@@ -1,0 +1,2204 @@
+{
+  "audit": "Non-blind offline engineering audit; seed facts unverified",
+  "source_sha": "144881b",
+  "seed_sha256": "5ab134e331add59884ff5bca548dc17d5a428a7a5d69fdec09c7863babe08a58",
+  "import": {
+    "seed_records": 500,
+    "universities": 501,
+    "new_observations": 500
+  },
+  "second_import_new_observations": 0,
+  "default_spy_candidates": 40,
+  "default_spy_live_attempts": 20,
+  "synthetic_stage_order": [
+    "sitemaps",
+    "navigation",
+    "confirmation",
+    "catalogue_walker",
+    "search_stage"
+  ],
+  "metrics_within_group": {
+    "audited_rows": 50,
+    "test_assertions_passed": 450,
+    "registry_covered": 1,
+    "generic_route": 49,
+    "domain_status": {
+      "seed": 29,
+      "unknown": 20,
+      "curated": 1
+    },
+    "seed_hint_conflicts": 4,
+    "default_candidate_window_40": 4,
+    "default_live_window_20": 1,
+    "country_preferred_live_window_20": 37,
+    "canonical_names_changed": 7,
+    "ambiguous_alias_rows": 6,
+    "live_checked": 0
+  },
+  "rows": [
+    {
+      "seed_id": "qs2027-003",
+      "name": "Stanford University",
+      "canonical_name": "Stanford University",
+      "country": "United States",
+      "aliases": [
+        "Stanford University"
+      ],
+      "domain": "stanford.edu",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "stanford.edu",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 252,
+      "group_position": 23,
+      "country_preferred_position": 29,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-013",
+      "name": "Peking University",
+      "canonical_name": "Peking University",
+      "country": "China",
+      "aliases": [
+        "Peking University"
+      ],
+      "domain": "pku.edu.cn",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "pku.edu.cn",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 203,
+      "group_position": 19,
+      "country_preferred_position": 18,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-023",
+      "name": "The University of Melbourne",
+      "canonical_name": "The University of Melbourne",
+      "country": "Australia",
+      "aliases": [
+        "The University of Melbourne"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 286,
+      "group_position": 27,
+      "country_preferred_position": 16,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-033",
+      "name": "The Hong Kong University of Science and Technology",
+      "canonical_name": "The Hong Kong University of Science and Technology",
+      "country": "Hong Kong",
+      "aliases": [
+        "The Hong Kong University of Science and Technology"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": true,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 279,
+      "group_position": 25,
+      "country_preferred_position": 7,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Seed domain and website registrable domains conflict; importer rejects domain hint.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-043",
+      "name": "Columbia University",
+      "canonical_name": "Columbia University",
+      "country": "United States",
+      "aliases": [
+        "Columbia University"
+      ],
+      "domain": "columbia.edu",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "columbia.edu",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 62,
+      "group_position": 9,
+      "country_preferred_position": 7,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 2,
+      "ambiguous_alias_queries": {
+        "Columbia University": 2
+      },
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences.",
+        "One or more alias token queries retrieve multiple institutions."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-053",
+      "name": "Korea University",
+      "canonical_name": "Korea University",
+      "country": "South Korea",
+      "aliases": [
+        "Korea University"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 148,
+      "group_position": 13,
+      "country_preferred_position": 7,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 13,
+      "ambiguous_alias_queries": {
+        "Korea University": 13
+      },
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Outside default 40-candidate window with no preferences.",
+        "One or more alias token queries retrieve multiple institutions."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-063",
+      "name": "KFUPM",
+      "canonical_name": "KFUPM",
+      "country": "Saudi Arabia",
+      "aliases": [
+        "KFUPM"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 141,
+      "group_position": 12,
+      "country_preferred_position": 2,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-073",
+      "name": "Sorbonne University",
+      "canonical_name": "Sorbonne University",
+      "country": "France",
+      "aliases": [
+        "Sorbonne University"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 248,
+      "group_position": 22,
+      "country_preferred_position": 5,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-083",
+      "name": "The University of Sheffield",
+      "canonical_name": "The University of Sheffield",
+      "country": "United Kingdom",
+      "aliases": [
+        "The University of Sheffield"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": true,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 291,
+      "group_position": 28,
+      "country_preferred_position": 23,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Seed domain and website registrable domains conflict; importer rejects domain hint.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-093",
+      "name": "University of Washington",
+      "canonical_name": "University of Washington",
+      "country": "United States",
+      "aliases": [
+        "University of Washington"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": true,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 475,
+      "group_position": 49,
+      "country_preferred_position": 63,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Seed domain and website registrable domains conflict; importer rejects domain hint.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-103",
+      "name": "Tohoku University",
+      "canonical_name": "Tohoku University",
+      "country": "Japan",
+      "aliases": [
+        "Tohoku University"
+      ],
+      "domain": "tohoku.ac.jp",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "tohoku.ac.jp",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 298,
+      "group_position": 29,
+      "country_preferred_position": 10,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-113",
+      "name": "University of Southampton",
+      "canonical_name": "University of Southampton",
+      "country": "United Kingdom",
+      "aliases": [
+        "University of Southampton"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": true,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 454,
+      "group_position": 45,
+      "country_preferred_position": 43,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Seed domain and website registrable domains conflict; importer rejects domain hint.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-123",
+      "name": "Alma Mater Studiorum - Università di Bologna",
+      "canonical_name": "Alma Mater Studiorum - Università di Bologna",
+      "country": "Italy",
+      "aliases": [
+        "Alma Mater Studiorum - Università di Bologna"
+      ],
+      "domain": "unibo.it",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "unibo.it",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 28,
+      "group_position": 2,
+      "country_preferred_position": 2,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Retained as candidate but outside default 20-live window with no preferences."
+      ],
+      "risk": "medium",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-133",
+      "name": "Universidade de São Paulo",
+      "canonical_name": "Universidade de São Paulo",
+      "country": "Brazil",
+      "aliases": [
+        "Universidade de São Paulo"
+      ],
+      "domain": "usp.br",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "usp.br",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 319,
+      "group_position": 32,
+      "country_preferred_position": 1,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-143",
+      "name": "National Tsing Hua University - NTHU",
+      "canonical_name": "National Tsing Hua University - NTHU",
+      "country": "Taiwan",
+      "aliases": [
+        "National Tsing Hua University - NTHU"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 190,
+      "group_position": 18,
+      "country_preferred_position": 7,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-153",
+      "name": "University of Southern California",
+      "canonical_name": "University of Southern California",
+      "country": "United States",
+      "aliases": [
+        "University of Southern California"
+      ],
+      "domain": "usc.edu",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "usc.edu",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 455,
+      "group_position": 46,
+      "country_preferred_position": 60,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-163",
+      "name": "Washington University in St. Louis",
+      "canonical_name": "Washington University in St. Louis",
+      "country": "United States",
+      "aliases": [
+        "Washington University in St. Louis"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 492,
+      "group_position": 50,
+      "country_preferred_position": 67,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-173",
+      "name": "University of California, Santa Barbara (UCSB)",
+      "canonical_name": "University of California, Santa Barbara",
+      "country": "United States",
+      "aliases": [
+        "UCSB",
+        "University of California, Santa Barbara",
+        "University of California, Santa Barbara (UCSB)"
+      ],
+      "domain": "ucsb.edu",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "ucsb.edu",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 385,
+      "group_position": 38,
+      "country_preferred_position": 42,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences.",
+        "Canonical name differs; full source name retained as searchable alias."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-183",
+      "name": "Emory University",
+      "canonical_name": "Emory University",
+      "country": "United States",
+      "aliases": [
+        "Emory University"
+      ],
+      "domain": "emory.edu",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "emory.edu",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 80,
+      "group_position": 10,
+      "country_preferred_position": 11,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-193",
+      "name": "Universitas Indonesia",
+      "canonical_name": "Universitas Indonesia",
+      "country": "Indonesia",
+      "aliases": [
+        "Universitas Indonesia"
+      ],
+      "domain": "ui.ac.id",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "ui.ac.id",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 328,
+      "group_position": 33,
+      "country_preferred_position": 6,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 3,
+      "ambiguous_alias_queries": {
+        "Universitas Indonesia": 3
+      },
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences.",
+        "One or more alias token queries retrieve multiple institutions."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-203",
+      "name": "Loughborough University",
+      "canonical_name": "Loughborough University",
+      "country": "United Kingdom",
+      "aliases": [
+        "Loughborough University"
+      ],
+      "domain": "lboro.ac.uk",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "lboro.ac.uk",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 164,
+      "group_position": 15,
+      "country_preferred_position": 12,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-213",
+      "name": "Hamad Bin Khalifa University (HBKU)",
+      "canonical_name": "Hamad Bin Khalifa University",
+      "country": "Qatar",
+      "aliases": [
+        "HBKU",
+        "Hamad Bin Khalifa University",
+        "Hamad Bin Khalifa University (HBKU)"
+      ],
+      "domain": "hbku.edu.qa",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "hbku.edu.qa",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 99,
+      "group_position": 11,
+      "country_preferred_position": 1,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences.",
+        "Canonical name differs; full source name retained as searchable alias."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-223",
+      "name": "American University of Beirut (AUB)",
+      "canonical_name": "American University of Beirut",
+      "country": "Lebanon",
+      "aliases": [
+        "AUB",
+        "American University of Beirut",
+        "American University of Beirut (AUB)"
+      ],
+      "domain": "aub.edu.lb",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "aub.edu.lb",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 29,
+      "group_position": 3,
+      "country_preferred_position": 1,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Retained as candidate but outside default 20-live window with no preferences.",
+        "Canonical name differs; full source name retained as searchable alias."
+      ],
+      "risk": "medium",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-233",
+      "name": "Universidad de los Andes",
+      "canonical_name": "Universidad de los Andes",
+      "country": "Colombia",
+      "aliases": [
+        "Universidad de los Andes"
+      ],
+      "domain": "uniandes.edu.co",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "uniandes.edu.co",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 313,
+      "group_position": 30,
+      "country_preferred_position": 2,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-243",
+      "name": "Beijing Institute of Technology",
+      "canonical_name": "Beijing Institute of Technology",
+      "country": "China",
+      "aliases": [
+        "Beijing Institute of Technology"
+      ],
+      "domain": "bit.edu.cn",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "bit.edu.cn",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 39,
+      "group_position": 4,
+      "country_preferred_position": 2,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Retained as candidate but outside default 20-live window with no preferences."
+      ],
+      "risk": "medium",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-253",
+      "name": "University of Maryland, College Park",
+      "canonical_name": "University of Maryland, College Park",
+      "country": "United States",
+      "aliases": [
+        "University of Maryland, College Park"
+      ],
+      "domain": "umd.edu",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "umd.edu",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 425,
+      "group_position": 44,
+      "country_preferred_position": 50,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-263",
+      "name": "Universitat Pompeu Fabra (Barcelona)",
+      "canonical_name": "Universitat Pompeu Fabra",
+      "country": "Spain",
+      "aliases": [
+        "Barcelona",
+        "Universitat Pompeu Fabra",
+        "Universitat Pompeu Fabra (Barcelona)"
+      ],
+      "domain": "upf.es",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "upf.es",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 340,
+      "group_position": 35,
+      "country_preferred_position": 12,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {
+        "Barcelona": 5
+      },
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences.",
+        "Canonical name differs; full source name retained as searchable alias.",
+        "One or more alias token queries retrieve multiple institutions."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-273",
+      "name": "Charles University",
+      "canonical_name": "Charles University",
+      "country": "Czechia",
+      "aliases": [
+        "Charles University"
+      ],
+      "domain": "cuni.cz",
+      "domain_status": "curated",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": true,
+      "registry_seed_categories": [
+        "admissions",
+        "costs"
+      ],
+      "global_position": 2,
+      "group_position": 1,
+      "country_preferred_position": 1,
+      "default_live_attempted_synthetic_spy": true,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "discover_one_with_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Curated registry route; seed facts remain unverified."
+      ],
+      "risk": "medium",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-283",
+      "name": "Radboud University",
+      "canonical_name": "Radboud University",
+      "country": "Netherlands",
+      "aliases": [
+        "Radboud University"
+      ],
+      "domain": "ru.nl",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "ru.nl",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 221,
+      "group_position": 20,
+      "country_preferred_position": 7,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-293",
+      "name": "Universidad Nacional de Colombia",
+      "canonical_name": "Universidad Nacional de Colombia",
+      "country": "Colombia",
+      "aliases": [
+        "Universidad Nacional de Colombia"
+      ],
+      "domain": "unal.edu.co",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "unal.edu.co",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 316,
+      "group_position": 31,
+      "country_preferred_position": 3,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-303",
+      "name": "Université Paris Cité",
+      "canonical_name": "Université Paris Cité",
+      "country": "France",
+      "aliases": [
+        "Université Paris Cité"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 351,
+      "group_position": 36,
+      "country_preferred_position": 10,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-313",
+      "name": "The University of Arizona",
+      "canonical_name": "The University of Arizona",
+      "country": "United States",
+      "aliases": [
+        "The University of Arizona"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 282,
+      "group_position": 26,
+      "country_preferred_position": 33,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-323",
+      "name": "University of Delhi",
+      "canonical_name": "University of Delhi",
+      "country": "India",
+      "aliases": [
+        "University of Delhi"
+      ],
+      "domain": "du.ac.in",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "du.ac.in",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 398,
+      "group_position": 41,
+      "country_preferred_position": 11,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-333",
+      "name": "Universität Innsbruck",
+      "canonical_name": "Universität Innsbruck",
+      "country": "Austria",
+      "aliases": [
+        "Universität Innsbruck"
+      ],
+      "domain": "uibk.ac.at",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "uibk.ac.at",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 335,
+      "group_position": 34,
+      "country_preferred_position": 6,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-343",
+      "name": "University of Coimbra",
+      "canonical_name": "University of Coimbra",
+      "country": "Portugal",
+      "aliases": [
+        "University of Coimbra"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 393,
+      "group_position": 39,
+      "country_preferred_position": 3,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-353",
+      "name": "Brunel University of London",
+      "canonical_name": "Brunel University of London",
+      "country": "United Kingdom",
+      "aliases": [
+        "Brunel University of London"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 46,
+      "group_position": 5,
+      "country_preferred_position": 3,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-363",
+      "name": "City St George’s, University of London",
+      "canonical_name": "City St George’s, University of London",
+      "country": "United Kingdom",
+      "aliases": [
+        "City St George’s, University of London"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 60,
+      "group_position": 8,
+      "country_preferred_position": 5,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-373",
+      "name": "University of Victoria (UVic)",
+      "canonical_name": "University of Victoria",
+      "country": "Canada",
+      "aliases": [
+        "UVic",
+        "University of Victoria",
+        "University of Victoria (UVic)"
+      ],
+      "domain": "uvic.ca",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "uvic.ca",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 472,
+      "group_position": 48,
+      "country_preferred_position": 14,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {
+        "University of Victoria": 2
+      },
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences.",
+        "Canonical name differs; full source name retained as searchable alias.",
+        "One or more alias token queries retrieve multiple institutions."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-383",
+      "name": "University of East Anglia (UEA)",
+      "canonical_name": "University of East Anglia",
+      "country": "United Kingdom",
+      "aliases": [
+        "UEA",
+        "University of East Anglia",
+        "University of East Anglia (UEA)"
+      ],
+      "domain": "uea.ac.uk",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "uea.ac.uk",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 400,
+      "group_position": 42,
+      "country_preferred_position": 33,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences.",
+        "Canonical name differs; full source name retained as searchable alias."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-393",
+      "name": "The American University in Cairo",
+      "canonical_name": "The American University in Cairo",
+      "country": "Egypt",
+      "aliases": [
+        "The American University in Cairo"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 274,
+      "group_position": 24,
+      "country_preferred_position": 2,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-403",
+      "name": "National and Kapodistrian University of Athens",
+      "canonical_name": "National and Kapodistrian University of Athens",
+      "country": "Greece",
+      "aliases": [
+        "National and Kapodistrian University of Athens"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 182,
+      "group_position": 17,
+      "country_preferred_position": 1,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-413",
+      "name": "Singapore Management University",
+      "canonical_name": "Singapore Management University",
+      "country": "Singapore",
+      "aliases": [
+        "Singapore Management University"
+      ],
+      "domain": "smu.edu.sg",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "smu.edu.sg",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 244,
+      "group_position": 21,
+      "country_preferred_position": 3,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-423",
+      "name": "Murdoch University",
+      "canonical_name": "Murdoch University",
+      "country": "Australia",
+      "aliases": [
+        "Murdoch University"
+      ],
+      "domain": "murdoch.edu.au",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "murdoch.edu.au",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 178,
+      "group_position": 16,
+      "country_preferred_position": 12,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-433",
+      "name": "Chung-Ang University (CAU)",
+      "canonical_name": "Chung-Ang University",
+      "country": "South Korea",
+      "aliases": [
+        "CAU",
+        "Chung-Ang University",
+        "Chung-Ang University (CAU)"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 59,
+      "group_position": 7,
+      "country_preferred_position": 2,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {
+        "CAU": 3
+      },
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Outside default 40-candidate window with no preferences.",
+        "Canonical name differs; full source name retained as searchable alias.",
+        "One or more alias token queries retrieve multiple institutions."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-443",
+      "name": "University of Trento",
+      "canonical_name": "University of Trento",
+      "country": "Italy",
+      "aliases": [
+        "University of Trento"
+      ],
+      "domain": "unitn.it",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "unitn.it",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 467,
+      "group_position": 47,
+      "country_preferred_position": 14,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-453",
+      "name": "Central South University",
+      "canonical_name": "Central South University",
+      "country": "China",
+      "aliases": [
+        "Central South University"
+      ],
+      "domain": "csu.edu.cn",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "csu.edu.cn",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 54,
+      "group_position": 6,
+      "country_preferred_position": 4,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-463",
+      "name": "University of Connecticut",
+      "canonical_name": "University of Connecticut",
+      "country": "United States",
+      "aliases": [
+        "University of Connecticut"
+      ],
+      "domain": "uconn.edu",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "uconn.edu",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 396,
+      "group_position": 40,
+      "country_preferred_position": 46,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-473",
+      "name": "University of Bayreuth",
+      "canonical_name": "University of Bayreuth",
+      "country": "Germany",
+      "aliases": [
+        "University of Bayreuth"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 371,
+      "group_position": 37,
+      "country_preferred_position": 24,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-483",
+      "name": "Kyungpook National University",
+      "canonical_name": "Kyungpook National University",
+      "country": "South Korea",
+      "aliases": [
+        "Kyungpook National University"
+      ],
+      "domain": null,
+      "domain_status": "unknown",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": null,
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 153,
+      "group_position": 14,
+      "country_preferred_position": 9,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "No usable imported domain; identity hints/provider become prerequisite when scheduled.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    },
+    {
+      "seed_id": "qs2027-493",
+      "name": "University of Electronic Science and Technology of China",
+      "canonical_name": "University of Electronic Science and Technology of China",
+      "country": "China",
+      "aliases": [
+        "University of Electronic Science and Technology of China"
+      ],
+      "domain": "uestc.edu.cn",
+      "domain_status": "seed",
+      "seed_hint_conflict": false,
+      "imported_seed_domain": "uestc.edu.cn",
+      "registry_covered": false,
+      "registry_seed_categories": [],
+      "global_position": 401,
+      "group_position": 43,
+      "country_preferred_position": 32,
+      "default_live_attempted_synthetic_spy": false,
+      "full_name_matches": 1,
+      "ambiguous_alias_queries": {},
+      "synthetic_route_events": [
+        "identify_site",
+        "discover_one_without_seeds"
+      ],
+      "tests": {
+        "imported_identity": true,
+        "full_name_retrieves_identity": true,
+        "canonical_retrieves_identity": true,
+        "all_aliases_retrieve_identity": true,
+        "country_alias_retrieves_identity": true,
+        "country_exclusion_removes_identity": true,
+        "explicit_id_retrieval_exact": true,
+        "observation_remains_unverified": true,
+        "routing_matches_registry": true
+      },
+      "observations": [
+        "Generic identity route; no curated programme/admissions entry points.",
+        "Outside default 40-candidate window with no preferences."
+      ],
+      "risk": "high",
+      "live_checked": false
+    }
+  ]
+}

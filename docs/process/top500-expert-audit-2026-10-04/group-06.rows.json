@@ -1,0 +1,4655 @@
+{
+  "method": "Non-blind offline diagnosis; full seed+registry importer/retrieve; synthetic allocation and route seams; no live source reads.",
+  "summary": {
+    "covered": 50,
+    "import": {
+      "seed_records": 500,
+      "universities": 501,
+      "new_observations": 500
+    },
+    "curated_total": 19,
+    "exact_recall": 50,
+    "canonical_recall": 50,
+    "alias_queries": 60,
+    "alias_recall": 60,
+    "ambiguous_exact": 4,
+    "exact_not_first": 4,
+    "curated_group": 3,
+    "missing_domain": 14,
+    "in_default_40": 3,
+    "in_default_live_20": 3,
+    "region_semantic_mismatch": 50,
+    "raw_seed_country_ranking_mismatch": 15,
+    "stable_ids_and_order_under_seed_permutation_and_unverified_values": true,
+    "idempotent_import": {
+      "seed_records": 500,
+      "universities": 501,
+      "new_observations": 0
+    },
+    "repeat_allocation_identical": true,
+    "selected_input_order_ignored": true,
+    "alias_overlap_validates": true,
+    "literal_overlap_rejected": true,
+    "full_default_allocation": {
+      "candidate_ids": [
+        "f84a79b129f827c8a533eee7399c142e",
+        "3c2286e3e2e533778845d04266d71be4",
+        "24623341ce2244aaafc2576a3b52e15f",
+        "6c96ae0ad8421f8411788a77cb4cb83f",
+        "97c8608caf287b8b84b54db721e0c0b1",
+        "1d9e59cdc31da16baef8c56eeb496b30",
+        "931ba7ee70b61ac9ece2384af7438bc5",
+        "4a720cae0d73cd768e4e2859f68a9737",
+        "ec2c45018a9dc7b4eeb38d1ef7f1460e",
+        "9168d783948e0afc1cee7ec5b4ace2e0",
+        "300d98d879febf7e8a0ccfc3b85b54f7",
+        "1804042f793e94d920c23b5ff8991cb4",
+        "926d55f74f7adca0474e17e782024e58",
+        "33ecfb4e2cab12ed0347f18642408bb2",
+        "827911c26821b6973c6a599f814ba748",
+        "da06864e37136a969b25f9b149f51e17",
+        "69136128c96738816c7daf54285cd903",
+        "9edd1f44d0869cffad57bfbb4f0fe37e",
+        "90b71781a1c9bd7709cb903afe7a1d60",
+        "c49edcbcb16dea8d8d3191bf14f4e9a8",
+        "4ce9c9d718ddb14f7ed20598e46703f5",
+        "3f534e6ab1be8429dee633ac1276efb7",
+        "b846546f6dbfeb95e15daa918995d1ec",
+        "e56cbdb8cc69964b0cbaea11d4784e33",
+        "ad84e765aa6db876e0063834a3ab46c0",
+        "99ed332db2fb721c2d2d54eafae5a72c",
+        "b153284409ab568e9d21f65030051de2",
+        "410a6897c028a2e4f347c47e8dbb7918",
+        "87032d755c3bf2760d234241d238087b",
+        "54a0947de30f6266f328799d52955748",
+        "a921c8dada5e5c99d2ef8d49e868976c",
+        "52fa3e87eaafc071ed9d1affd4996846",
+        "4d9f471fe886e9a62118419dd4908de3",
+        "b7244883b32b4f6a26df4580f71a7c5a",
+        "0480c3b293c219debd4325fe107ac27b",
+        "255ddce425eb09449d4c0c0b1cfaf56e",
+        "ba67f6f7aadfeb949a3501f41cdfcd6a",
+        "4acf8a80c8102e0173c9ddd254c4d455",
+        "7ba4bf6866ca12aab7c66ef1936bad74",
+        "bb4256f5368f30c6ea956aff77e510d4"
+      ],
+      "attempted_ids": [
+        "f84a79b129f827c8a533eee7399c142e",
+        "3c2286e3e2e533778845d04266d71be4",
+        "24623341ce2244aaafc2576a3b52e15f",
+        "6c96ae0ad8421f8411788a77cb4cb83f",
+        "97c8608caf287b8b84b54db721e0c0b1",
+        "1d9e59cdc31da16baef8c56eeb496b30",
+        "931ba7ee70b61ac9ece2384af7438bc5",
+        "4a720cae0d73cd768e4e2859f68a9737",
+        "ec2c45018a9dc7b4eeb38d1ef7f1460e",
+        "9168d783948e0afc1cee7ec5b4ace2e0",
+        "300d98d879febf7e8a0ccfc3b85b54f7",
+        "1804042f793e94d920c23b5ff8991cb4",
+        "926d55f74f7adca0474e17e782024e58",
+        "33ecfb4e2cab12ed0347f18642408bb2",
+        "827911c26821b6973c6a599f814ba748",
+        "da06864e37136a969b25f9b149f51e17",
+        "69136128c96738816c7daf54285cd903",
+        "9edd1f44d0869cffad57bfbb4f0fe37e",
+        "90b71781a1c9bd7709cb903afe7a1d60",
+        "c49edcbcb16dea8d8d3191bf14f4e9a8"
+      ],
+      "rankings_count": 0,
+      "programs_count": 0,
+      "unattempted_blank_trace_count": 20
+    },
+    "default_20_countries": {
+      "Finland": 1,
+      "Czechia": 2,
+      "Netherlands": 2,
+      "South Korea": 1,
+      "Turkey": 2,
+      "Singapore": 1,
+      "Kazakhstan": 1,
+      "Italy": 1,
+      "Germany": 1,
+      "Hong Kong": 1,
+      "Canada": 2,
+      "Estonia": 1,
+      "Austria": 1,
+      "Poland": 1,
+      "Lithuania": 1,
+      "Denmark": 1
+    },
+    "default_20_curated": 19,
+    "uk_preference_20_countries": {
+      "United Kingdom": 20
+    },
+    "synthetic_renaming_changes_identity": true
+  },
+  "universities": [
+    {
+      "seed_id": "qs2027-006",
+      "name": "University of Cambridge",
+      "university_id": "183d86e6347e1e71d94a15fdd92a0c6c",
+      "canonical_name": "University of Cambridge",
+      "country": "United Kingdom",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Cambridge",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Cambridge",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of cambridge",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Cambridge of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Cambridge",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "United Kingdom",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 31,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "cam.ac.uk",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.cam.ac.uk/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 387,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-016",
+      "name": "Cornell University",
+      "university_id": "2a800f28314831876a61244239f7b32d",
+      "canonical_name": "Cornell University",
+      "country": "United States",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Cornell University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Cornell University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "cornell university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Cornell",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Cornell University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "United States of America",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 8,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 0.35
+      },
+      "regions": [
+        {
+          "region": "north america",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "cornell.edu",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.cornell.edu/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 65,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-026",
+      "name": "Fudan University",
+      "university_id": "fec60b3a73922cfdd2a8ba61ce9e8398",
+      "canonical_name": "Fudan University",
+      "country": "China",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Fudan University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Fudan University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "fudan university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Fudan",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Fudan University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "China (Mainland)",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 9,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 0.35
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "fudan.edu.cn",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.fudan.edu.cn/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 89,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-036",
+      "name": "Shanghai Jiao Tong University",
+      "university_id": "b0e3a62d4112f4e0bbb16c0195a049ed",
+      "canonical_name": "Shanghai Jiao Tong University",
+      "country": "China",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Shanghai Jiao Tong University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Shanghai Jiao Tong University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "shanghai jiao tong university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Tong Jiao Shanghai",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Shanghai Jiao Tong University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "China (Mainland)",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 20,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 0.35
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "sjtu.edu.cn",
+        "domain_status": "seed",
+        "official_site_hint": "https://en.sjtu.edu.cn/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 237,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-046",
+      "name": "University of British Columbia",
+      "university_id": "926d55f74f7adca0474e17e782024e58",
+      "canonical_name": "University of British Columbia",
+      "country": "Canada",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of British Columbia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of British Columbia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of british columbia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Columbia British of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of British Columbia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Canada",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 1,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "north america",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "curated",
+        "domain": "ubc.ca",
+        "domain_status": "curated",
+        "official_site_hint": "http://www.ubc.ca/",
+        "registry_entry": true,
+        "synthetic_identify_calls": 0,
+        "synthetic_discover_one_calls": 1,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 13,
+        "in_candidate_40": true,
+        "enrichment_20": true,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-056",
+      "name": "Universiti Malaya (UM)",
+      "university_id": "a24aea10666d1f07709d4034180bec2f",
+      "canonical_name": "Universiti Malaya",
+      "country": "Malaysia",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Universiti Malaya (UM)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Universiti Malaya",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universiti malaya",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Malaya Universiti",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "UM",
+          "target_found": true,
+          "target_position": 19,
+          "result_count": 21,
+          "other_names": [
+            "University of British Columbia",
+            "Alma Mater Studiorum - Università di Bologna",
+            "Bauman Moscow State Technical University",
+            "Columbia University",
+            "Ghent University",
+            "Humboldt-Universität zu Berlin",
+            "Indian Institute of Technology Bombay",
+            "KU Leuven"
+          ]
+        },
+        {
+          "query": "Universiti Malaya",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "Universiti Malaya (UM)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Malaysia",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 6,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "um.edu.my",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.um.edu.my/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 356,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-066",
+      "name": "Brown University",
+      "university_id": "28126d66542cb37820a27f5ab843d03e",
+      "canonical_name": "Brown University",
+      "country": "United States",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Brown University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Brown University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "brown university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Brown",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Brown University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "United States of America",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 3,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 0.35
+      },
+      "regions": [
+        {
+          "region": "north america",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "brown.edu",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.brown.edu/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 45,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-076",
+      "name": "Université Paris-Saclay",
+      "university_id": "4e231ff74acee678b0d5655a4e90c5e8",
+      "canonical_name": "Université Paris-Saclay",
+      "country": "France",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Université Paris-Saclay",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Université Paris-Saclay",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universite paris saclay",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Paris-Saclay Université",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Université Paris-Saclay",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "France",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 11,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "universite-paris-saclay.fr",
+        "domain_status": "seed",
+        "official_site_hint": "https://www.universite-paris-saclay.fr/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 352,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-086",
+      "name": "Universität Heidelberg",
+      "university_id": "07ae7fbe8af1cf80ba38455e04faf76b",
+      "canonical_name": "Universität Heidelberg",
+      "country": "Germany",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Universität Heidelberg",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Universität Heidelberg",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universitat heidelberg",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Heidelberg Universität",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Universität Heidelberg",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Germany",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 20,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": null,
+        "domain_status": "unknown",
+        "official_site_hint": null,
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 334,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-096",
+      "name": "University of Alberta",
+      "university_id": "9425adbd0707539f6fd38aa3026d9128",
+      "canonical_name": "University of Alberta",
+      "country": "Canada",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Alberta",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Alberta",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of alberta",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Alberta of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Alberta",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Canada",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 10,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "north america",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "ualberta.ca",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.ualberta.ca/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 365,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-106",
+      "name": "Technical University of Denmark",
+      "university_id": "b153bff3bf12abf1465ceb066d88d1ca",
+      "canonical_name": "Technical University of Denmark",
+      "country": "Denmark",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Technical University of Denmark",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Technical University of Denmark",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "technical university of denmark",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Denmark of University Technical",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Technical University of Denmark",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Denmark",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 3,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "dtu.dk",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.dtu.dk/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 266,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-116",
+      "name": "Lomonosov Moscow State University",
+      "university_id": "ac924adca204baf97210b5eac7f140c0",
+      "canonical_name": "Lomonosov Moscow State University",
+      "country": "Russia",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Lomonosov Moscow State University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Lomonosov Moscow State University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "lomonosov moscow state university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University State Moscow Lomonosov",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Lomonosov Moscow State University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Russian Federation",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 4,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 0.35
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        },
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "msu.ru",
+        "domain_status": "seed",
+        "official_site_hint": "https://www.msu.ru/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 163,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-126",
+      "name": "Aalto University",
+      "university_id": "f84a79b129f827c8a533eee7399c142e",
+      "canonical_name": "Aalto University",
+      "country": "Finland",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Aalto University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Aalto University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "aalto university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Aalto",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Aalto University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Finland",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 1,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "curated",
+        "domain": "aalto.fi",
+        "domain_status": "curated",
+        "official_site_hint": "https://www.aalto.fi/",
+        "registry_entry": true,
+        "synthetic_identify_calls": 0,
+        "synthetic_discover_one_calls": 1,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 1,
+        "in_candidate_40": true,
+        "enrichment_20": true,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-136",
+      "name": "University of Exeter",
+      "university_id": "966907c0c3c2ce1ab6a83c41f1398f28",
+      "canonical_name": "University of Exeter",
+      "country": "United Kingdom",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Exeter",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Exeter",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of exeter",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Exeter of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Exeter",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "United Kingdom",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 34,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "ex.ac.uk",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.ex.ac.uk/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 402,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-146",
+      "name": "Tongji University",
+      "university_id": "8aa96323c1b59142f370e2f430dc9458",
+      "canonical_name": "Tongji University",
+      "country": "China",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Tongji University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Tongji University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "tongji university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Tongji",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Tongji University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "China (Mainland)",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 29,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 0.35
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "tongji.edu.cn",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.tongji.edu.cn/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 299,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-156",
+      "name": "Nagoya University",
+      "university_id": "01ea8dd78746c15f2655b59fd4f5deab",
+      "canonical_name": "Nagoya University",
+      "country": "Japan",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Nagoya University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Nagoya University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "nagoya university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Nagoya",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Nagoya University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Japan",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 7,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "nagoya-u.ac.jp",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.nagoya-u.ac.jp/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 179,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-166",
+      "name": "Wuhan University",
+      "university_id": "8bb3a8c58dba2d05943c9dc183761373",
+      "canonical_name": "Wuhan University",
+      "country": "China",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Wuhan University",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Huazhong University of Science and Technology"
+          ]
+        },
+        "canonical": {
+          "query": "Wuhan University",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Huazhong University of Science and Technology"
+          ]
+        },
+        "normalized": {
+          "query": "wuhan university",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Huazhong University of Science and Technology"
+          ]
+        },
+        "word_reorder": {
+          "query": "University Wuhan",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Huazhong University of Science and Technology"
+          ]
+        }
+      },
+      "aliases": [
+        {
+          "query": "Wuhan University",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Huazhong University of Science and Technology"
+          ]
+        }
+      ],
+      "country_filter": {
+        "seed_country": "China (Mainland)",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 35,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 0.35
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "whu.edu.cn",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.whu.edu.cn/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 495,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure.",
+        "Full seed name returns additional institutions; lexical substring matching does not prioritize exact identity."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-176",
+      "name": "Queen's University Belfast",
+      "university_id": "6a93ab27e1abf5163e01567213bc1876",
+      "canonical_name": "Queen's University Belfast",
+      "country": "United Kingdom",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Queen's University Belfast",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Queen's University Belfast",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "queen s university belfast",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Belfast University Queen's",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Queen's University Belfast",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "United Kingdom",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 16,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": null,
+        "domain_status": "unknown",
+        "official_site_hint": null,
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 219,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-186",
+      "name": "Universidad de Chile",
+      "university_id": "59910fe6a545833066435b048052f413",
+      "canonical_name": "Universidad de Chile",
+      "country": "Chile",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Universidad de Chile",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Pontificia Universidad Católica de Chile"
+          ]
+        },
+        "canonical": {
+          "query": "Universidad de Chile",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Pontificia Universidad Católica de Chile"
+          ]
+        },
+        "normalized": {
+          "query": "universidad de chile",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Pontificia Universidad Católica de Chile"
+          ]
+        },
+        "word_reorder": {
+          "query": "Chile de Universidad",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Pontificia Universidad Católica de Chile"
+          ]
+        }
+      },
+      "aliases": [
+        {
+          "query": "Universidad de Chile",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Pontificia Universidad Católica de Chile"
+          ]
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Chile",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 2,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "south america",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "uchile.cl",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.uchile.cl/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 311,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure.",
+        "Full seed name returns additional institutions; lexical substring matching does not prioritize exact identity."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-196",
+      "name": "Université catholique de Louvain (UCLouvain)",
+      "university_id": "80e463c71f22cabb588efef812e3a478",
+      "canonical_name": "Université catholique de Louvain",
+      "country": "Belgium",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Université catholique de Louvain (UCLouvain)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Université catholique de Louvain",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universite catholique de louvain",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Louvain de catholique Université",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "UCLouvain",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "Université catholique de Louvain",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "Université catholique de Louvain (UCLouvain)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Belgium",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 3,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "ucl.ac.be",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.ucl.ac.be/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 343,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-206",
+      "name": "Gadjah Mada University",
+      "university_id": "999adb67ce0956924ed89c7df9f0b81f",
+      "canonical_name": "Gadjah Mada University",
+      "country": "Indonesia",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Gadjah Mada University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Gadjah Mada University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "gadjah mada university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Mada Gadjah",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Gadjah Mada University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Indonesia",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 1,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": null,
+        "domain_status": "unknown",
+        "official_site_hint": null,
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 90,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-216",
+      "name": "Hong Kong Baptist University",
+      "university_id": "2c5dec3e9c25f03e0c506085946bfa94",
+      "canonical_name": "Hong Kong Baptist University",
+      "country": "Hong Kong",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Hong Kong Baptist University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Hong Kong Baptist University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "hong kong baptist university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Baptist Kong Hong",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Hong Kong Baptist University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Hong Kong SAR, China",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 3,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 0.35
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "hkbu.edu.hk",
+        "domain_status": "seed",
+        "official_site_hint": "https://www.hkbu.edu.hk/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 106,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-226",
+      "name": "Universidad Autónoma de Madrid",
+      "university_id": "ff1f3e375ef9661b18e703bac68d737c",
+      "canonical_name": "Universidad Autónoma de Madrid",
+      "country": "Spain",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Universidad Autónoma de Madrid",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Universidad Autónoma de Madrid",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universidad autonoma de madrid",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Madrid de Autónoma Universidad",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Universidad Autónoma de Madrid",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Spain",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 3,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "uam.es",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.uam.es/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 308,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-236",
+      "name": "Tianjin University",
+      "university_id": "5d6db453e946ac90945f7f32e4821331",
+      "canonical_name": "Tianjin University",
+      "country": "China",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Tianjin University",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Nankai University"
+          ]
+        },
+        "canonical": {
+          "query": "Tianjin University",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Nankai University"
+          ]
+        },
+        "normalized": {
+          "query": "tianjin university",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Nankai University"
+          ]
+        },
+        "word_reorder": {
+          "query": "University Tianjin",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Nankai University"
+          ]
+        }
+      },
+      "aliases": [
+        {
+          "query": "Tianjin University",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Nankai University"
+          ]
+        }
+      ],
+      "country_filter": {
+        "seed_country": "China (Mainland)",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 28,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 0.35
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "tju.edu.cn",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.tju.edu.cn/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 296,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure.",
+        "Full seed name returns additional institutions; lexical substring matching does not prioritize exact identity."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-246",
+      "name": "Université Paris 1 Panthéon-Sorbonne",
+      "university_id": "ede75e33677058c78a580d9aea50e88b",
+      "canonical_name": "Université Paris 1 Panthéon-Sorbonne",
+      "country": "France",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Université Paris 1 Panthéon-Sorbonne",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Université Paris 1 Panthéon-Sorbonne",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universite paris 1 pantheon sorbonne",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Panthéon-Sorbonne 1 Paris Université",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Université Paris 1 Panthéon-Sorbonne",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "France",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 9,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": null,
+        "domain_status": "unknown",
+        "official_site_hint": null,
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 350,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-256",
+      "name": "University of Porto",
+      "university_id": "26d8b45ecb75910e90280c9894a4dd86",
+      "canonical_name": "University of Porto",
+      "country": "Portugal",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Porto",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Porto",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of porto",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Porto of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Porto",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Portugal",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 5,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": null,
+        "domain_status": "unknown",
+        "official_site_hint": null,
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 445,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-266",
+      "name": "Singapore University of Technology and Design",
+      "university_id": "f8297dbb8cd810a9b75ad9c2716be6e2",
+      "canonical_name": "Singapore University of Technology and Design",
+      "country": "Singapore",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Singapore University of Technology and Design",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Singapore University of Technology and Design",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "singapore university of technology and design",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Design and Technology of University Singapore",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Singapore University of Technology and Design",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Singapore",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 4,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "sutd.edu.sg",
+        "domain_status": "seed",
+        "official_site_hint": "https://www.sutd.edu.sg/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 245,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-276",
+      "name": "Universitas Airlangga",
+      "university_id": "de08892edd19f85dcba173acc5a80f74",
+      "canonical_name": "Universitas Airlangga",
+      "country": "Indonesia",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Universitas Airlangga",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Universitas Airlangga",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universitas airlangga",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Airlangga Universitas",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Universitas Airlangga",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Indonesia",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 5,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "unair.ac.id",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.unair.ac.id/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 327,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-286",
+      "name": "University of Southern Denmark (SDU)",
+      "university_id": "eb802c577332212bddfa6544fdb23316",
+      "canonical_name": "University of Southern Denmark",
+      "country": "Denmark",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Southern Denmark (SDU)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Southern Denmark",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of southern denmark",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Denmark Southern of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "SDU",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "University of Southern Denmark",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "University of Southern Denmark (SDU)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Denmark",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 5,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": null,
+        "domain_status": "unknown",
+        "official_site_hint": null,
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 456,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-296",
+      "name": "Stellenbosch University",
+      "university_id": "b48cd41ef39f7d61ce8019ee32656a21",
+      "canonical_name": "Stellenbosch University",
+      "country": "South Africa",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Stellenbosch University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Stellenbosch University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "stellenbosch university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Stellenbosch",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Stellenbosch University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "South Africa",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 1,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "africa",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": null,
+        "domain_status": "unknown",
+        "official_site_hint": null,
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 253,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-306",
+      "name": "Sultan Qaboos University",
+      "university_id": "88f7f0b0aec189683ef99f92e6b0fe99",
+      "canonical_name": "Sultan Qaboos University",
+      "country": "Oman",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Sultan Qaboos University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Sultan Qaboos University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "sultan qaboos university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Qaboos Sultan",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Sultan Qaboos University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Oman",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 1,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "squ.edu.om",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.squ.edu.om/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 256,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-316",
+      "name": "University of Leicester",
+      "university_id": "fd11861a151401603b239ee68f9eefd0",
+      "canonical_name": "University of Leicester",
+      "country": "United Kingdom",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Leicester",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Leicester",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of leicester",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Leicester of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Leicester",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "United Kingdom",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 38,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "le.ac.uk",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.le.ac.uk/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 419,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-326",
+      "name": "Case Western Reserve University",
+      "university_id": "c6e6f0142777fe98d4c3e57f0108328b",
+      "canonical_name": "Case Western Reserve University",
+      "country": "United States",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Case Western Reserve University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Case Western Reserve University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "case western reserve university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Reserve Western Case",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Case Western Reserve University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "United States of America",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 6,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 0.35
+      },
+      "regions": [
+        {
+          "region": "north america",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "case.edu",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.case.edu/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 51,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-336",
+      "name": "Southeast University",
+      "university_id": "7fe4170afc9280c9a0ff32aaba0b7418",
+      "canonical_name": "Southeast University",
+      "country": "China",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Southeast University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Southeast University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "southeast university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Southeast",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Southeast University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "China (Mainland)",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 25,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 0.35
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "seu.edu.cn",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.seu.edu.cn/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 250,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-346",
+      "name": "Mahidol University",
+      "university_id": "d37440c301e67de3702527da92da74e3",
+      "canonical_name": "Mahidol University",
+      "country": "Thailand",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Mahidol University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Mahidol University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "mahidol university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Mahidol",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Mahidol University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Thailand",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 2,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "mahidol.ac.th",
+        "domain_status": "seed",
+        "official_site_hint": "https://www.mahidol.ac.th/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 171,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-356",
+      "name": "Sunway University",
+      "university_id": "d9dfc360aa53671bafacca4f52d0ada8",
+      "canonical_name": "Sunway University",
+      "country": "Malaysia",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Sunway University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Sunway University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "sunway university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Sunway",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Sunway University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Malaysia",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 2,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": null,
+        "domain_status": "unknown",
+        "official_site_hint": null,
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 259,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-366",
+      "name": "Université de Liège",
+      "university_id": "1efd188d37b8327b78dddd76688a298a",
+      "canonical_name": "Université de Liège",
+      "country": "Belgium",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Université de Liège",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Université de Liège",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universite de liege",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Liège de Université",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Université de Liège",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Belgium",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 4,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": null,
+        "domain_status": "unknown",
+        "official_site_hint": null,
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 344,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-376",
+      "name": "Goethe-University Frankfurt am Main",
+      "university_id": "2972b95e6fd212d2cd47fc00cc13f034",
+      "canonical_name": "Goethe-University Frankfurt am Main",
+      "country": "Germany",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Goethe-University Frankfurt am Main",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Goethe-University Frankfurt am Main",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "goethe university frankfurt am main",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Main am Frankfurt Goethe-University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Goethe-University Frankfurt am Main",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Germany",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 6,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": null,
+        "domain_status": "unknown",
+        "official_site_hint": null,
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 95,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-386",
+      "name": "Northeastern University",
+      "university_id": "4d8cded2225c1bd2183ba5676a19c1c4",
+      "canonical_name": "Northeastern University",
+      "country": "United States",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Northeastern University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Northeastern University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "northeastern university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Northeastern",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Northeastern University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "United States of America",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 22,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 0.35
+      },
+      "regions": [
+        {
+          "region": "north america",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": null,
+        "domain_status": "unknown",
+        "official_site_hint": "http://www.northeastern.edu/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 197,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-396",
+      "name": "Università degli Studi di Pavia",
+      "university_id": "24595cf6d901a2c6965208e526ff8d22",
+      "canonical_name": "Università degli Studi di Pavia",
+      "country": "Italy",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Università degli Studi di Pavia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Università degli Studi di Pavia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universita degli studi di pavia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Pavia di Studi degli Università",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Università degli Studi di Pavia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Italy",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 6,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "unipv.it",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.unipv.it/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 324,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-406",
+      "name": "University of Turin",
+      "university_id": "d0e1a5a70ba27842af79a37c5a87bb50",
+      "canonical_name": "University of Turin",
+      "country": "Italy",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Turin",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Turin",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of turin",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Turin of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Turin",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Italy",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 15,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "unito.it",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.unito.it/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 469,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-416",
+      "name": "University of Kent",
+      "university_id": "50a103b18b78b339208605ce673c7ffe",
+      "canonical_name": "University of Kent",
+      "country": "United Kingdom",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Kent",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Tashkent Institute of Irrigation and Agricultural Mechanization Engineers - National Research University"
+          ]
+        },
+        "canonical": {
+          "query": "University of Kent",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Tashkent Institute of Irrigation and Agricultural Mechanization Engineers - National Research University"
+          ]
+        },
+        "normalized": {
+          "query": "university of kent",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Tashkent Institute of Irrigation and Agricultural Mechanization Engineers - National Research University"
+          ]
+        },
+        "word_reorder": {
+          "query": "Kent of University",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Tashkent Institute of Irrigation and Agricultural Mechanization Engineers - National Research University"
+          ]
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Kent",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "Tashkent Institute of Irrigation and Agricultural Mechanization Engineers - National Research University"
+          ]
+        }
+      ],
+      "country_filter": {
+        "seed_country": "United Kingdom",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 36,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": null,
+        "domain_status": "unknown",
+        "official_site_hint": null,
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 416,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure.",
+        "Full seed name returns additional institutions; lexical substring matching does not prioritize exact identity."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-426",
+      "name": "Northwestern Polytechnical University",
+      "university_id": "635bacbf1c508aaf5780b7dae72caffc",
+      "canonical_name": "Northwestern Polytechnical University",
+      "country": "China",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Northwestern Polytechnical University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Northwestern Polytechnical University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "northwestern polytechnical university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Polytechnical Northwestern",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Northwestern Polytechnical University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "China (Mainland)",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 17,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 0.35
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": null,
+        "domain_status": "unknown",
+        "official_site_hint": null,
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 198,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-436",
+      "name": "Universitat Politecnica de Valencia",
+      "university_id": "bc4e9e4a8b342f3fb02550dc50a966a5",
+      "canonical_name": "Universitat Politecnica de Valencia",
+      "country": "Spain",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Universitat Politecnica de Valencia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Universitat Politecnica de Valencia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universitat politecnica de valencia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Valencia de Politecnica Universitat",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Universitat Politecnica de Valencia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Spain",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 11,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": null,
+        "domain_status": "unknown",
+        "official_site_hint": null,
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 339,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-446",
+      "name": "University of Science and Technology Beijing",
+      "university_id": "c3587869ad0ae55b4f8b1f62c3f3bae9",
+      "canonical_name": "University of Science and Technology Beijing",
+      "country": "China",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Science and Technology Beijing",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Science and Technology Beijing",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of science and technology beijing",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Beijing Technology and Science of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Science and Technology Beijing",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "China (Mainland)",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 33,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 0.35
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "ustb.edu.cn",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.ustb.edu.cn/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 451,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-456",
+      "name": "Masaryk University",
+      "university_id": "97c8608caf287b8b84b54db721e0c0b1",
+      "canonical_name": "Masaryk University",
+      "country": "Czechia",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Masaryk University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Masaryk University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "masaryk university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Masaryk",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Masaryk University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Czechia",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 2,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "curated",
+        "domain": "muni.cz",
+        "domain_status": "curated",
+        "official_site_hint": null,
+        "registry_entry": true,
+        "synthetic_identify_calls": 0,
+        "synthetic_discover_one_calls": 1,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 5,
+        "in_candidate_40": true,
+        "enrichment_20": true,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-466",
+      "name": "Chongqing University",
+      "university_id": "3411ae1e5b157806fbf4926ddf368d83",
+      "canonical_name": "Chongqing University",
+      "country": "China",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Chongqing University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Chongqing University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "chongqing university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "University Chongqing",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Chongqing University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "China (Mainland)",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 6,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 0.35
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "cqu.edu.cn",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.cqu.edu.cn/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 57,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-476",
+      "name": "Universidad Nacional de La Plata (UNLP)",
+      "university_id": "cbcf6986bea170e93ade3c131a5a2166",
+      "canonical_name": "Universidad Nacional de La Plata",
+      "country": "Argentina",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Universidad Nacional de La Plata (UNLP)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Universidad Nacional de La Plata",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universidad nacional de la plata",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Plata La de Nacional Universidad",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "UNLP",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "Universidad Nacional de La Plata",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "Universidad Nacional de La Plata (UNLP)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Argentina",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 2,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "south america",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "unlp.edu.ar",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.unlp.edu.ar/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 317,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-486",
+      "name": "Royal Holloway, University of London",
+      "university_id": "30bee051afe60806fa00787a688fa709",
+      "canonical_name": "Royal Holloway, University of London",
+      "country": "United Kingdom",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Royal Holloway, University of London",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Royal Holloway, University of London",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "royal holloway university of london",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "London of University Holloway, Royal",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Royal Holloway, University of London",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "United Kingdom",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 17,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "europe",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "rhul.ac.uk",
+        "domain_status": "seed",
+        "official_site_hint": "https://rhul.ac.uk/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 225,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    },
+    {
+      "seed_id": "qs2027-496",
+      "name": "Universitas Padjadjaran (UNPAD)",
+      "university_id": "1b91df6c6c1f9ba161943e4e4a761fe1",
+      "canonical_name": "Universitas Padjadjaran",
+      "country": "Indonesia",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Universitas Padjadjaran (UNPAD)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Universitas Padjadjaran",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universitas padjadjaran",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "word_reorder": {
+          "query": "Padjadjaran Universitas",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "UNPAD",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "Universitas Padjadjaran",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "Universitas Padjadjaran (UNPAD)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "country_filter": {
+        "seed_country": "Indonesia",
+        "raw_match": true,
+        "canonical_match": true,
+        "excluded_removes": true,
+        "preference_position": 7,
+        "literal_ranking_utility": 1.0,
+        "literal_ranking_knockout": true,
+        "raw_seed_ranking_utility": 1.0
+      },
+      "regions": [
+        {
+          "region": "asia",
+          "retrieved": true,
+          "excluded": true,
+          "ranking_preferred_utility": 0.35,
+          "ranking_excluded_knockout": false
+        }
+      ],
+      "discovery_route": {
+        "kind": "generic_identity",
+        "domain": "unpad.ac.id",
+        "domain_status": "seed",
+        "official_site_hint": "http://www.unpad.ac.id/",
+        "registry_entry": false,
+        "synthetic_identify_calls": 1,
+        "synthetic_discover_one_calls": 0,
+        "fallback_keeps_candidate": true
+      },
+      "allocation": {
+        "default_position": 329,
+        "in_candidate_40": false,
+        "enrichment_20": false,
+        "selected_returns_exact_id": true,
+        "empty_rankings_programs": true
+      },
+      "observations": [
+        "Region preference/exclusion semantics differ between retrieval and country ranking under synthetic region profile.",
+        "Not allocated enrichment in synthetic 40-candidate / 20-enrichment default run; deterministic repetition does not rotate exposure."
+      ],
+      "risk": "observed cross-stage semantic inconsistency; allocation limitation under bounded synthetic scenario; admissions facts unverified"
+    }
+  ]
+}

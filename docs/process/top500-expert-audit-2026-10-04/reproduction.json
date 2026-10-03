@@ -1,0 +1,56 @@
+{
+  "method": "Parent independently executed completed expert probe scripts against the unchanged baseline application source",
+  "source_sha": "144881b",
+  "groups": [
+    {
+      "group": 1,
+      "command": "backend/.venv/bin/python docs/process/top500-expert-audit-2026-10-04/group-01.probe.py",
+      "exit_code": 0
+    },
+    {
+      "group": 2,
+      "command": "backend/.venv/bin/python docs/process/top500-expert-audit-2026-10-04/group-02.probe.py",
+      "exit_code": 0
+    },
+    {
+      "group": 3,
+      "command": "backend/.venv/bin/python docs/process/top500-expert-audit-2026-10-04/group-03.probe.py",
+      "exit_code": 0
+    },
+    {
+      "group": 4,
+      "command": "backend/.venv/bin/python docs/process/top500-expert-audit-2026-10-04/group-04.probe.py",
+      "exit_code": 0
+    },
+    {
+      "group": 5,
+      "command": "backend/.venv/bin/python docs/process/top500-expert-audit-2026-10-04/group-05.probe.py",
+      "exit_code": 0
+    },
+    {
+      "group": 6,
+      "command": "backend/.venv/bin/python docs/process/top500-expert-audit-2026-10-04/group-06.probe.py",
+      "exit_code": 0
+    },
+    {
+      "group": 7,
+      "command": "backend/.venv/bin/python docs/process/top500-expert-audit-2026-10-04/group-07.probe.py",
+      "exit_code": 0
+    },
+    {
+      "group": 8,
+      "command": "backend/.venv/bin/python docs/process/top500-expert-audit-2026-10-04/group-08.probe.py",
+      "exit_code": 0
+    },
+    {
+      "group": 9,
+      "command": "backend/.venv/bin/python docs/process/top500-expert-audit-2026-10-04/group-09.probe.py",
+      "exit_code": 0
+    },
+    {
+      "group": 10,
+      "command": "backend/.venv/bin/python docs/process/top500-expert-audit-2026-10-04/group-10.probe.py",
+      "exit_code": 0
+    }
+  ]
+}

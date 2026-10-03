@@ -1,0 +1,128 @@
+{
+  "status": "candidate_registry_for_review",
+  "source_sha": "144881b",
+  "scope": "Non-blind engineering audit; no production promotion, signed gold change or live university fact certification",
+  "candidates": [
+    {
+      "id": "T500-01",
+      "title": "Require corroborated university site identity",
+      "priority": 1,
+      "expert_groups": [
+        2
+      ],
+      "status": "candidate",
+      "evidence_limit": "Synthetic unrelated-site titles are accepted; independently adjudicated real negative pages needed."
+    },
+    {
+      "id": "T500-02",
+      "title": "Carry explicit requested programme and degree into eligibility",
+      "priority": 1,
+      "expert_groups": [
+        4
+      ],
+      "status": "candidate",
+      "evidence_limit": "Synthetic wrong-programme claim hard-filters; upstream live reachability is unproven and existing adapter guards must remain."
+    },
+    {
+      "id": "T500-03",
+      "title": "Prefer exact institution names and aliases in explicit queries",
+      "priority": 1,
+      "expert_groups": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "status": "candidate",
+      "evidence_limit": "Full500 replay: current top-one471/500; development post-sort500/500; result sets unchanged. No production patch or held-out success."
+    },
+    {
+      "id": "T500-04",
+      "title": "Unify country and region meanings across retrieval and scoring",
+      "priority": 1,
+      "expert_groups": [
+        6
+      ],
+      "status": "candidate",
+      "evidence_limit": "Actual code disagree under synthetic region/alias profiles; keep approved scores and weights unchanged."
+    },
+    {
+      "id": "T500-05",
+      "title": "Reserve and measure budgets for identity programme discovery and verification",
+      "priority": 1,
+      "expert_groups": [
+        3,
+        4,
+        6,
+        7
+      ],
+      "status": "candidate",
+      "evidence_limit": "Serial ordering and late search can exhaust a case before useful work; frozen historical and synthetic evidence only."
+    },
+    {
+      "id": "T500-06",
+      "title": "Stop further provider queries after quota failures",
+      "priority": 1,
+      "expert_groups": [
+        7
+      ],
+      "status": "candidate",
+      "evidence_limit": "Synthetic429 currently consumes all six query attempts; no real exhausted-provider requests made in this audit."
+    },
+    {
+      "id": "T500-07",
+      "title": "Retain stage trace on interruption and mark research not attempted",
+      "priority": 1,
+      "expert_groups": [
+        6,
+        7,
+        8
+      ],
+      "status": "candidate",
+      "evidence_limit": "Synthetic timeout loses inner trace; outside-live-window candidates lack a not-attempted limitation."
+    },
+    {
+      "id": "T500-08",
+      "title": "Reuse verified discovery routes with complete cache provenance",
+      "priority": 2,
+      "expert_groups": [
+        9
+      ],
+      "status": "candidate",
+      "evidence_limit": "Successful identity persistence does not itself create a reusable programme route. Cache provenance needs targeted controls."
+    },
+    {
+      "id": "T500-09",
+      "title": "Normalize supported country aliases and orthographic forms in explicit queries",
+      "priority": 2,
+      "expert_groups": [
+        1,
+        5
+      ],
+      "status": "candidate",
+      "evidence_limit": "Country aliases work in filters but can fail in free text; mechanical query variants need independently collected user-query evaluation."
+    },
+    {
+      "id": "T500-10",
+      "title": "Expand explicit multilingual programme evidence with negative controls",
+      "priority": 2,
+      "expert_groups": [
+        5
+      ],
+      "status": "candidate",
+      "evidence_limit": "Synthetic translated degree and page-shape gaps are hypothesis evidence, not confirmed university-site failure rates."
+    },
+    {
+      "id": "T500-11",
+      "title": "Measure supported scoped current facts alongside existing reference metrics",
+      "priority": 1,
+      "expert_groups": [
+        10
+      ],
+      "status": "candidate",
+      "evidence_limit": "Synthetic scorer examples show reference recall does not imply joint support/currentness; acceptance gate explicitly documents its scope. Preserve old scores and signed corpus, add separate adjudicated metrics and attempted-case manifest."
+    }
+  ]
+}
