@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current holder: nobody; workflow checkpoint2026-10-03, task/reference-fact-recovery.** PR42 workflow sourcee40183e pushed; exact-head CI8/8 passed (37107912115 and37107916481), merge state CLEAN. Owner handoff explicitly reserves merge to owner; ready for owner squash merge. Exa secret NAME confirmed, value not read. User supplied permitted test email privately; do not put it in Git or delete an existing account. Next task2: after main merge, dispatch explicit exa120s/60reads benchmark and collect metrics/oracle; provider health not yet measured. Draft PR41 remains undeployed with full reviewed acceptance FAIL.
+**Current holder: gpt-6-astra; resumed2026-10-03 after owner merged PR42.** Source main b672349e5bba2bd3cbfe8d8f155db74da11a492c is tree-identical to selected e40183e. Task2 benchmark37110018701 dispatched on main with explicit exa,120s/60reads, all ten cases. Do not duplicate this run. Collect exact provider decision, query counts, strict metrics and oracle verdicts; stop on observed quota failure. PR41 remains separate draft; no runtime deployment authorized by this workflow change.
 
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
 
@@ -1754,6 +1754,9 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Task2 running write-ahead:** inspect Actions run37110018701 (main b672349) until completion/failure, download its own artifacts, keep captures separate from old300s diagnostics, and record six metrics plus all four oracle verdict counts. No re-scoring old captures. On actual provider402/429/quota failure, stop/cancel rather than loop or change identities. After measurement, perform brief-profile live check with user-provided email through normal auth; do not erase an existing account.
+
 
 **Latest next step:** owner squash-merges PR42 (explicit handoff requirement), then verify main workflow input and run gh workflow run benchmark-capture --ref main -f mode=benchmark -f case= -f seconds_per_case=120 -f max_pages=60 -f search_provider=exa. Record source/run/provider/query counts, six metric rows and oracle verdicts without mixing old captures. Stop on provider quota failure. No self-hosted runners registered as of this checkpoint; cloud site-access failures stay visible. Permitted test email has been supplied in chat, keep private and use normal auth; never delete an existing user account as synthetic cleanup.
 
@@ -4978,3 +4981,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 2026-10-03 gpt-6-astra resumes at34f716d: owner refreshed workflow scope; e40183e push succeeds; PR42 created, CI37107912115/37107916481 pending.
 
 2026-10-03 gpt-6-astra:34f716d→17ee5e2→PR42 readiness; workflowe40183e8/8CI; owner merge pending, baton released with executable120s/60reads command.
+
+2026-10-03 gpt-6-astra resumes fromec7436a: PR42 merged by owner at08:31:09UTC asb672349; tree equals e40183e; new120s/60reads exa run37110018701 dispatched.
