@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current holder: gpt-6-astra; resumed2026-10-03 UTC at f2c4cfe, task/reference-fact-recovery, draft PR #41.** Owner asks to configure search against certified reference facts; the earlier public-flow acceptance is insufficient for fact completeness.
+**Current holder: nobody; released2026-10-03 UTC after a139995, task/reference-fact-recovery, draft PR #41.** Source1c3db3e repairs NTU document scope/referee evidence; a139995 preserves conditional translation. Full gates2942/94.95%, frontend232, migrated approved demo green. Latest live13/62 remains FAIL; offline matched facts and mapping ceiling57/62 do not establish release readiness. No merge/deployment. Exact next work in §5.
 
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
 
@@ -4940,3 +4940,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 **ER-12 contract write-ahead:** REQUIRED_DOCUMENT may carry {document, required_unless_language_in:[language names]} for an explicit translation exception. Legacy strings stay supported; evaluator maps only the exception field behind exact identity. Checklist keeps condition in its visible name and source clause in format_notes; no unconditional required=true prediction.
 
 - 2026-10-03 ER12 complete local gates:2942passed/94.95%, focused113, registry5, Ruff/format/mypy328, frontend232/type/lint/build, isolated migrated demo/checklists3 and single Alembic head d8e412c6a901. Frozen official Groningen replay2/11→3/11 with25 raw claims each. Exact conditional translation replaces unsupported unconditional certified English requirement; mapping ceiling57/62 is not live recall. No production release; next structural table context and provider access.
+
+- 2026-10-03 gpt-6-astra:bcacf39→1c3db3e→a139995 pushed in draft PR41; ER11 and ER12 source repairs independently replayed. Full2942/94.95%, no gold changes, no release. Baton released; next qualified Toronto table/source gaps and provider-backed full verification.
