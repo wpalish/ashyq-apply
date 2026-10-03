@@ -51,6 +51,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**Top500 audit review artifact:** draft PR44 https://github.com/wpalish/ashyq-apply/pull/44 targets task/reference-fact-recovery. All10 tasks/500 rows completed and pushed at df66ad9; no production patch or live500 fact verification.
+
 **Top500 expert algorithm audit complete; improvements remain candidates.** Ten reports,500 per-institution audit rows, reproducing scripts and manifest are in docs/process/top500-expert-audit-2026-10-04/. Local retrieval exact-name top-one471/500; proposed post-sort500/500 in same-input development experiment, preserving result sets. This is not a live500-university official-fact check, blind expert trace or production patch.
 
 **Top500 expert algorithm audit, in progress.** Ten disjoint50-university packets, rank-stratified by list position modulo10. Audit actual local retrieval and discovery/identity logic. Findings must include reproducible evidence, limitations and falsifiable equal-budget experiment proposals. This is a non-blind engineering audit, not a certified500-university fact corpus or live end-to-end acceptance.
@@ -133,6 +135,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**Top500 completed and pushed df66ad9, PR44:** ten expert reports and500 individual rows,11 consolidated candidates, parent10/10 script reproductions and500-unique coverage validator passed. Exact-name experiment471->500/500 top-one preserves all result sets. Catalogue25 tests passed; backend/frontend source unchanged144881b. Fresh official fact verification remains0/500 for this audit.
 
 **Top500 checkpoints e8b7070/3864b6a/92918af:** ten packets and first300 individual audit rows pushed; final remaining200 rows,11 candidate hypotheses,500-coverage validator and all10 parent reproductions complete locally. See campaign README and validation.json for exact limits.
 
