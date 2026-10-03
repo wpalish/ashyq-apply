@@ -15,6 +15,7 @@ from datetime import UTC, datetime
 
 from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
 from app.adapters.document_ir import DocumentIR, build_document_ir
+from app.adapters.documents.structured_documents import read_supplemental_tables
 from app.adapters.extraction import (
     ClaimBuilder,
     html_title,
@@ -608,6 +609,8 @@ def read_documents(
                 break
     finally:
         builder.meta["scope"] = original_scope
+    if document is not None:
+        items.extend(read_supplemental_tables(document, builder, purpose))
     before_forms = len(builder.claims)
     if document is None or not document.blocks:
         # Fetcher also accepts plain text. With no structural blocks, preserve

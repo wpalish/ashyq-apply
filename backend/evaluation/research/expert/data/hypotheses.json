@@ -225,6 +225,23 @@
       ],
       "policy_guard": "Signed gold, prior identity versions and Fetcher unchanged. No new human evidence/currentness adjudication, no forced expected values, no live capture upgrade.",
       "validation_artifact": "docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md"
+    },
+    {
+      "id": "ER-13",
+      "status": "tested",
+      "case_ids": [
+        "toronto"
+      ],
+      "observation": "School-system picker hidden h2/control headings erase published St.George/Ontario context. Exact saved-page replay produces0 to1 scoped supplemental document, but reviewed recall remains0/4 because degree is unstated. Mapping previously omitted the recorded qualification.",
+      "proposed_rule": "Ignore only form-only helper headings, retain normal accessible headings; read explicit required supplemental table row only under matching programme/campus; preserve qualification and missing degree.",
+      "integration_seam": "document_ir form heading handling; documents.structured_documents; evaluation.mapping.evidence_scope; exact observed-supplemental bindings.",
+      "counterexample": "A real accessible heading, another campus, an optional/conditional row or another qualification must not be silently replaced by request context.",
+      "falsification": "Same-source old/new reader and adversarial shape tests; reject if it invents degree or loses qualification. Full regression and catalogue-only live diagnostics reported separately.",
+      "evidence_artifacts": [
+        "backend/evaluation/research/expert/data/runs.2026-10-02/er13.frozen-supplemental.json"
+      ],
+      "policy_guard": "Original gold and prior bindings untouched; no CAPTCHA/robots bypass, no requested degree as published evidence.",
+      "validation_artifact": "docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md"
     }
   ]
 }

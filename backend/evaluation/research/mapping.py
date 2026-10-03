@@ -81,6 +81,7 @@ def evidence_scope(
         intake=recorded.get("intake"),
         academic_year=recorded.get("academic_year"),
         population=recorded.get("population"),
+        qualification=recorded.get("qualification"),
     )
 
 

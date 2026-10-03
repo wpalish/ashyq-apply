@@ -58,7 +58,7 @@ HELDOUT = {
 #: live with them is what lets a scholarship or document claim land on its
 #: certified key; without them every such claim stays ``unmapped.*``.
 REVIEWED_BINDINGS = Path(__file__).parent / "data" / "identity_bindings.reviewed.json"
-CURRENT_BINDINGS = Path(__file__).parent / "data" / "identity_bindings.2026-10-03.conditions.json"
+CURRENT_BINDINGS = Path(__file__).parent / "data" / "identity_bindings.2026-10-03.supplemental.json"
 
 
 async def _jev_shadow(case_id: str, queued: list[str], profile: Any) -> None:

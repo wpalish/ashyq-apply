@@ -291,3 +291,36 @@ OUT_OF_BUDGET in the isolated migrated demo. Logs: /tmp/unimatch-er12-*.log.
 The three diagnostic provenance records are retained in
 `remaining-documents.sources.json`; raw caches are under ignored
 `artifacts/reference-facts-2026-10-03/remaining-documents/`.
+
+
+## ER-13 source-qualified supplemental documents — 2026-10-03
+
+Toronto's programme HTML has St.George/Ontario headings, followed by a school
+system form whose hidden h2 labels replaced that context in the flattened outline.
+Form-only hidden/control headings now leave the evidence context intact; genuine
+accessible headings and working accordion headings remain. The table reader accepts
+only an explicit supplemental-application / Required row under a matching programme
+heading. Multiple campuses require an explicit choice; optional/conditional values,
+foreign programmes and disconnected rows produce no obligation.
+
+Qualification is preserved in the claim, visible checklist and evaluator; the
+mapper previously silently discarded this existing scope field. Exact row/source
+identity is versioned separately. Normal Fetcher replay of the saved page goes
+from0 documents/claims to1 scoped document/claim, but **Toronto recall stays0/4**:
+the section has no explicit degree level. The claim is marked for clarification;
+requested bachelor degree is not substituted. Ontario Secondary School Diploma
+(OSSD) scope must not be applied to every applicant.
+
+The linked generic supplemental page confirms the programme/campus association.
+The linked Arts&Science programme page returns a human-verification challenge with
+HTTP200; its title and226-character response are recorded, with no extracted claim
+or challenge bypass. `er13.frozen-supplemental.json` retains both linked-source
+records, original page provenance and before/after output. Signed gold unchanged.
+
+Focused77/Ruff/format/mypy330/frontend232/type/lint/build/demo pass; full backend
+is running. First full attempt was interrupted to add the negative case for an
+accessible heading beside unrelated evidence/form. It is not a completed gate.
+
+Next bounded live diagnosis explicitly selects provider=none (catalogue/sitemap
+walk only),300seconds/60reads per case for Groningen/Toronto/NTU. It does not retry
+Exa429 and will not be mixed with the former provider-backed13/62 score.
