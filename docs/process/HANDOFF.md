@@ -1788,6 +1788,10 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**CURRENT EXECUTION NEXT — 2026-10-04 13:10UTC [expert-500] frozen V6 source publication and fresh paired launch.** V6 actual parent/replay342, full3884/94.89% source, frontend232 and real once-only tool-free canonical neutral9783/20038/6713ms all passed. Both original mapping hashes, launcher itself, strict raw identity/provider/effective49k deadline, postcharged source start and commit/proposal/receipt chronology are bound. Nine helpers/19modules snapshotted before live calls; preserve these bytes. Publish this source/tag, verify its exact-head cloud gates, create a new original10-case assignment/receipt mapping before any baseline, then run fresh10baselines+10blindexperts on that same source. Complete all-ten raw replay/seal before unchanged62labels. No model/source retry, posthoc V5 score, allowance increase or50-case/HELDOUT expansion. See EXPERT500_PHASE1_V6_2026-10-04.md.
+
+**Historical draft-preflight plan, completed by the entry above:**
+
 **CURRENT EXECUTION NEXT — 2026-10-04 12:38UTC [expert-500] V6 draft preflight before source freeze.** Main1f64a3a import plus the three new pure helpers is locally green: backend3884/94.89%, frontend232 and all static/build gates. Finish actual V6 parent/report strict navigation outcome types, charged-clock boundary and raw-controller stop-reason replay; complete canonical macOS allocation/Seatbelt/argv no-source preflight and fresh three-phase real tool-free neutral. The tighter effective source action deadline49,000ms intentionally cancels source work at49,000 inside the unchanged95,000 outer ceiling, reserving full final data start by52,000. Record this cancellation semantics and both original assignment/receipt file hashes in the manifest, freeze the launcher itself and all actual helpers. Then new exact-source CI/tag/fingerprints and fresh10+10, raw replay/seal before unchanged62 labels. Do not repair/rescore V5, waive rejection/timeouts, reset active clocks, expand50 cases or read HELDOUT.
 
 **Historical prospective plan, superseded by the entry above:**
@@ -3733,6 +3737,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+- 2026-10-04 13:10UTC [expert-500] actual V6 freeze preflight complete: full3884/94.89%, Ruff/format/mypy356 and frontend232/type/lint/build; actual parent/reporter342 (74/268), isolated parent mypy5 and B023-only synchronous-callback Ruff exception. Three once-only real neutral phases9783/20038/6713ms, cumulative36842, zero source requests, actual canonical/device/inode/Seatbelt/argv/completed-stream proofs passed. Prior four draft boolean failures and all independent review clock/chronology/raw-stop/deadline findings resolved by explicit strict tests. Nine helpers/19modules prospective frozen snapshots, no university V6 measurement yet.
+
 - 2026-10-04 12:30UTC [expert-500] prospective V6 pure source plus approved main1f64a3a: full backend3884 passed/94.89% coverage, Ruff/format/mypy356 source files, frontend232/typecheck/lint/build all passed. Source app tree49100542fa1ddd00ca3deff615422114ab54a27e; one migration headd8e412c6a901. Actual V6 pilot draft71 cases passed; report draft235 passed/4 boolean navigation receipt cases red and independent reviewer found charged-clock boundary/summary stop reason binding risks. These parent scripts are not frozen or live; no V6 result exists. Next gate must resolve all draft checks before source freeze.
 
 **[expert-500] V5 source/actual trial boundary (2026-10-04):** local3638passed/94.89%,Ruff/format/mypy349,frontend232/build,parent206,neutral8419/20372/7224ms; exact-source release-gates37198505019/37198507725/37198575035 total12/12success. Actual frozen report failed pre-seal on /var versus /private/var workspace spelling; no score was produced. Passing source gates did not cover real allocator canonicalization.
@@ -5043,3 +5049,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-04 11:56UTC — gpt-6-astra [expert-500]: cf1a38e → V5 unscored quarantine checkpoint; frozen report rejected macOS workspace binding before seal/labels. Exactsource12/12green; mainPR43/47 noted. Next prospective integration and canonical/public-contract preflight, no50-case admission.
 
 - 2026-10-04 12:38UTC gpt-6-astra [expert-500]: 3eb2e8b → approved-main integration checkpoint; pure V6 source green, actual parent/reporter still draft and deeper replay checks pending; zero new university calls.
+
+- 2026-10-04 13:10UTC gpt-6-astra [expert-500]: 28d18e7 → V6 source freeze publication;342 actual-parent tests and canonical real neutral passed, new fresh paired source/tag/CI launch next; V5 remains unscored.

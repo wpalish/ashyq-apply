@@ -1,0 +1,1469 @@
+"""Independent offline tests of the actual V6 parent; all sources are synthetic."""
+
+import asyncio
+import copy
+import json
+import runpy
+import shutil
+from dataclasses import dataclass, field
+from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+
+from app.adapters.fetching import FetchResult
+from app.domain.enums import FetchOutcome
+from evaluation.research.expert.blind_cli import Isolation
+from evaluation.research.expert.controller import execute
+from evaluation.research.expert.packet import digest
+from evaluation.research.expert.selector import SelectorTurn
+from evaluation.research.expert.workspace_policy import allocate_workspaces
+
+PILOT = Path("/tmp/unimatch-expert500-journal-pilot-v6.py")
+REPORT = Path("/tmp/unimatch-expert500-journal-report-v6.py")
+HEAD = "a" * 40
+URL = "https://u.edu/admissions"
+QUOTE = "International bachelor applicants need IELTS Academic overall 6.5."
+SCOPE = {
+    "university": "U",
+    "programme": None,
+    "degree": "bachelor",
+    "field": None,
+    "intake": None,
+    "population": "international",
+    "qualification": None,
+    "academic_year": None,
+}
+
+
+def source_action(tool="fetcher", **changes):
+    value = {
+        "tool": tool,
+        "url": URL if tool == "fetcher" else None,
+        "query": "site:u.edu official admissions" if tool == "search_provider" else None,
+        "domains": ["u.edu"] if tool == "search_provider" else [],
+        "max_results": 4 if tool == "search_provider" else None,
+        "source_step": 1 if tool == "view" else None,
+        "page": None,
+        "offset": None,
+        "section_offset": None,
+        "link_offset": None,
+    }
+    return {**value, **changes}
+
+
+def fact(**changes):
+    value = {
+        "id": "english",
+        "question": "Q1",
+        "claim_key": "ielts.overall",
+        "value_json": "6.5",
+        "source_step": 1,
+        "quotation": QUOTE,
+        "location": {"kind": "text", "block_id": None, "section_path": [], "page": None},
+        "scope": dict(SCOPE),
+    }
+    return {**value, **changes}
+
+
+def finding(**changes):
+    value = {
+        "question": "Q1",
+        "status": "found",
+        "fact_ids": ["english"],
+        "scope": dict(SCOPE),
+        "observation": "The recorded synthetic page states this minimum.",
+        "supporting_steps": [],
+    }
+    return {**value, **changes}
+
+
+def decision(prompt, kind="action", facts=None, findings=None, action=None, **changes):
+    if "accepted_journal" not in prompt:
+        assert kind == "submit" and action is None and not facts and not findings
+        return minimal_commit(prompt, **changes)
+    value = {
+        "kind": kind,
+        "observation": "Inspect the current recorded official source.",
+        "journal_sha256": prompt["accepted_journal"]["sha256"],
+        "action": source_action() if kind == "action" and action is None else action,
+        "facts": facts or [],
+        "question_findings": findings or [],
+    }
+    return {**value, **changes}
+
+
+def minimal_commit(prompt, **changes):
+    from evaluation.research.expert.representation import CLOSING_OBSERVATION
+
+    current_hash = (
+        prompt["accepted_journal"]["sha256"]
+        if "accepted_journal" in prompt
+        else prompt["journal_sha256"]
+    )
+    return {
+        "kind": "submit",
+        "observation": CLOSING_OBSERVATION,
+        "journal_sha256": current_hash,
+        "action": None,
+        "facts": [],
+        "question_findings": [],
+        **changes,
+    }
+
+
+def completed_events(answer):
+    return (
+        "\n".join(
+            json.dumps(item)
+            for item in [
+                {"type": "thread.started", "thread_id": "synthetic"},
+                {"type": "turn.started"},
+                {
+                    "type": "item.completed",
+                    "item": {"id": "answer", "type": "agent_message", "text": answer},
+                },
+                {"type": "turn.completed", "usage": {"input_tokens": 1, "output_tokens": 1}},
+            ]
+        )
+        + "\n"
+    )
+
+
+@dataclass
+class Harness:
+    runtime: dict
+    repo: Path
+    root: Path
+    workspace: Path
+    packet: dict
+    pending: list = field(default_factory=list)
+    calls: list = field(default_factory=list)
+    queries: list = field(default_factory=list)
+    prompts: list = field(default_factory=list)
+    commands: list = field(default_factory=list)
+    plans: list = field(default_factory=list)
+    controller_dirs: list = field(default_factory=list)
+    summary_hook: object = None
+    workflow_error: Exception | None = None
+    source_body: bytes | None = None
+    source_content_type: str = "text/html"
+    plan_hook: object = None
+
+    @property
+    def folder(self):
+        return self.root / "experts/u"
+
+    def queue(self, callback=None, *, elapsed=12000, error=None, raw=None):
+        self.pending.append({"callback": callback, "elapsed": elapsed, "error": error, "raw": raw})
+
+    def read(self, name):
+        return json.loads((self.folder / name).read_text())
+
+    def run(self):
+        return self.runtime["expert"](
+            self.repo, "synthetic-frozen", self.root, "u", {"u": self.workspace}
+        )
+
+
+@pytest.fixture
+def pilot(tmp_path, monkeypatch):
+    module = runpy.run_path(str(PILOT))
+    runtime = module["expert"].__globals__
+    runtime["STOP"].clear()
+    # Allocation alone may canonicalize the trusted temporary root; persisted
+    # assignments and real filesystem receipts must already agree before expert.
+    tmp_path = tmp_path.resolve(strict=True)
+    repo, root = tmp_path / "repo", tmp_path / "results"
+    assignments, receipts = allocate_workspaces(("u",), temp_root=tmp_path)
+    workspace = Path(assignments["u"])
+    context = repo / "backend/evaluation/research/expert/ALGORITHM_CONTEXT.md"
+    context.parent.mkdir(parents=True)
+    context.write_text("Public generic algorithm instructions; no previous case outcomes.")
+    (root / "baseline/u").mkdir(parents=True)
+    (root / "workspace-locations.json").write_text(json.dumps(assignments))
+    (root / "workspace-receipts.json").write_text(json.dumps(receipts))
+    packet = {
+        "schema_version": "1",
+        "baseline_pipeline_sha": HEAD,
+        "baseline_budget": {
+            "max_fetcher_calls": 60,
+            "max_elapsed_ms": 120000,
+            "max_search_queries": 6,
+            "browser_enabled": False,
+        },
+        "comparison_mode": "independent_full_budget",
+        "public_profile": {"education_system": "KZ national secondary"},
+        "cases": [
+            {
+                "case_id": "u",
+                "university": "U",
+                "domain": "u.edu",
+                "request": {
+                    **{key: None for key in SCOPE},
+                    "university": "U",
+                    "degree": "bachelor",
+                    "field": "computer science",
+                    "intake": "fall 2027",
+                },
+                "baseline": {
+                    "ranked_urls": ["BASELINE_OUTPUT_MUST_NOT_ENTER_SELECTOR"],
+                    "prediction_count": 99,
+                    "error": "PRIVATE_BASELINE_SENTINEL",
+                },
+            }
+        ],
+    }
+    packet_path = root / "baseline/u/public-packet.json"
+    packet_path.write_text(json.dumps(packet))
+    (root / "baseline/u/result.json").write_text(
+        json.dumps({"case_id": "u", "packet": str(packet_path), "head_sha": HEAD})
+    )
+    monkeypatch.setattr(
+        Isolation,
+        "local",
+        classmethod(
+            lambda cls, path, roots: cls(
+                path.resolve(), tuple(p.resolve() for p in roots), "/mock/sandbox", "/mock/codex"
+            )
+        ),
+    )
+    monkeypatch.setattr(
+        Isolation,
+        "prove_access",
+        lambda self, *args: {
+            "allowed_read": True,
+            "sealed_read_denied": True,
+            "sealed_stdout_empty": True,
+            "sealed_roots": [str(path) for path in self.sealed_roots],
+            "mock_only": True,
+        },
+    )
+    harness = Harness(runtime, repo, root, workspace, packet)
+
+    async def get(url):
+        harness.calls.append(url)
+        return FetchResult(
+            url=url,
+            final_url=url,
+            outcome=FetchOutcome.OK,
+            status_code=200,
+            content_type=harness.source_content_type,
+            content=harness.source_body
+            or f"<main><h1>Admissions</h1><p>{QUOTE}</p></main>".encode(),
+        )
+
+    class ProviderLimit(RuntimeError):
+        http_status = 429
+
+    async def search(**kwargs):
+        harness.queries.append(kwargs)
+        raise ProviderLimit("Synthetic provider limit")
+
+    def workflow(repo, ref, case_id, inputs, destination):
+        if harness.workflow_error:
+            raise harness.workflow_error
+        plan = json.loads(inputs["plan"])
+        if harness.plan_hook:
+            harness.plan_hook(plan)
+            inputs = {**inputs, "plan": json.dumps(plan)}
+        harness.plans.append(plan)
+        artifact = destination / "artifact"
+        logs = artifact / "logs"
+        logs.mkdir(parents=True)
+        (destination / "dispatch.json").write_text(json.dumps({"inputs": inputs}))
+        if harness.controller_dirs:
+            for old in (harness.controller_dirs[-1] / "artifact/logs").glob("*.json"):
+                shutil.copy2(old, logs / old.name)
+        summary = asyncio.run(execute(plan, logs, get=get, search=search, provider_name="exa_mcp"))
+        if harness.summary_hook:
+            harness.summary_hook(summary, plan)
+        (artifact / "summary.json").write_text(json.dumps(summary))
+        run_id = len(harness.plans)
+        (destination / "run.json").write_text(
+            json.dumps({"run_id": run_id, "headSha": HEAD, "conclusion": "success"})
+        )
+        harness.controller_dirs.append(destination)
+        return run_id, HEAD
+
+    def select(isolation, schema, output, prompt, **kwargs):
+        harness.prompts.append((copy.deepcopy(prompt), dict(kwargs)))
+        harness.commands.append(isolation.command(schema, output=output, model=kwargs.get("model")))
+        assert harness.pending, "Unexpected selector call after closure"
+        item = harness.pending.pop(0)
+        if item["error"]:
+            return SelectorTurn(
+                None, item["elapsed"], "unfinished partial output", "", None, item["error"]
+            )
+        answer = item["callback"](prompt) if item["callback"] else decision(prompt)
+        raw = item["raw"] if item["raw"] is not None else json.dumps(answer)
+        output.write_text(raw)
+        return SelectorTurn(answer, item["elapsed"], completed_events(raw), "", 0, None)
+
+    runtime.update(workflow=workflow, select=select, emit=lambda **kwargs: None)
+    return harness
+
+
+def bootstrap(pilot):
+    pilot.queue()
+
+
+def checkpoint(pilot, *, kind="record", elapsed=12000, **changes):
+    pilot.queue(
+        lambda prompt: decision(prompt, kind, facts=[fact()], findings=[finding()], **changes),
+        elapsed=elapsed,
+    )
+
+
+def commit(pilot, *, elapsed=500, acknowledge_source=None):
+    pilot.queue(
+        lambda prompt: decision(
+            prompt,
+            "submit",
+            facts=[
+                fact(id="english_second_source", question="OTHER", source_step=acknowledge_source)
+            ]
+            if acknowledge_source is not None
+            else [],
+        ),
+        elapsed=elapsed,
+    )
+
+
+def assert_exact_clock(result):
+    cumulative = 0
+    for entry in result["meter"]:
+        assert type(entry["elapsed_ms"]) is int and entry["elapsed_ms"] >= 0
+        cumulative += entry["elapsed_ms"]
+        assert entry["active_ms"] == cumulative
+    assert result["active_ms"] == cumulative
+
+
+def test_checkpoint_then_short_commit_retains_the_exact_source_fact(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot)
+    commit(pilot)
+    result = pilot.run()
+    assert result["status"] == "submitted" and result["validated"]
+    assert result["completion_kind"] == "explicit_commit" and result["explicit_commit"] is True
+    assert result["found"] == ["Q1"] and result["accepted_turns"] == 3
+    assert pilot.calls == [URL]
+    trace = pilot.read("trace.json")
+    assert trace["proposals"][0]["value"] == 6.5
+    assert trace["packet_sha256"] == digest(pilot.packet)
+    assert pilot.read("compact-citation-proof.json")[0]["source_step"] == 1
+    assert_exact_clock(result)
+
+
+def test_checkpoint_then_timeout_keeps_verified_facts_but_run_is_incomplete(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot)
+    pilot.queue(elapsed=22017, error="selector_timeout")
+    result = pilot.run()
+    assert result["status"] == "incomplete" and result["error"] == "selector_timeout"
+    assert result["validated"] and result["found"] == ["Q1"]
+    assert result["accepted_turns"] == 2 and result["explicit_commit"] is False
+    assert len(pilot.read("accepted-journal.json")["facts"]) == 1
+    assert len(pilot.read("journal-events.json")) == 2
+    assert any(e["kind"] == "selector_timeout" for e in result["turn_errors"])
+    assert_exact_clock(result)
+
+
+@pytest.mark.parametrize("bad", ["quote", "location", "stale_hash", "duplicate_fact"])
+def test_bad_atomic_delta_preserves_prior_checkpoint_and_is_sticky(pilot, bad):
+    bootstrap(pilot)
+    checkpoint(pilot)
+
+    def malformed(prompt):
+        new = fact(id="extra", question="OTHER", claim_key="unmapped.source_note")
+        if bad == "quote":
+            new["quotation"] = "This sentence never appeared in the source."
+        if bad == "location":
+            new["location"] = {
+                "kind": "document_ir",
+                "block_id": "b999",
+                "section_path": [],
+                "page": None,
+            }
+        if bad == "duplicate_fact":
+            new = fact()
+        value = decision(prompt, "record", facts=[new])
+        if bad == "stale_hash":
+            value["journal_sha256"] = "f" * 64
+        return value
+
+    pilot.queue(malformed)
+    commit(pilot)
+    result = pilot.run()
+    accepted = pilot.read("accepted-journal.json")
+    assert [f["id"] for f in accepted["facts"]] == ["english"]
+    assert [e["turn"] for e in pilot.read("journal-events.json")] == [1, 2, 4]
+    assert result["turn_errors"][0]["kind"] == "rejected_checkpoint"
+    assert not (pilot.folder / "checkpoint-03.json").exists()
+    assert result["journal_sha256"] == pilot.read("checkpoint-02.json")["journal_sha256"]
+    assert_exact_clock(result)
+
+
+def test_second_source_read_carries_full_resume_policy_hashes_and_clock(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot, kind="action")
+    commit(pilot, acknowledge_source=2)
+    result = pilot.run()
+    assert result["validated"] and result["status"] == "submitted"
+    assert pilot.calls == [URL, URL]
+    first, second = pilot.plans
+    assert second["start_calls"] == 1 and second["start_search_queries"] == 0
+    assert second["start_ms"] >= first["start_ms"] + 12000
+    assert second["resume_summary"]["tool_policy"]["action_deadline_ms"] == 49000
+    assert first["action_deadline_ms"] == second["action_deadline_ms"] == 49000
+    assert first["max_ms"] == second["max_ms"] == 120000
+    assert result["source_deadline_ms"] == 95000
+    assert second["resume_summary"]["raw_logs"]
+    trace = pilot.read("trace.json")
+    assert [a["fetcher_calls_cumulative"] for a in trace["actions"]] == [1, 2]
+    assert trace["actions"][0]["raw_log_sha256"] == next(
+        iter(second["resume_summary"]["raw_logs"].values())
+    )
+    assert_exact_clock(result)
+
+
+def test_completed_checkpoint_near_deadline_closes_without_another_selector(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot, elapsed=55000)
+    clock = SimpleNamespace(value=0.0)
+    pilot.runtime["time"] = SimpleNamespace(monotonic=lambda: clock.value)
+
+    def near_deadline(summary, plan):
+        summary["final"]["elapsed_ms"] = 52000
+        summary["final"]["stop_reason"] = "action_deadline_reached"
+
+    pilot.summary_hook = near_deadline
+    original = pilot.runtime["commit_events"]
+    once = False
+
+    def commit_events(path, value):
+        nonlocal once
+        original(path, value)
+        if path.name == "journal-events.json" and len(value) == 2 and not once:
+            once = True
+            clock.value += 10.0
+
+    pilot.runtime["commit_events"] = commit_events
+    result = pilot.run()
+    assert len(pilot.prompts) == 2 and result["found"] == ["Q1"]
+    assert result["status"] == "submitted" and result["completion_kind"] == "budget_checkpoint"
+    assert result["explicit_commit"] is False
+    assert 117000 <= result["active_ms"] <= 120000
+    assert result["source_deadline_ms"] == 95000 and result["closing_reserve_ms"] == 3000
+    findings = pilot.read("trace.json")["question_findings"]
+    assert len(findings) == 7
+    assert all(
+        row["status"] == ("found" if row["question"] == "Q1" else "unresolved") for row in findings
+    )
+    assert_exact_clock(result)
+
+
+def test_initial_nonempty_fact_cannot_enter_journal_before_any_source(pilot):
+    checkpoint(pilot)
+    pilot.queue(elapsed=22000, error="selector_timeout")
+    result = pilot.run()
+    assert not result["validated"] and result["status"] == "incomplete"
+    assert pilot.calls == [] and not (pilot.folder / "accepted-journal.json").exists()
+    assert result["turn_errors"][0]["kind"] == "rejected_checkpoint"
+
+
+def test_commit_marker_write_failure_does_not_accept_candidate(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot)
+    original = pilot.runtime["commit_events"]
+
+    def commit_events(path, value):
+        if path.name == "journal-events.json" and len(value) == 2:
+            raise OSError("Synthetic marker write failure")
+        original(path, value)
+
+    pilot.runtime["commit_events"] = commit_events
+    result = pilot.run()
+    assert result["status"] == "incomplete" and result["validated"]
+    assert pilot.read("accepted-journal.json")["facts"] == []
+    assert result["accepted_turns"] == 1 and len(pilot.read("journal-events.json")) == 1
+    assert (
+        pilot.folder / "checkpoint-02.json"
+    ).exists()  # Uncommitted orphan is not retained state.
+
+
+def test_sticky_provider429_stops_dispatch_and_never_promotes_partial_text(pilot):
+    pilot.queue(lambda prompt: decision(prompt, action=source_action("search_provider")))
+    result = pilot.run()
+    assert len(pilot.queries) == 1 and pilot.calls == [] and len(pilot.prompts) == 1
+    assert pilot.runtime["STOP"].is_set()
+    assert result["status"] == "incomplete" and result["error"] == "provider_http_429"
+    assert pilot.read("accepted-journal.json")["facts"] == []
+    assert_exact_clock(result)
+
+
+def test_unknown_dispatch_outcome_is_not_reissued(pilot):
+    bootstrap(pilot)
+    pilot.workflow_error = RuntimeError("Synthetic unknown dispatch outcome")
+    result = pilot.run()
+    assert pilot.runtime["STOP"].is_set() and len(pilot.prompts) == 1 and pilot.calls == []
+    assert result["status"] == "incomplete" and not result["validated"]
+
+
+def test_selector_prompt_contains_only_current_case_and_no_baseline_outputs(pilot):
+    from evaluation.research.expert.question_contract import EFFECTIVE_JOURNAL_INSTRUCTIONS
+
+    bootstrap(pilot)
+    checkpoint(pilot)
+    commit(pilot)
+    result = pilot.run()
+    assert result["validated"]
+    for prompt, kwargs in pilot.prompts:
+        encoded = json.dumps(prompt)
+        assert "BASELINE_OUTPUT_MUST_NOT_ENTER_SELECTOR" not in encoded
+        assert "PRIVATE_BASELINE_SENTINEL" not in encoded
+        assert str(pilot.repo) not in encoded and str(pilot.root) not in encoded
+        assert prompt["public_packet"]["cases"][0].get("baseline", {}) == {}
+        assert set(prompt["public_packet"]["cases"][0]) <= {
+            "case_id",
+            "university",
+            "domain",
+            "request",
+            "baseline",
+        }
+        assert kwargs["model"] == "gpt-6-astra" and kwargs["timeout_seconds"] <= 55
+        assert prompt["task"].count(EFFECTIVE_JOURNAL_INSTRUCTIONS) == 1
+        assert "16" not in prompt["task"] and "7 question findings" not in prompt["task"]
+        assert prompt["public_question_contract"]["questions"]["Q1"]["required_scope"] == [
+            "degree",
+            "population",
+        ]
+    assert pilot.prompts[0][0]["recorded_actions"] == []
+    assert len(pilot.prompts[1][0]["recorded_actions"]) == 1
+    assert len(pilot.prompts[2][0]["accepted_journal"]["facts"]) == 1
+
+
+def test_over_budget_completed_delta_is_not_retained(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot, elapsed=120000)
+    result = pilot.run()
+    assert result["status"] == "incomplete" and result["validated"]
+    assert result["active_ms"] > 120000 and result["found"] == []
+    assert pilot.read("accepted-journal.json")["facts"] == []
+    assert_exact_clock(result)
+
+
+def test_delta_with_saved_view_retains_facts_without_another_source_request(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot, kind="action", action=source_action("view"))
+    commit(pilot)
+    result = pilot.run()
+    assert result["status"] == "submitted" and result["found"] == ["Q1"]
+    assert pilot.calls == [URL] and len(pilot.plans) == 1
+    assert len(pilot.read("trace.json")["actions"]) == 1
+    assert any(entry["stage"] == "stored_source_view" for entry in result["meter"])
+    outcomes = pilot.read("navigation-outcomes.json")
+    assert outcomes == result["navigation_outcomes"] and len(outcomes) == 1
+    outcome = outcomes[0]
+    assert outcome["status"] == "stored_view" and outcome["turn"] == 2
+    assert outcome["source_action_count"] == outcome["processed_through_action_count"] == 1
+    assert outcome["decision_sha256"] == digest(pilot.read("selector-02.decision.json"))
+    assert outcome["accepted_journal_sha256"] == pilot.read("checkpoint-02.json")["journal_sha256"]
+    entry = result["meter"][outcome["view_meter_index"]]
+    assert entry["stage"] == "stored_source_view" and entry["turn"] == 2
+    assert outcome["active_ms"] == entry["active_ms"] - entry["elapsed_ms"]
+    assert outcome["view_sha256"] == digest(
+        pilot.read("selector-03.request.json")["prompt"]["current_source_views"][-1]["view"]
+    )
+    assert_exact_clock(result)
+
+
+def test_duplicate_raw_json_keys_are_rejected_before_dispatch(pilot):
+    raw = (
+        '{"kind":"action","kind":"submit","observation":"Synthetic",'
+        '"journal_sha256":"' + "a" * 64 + '","action":null,"facts":[],"question_findings":[]}'
+    )
+    pilot.queue(raw=raw)
+    pilot.queue(error="selector_timeout", elapsed=22000)
+    result = pilot.run()
+    assert pilot.calls == [] and pilot.queries == []
+    assert result["turn_errors"][0]["kind"] == "rejected_checkpoint"
+    assert result["status"] == "incomplete" and not result["validated"]
+
+
+def test_backward_controller_clock_stops_without_retry(pilot):
+    bootstrap(pilot)
+
+    def backwards(summary, plan):
+        summary["final"]["elapsed_ms"] = plan["start_ms"] - 1
+
+    pilot.summary_hook = backwards
+    result = pilot.run()
+    assert result["status"] == "incomplete" and not result["validated"]
+    assert "moved backwards" in result["error"] and pilot.runtime["STOP"].is_set()
+    assert len(pilot.calls) == 1 and len(pilot.prompts) == 1 and len(pilot.plans) == 1
+
+
+@pytest.mark.parametrize(
+    "slow_stage", ["controller_summary_parse", "checkpoint_hash", "final_proof_hash"]
+)
+def test_slow_source_processing_and_hashes_are_charged_before_completion(pilot, slow_stage):
+    bootstrap(pilot)
+    checkpoint(pilot)
+    commit(pilot)
+    clock = SimpleNamespace(value=0.0)
+    pilot.runtime["time"] = SimpleNamespace(monotonic=lambda: clock.value)
+    original_digest = pilot.runtime["digest"]
+    injected = False
+    proof_hashes = 0
+
+    def slow_digest(value):
+        nonlocal injected, proof_hashes
+        if (
+            isinstance(value, list)
+            and value
+            and isinstance(value[0], dict)
+            and "fact_id" in value[0]
+        ):
+            proof_hashes += 1
+        target = (
+            slow_stage == "checkpoint_hash"
+            and isinstance(value, dict)
+            and value.get("kind") == "record"
+        )
+        target = target or (
+            slow_stage == "final_proof_hash"
+            and proof_hashes == 3
+            and isinstance(value, list)
+            and value
+            and "fact_id" in value[0]
+        )
+        if target and not injected:
+            injected = True
+            clock.value += 110.0
+        return original_digest(value)
+
+    def slow_loads(value):
+        nonlocal injected
+        parsed = json.loads(value)
+        if (
+            slow_stage == "controller_summary_parse"
+            and not injected
+            and isinstance(parsed, dict)
+            and {"actions", "tool_policy", "final", "raw_logs"} <= set(parsed)
+        ):
+            injected = True
+            clock.value += 110.0
+        return parsed
+
+    pilot.runtime["digest"] = slow_digest
+    pilot.runtime["json"] = SimpleNamespace(loads=slow_loads, dumps=json.dumps)
+    result = pilot.run()
+    assert injected
+    assert result["active_ms"] >= 120000 and result["status"] == "incomplete"
+    assert pilot.calls == [URL]
+    if slow_stage == "checkpoint_hash":
+        assert pilot.read("accepted-journal.json")["facts"] == []
+    assert_exact_clock(result)
+
+
+def test_later_bad_fact_rejects_the_whole_new_delta_atomically(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot)
+    pilot.queue(
+        lambda prompt: decision(
+            prompt,
+            "record",
+            facts=[
+                fact(id="new_valid", question="OTHER", claim_key="unmapped.note"),
+                fact(
+                    id="new_invalid",
+                    question="OTHER",
+                    claim_key="unmapped.second_note",
+                    quotation="Never recorded synthetic text",
+                ),
+            ],
+        )
+    )
+    commit(pilot)
+    result = pilot.run()
+    assert result["validated"] and result["turn_errors"][0]["kind"] == "rejected_checkpoint"
+    assert [row["id"] for row in pilot.read("accepted-journal.json")["facts"]] == ["english"]
+    assert not (pilot.folder / "checkpoint-03.json").exists()
+    assert [event["turn"] for event in pilot.read("journal-events.json")] == [1, 2, 4]
+
+
+def test_crossing_budget_during_marker_write_restores_the_prior_committed_state(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot)
+    clock = SimpleNamespace(value=0.0)
+    pilot.runtime["time"] = SimpleNamespace(monotonic=lambda: clock.value)
+    original = pilot.runtime["commit_events"]
+
+    def delayed_commit(path, value):
+        original(path, value)
+        if len(value) == 2:
+            clock.value += 100.0
+
+    pilot.runtime["commit_events"] = delayed_commit
+    result = pilot.run()
+    assert result["status"] == "incomplete" and result["active_ms"] >= 120000
+    assert len(pilot.read("journal-events.json")) == 1
+    assert pilot.read("accepted-journal.json")["facts"] == []
+    assert result["accepted_turns"] == 1
+    assert_exact_clock(result)
+
+
+def close_after_source(pilot, source_count=1):
+    def exhausted(summary, plan):
+        if len(pilot.plans) == source_count:
+            summary["final"]["stop_reason"] = "action_deadline_exhausted"
+
+    pilot.summary_hook = exhausted
+
+
+def test_minimal_closure_retains_exact_journal_without_evidence_regeneration(pilot):
+    close_after_source(pilot)
+    bootstrap(pilot)
+    checkpoint(pilot)
+    commit(pilot)
+    result = pilot.run()
+    assert result["status"] == "submitted" and result["all_recorded_sources_processed"] is True
+    assert result["processed_through_action_count"] == 1
+    assert pilot.calls == [URL] and pilot.queries == []
+    requests = [pilot.read(f"selector-{turn:02d}.request.json") for turn in (1, 2, 3)]
+    assert [request["selector_mode"] for request in requests] == [
+        "research",
+        "data_closure",
+        "minimal_commit",
+    ]
+    closing = requests[-1]
+    assert set(closing["prompt"]) == {"task", "journal_sha256"}
+    assert "$defs" not in closing["schema"]
+    assert closing["schema"]["properties"]["action"] == {"type": "null"}
+    assert closing["schema"]["properties"]["facts"]["maxItems"] == 0
+    assert closing["schema"]["properties"]["question_findings"]["maxItems"] == 0
+    assert URL not in json.dumps(closing["prompt"]) and QUOTE not in json.dumps(closing["prompt"])
+    assert pilot.read("selector-03.decision.json")["facts"] == []
+    assert pilot.read("checkpoint-02.json") == pilot.read("checkpoint-03.json")
+    assert pilot.read("accepted-journal.json")["facts"] == [fact()]
+    events = pilot.read("journal-events.json")
+    assert events[-1]["selector_request_sha256"] == digest(closing)
+    assert events[-1]["processed_through_action_count"] == 1
+    assert_exact_clock(result)
+
+
+def test_pending_source_gets_data_closure_before_a_minimal_commit(pilot):
+    close_after_source(pilot, 2)
+    bootstrap(pilot)
+    checkpoint(pilot, kind="action")
+    pilot.queue(
+        lambda prompt: decision(
+            prompt, "record", facts=[fact(id="second_source", question="OTHER", source_step=2)]
+        )
+    )
+    commit(pilot)
+    result = pilot.run()
+    assert result["status"] == "submitted" and result["all_recorded_sources_processed"] is True
+    pending = pilot.read("selector-03.request.json")
+    assert pending["selector_mode"] == "data_closure"
+    assert pending["source_action_count"] == 2 and pending["processed_through_action_count"] == 1
+    assert pending["schema"]["properties"]["kind"]["enum"] == ["record", "submit"]
+    assert pending["prompt"]["current_source_views"][-1]["step"] == 2
+    assert pilot.read("selector-04.request.json")["selector_mode"] == "minimal_commit"
+    assert [row["source_step"] for row in pilot.read("accepted-journal.json")["facts"]] == [1, 2]
+    assert pilot.calls == [URL, URL] and len(pilot.plans) == 2
+    assert_exact_clock(result)
+
+
+def test_hash_only_decision_cannot_acknowledge_a_pending_unprocessed_source(pilot):
+    close_after_source(pilot)
+    bootstrap(pilot)
+    pilot.queue(lambda prompt: minimal_commit(prompt), elapsed=500)
+    pilot.queue(error="selector_timeout", elapsed=500)
+    result = pilot.run()
+    assert result["status"] == "incomplete"
+    assert result["all_recorded_sources_processed"] is False
+    assert result["processed_through_action_count"] == 0
+    assert [event["turn"] for event in pilot.read("journal-events.json")] == [1]
+    assert pilot.read("accepted-journal.json")["facts"] == []
+    assert pilot.read("selector-02.request.json")["selector_mode"] == "data_closure"
+    assert_exact_clock(result)
+
+
+def test_pending_source_can_be_explicitly_acknowledged_as_unresolved_without_new_facts(pilot):
+    close_after_source(pilot)
+    bootstrap(pilot)
+    unresolved = finding(
+        question="Q0",
+        status="unresolved",
+        fact_ids=[],
+        scope={key: None for key in SCOPE},
+        supporting_steps=[1],
+        observation="This source states an English minimum; exact programme identity remains unresolved.",
+    )
+    pilot.queue(lambda prompt: decision(prompt, "record", findings=[unresolved]))
+    commit(pilot)
+    result = pilot.run()
+    assert result["status"] == "submitted" and result["all_recorded_sources_processed"] is True
+    assert pilot.read("accepted-journal.json")["facts"] == []
+    assert pilot.read("accepted-journal.json")["question_findings"] == [unresolved]
+    assert pilot.read("selector-03.request.json")["selector_mode"] == "minimal_commit"
+    assert result["found"] == []
+
+
+@pytest.mark.parametrize("bad", ["fact", "finding", "action", "stale_hash"])
+def test_minimal_closure_rejects_deltas_actions_and_stale_hash_atomically(pilot, bad):
+    close_after_source(pilot)
+    bootstrap(pilot)
+    checkpoint(pilot)
+
+    def invalid(prompt):
+        changes = {
+            "fact": {"facts": [fact(id="new_fact", question="OTHER")]},
+            "finding": {"question_findings": [finding()]},
+            "action": {"action": source_action()},
+            "stale_hash": {"journal_sha256": "f" * 64},
+        }
+        return minimal_commit(prompt, **changes[bad])
+
+    pilot.queue(invalid, elapsed=500)
+    commit(pilot)
+    result = pilot.run()
+    assert result["validated"] and result["turn_errors"][0]["kind"] == "rejected_checkpoint"
+    assert [event["turn"] for event in pilot.read("journal-events.json")] == [1, 2, 4]
+    assert pilot.read("accepted-journal.json")["facts"] == [fact()]
+    assert not (pilot.folder / "checkpoint-03.json").exists()
+    assert pilot.calls == [URL] and pilot.queries == []
+    assert_exact_clock(result)
+
+
+@pytest.mark.parametrize("key", ["scholarship_exists", "scholarship_coverage"])
+def test_named_award_is_proved_by_its_selected_source_context(pilot, key):
+    name = "Example Merit Scholarship"
+    quote = "International bachelor recipients receive full tuition support."
+    pilot.source_body = f"<h1>{name}</h1><p>{quote}</p>".encode()
+    value = (
+        name
+        if key == "scholarship_exists"
+        else {"subject": name, "value": {"tuition": "full", "renewal": "subject to annual review"}}
+    )
+    source_fact = fact(
+        id="award", question="OTHER", claim_key=key, value_json=json.dumps(value), quotation=quote
+    )
+    bootstrap(pilot)
+    pilot.queue(lambda prompt: decision(prompt, "record", facts=[source_fact]))
+    commit(pilot)
+    result = pilot.run()
+    assert result["status"] == "submitted" and result["validated"]
+    proof = pilot.read("compact-citation-proof.json")[0]
+    assert proof["award_subject_proof"]["literal_subject"] == name
+    assert proof["award_subject_proof"]["source_step"] == 1
+    assert proof["location"] == source_fact["location"]
+    assert pilot.read("trace.json")["proposals"][0]["value"] == value
+    assert pilot.read("accepted-journal.json")["facts"][0]["scope"] == SCOPE
+
+
+def test_award_name_elsewhere_on_page_cannot_bind_a_different_selected_section(pilot):
+    name = "Example Merit Scholarship"
+    quote = "International bachelor recipients receive full tuition support."
+    pilot.source_body = (
+        f"<h1>{name}</h1><p>A separate award is listed here.</p>"
+        f"<h1>Different Scholarship</h1><p>{quote}</p>"
+    ).encode()
+    bootstrap(pilot)
+    pilot.queue(
+        lambda prompt: decision(
+            prompt,
+            "record",
+            facts=[
+                fact(
+                    id="award",
+                    question="OTHER",
+                    claim_key="scholarship_exists",
+                    value_json=json.dumps(name),
+                    quotation=quote,
+                )
+            ],
+        )
+    )
+    pilot.queue(
+        lambda prompt: decision(
+            prompt,
+            "submit",
+            findings=[
+                finding(
+                    question="Q5",
+                    status="unresolved",
+                    fact_ids=[],
+                    supporting_steps=[1],
+                    scope={key: None for key in SCOPE},
+                    observation="The submitted award name was absent from the selected context.",
+                )
+            ],
+        )
+    )
+    result = pilot.run()
+    assert result["turn_errors"][0]["kind"] == "rejected_checkpoint"
+    assert pilot.read("accepted-journal.json")["facts"] == []
+    assert "selected context" in result["turn_errors"][0]["feedback"]["error"]
+
+
+def english_component_facts(pilot):
+    facts = []
+    for index, component in enumerate(("overall", "reading", "writing", "speaking", "listening")):
+        minimum = "6.5" if index == 0 else "6.0"
+        quote = f"International bachelor applicants need IELTS Academic {component} {minimum}."
+        facts.append(
+            fact(
+                id="english" if index == 0 else f"english_{component}",
+                claim_key=f"ielts.{component}",
+                value_json=minimum,
+                quotation=quote,
+            )
+        )
+    pilot.source_body = (
+        "<h1>Admissions</h1>" + "".join(f"<p>{item['quotation']}</p>" for item in facts)
+    ).encode()
+    return facts
+
+
+def unresolved_finding(question):
+    return finding(
+        question=question,
+        status="unresolved",
+        fact_ids=[],
+        supporting_steps=[1],
+        scope={key: None for key in SCOPE},
+        observation=f"This read supports English test minima; {question} remains unresolved.",
+    )
+
+
+def test_four_source_facts_and_two_findings_can_be_accepted_as_one_delta(pilot):
+    facts = english_component_facts(pilot)[:4]
+    bootstrap(pilot)
+    pilot.queue(
+        lambda prompt: decision(
+            prompt,
+            "record",
+            facts=facts,
+            findings=[finding(fact_ids=[item["id"] for item in facts]), unresolved_finding("Q2")],
+        )
+    )
+    commit(pilot)
+    result = pilot.run()
+    assert result["status"] == "submitted" and not result["turn_errors"]
+    assert pilot.read("accepted-journal.json")["facts"] == facts
+    assert len(pilot.read("accepted-journal.json")["question_findings"]) == 2
+    assert pilot.calls == [URL] and len(pilot.read("compact-citation-proof.json")) == 4
+
+
+@pytest.mark.parametrize("oversized", ["five_facts", "three_findings"])
+def test_over_limit_delta_is_rejected_atomically_before_source_facts_enter_journal(
+    pilot, oversized
+):
+    supported = english_component_facts(pilot)
+    bootstrap(pilot)
+    checkpoint(pilot)
+
+    def too_large(prompt):
+        if oversized == "five_facts":
+            return decision(
+                prompt, "record", facts=[{**item, "id": "new_" + item["id"]} for item in supported]
+            )
+        return decision(
+            prompt,
+            "record",
+            findings=[unresolved_finding(question) for question in ("Q2", "Q3", "Q4")],
+        )
+
+    pilot.queue(too_large)
+    commit(pilot)
+    result = pilot.run()
+    assert result["validated"] and result["turn_errors"][0]["kind"] == "rejected_checkpoint"
+    assert pilot.read("accepted-journal.json")["facts"] == [fact()]
+    assert [event["turn"] for event in pilot.read("journal-events.json")] == [1, 2, 4]
+    assert not (pilot.folder / "checkpoint-03.json").exists()
+    assert pilot.calls == [URL] and pilot.queries == []
+    assert any(entry["stage"] == "rejection_feedback_construction" for entry in result["meter"])
+    assert any(entry["stage"] == "rejection_feedback_write" for entry in result["meter"])
+
+
+def test_actual_selector_commands_and_phase_windows_preserve_both_reserves(pilot):
+    close_after_source(pilot)
+    bootstrap(pilot)
+    checkpoint(pilot)
+    commit(pilot)
+    result = pilot.run()
+    assert result["status"] == "submitted" and result["requested_reasoning_effort"] == "low"
+    events = pilot.read("journal-events.json")
+    for turn, phase, cap, reserve in (
+        (1, "bootstrap", 30000, 13000),
+        (2, "data", 55000, 13000),
+        (3, "minimal_commit", 10000, 3000),
+    ):
+        request = pilot.read(f"selector-{turn:02d}.request.json")
+        meta = pilot.read(f"selector-{turn:02d}.meta.json")
+        start = meta["selector_start_active_ms"]
+        expected = min(cap, 120000 - start - reserve)
+        assert request["selector_phase"] == meta["selector_phase"] == phase
+        assert meta["selector_timeout_ms"] == expected
+        assert (
+            meta["selector_timeout_seconds"]
+            == pilot.prompts[turn - 1][1]["timeout_seconds"]
+            == expected / 1000
+        )
+        assert start + expected + reserve <= 120000
+        assert request["selector_command"] == pilot.commands[turn - 1]
+        argv = request["selector_command"]
+        assert argv[argv.index("--model") + 1] == "gpt-6-astra"
+        assert argv.count('model_reasoning_effort="low"') == 1
+        assert (
+            request["command_proof"]["model_reasoning_effort"] == meta["reasoning_effort"] == "low"
+        )
+        assert request["schema_sha256"] == meta["schema_sha256"] == digest(request["schema"])
+        assert events[turn - 1]["selector_phase"] == phase
+        assert (
+            events[turn - 1]["selector_command_sha256"] == request["command_proof"]["argv_sha256"]
+        )
+        assert request["schema"]["properties"]["facts"]["maxItems"] == (0 if turn == 3 else 4)
+        assert request["schema"]["properties"]["question_findings"]["maxItems"] == (
+            0 if turn == 3 else 2
+        )
+    assert pilot.calls == [URL] and pilot.queries == []
+    assert_exact_clock(result)
+
+
+def test_no_data_window_keeps_closure_and_technical_reserves_without_model_call(pilot):
+    bootstrap(pilot)
+
+    def almost_spent(summary, plan):
+        summary["final"]["elapsed_ms"] = 52001
+        summary["final"]["stop_reason"] = "action_deadline_exhausted"
+
+    pilot.summary_hook = almost_spent
+    result = pilot.run()
+    assert len(pilot.prompts) == 1 and not pilot.pending
+    assert result["status"] == "incomplete" and result["all_recorded_sources_processed"] is False
+    assert result["processed_through_action_count"] == 0 and result["accepted_turns"] == 1
+    assert pilot.read("accepted-journal.json")["facts"] == []
+    assert result["error"] == "full_final_data_reserve_unavailable"
+    assert not (pilot.folder / "selector-02.request.json").exists()
+    assert not (pilot.folder / "selector-02.meta.json").exists()
+    assert pilot.calls == [URL] and pilot.queries == []
+    assert result["active_ms"] < 120000
+    assert_exact_clock(result)
+
+
+@pytest.mark.parametrize("phase", ["bootstrap", "data", "minimal_commit"])
+def test_completed_selector_beyond_its_phase_window_cannot_enter_the_journal(pilot, phase):
+    if phase == "bootstrap":
+        pilot.queue(elapsed=30001)
+        expected_turns, retained = [], []
+    elif phase == "data":
+        bootstrap(pilot)
+        checkpoint(pilot, elapsed=55001)
+        expected_turns, retained = [1], []
+    else:
+        close_after_source(pilot)
+        bootstrap(pilot)
+        checkpoint(pilot)
+        commit(pilot, elapsed=10001)
+        expected_turns, retained = [1, 2], [fact()]
+    result = pilot.run()
+    assert result["status"] == "incomplete" and result["error"] == "selector_phase_timeout_exceeded"
+    if expected_turns:
+        assert [event["turn"] for event in pilot.read("journal-events.json")] == expected_turns
+        assert pilot.read("accepted-journal.json")["facts"] == retained
+    else:
+        assert not (pilot.folder / "journal-events.json").exists()
+        assert not (pilot.folder / "accepted-journal.json").exists()
+    assert len(pilot.calls) == (0 if phase == "bootstrap" else 1)
+    assert not pilot.queries and not pilot.pending
+    assert_exact_clock(result)
+
+
+def test_same_source_location_feedback_keeps_rejected_delta_out_until_corrected(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot)
+    invalid = fact(
+        id="located",
+        question="OTHER",
+        claim_key="public.synthetic.note",
+        value_json=json.dumps("IELTS policy"),
+        location={"kind": "document_ir", "block_id": "b99999", "section_path": [], "page": None},
+    )
+    pilot.queue(lambda prompt: decision(prompt, "record", facts=[invalid]))
+    observed = {}
+
+    def corrected(prompt):
+        feedback = prompt["validation_feedback"]["source_location_diagnostics"]
+        observed.update(copy.deepcopy(feedback))
+        diagnostic = next(item for item in feedback["diagnostics"] if item["fact_id"] == "located")
+        candidate = next(
+            item for item in diagnostic["candidates"] if item["quotation_in_block_text"]
+        )
+        assert diagnostic["source_step"] == 1 and candidate["match_kind"] == "exact_block_text"
+        assert QUOTE in candidate["text_window"]
+        fixed = {**invalid, "location": candidate["location"]}
+        return decision(prompt, "record", facts=[fixed])
+
+    pilot.queue(corrected)
+    commit(pilot)
+    result = pilot.run()
+    assert result["validated"] and result["turn_errors"][0]["kind"] == "rejected_checkpoint"
+    assert [event["turn"] for event in pilot.read("journal-events.json")] == [1, 2, 4, 5]
+    assert not (pilot.folder / "checkpoint-03.json").exists()
+    assert pilot.read("checkpoint-02.json")["facts"] == [fact()]
+    assert [item["id"] for item in pilot.read("accepted-journal.json")["facts"]] == [
+        "english",
+        "located",
+    ]
+    assert observed["offending_fact_ids"] == ["located"]
+    assert pilot.calls == [URL] and pilot.queries == []
+    assert any(item["stage"] == "rejection_feedback_construction" for item in result["meter"])
+    assert any(item["stage"] == "rejection_feedback_write" for item in result["meter"])
+    assert_exact_clock(result)
+
+
+def test_location_feedback_cannot_copy_a_quote_from_a_different_recorded_step(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot)
+    invalid = fact(
+        id="future_location",
+        question="OTHER",
+        source_step=2,
+        location={"kind": "document_ir", "block_id": "b99999", "section_path": [], "page": None},
+    )
+    pilot.queue(lambda prompt: decision(prompt, "record", facts=[invalid]))
+
+    def inspect_then_commit(prompt):
+        feedback = prompt["validation_feedback"]["source_location_diagnostics"]
+        diagnostic = next(
+            item for item in feedback["diagnostics"] if item["fact_id"] == "future_location"
+        )
+        assert diagnostic["source_step"] == 2 and diagnostic["candidates"] == []
+        assert feedback["scanned_blocks"] == 0
+        assert [item["id"] for item in prompt["accepted_journal"]["facts"]] == ["english"]
+        return decision(prompt, "submit")
+
+    pilot.queue(inspect_then_commit, elapsed=500)
+    result = pilot.run()
+    assert result["validated"] and result["turn_errors"][0]["kind"] == "rejected_checkpoint"
+    assert pilot.read("accepted-journal.json")["facts"] == [fact()]
+    assert [event["turn"] for event in pilot.read("journal-events.json")] == [1, 2, 4]
+    assert not (pilot.folder / "checkpoint-03.json").exists()
+    assert pilot.calls == [URL] and pilot.queries == []
+    assert_exact_clock(result)
+
+
+@pytest.mark.parametrize("tool", ["fetcher", "search_provider", "view"])
+def test_next_action_returned_after_cutoff_is_declined_but_verified_delta_survives(pilot, tool):
+    bootstrap(pilot)
+    checkpoint(pilot, kind="action", elapsed=37000, action=source_action(tool))
+    commit(pilot)
+    result = pilot.run()
+    assert result["status"] == "submitted" and result["completion_kind"] == "explicit_commit"
+    assert result["validated"] and not result["turn_errors"]
+    assert result["found"] == ["Q1"] and result["accepted_turns"] == 3
+    assert pilot.calls == [URL] and pilot.queries == [] and len(pilot.plans) == 1
+    assert len(pilot.read("trace.json")["actions"]) == 1
+    assert pilot.read("accepted-journal.json")["facts"] == [fact()]
+    assert pilot.read("checkpoint-02.json") == pilot.read("checkpoint-03.json")
+    assert pilot.read("selector-02.request.json")["selector_mode"] == "research"
+    closing = pilot.read("selector-03.request.json")
+    assert closing["selector_mode"] == closing["selector_phase"] == "minimal_commit"
+    assert set(closing["prompt"]) == {"task", "journal_sha256"}
+    assert closing["schema"]["properties"]["facts"]["maxItems"] == 0
+    outcomes = pilot.read("navigation-outcomes.json")
+    assert outcomes == result["navigation_outcomes"] and len(outcomes) == 1
+    outcome = outcomes[0]
+    assert outcome["status"] == "declined" and outcome["turn"] == 2
+    assert outcome["reason"] == "source_cutoff_reached" and outcome["cutoff_ms"] == 49000
+    assert 49000 <= outcome["active_ms"] < 95000
+    assert outcome["source_action_count"] == outcome["processed_through_action_count"] == 1
+    assert outcome["action"]["tool"] == tool
+    assert outcome["decision_sha256"] == digest(pilot.read("selector-02.decision.json"))
+    assert outcome["accepted_journal_sha256"] == pilot.read("checkpoint-02.json")["journal_sha256"]
+    policy_entry = result["meter"][outcome["policy_meter_index"]]
+    assert policy_entry["stage"] == "navigation_proposal_policy" and policy_entry["turn"] == 2
+    assert outcome["active_ms"] == policy_entry["active_ms"]
+    assert not any(entry["stage"] == "stored_source_view" for entry in result["meter"])
+    assert pilot.plans[0]["action_deadline_ms"] == 49000
+    assert result["source_deadline_ms"] == 95000
+    assert_exact_clock(result)
+
+
+@pytest.mark.parametrize("hash_kind", ["current", "stale"])
+def test_late_hash_only_answer_never_accepts_a_pending_source(pilot, hash_kind):
+    bootstrap(pilot)
+
+    def unsupported_close(prompt):
+        changes = {"journal_sha256": "f" * 64} if hash_kind == "stale" else {}
+        return minimal_commit(prompt, **changes)
+
+    pilot.queue(unsupported_close, elapsed=37000)
+    pilot.queue(error="selector_timeout", elapsed=500)
+    result = pilot.run()
+    assert result["status"] == "incomplete" and result["validated"]
+    assert result["explicit_commit"] is False and result["found"] == []
+    assert result["all_recorded_sources_processed"] is False
+    assert result["processed_through_action_count"] == 0
+    assert pilot.read("accepted-journal.json")["facts"] == []
+    assert [event["turn"] for event in pilot.read("journal-events.json")] == [1]
+    assert not (pilot.folder / "checkpoint-02.json").exists()
+    assert pilot.read("selector-03.request.json")["selector_mode"] == "data_closure"
+    assert pilot.read("navigation-outcomes.json") == []
+    assert [entry["kind"] for entry in result["turn_errors"]] == [
+        "rejected_checkpoint",
+        "selector_timeout",
+    ]
+    assert pilot.calls == [URL] and pilot.queries == [] and len(pilot.plans) == 1
+    assert_exact_clock(result)
+
+
+def test_false_hash_with_late_next_action_neither_accepts_delta_nor_dispatches(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot, kind="action", elapsed=37000, journal_sha256="f" * 64)
+    pilot.queue(error="selector_timeout", elapsed=500)
+    result = pilot.run()
+    assert result["status"] == "incomplete" and result["found"] == []
+    assert result["all_recorded_sources_processed"] is False
+    assert pilot.read("accepted-journal.json")["facts"] == []
+    assert [event["turn"] for event in pilot.read("journal-events.json")] == [1]
+    assert pilot.read("navigation-outcomes.json") == []
+    assert not (pilot.folder / "checkpoint-02.json").exists()
+    assert pilot.read("selector-03.request.json")["selector_mode"] == "data_closure"
+    assert pilot.calls == [URL] and pilot.queries == [] and len(pilot.plans) == 1
+    assert result["turn_errors"][0]["kind"] == "rejected_checkpoint"
+    assert_exact_clock(result)
+
+
+def test_timeout_after_late_verified_delta_keeps_facts_and_remains_incomplete(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot, kind="action", elapsed=37000)
+    pilot.queue(error="selector_timeout", elapsed=10000)
+    result = pilot.run()
+    assert result["status"] == "incomplete" and result["error"] == "selector_timeout"
+    assert result["validated"] and result["found"] == ["Q1"]
+    assert result["explicit_commit"] is False and result["accepted_turns"] == 2
+    assert result["all_recorded_sources_processed"] is True
+    assert pilot.read("accepted-journal.json")["facts"] == [fact()]
+    assert [event["turn"] for event in pilot.read("journal-events.json")] == [1, 2]
+    assert pilot.read("selector-03.request.json")["selector_mode"] == "minimal_commit"
+    assert pilot.read("navigation-outcomes.json")[0]["status"] == "declined"
+    assert [entry["kind"] for entry in result["turn_errors"]] == ["selector_timeout"]
+    assert pilot.calls == [URL] and pilot.queries == [] and len(pilot.plans) == 1
+    assert_exact_clock(result)
+
+
+@pytest.mark.parametrize(
+    ("dimension", "asserted", "expected"),
+    [
+        ("population", "domestic", "international"),
+        ("qualification", "Other secondary award", "KZ national secondary"),
+        ("intake", "fall 2026", "fall 2027"),
+    ],
+)
+def test_scope_rejection_feedback_identifies_mismatch_without_changing_asserted_source(
+    pilot, dimension, asserted, expected
+):
+    bootstrap(pilot)
+    scope = {**SCOPE, dimension: asserted}
+    wrong_fact, wrong_finding = fact(scope=scope), finding(scope=scope)
+    original = copy.deepcopy((wrong_fact, wrong_finding))
+    pilot.queue(
+        lambda prompt: decision(prompt, "record", facts=[wrong_fact], findings=[wrong_finding])
+    )
+    observed = []
+
+    def explicitly_unresolved(prompt):
+        diagnostics = prompt["validation_feedback"]["question_scope_diagnostics"]
+        observed.extend(copy.deepcopy(diagnostics))
+        assert prompt["accepted_journal"]["facts"] == []
+        return decision(prompt, "submit", findings=[unresolved_finding("Q1")])
+
+    pilot.queue(explicitly_unresolved, elapsed=500)
+    result = pilot.run()
+    assert result["validated"] and result["turn_errors"][0]["kind"] == "rejected_checkpoint"
+    assert result["found"] == [] and pilot.read("accepted-journal.json")["facts"] == []
+    assert not (pilot.folder / "checkpoint-02.json").exists()
+    assert [event["turn"] for event in pilot.read("journal-events.json")] == [1, 3]
+    mismatch = [item for item in observed if item["field"] == dimension]
+    assert mismatch and all(
+        item["expected"] == expected and item["asserted"] == asserted for item in mismatch
+    )
+    assert any(
+        item["target"] == "finding"
+        and item["finding_index"] == 0
+        and item["fact_ids"] == ["english"]
+        for item in mismatch
+    )
+    assert original == (wrong_fact, wrong_finding)
+    assert pilot.read("selector-02.decision.json")["facts"][0]["scope"][dimension] == asserted
+    assert pilot.calls == [URL] and pilot.queries == [] and len(pilot.plans) == 1
+    assert_exact_clock(result)
+
+
+def test_fixture_persists_exact_real_workspace_identity_before_selector(pilot):
+    mapping = json.loads((pilot.root / "workspace-locations.json").read_text())
+    receipts = json.loads((pilot.root / "workspace-receipts.json").read_text())
+    observed = pilot.workspace.stat()
+    assert mapping == {"u": str(pilot.workspace)}
+    assert pilot.workspace.resolve(strict=True) == pilot.workspace
+    assert receipts == {
+        "u": {
+            "path": str(pilot.workspace),
+            "device": observed.st_dev,
+            "inode": observed.st_ino,
+        }
+    }
+    bootstrap(pilot)
+    checkpoint(pilot)
+    commit(pilot)
+    assert pilot.run()["status"] == "submitted"
+    for command in pilot.commands:
+        schema = command[command.index("--output-schema") + 1]
+        output = command[command.index("--output-last-message") + 1]
+        assert schema == str(pilot.workspace / "decision.schema.json")
+        assert Path(output).parent == pilot.workspace
+    assert mapping == json.loads((pilot.root / "workspace-locations.json").read_text())
+    assert receipts == json.loads((pilot.root / "workspace-receipts.json").read_text())
+
+
+@pytest.mark.parametrize("mutation", ["assignment", "receipt", "both", "caller"])
+@pytest.mark.parametrize("alias_kind", ["symlink_ancestor", "dot_segment"])
+def test_real_filesystem_alias_cannot_be_partially_normalized_into_a_selector(
+    pilot, mutation, alias_kind
+):
+    if alias_kind == "symlink_ancestor":
+        parent_alias = pilot.workspace.parent / "aliased-parent"
+        parent_alias.symlink_to(pilot.workspace.parent, target_is_directory=True)
+        alias = str(parent_alias / pilot.workspace.name)
+    else:
+        alias = str(pilot.workspace.parent) + "/./" + pilot.workspace.name
+    assert Path(alias).samefile(pilot.workspace)
+    assert Path(alias).resolve(strict=True) == pilot.workspace
+    assignments_path = pilot.root / "workspace-locations.json"
+    receipts_path = pilot.root / "workspace-receipts.json"
+    assignments = json.loads(assignments_path.read_text())
+    receipts = json.loads(receipts_path.read_text())
+    if mutation in {"assignment", "both"}:
+        assignments["u"] = alias
+        assignments_path.write_text(json.dumps(assignments))
+    if mutation in {"receipt", "both"}:
+        receipts["u"]["path"] = alias
+        receipts_path.write_text(json.dumps(receipts))
+    caller_workspace = Path(alias) if mutation == "caller" else pilot.workspace
+    if mutation == "caller" and alias_kind == "dot_segment":
+        # pathlib itself erases '/./'; a symlink remains an observable caller
+        # alias, while raw persisted dot segments are tested above.
+        caller_workspace = alias
+    bootstrap(pilot)
+    with pytest.raises(ValueError):
+        pilot.runtime["expert"](
+            pilot.repo, "synthetic-frozen", pilot.root, "u", {"u": caller_workspace}
+        )
+    assert pilot.prompts == [] and pilot.commands == [] and len(pilot.pending) == 1
+    assert pilot.calls == [] and pilot.queries == [] and pilot.plans == []
+    assert not (pilot.folder / "selector-01.request.json").exists()
+    assert not (pilot.folder / "journal-events.json").exists()
+
+
+@pytest.mark.parametrize("mutation", ["missing", "wrong_device", "wrong_inode", "replace_dir"])
+def test_missing_or_replaced_workspace_receipt_stops_before_model(pilot, mutation):
+    receipt_path = pilot.root / "workspace-receipts.json"
+    receipts = json.loads(receipt_path.read_text())
+    if mutation == "missing":
+        receipts.pop("u")
+    elif mutation == "wrong_device":
+        receipts["u"]["device"] += 1
+    elif mutation == "wrong_inode":
+        receipts["u"]["inode"] += 1
+    else:
+        pilot.workspace.rename(pilot.workspace.with_name("original-workspace"))
+        pilot.workspace.mkdir()
+    receipt_path.write_text(json.dumps(receipts))
+    bootstrap(pilot)
+    with pytest.raises(ValueError):
+        pilot.run()
+    assert pilot.prompts == [] and pilot.commands == [] and len(pilot.pending) == 1
+    assert pilot.calls == [] and pilot.queries == [] and pilot.plans == []
+
+
+@pytest.mark.parametrize("target", ["schema", "answer"])
+def test_existing_selector_file_alias_is_rejected_before_model(pilot, target):
+    original = pilot.workspace.parent / "synthetic-existing-file.json"
+    original.write_text("{}")
+    alias = pilot.workspace / ("decision.schema.json" if target == "schema" else "answer-01.json")
+    alias.symlink_to(original)
+    bootstrap(pilot)
+    with pytest.raises(ValueError):
+        pilot.run()
+    assert original.read_text() == "{}"
+    assert pilot.prompts == [] and pilot.commands == [] and len(pilot.pending) == 1
+    assert pilot.calls == [] and pilot.queries == [] and pilot.plans == []
+
+
+@pytest.mark.parametrize("target", ["workspace", "schema", "answer"])
+def test_returned_selector_filesystem_alias_never_accepts_the_new_delta(pilot, target):
+    bootstrap(pilot)
+    checkpoint(pilot)
+    original_select = pilot.runtime["select"]
+
+    def alias_after_completed_selector(isolation, schema, output, prompt, **kwargs):
+        selected = original_select(isolation, schema, output, prompt, **kwargs)
+        if len(pilot.prompts) == 2:
+            if target == "workspace":
+                moved = pilot.workspace.with_name("moved-workspace")
+                pilot.workspace.rename(moved)
+                pilot.workspace.symlink_to(moved, target_is_directory=True)
+            else:
+                path = schema if target == "schema" else output
+                moved = path.with_name("moved-" + path.name)
+                path.rename(moved)
+                path.symlink_to(moved)
+        return selected
+
+    pilot.runtime["select"] = alias_after_completed_selector
+    result = pilot.run()
+    assert result["status"] == "incomplete"
+    assert result["error"].startswith("selector_workspace_changed:")
+    assert result["found"] == [] and result["accepted_turns"] == 1
+    assert pilot.read("accepted-journal.json")["facts"] == []
+    assert [event["turn"] for event in pilot.read("journal-events.json")] == [1]
+    assert not (pilot.folder / "checkpoint-02.json").exists()
+    assert pilot.read("selector-02.meta.json")["returncode"] == 0
+    assert len(pilot.prompts) == 2 and pilot.calls == [URL] and pilot.queries == []
+    assert_exact_clock(result)
+
+
+@pytest.mark.parametrize("tool", ["fetcher", "search_provider", "view"])
+def test_policy_work_that_reaches_cutoff_declines_before_actual_source_or_view(pilot, tool):
+    bootstrap(pilot)
+    checkpoint(pilot, kind="action", action=source_action(tool))
+    commit(pilot)
+    clock = SimpleNamespace(value=0.0)
+    pilot.runtime["time"] = SimpleNamespace(monotonic=lambda: clock.value)
+    original = pilot.runtime["source_proposal"]
+    crossed = False
+
+    def measured_policy(*, active_ms, source_closed=False):
+        nonlocal crossed
+        result = original(active_ms=active_ms, source_closed=source_closed)
+        if len(pilot.plans) == 1 and active_ms < 49000 and not crossed:
+            crossed = True
+            clock.value += (49000 - active_ms) / 1000
+        return result
+
+    pilot.runtime["source_proposal"] = measured_policy
+    result = pilot.run()
+    assert crossed and len(pilot.plans) == 1
+    assert result["status"] == "submitted" and result["explicit_commit"]
+    outcome = result["navigation_outcomes"][0]
+    assert outcome["status"] == "declined" and outcome["active_ms"] >= 49000
+    assert outcome["action"]["tool"] == tool
+    assert outcome["policy"]["dispatch_allowed"] is False
+    assert not any(entry["stage"] == "stored_source_view" for entry in result["meter"])
+    assert result["found"] == ["Q1"]
+    assert_exact_clock(result)
