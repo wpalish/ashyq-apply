@@ -392,7 +392,11 @@ async def discover_candidates(
     # SearchResult: a provider reports what it returned, and which of our
     # queries asked for it is our bookkeeping, not part of its contract.
     families: dict[str, list[str]] = {}
+    #: The families actually sent. A 429 stops the loop, and reporting the
+    #: planned families as run overstated the queries spent (V6b audit).
+    sent: list[str] = []
     for query in queries:
+        sent.append(query.family)
         try:
             response = await provider.search(
                 query=query.text,
@@ -496,7 +500,7 @@ async def discover_candidates(
 
     return RetrievalReport(
         candidates=ranked,
-        queries_run=tuple(q.family for q in queries),
+        queries_run=tuple(sent),
         provider=getattr(provider, "name", "unknown"),
         ontology_version=ontology_version(),
         rejection_counts=outcome.rejection_counts,

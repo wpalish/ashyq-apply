@@ -120,6 +120,16 @@ def _reset_rate_limiter():
     main_module._limiter.hits.clear()
 
 
+@pytest.fixture(autouse=True)
+def _reset_search_throttle():
+    """A 429 recorded by one test must not silence search in the next."""
+    from app.adapters.search import reset_search_throttle
+
+    reset_search_throttle()
+    yield
+    reset_search_throttle()
+
+
 @pytest.fixture(scope="session")
 def corpus_dir() -> Path:
     if not CORPUS.exists():

@@ -240,7 +240,7 @@ class TestNobodySearchesByAccident:
         monkeypatch.setenv("UNIMATCH_SEARCH_PROVIDER", "fake")
         try:
             provider = get_search_provider()
-            assert isinstance(provider, FakeSearchProvider)
+            assert isinstance(provider.inner, FakeSearchProvider)
             assert provider.name == "fake"
         finally:
             get_settings.cache_clear()
