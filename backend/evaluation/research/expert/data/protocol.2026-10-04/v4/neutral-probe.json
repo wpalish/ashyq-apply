@@ -1,0 +1,45 @@
+{
+  "workspace": "/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-blind-v4-probe-atwjarla",
+  "university_requests": 0,
+  "results": [
+    {
+      "mode": "bound-journal",
+      "elapsed_ms": 8671,
+      "error_kind": null,
+      "returncode": 0,
+      "answer": {
+        "kind": "action",
+        "observation": "neutral probe",
+        "journal_sha256": "947cdbcb8f1acc7d84fc085036c6c29d34424069a7fd244d10ecfbd256007cdc",
+        "action": {
+          "tool": "fetcher",
+          "url": "https://example.org/public-probe",
+          "query": null,
+          "domains": [],
+          "max_results": null,
+          "source_step": null,
+          "page": null,
+          "offset": null,
+          "section_offset": null,
+          "link_offset": null
+        },
+        "facts": [],
+        "question_findings": []
+      }
+    },
+    {
+      "mode": "closing",
+      "elapsed_ms": 5781,
+      "error_kind": null,
+      "returncode": 0,
+      "answer": {
+        "kind": "submit",
+        "observation": "Commit the accepted journal by hash.",
+        "journal_sha256": "947cdbcb8f1acc7d84fc085036c6c29d34424069a7fd244d10ecfbd256007cdc",
+        "action": null,
+        "facts": [],
+        "question_findings": []
+      }
+    }
+  ]
+}

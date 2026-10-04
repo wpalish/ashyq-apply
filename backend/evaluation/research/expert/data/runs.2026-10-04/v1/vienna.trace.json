@@ -1,0 +1,392 @@
+{
+  "schema_version": "1",
+  "case_id": "vienna",
+  "packet_sha256": "52f948b78055b441d649dc89c4a9c4e3a7961fd86f3d2328dca9fc673b79783d",
+  "baseline_pipeline_sha": "e5988bd7733e9be9ea0da85ca17692bd0fbb7da0",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T02:12:53.310004+00:00",
+  "ended_at": "2026-10-04T02:16:32.409577+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T02:13:48.403328+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "vienna-001.json",
+      "raw_log_sha256": "e65b60965e448d4f810a883d8fa29fabd94efffc04aaa95376f1a366ae02cb9f",
+      "elapsed_ms": 1442,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 22805,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Open the official University of Vienna Computer Science admissions page identified in the public packet to verify the exact programme and inspect its published admission details.",
+      "observed_from_step": null,
+      "action": "Verify the exact bachelor Computer Science programme and inspect official admissions information for Q0–Q4.",
+      "stage": "page_understanding",
+      "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "final_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+    },
+    {
+      "at": "2026-10-04T02:16:17.977929+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://studieren.univie.ac.at/en/tuition-fee/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "outside_policy",
+      "raw_log_path": "vienna-002.json",
+      "raw_log_sha256": "f6a0b7d97d2e6ca4cfa2d0971e7c2b2c141dc514083ecf323d499e28e4bc9b62",
+      "elapsed_ms": 2729,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 120045,
+      "search_queries_cumulative": 0,
+      "step": 2,
+      "observed_before": "The official programme page confirms a University of Vienna bachelor's programme in Computer Science leading to a BSc and states that German is an admission requirement. It publishes a 2026 application period and a €50 entrance-exam administration fee, but these do not settle the requested fall 2027 deadline or 2027/28 international tuition. Next, inspect the linked official tuition page for applicable fee amounts and academic-year scope.",
+      "observed_from_step": 1,
+      "action": "Verify officially published tuition and Students' Union fees, including international applicability and whether an academic year covering fall 2027 is stated.",
+      "stage": "page_understanding",
+      "url": "https://studieren.univie.ac.at/en/tuition-fee/",
+      "final_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/tuition-fee/students-union-fee"
+    }
+  ],
+  "proposals": [
+    {
+      "claim_key": "programme.exists",
+      "source_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "excerpt": "Computer Science (bachelor's programme)",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        1
+      ],
+      "value": true,
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "programme.degree_award",
+      "source_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "excerpt": "Bachelor of Science (BSc)",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        1
+      ],
+      "value": "Bachelor of Science (BSc)",
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "programme.language",
+      "source_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "excerpt": "German (admission requirement)",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        1
+      ],
+      "value": "German (admission requirement)",
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "application_period.observed",
+      "source_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "excerpt": "2 March to 4 May 2026",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": "2026"
+      },
+      "supporting_steps": [
+        1
+      ],
+      "value": "2 March to 4 May 2026",
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "application_fee",
+      "source_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "excerpt": "€ 50 administration fee",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": "2026"
+      },
+      "supporting_steps": [
+        1
+      ],
+      "value": {
+        "amount": 50,
+        "currency": "EUR",
+        "description": "entrance exam administration fee"
+      },
+      "status": "unreviewed"
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "supporting_steps": [
+        1
+      ],
+      "proposal_indices": [
+        0,
+        1
+      ],
+      "evidence": [
+        {
+          "action_step": 1,
+          "source_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+          "excerpt": "Computer Science (bachelor's programme)",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b29",
+            "section_path": [
+              "Computer Science (bachelor's programme)"
+            ],
+            "page": null
+          }
+        },
+        {
+          "action_step": 1,
+          "source_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+          "excerpt": "Bachelor of Science (BSc)",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b52",
+            "section_path": [
+              "Computer Science (bachelor's programme)",
+              "The degree programme in a nutshell"
+            ],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The official page names the exact Computer Science bachelor's programme and identifies its degree as Bachelor of Science (BSc)."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [
+        1
+      ],
+      "proposal_indices": [
+        2
+      ],
+      "evidence": [
+        {
+          "action_step": 1,
+          "source_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+          "excerpt": "German (admission requirement)",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b49",
+            "section_path": [
+              "Computer Science (bachelor's programme)",
+              "The degree programme in a nutshell"
+            ],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The programme is published as German with German an admission requirement; no IELTS, TOEFL, or Duolingo minimum has yet been established."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [
+        1
+      ],
+      "proposal_indices": [],
+      "evidence": [
+        {
+          "action_step": 1,
+          "source_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+          "excerpt": "Non-EU/EEA school certificate",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b81",
+            "section_path": [
+              "Computer Science (bachelor's programme)",
+              "Info about the application and admission"
+            ],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The page identifies a non-EU/EEA school-certificate route, but Kazakhstan national-secondary, NIS, and any additional-year rules remain unverified."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [
+        1
+      ],
+      "proposal_indices": [
+        3
+      ],
+      "evidence": [
+        {
+          "action_step": 1,
+          "source_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+          "excerpt": "2 March to 4 May 2026",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b57",
+            "section_path": [
+              "Computer Science (bachelor's programme)",
+              "The entrance exam procedure"
+            ],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": "2026"
+      },
+      "observation": "Only the 2026 application period is observed; it does not answer the fall 2027 deadline."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The programme page links to tuition information but gives no amount or academic year covering fall 2027."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No bachelor scholarship has yet been verified."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No exact scholarship or its international eligibility conditions have yet been verified."
+    }
+  ],
+  "review_status": "unreviewed"
+}

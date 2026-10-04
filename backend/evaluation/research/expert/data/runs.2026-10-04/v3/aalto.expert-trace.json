@@ -1,0 +1,222 @@
+{
+  "schema_version": "1",
+  "case_id": "aalto",
+  "packet_sha256": "debcb70178dc4888cd3649b343cafb6e02a8ee9591c47ae05f16385da9a90a98",
+  "baseline_pipeline_sha": "2f4491eeb44442b8052bfe99e720415d2fd821ea",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T09:05:05.568224+00:00",
+  "ended_at": "2026-10-04T09:10:33.918460+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T09:05:51.122586+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:aalto.fi bachelor computer science admissions",
+        "domains": [
+          "aalto.fi"
+        ],
+        "max_results": 5
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "aalto-001.json",
+      "raw_log_sha256": "9c232ea25fc3c3ba00f1a6087208cd09b79eb6cfc075539e479f41e17af2197f",
+      "elapsed_ms": 2233,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 20941,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "Search for an official bachelor Computer Science programme and admissions route.",
+      "observed_from_step": null,
+      "action": "search_provider: site:aalto.fi bachelor computer science admissions",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T09:06:53.224616+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.aalto.fi/en/admission-services/apply-to-bachelors-programmes-in-english"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "aalto-002.json",
+      "raw_log_sha256": "6954beb62e70a488fa30410aef94d048dc5309e32944ae886ca513e8ce8140f3",
+      "elapsed_ms": 10371,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 41117,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Open the official English bachelor admissions overview to establish programme routes and current admissions scope.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://www.aalto.fi/en/admission-services/apply-to-bachelors-programmes-in-english",
+      "stage": "page_understanding",
+      "url": "https://www.aalto.fi/en/admission-services/apply-to-bachelors-programmes-in-english",
+      "final_url": "https://www.aalto.fi/en/admission-services/apply-to-bachelors-programmes-in-english"
+    },
+    {
+      "at": "2026-10-04T09:07:56.787760+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.aalto.fi/en/admission-services/english-taught-bachelors-programmes-in-science-and-technology-or-business-and-economics-admission"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "aalto-003.json",
+      "raw_log_sha256": "9774e45b8d61d686f035566900bbc5c45100b6299df252c76a2fc77108dbcc57",
+      "elapsed_ms": 10493,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 61045,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "The general admissions page was robots-blocked; inspect the official admissions-round page discovered in search.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://www.aalto.fi/en/admission-services/english-taught-bachelors-programmes-in-science-and-technology-or-business-and-economics-admission",
+      "stage": "page_understanding",
+      "url": "https://www.aalto.fi/en/admission-services/english-taught-bachelors-programmes-in-science-and-technology-or-business-and-economics-admission",
+      "final_url": "https://www.aalto.fi/en/admission-services/english-taught-bachelors-programmes-in-science-and-technology-or-business-and-economics-admission"
+    },
+    {
+      "at": "2026-10-04T09:08:52.535392+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:aalto.fi bachelor \"Computer Science\" programme",
+        "domains": [
+          "aalto.fi"
+        ],
+        "max_results": 5
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "aalto-004.json",
+      "raw_log_sha256": "5b9ac2e40e434397d47ef8e608e25aa44eb619f9e11f2af945890084ef4f68c3",
+      "elapsed_ms": 1763,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 71712,
+      "search_queries_cumulative": 2,
+      "step": 4,
+      "observed_before": "The two admissions pages were blocked. Search for an official programme page to establish exact programme identity.",
+      "observed_from_step": 3,
+      "action": "search_provider: site:aalto.fi bachelor \"Computer Science\" programme",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T09:09:47.347046+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.aalto.fi/en/department-of-computer-science/education"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "aalto-005.json",
+      "raw_log_sha256": "2d979a872b8cb562356af6883a2155c96df942cc08763dde57ce311d3bee58e2",
+      "elapsed_ms": 10427,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 91860,
+      "search_queries_cumulative": 2,
+      "step": 5,
+      "observed_before": "Read the department's bachelor programme listing to establish exact Computer Science identity.",
+      "observed_from_step": 4,
+      "action": "fetcher: https://www.aalto.fi/en/department-of-computer-science/education",
+      "stage": "page_understanding",
+      "url": "https://www.aalto.fi/en/department-of-computer-science/education",
+      "final_url": "https://www.aalto.fi/en/department-of-computer-science/education"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "inaccessible",
+      "supporting_steps": [
+        5
+      ],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Aalto University",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The official Department of Computer Science education page was blocked by robots policy; programme existence could not be verified."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

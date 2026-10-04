@@ -1,0 +1,101 @@
+{
+  "schema_version": "1",
+  "dataset_version": "2026-09-23.reviewed",
+  "dataset_sha256": "d45d26fa10a1bd60271c63225c1ff453109d8cb6781782867c0d782ee63bedd0",
+  "capture_sha256": "b5a62b64fa261f40632c3920d6001398129fb012f0c99e2c8b5112d04914d021",
+  "baseline_pipeline_sha": "9421884465cbc986ce0ab017102126731fe2589d",
+  "baseline_captured_at": "20261004T032230Z",
+  "baseline_budget": {
+    "max_fetcher_calls": 60,
+    "max_elapsed_ms": 120000,
+    "browser_enabled": false,
+    "max_search_queries": 6
+  },
+  "cases": [
+    {
+      "case_id": "ntu",
+      "university": "Nanyang Technological University",
+      "domain": "ntu.edu.sg",
+      "request": {
+        "university": "Nanyang Technological University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "baseline": {
+        "ranked_urls": [
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-computer-science-and-business",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-computer-science-and-economics",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-business-(with-specialisation-in-business-analytics)-computer-engineering-computer-science",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-(hons)-in-data-science-and-artificial-intelligence-with-a-second-major-in-sustainability",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-(hons)-in-computer-science-with-a-second-major-in-sustainability",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-(hons)-in-computer-science-with-a-second-major-in-entrepreneurship",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-electrical-and-electronic-engineering-and-social-sciences-(economics)",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-bachelor-of-engineering-(chemical-and-biomolecular-engineering)-and-bachelor-of-social-science-(economics)",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-bachelor-of-engineering-(bioengineering)-and-bachelor-of-social-science-(economics)",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-in-psychology-with-second-major-in-biological-sciences",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-in-psychology-(honours)",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-(hons)-in-double-major---psychology-and-media-analytics",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-(hons)-in-double-major---economics-and-psychology",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-science-in-philosophy-politics-and-economics",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-energy-studies-and-education",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-applied-physics-with-second-major-in-data-analytics",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-applied-physics-with-second-major-in-astrophysics",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-and-mathematical-sciences",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics---applied-physics-with-second-major-in-material-physics-and-technologies",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-sciences-with-second-major-in-sustainability",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-sciences",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies-with-second-major-in-data-analytics",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies-with-second-major-in-business",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-environmental-earth-systems-science-with-second-major-in-entrepreneurship",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-environmental-earth-systems-science-and-public-policy-and-global-affairs",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-data-science-artificial-intelligence",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-chemistry-and-biological-chemistry-with-second-major-in-data-analytics",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-chemistry-and-biological-chemistry-with-second-major-in-business-(international-trading)",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-chemistry-and-biological-chemistry",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-sustainability",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-food-science-and-technology",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-entrepreneurship",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-data-analytics",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-biomedical-structural-biology",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-applied-physics-with-second-major-in-quantum-technologies",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-applied-physics-with-second-major-in-microelectronics-engineering"
+        ],
+        "programme_urls": [
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)"
+        ],
+        "prediction_count": 3,
+        "error": null,
+        "telemetry": {
+          "http_fetches": 28,
+          "pdf_fetches": 0,
+          "browser_fetches": 0,
+          "latency_seconds": 67.629709023
+        }
+      }
+    }
+  ],
+  "public_profile": {
+    "level": "bachelor",
+    "intended_fields": [
+      "computer science"
+    ],
+    "intake_term": "fall",
+    "intake_year": 2027,
+    "citizenship": "Kazakhstan",
+    "country_of_residence": "Kazakhstan",
+    "education_country": "Kazakhstan",
+    "education_system": "KZ national secondary"
+  },
+  "comparison_mode": "independent_full_budget"
+}

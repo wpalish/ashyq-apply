@@ -1,0 +1,243 @@
+{
+  "schema_version": "1",
+  "case_id": "hku",
+  "packet_sha256": "94747e195e11fcf08e314e0f1e6055f4d06eb155b92ebacf7a5c75d9f4d032d0",
+  "baseline_pipeline_sha": "e5988bd7733e9be9ea0da85ca17692bd0fbb7da0",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T02:16:32.508245+00:00",
+  "ended_at": "2026-10-04T02:19:56.907484+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T02:17:23.628532+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-001.json",
+      "raw_log_sha256": "57c93c1cc8ba8503329589e630a4a6195f513857c7acab081bac916391773ea4",
+      "elapsed_ms": 6189,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 26854,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Begin with the official HKU programme page supplied in the public packet to verify the exact undergraduate programme identity.",
+      "observed_from_step": null,
+      "action": "Read the official programme page for evidence of the exact bachelor programme and field.",
+      "stage": "page_understanding",
+      "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+      "final_url": "https://www.cds.hku.hk/prospective-students/undergraduate-old-2026/6999-computing-and-data-science/"
+    },
+    {
+      "at": "2026-10-04T02:19:21.626640+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:admissions.hku.hk Kazakhstan international qualifications IELTS TOEFL Duolingo deadline tuition scholarships undergraduate 2027",
+        "domains": [
+          "admissions.hku.hk"
+        ],
+        "max_results": 10
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-002.json",
+      "raw_log_sha256": "84922d5f4232c7326165a01d5898902d06ded372696cd4f46bdb0167895ef20a",
+      "elapsed_ms": 1406,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 100265,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "The official programme page establishes that HKU offers the Bachelor of Engineering in Computer Science under programme code 6999. Next, locate HKU's official international-admissions page covering Kazakhstan secondary qualifications, English tests, deadlines, tuition, and scholarships.",
+      "observed_from_step": 1,
+      "action": "Discover official HKU international undergraduate admissions pages relevant to Kazakhstan and the requested fall 2027 intake.",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    }
+  ],
+  "proposals": [
+    {
+      "claim_key": "programme.exists",
+      "source_url": "https://www.cds.hku.hk/prospective-students/undergraduate-old-2026/6999-computing-and-data-science/",
+      "excerpt": "Computing and Data Science (programme code: 6999) offers the choices of three professional degree programmes, namely: (1) Bachelor of Engineering in Computer Science [BEng(CompSc)] , (2) Bachelor of Engineering in Artificial Intelligence and Data Science [BEng(AI&DataSc)] , and (3) Bachelor of Arts and Sciences in Applied Artificial Intelligence [BASc(AppliedAI)] .",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Hong Kong",
+        "programme": "6999 Computing and Data Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        1
+      ],
+      "value": {
+        "programme": "6999 Computing and Data Science",
+        "specialized_degree": "Bachelor of Engineering in Computer Science [BEng(CompSc)]",
+        "exists": true
+      },
+      "status": "unreviewed"
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "supporting_steps": [
+        1
+      ],
+      "proposal_indices": [
+        0
+      ],
+      "evidence": [
+        {
+          "action_step": 1,
+          "source_url": "https://www.cds.hku.hk/prospective-students/undergraduate-old-2026/6999-computing-and-data-science/",
+          "excerpt": "Computing and Data Science (programme code: 6999) offers the choices of three professional degree programmes, namely: (1) Bachelor of Engineering in Computer Science [BEng(CompSc)] , (2) Bachelor of Engineering in Artificial Intelligence and Data Science [BEng(AI&DataSc)] , and (3) Bachelor of Arts and Sciences in Applied Artificial Intelligence [BASc(AppliedAI)] .",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b72",
+            "section_path": [
+              "6999 Computing and Data Science",
+              "Programme Highlights and Key Features"
+            ],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "University of Hong Kong",
+        "programme": "6999 Computing and Data Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "HKU publishes Bachelor of Engineering in Computer Science [BEng(CompSc)] as one of the specialized degree programmes available through 6999 Computing and Data Science."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Hong Kong",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The displayed IELTS 7.0 condition applies only to later eligibility for BASc(AppliedAI), not general international admission to BEng(CompSc); IELTS, TOEFL, and Duolingo admission minima remain unresolved."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Hong Kong",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": "international",
+        "qualification": "KZ national secondary",
+        "academic_year": null
+      },
+      "observation": "No read evidence yet addresses Kazakhstan national secondary credentials, NIS qualifications, or an additional-year requirement."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Hong Kong",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": "fall 2027",
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No fall 2027 international application deadline has been read."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Hong Kong",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": "fall 2027",
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No expressly published tuition schedule covering fall 2027 has been read."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Hong Kong",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "A Scholarships navigation link is visible, but a link label alone does not establish a bachelor scholarship."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Hong Kong",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No exact bachelor scholarship or its international eligibility conditions have been read."
+    }
+  ],
+  "review_status": "unreviewed"
+}

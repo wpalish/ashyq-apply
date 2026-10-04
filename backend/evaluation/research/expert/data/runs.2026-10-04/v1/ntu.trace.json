@@ -1,0 +1,174 @@
+{
+  "schema_version": "1",
+  "case_id": "ntu",
+  "packet_sha256": "f17899779492c457d0814bd28e57c4a2f4bb0696e1c156bf8509d1d37a9e78f5",
+  "baseline_pipeline_sha": "e5988bd7733e9be9ea0da85ca17692bd0fbb7da0",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T02:18:39.649177+00:00",
+  "ended_at": "2026-10-04T02:21:22.068543+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T02:19:38.619446+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ntu-001.json",
+      "raw_log_sha256": "44ce76a914aa55bb55e27ecbe81451f4354d9b09b1e1fa40cd5a987953eb07f6",
+      "elapsed_ms": 3116,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 30153,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Open the official NTU programme page first to verify the exact bachelor Computer Science programme and inspect its published admissions links.",
+      "observed_from_step": null,
+      "action": "Verify the exact programme title and degree from the official programme page, and identify official admissions routes linked from it.",
+      "stage": "page_understanding",
+      "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+      "final_url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [
+        1
+      ],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The saved whole text identifies the programme, but the requested structured block has not yet been displayed."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No official English-test minima have been read."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [
+        1
+      ],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The page mentions equivalent qualifications generally but does not establish KZ national-secondary, NIS, or additional-year eligibility."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No fall 2027 deadline has been read."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No tuition schedule expressly covering fall 2027 has been read."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No bachelor scholarship page has been read."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No exact scholarship or international eligibility conditions have been established."
+    }
+  ],
+  "review_status": "unreviewed"
+}

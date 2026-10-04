@@ -1,0 +1,362 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "blind-experts@2f4491eeb44442b8052bfe99e720415d2fd821ea",
+  "captured_at": "2026-10-04T09:21:10.242542+00:00",
+  "mode": "live",
+  "config": {
+    "unreviewed_proposals": true,
+    "comparison_mode": "independent_full_budget",
+    "source_harness_sha": "2f4491eeb44442b8052bfe99e720415d2fd821ea",
+    "lossless_projection": true,
+    "excluded": []
+  },
+  "observations": [
+    {
+      "case_id": "groningen",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "delft",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "aalto",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "vienna",
+      "programme_urls": [
+        "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+      ],
+      "ranked_urls": null,
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+            "excerpt": "Computer Science (bachelor's programme)",
+            "scope": {
+              "university": "University of Vienna",
+              "programme": "Computer Science",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.language",
+          "value": "German (admission requirement)",
+          "evidence": {
+            "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+            "excerpt": "German (admission requirement)",
+            "scope": {
+              "university": "University of Vienna",
+              "programme": "Computer Science",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.admission_route",
+          "value": "Entrance exam procedure",
+          "evidence": {
+            "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+            "excerpt": "Entrance exam procedure",
+            "scope": {
+              "university": "University of Vienna",
+              "programme": "Computer Science",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "deadline",
+          "value": {
+            "publication_status": "not yet published",
+            "announcement": "by the end of the year",
+            "academic_year": "2027/28"
+          },
+          "evidence": {
+            "url": "https://aufnahmeverfahren.univie.ac.at/en/admission-info/non-eu",
+            "excerpt": "Applying for the academic year 2026/27 is no longer possible. We will inform you about the deadlines for the academic year 2027/28 by the end of the year.",
+            "scope": {
+              "university": "University of Vienna",
+              "programme": null,
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "Applicants with secondary-school leaving certificate from a non-EU/EEA country",
+              "qualification": "Secondary-school leaving certificate",
+              "academic_year": "2027/28"
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "warsaw",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "ubc",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "toronto",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "hku",
+      "programme_urls": [
+        "https://www.cs.hku.hk/programmes/beng-compsc/admission"
+      ],
+      "ranked_urls": null,
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.cs.hku.hk/programmes/beng-compsc/admission",
+            "excerpt": "Applicants who wish to apply for admission to the Bachelor of Engineering in Computer Science (BEng(CompSc)) may apply through one of the following schemes, namely JUPAS, Non-JUPAS, International Admissions Scheme and Admission of Undergraduate Students from the Mainland*, in the same admission year.",
+            "scope": {
+              "university": "University of Hong Kong",
+              "programme": "Bachelor of Engineering in Computer Science (BEng(CompSc))",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "ntu",
+      "programme_urls": [
+        "https://www.ntu.edu.sg/admissions/undergraduate/undergraduate-programme/bachelor-of-computing-in-computer-science"
+      ],
+      "ranked_urls": null,
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/undergraduate-programme/bachelor-of-computing-in-computer-science",
+            "excerpt": "The\n Bachelor of Computing (Hons) in Computer Science \nat NTU’s \nCollege of Computing and Data Science (CCDS)\n is a \n4-year direct honours degree",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor of Computing (Hons) in Computer Science",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "kaist",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    }
+  ]
+}

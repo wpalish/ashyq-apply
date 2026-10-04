@@ -1,0 +1,227 @@
+{
+  "schema_version": "1",
+  "case_id": "vienna",
+  "packet_sha256": "dff066218073c263ecce25b29f2ae61c70eb7f95176fa39f004e95cbc31119a9",
+  "baseline_pipeline_sha": "9421884465cbc986ce0ab017102126731fe2589d",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T03:48:43.739415+00:00",
+  "ended_at": "2026-10-04T03:55:07.946735+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T03:49:23.547022+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "vienna-001.json",
+      "raw_log_sha256": "49244fd4128bbe619f64a5855ab466c943d4aedff11df7e76ebdee53e2656b3d",
+      "elapsed_ms": 1072,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 9235,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Start with the supplied official programme route.",
+      "observed_from_step": null,
+      "action": "fetcher: https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "stage": "page_understanding",
+      "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "final_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+    },
+    {
+      "at": "2026-10-04T03:50:15.528396+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://aufnahmeverfahren.univie.ac.at/en/admission-info"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "vienna-002.json",
+      "raw_log_sha256": "69d1b13012c1ef9c83857088f9296697d24bef15ddfc0cc04df580407e9cde9c",
+      "elapsed_ms": 933,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 19007,
+      "search_queries_cumulative": 0,
+      "step": 2,
+      "observed_before": "The programme is explicitly listed; its published application dates are for 2026. Follow admission guidance for international qualifications.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://aufnahmeverfahren.univie.ac.at/en/admission-info",
+      "stage": "page_understanding",
+      "url": "https://aufnahmeverfahren.univie.ac.at/en/admission-info",
+      "final_url": "https://aufnahmeverfahren.univie.ac.at/en/admission-info"
+    },
+    {
+      "at": "2026-10-04T03:51:10.572486+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://aufnahmeverfahren.univie.ac.at/en/admission-info/non-eu"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "vienna-003.json",
+      "raw_log_sha256": "d432b0181857a04253e4e89ec0752afa14c1451ad20c27c8f86356730979808a",
+      "elapsed_ms": 1030,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 28841,
+      "search_queries_cumulative": 0,
+      "step": 3,
+      "observed_before": "Admission guidance links a dedicated route for non-EU/EEA secondary-school certificates.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://aufnahmeverfahren.univie.ac.at/en/admission-info/non-eu",
+      "stage": "page_understanding",
+      "url": "https://aufnahmeverfahren.univie.ac.at/en/admission-info/non-eu",
+      "final_url": "https://aufnahmeverfahren.univie.ac.at/en/admission-info/non-eu"
+    },
+    {
+      "at": "2026-10-04T03:52:06.016791+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://studieren.univie.ac.at/en/admission/info-third-country-students/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "vienna-004.json",
+      "raw_log_sha256": "5508c9c753affa04515bf85a0699324e20c04d062b23ba1f54a2ee6f695fdf0c",
+      "elapsed_ms": 2642,
+      "fetcher_calls_cumulative": 4,
+      "elapsed_ms_cumulative": 41260,
+      "search_queries_cumulative": 0,
+      "step": 4,
+      "observed_before": "The non-EU route says 2027/28 deadlines will be announced by year-end and links country-specific qualification requirements.",
+      "observed_from_step": 3,
+      "action": "fetcher: https://studieren.univie.ac.at/en/admission/info-third-country-students/",
+      "stage": "page_understanding",
+      "url": "https://studieren.univie.ac.at/en/admission/info-third-country-students/",
+      "final_url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/country-specific-requirements-for-admission"
+    },
+    {
+      "at": "2026-10-04T03:53:03.403986+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "vienna-005.json",
+      "raw_log_sha256": "90ebf0f4bb0aa6befef984ce520c214d247ab28ef3882845cd610a45f8f05daf",
+      "elapsed_ms": 1179,
+      "fetcher_calls_cumulative": 5,
+      "elapsed_ms_cumulative": 52552,
+      "search_queries_cumulative": 0,
+      "step": 5,
+      "observed_before": "Country-specific guidance does not list Kazakhstan in the displayed bachelor requirements. Inspect the official scholarship page next.",
+      "observed_from_step": 4,
+      "action": "fetcher: https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships",
+      "stage": "page_understanding",
+      "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships",
+      "final_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships"
+    },
+    {
+      "at": "2026-10-04T03:54:06.248026+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://studienpraeses.univie.ac.at/stipendien/leistungsstipendium-nach-dem-studfg/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "vienna-006.json",
+      "raw_log_sha256": "09f9b40e8eb179fb8125b489f0902afb0326bcf2bc3688cb779ad39fbf44fe5c",
+      "elapsed_ms": 1873,
+      "fetcher_calls_cumulative": 6,
+      "elapsed_ms_cumulative": 72285,
+      "search_queries_cumulative": 0,
+      "step": 6,
+      "observed_before": "The saved scholarship index links the merit scholarship’s detailed conditions.",
+      "observed_from_step": 5,
+      "action": "fetcher: https://studienpraeses.univie.ac.at/stipendien/leistungsstipendium-nach-dem-studfg/",
+      "stage": "page_understanding",
+      "url": "https://studienpraeses.univie.ac.at/stipendien/leistungsstipendium-nach-dem-studfg/",
+      "final_url": "https://studienpraeses.univie.ac.at/stipendien/leistungsstipendium-nach-dem-studfg/"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

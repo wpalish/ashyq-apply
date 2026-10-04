@@ -1,0 +1,135 @@
+{
+  "kind": "submit",
+  "observation": "Submit the complete journal; all proposed evidence remains unreviewed.",
+  "action": null,
+  "facts": [
+    {
+      "id": "f1",
+      "question": "Q0",
+      "claim_key": "programme.exists",
+      "value_json": "true",
+      "source_step": 2,
+      "quotation": "Computer Science (bachelor's programme)",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b29",
+        "section_path": [
+          "Computer Science (bachelor's programme)"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      }
+    },
+    {
+      "id": "f2",
+      "question": "OTHER",
+      "claim_key": "programme.language",
+      "value_json": "\"German (admission requirement)\"",
+      "source_step": 2,
+      "quotation": "German (admission requirement)",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b49",
+        "section_path": [
+          "Computer Science (bachelor's programme)",
+          "The degree programme in a nutshell"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      }
+    },
+    {
+      "id": "f3",
+      "question": "OTHER",
+      "claim_key": "programme.admission_route",
+      "value_json": "\"Entrance exam procedure\"",
+      "source_step": 2,
+      "quotation": "Entrance exam procedure",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b50",
+        "section_path": [
+          "Computer Science (bachelor's programme)",
+          "The degree programme in a nutshell"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      }
+    },
+    {
+      "id": "f4",
+      "question": "Q3",
+      "claim_key": "deadline",
+      "value_json": "{\"publication_status\":\"not yet published\",\"announcement\":\"by the end of the year\",\"academic_year\":\"2027/28\"}",
+      "source_step": 4,
+      "quotation": "Applying for the academic year 2026/27 is no longer possible. We will inform you about the deadlines for the academic year 2027/28 by the end of the year.",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b33",
+        "section_path": [
+          "Admission to bachelor's and diploma programmes with entrance exam procedure",
+          "Secondary-school leaving certificate from a non-EU/EEA country"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "University of Vienna",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": "Applicants with secondary-school leaving certificate from a non-EU/EEA country",
+        "qualification": "Secondary-school leaving certificate",
+        "academic_year": "2027/28"
+      }
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "fact_ids": [
+        "f1"
+      ],
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Exact bachelor Computer Science programme confirmed.",
+      "supporting_steps": []
+    }
+  ]
+}

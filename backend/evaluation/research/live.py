@@ -11,6 +11,11 @@ canary setup, discovery, verification, and funding. The parent adds a separate
 15-second process reserve for startup and cancellation/output cleanup; this
 reserve never authorizes more tool calls. Legacy mode retains its five-second
 child reserve and cache-free page accounting.
+
+``--finalization-reserve-ms 1000`` is an optional strict evaluation setting.
+Source/work stops at 119000ms of the same 120000ms case clock; cancellation
+cleanup and final output/checkpoint work remain measured, without clamping an
+overrun. The final metering-envelope write is audit persistence after that work.
 """
 
 import argparse
@@ -81,6 +86,7 @@ class _ExpertBudget:
     started: float
     max_search_queries: int = STRICT_MAX_SEARCH_QUERIES
     clock: Callable[[], float] = time.monotonic
+    finalization_reserve_ms: int = 0
     fetcher_calls: int = 0
     search_queries: int = 0
     blocked_search_queries: int = 0
@@ -88,10 +94,30 @@ class _ExpertBudget:
     stop_reason: str | None = None
     provider_failure: dict[str, Any] | None = None
 
+    @property
+    def source_work_deadline_ms(self) -> int:
+        return int(self.seconds * 1000) - self.finalization_reserve_ms
+
+    @property
+    def active_time_basis(self) -> str:
+        basis = "capture_one entry; includes canary setup and all pipeline stages"
+        if self.finalization_reserve_ms:
+            basis += (
+                ", cancellation cleanup, output/raw persistence and final checkpoint work; "
+                "final metering-envelope persistence is audit only"
+            )
+        return basis
+
     def remaining(self) -> float:
-        remaining = self.seconds - (self.clock() - self.started)
+        remaining = (
+            self.seconds - self.finalization_reserve_ms / 1000 - (self.clock() - self.started)
+        )
         if remaining <= 0:
-            self.stop_reason = self.stop_reason or "wall_clock_budget_exhausted"
+            self.stop_reason = self.stop_reason or (
+                "source_work_deadline_exhausted"
+                if self.finalization_reserve_ms
+                else "wall_clock_budget_exhausted"
+            )
             raise TimeoutError("BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED")
         return remaining
 
@@ -153,6 +179,8 @@ class _ExpertBudget:
             "max_fetcher_calls": self.max_fetcher_calls,
             "max_search_queries": self.max_search_queries,
             "max_active_seconds": self.seconds,
+            "finalization_reserve_ms": self.finalization_reserve_ms,
+            "source_work_deadline_ms": self.source_work_deadline_ms,
             "fetcher_calls": self.fetcher_calls,
             "search_queries": self.search_queries,
             "blocked_search_queries": self.blocked_search_queries,
@@ -160,7 +188,7 @@ class _ExpertBudget:
             "elapsed_ms": max(0, int((self.clock() - self.started) * 1000)),
             "stop_reason": self.stop_reason,
             "provider_failure": self.provider_failure,
-            "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+            "active_time_basis": self.active_time_basis,
         }
 
 
@@ -217,8 +245,13 @@ async def capture_one(
     seconds: float | None = None,
     *,
     strict_expert_budget: bool = False,
+    finalization_reserve_ms: int = 0,
 ) -> None:
     entered = time.monotonic()
+    if type(finalization_reserve_ms) is not int or finalization_reserve_ms < 0:
+        raise ValueError("Finalization reserve must be a nonnegative integer in milliseconds")
+    if finalization_reserve_ms and not strict_expert_budget:
+        raise ValueError("Finalization reserve requires strict expert budget mode")
     # Delayed imports keep ordinary offline evaluation entirely independent of I/O.
     from app.adapters import fetching
     from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, PageCategory
@@ -239,12 +272,21 @@ async def capture_one(
             raise ValueError(
                 "Strict capture budget must be at most 60 Fetcher calls and 120 active seconds"
             )
+        if finalization_reserve_ms >= seconds * 1000:
+            raise ValueError("Finalization reserve must be less than the full case clock")
         settings = get_settings()
         if settings.search_provider not in STRICT_PROVIDERS:
             raise ValueError("Strict live capture requires configured exa or exa_mcp")
         if settings.enable_browser_tier or not settings.respect_robots:
             raise ValueError("Strict live capture requires browser tier off and robots respected")
-        budget = _ExpertBudget(max_pages, seconds, settings.search_provider, entered)
+        budget = _ExpertBudget(
+            max_pages,
+            seconds,
+            settings.search_provider,
+            entered,
+            clock=time.monotonic,
+            finalization_reserve_ms=finalization_reserve_ms,
+        )
 
     predictions: list[Prediction] = []
     raw_claims: list[dict[str, Any]] = []
@@ -265,6 +307,13 @@ async def capture_one(
 
     fetchers: list[Any] = []
 
+    def budget_checkpoint() -> None:
+        assert budget is not None
+        budget_output = output.with_suffix(".budget.json")
+        budget_temporary = budget_output.with_suffix(".pending")
+        budget_temporary.write_text(json.dumps(budget.snapshot(), indent=2), encoding="utf-8")
+        budget_temporary.replace(budget_output)
+
     def checkpoint() -> None:
         observation.telemetry.latency_seconds = time.monotonic() - started
         # Counted from the fetcher's own tier tally, never assumed: a zero
@@ -276,10 +325,14 @@ async def capture_one(
         temporary.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
         temporary.replace(output)
         if budget:
-            budget_output = output.with_suffix(".budget.json")
-            budget_temporary = budget_output.with_suffix(".pending")
-            budget_temporary.write_text(json.dumps(budget.snapshot(), indent=2), encoding="utf-8")
-            budget_temporary.replace(budget_output)
+            budget_checkpoint()
+
+    def final_checkpoint() -> None:
+        checkpoint()
+        if budget and budget.finalization_reserve_ms:
+            # Record the completed first checkpoint's own work from the same
+            # clock. This final metering envelope never opens a new work budget.
+            budget_checkpoint()
 
     checkpoint()
     original_request = fetching._pinned_request
@@ -317,6 +370,8 @@ async def capture_one(
         began = time.monotonic()
         if budget:
             checkpoint()
+            if budget.finalization_reserve_ms:
+                budget.remaining()
         try:
             return await original_search(provider, *args, **kwargs)
         except Exception as exc:
@@ -381,6 +436,8 @@ async def capture_one(
                 print(f"get #{requests} start t={began - started:.0f}s {url[:120]}", flush=True)
                 if budget:
                     checkpoint()
+                    if budget.finalization_reserve_ms:
+                        budget.remaining()
                 result = await original(url, **kwargs)
                 # One line per page read, so a case that runs out of wall
                 # clock shows which reads took it: its own log is printed by
@@ -469,20 +526,27 @@ async def capture_one(
             observation.predictions = predictions
             observation.error = "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
             if budget:
-                budget.stop_reason = budget.stop_reason or "wall_clock_budget_exhausted"
-            checkpoint()
+                budget.stop_reason = budget.stop_reason or (
+                    "source_work_deadline_exhausted"
+                    if budget.finalization_reserve_ms
+                    else "wall_clock_budget_exhausted"
+                )
+            final_checkpoint()
             return
     rows = report["institutions"]
     observation.programme_urls = [HttpUrl(url) for r in rows for url in r["programs"]]
     observation.predictions = predictions
     observation.error = report["run_error"] or None
-    checkpoint()
+    if budget is None or not budget.finalization_reserve_ms:
+        checkpoint()
     # Preserve raw output for mapping/adjudication; do not invent unsupported counters.
     output.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
     output.with_suffix(".raw.json").write_text(
         json.dumps({"canary": report, "claims": raw_claims}, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
+    if budget and budget.finalization_reserve_ms:
+        final_checkpoint()
 
 
 def main() -> None:
@@ -501,6 +565,12 @@ def main() -> None:
         "--strict-expert-budget",
         action="store_true",
         help="evaluation only: cold 60 get / 6 provider query / 120 active second caps; stop batch on 429",
+    )
+    parser.add_argument(
+        "--finalization-reserve-ms",
+        type=int,
+        default=None,
+        help="strict evaluation only: reserve case-clock milliseconds for cancellation/output cleanup (V4:1000)",
     )
     parser.add_argument(
         "--search-provider",
@@ -562,6 +632,12 @@ def main() -> None:
         parser.error(
             "Strict expert budget cannot exceed 60 Fetcher.get calls and 120 active seconds"
         )
+    if args.finalization_reserve_ms is not None:
+        if not args.strict_expert_budget:
+            parser.error("Finalization reserve requires --strict-expert-budget")
+        if not 0 <= args.finalization_reserve_ms < args.seconds_per_case * 1000:
+            parser.error("Finalization reserve must be 0..(full case clock minus 1) milliseconds")
+    finalization_reserve_ms = args.finalization_reserve_ms or 0
     settings = (
         Settings(search_provider=args.search_provider) if args.search_provider else Settings()
     )
@@ -615,9 +691,11 @@ def main() -> None:
         with patch.dict(os.environ, child_configuration):
             get_settings.cache_clear()
             try:
-                strict_arguments = (
+                strict_arguments: dict[str, Any] = (
                     {"strict_expert_budget": True} if args.strict_expert_budget else {}
                 )
+                if args.finalization_reserve_ms is not None:
+                    strict_arguments["finalization_reserve_ms"] = finalization_reserve_ms
                 asyncio.run(
                     capture_one(args.case, args.out, args.max_pages, soft, **strict_arguments)
                 )
@@ -663,6 +741,11 @@ def main() -> None:
                         "--seconds-per-case",
                         str(args.seconds_per_case),
                         *(["--strict-expert-budget"] if args.strict_expert_budget else []),
+                        *(
+                            ["--finalization-reserve-ms", str(finalization_reserve_ms)]
+                            if args.finalization_reserve_ms is not None
+                            else []
+                        ),
                         *(["--search-provider", search_provider] if args.search_provider else []),
                         *(["--search-first"] if args.search_first else []),
                         *(["--skip-refused-hosts"] if args.skip_refused_hosts else []),
@@ -726,7 +809,15 @@ def main() -> None:
                 "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
                 "cold_fetcher_reads": True,
                 "child_active_seconds": args.seconds_per_case,
-                "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+                "finalization_reserve_ms": finalization_reserve_ms,
+                "source_work_deadline_ms": args.seconds_per_case * 1000 - finalization_reserve_ms,
+                "active_time_basis": _ExpertBudget(
+                    args.max_pages,
+                    args.seconds_per_case,
+                    search_provider,
+                    0.0,
+                    finalization_reserve_ms=finalization_reserve_ms,
+                ).active_time_basis,
                 "parent_process_reserve_seconds": STRICT_PROCESS_RESERVE_SECONDS,
                 "parent_process_timeout_seconds": args.seconds_per_case
                 + STRICT_PROCESS_RESERVE_SECONDS,

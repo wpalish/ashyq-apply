@@ -1,0 +1,198 @@
+{
+  "schema_version": "1",
+  "case_id": "ubc",
+  "packet_sha256": "a91896194fd644198835c16d2de2f71108da7bcee9a09dd1f6aaedb6b9644bd7",
+  "baseline_pipeline_sha": "e5988bd7733e9be9ea0da85ca17692bd0fbb7da0",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T02:15:11.444476+00:00",
+  "ended_at": "2026-10-04T02:18:39.564468+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T02:16:02.202882+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:ubc.ca bachelor Computer Science program UBC official",
+        "domains": [
+          "ubc.ca"
+        ],
+        "max_results": 10
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-001.json",
+      "raw_log_sha256": "0f640f619af3ad8f3623e991e397d10806e677918ec9748d1094f6d4adcd400f",
+      "elapsed_ms": 1474,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 23374,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "No official source has been read yet. Search the official UBC domain for the exact bachelor-level Computer Science programme page.",
+      "observed_from_step": null,
+      "action": "Discover an official page establishing the exact bachelor Computer Science programme and degree.",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T02:17:13.161173+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-002.json",
+      "raw_log_sha256": "c5dbac2d02081c173cee3388bb11efe9a90d6861e73b6d2dadf633cdcf71b69e",
+      "elapsed_ms": 1827,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 46649,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Search results are discovery hints only. Read the official UBC Undergraduate Programs and Admissions page for the Vancouver Computer Science BSc to verify the exact programme and degree.",
+      "observed_from_step": 1,
+      "action": "Verify Q0 from the official programme page and identify official admissions links for later questions.",
+      "stage": "page_understanding",
+      "url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/",
+      "final_url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": null,
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "An official programme-page candidate was discovered, but its search snippet cannot prove programme existence."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": null,
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No official page establishing English-test minima has been read."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": null,
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No official page establishing Kazakhstan secondary-qualification or additional-year eligibility has been read."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": null,
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No official Fall 2027 international application deadline has been read."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": null,
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No official tuition schedule expressly covering Fall 2027 has been read."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": null,
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No official bachelor scholarship page has been read."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": null,
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No exact scholarship has yet been identified, so its international eligibility and conditions remain unresolved."
+    }
+  ],
+  "review_status": "unreviewed"
+}

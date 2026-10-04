@@ -92,13 +92,15 @@ class Isolation:
         denied = " ".join(f"(subpath {json.dumps(str(p))})" for p in self.sealed_roots)
         return f"(version 1) (allow default) (deny file-read* file-write* {denied})"
 
-    def command(self, schema: Path, *, output: Path) -> list[str]:
+    def command(self, schema: Path, *, output: Path, model: str | None = None) -> list[str]:
         if not schema.resolve().is_relative_to(self.workspace):
             raise ValueError("Selector schema must be in its isolated workspace")
         if not output.resolve().is_relative_to(self.workspace):
             raise ValueError("Selector output must be in its isolated workspace")
         if output.exists() or output.is_symlink():
             raise ValueError("Selector output must be a fresh file")
+        if model is not None and (not model.strip() or model != model.strip()):
+            raise ValueError("Requested selector model must be nonempty and trimmed")
         flags = [part for feature in DISABLED_FEATURES for part in ("--disable", feature)]
         return [
             self.sandbox_executable,
@@ -106,6 +108,7 @@ class Isolation:
             self.profile(),
             self.codex_executable,
             "exec",
+            *(["--model", model] if model is not None else []),
             "--ignore-user-config",
             "--ignore-rules",
             "--ephemeral",

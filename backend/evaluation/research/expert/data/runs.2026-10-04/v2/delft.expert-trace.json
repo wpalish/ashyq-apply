@@ -1,0 +1,203 @@
+{
+  "schema_version": "1",
+  "case_id": "delft",
+  "packet_sha256": "d4c9a08d8d819761b1cce88862c2c9441a30e4c675ba79b435fed065ed603423",
+  "baseline_pipeline_sha": "9421884465cbc986ce0ab017102126731fe2589d",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T03:43:20.395226+00:00",
+  "ended_at": "2026-10-04T03:48:59.334967+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T03:43:59.589319+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "delft-001.json",
+      "raw_log_sha256": "faddb9e285c27d70fcbc0bb0480fd267bc8928ef65778ba9f5766a627ae06a9b",
+      "elapsed_ms": 1014,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 10812,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Start with the supplied official Computer Science and Engineering programme URL.",
+      "observed_from_step": null,
+      "action": "fetcher: https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+      "stage": "page_understanding",
+      "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+      "final_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering"
+    },
+    {
+      "at": "2026-10-04T03:44:52.233400+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/admission-requirements"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "delft-002.json",
+      "raw_log_sha256": "4e172bd18af4cb616c9c11747abc21f3c3d48489602db7c51346383a724dac94",
+      "elapsed_ms": 1708,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 22190,
+      "search_queries_cumulative": 0,
+      "step": 2,
+      "observed_before": "The programme page establishes a bachelor in Computer Science and Engineering and links to admission requirements.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/admission-requirements",
+      "stage": "page_understanding",
+      "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/admission-requirements",
+      "final_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/admission-requirements"
+    },
+    {
+      "at": "2026-10-04T03:45:51.803911+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "delft-003.json",
+      "raw_log_sha256": "4a19aba2c2eb3c6461e6af3e2644bfa82f692fe8ff530946f4f784e6d10b3a63",
+      "elapsed_ms": 872,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 35046,
+      "search_queries_cumulative": 0,
+      "step": 3,
+      "observed_before": "The programme admissions page links to the international-diploma route for qualification and application requirements.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma",
+      "stage": "page_understanding",
+      "url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma",
+      "final_url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma"
+    },
+    {
+      "at": "2026-10-04T03:46:44.512244+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/admission-requirements"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "delft-004.json",
+      "raw_log_sha256": "ba9e5b1969f8d10271bb2711b991f68abb1b4d2344115db08f925fd85f215067",
+      "elapsed_ms": 844,
+      "fetcher_calls_cumulative": 4,
+      "elapsed_ms_cumulative": 44926,
+      "search_queries_cumulative": 0,
+      "step": 4,
+      "observed_before": "The international bachelor route links to detailed admission requirements.",
+      "observed_from_step": 3,
+      "action": "fetcher: https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/admission-requirements",
+      "stage": "page_understanding",
+      "url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/admission-requirements",
+      "final_url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/admission-requirements"
+    },
+    {
+      "at": "2026-10-04T03:47:47.049429+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/admission-requirements/country-specific-requirements"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "delft-005.json",
+      "raw_log_sha256": "dd0ae452e14af3cc9342d9f25374c3d3b06cf925a18f7992838ee846a1669e8f",
+      "elapsed_ms": 1455,
+      "fetcher_calls_cumulative": 5,
+      "elapsed_ms_cumulative": 57866,
+      "search_queries_cumulative": 0,
+      "step": 5,
+      "observed_before": "International admission requirements publish English-test minima and link to country-specific diploma requirements.",
+      "observed_from_step": 4,
+      "action": "fetcher: https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/admission-requirements/country-specific-requirements",
+      "stage": "page_understanding",
+      "url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/admission-requirements/country-specific-requirements",
+      "final_url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/admission-requirements/country-specific-requirements"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

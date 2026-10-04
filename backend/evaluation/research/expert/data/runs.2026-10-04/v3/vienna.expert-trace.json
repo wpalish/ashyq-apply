@@ -1,0 +1,299 @@
+{
+  "schema_version": "1",
+  "case_id": "vienna",
+  "packet_sha256": "4c3610ca5d540e23faaedd783746076a7c2572a7f89648ee963e11d8c0ac07b3",
+  "baseline_pipeline_sha": "2f4491eeb44442b8052bfe99e720415d2fd821ea",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T09:06:39.945576+00:00",
+  "ended_at": "2026-10-04T09:11:34.130532+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T09:07:20.390744+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site.univie.ac.at bachelor computer science admission",
+        "domains": [
+          "univie.ac.at"
+        ],
+        "max_results": 5
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "vienna-001.json",
+      "raw_log_sha256": "92d4ed44244f4617f8a92e922f02b10e68bfb57b8e11245670565ea5aca7ed24",
+      "elapsed_ms": 1620,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 10586,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "Locate the official bachelor Computer Science programme and admissions route.",
+      "observed_from_step": null,
+      "action": "search_provider: site.univie.ac.at bachelor computer science admission",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T09:08:11.431146+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "vienna-002.json",
+      "raw_log_sha256": "170d4e2948b3fec92ea6ae53a07ef75e360bb0a8aa13cf6c29462e3d45aec201",
+      "elapsed_ms": 1327,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 21056,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Open the official Computer Science bachelor programme page.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "stage": "page_understanding",
+      "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "final_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+    },
+    {
+      "at": "2026-10-04T09:09:30.263656+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://aufnahmeverfahren.univie.ac.at/en/admission-info"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "vienna-003.json",
+      "raw_log_sha256": "06b6180fc9603a112959991e951c23e9ed492497d9f5a16d5d2b1a4d828d0c45",
+      "elapsed_ms": 960,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 53920,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "Follow the official admission route to inspect international qualification requirements.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://aufnahmeverfahren.univie.ac.at/en/admission-info",
+      "stage": "page_understanding",
+      "url": "https://aufnahmeverfahren.univie.ac.at/en/admission-info",
+      "final_url": "https://aufnahmeverfahren.univie.ac.at/en/admission-info"
+    },
+    {
+      "at": "2026-10-04T09:10:26.113409+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://aufnahmeverfahren.univie.ac.at/en/admission-info/non-eu"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "vienna-004.json",
+      "raw_log_sha256": "04cabe3d0579400d2d05de9b43eaab03b56ffe24e6cd19fcc95074ef00598b49",
+      "elapsed_ms": 1095,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 64322,
+      "search_queries_cumulative": 1,
+      "step": 4,
+      "observed_before": "Follow the official admission route for non-EU/EEA secondary-school certificates.",
+      "observed_from_step": 3,
+      "action": "fetcher: https://aufnahmeverfahren.univie.ac.at/en/admission-info/non-eu",
+      "stage": "page_understanding",
+      "url": "https://aufnahmeverfahren.univie.ac.at/en/admission-info/non-eu",
+      "final_url": "https://aufnahmeverfahren.univie.ac.at/en/admission-info/non-eu"
+    }
+  ],
+  "proposals": [
+    {
+      "claim_key": "programme.exists",
+      "value": true,
+      "source_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "excerpt": "Computer Science (bachelor's programme)",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        2
+      ],
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "programme.language",
+      "value": "German (admission requirement)",
+      "source_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "excerpt": "German (admission requirement)",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        2
+      ],
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "programme.admission_route",
+      "value": "Entrance exam procedure",
+      "source_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "excerpt": "Entrance exam procedure",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        2
+      ],
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "deadline",
+      "value": {
+        "publication_status": "not yet published",
+        "announcement": "by the end of the year",
+        "academic_year": "2027/28"
+      },
+      "source_url": "https://aufnahmeverfahren.univie.ac.at/en/admission-info/non-eu",
+      "excerpt": "Applying for the academic year 2026/27 is no longer possible. We will inform you about the deadlines for the academic year 2027/28 by the end of the year.",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Vienna",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": "Applicants with secondary-school leaving certificate from a non-EU/EEA country",
+        "qualification": "Secondary-school leaving certificate",
+        "academic_year": "2027/28"
+      },
+      "supporting_steps": [
+        4
+      ],
+      "status": "unreviewed"
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "supporting_steps": [
+        2
+      ],
+      "proposal_indices": [
+        0
+      ],
+      "evidence": [
+        {
+          "action_step": 2,
+          "source_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+          "excerpt": "Computer Science (bachelor's programme)",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b29",
+            "section_path": [
+              "Computer Science (bachelor's programme)"
+            ],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Exact bachelor Computer Science programme confirmed."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}
