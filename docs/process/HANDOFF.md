@@ -54,6 +54,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**[expert-500] Current V7 source preparation complete; draft PR46, live repeat externally stopped.** Owner60reads/6queries network budget, model thinking excluded, immutable900s hang guard, normal CLI effort and120s algorithm are implemented. Actual parent/report/canonical-workspace/transport271 mocks and full4071/94.90% gates pass. Final11helpers/20modules,14 raw gate logs and the original three-phase neutral proof are frozen under protocol.2026-10-04/v7;14 original neutral request/stream/output/mapping records are preserved separately under v7-neutral-records without altering the primary freeze. V7 trial has not been allocated, no V7 university/source call or seal/label score exists. Actual V6b provider429 still requires a legitimate free availability restoration before the same-ten run. Source tag/selected-source CI are next;40/62 and complete per-fact causes remain required before50-case expansion. All V1–V6b andHELDOUT150 are preserved.
+
 **[expert-500] Phase1 protocol repair in progress (draft PR46); V5 rejected before seal and UNSCORED.** Frozen e0ac678 ten baselines/ten expert attempts ended; macOS logical/canonical workspace mismatch violates frozen replay. No V5 recall/precision, no accepted seal/label scoring, no40/62 admission or50-case/HELDOUT expansion. Historical V4 is4/62 versus2/62, V3 is3/62 versus3/62; preserve their sealed reports. Phase0 and earlier Phase1 were merged via PR47 into main1f64a3a; PR43 also changed two production discovery/retrieval files during V5. Current branch retains prospective V5 pure helpers/negative evidence, not a current-main accuracy result. Root owns git/HANDOFF/source provenance; fresh selectors remain independently OS-isolated. Separate production provider-stop/counter defects from evaluation protocol changes.
 
 
@@ -131,6 +133,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+- 2026-10-04 [expert-500] dc7e431ee885cf71a94b9563f29fee3acee840b6: implements owner network budget/default-effort and immutable wall guard; source-only resumed counters and all-raw provider429 replay; preserves repaired actual V7 parent/report/transport/canonical10case mocks in mutable v7-draft. Full4071/94.90%, frontend232 and271 actual-parent checks pass. No new provider/university work or accuracy result. Accompanying prospective-freeze commit preserves exact11helpers/20module hashes,14 gate-log byte copies and14 original neutral record copies; actual pure freeze preflight and byte audit passed with0newmodel/source requests.
 
 **[expert-500] V5 attempts quarantined (2026-10-04 11:56UTC):** frozene0ac678 all10+10 ended; report failed workspace provenance before seal/labels. UNSCORED156-file/1121407-byte bundle fingerprints957 originals;48 successful frozen workflows (10baseline+38expert),2submitted/8incomplete/16failed-or-rejected turns. Twelve exact-source cloud jobs passed. See EXPERT500_PHASE1_V5_2026-10-04.md and data/runs.2026-10-04/v5-unscored. No V5 script, trace or trial edits and no gate waiver.
 
@@ -1787,6 +1791,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[expert-500] V7 immutable preparation done, 2026-10-04 17:23UTC:** protocol.2026-10-04/v7 exists once with verified45 file entries/20modules/11actualhelpers, default effort null/cli_default,60reads/6queries and900s guard; source module/app/front/gold/binding bytes are pinned. Final271parent mocks/full4071/94.90%/frontend232/static361/demo/head evidence is archived. Push/tag the accompanying source, verify both push/PR selected-head release-gates, and update PR46 with exact source/gate state. Do not execute launcher or baseline/expert stage while V6b429 has no legitimate restoration evidence; owner question is pending. After availability returns, use a fresh single V7 trial and original same10 cohorts, seal all eligible original traces, then score unchanged62facts and evidence-backed expert-only miss causes. No V6b resume/reset, outside-budget promotion,50batch orHELDOUT access. Restore tmp helpers only byte-identically from frozen .txt copies if needed; preserve their exact original hashes/paths and original neutral records, do not regenerate results.
 
 **[expert-500] V7 checkpoint, 2026-10-04 17:12UTC:** All functional local gates are green:4071/94.90%, frontend232/type/lint/build, Ruff/format/mypy361, isolated20-result demo Groningen#1/UBCOUT_OF_BUDGET, one Alembic head. Actual V7 parent/report/cohort/transport271 offline checks passed. Independent timer, repeated preparation debit, hidden20-turn cap, missing transport artifact, erased provider429 and turn>=100 chronology findings are repaired. Final default-effort three-phase neutral bytes are unchanged. Preserve these evaluation sources and updated mutable v7-draft helper copies at this checkpoint. Next: finalize freeze/export helper static/validation checks and original gate hash JSON, create a fresh immutable protocol.2026-10-04/v7, push/tag selected source and check selected-head cloud gates. Live remains blocked by actual V6b provider429 until legitimate free availability is established; no new university/provider actions or trial allocation.
 
@@ -4249,6 +4255,8 @@ E2E (`npm run e2e`, `npm run e2e:auth`) was **not** run locally — ports 5173/8
 CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
+
+**[expert-500] Current V7 live blocker (2026-10-04):** V6b's original Exa MCP response recordedHTTP429 in run37207678059, with no reset time. The owner's first-person instruction says exhausted quota must stop without repeated retries/IP/provider workaround; no subsequent source request has been made. A concise owner question asks for the provider's free-limit restoration confirmation or stated reset time. New protocol/source/local proof are prepared, but no new ten-university result or per-fact diagnosis is claimed. Do not assume elapsed time restores the quota, do not buy credits or switch paid providers, and do not expand past40/62.
 
 **[expert-500] resolved external-state discrepancy:** main1f64a3a includes mergedPR43/PR47, Phase0 no longer awaiting45. V5 remained on historical app tree53d572; main is4910054. Import main only after V5 quarantine commit. Prospective production audit found attempted-family/subject diagnostics and cross-institution catalogue identity429 gaps; track in a separate production task, no Phase1 app mutation.
 
