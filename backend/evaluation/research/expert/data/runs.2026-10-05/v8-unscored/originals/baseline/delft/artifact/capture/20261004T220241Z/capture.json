@@ -1,0 +1,351 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "1ec0433f7daf559156d4f9bb21bda4811de16a29",
+  "captured_at": "20261004T220241Z",
+  "mode": "live",
+  "config": {
+    "search_provider": "exa",
+    "seconds_per_case": 120,
+    "max_fetcher_calls_per_case": 60,
+    "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+    "search_before_navigation": false,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "browser_enabled": false,
+    "cohort": [
+      "groningen",
+      "delft",
+      "aalto",
+      "vienna",
+      "warsaw",
+      "ubc",
+      "toronto",
+      "hku",
+      "ntu",
+      "kaist"
+    ],
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "harness_sha256": "b4f906e06ffe5323317c390a4783e125c997a3070ec4247192857999621628cd",
+    "mapping_sha256": "06e9d005d7f9093ca9f33c05bcb8fe1582b14e349adbb3720785b0fd239b082a",
+    "strict_expert_budget": true,
+    "max_search_queries_per_case": 6,
+    "cold_fetcher_reads": true,
+    "child_active_seconds": 120,
+    "finalization_reserve_ms": 1000,
+    "source_work_deadline_ms": 119000,
+    "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+    "parent_process_reserve_seconds": 15,
+    "parent_process_timeout_seconds": 135,
+    "case_budgets": {
+      "delft": {
+        "strict_expert_budget": true,
+        "provider": "exa",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "fetcher_calls": 47,
+        "search_queries": 6,
+        "blocked_search_queries": 0,
+        "network_http_requests": 50,
+        "elapsed_ms": 87418,
+        "stop_reason": null,
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 88.27953581700001,
+        "process_error": null,
+        "active_checkpoint_available": true
+      }
+    },
+    "batch_stop_reason": null,
+    "batch_completed_case_ids": [
+      "delft"
+    ],
+    "batch_remaining_case_ids": []
+  },
+  "observations": [
+    {
+      "case_id": "delft",
+      "programme_urls": [
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+        "https://www.tudelft.nl/onderwijs/opleidingen/bachelors/cse/bsc-computer-science-and-engineering"
+      ],
+      "ranked_urls": [
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/mst/bsc-molecular-science-and-technology",
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/lst/bsc-life-science-and-technology",
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering"
+      ],
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+            "excerpt": "Bachelor of Computer Science and Engineering Bachelor of Computer Science and Engineering Self-driving cars, smartphone navigation, personalised offers based on your surfing behaviour and robots used",
+            "scope": {
+              "university": "Delft University of Technology",
+              "programme": "Bachelor of Computer Science and Engineering",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.tudelft.nl/onderwijs/opleidingen/bachelors/cse/bsc-computer-science-and-engineering",
+            "excerpt": "BSc Computer Science and Engineering BSc Computer Science and Engineering Zelfrijdende auto’s, real-time navigatie op je telefoon, persoonlijke aanbiedingen op basis van je surfgedrag en robo",
+            "scope": {
+              "university": "Delft University of Technology",
+              "programme": "BSc Computer Science and Engineering",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "Costas Lemos Innovation Programme Scholarship",
+          "evidence": {
+            "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+            "excerpt": "Delft University Fund We support Support innovative Education CLIP Scholarship Open menu Support pioneering research Support innovative Education Delft Global Scholarship Fund CLIP Scholarship Online Education Entrepreneurship Talent Costas Lemos Innovation Programme Scholarship Call for applications is closed The Costas Lemos Innovation Programme (CLIP) Scholarships have been established to equip",
+            "scope": {
+              "university": "Delft University of Technology",
+              "programme": "Bsc Computer Science And Engineering",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "no"
+          },
+          "evidence": {
+            "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+            "excerpt": "The scholarships are available to students entering the academic year 2026 for one of the following specific TU Delft Master of Science Programmes: MSc Earth, Climate and Technology; MSc Environmental Eng",
+            "scope": {
+              "university": "Delft University of Technology",
+              "programme": "Bsc Computer Science And Engineering",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "Costas Lemos Innovation Programme Scholarship",
+          "evidence": {
+            "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+            "excerpt": "Delft University Fund We support Support innovative Education CLIP Scholarship Open menu Support pioneering research Support innovative Education Delft Global Scholarship Fund CLIP Scholarship Online Education Entrepreneurship Talent Costas Lemos Innovation Programme Scholarship Call for applications is closed The Costas Lemos Innovation Programme (CLIP) Scholarships have been established to equip",
+            "scope": {
+              "university": "Delft University of Technology",
+              "programme": "Bachelor Of Computer Science And Engineering",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "no"
+          },
+          "evidence": {
+            "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+            "excerpt": "The scholarships are available to students entering the academic year 2026 for one of the following specific TU Delft Master of Science Programmes: MSc Earth, Climate and Technology; MSc Environmental Eng",
+            "scope": {
+              "university": "Delft University of Technology",
+              "programme": "Bachelor Of Computer Science And Engineering",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 47,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 87.41773532800005,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [
+        {
+          "category": "classifier-rejected",
+          "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships/faq",
+          "page_type": "scholarship_faq",
+          "detail": "not an award page; no scholarship recorded (1 award links, 0 below it: /en/education/study-programme-orientation/practical-matters/scholarships/scholarships-from-other-providers)",
+          "characters": null
+        },
+        {
+          "category": "classifier-rejected",
+          "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships/faq",
+          "page_type": "scholarship_faq",
+          "detail": "not an award page; no scholarship recorded (1 award links, 0 below it: /en/education/study-programme-orientation/practical-matters/scholarships/scholarships-from-other-providers)",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+          "page_type": "program_detail",
+          "detail": "1 claims read from this page",
+          "characters": 2302
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.tudelft.nl/en/education/admission-and-application",
+          "page_type": "general_admissions",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 1454
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances",
+          "page_type": "costs",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 11558
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.tudelft.nl/onderwijs/opleidingen/bachelors/cse/bsc-computer-science-and-engineering",
+          "page_type": "program_detail",
+          "detail": "1 claims read from this page",
+          "characters": 2212
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.tudelft.nl/en/education/admission-and-application",
+          "page_type": "general_admissions",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 1454
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances",
+          "page_type": "costs",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 11558
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 2 award links, 2 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships/scholarships-from-other-providers",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+          "page_type": "scholarship_award",
+          "detail": "award page; 2 claims read",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 2 award links, 2 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships/scholarships-from-other-providers",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+          "page_type": "scholarship_award",
+          "detail": "award page; 2 claims read",
+          "characters": null
+        }
+      ],
+      "error": null
+    }
+  ]
+}

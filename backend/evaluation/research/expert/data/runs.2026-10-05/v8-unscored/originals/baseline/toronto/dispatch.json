@@ -1,0 +1,13 @@
+{
+  "ref": "expert500-phase1-v8-2026-10-05-1ec0433",
+  "inputs": {
+    "runner": "ubuntu-latest",
+    "case": "toronto",
+    "run_tag": "e500-70013be953d4491a",
+    "seconds_per_case": "120",
+    "max_pages": "60",
+    "search_provider": "exa",
+    "mode": "expert_baseline",
+    "extra_args": "--strict-expert-budget --finalization-reserve-ms 1000"
+  }
+}

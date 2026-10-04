@@ -1,0 +1,13 @@
+{
+  "ref": "expert500-phase1-v8-2026-10-05-1ec0433",
+  "inputs": {
+    "runner": "ubuntu-latest",
+    "case": "kaist",
+    "run_tag": "e500-35f76dae874a4b33",
+    "seconds_per_case": "120",
+    "max_pages": "60",
+    "search_provider": "exa",
+    "mode": "expert_baseline",
+    "extra_args": "--strict-expert-budget --finalization-reserve-ms 1000"
+  }
+}

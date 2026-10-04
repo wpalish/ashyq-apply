@@ -1,0 +1,29 @@
+{
+  "case_id": "kaist",
+  "provider": "exa",
+  "run_id": 37238806213,
+  "head_sha": "1ec0433f7daf559156d4f9bb21bda4811de16a29",
+  "capture": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v8-2026-10-05/baseline/kaist/artifact/capture/20261004T220803Z/capture.json",
+  "packet": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v8-2026-10-05/baseline/kaist/public-packet.json",
+  "budget": {
+    "strict_expert_budget": true,
+    "provider": "exa",
+    "max_fetcher_calls": 60,
+    "max_search_queries": 6,
+    "max_active_seconds": 120,
+    "finalization_reserve_ms": 1000,
+    "source_work_deadline_ms": 119000,
+    "fetcher_calls": 25,
+    "search_queries": 6,
+    "blocked_search_queries": 0,
+    "network_http_requests": 34,
+    "elapsed_ms": 75855,
+    "stop_reason": null,
+    "provider_failure": null,
+    "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+    "parent_process_elapsed_seconds": 76.59905863899999,
+    "process_error": null,
+    "active_checkpoint_available": true
+  },
+  "provider_failure": null
+}
