@@ -1,0 +1,55 @@
+{
+  "kind": "submit",
+  "observation": "Submit the complete journal; all proposed evidence remains unreviewed.",
+  "action": null,
+  "facts": [
+    {
+      "id": "f1",
+      "question": "Q0",
+      "claim_key": "programme.exists",
+      "value_json": "true",
+      "source_step": 3,
+      "quotation": "Applicants who wish to apply for admission to the Bachelor of Engineering in Computer Science (BEng(CompSc)) may apply through one of the following schemes, namely JUPAS, Non-JUPAS, International Admissions Scheme and Admission of Undergraduate Students from the Mainland*, in the same admission year.",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b140",
+        "section_path": [
+          "BEng in Computer Science",
+          "Admission"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "University of Hong Kong",
+        "programme": "Bachelor of Engineering in Computer Science (BEng(CompSc))",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      }
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "fact_ids": [
+        "f1"
+      ],
+      "scope": {
+        "university": "University of Hong Kong",
+        "programme": "Bachelor of Engineering in Computer Science (BEng(CompSc))",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Exact bachelor programme existence is established; fall 2027 availability is not established.",
+      "supporting_steps": []
+    }
+  ]
+}

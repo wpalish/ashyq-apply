@@ -1,0 +1,234 @@
+{
+  "schema_version": "1",
+  "case_id": "ubc",
+  "packet_sha256": "01b75b3f49691a139b4d003c087c28f029950277e68c396896e6d8aaff1228c0",
+  "baseline_pipeline_sha": "e0ac678e8b8ae251519e65598d3f0da4ff2abb24",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T11:38:30.230690+00:00",
+  "ended_at": "2026-10-04T11:43:18.904776+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T11:39:11.379354+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://you.ubc.ca/ubc_programs/computer-science-vancouver/"
+      },
+      "outcome": "http_error",
+      "outcome_status": "failure",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-001.json",
+      "raw_log_sha256": "304b650d6869d0e676e3e54cc9c796a7139cc9193b05931295599390165b441d",
+      "elapsed_ms": 5887,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 16970,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Start with UBC’s official Computer Science programme page.",
+      "observed_from_step": null,
+      "action": "fetcher: https://you.ubc.ca/ubc_programs/computer-science-vancouver/",
+      "stage": "page_understanding",
+      "url": "https://you.ubc.ca/ubc_programs/computer-science-vancouver/",
+      "final_url": "https://you.ubc.ca/programs/computer-science-vancouver/"
+    },
+    {
+      "at": "2026-10-04T11:40:11.643265+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:you.ubc.ca Computer Science bachelor English language admission international scholarships",
+        "domains": [
+          "you.ubc.ca"
+        ],
+        "max_results": 6
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-002.json",
+      "raw_log_sha256": "904318b6ada5c68054b73959018ef294e4ac4833059533b7598db938a5bea17f",
+      "elapsed_ms": 1622,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 28097,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "The initial programme URL returned 404; search official pages for the current Computer Science programme and admissions routes.",
+      "observed_from_step": 1,
+      "action": "search_provider: site:you.ubc.ca Computer Science bachelor English language admission international scholarships",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T11:41:05.959589+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-003.json",
+      "raw_log_sha256": "bd7cdf1b131b4ea92a7daca022b3b20314ffc09555661ecdd602b43bfb80a651",
+      "elapsed_ms": 2084,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 38943,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "Search identified a specific Computer Science BSc page; open it to verify programme identity and official admissions links.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://you.ubc.ca/programs/computer-science-vancouver-bsc/",
+      "stage": "page_understanding",
+      "url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/",
+      "final_url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/"
+    },
+    {
+      "at": "2026-10-04T11:42:23.211609+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-004.json",
+      "raw_log_sha256": "db0d05be23077dd2a6a26cae87665162beedf9fddcb7ca8efe12c95b6bca7148",
+      "elapsed_ms": 2670,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 69415,
+      "search_queries_cumulative": 1,
+      "step": 4,
+      "observed_before": "The Vancouver programme page establishes Computer Science (BSc) as a Bachelor of Science. Next inspect the linked English admission standard.",
+      "observed_from_step": 3,
+      "action": "fetcher: https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+      "stage": "page_understanding",
+      "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+      "final_url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/"
+    }
+  ],
+  "proposals": [
+    {
+      "claim_key": "programme.exists",
+      "value": true,
+      "source_url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/",
+      "excerpt": "Bachelor of Science",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of British Columbia",
+        "programme": "Computer Science (BSc)",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        3
+      ],
+      "status": "unreviewed"
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "supporting_steps": [
+        3
+      ],
+      "proposal_indices": [
+        0
+      ],
+      "evidence": [
+        {
+          "action_step": 3,
+          "source_url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/",
+          "excerpt": "Bachelor of Science",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b105",
+            "section_path": [
+              "Computer Science (BSc)",
+              "Program information",
+              "Program overview"
+            ],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "University of British Columbia",
+        "programme": "Computer Science (BSc)",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The programme overview identifies the Vancouver Computer Science (BSc) degree as Bachelor of Science."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

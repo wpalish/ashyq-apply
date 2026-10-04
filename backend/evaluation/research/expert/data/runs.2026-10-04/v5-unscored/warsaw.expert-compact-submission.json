@@ -1,0 +1,54 @@
+{
+  "kind": "submit",
+  "observation": "Submit the complete journal; all proposed evidence remains unreviewed.",
+  "action": null,
+  "facts": [
+    {
+      "id": "f1",
+      "question": "Q0",
+      "claim_key": "programme.exists",
+      "value_json": "true",
+      "source_step": 2,
+      "quotation": "Bachelor's degree, first cycle programme, Computer Science (S1-INF)",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b8",
+        "section_path": [
+          "Bachelor's degree, first cycle programme, Computer Science (S1-INF)"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "University of Warsaw",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      }
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "fact_ids": [
+        "f1"
+      ],
+      "scope": {
+        "university": "University of Warsaw",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Bachelor Computer Science is listed in the official catalogue.",
+      "supporting_steps": []
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "schema_version": "1",
+  "journal_sha256": "7bf86feb4028dea80d46f092ad141a0af172b0c6f24822118ce4bd69ca0594f0",
+  "facts": [
+    {
+      "claim_key": "programme.exists",
+      "id": "f1",
+      "location": {
+        "block_id": "b77",
+        "kind": "document_ir",
+        "page": null,
+        "section_path": [
+          "Bachelor of Computing (Hons) in Computer Science"
+        ]
+      },
+      "question": "Q0",
+      "quotation": "The Bachelor of Computing (Hons) in Computer Science at NTU’s College of Computing and Data Science (CCDS) is a 4-year direct honours degree that provides rigorous training in computing fundamentals, algorithms, data systems, and software design.",
+      "scope": {
+        "academic_year": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "programme": "Bachelor of Computing (Hons) in Computer Science",
+        "qualification": null,
+        "university": "Nanyang Technological University"
+      },
+      "source_step": 2,
+      "value_json": "true"
+    },
+    {
+      "claim_key": "country_credential.kz_high_school.direct_admission",
+      "id": "f2",
+      "location": {
+        "block_id": "b179",
+        "kind": "document_ir",
+        "page": null,
+        "section_path": [
+          "All Other International Qualifications",
+          "Criteria"
+        ]
+      },
+      "question": "Q2",
+      "quotation": "No, required additional qualification (see below)",
+      "scope": {
+        "academic_year": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "programme": null,
+        "qualification": "High School Certificate (Kazakhstan)",
+        "university": "Nanyang Technological University"
+      },
+      "source_step": 3,
+      "value_json": "\"No, required additional qualification (see below)\""
+    },
+    {
+      "claim_key": "country_credential.kz_nis.direct_admission",
+      "id": "f3",
+      "location": {
+        "block_id": "b219",
+        "kind": "document_ir",
+        "page": null,
+        "section_path": [
+          "All Other International Qualifications",
+          "Criteria"
+        ]
+      },
+      "question": "Q2",
+      "quotation": "Yes",
+      "scope": {
+        "academic_year": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "programme": null,
+        "qualification": "Kazakhstan NIS Grade 12 Certificate",
+        "university": "Nanyang Technological University"
+      },
+      "source_step": 3,
+      "value_json": "\"Yes\""
+    },
+    {
+      "claim_key": "country_credential.kz_nis.minimum",
+      "id": "f4",
+      "location": {
+        "block_id": "b220",
+        "kind": "document_ir",
+        "page": null,
+        "section_path": [
+          "All Other International Qualifications",
+          "Criteria"
+        ]
+      },
+      "question": "Q2",
+      "quotation": "Score of A in all subjects taken at NIS Grade 12 Certificate exam.",
+      "scope": {
+        "academic_year": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "programme": null,
+        "qualification": "Kazakhstan NIS Grade 12 Certificate",
+        "university": "Nanyang Technological University"
+      },
+      "source_step": 3,
+      "value_json": "\"Score of A in all subjects taken at NIS Grade 12 Certificate exam.\""
+    }
+  ],
+  "question_findings": [
+    {
+      "fact_ids": [
+        "f1"
+      ],
+      "observation": "Exact programme existence established.",
+      "question": "Q0",
+      "scope": {
+        "academic_year": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "programme": "Bachelor of Computing (Hons) in Computer Science",
+        "qualification": null,
+        "university": "Nanyang Technological University"
+      },
+      "status": "found",
+      "supporting_steps": []
+    }
+  ]
+}

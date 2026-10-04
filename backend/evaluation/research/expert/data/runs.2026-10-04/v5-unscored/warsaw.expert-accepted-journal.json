@@ -1,0 +1,53 @@
+{
+  "schema_version": "1",
+  "journal_sha256": "25403acf798e5e2b450781b97c1db8992e1280f354981f63fa410e13d18c622b",
+  "facts": [
+    {
+      "claim_key": "programme.exists",
+      "id": "f1",
+      "location": {
+        "block_id": "b8",
+        "kind": "document_ir",
+        "page": null,
+        "section_path": [
+          "Bachelor's degree, first cycle programme, Computer Science (S1-INF)"
+        ]
+      },
+      "question": "Q0",
+      "quotation": "Bachelor's degree, first cycle programme, Computer Science (S1-INF)",
+      "scope": {
+        "academic_year": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "programme": "Computer Science",
+        "qualification": null,
+        "university": "University of Warsaw"
+      },
+      "source_step": 2,
+      "value_json": "true"
+    }
+  ],
+  "question_findings": [
+    {
+      "fact_ids": [
+        "f1"
+      ],
+      "observation": "Bachelor Computer Science is listed in the official catalogue.",
+      "question": "Q0",
+      "scope": {
+        "academic_year": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "programme": "Computer Science",
+        "qualification": null,
+        "university": "University of Warsaw"
+      },
+      "status": "found",
+      "supporting_steps": []
+    }
+  ]
+}

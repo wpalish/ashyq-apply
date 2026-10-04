@@ -1,0 +1,81 @@
+{
+  "schema_version": "1",
+  "journal_sha256": "2be675efeeeba0e2f727910945c36e90c754ec870458d4c83dfa1c600d976bfd",
+  "facts": [
+    {
+      "claim_key": "programme.exists",
+      "id": "f1",
+      "location": {
+        "block_id": "b110",
+        "kind": "document_ir",
+        "page": null,
+        "section_path": [
+          "Computer Science"
+        ]
+      },
+      "question": "Q0",
+      "quotation": "Bachelor of Computer Science",
+      "scope": {
+        "academic_year": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "programme": "Computer Science",
+        "qualification": null,
+        "university": "University of Toronto"
+      },
+      "source_step": 3,
+      "value_json": "true"
+    },
+    {
+      "claim_key": "programme.admission_route",
+      "id": "f2",
+      "location": {
+        "block_id": "b131",
+        "kind": "document_ir",
+        "page": null,
+        "section_path": [
+          "Computer Science",
+          "Admission Requirements",
+          "Supplementary Requirements"
+        ]
+      },
+      "question": "Q2",
+      "quotation": "Transfer students who have completed any post-secondary studies (including studies at other divisions at the University of Toronto) are not eligible for admission to the Computer Science admission category. The Computer Science Specialist and Major are open only to those applying directly from high school.",
+      "scope": {
+        "academic_year": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "programme": "Computer Science",
+        "qualification": null,
+        "university": "University of Toronto"
+      },
+      "source_step": 3,
+      "value_json": "\"Transfer students who have completed any post-secondary studies (including studies at other divisions at the University of Toronto) are not eligible for admission to the Computer Science admission category. The Computer Science Specialist and Major are open only to those applying directly from high school.\""
+    }
+  ],
+  "question_findings": [
+    {
+      "fact_ids": [
+        "f1"
+      ],
+      "observation": "The Mississauga page names Computer Science and its Bachelor of Computer Science degree.",
+      "question": "Q0",
+      "scope": {
+        "academic_year": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "programme": "Computer Science",
+        "qualification": null,
+        "university": "University of Toronto"
+      },
+      "status": "found",
+      "supporting_steps": []
+    }
+  ]
+}

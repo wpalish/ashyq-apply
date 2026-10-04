@@ -1,0 +1,53 @@
+{
+  "schema_version": "1",
+  "journal_sha256": "d963a46fb63a1820db68469b8cab093babb9f153851337d67ec0eae89911d5fc",
+  "facts": [
+    {
+      "claim_key": "programme.exists",
+      "id": "f1",
+      "location": {
+        "block_id": "b77",
+        "kind": "document_ir",
+        "page": null,
+        "section_path": [
+          "Bachelor of Computing (Hons) in Computer Science"
+        ]
+      },
+      "question": "Q0",
+      "quotation": "The Bachelor of Computing (Hons) in Computer Science at NTU’s College of Computing and Data Science (CCDS) is a 4-year direct honours degree that provides rigorous training in computing fundamentals, algorithms, data systems, and software design.",
+      "scope": {
+        "academic_year": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "programme": "Bachelor of Computing (Hons) in Computer Science",
+        "qualification": null,
+        "university": "Nanyang Technological University"
+      },
+      "source_step": 2,
+      "value_json": "true"
+    }
+  ],
+  "question_findings": [
+    {
+      "fact_ids": [
+        "f1"
+      ],
+      "observation": "Exact programme existence established.",
+      "question": "Q0",
+      "scope": {
+        "academic_year": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "programme": "Bachelor of Computing (Hons) in Computer Science",
+        "qualification": null,
+        "university": "Nanyang Technological University"
+      },
+      "status": "found",
+      "supporting_steps": []
+    }
+  ]
+}

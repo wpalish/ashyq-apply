@@ -1,0 +1,998 @@
+{
+  "case_id": "warsaw",
+  "status": "incomplete",
+  "error": "selector_timeout",
+  "validated": true,
+  "trace_sha256": "5ecec755eb14152d531daf21f6aedc6b6471ef7dcddb0df442c09fd63c2b85f4",
+  "trace": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v5-2026-10-04/experts/warsaw/trace.json",
+  "journal_sha256": "25403acf798e5e2b450781b97c1db8992e1280f354981f63fa410e13d18c622b",
+  "compact_submission": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v5-2026-10-04/experts/warsaw/compact-submission.json",
+  "citation_proof_sha256": "bd63d4e3fc3cc06df3f9e31ff5d9c0f4fefed98ce9f1285247b2e464c630f4ab",
+  "accepted_turns": 4,
+  "active_ms": 107132,
+  "actions": 3,
+  "logical_expert": "expert500-warsaw",
+  "comparison_mode": "independent_full_budget",
+  "provider": "exa_mcp",
+  "requested_model": "gpt-6-astra",
+  "requested_reasoning_effort": "low",
+  "turn_policy": {
+    "policy_version": "1",
+    "model": "gpt-6-astra",
+    "model_reasoning_effort": "low",
+    "max_ms": 120000,
+    "max_calls": 60,
+    "max_search_queries": 6,
+    "source_deadline_ms": 95000,
+    "max_new_facts": 4,
+    "max_new_findings": 2,
+    "mechanical_validation_reserve_ms": 3000,
+    "minimal_commit_reserve_ms": 10000,
+    "phase_cap_ms": {
+      "bootstrap": 30000,
+      "data": 55000,
+      "minimal_commit": 10000
+    }
+  },
+  "exact_metering": true,
+  "codex_cli": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
+  "source_deadline_ms": 95000,
+  "closing_reserve_ms": 3000,
+  "turn_errors": [
+    {
+      "turn": 3,
+      "kind": "rejected_checkpoint",
+      "feedback": {
+        "error": "Q0 exact programme name is absent from the official evidence location",
+        "source_location_diagnostics": {
+          "schema_version": "1",
+          "diagnostics": [
+            {
+              "fact_id": "f2",
+              "source_step": 2,
+              "source_kind": "document_ir",
+              "reasons": [
+                "asserted_programme_text_not_visible",
+                "supplied_view_scan_incomplete"
+              ],
+              "scan_complete": false,
+              "matching_blocks_visible": 2,
+              "candidates_truncated": false,
+              "candidates": [
+                {
+                  "location": {
+                    "kind": "document_ir",
+                    "block_id": "b6",
+                    "section_path": [],
+                    "page": null
+                  },
+                  "source_view_index": 1,
+                  "match_kind": "exact_block_text",
+                  "quotation_in_block_text": true,
+                  "layout": {
+                    "kind": "table_cell",
+                    "table_id": 1,
+                    "row": 1,
+                    "col": 0,
+                    "row_headers": [],
+                    "column_headers": [],
+                    "label": "",
+                    "caption": ""
+                  },
+                  "text_window": "first cycle programme full-time, 3-year studies Language: Polish",
+                  "text_window_offset": 0,
+                  "text_total_chars": 64,
+                  "observed_local_scope": {
+                    "degree": null,
+                    "intake": null,
+                    "academic_year": null,
+                    "population": null,
+                    "qualification": null,
+                    "residency": null
+                  },
+                  "observed_section_scope": {
+                    "degree": null,
+                    "intake": null,
+                    "academic_year": null,
+                    "population": null,
+                    "qualification": null,
+                    "residency": null
+                  },
+                  "asserted_programme_text_visible": false
+                },
+                {
+                  "location": {
+                    "kind": "document_ir",
+                    "block_id": "b7",
+                    "section_path": [],
+                    "page": null
+                  },
+                  "source_view_index": 1,
+                  "match_kind": "context_only",
+                  "quotation_in_block_text": false,
+                  "layout": {
+                    "kind": "table_cell",
+                    "table_id": 1,
+                    "row": 1,
+                    "col": 1,
+                    "row_headers": [
+                      "first cycle programme full-time, 3-year studies Language: Polish"
+                    ],
+                    "column_headers": [],
+                    "label": "",
+                    "caption": ""
+                  },
+                  "text_window": "Jump to: General description ECTS Coordinators Qualifications awarded Access to further studies Learning outcomes Course structure diagram http://irk.uw.edu.pl/ Opis ogólny Kierunek studiów realizowany w ramach „Zintegrowanego Programu Rozwoju Dydaktyki – ZIP 2.0 ” , jest współfinansowany ze środków Europejskiego Funduszu Społecznego w ramach Programu Fundusze Europejskie dla Rozwoju Społecznego 2021-2027 (FERS) (nr umowy: FERS.01.05-IP.08-0365/23-00). Oznacza to, że studia na tym kierunku stwarzają dodatkowe możliwości rozwoju pasji i kompetencji przydatnych na intensywnie zmieniającym się rynku pracy. Uczestnicząc w Programie ZIP 2.0, dzięki funduszom europejskim, możesz korzystać m.in. z: - dodatkowych zajęć prowadzonych przez praktyków i organizowanych we współpracy z otoczeniem społec",
+                  "text_window_offset": 0,
+                  "text_total_chars": 4289,
+                  "observed_local_scope": {
+                    "degree": null,
+                    "intake": null,
+                    "academic_year": null,
+                    "population": null,
+                    "qualification": null,
+                    "residency": null
+                  },
+                  "observed_section_scope": {
+                    "degree": null,
+                    "intake": null,
+                    "academic_year": null,
+                    "population": null,
+                    "qualification": null,
+                    "residency": null
+                  },
+                  "asserted_programme_text_visible": false
+                }
+              ]
+            }
+          ],
+          "offending_fact_ids": [
+            "f2"
+          ],
+          "truncated": true,
+          "scanned_views": 2,
+          "scanned_blocks": 60,
+          "scanned_context_chars": 12795
+        }
+      }
+    },
+    {
+      "turn": 5,
+      "kind": "rejected_checkpoint",
+      "feedback": {
+        "error": "Q0 exact programme name is absent from the official evidence location",
+        "source_location_diagnostics": {
+          "schema_version": "1",
+          "diagnostics": [
+            {
+              "fact_id": "f2",
+              "source_step": 2,
+              "source_kind": "document_ir",
+              "reasons": [
+                "asserted_programme_text_not_visible",
+                "supplied_view_scan_incomplete"
+              ],
+              "scan_complete": false,
+              "matching_blocks_visible": 2,
+              "candidates_truncated": false,
+              "candidates": [
+                {
+                  "location": {
+                    "kind": "document_ir",
+                    "block_id": "b6",
+                    "section_path": [],
+                    "page": null
+                  },
+                  "source_view_index": 0,
+                  "match_kind": "exact_block_text",
+                  "quotation_in_block_text": true,
+                  "layout": {
+                    "kind": "table_cell",
+                    "table_id": 1,
+                    "row": 1,
+                    "col": 0,
+                    "row_headers": [],
+                    "column_headers": [],
+                    "label": "",
+                    "caption": ""
+                  },
+                  "text_window": "first cycle programme full-time, 3-year studies Language: Polish",
+                  "text_window_offset": 0,
+                  "text_total_chars": 64,
+                  "observed_local_scope": {
+                    "degree": null,
+                    "intake": null,
+                    "academic_year": null,
+                    "population": null,
+                    "qualification": null,
+                    "residency": null
+                  },
+                  "observed_section_scope": {
+                    "degree": null,
+                    "intake": null,
+                    "academic_year": null,
+                    "population": null,
+                    "qualification": null,
+                    "residency": null
+                  },
+                  "asserted_programme_text_visible": false
+                },
+                {
+                  "location": {
+                    "kind": "document_ir",
+                    "block_id": "b7",
+                    "section_path": [],
+                    "page": null
+                  },
+                  "source_view_index": 0,
+                  "match_kind": "context_only",
+                  "quotation_in_block_text": false,
+                  "layout": {
+                    "kind": "table_cell",
+                    "table_id": 1,
+                    "row": 1,
+                    "col": 1,
+                    "row_headers": [
+                      "first cycle programme full-time, 3-year studies Language: Polish"
+                    ],
+                    "column_headers": [],
+                    "label": "",
+                    "caption": ""
+                  },
+                  "text_window": "Jump to: General description ECTS Coordinators Qualifications awarded Access to further studies Learning outcomes Course structure diagram http://irk.uw.edu.pl/ Opis ogólny Kierunek studiów realizowany w ramach „Zintegrowanego Programu Rozwoju Dydaktyki – ZIP 2.0 ” , jest współfinansowany ze środków Europejskiego Funduszu Społecznego w ramach Programu Fundusze Europejskie dla Rozwoju Społecznego 2021-2027 (FERS) (nr umowy: FERS.01.05-IP.08-0365/23-00). Oznacza to, że studia na tym kierunku stwarzają dodatkowe możliwości rozwoju pasji i kompetencji przydatnych na intensywnie zmieniającym się rynku pracy. Uczestnicząc w Programie ZIP 2.0, dzięki funduszom europejskim, możesz korzystać m.in. z: - dodatkowych zajęć prowadzonych przez praktyków i organizowanych we współpracy z otoczeniem społec",
+                  "text_window_offset": 0,
+                  "text_total_chars": 4289,
+                  "observed_local_scope": {
+                    "degree": null,
+                    "intake": null,
+                    "academic_year": null,
+                    "population": null,
+                    "qualification": null,
+                    "residency": null
+                  },
+                  "observed_section_scope": {
+                    "degree": null,
+                    "intake": null,
+                    "academic_year": null,
+                    "population": null,
+                    "qualification": null,
+                    "residency": null
+                  },
+                  "asserted_programme_text_visible": false
+                }
+              ]
+            }
+          ],
+          "offending_fact_ids": [
+            "f2"
+          ],
+          "truncated": true,
+          "scanned_views": 2,
+          "scanned_blocks": 120,
+          "scanned_context_chars": 18762
+        }
+      }
+    },
+    {
+      "turn": 7,
+      "kind": "selector_timeout",
+      "elapsed_ms": 19151
+    }
+  ],
+  "explicit_commit": false,
+  "protocol_version": "journal-v5",
+  "processed_through_action_count": 3,
+  "all_recorded_sources_processed": true,
+  "real_elapsed_seconds": 230.881832,
+  "active_time_basis": "prompt/selector/parse/source/view/journal/trace work; excludes provisioning, GitHub transport and audit envelopes",
+  "meter": [
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 1
+    },
+    {
+      "stage": "bound_schema_construction",
+      "elapsed_ms": 2,
+      "active_ms": 3
+    },
+    {
+      "stage": "bound_schema_write",
+      "elapsed_ms": 1,
+      "active_ms": 4
+    },
+    {
+      "stage": "selector_command_construction",
+      "elapsed_ms": 1,
+      "active_ms": 5
+    },
+    {
+      "stage": "selector_command_proof",
+      "elapsed_ms": 1,
+      "active_ms": 6
+    },
+    {
+      "stage": "selector_request_write",
+      "elapsed_ms": 1,
+      "active_ms": 7
+    },
+    {
+      "stage": "checkpoint_selector",
+      "turn": 1,
+      "elapsed_ms": 13753,
+      "active_ms": 13760
+    },
+    {
+      "stage": "journal_answer_read",
+      "elapsed_ms": 1,
+      "active_ms": 13761
+    },
+    {
+      "stage": "journal_parse",
+      "elapsed_ms": 1,
+      "active_ms": 13762
+    },
+    {
+      "stage": "journal_candidate",
+      "elapsed_ms": 1,
+      "active_ms": 13763
+    },
+    {
+      "stage": "journal_submission",
+      "elapsed_ms": 1,
+      "active_ms": 13764
+    },
+    {
+      "stage": "checkpoint_expansion",
+      "elapsed_ms": 1,
+      "active_ms": 13765
+    },
+    {
+      "stage": "checkpoint_event_hashing",
+      "elapsed_ms": 1,
+      "active_ms": 13766
+    },
+    {
+      "stage": "checkpoint_snapshot_write",
+      "elapsed_ms": 1,
+      "active_ms": 13767
+    },
+    {
+      "stage": "checkpoint_commit_marker_write",
+      "elapsed_ms": 1,
+      "active_ms": 13768
+    },
+    {
+      "stage": "action_parse",
+      "elapsed_ms": 1,
+      "active_ms": 13769
+    },
+    {
+      "stage": "plan_construction",
+      "elapsed_ms": 1,
+      "active_ms": 13770
+    },
+    {
+      "stage": "controlled_source_action",
+      "elapsed_ms": 1481,
+      "active_ms": 15251,
+      "run_id": 37199337045
+    },
+    {
+      "stage": "controller_summary_read_and_parse",
+      "elapsed_ms": 1,
+      "active_ms": 15252
+    },
+    {
+      "stage": "source_output_processing_and_views",
+      "elapsed_ms": 1,
+      "active_ms": 15253
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 15254
+    },
+    {
+      "stage": "bound_schema_construction",
+      "elapsed_ms": 3,
+      "active_ms": 15257
+    },
+    {
+      "stage": "bound_schema_write",
+      "elapsed_ms": 1,
+      "active_ms": 15258
+    },
+    {
+      "stage": "selector_command_construction",
+      "elapsed_ms": 1,
+      "active_ms": 15259
+    },
+    {
+      "stage": "selector_command_proof",
+      "elapsed_ms": 1,
+      "active_ms": 15260
+    },
+    {
+      "stage": "selector_request_write",
+      "elapsed_ms": 1,
+      "active_ms": 15261
+    },
+    {
+      "stage": "checkpoint_selector",
+      "turn": 2,
+      "elapsed_ms": 8664,
+      "active_ms": 23925
+    },
+    {
+      "stage": "journal_answer_read",
+      "elapsed_ms": 1,
+      "active_ms": 23926
+    },
+    {
+      "stage": "journal_parse",
+      "elapsed_ms": 1,
+      "active_ms": 23927
+    },
+    {
+      "stage": "journal_candidate",
+      "elapsed_ms": 1,
+      "active_ms": 23928
+    },
+    {
+      "stage": "journal_submission",
+      "elapsed_ms": 1,
+      "active_ms": 23929
+    },
+    {
+      "stage": "checkpoint_expansion",
+      "elapsed_ms": 1,
+      "active_ms": 23930
+    },
+    {
+      "stage": "checkpoint_trace",
+      "elapsed_ms": 1,
+      "active_ms": 23931
+    },
+    {
+      "stage": "checkpoint_raw_log_validation",
+      "elapsed_ms": 2,
+      "active_ms": 23933
+    },
+    {
+      "stage": "checkpoint_all_fact_citations",
+      "elapsed_ms": 1,
+      "active_ms": 23934
+    },
+    {
+      "stage": "checkpoint_event_hashing",
+      "elapsed_ms": 1,
+      "active_ms": 23935
+    },
+    {
+      "stage": "checkpoint_snapshot_write",
+      "elapsed_ms": 1,
+      "active_ms": 23936
+    },
+    {
+      "stage": "checkpoint_commit_marker_write",
+      "elapsed_ms": 1,
+      "active_ms": 23937
+    },
+    {
+      "stage": "action_parse",
+      "elapsed_ms": 1,
+      "active_ms": 23938
+    },
+    {
+      "stage": "plan_construction",
+      "elapsed_ms": 1,
+      "active_ms": 23939
+    },
+    {
+      "stage": "controlled_source_action",
+      "elapsed_ms": 2333,
+      "active_ms": 26272,
+      "run_id": 37199385048
+    },
+    {
+      "stage": "controller_summary_read_and_parse",
+      "elapsed_ms": 1,
+      "active_ms": 26273
+    },
+    {
+      "stage": "source_output_processing_and_views",
+      "elapsed_ms": 66,
+      "active_ms": 26339
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 26340
+    },
+    {
+      "stage": "bound_schema_construction",
+      "elapsed_ms": 3,
+      "active_ms": 26343
+    },
+    {
+      "stage": "bound_schema_write",
+      "elapsed_ms": 1,
+      "active_ms": 26344
+    },
+    {
+      "stage": "selector_command_construction",
+      "elapsed_ms": 1,
+      "active_ms": 26345
+    },
+    {
+      "stage": "selector_command_proof",
+      "elapsed_ms": 1,
+      "active_ms": 26346
+    },
+    {
+      "stage": "selector_request_write",
+      "elapsed_ms": 2,
+      "active_ms": 26348
+    },
+    {
+      "stage": "checkpoint_selector",
+      "turn": 3,
+      "elapsed_ms": 19048,
+      "active_ms": 45396
+    },
+    {
+      "stage": "journal_answer_read",
+      "elapsed_ms": 1,
+      "active_ms": 45397
+    },
+    {
+      "stage": "journal_parse",
+      "elapsed_ms": 1,
+      "active_ms": 45398
+    },
+    {
+      "stage": "journal_candidate",
+      "elapsed_ms": 2,
+      "active_ms": 45400
+    },
+    {
+      "stage": "journal_submission",
+      "elapsed_ms": 1,
+      "active_ms": 45401
+    },
+    {
+      "stage": "checkpoint_expansion",
+      "elapsed_ms": 1,
+      "active_ms": 45402
+    },
+    {
+      "stage": "checkpoint_trace",
+      "elapsed_ms": 1,
+      "active_ms": 45403
+    },
+    {
+      "stage": "checkpoint_raw_log_validation",
+      "elapsed_ms": 46,
+      "active_ms": 45449
+    },
+    {
+      "stage": "checkpoint_all_fact_citations",
+      "elapsed_ms": 28,
+      "active_ms": 45477
+    },
+    {
+      "stage": "rejection_feedback_construction",
+      "elapsed_ms": 4,
+      "active_ms": 45481
+    },
+    {
+      "stage": "rejection_feedback_write",
+      "elapsed_ms": 1,
+      "active_ms": 45482
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 45483
+    },
+    {
+      "stage": "bound_schema_construction",
+      "elapsed_ms": 2,
+      "active_ms": 45485
+    },
+    {
+      "stage": "bound_schema_write",
+      "elapsed_ms": 1,
+      "active_ms": 45486
+    },
+    {
+      "stage": "selector_command_construction",
+      "elapsed_ms": 1,
+      "active_ms": 45487
+    },
+    {
+      "stage": "selector_command_proof",
+      "elapsed_ms": 1,
+      "active_ms": 45488
+    },
+    {
+      "stage": "selector_request_write",
+      "elapsed_ms": 2,
+      "active_ms": 45490
+    },
+    {
+      "stage": "checkpoint_selector",
+      "turn": 4,
+      "elapsed_ms": 11985,
+      "active_ms": 57475
+    },
+    {
+      "stage": "journal_answer_read",
+      "elapsed_ms": 1,
+      "active_ms": 57476
+    },
+    {
+      "stage": "journal_parse",
+      "elapsed_ms": 1,
+      "active_ms": 57477
+    },
+    {
+      "stage": "journal_candidate",
+      "elapsed_ms": 2,
+      "active_ms": 57479
+    },
+    {
+      "stage": "journal_submission",
+      "elapsed_ms": 1,
+      "active_ms": 57480
+    },
+    {
+      "stage": "checkpoint_expansion",
+      "elapsed_ms": 1,
+      "active_ms": 57481
+    },
+    {
+      "stage": "checkpoint_trace",
+      "elapsed_ms": 1,
+      "active_ms": 57482
+    },
+    {
+      "stage": "checkpoint_raw_log_validation",
+      "elapsed_ms": 45,
+      "active_ms": 57527
+    },
+    {
+      "stage": "checkpoint_all_fact_citations",
+      "elapsed_ms": 27,
+      "active_ms": 57554
+    },
+    {
+      "stage": "checkpoint_event_hashing",
+      "elapsed_ms": 1,
+      "active_ms": 57555
+    },
+    {
+      "stage": "checkpoint_snapshot_write",
+      "elapsed_ms": 1,
+      "active_ms": 57556
+    },
+    {
+      "stage": "checkpoint_commit_marker_write",
+      "elapsed_ms": 1,
+      "active_ms": 57557
+    },
+    {
+      "stage": "action_parse",
+      "elapsed_ms": 1,
+      "active_ms": 57558
+    },
+    {
+      "stage": "plan_construction",
+      "elapsed_ms": 1,
+      "active_ms": 57559
+    },
+    {
+      "stage": "controlled_source_action",
+      "elapsed_ms": 2031,
+      "active_ms": 59590,
+      "run_id": 37199444550
+    },
+    {
+      "stage": "controller_summary_read_and_parse",
+      "elapsed_ms": 1,
+      "active_ms": 59591
+    },
+    {
+      "stage": "source_output_processing_and_views",
+      "elapsed_ms": 72,
+      "active_ms": 59663
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 59664
+    },
+    {
+      "stage": "bound_schema_construction",
+      "elapsed_ms": 2,
+      "active_ms": 59666
+    },
+    {
+      "stage": "bound_schema_write",
+      "elapsed_ms": 1,
+      "active_ms": 59667
+    },
+    {
+      "stage": "selector_command_construction",
+      "elapsed_ms": 1,
+      "active_ms": 59668
+    },
+    {
+      "stage": "selector_command_proof",
+      "elapsed_ms": 1,
+      "active_ms": 59669
+    },
+    {
+      "stage": "selector_request_write",
+      "elapsed_ms": 2,
+      "active_ms": 59671
+    },
+    {
+      "stage": "checkpoint_selector",
+      "turn": 5,
+      "elapsed_ms": 17408,
+      "active_ms": 77079
+    },
+    {
+      "stage": "journal_answer_read",
+      "elapsed_ms": 1,
+      "active_ms": 77080
+    },
+    {
+      "stage": "journal_parse",
+      "elapsed_ms": 1,
+      "active_ms": 77081
+    },
+    {
+      "stage": "journal_candidate",
+      "elapsed_ms": 2,
+      "active_ms": 77083
+    },
+    {
+      "stage": "journal_submission",
+      "elapsed_ms": 1,
+      "active_ms": 77084
+    },
+    {
+      "stage": "checkpoint_expansion",
+      "elapsed_ms": 1,
+      "active_ms": 77085
+    },
+    {
+      "stage": "checkpoint_trace",
+      "elapsed_ms": 1,
+      "active_ms": 77086
+    },
+    {
+      "stage": "checkpoint_raw_log_validation",
+      "elapsed_ms": 83,
+      "active_ms": 77169
+    },
+    {
+      "stage": "checkpoint_all_fact_citations",
+      "elapsed_ms": 24,
+      "active_ms": 77193
+    },
+    {
+      "stage": "rejection_feedback_construction",
+      "elapsed_ms": 3,
+      "active_ms": 77196
+    },
+    {
+      "stage": "rejection_feedback_write",
+      "elapsed_ms": 1,
+      "active_ms": 77197
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 77198
+    },
+    {
+      "stage": "bound_schema_construction",
+      "elapsed_ms": 2,
+      "active_ms": 77200
+    },
+    {
+      "stage": "bound_schema_write",
+      "elapsed_ms": 1,
+      "active_ms": 77201
+    },
+    {
+      "stage": "selector_command_construction",
+      "elapsed_ms": 1,
+      "active_ms": 77202
+    },
+    {
+      "stage": "selector_command_proof",
+      "elapsed_ms": 1,
+      "active_ms": 77203
+    },
+    {
+      "stage": "selector_request_write",
+      "elapsed_ms": 2,
+      "active_ms": 77205
+    },
+    {
+      "stage": "checkpoint_selector",
+      "turn": 6,
+      "elapsed_ms": 10477,
+      "active_ms": 87682
+    },
+    {
+      "stage": "journal_answer_read",
+      "elapsed_ms": 1,
+      "active_ms": 87683
+    },
+    {
+      "stage": "journal_parse",
+      "elapsed_ms": 1,
+      "active_ms": 87684
+    },
+    {
+      "stage": "journal_candidate",
+      "elapsed_ms": 4,
+      "active_ms": 87688
+    },
+    {
+      "stage": "journal_submission",
+      "elapsed_ms": 1,
+      "active_ms": 87689
+    },
+    {
+      "stage": "checkpoint_expansion",
+      "elapsed_ms": 1,
+      "active_ms": 87690
+    },
+    {
+      "stage": "checkpoint_trace",
+      "elapsed_ms": 1,
+      "active_ms": 87691
+    },
+    {
+      "stage": "checkpoint_raw_log_validation",
+      "elapsed_ms": 79,
+      "active_ms": 87770
+    },
+    {
+      "stage": "checkpoint_all_fact_citations",
+      "elapsed_ms": 47,
+      "active_ms": 87817
+    },
+    {
+      "stage": "checkpoint_event_hashing",
+      "elapsed_ms": 1,
+      "active_ms": 87818
+    },
+    {
+      "stage": "checkpoint_snapshot_write",
+      "elapsed_ms": 1,
+      "active_ms": 87819
+    },
+    {
+      "stage": "checkpoint_commit_marker_write",
+      "elapsed_ms": 1,
+      "active_ms": 87820
+    },
+    {
+      "stage": "action_parse",
+      "elapsed_ms": 1,
+      "active_ms": 87821
+    },
+    {
+      "stage": "stored_source_view",
+      "elapsed_ms": 34,
+      "active_ms": 87855
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 87856
+    },
+    {
+      "stage": "bound_schema_construction",
+      "elapsed_ms": 2,
+      "active_ms": 87858
+    },
+    {
+      "stage": "bound_schema_write",
+      "elapsed_ms": 1,
+      "active_ms": 87859
+    },
+    {
+      "stage": "selector_command_construction",
+      "elapsed_ms": 1,
+      "active_ms": 87860
+    },
+    {
+      "stage": "selector_command_proof",
+      "elapsed_ms": 1,
+      "active_ms": 87861
+    },
+    {
+      "stage": "selector_request_write",
+      "elapsed_ms": 2,
+      "active_ms": 87863
+    },
+    {
+      "stage": "checkpoint_selector",
+      "turn": 7,
+      "elapsed_ms": 19151,
+      "active_ms": 107014
+    },
+    {
+      "stage": "closing_journal_submission",
+      "elapsed_ms": 1,
+      "active_ms": 107015
+    },
+    {
+      "stage": "closing_expansion",
+      "elapsed_ms": 1,
+      "active_ms": 107016
+    },
+    {
+      "stage": "closing_trace",
+      "elapsed_ms": 1,
+      "active_ms": 107017
+    },
+    {
+      "stage": "closing_raw_log_validation",
+      "elapsed_ms": 84,
+      "active_ms": 107101
+    },
+    {
+      "stage": "closing_all_fact_citations",
+      "elapsed_ms": 24,
+      "active_ms": 107125
+    },
+    {
+      "stage": "closing_journal_write",
+      "elapsed_ms": 1,
+      "active_ms": 107126
+    },
+    {
+      "stage": "closing_compact_write",
+      "elapsed_ms": 1,
+      "active_ms": 107127
+    },
+    {
+      "stage": "closing_proof_write",
+      "elapsed_ms": 1,
+      "active_ms": 107128
+    },
+    {
+      "stage": "closing_trace_write",
+      "elapsed_ms": 1,
+      "active_ms": 107129
+    },
+    {
+      "stage": "closing_trace_hash",
+      "elapsed_ms": 1,
+      "active_ms": 107130
+    },
+    {
+      "stage": "closing_citation_proof_hash",
+      "elapsed_ms": 1,
+      "active_ms": 107131
+    },
+    {
+      "stage": "terminal_retained_finding_summary",
+      "elapsed_ms": 1,
+      "active_ms": 107132
+    }
+  ],
+  "found": [
+    "Q0"
+  ]
+}
