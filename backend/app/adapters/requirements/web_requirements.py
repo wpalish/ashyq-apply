@@ -23,6 +23,7 @@ from app.adapters.extraction import (
     ClaimBuilder,
     excerpt_around,
     extract_admission_route,
+    extract_costs,
     extract_programme_faculty,
     extract_requirements,
     for_matching,
@@ -110,12 +111,28 @@ _WAIVER_NEGATION = re.compile(
 _WAIVER_OFFERED = re.compile(r"\b(available|offered|granted|waive[ds]?|waiving)\b", re.IGNORECASE)
 
 
+#: Experiment ER-08 (expert trace 2026-10-04), off until a paired run passes.
+#: After a programme page is known, one public query per topic finds the
+#: official page that publishes it. Groningen, NTU and HKU each answered the
+#: English, fee and deadline questions on pages this adapter never opened,
+#: and each was the top same-institution result of one query.
+TOPIC_SEARCH = False
+#: Topic name to the public query; only the institution name is filled in.
+_TOPIC_QUERIES = (
+    ("english", "{name} undergraduate English language requirements international applicants"),
+    ("fees", "{name} undergraduate tuition fees international students"),
+    ("deadline", "{name} undergraduate application deadline international students"),
+)
+
+
 @dataclass(frozen=True)
 class _Target:
     url: str
     specificity: SourceSpecificity
     #: Reached by following an English-requirement link from an official page.
     language_follow: bool = False
+    #: Found by experiment ER-08 for this topic.
+    topic: str | None = None
 
 
 #: Language-requirement pages followed per programme, beyond the two targets.
@@ -150,6 +167,9 @@ class WebRequirementsAdapter:
     def __init__(self, fetcher: Fetcher, academic_year: str) -> None:
         self.fetcher = fetcher
         self.academic_year = academic_year
+        #: Topic pages found per institution: programmes of one university
+        #: share them, so each query is sent once per run.
+        self._topic_pages: dict[str, tuple[tuple[str, str], ...]] = {}
 
     async def verify(
         self, candidate: Candidate, program: CandidateProgram, intake: str
@@ -166,6 +186,11 @@ class WebRequirementsAdapter:
         ]
         queue = [t for t in targets if t]
         visited = {t.url for t in queue}
+        if TOPIC_SEARCH and program.url:
+            for topic, url in await self._find_topic_pages(candidate, program, out):
+                if url not in visited:
+                    visited.add(url)
+                    queue.append(_Target(url, SourceSpecificity.UNIVERSITY_ADMISSIONS, topic=topic))
         followed = 0
         while queue:
             target = queue.pop(0)
@@ -379,6 +404,15 @@ class WebRequirementsAdapter:
             self._claim_english_test_types(text, builder)
             self._claim_english_waiver(text, builder)
             self._claim_fees(text, builder)
+            if (
+                TOPIC_SEARCH
+                and page.accepts("costs")
+                and (target.topic is not None or target.url == program.url)
+            ):
+                # A programme page or a fee page states the tuition table
+                # (Groningen: non-EU/EEA per academic year on the programme
+                # page), which the university-level cost adapter never reads.
+                extract_costs(text, builder)
 
             out.claims.extend(builder.claims)
             out.page_outcomes.append(
@@ -420,6 +454,62 @@ class WebRequirementsAdapter:
                 "requirements cannot be verified."
             )
         return out
+
+    async def _find_topic_pages(
+        self, candidate: Candidate, program: CandidateProgram, out: AdapterResult
+    ) -> tuple[tuple[str, str], ...]:
+        """One official page per topic, from one public query each, or nothing.
+
+        Only the institution's name enters a query. A result counts only on the
+        institution's own domain, outside excluded paths and not naming another
+        degree level. A provider failure (a 429 included) ends the search for
+        this institution; nothing is retried.
+        """
+        from app.adapters.discovery.live_discovery import (
+            is_excluded_path,
+            names_other_degree_level,
+            registrable_domain,
+            same_institution,
+        )
+        from app.adapters.search import SearchError, get_search_provider
+        from app.adapters.search.base import search_failure_diagnostic
+
+        key = candidate.domain or candidate.name
+        if key in self._topic_pages:
+            return self._topic_pages[key]
+        self._topic_pages[key] = ()
+        if not candidate.domain:
+            return ()
+        try:
+            provider = get_search_provider()
+        except SearchError:
+            return ()
+        found: list[tuple[str, str]] = []
+        for topic, template in _TOPIC_QUERIES:
+            try:
+                response = await provider.search(
+                    query=template.format(name=candidate.name),
+                    domains=[registrable_domain(candidate.domain) or candidate.domain],
+                    max_results=5,
+                )
+            except SearchError as exc:
+                out.errors.append(
+                    f"Topic search ({topic}): {search_failure_diagnostic(provider.name, exc)}"
+                )
+                break
+            taken = {u for _, u in found}
+            for result in response.results:
+                url = result.url
+                if (
+                    same_institution(url, candidate.domain)
+                    and not is_excluded_path(url)
+                    and not names_other_degree_level(url, str(program.degree))
+                    and url not in taken
+                ):
+                    found.append((topic, url))
+                    break
+        self._topic_pages[key] = tuple(found)
+        return self._topic_pages[key]
 
     # --- individual claims ------------------------------------------------
 
