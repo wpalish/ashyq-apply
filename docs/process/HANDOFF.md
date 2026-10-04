@@ -1746,7 +1746,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-**[expert-500] Write-ahead:** edit only evaluation/research/expert tooling, its offline tests, the benchmark expert-actions wiring as needed, and process evidence. No app algorithm or gold/binding edits. Preserve 120s/60-page/six-search budget, robots, free-provider 429 stop, citation/raw-log integrity, and unreviewed evidence status. Ten pilot identities must be in DEV so HELDOUT stays unopened. Full gates and separate Phase0 PR; fresh main capture/Phase1 ten-expert pilot only after controller/isolation readiness.
+**[expert-500] Write-ahead:** edit only evaluation/research/expert tooling, its offline tests, the benchmark expert-actions wiring as needed, and process evidence. No app algorithm or gold/binding edits. Preserve 120s/60-page/six-search budget, robots, free-provider 429 stop, citation/raw-log integrity, and unreviewed evidence status. Ten pilot identities must be in DEV so HELDOUT stays unopened. Additional Phase0 write-ahead: controller.expert_view + tests/test_expert_pdf_view.py add pure parsing of already stored PDF bytes with exact bounded page locations; evaluation/research/live.py and tests/test_expert_live_budget.py add an opt-in strict expert budget (cold get60 / global query6 / active120s) while preserving legacy mode; report the unchanged main app tree separately from the new evaluation harness SHA. Full gates and separate Phase0 PR; fresh main-app capture/Phase1 ten-expert pilot only after controller/isolation readiness.
 
 
 **After this documentation checkpoint:** inspect postmerge CI36972183803 and merge this metadata-only release record through its PR using the owner's standing merge authorization. No runtime edits are pending. Future product changes require a reproduced fault; partial official-data coverage is explicitly documented, not a completed universal knowledge base. Do not duplicate the synthetic NTU acceptance run or change production credentials.
@@ -3660,6 +3660,9 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**[expert-500] Phase0 checkpoint (2026-10-04):** backend Ruff check/format306 files and mypy306 pass; complete pytest3048 passed,2 warnings,94.89% coverage in385.43s. Frontend typecheck/lint/unit/build all exit0; exact unit count was truncated and is not asserted. Blinded selector25 offline regressions pass; real neutral CLI model probe completed text-only in4.104s with OS denied sealed sentinel. No university pages fetched in Phase0. Strict baseline budget and saved-PDF view are still under implementation and require their focused/full final gates before ready-for-review.
+
 
 **Public release acceptance:** PR39 source exact-head CI8/8; Fly v5 complete/health ok/demo false; local catalogue501 and country/name/empty queries pass; real UI run completed inabout157s,3 programmes,51 Claim records,21 page checks,0 unreadable. Result/evidence persistence and Saved filtering verified. Full source gates remain2873/94.89%,frontend232,E2E79+6 with1 intentional skip. Postmerge run36972183803 provides the main check status.
 

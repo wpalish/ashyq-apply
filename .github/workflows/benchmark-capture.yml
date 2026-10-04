@@ -490,11 +490,24 @@ jobs:
 
       - name: Baseline capture and blinded packet
         if: inputs.mode == 'expert_baseline'
+        env:
+          REQUESTED_CASE: ${{ inputs.case }}
         run: |
-          set -o pipefail
+          set -euo pipefail
           mkdir -p out
+          case_flags=()
+          packet_flags=()
+          if [ -n "$REQUESTED_CASE" ]; then
+            case_flags=(--case "$REQUESTED_CASE")
+            packet_flags=(--case "$REQUESTED_CASE")
+          else
+            # Public cohort IDs only. The expert exporter copies no labels.
+            for case_id in $(.venv/bin/python -c 'from evaluation.research.live import COHORT; print(" ".join(COHORT))'); do
+              packet_flags+=(--case "$case_id")
+            done
+          fi
           .venv/bin/python -m evaluation.research.live --live --out out/capture \
-            --case "${{ inputs.case }}" \
+            "${case_flags[@]}" \
             --seconds-per-case "${{ inputs.seconds_per_case }}" \
             --max-pages "${{ inputs.max_pages }}" ${{ inputs.extra_args }} \
             --search-provider "$UNIMATCH_SEARCH_PROVIDER" | tee out/capture.log
@@ -502,7 +515,7 @@ jobs:
           test -f "$CAPTURE"
           .venv/bin/python -m evaluation.research.expert prepare \
             --dataset evaluation/research/data/ground_truth.reviewed.json \
-            --capture "$CAPTURE" --case "${{ inputs.case }}" \
+            --capture "$CAPTURE" "${packet_flags[@]}" \
             --out out/packet.json
           echo "extra_args=${{ inputs.extra_args }}" >> out/config.txt
 
@@ -544,3 +557,12 @@ jobs:
           echo "BUNDLE_BEGIN"
           base64 -w 4000 bundle.tgz | sed 's/^/B64 /'
           echo "BUNDLE_END"
+
+      - name: Preserve independently recorded expert evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: expert-recovery-${{ github.run_id }}
+          path: backend/out
+          if-no-files-found: warn
+          retention-days: 14
