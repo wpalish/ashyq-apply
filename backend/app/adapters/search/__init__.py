@@ -64,6 +64,11 @@ class _ThrottleLatch:
         self._inner = inner
         self.name = inner.name
 
+    @property
+    def inner(self) -> SearchProvider:
+        """The adapter this latch guards (for type checks and diagnostics)."""
+        return self._inner
+
     def __getattr__(self, attr: str) -> object:
         return getattr(self._inner, attr)
 
