@@ -6,6 +6,7 @@ import base64
 import binascii
 import hashlib
 import json
+import math
 import re
 from dataclasses import dataclass
 from datetime import date, datetime
@@ -14,6 +15,15 @@ from typing import Any, Literal, Self
 from urllib.parse import urlsplit
 
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl, JsonValue, TypeAdapter, model_validator
+
+from .network_budget import (
+    BUDGET_MODEL,
+    NETWORK_COMPARISON_MODE,
+    WallGuard,
+    expert_budget,
+    parse_timestamp,
+    validate_expert_budget,
+)
 
 QuestionID = Literal["Q0", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6"]
 QUESTIONS = ("Q0", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6")
@@ -201,6 +211,9 @@ class ExpertTrace(Strict):
     initial_fetcher_calls: int = Field(ge=0)
     initial_elapsed_ms: int = Field(ge=0)
     initial_search_queries: int = Field(default=0, ge=0)
+    budget_model: Literal["network_actions_v1"] | None = None
+    wall_started_at: datetime | None = None
+    wall_deadline_at: datetime | None = None
     started_at: datetime
     ended_at: datetime
     actions: list[Action] = Field(min_length=1)
@@ -214,6 +227,29 @@ class ExpertTrace(Strict):
             raise ValueError("Trace times must include a timezone")
         if self.ended_at < self.started_at:
             raise ValueError("Trace ends before it starts")
+        if self.budget_model is not None or any(
+            value is not None for value in (self.wall_started_at, self.wall_deadline_at)
+        ):
+            if (
+                self.budget_model != BUDGET_MODEL
+                or self.wall_started_at is None
+                or self.wall_deadline_at is None
+            ):
+                raise ValueError("Network traces require budget_model and both wall timestamps")
+            guard = WallGuard(self.wall_started_at, self.wall_deadline_at)
+            if self.started_at != guard.started_at or self.ended_at > guard.deadline_at:
+                raise ValueError("Network trace must stay within its original wall hang guard")
+            budget = expert_budget()
+            if (self.max_fetcher_calls, self.max_elapsed_ms, self.max_search_queries) != (
+                budget["max_fetcher_calls"],
+                budget["max_elapsed_ms"],
+                budget["max_search_queries"],
+            ):
+                raise ValueError(
+                    "Network trace requires exact network caps and the wall hang guard"
+                )
+            if self.initial_fetcher_calls or self.initial_elapsed_ms or self.initial_search_queries:
+                raise ValueError("Independent network traces start with zero source counters")
         if [action.step for action in self.actions] != list(range(1, len(self.actions) + 1)):
             raise ValueError("Actions must have consecutive 1-based steps")
         if len({action.raw_log_path for action in self.actions}) != len(self.actions):
@@ -446,6 +482,14 @@ def _check_controller_action(
             or action.elapsed_ms_cumulative != before + charged
         ):
             raise ValueError(f"Controller elapsed accounting mismatch at step {action.step}")
+        if record.get("budget_origin") == NETWORK_COMPARISON_MODE and (
+            before != previous_ms
+            or charged != action.elapsed_ms
+            or (not executed and action.elapsed_ms != 0)
+        ):
+            raise ValueError(
+                "Network elapsed accounting must contain only measured controller actions"
+            )
     elif action.elapsed_ms_cumulative != previous_ms + action.elapsed_ms:
         raise ValueError(f"Controller elapsed accounting mismatch at step {action.step}")
     queries = previous_queries
@@ -757,6 +801,104 @@ def _controller_budget(
                     )
 
 
+def _network_controller_budget(
+    parsed: ExpertTrace, action: Action, record: dict[str, Any], case: dict[str, Any]
+) -> None:
+    """Bind prospective network actions to the independently recorded wall."""
+    from .controller import STRICT_PROVIDERS, _search_domains
+
+    assert parsed.wall_started_at is not None and parsed.wall_deadline_at is not None
+    guard = WallGuard(parsed.wall_started_at, parsed.wall_deadline_at)
+    expected = {**expert_budget(), **guard.as_dict()}
+    policy = record.get("tool_policy")
+    if not isinstance(policy, dict) or policy.get("strict_budget") is not True:
+        raise ValueError("Network actions require independent strict controller policy")
+    for metadata in (record, policy):
+        if any(
+            type(metadata.get(key)) is not type(value) or metadata.get(key) != value
+            for key, value in expected.items()
+        ):
+            raise ValueError("Controller network policy or wall guard differs from the trace")
+        if metadata.get("budget_origin") != NETWORK_COMPARISON_MODE:
+            raise ValueError("Controller network budget origin differs from the trace")
+    if record.get("case_id") != parsed.case_id or record.get("provider") not in STRICT_PROVIDERS:
+        raise ValueError("Network controller case or provider identity mismatch")
+    if policy.get("action_deadline_ms") is not None:
+        raise ValueError("Network policy uses only its absolute wall hang guard")
+    exploration = policy.get("exploration_mode")
+    if exploration not in {"same_policy", "outside_policy"} or (
+        exploration == "outside_policy" and action.policy_mode != "outside_policy"
+    ):
+        raise ValueError("Diagnostic network exploration cannot become same-policy evidence")
+    if action.policy_mode == "same_policy" and (
+        record.get("outcome")
+        or (record.get("response") or {}).get("outcome") == "blocked_by_final_url_policy"
+    ):
+        raise ValueError("Controller policy refusals cannot become same-policy network actions")
+    if action.search_queries_cumulative is None or any(
+        key not in record for key in ("elapsed_ms_before", "charged_elapsed_ms")
+    ):
+        raise ValueError(
+            "Network actions require independent source counters and elapsed accounting"
+        )
+    bounds = record.get("budgets")
+    required_bounds = {
+        "max_calls": parsed.max_fetcher_calls,
+        "max_ms": parsed.max_elapsed_ms,
+        "max_search_queries": parsed.max_search_queries,
+    }
+    if not isinstance(bounds, dict) or any(
+        type(bounds.get(key)) is not int or bounds.get(key) != value
+        for key, value in required_bounds.items()
+    ):
+        raise ValueError("Network actions require exact independently recorded caps")
+    at = parse_timestamp(record["at"])
+    completed = parse_timestamp(record.get("completed_at", ""), field="completed_at")
+    if record["at"] != at.isoformat() or record["completed_at"] != completed.isoformat():
+        raise ValueError("Network controller timestamps must be canonical aware UTC")
+    if not guard.started_at <= at <= completed <= parsed.ended_at:
+        raise ValueError("Controller completion is outside the retained trace wall interval")
+    if action.elapsed_ms > math.ceil((completed - at).total_seconds() * 1000):
+        raise ValueError("Measured source elapsed exceeds its recorded controller action interval")
+    wall_elapsed = record.get("wall_elapsed_ms")
+    if type(wall_elapsed) is not int or wall_elapsed != math.ceil(
+        (completed - guard.started_at).total_seconds() * 1000
+    ):
+        raise ValueError("Controller wall elapsed differs from its immutable case clock")
+    executed = record["executed"]
+    dispatch = record.get("dispatch_at")
+    if executed:
+        if not isinstance(dispatch, str):
+            raise ValueError("Executed network action requires an actual dispatch timestamp")
+        dispatched = parse_timestamp(dispatch, field="dispatch_at")
+        if dispatch != dispatched.isoformat() or not at <= dispatched < guard.deadline_at:
+            raise ValueError("Controller dispatched outside its immutable wall hang guard")
+        if dispatched > completed:
+            raise ValueError("Controller completion precedes dispatch")
+        if action.outcome_status == "success" and completed >= guard.deadline_at:
+            raise ValueError("Successful network evidence returned after its wall hang guard")
+        if action.tool not in {"fetcher", "search_provider"}:
+            raise ValueError(
+                "Network actions require the controlled Fetcher or configured provider"
+            )
+        domains = policy["official_domains"]
+        if any(not _official_source(_URL.validate_python("https://" + d), case) for d in domains):
+            raise ValueError("Controller official domains differ from the exact packet case")
+        if action.tool == "search_provider":
+            request = record["request"]
+            if _search_domains(request, tuple(domains)) != request.get("domains"):
+                raise ValueError("Controller query domains differ from their recorded restrictions")
+    elif dispatch is not None:
+        raise ValueError("Refused network action cannot claim an actual dispatch")
+    response = record.get("response") or {}
+    if (
+        action.tool == "search_provider"
+        and response.get("http_status") == 429
+        and record.get("stop_reason") != "http_429"
+    ):
+        raise ValueError("Controller provider 429 must retain its structured sticky stop")
+
+
 def validate_trace(
     trace: dict[str, Any], packet: dict[str, Any], *, logs_dir: Path | None = None
 ) -> ExpertTrace:
@@ -775,7 +917,15 @@ def validate_trace(
         raise ValueError("Unknown case ID")
     if parsed.baseline_pipeline_sha != packet["baseline_pipeline_sha"]:
         raise ValueError("Wrong baseline pipeline")
-    budget = packet["baseline_budget"]
+    network = packet.get("comparison_mode") == NETWORK_COMPARISON_MODE
+    budget = validate_expert_budget(packet) if network else packet["baseline_budget"]
+    if network:
+        if parsed.budget_model != BUDGET_MODEL:
+            raise ValueError("Network packet requires an explicit network trace budget_model")
+        if logs_dir is None:
+            raise ValueError("Network traces require independent controller raw logs")
+    elif parsed.budget_model is not None:
+        raise ValueError("Network trace requires the explicit network packet comparison mode")
     if (parsed.max_fetcher_calls, parsed.max_elapsed_ms) != (
         budget["max_fetcher_calls"],
         budget["max_elapsed_ms"],
@@ -808,8 +958,13 @@ def validate_trace(
             parsed.initial_elapsed_ms,
             parsed.initial_search_queries,
         )
+        provider_stopped = False
+        previous_completion = parsed.started_at
         for action in parsed.actions:
-            path = (root / action.raw_log_path).resolve()
+            unresolved = root / action.raw_log_path
+            if network and unresolved.is_symlink():
+                raise ValueError("Network raw logs must be independent regular files")
+            path = unresolved.resolve()
             if not path.is_relative_to(root):
                 raise ValueError("Raw log path escapes the log directory")
             data = path.read_bytes()
@@ -824,11 +979,22 @@ def validate_trace(
                     action, record, calls, elapsed, queries
                 )
                 _controller_budget(parsed, action, record, packet.get("comparison_mode"))
+                if network:
+                    _network_controller_budget(parsed, action, record, case)
+                    if action.at < previous_completion:
+                        raise ValueError("Network actions precede the previous raw completion")
+                    previous_completion = parse_timestamp(record["completed_at"])
+                    if provider_stopped and (
+                        record.get("stop_reason") != "http_429"
+                        or (record["executed"] and action.tool == "search_provider")
+                    ):
+                        raise ValueError("Network resume cannot clear or retry a provider 429")
+                    provider_stopped = provider_stopped or record.get("stop_reason") == "http_429"
                 records[action.step] = record
                 source = _source_read(record)
                 if source is not None:
                     sources[action.step] = source
-            elif parsed.question_findings is not None:
+            elif network or parsed.question_findings is not None:
                 raise ValueError("Question findings require independent structured controller logs")
             else:
                 calls, elapsed = action.fetcher_calls_cumulative, action.elapsed_ms_cumulative

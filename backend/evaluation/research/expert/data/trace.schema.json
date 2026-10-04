@@ -497,6 +497,45 @@
       "title": "Initial Search Queries",
       "type": "integer"
     },
+    "budget_model": {
+      "anyOf": [
+        {
+          "const": "network_actions_v1",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Budget Model"
+    },
+    "wall_started_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Wall Started At"
+    },
+    "wall_deadline_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Wall Deadline At"
+    },
     "started_at": {
       "format": "date-time",
       "title": "Started At",
