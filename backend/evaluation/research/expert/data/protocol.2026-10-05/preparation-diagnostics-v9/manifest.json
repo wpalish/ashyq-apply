@@ -1,0 +1,17 @@
+{
+  "schema_version": "1",
+  "status": "pre-freeze diagnostics",
+  "reason": "Three root-config I001 import-order findings in new V9 test files; parent/report/OS helper behavior unchanged. Earlier combined409 mocks passed, final-byte gate rerun after import-only correction.",
+  "records": [
+    {
+      "path": "initial-root-import-context-quality.log",
+      "original_path": "/tmp/unimatch-expert500-v9-parent-quality-final.txt",
+      "sha256": "a15b212c436380c2c34e7fdc522fe6bf7a0689699eb1b03ff7568561b9583a78"
+    },
+    {
+      "path": "pre-format-combined-409.log",
+      "original_path": "/tmp/unimatch-expert500-v9-frozen-byte-mock-gates.txt",
+      "sha256": "4963745f4377ad8e2eb992890830f4284a473cb5d6c2971f2dc1973c11a29a76"
+    }
+  ]
+}

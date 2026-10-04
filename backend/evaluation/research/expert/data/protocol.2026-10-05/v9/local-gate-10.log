@@ -1,0 +1,13 @@
+COMMAND: backend/.venv/bin/python -m ruff check --config backend/ruff.toml --ignore B023 /tmp/unimatch-expert500-journal-pilot-v9.py /tmp/unimatch-expert500-journal-report-v9.py /tmp/test_unimatch_expert500_journal_pilot_v9.py /tmp/test_unimatch_expert500_journal_report_v9.py /tmp/test_unimatch_expert500_actual_cohort_v9.py /tmp/test_unimatch_expert500_workflow_v9.py /tmp/unimatch-expert500-export-v9.py /tmp/unimatch-expert500-launch-v9.py /tmp/unimatch-expert500-freeze-v9.py /tmp/unimatch-expert500-isolation-preflight-v9.py
+All checks passed!
+EXIT: 0
+COMMAND: backend/.venv/bin/python -m ruff format --check --config backend/ruff.toml /tmp/unimatch-expert500-journal-pilot-v9.py /tmp/unimatch-expert500-journal-report-v9.py /tmp/test_unimatch_expert500_journal_pilot_v9.py /tmp/test_unimatch_expert500_journal_report_v9.py /tmp/test_unimatch_expert500_actual_cohort_v9.py /tmp/test_unimatch_expert500_workflow_v9.py /tmp/unimatch-expert500-export-v9.py /tmp/unimatch-expert500-launch-v9.py /tmp/unimatch-expert500-freeze-v9.py /tmp/unimatch-expert500-isolation-preflight-v9.py
+10 files already formatted
+EXIT: 0
+COMMAND: backend/.venv/bin/python -m mypy --follow-imports=skip /tmp/unimatch-expert500-journal-pilot-v9.py /tmp/unimatch-expert500-journal-report-v9.py /tmp/test_unimatch_expert500_journal_pilot_v9.py /tmp/test_unimatch_expert500_journal_report_v9.py /tmp/test_unimatch_expert500_actual_cohort_v9.py /tmp/test_unimatch_expert500_workflow_v9.py /tmp/unimatch-expert500-export-v9.py /tmp/unimatch-expert500-launch-v9.py /tmp/unimatch-expert500-freeze-v9.py /tmp/unimatch-expert500-isolation-preflight-v9.py
+/tmp/test_unimatch_expert500_actual_cohort_v9.py:671: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+/tmp/test_unimatch_expert500_actual_cohort_v9.py:672: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+/tmp/test_unimatch_expert500_actual_cohort_v9.py:883: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+/tmp/test_unimatch_expert500_actual_cohort_v9.py:1028: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+Success: no issues found in 10 source files
+EXIT: 0

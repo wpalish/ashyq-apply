@@ -1,0 +1,126 @@
+COMMAND: backend/.venv/bin/python -m ruff check --config backend/ruff.toml --ignore B023 /tmp/unimatch-expert500-journal-pilot-v9.py /tmp/unimatch-expert500-journal-report-v9.py /tmp/test_unimatch_expert500_journal_pilot_v9.py /tmp/test_unimatch_expert500_journal_report_v9.py /tmp/test_unimatch_expert500_actual_cohort_v9.py /tmp/test_unimatch_expert500_workflow_v9.py /tmp/unimatch-expert500-export-v9.py /tmp/unimatch-expert500-launch-v9.py /tmp/unimatch-expert500-freeze-v9.py /tmp/unimatch-expert500-isolation-preflight-v9.py
+/tmp/test_unimatch_expert500_journal_pilot_v9.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Independent offline tests of the actual V9 network parent; all sources are synthetic."""
+ 2 |
+ 3 | / import asyncio
+ 4 | | import copy
+ 5 | | import itertools
+ 6 | | import json
+ 7 | | import runpy
+ 8 | | import shutil
+ 9 | | import sys
+10 | | from dataclasses import dataclass, field
+11 | | from datetime import UTC, datetime, timedelta
+12 | | from pathlib import Path
+13 | |
+14 | | import pytest
+15 | |
+16 | | from app.adapters.fetching import FetchResult
+17 | | from app.domain.enums import FetchOutcome
+18 | | from evaluation.research.expert.controller import execute
+19 | | from evaluation.research.expert.network_budget import NETWORK_COMPARISON_MODE, expert_budget
+20 | | from evaluation.research.expert.network_turn_policy import (
+21 | |     NetworkBudgetIsolation as Isolation,
+22 | | )
+23 | | from evaluation.research.expert.network_turn_policy import (
+24 | |     NetworkSelectorTurn,
+25 | |     turn_window,
+26 | | )
+27 | | from evaluation.research.expert.workspace_policy import allocate_workspaces
+   | |___________________________________________________________________________^ I001
+28 |
+29 |   PILOT = Path("/tmp/unimatch-expert500-journal-pilot-v9.py")
+   |
+   = help: Organize imports
+
+/tmp/test_unimatch_expert500_journal_report_v9.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Independent V9 replay/sealing tests; no reviewed data or live I/O is used."""
+ 2 |
+ 3 | / import base64
+ 4 | | import copy
+ 5 | | import hashlib
+ 6 | | import importlib.util
+ 7 | | import json
+ 8 | | import runpy
+ 9 | | import shutil
+10 | | import sys
+11 | | from datetime import UTC, datetime, timedelta
+12 | | from pathlib import Path
+13 | |
+14 | | import pytest
+15 | | from test_unimatch_expert500_journal_pilot_v9 import (
+16 | |     HEAD,
+17 | |     PILOT,
+18 | |     REPORT,
+19 | |     URL,
+20 | |     bootstrap,
+21 | |     checkpoint,
+22 | |     commit,
+23 | |     completed_events,
+24 | |     decision,
+25 | |     fact,
+26 | | )
+27 | |
+28 | | from evaluation.research.expert.network_budget import (
+29 | |     BUDGET_MODEL,
+30 | |     NETWORK_COMPARISON_MODE,
+31 | |     WALL_GUARD_MS,
+32 | |     WallGuard,
+33 | |     expert_budget,
+34 | | )
+35 | | from evaluation.research.expert.network_report import (
+36 | |     MISS_CAUSES,
+37 | |     SourceCounters,
+38 | |     diagnose_fact,
+39 | |     network_gate,
+40 | |     validate_diagnoses,
+41 | |     validate_source_run,
+42 | | )
+43 | | from evaluation.research.schema import Capture, Observation
+   | |___________________________________________________________^ I001
+44 |
+45 |   pytest_plugins = ["test_unimatch_expert500_journal_pilot_v9"]
+   |
+   = help: Organize imports
+
+/tmp/test_unimatch_expert500_workflow_v9.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Mock transport/clock checks of the actual V9 workflow function only."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | import ast
+ 6 | | import asyncio
+ 7 | | import hashlib
+ 8 | | import json
+ 9 | | import math
+10 | | import threading
+11 | | from dataclasses import dataclass, field
+12 | | from datetime import UTC, datetime, timedelta
+13 | | from pathlib import Path
+14 | | from types import SimpleNamespace
+15 | | from typing import Any
+16 | |
+17 | | import pytest
+18 | |
+19 | | from app.adapters.fetching import FetchResult
+20 | | from app.adapters.search.base import SearchUnavailable
+21 | | from app.domain.enums import FetchOutcome
+22 | | from evaluation.research.expert.controller import execute
+23 | | from evaluation.research.expert.network_budget import (
+24 | |     BUDGET_MODEL,
+25 | |     NETWORK_COMPARISON_MODE,
+26 | |     WALL_GUARD_MS,
+27 | |     WallGuard,
+28 | | )
+   | |_^ I001
+29 |
+30 |   PILOT = Path("/tmp/unimatch-expert500-journal-pilot-v9.py")
+   |
+   = help: Organize imports
+
+Found 3 errors.
+[*] 3 fixable with the `--fix` option.
+EXIT: 1
