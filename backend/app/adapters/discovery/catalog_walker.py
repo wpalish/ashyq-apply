@@ -66,6 +66,12 @@ WALKER_TOP_N = 20
 
 #: Catalogues walked per institution, in discovery's own order of preference.
 WALKER_MAX_CATALOGS = 2
+#: Experiment ER-10 (expert trace 2026-10-04), off (None) until a paired run
+#: passes. When the applicant named a subject, at most this many leads that
+#: name none of the applicant's subjects are read per catalogue; leads that do
+#: name it are not limited. Groningen's "/education/bachelor" offered 16
+#: open-day, brochure and campus-tour pages, each read before "/bachelors".
+WALKER_SIGNAL_LESS_CAP: int | None = None
 #: Sub-catalogues the walk may descend into, found as leads of a catalogue.
 #: Two: Groningen's "Bachelor's degrees" is itself an index (A-Z, by subject,
 #: in English) and only the level below names the programmes (run 44).
@@ -344,6 +350,18 @@ def _without_query(url: str) -> str:
     return f"{parsed.netloc.lower()}{(parsed.path or '/').rstrip('/')}"
 
 
+#: Plural listing words, also as the tail of a compound ("Bacheloropleidingen",
+#: Groningen's Dutch label for its programme list).
+_LIST_WORDS = re.compile(
+    r"(programmes|programs|degrees|courses|studies|opleidingen|studiengänge|kierunki)\b", re.I
+)
+
+
+def _names_a_list(link: WalkerLink) -> bool:
+    """Whether a lead reads as a list of programmes rather than one page."""
+    return looks_like_catalogue(link.url) or bool(_LIST_WORDS.search(link.label or ""))
+
+
 def _descent_lead(walk: CatalogWalk, seen: set[str]) -> str | None:
     """The list one level down that this walk offered, strongest first.
 
@@ -530,6 +548,18 @@ class CatalogWalker:
             return walk
 
         budget = scored[:top_n]
+        if WALKER_SIGNAL_LESS_CAP is not None and self.fields:
+            named = [link for link in budget if self._names_subject(link)]
+            # A list of programmes before a single page: the one signal-less
+            # read Groningen needed was "/bachelors", not an open day.
+            others = sorted(
+                (link for link in budget if not self._names_subject(link)),
+                key=lambda link: not _names_a_list(link),
+            )
+            for link in others[WALKER_SIGNAL_LESS_CAP:]:
+                walk.outcomes.append((link.url, "walker_no_subject"))
+            kept = {id(link) for link in [*named, *others[:WALKER_SIGNAL_LESS_CAP]]}
+            budget = [link for link in budget if id(link) in kept]
         for link in scored[top_n:]:
             walk.outcomes.append((link.url, "walker_budget_exhausted"))
 
@@ -583,6 +613,12 @@ class CatalogWalker:
             scored.append(walk)
         scored.sort(key=lambda link: (-link.score, len(link.url)))
         return scored
+
+    def _names_subject(self, link: WalkerLink) -> bool:
+        """Whether a lead's label or URL names one of the applicant's subjects."""
+        return (
+            matches_field_text(link.label, self.fields) or matches_field(link.url, self.fields) > 0
+        )
 
     async def _read_lead(self, link: WalkerLink, walk: CatalogWalk) -> None:
         """Fetch, classify and judge one lead; record exactly one outcome."""
