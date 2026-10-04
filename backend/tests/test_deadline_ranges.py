@@ -64,3 +64,11 @@ def test_a_stated_start_is_still_an_intake():
     START = "Students beginning their studies in September 2027."
     claims = extract_intake_terms(START, _builder(START))
     assert [c.normalized_value for c in claims] == ["fall 2027"]
+
+
+def test_a_dated_event_is_not_an_intake():
+    """Groningen: "Beginning January 21, 2026, TOEFL iBT score reports ..."."""
+    from app.adapters.extraction import extract_intake_terms
+
+    text = "Beginning January 21, 2026, TOEFL iBT score reports will feature a new scale."
+    assert extract_intake_terms(text, _builder(text)) == []
