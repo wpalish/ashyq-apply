@@ -598,6 +598,12 @@ def main() -> None:
         help="experiment ER-05: links naming undergraduate admission become candidates",
     )
     parser.add_argument(
+        "--navigation-field-leads",
+        action="store_true",
+        help="experiment ER-09: the navigation fallback keeps a programme lead only when "
+        "its URL or link text names the applicant's subject",
+    )
+    parser.add_argument(
         "--topic-search",
         action="store_true",
         help="experiment ER-08: one public query per topic (English, fees, deadline) finds "
@@ -680,6 +686,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery
 
             live_discovery.NAVIGATION_SLOT = True
+        if args.navigation_field_leads:
+            from app.adapters.discovery import live_discovery as discovery_module
+
+            discovery_module.NAVIGATION_FIELD_LEADS = True
         if args.topic_search:
             from app.adapters.requirements import web_requirements
 
@@ -763,6 +773,7 @@ def main() -> None:
                         *(["--admission-lexicon"] if args.admission_lexicon else []),
                         *(["--navigation-slot"] if args.navigation_slot else []),
                         *(["--topic-search"] if args.topic_search else []),
+                        *(["--navigation-field-leads"] if args.navigation_field_leads else []),
                         "--search-funding-fallback"
                         if args.search_funding_fallback
                         else "--no-search-funding-fallback",
