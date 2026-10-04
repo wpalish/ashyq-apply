@@ -1,0 +1,115 @@
+"""Preserve the original provider-stopped baseline; never resume or score it."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import shutil
+from datetime import UTC, datetime
+from pathlib import Path
+
+from evaluation.research.expert.workspace_policy import validate_workspaces
+from evaluation.research.live import COHORT
+
+REPO = Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply')
+ROOT = REPO / 'artifacts/expert-500/phase1-v6b-2026-10-04'
+DEST = REPO / 'backend/evaluation/research/expert/data/runs.2026-10-04/v6b-unscored'
+SOURCE = 'd69ff52722ae9425a76761eafec2a108392970c0'
+TRIAL = '89af2615ff45c52c9400cbbde5cbb8f16e4348f17ac58794b263f1f87f75f4e2'
+
+
+def sha(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def read(path: Path):
+    return json.loads(path.read_text())
+
+
+if any((ROOT / name).exists() for name in ('experts-results.json', 'submission-seal.json', 'comparison.json')):
+    raise ValueError('Only the original baseline stop without experts/seal/scoring is eligible')
+if sha(ROOT / 'trial.json') != TRIAL or sha(ROOT / 'trial-at-baseline-start.json') != TRIAL:
+    raise ValueError('The original pre-baseline trial must remain unchanged')
+trial = read(ROOT / 'trial.json')
+if trial['harness_sha'] != SOURCE or trial['protocol_version'] != 'journal-v6b':
+    raise ValueError('Unexpected frozen source/version')
+assignments, receipts = read(ROOT / 'workspace-locations.json'), read(ROOT / 'workspace-receipts.json')
+for name, key in (('workspace-locations.json', 'workspace_assignments_sha256'), ('workspace-receipts.json', 'workspace_receipts_sha256')):
+    if sha(ROOT / name) != trial[key]:
+        raise ValueError('Original independent mapping changed')
+validate_workspaces(assignments, receipts, case_ids=tuple(COHORT))
+for path, expected in trial['scripts'].items():
+    if sha(Path(path)) != expected:
+        raise ValueError('An original frozen helper changed')
+results = read(ROOT / 'baseline-results.json')
+if results['stopped'] is not True or len(results['results']) != 3 or len(results['remaining_case_ids']) != 7:
+    raise ValueError('Unexpected original batch stop')
+by_case = {record['case_id']: record for record in results['results']}
+budget = by_case['aalto']['budget']
+if budget['stop_reason'] != 'http_429' or budget['provider_failure']['http_status'] != 429 or budget['provider'] != 'exa_mcp':
+    raise ValueError('The original provider429 stop is required')
+if by_case['aalto']['head_sha'] != SOURCE:
+    raise ValueError('Aalto source differs')
+for case in ('groningen', 'delft'):
+    if by_case[case]['error'] != 'RuntimeError: Canceled in-flight run after batch provider429':
+        raise ValueError('Unexpected sibling outcome')
+gates = read(Path('/tmp/unimatch-expert500-v6b-cloud-gates.json'))
+if gates['source'] != SOURCE or gates['all_eight_jobs_success'] is not True:
+    raise ValueError('Selected source gates are not complete')
+workflows = []
+for case in ('aalto', 'groningen', 'delft'):
+    initial = read(ROOT / 'baseline' / case / 'run.json')
+    terminal = initial if case == 'aalto' else read(Path(f'/tmp/unimatch-expert500-v6b-{case}-terminal.json'))
+    expected = 'success' if case == 'aalto' else 'cancelled'
+    if terminal['headSha'] != SOURCE or terminal['status'] != 'completed' or terminal['conclusion'] != expected:
+        raise ValueError('Actual terminal workflow state differs')
+    workflows.append({'case_id':case,'run_id':initial['run_id'],**terminal})
+inventory = [{'path':str(path.relative_to(ROOT)), 'sha256':sha(path), 'bytes':path.stat().st_size}
+             for path in sorted(ROOT.rglob('*')) if path.is_file()]
+DEST.mkdir(parents=True, exist_ok=False)
+files = []
+
+
+def copy(source: Path, name: str) -> None:
+    target = DEST / name
+    shutil.copyfile(source, target)
+    if sha(source) != sha(target):
+        raise ValueError('A bounded evidence copy differs')
+    files.append({'path':name,'sha256':sha(target),'bytes':target.stat().st_size})
+
+
+def save(name: str, value) -> None:
+    path = DEST / name
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2)+'\n')
+    files.append({'path':name,'sha256':sha(path),'bytes':path.stat().st_size})
+
+
+for name in ('trial.json','trial-at-baseline-start.json','workspace-locations.json','workspace-receipts.json','baseline-results.json'):
+    copy(ROOT / name, name)
+for case in ('aalto','groningen','delft'):
+    folder = ROOT / 'baseline' / case
+    for name in ('run.json','dispatch.json','result.json','orchestration-error.json'):
+        if (folder / name).is_file():
+            copy(folder / name, f'{case}.baseline-{name}')
+copy(Path('/tmp/unimatch-expert500-v6b-baseline.log'), 'original-parent-progress.jsonl')
+copy(Path('/tmp/unimatch-expert500-v6b-cloud-gates.json'), 'source-gates.json')
+copy(Path(__file__), 'quarantine-helper.py.txt')
+save('original-artifact-fingerprints.json', inventory)
+save('workflow-runs.json', workflows)
+save('case-outcomes-unscored.json', {'baseline_results':results,'expert_attempts':0})
+manifest = {
+    'stage':'Phase1 V6b','status':'stopped_during_baseline_provider_429_unscored',
+    'recorded_at':datetime.now(UTC).isoformat(),'source_harness_sha':SOURCE,'trial_sha256':TRIAL,
+    'assigned_case_count':10,'baseline_workflows_dispatched':3,'baseline_artifacts_completed':1,
+    'cancelled_workflows':2,'undispatched_case_count':7,'expert_attempts':0,
+    'accepted_submission_seal':False,'reviewed_label_scoring_performed':False,'comparison_created':False,
+    'source_bodies_exported':False,'reviewed_labels_exported':False,'frozen_script_modified':False,
+    'provider_retry_performed':False,'failure':'Exa MCP HTTP429 during first baseline batch',
+    'baseline_stop_budget':budget,'all_files':files,
+}
+(DEST / 'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+if any(sha(ROOT / item['path']) != item['sha256'] for item in inventory):
+    raise ValueError('An original artifact changed while preserving evidence')
+print(json.dumps({'files':len(files)+1,'original_files_fingerprinted':len(inventory),
+                  'copied_bytes':sum(item['bytes'] for item in files),'expert_attempts':0,
+                  'seal_created':False,'scoring_performed':False}))

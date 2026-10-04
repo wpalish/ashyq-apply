@@ -1,0 +1,13 @@
+{
+  "ref": "expert500-phase1-v6b-2026-10-04-d69ff52",
+  "inputs": {
+    "runner": "ubuntu-latest",
+    "case": "groningen",
+    "run_tag": "e500-5c36c07223e4445a",
+    "seconds_per_case": "120",
+    "max_pages": "60",
+    "search_provider": "exa_mcp",
+    "mode": "expert_baseline",
+    "extra_args": "--strict-expert-budget --finalization-reserve-ms 1000"
+  }
+}
