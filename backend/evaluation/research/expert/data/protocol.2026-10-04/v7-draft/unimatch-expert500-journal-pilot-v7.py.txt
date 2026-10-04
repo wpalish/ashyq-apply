@@ -294,33 +294,111 @@ def workflow(
         raise RuntimeError("Expert source requires its immutable guard and a live batch")
     import uuid
 
+    from evaluation.research.expert.network_report import (
+        SourceCounters,
+        validate_source_run,
+    )
+
+    # A clean expiry must leave no apparent controller run for the raw replay.
+    if wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0:
+        raise TimeoutError("wall_guard_exhausted")
+
+    plan = json.loads(inputs["plan"])
+    if not isinstance(plan, dict) or inputs.get("mode") != "expert_actions":
+        raise RuntimeError("Expert transport requires its original controlled action plan")
+    run_id: int | None = None
+    head_sha: str | None = None
+    state: dict[str, Any] = {}
+    dispatch_attempted = False
+    audit_began: float | None = None
+    audit_started_at = None
+    cancel_attempted = False
+    cancel_outcome = None
+    artifact_proof: dict[str, Any] = {}
+    trigger_error = None
+
+    def audit_remaining() -> float:
+        assert audit_began is not None
+        seconds = 60.0 - (time.monotonic() - audit_began)
+        if seconds <= 0:
+            raise TimeoutError("transport_audit_exhausted")
+        return seconds
+
     def remaining() -> float:
+        if audit_began is not None:
+            return audit_remaining()
         seconds = wall_guard.remaining_seconds(now=datetime.now(UTC))
         if seconds <= 0:
             raise TimeoutError("wall_guard_exhausted")
         return seconds
 
     def gh(argv: list[str], *, stdin: str | None = None) -> str:
-        return legacy["command"](argv, cwd=repo, stdin=stdin, timeout=min(60.0, remaining()))
+        nonlocal dispatch_attempted
+        timeout = min(60.0, remaining())
+        if audit_began is not None:
+            if argv[:2] != ["gh", "run"] or argv[2] not in {
+                "list",
+                "view",
+                "cancel",
+                "download",
+            }:
+                raise RuntimeError("Transport audit cannot dispatch a new source action")
+        elif argv[:3] == ["gh", "workflow", "run"]:
+            if STOP.is_set():
+                raise RuntimeError("Batch stopped before source dispatch")
+            timeout = min(timeout, remaining())
+            # Once the command is invoked even an exception is an ambiguous
+            # dispatch. Only identifying/auditing this tag is permitted next.
+            dispatch_attempted = True
+        result = legacy["command"](argv, cwd=repo, stdin=stdin, timeout=timeout)
+        if audit_began is not None:
+            audit_remaining()
+        return result
 
     tag = "e500-" + uuid.uuid4().hex[:16]
     inputs = {
         "runner": "ubuntu-latest",
-        "case": case_id,
-        "run_tag": tag,
         "seconds_per_case": "120",
         "max_pages": "60",
         "search_provider": "exa_mcp",
         **inputs,
+        "case": case_id,
+        "run_tag": tag,
     }
-    destination.mkdir(parents=True, exist_ok=True)
-    save(destination / "dispatch.json", {"ref": ref, "inputs": inputs, **wall_guard.as_dict()})
-    gh(
-        ["gh", "workflow", "run", "benchmark-capture.yml", "--ref", ref, "--json"],
-        stdin=json.dumps(inputs),
-    )
-    run_id = None
-    try:
+
+    def receipt(status: str, *, error: str | None = None) -> None:
+        began = audit_began
+        elapsed = math.ceil((time.monotonic() - began) * 1000) if began is not None else 0
+        save(
+            destination / "transport-audit.json",
+            {
+                "status": status,
+                "case_id": case_id,
+                "ref": ref,
+                "run_tag": tag,
+                **wall_guard.as_dict(),
+                "dispatch_attempted": dispatch_attempted,
+                "dispatch_count": int(dispatch_attempted),
+                "audit_only": audit_began is not None,
+                "audit_window_ms": 60000 if audit_began is not None else 0,
+                "audit_started_at": audit_started_at,
+                "audit_elapsed_ms": elapsed,
+                "guard_exhausted": wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0,
+                "trigger_error": trigger_error,
+                "error": error,
+                "run_id": run_id,
+                "head_sha": head_sha,
+                "run_status": state.get("status"),
+                "conclusion": state.get("conclusion"),
+                "cancel_attempted": cancel_attempted,
+                "cancel_outcome": cancel_outcome,
+                "artifact_verified": bool(artifact_proof),
+                **artifact_proof,
+            },
+        )
+
+    def identify() -> None:
+        nonlocal run_id, head_sha
         while run_id is None:
             runs = json.loads(
                 gh(
@@ -341,10 +419,24 @@ def workflow(
                     ]
                 )
             )
-            match = next((r for r in runs if r["displayTitle"].endswith(tag)), None)
-            if match:
-                run_id, head_sha = match["databaseId"], match["headSha"]
-                save(destination / "run.json", {"run_id": run_id, "head_sha": head_sha, "tag": tag})
+            matches = [r for r in runs if r["displayTitle"].endswith(tag)]
+            if len(matches) > 1:
+                raise RuntimeError("Dispatched tag identifies more than one workflow")
+            if matches:
+                candidate_id, candidate_sha = matches[0]["databaseId"], matches[0]["headSha"]
+                if (
+                    type(candidate_id) is not int
+                    or candidate_id <= 0
+                    or type(candidate_sha) is not str
+                    or len(candidate_sha) != 40
+                    or any(c not in "0123456789abcdef" for c in candidate_sha)
+                ):
+                    raise RuntimeError("Dispatched workflow identity is invalid")
+                run_id, head_sha = candidate_id, candidate_sha
+                save(
+                    destination / "run.json",
+                    {"run_id": run_id, "head_sha": head_sha, "tag": tag},
+                )
                 emit(
                     case=case_id,
                     mode=inputs["mode"],
@@ -352,22 +444,123 @@ def workflow(
                     state="dispatched",
                     source=head_sha,
                 )
-                break
-            if STOP.is_set():
+                return
+            if audit_began is None and STOP.is_set():
                 raise RuntimeError("Batch stopped before dispatched run could be identified")
             time.sleep(min(5.0, remaining()))
+
+    def completed() -> None:
+        nonlocal state, cancel_attempted, cancel_outcome
         while True:
             state = json.loads(
-                gh(["gh", "run", "view", str(run_id), "--json", "status,conclusion,headSha,url"])
+                gh(
+                    [
+                        "gh",
+                        "run",
+                        "view",
+                        str(run_id),
+                        "--json",
+                        "status,conclusion,headSha,url",
+                    ]
+                )
             )
             if state["headSha"] != head_sha:
                 raise RuntimeError("Workflow source changed unexpectedly")
             if state["status"] == "completed":
                 save(destination / "run.json", {"run_id": run_id, "tag": tag, **state})
-                break
-            if STOP.is_set():
+                return
+            if audit_began is not None and not cancel_attempted:
+                cancel_attempted = True
+                try:
+                    gh(["gh", "run", "cancel", str(run_id)])
+                    cancel_outcome = "requested"
+                except Exception as error:
+                    # A completion/cancel race can still yield a complete
+                    # original artifact; never retry this cancellation.
+                    cancel_outcome = type(error).__name__
+                continue
+            if audit_began is None and STOP.is_set():
                 raise RuntimeError("Canceled after batch provider429")
-            time.sleep(min(10.0, remaining()))
+            time.sleep(min(5.0 if audit_began is not None else 10.0, remaining()))
+
+    def verify_artifact(folder: Path) -> dict[str, Any]:
+        remaining()
+        if folder.is_symlink() or not folder.is_dir():
+            raise RuntimeError("Original controlled artifact is unavailable")
+        logs = folder / "logs"
+        if logs.is_symlink() or not logs.is_dir():
+            raise RuntimeError("Original controlled raw logs are unavailable")
+
+        def original(path: Path) -> bytes:
+            if path.is_symlink() or not path.is_file():
+                raise RuntimeError("Original controlled artifact must contain regular files")
+            return path.read_bytes()
+
+        if json.loads(original(folder / "plan.json")) != plan:
+            raise RuntimeError("Original artifact changed the dispatched action plan")
+        summary_bytes = original(folder / "summary.json")
+        summary = json.loads(summary_bytes)
+        produced, raw_logs = summary.get("actions"), summary.get("raw_logs")
+        if not isinstance(produced, list) or len(produced) != 1 or not isinstance(raw_logs, dict):
+            raise RuntimeError("Original controller action/checkpoint is incomplete")
+        if {path.name for path in logs.iterdir()} != set(raw_logs):
+            raise RuntimeError("Original artifact has unaccounted or missing raw source logs")
+        records = {}
+        for name, expected_sha in raw_logs.items():
+            if (
+                type(name) is not str
+                or name in {"", ".", ".."}
+                or Path(name).name != name
+                or "/" in name
+                or "\\" in name
+            ):
+                raise RuntimeError("Original raw source paths must be confined")
+            data = original(logs / name)
+            if hashlib.sha256(data).hexdigest() != expected_sha:
+                raise RuntimeError("Original controlled raw source hash changed")
+            records[name] = json.loads(data)
+        name = produced[0]["raw_log_path"]
+        resume = plan.get("resume_summary")
+        prior = (
+            SourceCounters(
+                resume["final"]["fetcher_calls"],
+                resume["final"]["search_queries"],
+                resume["final"]["elapsed_ms"],
+            )
+            if resume
+            else SourceCounters()
+        )
+        counters = validate_source_run(
+            plan,
+            summary,
+            records[name],
+            case_id=case_id,
+            official_domains=plan["official_domains"],
+            wall_guard=wall_guard,
+            raw_sha256=raw_logs[name],
+            prior=prior,
+            prior_summary=resume,
+        )
+        remaining()
+        return {
+            "summary_sha256": hashlib.sha256(summary_bytes).hexdigest(),
+            "plan_sha256": hashlib.sha256(original(folder / "plan.json")).hexdigest(),
+            "raw_logs": raw_logs,
+            "source_counters": counters.as_dict(),
+            "source_stop_reason": summary["final"].get("stop_reason"),
+        }
+
+    def artifact() -> None:
+        nonlocal artifact_proof
+        folder = destination / "artifact"
+        if folder.exists():
+            try:
+                artifact_proof = verify_artifact(folder)
+                return
+            except Exception:
+                if audit_began is None:
+                    raise
+        download = destination / "artifact-audit" if folder.exists() else folder
         gh(
             [
                 "gh",
@@ -377,25 +570,60 @@ def workflow(
                 "--name",
                 f"expert-recovery-{run_id}",
                 "--dir",
-                str(destination / "artifact"),
+                str(download),
             ]
         )
-        if state["conclusion"] != "success":
-            raise RuntimeError(
-                f"Workflow {run_id} did not complete successfully; inspect its artifact"
-            )
+        artifact_proof = verify_artifact(download)
+        if download != folder:
+            folder.rename(destination / "artifact-incomplete")
+            download.rename(folder)
+        remaining()
+
+    if destination.exists():
+        STOP.set()
+        raise RuntimeError("Source transport cannot reuse a controller destination")
+    destination.mkdir(parents=True, exist_ok=True)
+    save(
+        destination / "dispatch.json",
+        {"ref": ref, "inputs": inputs, **wall_guard.as_dict()},
+    )
+    try:
+        gh(
+            ["gh", "workflow", "run", "benchmark-capture.yml", "--ref", ref, "--json"],
+            stdin=json.dumps(inputs),
+        )
+        identify()
+        completed()
+        artifact()
+        if run_id is None or head_sha is None:
+            raise RuntimeError("Original dispatched workflow identity is unavailable")
+        receipt("completed")
         return run_id, head_sha
-    except Exception:
-        if run_id is not None:
-            # Cancellation is audit/cleanup only, never a new university/provider request.
-            try:
-                legacy["command"](["gh", "run", "cancel", str(run_id)], cwd=repo, timeout=10)
-            except Exception as cancel_error:
-                save(
-                    destination / "cancel-error.json",
-                    {"error": type(cancel_error).__name__, "detail": str(cancel_error)[:500]},
-                )
-        raise
+    except Exception as error:
+        trigger_error = type(error).__name__
+        if not dispatch_attempted:
+            STOP.set()
+            receipt("incomplete", error=trigger_error)
+            raise RuntimeError(
+                "Source receipt exists but no dispatch outcome is auditable"
+            ) from error
+        audit_began = time.monotonic()
+        audit_started_at = datetime.now(UTC).isoformat()
+        try:
+            identify()
+            completed()
+            artifact()
+            if run_id is None or head_sha is None:
+                raise RuntimeError("Original dispatched workflow identity is unavailable")
+            receipt("recovered")
+            audit_remaining()
+            return run_id, head_sha
+        except Exception as audit_error:
+            STOP.set()
+            receipt("incomplete", error=type(audit_error).__name__)
+            raise RuntimeError(
+                "Source dispatch transport audit is incomplete; batch stopped"
+            ) from audit_error
 
 
 def baseline(repo: Path, ref: str, root: Path, case_id: str) -> dict[str, Any]:
@@ -493,6 +721,9 @@ def commit_events(path: Path, events: list[dict[str, Any]]) -> None:
 def expert(
     repo: Path, ref: str, root: Path, case_id: str, workspaces: dict[str, Path]
 ) -> dict[str, Any]:
+    started_dt = datetime.now(UTC)
+    wall_guard = WallGuard(started_dt, started_dt + timedelta(milliseconds=WALL_GUARD_MS))
+    started = started_dt.isoformat()
     case_root = root / "experts" / case_id
     case_root.mkdir(parents=True, exist_ok=True)
     assignments = json.loads((root / "workspace-locations.json").read_text())
@@ -532,9 +763,6 @@ def expert(
     packet = json.loads(Path(baseline_result["packet"]).read_text())
     case = packet["cases"][0]
     context = (repo / "backend/evaluation/research/expert/ALGORITHM_CONTEXT.md").read_text()
-    started_dt = datetime.now(UTC)
-    wall_guard = WallGuard(started_dt, started_dt + timedelta(milliseconds=WALL_GUARD_MS))
-    started = started_dt.isoformat()
     validate_expert_budget(packet)
     active_ms = 0
     source_ms = 0
@@ -569,7 +797,9 @@ def expert(
         lambda: save(case_root / "navigation-outcomes.json", navigation_outcomes),
     )
 
-    for turn in range(1, 21):
+    turn = 0
+    while True:
+        turn += 1
         if STOP.is_set():
             result["error"] = "batch_stopped"
             break
@@ -749,7 +979,10 @@ def expert(
             )
             result["error"] = selected.error_kind
             break  # Earlier accepted explicit checkpoints survive; partial text does not.
-        if selected.elapsed_ms > window.timeout_ms:
+        model_started = datetime.fromisoformat(selected.selector_started_at)
+        model_finished = datetime.fromisoformat(selected.selector_finished_at)
+        model_elapsed_ms = math.ceil((model_finished - model_started).total_seconds() * 1000)
+        if model_elapsed_ms < 0 or model_elapsed_ms > window.timeout_ms:
             result["error"] = "selector_phase_timeout_exceeded"
             break
         if wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0:
@@ -1188,9 +1421,6 @@ def expert(
         except Exception as exc:
             result["error"] = type(exc).__name__ + ": " + str(exc)
             break
-    else:
-        result["completion_kind"] = "turn_limit_checkpoint"
-
     save(case_root / "recorded-actions.json", actions)
     accepted_source_count = events[-1]["source_action_count"] if events else 0
     trace_actions = actions[:accepted_source_count]

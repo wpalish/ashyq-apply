@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
+from .models import _outcome
 from .network_budget import (
     BUDGET_MODEL,
     MAX_FETCHER_CALLS,
@@ -137,19 +138,11 @@ def validate_source_run(
         if plan.get("resume_summary") is not None:
             raise ValueError("Fresh source dispatch cannot import a resume summary")
     else:
-        fields = (
-            "case_id",
-            "provider",
-            "log_prefix",
-            "budget_origin",
-            "budget_model",
-            "wall_started_at",
-            "wall_deadline_at",
-            "tool_policy",
-            "raw_logs",
-            "final",
-        )
-        expected_resume = {key: prior_summary[key] for key in fields}
+        expected_resume = {
+            key: value
+            for key, value in prior_summary.items()
+            if key not in {"actions", "replay", "initial"}
+        }
         if plan.get("resume_summary") != expected_resume:
             raise ValueError("Resume must retain the exact preceding controller summary")
     identity = {
@@ -211,7 +204,20 @@ def validate_source_run(
     # compares these against the selected action via its frozen domain helper.
     if action.get("request") != request or action.get("tool") != request["tool"]:
         raise ValueError("Summary action differs from its original raw request")
-    expected_outcome = raw.get("outcome") or raw.get("response", {}).get("outcome") or "ok"
+    response = raw.get("response") or {}
+    if not isinstance(response, Mapping):
+        raise ValueError("Original controller response must be a mapping")
+    expected_outcome, expected_status = _outcome(dict(raw))
+    if raw.get("outcome_status") != expected_status or (
+        response.get("outcome_status") is not None and response["outcome_status"] != expected_status
+    ):
+        raise ValueError("Original source status disagrees with its actual response")
+    if expected_status == "success" and request["tool"] == "fetcher":
+        code = response.get("status_code")
+        if type(code) is not int or not (
+            200 <= code < 300 or (expected_outcome == "cached" and code == 304)
+        ):
+            raise ValueError("A successful Fetcher source requires its original HTTP success")
     for key, expected in {
         "at": raw.get("at"),
         "outcome": expected_outcome,
@@ -230,6 +236,8 @@ def validate_source_run(
     executed = raw.get("executed")
     if type(executed) is not bool:
         raise ValueError("Actual source invocation must have a strict executed flag")
+    if executed != bool(response):
+        raise ValueError("Controller executed flag disagrees with its recorded response")
     dispatch = raw.get("dispatch_at")
     if executed:
         sent = _timestamp(dispatch, "source dispatch_at")
@@ -266,7 +274,6 @@ def validate_source_run(
     status = raw.get("outcome_status")
     if status not in {"success", "failure", "blocked"} or (not executed and status != "blocked"):
         raise ValueError("Original controller source status is invalid")
-    response = raw.get("response", {})
     if status == "success" and (not executed or completed >= wall_guard.deadline_at):
         raise ValueError("A successful source response must complete before the case guard")
     if (
@@ -278,6 +285,43 @@ def validate_source_run(
     reason = raw.get("stop_reason")
     if reason not in {None, "http_429", "budget_exhausted", "wall_guard_exhausted"}:
         raise ValueError("Unknown original network controller stop reason")
+    provider_429 = (
+        executed
+        and request["tool"] == "search_provider"
+        and any(
+            type(response.get(key)) is int and response[key] == 429
+            for key in ("http_status", "status_code")
+        )
+    )
+    prior_reason = prior_summary["final"].get("stop_reason") if prior_summary else None
+    if provider_429:
+        if status != "failure" or reason != "http_429" or final.get("stop_reason") != "http_429":
+            raise ValueError(
+                "Actual provider HTTP429 must retain the original raw/final http_429 latch"
+            )
+        required_reason = "http_429"
+    elif prior_reason is not None:
+        required_reason = prior_reason
+    elif completed >= wall_guard.deadline_at or (
+        response.get("outcome") == "action_timeout"
+        and raw.get("timeout_reason") == "wall_guard_exhausted"
+    ):
+        required_reason = "wall_guard_exhausted"
+    elif (
+        raw.get("outcome") == "budget_exhausted"
+        and not executed
+        and (
+            (request["tool"] == "fetcher" and prior.fetcher_calls >= MAX_FETCHER_CALLS)
+            or (request["tool"] == "search_provider" and prior.search_queries >= MAX_SEARCH_QUERIES)
+        )
+    ):
+        required_reason = "budget_exhausted"
+    else:
+        required_reason = None
+    if reason != required_reason:
+        raise ValueError(
+            "Original source stop reason does not follow its actual response/caps/wall"
+        )
     # Controller serialization can itself cross the guard after a valid source.
     # The late summary must make that exhaustion visible; it cannot close a
     # prior selector before the raw action was actually completed.

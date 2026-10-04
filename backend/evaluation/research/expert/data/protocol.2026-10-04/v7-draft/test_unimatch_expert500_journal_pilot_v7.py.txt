@@ -11,6 +11,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
+
 from app.adapters.fetching import FetchResult
 from app.domain.enums import FetchOutcome
 from evaluation.research.expert.controller import execute
@@ -159,8 +160,16 @@ class Harness:
     def folder(self):
         return self.root / "experts/u"
 
-    def queue(self, callback=None, *, elapsed=12000, error=None, raw=None):
-        self.pending.append({"callback": callback, "elapsed": elapsed, "error": error, "raw": raw})
+    def queue(self, callback=None, *, elapsed=12000, preparation=0, error=None, raw=None):
+        self.pending.append(
+            {
+                "callback": callback,
+                "elapsed": elapsed,
+                "preparation": preparation,
+                "error": error,
+                "raw": raw,
+            }
+        )
 
     def read(self, name):
         return json.loads((self.folder / name).read_text())
@@ -312,6 +321,7 @@ def pilot(tmp_path, monkeypatch):
         harness.commands.append(isolation.command(schema, output=output, model=kwargs.get("model")))
         assert harness.pending, "Unexpected selector call after closure"
         item = harness.pending.pop(0)
+        FakeDatetime.current += timedelta(milliseconds=item["preparation"])
         began = FakeDatetime.now(UTC)
         window = turn_window(phase=kwargs["phase"], wall_guard=kwargs["wall_guard"], now=began)
         FakeDatetime.current += timedelta(milliseconds=item["elapsed"])
@@ -319,7 +329,7 @@ def pilot(tmp_path, monkeypatch):
         if item["error"]:
             return NetworkSelectorTurn(
                 None,
-                item["elapsed"],
+                item["preparation"] + item["elapsed"],
                 "unfinished partial output",
                 "",
                 None,
@@ -333,7 +343,7 @@ def pilot(tmp_path, monkeypatch):
         output.write_text(raw)
         return NetworkSelectorTurn(
             answer,
-            item["elapsed"],
+            item["preparation"] + item["elapsed"],
             completed_events(raw),
             "",
             0,
@@ -528,3 +538,56 @@ def test_blind_public_packet_does_not_expose_baseline_or_previous_run_answers(pi
     assert "BASELINE_OUTPUT_MUST_NOT_ENTER_SELECTOR" not in encoded
     assert "PRIVATE_BASELINE_SENTINEL" not in encoded
     assert "network_actions_v1" in encoded
+
+
+def test_selector_preparation_is_not_counted_twice_against_prespawn_window(pilot):
+    pilot.queue(preparation=860_000, elapsed=20_000)
+    checkpoint(pilot, elapsed=500)
+    commit(pilot, elapsed=500)
+    result = pilot.run()
+    assert result["validated"] and result["status"] == "submitted", result
+    meta = pilot.read("selector-01.meta.json")
+    assert meta["elapsed_ms"] == 880_000
+    assert meta["selector_timeout_ms"] == 40_000
+    assert result["wall_elapsed_ms"] < 900_000
+    assert len(pilot.calls) == 1
+
+
+def test_outer_guard_starts_before_university_setup_and_is_never_reset(pilot, monkeypatch):
+    original = Isolation.prove_access
+
+    def slow_setup(self, *args):
+        FakeDatetime.current += timedelta(milliseconds=900_001)
+        return original(self, *args)
+
+    monkeypatch.setattr(Isolation, "prove_access", slow_setup)
+    result = pilot.run()
+    assert result["status"] == "incomplete" and not result["validated"]
+    assert result["error"] == "wall_guard_exhausted"
+    assert result["wall_elapsed_ms"] >= 900_001
+    assert not pilot.calls and not pilot.plans and not pilot.prompts
+
+
+def test_expert_can_use_more_than_twenty_source_actions_before_network_or_wall_limits(pilot):
+    pilot.queue(
+        lambda prompt: decision(prompt, action=source_action(url="https://u.edu/admissions/1")),
+        elapsed=500,
+    )
+    for source_step in range(1, 23):
+
+        def observe_then_read(prompt, step=source_step):
+            return decision(
+                prompt,
+                "action",
+                facts=[fact(id=f"english_{step}", question="OTHER", source_step=step)],
+                action=source_action(url=f"https://u.edu/admissions/{step + 1}"),
+            )
+
+        pilot.queue(observe_then_read, elapsed=500)
+    commit(pilot, elapsed=500, acknowledge_source=23)
+    result = pilot.run()
+    assert result["validated"] and result["status"] == "submitted", result
+    assert len(pilot.calls) == 23
+    assert result["accepted_turns"] == 24
+    assert result["completion_kind"] != "turn_limit_checkpoint"
+    assert result["wall_elapsed_ms"] < 900_000

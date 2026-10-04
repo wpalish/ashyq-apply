@@ -400,6 +400,49 @@ def test_log_reservation_crossing_wall_guard_is_rechecked_before_dispatch(
     assert summary["actions"][0]["outcome"] == "wall_guard_exhausted"
 
 
+@pytest.mark.parametrize("tool", ["fetcher", "search_provider"])
+def test_timeout_setup_crossing_wall_guard_refuses_without_inventing_source_attempt(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, tool: str
+) -> None:
+    clock = _Clock(wall=START + timedelta(seconds=899, milliseconds=999))
+    original_timeout_at = asyncio.timeout_at
+    anchored: list[float | None] = []
+    calls = 0
+
+    def delayed_timeout_at(when: float | None) -> asyncio.Timeout:
+        anchored.append(when)
+        clock.wall += timedelta(milliseconds=1)
+        return original_timeout_at(when)
+
+    monkeypatch.setattr(controller.asyncio, "timeout_at", delayed_timeout_at)
+
+    async def get(url: str) -> FetchResult:
+        nonlocal calls
+        calls += 1
+        return await _get(url)
+
+    async def search(**kwargs: Any) -> Any:
+        nonlocal calls
+        calls += 1
+        return await _search(**kwargs)
+
+    action = URL if tool == "fetcher" else {"tool": tool, "query": "programme"}
+    summary = _execute(
+        tmp_path,
+        _plan(actions=[action]),
+        get=get,
+        search=search,
+        now=lambda: clock.wall,
+    )
+    assert len(anchored) == 1 and anchored[0] is not None
+    assert calls == 0
+    assert summary["actions"][0]["executed"] is False
+    assert summary["actions"][0]["outcome"] == "wall_guard_exhausted"
+    assert summary["final"]["fetcher_calls"] == summary["final"]["search_queries"] == 0
+    assert summary["final"]["elapsed_ms"] == 0
+    assert _record(tmp_path, summary["actions"][0])["dispatch_at"] is None
+
+
 @pytest.mark.parametrize("suppress_cancel", [False, True])
 def test_absolute_wall_timeout_cancels_pending_action_without_fresh_source_allowance(
     tmp_path: Path, suppress_cancel: bool
@@ -528,7 +571,9 @@ def test_network_429_is_sanitized_sticky_and_cannot_be_cleared_by_prefix_or_resu
     assert calls == 1
 
 
-def test_university_429_is_a_source_failure_and_does_not_latch_provider_quota(tmp_path: Path) -> None:
+def test_university_429_is_a_source_failure_and_does_not_latch_provider_quota(
+    tmp_path: Path,
+) -> None:
     calls = 0
 
     async def get(url: str) -> FetchResult:

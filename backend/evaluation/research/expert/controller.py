@@ -94,6 +94,10 @@ TOOL_POLICY = {
 }
 
 
+class _WallGuardRefused(Exception):
+    """The wall expired during timeout setup, before any actual tool call."""
+
+
 def _host(url: str) -> str:
     try:
         return (urlsplit(url).hostname or "").lower().rstrip(".")
@@ -701,9 +705,14 @@ async def execute(
                 if tool == "search_provider" and stop_reason == "http_429":
                     refusal = "stopped_after_http_429"
                 wall_remaining_seconds: float | None = None
+                network_timeout_at: float | None = None
                 if wall_guard is not None:
+                    # Capture the loop anchor before reading UTC. Setup after
+                    # this point consumes the existing period, never renews it.
+                    loop_anchor = asyncio.get_running_loop().time()
                     dispatch_at = parse_timestamp(now().isoformat())
                     wall_remaining_seconds = wall_guard.remaining_seconds(now=dispatch_at)
+                    network_timeout_at = loop_anchor + wall_remaining_seconds
                     if dispatch_at < action_at:
                         raise ValueError("Wall clock decreased before dispatch")
                     if wall_remaining_seconds <= 0 or stop_reason == "wall_guard_exhausted":
@@ -742,9 +751,9 @@ async def execute(
                     record.update(outcome=refusal, outcome_status="blocked", executed=False)
                     elapsed = 0
                 else:
-                    record["executed"] = True
-                    calls = int(tool == "fetcher")
-                    queries = int(tool == "search_provider")
+                    record["executed"] = not network
+                    calls = int(not network and tool == "fetcher")
+                    queries = int(not network and tool == "search_provider")
                     action_budget_ms = (
                         max_ms if exploration == "outside_policy" else max_ms - action_start_ms
                     )
@@ -765,7 +774,25 @@ async def execute(
                             if strict
                             else None
                         )
-                        async with asyncio.timeout(timeout_seconds) as deadline:
+                        deadline_context = (
+                            asyncio.timeout_at(network_timeout_at)
+                            if network
+                            else asyncio.timeout(timeout_seconds)
+                        )
+                        async with deadline_context as deadline:
+                            if wall_guard is not None:
+                                actual_dispatch = parse_timestamp(now().isoformat())
+                                if actual_dispatch < dispatch_at:
+                                    raise ValueError("Wall clock decreased during timeout setup")
+                                if wall_guard.remaining_seconds(now=actual_dispatch) <= 0 or (
+                                    network_timeout_at is not None
+                                    and asyncio.get_running_loop().time() >= network_timeout_at
+                                ):
+                                    raise _WallGuardRefused
+                                record["dispatch_at"] = actual_dispatch.isoformat()
+                                record["executed"] = True
+                                calls = int(tool == "fetcher")
+                                queries = int(tool == "search_provider")
                             if tool == "fetcher":
                                 response = await _fetch(get, url)
                                 final_url = response["final_url"]
@@ -812,6 +839,16 @@ async def execute(
                                 }
                             if network and deadline.expired():
                                 raise TimeoutError
+                    except _WallGuardRefused:
+                        refusal = "wall_guard_exhausted"
+                        calls = queries = 0
+                        stop_reason = stop_reason or "wall_guard_exhausted"
+                        record.update(
+                            outcome=refusal,
+                            outcome_status="blocked",
+                            executed=False,
+                            dispatch_at=None,
+                        )
                     except TimeoutError:
                         record["response"] = {
                             "outcome": "action_timeout",
@@ -834,13 +871,20 @@ async def execute(
                             else:
                                 deadline_floor = max_ms
                     except Exception as exc:
+                        if network and not record["executed"]:
+                            # Keep the reserved pending record rather than
+                            # inventing a source attempt for invalid setup.
+                            raise
                         record["response"] = _failure(
                             exc, provider_name=provider_name if tool == "search_provider" else None
                         )
                         if tool == "search_provider" and record["response"]["http_status"] == 429:
                             stop_reason = "http_429"
-                    elapsed = max(0, math.ceil((monotonic() - began) * 1000))
-                    record["outcome_status"] = record["response"]["outcome_status"]
+                    elapsed = (
+                        max(0, math.ceil((monotonic() - began) * 1000)) if record["executed"] else 0
+                    )
+                    if record["executed"]:
+                        record["outcome_status"] = record["response"]["outcome_status"]
                 if wall_guard is not None:
                     completed_at = parse_timestamp(now().isoformat())
                     wall_guard.remaining_seconds(now=completed_at)
