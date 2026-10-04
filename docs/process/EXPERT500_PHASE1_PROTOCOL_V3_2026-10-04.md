@@ -1,6 +1,6 @@
 # Phase1 V3: explicit incremental fact submissions
 
-Status: source preparation; the fresh ten-case paired pilot has not started.
+Status: source preflight complete; the fresh ten-case paired pilot has not started.
 This document is a protocol description, not a search-quality result.
 
 ## Reason for this repair
@@ -72,3 +72,18 @@ Seal all ten before loading the unchanged62 reviewed labels. Report that result
 before any50-case batch; admission still requires a clean complete protocol and
 at least40/62 recovered facts. HELDOUT facts, production deployment, ranking and
 signed corpus changes are outside this protocol repair.
+
+## Source-only preflight evidence
+
+The new protocol has56 journal regressions,84 citation regressions and91
+independently mocked parent-cycle/report checks (22+69). The concrete OTHER and
+mixed-context intake/fee-year bypasses failed before their repairs and reject
+after them; correct short quotes can still use their exact saved location.
+The neutral completed tool-free journal turn took9871ms; its example.org action
+was never executed. No university request or reviewed-label read belongs to
+that format probe. Versioned actual parent-script snapshots, the complete12
+module fingerprints, and the probe result are in `data/protocol.2026-10-04/v3/`.
+The final frozen source gate passed3333 backend tests with94.89% coverage;
+Ruff/format/mypy342 and frontend type/lint/232 tests/build are green. One
+Alembic head remains d8e412c6a901. Source reads still require the frozen tag and
+pre-run trial manifest described above.
