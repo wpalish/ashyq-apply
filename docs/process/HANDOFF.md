@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current holder: nobody; [expert-500] Phase0 released for review as PR45, source a5835ef, task/expert-500-phase0 from origin/main b672349.** Continue the owner-requested ten-expert search investigation using the supplied live-audit specification. Prior PR44 is a local catalogue/code audit (500 rows, zero live source reads), not live fact recovery. Parent owns git/HANDOFF; no production changes.
+**Current holder: gpt-6-astra; [expert-500] Phase1 on task/expert-500-phase1 from Phase0 predecessor73df696.** Phase0 PR45 is ready for owner review; freeze this Phase1 harness revision for the same-day ten-case controlled live pilot. Continue the owner-requested ten-expert search investigation using the supplied live-audit specification. Prior PR44 is a local catalogue/code audit (500 rows, zero live source reads), not live fact recovery. Parent owns git/HANDOFF; no production changes.
 
 
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
@@ -48,7 +48,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**[expert-500] Phase0 ready-for-review (PR #45), source a5835ef; Phase1 pilot next.** Extend offline packets to the 501-identity catalogue, define Q0-Q6 trace outcomes and reviewed miss causes, create a sealed deterministic 350 DEV /150 HELDOUT split, enforce recorded controller budgets and validate stored raw logs. Then compare a fresh main ten-case capture with model-chosen controlled source reads. A genuine blind expert requires tools restricted by access control, not instructions alone; record any inability to establish isolation instead of claiming blinding.
+**[expert-500] Phase1 in-progress; Phase0 ready-for-review (PR #45), source a5835ef.** Extend offline packets to the 501-identity catalogue, define Q0-Q6 trace outcomes and reviewed miss causes, create a sealed deterministic 350 DEV /150 HELDOUT split, enforce recorded controller budgets and validate stored raw logs. Then compare a fresh main ten-case capture with model-chosen controlled source reads. A genuine blind expert requires tools restricted by access control, not instructions alone; record any inability to establish isolation instead of claiming blinding.
 
 
 **Local university search: deployed and public workflow verified (PR #39, main1aa188e, Fly v5).** Complete runtime acceptance is recorded in UNIMATCH_SEARCH_RELEASE_2026-10-02.md; this does not assert complete official admission facts for501 universities.
@@ -4901,3 +4901,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-10-02 UTC | gpt-6-astra | merged4de769d -> task/local-university-search | Owner requests full search completion after supplied seed audit. Clean baseline, one migration head; importer/catalogue, local candidates, bounded live enrichment and outage/live acceptance next. |
 
 - 2026-10-04: gpt-6-astra releases [expert-500] Phase0 a5835ef as PR45 after3094/94.88% gates and independent review; Phase1 predecessor exception written in §5; live university reads still0.
+
+- 2026-10-04: gpt-6-astra takes [expert-500] Phase1 from Phase0 predecessor73df696; ten-case strict exa_mcp pilot with app tree equal main@b672349, no code/prod/gold edits. Freeze this source for all baseline/controller jobs.
