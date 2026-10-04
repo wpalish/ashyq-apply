@@ -4971,3 +4971,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-04 09:24UTC: gpt-6-astra completes/seals V3 ten-case pair on2f4491e,3/62 vs3/62, two complete/eight timeout; public bundle/report preserved. Generic V4 representation/closure plan written before new source changes. No50-case/HELDOUT/production work.
 
 - 2026-10-04 10:09UTC: gpt-6-astra completes V4 source preparation after V3 negative result;3458/94.89%, frontend232, parent156, neutral8671/5781ms. Next freeze source tag/trial before fresh10baselines+10blind experts, then raw replay/all-ten seal before unchanged-label scoring; no50-case admission or production work.
+
+- 2026-10-04 10:12UTC: gpt-6-astra freezes/pushes V4 source24865069715f82a22d83ade810b367c0d5442c67/tag expert500-phase1-v4-2026-10-04-2486506. Pre-baseline trial SHA52b8bce9f3fb963224a5829b866599ec3b8673b11001e50e6447d81aa7ea58eb is byte-identical to trial-at-baseline-start; fresh paired source measurement started. Do not edit frozen scripts/modules, reset/retry cases or duplicate dispatch.
