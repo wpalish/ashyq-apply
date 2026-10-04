@@ -163,20 +163,45 @@
     },
     {
       "id": "ER-09",
-      "status": "candidate",
+      "status": "tested",
       "case_ids": [
         "groningen"
       ],
-      "observation": "2026-10-04 Groningen discovery read order (run 37234751647): publicSitemap-00001.xml is too_large, the navigation fallback reads /education/bachelor and takes brochures, open-day, campus-tour, webklassen and nederlandse-studenten pages as programme leads on URL structure alone; confirm and walker spend ~20 reads rejecting them and the wall clock ends before /bachelors/computing-science (which states deadline 1 May 2027 non-EU and fee EUR 19,800 non-EU 2027-28).",
+      "observation": "2026-10-04 Groningen discovery read order (run 37234751647): publicSitemap-00001.xml is too_large, the navigation fallback reads /education/bachelor and takes brochures, open-day, campus-tour, webklassen and nederlandse-studenten pages as programme leads on URL structure alone; confirm and walker spend ~20 reads rejecting them and the wall clock ends before /bachelors/computing-science (which states deadline 1 May 2027 non-EU and fee EUR 19,800 non-EU 2027-28). Paired run 37237341528 (ER-09 alone): Groningen saved 3 reads but still timed out - the catalogue walker, not navigation, spent the budget; other cases unchanged.",
       "proposed_rule": "When the applicant named a subject, the navigation fallback keeps a programme-page lead only if its URL or its link text names that subject (strong aliases included); catalogue-shaped links are still followed.",
       "integration_seam": "backend/app/adapters/discovery/live_discovery.py NAVIGATION_FIELD_LEADS in _navigation_fallback; live.py --navigation-field-leads",
       "counterexample": "A programme linked under an opaque URL and a label that is not the subject's name (e.g. a faculty brand name) would be dropped from navigation; the catalogue walker still reads it.",
       "falsification": "Enable only if a paired run reaches the Groningen programme page within budget with no lost programme page on the other cases.",
       "evidence_artifacts": [
-        "GitHub Actions run 37234751647 groningen-off logs (reads #4-#39)"
+        "GitHub Actions run 37234751647 groningen-off logs (reads #4-#39)",
+        "GitHub Actions run 37237341528 (expert_paired, --navigation-field-leads)"
       ],
       "policy_guard": "Fewer reads, no new sources; nothing is read that the fallback would not have read.",
       "validation_artifact": "backend/tests/test_navigation_field_leads.py"
+    },
+    {
+      "id": "ER-10",
+      "status": "tested",
+      "case_ids": [
+        "groningen",
+        "ntu",
+        "hku",
+        "ubc",
+        "vienna",
+        "delft",
+        "warsaw"
+      ],
+      "observation": "Paired run 37237341528 showed the catalogue walker reading 16 /education/bachelor/* pages (open day, brochures, campus tour) before /bachelors on Groningen. Paired run 37240128388 (off/on x2, --walker-subject-cap --navigation-field-leads, exa): Groningen off = timeout, 0 answers; on = /bachelors/computing-science found in 60 reads, deadline 2027-05-01 (correct: non-EU deadline 1 May 2027 on the programme page) and language English. Warsaw off = timeout; on = S1-INF programme found in 56 reads. UBC 63-65 -> 47-49 reads and no timeout, Vienna 65 -> 49, Delft 41 -> 29, all with identical answers. NTU and HKU unchanged. No lost or wrong value.",
+      "proposed_rule": "When the applicant named a subject, a catalogue walk reads every lead that names the subject but at most three that do not, listing pages (catalogue-shaped URL, or a label ending in a plural listing word such as programmes or opleidingen) first.",
+      "integration_seam": "backend/app/adapters/discovery/catalog_walker.py WALKER_SIGNAL_LESS_CAP, _names_a_list; live.py --walker-subject-cap",
+      "counterexample": "A catalogue whose programme links carry neither the subject's name nor a strong alias in URL or label (opaque codes) relies on its three signal-less reads and on search.",
+      "falsification": "Enable by default only with owner approval after the golden demo is checked; a case that loses a programme page or an answer rejects it.",
+      "evidence_artifacts": [
+        "GitHub Actions run 37240128388 (expert_paired, --walker-subject-cap --navigation-field-leads)",
+        "GitHub Actions run 37237341528"
+      ],
+      "policy_guard": "Fewer reads, no new sources; nothing is read that the walker would not have read.",
+      "validation_artifact": "backend/tests/test_catalog_walker_subject_cap.py"
     }
   ]
 }
