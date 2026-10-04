@@ -2,6 +2,20 @@
 
 Run from backend: python -m evaluation.research.live --live --out <directory>
 Each institution runs in its own process with a hard wall-clock budget.
+
+``--strict-expert-budget`` adds evaluation wrappers around the unchanged app:
+60 cumulative cold Fetcher.get calls and six configured Exa queries across
+all stages, with no further provider call after HTTP 429. Active time starts
+at capture_one entry and lasts the requested 120 seconds by default, including
+canary setup, discovery, verification, and funding. The parent adds a separate
+15-second process reserve for startup and cancellation/output cleanup; this
+reserve never authorizes more tool calls. Legacy mode retains its five-second
+child reserve and cache-free page accounting.
+
+``--finalization-reserve-ms 1000`` is an optional strict evaluation setting.
+Source/work stops at 119000ms of the same 120000ms case clock; cancellation
+cleanup and final output/checkpoint work remain measured, without clamping an
+overrun. The final metering-envelope write is audit persistence after that work.
 """
 
 import argparse
@@ -12,6 +26,8 @@ import os
 import subprocess
 import sys
 import time
+from collections.abc import Callable
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -52,6 +68,128 @@ HELDOUT = {
     "polimi": "polimi.it",
     "vilnius": "vu.lt",
 }
+
+STRICT_MAX_FETCHER_CALLS = 60
+STRICT_MAX_SEARCH_QUERIES = 6
+STRICT_MAX_SECONDS = 120
+STRICT_PROCESS_RESERVE_SECONDS = 15
+STRICT_PROVIDERS = frozenset({"exa", "exa_mcp"})
+
+
+@dataclass
+class _ExpertBudget:
+    """One case ledger shared by every Fetcher/provider instance and stage."""
+
+    max_fetcher_calls: int
+    seconds: float
+    provider_name: str
+    started: float
+    max_search_queries: int = STRICT_MAX_SEARCH_QUERIES
+    clock: Callable[[], float] = time.monotonic
+    finalization_reserve_ms: int = 0
+    fetcher_calls: int = 0
+    search_queries: int = 0
+    blocked_search_queries: int = 0
+    network_http_requests: int = 0
+    stop_reason: str | None = None
+    provider_failure: dict[str, Any] | None = None
+
+    @property
+    def source_work_deadline_ms(self) -> int:
+        return int(self.seconds * 1000) - self.finalization_reserve_ms
+
+    @property
+    def active_time_basis(self) -> str:
+        basis = "capture_one entry; includes canary setup and all pipeline stages"
+        if self.finalization_reserve_ms:
+            basis += (
+                ", cancellation cleanup, output/raw persistence and final checkpoint work; "
+                "final metering-envelope persistence is audit only"
+            )
+        return basis
+
+    def remaining(self) -> float:
+        remaining = (
+            self.seconds - self.finalization_reserve_ms / 1000 - (self.clock() - self.started)
+        )
+        if remaining <= 0:
+            self.stop_reason = self.stop_reason or (
+                "source_work_deadline_exhausted"
+                if self.finalization_reserve_ms
+                else "wall_clock_budget_exhausted"
+            )
+            raise TimeoutError("BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED")
+        return remaining
+
+    def before_fetch(self) -> None:
+        self.remaining()
+        if self.fetcher_calls >= self.max_fetcher_calls:
+            self.stop_reason = self.stop_reason or "page_budget_exhausted"
+            raise RuntimeError("BENCHMARK_PAGE_BUDGET_EXHAUSTED")
+        self.fetcher_calls += 1
+
+    def before_search(self, provider_name: str) -> None:
+        from app.adapters.search.base import SearchUnavailable
+
+        self.remaining()
+        if provider_name != self.provider_name or provider_name not in STRICT_PROVIDERS:
+            raise SearchUnavailable("Strict capture refused a different provider identity")
+        if self.provider_failure and self.provider_failure.get("http_status") == 429:
+            self.blocked_search_queries += 1
+            raise SearchUnavailable(
+                "Strict capture stopped provider calls after HTTP 429", http_status=429
+            )
+        if self.search_queries >= self.max_search_queries:
+            self.blocked_search_queries += 1
+            self.stop_reason = self.stop_reason or "search_budget_exhausted"
+            raise SearchUnavailable("Strict capture search query budget exhausted")
+        self.search_queries += 1
+
+    def failed_search(self, exc: Exception) -> Exception:
+        """Keep a fixed diagnostic/status, never vendor exception text or keys."""
+        from app.adapters.search.base import (
+            SearchFailureReason,
+            SearchUnavailable,
+            search_failure_diagnostic,
+        )
+
+        status = getattr(exc, "http_status", None)
+        if type(status) is not int or not 100 <= status <= 599:
+            status = getattr(getattr(exc, "response", None), "status_code", None)
+        if type(status) is not int or not 100 <= status <= 599:
+            status = None
+        reason = getattr(exc, "reason", None)
+        reason = reason if isinstance(reason, SearchFailureReason) else None
+        sanitized = SearchUnavailable(
+            "Configured search provider unavailable", http_status=status, reason=reason
+        )
+        self.provider_failure = {
+            "http_status": status,
+            "reason": reason.value if reason else None,
+            "error": search_failure_diagnostic(self.provider_name, sanitized),
+        }
+        if status == 429:
+            self.stop_reason = "http_429"
+        return sanitized
+
+    def snapshot(self) -> dict[str, Any]:
+        return {
+            "strict_expert_budget": True,
+            "provider": self.provider_name,
+            "max_fetcher_calls": self.max_fetcher_calls,
+            "max_search_queries": self.max_search_queries,
+            "max_active_seconds": self.seconds,
+            "finalization_reserve_ms": self.finalization_reserve_ms,
+            "source_work_deadline_ms": self.source_work_deadline_ms,
+            "fetcher_calls": self.fetcher_calls,
+            "search_queries": self.search_queries,
+            "blocked_search_queries": self.blocked_search_queries,
+            "network_http_requests": self.network_http_requests,
+            "elapsed_ms": max(0, int((self.clock() - self.started) * 1000)),
+            "stop_reason": self.stop_reason,
+            "provider_failure": self.provider_failure,
+            "active_time_basis": self.active_time_basis,
+        }
 
 
 #: Award and document identities the owner approved on 2026-09-23. Scoring
@@ -101,8 +239,19 @@ async def _jev_shadow(case_id: str, queued: list[str], profile: Any) -> None:
 
 
 async def capture_one(
-    case_id: str, output: Path, max_pages: int, seconds: float | None = None
+    case_id: str,
+    output: Path,
+    max_pages: int,
+    seconds: float | None = None,
+    *,
+    strict_expert_budget: bool = False,
+    finalization_reserve_ms: int = 0,
 ) -> None:
+    entered = time.monotonic()
+    if type(finalization_reserve_ms) is not int or finalization_reserve_ms < 0:
+        raise ValueError("Finalization reserve must be a nonnegative integer in milliseconds")
+    if finalization_reserve_ms and not strict_expert_budget:
+        raise ValueError("Finalization reserve requires strict expert budget mode")
     # Delayed imports keep ordinary offline evaluation entirely independent of I/O.
     from app.adapters import fetching
     from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, PageCategory
@@ -110,10 +259,39 @@ async def capture_one(
     from app.models.research import ClaimRow
     from scripts import canary_discovery as canary
 
+    budget = None
+    if strict_expert_budget:
+        from app.config import get_settings
+
+        seconds = STRICT_MAX_SECONDS if seconds is None else seconds
+        if (
+            type(max_pages) is not int
+            or not 1 <= max_pages <= STRICT_MAX_FETCHER_CALLS
+            or not 0 < seconds <= STRICT_MAX_SECONDS
+        ):
+            raise ValueError(
+                "Strict capture budget must be at most 60 Fetcher calls and 120 active seconds"
+            )
+        if finalization_reserve_ms >= seconds * 1000:
+            raise ValueError("Finalization reserve must be less than the full case clock")
+        settings = get_settings()
+        if settings.search_provider not in STRICT_PROVIDERS:
+            raise ValueError("Strict live capture requires configured exa or exa_mcp")
+        if settings.enable_browser_tier or not settings.respect_robots:
+            raise ValueError("Strict live capture requires browser tier off and robots respected")
+        budget = _ExpertBudget(
+            max_pages,
+            seconds,
+            settings.search_provider,
+            entered,
+            clock=time.monotonic,
+            finalization_reserve_ms=finalization_reserve_ms,
+        )
+
     predictions: list[Prediction] = []
     raw_claims: list[dict[str, Any]] = []
     identities = IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text(encoding="utf-8"))
-    started = time.monotonic()
+    started = entered if budget else time.monotonic()
     observation = Observation(
         case_id=case_id,
         error="CAPTURE_IN_PROGRESS",
@@ -129,6 +307,13 @@ async def capture_one(
 
     fetchers: list[Any] = []
 
+    def budget_checkpoint() -> None:
+        assert budget is not None
+        budget_output = output.with_suffix(".budget.json")
+        budget_temporary = budget_output.with_suffix(".pending")
+        budget_temporary.write_text(json.dumps(budget.snapshot(), indent=2), encoding="utf-8")
+        budget_temporary.replace(budget_output)
+
     def checkpoint() -> None:
         observation.telemetry.latency_seconds = time.monotonic() - started
         # Counted from the fetcher's own tier tally, never assumed: a zero
@@ -139,6 +324,15 @@ async def capture_one(
         temporary = output.with_suffix(".pending")
         temporary.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
         temporary.replace(output)
+        if budget:
+            budget_checkpoint()
+
+    def final_checkpoint() -> None:
+        checkpoint()
+        if budget and budget.finalization_reserve_ms:
+            # Record the completed first checkpoint's own work from the same
+            # clock. This final metering envelope never opens a new work budget.
+            budget_checkpoint()
 
     checkpoint()
     original_request = fetching._pinned_request
@@ -168,12 +362,22 @@ async def capture_one(
         # Each search call is counted and timed into this case's own log: a
         # case that runs out of wall clock after two fetches spent the time
         # somewhere, and search is the first place to look.
-        observation.telemetry.search_calls = (observation.telemetry.search_calls or 0) + 1
+        if budget:
+            budget.before_search(getattr(provider, "name", ""))
+            observation.telemetry.search_calls = budget.search_queries
+        else:
+            observation.telemetry.search_calls = (observation.telemetry.search_calls or 0) + 1
         began = time.monotonic()
+        if budget:
+            checkpoint()
+            if budget.finalization_reserve_ms:
+                budget.remaining()
         try:
             return await original_search(provider, *args, **kwargs)
         except Exception as exc:
             print(f"search failed after {time.monotonic() - began:.1f}s: {type(exc).__name__}")
+            if budget:
+                raise budget.failed_search(exc) from None
             raise
         finally:
             print(
@@ -186,7 +390,10 @@ async def capture_one(
     original_confirm = LiveDiscoveryAdapter._confirm_programs
 
     def counted_request(*args, **kwargs):
-        observation.telemetry.http_fetches = (observation.telemetry.http_fetches or 0) + 1
+        if budget:
+            budget.network_http_requests += 1
+        else:
+            observation.telemetry.http_fetches = (observation.telemetry.http_fetches or 0) + 1
         checkpoint()
         return original_request(*args, **kwargs)
 
@@ -197,7 +404,8 @@ async def capture_one(
                 queued.append(url)
         observation.ranked_urls = [HttpUrl(url) for url in queued]
         checkpoint()
-        await _jev_shadow(case_id, queued, profile)
+        if budget is None:
+            await _jev_shadow(case_id, queued, profile)
         return await original_confirm(adapter, selected, ranked, trace, profile)
 
     class ObservedRunner(canary.CanaryRunner):
@@ -215,13 +423,21 @@ async def capture_one(
                 # and until 2026-09-23 that repeat still spent the budget: run
                 # 20 ended Delft, Vienna and UBC in the funding stage with up
                 # to a fifth of their 60 calls being cache hits.
-                if network_reads >= max_pages:
+                if budget:
+                    budget.before_fetch()
+                    observation.telemetry.http_fetches = budget.fetcher_calls
+                    kwargs["use_cache"] = False
+                elif network_reads >= max_pages:
                     raise RuntimeError("BENCHMARK_PAGE_BUDGET_EXHAUSTED")
                 requests += 1
                 began = time.monotonic()
                 # Written before the read, so a read that never returns still
                 # names itself in the log.
                 print(f"get #{requests} start t={began - started:.0f}s {url[:120]}", flush=True)
+                if budget:
+                    checkpoint()
+                    if budget.finalization_reserve_ms:
+                        budget.remaining()
                 result = await original(url, **kwargs)
                 # One line per page read, so a case that runs out of wall
                 # clock shows which reads took it: its own log is printed by
@@ -298,8 +514,9 @@ async def capture_one(
         patch.object(LiveDiscoveryAdapter, "_confirm_programs", observed_confirm),
     ):
         try:
+            active_seconds = budget.remaining() if budget else seconds
             report = await asyncio.wait_for(
-                canary.run_canary({**COHORT, **HELDOUT}[case_id], False), seconds
+                canary.run_canary({**COHORT, **HELDOUT}[case_id], False), active_seconds
             )
         except TimeoutError:
             # The child stops itself just short of the parent's kill, so the
@@ -308,19 +525,28 @@ async def capture_one(
             # Runs 59-62: UBC filed nothing because the kill came mid-funding.
             observation.predictions = predictions
             observation.error = "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
-            checkpoint()
+            if budget:
+                budget.stop_reason = budget.stop_reason or (
+                    "source_work_deadline_exhausted"
+                    if budget.finalization_reserve_ms
+                    else "wall_clock_budget_exhausted"
+                )
+            final_checkpoint()
             return
     rows = report["institutions"]
     observation.programme_urls = [HttpUrl(url) for r in rows for url in r["programs"]]
     observation.predictions = predictions
     observation.error = report["run_error"] or None
-    checkpoint()
+    if budget is None or not budget.finalization_reserve_ms:
+        checkpoint()
     # Preserve raw output for mapping/adjudication; do not invent unsupported counters.
     output.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
     output.with_suffix(".raw.json").write_text(
         json.dumps({"canary": report, "claims": raw_claims}, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
+    if budget and budget.finalization_reserve_ms:
+        final_checkpoint()
 
 
 def main() -> None:
@@ -334,7 +560,18 @@ def main() -> None:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--case", choices=[*COHORT, *HELDOUT])
     parser.add_argument("--seconds-per-case", type=int, default=120)
-    parser.add_argument("--max-pages", type=int, default=40)
+    parser.add_argument("--max-pages", type=int, default=None)
+    parser.add_argument(
+        "--strict-expert-budget",
+        action="store_true",
+        help="evaluation only: cold 60 get / 6 provider query / 120 active second caps; stop batch on 429",
+    )
+    parser.add_argument(
+        "--finalization-reserve-ms",
+        type=int,
+        default=None,
+        help="strict evaluation only: reserve case-clock milliseconds for cancellation/output cleanup (V4:1000)",
+    )
     parser.add_argument(
         "--search-provider",
         choices=sorted(KNOWN_SEARCH_PROVIDERS),
@@ -385,17 +622,33 @@ def main() -> None:
     )
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
+    if args.max_pages is None:
+        args.max_pages = STRICT_MAX_FETCHER_CALLS if args.strict_expert_budget else 40
     if not 1 <= args.seconds_per_case <= 600 or not 1 <= args.max_pages <= 100:
         parser.error("Budget must be 1..600 seconds and 1..100 Fetcher.get calls per university")
+    if args.strict_expert_budget and (
+        args.seconds_per_case > STRICT_MAX_SECONDS or args.max_pages > STRICT_MAX_FETCHER_CALLS
+    ):
+        parser.error(
+            "Strict expert budget cannot exceed 60 Fetcher.get calls and 120 active seconds"
+        )
+    if args.finalization_reserve_ms is not None:
+        if not args.strict_expert_budget:
+            parser.error("Finalization reserve requires --strict-expert-budget")
+        if not 0 <= args.finalization_reserve_ms < args.seconds_per_case * 1000:
+            parser.error("Finalization reserve must be 0..(full case clock minus 1) milliseconds")
+    finalization_reserve_ms = args.finalization_reserve_ms or 0
     settings = (
         Settings(search_provider=args.search_provider) if args.search_provider else Settings()
     )
-    if args.search_provider:
+    if args.search_provider or args.strict_expert_budget:
         try:
             settings._validate_search()
         except RuntimeError as exc:
             parser.error(str(exc))
     search_provider = settings.search_provider
+    if args.strict_expert_budget and search_provider not in STRICT_PROVIDERS:
+        parser.error("Strict expert budget requires configured exa or exa_mcp")
     print(f"search provider: {search_provider}", flush=True)
     if args.child:
         web_scholarships.SEARCH_FUNDING_FALLBACK = args.search_funding_fallback
@@ -423,13 +676,29 @@ def main() -> None:
             live_discovery.NAVIGATION_SLOT = True
         # A few seconds under the parent's timeout, so the child's own stop
         # comes first and writes what it has.
-        soft = max(args.seconds_per_case - 5, 1)
+        soft = (
+            args.seconds_per_case
+            if args.strict_expert_budget
+            else max(args.seconds_per_case - 5, 1)
+        )
         # Apply the selection before the pipeline constructs Settings. Clearing
         # the cache also covers direct --child invocation in an existing process.
-        with patch.dict(os.environ, {"UNIMATCH_SEARCH_PROVIDER": search_provider}):
+        child_configuration = {"UNIMATCH_SEARCH_PROVIDER": search_provider}
+        if args.strict_expert_budget:
+            child_configuration.update(
+                UNIMATCH_ENABLE_BROWSER_TIER="false", UNIMATCH_RESPECT_ROBOTS="true"
+            )
+        with patch.dict(os.environ, child_configuration):
             get_settings.cache_clear()
             try:
-                asyncio.run(capture_one(args.case, args.out, args.max_pages, soft))
+                strict_arguments: dict[str, Any] = (
+                    {"strict_expert_budget": True} if args.strict_expert_budget else {}
+                )
+                if args.finalization_reserve_ms is not None:
+                    strict_arguments["finalization_reserve_ms"] = finalization_reserve_ms
+                asyncio.run(
+                    capture_one(args.case, args.out, args.max_pages, soft, **strict_arguments)
+                )
             finally:
                 get_settings.cache_clear()
         return
@@ -438,7 +707,10 @@ def main() -> None:
     directory.mkdir(parents=True)
     sha = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
     observations = []
-    for case_id in [args.case] if args.case else list(COHORT):
+    planned_cases = [args.case] if args.case else list(COHORT)
+    case_budgets: dict[str, Any] = {}
+    batch_stop_reason = None
+    for case_index, case_id in enumerate(planned_cases):
         output = directory / f"{case_id}.json"
         started = time.monotonic()
         environment = dict(
@@ -449,6 +721,8 @@ def main() -> None:
             UNIMATCH_SEARCH_PROVIDER=search_provider,
             PYTHONIOENCODING="utf-8",
         )
+        if args.strict_expert_budget:
+            environment["UNIMATCH_RESPECT_ROBOTS"] = "true"
         with (directory / f"{case_id}.log").open("w", encoding="utf-8") as log:
             try:
                 completed = subprocess.run(
@@ -466,6 +740,12 @@ def main() -> None:
                         str(args.max_pages),
                         "--seconds-per-case",
                         str(args.seconds_per_case),
+                        *(["--strict-expert-budget"] if args.strict_expert_budget else []),
+                        *(
+                            ["--finalization-reserve-ms", str(finalization_reserve_ms)]
+                            if args.finalization_reserve_ms is not None
+                            else []
+                        ),
                         *(["--search-provider", search_provider] if args.search_provider else []),
                         *(["--search-first"] if args.search_first else []),
                         *(["--skip-refused-hosts"] if args.skip_refused_hosts else []),
@@ -487,24 +767,68 @@ def main() -> None:
                     env=environment,
                     stdout=log,
                     stderr=log,
-                    timeout=args.seconds_per_case,
+                    timeout=args.seconds_per_case + STRICT_PROCESS_RESERVE_SECONDS
+                    if args.strict_expert_budget
+                    else args.seconds_per_case,
                     check=False,
                 )
                 error = f"PROCESS_EXIT_{completed.returncode}" if completed.returncode else None
             except subprocess.TimeoutExpired:
                 error = "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+        process_elapsed_seconds = time.monotonic() - started
         if output.exists():
             observation = Observation.model_validate_json(output.read_text(encoding="utf-8"))
             if error:
                 observation.error = error
-                observation.telemetry.latency_seconds = time.monotonic() - started
+                if not args.strict_expert_budget:
+                    observation.telemetry.latency_seconds = process_elapsed_seconds
         else:
             observation = Observation(
                 case_id=case_id,
                 error=error or "MISSING_OUTPUT",
-                telemetry=Telemetry(latency_seconds=time.monotonic() - started),
+                telemetry=Telemetry(
+                    latency_seconds=None if args.strict_expert_budget else process_elapsed_seconds
+                ),
             )
         observations.append(observation)
+        if args.strict_expert_budget:
+            budget_output = output.with_suffix(".budget.json")
+            if budget_output.exists():
+                case_budgets[case_id] = json.loads(budget_output.read_text(encoding="utf-8"))
+                if case_budgets[case_id].get("stop_reason") == "http_429":
+                    batch_stop_reason = "http_429"
+            case_budgets.setdefault(case_id, {}).update(
+                parent_process_elapsed_seconds=process_elapsed_seconds,
+                process_error=error,
+                active_checkpoint_available=budget_output.exists(),
+            )
+        strict_config = (
+            {
+                "strict_expert_budget": True,
+                "max_search_queries_per_case": STRICT_MAX_SEARCH_QUERIES,
+                "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+                "cold_fetcher_reads": True,
+                "child_active_seconds": args.seconds_per_case,
+                "finalization_reserve_ms": finalization_reserve_ms,
+                "source_work_deadline_ms": args.seconds_per_case * 1000 - finalization_reserve_ms,
+                "active_time_basis": _ExpertBudget(
+                    args.max_pages,
+                    args.seconds_per_case,
+                    search_provider,
+                    0.0,
+                    finalization_reserve_ms=finalization_reserve_ms,
+                ).active_time_basis,
+                "parent_process_reserve_seconds": STRICT_PROCESS_RESERVE_SECONDS,
+                "parent_process_timeout_seconds": args.seconds_per_case
+                + STRICT_PROCESS_RESERVE_SECONDS,
+                "case_budgets": case_budgets,
+                "batch_stop_reason": batch_stop_reason,
+                "batch_completed_case_ids": planned_cases[: case_index + 1],
+                "batch_remaining_case_ids": planned_cases[case_index + 1 :],
+            }
+            if args.strict_expert_budget
+            else {}
+        )
         capture = Capture(
             pipeline_sha=sha,
             captured_at=stamp,
@@ -530,11 +854,18 @@ def main() -> None:
                 "mapping_sha256": hashlib.sha256(
                     Path(__file__).with_name("mapping.py").read_bytes()
                 ).hexdigest(),
+                **strict_config,
             },
             observations=observations,
         )
         (directory / "capture.json").write_text(capture.model_dump_json(indent=2), encoding="utf-8")
         print(f"{case_id}: {observation.error or 'complete'}", flush=True)
+        if batch_stop_reason:
+            print(
+                "Capture stopped after provider HTTP 429; remaining cases were not attempted.",
+                flush=True,
+            )
+            break
     print(directory / "capture.json", flush=True)
 
 

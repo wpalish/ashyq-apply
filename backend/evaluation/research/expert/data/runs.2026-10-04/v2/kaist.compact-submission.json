@@ -1,0 +1,185 @@
+{
+  "kind": "submit",
+  "observation": "Computer Science is listed among undergraduate programmes. Admissions guidance and eligibility reads were blocked; remaining requirements are unverified.",
+  "action": null,
+  "facts": [
+    {
+      "id": "f1",
+      "question": "Q0",
+      "claim_key": "programme.exists",
+      "value_json": "true",
+      "source_step": 2,
+      "quotation": "Computer Science (https://engineering.kaist.ac.kr/education/departmentDetail?idx=77)",
+      "location": {
+        "kind": "text",
+        "block_id": null,
+        "section_path": [],
+        "page": null
+      },
+      "scope": {
+        "university": "KAIST",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      }
+    },
+    {
+      "id": "f2",
+      "question": "OTHER",
+      "claim_key": "programme.admission_route",
+      "value_json": "\"Freshmen enter with an undecided major; students choose their department/division in sophomore year without additional requirements or admission procedures.\"",
+      "source_step": 2,
+      "quotation": "※ KAIST holds 【non-declared major system】 at the freshmen year, applicant will get their admission offers as “undecided major”.\n\nOn sophomore year, students will choose the department/division for their degree year without any additional requirements or admission procedures.",
+      "location": {
+        "kind": "text",
+        "block_id": null,
+        "section_path": [],
+        "page": null
+      },
+      "scope": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      }
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "fact_ids": [
+        "f1"
+      ],
+      "scope": {
+        "university": "KAIST",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "International undergraduate programme navigation explicitly lists Computer Science.",
+      "supporting_steps": []
+    },
+    {
+      "question": "Q1",
+      "status": "inaccessible",
+      "fact_ids": [],
+      "scope": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Application Guidelines was blocked by robots policy; English test minima could not be verified.",
+      "supporting_steps": [
+        3
+      ]
+    },
+    {
+      "question": "Q2",
+      "status": "inaccessible",
+      "fact_ids": [],
+      "scope": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Eligibility and Application Guidelines were blocked. Kazakhstan secondary, NIS and additional-year eligibility remain unverified.",
+      "supporting_steps": [
+        3,
+        4
+      ]
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "fact_ids": [],
+      "scope": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No fall 2027 international deadline was established. The linked calendar was not read.",
+      "supporting_steps": []
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "fact_ids": [],
+      "scope": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No tuition evidence for the academic year containing fall 2027 was read.",
+      "supporting_steps": []
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "fact_ids": [],
+      "scope": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Navigation links to KAIST Scholarship, but the scholarship page was not read.",
+      "supporting_steps": [
+        2
+      ]
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "fact_ids": [],
+      "scope": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Eligibility for the linked KAIST Scholarship was not established.",
+      "supporting_steps": []
+    }
+  ]
+}

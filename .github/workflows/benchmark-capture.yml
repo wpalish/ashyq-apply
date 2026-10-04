@@ -14,6 +14,7 @@
 # It never commits anything. The capture and the metrics come back as an
 # artifact, for a human to read and decide about.
 name: benchmark-capture
+run-name: research ${{ inputs.mode || 'benchmark' }} ${{ inputs.case || 'cohort' }} ${{ inputs.run_tag || 'manual' }}
 
 on:
   workflow_dispatch:
@@ -40,6 +41,14 @@ on:
         default: 'benchmark'
       plan:
         description: 'expert_actions: the plan JSON (evaluation/research/expert/controller.py)'
+        required: false
+        default: ''
+      resume_run_id:
+        description: 'expert_actions: restore prior raw logs from this repository run; plan must carry its resume_summary'
+        required: false
+        default: ''
+      run_tag:
+        description: 'Public audit correlation token, used only in the workflow display title'
         required: false
         default: ''
       extra_args:
@@ -422,6 +431,9 @@ jobs:
     if: startsWith(inputs.mode, 'expert_')
     runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
     timeout-minutes: 55
+    permissions:
+      contents: read
+      actions: read
     defaults:
       run:
         working-directory: backend
@@ -490,11 +502,24 @@ jobs:
 
       - name: Baseline capture and blinded packet
         if: inputs.mode == 'expert_baseline'
+        env:
+          REQUESTED_CASE: ${{ inputs.case }}
         run: |
-          set -o pipefail
+          set -euo pipefail
           mkdir -p out
+          case_flags=()
+          packet_flags=()
+          if [ -n "$REQUESTED_CASE" ]; then
+            case_flags=(--case "$REQUESTED_CASE")
+            packet_flags=(--case "$REQUESTED_CASE")
+          else
+            # Public cohort IDs only. The expert exporter copies no labels.
+            for case_id in $(.venv/bin/python -c 'from evaluation.research.live import COHORT; print(" ".join(COHORT))'); do
+              packet_flags+=(--case "$case_id")
+            done
+          fi
           .venv/bin/python -m evaluation.research.live --live --out out/capture \
-            --case "${{ inputs.case }}" \
+            ${case_flags[@]+"${case_flags[@]}"} \
             --seconds-per-case "${{ inputs.seconds_per_case }}" \
             --max-pages "${{ inputs.max_pages }}" ${{ inputs.extra_args }} \
             --search-provider "$UNIMATCH_SEARCH_PROVIDER" | tee out/capture.log
@@ -502,7 +527,7 @@ jobs:
           test -f "$CAPTURE"
           .venv/bin/python -m evaluation.research.expert prepare \
             --dataset evaluation/research/data/ground_truth.reviewed.json \
-            --capture "$CAPTURE" --case "${{ inputs.case }}" \
+            --capture "$CAPTURE" "${packet_flags[@]}" \
             --out out/packet.json
           echo "extra_args=${{ inputs.extra_args }}" >> out/config.txt
 
@@ -525,11 +550,43 @@ jobs:
           done
           echo "extra_args=${{ inputs.extra_args }} base_args=${{ inputs.base_args }}" >> out/config.txt
 
+      - name: Validate the resume request
+        if: inputs.mode == 'expert_actions' && inputs.resume_run_id != ''
+        env:
+          RESUME_RUN_ID: ${{ inputs.resume_run_id }}
+        run: |
+          .venv/bin/python - <<'PY'
+          import json, os, re
+          run_id = os.environ['RESUME_RUN_ID']
+          if not re.fullmatch(r'[1-9][0-9]*', run_id):
+              raise SystemExit('resume_run_id must be a positive numeric workflow run ID')
+          plan = json.loads(os.environ['PLAN_JSON'])
+          summary = plan.get('resume_summary')
+          if not plan.get('strict_budget') or not isinstance(summary, dict) or not summary.get('raw_logs'):
+              raise SystemExit('Resume requires a strict plan and independently hashed previous raw logs')
+          PY
+
+      - name: Restore the preceding controlled raw logs
+        if: inputs.mode == 'expert_actions' && inputs.resume_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: expert-recovery-${{ inputs.resume_run_id }}
+          run-id: ${{ inputs.resume_run_id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          path: backend/out/preceding
+
       - name: Execute an expert plan
         if: inputs.mode == 'expert_actions'
         run: |
           set -o pipefail
           mkdir -p out
+          if [ -d out/preceding ]; then
+            test -d out/preceding/logs
+            test ! -e out/logs
+            mv out/preceding/logs out/logs
+            rm -rf out/preceding
+          fi
           printf '%s' "$PLAN_JSON" > out/plan.json
           .venv/bin/python -m evaluation.research.expert.controller \
             --plan out/plan.json --logs-dir out/logs --cache-dir out/cache \
@@ -544,3 +601,12 @@ jobs:
           echo "BUNDLE_BEGIN"
           base64 -w 4000 bundle.tgz | sed 's/^/B64 /'
           echo "BUNDLE_END"
+
+      - name: Preserve independently recorded expert evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: expert-recovery-${{ github.run_id }}
+          path: backend/out
+          if-no-files-found: warn
+          retention-days: 14

@@ -1,0 +1,285 @@
+{
+  "schema_version": "1",
+  "case_id": "aalto",
+  "packet_sha256": "2f615074d2361d17998ebe09922d2bd067771cf59b77aedcd98bfb0d8950469c",
+  "baseline_pipeline_sha": "9421884465cbc986ce0ab017102126731fe2589d",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T03:43:20.395174+00:00",
+  "ended_at": "2026-10-04T03:48:43.708641+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T03:44:03.728672+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:aalto.fi bachelor computer science admissions 2027",
+        "domains": [
+          "aalto.fi"
+        ],
+        "max_results": 5
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "aalto-001.json",
+      "raw_log_sha256": "588944f7c88e00e7bf43b7ff2158796de1edb9029f48e6773dfd5da747862ba5",
+      "elapsed_ms": 1353,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 15108,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "The baseline curriculum URLs did not establish an exact programme or admissions requirements; discover official bachelor routes.",
+      "observed_from_step": null,
+      "action": "search_provider: site:aalto.fi bachelor computer science admissions 2027",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T03:44:56.843796+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.aalto.fi/en/admission-services/apply-to-bachelors-programmes-in-english"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "aalto-002.json",
+      "raw_log_sha256": "7fa4061092bcfa387ed013113b087dc081dd269eb0ce3b9eaa46b9a1c06414c9",
+      "elapsed_ms": 10588,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 33150,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Search results identify a current bachelor admissions hub; exact Computer Science identity remains unestablished.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://www.aalto.fi/en/admission-services/apply-to-bachelors-programmes-in-english",
+      "stage": "page_understanding",
+      "url": "https://www.aalto.fi/en/admission-services/apply-to-bachelors-programmes-in-english",
+      "final_url": "https://www.aalto.fi/en/admission-services/apply-to-bachelors-programmes-in-english"
+    },
+    {
+      "at": "2026-10-04T03:46:00.911692+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.aalto.fi/en/admission-services/admission-to-aalto-bachelors-programme-in-science-and-technology-bachelor-and-master-of-science-in"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "aalto-003.json",
+      "raw_log_sha256": "681da8df0dfd88c7adf06f234debe84a13c03e3b6917c353bb9f95c2ac7b6030",
+      "elapsed_ms": 10273,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 52561,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "The bachelor admissions hub was robots-blocked. Try the separately discovered science and technology admissions page.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://www.aalto.fi/en/admission-services/admission-to-aalto-bachelors-programme-in-science-and-technology-bachelor-and-master-of-science-in",
+      "stage": "page_understanding",
+      "url": "https://www.aalto.fi/en/admission-services/admission-to-aalto-bachelors-programme-in-science-and-technology-bachelor-and-master-of-science-in",
+      "final_url": "https://www.aalto.fi/en/admission-services/admission-to-aalto-bachelors-programme-in-science-and-technology-bachelor-and-master-of-science-in"
+    },
+    {
+      "at": "2026-10-04T03:47:06.675201+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:aalto.fi \"Computer Science\" \"bachelor\" programme",
+        "domains": [
+          "aalto.fi"
+        ],
+        "max_results": 5
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "aalto-004.json",
+      "raw_log_sha256": "12f59451030f8c68cf87d61a202f6bb98f2417236baf178ee3c029bf6d7e0a9a",
+      "elapsed_ms": 1126,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 64293,
+      "search_queries_cumulative": 2,
+      "step": 4,
+      "observed_before": "Both admissions pages were robots-blocked; search for an exact Computer Science bachelor programme before treating related programmes as equivalent.",
+      "observed_from_step": 3,
+      "action": "search_provider: site:aalto.fi \"Computer Science\" \"bachelor\" programme",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T03:48:05.605664+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.aalto.fi/en/department-of-computer-science/education"
+      },
+      "outcome": "action_timeout",
+      "outcome_status": "failure",
+      "policy_mode": "same_policy",
+      "raw_log_path": "aalto-005.json",
+      "raw_log_sha256": "a929e8c83cce9c03c0cc4d049890f3b534e14584f7ba06252f1ac1331ac7ef1c",
+      "elapsed_ms": 1626,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 75004,
+      "search_queries_cumulative": 2,
+      "step": 5,
+      "observed_before": "Search identifies a departmental education page naming Computer Science at bachelor level; its text must be read to establish the exact programme and language.",
+      "observed_from_step": 4,
+      "action": "fetcher: https://www.aalto.fi/en/department-of-computer-science/education",
+      "stage": "page_understanding",
+      "url": "https://www.aalto.fi/en/department-of-computer-science/education",
+      "final_url": null
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "inaccessible",
+      "supporting_steps": [
+        5
+      ],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Aalto University",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The departmental education page timed out; exact bachelor Computer Science existence remains unverified."
+    },
+    {
+      "question": "Q1",
+      "status": "inaccessible",
+      "supporting_steps": [
+        2,
+        3
+      ],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Aalto University",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Admissions pages were robots-blocked; English-test requirements could not be verified."
+    },
+    {
+      "question": "Q2",
+      "status": "inaccessible",
+      "supporting_steps": [
+        2,
+        3
+      ],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Aalto University",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Admissions pages were robots-blocked; international secondary, Kazakhstan/NIS and additional-year eligibility remain unverified."
+    },
+    {
+      "question": "Q3",
+      "status": "inaccessible",
+      "supporting_steps": [
+        2,
+        3
+      ],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Aalto University",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Admissions pages were robots-blocked; search snippets do not establish the requested fall 2027 deadline."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Aalto University",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No readable official evidence establishes international tuition for the academic year containing fall 2027."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Aalto University",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No scholarship source was successfully read; bachelor scholarship existence remains unsettled."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Aalto University",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No precise scholarship or its international eligibility was established."
+    }
+  ],
+  "review_status": "unreviewed"
+}

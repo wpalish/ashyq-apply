@@ -1,0 +1,25 @@
+{
+  "case_id": "kaist",
+  "run_id": 37173872298,
+  "head_sha": "9421884465cbc986ce0ab017102126731fe2589d",
+  "capture": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v2-2026-10-04/baseline/kaist/artifact/capture/20261004T032232Z/capture.json",
+  "packet": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v2-2026-10-04/baseline/kaist/public-packet.json",
+  "budget": {
+    "strict_expert_budget": true,
+    "provider": "exa_mcp",
+    "max_fetcher_calls": 60,
+    "max_search_queries": 6,
+    "max_active_seconds": 120,
+    "fetcher_calls": 30,
+    "search_queries": 6,
+    "blocked_search_queries": 0,
+    "network_http_requests": 30,
+    "elapsed_ms": 94046,
+    "stop_reason": null,
+    "provider_failure": null,
+    "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+    "parent_process_elapsed_seconds": 94.77496298899999,
+    "process_error": null,
+    "active_checkpoint_available": true
+  }
+}

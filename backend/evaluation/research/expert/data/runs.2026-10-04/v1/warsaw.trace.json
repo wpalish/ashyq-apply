@@ -1,0 +1,198 @@
+{
+  "schema_version": "1",
+  "case_id": "warsaw",
+  "packet_sha256": "b5bd582a73377fa78acc768c6a4654eb964ddc65e141ab3ccbfd8a62504d0fbd",
+  "baseline_pipeline_sha": "e5988bd7733e9be9ea0da85ca17692bd0fbb7da0",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T02:12:57.724075+00:00",
+  "ended_at": "2026-10-04T02:16:28.350624+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T02:13:49.604920+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:uw.edu.pl University of Warsaw bachelor Computer Science English admissions",
+        "domains": [
+          "uw.edu.pl"
+        ],
+        "max_results": 10
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "warsaw-001.json",
+      "raw_log_sha256": "2e33195f28768c03e6700577a7e23ce68b8f6f594acacb18e49aba991b5b69f2",
+      "elapsed_ms": 1965,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 23934,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "No official source has yet been read. Begin with a domain-restricted search for the exact English-language bachelor Computer Science programme; search results will be used only to discover an official page.",
+      "observed_from_step": null,
+      "action": "Discover the official page for the exact bachelor Computer Science programme and its admissions route.",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T02:15:02.957655+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "warsaw-002.json",
+      "raw_log_sha256": "78e411a4baf90fb4d63a9697eb2408c874bbfadd394533c8be4f4e3824423e52",
+      "elapsed_ms": 2364,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 48663,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Search result 4 identifies an official University of Warsaw catalogue candidate for the exact first-cycle Computer Science programme, but the snippet is only a discovery hint and cannot support a finding. Read that official programme page first to verify its published identity, degree, language, and admissions route.",
+      "observed_from_step": 1,
+      "action": "Verify the exact programme name, bachelor/first-cycle status, instructional language, qualification awarded, and official admissions route.",
+      "stage": "page_understanding",
+      "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+      "final_url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Warsaw",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "An official programme-page candidate was discovered, but no official page has yet been read."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Warsaw",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No read evidence establishes IELTS, TOEFL, or Duolingo minima."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Warsaw",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": "KZ national secondary",
+        "academic_year": null
+      },
+      "observation": "No read evidence establishes eligibility for a Kazakhstan national secondary qualification, NIS credential, or an additional-year requirement."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Warsaw",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": "fall 2027",
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No read evidence establishes a fall 2027 international application deadline."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Warsaw",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": "fall 2027",
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No read evidence establishes international tuition for an academic year covering fall 2027."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Warsaw",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No official scholarship page has been read."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Warsaw",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No read evidence establishes international eligibility or conditions for an exact bachelor scholarship."
+    }
+  ],
+  "review_status": "unreviewed"
+}

@@ -1,0 +1,30 @@
+import json
+import tempfile
+from dataclasses import replace
+from pathlib import Path
+
+from evaluation.research.expert.blind_cli import Isolation
+from evaluation.research.expert.compact import COMPACT_INSTRUCTIONS, compact_schema, parse_compact_decision
+from evaluation.research.expert.selector import select
+
+workspace = Path(tempfile.mkdtemp(prefix='unimatch-blind-v2-probe-'))
+isolation = Isolation.local(workspace, [Path('/Users/wpalish/Documents/Codex'),
+    Path('/Users/wpalish/.codex/memories'), Path('/Users/wpalish/.codex/sessions'),
+    Path('/Users/wpalish/.codex/attachments'), Path('/Users/wpalish/Downloads')])
+isolation = replace(isolation, codex_executable='/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex')
+schema = workspace/'schema.json'
+schema.write_text(json.dumps(compact_schema()))
+result = select(isolation, schema, workspace/'answer.json',
+    {'task':COMPACT_INSTRUCTIONS,
+     'neutral_probe':'No university research or tool action is executed. Return kind=action, '
+        'one fetcher action for https://example.org/public-probe, observation=neutral probe, '
+        'all irrelevant action fields null, domains=[], facts=[], question_findings=[].'},
+    timeout_seconds=20, model='gpt-6-astra')
+(workspace/'events.jsonl').write_text(result.stdout)
+(workspace/'stderr.txt').write_text(result.stderr)
+answer = parse_compact_decision(result.answer).model_dump(mode='json') if result.answer else None
+print(json.dumps({'workspace':str(workspace),'elapsed_ms':result.elapsed_ms,
+    'error_kind':result.error_kind, 'returncode':result.returncode,
+    'answer':answer},ensure_ascii=False),flush=True)
+if result.error_kind:
+    raise SystemExit(1)

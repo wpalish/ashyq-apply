@@ -1,0 +1,25 @@
+{
+  "case_id": "groningen",
+  "run_id": 37190533621,
+  "head_sha": "2f4491eeb44442b8052bfe99e720415d2fd821ea",
+  "capture": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v3-2026-10-04/baseline/groningen/artifact/capture/20261004T085651Z/capture.json",
+  "packet": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v3-2026-10-04/baseline/groningen/public-packet.json",
+  "budget": {
+    "strict_expert_budget": true,
+    "provider": "exa_mcp",
+    "max_fetcher_calls": 60,
+    "max_search_queries": 6,
+    "max_active_seconds": 120,
+    "fetcher_calls": 42,
+    "search_queries": 0,
+    "blocked_search_queries": 0,
+    "network_http_requests": 80,
+    "elapsed_ms": 120003,
+    "stop_reason": "wall_clock_budget_exhausted",
+    "provider_failure": null,
+    "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+    "parent_process_elapsed_seconds": 120.757961072,
+    "process_error": null,
+    "active_checkpoint_available": true
+  }
+}

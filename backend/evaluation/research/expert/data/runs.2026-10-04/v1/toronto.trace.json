@@ -1,0 +1,241 @@
+{
+  "schema_version": "1",
+  "case_id": "toronto",
+  "packet_sha256": "2e0e519ab4b9db87831db48680fda2449da33f9ff5c51dfa441f391bdc5fdef9",
+  "baseline_pipeline_sha": "e5988bd7733e9be9ea0da85ca17692bd0fbb7da0",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T02:16:28.423529+00:00",
+  "ended_at": "2026-10-04T02:20:05.291294+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T02:17:18.796002+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-001.json",
+      "raw_log_sha256": "9c39952aeefc588c597aca40b461c84987831cedb3b313f9957f2e181d7e80c9",
+      "elapsed_ms": 1776,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 22343,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Begin with the official University of Toronto Mississauga undergraduate Computer Science programme page supplied in the public packet to verify the exact programme identity and degree.",
+      "observed_from_step": null,
+      "action": "Read the official undergraduate Computer Science programme page and capture evidence for exact programme existence and any linked admissions requirements.",
+      "stage": "page_understanding",
+      "url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+      "final_url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science"
+    },
+    {
+      "at": "2026-10-04T02:19:35.058467+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-002.json",
+      "raw_log_sha256": "d6711e42626e4458f85b82b5b781f2666fc23f3fde64d63a3ad904ed7ef65aab",
+      "elapsed_ms": 3760,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 109476,
+      "search_queries_cumulative": 0,
+      "step": 2,
+      "observed_before": "The saved official UTM programme page now provides block-level evidence for an undergraduate Computer Science programme. Next, read the linked official English Language Requirements page to obtain IELTS, TOEFL, and Duolingo minima.",
+      "observed_from_step": 1,
+      "action": "Read the official UTM English Language Requirements page and capture published IELTS, TOEFL, and Duolingo minimum scores.",
+      "stage": "page_understanding",
+      "url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements",
+      "final_url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements"
+    }
+  ],
+  "proposals": [
+    {
+      "claim_key": "programme.exists",
+      "source_url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+      "excerpt": "Computer Science (Specialist, Major)",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Toronto",
+        "programme": "Computer Science (Specialist, Major)",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        1
+      ],
+      "value": {
+        "exists": true,
+        "official_name": "Computer Science (Specialist, Major)",
+        "level": "undergraduate",
+        "campus": "University of Toronto Mississauga"
+      },
+      "status": "unreviewed"
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "supporting_steps": [
+        1
+      ],
+      "proposal_indices": [
+        0
+      ],
+      "evidence": [
+        {
+          "action_step": 1,
+          "source_url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+          "excerpt": "Computer Science (Specialist, Major)",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b129",
+            "section_path": [
+              "Computer Science",
+              "Computer Science programs",
+              "Computer Science (Specialist, Major)"
+            ],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "University of Toronto",
+        "programme": "Computer Science (Specialist, Major)",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The official U of T Mississauga undergraduate-programme page identifies “Computer Science (Specialist, Major).”"
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Toronto",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No English-test minima have yet been read; the official linked requirements page is the next action."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Toronto",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No Kazakhstan national-secondary, NIS, or additional-year eligibility evidence has been read."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Toronto",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No deadline expressly applicable to Fall 2027 international admission has been read."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Toronto",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": "fall 2027",
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No international tuition schedule expressly covering Fall 2027 has been read."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Toronto",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The programme-page navigation contains an Entrance Scholarships link, but its label alone does not prove that a bachelor scholarship exists."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Toronto",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No named scholarship or international eligibility conditions have been read."
+    }
+  ],
+  "review_status": "unreviewed"
+}

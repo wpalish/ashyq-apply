@@ -1,0 +1,206 @@
+{
+  "schema_version": "1",
+  "case_id": "ntu",
+  "packet_sha256": "06eb07ce6aaaf081a9c3bcebe4c1abab37ecc7d55cabcb87e844e5d3b0926988",
+  "baseline_pipeline_sha": "2f4491eeb44442b8052bfe99e720415d2fd821ea",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T09:14:39.874823+00:00",
+  "ended_at": "2026-10-04T09:18:40.506951+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T09:15:15.480472+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:ntu.edu.sg bachelor computer science international qualifications admission scholarship",
+        "domains": [
+          "ntu.edu.sg"
+        ],
+        "max_results": 5
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ntu-001.json",
+      "raw_log_sha256": "e46864b0f0f9ba9372ca44cc3098dc1e7fcfd8f99c4f3697ad9195c8be3e7b71",
+      "elapsed_ms": 3117,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 12638,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "Locate official Computer Science and international admissions pages.",
+      "observed_from_step": null,
+      "action": "search_provider: site:ntu.edu.sg bachelor computer science international qualifications admission scholarship",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T09:16:16.190953+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.ntu.edu.sg/admissions/undergraduate/undergraduate-programme/bachelor-of-computing-in-computer-science"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ntu-002.json",
+      "raw_log_sha256": "37f6b835f5d3abd56668b849fcefb9e014fe7cdd11e2753604cee9ca9e8d6810",
+      "elapsed_ms": 2177,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 24279,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Open the official Computer Science programme result.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://www.ntu.edu.sg/admissions/undergraduate/undergraduate-programme/bachelor-of-computing-in-computer-science",
+      "stage": "page_understanding",
+      "url": "https://www.ntu.edu.sg/admissions/undergraduate/undergraduate-programme/bachelor-of-computing-in-computer-science",
+      "final_url": "https://www.ntu.edu.sg/admissions/undergraduate/undergraduate-programme/bachelor-of-computing-in-computer-science"
+    },
+    {
+      "at": "2026-10-04T09:17:37.054922+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements/international-qualifications/other-international-qualifications"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ntu-003.json",
+      "raw_log_sha256": "701007759979325d440ef0a9ab8321272c7541b5713f5f13f4d2caf3ba9f91ac",
+      "elapsed_ms": 1180,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 58080,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "The official programme page establishes the bachelor Computer Science degree. Next inspect international qualification requirements.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements/international-qualifications/other-international-qualifications",
+      "stage": "page_understanding",
+      "url": "https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements/international-qualifications/other-international-qualifications",
+      "final_url": "https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements/international-qualifications/other-international-qualifications"
+    }
+  ],
+  "proposals": [
+    {
+      "claim_key": "programme.exists",
+      "value": true,
+      "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/undergraduate-programme/bachelor-of-computing-in-computer-science",
+      "excerpt": "The\n Bachelor of Computing (Hons) in Computer Science \nat NTU’s \nCollege of Computing and Data Science (CCDS)\n is a \n4-year direct honours degree",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": "Bachelor of Computing (Hons) in Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        2
+      ],
+      "status": "unreviewed"
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "supporting_steps": [
+        2
+      ],
+      "proposal_indices": [
+        0
+      ],
+      "evidence": [
+        {
+          "action_step": 2,
+          "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/undergraduate-programme/bachelor-of-computing-in-computer-science",
+          "excerpt": "The\n Bachelor of Computing (Hons) in Computer Science \nat NTU’s \nCollege of Computing and Data Science (CCDS)\n is a \n4-year direct honours degree",
+          "location": {
+            "kind": "text",
+            "block_id": null,
+            "section_path": [],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": "Bachelor of Computing (Hons) in Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Official page describes the exact bachelor programme."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

@@ -1,0 +1,231 @@
+{
+  "schema_version": "1",
+  "case_id": "ubc",
+  "packet_sha256": "c62332da8a956f02c3a8f6b2dca72b3321aa7054186e9cf2915e71850d81678a",
+  "baseline_pipeline_sha": "9421884465cbc986ce0ab017102126731fe2589d",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T03:50:03.586216+00:00",
+  "ended_at": "2026-10-04T03:56:25.870455+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T03:50:41.089957+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://you.ubc.ca/ubc_programs/computer-science-vancouver/"
+      },
+      "outcome": "http_error",
+      "outcome_status": "failure",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-001.json",
+      "raw_log_sha256": "7b385e54403206b9ddbb419420df98f7c1d59dfc3f6f34c98c5a0b25ee8fbc21",
+      "elapsed_ms": 4685,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 12966,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "The baseline established no programme evidence. Start with UBC's official Computer Science programme page.",
+      "observed_from_step": null,
+      "action": "fetcher: https://you.ubc.ca/ubc_programs/computer-science-vancouver/",
+      "stage": "page_understanding",
+      "url": "https://you.ubc.ca/ubc_programs/computer-science-vancouver/",
+      "final_url": "https://you.ubc.ca/programs/computer-science-vancouver/"
+    },
+    {
+      "at": "2026-10-04T03:51:35.309894+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:you.ubc.ca computer science bachelor admission English international requirements",
+        "domains": [
+          "ubc.ca"
+        ],
+        "max_results": 5
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-002.json",
+      "raw_log_sha256": "a7107cfe548f2551c7d0aa8e9e4549587e048a436a9aa5bd620b7a7cd1741de0",
+      "elapsed_ms": 1481,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 24050,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "The initial programme URL returned 404. Search official UBC pages for the current programme and admissions routes.",
+      "observed_from_step": 1,
+      "action": "search_provider: site:you.ubc.ca computer science bachelor admission English international requirements",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T03:52:37.188523+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://you.ubc.ca/applying-ubc/requirements/international-high-schools/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-003.json",
+      "raw_log_sha256": "44acdbf4b532392bacfdd509e40f11943dc060b39be0400d83071042590117b0",
+      "elapsed_ms": 1852,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 35138,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "Official search identified the international admissions requirements route; read it for qualification requirements and linked evidence.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://you.ubc.ca/applying-ubc/requirements/international-high-schools/",
+      "stage": "page_understanding",
+      "url": "https://you.ubc.ca/applying-ubc/requirements/international-high-schools/",
+      "final_url": "https://you.ubc.ca/applying-ubc/requirements/international-high-schools/"
+    },
+    {
+      "at": "2026-10-04T03:53:33.851825+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-004.json",
+      "raw_log_sha256": "e6daeed5a01fa12e6c3ba12d0949e2066ec1638734ee72fac26f7342a9e8b3b6",
+      "elapsed_ms": 1695,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 47684,
+      "search_queries_cumulative": 1,
+      "step": 4,
+      "observed_before": "The international requirements page lists Kazakhstan but does not expose its requirements in the saved text. Follow the English requirements link for published test minima.",
+      "observed_from_step": 3,
+      "action": "fetcher: https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+      "stage": "page_understanding",
+      "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+      "final_url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/"
+    },
+    {
+      "at": "2026-10-04T03:54:26.557462+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.cs.ubc.ca/computer-science-major-ba-admission-requirements"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-005.json",
+      "raw_log_sha256": "976a440f7ba2436d9348532dc5622e74a41c6d653f053ac76eb14513e90ca94e",
+      "elapsed_ms": 1092,
+      "fetcher_calls_cumulative": 4,
+      "elapsed_ms_cumulative": 58706,
+      "search_queries_cumulative": 1,
+      "step": 5,
+      "observed_before": "The English requirements page publishes IELTS, TOEFL and Duolingo minima. Read the discovered Computer Science BA page to establish programme existence.",
+      "observed_from_step": 4,
+      "action": "fetcher: https://www.cs.ubc.ca/computer-science-major-ba-admission-requirements",
+      "stage": "page_understanding",
+      "url": "https://www.cs.ubc.ca/computer-science-major-ba-admission-requirements",
+      "final_url": "https://www.cs.ubc.ca/computer-science-major-ba-admission-requirements"
+    },
+    {
+      "at": "2026-10-04T03:55:21.230929+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-006.json",
+      "raw_log_sha256": "48ea9273150eafa016764d6bfc02c1916972af3941e958770b7777774ceb4e13",
+      "elapsed_ms": 2089,
+      "fetcher_calls_cumulative": 5,
+      "elapsed_ms_cumulative": 69744,
+      "search_queries_cumulative": 1,
+      "step": 6,
+      "observed_before": "The department confirms a Computer Science BA major. Read the international scholarship page for named awards and eligibility.",
+      "observed_from_step": 5,
+      "action": "fetcher: https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+      "stage": "page_understanding",
+      "url": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+      "final_url": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}
