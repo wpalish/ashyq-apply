@@ -100,6 +100,36 @@
           "default": null,
           "title": "Url"
         },
+        "final_url": {
+          "anyOf": [
+            {
+              "format": "uri",
+              "maxLength": 2083,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Final Url"
+        },
+        "request": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/JsonValue"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Request"
+        },
         "raw_log_path": {
           "minLength": 1,
           "title": "Raw Log Path",
@@ -119,6 +149,19 @@
           "minimum": 0,
           "title": "Fetcher Calls Cumulative",
           "type": "integer"
+        },
+        "search_queries_cumulative": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Search Queries Cumulative"
         },
         "elapsed_ms_cumulative": {
           "minimum": 0,
@@ -156,6 +199,60 @@
         "elapsed_ms_cumulative"
       ],
       "title": "Action",
+      "type": "object"
+    },
+    "EvidenceLocation": {
+      "additionalProperties": false,
+      "description": "Coordinates in the saved source, using production text or DocumentIR.",
+      "properties": {
+        "kind": {
+          "enum": [
+            "text",
+            "document_ir",
+            "pdf"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "block_id": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Block Id"
+        },
+        "section_path": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Section Path",
+          "type": "array"
+        },
+        "page": {
+          "anyOf": [
+            {
+              "maximum": 40,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "EvidenceLocation",
       "type": "object"
     },
     "JsonValue": {},
@@ -227,6 +324,115 @@
       ],
       "title": "Proposal",
       "type": "object"
+    },
+    "QuestionFinding": {
+      "additionalProperties": false,
+      "properties": {
+        "question": {
+          "enum": [
+            "Q0",
+            "Q1",
+            "Q2",
+            "Q3",
+            "Q4",
+            "Q5",
+            "Q6"
+          ],
+          "title": "Question",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "found",
+            "not_published",
+            "inaccessible",
+            "unresolved"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "supporting_steps": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Supporting Steps",
+          "type": "array"
+        },
+        "proposal_indices": {
+          "description": "Zero-based proposal indices",
+          "items": {
+            "type": "integer"
+          },
+          "title": "Proposal Indices",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/SourceEvidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "scope": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Scope",
+          "type": "object"
+        },
+        "observation": {
+          "minLength": 1,
+          "title": "Observation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "question",
+        "status",
+        "observation"
+      ],
+      "title": "QuestionFinding",
+      "type": "object"
+    },
+    "SourceEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "action_step": {
+          "minimum": 1,
+          "title": "Action Step",
+          "type": "integer"
+        },
+        "source_url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Source Url",
+          "type": "string"
+        },
+        "excerpt": {
+          "minLength": 1,
+          "title": "Excerpt",
+          "type": "string"
+        },
+        "location": {
+          "$ref": "#/$defs/EvidenceLocation"
+        }
+      },
+      "required": [
+        "action_step",
+        "source_url",
+        "excerpt",
+        "location"
+      ],
+      "title": "SourceEvidence",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -262,6 +468,19 @@
       "title": "Max Elapsed Ms",
       "type": "integer"
     },
+    "max_search_queries": {
+      "anyOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Max Search Queries"
+    },
     "initial_fetcher_calls": {
       "minimum": 0,
       "title": "Initial Fetcher Calls",
@@ -270,6 +489,12 @@
     "initial_elapsed_ms": {
       "minimum": 0,
       "title": "Initial Elapsed Ms",
+      "type": "integer"
+    },
+    "initial_search_queries": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Initial Search Queries",
       "type": "integer"
     },
     "started_at": {
@@ -296,6 +521,21 @@
       },
       "title": "Proposals",
       "type": "array"
+    },
+    "question_findings": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/QuestionFinding"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Question Findings"
     },
     "review_status": {
       "const": "unreviewed",

@@ -1,37 +1,41 @@
-"""Run controller: execute an expert's chosen actions and log them independently.
+"""Execute model-chosen actions through production tools and record their bytes.
 
-The expert never touches the network. It names one action at a time; this
-controller performs it through the production ``Fetcher`` or the configured
-search-provider seam, and writes the raw tool output to a numbered log file
-whose SHA-256 is computed here, not by the expert. The trace the expert later
-submits must cite these files; ``validate --logs-dir`` re-hashes them.
+Legacy plans retain diagnostic overflow accounting. Fresh pilots opt in with
+``strict_budget: true``: at most 60 cumulative Fetcher.get calls, 120000 ms,
+and six configured Exa queries. Exhaustion refuses a call before invoking it.
+Only an explicit ``exploration_mode: outside_policy`` permits extra diagnostic
+calls, and every action in that mode is outside policy, including early ones.
 
-Budget accounting follows the handoff's equal-budget rule. ``replay`` re-reads
-the baseline's own path up to the intervention point first, so the calls and
-time it costs are counted the way the pipeline spent them; every later action
-is counted cumulatively on top. An action that would exceed the packet's call
-or time cap is still executed and logged, but marked ``outside_policy``.
+``budget_origin`` distinguishes an ``independent_full_budget`` expert run from
+a ``baseline_intervention`` sharing the pipeline's already spent budget. For
+incremental plans the caller supplies ``start_ms`` including model selection
+time since the original run began, alongside ``start_calls`` and
+``start_search_queries``. Time within this invocation is measured with the
+monotonic clock; an asyncio deadline also bounds each actual tool action.
 
-The tool policy is enforced here, not requested of the expert: repository
-hosts and public mirrors of this benchmark are refused before any request, and
-search results pointing at them are dropped from the log the expert reads.
+Raw logs belong in ignored artifacts, never Git. ``resume_summary`` may hold
+the preceding returned summary to recheck raw-log hashes before resuming.
+Existing logs establish counter floors and retain a provider's HTTP 429 stop.
+The Fetcher continues to own robots, SSRF, privacy, and redirect behavior.
 """
 
 from __future__ import annotations
 
+import asyncio
 import base64
 import hashlib
 import json
+import math
+import re
 import time
-from collections.abc import Awaitable, Callable, Sequence
-from dataclasses import dataclass, field
+from collections.abc import Awaitable, Callable, Iterator, Sequence
+from contextlib import contextmanager
+from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, BinaryIO
 from urllib.parse import urlsplit
 
-#: Hosts the expert may not reach: the repository, its mirrors, and anywhere a
-#: copy of the signed benchmark could be published.
 BLOCKED_HOSTS = (
     "github.com",
     "githubusercontent.com",
@@ -42,6 +46,20 @@ BLOCKED_HOSTS = (
     "huggingface.co",
     "kaggle.com",
 )
+STRICT_PROVIDERS = frozenset({"exa", "exa_mcp"})
+STRICT_MAX_CALLS = 60
+STRICT_MAX_MS = 120_000
+STRICT_MAX_SEARCH_QUERIES = 6
+MAX_LOG_CONTENT_BYTES = 8 * 1024 * 1024
+MAX_VIEW_CHARS = 50_000
+MAX_VIEW_ITEMS = 500
+_SAFE_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,119}\Z")
+_SAFE_FILENAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,239}\Z")
+_DOMAIN = re.compile(
+    r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*\Z"
+)
+_QUERY_DOMAIN = re.compile(r"\b(?:site|domain):\s*([^\s)]+)", re.IGNORECASE)
+_QUERY_URL = re.compile(r"https?://[^\s\"'()]+", re.IGNORECASE)
 
 TOOL_POLICY = {
     "allowed": [
@@ -53,9 +71,45 @@ TOOL_POLICY = {
 }
 
 
+def _host(url: str) -> str:
+    try:
+        return (urlsplit(url).hostname or "").lower().rstrip(".")
+    except ValueError:
+        return ""
+
+
 def blocked(url: str) -> bool:
-    host = (urlsplit(url).hostname or "").lower()
+    host = _host(url)
     return any(host == h or host.endswith("." + h) for h in BLOCKED_HOSTS)
+
+
+def _domain(value: str) -> str:
+    domain = value.lower().strip().rstrip(".")
+    if not _DOMAIN.fullmatch(domain) or len(domain) > 253:
+        raise ValueError("Official and query domains must be plain hostnames")
+    return domain
+
+
+def _allowed_url(url: str, domains: tuple[str, ...]) -> bool:
+    try:
+        parts = urlsplit(url)
+        if parts.scheme not in {"http", "https"} or parts.username or parts.password:
+            return False
+        host = _host(url)
+        _domain(host)
+        _port = parts.port  # reject malformed ports before passing the URL to a tool
+    except ValueError:
+        return False
+    return not blocked(url) and (
+        not domains or any(host == d or host.endswith("." + d) for d in domains)
+    )
+
+
+def _integer(plan: dict[str, Any], key: str, default: int | None = None) -> int:
+    value = plan.get(key, default)
+    if type(value) is not int or value < 0:
+        raise ValueError(f"{key} must be a nonnegative integer")
+    return value
 
 
 @dataclass
@@ -65,44 +119,225 @@ class Ledger:
     calls: int = 0
     ms: int = 0
     entries: list[dict[str, Any]] = field(default_factory=list)
+    max_search_queries: int | None = None
+    search_queries: int = 0
 
-    def charge(self, *, calls: int, ms: int) -> str:
+    def charge(self, *, calls: int, ms: int, search_queries: int = 0) -> str:
         self.calls += calls
         self.ms += ms
-        within = self.calls <= self.max_calls and self.ms <= self.max_ms
+        self.search_queries += search_queries
+        within = (
+            self.calls <= self.max_calls
+            and self.ms <= self.max_ms
+            and (self.max_search_queries is None or self.search_queries <= self.max_search_queries)
+        )
         return "same_policy" if within else "outside_policy"
 
 
-def _write_log(logs_dir: Path, name: str, record: dict[str, Any]) -> tuple[str, str]:
-    data = json.dumps(record, ensure_ascii=False, sort_keys=True, indent=1).encode("utf-8")
+@contextmanager
+def _reserve_log(logs_dir: Path, name: str, record: dict[str, Any]) -> Iterator[BinaryIO]:
+    """Reserve before I/O; interrupted calls leave an explicitly incomplete log."""
+    if Path(name).name != name or not _SAFE_FILENAME.fullmatch(name):
+        raise ValueError("Raw log name must be a safe filename")
     logs_dir.mkdir(parents=True, exist_ok=True)
-    (logs_dir / name).write_bytes(data)
+    with (logs_dir / name).open("xb") as output:
+        output.write(json.dumps({**record, "outcome": "pending"}).encode("utf-8"))
+        output.flush()
+        yield output
+
+
+def _write_log(
+    logs_dir: Path,
+    name: str,
+    record: dict[str, Any],
+    *,
+    output: BinaryIO | None = None,
+) -> tuple[str, str]:
+    """Complete only this action's reserved file, never replace an existing log."""
+    data = json.dumps(record, ensure_ascii=False, sort_keys=True, indent=1).encode("utf-8")
+    if output is None:
+        with _reserve_log(logs_dir, name, record) as reserved:
+            return _write_log(logs_dir, name, record, output=reserved)
+    output.seek(0)
+    output.truncate()
+    output.write(data)
+    output.flush()
     return name, hashlib.sha256(data).hexdigest()
 
 
-async def _fetch(get: Callable[[str], Awaitable[Any]], url: str) -> tuple[dict[str, Any], int]:
-    began = time.monotonic()
-    try:
-        result = await get(url)
-    except Exception as exc:  # a failed call is still a recorded call
-        return {"error": f"{type(exc).__name__}: {exc}", "outcome": "exception"}, int(
-            (time.monotonic() - began) * 1000
-        )
-    elapsed = int((time.monotonic() - began) * 1000)
-    outcome = getattr(result.outcome, "value", str(result.outcome))
+def _existing_state(
+    plan: dict[str, Any],
+    logs_dir: Path,
+    prefix: str,
+    provider_name: str,
+    strict: bool,
+    budget_origin: str,
+) -> tuple[int, dict[str, Any]]:
+    """Locate the next log and reject counter resets or changed resume bytes."""
+    pattern = re.compile(re.escape(prefix) + r"-(\d+)\.json\Z")
+    expected: dict[str, str] = {}
+    resume = plan.get("resume_summary")
+    if resume is not None:
+        if not isinstance(resume, dict) or resume.get("case_id") != plan["case_id"]:
+            raise ValueError("Resume summary belongs to a different case")
+        if resume.get("provider") != provider_name:
+            raise ValueError("Resume summary belongs to a different provider")
+        expected.update(resume.get("raw_logs", {}))
+        for entry in resume.get("replay", []) + resume.get("actions", []):
+            expected[entry["raw_log_path"]] = entry["raw_log_sha256"]
+        if strict:
+            # Earlier summaries lack the explicit field; their recorded names
+            # still bind the prefix. Never verify one run's bytes but rebuild
+            # budget/429 state from a different, empty filename namespace.
+            if resume.get("log_prefix", prefix) != prefix or any(
+                not isinstance(name, str) or not pattern.fullmatch(name) for name in expected
+            ):
+                raise ValueError("Resume log_prefix differs from the recorded run")
+            if resume.get("budget_origin", budget_origin) != budget_origin:
+                raise ValueError("Resume budget_origin differs from the recorded run")
+        for name, sha in expected.items():
+            if (
+                not isinstance(name, str)
+                or Path(name).name != name
+                or not _SAFE_FILENAME.fullmatch(name)
+            ):
+                raise ValueError("Resume raw log path must be a safe filename")
+            path = logs_dir / name
+            if path.is_symlink() or not path.is_file():
+                raise ValueError("Resume raw logs must be regular files")
+            data = path.read_bytes()
+            if hashlib.sha256(data).hexdigest() != sha:
+                raise ValueError("Resume raw log hash mismatch")
+    numbered = []
+    for path in logs_dir.iterdir() if logs_dir.exists() else []:
+        match = pattern.fullmatch(path.name)
+        if match:
+            if path.is_symlink() or not path.is_file():
+                raise ValueError("Raw logs must be regular files")
+            numbered.append((int(match[1]), path))
+    state: dict[str, Any] = {}
+    previous = (0, 0, 0)
+    provider_stopped = False
+    for _number, path in sorted(numbered):
+        data = path.read_bytes()
+        if path.name in expected and hashlib.sha256(data).hexdigest() != expected[path.name]:
+            raise ValueError("Resume raw log hash mismatch")
+        expected[path.name] = hashlib.sha256(data).hexdigest()
+        record = json.loads(data)
+        if record.get("outcome") == "pending":
+            raise ValueError("Incomplete raw log: adjudicate the interrupted call before resuming")
+        if strict:
+            if record.get("case_id") != plan["case_id"] or record.get("provider") != provider_name:
+                raise ValueError("Existing log case/provider differs from this run")
+            if not (record.get("tool_policy") or {}).get("strict_budget"):
+                raise ValueError("Cannot resume legacy logs as a strict run")
+            if record["tool_policy"].get("budget_origin") != budget_origin:
+                raise ValueError("Resume budget_origin differs from recorded policy")
+            for key, plan_key in (
+                ("max_fetcher_calls", "max_calls"),
+                ("max_elapsed_ms", "max_ms"),
+                ("max_search_queries", "max_search_queries"),
+            ):
+                expected_cap = plan.get(plan_key, STRICT_MAX_SEARCH_QUERIES)
+                if record["tool_policy"].get(key) != expected_cap:
+                    raise ValueError("Resume budget differs from recorded policy")
+            if record["tool_policy"].get("official_domains", []) != [
+                _domain(d) for d in plan.get("official_domains", [])
+            ]:
+                raise ValueError("Resume official domains differ from recorded policy")
+            counters = (
+                _integer(record, "fetcher_calls_cumulative"),
+                _integer(record, "elapsed_ms_cumulative"),
+                _integer(record, "search_queries_cumulative", 0),
+            )
+            if any(value < old for value, old in zip(counters, previous, strict=True)):
+                raise ValueError("Existing raw log counters decrease")
+            previous = counters
+        state = record
+        provider_stopped = provider_stopped or record.get("stop_reason") == "http_429"
+    if provider_stopped:
+        state["stop_reason"] = "http_429"
+    first = _integer(plan, "first_log_number", max((n for n, _p in numbered), default=0) + 1)
+    if first < 1 or any(first <= number for number, _path in numbered):
+        raise ValueError("first_log_number would overwrite an existing log")
+    state["raw_logs"] = expected
+    return first, state
+
+
+def _failure(exc: Exception, *, provider_name: str | None = None) -> dict[str, Any]:
+    """Use only fixed categories/status; arbitrary exception text may contain keys."""
+    from app.adapters.search.base import SearchFailureReason, search_failure_diagnostic
+
+    status = getattr(exc, "http_status", None)
+    if type(status) is not int or not 100 <= status <= 599:
+        response = getattr(exc, "response", None)
+        status = getattr(response, "status_code", None)
+    if type(status) is not int or not 100 <= status <= 599:
+        status = None
+    reason = getattr(exc, "reason", None)
     return {
+        "outcome": "provider_unavailable" if provider_name else "exception",
+        "outcome_status": "failure",
+        "error": search_failure_diagnostic(provider_name, exc)
+        if provider_name
+        else "Fetcher action failed; exception text withheld.",
+        "http_status": status,
+        "status_code": status,
+        "failure_reason": reason.value if isinstance(reason, SearchFailureReason) else None,
+    }
+
+
+async def _fetch(get: Callable[[str], Awaitable[Any]], url: str) -> dict[str, Any]:
+    result = await get(url)
+    outcome = getattr(result.outcome, "value", str(result.outcome))
+    body = result.content or b""
+    response = {
         "outcome": outcome,
+        "outcome_status": "success"
+        if result.ok
+        else "blocked"
+        if outcome in {"blocked", "refused_privacy", "robots_disallowed", "robots_crawl_delay"}
+        else "failure",
         "ok": bool(result.ok),
         "status_code": result.status_code,
         "final_url": result.final_url or result.url,
         "content_type": result.content_type,
         "from_cache": bool(result.from_cache),
         "fetch_tier": result.fetch_tier,
-        "error": result.error,
+        "error": "" if not result.error else "Fetcher reported a failure; detail withheld.",
         "fetched_at": result.fetched_at.isoformat(),
-        "content_sha256": hashlib.sha256(result.content or b"").hexdigest(),
-        "content_b64": base64.b64encode(result.content or b"").decode("ascii"),
-    }, elapsed
+        "content_sha256": hashlib.sha256(body).hexdigest(),
+        "content_b64": base64.b64encode(body[:MAX_LOG_CONTENT_BYTES]).decode("ascii"),
+    }
+    if len(body) > MAX_LOG_CONTENT_BYTES:
+        response.update(
+            outcome="raw_content_limit_exceeded",
+            outcome_status="failure",
+            ok=False,
+            content_b64="",
+            content_bytes=len(body),
+        )
+    return response
+
+
+def _search_domains(action: dict[str, Any], official_domains: tuple[str, ...]) -> list[str]:
+    values = action.get("domains", [])
+    if not isinstance(values, list) or any(not isinstance(d, str) for d in values):
+        raise ValueError("Search domains must be a list of hostnames")
+    domains = [_domain(d) for d in values] or list(official_domains)
+    restrictions = list(domains)
+    if any(
+        not _allowed_url(match[0], official_domains)
+        for match in _QUERY_URL.finditer(str(action["query"]))
+    ):
+        raise ValueError("Search query URL leaves the official tool policy")
+    for match in _QUERY_DOMAIN.finditer(str(action["query"])):
+        restriction = match[1].strip("\"'")
+        restriction = _host(restriction) if "://" in restriction else restriction.split("/", 1)[0]
+        restrictions.append(_domain(restriction))
+    if any(not _allowed_url("https://" + domain, official_domains) for domain in restrictions):
+        raise ValueError("Search query/domain leaves the official tool policy")
+    return domains
 
 
 async def execute(
@@ -113,125 +348,371 @@ async def execute(
     search: Callable[..., Awaitable[Any]] | None,
     provider_name: str,
     now: Callable[[], datetime] = lambda: datetime.now(UTC),
+    monotonic: Callable[[], float] = time.monotonic,
 ) -> dict[str, Any]:
-    """Perform ``plan``'s replay and actions; return the summary the trace cites."""
-    ledger = Ledger(
-        max_calls=int(plan["max_calls"]),
-        max_ms=int(plan["max_ms"]),
-        calls=int(plan.get("start_calls", 0)),
-        ms=int(plan.get("start_ms", 0)),
+    """Execute a bounded plan. Injectable clocks/tools keep verification offline."""
+    strict = plan.get("strict_budget", False)
+    if type(strict) is not bool:
+        raise ValueError("strict_budget must be a boolean")
+    if strict and provider_name not in STRICT_PROVIDERS:
+        raise ValueError("Strict expert runs require configured exa or exa_mcp")
+    if plan.get("provider", provider_name) != provider_name:
+        raise ValueError("Plan provider differs from the configured provider")
+    max_calls, max_ms = _integer(plan, "max_calls"), _integer(plan, "max_ms")
+    max_queries = _integer(plan, "max_search_queries", STRICT_MAX_SEARCH_QUERIES)
+    if max_calls < 1 or max_ms < 1 or max_queries < 1:
+        raise ValueError("Run budgets must be positive")
+    if strict and (
+        max_calls > STRICT_MAX_CALLS
+        or max_ms > STRICT_MAX_MS
+        or max_queries > STRICT_MAX_SEARCH_QUERIES
+    ):
+        raise ValueError("Strict run budget exceeds 60 Fetcher calls, 120 seconds or six queries")
+    exploration = plan.get("exploration_mode", "same_policy")
+    if exploration not in {"same_policy", "outside_policy"}:
+        raise ValueError("exploration_mode must be same_policy or outside_policy")
+    origin = plan.get(
+        "budget_origin", "independent_full_budget" if strict else "baseline_intervention"
     )
-    first = int(plan.get("first_log_number", 1))
-    prefix = str(plan.get("log_prefix", plan["case_id"]))
+    if origin not in {"independent_full_budget", "baseline_intervention"}:
+        raise ValueError("Unsupported budget_origin")
+    prefix = plan.get("log_prefix", plan["case_id"])
+    if not isinstance(prefix, str) or not _SAFE_ID.fullmatch(prefix):
+        raise ValueError("log_prefix/case_id must be a safe identifier")
+    if not isinstance(plan["case_id"], str) or not _SAFE_ID.fullmatch(plan["case_id"]):
+        raise ValueError("case_id must be a safe identifier")
+    domains = plan.get("official_domains", [])
+    if not isinstance(domains, list) or any(not isinstance(d, str) for d in domains):
+        raise ValueError("official_domains must be a list of hostnames")
+    official_domains = tuple(_domain(d) for d in domains)
+    if strict and not official_domains:
+        raise ValueError("Strict expert runs require independently resolved official_domains")
+    if any(blocked("https://" + d) for d in official_domains):
+        raise ValueError("Official domains cannot include a blocked repository host")
+    number, state = _existing_state(plan, logs_dir, prefix, provider_name, strict, origin)
+    initial = {
+        key: _integer(plan, key, int(state.get(record_key, 0)))
+        for key, record_key in (
+            ("start_calls", "fetcher_calls_cumulative"),
+            ("start_ms", "elapsed_ms_cumulative"),
+            ("start_search_queries", "search_queries_cumulative"),
+        )
+    }
+    if strict and any(
+        initial[key] < int(state.get(record_key, 0))
+        for key, record_key in (
+            ("start_calls", "fetcher_calls_cumulative"),
+            ("start_ms", "elapsed_ms_cumulative"),
+            ("start_search_queries", "search_queries_cumulative"),
+        )
+    ):
+        raise ValueError("Resume counters cannot decrease")
+    ledger = Ledger(
+        max_calls,
+        max_ms,
+        calls=initial["start_calls"],
+        ms=initial["start_ms"],
+        max_search_queries=max_queries if strict else None,
+        search_queries=initial["start_search_queries"],
+    )
+    stop_reason = plan.get("stop_reason", state.get("stop_reason"))
+    if stop_reason not in {None, "http_429", "budget_exhausted"}:
+        raise ValueError("Unsupported stop_reason")
+    if state.get("stop_reason") == "http_429":
+        stop_reason = "http_429"
+    policy = {
+        **TOOL_POLICY,
+        "strict_budget": strict,
+        "official_domains": list(official_domains),
+        "allowed_search_providers": sorted(STRICT_PROVIDERS) if strict else [provider_name],
+        "max_search_queries": max_queries if strict else None,
+        "max_fetcher_calls": max_calls,
+        "max_elapsed_ms": max_ms,
+        "budget_origin": origin,
+    }
     summary: dict[str, Any] = {
         "case_id": plan["case_id"],
         "provider": provider_name,
-        "tool_policy": TOOL_POLICY,
+        "log_prefix": prefix,
+        "tool_policy": policy,
+        "budget_origin": origin,
+        "initial": initial,
+        "raw_logs": state.get("raw_logs", {}),
         "replay": [],
         "actions": [],
     }
-    number = first
+    run_began = monotonic()
     for kind, items in (("replay", plan.get("replay", [])), ("actions", plan.get("actions", []))):
         for item in items:
-            action = {"tool": "fetcher", "url": item} if isinstance(item, str) else dict(item)
+            action: dict[str, Any] = (
+                {"tool": "fetcher", "url": item} if isinstance(item, str) else dict(item)
+            )
+            tool = action.get("tool")
+            if tool not in {"fetcher", "search_provider"}:
+                raise ValueError("Unsupported expert tool")
+            name = f"{prefix}-{number:03d}.json"
+            if (logs_dir / name).exists() or (logs_dir / name).is_symlink():
+                raise ValueError("Raw log already exists")
             at = now().isoformat()
-            record: dict[str, Any] = {"request": action, "at": at, "phase": kind}
-            calls = 0
-            if action["tool"] == "fetcher":
-                url = str(action["url"])
-                if blocked(url):
-                    record["outcome"] = "blocked_by_tool_policy"
-                    elapsed = 0
+            began = monotonic()
+            if strict:
+                ledger.ms = max(
+                    ledger.ms, initial["start_ms"] + math.ceil((began - run_began) * 1000)
+                )
+            record: dict[str, Any] = {
+                "request": action,
+                "at": at,
+                "phase": kind,
+                "case_id": plan["case_id"],
+                "provider": provider_name,
+                "log_prefix": prefix,
+                "tool_policy": policy,
+                "budget_origin": origin,
+                "elapsed_ms_before": ledger.ms,
+                "budgets": {
+                    "max_calls": max_calls,
+                    "max_ms": max_ms,
+                    "max_search_queries": max_queries if strict else None,
+                },
+            }
+            with _reserve_log(logs_dir, name, record) as output:
+                refusal: str | None = None
+                if tool == "fetcher":
+                    url = str(action["url"])
+                    if blocked(url):
+                        refusal = "blocked_by_tool_policy"
+                    elif (official_domains or strict) and not _allowed_url(url, official_domains):
+                        refusal = "blocked_by_official_domains"
                 else:
-                    response, elapsed = await _fetch(get, url)
-                    record["response"] = response
-                    calls = 1
-            elif action["tool"] == "search_provider":
-                if search is None:
-                    record["outcome"] = "search_provider_not_configured"
-                    elapsed = 0
-                else:
-                    began = time.monotonic()
+                    if search is None:
+                        refusal = "search_provider_not_configured"
                     try:
-                        answer = await search(
-                            query=str(action["query"]),
-                            domains=list(action.get("domains", [])),
-                            max_results=int(action.get("max_results", 10)),
-                        )
-                        results = [
-                            {"rank": r.rank, "url": r.url, "title": r.title, "snippet": r.snippet}
-                            for r in answer.results
-                        ]
+                        action["domains"] = _search_domains(action, official_domains)
+                        if not isinstance(action["query"], str) or not action["query"].strip():
+                            raise ValueError("Search query must be nonempty text")
+                        if (
+                            type(action.get("max_results", 10)) is not int
+                            or not 1 <= action.get("max_results", 10) <= 100
+                        ):
+                            raise ValueError("Search result limit must be 1..100")
+                    except ValueError:
+                        refusal = "blocked_by_tool_policy"
+                if tool == "search_provider" and stop_reason == "http_429":
+                    refusal = "stopped_after_http_429"
+                exhausted = strict and (
+                    ledger.ms >= ledger.max_ms
+                    or (tool == "fetcher" and ledger.calls >= ledger.max_calls)
+                    or (tool == "search_provider" and ledger.search_queries >= max_queries)
+                )
+                if refusal is None and exhausted and exploration != "outside_policy":
+                    refusal = "budget_exhausted"
+                    stop_reason = stop_reason or "budget_exhausted"
+                calls = queries = 0
+                deadline_floor = 0
+                if refusal:
+                    record.update(outcome=refusal, outcome_status="blocked", executed=False)
+                    elapsed = 0
+                else:
+                    record["executed"] = True
+                    calls = int(tool == "fetcher")
+                    queries = int(tool == "search_provider")
+                    action_budget_ms = (
+                        max_ms if exploration == "outside_policy" else max_ms - ledger.ms
+                    )
+                    try:
+                        async with asyncio.timeout(
+                            max(1, action_budget_ms) / 1000 if strict else None
+                        ):
+                            if tool == "fetcher":
+                                response = await _fetch(get, url)
+                                final_url = response["final_url"]
+                                if blocked(final_url) or (
+                                    (official_domains or strict)
+                                    and not _allowed_url(final_url, official_domains)
+                                ):
+                                    response.update(
+                                        outcome="blocked_by_final_url_policy",
+                                        outcome_status="blocked",
+                                        ok=False,
+                                        content_b64="",
+                                        error="Final URL is outside tool policy.",
+                                    )
+                                record["response"] = response
+                            else:
+                                assert search is not None
+                                answer = await search(
+                                    query=str(action["query"]),
+                                    domains=action["domains"],
+                                    max_results=action.get("max_results", 10),
+                                )
+                                results = [
+                                    {
+                                        "rank": r.rank,
+                                        "url": r.url,
+                                        "title": r.title,
+                                        "snippet": r.snippet,
+                                    }
+                                    for r in answer.results
+                                ]
+                                record["response"] = {
+                                    "outcome": "ok",
+                                    "outcome_status": "success",
+                                    "results": [
+                                        r
+                                        for r in results
+                                        if _allowed_url(r["url"], official_domains)
+                                    ],
+                                    "dropped_by_tool_policy": sum(
+                                        not _allowed_url(r["url"], official_domains)
+                                        for r in results
+                                    ),
+                                }
+                    except TimeoutError:
                         record["response"] = {
-                            "results": [r for r in results if not blocked(r["url"])],
-                            "dropped_by_tool_policy": sum(blocked(r["url"]) for r in results),
+                            "outcome": "action_timeout",
+                            "outcome_status": "failure",
+                            "error": "Action exceeded the remaining run deadline.",
                         }
+                        if strict:
+                            stop_reason = stop_reason or "budget_exhausted"
+                            deadline_floor = max_ms
                     except Exception as exc:
-                        record["response"] = {"error": f"{type(exc).__name__}: {exc}"}
-                    elapsed = int((time.monotonic() - began) * 1000)
-            else:
-                raise ValueError(f"Unsupported tool {action['tool']!r}")
-            policy = ledger.charge(calls=calls, ms=elapsed)
-            record.update(
-                elapsed_ms=elapsed,
-                fetcher_calls_cumulative=ledger.calls,
-                elapsed_ms_cumulative=ledger.ms,
-                policy_mode=policy,
-            )
-            name, sha = _write_log(logs_dir, f"{prefix}-{number:03d}.json", record)
-            number += 1
-            summary[kind].append(
-                {
-                    "raw_log_path": name,
-                    "raw_log_sha256": sha,
-                    "at": at,
-                    "tool": action["tool"],
-                    "request": action,
-                    "outcome": record.get("outcome")
+                        record["response"] = _failure(
+                            exc, provider_name=provider_name if tool == "search_provider" else None
+                        )
+                        if tool == "search_provider" and record["response"]["http_status"] == 429:
+                            stop_reason = "http_429"
+                    elapsed = max(0, math.ceil((monotonic() - began) * 1000))
+                    record["outcome_status"] = record["response"]["outcome_status"]
+                if strict:
+                    elapsed_total = max(
+                        ledger.ms + elapsed,
+                        initial["start_ms"] + math.ceil((monotonic() - run_began) * 1000),
+                        deadline_floor,
+                    )
+                    charge_ms = elapsed_total - ledger.ms
+                else:
+                    charge_ms = elapsed
+                mode = ledger.charge(calls=calls, ms=charge_ms, search_queries=queries)
+                if (
+                    exploration == "outside_policy"
+                    or refusal
                     or (record.get("response") or {}).get("outcome")
-                    or ("error" if "error" in (record.get("response") or {}) else "ok"),
-                    "elapsed_ms": elapsed,
-                    "fetcher_calls_cumulative": ledger.calls,
-                    "elapsed_ms_cumulative": ledger.ms,
-                    "policy_mode": policy,
-                }
-            )
-    summary["final"] = {"fetcher_calls": ledger.calls, "elapsed_ms": ledger.ms}
+                    == "blocked_by_final_url_policy"
+                ):
+                    mode = "outside_policy"
+                record.update(
+                    elapsed_ms=elapsed,
+                    charged_elapsed_ms=charge_ms,
+                    fetcher_calls_cumulative=ledger.calls,
+                    elapsed_ms_cumulative=ledger.ms,
+                    search_queries_cumulative=ledger.search_queries,
+                    policy_mode=mode,
+                    stop_reason=stop_reason,
+                )
+                name, sha = _write_log(logs_dir, name, record, output=output)
+                summary["raw_logs"][name] = sha
+                number += 1
+                response = record.get("response") or {}
+                summary[kind].append(
+                    {
+                        "raw_log_path": name,
+                        "raw_log_sha256": sha,
+                        "at": at,
+                        "tool": tool,
+                        "request": action,
+                        "outcome": record.get("outcome") or response.get("outcome") or "ok",
+                        "outcome_status": record["outcome_status"],
+                        "executed": record["executed"],
+                        "final_url": response.get("final_url"),
+                        "elapsed_ms": elapsed,
+                        "fetcher_calls_cumulative": ledger.calls,
+                        "elapsed_ms_cumulative": ledger.ms,
+                        "search_queries_cumulative": ledger.search_queries,
+                        "policy_mode": mode,
+                    }
+                )
+    summary["final"] = {
+        "fetcher_calls": ledger.calls,
+        "elapsed_ms": ledger.ms,
+        "search_queries": ledger.search_queries,
+        "stop_reason": stop_reason,
+        "next_log_number": number,
+    }
     return summary
 
 
 async def run(plan_path: Path, logs_dir: Path, cache_dir: Path) -> dict[str, Any]:
-    """Execute a plan with the production Fetcher and configured search provider."""
+    """Use the configured provider, cold Fetcher reads in strict mode, no fallback."""
     from app.adapters.fetching import Fetcher
     from app.adapters.search import SearchProviderNotConfigured, get_search_provider
     from app.config import get_settings
 
     settings = get_settings()
     plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    strict = plan.get("strict_budget", False)
+    if strict and settings.search_provider not in STRICT_PROVIDERS:
+        raise ValueError("Strict expert runs require configured exa or exa_mcp")
     try:
         provider = get_search_provider()
         search = provider.search
         provider_name = settings.search_provider
+        if strict and provider.name != provider_name:
+            raise ValueError("Configured provider identity mismatch")
     except SearchProviderNotConfigured:
         search, provider_name = None, "none"
     async with Fetcher(
         cache_dir,
         delay_seconds=settings.fetch_delay_seconds,
-        respect_robots=settings.respect_robots,
+        respect_robots=True if strict else settings.respect_robots,
         timeout=settings.fetch_timeout_seconds,
         contact=settings.fetch_contact,
     ) as fetcher:
-        return await execute(
-            plan, logs_dir, get=fetcher.get, search=search, provider_name=provider_name
-        )
+
+        async def get(url: str) -> Any:
+            return await fetcher.get(url, use_cache=not strict)
+
+        return await execute(plan, logs_dir, get=get, search=search, provider_name=provider_name)
 
 
-def expert_view(record: dict[str, Any], *, chars: int = 6000, links: int = 120) -> dict[str, Any]:
-    """What the expert reads of one raw log: status, readable text, links."""
+def expert_view(
+    record: dict[str, Any],
+    *,
+    chars: int = 6000,
+    links: int = 120,
+    offset: int = 0,
+    link_offset: int = 0,
+    sections: int = 80,
+    section_offset: int = 0,
+    page: int | None = None,
+) -> dict[str, Any]:
+    """Paginate exact readable text, named IR blocks and discovery links from a raw log.
+
+    Pagination reads stored bytes only. Text and section hashes cover the full
+    representation, so later pages can be verified against the same source.
+    PDF ``page`` is one-based and selects the exact page text; omitting it
+    returns the production aggregate. Only the first forty pages are parsed.
+    """
     from app.adapters.document_ir import build_document_ir
-    from app.adapters.extraction import readable_text
+    from app.adapters.extraction import pdf_to_text, readable_text
 
-    view: dict[str, Any] = {"request": record["request"], "policy_mode": record["policy_mode"]}
+    if any(
+        type(n) is not int or n < 0
+        for n in (chars, links, offset, link_offset, sections, section_offset)
+    ):
+        raise ValueError("View limits and offsets must be nonnegative integers")
+    if page is not None and (type(page) is not int or not 1 <= page <= 40):
+        raise ValueError("PDF page must be an integer from 1 to 40")
+    chars, links, sections = (
+        min(chars, MAX_VIEW_CHARS),
+        min(links, MAX_VIEW_ITEMS),
+        min(sections, MAX_VIEW_ITEMS),
+    )
+    view: dict[str, Any] = {
+        "request": record["request"],
+        "policy_mode": record["policy_mode"],
+        "outcome_status": record.get("outcome_status"),
+    }
     response = record.get("response") or {}
     if "results" in response or record.get("outcome"):
         view.update(dict(response))
@@ -240,32 +721,136 @@ def expert_view(record: dict[str, Any], *, chars: int = 6000, links: int = 120) 
     view.update(
         {
             k: response.get(k)
-            for k in ("outcome", "status_code", "final_url", "content_type", "error")
+            for k in (
+                "outcome",
+                "status_code",
+                "http_status",
+                "final_url",
+                "content_type",
+                "error",
+                "failure_reason",
+                "fetched_at",
+                "content_sha256",
+                "from_cache",
+                "fetch_tier",
+            )
         }
     )
-    body = base64.b64decode(response.get("content_b64", "") or b"")
+    body = base64.b64decode(response.get("content_b64", "") or b"", validate=True)
+    expected_hash = response.get("content_sha256")
+    if body and expected_hash and hashlib.sha256(body).hexdigest() != expected_hash:
+        raise ValueError("Stored content hash mismatch")
+    content_type = (response.get("content_type") or "").lower()
+    if page is not None and "pdf" not in content_type:
+        raise ValueError("A page number requires a stored PDF response")
+    text = ""
     if body and "html" in (response.get("content_type") or "").lower():
         html = body.decode("utf-8", errors="replace")
-        view["text"] = readable_text(html)[:chars]
+        text = readable_text(html)
         doc = build_document_ir(html, response.get("final_url") or record["request"]["url"])
+        view["title"] = doc.title
+        blocks = [asdict(block) for block in doc.blocks]
+        view.update(
+            sections=blocks[section_offset : section_offset + sections],
+            sections_total=len(blocks),
+            sections_sha256=hashlib.sha256(
+                json.dumps(blocks, sort_keys=True, ensure_ascii=False).encode("utf-8")
+            ).hexdigest(),
+            sections_offset=section_offset,
+            sections_next_offset=section_offset + sections
+            if section_offset + sections < len(blocks) and sections
+            else None,
+        )
+        domains = tuple((record.get("tool_policy") or {}).get("official_domains", []))
         seen: list[dict[str, str]] = []
         for link in doc.links:
-            if not blocked(link.url) and all(s["url"] != link.url for s in seen):
-                seen.append({"url": link.url, "text": link.text[:80]})
-        view["links"] = seen[:links]
-        view["links_total"] = len(seen)
+            if _allowed_url(link.url, domains) and all(s["url"] != link.url for s in seen):
+                seen.append({"url": link.url, "text": link.text})
+        view.update(
+            links=seen[link_offset : link_offset + links],
+            links_total=len(seen),
+            links_offset=link_offset,
+            links_next_offset=link_offset + links
+            if link_offset + links < len(seen) and links
+            else None,
+        )
+    elif "pdf" in content_type:
+        import io
+
+        view.update(
+            pdf_page=page,
+            pdf_pages=[],
+            pdf_pages_total=None,
+            pdf_pages_read=0,
+            pdf_page_limit_reached=False,
+            pdf_status="unresolved",
+            pdf_error="pdf_payload_unavailable",
+            text="",
+            text_offset=offset,
+            text_total_chars=0,
+            text_sha256=hashlib.sha256(b"").hexdigest(),
+            text_next_offset=None,
+        )
+        if body:
+            try:
+                from pypdf import PdfReader
+
+                reader = PdfReader(io.BytesIO(body))
+                total_pages = len(reader.pages)
+                page_texts = [(item.extract_text() or "") for item in reader.pages[:40]]
+                aggregate = pdf_to_text(body, max_pages=40)
+            except ImportError:
+                view["pdf_error"] = "pdf_parser_unavailable"
+            except Exception:
+                # PDF content is untrusted. Keep a fixed observable failure,
+                # never a byte placeholder or arbitrary exception text.
+                view["pdf_error"] = "pdf_decode_error"
+            else:
+                if page is not None and page > len(page_texts):
+                    raise ValueError("PDF page does not exist in the stored document")
+                view.update(
+                    pdf_pages=[
+                        {
+                            "page": index + 1,
+                            "text_total_chars": len(value),
+                            "text_sha256": hashlib.sha256(value.encode("utf-8")).hexdigest(),
+                            "has_text": bool(value.strip()),
+                        }
+                        for index, value in enumerate(page_texts)
+                    ],
+                    pdf_pages_total=total_pages,
+                    pdf_pages_read=len(page_texts),
+                    pdf_page_limit_reached=total_pages > 40,
+                )
+                text = page_texts[page - 1] if page is not None else aggregate
+                if text.strip() and aggregate.strip():
+                    view.update(pdf_status="readable", pdf_error=None)
+                else:
+                    text = ""
+                    view["pdf_error"] = (
+                        "pdf_decode_error"
+                        if any(value.strip() for value in page_texts) and not aggregate.strip()
+                        else "pdf_no_extractable_text"
+                    )
     elif body and any(
         t in (response.get("content_type") or "").lower() for t in ("xml", "text/plain")
     ):
-        view["text"] = body.decode("utf-8", errors="replace")[:chars]
+        text = body.decode("utf-8", errors="replace")
     elif body:
-        view["text"] = f"[{len(body)} bytes of {response.get('content_type')}]"
+        text = f"[{len(body)} bytes of {response.get('content_type')}; pure parsing required]"
+    if text:
+        view.update(
+            text=text[offset : offset + chars],
+            text_offset=offset,
+            text_total_chars=len(text),
+            text_sha256=hashlib.sha256(text.encode("utf-8")).hexdigest(),
+            text_next_offset=offset + chars if offset + chars < len(text) and chars else None,
+        )
     return view
 
 
 def main(argv: Sequence[str] | None = None) -> None:
     import argparse
-    import asyncio
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--plan", type=Path, required=True)

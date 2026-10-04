@@ -8,6 +8,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 **Search-layer selection holder: arena-01a0f379, taken 2026-10-02, re-taken 2026-10-03**, branch `arena/01a0f379-ashyq-apply` from `origin/main@b145da2` (PR #40). The owner's brief of 2026-10-02 sets four ordered tasks: (1) a workflow-only `search_provider` input for `benchmark-capture`, (2) the first honest ten-case capture after PR #32–#36 with recorded before/after numbers, (3) a live check of https://ashyq-apply-alisher.fly.dev with one test account, (4) evidence-driven fixes one at a time. Free search only: keyless `exa_mcp`, keyed `exa` on the remaining balance, or `none`; Serper is excluded (balance −5). No production setting changes, no purchases, no applicant data in Git.
 
+**Current holder: nobody; [expert-500] Phase0 released for review as PR45, source a5835ef, task/expert-500-phase0 from origin/main b672349.** Continue the owner-requested ten-expert search investigation using the supplied live-audit specification. Prior PR44 is a local catalogue/code audit (500 rows, zero live source reads), not live fact recovery. Parent owns git/HANDOFF; no production changes.
+
+
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
 
 
@@ -46,6 +49,9 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[expert-500] Phase0 ready-for-review (PR #45), source a5835ef; Phase1 pilot next.** Extend offline packets to the 501-identity catalogue, define Q0-Q6 trace outcomes and reviewed miss causes, create a sealed deterministic 350 DEV /150 HELDOUT split, enforce recorded controller budgets and validate stored raw logs. Then compare a fresh main ten-case capture with model-chosen controlled source reads. A genuine blind expert requires tools restricted by access control, not instructions alone; record any inability to establish isolation instead of claiming blinding.
+
 
 **Local university search: deployed and public workflow verified (PR #39, main1aa188e, Fly v5).** Complete runtime acceptance is recorded in UNIMATCH_SEARCH_RELEASE_2026-10-02.md; this does not assert complete official admission facts for501 universities.
 
@@ -123,6 +129,9 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
 **Workflow-only search-layer selection — LANDED on `main` as `b672349` via PR #42 (2026-10-03):** `.github/workflows/benchmark-capture.yml` has a `search_provider` input (`auto` default, `exa`, `exa_mcp`, `none`). The provider was previously decided by a nested secrets expression in two jobs and re-derived by hand in the log line, so the printed mode could disagree with the process; one "Select the search layer" step per job now resolves it once, exports it through `$GITHUB_ENV` and names the deciding secret, and the log line, `out/config.txt`, the Provider step, the `--search-provider` argument and `capture.config` all read that one value. `exa` without `UNIMATCH_EXA_API_KEY` and any unknown value fail the job before the capture starts. `auto` keeps the historical Serper→Brave→Tavily→Exa→none precedence. Workflow only: no application, test, schema, migration, ranking, Fetcher or golden file is touched. **This session's own copy of the same edit (`62dac4c`, never pushed — the sandbox's GitHub App lacked the `workflows` scope) is superseded; discard it, do not re-apply it. Task 2 is therefore unblocked.**
+
+**[expert-500] Phase0 (initial source c04bf6a; final strict/PDF/review fixes a5835ef):** 501 public identities, sealed350/150 split, all10 pilots in DEV, Q0-Q6 exact-source trace proof, strict60/120s/6 controller and resume, equal-budget baseline wrapper, PDF page view, OS-isolated ephemeral tool-free selector. Final backend3094/94.88%; frontend gates green/unchanged. Real neutral model probe only; zero university live reads. Report docs/process/EXPERT500_PHASE0_2026-10-04.md. No app/gold/bindings/deployment changes.
+
 
 **Search release evidence:** tested dbbf396 → merged1aa188e, identical tree6534f52;8 exact-head CI jobs passed. Fly v5/ce0acb2a image verified on both existing machines. Public catalogue filters and UI-selected run9307186a completed; results/evidence survive reload and Save works in the isolated synthetic case.
 
@@ -1749,6 +1758,9 @@ No branch, commit, push or stash has been performed by this writer.
 **PR #41 (`task/reference-fact-recovery`, draft, gpt-6-astra) is already executing task 2 and task 4 — do not duplicate it (2026-10-03):** its measurements use the configured Exa MCP provider, **300 seconds and 60 non-cached reads per case** (note: 300 s, not the brief's 120 s, so its numbers are not budget-comparable with the 28.09 baseline), and record: ten-case baseline **11/62** under the original exact identity bindings (Groningen 2/11, Delft 1/1, Aalto 0/2, Vienna 1/4, Warsaw 2/2, UBC 3/3 with budget exhausted, Toronto 0/4, HKU 1/4, NTU 1/21, KAIST 0/10); the same frozen capture re-scored with AI-observed source/name aliases **16/62** (a mapping correction of +5, not five newly discovered facts); and an exact-source full repeat on `bc84ccf` at **13/62** (NTU 6/21, KAIST 1/10, Groningen −2 to a 295 s child deadline after it had already read the correct programme, Warsaw −2 and Vienna recording provider **HTTP 429**, UBC budget exhausted again). It stopped live probing at the provider throttle rather than retrying, which is the behaviour the brief requires. Its expressible-key ceiling rose 51→57/62, and its per-fix results are ER-08 (KAIST 0/10→1/10 on an equal-budget pair), ER-09 (offline replay 5 reads→1 read, production constant stays False), ER-10 (0→3 stored claims at an injected interruption), ER-11 (NTU documents 0/21→5/21 on both current URLs), ER-12 (Groningen translation 2/11→3/11). Full detail: `docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md` on that branch. **That branch also hit the identical `workflow`-scope rejection and retained its own workflow patch locally, so two sessions now hold the same blocked edit.**
 
 **Task 2 is still open and is now the whole measurement gap (2026-10-03):** no `benchmark-capture` run exists after 2026-09-28 (`36481185172` was the last, on `b23651b1`). PR #37–#40 changed discovery, the runner, the browser tier budget, the ontology and added the 501-identity local catalogue and a 300 s per-institution deadline, so every earlier number is stale. **The workflow input it needs is on `main` since `b672349` (PR #42), so it can be dispatched now:** `mode=benchmark`, `case` blank (all ten), `seconds_per_case=120`, `max_pages=60`, `search_provider=exa` if `UNIMATCH_EXA_API_KEY` is set else `exa_mcp`; **do not change the budgets**; download the artifact and record claim_recall against 13/62 (`0f5b99d`, 28.09), claim_precision against 20/21, programme-page recall/precision against 7/10 and 7/21, award discovery against 0/3, all four oracle verdicts, and the search mode with the number of requests it actually issued. The frozen reviewed baseline (2026-09-20) is 0/62, 0/5, 1/10, 1/9, 0/3 with **search_calls 0** and 520 http reads at 90 s per case. If search failed, say so in one line; never mix runs, never re-score an older capture, never invent a number. Stop at the first sign the keyless quota is exhausted and record it in §7.
+
+**[expert-500] Phase1 NEXT:** branch explicitly from this Phase0 predecessor as task/expert-500-phase1; freeze its harness revision for all live jobs, with production app tree53d57225bb16867ccc0de5f961d8870dbab7b9ce equal to main@b672349. Parent-only ignored orchestration calls expert_baseline with --strict-expert-budget and expert_actions with independently captured/restored logs; provider exa_mcp,60cold get /120active seconds /6queries, max3 independent experts simultaneously, batch stop429. Ten cases receive only public packet/context/controller views under OS access denial of gold/repo/history/other-expert outputs. Validate every submitted trace before unsealing/scoring62labels; record active vs real elapsed time, malformed/incomplete runs and semantic applicability limits. Commit only bounded trace/report/provenance with no raw pages or PII, separate Phase1 evidence PR. Report pilot before starting any50-case batch. No app/gold/bindings/production changes; owner merges PR45. **
+
 
 **After this documentation checkpoint:** inspect postmerge CI36972183803 and merge this metadata-only release record through its PR using the owner's standing merge authorization. No runtime edits are pending. Future product changes require a reproduced fault; partial official-data coverage is explicitly documented, not a completed universal knowledge base. Do not duplicate the synthetic NTU acceptance run or change production credentials.
 
@@ -3662,6 +3674,12 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[expert-500] Reviewed final gate:**3094 passed,2 warnings,94.88% coverage in386.01s; Ruff319 files lint/format green; mypy319 green plus final live/test scoped check. Frontend typecheck/lint/unit/build exit0, source unchanged; exact unit count not asserted. Focused115 strict/PDF/trace/workflow tests pass; selector25 pass. One Alembic head d8e412c6a901. The intermediate3092 full run preceded the final JEV-shadow fix and is not the final source proof.
+
+
+**[expert-500] Phase0 checkpoint (2026-10-04):** backend Ruff check/format306 files and mypy306 pass; complete pytest3048 passed,2 warnings,94.89% coverage in385.43s. Frontend typecheck/lint/unit/build all exit0; exact unit count was truncated and is not asserted. Blinded selector25 offline regressions pass; real neutral CLI model probe completed text-only in4.104s with OS denied sealed sentinel. No university pages fetched in Phase0. Strict baseline budget and saved-PDF view are still under implementation and require their focused/full final gates before ready-for-review.
+
+
 **Public release acceptance:** PR39 source exact-head CI8/8; Fly v5 complete/health ok/demo false; local catalogue501 and country/name/empty queries pass; real UI run completed inabout157s,3 programmes,51 Claim records,21 page checks,0 unreadable. Result/evidence persistence and Saved filtering verified. Full source gates remain2873/94.89%,frontend232,E2E79+6 with1 intentional skip. Postmerge run36972183803 provides the main check status.
 
 
@@ -4405,6 +4423,9 @@ next agent does not reopen it.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
+- 2026-10-04 [expert-500] evaluation only: prepare-catalogue/split-catalogue CLI; catalogue public-profile/provenance/comparison_mode packet fields; optional complete question_findings(Q0-Q6), exact SourceEvidence location and evaluator-only TraceAdjudication. Strict plans bind official domains, queries, origin, prefix and counters with raw-byte hashes; response elapsed_ms_before/charged_elapsed_ms support decision-time gaps. live --strict-expert-budget counts cold get60/query6/active120s plus separate15s process reserve and stops cohort429; legacy unchanged. expert_view page=N adds bounded pure PDF text/page metadata. Workflow resume_run_id restores hashed prior artifact; run_tag is public display-title correlation only. blind_cli is macOS OS-denied, ephemeral/tool-free; unknown event streams fail closed. No production API/model/migration/gold change.
+
+
 **2026-10-02 eligibility integrity:** a future admission window or optional-test policy alone cannot establish overall MET. Individual date/policy checks remain unchanged; missing assessable entry requirements produce NEEDS_OFFICIAL_CLARIFICATION with an explicit academic requirements unknown. Ranking formula/v1 untouched.
 
 
@@ -4764,6 +4785,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 
 ## 11. Session log (one line per session, newest last)
 
+- 2026-10-04 00:45 UTC: gpt-6-astra takes [expert-500] from b672349; prior PR44 completed offline only; Phase0 then live ten-case pilot.
+
 | 2026-10-01 UTC | gpt-6-astra | merged main e24231e → task/unimatch-redesign takeover | Owner provided 46-section Unimatch full redesign request and 18 references. Current tree matches main; source write-ahead recorded before UI edits. |
 
 | Session (UTC) | Agent | From → to | Summary |
@@ -4888,3 +4911,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-10-02 UTC | gpt-6-astra | merged4de769d -> task/local-university-search | Owner requests full search completion after supplied seed audit. Clean baseline, one migration head; importer/catalogue, local candidates, bounded live enrichment and outage/live acceptance next. |
 
 | 2026-10-03 UTC | arena-01a0f379 | b145da2 -> workflow search_provider input (re-applied after a second mid-session re-clone) | Owner brief taken; task 1 written and re-validated on three successive mains, still unpushed because the sandbox token lacks `workflows`. PR #37–#40 landed meanwhile: 501-identity catalogue, 300 s institution deadline, Fly v5, and a real NTU acceptance run (3 programmes, 51 Claims, ~157 s, 33.3 % completeness). Task 2 has had no capture since 2026-09-28. No live calls, no purchases, no production change from this session. |
+
+- 2026-10-04: gpt-6-astra releases [expert-500] Phase0 a5835ef as PR45 after3094/94.88% gates and independent review; Phase1 predecessor exception written in §5; live university reads still0.
