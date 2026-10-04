@@ -385,6 +385,11 @@ _A_DATE = (
     rf"|(?:{_MONTH_NAMES})\s+\d{{1,2}},?\s+\d{{4}}"
     r"|\d{4}-\d{2}-\d{2}"
 )
+#: A window between two dates: "15 October 2026 - 19 March 2027", "… to …".
+_DATE_RANGE = re.compile(
+    rf"({_A_DATE})\s*(?:[-–—]|to|until)\s*({_A_DATE})",
+    re.IGNORECASE,
+)
 #: One row of a deadline table that names its population: Groningen's
 #: "non-EU/EEA students 01 May 2027 01 September 2027". The lookbehind keeps
 #: the "EU/EEA" inside "non-EU/EEA" from reading as a second row.
@@ -735,8 +740,22 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
             ),
         )
     deadline_match = None if rows else (_DEADLINE.search(text) or _APPLICATION_PERIOD.search(text))
+    deadline_raw = deadline_match.group(1) if deadline_match else None
     if deadline_match:
-        deadline = parse_date_string(deadline_match.group(1))
+        # A date that opens a range is a window start, never the deadline
+        # (NTU: "Online application 15 October 2026 - 19 March 2027" was read
+        # as a 15 October deadline, paired run 37234751647). The window's end
+        # is the deadline; when the page states several windows that end on
+        # different dates — one per qualification — none is claimed, because
+        # nothing here says which one applies to the applicant.
+        windows = {m.group(2) for m in _DATE_RANGE.finditer(text)}
+        opened = _DATE_RANGE.match(text, deadline_match.start(1))
+        if len(windows) > 1:
+            deadline_raw = None
+        elif opened is not None:
+            deadline_raw = opened.group(2)
+    if deadline_match and deadline_raw:
+        deadline = parse_date_string(deadline_raw)
         if deadline:
             ex = excerpt_around(text, deadline_match.start(), deadline_match.end())
             _keep(
