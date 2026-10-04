@@ -598,6 +598,12 @@ def main() -> None:
         help="experiment ER-05: links naming undergraduate admission become candidates",
     )
     parser.add_argument(
+        "--walker-subject-cap",
+        action="store_true",
+        help="experiment ER-10: a catalogue walk reads at most three leads that name none "
+        "of the applicant's subjects, lists first",
+    )
+    parser.add_argument(
         "--navigation-field-leads",
         action="store_true",
         help="experiment ER-09: the navigation fallback keeps a programme lead only when "
@@ -686,6 +692,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery
 
             live_discovery.NAVIGATION_SLOT = True
+        if args.walker_subject_cap:
+            from app.adapters.discovery import catalog_walker
+
+            catalog_walker.WALKER_SIGNAL_LESS_CAP = 3
         if args.navigation_field_leads:
             from app.adapters.discovery import live_discovery as discovery_module
 
@@ -774,6 +784,7 @@ def main() -> None:
                         *(["--navigation-slot"] if args.navigation_slot else []),
                         *(["--topic-search"] if args.topic_search else []),
                         *(["--navigation-field-leads"] if args.navigation_field_leads else []),
+                        *(["--walker-subject-cap"] if args.walker_subject_cap else []),
                         "--search-funding-fallback"
                         if args.search_funding_fallback
                         else "--no-search-funding-fallback",
