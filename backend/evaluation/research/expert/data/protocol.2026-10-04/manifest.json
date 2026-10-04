@@ -21,7 +21,7 @@
   "files": [
     {
       "path": "compact-pilot.py.txt",
-      "sha256": "f71358cc16733df0c0ba2bca38ede3cb91544b7b9ec62547e76301f350712ce8"
+      "sha256": "4ba15c517b283dba87f30378bb0024eadc4bf495d47d8f7b49e5d48b6c03b1bb"
     },
     {
       "path": "legacy-transport.py.txt",
@@ -29,7 +29,7 @@
     },
     {
       "path": "compact-report.py.txt",
-      "sha256": "d94964818c539dde070aa3ef97c217c82ddb004cba16e8f26213540145d72bd1"
+      "sha256": "bc00752a95658276757ef12633a6b81efd95e954550fc67e452dce0461b60ac7"
     },
     {
       "path": "neutral-probe.py.txt",
@@ -37,7 +37,7 @@
     },
     {
       "path": "test-compact-pilot.py.txt",
-      "sha256": "5a99e8b28c667ab3ffd544bd09be3d7c4c9687f0695c7b45fd634fc4929e56f2"
+      "sha256": "4138154df6e6d82944980e6d09bf3ea4e3bcb54c939492ed4ccec1fcd3a27e5d"
     },
     {
       "path": "backend/evaluation/research/expert/blind_cli.py",
@@ -54,9 +54,24 @@
     {
       "path": "backend/evaluation/research/expert/controller.py",
       "sha256": "5c081ac3ec25950bccdedf9a6e63c424e37fded2c48bbd6ed60fc23c434284cc"
+    },
+    {
+      "path": "test-compact-report.py.txt",
+      "sha256": "b195ce6df313a17dfa8669fbbfbbec34b031c06241d7f22993b00a1f1c2a8cb5"
     }
   ],
-  "offline_orchestrator_tests": 6,
+  "offline_orchestrator_tests": 12,
   "production_app_tree": "53d57225bb16867ccc0de5f961d8870dbab7b9ce",
-  "production_main_commit": "b672349e5bba2bd3cbfe8d8f155db74da11a492c"
+  "production_main_commit": "b672349e5bba2bd3cbfe8d8f155db74da11a492c",
+  "protocol_revision": "v2.1-before-first-expert",
+  "offline_report_integrity_tests": 7,
+  "total_parent_cycle_tests": 19,
+  "source_only_review_fixes": [
+    "resume tool_policy retained",
+    "all facts retain exact citation proof including OTHER",
+    "fresh answer file rejects duplicate JSON fields",
+    "cohort results equal sealed per-case results",
+    "fixed seal provenance immutable",
+    "queue absence is not a discovered-candidate miss cause"
+  ]
 }

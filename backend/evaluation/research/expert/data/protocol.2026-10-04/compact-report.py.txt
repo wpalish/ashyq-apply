@@ -5,11 +5,13 @@ import argparse
 import hashlib
 import json
 import re
+import runpy
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from evaluation.research.expert.models import validate_trace
+from evaluation.research.expert.compact import expand_submission, parse_compact_decision
 from evaluation.research.expert.packet import digest
 from evaluation.research.live import COHORT
 from evaluation.research.mapping import CLAIM_KEYS, STRUCTURED_KEYS, normalize_claim
@@ -42,6 +44,33 @@ def projected(item: dict[str, Any]) -> list[tuple[str, Any]]:
     return [(key, value)]
 
 
+def verified_cohort(root: Path, final: dict[str, Any], case_ids: Any) -> list[dict[str, Any]]:
+    entries = final['results']
+    ids = [entry['case_id'] for entry in entries]
+    if final['stopped'] or len(ids) != len(set(ids)) or set(ids) != set(case_ids):
+        raise ValueError('All experts must be uniquely finalized before unsealing')
+    sealed = []
+    by_case = {entry['case_id']:entry for entry in entries}
+    for case_id in case_ids:
+        recorded = read(root/'experts'/case_id/'result.json')
+        if recorded != by_case[case_id]:
+            raise ValueError('Aggregate differs from the per-case result being sealed')
+        sealed.append(recorded)
+    return sealed
+
+
+def immutable_seal(path: Path, seal: dict[str, Any]) -> dict[str, Any]:
+    if path.exists():
+        previous = read(path)
+        before = {k:v for k,v in previous.items() if k != 'sealed_at'}
+        after = {k:v for k,v in seal.items() if k != 'sealed_at'}
+        if before != after:
+            raise ValueError('Previous seal or fixed provenance differs')
+        return previous
+    save(path,seal)
+    return seal
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, required=True)
@@ -50,8 +79,8 @@ def main() -> None:
     args = parser.parse_args()
     root = args.root
     final = read(root / "experts-results.json")
-    if final["stopped"] or {r["case_id"] for r in final["results"]} != set(COHORT):
-        raise ValueError("All ten experts must be finalized before unsealing reviewed labels")
+    sealed_results = verified_cohort(root, final, COHORT)
+    citation_guard = runpy.run_path(str(args.orchestrator))['validate_all_fact_citations']
     submissions, traces, log_dirs = [], {}, {}
     for case_id in COHORT:
         folder = root / "experts" / case_id
@@ -64,24 +93,35 @@ def main() -> None:
         validate_trace(trace, packet, logs_dir=log_dir)
         if digest(trace) != result["trace_sha256"]:
             raise ValueError("A submitted trace changed before unsealing")
+        compact_path = folder/'compact-submission.json'
+        if trace['proposals'] and not compact_path.is_file():
+            raise ValueError('Proposals lack their original compact coordinates')
+        if compact_path.is_file():
+            compact = parse_compact_decision(compact_path.read_text())
+            expanded = expand_submission(compact,trace['actions'],
+                ended_at=datetime.fromisoformat(trace['ended_at']),case_id=case_id)
+            if any(expanded[key] != trace[key] for key in ('proposals','question_findings')):
+                raise ValueError('Final trace differs from its original compact submission')
+            proof = citation_guard(compact,trace['actions'],logs_dir=log_dir,packet=packet)
+            if digest(proof) != result.get('citation_proof_sha256') or proof != read(folder/'compact-citation-proof.json'):
+                raise ValueError('Final compact citation proof changed')
         traces[case_id], log_dirs[case_id] = trace, log_dir
         submissions.append({"case_id": case_id, "trace_sha256": digest(trace),
             "trace_file_sha256": file_hash(folder / "trace.json"),
             "result_sha256": file_hash(folder / "result.json"), "packet_sha256": digest(packet),
+            "compact_submission_sha256": file_hash(compact_path) if compact_path.is_file() else None,
+            "baseline_result_sha256": file_hash(root/'baseline'/case_id/'result.json'),
+            "baseline_capture_sha256": file_hash(Path(read(root/'baseline'/case_id/'result.json')['capture'])),
             "raw_logs": [{"path": a["raw_log_path"], "sha256": a["raw_log_sha256"]} for a in trace["actions"]]})
     seal = {"sealed_at": datetime.now(UTC).isoformat(), "count": len(submissions),
             "all_traces_validated_with_raw_logs": True, "submissions": submissions,
             "orchestrator_sha256": file_hash(args.orchestrator),
             "legacy_transport_sha256": file_hash(Path("/tmp/unimatch-expert500-pilot-v1-frozen.py")),
-            "trial_file_sha256": file_hash(root / "trial.json")}
+            "trial_file_sha256": file_hash(root / "trial.json"),
+            "cohort_results_sha256": file_hash(root/'experts-results.json'),
+            "all_compact_fact_locations_validated": True}
     seal_path = root / "submission-seal.json"
-    if seal_path.exists():
-        previous = read(seal_path)
-        if previous["submissions"] != submissions:
-            raise ValueError("Previous submission seal differs")
-        seal = previous
-    else:
-        save(seal_path, seal)
+    seal = immutable_seal(seal_path,seal)
     # The only reviewed-label read in this script is below the immutable seal.
     dataset = Dataset.model_validate_json(args.dataset.read_text())
     baseline_parts = [Capture.model_validate_json(Path(read(root / "baseline" / c / "result.json")["capture"]).read_text()) for c in COHORT]
@@ -123,7 +163,7 @@ def main() -> None:
     rows = []
     by_baseline = {o.case_id:o for o in baseline.observations}
     by_expert = {o.case_id:o for o in expert_capture.observations}
-    for result in final["results"]:
+    for result in sealed_results:
         case_id = result["case_id"]
         trace, observation = traces[case_id], by_baseline[case_id]
         budget = read(root / "baseline" / case_id / "result.json")["budget"]
@@ -165,10 +205,10 @@ def main() -> None:
                     else "CLASSIFIER" if any(p["category"]=="classifier-rejected" for p in outcomes)
                     else "EXTRACTOR" if any(p["category"]=="no-pattern-match" for p in outcomes)
                     else "BUDGET" if budget.get("stop_reason") in {"wall_clock_budget_exhausted","page_budget_exhausted"}
-                    else "NOT_DISCOVERED" if question=="Q0" and source not in {canonical_url(u) for u in (observation.ranked_urls or [])} and not outcomes
                     else "UNRESOLVED_CAUSE")
                 misses.append({"question":question,"cause":cause,"source_url":source,"baseline_page_outcomes":outcomes,
-                    "baseline_stop_reason":budget.get("stop_reason"),"diagnostic_only":True})
+                    "baseline_stop_reason":budget.get("stop_reason"),"diagnostic_only":True,
+                    "programme_confirmation_queue_absent":question=='Q0' and source not in {canonical_url(u) for u in (observation.ranked_urls or [])}})
         rows.append({"case_id":case_id,"expert_status":result["status"],"expert_error_type":result.get("error","").split(":",1)[0] or None,
             "expert_active_ms_recorded":result["active_ms"],
             "unmetered_final_selector_timeout_lower_bound_ms":timeout_lower_bound,
@@ -186,7 +226,7 @@ def main() -> None:
             sum(entry["elapsed_ms"] for entry in ledger) == result["active_ms"]
         ) and all(entry["elapsed_ms"] >= 0 for entry in ledger)
     eligible = all(r["status"]=="submitted" and not r.get("error") and r["active_ms"]<=120000
-        and metered(r) and r.get("requested_model")=="gpt-6-astra" for r in final["results"])
+        and metered(r) and r.get("requested_model")=="gpt-6-astra" for r in sealed_results)
     save(root / "comparison.json", {"seal_sha256":digest(seal),"dataset_file_sha256":file_hash(args.dataset),
         "baseline_metrics":baseline_score["metrics"],"expert_metrics":expert_score["metrics"],"cases":rows,
         "protocol_eligible":eligible,"protocol_gate":eligible and expert_score["metrics"]["claim_recall"]["numerator"] >= 40})

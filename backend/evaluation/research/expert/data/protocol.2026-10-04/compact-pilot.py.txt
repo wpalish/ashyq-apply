@@ -22,7 +22,10 @@ from evaluation.research.expert.compact import (
     COMPACT_INSTRUCTIONS, compact_schema, expand_submission, parse_compact_decision,
 )
 from evaluation.research.expert.controller import expert_view
-from evaluation.research.expert.models import QUESTIONS, validate_trace
+from evaluation.research.expert.models import (
+    QUESTIONS, Action, EvidenceLocation, QuestionFinding, SourceEvidence,
+    _evidence_scope, _official_source, _quote_matches, _source_read, validate_trace,
+)
 from evaluation.research.expert.packet import digest
 from evaluation.research.expert.selector import select
 from evaluation.research.mapping import CLAIM_KEYS, STRUCTURED_KEYS
@@ -55,6 +58,54 @@ when actually established by the source; do not infer equivalence or a request's
 population, qualification, intake or year. Older fees cannot settle Q4.
 Return only the declared compact JSON, with a short public observation.
 """
+
+
+def validate_all_fact_citations(decision: Any, actions: list[dict[str, Any]],
+        *, logs_dir: Path, packet: dict[str, Any]) -> list[dict[str, Any]]:
+    """Validate coordinates and visible scope contradictions for EVERY fact.
+
+    A fact does not evade citation checks by using OTHER or omitting a finding.
+    This supplements, never replaces, complete controller/trace validation.
+    It uses the exact frozen validator's pure source parsers, no network or labels.
+    """
+    parsed = parse_compact_decision(decision)
+    case = packet['cases'][0]
+    root = logs_dir.resolve()
+    recorded = {a['step']:Action.model_validate(a) for a in actions}
+    sources, proof = {}, []
+    for index, fact in enumerate(parsed.facts):
+        action = recorded.get(fact.source_step)
+        if action is None or action.tool != 'fetcher' or action.policy_mode != 'same_policy' or action.outcome_status != 'success':
+            raise ValueError('Every compact fact requires its successful controlled source action')
+        path = (root/action.raw_log_path).resolve()
+        if not path.is_relative_to(root):
+            raise ValueError('Compact citation path escapes the recorded log directory')
+        if fact.source_step not in sources:
+            data = path.read_bytes()
+            if hashlib.sha256(data).hexdigest() != action.raw_log_sha256:
+                raise ValueError('Compact citation raw log hash mismatch')
+            record = json.loads(data)
+            if record.get('case_id') != case['case_id']:
+                raise ValueError('Compact citation source belongs to another case')
+            source = _source_read(record)
+            if source is None or not _official_source(source.url, case) or str(source.url) != str(action.final_url or action.url):
+                raise ValueError('Compact citation source is not this exact official page')
+            sources[fact.source_step] = source
+        source = sources[fact.source_step]
+        location = EvidenceLocation.model_validate(fact.location.model_dump())
+        if not _quote_matches(fact.quotation, source, location):
+            raise ValueError('Compact fact quote or location is absent from its exact official source')
+        evidence = SourceEvidence(action_step=action.step, source_url=source.url,
+            excerpt=fact.quotation, location=location)
+        check = QuestionFinding(question=fact.question if fact.question != 'OTHER' else 'Q1',
+            status='unresolved', supporting_steps=[action.step], evidence=[evidence],
+            scope=fact.scope.model_dump(), observation='Mechanical citation-scope check only.')
+        _evidence_scope(check, evidence, source)
+        proof.append({'fact_id':fact.id, 'proposal_index':index, 'source_step':action.step,
+            'raw_log_sha256':action.raw_log_sha256, 'source_url':str(source.url),
+            'quotation_sha256':hashlib.sha256(fact.quotation.encode()).hexdigest(),
+            'location':fact.location.model_dump(mode='json'), 'scope':fact.scope.model_dump()})
+    return proof
 
 
 def expert(repo: Path, ref: str, root: Path, case_id: str,
@@ -147,7 +198,9 @@ def expert(repo: Path, ref: str, root: Path, case_id: str,
             result['error'] = 'active_budget_exhausted_before_validation'
             break
         try:
-            chosen = charge('compact_parse', lambda: parse_compact_decision(selected.answer))
+            # Parse the fresh completed answer FILE so duplicate fields cannot
+            # disappear through the selector event parser's dictionary path.
+            chosen = charge('compact_parse', lambda: parse_compact_decision(output.read_text()))
             save(case_root/f'selector-{turn:02d}.decision.json', chosen.model_dump(mode='json'))
             feedback = None
             if chosen.kind == 'submit':
@@ -162,6 +215,13 @@ def expert(repo: Path, ref: str, root: Path, case_id: str,
                 tentative = charge('trace_construction', lambda: make_trace(case_id, packet,
                     started, actions, expanded['proposals'], expanded['question_findings']))
                 charge('raw_log_validation', lambda: validate_trace(tentative, packet, logs_dir=log_dir))
+                citation_proof = charge('all_fact_citation_validation', lambda: validate_all_fact_citations(
+                    chosen, actions, logs_dir=log_dir, packet=packet))
+                charge('compact_submission_write', lambda: save(case_root/'compact-submission.json',
+                    chosen.model_dump(mode='json')))
+                charge('citation_proof_write', lambda: save(case_root/'compact-citation-proof.json', citation_proof))
+                result['compact_submission'] = str(case_root/'compact-submission.json')
+                result['citation_proof_sha256'] = digest(citation_proof)
                 proposals, findings = expanded['proposals'], expanded['question_findings']
                 result['status'] = 'submitted' if active_ms < TOTAL_MS else 'incomplete'
                 if result['status'] != 'submitted':
@@ -195,7 +255,7 @@ def expert(repo: Path, ref: str, root: Path, case_id: str,
                     plan['start_calls'] = summary['final']['fetcher_calls']
                     plan['start_search_queries'] = summary['final']['search_queries']
                     plan['resume_summary'] = {key:summary[key] for key in (
-                        'case_id','provider','log_prefix','budget_origin','action_deadline_ms','raw_logs','final')}
+                        'case_id','provider','log_prefix','budget_origin','action_deadline_ms','tool_policy','raw_logs','final')}
                 return plan
             plan = charge('plan_construction', prepare_plan)
             if active_ms >= NAVIGATION_MS:

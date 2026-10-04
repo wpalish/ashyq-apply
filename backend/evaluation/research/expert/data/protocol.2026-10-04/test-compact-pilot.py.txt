@@ -1,5 +1,7 @@
 """Offline integration of the actual frozen pilot, with independent mock bytes."""
 import asyncio
+import base64
+import hashlib
 import json
 import runpy
 import shutil
@@ -83,7 +85,9 @@ def pilot(tmp_path, monkeypatch):
 
     def select(isolation,schema,output,prompt,**kwargs):
         selector_prompts.append((prompt,kwargs))
-        return selections.pop(0)
+        selected=selections.pop(0)
+        if selected.answer is not None: output.write_text(json.dumps(selected.answer))
+        return selected
 
     runtime.update(workflow=workflow,select=select,emit=lambda **kwargs:None)
     return runtime,repo,root,workspace,calls,selector_prompts,plans,selections
@@ -117,6 +121,19 @@ def test_navigation_timeout_charged_and_partial_text_never_becomes_facts(pilot):
     assert result['active_ms']>=22025 and result['actions']==0
     assert not result['validated'] and result['status']=='incomplete'
     assert pilot[4]==[] and pilot[5][1][0]['required_now']=='submit'
+
+
+def test_second_controlled_read_keeps_hashed_deadline_policy_and_previous_raw_logs(pilot):
+    pilot[-1].insert(1,SelectorTurn(choice(),9000,'','',0,None))
+    result=run(pilot)
+    assert result['status']=='submitted' and result['validated']
+    assert result['actions']==2 and pilot[4]==[URL,URL]
+    resume=pilot[6][1]['resume_summary']
+    assert resume['tool_policy']['action_deadline_ms']==75000
+    assert resume['tool_policy']['max_elapsed_ms']==120000
+    trace=json.loads((pilot[2]/'experts/u/trace.json').read_text())
+    assert [a['fetcher_calls_cumulative'] for a in trace['actions']]==[1,2]
+    assert trace['actions'][1]['raw_log_path']!=trace['actions'][0]['raw_log_path']
 
 
 def test_source_deadline_reserves_final_selector_time(pilot):
@@ -161,3 +178,65 @@ def test_unknown_dispatch_outcome_is_not_reissued(pilot):
     result=run(pilot)
     assert runtime['STOP'].is_set() and result['actions']==0
     assert result['status']=='incomplete' and not result['validated']
+
+
+def test_unreferenced_other_fact_keeps_independently_validated_location(pilot):
+    final=choice('submit');final['facts'][0]['question']='OTHER';final['question_findings']=[]
+    pilot[-1][1]=SelectorTurn(final,13000,'','',0,None)
+    result=run(pilot)
+    assert result['status']=='submitted' and result['validated']
+    proof=json.loads((pilot[2]/'experts/u/compact-citation-proof.json').read_text())
+    assert proof[0]['proposal_index']==0 and proof[0]['location']['kind']=='text'
+
+
+@pytest.mark.parametrize('question',['Q1','OTHER'])
+def test_wrong_location_cannot_enter_scores_by_omitting_question_finding(pilot,question):
+    assert run(pilot)['validated']
+    runtime,_,root,*_=pilot
+    trace=json.loads((root/'experts/u/trace.json').read_text())
+    packet=json.loads((root/'baseline/u/public-packet.json').read_text())
+    final=choice('submit');final['question_findings']=[];final['facts'][0]['question']=question
+    final['facts'][0]['location']={'kind':'document_ir','block_id':'b999',
+        'section_path':['Admissions'],'page':None}
+    with pytest.raises(ValueError,match='location'):
+        runtime['validate_all_fact_citations'](final,trace['actions'],
+            logs_dir=root/'experts/u/controller-01/artifact/logs',packet=packet)
+
+
+def test_other_fact_cannot_hide_visible_domestic_scope_contradiction(pilot):
+    assert run(pilot)['validated']
+    runtime,_,root,*_=pilot
+    trace=json.loads((root/'experts/u/trace.json').read_text())
+    packet=json.loads((root/'baseline/u/public-packet.json').read_text())
+    actions=trace['actions'];logs=root/'experts/u/controller-01/artifact/logs'
+    raw_path=logs/actions[0]['raw_log_path'];record=json.loads(raw_path.read_text())
+    quote='Domestic applicants to bachelor programmes need IELTS Academic overall 6.5.'
+    body=f'<main><p>{quote}</p></main>'.encode()
+    record['response']['content_b64']=base64.b64encode(body).decode()
+    record['response']['content_sha256']=hashlib.sha256(body).hexdigest()
+    raw=json.dumps(record).encode();raw_path.write_bytes(raw)
+    actions[0]['raw_log_sha256']=hashlib.sha256(raw).hexdigest()
+    final=choice('submit');final['facts'][0].update(question='OTHER',quotation=quote)
+    final['question_findings']=[]
+    with pytest.raises(ValueError,match='domestic'):
+        runtime['validate_all_fact_citations'](final,actions,logs_dir=logs,packet=packet)
+
+
+def test_actual_completed_answer_file_rejects_duplicate_fields_before_any_source_io(pilot):
+    runtime,*_=pilot
+    actual=runtime['select']
+    first=True
+    def select(*args,**kwargs):
+        nonlocal first
+        selected=actual(*args,**kwargs)
+        if first:
+            first=False
+            text=args[2].read_text()
+            args[2].write_text(text.replace('{','{"kind":"submit",',1))
+        return selected
+    runtime['select']=select
+    pilot[-1][1]=SelectorTurn(None,20000,'','',None,'selector_timeout')
+    pilot[-1].append(SelectorTurn(None,55000,'','',None,'selector_timeout'))
+    result=run(pilot)
+    assert not result['validated'] and pilot[4]==[]
+    assert any('Duplicate JSON field' in e.get('feedback','') for e in result['turn_errors'])
