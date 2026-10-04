@@ -1,0 +1,92 @@
+{
+  "schema_version": "1",
+  "protocol_version": "journal-v8",
+  "recorded_at": "2026-10-04T21:36:40.375735+00:00",
+  "all_passed": true,
+  "actual_ten_case_launcher_preflight": true,
+  "backend_tests": 4075,
+  "backend_coverage_percent": 94.9,
+  "frontend_tests": 232,
+  "actual_parent_mocks": 389,
+  "static_source_files": 362,
+  "parent_quality_files": 9,
+  "source_calls": 0,
+  "new_neutral_model_calls": 0,
+  "integrated_main": "1d2116775e8ab2506a3a0907252b01a59f76ae21",
+  "unchanged_frontend_tree": "4aaba144e9642060a4915a22527ef016ee8cc83d",
+  "frontend_reused_from_unchanged_tree": true,
+  "gates": {
+    "backend_tests": true,
+    "backend_ruff": true,
+    "backend_format": true,
+    "backend_mypy": true,
+    "frontend_tests": true,
+    "frontend_typecheck": true,
+    "frontend_build": true,
+    "frontend_lint": true,
+    "evaluation_quality": true,
+    "combined_parent_mocks": true,
+    "actual_ten_case_launcher_preflight": true,
+    "exa_provider_pin": true,
+    "demo_order": true,
+    "alembic_single_head": true
+  },
+  "raw_logs": {
+    "backend_tests": {
+      "path": "/tmp/unimatch-expert500-v8-integrated-backend-gates.txt",
+      "sha256": "893f385be44e6e1b63f540f023090a4e23e1b7c1bab90d5fba8c8d627905e367"
+    },
+    "backend_ruff": {
+      "path": "/tmp/unimatch-expert500-v8-integrated-backend-ruff.txt",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "backend_format": {
+      "path": "/tmp/unimatch-expert500-v8-integrated-backend-format.txt",
+      "sha256": "a604952119833842dee785962a8300fc911d7a180ce45a41c910a6ef9dde2273"
+    },
+    "backend_mypy": {
+      "path": "/tmp/unimatch-expert500-v8-integrated-backend-mypy.txt",
+      "sha256": "179e9b78becb006e23972d3cfd2c8b878097ce9fa23d297fe72ba0bce1a41fac"
+    },
+    "frontend_tests": {
+      "path": "/tmp/unimatch-expert500-v8-frontend-gates.txt",
+      "sha256": "dbe52be9d0bf2fecdeabc99a5eda56c6b1efb547c974ecc519366ca812a2b8b2"
+    },
+    "frontend_typecheck": {
+      "path": "/tmp/unimatch-expert500-v8-frontend-gates.txt",
+      "sha256": "dbe52be9d0bf2fecdeabc99a5eda56c6b1efb547c974ecc519366ca812a2b8b2"
+    },
+    "frontend_build": {
+      "path": "/tmp/unimatch-expert500-v8-frontend-gates.txt",
+      "sha256": "dbe52be9d0bf2fecdeabc99a5eda56c6b1efb547c974ecc519366ca812a2b8b2"
+    },
+    "frontend_lint": {
+      "path": "/tmp/unimatch-expert500-v8-frontend-gates.txt",
+      "sha256": "dbe52be9d0bf2fecdeabc99a5eda56c6b1efb547c974ecc519366ca812a2b8b2"
+    },
+    "evaluation_quality": {
+      "path": "/tmp/unimatch-expert500-v8-integrated-parent-quality-final.txt",
+      "sha256": "bb5f4781c284f524f3843c10ac40bb52f82484ff2e8139e270dd7050e1a5233a"
+    },
+    "combined_parent_mocks": {
+      "path": "/tmp/unimatch-expert500-v8-frozen-byte-mock-gates.txt",
+      "sha256": "0b7cb85945b19965a4efbd9f4b6bc646b333c1e6c1be09fd69368f7519323f3b"
+    },
+    "actual_ten_case_launcher_preflight": {
+      "path": "/tmp/unimatch-expert500-v8-frozen-byte-mock-gates.txt",
+      "sha256": "0b7cb85945b19965a4efbd9f4b6bc646b333c1e6c1be09fd69368f7519323f3b"
+    },
+    "exa_provider_pin": {
+      "path": "/tmp/unimatch-expert500-v8-frozen-byte-mock-gates.txt",
+      "sha256": "0b7cb85945b19965a4efbd9f4b6bc646b333c1e6c1be09fd69368f7519323f3b"
+    },
+    "demo_order": {
+      "path": "/tmp/unimatch-expert500-v8-integrated-demo-gate.txt",
+      "sha256": "6d60c1d4e4a86c321df497cd10f827cf01706c40008398e9e1f7cac6bf494b0e"
+    },
+    "alembic_single_head": {
+      "path": "/tmp/unimatch-expert500-v8-integrated-alembic-gate.txt",
+      "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b"
+    }
+  }
+}

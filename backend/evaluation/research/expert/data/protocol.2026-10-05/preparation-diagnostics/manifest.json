@@ -1,0 +1,25 @@
+{
+  "recorded_at": "2026-10-04T21:35:28.757782+00:00",
+  "protocol_version": "journal-v8",
+  "live_calls": 0,
+  "files": [
+    {
+      "path": "initial-parent-quality.log",
+      "original_path": "/tmp/unimatch-expert500-v8-parent-quality.txt",
+      "sha256": "ec7708a0cf604519d148f6ad7733dd4b299d4a1c937ab094a3336efaa40aefee",
+      "resolution": "6 formatting findings, autofixed imports and parentheses"
+    },
+    {
+      "path": "initial-demo-checker.log",
+      "original_path": "/tmp/unimatch-expert500-v8-demo-gate.txt",
+      "sha256": "168c2ef360114c0f320faf0d03db0597cb52a7588c40a43beec0b641ab4cc141",
+      "resolution": "checker used admissions_fit; corrected to ranking.bucket; no product change"
+    },
+    {
+      "path": "import-context-quality.log",
+      "original_path": "/tmp/unimatch-expert500-v8-integrated-parent-quality.txt",
+      "sha256": "47bac5182c96d02f3b5690614493f9210a8b0a11e2f7722af7ff9c40038046ac",
+      "resolution": "root-versus-backend Ruff package classification; final root gate fixed import ordering"
+    }
+  ]
+}

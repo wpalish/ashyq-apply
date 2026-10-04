@@ -1,0 +1,54 @@
+/tmp/test_unimatch_expert500_actual_cohort_v8.py:8:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 6 |   """
+ 7 |
+ 8 | / from __future__ import annotations
+ 9 | |
+10 | | import copy
+11 | | import hashlib
+12 | | import importlib.util
+13 | | import json
+14 | | import pathlib
+15 | | import runpy
+16 | | import shutil
+17 | | import subprocess
+18 | | import sys
+19 | | from collections.abc import Iterator
+20 | | from dataclasses import dataclass, field, replace
+21 | | from pathlib import Path
+22 | | from typing import Any
+23 | |
+24 | | import pytest
+25 | |
+26 | | from evaluation.research import live
+27 | | from evaluation.research.expert import workspace_policy
+28 | | from evaluation.research.expert.blind_cli import selector_answer
+29 | | from evaluation.research.expert.journal import AcceptedJournal
+30 | | from evaluation.research.expert.network_budget import (
+31 | |     BUDGET_MODEL,
+32 | |     NETWORK_COMPARISON_MODE,
+33 | |     WALL_GUARD_MS,
+34 | |     expert_budget,
+35 | | )
+36 | | from evaluation.research.expert.network_turn_policy import (
+37 | |     NetworkBudgetIsolation,
+38 | |     command_proof,
+39 | |     journal_schema_for_turn,
+40 | |     parse_turn_decision,
+41 | |     policy_limits,
+42 | | )
+43 | | from evaluation.research.expert.workspace_policy import (
+44 | |     allocate_workspaces,
+45 | |     selector_paths,
+46 | |     validate_selector_paths,
+47 | |     validate_workspaces,
+48 | | )
+49 | | from evaluation.research.live import COHORT
+   | |___________________________________________^ I001
+50 |
+51 |   REPO = Path(
+   |
+   = help: Organize imports
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.

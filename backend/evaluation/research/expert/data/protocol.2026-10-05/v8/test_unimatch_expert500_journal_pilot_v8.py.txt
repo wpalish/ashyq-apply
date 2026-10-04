@@ -1,0 +1,824 @@
+"""Independent offline tests of the actual V8 network parent; all sources are synthetic."""
+
+import asyncio
+import copy
+import itertools
+import json
+import runpy
+import shutil
+import sys
+from dataclasses import dataclass, field
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+
+import pytest
+from app.adapters.fetching import FetchResult
+from app.domain.enums import FetchOutcome
+from evaluation.research.expert.controller import execute
+from evaluation.research.expert.network_budget import NETWORK_COMPARISON_MODE, expert_budget
+from evaluation.research.expert.network_turn_policy import (
+    NetworkBudgetIsolation as Isolation,
+)
+from evaluation.research.expert.network_turn_policy import (
+    NetworkSelectorTurn,
+    turn_window,
+)
+from evaluation.research.expert.workspace_policy import allocate_workspaces
+
+PILOT = Path("/tmp/unimatch-expert500-journal-pilot-v8.py")
+REPORT = Path("/tmp/unimatch-expert500-journal-report-v8.py")
+HEAD = "a" * 40
+URL = "https://u.edu/admissions"
+QUOTE = "International bachelor applicants need IELTS Academic overall 6.5."
+SCOPE = {
+    "university": "U",
+    "programme": None,
+    "degree": "bachelor",
+    "field": None,
+    "intake": None,
+    "population": "international",
+    "qualification": None,
+    "academic_year": None,
+}
+
+
+def source_action(tool="fetcher", **changes):
+    value = {
+        "tool": tool,
+        "url": URL if tool == "fetcher" else None,
+        "query": "site:u.edu official admissions" if tool == "search_provider" else None,
+        "domains": ["u.edu"] if tool == "search_provider" else [],
+        "max_results": 4 if tool == "search_provider" else None,
+        "source_step": 1 if tool == "view" else None,
+        "page": None,
+        "offset": None,
+        "section_offset": None,
+        "link_offset": None,
+    }
+    return {**value, **changes}
+
+
+def fact(**changes):
+    value = {
+        "id": "english",
+        "question": "Q1",
+        "claim_key": "ielts.overall",
+        "value_json": "6.5",
+        "source_step": 1,
+        "quotation": QUOTE,
+        "location": {"kind": "text", "block_id": None, "section_path": [], "page": None},
+        "scope": dict(SCOPE),
+    }
+    return {**value, **changes}
+
+
+def finding(**changes):
+    value = {
+        "question": "Q1",
+        "status": "found",
+        "fact_ids": ["english"],
+        "scope": dict(SCOPE),
+        "observation": "The recorded synthetic page states this minimum.",
+        "supporting_steps": [],
+    }
+    return {**value, **changes}
+
+
+def decision(prompt, kind="action", facts=None, findings=None, action=None, **changes):
+    if "accepted_journal" not in prompt:
+        assert kind == "submit" and action is None and not facts and not findings
+        return minimal_commit(prompt, **changes)
+    value = {
+        "kind": kind,
+        "observation": "Inspect the current recorded official source.",
+        "journal_sha256": prompt["accepted_journal"]["sha256"],
+        "action": source_action() if kind == "action" and action is None else action,
+        "facts": facts or [],
+        "question_findings": findings or [],
+    }
+    return {**value, **changes}
+
+
+def minimal_commit(prompt, **changes):
+    from evaluation.research.expert.representation import CLOSING_OBSERVATION
+
+    current_hash = (
+        prompt["accepted_journal"]["sha256"]
+        if "accepted_journal" in prompt
+        else prompt["journal_sha256"]
+    )
+    return {
+        "kind": "submit",
+        "observation": CLOSING_OBSERVATION,
+        "journal_sha256": current_hash,
+        "action": None,
+        "facts": [],
+        "question_findings": [],
+        **changes,
+    }
+
+
+def completed_events(answer):
+    return (
+        "\n".join(
+            json.dumps(item)
+            for item in [
+                {"type": "thread.started", "thread_id": "synthetic"},
+                {"type": "turn.started"},
+                {
+                    "type": "item.completed",
+                    "item": {"id": "answer", "type": "agent_message", "text": answer},
+                },
+                {"type": "turn.completed", "usage": {"input_tokens": 1, "output_tokens": 1}},
+            ]
+        )
+        + "\n"
+    )
+
+
+@dataclass
+class Harness:
+    runtime: dict
+    repo: Path
+    root: Path
+    workspace: Path
+    packet: dict
+    pending: list = field(default_factory=list)
+    calls: list = field(default_factory=list)
+    queries: list = field(default_factory=list)
+    prompts: list = field(default_factory=list)
+    commands: list = field(default_factory=list)
+    plans: list = field(default_factory=list)
+    controller_dirs: list = field(default_factory=list)
+    summary_hook: object = None
+    workflow_error: Exception | None = None
+    source_body: bytes | None = None
+    source_content_type: str = "text/html"
+    plan_hook: object = None
+    search_error_status: int = 429
+
+    @property
+    def folder(self):
+        return self.root / "experts/u"
+
+    def queue(self, callback=None, *, elapsed=12000, preparation=0, error=None, raw=None):
+        self.pending.append(
+            {
+                "callback": callback,
+                "elapsed": elapsed,
+                "preparation": preparation,
+                "error": error,
+                "raw": raw,
+            }
+        )
+
+    def read(self, name):
+        return json.loads((self.folder / name).read_text())
+
+    def run(self):
+        return self.runtime["expert"](
+            self.repo, "synthetic-frozen", self.root, "u", {"u": self.workspace}
+        )
+
+
+@pytest.fixture
+def pilot(tmp_path, monkeypatch):
+    module = runpy.run_path(str(PILOT))
+    runtime = module["expert"].__globals__
+    runtime["STOP"].clear()
+    FakeDatetime.current = datetime.now(UTC)
+    runtime["datetime"] = FakeDatetime
+    # Allocation alone may canonicalize the trusted temporary root; persisted
+    # assignments and real filesystem receipts must already agree before expert.
+    tmp_path = tmp_path.resolve(strict=True)
+    repo, root = tmp_path / "repo", tmp_path / "results"
+    assignments, receipts = allocate_workspaces(("u",), temp_root=tmp_path)
+    workspace = Path(assignments["u"])
+    context = repo / "backend/evaluation/research/expert/ALGORITHM_CONTEXT.md"
+    context.parent.mkdir(parents=True)
+    context.write_text("Public generic algorithm instructions; no previous case outcomes.")
+    (root / "baseline/u").mkdir(parents=True)
+    (root / "workspace-locations.json").write_text(json.dumps(assignments))
+    (root / "workspace-receipts.json").write_text(json.dumps(receipts))
+    packet = {
+        "schema_version": "1",
+        "baseline_pipeline_sha": HEAD,
+        "baseline_budget": {
+            "max_fetcher_calls": 60,
+            "max_elapsed_ms": 120000,
+            "max_search_queries": 6,
+            "browser_enabled": False,
+        },
+        "comparison_mode": NETWORK_COMPARISON_MODE,
+        "expert_budget": expert_budget(),
+        "public_profile": {"education_system": "KZ national secondary"},
+        "cases": [
+            {
+                "case_id": "u",
+                "university": "U",
+                "domain": "u.edu",
+                "request": {
+                    **{key: None for key in SCOPE},
+                    "university": "U",
+                    "degree": "bachelor",
+                    "field": "computer science",
+                    "intake": "fall 2027",
+                },
+                "baseline": {
+                    "ranked_urls": ["BASELINE_OUTPUT_MUST_NOT_ENTER_SELECTOR"],
+                    "prediction_count": 99,
+                    "error": "PRIVATE_BASELINE_SENTINEL",
+                },
+            }
+        ],
+    }
+    packet_path = root / "baseline/u/public-packet.json"
+    packet_path.write_text(json.dumps(packet))
+    (root / "baseline/u/result.json").write_text(
+        json.dumps(
+            {"case_id": "u", "provider": "exa", "packet": str(packet_path), "head_sha": HEAD}
+        )
+    )
+    monkeypatch.setattr(
+        Isolation,
+        "local",
+        classmethod(
+            lambda cls, path, roots: cls(
+                path.resolve(), tuple(p.resolve() for p in roots), "/mock/sandbox", "/mock/codex"
+            )
+        ),
+    )
+    monkeypatch.setattr(
+        Isolation,
+        "prove_access",
+        lambda self, *args: {
+            "allowed_read": True,
+            "sealed_read_denied": True,
+            "sealed_stdout_empty": True,
+            "sealed_roots": [str(path) for path in self.sealed_roots],
+            "mock_only": True,
+        },
+    )
+    harness = Harness(runtime, repo, root, workspace, packet)
+
+    async def get(url):
+        FakeDatetime.current += timedelta(milliseconds=10)
+        harness.calls.append(url)
+        return FetchResult(
+            url=url,
+            final_url=url,
+            outcome=FetchOutcome.OK,
+            status_code=200,
+            content_type=harness.source_content_type,
+            content=harness.source_body
+            or f"<main><h1>Admissions</h1><p>{QUOTE}</p></main>".encode(),
+        )
+
+    class ProviderLimit(RuntimeError):
+        http_status = 429
+
+    async def search(**kwargs):
+        FakeDatetime.current += timedelta(milliseconds=10)
+        harness.queries.append(kwargs)
+        failure = ProviderLimit("Synthetic provider limit")
+        failure.http_status = harness.search_error_status
+        raise failure
+
+    def workflow(repo, ref, case_id, inputs, destination, **kwargs):
+        if harness.workflow_error:
+            raise harness.workflow_error
+        plan = json.loads(inputs["plan"])
+        if harness.plan_hook:
+            harness.plan_hook(plan)
+            inputs = {**inputs, "plan": json.dumps(plan)}
+        harness.plans.append(plan)
+        artifact = destination / "artifact"
+        logs = artifact / "logs"
+        logs.mkdir(parents=True)
+        (destination / "dispatch.json").write_text(json.dumps({"inputs": inputs}))
+        if harness.controller_dirs:
+            for old in (harness.controller_dirs[-1] / "artifact/logs").glob("*.json"):
+                shutil.copy2(old, logs / old.name)
+        source_ticks = itertools.count()
+        summary = asyncio.run(
+            execute(
+                plan,
+                logs,
+                get=get,
+                search=search,
+                provider_name="exa",
+                now=lambda: FakeDatetime.now(UTC),
+                monotonic=lambda: next(source_ticks) / 1_000_000,
+            )
+        )
+        if harness.summary_hook:
+            harness.summary_hook(summary, plan)
+        (artifact / "summary.json").write_text(json.dumps(summary))
+        run_id = len(harness.plans)
+        (destination / "run.json").write_text(
+            json.dumps({"run_id": run_id, "headSha": HEAD, "conclusion": "success"})
+        )
+        harness.controller_dirs.append(destination)
+        return run_id, HEAD
+
+    def select(isolation, schema, output, prompt, **kwargs):
+        harness.prompts.append((copy.deepcopy(prompt), dict(kwargs)))
+        harness.commands.append(isolation.command(schema, output=output, model=kwargs.get("model")))
+        assert harness.pending, "Unexpected selector call after closure"
+        item = harness.pending.pop(0)
+        FakeDatetime.current += timedelta(milliseconds=item["preparation"])
+        began = FakeDatetime.now(UTC)
+        window = turn_window(phase=kwargs["phase"], wall_guard=kwargs["wall_guard"], now=began)
+        FakeDatetime.current += timedelta(milliseconds=item["elapsed"])
+        finished = FakeDatetime.now(UTC)
+        if item["error"]:
+            return NetworkSelectorTurn(
+                None,
+                item["preparation"] + item["elapsed"],
+                "unfinished partial output",
+                "",
+                None,
+                item["error"],
+                window,
+                began.isoformat(),
+                finished.isoformat(),
+            )
+        answer = item["callback"](prompt) if item["callback"] else decision(prompt)
+        raw = item["raw"] if item["raw"] is not None else json.dumps(answer)
+        output.write_text(raw)
+        return NetworkSelectorTurn(
+            answer,
+            item["preparation"] + item["elapsed"],
+            completed_events(raw),
+            "",
+            0,
+            None,
+            window,
+            began.isoformat(),
+            finished.isoformat(),
+        )
+
+    runtime.update(workflow=workflow, select=select, emit=lambda **kwargs: None)
+    return harness
+
+
+def bootstrap(pilot):
+    pilot.queue()
+
+
+def checkpoint(pilot, *, kind="record", elapsed=12000, **changes):
+    pilot.queue(
+        lambda prompt: decision(prompt, kind, facts=[fact()], findings=[finding()], **changes),
+        elapsed=elapsed,
+    )
+
+
+def commit(pilot, *, elapsed=500, acknowledge_source=None):
+    pilot.queue(
+        lambda prompt: decision(
+            prompt,
+            "submit",
+            facts=[
+                fact(id="english_second_source", question="OTHER", source_step=acknowledge_source)
+            ]
+            if acknowledge_source is not None
+            else [],
+        ),
+        elapsed=elapsed,
+    )
+
+
+def assert_exact_clock(result):
+    cumulative = 0
+    for entry in result["meter"]:
+        assert type(entry["elapsed_ms"]) is int and entry["elapsed_ms"] >= 0
+        cumulative += entry["elapsed_ms"]
+        assert entry["active_ms"] == cumulative
+    assert result["active_ms"] == cumulative
+
+
+class FakeDatetime(datetime):
+    current = datetime.now(UTC)
+
+    @classmethod
+    def now(cls, tz=None):
+        return cls.current.astimezone(tz or UTC)
+
+
+def test_network_parent_accepts_model_thinking_above_old120seconds_without_source_debit(pilot):
+    pilot.queue(elapsed=180_000)
+    checkpoint(pilot, elapsed=160_000)
+    commit(pilot)
+    result = pilot.run()
+    assert result["validated"] and result["status"] == "submitted", json.dumps(result)
+    assert result["found"] == ["Q1"] and result["accepted_turns"] == 3
+    assert pilot.plans[0]["start_ms"] == 0
+    assert result["source_ms"] < 1000
+    assert result["active_ms"] > 340_000
+    assert result["wall_elapsed_ms"] >= 340_500
+    assert result["requested_reasoning_effort"] is None
+    assert result["reasoning_effort_source"] == "cli_default"
+    assert all("model_reasoning_effort" not in " ".join(argv) for argv in pilot.commands)
+    assert pilot.read("trace.json")["proposals"][0]["value"] == 6.5
+    assert_exact_clock(result)
+
+
+def test_resumed_source_ledger_preserves_only_measured_controller_ms(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot, kind="action", elapsed=200_000)
+    commit(pilot, acknowledge_source=2)
+    result = pilot.run()
+    assert result["validated"] and result["status"] == "submitted", json.dumps(result)
+    first, second = pilot.plans
+    first_summary = json.loads((pilot.controller_dirs[0] / "artifact/summary.json").read_text())
+    assert first["start_ms"] == 0
+    assert second["start_ms"] == first_summary["final"]["elapsed_ms"]
+    assert second["start_calls"] == 1 and second["start_search_queries"] == 0
+    assert first["wall_started_at"] == second["wall_started_at"]
+    assert first["wall_deadline_at"] == second["wall_deadline_at"]
+    assert result["source_ms"] < 1000 and result["active_ms"] > 200_000
+    assert len(pilot.calls) == 2
+
+
+def test_wall_guard_timeout_keeps_only_already_accepted_complete_checkpoint(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot)
+    pilot.queue(elapsed=880_000, error="selector_timeout")
+    result = pilot.run()
+    assert result["validated"] and result["status"] == "incomplete", result
+    assert result["found"] == ["Q1"] and result["accepted_turns"] == 2
+    assert len(pilot.read("accepted-journal.json")["facts"]) == 1
+    assert len(pilot.calls) == 1
+    trace = pilot.read("trace.json")
+    assert datetime.fromisoformat(trace["ended_at"]) < datetime.fromisoformat(
+        trace["wall_deadline_at"]
+    )
+    assert result["wall_elapsed_ms"] > 900_000
+
+
+def test_no_completed_model_answer_after_guard_is_accepted_or_dispatched(pilot):
+    pilot.queue(elapsed=900_001)
+    result = pilot.run()
+    assert result["status"] == "incomplete" and not result["validated"]
+    assert not pilot.calls and not pilot.plans
+    assert not (pilot.folder / "journal-events.json").exists()
+
+
+def test_original_source_and_query_caps_and_baseline_unchanged(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot)
+    commit(pilot)
+    result = pilot.run()
+    assert result["validated"], result
+    assert pilot.packet["baseline_budget"]["max_elapsed_ms"] == 120_000
+    assert result["provider"] == "exa" and result["protocol_version"] == "journal-v8"
+    for plan in pilot.plans:
+        assert plan["provider"] == "exa"
+        assert (plan["max_calls"], plan["max_search_queries"]) == (60, 6)
+        assert plan["max_ms"] == 900_000
+        assert "action_deadline_ms" not in plan
+        assert "exploration_mode" not in plan
+
+
+@pytest.mark.parametrize("bad", ["quote", "location", "stale_hash", "duplicate_fact"])
+def test_network_mode_does_not_weaken_atomic_source_citation_guards(pilot, bad):
+    bootstrap(pilot)
+    checkpoint(pilot)
+
+    def malformed(prompt):
+        extra = fact(id="extra", question="OTHER")
+        if bad == "quote":
+            extra["quotation"] = "Never published in the synthetic source."
+        elif bad == "location":
+            extra["location"] = {
+                "kind": "document_ir",
+                "block_id": "missing",
+                "section_path": [],
+                "page": None,
+            }
+        elif bad == "duplicate_fact":
+            extra = fact()
+        answer = decision(prompt, "record", facts=[extra])
+        if bad == "stale_hash":
+            answer["journal_sha256"] = "f" * 64
+        return answer
+
+    pilot.queue(malformed)
+    commit(pilot)
+    result = pilot.run()
+    assert result["validated"], result
+    assert [f["id"] for f in pilot.read("accepted-journal.json")["facts"]] == ["english"]
+    assert [e["turn"] for e in pilot.read("journal-events.json")] == [1, 2, 4]
+
+
+def test_provider429_still_stops_entire_batch_without_retry(pilot):
+    pilot.queue(lambda prompt: decision(prompt, action=source_action("search_provider")))
+    result = pilot.run()
+    assert result["error"] == "provider_http_429"
+    assert pilot.runtime["STOP"].is_set()
+    assert len(pilot.queries) == 1 and len(pilot.plans) == 1
+    assert not pilot.calls
+
+
+def test_selector_receipts_bind_exact_full_remaining_guard_and_no_short_phase_caps(pilot):
+    pilot.queue(elapsed=180_000)
+    checkpoint(pilot, elapsed=60_000)
+    commit(pilot)
+    result = pilot.run()
+    assert result["validated"], result
+    first = pilot.read("selector-01.meta.json")
+    second = pilot.read("selector-02.meta.json")
+    assert first["selector_timeout_ms"] == 900_000
+    assert second["selector_timeout_ms"] == 719_990
+    assert first["reasoning_effort"] is None
+    assert first["selector_window"]["wall_guard"]["wall_started_at"] == result["wall_started_at"]
+    assert second["wall_deadline_at"] == first["wall_deadline_at"]
+
+
+def test_blind_public_packet_does_not_expose_baseline_or_previous_run_answers(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot)
+    commit(pilot)
+    result = pilot.run()
+    assert result["validated"], result
+    encoded = json.dumps([prompt for prompt, _ in pilot.prompts])
+    assert "BASELINE_OUTPUT_MUST_NOT_ENTER_SELECTOR" not in encoded
+    assert "PRIVATE_BASELINE_SENTINEL" not in encoded
+    assert "network_actions_v1" in encoded
+
+
+def test_selector_preparation_is_not_counted_twice_against_prespawn_window(pilot):
+    pilot.queue(preparation=860_000, elapsed=20_000)
+    checkpoint(pilot, elapsed=500)
+    commit(pilot, elapsed=500)
+    result = pilot.run()
+    assert result["validated"] and result["status"] == "submitted", result
+    meta = pilot.read("selector-01.meta.json")
+    assert meta["elapsed_ms"] == 880_000
+    assert meta["selector_timeout_ms"] == 40_000
+    assert result["wall_elapsed_ms"] < 900_000
+    assert len(pilot.calls) == 1
+
+
+@pytest.mark.parametrize("status", [401, 402, 403, 429])
+def test_v8_actual_provider_refusal_stops_before_another_selector_or_case(pilot, status):
+    pilot.search_error_status = status
+    pilot.queue(lambda prompt: decision(prompt, action=source_action("search_provider")))
+    result = pilot.run()
+    assert result["error"] == f"provider_http_{status}" and pilot.runtime["STOP"].is_set()
+    assert result["provider_failure"]["provider"] == "exa"
+    assert result["provider_failure"]["http_status"] == status
+    assert len(pilot.prompts) == len(pilot.queries) == len(pilot.plans) == 1
+    assert not pilot.calls and result["found"] == []
+    assert pilot.read("checkpoint-01.json")["facts"] == []
+    summary = json.loads((pilot.controller_dirs[0] / "artifact/summary.json").read_text())
+    assert summary["final"]["stop_reason"] == ("http_429" if status == 429 else None)
+
+
+def test_v8_provider_error_cannot_become_a_source_fact(pilot):
+    pilot.search_error_status = 503
+    pilot.queue(lambda prompt: decision(prompt, action=source_action("search_provider")))
+    checkpoint(pilot)
+    pilot.queue(elapsed=900_000, error="selector_timeout")
+    result = pilot.run()
+    assert result["found"] == [] and result["status"] == "incomplete"
+    assert pilot.read("checkpoint-01.json")["facts"] == []
+    assert len(pilot.queries) == 1 and not pilot.calls
+    assert (pilot.folder / "validation-02.json").exists()
+
+
+@pytest.mark.parametrize("provider", ["exa", "exa_mcp", "none"])
+def test_v8_actual_baseline_adapter_pins_dispatch_and_checks_capture_provider(
+    tmp_path, monkeypatch, provider
+):
+    module = runpy.run_path(str(PILOT))
+    runtime = module["baseline"].__globals__
+    runtime["STOP"].clear()
+    seen = []
+
+    def workflow(repo, ref, case_id, inputs, destination):
+        seen.append(dict(inputs))
+        artifacts = destination / "artifact"
+        path = artifacts / "capture/run/capture.json"
+        path.parent.mkdir(parents=True)
+        path.write_text(
+            json.dumps(
+                {
+                    "pipeline_sha": HEAD,
+                    "config": {
+                        "search_provider": provider,
+                        "strict_expert_budget": True,
+                        "case_budgets": {case_id: {"provider": provider, "provider_failure": None}},
+                    },
+                }
+            )
+        )
+        (artifacts / "packet.json").write_text(
+            json.dumps(
+                {
+                    "baseline_budget": {
+                        "max_fetcher_calls": 60,
+                        "max_elapsed_ms": 120000,
+                        "browser_enabled": False,
+                    }
+                }
+            )
+        )
+        return 123, HEAD
+
+    monkeypatch.setitem(runtime, "workflow", workflow)
+    if provider == "exa":
+        result = runtime["baseline"](tmp_path, "ref", tmp_path / "results", "u")
+        assert result["provider"] == "exa" and result["provider_failure"] is None
+        packet = json.loads(Path(result["packet"]).read_text())
+        assert packet["baseline_budget"]["max_elapsed_ms"] == 120000
+        assert packet["expert_budget"]["max_elapsed_ms"] == 900000
+    else:
+        with pytest.raises(RuntimeError, match="provider mismatch"):
+            runtime["baseline"](tmp_path, "ref", tmp_path / "results", "u")
+        assert not (tmp_path / "results/baseline/u/result.json").exists()
+    assert seen == [
+        {
+            "mode": "expert_baseline",
+            "search_provider": "exa",
+            "extra_args": "--strict-expert-budget --finalization-reserve-ms 1000",
+        }
+    ]
+
+
+@pytest.mark.parametrize("status", [None, 401, 402, 403, 429, 503])
+def test_v8_baseline_any_observed_provider_failure_stops_batch_without_relabelling(
+    tmp_path, monkeypatch, status
+):
+    module = runpy.run_path(str(PILOT))
+    runtime = module["baseline"].__globals__
+    runtime["STOP"].clear()
+    failure = {"http_status": status, "reason": None, "error": "Synthetic fixed diagnostic"}
+
+    def workflow(repo, ref, case_id, inputs, destination):
+        artifacts = destination / "artifact"
+        path = artifacts / "capture/run/capture.json"
+        path.parent.mkdir(parents=True)
+        path.write_text(
+            json.dumps(
+                {
+                    "pipeline_sha": HEAD,
+                    "config": {
+                        "search_provider": "exa",
+                        "strict_expert_budget": True,
+                        "case_budgets": {
+                            case_id: {
+                                "provider": "exa",
+                                "provider_failure": failure,
+                                "stop_reason": "http_429" if status == 429 else None,
+                            }
+                        },
+                    },
+                }
+            )
+        )
+        (artifacts / "packet.json").write_text(
+            json.dumps(
+                {
+                    "baseline_budget": {
+                        "max_fetcher_calls": 60,
+                        "max_elapsed_ms": 120000,
+                        "browser_enabled": False,
+                    }
+                }
+            )
+        )
+        return 123, HEAD
+
+    monkeypatch.setitem(runtime, "workflow", workflow)
+    result = runtime["baseline"](tmp_path, "ref", tmp_path / "results", "u")
+    assert result["provider_failure"] == result["budget"]["provider_failure"] == failure
+    assert result["budget"]["stop_reason"] == ("http_429" if status == 429 else None)
+    assert runtime["STOP"].is_set()
+
+
+@pytest.mark.parametrize("field", ["search_provider", "algorithm_provider", "expert_provider"])
+@pytest.mark.parametrize("value", [None, "exa_mcp"])
+def test_v8_missing_or_mixed_trial_provider_fails_before_any_stage_call(
+    tmp_path, monkeypatch, field, value
+):
+    module = runpy.run_path(str(PILOT))
+    trial = {
+        "protocol_version": "journal-v8",
+        "frozen_ref": "ref",
+        "search_provider": "exa",
+        "algorithm_provider": "exa",
+        "expert_provider": "exa",
+    }
+    if value is None:
+        del trial[field]
+    else:
+        trial[field] = value
+    (tmp_path / "trial.json").write_text(json.dumps(trial))
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            str(PILOT),
+            "--repo",
+            str(tmp_path),
+            "--root",
+            str(tmp_path),
+            "--ref",
+            "ref",
+            "--stage",
+            "baseline",
+        ],
+    )
+    with pytest.raises(ValueError, match="frozen V8 trial"):
+        module["main"]()
+    assert not (tmp_path / "baseline").exists()
+
+
+def test_v8_expert_stage_cannot_ignore_provider_failure_in_baseline_results(pilot, monkeypatch):
+    import hashlib
+
+    trial = {
+        "protocol_version": "journal-v8",
+        "frozen_ref": "ref",
+        "search_provider": "exa",
+        "algorithm_provider": "exa",
+        "expert_provider": "exa",
+        "workspace_assignments_sha256": hashlib.sha256(
+            (pilot.root / "workspace-locations.json").read_bytes()
+        ).hexdigest(),
+        "workspace_receipts_sha256": hashlib.sha256(
+            (pilot.root / "workspace-receipts.json").read_bytes()
+        ).hexdigest(),
+    }
+    (pilot.root / "trial.json").write_text(json.dumps(trial))
+    (pilot.root / "baseline-results.json").write_text(
+        json.dumps(
+            {
+                "stopped": False,
+                "remaining_case_ids": [],
+                "results": [
+                    {"case_id": "u", "provider": "exa", "provider_failure": {"http_status": 402}}
+                ],
+            }
+        )
+    )
+    monkeypatch.setitem(pilot.runtime["legacy"], "COHORT", ("u",))
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            str(PILOT),
+            "--repo",
+            str(pilot.repo),
+            "--root",
+            str(pilot.root),
+            "--ref",
+            "ref",
+            "--stage",
+            "experts",
+        ],
+    )
+    with pytest.raises(ValueError, match="Provider-stopped"):
+        pilot.runtime["main"]()
+    assert not pilot.prompts and not pilot.plans
+
+
+def test_outer_guard_starts_before_university_setup_and_is_never_reset(pilot, monkeypatch):
+    original = Isolation.prove_access
+
+    def slow_setup(self, *args):
+        FakeDatetime.current += timedelta(milliseconds=900_001)
+        return original(self, *args)
+
+    monkeypatch.setattr(Isolation, "prove_access", slow_setup)
+    result = pilot.run()
+    assert result["status"] == "incomplete" and not result["validated"]
+    assert result["error"] == "wall_guard_exhausted"
+    assert result["wall_elapsed_ms"] >= 900_001
+    assert not pilot.calls and not pilot.plans and not pilot.prompts
+
+
+def test_expert_can_use_more_than_twenty_source_actions_before_network_or_wall_limits(pilot):
+    pilot.queue(
+        lambda prompt: decision(prompt, action=source_action(url="https://u.edu/admissions/1")),
+        elapsed=500,
+    )
+    for source_step in range(1, 23):
+
+        def observe_then_read(prompt, step=source_step):
+            return decision(
+                prompt,
+                "action",
+                facts=[fact(id=f"english_{step}", question="OTHER", source_step=step)],
+                action=source_action(url=f"https://u.edu/admissions/{step + 1}"),
+            )
+
+        pilot.queue(observe_then_read, elapsed=500)
+    commit(pilot, elapsed=500, acknowledge_source=23)
+    result = pilot.run()
+    assert result["validated"] and result["status"] == "submitted", result
+    assert len(pilot.calls) == 23
+    assert result["accepted_turns"] == 24
+    assert result["completion_kind"] != "turn_limit_checkpoint"
+    assert result["wall_elapsed_ms"] < 900_000

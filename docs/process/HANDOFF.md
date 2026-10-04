@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current execution holder: gpt-6-astra, 2026-10-04 20:55UTC, [expert-500], task/expert-500-phase1, takeover HEADe984656.** Owner says continue. First reconcile the original Exa MCP429 with current public provider guidance and the existing account's read-only free allowance; no search request, provider/identity substitution, key change or trial allocation during this availability check. V7 source702e096 remains immutable with12/12 exact-source cloud jobs passed; current documentation HEADe984656 also passes8/8 cloud jobs. Local4071/94.90%,frontend232,static361,actual-parent271 and all original raw proof remain preserved. No40/62 result, fact-miss diagnosis or50/HELDOUT expansion is claimed. Historical holder paragraphs/tables below do not override this entry. Production provider/counter repair is deferred.
+**Current execution holder: gpt-6-astra, 2026-10-04 21:38UTC, [expert-500], task/expert-500-phase1, checkpoint48062ce.** Main PR48 at1d2116775e8ab2506a3a0907252b01a59f76ae21 is integrated. Prospective V8 pins both arms to the already-authorized existing-key exa/free allowance; no new key, purchase or production setting. Final local4075/94.90%, frontend232 on unchanged tree, static362, actual-parent389 and isolated demo/single-head gates pass. Eleven actual helpers/twenty modules/fourteen raw gate logs are frozen once; original V7 neutral is reused with fourteen unchanged runtime hashes. No V8 trial/source request/score yet. Commit/tag source, confirm exact-source cloud gates, then once-only same-ten pilot; stop on provider refusal. Old holder entries remain historical.
 
 **Search-layer selection holder: arena-01a0f379, taken 2026-10-02, re-taken 2026-10-03**, branch `arena/01a0f379-ashyq-apply` from `origin/main@b145da2` (PR #40). The owner's brief of 2026-10-02 sets four ordered tasks: (1) a workflow-only `search_provider` input for `benchmark-capture`, (2) the first honest ten-case capture after PR #32–#36 with recorded before/after numbers, (3) a live check of https://ashyq-apply-alisher.fly.dev with one test account, (4) evidence-driven fixes one at a time. Free search only: keyless `exa_mcp`, keyed `exa` on the remaining balance, or `none`; Serper is excluded (balance −5). No production setting changes, no purchases, no applicant data in Git.
 
@@ -53,6 +53,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[expert-500] Current prospective V8 source preparation complete; draft PR46, live same-ten comparison pending.** Owned Free-tier Exa dashboard has19.25USD/no payment method/zero purchased credits; prior owner brief authorizes existing-key exa. Anonymous V6b429 is not retried or declared reset. Main PR48 is integrated at48062ce; V8 itself adds no production/workflow edit. Final4075/94.90%, frontend232, static362, parent389 gates pass. Once-only protocol.2026-10-05/v8 freeze binds11helpers/20modules/14original raw gates and the original V7 neutral proof. Source tag/CI and fresh V8 trial allocation next; no40/62 score, expert-only diagnosis or50/HELDOUT expansion yet. All old freezes/traces remain unchanged.
 
 **[expert-500] Current V7 source preparation complete; draft PR46, live repeat externally stopped.** Owner60reads/6queries network budget, model thinking excluded, immutable900s hang guard, normal CLI effort and120s algorithm are implemented. Actual parent/report/canonical-workspace/transport271 mocks and full4071/94.90% gates pass. Final11helpers/20modules,14 raw gate logs and the original three-phase neutral proof are frozen under protocol.2026-10-04/v7;14 original neutral request/stream/output/mapping records are preserved separately under v7-neutral-records without altering the primary freeze. V7 trial has not been allocated, no V7 university/source call or seal/label score exists. Actual V6b provider429 still requires a legitimate free availability restoration before the same-ten run. Source tag and selected-source CI are complete (702e096,12/12);40/62 and complete per-fact causes remain required before50-case expansion. All V1–V6b andHELDOUT150 are preserved.
 
@@ -133,6 +135,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+- [expert-500] 48062ce integrates newly merged main PR48 and preserves the prospective keyed-free V8 helper draft, additive report provider pin and read-only availability evidence. Main app/frontend/migration trees match exactly; all existing protocol/gold/binding bytes remain preserved.
 
 - 2026-10-04 [expert-500] 702e096c6363748c53e7750e1c6411e2821585ae: final immutable V7 network-action protocol/source pin, tag expert500-phase1-v7-2026-10-04-702e096. Exact source passed12/12 jobs across37220350910(push),37220352840(PR),37220437042(tag). Original JSON job records/hashes are preserved under v7-ci; core v7 freeze and all old versions remain unchanged. No V7 live trial allocated.
 
@@ -1793,6 +1797,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**CURRENT NEXT, 2026-10-04 21:38UTC [expert-500]: push/tag V8 source and wait for its exact-source cloud matrices before live allocation.** Local source freeze manifestSHA256a2c467a2c50a49fa94ad08c61b673f0661f05f6a0e360528f008d7942e390656; original raw4075/94.90%,frontend232,static362,parent389 gates retained. Create one immutable source tag, verify selected commit and all CI jobs, then run /tmp/unimatch-expert500-launch-v8.py --harness-sha SOURCE --frozen-ref TAG only on exact source. Fresh root artifacts/expert-500/phase1-v8-2026-10-05 must not exist. Use journal-pilot-v8 baseline, then experts only if all ten baseline runs are complete without provider failure. Both arms exa, same60/6, expert900s normal effort, algorithm120s. Seal before unchanged62 labels; preserve all raw attempts; no retries after provider/auth/quota refusal, no heldout150 or50-case expansion without40/62 and required per-fact diagnoses.
 
 **CURRENT WRITE-AHEAD, 2026-10-04 21:26UTC [expert-500]: integrate newly merged main PR48 before V8 source freeze.** Fetch moved origin/main from1f64a3a to1d2116775e8ab2506a3a0907252b01a59f76ae21; its nine files are the search throttle/count fix and regression tests, with no evaluation, frontend, migration, gold or binding changes. Merge this main into task/expert-500-phase1 while preserving every old frozen artifact. Rerun backend full coverage/static/demo and actual V8 parent mocks against the integrated source; reuse frontend and neutral proof only because their exact bytes remain unchanged. Existing-key exa remains the authorized free provider, both arms pinned; no live allocation before exact-source gates.
 
@@ -3775,6 +3781,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**CURRENT V8 integrated-source local gates, 2026-10-04 21:38UTC:** backend4075 passed94.90% coverage in397.66s; app/tests/evaluation Ruff/format/mypy362 passed; unchanged frontend232/typecheck/lint/build passed; final-byte actual parent/report/canonical-workspace/transport389 passed, all9 new helper static gates passed. Synthetic isolated demo20/Groningen first/UBC OUT_OF_BUDGET passed; one Alembic head d8e412c6a901. Once-only freeze11helpers/20modules/14original gate logs; reused original V7 three-phase neutral with14 unchanged runtime imports and0 new source/model calls. Selected-source cloud CI and actual pilot are pending. Initial formatting/import-context and demo-checker negatives are preserved in preparation-diagnostics; no product regression was hidden.
+
 **CURRENT V8 preparation gates before new-main integration:** backend4071/94.89%, frontend232/typecheck/lint/build, static361 and parent388 pass. Current origin/main advanced during preparation; integrated-backend/parent gates pending. Initial parent lint was six autofixable import/parenthesis issues; fixed without behavior change. Isolated demo checker initially checked admissions_fit rather than ranking.bucket; corrected checker passes20/Groningen-first/UBC-OUT_OF_BUDGET without app changes. Original failed and final gate logs retained separately.
 
 - 2026-10-04 17:49UTC [expert-500] final selectedsource702e096 cloud12/12 success:37220350910,37220352840,37220437042. Exact head/source identity and all four jobs/run verified from original GitHub JSON, archived under v7-ci. No source dispatch in CI. Local4071/94.90%,frontend232,static361,actualparent271,syntheticdemo20 and singlehead remain final source proof. Live admission still pending; no new labels/score.
@@ -4270,6 +4278,8 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+**CURRENT V8:** no owner clarification is required for the already-authorized existing-key free route. Dashboard/secret metadata does not prove key match; actual original baseline will determine availability. Any authentication/quota/provider refusal must stop and be retained unscored; never purchase, switch identity/IP or retry the stopped attempt. Exact-source CI must finish before allocation;40/62 and complete diagnoses remain unmeasured. Historical anonymous-MCP block is retained and is not claimed reset.
+
 **[expert-500] Current V7 live blocker (2026-10-04):** V6b's original Exa MCP response recordedHTTP429 in run37207678059, with no reset time. The owner's first-person instruction says exhausted quota must stop without repeated retries/IP/provider workaround; no subsequent source request has been made. A concise owner question asks for the provider's free-limit restoration confirmation or stated reset time. New protocol/source/local proof are prepared, but no new ten-university result or per-fact diagnosis is claimed. Do not assume elapsed time restores the quota, do not buy credits or switch paid providers, and do not expand past40/62.
 
 **[expert-500] resolved external-state discrepancy:** main1f64a3a includes mergedPR43/PR47, Phase0 no longer awaiting45. V5 remained on historical app tree53d572; main is4910054. Import main only after V5 quarantine commit. Prospective production audit found attempted-family/subject diagnostics and cross-institution catalogue identity429 gaps; track in a separate production task, no Phase1 app mutation.
@@ -4562,6 +4572,8 @@ next agent does not reopen it.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
+- [expert-500] Prospective V8 pins search_provider/algorithm_provider/expert_provider to existing keyed exa. Pure validate_source_run gains optional provider argument with unchanged historical default exa_mcp. V8 parent/report/dispatch/raw/seal reject provider drift/refusals; original V7 helpers/module archive are unchanged. No product/schema/workflow contract change.
+
 - 2026-10-04 [expert-500] owner-authorized prospective V7: comparison_mode/budget_origin independent_network_budget, budget_model network_actions_v1; exact expert_budget60reads/6queries with model_thinking_included=false and max_elapsed_ms900000 explicitly hang_guard_only. Optional additive trace budget_model/wall_started_at/wall_deadline_at bind one immutable aware UTC900s guard and zero initial source counters; legacy120s traces stay supported. New network_turn_policy uses normal CLI default effort with no override or phase caps, new network_report validates source-only counters and separate accepted-prefix/all-action audit. Per expert-only fact exact miss-cause dictionary, null remains unresolved rather than guessed; outside_policy diagnostic facts excluded from gate. No app/frontend/gold/binding/HELDOUT change.
 
 - [expert-500] V5 evaluation only: new `expert/turn_policy.py`4/2 complete-delta caps, exact cumulative adaptive bootstrap/data/minimal windows and Astra low Isolation wrapper/argv proof; new `expert/location_feedback.py` bounded same-source structural diagnostics. New parent/request/process/event fields bind policy, start/window, effort, schema, argv and independently assigned/proved workspace. Replays all attempts, retains terminal timeoutNone returncode, requires source receipts and immutable all-ten seal before labels. No existing journal/citation/mapper/app/gold/registry change.
@@ -4683,6 +4695,8 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 | 2026-09-09 | security audit | `security.py`: `SCRYPT_R`, `SCRYPT_P`, `_maxmem(n, r)`; `routes_metrics` compares bytes | scrypt cost schedule and the 500-on-non-ASCII bearer. |
 
 ## 9. Traps and lessons (things that cost a session; keep them)
+
+- [expert-500] Main can advance during preparation: fetch before final freeze and integrate9-file PR48 without deleting task-only historical artifacts. Annotated tags require rev-parse TAG^{commit}; source-only launcher regression pins this. Ruff first-party classification can differ with invocation cwd; root final-config gates define the frozen import formatting. Demo acceptance uses ranking.bucket, not admissions_fit; failed checker and corrected final run are retained separately.
 
 **macOS expert workspace trap (V5):** tempfile.mkdtemp preserves logical /var; Isolation.local resolves /private/var; schema/output paths retained logical spelling too. Frozen replay exact binding rightly refuses inconsistent records. Normalize the allocator once before all assignments/arguments, exercise an actual filesystem alias and command replay in no-source preflight; preserve V5 UNSCORED, never edit its assignment/report to recover a score.
 
@@ -4941,6 +4955,7 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 
 ## 11. Session log (one line per session, newest last)
 
+| 2026-10-04 21:38UTC | gpt-6-astra | 48062ce -> prospective V8 source freeze | Main PR48 integrated;4075/94.90%,frontend232,static362,parent389 pass;11helpers/20modules/14raw gates frozen once. Existing free keyed Exa pinned both arms; no new source/model call. Commit/tag/CI before once-only ten-case measurement. |
 | 2026-10-04 21:26UTC | gpt-6-astra | fedc98a -> main PR48 integration checkpoint | Legitimate existing free Exa allowance confirmed read-only; prospective V8 pins both arms to authorized keyed exa. Initial gates pass; main advanced to1d21167, integrate before freeze and repeat affected gates. No new provider/university call or trial. |
 | 2026-10-04 20:55UTC | gpt-6-astra | e984656 -> read-only availability audit | Owner says continue; clean synchronized task branch, main1f64a3a unchanged, one Alembic head, current head8/8 CI and selected frozen source12/12. Inspect existing free-provider state without retrying Exa search; reconcile cohort names in the V7 report. |
 
