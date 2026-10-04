@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current execution holder: gpt-6-astra, 2026-10-04 12:38UTC, [expert-500] Phase1 V6 source integration, task/expert-500-phase1.** Approved main1f64a3a is imported without rewriting shared history; new pure canonical workspace, public question-contract and timing helpers pass the complete source gates. V6 parent/replay scripts remain drafts outside the repository, with deeper navigation outcome checks still being repaired before a freeze. V5 remains unscored and quarantined; no new live university calls or admission. Earlier holder/integration entries are historical context.
+**Current execution holder: gpt-6-astra, 2026-10-04 13:34UTC, [expert-500] Phase1 V6b source preparation, task/expert-500-phase1.** Actual ten-case catalogue adapter preflight and all 360 actual-parent checks are green. Preserve the pre-live V6 candidate08f3879 and V5 unscored quarantine. V6b changes only cloned caller adapters; repository application/tests/protocol modules/frontend remain gate-tested and unchanged. Next freeze/publish the ten helper sources, verify exact-source cloud gates, allocate a fresh original trial once, then run10+10. No V6/V6b university calls, seal, score or50-case admission yet. Earlier holder/integration entries are historical context.
 
 **Search-layer selection holder: arena-01a0f379, taken 2026-10-02, re-taken 2026-10-03**, branch `arena/01a0f379-ashyq-apply` from `origin/main@b145da2` (PR #40). The owner's brief of 2026-10-02 sets four ordered tasks: (1) a workflow-only `search_provider` input for `benchmark-capture`, (2) the first honest ten-case capture after PR #32–#36 with recorded before/after numbers, (3) a live check of https://ashyq-apply-alisher.fly.dev with one test account, (4) evidence-driven fixes one at a time. Free search only: keyless `exa_mcp`, keyed `exa` on the remaining balance, or `none`; Serper is excluded (balance −5). No production setting changes, no purchases, no applicant data in Git.
 
@@ -1787,6 +1787,14 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**CURRENT EXECUTION NEXT — 2026-10-04 13:34UTC [expert-500] V6b real-cohort preflight passed.** 360 actual-parent checks (74pilot/268report/18real-cohort) and configured Ruff/format/isolated mypy are green. The real10-entry COHORT dictionary is preserved throughout tests; only actual caller boundaries use explicit tuples. Actual launcher allocates once and binds both canonical/device/inode maps and initial trial; actual parent baseline callbacks cover all ten with no model/source/label I/O. Reuse the unchanged once-only V6 neutral transport proof. Snapshot ten V6b helper sources and19modules, publish source/tag, wait selected-source cloud gates, then invoke the frozen launcher while HEAD still equals that source. Fresh10baselines+10experts follow, all raw replay/seal before62labels. See EXPERT500_PHASE1_V6B_2026-10-04.md. Preserve08/V1–V5; no retry/rescore/extra allowance/50-case admission.
+
+**Historical pre-live repair plan, completed by the entry above:**
+
+**CURRENT EXECUTION NEXT — 2026-10-04 13:18UTC [expert-500] pre-live actual-cohort adapter repair.** Frozen prospective candidate08f3879 has no tag/trial/university requests. Before launch root checked actual live.COHORT and found it is a10-entry dict, while the new workspace helper correctly requires aSequence; synthetic fixtures/neutral had tuple cohorts. Preserve08 snapshots and original /tmpV6 helpers; clone prospective V6b parents/report/launcher/tests/export/freeze, adapt only these callers using tuple(COHORT)/tuple(legacyCOHORT). Add a no-source actual launcher+parent-main+canonical argv replay using the real10-case COHORT, not a mockedone-case tuple, before another source freeze. Reuse the unchanged once-only real V6 neutral transport proof; no repeatmodel/source. No trial exists to repair/reset and no labelscore to change. After green actual-cohort gate, snapshot newV6b bytes/source/tag and freshpair.
+
+**Historical candidate freeze plan, superseded before live launch:**
 
 **CURRENT EXECUTION NEXT — 2026-10-04 13:10UTC [expert-500] frozen V6 source publication and fresh paired launch.** V6 actual parent/replay342, full3884/94.89% source, frontend232 and real once-only tool-free canonical neutral9783/20038/6713ms all passed. Both original mapping hashes, launcher itself, strict raw identity/provider/effective49k deadline, postcharged source start and commit/proposal/receipt chronology are bound. Nine helpers/19modules snapshotted before live calls; preserve these bytes. Publish this source/tag, verify its exact-head cloud gates, create a new original10-case assignment/receipt mapping before any baseline, then run fresh10baselines+10blindexperts on that same source. Complete all-ten raw replay/seal before unchanged62labels. No model/source retry, posthoc V5 score, allowance increase or50-case/HELDOUT expansion. See EXPERT500_PHASE1_V6_2026-10-04.md.
 
@@ -3737,6 +3745,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+- 2026-10-04 13:34UTC [expert-500] V6b actual-parent360 passed in17.53s:74pilot/268report/18real10-case launcher+parent+argv tests, zero source/model/label I/O. Ruff and format with backend/ruff.toml green; isolated mypy with backend/mypy.ini green5files. Complete repository3884/94.89%, frontend232 and static356 reused because functional sources are unchanged; original/new gate logs fingerprinted. Unchanged original neutral transport script/mappings/streams/output hashes replayed before new snapshot; no repeated model probe. Pre-live V6 cloud runs37204671939/37204674452 bothsuccess, but prospectiveV6b selected-source gates still required.
+
 - 2026-10-04 13:10UTC [expert-500] actual V6 freeze preflight complete: full3884/94.89%, Ruff/format/mypy356 and frontend232/type/lint/build; actual parent/reporter342 (74/268), isolated parent mypy5 and B023-only synchronous-callback Ruff exception. Three once-only real neutral phases9783/20038/6713ms, cumulative36842, zero source requests, actual canonical/device/inode/Seatbelt/argv/completed-stream proofs passed. Prior four draft boolean failures and all independent review clock/chronology/raw-stop/deadline findings resolved by explicit strict tests. Nine helpers/19modules prospective frozen snapshots, no university V6 measurement yet.
 
 - 2026-10-04 12:30UTC [expert-500] prospective V6 pure source plus approved main1f64a3a: full backend3884 passed/94.89% coverage, Ruff/format/mypy356 source files, frontend232/typecheck/lint/build all passed. Source app tree49100542fa1ddd00ca3deff615422114ab54a27e; one migration headd8e412c6a901. Actual V6 pilot draft71 cases passed; report draft235 passed/4 boolean navigation receipt cases red and independent reviewer found charged-clock boundary/summary stop reason binding risks. These parent scripts are not frozen or live; no V6 result exists. Next gate must resolve all draft checks before source freeze.
@@ -5051,3 +5061,7 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-04 12:38UTC gpt-6-astra [expert-500]: 3eb2e8b → approved-main integration checkpoint; pure V6 source green, actual parent/reporter still draft and deeper replay checks pending; zero new university calls.
 
 - 2026-10-04 13:10UTC gpt-6-astra [expert-500]: 28d18e7 → V6 source freeze publication;342 actual-parent tests and canonical real neutral passed, new fresh paired source/tag/CI launch next; V5 remains unscored.
+
+- 2026-10-04 13:18UTC gpt-6-astra [expert-500]:08f3879 preserved; pre-live actual COHORT dict/Sequence mismatch caught before tag/trial/source; explicit caller adapters + actual10-case launcher preflight now prospectiveV6b.
+
+- 2026-10-04 13:34UTC gpt-6-astra [expert-500]: actual V6b caller repair/preflight360 and configured static checks green; ten helper snapshot and new selected-source publication next, still zero live V6/V6b university calls.

@@ -1,0 +1,77 @@
+{
+  "all_passed": true,
+  "backend_tests": 3884,
+  "backend_coverage_percent": 94.89,
+  "frontend_tests": 232,
+  "mypy_source_files": 356,
+  "parent_cycle_tests": 360,
+  "pilot_parent_tests": 74,
+  "report_replay_tests": 268,
+  "question_contract_tests": 112,
+  "workspace_policy_tests": 72,
+  "research_timing_tests": 53,
+  "parent_static_mypy_files": 5,
+  "parent_lint_ignore": [
+    "B023"
+  ],
+  "parent_lint_reason": "Meter callbacks execute synchronously in the same loop iteration; no callback escapes to a later iteration. All repository app/tests/evaluation Ruff rules remain unchanged.",
+  "log_fingerprints": {
+    "backend": {
+      "path": "/tmp/unimatch-expert500-v6-backend.txt",
+      "sha256": "354b9e5c1d27677e68b570a6f0c6eed16c6004a6985cbce6775f71b3861369d8"
+    },
+    "ruff": {
+      "path": "/tmp/unimatch-expert500-v6-ruff.txt",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "format": {
+      "path": "/tmp/unimatch-expert500-v6-format.txt",
+      "sha256": "36cf8af8d105b4a260074246b932f4daff21638d0552a8d54fc9d92076312dfd"
+    },
+    "mypy": {
+      "path": "/tmp/unimatch-expert500-v6-mypy.txt",
+      "sha256": "66b812ace6fcb7ea7067dfe0a1cd7b039632cbe3c913df19b43527865444c9c4"
+    },
+    "frontend-type": {
+      "path": "/tmp/unimatch-expert500-v6-frontend-type.txt",
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02"
+    },
+    "frontend-lint": {
+      "path": "/tmp/unimatch-expert500-v6-frontend-lint.txt",
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a"
+    },
+    "frontend-tests": {
+      "path": "/tmp/unimatch-expert500-v6-frontend-tests.txt",
+      "sha256": "77f9e01063dd9503bbfdb8ca0c6769f164be041443ac93e970719b59ada69308"
+    },
+    "frontend-build": {
+      "path": "/tmp/unimatch-expert500-v6-frontend-build.txt",
+      "sha256": "b45a23e45d71eee1487472e9eb8444e80982820c9d91bb6c9ad182fc564a0925"
+    },
+    "v6b-parent-lint": {
+      "path": "/tmp/unimatch-expert500-v6b-parent-lint.txt",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "v6b-parent-format": {
+      "path": "/tmp/unimatch-expert500-v6b-parent-format.txt",
+      "sha256": "8e93d18ae56550d4eef2feac77e6630617c7e169246e56e39c75d58b46167985"
+    },
+    "v6b-parent-mypy": {
+      "path": "/tmp/unimatch-expert500-v6b-parent-mypy.txt",
+      "sha256": "e317872697c2cbfdefa321527a6efe73290dff3a390b0fa8723b87092eccba6a"
+    },
+    "v6b-parent-final": {
+      "path": "/tmp/unimatch-expert500-v6b-parent-final.txt",
+      "sha256": "afc752ca19ec26039e9d760c08e19b72c832f064d9d5d14fd22931a9185c4c5a"
+    }
+  },
+  "actual_ten_case_launcher_preflight": true,
+  "actual_cohort_preflight_tests": 18,
+  "actual_cohort_preflight_source_requests": 0,
+  "actual_cohort_preflight_model_requests": 0,
+  "source_gate_reuse": {
+    "source": "28d18e79c288d69bcbc4b3d2becaae41dc47edd6",
+    "same_repository_application_tests_frontend_and_protocol_modules": true,
+    "new_actual_parent_gates": "V6b 360 plus isolated static checks"
+  }
+}
