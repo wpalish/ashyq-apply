@@ -1,0 +1,159 @@
+{
+  "schema_version": "1",
+  "case_id": "toronto",
+  "packet_sha256": "b6ab5d285d413255a2c2d8d3761be58d88c1a9ce102ebfa739257ccf40be6d2f",
+  "baseline_pipeline_sha": "24865069715f82a22d83ade810b367c0d5442c67",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T10:25:58.956153+00:00",
+  "ended_at": "2026-10-04T10:28:59.648593+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T10:26:37.234686+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://future.utoronto.ca/undergraduate-programs/computer-science/"
+      },
+      "outcome": "http_error",
+      "outcome_status": "failure",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-001.json",
+      "raw_log_sha256": "94d0c48f465a51532e08e9fb1220b2b7d1dc69f70fd6039a2e177b2f5af021f6",
+      "elapsed_ms": 112,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 9767,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Start with the official undergraduate Computer Science programme page.",
+      "observed_from_step": null,
+      "action": "fetcher: https://future.utoronto.ca/undergraduate-programs/computer-science/",
+      "stage": "page_understanding",
+      "url": "https://future.utoronto.ca/undergraduate-programs/computer-science/",
+      "final_url": "https://future.utoronto.ca/undergraduate-programs/computer-science/"
+    },
+    {
+      "at": "2026-10-04T10:27:29.613754+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:utoronto.ca computer science undergraduate bachelor admission international English Kazakhstan scholarships",
+        "domains": [
+          "utoronto.ca"
+        ],
+        "max_results": 8
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-002.json",
+      "raw_log_sha256": "8b6e5aced5a6bb4731dd61d84c43604dac90b1091c5cfdfcd0b32fe6fd844963",
+      "elapsed_ms": 1062,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 19659,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "The initial programme page returned HTTP 403; search for an accessible official programme source.",
+      "observed_from_step": 1,
+      "action": "search_provider: site:utoronto.ca computer science undergraduate bachelor admission international English Kazakhstan scholarships",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T10:28:23.260843+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.utsc.utoronto.ca/admissions/programs/computer-science"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-003.json",
+      "raw_log_sha256": "ec5432394d486c45338521e2da58dbfe8039abee33d6405922d0910ccd7a7fe3",
+      "elapsed_ms": 682,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 29752,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "Search results identify an official Scarborough programme page; snippets are discovery only.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://www.utsc.utoronto.ca/admissions/programs/computer-science",
+      "stage": "page_understanding",
+      "url": "https://www.utsc.utoronto.ca/admissions/programs/computer-science",
+      "final_url": "https://www.utsc.utoronto.ca/admissions/programs/computer-science"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

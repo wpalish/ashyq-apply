@@ -1,0 +1,135 @@
+{
+  "schema_version": "1",
+  "case_id": "vienna",
+  "packet_sha256": "33c67366ccabd0bb5cd48c59f3aad8a4cc468d5210174029ebf20f0293ba60cc",
+  "baseline_pipeline_sha": "24865069715f82a22d83ade810b367c0d5442c67",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T10:21:46.054732+00:00",
+  "ended_at": "2026-10-04T10:23:56.126604+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T10:22:29.319842+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:univie.ac.at Computer Science bachelor admission",
+        "domains": [
+          "univie.ac.at"
+        ],
+        "max_results": 5
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "vienna-001.json",
+      "raw_log_sha256": "d63c730da7e73a43f41c5ad5d8283ed03ebbee2004efdc7dc42e668b4e5f7dbe",
+      "elapsed_ms": 2370,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 11181,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "Find the official bachelor Computer Science programme and admissions route.",
+      "observed_from_step": null,
+      "action": "search_provider: site:univie.ac.at Computer Science bachelor admission",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T10:23:22.205799+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "vienna-002.json",
+      "raw_log_sha256": "8c23712abac1ce323b8dbb9ca6d760ee802480dd66b0a399bcd7d4dc81250432",
+      "elapsed_ms": 1469,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 22050,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Search identified an official Computer Science bachelor page; read it to establish programme identity and admission links.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "stage": "page_understanding",
+      "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "final_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

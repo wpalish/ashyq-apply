@@ -1,0 +1,55 @@
+{
+  "schema_version": "1",
+  "journal_sha256": "5230b849637d59fb31aadcd2930f88003df89d2bedeab84c3cc52ce2d0593654",
+  "facts": [
+    {
+      "claim_key": "programme.exists",
+      "id": "f1",
+      "location": {
+        "block_id": "b105",
+        "kind": "document_ir",
+        "page": null,
+        "section_path": [
+          "Computer Science (BA)",
+          "Program information",
+          "Program overview"
+        ]
+      },
+      "question": "Q0",
+      "quotation": "Bachelor of Arts",
+      "scope": {
+        "academic_year": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "programme": "Computer Science (BA)",
+        "qualification": null,
+        "university": "University of British Columbia"
+      },
+      "source_step": 3,
+      "value_json": "true"
+    }
+  ],
+  "question_findings": [
+    {
+      "fact_ids": [
+        "f1"
+      ],
+      "observation": "The official Vancouver programme overview identifies the degree as Bachelor of Arts.",
+      "question": "Q0",
+      "scope": {
+        "academic_year": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "programme": "Computer Science (BA)",
+        "qualification": null,
+        "university": "University of British Columbia"
+      },
+      "status": "found",
+      "supporting_steps": []
+    }
+  ]
+}

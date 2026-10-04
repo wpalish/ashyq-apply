@@ -1,0 +1,1209 @@
+{
+  "seal_sha256": "411a369b54cfdb43c18500124aea730b48b66a54a1f9547881b6ed7e634c7b5f",
+  "dataset_file_sha256": "f72e5cf3dfdf23a1ee0a7d7ec1c00803c4161adcd467e4d9cc6895ea9bba0de8",
+  "baseline_metrics": {
+    "programme_page_recall": {
+      "numerator": 3,
+      "denominator": 10,
+      "value": 0.3
+    },
+    "programme_page_precision": {
+      "numerator": 3,
+      "denominator": 15,
+      "value": 0.2
+    },
+    "recall_at_5": {
+      "numerator": 3,
+      "denominator": 10,
+      "value": 0.3
+    },
+    "recall_at_10": {
+      "numerator": 3,
+      "denominator": 10,
+      "value": 0.3
+    },
+    "recall_at_20": {
+      "numerator": 3,
+      "denominator": 10,
+      "value": 0.3
+    },
+    "claim_precision": {
+      "numerator": 6,
+      "denominator": 7,
+      "value": 0.8571428571428571
+    },
+    "claim_recall": {
+      "numerator": 4,
+      "denominator": 62,
+      "value": 0.06451612903225806
+    },
+    "claim_recall_same_page": {
+      "numerator": 1,
+      "denominator": 62,
+      "value": 0.016129032258064516
+    },
+    "unsupported_claim_rate": {
+      "numerator": 0,
+      "denominator": 1,
+      "value": 0.0
+    },
+    "wrong_scope_claim_rate": {
+      "numerator": 1,
+      "denominator": 7,
+      "value": 0.14285714285714285
+    },
+    "critical_field_coverage": {
+      "numerator": 1,
+      "denominator": 210,
+      "value": 0.004761904761904762
+    },
+    "scholarship_discovery_recall": {
+      "numerator": 0,
+      "denominator": 3,
+      "value": 0.0
+    },
+    "scholarship_applicability_precision": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "scholarship_applicability_recall": {
+      "numerator": 0,
+      "denominator": 7,
+      "value": 0.0
+    },
+    "scholarship_coverage_precision": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "primary_source_rate": {
+      "numerator": 12,
+      "denominator": 12,
+      "value": 1.0
+    },
+    "verbatim_evidence_rate": {
+      "numerator": 1,
+      "denominator": 7,
+      "value": 0.14285714285714285
+    },
+    "current_evidence_rate": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "conflict_visibility_rate": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "support_adjudication_rate": {
+      "numerator": 1,
+      "denominator": 12,
+      "value": 0.08333333333333333
+    },
+    "claim_adjudication_rate": {
+      "numerator": 7,
+      "denominator": 12,
+      "value": 0.5833333333333334
+    },
+    "human_review_rate": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    }
+  },
+  "expert_metrics": {
+    "programme_page_recall": {
+      "numerator": 0,
+      "denominator": 10,
+      "value": 0.0
+    },
+    "programme_page_precision": {
+      "numerator": 0,
+      "denominator": 2,
+      "value": 0.0
+    },
+    "recall_at_5": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "recall_at_10": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "recall_at_20": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "claim_precision": {
+      "numerator": 2,
+      "denominator": 2,
+      "value": 1.0
+    },
+    "claim_recall": {
+      "numerator": 2,
+      "denominator": 62,
+      "value": 0.03225806451612903
+    },
+    "claim_recall_same_page": {
+      "numerator": 0,
+      "denominator": 62,
+      "value": 0.0
+    },
+    "unsupported_claim_rate": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "wrong_scope_claim_rate": {
+      "numerator": 0,
+      "denominator": 2,
+      "value": 0.0
+    },
+    "critical_field_coverage": {
+      "numerator": 1,
+      "denominator": 210,
+      "value": 0.004761904761904762
+    },
+    "scholarship_discovery_recall": {
+      "numerator": 0,
+      "denominator": 3,
+      "value": 0.0
+    },
+    "scholarship_applicability_precision": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "scholarship_applicability_recall": {
+      "numerator": 0,
+      "denominator": 7,
+      "value": 0.0
+    },
+    "scholarship_coverage_precision": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "primary_source_rate": {
+      "numerator": 4,
+      "denominator": 4,
+      "value": 1.0
+    },
+    "verbatim_evidence_rate": {
+      "numerator": 0,
+      "denominator": 2,
+      "value": 0.0
+    },
+    "current_evidence_rate": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "conflict_visibility_rate": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "support_adjudication_rate": {
+      "numerator": 0,
+      "denominator": 4,
+      "value": 0.0
+    },
+    "claim_adjudication_rate": {
+      "numerator": 2,
+      "denominator": 4,
+      "value": 0.5
+    },
+    "human_review_rate": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    }
+  },
+  "cases": [
+    {
+      "case_id": "groningen",
+      "expert_status": "incomplete",
+      "expert_error_type": "selector_timeout",
+      "expert_active_ms_recorded": 33157,
+      "completion_kind": null,
+      "accepted_turns": 1,
+      "rejected_checkpoints": 1,
+      "unmetered_final_selector_timeout_lower_bound_ms": null,
+      "expert_reads": 1,
+      "expert_queries": 0,
+      "expert_questions": {
+        "Q0": "unresolved",
+        "Q1": "unresolved",
+        "Q2": "unresolved",
+        "Q3": "unresolved",
+        "Q4": "unresolved",
+        "Q5": "unresolved",
+        "Q6": "unresolved"
+      },
+      "algorithm_matches_expert": {
+        "Q0": null,
+        "Q1": null,
+        "Q2": null,
+        "Q3": null,
+        "Q4": null,
+        "Q5": null,
+        "Q6": null
+      },
+      "miss_diagnosis": [],
+      "baseline_budget": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "fetcher_calls": 41,
+        "search_queries": 0,
+        "blocked_search_queries": 0,
+        "network_http_requests": 79,
+        "elapsed_ms": 119004,
+        "stop_reason": "source_work_deadline_exhausted",
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 119.812673354,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "baseline_raw_keys": [],
+      "raw_row_keys": [],
+      "baseline_score": {
+        "case_id": "groningen",
+        "country": "Netherlands",
+        "site_types": [
+          "large_sitemap"
+        ],
+        "programme_hit": false,
+        "correct_claims": 0,
+        "answerable_claims": 11,
+        "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+      },
+      "expert_score": {
+        "case_id": "groningen",
+        "country": "Netherlands",
+        "site_types": [
+          "large_sitemap"
+        ],
+        "programme_hit": false,
+        "correct_claims": 0,
+        "answerable_claims": 11,
+        "error": null
+      },
+      "algorithm_core_completeness": null
+    },
+    {
+      "case_id": "delft",
+      "expert_status": "incomplete",
+      "expert_error_type": "selector_timeout",
+      "expert_active_ms_recorded": 88394,
+      "completion_kind": null,
+      "accepted_turns": 3,
+      "rejected_checkpoints": 3,
+      "unmetered_final_selector_timeout_lower_bound_ms": null,
+      "expert_reads": 1,
+      "expert_queries": 1,
+      "expert_questions": {
+        "Q0": "unresolved",
+        "Q1": "unresolved",
+        "Q2": "unresolved",
+        "Q3": "unresolved",
+        "Q4": "unresolved",
+        "Q5": "unresolved",
+        "Q6": "unresolved"
+      },
+      "algorithm_matches_expert": {
+        "Q0": null,
+        "Q1": null,
+        "Q2": null,
+        "Q3": null,
+        "Q4": null,
+        "Q5": null,
+        "Q6": null
+      },
+      "miss_diagnosis": [],
+      "baseline_budget": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "fetcher_calls": 47,
+        "search_queries": 6,
+        "blocked_search_queries": 0,
+        "network_http_requests": 50,
+        "elapsed_ms": 86551,
+        "stop_reason": null,
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 87.05420632200003,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "baseline_raw_keys": [
+        "canary",
+        "claims"
+      ],
+      "raw_row_keys": [
+        "institution",
+        "country",
+        "domain",
+        "access",
+        "robots_disallowed_requests",
+        "pages_checked",
+        "pages_failed",
+        "failures",
+        "outcomes",
+        "discovered",
+        "discovery_trace",
+        "programs",
+        "program_page_found",
+        "scholarship_page_found",
+        "discovery_notes",
+        "claims",
+        "claims_verified",
+        "completeness",
+        "eligibility",
+        "funding_fit",
+        "scholarships_found",
+        "false_positives",
+        "page_outcomes",
+        "page_types",
+        "page_diagnostics"
+      ],
+      "baseline_score": {
+        "case_id": "delft",
+        "country": "Netherlands",
+        "site_types": [
+          "course_catalogue"
+        ],
+        "programme_hit": true,
+        "correct_claims": 1,
+        "answerable_claims": 1,
+        "error": null
+      },
+      "expert_score": {
+        "case_id": "delft",
+        "country": "Netherlands",
+        "site_types": [
+          "course_catalogue"
+        ],
+        "programme_hit": false,
+        "correct_claims": 0,
+        "answerable_claims": 1,
+        "error": null
+      },
+      "algorithm_core_completeness": 0.167
+    },
+    {
+      "case_id": "aalto",
+      "expert_status": "submitted",
+      "expert_error_type": null,
+      "expert_active_ms_recorded": 105916,
+      "completion_kind": "explicit_commit",
+      "accepted_turns": 7,
+      "rejected_checkpoints": 0,
+      "unmetered_final_selector_timeout_lower_bound_ms": null,
+      "expert_reads": 3,
+      "expert_queries": 2,
+      "expert_questions": {
+        "Q0": "unresolved",
+        "Q1": "unresolved",
+        "Q2": "unresolved",
+        "Q3": "unresolved",
+        "Q4": "unresolved",
+        "Q5": "unresolved",
+        "Q6": "unresolved"
+      },
+      "algorithm_matches_expert": {
+        "Q0": null,
+        "Q1": null,
+        "Q2": null,
+        "Q3": null,
+        "Q4": null,
+        "Q5": null,
+        "Q6": null
+      },
+      "miss_diagnosis": [],
+      "baseline_budget": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "fetcher_calls": 22,
+        "search_queries": 6,
+        "blocked_search_queries": 0,
+        "network_http_requests": 4,
+        "elapsed_ms": 32379,
+        "stop_reason": null,
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 33.103246430999995,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "baseline_raw_keys": [
+        "canary",
+        "claims"
+      ],
+      "raw_row_keys": [
+        "institution",
+        "country",
+        "domain",
+        "access",
+        "robots_disallowed_requests",
+        "pages_checked",
+        "pages_failed",
+        "failures",
+        "outcomes",
+        "discovered",
+        "discovery_trace",
+        "programs",
+        "program_page_found",
+        "scholarship_page_found",
+        "discovery_notes",
+        "claims",
+        "claims_verified",
+        "completeness",
+        "eligibility",
+        "funding_fit",
+        "scholarships_found",
+        "false_positives",
+        "page_outcomes",
+        "page_types",
+        "page_diagnostics"
+      ],
+      "baseline_score": {
+        "case_id": "aalto",
+        "country": "Finland",
+        "site_types": [
+          "multilingual"
+        ],
+        "programme_hit": false,
+        "correct_claims": 0,
+        "answerable_claims": 2,
+        "error": null
+      },
+      "expert_score": {
+        "case_id": "aalto",
+        "country": "Finland",
+        "site_types": [
+          "multilingual"
+        ],
+        "programme_hit": false,
+        "correct_claims": 0,
+        "answerable_claims": 2,
+        "error": null
+      },
+      "algorithm_core_completeness": 0.0
+    },
+    {
+      "case_id": "vienna",
+      "expert_status": "incomplete",
+      "expert_error_type": "selector_timeout",
+      "expert_active_ms_recorded": 44248,
+      "completion_kind": null,
+      "accepted_turns": 2,
+      "rejected_checkpoints": 1,
+      "unmetered_final_selector_timeout_lower_bound_ms": null,
+      "expert_reads": 1,
+      "expert_queries": 1,
+      "expert_questions": {
+        "Q0": "unresolved",
+        "Q1": "unresolved",
+        "Q2": "unresolved",
+        "Q3": "unresolved",
+        "Q4": "unresolved",
+        "Q5": "unresolved",
+        "Q6": "unresolved"
+      },
+      "algorithm_matches_expert": {
+        "Q0": null,
+        "Q1": null,
+        "Q2": null,
+        "Q3": null,
+        "Q4": null,
+        "Q5": null,
+        "Q6": null
+      },
+      "miss_diagnosis": [],
+      "baseline_budget": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "fetcher_calls": 54,
+        "search_queries": 6,
+        "blocked_search_queries": 1,
+        "network_http_requests": 71,
+        "elapsed_ms": 113254,
+        "stop_reason": "search_budget_exhausted",
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 113.888125806,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "baseline_raw_keys": [
+        "canary",
+        "claims"
+      ],
+      "raw_row_keys": [
+        "institution",
+        "country",
+        "domain",
+        "access",
+        "robots_disallowed_requests",
+        "pages_checked",
+        "pages_failed",
+        "failures",
+        "outcomes",
+        "discovered",
+        "discovery_trace",
+        "programs",
+        "program_page_found",
+        "scholarship_page_found",
+        "discovery_notes",
+        "claims",
+        "claims_verified",
+        "completeness",
+        "eligibility",
+        "funding_fit",
+        "scholarships_found",
+        "false_positives",
+        "page_outcomes",
+        "page_types",
+        "page_diagnostics"
+      ],
+      "baseline_score": {
+        "case_id": "vienna",
+        "country": "Austria",
+        "site_types": [
+          "faculty_subdomain"
+        ],
+        "programme_hit": true,
+        "correct_claims": 1,
+        "answerable_claims": 4,
+        "error": null
+      },
+      "expert_score": {
+        "case_id": "vienna",
+        "country": "Austria",
+        "site_types": [
+          "faculty_subdomain"
+        ],
+        "programme_hit": false,
+        "correct_claims": 0,
+        "answerable_claims": 4,
+        "error": null
+      },
+      "algorithm_core_completeness": 0.167
+    },
+    {
+      "case_id": "warsaw",
+      "expert_status": "incomplete",
+      "expert_error_type": "selector_timeout",
+      "expert_active_ms_recorded": 117071,
+      "completion_kind": null,
+      "accepted_turns": 2,
+      "rejected_checkpoints": 5,
+      "unmetered_final_selector_timeout_lower_bound_ms": null,
+      "expert_reads": 1,
+      "expert_queries": 1,
+      "expert_questions": {
+        "Q0": "unresolved",
+        "Q1": "unresolved",
+        "Q2": "unresolved",
+        "Q3": "unresolved",
+        "Q4": "unresolved",
+        "Q5": "unresolved",
+        "Q6": "unresolved"
+      },
+      "algorithm_matches_expert": {
+        "Q0": null,
+        "Q1": null,
+        "Q2": null,
+        "Q3": null,
+        "Q4": null,
+        "Q5": null,
+        "Q6": null
+      },
+      "miss_diagnosis": [],
+      "baseline_budget": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "fetcher_calls": 41,
+        "search_queries": 0,
+        "blocked_search_queries": 0,
+        "network_http_requests": 80,
+        "elapsed_ms": 119003,
+        "stop_reason": "source_work_deadline_exhausted",
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 119.70999375,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "baseline_raw_keys": [],
+      "raw_row_keys": [],
+      "baseline_score": {
+        "case_id": "warsaw",
+        "country": "Poland",
+        "site_types": [
+          "multilingual"
+        ],
+        "programme_hit": false,
+        "correct_claims": 0,
+        "answerable_claims": 2,
+        "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+      },
+      "expert_score": {
+        "case_id": "warsaw",
+        "country": "Poland",
+        "site_types": [
+          "multilingual"
+        ],
+        "programme_hit": false,
+        "correct_claims": 0,
+        "answerable_claims": 2,
+        "error": null
+      },
+      "algorithm_core_completeness": null
+    },
+    {
+      "case_id": "ubc",
+      "expert_status": "submitted",
+      "expert_error_type": null,
+      "expert_active_ms_recorded": 107163,
+      "completion_kind": "explicit_commit",
+      "accepted_turns": 6,
+      "rejected_checkpoints": 2,
+      "unmetered_final_selector_timeout_lower_bound_ms": null,
+      "expert_reads": 2,
+      "expert_queries": 1,
+      "expert_questions": {
+        "Q0": "found",
+        "Q1": "unresolved",
+        "Q2": "unresolved",
+        "Q3": "unresolved",
+        "Q4": "unresolved",
+        "Q5": "unresolved",
+        "Q6": "unresolved"
+      },
+      "algorithm_matches_expert": {
+        "Q0": false,
+        "Q1": null,
+        "Q2": null,
+        "Q3": null,
+        "Q4": null,
+        "Q5": null,
+        "Q6": null
+      },
+      "miss_diagnosis": [
+        {
+          "question": "Q0",
+          "cause": "UNRESOLVED_CAUSE",
+          "source_url": "https://you.ubc.ca/programs/computer-science-vancouver-ba",
+          "baseline_page_outcomes": [],
+          "baseline_stop_reason": "source_work_deadline_exhausted",
+          "diagnostic_only": true,
+          "programme_confirmation_queue_absent": true
+        }
+      ],
+      "baseline_budget": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "fetcher_calls": 60,
+        "search_queries": 0,
+        "blocked_search_queries": 0,
+        "network_http_requests": 62,
+        "elapsed_ms": 119005,
+        "stop_reason": "source_work_deadline_exhausted",
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 119.58531374399999,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "baseline_raw_keys": [],
+      "raw_row_keys": [],
+      "baseline_score": {
+        "case_id": "ubc",
+        "country": "Canada",
+        "site_types": [
+          "static"
+        ],
+        "programme_hit": false,
+        "correct_claims": 0,
+        "answerable_claims": 3,
+        "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+      },
+      "expert_score": {
+        "case_id": "ubc",
+        "country": "Canada",
+        "site_types": [
+          "static"
+        ],
+        "programme_hit": false,
+        "correct_claims": 1,
+        "answerable_claims": 3,
+        "error": null
+      },
+      "algorithm_core_completeness": null
+    },
+    {
+      "case_id": "toronto",
+      "expert_status": "incomplete",
+      "expert_error_type": "selector_timeout",
+      "expert_active_ms_recorded": 51948,
+      "completion_kind": null,
+      "accepted_turns": 3,
+      "rejected_checkpoints": 1,
+      "unmetered_final_selector_timeout_lower_bound_ms": null,
+      "expert_reads": 2,
+      "expert_queries": 1,
+      "expert_questions": {
+        "Q0": "unresolved",
+        "Q1": "unresolved",
+        "Q2": "unresolved",
+        "Q3": "unresolved",
+        "Q4": "unresolved",
+        "Q5": "unresolved",
+        "Q6": "unresolved"
+      },
+      "algorithm_matches_expert": {
+        "Q0": null,
+        "Q1": null,
+        "Q2": null,
+        "Q3": null,
+        "Q4": null,
+        "Q5": null,
+        "Q6": null
+      },
+      "miss_diagnosis": [],
+      "baseline_budget": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "fetcher_calls": 27,
+        "search_queries": 6,
+        "blocked_search_queries": 0,
+        "network_http_requests": 32,
+        "elapsed_ms": 40519,
+        "stop_reason": null,
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 41.030703421,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "baseline_raw_keys": [
+        "canary",
+        "claims"
+      ],
+      "raw_row_keys": [
+        "institution",
+        "country",
+        "domain",
+        "access",
+        "robots_disallowed_requests",
+        "pages_checked",
+        "pages_failed",
+        "failures",
+        "outcomes",
+        "discovered",
+        "discovery_trace",
+        "programs",
+        "program_page_found",
+        "scholarship_page_found",
+        "discovery_notes",
+        "claims",
+        "claims_verified",
+        "completeness",
+        "eligibility",
+        "funding_fit",
+        "scholarships_found",
+        "false_positives",
+        "page_outcomes",
+        "page_types",
+        "page_diagnostics"
+      ],
+      "baseline_score": {
+        "case_id": "toronto",
+        "country": "Canada",
+        "site_types": [
+          "dynamic_programme_index"
+        ],
+        "programme_hit": false,
+        "correct_claims": 0,
+        "answerable_claims": 4,
+        "error": null
+      },
+      "expert_score": {
+        "case_id": "toronto",
+        "country": "Canada",
+        "site_types": [
+          "dynamic_programme_index"
+        ],
+        "programme_hit": false,
+        "correct_claims": 0,
+        "answerable_claims": 4,
+        "error": null
+      },
+      "algorithm_core_completeness": 0.0
+    },
+    {
+      "case_id": "hku",
+      "expert_status": "incomplete",
+      "expert_error_type": "selector_timeout",
+      "expert_active_ms_recorded": 94090,
+      "completion_kind": null,
+      "accepted_turns": 4,
+      "rejected_checkpoints": 2,
+      "unmetered_final_selector_timeout_lower_bound_ms": null,
+      "expert_reads": 2,
+      "expert_queries": 1,
+      "expert_questions": {
+        "Q0": "unresolved",
+        "Q1": "unresolved",
+        "Q2": "unresolved",
+        "Q3": "unresolved",
+        "Q4": "unresolved",
+        "Q5": "unresolved",
+        "Q6": "unresolved"
+      },
+      "algorithm_matches_expert": {
+        "Q0": null,
+        "Q1": null,
+        "Q2": null,
+        "Q3": null,
+        "Q4": null,
+        "Q5": null,
+        "Q6": null
+      },
+      "miss_diagnosis": [],
+      "baseline_budget": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "fetcher_calls": 28,
+        "search_queries": 6,
+        "blocked_search_queries": 1,
+        "network_http_requests": 30,
+        "elapsed_ms": 72717,
+        "stop_reason": "search_budget_exhausted",
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 73.26522038799999,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "baseline_raw_keys": [
+        "canary",
+        "claims"
+      ],
+      "raw_row_keys": [
+        "institution",
+        "country",
+        "domain",
+        "access",
+        "robots_disallowed_requests",
+        "pages_checked",
+        "pages_failed",
+        "failures",
+        "outcomes",
+        "discovered",
+        "discovery_trace",
+        "programs",
+        "program_page_found",
+        "scholarship_page_found",
+        "discovery_notes",
+        "claims",
+        "claims_verified",
+        "completeness",
+        "eligibility",
+        "funding_fit",
+        "scholarships_found",
+        "false_positives",
+        "page_outcomes",
+        "page_types",
+        "page_diagnostics"
+      ],
+      "baseline_score": {
+        "case_id": "hku",
+        "country": "Hong Kong",
+        "site_types": [
+          "pdf_brochure_link"
+        ],
+        "programme_hit": false,
+        "correct_claims": 1,
+        "answerable_claims": 4,
+        "error": null
+      },
+      "expert_score": {
+        "case_id": "hku",
+        "country": "Hong Kong",
+        "site_types": [
+          "pdf_brochure_link"
+        ],
+        "programme_hit": false,
+        "correct_claims": 0,
+        "answerable_claims": 4,
+        "error": null
+      },
+      "algorithm_core_completeness": 0.0
+    },
+    {
+      "case_id": "ntu",
+      "expert_status": "submitted",
+      "expert_error_type": null,
+      "expert_active_ms_recorded": 115686,
+      "completion_kind": "explicit_commit",
+      "accepted_turns": 6,
+      "rejected_checkpoints": 2,
+      "unmetered_final_selector_timeout_lower_bound_ms": null,
+      "expert_reads": 2,
+      "expert_queries": 1,
+      "expert_questions": {
+        "Q0": "found",
+        "Q1": "unresolved",
+        "Q2": "unresolved",
+        "Q3": "unresolved",
+        "Q4": "unresolved",
+        "Q5": "unresolved",
+        "Q6": "unresolved"
+      },
+      "algorithm_matches_expert": {
+        "Q0": true,
+        "Q1": null,
+        "Q2": null,
+        "Q3": null,
+        "Q4": null,
+        "Q5": null,
+        "Q6": null
+      },
+      "miss_diagnosis": [],
+      "baseline_budget": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "fetcher_calls": 28,
+        "search_queries": 6,
+        "blocked_search_queries": 1,
+        "network_http_requests": 32,
+        "elapsed_ms": 66271,
+        "stop_reason": "search_budget_exhausted",
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 66.71642933700001,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "baseline_raw_keys": [
+        "canary",
+        "claims"
+      ],
+      "raw_row_keys": [
+        "institution",
+        "country",
+        "domain",
+        "access",
+        "robots_disallowed_requests",
+        "pages_checked",
+        "pages_failed",
+        "failures",
+        "outcomes",
+        "discovered",
+        "discovery_trace",
+        "programs",
+        "program_page_found",
+        "scholarship_page_found",
+        "discovery_notes",
+        "claims",
+        "claims_verified",
+        "completeness",
+        "eligibility",
+        "funding_fit",
+        "scholarships_found",
+        "false_positives",
+        "page_outcomes",
+        "page_types",
+        "page_diagnostics"
+      ],
+      "baseline_score": {
+        "case_id": "ntu",
+        "country": "Singapore",
+        "site_types": [
+          "large_navigation"
+        ],
+        "programme_hit": true,
+        "correct_claims": 1,
+        "answerable_claims": 21,
+        "error": null
+      },
+      "expert_score": {
+        "case_id": "ntu",
+        "country": "Singapore",
+        "site_types": [
+          "large_navigation"
+        ],
+        "programme_hit": false,
+        "correct_claims": 1,
+        "answerable_claims": 21,
+        "error": null
+      },
+      "algorithm_core_completeness": 0.0
+    },
+    {
+      "case_id": "kaist",
+      "expert_status": "submitted",
+      "expert_error_type": null,
+      "expert_active_ms_recorded": 113165,
+      "completion_kind": "explicit_commit",
+      "accepted_turns": 7,
+      "rejected_checkpoints": 0,
+      "unmetered_final_selector_timeout_lower_bound_ms": null,
+      "expert_reads": 4,
+      "expert_queries": 1,
+      "expert_questions": {
+        "Q0": "unresolved",
+        "Q1": "unresolved",
+        "Q2": "unresolved",
+        "Q3": "unresolved",
+        "Q4": "unresolved",
+        "Q5": "unresolved",
+        "Q6": "unresolved"
+      },
+      "algorithm_matches_expert": {
+        "Q0": null,
+        "Q1": null,
+        "Q2": null,
+        "Q3": null,
+        "Q4": null,
+        "Q5": null,
+        "Q6": null
+      },
+      "miss_diagnosis": [],
+      "baseline_budget": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "fetcher_calls": 33,
+        "search_queries": 6,
+        "blocked_search_queries": 0,
+        "network_http_requests": 30,
+        "elapsed_ms": 94022,
+        "stop_reason": null,
+        "provider_failure": {
+          "http_status": null,
+          "reason": "malformed response",
+          "error": "Search service unavailable (exa_mcp; malformed response)."
+        },
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 94.771020195,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "baseline_raw_keys": [
+        "canary",
+        "claims"
+      ],
+      "raw_row_keys": [
+        "institution",
+        "country",
+        "domain",
+        "access",
+        "robots_disallowed_requests",
+        "pages_checked",
+        "pages_failed",
+        "failures",
+        "outcomes",
+        "discovered",
+        "discovery_trace",
+        "programs",
+        "program_page_found",
+        "scholarship_page_found",
+        "discovery_notes",
+        "claims",
+        "claims_verified",
+        "completeness",
+        "eligibility",
+        "funding_fit",
+        "scholarships_found",
+        "false_positives",
+        "page_outcomes",
+        "page_types",
+        "page_diagnostics"
+      ],
+      "baseline_score": {
+        "case_id": "kaist",
+        "country": "South Korea",
+        "site_types": [
+          "multilingual_faculty"
+        ],
+        "programme_hit": false,
+        "correct_claims": 0,
+        "answerable_claims": 10,
+        "error": null
+      },
+      "expert_score": {
+        "case_id": "kaist",
+        "country": "South Korea",
+        "site_types": [
+          "multilingual_faculty"
+        ],
+        "programme_hit": false,
+        "correct_claims": 0,
+        "answerable_claims": 10,
+        "error": null
+      },
+      "algorithm_core_completeness": 0.0
+    }
+  ],
+  "protocol_eligible": false,
+  "protocol_gate": false
+}

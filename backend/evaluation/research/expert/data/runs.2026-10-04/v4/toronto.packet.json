@@ -1,0 +1,59 @@
+{
+  "schema_version": "1",
+  "dataset_version": "2026-09-23.reviewed",
+  "dataset_sha256": "d45d26fa10a1bd60271c63225c1ff453109d8cb6781782867c0d782ee63bedd0",
+  "capture_sha256": "a07ea5273011073ca8f05b97d7171bab1280d21f4d4d78f5bb51587fd25fdd58",
+  "baseline_pipeline_sha": "24865069715f82a22d83ade810b367c0d5442c67",
+  "baseline_captured_at": "20261004T101612Z",
+  "baseline_budget": {
+    "max_fetcher_calls": 60,
+    "max_elapsed_ms": 120000,
+    "browser_enabled": false,
+    "max_search_queries": 6
+  },
+  "cases": [
+    {
+      "case_id": "toronto",
+      "university": "University of Toronto",
+      "domain": "utoronto.ca",
+      "request": {
+        "university": "University of Toronto",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "baseline": {
+        "ranked_urls": [],
+        "programme_urls": [
+          "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+          "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/programs/computer-science"
+        ],
+        "prediction_count": 0,
+        "error": null,
+        "telemetry": {
+          "http_fetches": 27,
+          "pdf_fetches": 1,
+          "browser_fetches": 0,
+          "latency_seconds": 40.519289703999995
+        }
+      }
+    }
+  ],
+  "public_profile": {
+    "level": "bachelor",
+    "intended_fields": [
+      "computer science"
+    ],
+    "intake_term": "fall",
+    "intake_year": 2027,
+    "citizenship": "Kazakhstan",
+    "country_of_residence": "Kazakhstan",
+    "education_country": "Kazakhstan",
+    "education_system": "KZ national secondary"
+  },
+  "comparison_mode": "independent_full_budget"
+}

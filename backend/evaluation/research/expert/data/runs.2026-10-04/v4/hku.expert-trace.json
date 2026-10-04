@@ -1,0 +1,159 @@
+{
+  "schema_version": "1",
+  "case_id": "hku",
+  "packet_sha256": "07ecdb7ba5388d4629f7afab114902c5f6f9114ffd8c61098760d318765e56c4",
+  "baseline_pipeline_sha": "24865069715f82a22d83ade810b367c0d5442c67",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T10:27:31.928618+00:00",
+  "ended_at": "2026-10-04T10:31:14.278688+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T10:28:11.748093+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site.hku.hk undergraduate Computer Science international admissions English requirements scholarships",
+        "domains": [
+          "hku.hk"
+        ],
+        "max_results": 6
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-001.json",
+      "raw_log_sha256": "704c137fbd4c26aa6fa6649c1ae5a96bf7c72ff00af10a8af21f45191b8594b6",
+      "elapsed_ms": 1685,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 10464,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "Find official undergraduate Computer Science and admissions sources.",
+      "observed_from_step": null,
+      "action": "search_provider: site.hku.hk undergraduate Computer Science international admissions English requirements scholarships",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T10:29:04.871316+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.cs.hku.hk/programmes/beng-compsc/admission"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-002.json",
+      "raw_log_sha256": "9211aa8e32484b63871705fb6840d60667df62642cce5fab0fc61b6a36ca0628",
+      "elapsed_ms": 12308,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 33197,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Search results identify an official Computer Science admissions page; read it to verify programme existence.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://www.cs.hku.hk/programmes/beng-compsc/admission",
+      "stage": "page_understanding",
+      "url": "https://www.cs.hku.hk/programmes/beng-compsc/admission",
+      "final_url": "https://www.cs.hku.hk/programmes/beng-compsc/admission"
+    },
+    {
+      "at": "2026-10-04T10:30:08.529372+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.cds.hku.hk/prospective-students/undergraduate/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-003.json",
+      "raw_log_sha256": "30aad77afb0ffbf6e8340e1d6bedda48de746c88ecbcefa5fee7c6de67f32e4d",
+      "elapsed_ms": 3902,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 46881,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "The initial programme page was robots-blocked; inspect the official school undergraduate page discovered in search.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://www.cds.hku.hk/prospective-students/undergraduate/",
+      "stage": "page_understanding",
+      "url": "https://www.cds.hku.hk/prospective-students/undergraduate/",
+      "final_url": "https://www.cds.hku.hk/prospective-students/undergraduate/"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

@@ -1,6 +1,6 @@
 # Phase1 V4: literal subjects and bounded completion
 
-Status: source preflight complete. The fresh V4 ten-case paired pilot has not started.
+Status: measured negative. All ten fresh baseline/expert pairs were replayed and sealed at2026-10-04T10:41:57.818663+00:00 before labels; algorithm4/62 versus experts2/62, four submitted/six selector timeouts. No baseline120000ms overruns. No40/62 admission or50-case expansion. See EXPERT500_PHASE1_V4_2026-10-04.md and the bounded data/runs.2026-10-04/v4 bundle.
 V1, V2 and V3 measurements, source tags, scripts and seals remain historical.
 The last V3 result is algorithm3/62 versus experts3/62; admission failed.
 

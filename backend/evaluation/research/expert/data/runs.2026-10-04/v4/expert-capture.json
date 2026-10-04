@@ -1,0 +1,313 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "blind-experts@24865069715f82a22d83ade810b367c0d5442c67",
+  "captured_at": "2026-10-04T10:41:57.818663+00:00",
+  "mode": "live",
+  "config": {
+    "unreviewed_proposals": true,
+    "comparison_mode": "independent_full_budget",
+    "source_harness_sha": "24865069715f82a22d83ade810b367c0d5442c67",
+    "lossless_projection": true,
+    "excluded": []
+  },
+  "observations": [
+    {
+      "case_id": "groningen",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "delft",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "aalto",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "vienna",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "warsaw",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "ubc",
+      "programme_urls": [
+        "https://you.ubc.ca/programs/computer-science-vancouver-ba/"
+      ],
+      "ranked_urls": null,
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://you.ubc.ca/programs/computer-science-vancouver-ba/",
+            "excerpt": "Bachelor of Arts",
+            "scope": {
+              "university": "University of British Columbia",
+              "programme": "Computer Science (BA)",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "toronto",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "hku",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "ntu",
+      "programme_urls": [
+        "https://www.ntu.edu.sg/admissions/undergraduate/undergraduate-programme/bachelor-of-computing-in-computer-science"
+      ],
+      "ranked_urls": null,
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/undergraduate-programme/bachelor-of-computing-in-computer-science",
+            "excerpt": "The\n Bachelor of Computing (Hons) in Computer Science \nat NTU’s \nCollege of Computing and Data Science (CCDS)\n is a \n4-year direct honours degree",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor of Computing (Hons) in Computer Science",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "country_credential.kazakhstan_high_school_certificate.direct_admission",
+          "value": "No, required additional qualification (see below)",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements/international-qualifications/other-international-qualifications",
+            "excerpt": "No, required additional qualification (see below)",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": null,
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": "High School Certificate (Kazakhstan)",
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "kaist",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [
+        {
+          "key": "deadline",
+          "value": {
+            "track": "Regular Admissions — Fall Track Only",
+            "application_period_and_document_submission": "November 10, 2026 ~ January 14, 2027, 6:00 PM (KST)",
+            "heading": "Application Timeline for 2027 Admissions",
+            "table_caption": "Application Timeline for 2023 Admissions"
+          },
+          "evidence": {
+            "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+            "excerpt": "November 10, 2026 ~ January 14, 2027, 6:00 PM (KST)",
+            "scope": {
+              "university": "KAIST",
+              "programme": null,
+              "degree": "bachelor",
+              "field": null,
+              "intake": "fall 2027",
+              "population": "international",
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    }
+  ]
+}

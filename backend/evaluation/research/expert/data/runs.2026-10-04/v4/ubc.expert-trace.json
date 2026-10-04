@@ -1,0 +1,210 @@
+{
+  "schema_version": "1",
+  "case_id": "ubc",
+  "packet_sha256": "d6426f7d906dbaba12fa13c77fda5bdaae2e4c754683da82f509aa09d3b9e8d5",
+  "baseline_pipeline_sha": "24865069715f82a22d83ade810b367c0d5442c67",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T10:23:56.233528+00:00",
+  "ended_at": "2026-10-04T10:27:50.279000+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T10:24:36.991808+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://you.ubc.ca/ubc_programs/computer-science-vancouver/"
+      },
+      "outcome": "http_error",
+      "outcome_status": "failure",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-001.json",
+      "raw_log_sha256": "345a4432259ad427356a38819cb20a015dd85e235a07ebb401cee2fcac51ad81",
+      "elapsed_ms": 5054,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 14001,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Start with UBC's official Computer Science programme page.",
+      "observed_from_step": null,
+      "action": "fetcher: https://you.ubc.ca/ubc_programs/computer-science-vancouver/",
+      "stage": "page_understanding",
+      "url": "https://you.ubc.ca/ubc_programs/computer-science-vancouver/",
+      "final_url": "https://you.ubc.ca/programs/computer-science-vancouver/"
+    },
+    {
+      "at": "2026-10-04T10:25:30.931526+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:you.ubc.ca Computer Science bachelor English admission requirements international Kazakhstan scholarships",
+        "domains": [
+          "ubc.ca"
+        ],
+        "max_results": 6
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-002.json",
+      "raw_log_sha256": "2e542afbe0cf3e64db88a2fbb28eadbd3660a30f91fa6c6aa70ca1e64d303663",
+      "elapsed_ms": 1377,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 26186,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "The initial programme URL returned 404; search official pages for the current programme and admissions routes.",
+      "observed_from_step": 1,
+      "action": "search_provider: site:you.ubc.ca Computer Science bachelor English admission requirements international Kazakhstan scholarships",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T10:26:25.063036+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://you.ubc.ca/programs/computer-science-vancouver-ba/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-003.json",
+      "raw_log_sha256": "98b582241e056169ce6300cb18a79cff31f62923fcf028d6557d8462c9f1fe11",
+      "elapsed_ms": 1995,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 37754,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "Open the official Vancouver Computer Science BA programme result to establish programme identity and admissions links.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://you.ubc.ca/programs/computer-science-vancouver-ba/",
+      "stage": "page_understanding",
+      "url": "https://you.ubc.ca/programs/computer-science-vancouver-ba/",
+      "final_url": "https://you.ubc.ca/programs/computer-science-vancouver-ba/"
+    }
+  ],
+  "proposals": [
+    {
+      "claim_key": "programme.exists",
+      "value": true,
+      "source_url": "https://you.ubc.ca/programs/computer-science-vancouver-ba/",
+      "excerpt": "Bachelor of Arts",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of British Columbia",
+        "programme": "Computer Science (BA)",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        3
+      ],
+      "status": "unreviewed"
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "supporting_steps": [
+        3
+      ],
+      "proposal_indices": [
+        0
+      ],
+      "evidence": [
+        {
+          "action_step": 3,
+          "source_url": "https://you.ubc.ca/programs/computer-science-vancouver-ba/",
+          "excerpt": "Bachelor of Arts",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b105",
+            "section_path": [
+              "Computer Science (BA)",
+              "Program information",
+              "Program overview"
+            ],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "University of British Columbia",
+        "programme": "Computer Science (BA)",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The official Vancouver programme overview identifies the degree as Bachelor of Arts."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}
