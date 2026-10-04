@@ -6,6 +6,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current holder: gpt-6-astra, 2026-10-04 00:45 UTC, task/expert-500-phase0 from origin/main b672349.** Continue the owner-requested ten-expert search investigation using the supplied live-audit specification. Prior PR44 is a local catalogue/code audit (500 rows, zero live source reads), not live fact recovery. Parent owns git/HANDOFF; no production changes.
+
+
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
 
 
@@ -44,6 +47,9 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[expert-500] Phase0 preparation in progress; Phase1 pilot next.** Extend offline packets to the 501-identity catalogue, define Q0-Q6 trace outcomes and reviewed miss causes, create a sealed deterministic 350 DEV /150 HELDOUT split, enforce recorded controller budgets and validate stored raw logs. Then compare a fresh main ten-case capture with model-chosen controlled source reads. A genuine blind expert requires tools restricted by access control, not instructions alone; record any inability to establish isolation instead of claiming blinding.
+
 
 **Local university search: deployed and public workflow verified (PR #39, main1aa188e, Fly v5).** Complete runtime acceptance is recorded in UNIMATCH_SEARCH_RELEASE_2026-10-02.md; this does not assert complete official admission facts for501 universities.
 
@@ -1739,6 +1745,9 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[expert-500] Write-ahead:** edit only evaluation/research/expert tooling, its offline tests, the benchmark expert-actions wiring as needed, and process evidence. No app algorithm or gold/binding edits. Preserve 120s/60-page/six-search budget, robots, free-provider 429 stop, citation/raw-log integrity, and unreviewed evidence status. Ten pilot identities must be in DEV so HELDOUT stays unopened. Full gates and separate Phase0 PR; fresh main capture/Phase1 ten-expert pilot only after controller/isolation readiness.
+
 
 **After this documentation checkpoint:** inspect postmerge CI36972183803 and merge this metadata-only release record through its PR using the owner's standing merge authorization. No runtime edits are pending. Future product changes require a reproduced fault; partial official-data coverage is explicitly documented, not a completed universal knowledge base. Do not duplicate the synthetic NTU acceptance run or change production credentials.
 
@@ -4753,6 +4762,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+- 2026-10-04 00:45 UTC: gpt-6-astra takes [expert-500] from b672349; prior PR44 completed offline only; Phase0 then live ten-case pilot.
 
 | 2026-10-01 UTC | gpt-6-astra | merged main e24231e → task/unimatch-redesign takeover | Owner provided 46-section Unimatch full redesign request and 18 references. Current tree matches main; source write-ahead recorded before UI edits. |
 
