@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current holder: gpt-6-astra; [expert-500] Phase1 on task/expert-500-phase1 from Phase0 predecessor73df696.** Phase0 PR45 is ready for owner review; freeze this Phase1 harness revision for the same-day ten-case controlled live pilot. Continue the owner-requested ten-expert search investigation using the supplied live-audit specification. Prior PR44 is a local catalogue/code audit (500 rows, zero live source reads), not live fact recovery. Parent owns git/HANDOFF; no production changes.
+**Current holder: gpt-6-astra; [expert-500] Phase1 on task/expert-500-phase1 from Phase0 predecessor73df696.** Phase0 PR45 is ready for owner review; draft Phase1 PR46 preserves V1 and the released V2 protocol ba33145. Freeze this metadata HEAD for the fresh same-day ten-case controlled V2 live pilot. Continue the owner-requested ten-expert search investigation using the supplied live-audit specification. Prior PR44 is a local catalogue/code audit (500 rows, zero live source reads), not live fact recovery. Parent owns git/HANDOFF; no production changes.
 
 
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
@@ -125,6 +125,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[expert-500] ba3314540903543e614c1b949445a868f88d210e:** V2 compact/time protocol released after3193/94.88% full gates,338-file Ruff/mypy, frontend232/type/lint/build and one Alembic head. Compact69 and controller deadline23 regressions plus six offline parent-cycle checks pass. Existing bundled CLI0.159.2 completes explicit gpt-6-astra neutral turn. Draft Phase1 PR46 https://github.com/wpalish/ashyq-apply/pull/46 preserves V1 evidence and tracks the fresh V2 pilot. Exact scripts/hashes in protocol.2026-10-04; app tree equals remote main@b672349.
 
 **[expert-500] d00e912:** frozen V1 negative evidence: ten baselines plus ten isolated expert attempts, all traces raw-log validated then sealed,4/62 vs4/62; protocol ineligible, no batches50. Selector timeout accounting fixed with32 focused tests. Compact/deadline integration was pending in that WIP checkpoint and is verified separately below.
 
@@ -4917,3 +4919,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-04: gpt-6-astra takes [expert-500] Phase1 from Phase0 predecessor73df696; ten-case strict exa_mcp pilot with app tree equal main@b672349, no code/prod/gold edits. Freeze this source for all baseline/controller jobs.
 
 - 2026-10-04: gpt-6-astra completes Phase1 protocol V2 full3193/94.88% gates and neutral model isolation check. Source checkpoint and fresh ten-case frozen-harness pilot next; no production changes.
+
+- 2026-10-04: gpt-6-astra publishes source ba33145 and attaches draft PR46; metadata freeze before fresh V2 baseline/controller jobs. Phase0 PR45 remains owner-reviewed; no main merge or deployment.
