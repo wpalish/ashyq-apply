@@ -1,0 +1,151 @@
+"""Export bounded post-seal Phase1 evidence, without source bodies or labels."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import shutil
+from pathlib import Path
+
+
+def read(path: Path):
+    return json.loads(path.read_text())
+
+
+def sha(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--destination", type=Path, required=True)
+    parser.add_argument("--protocol", type=Path, required=True)
+    args = parser.parse_args()
+    root, dest = args.root, args.destination
+    seal, comparison = read(root / "submission-seal.json"), read(root / "comparison.json")
+    if seal["count"] != 10 or not seal["all_traces_validated_with_raw_logs"]:
+        raise ValueError("All ten source-validated submissions must already be sealed")
+    dest.mkdir(parents=True, exist_ok=True)
+    copies = []
+
+    def copy(source: Path, name: str) -> None:
+        target = dest / name
+        shutil.copyfile(source, target)
+        if sha(source) != sha(target):
+            raise ValueError("Evidence copy differs")
+        copies.append({"path": name, "sha256": sha(target), "bytes": target.stat().st_size})
+
+    for name in (
+        "submission-seal.json",
+        "trial.json",
+        "trial-at-baseline-start.json",
+        "workspace-locations.json",
+        "baseline-results.json",
+        "experts-results.json",
+        "baseline-capture.json",
+        "expert-capture.json",
+        "expert-value-projections.json",
+        "baseline-score.json",
+        "expert-score.json",
+        "comparison.json",
+    ):
+        copy(root / name, name)
+    for entry in seal["submissions"]:
+        case = entry["case_id"]
+        expert, baseline = root / "experts" / case, root / "baseline" / case
+        for name in ("trace", "result"):
+            source = expert / (name + ".json")
+            if sha(source) != entry[name + "_file_sha256" if name == "trace" else "result_sha256"]:
+                raise ValueError("Sealed per-case evidence changed")
+            copy(source, case + ".expert-" + name + ".json")
+        copy(baseline / "public-packet.json", case + ".packet.json")
+        copy(baseline / "result.json", case + ".baseline-result.json")
+        copy(expert / "isolation.json", case + ".isolation.json")
+        artifacts = {item["path"]: item["sha256"] for item in entry["protocol_artifacts"]}
+        for source in sorted(expert.glob("checkpoint-*.json")):
+            if artifacts.get(source.name) != sha(source):
+                raise ValueError("Sealed journal checkpoint changed")
+            copy(source, case + "." + source.name)
+        for name in (
+            "compact-submission.json",
+            "compact-citation-proof.json",
+            "accepted-journal.json",
+            "journal-events.json",
+        ):
+            if (expert / name).is_file():
+                expected = (
+                    entry.get("compact_submission_sha256")
+                    if name == "compact-submission.json"
+                    else artifacts.get(name)
+                )
+                if sha(expert / name) != expected:
+                    raise ValueError("Sealed journal/citation evidence changed")
+                copy(expert / name, case + "." + name)
+    runs = []
+    for kind, pattern in (
+        ("baseline", "baseline/*/run.json"),
+        ("expert_controller", "experts/*/controller-*/run.json"),
+    ):
+        for path in sorted(root.glob(pattern)):
+            run = read(path)
+            if (
+                run["headSha"] != read(root / "trial.json")["harness_sha"]
+                or run["conclusion"] != "success"
+            ):
+                raise ValueError("Workflow source or conclusion differs")
+            runs.append(
+                {
+                    "case_id": path.parent.name if kind == "baseline" else path.parent.parent.name,
+                    "kind": kind,
+                    "round": path.parent.name,
+                    "run_id": run["run_id"],
+                    "head_sha": run["headSha"],
+                    "url": run["url"],
+                    "conclusion": run["conclusion"],
+                }
+            )
+    if len({r["run_id"] for r in runs}) != len(runs):
+        raise ValueError("Repeated workflow run identity")
+    runs_path = dest / "workflow-runs.json"
+    runs_path.write_text(json.dumps(runs, ensure_ascii=False, indent=2) + "\n")
+    copies.append(
+        {"path": runs_path.name, "sha256": sha(runs_path), "bytes": runs_path.stat().st_size}
+    )
+    protocol = read(root / "trial.json")["expert_protocol"]
+    for entry in protocol["files"]:
+        if "/" not in entry["path"]:
+            source = args.protocol / entry["path"]
+            if sha(source) != entry["sha256"]:
+                raise ValueError("Recorded parent protocol changed")
+            copy(source, entry["path"])
+    manifest = {
+        "stage": "Phase1 V5",
+        "count": 10,
+        "source_harness_sha": read(root / "trial.json")["harness_sha"],
+        "protocol_eligible": comparison["protocol_eligible"],
+        "protocol_gate": comparison["protocol_gate"],
+        "accepted_journal_deltas_replayed": seal["all_accepted_journal_deltas_replayed"],
+        "source_bodies_exported": False,
+        "reviewed_labels_exported": False,
+        "baseline_workflow_runs": sum(r["kind"] == "baseline" for r in runs),
+        "expert_workflow_runs": sum(r["kind"] == "expert_controller" for r in runs),
+        "all_files": copies,
+    }
+    (dest / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+    print(
+        json.dumps(
+            {
+                "files": len(copies) + 1,
+                "bytes": sum(x["bytes"] for x in copies),
+                "workflow_runs": len(runs),
+                "destination": str(dest),
+            },
+            ensure_ascii=False,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

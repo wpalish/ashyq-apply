@@ -1,0 +1,153 @@
+"""Real tool-free V5 bootstrap/data/closure probes; zero university requests."""
+
+import json
+import tempfile
+from dataclasses import replace
+from pathlib import Path
+
+from evaluation.research.expert.journal import JOURNAL_INSTRUCTIONS, AcceptedJournal
+from evaluation.research.expert.representation import closing_prompt
+from evaluation.research.expert.selector import select
+from evaluation.research.expert.turn_policy import (
+    AstraLowEffortIsolation as Isolation,
+)
+from evaluation.research.expert.turn_policy import (
+    command_proof,
+    journal_schema_for_turn,
+    parse_turn_decision,
+    policy_limits,
+    turn_window,
+)
+
+workspace = Path(tempfile.mkdtemp(prefix="unimatch-blind-v5-probe-"))
+isolation = replace(
+    Isolation.local(
+        workspace,
+        [
+            Path("/Users/wpalish/Documents/Codex"),
+            Path("/Users/wpalish/.codex/memories"),
+            Path("/Users/wpalish/.codex/sessions"),
+            Path("/Users/wpalish/.codex/attachments"),
+            Path("/Users/wpalish/Downloads"),
+            *Path("/tmp").glob("unimatch-expert500*"),
+            *Path("/tmp").glob("test_unimatch_expert500*"),
+        ],
+    ),
+    codex_executable="/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
+)
+hash_value = AcceptedJournal.initial().sha256
+results = []
+for phase in ("bootstrap", "data", "minimal_commit"):
+    schema = workspace / (phase + ".schema.json")
+    schema.write_text(
+        json.dumps(
+            journal_schema_for_turn(
+                journal_sha256=hash_value, canonical_university="Synthetic University", phase=phase
+            )
+        )
+    )
+    if phase == "minimal_commit":
+        prompt = closing_prompt(journal_sha256=hash_value)
+    elif phase == "bootstrap":
+        prompt = {
+            "task": JOURNAL_INSTRUCTIONS,
+            "accepted_journal": {"sha256": hash_value},
+            "neutral_probe": "No university research or tool action is executed. Return kind=action, one fetcher action for https://example.org/public-probe, observation=neutral probe, all irrelevant action fields null, domains=[], facts=[], question_findings=[]. journal_sha256 must equal the supplied empty journal hash.",
+        }
+    else:
+        scope = {
+            k: None
+            for k in (
+                "university",
+                "programme",
+                "degree",
+                "field",
+                "intake",
+                "population",
+                "qualification",
+                "academic_year",
+            )
+        }
+        scope["university"] = "Synthetic University"
+        facts = [
+            {
+                "id": f"probe{i}",
+                "question": "OTHER",
+                "claim_key": "synthetic_probe",
+                "value_json": json.dumps(f"public synthetic value {i}"),
+                "scope": scope,
+                "source_step": 1,
+                "quotation": f"Synthetic fixture statement {i}.",
+                "location": {
+                    "kind": "document_ir",
+                    "block_id": f"p:{i}",
+                    "section_path": ["Synthetic fixture"],
+                    "page": None,
+                },
+            }
+            for i in range(1, 5)
+        ]
+        prompt = {
+            "task": "Neutral schema serialization only. No research/action/source was executed and these invented fixture statements are not university facts. Return exactly the provided completed four-fact record, no extra fields.",
+            "synthetic_record": {
+                "kind": "record",
+                "observation": "Neutral synthetic data serialization.",
+                "journal_sha256": hash_value,
+                "action": None,
+                "facts": facts,
+                "question_findings": [],
+            },
+        }
+    output = workspace / (phase + ".answer.json")
+    command = isolation.command(schema, output=output, model="gpt-6-astra")
+    window = turn_window(phase=phase, active_ms=0)
+    result = select(
+        isolation,
+        schema,
+        output,
+        prompt,
+        timeout_seconds=window.timeout_seconds,
+        model="gpt-6-astra",
+    )
+    (workspace / (phase + ".events.jsonl")).write_text(result.stdout)
+    (workspace / (phase + ".stderr.txt")).write_text(result.stderr)
+    answer = (
+        parse_turn_decision(
+            output.read_text(),
+            journal_sha256=hash_value,
+            canonical_university="Synthetic University",
+            phase=phase,
+        ).model_dump(mode="json")
+        if result.answer
+        else None
+    )
+    if phase == "data" and answer and len(answer["facts"]) != 4:
+        raise ValueError("Synthetic full four-fact probe was not completed")
+    results.append(
+        {
+            "mode": phase,
+            "elapsed_ms": result.elapsed_ms,
+            "timeout_ms": window.timeout_ms,
+            "command_proof": command_proof(command),
+            "error_kind": result.error_kind,
+            "returncode": result.returncode,
+            "answer": answer,
+        }
+    )
+    if result.error_kind:
+        break
+print(
+    json.dumps(
+        {
+            "workspace": str(workspace),
+            "university_requests": 0,
+            "turn_policy": policy_limits(),
+            "requested_reasoning_effort": "low",
+            "results": results,
+        },
+        ensure_ascii=False,
+    ),
+    flush=True,
+)
+if len(results) != 3 or any(r["error_kind"] for r in results):
+    raise SystemExit(1)

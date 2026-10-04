@@ -126,6 +126,8 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+- [expert-500] V5 source preparation from864b8b7 successor: new pure four-fact/two-finding turn policy, adaptive30/55/10s windows with internal10s+3s reserve and exact Astra low argv; bounded current-source IR diagnostics. All-attempt schema/journal/controller receipts, terminal failures and exact proved isolation/workspace/CLI/turn output are replayed. Full3638/94.89%, frontend232, mock-parent206 and final neutral8419/20372/7224ms (zero university reads) passed. Seven scripts/16 modules snapshotted; fresh paired measurement still pending.
+
 - [expert-500] V4 measured on frozen2486506:10 fresh baselines +10 fresh blind cases,39 successful controlled workflows (10baseline/29expert), all-ten raw/citation/navigation/journal replay and seal before unchanged62labels. Main4/62, expert2/62, strict precision2/2; four submitted/six selector timeouts,17 rejected/failed turns. Baselines all≤120000 after internal1000ms reserve. No40/62 admission, no50-case expansion.152-file bounded bundle + owner report retain exact trial/seal/negative results and12 exact-source CI jobs. V5 write-ahead below; source/app/gold/HELDOUT unchanged.
 
 - [expert-500] V4 source preparation at24865069715f82a22d83ade810b367c0d5442c67: pure public representation and exact selected-context award subjects, hash-bound minimal closure and processed-source receipts, model-request/controller/trace route binding, strict original-clock baseline reserve and eligibility, immutable initial manifest and post-seal exact registry/dataset bytes. Full3458/94.89%, frontend232, actual-parent156 and real neutral8671/5781ms passed. New frozen V4 scripts/module manifest preserved; fresh paired measurement is complete and negative (entry below).
@@ -3696,6 +3698,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[expert-500] V5 source gates:**3638 backend tests/94.89%, Ruff/format/mypy349, frontend232/type/lint/build;75 turn-policy and105 location-feedback cases.206 actual-parent/replay mock checks retain156 V4 checks. Final neutral8419ms bootstrap/20372ms four synthetic facts/7224ms minimal closure, zero university reads. Source code unchanged app/frontend/gold/bindings/robots/HELDOUT; one head d8e412c6a901. New V5 trial/source calls have not started; no40/62 admission.
+
 **[expert-500] V4 source gates:**3458 backend tests,2 warnings,94.89%; Ruff/format/mypy345; frontend type/lint/232/build green. Representation107, baseline reserve18 new tests and156 actual-parent mock regressions green, including demonstrated pending-source hash-only and model/actual-request bugs. Real neutral tool-free bound8671ms/closing5781ms,0 university requests.14 protocol module fingerprints +7 actual parent-script snapshots pinned. App/frontend trees unchanged; Alembic onehead d8e412c6a901. V4 measurement complete: main4/62 versus expert2/62,4 submitted/6 timeouts, false clean/admission. Frozen2486506 cloud12/12 green across37194489042,37194491936,37194542987. V5 proposed source/parent changes are not yet tested; no V5 calls.
 
 **[expert-500] V3 measured admission: FAIL.**3/62 versus3/62, precision3/4; two submitted/eight selector timeouts,22 rejected checkpoint attempts, retained exact timing and three baseline cleanup overruns. All ten raw traces + accepted-delta replays sealed before labels. V3 source3333/94.89%, frontend232, parent91; source cloud8/8 passed. This is a failed expert protocol comparison, not a500-university fact audit or a production-search completion claim.
@@ -4457,6 +4461,8 @@ next agent does not reopen it.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
+- [expert-500] V5 evaluation only: new `expert/turn_policy.py`4/2 complete-delta caps, exact cumulative adaptive bootstrap/data/minimal windows and Astra low Isolation wrapper/argv proof; new `expert/location_feedback.py` bounded same-source structural diagnostics. New parent/request/process/event fields bind policy, start/window, effort, schema, argv and independently assigned/proved workspace. Replays all attempts, retains terminal timeoutNone returncode, requires source receipts and immutable all-ten seal before labels. No existing journal/citation/mapper/app/gold/registry change.
+
 - [expert-500] V4 evaluation only: `expert/representation.py` public exact-university/hash bound schemas and six-field minimal closure; literal `scholarship_exists` name or exact `subject/value` AWARD_KEYS/coverage wrapper with selected-context proof. Parent request/event hash binds processed-through source count; empty submit cannot process a new source. Existing private mapper reused only after seal with exact pinned bytes. `live.capture_one`/CLI opt-in `finalization_reserve_ms=1000` closes work119000ms on original120000ms clock; default0. No existing app/journal/citation/gold/registry contract changes.
 
 - [expert-500] V3 evaluation-only modules: `expert.journal.JournalDecision` carries action/record/submit + prior journal SHA256 + immutable bounded deltas; `AcceptedJournal` exposes canonical snapshots and mechanically expands to the unchanged compact/trace contract. `expert.citations.validate_fact_citations` validates every saved-source fact, including OTHER, against exact coordinates and declared-scope/original-quote contradictions. Existing V1/V2 models and production app APIs are unchanged. Parent script/module hashes, original completed selector answers, accepted journal markers and exact cumulative meter are sealed before labels.
@@ -4574,6 +4580,8 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 | 2026-09-09 | security audit | `security.py`: `SCRYPT_R`, `SCRYPT_P`, `_maxmem(n, r)`; `routes_metrics` compares bytes | scrypt cost schedule and the 500-on-non-ASCII bearer. |
 
 ## 9. Traps and lessons (things that cost a session; keep them)
+
+- [expert-500] External parent lint autofix can delete an exception binding used only by a nested lambda. Bind it explicitly (`except ValueError as exc`, `lambda exc=exc`) and re-run actual rejection regressions; V5 caught/fixed this before source freeze or university calls.
 
 - [expert-500] The global CLI0.147.0 can fail GPT-6 Astra with an upgrade-required400, despite the model existing in the app. Existing bundled CLI0.159.2 supports the requested model. Prove a neutral completed tool-free answer before university dispatches; do not silently fall back to a compiled default. Its constrained output schema rejects Pydantic format=uri; remove that annotation from generated provider schema without weakening local URL validation. Both failures were neutral, with zero university I/O.
 
@@ -4979,3 +4987,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-04 10:12UTC: gpt-6-astra freezes/pushes V4 source24865069715f82a22d83ade810b367c0d5442c67/tag expert500-phase1-v4-2026-10-04-2486506. Pre-baseline trial SHA52b8bce9f3fb963224a5829b866599ec3b8673b11001e50e6447d81aa7ea58eb is byte-identical to trial-at-baseline-start; fresh paired source measurement started. Do not edit frozen scripts/modules, reset/retry cases or duplicate dispatch.
 
 - 2026-10-04 10:48UTC: gpt-6-astra completes V4 raw replay/seal and publishes negative paired result4/62 vs2/62; all39 source workflows and12 exact-source gate jobs succeeded, no baseline clock overruns. V5 generic small-delta/adaptive-latency/current-source diagnostic plan written before code; preserve all V1–V4 history.
+
+- 2026-10-04 11:19UTC: gpt-6-astra completes V5 source preflight from864b8b7;3638/94.89%, frontend232, parent206, real neutral8419/20372/7224ms. Next freeze source/tag/initial trial before fresh10+10, all-ten raw replay/seal before unchanged labels. Earlier V1–V4 negative evidence preserved.
