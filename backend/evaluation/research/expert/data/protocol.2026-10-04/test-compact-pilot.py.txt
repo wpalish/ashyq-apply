@@ -1,0 +1,163 @@
+"""Offline integration of the actual frozen pilot, with independent mock bytes."""
+import asyncio
+import json
+import runpy
+import shutil
+from datetime import UTC, datetime
+from pathlib import Path
+
+import pytest
+
+from app.adapters.fetching import FetchResult
+from app.domain.enums import FetchOutcome
+from evaluation.research.expert.blind_cli import Isolation
+from evaluation.research.expert.controller import execute
+from evaluation.research.expert.selector import SelectorTurn
+
+URL = 'https://u.edu/admissions'
+QUOTE = 'International bachelor applicants need IELTS Academic overall 6.5.'
+SCOPE = {'university':'U','programme':None,'degree':'bachelor','field':None,
+    'intake':None,'population':'international','qualification':None,'academic_year':None}
+
+
+def choice(kind='action'):
+    return {'kind':kind,'observation':'Read official admissions evidence.',
+        'action':{'tool':'fetcher','url':URL,'query':None,'domains':[],
+            'max_results':None,'source_step':None,'page':None,'offset':None,
+            'section_offset':None,'link_offset':None} if kind=='action' else None,
+        'facts':[{'id':'english','question':'Q1','claim_key':'ielts.overall',
+            'value_json':'6.5','source_step':1,'quotation':QUOTE,
+            'location':{'kind':'text','block_id':None,'section_path':[],'page':None},
+            'scope':SCOPE}] if kind=='submit' else [],
+        'question_findings':[{'question':'Q1','status':'found','fact_ids':['english'],
+            'scope':SCOPE,'observation':'Saved page states this minimum.',
+            'supporting_steps':[]}] if kind=='submit' else []}
+
+
+@pytest.fixture
+def pilot(tmp_path, monkeypatch):
+    module = runpy.run_path('/tmp/unimatch-expert500-compact-pilot.py')
+    module['expert'].__globals__['STOP'].clear()
+    repo = tmp_path/'repo'
+    context = repo/'backend/evaluation/research/expert/ALGORITHM_CONTEXT.md'
+    context.parent.mkdir(parents=True)
+    context.write_text('Public task context without answers.')
+    root, workspace = tmp_path/'results', tmp_path/'workspace'
+    (root/'baseline/u').mkdir(parents=True)
+    workspace.mkdir()
+    packet = {'schema_version':'1','baseline_pipeline_sha':'abcdef0123456789',
+        'baseline_budget':{'max_fetcher_calls':60,'max_elapsed_ms':120000,
+            'max_search_queries':6,'browser_enabled':False},
+        'public_profile':{'education_system':'KZ national secondary'},
+        'cases':[{'case_id':'u','university':'U','domain':'u.edu',
+            'request':{**{k:None for k in SCOPE},'university':'U',
+                       'degree':'bachelor','field':'computer science','intake':'fall 2027'},
+            'baseline':{}}]}
+    public_packet=root/'baseline/u/public-packet.json'
+    public_packet.write_text(json.dumps(packet))
+    (root/'baseline/u/result.json').write_text(json.dumps(
+        {'packet':str(public_packet),'head_sha':packet['baseline_pipeline_sha']}))
+    monkeypatch.setattr(Isolation,'prove_access',lambda self,*args:{'mock_only':True})
+    calls, selector_prompts, plans = [], [], []
+    runtime = module['expert'].__globals__
+
+    async def get(url):
+        calls.append(url)
+        return FetchResult(url=url,final_url=url,outcome=FetchOutcome.OK,
+            status_code=200,content_type='text/html',
+            content=f'<main><h1>Admissions</h1><p>{QUOTE}</p></main>'.encode())
+
+    def workflow(repo, ref, case_id, inputs, destination):
+        plan=json.loads(inputs['plan']); plans.append(plan)
+        artifact=destination/'artifact'
+        logs=artifact/'logs'; logs.mkdir(parents=True)
+        if len(plans)>1:
+            old=root/'experts/u'/f'controller-{len(plans)-1:02d}'/'artifact/logs'
+            for file in old.glob('*.json'): shutil.copy2(file,logs/file.name)
+        summary=asyncio.run(execute(plan,logs,get=get,search=None,provider_name='exa_mcp'))
+        (artifact/'summary.json').write_text(json.dumps(summary))
+        return len(plans),packet['baseline_pipeline_sha']
+
+    selections=[SelectorTurn(choice(),12000,'','',0,None),
+                SelectorTurn(choice('submit'),13000,'','',0,None)]
+
+    def select(isolation,schema,output,prompt,**kwargs):
+        selector_prompts.append((prompt,kwargs))
+        return selections.pop(0)
+
+    runtime.update(workflow=workflow,select=select,emit=lambda **kwargs:None)
+    return runtime,repo,root,workspace,calls,selector_prompts,plans,selections
+
+
+def run(pilot):
+    module,repo,root,workspace,*_=pilot
+    return module['expert'](repo,'frozen',root,'u',{'u':workspace})
+
+
+def test_actual_orchestrator_validates_source_bytes_and_derives_date(pilot):
+    result=run(pilot)
+    assert result['status']=='submitted' and result['validated']
+    assert result['found']==['Q1'] and result['exact_metering']
+    runtime,repo,root,workspace,calls,prompts,plans,_=pilot
+    trace=json.loads((root/'experts/u/trace.json').read_text())
+    assert calls==[URL]
+    assert trace['proposals'][0]['accessed_on']==datetime.now(UTC).date().isoformat()
+    assert trace['proposals'][0]['value']==6.5
+    assert all(kwargs['model']=='gpt-6-astra' for _,kwargs in prompts)
+    assert plans[0]['max_ms']==120000 and plans[0]['action_deadline_ms']==75000
+    assert result['active_ms']==sum(entry['elapsed_ms'] for entry in result['meter'])
+
+
+def test_navigation_timeout_charged_and_partial_text_never_becomes_facts(pilot):
+    *_,selections=pilot
+    selections[0]=SelectorTurn(None,20025,'partial unsupported answer','',None,'selector_timeout')
+    selections[1]=SelectorTurn({'kind':'submit','observation':'No sources read.',
+        'action':None,'facts':[],'question_findings':[]},2000,'','',0,None)
+    result=run(pilot)
+    assert result['active_ms']>=22025 and result['actions']==0
+    assert not result['validated'] and result['status']=='incomplete'
+    assert pilot[4]==[] and pilot[5][1][0]['required_now']=='submit'
+
+
+def test_source_deadline_reserves_final_selector_time(pilot):
+    runtime,*_=pilot
+    actual=runtime['workflow']
+    def workflow(*args):
+        run_id,sha=actual(*args)
+        path=args[-1]/'artifact/summary.json'
+        summary=json.loads(path.read_text())
+        summary['final'].update(elapsed_ms=75000,stop_reason='action_deadline_exhausted')
+        path.write_text(json.dumps(summary))
+        return run_id,sha
+    runtime['workflow']=workflow
+    result=run(pilot)
+    assert result['validated'] and result['status']=='submitted'
+    assert pilot[5][1][0]['required_now']=='submit'
+    assert 44 < pilot[5][1][1]['timeout_seconds'] <=45
+    assert len(pilot[6])==1
+
+
+def test_final_answer_over_budget_is_preserved_but_not_passed(pilot):
+    pilot[-1][1]=SelectorTurn(choice('submit'),120000,'','',0,None)
+    result=run(pilot)
+    assert result['status']=='incomplete' and result['active_ms']>120000
+    assert result['found']==[]
+    assert result['validated']  # the unresolved trace is audit-valid, not accepted research
+
+
+def test_controller_source_drift_stops_new_dispatches(pilot):
+    runtime,*_=pilot
+    actual=runtime['workflow']
+    runtime['workflow']=lambda *args:(actual(*args)[0],'different-source')
+    result=run(pilot)
+    assert result['status']=='incomplete'
+    assert runtime['STOP'].is_set() and not result['validated']
+
+
+def test_unknown_dispatch_outcome_is_not_reissued(pilot):
+    runtime,*_=pilot
+    def workflow(*args): raise RuntimeError('unknown dispatch outcome')
+    runtime['workflow']=workflow
+    result=run(pilot)
+    assert runtime['STOP'].is_set() and result['actions']==0
+    assert result['status']=='incomplete' and not result['validated']

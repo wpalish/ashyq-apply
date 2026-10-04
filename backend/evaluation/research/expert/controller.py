@@ -12,6 +12,10 @@ incremental plans the caller supplies ``start_ms`` including model selection
 time since the original run began, alongside ``start_calls`` and
 ``start_search_queries``. Time within this invocation is measured with the
 monotonic clock; an asyncio deadline also bounds each actual tool action.
+An optional strict ``action_deadline_ms`` is an absolute cumulative active
+ceiling for navigation, within ``max_ms``. It preserves time for a final
+submission without tool I/O and cannot be extended when resuming. Explicit
+outside-policy exploration also respects this navigation ceiling.
 
 Raw logs belong in ignored artifacts, never Git. ``resume_summary`` may hold
 the preceding returned summary to recheck raw-log hashes before resuming.
@@ -112,6 +116,13 @@ def _integer(plan: dict[str, Any], key: str, default: int | None = None) -> int:
     return value
 
 
+def _action_deadline(plan: dict[str, Any], max_ms: int) -> int | None:
+    value = plan.get("action_deadline_ms")
+    if value is not None and (type(value) is not int or not 1 <= value <= max_ms):
+        raise ValueError("action_deadline_ms must be an integer from 1 to max_ms")
+    return value
+
+
 @dataclass
 class Ledger:
     max_calls: int
@@ -172,6 +183,7 @@ def _existing_state(
     provider_name: str,
     strict: bool,
     budget_origin: str,
+    action_deadline_ms: int | None,
 ) -> tuple[int, dict[str, Any]]:
     """Locate the next log and reject counter resets or changed resume bytes."""
     pattern = re.compile(re.escape(prefix) + r"-(\d+)\.json\Z")
@@ -195,6 +207,15 @@ def _existing_state(
                 raise ValueError("Resume log_prefix differs from the recorded run")
             if resume.get("budget_origin", budget_origin) != budget_origin:
                 raise ValueError("Resume budget_origin differs from the recorded run")
+            previous_policy = resume.get("tool_policy", {})
+            if not isinstance(previous_policy, dict) or (
+                _action_deadline(previous_policy, plan["max_ms"]) != action_deadline_ms
+            ):
+                raise ValueError("Resume action_deadline_ms differs from recorded policy")
+            if "action_deadline_ms" in resume and (
+                _action_deadline(resume, plan["max_ms"]) != action_deadline_ms
+            ):
+                raise ValueError("Resume action_deadline_ms differs from the recorded summary")
         for name, sha in expected.items():
             if (
                 not isinstance(name, str)
@@ -241,6 +262,8 @@ def _existing_state(
                 expected_cap = plan.get(plan_key, STRICT_MAX_SEARCH_QUERIES)
                 if record["tool_policy"].get(key) != expected_cap:
                     raise ValueError("Resume budget differs from recorded policy")
+            if _action_deadline(record["tool_policy"], plan["max_ms"]) != action_deadline_ms:
+                raise ValueError("Resume action_deadline_ms differs from recorded policy")
             if record["tool_policy"].get("official_domains", []) != [
                 _domain(d) for d in plan.get("official_domains", [])
             ]:
@@ -362,6 +385,7 @@ async def execute(
     max_queries = _integer(plan, "max_search_queries", STRICT_MAX_SEARCH_QUERIES)
     if max_calls < 1 or max_ms < 1 or max_queries < 1:
         raise ValueError("Run budgets must be positive")
+    action_deadline_ms = _action_deadline(plan, max_ms)
     if strict and (
         max_calls > STRICT_MAX_CALLS
         or max_ms > STRICT_MAX_MS
@@ -389,7 +413,9 @@ async def execute(
         raise ValueError("Strict expert runs require independently resolved official_domains")
     if any(blocked("https://" + d) for d in official_domains):
         raise ValueError("Official domains cannot include a blocked repository host")
-    number, state = _existing_state(plan, logs_dir, prefix, provider_name, strict, origin)
+    number, state = _existing_state(
+        plan, logs_dir, prefix, provider_name, strict, origin, action_deadline_ms
+    )
     initial = {
         key: _integer(plan, key, int(state.get(record_key, 0)))
         for key, record_key in (
@@ -416,10 +442,10 @@ async def execute(
         search_queries=initial["start_search_queries"],
     )
     stop_reason = plan.get("stop_reason", state.get("stop_reason"))
-    if stop_reason not in {None, "http_429", "budget_exhausted"}:
+    if stop_reason not in {None, "http_429", "budget_exhausted", "action_deadline_exhausted"}:
         raise ValueError("Unsupported stop_reason")
-    if state.get("stop_reason") == "http_429":
-        stop_reason = "http_429"
+    if state.get("stop_reason") in {"http_429", "action_deadline_exhausted"}:
+        stop_reason = state["stop_reason"]
     policy = {
         **TOOL_POLICY,
         "strict_budget": strict,
@@ -430,6 +456,8 @@ async def execute(
         "max_elapsed_ms": max_ms,
         "budget_origin": origin,
     }
+    if action_deadline_ms is not None:
+        policy["action_deadline_ms"] = action_deadline_ms
     summary: dict[str, Any] = {
         "case_id": plan["case_id"],
         "provider": provider_name,
@@ -441,6 +469,8 @@ async def execute(
         "replay": [],
         "actions": [],
     }
+    if action_deadline_ms is not None:
+        summary["action_deadline_ms"] = action_deadline_ms
     run_began = monotonic()
     for kind, items in (("replay", plan.get("replay", [])), ("actions", plan.get("actions", []))):
         for item in items:
@@ -499,14 +529,30 @@ async def execute(
                         refusal = "blocked_by_tool_policy"
                 if tool == "search_provider" and stop_reason == "http_429":
                     refusal = "stopped_after_http_429"
+                action_start_ms = ledger.ms
+                if strict and action_deadline_ms is not None:
+                    # Log reservation and input checks consume active time too.
+                    # Recheck immediately before allowing any outbound action.
+                    action_start_ms = max(
+                        ledger.ms,
+                        initial["start_ms"] + math.ceil((monotonic() - run_began) * 1000),
+                    )
                 exhausted = strict and (
-                    ledger.ms >= ledger.max_ms
+                    action_start_ms >= ledger.max_ms
                     or (tool == "fetcher" and ledger.calls >= ledger.max_calls)
                     or (tool == "search_provider" and ledger.search_queries >= max_queries)
                 )
                 if refusal is None and exhausted and exploration != "outside_policy":
                     refusal = "budget_exhausted"
                     stop_reason = stop_reason or "budget_exhausted"
+                if (
+                    refusal is None
+                    and strict
+                    and action_deadline_ms is not None
+                    and action_start_ms >= action_deadline_ms
+                ):
+                    refusal = "action_deadline_exhausted"
+                    stop_reason = stop_reason or "action_deadline_exhausted"
                 calls = queries = 0
                 deadline_floor = 0
                 if refusal:
@@ -517,8 +563,17 @@ async def execute(
                     calls = int(tool == "fetcher")
                     queries = int(tool == "search_provider")
                     action_budget_ms = (
-                        max_ms if exploration == "outside_policy" else max_ms - ledger.ms
+                        max_ms if exploration == "outside_policy" else max_ms - action_start_ms
                     )
+                    navigation_limited = (
+                        strict
+                        and action_deadline_ms is not None
+                        and action_deadline_ms - action_start_ms < action_budget_ms
+                    )
+                    if strict and action_deadline_ms is not None:
+                        action_budget_ms = min(
+                            action_budget_ms, action_deadline_ms - action_start_ms
+                        )
                     try:
                         async with asyncio.timeout(
                             max(1, action_budget_ms) / 1000 if strict else None
@@ -574,8 +629,16 @@ async def execute(
                             "error": "Action exceeded the remaining run deadline.",
                         }
                         if strict:
-                            stop_reason = stop_reason or "budget_exhausted"
-                            deadline_floor = max_ms
+                            stop_reason = stop_reason or (
+                                "action_deadline_exhausted"
+                                if navigation_limited
+                                else "budget_exhausted"
+                            )
+                            if navigation_limited:
+                                assert action_deadline_ms is not None
+                                deadline_floor = action_deadline_ms
+                            else:
+                                deadline_floor = max_ms
                     except Exception as exc:
                         record["response"] = _failure(
                             exc, provider_name=provider_name if tool == "search_provider" else None
