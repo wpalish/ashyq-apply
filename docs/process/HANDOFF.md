@@ -48,7 +48,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**[expert-500] Phase0 preparation in progress; Phase1 pilot next.** Extend offline packets to the 501-identity catalogue, define Q0-Q6 trace outcomes and reviewed miss causes, create a sealed deterministic 350 DEV /150 HELDOUT split, enforce recorded controller budgets and validate stored raw logs. Then compare a fresh main ten-case capture with model-chosen controlled source reads. A genuine blind expert requires tools restricted by access control, not instructions alone; record any inability to establish isolation instead of claiming blinding.
+**[expert-500] Phase0 complete locally, ready-for-review (PR pending); Phase1 pilot next.** Extend offline packets to the 501-identity catalogue, define Q0-Q6 trace outcomes and reviewed miss causes, create a sealed deterministic 350 DEV /150 HELDOUT split, enforce recorded controller budgets and validate stored raw logs. Then compare a fresh main ten-case capture with model-chosen controlled source reads. A genuine blind expert requires tools restricted by access control, not instructions alone; record any inability to establish isolation instead of claiming blinding.
 
 
 **Local university search: deployed and public workflow verified (PR #39, main1aa188e, Fly v5).** Complete runtime acceptance is recorded in UNIMATCH_SEARCH_RELEASE_2026-10-02.md; this does not assert complete official admission facts for501 universities.
@@ -125,6 +125,9 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[expert-500] Phase0 (initial source c04bf6a; final strict/PDF/review fixes in this commit):** 501 public identities, sealed350/150 split, all10 pilots in DEV, Q0-Q6 exact-source trace proof, strict60/120s/6 controller and resume, equal-budget baseline wrapper, PDF page view, OS-isolated ephemeral tool-free selector. Final backend3094/94.88%; frontend gates green/unchanged. Real neutral model probe only; zero university live reads. Report docs/process/EXPERT500_PHASE0_2026-10-04.md. No app/gold/bindings/deployment changes.
+
 
 **Search release evidence:** tested dbbf396 → merged1aa188e, identical tree6534f52;8 exact-head CI jobs passed. Fly v5/ce0acb2a image verified on both existing machines. Public catalogue filters and UI-selected run9307186a completed; results/evidence survive reload and Save works in the isolated synthetic case.
 
@@ -1746,7 +1749,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-**[expert-500] Write-ahead:** edit only evaluation/research/expert tooling, its offline tests, the benchmark expert-actions wiring as needed, and process evidence. No app algorithm or gold/binding edits. Preserve 120s/60-page/six-search budget, robots, free-provider 429 stop, citation/raw-log integrity, and unreviewed evidence status. Ten pilot identities must be in DEV so HELDOUT stays unopened. Additional Phase0 write-ahead: controller.expert_view + tests/test_expert_pdf_view.py add pure parsing of already stored PDF bytes with exact bounded page locations; evaluation/research/live.py and tests/test_expert_live_budget.py add an opt-in strict expert budget (cold get60 / global query6 / active120s) while preserving legacy mode; report the unchanged main app tree separately from the new evaluation harness SHA. Full gates and separate Phase0 PR; fresh main-app capture/Phase1 ten-expert pilot only after controller/isolation readiness.
+**[expert-500] Write-ahead:** edit only evaluation/research/expert tooling, its offline tests, the benchmark expert-actions wiring as needed, and process evidence. No app algorithm or gold/binding edits. Preserve 120s/60-page/six-search budget, robots, free-provider 429 stop, citation/raw-log integrity, and unreviewed evidence status. Ten pilot identities must be in DEV so HELDOUT stays unopened. Additional Phase0 write-ahead: benchmark-capture expert_actions restores a prior same-run artifact only with an explicit numeric resume_run_id and controller raw hash/counter validation; offline workflow tests execute blank/single case shell wiring and resume checks. controller.expert_view + tests/test_expert_pdf_view.py add pure parsing of already stored PDF bytes with exact bounded page locations; evaluation/research/live.py and tests/test_expert_live_budget.py add an opt-in strict expert budget (cold get60 / global query6 / active120s) while preserving legacy mode; report the unchanged main app tree separately from the new evaluation harness SHA. Full gates and separate Phase0 PR; fresh main-app capture/Phase1 ten-expert pilot only after controller/isolation readiness.
 
 
 **After this documentation checkpoint:** inspect postmerge CI36972183803 and merge this metadata-only release record through its PR using the owner's standing merge authorization. No runtime edits are pending. Future product changes require a reproduced fault; partial official-data coverage is explicitly documented, not a completed universal knowledge base. Do not duplicate the synthetic NTU acceptance run or change production credentials.
@@ -3661,6 +3664,9 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[expert-500] Reviewed final gate:**3094 passed,2 warnings,94.88% coverage in386.01s; Ruff319 files lint/format green; mypy319 green plus final live/test scoped check. Frontend typecheck/lint/unit/build exit0, source unchanged; exact unit count not asserted. Focused115 strict/PDF/trace/workflow tests pass; selector25 pass. One Alembic head d8e412c6a901. The intermediate3092 full run preceded the final JEV-shadow fix and is not the final source proof.
+
+
 **[expert-500] Phase0 checkpoint (2026-10-04):** backend Ruff check/format306 files and mypy306 pass; complete pytest3048 passed,2 warnings,94.89% coverage in385.43s. Frontend typecheck/lint/unit/build all exit0; exact unit count was truncated and is not asserted. Blinded selector25 offline regressions pass; real neutral CLI model probe completed text-only in4.104s with OS denied sealed sentinel. No university pages fetched in Phase0. Strict baseline budget and saved-PDF view are still under implementation and require their focused/full final gates before ready-for-review.
 
 
@@ -4406,6 +4412,9 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+- 2026-10-04 [expert-500] evaluation only: prepare-catalogue/split-catalogue CLI; catalogue public-profile/provenance/comparison_mode packet fields; optional complete question_findings(Q0-Q6), exact SourceEvidence location and evaluator-only TraceAdjudication. Strict plans bind official domains, queries, origin, prefix and counters with raw-byte hashes; response elapsed_ms_before/charged_elapsed_ms support decision-time gaps. live --strict-expert-budget counts cold get60/query6/active120s plus separate15s process reserve and stops cohort429; legacy unchanged. expert_view page=N adds bounded pure PDF text/page metadata. Workflow resume_run_id restores hashed prior artifact; run_tag is public display-title correlation only. blind_cli is macOS OS-denied, ephemeral/tool-free; unknown event streams fail closed. No production API/model/migration/gold change.
+
 
 **2026-10-02 eligibility integrity:** a future admission window or optional-test policy alone cannot establish overall MET. Individual date/policy checks remain unchanged; missing assessable entry requirements produce NEEDS_OFFICIAL_CLARIFICATION with an explicit academic requirements unknown. Ranking formula/v1 untouched.
 

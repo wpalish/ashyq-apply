@@ -505,7 +505,10 @@ def _source_read(record: dict[str, Any]) -> _SourceRead | None:
 def _quote_matches(
     excerpt: str, source: _SourceRead, location: EvidenceLocation | None = None
 ) -> bool:
-    from app.domain.claim_verifier import is_verbatim_excerpt
+    from app.domain.claim_verifier import is_verbatim_excerpt, normalize_text
+
+    if not normalize_text(excerpt):
+        return False
 
     if location is not None:
         if location.kind == "document_ir":

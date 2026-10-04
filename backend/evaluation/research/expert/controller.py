@@ -684,20 +684,25 @@ def expert_view(
     link_offset: int = 0,
     sections: int = 80,
     section_offset: int = 0,
+    page: int | None = None,
 ) -> dict[str, Any]:
     """Paginate exact readable text, named IR blocks and discovery links from a raw log.
 
     Pagination reads stored bytes only. Text and section hashes cover the full
     representation, so later pages can be verified against the same source.
+    PDF ``page`` is one-based and selects the exact page text; omitting it
+    returns the production aggregate. Only the first forty pages are parsed.
     """
     from app.adapters.document_ir import build_document_ir
-    from app.adapters.extraction import readable_text
+    from app.adapters.extraction import pdf_to_text, readable_text
 
     if any(
         type(n) is not int or n < 0
         for n in (chars, links, offset, link_offset, sections, section_offset)
     ):
         raise ValueError("View limits and offsets must be nonnegative integers")
+    if page is not None and (type(page) is not int or not 1 <= page <= 40):
+        raise ValueError("PDF page must be an integer from 1 to 40")
     chars, links, sections = (
         min(chars, MAX_VIEW_CHARS),
         min(links, MAX_VIEW_ITEMS),
@@ -735,6 +740,9 @@ def expert_view(
     expected_hash = response.get("content_sha256")
     if body and expected_hash and hashlib.sha256(body).hexdigest() != expected_hash:
         raise ValueError("Stored content hash mismatch")
+    content_type = (response.get("content_type") or "").lower()
+    if page is not None and "pdf" not in content_type:
+        raise ValueError("A page number requires a stored PDF response")
     text = ""
     if body and "html" in (response.get("content_type") or "").lower():
         html = body.decode("utf-8", errors="replace")
@@ -766,6 +774,64 @@ def expert_view(
             if link_offset + links < len(seen) and links
             else None,
         )
+    elif "pdf" in content_type:
+        import io
+
+        view.update(
+            pdf_page=page,
+            pdf_pages=[],
+            pdf_pages_total=None,
+            pdf_pages_read=0,
+            pdf_page_limit_reached=False,
+            pdf_status="unresolved",
+            pdf_error="pdf_payload_unavailable",
+            text="",
+            text_offset=offset,
+            text_total_chars=0,
+            text_sha256=hashlib.sha256(b"").hexdigest(),
+            text_next_offset=None,
+        )
+        if body:
+            try:
+                from pypdf import PdfReader
+
+                reader = PdfReader(io.BytesIO(body))
+                total_pages = len(reader.pages)
+                page_texts = [(item.extract_text() or "") for item in reader.pages[:40]]
+                aggregate = pdf_to_text(body, max_pages=40)
+            except ImportError:
+                view["pdf_error"] = "pdf_parser_unavailable"
+            except Exception:
+                # PDF content is untrusted. Keep a fixed observable failure,
+                # never a byte placeholder or arbitrary exception text.
+                view["pdf_error"] = "pdf_decode_error"
+            else:
+                if page is not None and page > len(page_texts):
+                    raise ValueError("PDF page does not exist in the stored document")
+                view.update(
+                    pdf_pages=[
+                        {
+                            "page": index + 1,
+                            "text_total_chars": len(value),
+                            "text_sha256": hashlib.sha256(value.encode("utf-8")).hexdigest(),
+                            "has_text": bool(value.strip()),
+                        }
+                        for index, value in enumerate(page_texts)
+                    ],
+                    pdf_pages_total=total_pages,
+                    pdf_pages_read=len(page_texts),
+                    pdf_page_limit_reached=total_pages > 40,
+                )
+                text = page_texts[page - 1] if page is not None else aggregate
+                if text.strip() and aggregate.strip():
+                    view.update(pdf_status="readable", pdf_error=None)
+                else:
+                    text = ""
+                    view["pdf_error"] = (
+                        "pdf_decode_error"
+                        if any(value.strip() for value in page_texts) and not aggregate.strip()
+                        else "pdf_no_extractable_text"
+                    )
     elif body and any(
         t in (response.get("content_type") or "").lower() for t in ("xml", "text/plain")
     ):

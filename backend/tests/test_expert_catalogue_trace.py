@@ -231,6 +231,15 @@ def trace_for(packet: dict[str, Any], tmp_path: Path, *, found: bool = True) -> 
     return trace
 
 
+@pytest.mark.parametrize("excerpt", [" ", "\t\n", "\u00a0\u2003"])
+def test_whitespace_only_excerpt_cannot_prove_an_official_fact(tmp_path, packet, excerpt) -> None:
+    trace = trace_for(packet, tmp_path)
+    trace["proposals"][1]["excerpt"] = excerpt
+    trace["question_findings"][1]["evidence"][0]["excerpt"] = excerpt
+    with pytest.raises(ValueError, match="Proposed quote"):
+        validate_trace(trace, packet, logs_dir=tmp_path)
+
+
 def test_complete_findings_are_unreviewed_and_match_the_saved_source(
     packet: dict[str, Any],
     tmp_path: Path,
