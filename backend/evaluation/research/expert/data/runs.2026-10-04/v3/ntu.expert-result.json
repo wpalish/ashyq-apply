@@ -1,0 +1,553 @@
+{
+  "case_id": "ntu",
+  "status": "incomplete",
+  "error": "selector_timeout",
+  "validated": true,
+  "trace_sha256": "c1e4c50cfdab10f0b5f0b9a30012dc522591a32178dacff180a346537046148d",
+  "trace": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v3-2026-10-04/experts/ntu/trace.json",
+  "journal_sha256": "c4aee0e456404262bbd1817dc6d9cf34d909bb539fa8cdda93fc37167fb45e02",
+  "compact_submission": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v3-2026-10-04/experts/ntu/compact-submission.json",
+  "citation_proof_sha256": "0e761cec1eff8b66f1c6b67144ee0669631cc94241966b375d90feecedb1718a",
+  "accepted_turns": 4,
+  "active_ms": 109173,
+  "actions": 3,
+  "logical_expert": "expert500-ntu",
+  "comparison_mode": "independent_full_budget",
+  "provider": "exa_mcp",
+  "requested_model": "gpt-6-astra",
+  "exact_metering": true,
+  "codex_cli": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
+  "source_deadline_ms": 95000,
+  "closing_reserve_ms": 3000,
+  "turn_errors": [
+    {
+      "turn": 3,
+      "kind": "rejected_checkpoint",
+      "feedback": "Q0 scope differs from public request: university"
+    },
+    {
+      "turn": 5,
+      "kind": "rejected_checkpoint",
+      "feedback": "HTML text quotation needs one unambiguous DocumentIR block or an explicit structural location"
+    },
+    {
+      "turn": 7,
+      "kind": "selector_timeout",
+      "elapsed_ms": 22012
+    }
+  ],
+  "explicit_commit": false,
+  "protocol_version": "journal-v3",
+  "real_elapsed_seconds": 240.795893,
+  "active_time_basis": "prompt/selector/parse/source/view/journal/trace work; excludes provisioning, GitHub transport and audit envelopes",
+  "meter": [
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 1
+    },
+    {
+      "stage": "checkpoint_selector",
+      "turn": 1,
+      "elapsed_ms": 9509,
+      "active_ms": 9510
+    },
+    {
+      "stage": "journal_answer_read",
+      "elapsed_ms": 1,
+      "active_ms": 9511
+    },
+    {
+      "stage": "journal_parse",
+      "elapsed_ms": 1,
+      "active_ms": 9512
+    },
+    {
+      "stage": "journal_candidate",
+      "elapsed_ms": 1,
+      "active_ms": 9513
+    },
+    {
+      "stage": "journal_submission",
+      "elapsed_ms": 1,
+      "active_ms": 9514
+    },
+    {
+      "stage": "checkpoint_expansion",
+      "elapsed_ms": 1,
+      "active_ms": 9515
+    },
+    {
+      "stage": "checkpoint_event_hashing",
+      "elapsed_ms": 1,
+      "active_ms": 9516
+    },
+    {
+      "stage": "checkpoint_snapshot_write",
+      "elapsed_ms": 1,
+      "active_ms": 9517
+    },
+    {
+      "stage": "checkpoint_commit_marker_write",
+      "elapsed_ms": 1,
+      "active_ms": 9518
+    },
+    {
+      "stage": "action_parse",
+      "elapsed_ms": 1,
+      "active_ms": 9519
+    },
+    {
+      "stage": "plan_construction",
+      "elapsed_ms": 1,
+      "active_ms": 9520
+    },
+    {
+      "stage": "controlled_source_action",
+      "elapsed_ms": 3118,
+      "active_ms": 12638,
+      "run_id": 37191532030
+    },
+    {
+      "stage": "controller_summary_read_and_parse",
+      "elapsed_ms": 1,
+      "active_ms": 12639
+    },
+    {
+      "stage": "source_output_processing_and_views",
+      "elapsed_ms": 2,
+      "active_ms": 12641
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 12642
+    },
+    {
+      "stage": "checkpoint_selector",
+      "turn": 2,
+      "elapsed_ms": 9445,
+      "active_ms": 22087
+    },
+    {
+      "stage": "journal_answer_read",
+      "elapsed_ms": 1,
+      "active_ms": 22088
+    },
+    {
+      "stage": "journal_parse",
+      "elapsed_ms": 1,
+      "active_ms": 22089
+    },
+    {
+      "stage": "journal_candidate",
+      "elapsed_ms": 1,
+      "active_ms": 22090
+    },
+    {
+      "stage": "journal_submission",
+      "elapsed_ms": 1,
+      "active_ms": 22091
+    },
+    {
+      "stage": "checkpoint_expansion",
+      "elapsed_ms": 1,
+      "active_ms": 22092
+    },
+    {
+      "stage": "checkpoint_trace",
+      "elapsed_ms": 1,
+      "active_ms": 22093
+    },
+    {
+      "stage": "checkpoint_raw_log_validation",
+      "elapsed_ms": 2,
+      "active_ms": 22095
+    },
+    {
+      "stage": "checkpoint_all_fact_citations",
+      "elapsed_ms": 1,
+      "active_ms": 22096
+    },
+    {
+      "stage": "checkpoint_event_hashing",
+      "elapsed_ms": 1,
+      "active_ms": 22097
+    },
+    {
+      "stage": "checkpoint_snapshot_write",
+      "elapsed_ms": 1,
+      "active_ms": 22098
+    },
+    {
+      "stage": "checkpoint_commit_marker_write",
+      "elapsed_ms": 1,
+      "active_ms": 22099
+    },
+    {
+      "stage": "action_parse",
+      "elapsed_ms": 1,
+      "active_ms": 22100
+    },
+    {
+      "stage": "plan_construction",
+      "elapsed_ms": 1,
+      "active_ms": 22101
+    },
+    {
+      "stage": "controlled_source_action",
+      "elapsed_ms": 2178,
+      "active_ms": 24279,
+      "run_id": 37191585585
+    },
+    {
+      "stage": "controller_summary_read_and_parse",
+      "elapsed_ms": 1,
+      "active_ms": 24280
+    },
+    {
+      "stage": "source_output_processing_and_views",
+      "elapsed_ms": 50,
+      "active_ms": 24330
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 24331
+    },
+    {
+      "stage": "checkpoint_selector",
+      "turn": 3,
+      "elapsed_ms": 16222,
+      "active_ms": 40553
+    },
+    {
+      "stage": "journal_answer_read",
+      "elapsed_ms": 1,
+      "active_ms": 40554
+    },
+    {
+      "stage": "journal_parse",
+      "elapsed_ms": 1,
+      "active_ms": 40555
+    },
+    {
+      "stage": "journal_candidate",
+      "elapsed_ms": 2,
+      "active_ms": 40557
+    },
+    {
+      "stage": "journal_submission",
+      "elapsed_ms": 1,
+      "active_ms": 40558
+    },
+    {
+      "stage": "checkpoint_expansion",
+      "elapsed_ms": 1,
+      "active_ms": 40559
+    },
+    {
+      "stage": "checkpoint_trace",
+      "elapsed_ms": 1,
+      "active_ms": 40560
+    },
+    {
+      "stage": "checkpoint_raw_log_validation",
+      "elapsed_ms": 1,
+      "active_ms": 40561
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 40562
+    },
+    {
+      "stage": "checkpoint_selector",
+      "turn": 4,
+      "elapsed_ms": 16248,
+      "active_ms": 56810
+    },
+    {
+      "stage": "journal_answer_read",
+      "elapsed_ms": 1,
+      "active_ms": 56811
+    },
+    {
+      "stage": "journal_parse",
+      "elapsed_ms": 1,
+      "active_ms": 56812
+    },
+    {
+      "stage": "journal_candidate",
+      "elapsed_ms": 2,
+      "active_ms": 56814
+    },
+    {
+      "stage": "journal_submission",
+      "elapsed_ms": 1,
+      "active_ms": 56815
+    },
+    {
+      "stage": "checkpoint_expansion",
+      "elapsed_ms": 1,
+      "active_ms": 56816
+    },
+    {
+      "stage": "checkpoint_trace",
+      "elapsed_ms": 1,
+      "active_ms": 56817
+    },
+    {
+      "stage": "checkpoint_raw_log_validation",
+      "elapsed_ms": 47,
+      "active_ms": 56864
+    },
+    {
+      "stage": "checkpoint_all_fact_citations",
+      "elapsed_ms": 30,
+      "active_ms": 56894
+    },
+    {
+      "stage": "checkpoint_event_hashing",
+      "elapsed_ms": 1,
+      "active_ms": 56895
+    },
+    {
+      "stage": "checkpoint_snapshot_write",
+      "elapsed_ms": 1,
+      "active_ms": 56896
+    },
+    {
+      "stage": "checkpoint_commit_marker_write",
+      "elapsed_ms": 1,
+      "active_ms": 56897
+    },
+    {
+      "stage": "action_parse",
+      "elapsed_ms": 1,
+      "active_ms": 56898
+    },
+    {
+      "stage": "plan_construction",
+      "elapsed_ms": 1,
+      "active_ms": 56899
+    },
+    {
+      "stage": "controlled_source_action",
+      "elapsed_ms": 1181,
+      "active_ms": 58080,
+      "run_id": 37191655362
+    },
+    {
+      "stage": "controller_summary_read_and_parse",
+      "elapsed_ms": 1,
+      "active_ms": 58081
+    },
+    {
+      "stage": "source_output_processing_and_views",
+      "elapsed_ms": 129,
+      "active_ms": 58210
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 58211
+    },
+    {
+      "stage": "checkpoint_selector",
+      "turn": 5,
+      "elapsed_ms": 18843,
+      "active_ms": 77054
+    },
+    {
+      "stage": "journal_answer_read",
+      "elapsed_ms": 1,
+      "active_ms": 77055
+    },
+    {
+      "stage": "journal_parse",
+      "elapsed_ms": 1,
+      "active_ms": 77056
+    },
+    {
+      "stage": "journal_candidate",
+      "elapsed_ms": 3,
+      "active_ms": 77059
+    },
+    {
+      "stage": "journal_submission",
+      "elapsed_ms": 1,
+      "active_ms": 77060
+    },
+    {
+      "stage": "checkpoint_expansion",
+      "elapsed_ms": 1,
+      "active_ms": 77061
+    },
+    {
+      "stage": "checkpoint_trace",
+      "elapsed_ms": 1,
+      "active_ms": 77062
+    },
+    {
+      "stage": "checkpoint_raw_log_validation",
+      "elapsed_ms": 105,
+      "active_ms": 77167
+    },
+    {
+      "stage": "checkpoint_all_fact_citations",
+      "elapsed_ms": 110,
+      "active_ms": 77277
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 77278
+    },
+    {
+      "stage": "checkpoint_selector",
+      "turn": 6,
+      "elapsed_ms": 9504,
+      "active_ms": 86782
+    },
+    {
+      "stage": "journal_answer_read",
+      "elapsed_ms": 1,
+      "active_ms": 86783
+    },
+    {
+      "stage": "journal_parse",
+      "elapsed_ms": 1,
+      "active_ms": 86784
+    },
+    {
+      "stage": "journal_candidate",
+      "elapsed_ms": 2,
+      "active_ms": 86786
+    },
+    {
+      "stage": "journal_submission",
+      "elapsed_ms": 1,
+      "active_ms": 86787
+    },
+    {
+      "stage": "checkpoint_expansion",
+      "elapsed_ms": 1,
+      "active_ms": 86788
+    },
+    {
+      "stage": "checkpoint_trace",
+      "elapsed_ms": 1,
+      "active_ms": 86789
+    },
+    {
+      "stage": "checkpoint_raw_log_validation",
+      "elapsed_ms": 105,
+      "active_ms": 86894
+    },
+    {
+      "stage": "checkpoint_all_fact_citations",
+      "elapsed_ms": 28,
+      "active_ms": 86922
+    },
+    {
+      "stage": "checkpoint_event_hashing",
+      "elapsed_ms": 1,
+      "active_ms": 86923
+    },
+    {
+      "stage": "checkpoint_snapshot_write",
+      "elapsed_ms": 1,
+      "active_ms": 86924
+    },
+    {
+      "stage": "checkpoint_commit_marker_write",
+      "elapsed_ms": 1,
+      "active_ms": 86925
+    },
+    {
+      "stage": "action_parse",
+      "elapsed_ms": 1,
+      "active_ms": 86926
+    },
+    {
+      "stage": "stored_source_view",
+      "elapsed_ms": 60,
+      "active_ms": 86986
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 86987
+    },
+    {
+      "stage": "checkpoint_selector",
+      "turn": 7,
+      "elapsed_ms": 22012,
+      "active_ms": 108999
+    },
+    {
+      "stage": "closing_journal_submission",
+      "elapsed_ms": 1,
+      "active_ms": 109000
+    },
+    {
+      "stage": "closing_expansion",
+      "elapsed_ms": 1,
+      "active_ms": 109001
+    },
+    {
+      "stage": "closing_trace",
+      "elapsed_ms": 1,
+      "active_ms": 109002
+    },
+    {
+      "stage": "closing_raw_log_validation",
+      "elapsed_ms": 137,
+      "active_ms": 109139
+    },
+    {
+      "stage": "closing_all_fact_citations",
+      "elapsed_ms": 27,
+      "active_ms": 109166
+    },
+    {
+      "stage": "closing_journal_write",
+      "elapsed_ms": 1,
+      "active_ms": 109167
+    },
+    {
+      "stage": "closing_compact_write",
+      "elapsed_ms": 1,
+      "active_ms": 109168
+    },
+    {
+      "stage": "closing_proof_write",
+      "elapsed_ms": 1,
+      "active_ms": 109169
+    },
+    {
+      "stage": "closing_trace_write",
+      "elapsed_ms": 1,
+      "active_ms": 109170
+    },
+    {
+      "stage": "closing_trace_hash",
+      "elapsed_ms": 1,
+      "active_ms": 109171
+    },
+    {
+      "stage": "closing_citation_proof_hash",
+      "elapsed_ms": 1,
+      "active_ms": 109172
+    },
+    {
+      "stage": "terminal_retained_finding_summary",
+      "elapsed_ms": 1,
+      "active_ms": 109173
+    }
+  ],
+  "found": [
+    "Q0"
+  ]
+}

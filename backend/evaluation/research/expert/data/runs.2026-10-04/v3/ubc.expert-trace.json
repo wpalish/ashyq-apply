@@ -1,0 +1,159 @@
+{
+  "schema_version": "1",
+  "case_id": "ubc",
+  "packet_sha256": "79ca3a58a1a8bd2238defc5e5125fdc5666b8e61090fffbc465c7eb8c3a6b4dd",
+  "baseline_pipeline_sha": "2f4491eeb44442b8052bfe99e720415d2fd821ea",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T09:10:33.967127+00:00",
+  "ended_at": "2026-10-04T09:14:39.779527+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T09:11:20.314011+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://you.ubc.ca/ubc_programs/computer-science-vancouver/"
+      },
+      "outcome": "http_error",
+      "outcome_status": "failure",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-001.json",
+      "raw_log_sha256": "421c41786f7e4f1f18159c17eb6a9b05acd87fa2a95d640bb0310d49241117d8",
+      "elapsed_ms": 4827,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 17798,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Start with UBC's official Computer Science programme page.",
+      "observed_from_step": null,
+      "action": "fetcher: https://you.ubc.ca/ubc_programs/computer-science-vancouver/",
+      "stage": "page_understanding",
+      "url": "https://you.ubc.ca/ubc_programs/computer-science-vancouver/",
+      "final_url": "https://you.ubc.ca/programs/computer-science-vancouver/"
+    },
+    {
+      "at": "2026-10-04T09:12:10.687144+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:you.ubc.ca computer science bachelor English language admission requirements international scholarships 2027",
+        "domains": [
+          "you.ubc.ca"
+        ],
+        "max_results": 8
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-002.json",
+      "raw_log_sha256": "b894e3b60517b3ca48320705d1a0714877e4ad408df4a301a75d7734d149f815",
+      "elapsed_ms": 1574,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 29260,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Initial programme URL returned 404; search for current official programme and admissions pages.",
+      "observed_from_step": 1,
+      "action": "search_provider: site:you.ubc.ca computer science bachelor English language admission requirements international scholarships 2027",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T09:13:09.720270+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://you.ubc.ca/programs/computer-science-okanagan-ba/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ubc-003.json",
+      "raw_log_sha256": "89df9482a7ccecc0463fb7db127810f9e4c947fef9e7150e48f536b0b4203f22",
+      "elapsed_ms": 2932,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 42900,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "Open the official Computer Science bachelor programme result.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://you.ubc.ca/programs/computer-science-okanagan-ba/",
+      "stage": "page_understanding",
+      "url": "https://you.ubc.ca/programs/computer-science-okanagan-ba/",
+      "final_url": "https://you.ubc.ca/programs/computer-science-okanagan-ba/"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

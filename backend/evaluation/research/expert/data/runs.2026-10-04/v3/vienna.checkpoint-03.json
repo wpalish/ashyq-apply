@@ -1,0 +1,80 @@
+{
+  "schema_version": "1",
+  "journal_sha256": "7eb1ec8dc5e9b3131bb3c951ada87d971b0e9ce0df8d9b04539a89ee5f5f649c",
+  "facts": [
+    {
+      "claim_key": "programme.exists",
+      "id": "f1",
+      "location": {
+        "block_id": "b29",
+        "kind": "document_ir",
+        "page": null,
+        "section_path": [
+          "Computer Science (bachelor's programme)"
+        ]
+      },
+      "question": "Q0",
+      "quotation": "Computer Science (bachelor's programme)",
+      "scope": {
+        "academic_year": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "programme": "Computer Science",
+        "qualification": null,
+        "university": "University of Vienna"
+      },
+      "source_step": 2,
+      "value_json": "true"
+    },
+    {
+      "claim_key": "programme.language",
+      "id": "f2",
+      "location": {
+        "block_id": "b49",
+        "kind": "document_ir",
+        "page": null,
+        "section_path": [
+          "Computer Science (bachelor's programme)",
+          "The degree programme in a nutshell"
+        ]
+      },
+      "question": "OTHER",
+      "quotation": "German (admission requirement)",
+      "scope": {
+        "academic_year": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "programme": "Computer Science",
+        "qualification": null,
+        "university": "University of Vienna"
+      },
+      "source_step": 2,
+      "value_json": "\"German (admission requirement)\""
+    }
+  ],
+  "question_findings": [
+    {
+      "fact_ids": [
+        "f1"
+      ],
+      "observation": "Exact bachelor Computer Science programme confirmed.",
+      "question": "Q0",
+      "scope": {
+        "academic_year": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "programme": "Computer Science",
+        "qualification": null,
+        "university": "University of Vienna"
+      },
+      "status": "found",
+      "supporting_steps": []
+    }
+  ]
+}

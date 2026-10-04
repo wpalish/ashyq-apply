@@ -1,6 +1,8 @@
 # Phase1 V3: explicit incremental fact submissions
 
-Status: source preflight complete; the fresh ten-case paired pilot has not started.
+Status: fresh ten-case paired pilot measured and failed admission. See
+`EXPERT500_PHASE1_V3_2026-10-04.md`: algorithm3/62, experts3/62, two complete/eight
+selector timeouts. This frozen protocol and its seal are preserved as history.
 This document is a protocol description, not a search-quality result.
 
 ## Reason for this repair
