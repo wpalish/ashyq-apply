@@ -931,7 +931,18 @@ _FLOOR_AT_TUITION: Final[frozenset[ClaimType]] = frozenset(
 )
 
 
-def _population_amounts(text: str, label: str) -> list[tuple[str, float, str, int, int]]:
+#: An academic year as fee tables print it: 2027-2028, 2027/28, 2027–28.
+_ACADEMIC_YEAR = re.compile(r"\b(20\d{2})\s*[-/–]\s*(?:20)?(\d{2})\b")
+
+
+def _year_key(text: str) -> str | None:
+    m = _ACADEMIC_YEAR.search(text or "")
+    return f"{m.group(1)}/{m.group(2)}" if m else None
+
+
+def _population_amounts(
+    text: str, label: str, academic_year: str | None = None
+) -> list[tuple[str, float, str, int, int]]:
     """One fee per population row of a fee table, or none at all.
 
     ``(population, amount, currency, start, end)`` — only when the table after
@@ -939,29 +950,41 @@ def _population_amounts(text: str, label: str) -> list[tuple[str, float, str, in
     before the next one begins. The statutory EU/EEA fee and the institutional
     non-EU/EEA fee are different numbers on one page, and the first-match
     reading quoted whichever came first to everybody.
+
+    The label must stand as a word, not inside a link slug: Groningen's
+    programme page says ``…/application-enrolment-tuition-fees/…`` in two
+    links before its "Tuition fees" table, and the first-match header read the
+    link and missed the table (expert trace, 2026-10-04). Every standalone
+    occurrence is tried until one yields a table. When a population has one
+    row per academic year, the row for ``academic_year`` is kept if present.
     """
-    header = re.search(label, text, re.IGNORECASE)
-    if header is None:
-        return []
-    names = [
-        m for m in _POPULATION_WORD.finditer(text, header.end()) if m.start() - header.end() < 600
-    ]
-    out: list[tuple[str, float, str, int, int]] = []
-    seen: set[str] = set()
-    for i, name in enumerate(names):
-        stop = names[i + 1].start() if i + 1 < len(names) else len(text)
-        segment = text[name.end() : min(stop, name.end() + 120)]
-        money = _MONEY.search(segment)
-        population = population_named(name.group(0))
-        parsed = parse_money(money.group(0)) if money else None
-        if money is None or parsed is None or population is None or population in seen:
-            continue
-        amount, currency = parsed
-        if amount < TUITION_FLOOR_AMOUNT:
-            continue
-        seen.add(population)
-        out.append((population, amount, currency, name.start(), name.end() + money.end()))
-    return out if len(out) >= 2 else []
+    want = _year_key(academic_year or "")
+    for header in re.finditer(rf"(?<![\w/-]){label}(?![\w/-])", text, re.IGNORECASE):
+        names = [
+            m
+            for m in _POPULATION_WORD.finditer(text, header.end())
+            if m.start() - header.end() < 600
+        ]
+        rows: dict[str, tuple[str, float, str, int, int]] = {}
+        for i, name in enumerate(names):
+            stop = names[i + 1].start() if i + 1 < len(names) else len(text)
+            segment = text[name.end() : min(stop, name.end() + 120)]
+            money = _MONEY.search(segment)
+            population = population_named(name.group(0))
+            parsed = parse_money(money.group(0)) if money else None
+            if money is None or parsed is None or population is None:
+                continue
+            amount, currency = parsed
+            if amount < TUITION_FLOOR_AMOUNT:
+                continue
+            row = (population, amount, currency, name.start(), name.end() + money.end())
+            if population not in rows or (
+                want is not None and _year_key(segment[: money.start()]) == want
+            ):
+                rows[population] = row
+        if len(rows) >= 2:
+            return list(rows.values())
+    return []
 
 
 def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
@@ -985,7 +1008,9 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
     )
     for ctype, label in patterns:
         if ctype is ClaimType.TUITION:
-            rows = _population_amounts(text, label)
+            rows = _population_amounts(
+                text, label, cast("str | None", builder.meta.get("academic_year"))
+            )
             for population, amount, currency, start, end in rows:
                 _keep(
                     found,
