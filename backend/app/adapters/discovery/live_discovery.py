@@ -36,7 +36,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
-from typing import TypedDict
+from typing import TYPE_CHECKING, TypedDict
 from urllib.parse import urljoin, urlparse, urlunparse
 from xml.etree import ElementTree
 
@@ -54,6 +54,9 @@ from app.domain.site_identity import hosts_share_site
 from app.domain.site_identity import registrable_domain as site_domain
 from app.schemas.profile import ApplicantProfileIn
 from app.schemas.result import RankingEntry
+
+if TYPE_CHECKING:  # pragma: no cover - the seam is only needed as an annotation
+    from app.adapters.search.base import SearchProvider
 
 log = logging.getLogger("unimatch.discovery")
 
@@ -1029,11 +1032,44 @@ class LiveDiscoveryAdapter:
         self.page_recorder = page_recorder
         #: One outcome per walker-touched page, for the run's persisted report.
         self.walker_outcomes: list[PageOutcome] = []
+        #: The search provider, resolved once per run. See
+        #: :meth:`_search_provider_or_none` for why this is per run and not per
+        #: institution.
+        self._search_provider: SearchProvider | None = None
+        self._search_provider_resolved = False
 
     def registry(self) -> list[dict]:
         if not self.registry_path.exists():
             return []
         return json.loads(self.registry_path.read_text())
+
+    def _search_provider_or_none(self) -> SearchProvider | None:
+        """The configured provider, or ``None`` when there is none.
+
+        Resolved **once per discovery run**, not once per institution.
+
+        ``get_search_provider`` builds a fresh adapter object on every call, and
+        the keyless Exa MCP provider performs its JSON-RPC handshake on first
+        use and remembers the session id on the instance. Calling it inside the
+        per-institution loop therefore re-handshaked for each of the nineteen
+        institutions — nineteen handshakes instead of one — and, because that
+        handshake shares the fifteen-second search budget with the first query,
+        the first and best-ranked query family was the one that timed out.
+
+        One instance per run keeps the handshake where it belongs: once, before
+        the first institution asks anything. A run is also the right scope
+        rather than the process, because the provider is built from settings and
+        a test that changes settings must still see the change.
+        """
+        if not self._search_provider_resolved:
+            from app.adapters.search import SearchError, get_search_provider
+
+            try:
+                self._search_provider = get_search_provider()
+            except SearchError:
+                self._search_provider = None
+            self._search_provider_resolved = True
+        return self._search_provider
 
     async def discover(self, profile: ApplicantProfileIn, limit: int = 50) -> list[Candidate]:
         prefs = profile.preferences
@@ -1391,18 +1427,32 @@ class LiveDiscoveryAdapter:
         A provider failure degrades this run rather than ending it: discovery
         keeps everything the other generators produced.
         """
-        from app.adapters.search import SearchError, get_search_provider
+        from app.adapters.search import SearchError
         from app.adapters.search.base import search_failure_diagnostic
         from app.adapters.search.intent import DiscoveryIntent
         from app.adapters.search.retrieval import discover_candidates
 
-        try:
-            provider = get_search_provider()
-        except SearchError:
+        provider = self._search_provider_or_none()
+        if provider is None:
             return
 
         fields = list(profile.context.intended_fields)
         if not fields:
+            return
+        # Every programme slot is already taken, so the recovery loop below
+        # breaks on its first iteration and whatever the provider ranked is
+        # discarded unread. Asking anyway is pure cost: measured, six provider
+        # calls, one entry-point read and zero pages added when the registry,
+        # the sitemaps and the catalogue walker had already filled the three
+        # slots. Checking first is exactly equivalent — with no free slot,
+        # search cannot contribute a page — and it removes a handshake, six
+        # queries and three reads per institution from every such run.
+        if len(selected[PageCategory.PROGRAM_PAGE]) >= MAX_PAGES_PER_CATEGORY:
+            trace.search_limitations.append(
+                f"Search not run at {entry['name']}: all {MAX_PAGES_PER_CATEGORY} "
+                "programme-page slots were already filled by the registry, the "
+                "sitemaps and the catalogue walker."
+            )
             return
         if len(_distinct_fields(fields)) > 1:
             await self._add_multi_field_search_results(
@@ -1443,6 +1493,12 @@ class LiveDiscoveryAdapter:
             return
 
         trace.search_failures.extend(report.failure_diagnostics)
+        if report.throttled:
+            trace.search_limitations.append(
+                f"Search at {entry['name']} stopped: {report.provider} answered "
+                "HTTP 429, so the remaining query families were not sent. This "
+                "is a quota stop, not a search that found nothing."
+            )
         pages = selected[PageCategory.PROGRAM_PAGE]
         if RECOVER_SEARCH_CANDIDATES:
             await self._recover_search_pages(report.candidates, pages, trace, profile)
@@ -1581,6 +1637,16 @@ class LiveDiscoveryAdapter:
                 continue
             reports.append((intent.field, report))
             trace.search_failures.extend(report.failure_diagnostics)
+            if report.throttled:
+                # One rate-limit answer ends the run's searching, not just this
+                # subject's: the remaining subjects would each re-send a query
+                # into a quota that has already refused.
+                trace.search_limitations.append(
+                    f"Search at {entry['name']} stopped: {provider.name} answered "
+                    "HTTP 429, so the remaining subjects were not searched. This "
+                    "is a quota stop, not a search that found nothing."
+                )
+                break
             query_count += len(report.queries_run)
             failed_count += len(report.failed_queries)
             for reason, count in report.rejection_counts.items():

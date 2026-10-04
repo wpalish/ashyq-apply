@@ -182,6 +182,11 @@ class RetrievalReport:
     #: opened pages and the cause was a refused connection, not an empty
     #: shortlist; two different facts deserve two counters.
     hop_entry_points_unreachable: int = 0
+    #: True when the provider answered with a rate limit. A 429 is an answer,
+    #: not a failure to ask again: the remaining query families are
+    #: rephrasings of the same question, and sending them spends the quota that
+    #: has already refused. The caller must stop rather than continue.
+    throttled: bool = False
     #: Safe provider/status messages for presentation; never vendor error text.
     failure_diagnostics: tuple[str, ...] = ()
 
@@ -382,6 +387,7 @@ async def discover_candidates(
     results: list[SearchResult] = []
     failed: list[str] = []
     failures: list[str] = []
+    throttled = False
     # URL to the families that returned it. Kept here rather than on
     # SearchResult: a provider reports what it returned, and which of our
     # queries asked for it is our bookkeeping, not part of its contract.
@@ -401,6 +407,13 @@ async def discover_candidates(
             failed.append(query.family)
             if diagnostic not in failures:
                 failures.append(diagnostic)
+            if exc.http_status == 429:
+                # The endpoint has said no for this window. Six rephrasings
+                # would be six more requests against a quota that already
+                # refused — the loop this project's own rules ban — so stop
+                # here and let the caller record the stop.
+                throttled = True
+                break
             continue
         results.extend(response.results)
         for result in response.results:
@@ -492,4 +505,5 @@ async def discover_candidates(
         hop_entry_points=tuple(opened),
         hop_candidates=len(hopped),
         hop_entry_points_unreachable=unreachable,
+        throttled=throttled,
     )
