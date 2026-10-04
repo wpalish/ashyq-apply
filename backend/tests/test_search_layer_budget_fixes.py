@@ -213,6 +213,9 @@ async def test_a_rate_limit_stops_the_remaining_query_families():
     )
     assert report.failed_queries
     assert report.candidates == ()
+    assert len(report.queries_run) == len(provider.queries) == 1, (
+        "queries_run reports what was sent, not the six that were planned"
+    )
 
 
 async def test_other_failures_do_not_stop_the_remaining_families():

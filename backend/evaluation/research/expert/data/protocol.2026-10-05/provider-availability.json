@@ -1,0 +1,47 @@
+{
+  "local_date": "2026-10-05",
+  "method": "Read-only existing Chrome dashboard through cua_repl; public vendor documentation; repository secret metadata only",
+  "dashboard": {
+    "url": "https://dashboard.exa.ai/billing",
+    "plan": "Free tier",
+    "remaining_balance_usd": "19.25",
+    "payment_method_present": false,
+    "purchased_credits_last_30_days_usd": "0",
+    "invoices_present": false
+  },
+  "key_metadata": {
+    "url": "https://dashboard.exa.ai/api-keys",
+    "existing_default_key_present": true,
+    "created_date": "2026-09-18",
+    "team_qps": 10,
+    "key_qps": 10,
+    "credential_revealed_or_changed": false
+  },
+  "repository_secret": {
+    "name": "UNIMATCH_EXA_API_KEY",
+    "metadata_updated_at": "2026-09-21T20:12:34Z",
+    "value_read": false,
+    "matches_dashboard_key": "not verified from metadata"
+  },
+  "owner_authorization": "First-person pasted request Part4 Task2 selects existing-key exa when UNIMATCH_EXA_API_KEY exists; free-only instruction retained",
+  "provider_documentation": [
+    {
+      "url": "https://exa.ai/docs/get-started/exa-mcp",
+      "observation": "Anonymous MCP rate limits and authenticated team limits are distinct; official429 guidance is to authenticate with an owned OAuth account or API key."
+    },
+    {
+      "url": "https://exa.ai/docs/admin/billing",
+      "observation": "Monthly free grant resets on the first calendar day; exhausted team/key credits return402, throughput limits return429."
+    }
+  ],
+  "anonymous_mcp_reset_confirmed": false,
+  "new_provider_searches": 0,
+  "new_university_reads": 0,
+  "purchases": 0,
+  "new_accounts": 0,
+  "secret_changes": 0,
+  "production_changes": 0,
+  "decision": "Prepare a separately versioned exa-pinned trial under the previously authorized free provider option; never repeat/resume the anonymousMCP stop. An original authentication/quota refusal must stop the prospective trial.",
+  "observed_on_utc": "2026-10-04",
+  "recorded_at": "2026-10-04T21:26:24.212053+00:00"
+}

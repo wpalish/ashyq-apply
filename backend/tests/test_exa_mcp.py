@@ -569,5 +569,5 @@ def test_configuration_and_factory_allow_keyless_mcp_in_production(monkeypatch):
     settings.validate_runtime()
     assert "exa_mcp" in KNOWN_SEARCH_PROVIDERS
     monkeypatch.setattr("app.config.get_settings", lambda: settings)
-    assert isinstance(get_search_provider(), ExaMcpSearchProvider)
+    assert isinstance(get_search_provider().inner, ExaMcpSearchProvider)
     get_settings.cache_clear()

@@ -1637,6 +1637,10 @@ class LiveDiscoveryAdapter:
                 continue
             reports.append((intent.field, report))
             trace.search_failures.extend(report.failure_diagnostics)
+            # Counted before a throttle stop: the queries sent before the 429
+            # were spent, and leaving them out understated the run's cost.
+            query_count += len(report.queries_run)
+            failed_count += len(report.failed_queries)
             if report.throttled:
                 # One rate-limit answer ends the run's searching, not just this
                 # subject's: the remaining subjects would each re-send a query
@@ -1647,8 +1651,6 @@ class LiveDiscoveryAdapter:
                     "is a quota stop, not a search that found nothing."
                 )
                 break
-            query_count += len(report.queries_run)
-            failed_count += len(report.failed_queries)
             for reason, count in report.rejection_counts.items():
                 rejection_counts[reason] = rejection_counts.get(reason, 0) + count
 

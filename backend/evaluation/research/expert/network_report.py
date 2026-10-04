@@ -90,6 +90,7 @@ def validate_source_run(
     official_domains: Sequence[str],
     wall_guard: WallGuard,
     raw_sha256: str,
+    provider: str = "exa_mcp",
     prior: SourceCounters = SourceCounters(),
     prior_summary: Mapping[str, Any] | None = None,
 ) -> SourceCounters:
@@ -100,6 +101,10 @@ def validate_source_run(
     must finish strictly before the immutable deadline and can support facts
     only through the separate original citation validator.
     """
+    if type(provider) is not str or provider not in {"exa", "exa_mcp"}:
+        raise ValueError("A source run requires a pinned allowed search provider")
+    if plan.get("provider", "exa_mcp") != provider:
+        raise ValueError("Dispatch plan differs from the pinned search provider")
     _equal(
         plan,
         {
@@ -138,6 +143,8 @@ def validate_source_run(
         if plan.get("resume_summary") is not None:
             raise ValueError("Fresh source dispatch cannot import a resume summary")
     else:
+        if prior_summary.get("provider") != provider:
+            raise ValueError("Resume cannot change the pinned search provider")
         expected_resume = {
             key: value
             for key, value in prior_summary.items()
@@ -147,7 +154,7 @@ def validate_source_run(
             raise ValueError("Resume must retain the exact preceding controller summary")
     identity = {
         "case_id": case_id,
-        "provider": "exa_mcp",
+        "provider": provider,
         "log_prefix": case_id,
         "budget_origin": NETWORK_COMPARISON_MODE,
         **expert_budget(),
