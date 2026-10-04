@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current holder: gpt-6-astra, 2026-10-04 00:45 UTC, task/expert-500-phase0 from origin/main b672349.** Continue the owner-requested ten-expert search investigation using the supplied live-audit specification. Prior PR44 is a local catalogue/code audit (500 rows, zero live source reads), not live fact recovery. Parent owns git/HANDOFF; no production changes.
+**Current holder: nobody; [expert-500] Phase0 released for review as PR45, source a5835ef, task/expert-500-phase0 from origin/main b672349.** Continue the owner-requested ten-expert search investigation using the supplied live-audit specification. Prior PR44 is a local catalogue/code audit (500 rows, zero live source reads), not live fact recovery. Parent owns git/HANDOFF; no production changes.
 
 
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
@@ -48,7 +48,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**[expert-500] Phase0 complete locally, ready-for-review (PR pending); Phase1 pilot next.** Extend offline packets to the 501-identity catalogue, define Q0-Q6 trace outcomes and reviewed miss causes, create a sealed deterministic 350 DEV /150 HELDOUT split, enforce recorded controller budgets and validate stored raw logs. Then compare a fresh main ten-case capture with model-chosen controlled source reads. A genuine blind expert requires tools restricted by access control, not instructions alone; record any inability to establish isolation instead of claiming blinding.
+**[expert-500] Phase0 ready-for-review (PR #45), source a5835ef; Phase1 pilot next.** Extend offline packets to the 501-identity catalogue, define Q0-Q6 trace outcomes and reviewed miss causes, create a sealed deterministic 350 DEV /150 HELDOUT split, enforce recorded controller budgets and validate stored raw logs. Then compare a fresh main ten-case capture with model-chosen controlled source reads. A genuine blind expert requires tools restricted by access control, not instructions alone; record any inability to establish isolation instead of claiming blinding.
 
 
 **Local university search: deployed and public workflow verified (PR #39, main1aa188e, Fly v5).** Complete runtime acceptance is recorded in UNIMATCH_SEARCH_RELEASE_2026-10-02.md; this does not assert complete official admission facts for501 universities.
@@ -126,7 +126,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**[expert-500] Phase0 (initial source c04bf6a; final strict/PDF/review fixes in this commit):** 501 public identities, sealed350/150 split, all10 pilots in DEV, Q0-Q6 exact-source trace proof, strict60/120s/6 controller and resume, equal-budget baseline wrapper, PDF page view, OS-isolated ephemeral tool-free selector. Final backend3094/94.88%; frontend gates green/unchanged. Real neutral model probe only; zero university live reads. Report docs/process/EXPERT500_PHASE0_2026-10-04.md. No app/gold/bindings/deployment changes.
+**[expert-500] Phase0 (initial source c04bf6a; final strict/PDF/review fixes a5835ef):** 501 public identities, sealed350/150 split, all10 pilots in DEV, Q0-Q6 exact-source trace proof, strict60/120s/6 controller and resume, equal-budget baseline wrapper, PDF page view, OS-isolated ephemeral tool-free selector. Final backend3094/94.88%; frontend gates green/unchanged. Real neutral model probe only; zero university live reads. Report docs/process/EXPERT500_PHASE0_2026-10-04.md. No app/gold/bindings/deployment changes.
 
 
 **Search release evidence:** tested dbbf396 → merged1aa188e, identical tree6534f52;8 exact-head CI jobs passed. Fly v5/ce0acb2a image verified on both existing machines. Public catalogue filters and UI-selected run9307186a completed; results/evidence survive reload and Save works in the isolated synthetic case.
@@ -1749,7 +1749,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-**[expert-500] Write-ahead:** edit only evaluation/research/expert tooling, its offline tests, the benchmark expert-actions wiring as needed, and process evidence. No app algorithm or gold/binding edits. Preserve 120s/60-page/six-search budget, robots, free-provider 429 stop, citation/raw-log integrity, and unreviewed evidence status. Ten pilot identities must be in DEV so HELDOUT stays unopened. Additional Phase0 write-ahead: benchmark-capture expert_actions restores a prior same-run artifact only with an explicit numeric resume_run_id and controller raw hash/counter validation; offline workflow tests execute blank/single case shell wiring and resume checks. controller.expert_view + tests/test_expert_pdf_view.py add pure parsing of already stored PDF bytes with exact bounded page locations; evaluation/research/live.py and tests/test_expert_live_budget.py add an opt-in strict expert budget (cold get60 / global query6 / active120s) while preserving legacy mode; report the unchanged main app tree separately from the new evaluation harness SHA. Full gates and separate Phase0 PR; fresh main-app capture/Phase1 ten-expert pilot only after controller/isolation readiness.
+**[expert-500] Phase1 NEXT:** branch explicitly from this Phase0 predecessor as task/expert-500-phase1; freeze its harness revision for all live jobs, with production app tree53d57225bb16867ccc0de5f961d8870dbab7b9ce equal to main@b672349. Parent-only ignored orchestration calls expert_baseline with --strict-expert-budget and expert_actions with independently captured/restored logs; provider exa_mcp,60cold get /120active seconds /6queries, max3 independent experts simultaneously, batch stop429. Ten cases receive only public packet/context/controller views under OS access denial of gold/repo/history/other-expert outputs. Validate every submitted trace before unsealing/scoring62labels; record active vs real elapsed time, malformed/incomplete runs and semantic applicability limits. Commit only bounded trace/report/provenance with no raw pages or PII, separate Phase1 evidence PR. Report pilot before starting any50-case batch. No app/gold/bindings/production changes; owner merges PR45. **
 
 
 **After this documentation checkpoint:** inspect postmerge CI36972183803 and merge this metadata-only release record through its PR using the owner's standing merge authorization. No runtime edits are pending. Future product changes require a reproduced fault; partial official-data coverage is explicitly documented, not a completed universal knowledge base. Do not duplicate the synthetic NTU acceptance run or change production credentials.
@@ -4899,3 +4899,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-10-02 UTC | gpt-6-astra | merged5a6edc9 -> task/unimatch-release-evidence | PR37 exact-head and actual-main gates passed; Fly v4 deployed same tree, both machines healthy. Public branded page/authenticated prior synthetic Find and bounded live Groningen worker canary verified. Fresh authenticated run remains blocked by Mac lock; release evidence and next step recorded. |
 
 | 2026-10-02 UTC | gpt-6-astra | merged4de769d -> task/local-university-search | Owner requests full search completion after supplied seed audit. Clean baseline, one migration head; importer/catalogue, local candidates, bounded live enrichment and outage/live acceptance next. |
+
+- 2026-10-04: gpt-6-astra releases [expert-500] Phase0 a5835ef as PR45 after3094/94.88% gates and independent review; Phase1 predecessor exception written in §5; live university reads still0.
