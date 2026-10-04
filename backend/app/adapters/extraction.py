@@ -825,6 +825,9 @@ _NOT_AN_INTAKE = re.compile(
     r"deadline|due\b|apply by|closes?\b|graduat|convocation|tuition|fee", re.I
 )
 
+#: The text just before a date that ends a range: "... to 19 March 2026".
+_ENDS_A_RANGE = re.compile(r"(?:\bto|\buntil|\btill|[-–—])\s*(?:\d{1,2}\s+)?$", re.I)
+
 
 def extract_intake_terms(text: str, builder: ClaimBuilder) -> list[Claim]:
     """Each intake term a page states as a start ("fall 2027"), once each.
@@ -845,6 +848,11 @@ def extract_intake_terms(text: str, builder: ClaimBuilder) -> list[Claim]:
         start, end = _sentence_bounds(text, m.start(), m.end())
         sentence = flat[start:end].strip()
         if _NOT_AN_INTAKE.search(sentence):
+            continue
+        term_at = m.start("season") if m.group("season") else m.start("month")
+        if _ENDS_A_RANGE.search(flat[max(0, term_at - 24) : term_at]):
+            # "Online Application ... to 19 March 2026" closes a window; the
+            # end of an application period is not the start of study (NTU).
             continue
         season = (
             m.group("season") or _MONTH_SEASON.get((m.group("month") or "").lower(), "")
