@@ -598,6 +598,12 @@ def main() -> None:
         help="experiment ER-05: links naming undergraduate admission become candidates",
     )
     parser.add_argument(
+        "--topic-search",
+        action="store_true",
+        help="experiment ER-08: one public query per topic (English, fees, deadline) finds "
+        "the official page that publishes it",
+    )
+    parser.add_argument(
         "--navigation-slot",
         action="store_true",
         help="experiment ER-07: one programme-page slot is kept for the navigation hop",
@@ -674,6 +680,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery
 
             live_discovery.NAVIGATION_SLOT = True
+        if args.topic_search:
+            from app.adapters.requirements import web_requirements
+
+            web_requirements.TOPIC_SEARCH = True
         # A few seconds under the parent's timeout, so the child's own stop
         # comes first and writes what it has.
         soft = (
@@ -752,6 +762,7 @@ def main() -> None:
                         *(["--reject-archive-hosts"] if args.reject_archive_hosts else []),
                         *(["--admission-lexicon"] if args.admission_lexicon else []),
                         *(["--navigation-slot"] if args.navigation_slot else []),
+                        *(["--topic-search"] if args.topic_search else []),
                         "--search-funding-fallback"
                         if args.search_funding_fallback
                         else "--no-search-funding-fallback",
