@@ -1,0 +1,197 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "62efd4734a0e64c7dd04a7329f1e37e83b7e65f1",
+  "captured_at": "20261004T225551Z",
+  "mode": "live",
+  "config": {
+    "search_provider": "exa",
+    "seconds_per_case": 120,
+    "max_fetcher_calls_per_case": 60,
+    "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+    "search_before_navigation": false,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "browser_enabled": false,
+    "cohort": [
+      "groningen",
+      "delft",
+      "aalto",
+      "vienna",
+      "warsaw",
+      "ubc",
+      "toronto",
+      "hku",
+      "ntu",
+      "kaist"
+    ],
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "harness_sha256": "b4f906e06ffe5323317c390a4783e125c997a3070ec4247192857999621628cd",
+    "mapping_sha256": "06e9d005d7f9093ca9f33c05bcb8fe1582b14e349adbb3720785b0fd239b082a",
+    "strict_expert_budget": true,
+    "max_search_queries_per_case": 6,
+    "cold_fetcher_reads": true,
+    "child_active_seconds": 120,
+    "finalization_reserve_ms": 1000,
+    "source_work_deadline_ms": 119000,
+    "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+    "parent_process_reserve_seconds": 15,
+    "parent_process_timeout_seconds": 135,
+    "case_budgets": {
+      "vienna": {
+        "strict_expert_budget": true,
+        "provider": "exa",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "fetcher_calls": 54,
+        "search_queries": 6,
+        "blocked_search_queries": 1,
+        "network_http_requests": 71,
+        "elapsed_ms": 91061,
+        "stop_reason": "search_budget_exhausted",
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 91.68405453000001,
+        "process_error": null,
+        "active_checkpoint_available": true
+      }
+    },
+    "batch_stop_reason": null,
+    "batch_completed_case_ids": [
+      "vienna"
+    ],
+    "batch_remaining_case_ids": []
+  },
+  "observations": [
+    {
+      "case_id": "vienna",
+      "programme_urls": [
+        "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+      ],
+      "ranked_urls": [
+        "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+      ],
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+            "excerpt": "Entrance exam procedure © Ian Ehm University of Vienna / Entrance exam / Before the entrance exam / Degree programmes / Computer Science (bachelor's programme) Computer Science (bachelor's programme) Delve into the world of technology and innovation: in the bachelor's programme in Computer Science, you will solve",
+            "scope": {
+              "university": "University of Vienna",
+              "programme": "Computer Science (bachelor's programme)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "deadline",
+          "value": "2026-05-04",
+          "evidence": {
+            "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+            "excerpt": "is conducted in the bachelor's programme in Computer Science. You'll find a brief overview in the right info box → The entrance exam procedure Overview Application period 2 March to 4 May 2026 Written test 13 July 2026 on site in Vienna (no alternative dates) Test details With the free test literature and sample exercises you'll be well prepare",
+            "scope": {
+              "university": "University of Vienna",
+              "programme": "Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 54,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 91.06125910099999,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [
+        {
+          "category": "classifier-rejected",
+          "url": "https://studieren.univie.ac.at/en/admission-procedure",
+          "page_type": "unknown",
+          "detail": "classified as unknown; no requirement can be read from this kind of page. title='Application and admission at the University of Vienna' signals='no decisive signals' chars=3283 degrees=[]",
+          "characters": 3283
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://studieren.univie.ac.at/en/admission/german-language-proficiency/",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 404",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+          "page_type": "program_detail",
+          "detail": "2 claims read from this page",
+          "characters": 7339
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://aufnahmeverfahren.univie.ac.at/en/german-language-proficiency",
+          "page_type": "program_detail",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 7082
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://studieren.univie.ac.at/en/tuition-fee",
+          "page_type": "costs",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 1482
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        }
+      ],
+      "error": null
+    }
+  ]
+}

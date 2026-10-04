@@ -1,0 +1,13 @@
+{
+  "ref": "expert500-phase1-v9-2026-10-05-62efd47",
+  "inputs": {
+    "runner": "ubuntu-latest",
+    "case": "delft",
+    "run_tag": "e500-bf7d98df2e104fa8",
+    "seconds_per_case": "120",
+    "max_pages": "60",
+    "search_provider": "exa",
+    "mode": "expert_baseline",
+    "extra_args": "--strict-expert-budget --finalization-reserve-ms 1000"
+  }
+}

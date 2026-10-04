@@ -1,0 +1,101 @@
+{
+  "status": "passed",
+  "recorded_at": "2026-10-04T23:03:19.535444+00:00",
+  "source": "62efd4734a0e64c7dd04a7329f1e37e83b7e65f1",
+  "cases": [
+    {
+      "case_id": "aalto",
+      "run_id": 37241756253,
+      "reads": 27,
+      "queries": 6,
+      "elapsed_ms": 33209,
+      "stop_reason": null,
+      "capture_sha256": "949aa30a45043b44bfdfefa4a7fbb50107a3e1d24865919bb90bbdbacc76c890"
+    },
+    {
+      "case_id": "delft",
+      "run_id": 37241755941,
+      "reads": 47,
+      "queries": 6,
+      "elapsed_ms": 75367,
+      "stop_reason": null,
+      "capture_sha256": "9e695fe173bbcd48eb79230aa3b637238676ab180494f274ec4df33498693642"
+    },
+    {
+      "case_id": "groningen",
+      "run_id": 37241756061,
+      "reads": 42,
+      "queries": 0,
+      "elapsed_ms": 119004,
+      "stop_reason": "source_work_deadline_exhausted",
+      "capture_sha256": "badddc8cbcdd7626a46c8536ecb27b9d5ee8a9ddad49102255d8a400b2a526e4"
+    },
+    {
+      "case_id": "vienna",
+      "run_id": 37241835232,
+      "reads": 54,
+      "queries": 6,
+      "elapsed_ms": 91061,
+      "stop_reason": "search_budget_exhausted",
+      "capture_sha256": "626e69df0149f28b4a140154c7e26d8f1ab176f0adc6c13fd933a2dce007a024"
+    },
+    {
+      "case_id": "warsaw",
+      "run_id": 37241878896,
+      "reads": 40,
+      "queries": 0,
+      "elapsed_ms": 119110,
+      "stop_reason": "source_work_deadline_exhausted",
+      "capture_sha256": "d09e60258d65d38878e2e9d17b18c2b87343dd4b37cb45dde59c7f0f5452c158"
+    },
+    {
+      "case_id": "toronto",
+      "run_id": 37241976096,
+      "reads": 27,
+      "queries": 6,
+      "elapsed_ms": 48455,
+      "stop_reason": null,
+      "capture_sha256": "621354ba8f39da6e0a7151d65b7d3c9db56aa18d0c817906b56678ffe8e3ba09"
+    },
+    {
+      "case_id": "ubc",
+      "run_id": 37241927328,
+      "reads": 60,
+      "queries": 5,
+      "elapsed_ms": 119005,
+      "stop_reason": "page_budget_exhausted",
+      "capture_sha256": "26ce7ac74db0ae08c25c50b452f90eeafc09130e0e01795ecf69cf423da1a814"
+    },
+    {
+      "case_id": "hku",
+      "run_id": 37242048795,
+      "reads": 33,
+      "queries": 6,
+      "elapsed_ms": 55160,
+      "stop_reason": null,
+      "capture_sha256": "f7753074860b754c77c159f46eab0be456f6872af9724d588bc40b40ac53ff48"
+    },
+    {
+      "case_id": "ntu",
+      "run_id": 37242072857,
+      "reads": 35,
+      "queries": 1,
+      "elapsed_ms": 74241,
+      "stop_reason": null,
+      "capture_sha256": "beb8799562ff89109c141e31ce41eb844e046206898017280646692b59d0e0e5"
+    },
+    {
+      "case_id": "kaist",
+      "run_id": 37242085279,
+      "reads": 30,
+      "queries": 6,
+      "elapsed_ms": 77627,
+      "stop_reason": null,
+      "capture_sha256": "7ffce304a3435f8a028c4d7a399b5d7a7fe3743e29c12bfaf1afbd51d93eb440"
+    }
+  ],
+  "completed": 10,
+  "source_provider_budget_valid": true,
+  "labels_opened": false,
+  "score": null
+}

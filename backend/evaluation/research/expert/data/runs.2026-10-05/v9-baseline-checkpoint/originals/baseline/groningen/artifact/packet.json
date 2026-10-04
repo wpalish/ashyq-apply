@@ -1,0 +1,46 @@
+{
+  "schema_version": "1",
+  "dataset_version": "2026-09-23.reviewed",
+  "dataset_sha256": "d45d26fa10a1bd60271c63225c1ff453109d8cb6781782867c0d782ee63bedd0",
+  "capture_sha256": "ef3fed43c3e3740cbfdf20822e07b7489057bf8acdaf4af3d801b04c80698622",
+  "baseline_pipeline_sha": "62efd4734a0e64c7dd04a7329f1e37e83b7e65f1",
+  "baseline_captured_at": "20261004T225431Z",
+  "baseline_budget": {
+    "max_fetcher_calls": 60,
+    "max_elapsed_ms": 120000,
+    "browser_enabled": false
+  },
+  "cases": [
+    {
+      "case_id": "groningen",
+      "university": "University of Groningen",
+      "domain": "rug.nl",
+      "request": {
+        "university": "University of Groningen",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "baseline": {
+        "ranked_urls": [
+          "https://www.rug.nl/education/bachelor/brochures",
+          "https://www.rug.nl/education/bachelor/international-students/study-in-the-netherlands-groningen/accommodation",
+          "https://www.rug.nl/education/bachelor/nederlandse-studenten"
+        ],
+        "programme_urls": [],
+        "prediction_count": 0,
+        "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+        "telemetry": {
+          "http_fetches": 42,
+          "pdf_fetches": 0,
+          "browser_fetches": 0,
+          "latency_seconds": 119.00368304
+        }
+      }
+    }
+  ]
+}
