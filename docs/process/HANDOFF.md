@@ -126,6 +126,8 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**[expert-500] Phase1 V1 live pilot on frozen e5988bd:** all10 independent baseline runs and10 OS-isolated experts finished,23 expert controller runs, max3 simultaneous. Ten real raw-log-validated traces were hashed/sealed before opening reviewed gold. Algorithm4/62, expert4/62; all10 expert runs incomplete,7 selector timeouts,8 date-format feedback rounds, no provider429. Negative report EXPERT500_PHASE1_V1_2026-10-04.md and bounded runs.2026-10-04/v1 provenance are preserved. V1 has unmetered final timeout/view/validation gaps and is not an eligible equal-budget protocol; no50-case batches, no default rule, no prod/app/gold/binding/HELDOUT change. Phase0 PR45 now has8/8 cloud gates green. Protocol repair write-ahead is in §5.
+
 **[expert-500] Phase0 (initial source c04bf6a; final strict/PDF/review fixes a5835ef):** 501 public identities, sealed350/150 split, all10 pilots in DEV, Q0-Q6 exact-source trace proof, strict60/120s/6 controller and resume, equal-budget baseline wrapper, PDF page view, OS-isolated ephemeral tool-free selector. Final backend3094/94.88%; frontend gates green/unchanged. Real neutral model probe only; zero university live reads. Report docs/process/EXPERT500_PHASE0_2026-10-04.md. No app/gold/bindings/deployment changes.
 
 
@@ -1748,6 +1750,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[expert-500] Phase1 protocol repair NEXT (after frozen V1 jobs completed):** V1 harness e5988bd completed all10 baselines and all10 isolated experts on2026-10-04, max3 concurrently, no429. Every saved trace validated against real raw logs and was sealed before gold scoring: algorithm4/62 and expert4/62; all10 expert runs incomplete. Publish the negative report and immutable provenance. Repair only the evaluator protocol: compact navigation/fact submission with controller-derived URL/date, compatible explicit scopes and exact quotes; meter timed-out selectors and all view/validation work; reserve45active seconds via a bounded controller action deadline. Add meaningful mock-only tests and run full gates. Preserve V1 artifacts/hashes, app/main tree, gold/bindings and sealed HELDOUT. Then freeze the new evaluation source for a fresh ten-case comparison; no50-case batches until the protocol passes its40/62 gate. Root owns git/HANDOFF; agents may edit only assigned new compact-contract/tests and controller deadline/tests, with no live calls or label access.
 
 **[expert-500] Phase1 NEXT:** branch explicitly from this Phase0 predecessor as task/expert-500-phase1; freeze its harness revision for all live jobs, with production app tree53d57225bb16867ccc0de5f961d8870dbab7b9ce equal to main@b672349. Parent-only ignored orchestration calls expert_baseline with --strict-expert-budget and expert_actions with independently captured/restored logs; provider exa_mcp,60cold get /120active seconds /6queries, max3 independent experts simultaneously, batch stop429. Ten cases receive only public packet/context/controller views under OS access denial of gold/repo/history/other-expert outputs. Validate every submitted trace before unsealing/scoring62labels; record active vs real elapsed time, malformed/incomplete runs and semantic applicability limits. Commit only bounded trace/report/provenance with no raw pages or PII, separate Phase1 evidence PR. Report pilot before starting any50-case batch. No app/gold/bindings/production changes; owner merges PR45. **
 
@@ -3663,6 +3667,8 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**[expert-500] Phase1 repair WIP:** V1 final10 trace validations matched actual raw logs; descriptive scores4/62 on both sides, protocol gate failed. Root selector-accounting patch passes32 focused selector/isolation tests and mypy3 files; full gates for compact/deadline integration are pending, not inherited from Phase0. Phase0 exact-head cloud checks are8/8 green. No application or frontend changes.
 
 **[expert-500] Reviewed final gate:**3094 passed,2 warnings,94.88% coverage in386.01s; Ruff319 files lint/format green; mypy319 green plus final live/test scoped check. Frontend typecheck/lint/unit/build exit0, source unchanged; exact unit count not asserted. Focused115 strict/PDF/trace/workflow tests pass; selector25 pass. One Alembic head d8e412c6a901. The intermediate3092 full run preceded the final JEV-shadow fix and is not the final source proof.
 

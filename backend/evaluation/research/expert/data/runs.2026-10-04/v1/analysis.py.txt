@@ -1,0 +1,189 @@
+"""Seal all ten blind submissions before loading reviewed labels; offline only."""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import re
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
+from evaluation.research.expert.models import validate_trace
+from evaluation.research.expert.packet import digest
+from evaluation.research.live import COHORT
+from evaluation.research.mapping import CLAIM_KEYS, STRUCTURED_KEYS, normalize_claim
+from evaluation.research.metrics import canonical_url, score, scope_matches
+from evaluation.research.schema import Capture, Dataset, Evidence, Observation, Prediction, Scope
+
+
+def read(path: Path) -> Any:
+    return json.loads(path.read_text())
+
+
+def save(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+
+
+def file_hash(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def projected(item: dict[str, Any]) -> list[tuple[str, Any]]:
+    """Only lossless fields already explicitly present in a submitted value."""
+    key, value = item["claim_key"], item["value"]
+    if key in {"programme.exists", "program_exists"}:
+        if isinstance(value, dict) and type(value.get("exists")) is bool:
+            return [("programme.exists", value["exists"])]
+        return [("programme.exists", value)]
+    if key in CLAIM_KEYS or key in STRUCTURED_KEYS:
+        key, value, _, _ = normalize_claim(key, {"normalized_value": value})
+    return [(key, value)]
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--dataset", type=Path, required=True)
+    args = parser.parse_args()
+    root = args.root
+    final = read(root / "experts-results.json")
+    if final["stopped"] or {r["case_id"] for r in final["results"]} != set(COHORT):
+        raise ValueError("All ten experts must be finalized before unsealing reviewed labels")
+    submissions, traces, log_dirs = [], {}, {}
+    for case_id in COHORT:
+        folder = root / "experts" / case_id
+        result, packet = read(folder / "result.json"), read(root / "baseline" / case_id / "public-packet.json")
+        if not result.get("validated"):
+            raise ValueError(f"Unvalidated submission: {case_id}")
+        trace = read(folder / "trace.json")
+        latest = sorted(folder.glob("controller-*/artifact/summary.json"))[-1]
+        log_dir = latest.parent / "logs"
+        validate_trace(trace, packet, logs_dir=log_dir)
+        if digest(trace) != result["trace_sha256"]:
+            raise ValueError("A submitted trace changed before unsealing")
+        traces[case_id], log_dirs[case_id] = trace, log_dir
+        submissions.append({"case_id": case_id, "trace_sha256": digest(trace),
+            "trace_file_sha256": file_hash(folder / "trace.json"),
+            "result_sha256": file_hash(folder / "result.json"), "packet_sha256": digest(packet),
+            "raw_logs": [{"path": a["raw_log_path"], "sha256": a["raw_log_sha256"]} for a in trace["actions"]]})
+    seal = {"sealed_at": datetime.now(UTC).isoformat(), "count": len(submissions),
+            "all_traces_validated_with_raw_logs": True, "submissions": submissions,
+            "orchestrator_sha256": file_hash(Path("/tmp/unimatch-expert500-pilot.py"))}
+    seal_path = root / "submission-seal.json"
+    if seal_path.exists():
+        previous = read(seal_path)
+        if previous["submissions"] != submissions:
+            raise ValueError("Previous submission seal differs")
+        seal = previous
+    else:
+        save(seal_path, seal)
+    # The only reviewed-label read in this script is below the immutable seal.
+    dataset = Dataset.model_validate_json(args.dataset.read_text())
+    baseline_parts = [Capture.model_validate_json(Path(read(root / "baseline" / c / "result.json")["capture"]).read_text()) for c in COHORT]
+    frozen_shas = {part.pipeline_sha for part in baseline_parts}
+    if len(frozen_shas) != 1:
+        raise ValueError("Baseline harness source drift")
+    baseline = Capture(pipeline_sha=baseline_parts[0].pipeline_sha, captured_at=baseline_parts[0].captured_at,
+        mode="live", config={"independent_ten_case_runs": True, "strict_expert_budget": True,
+        "search_provider": "exa_mcp", "max_pages": 60, "seconds_per_case": 120,
+        "max_search_queries": 6, "run_ids": {c:read(root / "baseline" / c / "result.json")["run_id"] for c in COHORT}},
+        observations=[obs for part in baseline_parts for obs in part.observations])
+    save(root / "baseline-capture.json", baseline.model_dump(mode="json"))
+    normalization, expert_observations, excluded, by_proposal = [], [], [], {}
+    for case_id, trace in traces.items():
+        predictions = []
+        for index, proposal in enumerate(trace["proposals"]):
+            by_proposal[case_id, index] = []
+            for key, value in projected(proposal):
+                try:
+                    evidence = Evidence(url=proposal["source_url"], excerpt=proposal["excerpt"],
+                        scope=Scope.model_validate(proposal["scope"]), accessed_on=proposal["accessed_on"], source_type="official")
+                    prediction = Prediction(key=key, value=value, evidence=evidence)
+                    predictions.append(prediction)
+                    by_proposal[case_id, index].append(prediction)
+                    normalization.append({"case_id":case_id, "proposal_index":index, "input_key":proposal["claim_key"],
+                        "input_value":proposal["value"], "key":key, "value":value})
+                except ValueError as exc:
+                    excluded.append({"case_id":case_id,"proposal_index":index,"reason":str(exc)[:500]})
+        expert_observations.append(Observation(case_id=case_id, predictions=predictions,
+            programme_urls=list(dict.fromkeys(p["source_url"] for f in trace["question_findings"] if f["question"] == "Q0" and f["status"] == "found" for p in (trace["proposals"][i] for i in f["proposal_indices"])))))
+    expert_capture = Capture(pipeline_sha="blind-experts@" + next(iter(frozen_shas)), captured_at=seal["sealed_at"],
+        mode="live", config={"unreviewed_proposals":True,"comparison_mode":"independent_full_budget",
+        "source_harness_sha":next(iter(frozen_shas)),"lossless_projection":True,"excluded":excluded},
+        observations=expert_observations)
+    save(root / "expert-capture.json", expert_capture.model_dump(mode="json"))
+    save(root / "expert-value-projections.json", normalization)
+    baseline_score, expert_score = score(dataset, baseline), score(dataset, expert_capture)
+    save(root / "baseline-score.json", baseline_score); save(root / "expert-score.json", expert_score)
+    rows = []
+    by_baseline = {o.case_id:o for o in baseline.observations}
+    by_expert = {o.case_id:o for o in expert_capture.observations}
+    for result in final["results"]:
+        case_id = result["case_id"]
+        trace, observation = traces[case_id], by_baseline[case_id]
+        budget = read(root / "baseline" / case_id / "result.json")["budget"]
+        raw_paths = list((root / "baseline" / case_id / "artifact").glob("capture/**/*.raw.json"))
+        raw = read(raw_paths[0]) if len(raw_paths) == 1 else None
+        row_raw = (raw or {}).get("canary", {}).get("institutions", [])
+        core_completeness = row_raw[0]["completeness"] if len(row_raw)==1 else None
+        # V1 failed to meter a timed-out selector in finally. Preserve the
+        # recorded value; the client timeout is a lower bound, not an exact
+        # measurement or a hidden extra research allowance.
+        timeout_lower_bound = None
+        error = result.get("error", "")
+        match = re.search(r"timed out after ([\d.]+) seconds", error)
+        if match and "Command '['/usr/bin/sandbox-exec'" in error:
+            timeout_lower_bound = round(float(match.group(1))*1000)
+        matches, misses = {}, []
+        for finding in trace["question_findings"]:
+            question = finding["question"]
+            if finding["status"] != "found":
+                matches[question] = None
+                continue
+            wanted = [p for i in finding["proposal_indices"] for p in by_proposal[case_id, i]]
+            def question_scope(prediction: Prediction) -> Scope:
+                assert prediction.evidence is not None
+                scope = prediction.evidence.scope
+                if question == "Q0":
+                    # Q0 requires exact programme identity + bachelor degree.
+                    # The existing capture mapper does not emit field, whereas
+                    # programme identity already establishes the CS match.
+                    return Scope(university=scope.university, programme=scope.programme, degree=scope.degree)
+                return scope
+            matched = bool(wanted) and all(any(p.key==q.key and p.value==q.value and p.evidence and q.evidence
+                and scope_matches(question_scope(p),q.evidence.scope) for q in observation.predictions) for p in wanted)
+            matches[question] = matched
+            if not matched:
+                source = canonical_url(finding["evidence"][0]["source_url"])
+                outcomes = [p.model_dump() for p in observation.page_outcomes if canonical_url(p.url)==source]
+                cause = ("ACCESS" if any(p["category"] in {"fetch-failed","unreadable"} for p in outcomes)
+                    else "CLASSIFIER" if any(p["category"]=="classifier-rejected" for p in outcomes)
+                    else "EXTRACTOR" if any(p["category"]=="no-pattern-match" for p in outcomes)
+                    else "BUDGET" if budget.get("stop_reason") in {"wall_clock_budget_exhausted","page_budget_exhausted"}
+                    else "NOT_DISCOVERED" if question=="Q0" and source not in {canonical_url(u) for u in (observation.ranked_urls or [])} and not outcomes
+                    else "UNRESOLVED_CAUSE")
+                misses.append({"question":question,"cause":cause,"source_url":source,"baseline_page_outcomes":outcomes,
+                    "baseline_stop_reason":budget.get("stop_reason"),"diagnostic_only":True})
+        rows.append({"case_id":case_id,"expert_status":result["status"],"expert_error_type":result.get("error","").split(":",1)[0] or None,
+            "expert_active_ms_recorded":result["active_ms"],
+            "unmetered_final_selector_timeout_lower_bound_ms":timeout_lower_bound,
+            "expert_reads":trace["actions"][-1]["fetcher_calls_cumulative"],
+            "expert_queries":trace["actions"][-1]["search_queries_cumulative"],
+            "expert_questions":{f["question"]:f["status"] for f in trace["question_findings"]},
+            "algorithm_matches_expert":matches,"miss_diagnosis":misses,"baseline_budget":budget,
+            "baseline_raw_keys":list(raw or {}),"raw_row_keys":list(row_raw[0]) if row_raw else [],
+            "baseline_score":next(r for r in baseline_score["cases"] if r["case_id"]==case_id),
+            "expert_score":next(r for r in expert_score["cases"] if r["case_id"]==case_id),
+            "algorithm_core_completeness":core_completeness})
+    eligible = all(r["status"]=="submitted" and not r.get("error") and r["active_ms"]<=120000 for r in final["results"])
+    save(root / "comparison.json", {"seal_sha256":digest(seal),"dataset_file_sha256":file_hash(args.dataset),
+        "baseline_metrics":baseline_score["metrics"],"expert_metrics":expert_score["metrics"],"cases":rows,
+        "protocol_eligible":eligible,"protocol_gate":eligible and expert_score["metrics"]["claim_recall"]["numerator"] >= 40})
+    print(json.dumps({"baseline":baseline_score["metrics"]["claim_recall"],"expert":expert_score["metrics"]["claim_recall"],
+        "expert_precision":expert_score["metrics"]["claim_precision"],"sealed_submissions":len(submissions)},ensure_ascii=False))
+
+
+if __name__ == "__main__":
+    main()

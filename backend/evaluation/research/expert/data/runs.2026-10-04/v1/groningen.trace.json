@@ -1,0 +1,322 @@
+{
+  "schema_version": "1",
+  "case_id": "groningen",
+  "packet_sha256": "5304772b409c77a448dc926aa3eb693bcece8496141aea55ed1a12ab65126781",
+  "baseline_pipeline_sha": "e5988bd7733e9be9ea0da85ca17692bd0fbb7da0",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T02:09:30.629413+00:00",
+  "ended_at": "2026-10-04T02:12:57.607779+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T02:10:23.995442+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:rug.nl bachelor Computing Science University of Groningen",
+        "domains": [
+          "rug.nl"
+        ],
+        "max_results": 10
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "groningen-001.json",
+      "raw_log_sha256": "06941e8819a33317fa9191a50d3f17c5a148a308c37f65d4bddad283d50ee0d6",
+      "elapsed_ms": 1938,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 23435,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "No official source has yet been read. First locate the exact University of Groningen bachelor Computer Science programme page; search results will be used only for discovery.",
+      "observed_from_step": null,
+      "action": "Discover the official exact bachelor Computer Science/Computing Science programme page for subsequent reading.",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T02:11:28.247284+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.rug.nl/bachelors/computing-science/?lang=en"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "groningen-002.json",
+      "raw_log_sha256": "21ec7f314c4b891961611346476ad18c0e1948ce6e93805be98a9300f6fe8251",
+      "elapsed_ms": 1245,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 46366,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Search results identify an official University of Groningen Computing Science bachelor page, but snippets cannot establish any fact. Read that programme page first to verify the exact programme and locate official admissions details.",
+      "observed_from_step": 1,
+      "action": "Verify the exact bachelor programme and inspect its official admissions, deadline, language, tuition, and scholarship links.",
+      "stage": "page_understanding",
+      "url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+      "final_url": "https://www.rug.nl/bachelors/computing-science/?lang=en"
+    }
+  ],
+  "proposals": [
+    {
+      "claim_key": "programme.exists",
+      "source_url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+      "excerpt": "If you enjoy problem-solving and want to work at the forefront of digital innovation, the Bachelor's degree in Computing Science at the University of Groningen is the programme for you.",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Groningen",
+        "programme": "Computing Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        2
+      ],
+      "value": {
+        "exists": true,
+        "official_name": "Computing Science",
+        "degree_award": "BSc in Computing Science"
+      },
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "programme.degree_award",
+      "source_url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+      "excerpt": "BSc in Computing Science",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Groningen",
+        "programme": "Computing Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        2
+      ],
+      "value": "BSc in Computing Science",
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "programme.instruction_and_population",
+      "source_url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+      "excerpt": "The Bachelor's in Computing Science is a three-year, English-taught international programme.",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Groningen",
+        "programme": "Computing Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        2
+      ],
+      "value": {
+        "language": "English",
+        "description": "international programme",
+        "duration": "three-year"
+      },
+      "status": "unreviewed"
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "supporting_steps": [
+        2
+      ],
+      "proposal_indices": [
+        0,
+        1
+      ],
+      "evidence": [
+        {
+          "action_step": 2,
+          "source_url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+          "excerpt": "If you enjoy problem-solving and want to work at the forefront of digital innovation, the Bachelor's degree in Computing Science at the University of Groningen is the programme for you.",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b62",
+            "section_path": [
+              "Computing Science"
+            ],
+            "page": null
+          }
+        },
+        {
+          "action_step": 2,
+          "source_url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+          "excerpt": "BSc in Computing Science",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b71",
+            "section_path": [
+              "Computing Science",
+              "Want to learn more?"
+            ],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "University of Groningen",
+        "programme": "Computing Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The official University of Groningen page expressly identifies the Bachelor's degree in Computing Science and its award as BSc in Computing Science."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [
+        2
+      ],
+      "proposal_indices": [],
+      "evidence": [
+        {
+          "action_step": 2,
+          "source_url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+          "excerpt": "Language proficiency certificate for English (except for applicants with a Dutch pre-university education (VWO) as well as the exemptions listed on the language exemptions webpage). More information: https://www.rug.nl/fse/education/admission-application/apply-bsc/language",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b117",
+            "section_path": [
+              "Computing Science",
+              "Admission requirements"
+            ],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "University of Groningen",
+        "programme": "Computing Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The programme requires English evidence and links to the faculty language page, but no IELTS, TOEFL, or Duolingo minima have yet been read."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [
+        2
+      ],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Groningen",
+        "programme": "Computing Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The page states a general VWO-equivalence requirement, but Kazakhstan national-secondary, NIS, and additional-year eligibility have not been established."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Groningen",
+        "programme": "Computing Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The page text displays a 1 May 2027 deadline and 1 September 2027 start, but precise DocumentIR blocks are being inspected before proposing the fact."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Groningen",
+        "programme": "Computing Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": "international",
+        "qualification": null,
+        "academic_year": "2027-2028"
+      },
+      "observation": "The page text displays a 2027–2028 non-EU/EEA fee, but precise DocumentIR blocks are being inspected before proposing the fact."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Groningen",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No official bachelor scholarship evidence has been read."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "University of Groningen",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No official scholarship eligibility or conditions have been read."
+    }
+  ],
+  "review_status": "unreviewed"
+}
