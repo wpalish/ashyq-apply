@@ -1,0 +1,256 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "blind-experts@9421884465cbc986ce0ab017102126731fe2589d",
+  "captured_at": "2026-10-04T04:06:35.538898+00:00",
+  "mode": "live",
+  "config": {
+    "unreviewed_proposals": true,
+    "comparison_mode": "independent_full_budget",
+    "source_harness_sha": "9421884465cbc986ce0ab017102126731fe2589d",
+    "lossless_projection": true,
+    "excluded": []
+  },
+  "observations": [
+    {
+      "case_id": "groningen",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "delft",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "aalto",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "vienna",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "warsaw",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "ubc",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "toronto",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "hku",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "ntu",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "kaist",
+      "programme_urls": [
+        "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01"
+      ],
+      "ranked_urls": null,
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01",
+            "excerpt": "Computer Science (https://engineering.kaist.ac.kr/education/departmentDetail?idx=77)",
+            "scope": {
+              "university": "KAIST",
+              "programme": "Computer Science",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.admission_route",
+          "value": "Freshmen enter with an undecided major; students choose their department/division in sophomore year without additional requirements or admission procedures.",
+          "evidence": {
+            "url": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01",
+            "excerpt": "※ KAIST holds 【non-declared major system】 at the freshmen year, applicant will get their admission offers as “undecided major”.\n\nOn sophomore year, students will choose the department/division for their degree year without any additional requirements or admission procedures.",
+            "scope": {
+              "university": "KAIST",
+              "programme": null,
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,300 @@
+{
+  "case_id": "vienna",
+  "status": "incomplete",
+  "error": "selector_timeout",
+  "validated": true,
+  "trace_sha256": "31071cea14485052c45e29edf6ac07d1ab268db1411e2735e6e364a8ffd6eed7",
+  "trace": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v2-2026-10-04/experts/vienna/trace.json",
+  "active_ms": 120283,
+  "actions": 6,
+  "logical_expert": "expert500-vienna",
+  "comparison_mode": "independent_full_budget",
+  "provider": "exa_mcp",
+  "requested_model": "gpt-6-astra",
+  "exact_metering": true,
+  "codex_cli": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
+  "navigation_deadline_ms": 75000,
+  "turn_errors": [
+    {
+      "turn": 8,
+      "kind": "selector_timeout",
+      "elapsed_ms": 47688
+    }
+  ],
+  "real_elapsed_seconds": 384.475526,
+  "active_time_basis": "prompt/selector/parse/source/view/trace-validation work; excludes provisioning, GitHub transport and audit envelopes",
+  "meter": [
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 1
+    },
+    {
+      "stage": "navigation_selector",
+      "elapsed_ms": 8158,
+      "active_ms": 8159
+    },
+    {
+      "stage": "compact_parse",
+      "elapsed_ms": 1,
+      "active_ms": 8160
+    },
+    {
+      "stage": "action_parse",
+      "elapsed_ms": 1,
+      "active_ms": 8161
+    },
+    {
+      "stage": "plan_construction",
+      "elapsed_ms": 1,
+      "active_ms": 8162
+    },
+    {
+      "stage": "controlled_source_action",
+      "elapsed_ms": 1073,
+      "active_ms": 9235,
+      "run_id": 37175137584
+    },
+    {
+      "stage": "source_output_processing_and_views",
+      "elapsed_ms": 75,
+      "active_ms": 9310
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 9311
+    },
+    {
+      "stage": "navigation_selector",
+      "elapsed_ms": 8759,
+      "active_ms": 18070
+    },
+    {
+      "stage": "compact_parse",
+      "elapsed_ms": 1,
+      "active_ms": 18071
+    },
+    {
+      "stage": "action_parse",
+      "elapsed_ms": 1,
+      "active_ms": 18072
+    },
+    {
+      "stage": "plan_construction",
+      "elapsed_ms": 1,
+      "active_ms": 18073
+    },
+    {
+      "stage": "controlled_source_action",
+      "elapsed_ms": 934,
+      "active_ms": 19007,
+      "run_id": 37175178924
+    },
+    {
+      "stage": "source_output_processing_and_views",
+      "elapsed_ms": 47,
+      "active_ms": 19054
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 19055
+    },
+    {
+      "stage": "navigation_selector",
+      "elapsed_ms": 8752,
+      "active_ms": 27807
+    },
+    {
+      "stage": "compact_parse",
+      "elapsed_ms": 1,
+      "active_ms": 27808
+    },
+    {
+      "stage": "action_parse",
+      "elapsed_ms": 1,
+      "active_ms": 27809
+    },
+    {
+      "stage": "plan_construction",
+      "elapsed_ms": 1,
+      "active_ms": 27810
+    },
+    {
+      "stage": "controlled_source_action",
+      "elapsed_ms": 1031,
+      "active_ms": 28841,
+      "run_id": 37175224659
+    },
+    {
+      "stage": "source_output_processing_and_views",
+      "elapsed_ms": 74,
+      "active_ms": 28915
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 28916
+    },
+    {
+      "stage": "navigation_selector",
+      "elapsed_ms": 9698,
+      "active_ms": 38614
+    },
+    {
+      "stage": "compact_parse",
+      "elapsed_ms": 1,
+      "active_ms": 38615
+    },
+    {
+      "stage": "action_parse",
+      "elapsed_ms": 1,
+      "active_ms": 38616
+    },
+    {
+      "stage": "plan_construction",
+      "elapsed_ms": 1,
+      "active_ms": 38617
+    },
+    {
+      "stage": "controlled_source_action",
+      "elapsed_ms": 2643,
+      "active_ms": 41260,
+      "run_id": 37175271579
+    },
+    {
+      "stage": "source_output_processing_and_views",
+      "elapsed_ms": 104,
+      "active_ms": 41364
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 41365
+    },
+    {
+      "stage": "navigation_selector",
+      "elapsed_ms": 10004,
+      "active_ms": 51369
+    },
+    {
+      "stage": "compact_parse",
+      "elapsed_ms": 1,
+      "active_ms": 51370
+    },
+    {
+      "stage": "action_parse",
+      "elapsed_ms": 1,
+      "active_ms": 51371
+    },
+    {
+      "stage": "plan_construction",
+      "elapsed_ms": 1,
+      "active_ms": 51372
+    },
+    {
+      "stage": "controlled_source_action",
+      "elapsed_ms": 1180,
+      "active_ms": 52552,
+      "run_id": 37175314653
+    },
+    {
+      "stage": "source_output_processing_and_views",
+      "elapsed_ms": 59,
+      "active_ms": 52611
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 52612
+    },
+    {
+      "stage": "navigation_selector",
+      "elapsed_ms": 8523,
+      "active_ms": 61135
+    },
+    {
+      "stage": "compact_parse",
+      "elapsed_ms": 1,
+      "active_ms": 61136
+    },
+    {
+      "stage": "action_parse",
+      "elapsed_ms": 1,
+      "active_ms": 61137
+    },
+    {
+      "stage": "stored_source_view",
+      "elapsed_ms": 62,
+      "active_ms": 61199
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 61200
+    },
+    {
+      "stage": "navigation_selector",
+      "elapsed_ms": 9208,
+      "active_ms": 70408
+    },
+    {
+      "stage": "compact_parse",
+      "elapsed_ms": 1,
+      "active_ms": 70409
+    },
+    {
+      "stage": "action_parse",
+      "elapsed_ms": 1,
+      "active_ms": 70410
+    },
+    {
+      "stage": "plan_construction",
+      "elapsed_ms": 1,
+      "active_ms": 70411
+    },
+    {
+      "stage": "controlled_source_action",
+      "elapsed_ms": 1874,
+      "active_ms": 72285,
+      "run_id": 37175373622
+    },
+    {
+      "stage": "source_output_processing_and_views",
+      "elapsed_ms": 38,
+      "active_ms": 72323
+    },
+    {
+      "stage": "prompt_construction",
+      "elapsed_ms": 1,
+      "active_ms": 72324
+    },
+    {
+      "stage": "final_selector",
+      "elapsed_ms": 47688,
+      "active_ms": 120012
+    },
+    {
+      "stage": "closing_trace_construction",
+      "elapsed_ms": 1,
+      "active_ms": 120013
+    },
+    {
+      "stage": "closing_raw_log_validation",
+      "elapsed_ms": 268,
+      "active_ms": 120281
+    },
+    {
+      "stage": "trace_hash_and_serialization",
+      "elapsed_ms": 1,
+      "active_ms": 120282
+    },
+    {
+      "stage": "trace_file_write",
+      "elapsed_ms": 1,
+      "active_ms": 120283
+    }
+  ],
+  "found": []
+}

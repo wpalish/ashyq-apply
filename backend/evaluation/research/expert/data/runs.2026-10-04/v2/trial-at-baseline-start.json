@@ -1,0 +1,66 @@
+{
+  "prepared_at": "2026-10-04T03:16:30.870511+00:00",
+  "requested_model": "gpt-6-astra",
+  "cli_version": "0.159.2",
+  "cli_source": "Existing ChatGPT.app bundled Codex CLI",
+  "neutral_probe": {
+    "successful": true,
+    "elapsed_ms": 7956,
+    "completed_tool_free": true,
+    "university_requests": 0
+  },
+  "limits": {
+    "cold_fetcher_calls": 60,
+    "search_queries": 6,
+    "total_active_ms": 120000,
+    "navigation_action_deadline_ms": 75000
+  },
+  "max_parallel_experts": 3,
+  "active_clock": "prompt/selector/parse/source/view/trace validation; excludes provisioning, GitHub control transport and audit envelopes",
+  "live_v2_started": true,
+  "files": [
+    {
+      "path": "compact-pilot.py.txt",
+      "sha256": "f71358cc16733df0c0ba2bca38ede3cb91544b7b9ec62547e76301f350712ce8"
+    },
+    {
+      "path": "legacy-transport.py.txt",
+      "sha256": "9eaa88effd037d17937bd96b16d341c711f02ac2825c74d0d6a1f5f95bb2c5a7"
+    },
+    {
+      "path": "compact-report.py.txt",
+      "sha256": "d94964818c539dde070aa3ef97c217c82ddb004cba16e8f26213540145d72bd1"
+    },
+    {
+      "path": "neutral-probe.py.txt",
+      "sha256": "359ade9ec4901f92b561377306fab471286ff6c948310fb2e12093d5f38fd319"
+    },
+    {
+      "path": "test-compact-pilot.py.txt",
+      "sha256": "5a99e8b28c667ab3ffd544bd09be3d7c4c9687f0695c7b45fd634fc4929e56f2"
+    },
+    {
+      "path": "backend/evaluation/research/expert/blind_cli.py",
+      "sha256": "c529d0847008701c6f6b2711fd0ac10207d9c4dcd22bfac06dee532fc0ffd4aa"
+    },
+    {
+      "path": "backend/evaluation/research/expert/selector.py",
+      "sha256": "17bfe9fb196cec0d2d4eead2575f9bd57a0a01974a1b3a8c1f8a3e4937e501e6"
+    },
+    {
+      "path": "backend/evaluation/research/expert/compact.py",
+      "sha256": "1fdc7a62a29771def5420c2a607ec7036075683a43f036921e6971d934258e3e"
+    },
+    {
+      "path": "backend/evaluation/research/expert/controller.py",
+      "sha256": "5c081ac3ec25950bccdedf9a6e63c424e37fded2c48bbd6ed60fc23c434284cc"
+    }
+  ],
+  "offline_orchestrator_tests": 6,
+  "production_app_tree": "53d57225bb16867ccc0de5f961d8870dbab7b9ce",
+  "production_main_commit": "b672349e5bba2bd3cbfe8d8f155db74da11a492c",
+  "harness_sha": "9421884465cbc986ce0ab017102126731fe2589d",
+  "ref": "task/expert-500-phase1",
+  "parent_knows_v1_reviewed_labels": true,
+  "selectors_have_no_gold_access": true
+}

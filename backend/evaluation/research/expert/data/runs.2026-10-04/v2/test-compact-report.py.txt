@@ -1,0 +1,42 @@
+import json
+import runpy
+from pathlib import Path
+
+import pytest
+
+
+@pytest.fixture
+def report():
+    return runpy.run_path('/tmp/unimatch-expert500-pilot-report-v2.py')
+
+
+def test_cohort_status_and_meter_must_equal_the_sealed_case(report,tmp_path):
+    folder=tmp_path/'experts/u';folder.mkdir(parents=True)
+    recorded={'case_id':'u','status':'incomplete','active_ms':130000}
+    (folder/'result.json').write_text(json.dumps(recorded))
+    valid={'stopped':False,'results':[recorded]}
+    assert report['verified_cohort'](tmp_path,valid,['u'])==[recorded]
+    stale={'stopped':False,'results':[{**recorded,'status':'submitted','active_ms':110000}]}
+    with pytest.raises(ValueError,match='Aggregate differs'):
+        report['verified_cohort'](tmp_path,stale,['u'])
+
+
+def test_duplicate_cohort_ids_cannot_satisfy_finalization_gate(report,tmp_path):
+    value={'stopped':False,'results':[{'case_id':'u'},{'case_id':'u'}]}
+    with pytest.raises(ValueError,match='uniquely'):
+        report['verified_cohort'](tmp_path,value,['u'])
+
+
+@pytest.mark.parametrize('field',['orchestrator_sha256','legacy_transport_sha256',
+    'trial_file_sha256','cohort_results_sha256','submissions'])
+def test_previous_seal_binds_every_fixed_provenance_field(report,tmp_path,field):
+    seal={'sealed_at':'2026-10-04T00:00:00Z','submissions':[],
+        'orchestrator_sha256':'a','legacy_transport_sha256':'b',
+        'trial_file_sha256':'c','cohort_results_sha256':'d'}
+    path=tmp_path/'seal.json'
+    assert report['immutable_seal'](path,seal)==seal
+    later={**seal,'sealed_at':'2026-10-04T01:00:00Z'}
+    assert report['immutable_seal'](path,later)==seal
+    with pytest.raises(ValueError,match='provenance'):
+        report['immutable_seal'](path,{**later,field:'changed'})
+    assert json.loads(path.read_text())==seal

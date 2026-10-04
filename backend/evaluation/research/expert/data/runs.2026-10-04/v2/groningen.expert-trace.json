@@ -1,0 +1,231 @@
+{
+  "schema_version": "1",
+  "case_id": "groningen",
+  "packet_sha256": "22204e59fffb03545b014b1f3099c6eca421069e44934a722c8f443e59558742",
+  "baseline_pipeline_sha": "9421884465cbc986ce0ab017102126731fe2589d",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T03:43:20.395254+00:00",
+  "ended_at": "2026-10-04T03:50:03.314097+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T03:44:08.966930+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:rug.nl bachelors computer science admission requirements",
+        "domains": [
+          "rug.nl"
+        ],
+        "max_results": 5
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "groningen-001.json",
+      "raw_log_sha256": "afaad51066b238aff76aacff761bed9221c4ae0ee38a1b910fcc01837f98d738",
+      "elapsed_ms": 3508,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 15589,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "The baseline did not identify a programme page; search the official domain for the exact bachelor programme.",
+      "observed_from_step": null,
+      "action": "search_provider: site:rug.nl bachelors computer science admission requirements",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T03:44:57.113846+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.rug.nl/bachelors/computing-science/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "groningen-002.json",
+      "raw_log_sha256": "d06c59476a8b75a20937e4d72448ce4193fc128f41dd6e8f0cb333075842a4b9",
+      "elapsed_ms": 1213,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 25069,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Search located the official Computing Science bachelor page; inspect its programme identity and admissions links.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://www.rug.nl/bachelors/computing-science/",
+      "stage": "page_understanding",
+      "url": "https://www.rug.nl/bachelors/computing-science/",
+      "final_url": "https://www.rug.nl/bachelors/computing-science/"
+    },
+    {
+      "at": "2026-10-04T03:45:55.569947+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.rug.nl/fse/education/admission-application/apply-bsc/language"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "groningen-003.json",
+      "raw_log_sha256": "b0fa2f999e8a1f9d56ac2f75d624d9e8aa8142c72fd85744e5512c50d60abf6d",
+      "elapsed_ms": 2436,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 37798,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "The programme page provides 2027 deadlines and 2027–2028 fees, and links to faculty English requirements.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://www.rug.nl/fse/education/admission-application/apply-bsc/language",
+      "stage": "page_understanding",
+      "url": "https://www.rug.nl/fse/education/admission-application/apply-bsc/language",
+      "final_url": "https://www.rug.nl/fse/education/admission-and-application/apply-bsc/language?lang=en"
+    },
+    {
+      "at": "2026-10-04T03:47:24.698826+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/non-dutch-qualification/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "groningen-004.json",
+      "raw_log_sha256": "b6d804cbc120350050a722d0f6f4c28384167180442ea6ac9dae1f913bdf091e",
+      "elapsed_ms": 2532,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 49870,
+      "search_queries_cumulative": 1,
+      "step": 4,
+      "observed_before": "English requirements are labelled 2026–2027; the programme links to international qualification guidance for further eligibility checks.",
+      "observed_from_step": 3,
+      "action": "fetcher: https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/non-dutch-qualification/",
+      "stage": "page_understanding",
+      "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/non-dutch-qualification/",
+      "final_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/"
+    },
+    {
+      "at": "2026-10-04T03:48:23.086080+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/bachelor-non-dutch-qualification"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "groningen-005.json",
+      "raw_log_sha256": "ac94d53381a768a676575088a55a78c95e9e6ab0c63253af7cbc1140de6e462e",
+      "elapsed_ms": 1487,
+      "fetcher_calls_cumulative": 4,
+      "elapsed_ms_cumulative": 62130,
+      "search_queries_cumulative": 1,
+      "step": 5,
+      "observed_before": "The international admissions landing page links to bachelor registration guidance; inspect that route for secondary qualification requirements.",
+      "observed_from_step": 4,
+      "action": "fetcher: https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/bachelor-non-dutch-qualification",
+      "stage": "page_understanding",
+      "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/bachelor-non-dutch-qualification",
+      "final_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/bachelor-non-dutch-qualification"
+    },
+    {
+      "at": "2026-10-04T03:49:08.284014+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/with-non-dutch-diploma/bachelor/bachelor-entry-requirements/vwo-equivalent-qualifications"
+      },
+      "outcome": "action_timeout",
+      "outcome_status": "failure",
+      "policy_mode": "same_policy",
+      "raw_log_path": "groningen-006.json",
+      "raw_log_sha256": "c2f5de5d81d18e2fc96a341eec0525cf11b8d47c7374376f582f975852812307",
+      "elapsed_ms": 2287,
+      "fetcher_calls_cumulative": 5,
+      "elapsed_ms_cumulative": 75001,
+      "search_queries_cumulative": 1,
+      "step": 6,
+      "observed_before": "Bachelor registration guidance links directly to the country-specific list of VWO-equivalent qualifications.",
+      "observed_from_step": 5,
+      "action": "fetcher: https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/with-non-dutch-diploma/bachelor/bachelor-entry-requirements/vwo-equivalent-qualifications",
+      "stage": "page_understanding",
+      "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/with-non-dutch-diploma/bachelor/bachelor-entry-requirements/vwo-equivalent-qualifications",
+      "final_url": null
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

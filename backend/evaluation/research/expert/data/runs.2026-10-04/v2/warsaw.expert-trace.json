@@ -1,0 +1,239 @@
+{
+  "schema_version": "1",
+  "case_id": "warsaw",
+  "packet_sha256": "159771ccff548e96bdd92ee18608fcd7d0cbf5ca9330f36467f51619cbcd3a86",
+  "baseline_pipeline_sha": "9421884465cbc986ce0ab017102126731fe2589d",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T03:48:59.555425+00:00",
+  "ended_at": "2026-10-04T03:55:18.277741+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T03:49:35.577818+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:uw.edu.pl computer science first cycle admissions bachelor",
+        "domains": [
+          "uw.edu.pl"
+        ],
+        "max_results": 5
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "warsaw-001.json",
+      "raw_log_sha256": "6100f9c018a559cb72cef7cd49db64c768f8f13c52d20c212a3b003bf395e522",
+      "elapsed_ms": 1737,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 10150,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "The baseline established no programme or admissions evidence. Search for an official Computer Science bachelor route.",
+      "observed_from_step": null,
+      "action": "search_provider: site:uw.edu.pl computer science first cycle admissions bachelor",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T03:50:24.178778+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "warsaw-002.json",
+      "raw_log_sha256": "dc4933a038d6028c2922de3986a91a22be9faa7e0a46208630760e602ee034ad",
+      "elapsed_ms": 2678,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 21665,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Search located an official catalogue entry explicitly naming the bachelor Computer Science programme; read it to verify existence and navigation links.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+      "stage": "page_understanding",
+      "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+      "final_url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/"
+    },
+    {
+      "at": "2026-10-04T03:51:26.458081+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://irk.uw.edu.pl/en-gb/offer/PELNE2026/programme/S1-INF/?from=field%3AP_INF"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "warsaw-003.json",
+      "raw_log_sha256": "d7e0b70d11bc627a927ecb86605420267d6c47b4c830017afbeb9142e561169e",
+      "elapsed_ms": 2513,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 33850,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "The catalogue confirms a bachelor Computer Science programme taught in Polish. Read its admissions entry for foreign-qualification requirements and linked policies.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://irk.uw.edu.pl/en-gb/offer/PELNE2026/programme/S1-INF/?from=field%3AP_INF",
+      "stage": "page_understanding",
+      "url": "https://irk.uw.edu.pl/en-gb/offer/PELNE2026/programme/S1-INF/?from=field%3AP_INF",
+      "final_url": "https://irk.uw.edu.pl/en-gb/offer/PELNE2026/programme/S1-INF/?from=field%3AP_INF"
+    },
+    {
+      "at": "2026-10-04T03:52:25.940070+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:rekrutacja.uw.edu.pl Kazakhstan secondary certificate admission recognition",
+        "domains": [
+          "uw.edu.pl"
+        ],
+        "max_results": 5
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "warsaw-004.json",
+      "raw_log_sha256": "8d522e8cbcd6c5ec374accd5a6bf5c919ca49665f832e0258218322483701890",
+      "elapsed_ms": 4520,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 48473,
+      "search_queries_cumulative": 2,
+      "step": 4,
+      "observed_before": "The admissions entry covers 2026/2027 and foreign-school applicants, but does not settle Kazakhstan credentials or fall 2027. Search for country-specific recognition guidance.",
+      "observed_from_step": 3,
+      "action": "search_provider: site:rekrutacja.uw.edu.pl Kazakhstan secondary certificate admission recognition",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T03:53:18.710284+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://rekrutacja.uw.edu.pl/en/recognition-of-foreign-education/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "warsaw-005.json",
+      "raw_log_sha256": "c0e6e4728275fe05e462c4e77a28d1bb26f7106fa8a3e9c46dfa5a7364fe9bf6",
+      "elapsed_ms": 4230,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 62723,
+      "search_queries_cumulative": 2,
+      "step": 5,
+      "observed_before": "Search located official foreign-education recognition guidance; read it for secondary-certificate eligibility and country-specific conditions.",
+      "observed_from_step": 4,
+      "action": "fetcher: https://rekrutacja.uw.edu.pl/en/recognition-of-foreign-education/",
+      "stage": "page_understanding",
+      "url": "https://rekrutacja.uw.edu.pl/en/recognition-of-foreign-education/",
+      "final_url": "https://rekrutacja.uw.edu.pl/en/recognition-of-foreign-education/"
+    },
+    {
+      "at": "2026-10-04T03:54:17.895646+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:uw.edu.pl rector scholarship first year first cycle foreign students eligibility",
+        "domains": [
+          "uw.edu.pl"
+        ],
+        "max_results": 5
+      },
+      "outcome": "action_timeout",
+      "outcome_status": "failure",
+      "policy_mode": "same_policy",
+      "raw_log_path": "warsaw-006.json",
+      "raw_log_sha256": "fc8d6a29b1b7e681a6c5cd4b746f236163a0ef92509e79ee682c14cf494ea77f",
+      "elapsed_ms": 2065,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 75004,
+      "search_queries_cumulative": 3,
+      "step": 6,
+      "observed_before": "Recognition guidance gives general foreign-certificate rules but does not establish KZ/NIS eligibility. Search for an official bachelor scholarship and its international eligibility.",
+      "observed_from_step": 5,
+      "action": "search_provider: site:uw.edu.pl rector scholarship first year first cycle foreign students eligibility",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}
