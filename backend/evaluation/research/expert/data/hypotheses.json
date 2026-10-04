@@ -135,6 +135,28 @@
       ],
       "policy_guard": "Reads via Fetcher only; slot changes discovery order, never evidence rules.",
       "validation_artifact": "backend/evaluation/research/expert/data/runs.2026-09-27/er07.paired.txt"
+    },
+    {
+      "id": "ER-08",
+      "status": "tested",
+      "case_ids": [
+        "groningen",
+        "ntu",
+        "hku",
+        "ubc",
+        "vienna"
+      ],
+      "observation": "2026-10-04 expert traces (claude-opus-5, not blind: gold seen earlier in session): Groningen, NTU and HKU publish the English minimum, the international fee and the deadline on topic pages the requirements adapter never opens (it reads program.url + admissions_url only); one Exa query per topic ranked that page first among the institution's results. Paired run 37234751647 (off/on x2, 120 s / 60 reads, exa): NTU core questions 2/6 -> 4/6 in both on arms (IELTS 6.5, subscores 6.5, TOEFL 90 correct); one wrong value: admission_deadline 2026-10-15 is the application window start (window 15 Oct 2026 - 20 Jan 2027) read by the existing deadline extractor from the newly reached important-dates page. Groningen times out before a programme page is known in both arms (ER-08 needs program.url); HKU robots-unreachable from runners; UBC page budget; Vienna unchanged. No other regression.",
+      "proposed_rule": "After a programme page is known, send one public query per topic (English requirements, international tuition, application deadline) restricted to the institution domain; read the first same-institution result outside excluded paths and other degree levels; read tuition tables on programme and fee pages.",
+      "integration_seam": "backend/app/adapters/requirements/web_requirements.py TOPIC_SEARCH, _find_topic_pages; live.py --topic-search",
+      "counterexample": "A date-range or multi-qualification page (NTU important dates) makes the existing deadline extractor take a window start for the deadline.",
+      "falsification": "Enable only if a paired run shows more correct core answers with no new wrong value; fix the date-range deadline reading first and re-run the pair.",
+      "evidence_artifacts": [
+        "GitHub Actions run 37234751647 (expert_paired, --topic-search)",
+        "expert rounds 37233683465, 37234315038, 37234319749, 37234446204, 37234324417, 37234450457"
+      ],
+      "policy_guard": "Only the institution name enters a query; pages are read through the Fetcher with robots and official-domain checks; snippets never become facts.",
+      "validation_artifact": "backend/tests/test_topic_search.py"
     }
   ]
 }
