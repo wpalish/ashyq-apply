@@ -1,0 +1,1708 @@
+........FFFFFFFFFFFFFFF.............F....FF.......................FFFFFF [ 54%]
+FF.................................FFFFFFFFFFFFFFFFFFFFFFF.              [100%]
+=================================== FAILURES ===================================
+_ test_explicit_adjacent_year_label_keeps_literal_text_and_exact_dom_provenance _
+
+    def test_explicit_adjacent_year_label_keeps_literal_text_and_exact_dom_provenance():
+        html = """<main><div><div><h1>Qualification requirements</h1>
+        <div class="visual-subtitle">Academic year 2030/2031</div></div>
+        <div><p>Foundation years are not considered.</p></div></div></main>"""
+        doc = build_document_ir(html, "https://example.edu/qualifications")
+        note = next(b for b in doc.blocks if b.kind == "paragraph")
+        assert note.id == "b1"  # The added context creates no new quote block.
+        assert note.text == "Foundation years are not considered."
+        assert note.section_path == ("Qualification requirements",)
+>       (label,) = note.section_year_labels
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EvidenceBlock' object has no attribute 'section_year_labels'
+
+tests/test_document_ir.py:127: AttributeError
+_ test_year_labels_in_navigation_or_controls_do_not_become_section_scope[nav] __
+
+wrapper = 'nav'
+
+    @pytest.mark.parametrize("wrapper", ["nav", "aside", "footer", "header", "form"])
+    def test_year_labels_in_navigation_or_controls_do_not_become_section_scope(wrapper):
+        html = f"""<{wrapper}><h1>Menu</h1><div>Academic year 2030/2031</div></{wrapper}>
+        <main><h1>Qualifications</h1><p>Foundation years are not considered.</p></main>"""
+        doc = build_document_ir(html, "https://example.edu/x")
+        assert not next(
+            b for b in doc.blocks if b.text == "Foundation years are not considered."
+>       ).section_year_labels
+          ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EvidenceBlock' object has no attribute 'section_year_labels'
+
+tests/test_document_ir.py:142: AttributeError
+_ test_year_labels_in_navigation_or_controls_do_not_become_section_scope[aside] _
+
+wrapper = 'aside'
+
+    @pytest.mark.parametrize("wrapper", ["nav", "aside", "footer", "header", "form"])
+    def test_year_labels_in_navigation_or_controls_do_not_become_section_scope(wrapper):
+        html = f"""<{wrapper}><h1>Menu</h1><div>Academic year 2030/2031</div></{wrapper}>
+        <main><h1>Qualifications</h1><p>Foundation years are not considered.</p></main>"""
+        doc = build_document_ir(html, "https://example.edu/x")
+        assert not next(
+            b for b in doc.blocks if b.text == "Foundation years are not considered."
+>       ).section_year_labels
+          ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EvidenceBlock' object has no attribute 'section_year_labels'
+
+tests/test_document_ir.py:142: AttributeError
+_ test_year_labels_in_navigation_or_controls_do_not_become_section_scope[footer] _
+
+wrapper = 'footer'
+
+    @pytest.mark.parametrize("wrapper", ["nav", "aside", "footer", "header", "form"])
+    def test_year_labels_in_navigation_or_controls_do_not_become_section_scope(wrapper):
+        html = f"""<{wrapper}><h1>Menu</h1><div>Academic year 2030/2031</div></{wrapper}>
+        <main><h1>Qualifications</h1><p>Foundation years are not considered.</p></main>"""
+        doc = build_document_ir(html, "https://example.edu/x")
+        assert not next(
+            b for b in doc.blocks if b.text == "Foundation years are not considered."
+>       ).section_year_labels
+          ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EvidenceBlock' object has no attribute 'section_year_labels'
+
+tests/test_document_ir.py:142: AttributeError
+_ test_year_labels_in_navigation_or_controls_do_not_become_section_scope[header] _
+
+wrapper = 'header'
+
+    @pytest.mark.parametrize("wrapper", ["nav", "aside", "footer", "header", "form"])
+    def test_year_labels_in_navigation_or_controls_do_not_become_section_scope(wrapper):
+        html = f"""<{wrapper}><h1>Menu</h1><div>Academic year 2030/2031</div></{wrapper}>
+        <main><h1>Qualifications</h1><p>Foundation years are not considered.</p></main>"""
+        doc = build_document_ir(html, "https://example.edu/x")
+        assert not next(
+            b for b in doc.blocks if b.text == "Foundation years are not considered."
+>       ).section_year_labels
+          ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EvidenceBlock' object has no attribute 'section_year_labels'
+
+tests/test_document_ir.py:142: AttributeError
+_ test_year_labels_in_navigation_or_controls_do_not_become_section_scope[form] _
+
+wrapper = 'form'
+
+    @pytest.mark.parametrize("wrapper", ["nav", "aside", "footer", "header", "form"])
+    def test_year_labels_in_navigation_or_controls_do_not_become_section_scope(wrapper):
+        html = f"""<{wrapper}><h1>Menu</h1><div>Academic year 2030/2031</div></{wrapper}>
+        <main><h1>Qualifications</h1><p>Foundation years are not considered.</p></main>"""
+        doc = build_document_ir(html, "https://example.edu/x")
+        assert not next(
+            b for b in doc.blocks if b.text == "Foundation years are not considered."
+>       ).section_year_labels
+          ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EvidenceBlock' object has no attribute 'section_year_labels'
+
+tests/test_document_ir.py:142: AttributeError
+_ test_only_adjacent_explicit_academic_year_labels_are_kept[<div role="navigation">Academic year 2030/2031</div>] _
+
+label = '<div role="navigation">Academic year 2030/2031</div>'
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            '<div role="navigation">Academic year 2030/2031</div>',
+            "<div hidden>Academic year 2030/2031</div>",
+            '<div aria-hidden="true">Academic year 2030/2031</div>',
+            '<div><a href="/old">Academic year 2030/2031</a></div>',
+            "<p>Other unrelated content.</p><div>Academic year 2030/2031</div>",
+            "<div>Applications for fall 2030</div>",
+        ],
+    )
+    def test_only_adjacent_explicit_academic_year_labels_are_kept(label):
+        doc = build_document_ir(
+            f"<h1>Qualifications</h1>{label}<p>Policy.</p>", "https://example.edu/x"
+        )
+>       assert not next(b for b in doc.blocks if b.text == "Policy.").section_year_labels
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EvidenceBlock' object has no attribute 'section_year_labels'
+
+tests/test_document_ir.py:160: AttributeError
+_ test_only_adjacent_explicit_academic_year_labels_are_kept[<div hidden>Academic year 2030/2031</div>] _
+
+label = '<div hidden>Academic year 2030/2031</div>'
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            '<div role="navigation">Academic year 2030/2031</div>',
+            "<div hidden>Academic year 2030/2031</div>",
+            '<div aria-hidden="true">Academic year 2030/2031</div>',
+            '<div><a href="/old">Academic year 2030/2031</a></div>',
+            "<p>Other unrelated content.</p><div>Academic year 2030/2031</div>",
+            "<div>Applications for fall 2030</div>",
+        ],
+    )
+    def test_only_adjacent_explicit_academic_year_labels_are_kept(label):
+        doc = build_document_ir(
+            f"<h1>Qualifications</h1>{label}<p>Policy.</p>", "https://example.edu/x"
+        )
+>       assert not next(b for b in doc.blocks if b.text == "Policy.").section_year_labels
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EvidenceBlock' object has no attribute 'section_year_labels'
+
+tests/test_document_ir.py:160: AttributeError
+_ test_only_adjacent_explicit_academic_year_labels_are_kept[<div aria-hidden="true">Academic year 2030/2031</div>] _
+
+label = '<div aria-hidden="true">Academic year 2030/2031</div>'
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            '<div role="navigation">Academic year 2030/2031</div>',
+            "<div hidden>Academic year 2030/2031</div>",
+            '<div aria-hidden="true">Academic year 2030/2031</div>',
+            '<div><a href="/old">Academic year 2030/2031</a></div>',
+            "<p>Other unrelated content.</p><div>Academic year 2030/2031</div>",
+            "<div>Applications for fall 2030</div>",
+        ],
+    )
+    def test_only_adjacent_explicit_academic_year_labels_are_kept(label):
+        doc = build_document_ir(
+            f"<h1>Qualifications</h1>{label}<p>Policy.</p>", "https://example.edu/x"
+        )
+>       assert not next(b for b in doc.blocks if b.text == "Policy.").section_year_labels
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EvidenceBlock' object has no attribute 'section_year_labels'
+
+tests/test_document_ir.py:160: AttributeError
+_ test_only_adjacent_explicit_academic_year_labels_are_kept[<div><a href="/old">Academic year 2030/2031</a></div>] _
+
+label = '<div><a href="/old">Academic year 2030/2031</a></div>'
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            '<div role="navigation">Academic year 2030/2031</div>',
+            "<div hidden>Academic year 2030/2031</div>",
+            '<div aria-hidden="true">Academic year 2030/2031</div>',
+            '<div><a href="/old">Academic year 2030/2031</a></div>',
+            "<p>Other unrelated content.</p><div>Academic year 2030/2031</div>",
+            "<div>Applications for fall 2030</div>",
+        ],
+    )
+    def test_only_adjacent_explicit_academic_year_labels_are_kept(label):
+        doc = build_document_ir(
+            f"<h1>Qualifications</h1>{label}<p>Policy.</p>", "https://example.edu/x"
+        )
+>       assert not next(b for b in doc.blocks if b.text == "Policy.").section_year_labels
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EvidenceBlock' object has no attribute 'section_year_labels'
+
+tests/test_document_ir.py:160: AttributeError
+_ test_only_adjacent_explicit_academic_year_labels_are_kept[<p>Other unrelated content.</p><div>Academic year 2030/2031</div>] _
+
+label = '<p>Other unrelated content.</p><div>Academic year 2030/2031</div>'
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            '<div role="navigation">Academic year 2030/2031</div>',
+            "<div hidden>Academic year 2030/2031</div>",
+            '<div aria-hidden="true">Academic year 2030/2031</div>',
+            '<div><a href="/old">Academic year 2030/2031</a></div>',
+            "<p>Other unrelated content.</p><div>Academic year 2030/2031</div>",
+            "<div>Applications for fall 2030</div>",
+        ],
+    )
+    def test_only_adjacent_explicit_academic_year_labels_are_kept(label):
+        doc = build_document_ir(
+            f"<h1>Qualifications</h1>{label}<p>Policy.</p>", "https://example.edu/x"
+        )
+>       assert not next(b for b in doc.blocks if b.text == "Policy.").section_year_labels
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EvidenceBlock' object has no attribute 'section_year_labels'
+
+tests/test_document_ir.py:160: AttributeError
+_ test_only_adjacent_explicit_academic_year_labels_are_kept[<div>Applications for fall 2030</div>] _
+
+label = '<div>Applications for fall 2030</div>'
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            '<div role="navigation">Academic year 2030/2031</div>',
+            "<div hidden>Academic year 2030/2031</div>",
+            '<div aria-hidden="true">Academic year 2030/2031</div>',
+            '<div><a href="/old">Academic year 2030/2031</a></div>',
+            "<p>Other unrelated content.</p><div>Academic year 2030/2031</div>",
+            "<div>Applications for fall 2030</div>",
+        ],
+    )
+    def test_only_adjacent_explicit_academic_year_labels_are_kept(label):
+        doc = build_document_ir(
+            f"<h1>Qualifications</h1>{label}<p>Policy.</p>", "https://example.edu/x"
+        )
+>       assert not next(b for b in doc.blocks if b.text == "Policy.").section_year_labels
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EvidenceBlock' object has no attribute 'section_year_labels'
+
+tests/test_document_ir.py:160: AttributeError
+________ test_section_year_labels_stay_separate_between_heading_scopes _________
+
+    def test_section_year_labels_stay_separate_between_heading_scopes():
+        html = """<h1>Campus A</h1><div>Academic year 2030/2031</div><p>Policy A.</p>
+        <h1>Campus B</h1><div>Academic year 2031/2032</div><p>Policy B.</p>"""
+        doc = build_document_ir(html, "https://example.edu/x")
+        a = next(b for b in doc.blocks if b.text == "Policy A.")
+        b = next(b for b in doc.blocks if b.text == "Policy B.")
+>       assert a.section_year_labels[0].text == "Academic year 2030/2031"
+               ^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EvidenceBlock' object has no attribute 'section_year_labels'
+
+tests/test_document_ir.py:169: AttributeError
+______________ test_footer_does_not_inherit_a_content_year_label _______________
+
+    def test_footer_does_not_inherit_a_content_year_label():
+        doc = build_document_ir(
+            "<main><h1>Fees</h1><div>Academic year 2030/2031</div><p>Content.</p></main>"
+            "<footer><p>Footer note.</p></footer>",
+            "https://example.edu/x",
+        )
+>       assert not next(b for b in doc.blocks if b.text == "Footer note.").section_year_labels
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EvidenceBlock' object has no attribute 'section_year_labels'
+
+tests/test_document_ir.py:181: AttributeError
+____ test_year_cells_keep_same_row_and_original_blank_or_merged_coordinates ____
+
+    def test_year_cells_keep_same_row_and_original_blank_or_merged_coordinates():
+        doc = build_document_ir(
+            """<table><tr><th>Applicant</th><th>Year</th><th>Fee</th></tr>
+        <tr><td>International</td><td>2030-2031</td><td>EUR 19800</td></tr>
+        <tr><td>Domestic</td><td></td><td>EUR 19800</td></tr></table>""",
+            "https://example.edu/x",
+        )
+        fees = [b for b in doc.blocks if b.text == "EUR 19800"]
+>       (year,) = fees[0].row_year_cells
+                  ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EvidenceBlock' object has no attribute 'row_year_cells'
+
+tests/test_document_ir.py:192: AttributeError
+_ test_question_specific_visible_scope_conflicts_are_preserved[Q4-International bachelor tuition for 2030/2031 is EUR 1234 per year.-scope2-academic_year] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_question_specific_visible2')
+question = 'Q4'
+quote = 'International bachelor tuition for 2030/2031 is EUR 1234 per year.'
+scope = {'university': 'Example University', 'programme': None, 'degree': 'bachelor', 'field': None, ...}
+message = 'academic_year'
+
+    @pytest.mark.parametrize(
+        "question,quote,scope,message",
+        [
+            (
+                "Q0",
+                "Bachelor Fictional Studies is a bachelor programme.",
+                _scope(programme="Bachelor Different Studies"),
+                "exact programme",
+            ),
+            (
+                "Q3",
+                "International bachelor applications for fall 2030 close on 1 February 2030.",
+                _scope(intake="fall 2031"),
+                "intake scope",
+            ),
+            (
+                "Q4",
+                "International bachelor tuition for 2030/2031 is EUR 1234 per year.",
+                _scope(academic_year="2031/2032"),
+                "academic_year",
+            ),
+        ],
+    )
+    def test_question_specific_visible_scope_conflicts_are_preserved(
+        tmp_path: Path, question: str, quote: str, scope: dict[str, str | None], message: str
+    ) -> None:
+        action, _record = _source(tmp_path, body=f"<p>{quote}</p>".encode())
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:312: AssertionError
+_ test_declared_scope_guards_apply_to_other_and_unreferenced_questions[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.-2031/2032-2030/2031-academic_year-OTHER] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_declared_scope_guards_app4')
+question = 'OTHER', dimension = 'academic_year'
+quote = 'International bachelor tuition for 2030/2031 is EUR 1234 per year.'
+incorrect = '2031/2032', correct = '2030/2031', message = 'academic_year'
+
+    @pytest.mark.parametrize("question", ["OTHER", "Q1"])
+    @pytest.mark.parametrize(
+        "dimension,quote,incorrect,correct,message",
+        [
+            (
+                "programme",
+                "Bachelor Fictional Studies is a bachelor programme.",
+                "Bachelor Different Studies",
+                "Bachelor Fictional Studies",
+                "exact programme",
+            ),
+            (
+                "intake",
+                "International bachelor applications for fall 2030 close on 1 February 2030.",
+                "fall 2031",
+                "fall 2030",
+                "intake scope",
+            ),
+            (
+                "academic_year",
+                "International bachelor tuition for 2030/2031 is EUR 1234 per year.",
+                "2031/2032",
+                "2030/2031",
+                "academic_year",
+            ),
+        ],
+    )
+    def test_declared_scope_guards_apply_to_other_and_unreferenced_questions(
+        tmp_path: Path,
+        question: str,
+        dimension: str,
+        quote: str,
+        incorrect: str,
+        correct: str,
+        message: str,
+    ) -> None:
+        action, _record = _source(tmp_path, body=f"<p>{quote}</p>".encode())
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:355: AssertionError
+_ test_declared_scope_guards_apply_to_other_and_unreferenced_questions[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.-2031/2032-2030/2031-academic_year-Q1] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_declared_scope_guards_app5')
+question = 'Q1', dimension = 'academic_year'
+quote = 'International bachelor tuition for 2030/2031 is EUR 1234 per year.'
+incorrect = '2031/2032', correct = '2030/2031', message = 'academic_year'
+
+    @pytest.mark.parametrize("question", ["OTHER", "Q1"])
+    @pytest.mark.parametrize(
+        "dimension,quote,incorrect,correct,message",
+        [
+            (
+                "programme",
+                "Bachelor Fictional Studies is a bachelor programme.",
+                "Bachelor Different Studies",
+                "Bachelor Fictional Studies",
+                "exact programme",
+            ),
+            (
+                "intake",
+                "International bachelor applications for fall 2030 close on 1 February 2030.",
+                "fall 2031",
+                "fall 2030",
+                "intake scope",
+            ),
+            (
+                "academic_year",
+                "International bachelor tuition for 2030/2031 is EUR 1234 per year.",
+                "2031/2032",
+                "2030/2031",
+                "academic_year",
+            ),
+        ],
+    )
+    def test_declared_scope_guards_apply_to_other_and_unreferenced_questions(
+        tmp_path: Path,
+        question: str,
+        dimension: str,
+        quote: str,
+        incorrect: str,
+        correct: str,
+        message: str,
+    ) -> None:
+        action, _record = _source(tmp_path, body=f"<p>{quote}</p>".encode())
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:355: AssertionError
+_ test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.- Fees for 2031/2032 follow a different policy.-2031/2032-2030/2031-academic_year-application/pdf-OTHER] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_mixed_context_cannot_mask8')
+question = 'OTHER', content_type = 'application/pdf'
+dimension = 'academic_year'
+quote = 'International bachelor tuition for 2030/2031 is EUR 1234 per year.'
+tail = ' Fees for 2031/2032 follow a different policy.', incorrect = '2031/2032'
+correct = '2030/2031', message = 'academic_year'
+
+    @pytest.mark.parametrize("question", ["OTHER", "Q1"])
+    @pytest.mark.parametrize(
+        "content_type", ["application/pdf", "text/plain", "application/xml", "text/html"]
+    )
+    @pytest.mark.parametrize(
+        "dimension,quote,tail,incorrect,correct,message",
+        [
+            (
+                "intake",
+                "International bachelor applications for fall 2030 close on 1 February 2030.",
+                " Applications for fall 2031 follow a different policy.",
+                "fall 2031",
+                "fall 2030",
+                "intake scope",
+            ),
+            (
+                "academic_year",
+                "International bachelor tuition for 2030/2031 is EUR 1234 per year.",
+                " Fees for 2031/2032 follow a different policy.",
+                "2031/2032",
+                "2030/2031",
+                "academic_year",
+            ),
+        ],
+    )
+    def test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year(
+        tmp_path: Path,
+        question: str,
+        content_type: str,
+        dimension: str,
+        quote: str,
+        tail: str,
+        incorrect: str,
+        correct: str,
+        message: str,
+    ) -> None:
+        context = quote + tail
+        location: dict[str, Any] = _fact()["location"]
+        if content_type == "application/pdf":
+            body = _pdf(context)
+            location = {"kind": "pdf", "block_id": None, "section_path": [], "page": 1}
+        elif content_type == "text/html":
+            body = f"<p>{context}</p>".encode()
+            location = {"kind": "document_ir", "block_id": "b0", "section_path": [], "page": None}
+        else:
+            body = context.encode()
+        action, _record = _source(tmp_path, body=body, content_type=content_type)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:540: AssertionError
+_ test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.- Fees for 2031/2032 follow a different policy.-2031/2032-2030/2031-academic_year-application/pdf-Q1] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_mixed_context_cannot_mask9')
+question = 'Q1', content_type = 'application/pdf', dimension = 'academic_year'
+quote = 'International bachelor tuition for 2030/2031 is EUR 1234 per year.'
+tail = ' Fees for 2031/2032 follow a different policy.', incorrect = '2031/2032'
+correct = '2030/2031', message = 'academic_year'
+
+    @pytest.mark.parametrize("question", ["OTHER", "Q1"])
+    @pytest.mark.parametrize(
+        "content_type", ["application/pdf", "text/plain", "application/xml", "text/html"]
+    )
+    @pytest.mark.parametrize(
+        "dimension,quote,tail,incorrect,correct,message",
+        [
+            (
+                "intake",
+                "International bachelor applications for fall 2030 close on 1 February 2030.",
+                " Applications for fall 2031 follow a different policy.",
+                "fall 2031",
+                "fall 2030",
+                "intake scope",
+            ),
+            (
+                "academic_year",
+                "International bachelor tuition for 2030/2031 is EUR 1234 per year.",
+                " Fees for 2031/2032 follow a different policy.",
+                "2031/2032",
+                "2030/2031",
+                "academic_year",
+            ),
+        ],
+    )
+    def test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year(
+        tmp_path: Path,
+        question: str,
+        content_type: str,
+        dimension: str,
+        quote: str,
+        tail: str,
+        incorrect: str,
+        correct: str,
+        message: str,
+    ) -> None:
+        context = quote + tail
+        location: dict[str, Any] = _fact()["location"]
+        if content_type == "application/pdf":
+            body = _pdf(context)
+            location = {"kind": "pdf", "block_id": None, "section_path": [], "page": 1}
+        elif content_type == "text/html":
+            body = f"<p>{context}</p>".encode()
+            location = {"kind": "document_ir", "block_id": "b0", "section_path": [], "page": None}
+        else:
+            body = context.encode()
+        action, _record = _source(tmp_path, body=body, content_type=content_type)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:540: AssertionError
+_ test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.- Fees for 2031/2032 follow a different policy.-2031/2032-2030/2031-academic_year-text/plain-OTHER] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_mixed_context_cannot_mask10')
+question = 'OTHER', content_type = 'text/plain', dimension = 'academic_year'
+quote = 'International bachelor tuition for 2030/2031 is EUR 1234 per year.'
+tail = ' Fees for 2031/2032 follow a different policy.', incorrect = '2031/2032'
+correct = '2030/2031', message = 'academic_year'
+
+    @pytest.mark.parametrize("question", ["OTHER", "Q1"])
+    @pytest.mark.parametrize(
+        "content_type", ["application/pdf", "text/plain", "application/xml", "text/html"]
+    )
+    @pytest.mark.parametrize(
+        "dimension,quote,tail,incorrect,correct,message",
+        [
+            (
+                "intake",
+                "International bachelor applications for fall 2030 close on 1 February 2030.",
+                " Applications for fall 2031 follow a different policy.",
+                "fall 2031",
+                "fall 2030",
+                "intake scope",
+            ),
+            (
+                "academic_year",
+                "International bachelor tuition for 2030/2031 is EUR 1234 per year.",
+                " Fees for 2031/2032 follow a different policy.",
+                "2031/2032",
+                "2030/2031",
+                "academic_year",
+            ),
+        ],
+    )
+    def test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year(
+        tmp_path: Path,
+        question: str,
+        content_type: str,
+        dimension: str,
+        quote: str,
+        tail: str,
+        incorrect: str,
+        correct: str,
+        message: str,
+    ) -> None:
+        context = quote + tail
+        location: dict[str, Any] = _fact()["location"]
+        if content_type == "application/pdf":
+            body = _pdf(context)
+            location = {"kind": "pdf", "block_id": None, "section_path": [], "page": 1}
+        elif content_type == "text/html":
+            body = f"<p>{context}</p>".encode()
+            location = {"kind": "document_ir", "block_id": "b0", "section_path": [], "page": None}
+        else:
+            body = context.encode()
+        action, _record = _source(tmp_path, body=body, content_type=content_type)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:540: AssertionError
+_ test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.- Fees for 2031/2032 follow a different policy.-2031/2032-2030/2031-academic_year-text/plain-Q1] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_mixed_context_cannot_mask11')
+question = 'Q1', content_type = 'text/plain', dimension = 'academic_year'
+quote = 'International bachelor tuition for 2030/2031 is EUR 1234 per year.'
+tail = ' Fees for 2031/2032 follow a different policy.', incorrect = '2031/2032'
+correct = '2030/2031', message = 'academic_year'
+
+    @pytest.mark.parametrize("question", ["OTHER", "Q1"])
+    @pytest.mark.parametrize(
+        "content_type", ["application/pdf", "text/plain", "application/xml", "text/html"]
+    )
+    @pytest.mark.parametrize(
+        "dimension,quote,tail,incorrect,correct,message",
+        [
+            (
+                "intake",
+                "International bachelor applications for fall 2030 close on 1 February 2030.",
+                " Applications for fall 2031 follow a different policy.",
+                "fall 2031",
+                "fall 2030",
+                "intake scope",
+            ),
+            (
+                "academic_year",
+                "International bachelor tuition for 2030/2031 is EUR 1234 per year.",
+                " Fees for 2031/2032 follow a different policy.",
+                "2031/2032",
+                "2030/2031",
+                "academic_year",
+            ),
+        ],
+    )
+    def test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year(
+        tmp_path: Path,
+        question: str,
+        content_type: str,
+        dimension: str,
+        quote: str,
+        tail: str,
+        incorrect: str,
+        correct: str,
+        message: str,
+    ) -> None:
+        context = quote + tail
+        location: dict[str, Any] = _fact()["location"]
+        if content_type == "application/pdf":
+            body = _pdf(context)
+            location = {"kind": "pdf", "block_id": None, "section_path": [], "page": 1}
+        elif content_type == "text/html":
+            body = f"<p>{context}</p>".encode()
+            location = {"kind": "document_ir", "block_id": "b0", "section_path": [], "page": None}
+        else:
+            body = context.encode()
+        action, _record = _source(tmp_path, body=body, content_type=content_type)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:540: AssertionError
+_ test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.- Fees for 2031/2032 follow a different policy.-2031/2032-2030/2031-academic_year-application/xml-OTHER] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_mixed_context_cannot_mask12')
+question = 'OTHER', content_type = 'application/xml'
+dimension = 'academic_year'
+quote = 'International bachelor tuition for 2030/2031 is EUR 1234 per year.'
+tail = ' Fees for 2031/2032 follow a different policy.', incorrect = '2031/2032'
+correct = '2030/2031', message = 'academic_year'
+
+    @pytest.mark.parametrize("question", ["OTHER", "Q1"])
+    @pytest.mark.parametrize(
+        "content_type", ["application/pdf", "text/plain", "application/xml", "text/html"]
+    )
+    @pytest.mark.parametrize(
+        "dimension,quote,tail,incorrect,correct,message",
+        [
+            (
+                "intake",
+                "International bachelor applications for fall 2030 close on 1 February 2030.",
+                " Applications for fall 2031 follow a different policy.",
+                "fall 2031",
+                "fall 2030",
+                "intake scope",
+            ),
+            (
+                "academic_year",
+                "International bachelor tuition for 2030/2031 is EUR 1234 per year.",
+                " Fees for 2031/2032 follow a different policy.",
+                "2031/2032",
+                "2030/2031",
+                "academic_year",
+            ),
+        ],
+    )
+    def test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year(
+        tmp_path: Path,
+        question: str,
+        content_type: str,
+        dimension: str,
+        quote: str,
+        tail: str,
+        incorrect: str,
+        correct: str,
+        message: str,
+    ) -> None:
+        context = quote + tail
+        location: dict[str, Any] = _fact()["location"]
+        if content_type == "application/pdf":
+            body = _pdf(context)
+            location = {"kind": "pdf", "block_id": None, "section_path": [], "page": 1}
+        elif content_type == "text/html":
+            body = f"<p>{context}</p>".encode()
+            location = {"kind": "document_ir", "block_id": "b0", "section_path": [], "page": None}
+        else:
+            body = context.encode()
+        action, _record = _source(tmp_path, body=body, content_type=content_type)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:540: AssertionError
+_ test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.- Fees for 2031/2032 follow a different policy.-2031/2032-2030/2031-academic_year-application/xml-Q1] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_mixed_context_cannot_mask13')
+question = 'Q1', content_type = 'application/xml', dimension = 'academic_year'
+quote = 'International bachelor tuition for 2030/2031 is EUR 1234 per year.'
+tail = ' Fees for 2031/2032 follow a different policy.', incorrect = '2031/2032'
+correct = '2030/2031', message = 'academic_year'
+
+    @pytest.mark.parametrize("question", ["OTHER", "Q1"])
+    @pytest.mark.parametrize(
+        "content_type", ["application/pdf", "text/plain", "application/xml", "text/html"]
+    )
+    @pytest.mark.parametrize(
+        "dimension,quote,tail,incorrect,correct,message",
+        [
+            (
+                "intake",
+                "International bachelor applications for fall 2030 close on 1 February 2030.",
+                " Applications for fall 2031 follow a different policy.",
+                "fall 2031",
+                "fall 2030",
+                "intake scope",
+            ),
+            (
+                "academic_year",
+                "International bachelor tuition for 2030/2031 is EUR 1234 per year.",
+                " Fees for 2031/2032 follow a different policy.",
+                "2031/2032",
+                "2030/2031",
+                "academic_year",
+            ),
+        ],
+    )
+    def test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year(
+        tmp_path: Path,
+        question: str,
+        content_type: str,
+        dimension: str,
+        quote: str,
+        tail: str,
+        incorrect: str,
+        correct: str,
+        message: str,
+    ) -> None:
+        context = quote + tail
+        location: dict[str, Any] = _fact()["location"]
+        if content_type == "application/pdf":
+            body = _pdf(context)
+            location = {"kind": "pdf", "block_id": None, "section_path": [], "page": 1}
+        elif content_type == "text/html":
+            body = f"<p>{context}</p>".encode()
+            location = {"kind": "document_ir", "block_id": "b0", "section_path": [], "page": None}
+        else:
+            body = context.encode()
+        action, _record = _source(tmp_path, body=body, content_type=content_type)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:540: AssertionError
+_ test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.- Fees for 2031/2032 follow a different policy.-2031/2032-2030/2031-academic_year-text/html-OTHER] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_mixed_context_cannot_mask14')
+question = 'OTHER', content_type = 'text/html', dimension = 'academic_year'
+quote = 'International bachelor tuition for 2030/2031 is EUR 1234 per year.'
+tail = ' Fees for 2031/2032 follow a different policy.', incorrect = '2031/2032'
+correct = '2030/2031', message = 'academic_year'
+
+    @pytest.mark.parametrize("question", ["OTHER", "Q1"])
+    @pytest.mark.parametrize(
+        "content_type", ["application/pdf", "text/plain", "application/xml", "text/html"]
+    )
+    @pytest.mark.parametrize(
+        "dimension,quote,tail,incorrect,correct,message",
+        [
+            (
+                "intake",
+                "International bachelor applications for fall 2030 close on 1 February 2030.",
+                " Applications for fall 2031 follow a different policy.",
+                "fall 2031",
+                "fall 2030",
+                "intake scope",
+            ),
+            (
+                "academic_year",
+                "International bachelor tuition for 2030/2031 is EUR 1234 per year.",
+                " Fees for 2031/2032 follow a different policy.",
+                "2031/2032",
+                "2030/2031",
+                "academic_year",
+            ),
+        ],
+    )
+    def test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year(
+        tmp_path: Path,
+        question: str,
+        content_type: str,
+        dimension: str,
+        quote: str,
+        tail: str,
+        incorrect: str,
+        correct: str,
+        message: str,
+    ) -> None:
+        context = quote + tail
+        location: dict[str, Any] = _fact()["location"]
+        if content_type == "application/pdf":
+            body = _pdf(context)
+            location = {"kind": "pdf", "block_id": None, "section_path": [], "page": 1}
+        elif content_type == "text/html":
+            body = f"<p>{context}</p>".encode()
+            location = {"kind": "document_ir", "block_id": "b0", "section_path": [], "page": None}
+        else:
+            body = context.encode()
+        action, _record = _source(tmp_path, body=body, content_type=content_type)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:540: AssertionError
+_ test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.- Fees for 2031/2032 follow a different policy.-2031/2032-2030/2031-academic_year-text/html-Q1] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_mixed_context_cannot_mask15')
+question = 'Q1', content_type = 'text/html', dimension = 'academic_year'
+quote = 'International bachelor tuition for 2030/2031 is EUR 1234 per year.'
+tail = ' Fees for 2031/2032 follow a different policy.', incorrect = '2031/2032'
+correct = '2030/2031', message = 'academic_year'
+
+    @pytest.mark.parametrize("question", ["OTHER", "Q1"])
+    @pytest.mark.parametrize(
+        "content_type", ["application/pdf", "text/plain", "application/xml", "text/html"]
+    )
+    @pytest.mark.parametrize(
+        "dimension,quote,tail,incorrect,correct,message",
+        [
+            (
+                "intake",
+                "International bachelor applications for fall 2030 close on 1 February 2030.",
+                " Applications for fall 2031 follow a different policy.",
+                "fall 2031",
+                "fall 2030",
+                "intake scope",
+            ),
+            (
+                "academic_year",
+                "International bachelor tuition for 2030/2031 is EUR 1234 per year.",
+                " Fees for 2031/2032 follow a different policy.",
+                "2031/2032",
+                "2030/2031",
+                "academic_year",
+            ),
+        ],
+    )
+    def test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year(
+        tmp_path: Path,
+        question: str,
+        content_type: str,
+        dimension: str,
+        quote: str,
+        tail: str,
+        incorrect: str,
+        correct: str,
+        message: str,
+    ) -> None:
+        context = quote + tail
+        location: dict[str, Any] = _fact()["location"]
+        if content_type == "application/pdf":
+            body = _pdf(context)
+            location = {"kind": "pdf", "block_id": None, "section_path": [], "page": 1}
+        elif content_type == "text/html":
+            body = f"<p>{context}</p>".encode()
+            location = {"kind": "document_ir", "block_id": "b0", "section_path": [], "page": None}
+        else:
+            body = context.encode()
+        action, _record = _source(tmp_path, body=body, content_type=content_type)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:540: AssertionError
+__ test_qualification_note_year_uses_only_its_explicit_adjacent_heading_label __
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_qualification_note_year_u0')
+
+    def test_qualification_note_year_uses_only_its_explicit_adjacent_heading_label(
+        tmp_path: Path,
+    ) -> None:
+        quote = "Foundation years are not considered."
+        html = f"""<main><div><div><h1>International bachelor qualifications</h1>
+        <div>Academic year 2030/2031</div></div><div><p>{quote}</p></div></div></main>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html,
+            quote,
+            question="Q2",
+            id="foundation_note",
+            claim_key="country_credential",
+            value_json=json.dumps(quote),
+            scope=_scope(academic_year="2030/2031"),
+        )
+>       proof = _validate(tmp_path, _decision(fact), [action])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_expert_citations.py:784: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_expert_citations.py:150: in _validate
+    return validate_fact_citations(
+evaluation/research/expert/citations.py:264: in validate_fact_citations
+    _evidence_scope(dimension_check, scope_evidence, source)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+finding = QuestionFinding(question='Q4', status='unresolved', supporting_steps=[1], proposal_indices=[], evidence=[SourceEvidenc...ernational', 'qualification': None, 'academic_year': '2030/2031'}, observation='Mechanical citation-scope check only.')
+evidence = SourceEvidence(action_step=1, source_url=HttpUrl('https://example.edu/admissions'), excerpt='Foundation years are not ...EvidenceLocation(kind='document_ir', block_id='b1', section_path=['International bachelor qualifications'], page=None))
+source = _SourceRead(url=HttpUrl('https://example.edu/admissions'), text='International bachelor qualifications\n\nAcademic yea...able_id=None, row=None, col=None, row_headers=(), column_headers=(), caption='', label='')], links=[]), pdf_pages=None)
+
+    def _evidence_scope(
+        finding: QuestionFinding, evidence: SourceEvidence, source: _SourceRead
+    ) -> None:
+        """Reject visible contradictions; semantic applicability stays unreviewed."""
+        from app.adapters.scope_reader import read_scope
+        from app.domain.claim_verifier import is_verbatim_excerpt
+    
+        context = evidence.excerpt
+        local_context = context
+        if evidence.location.kind == "document_ir":
+            block = next(
+                block for block in source.document.blocks if block.id == evidence.location.block_id
+            )
+            local_context = " ".join(
+                [
+                    *block.row_headers,
+                    *block.column_headers,
+                    block.label,
+                    block.caption,
+                    block.text,
+                ]
+            )
+            context = " ".join([*block.section_path, local_context])
+        local_scope, section_scope = read_scope(local_context), read_scope(context)
+        observed_degree = local_scope.degree or section_scope.degree
+        observed_population = local_scope.population or section_scope.population
+        observed_intake = local_scope.intake or section_scope.intake
+        if observed_degree is not None and observed_degree != finding.scope.get("degree"):
+            raise ValueError("Official evidence states a different degree scope")
+        if observed_population == "domestic" and finding.scope.get("population") == "international":
+            raise ValueError("Official evidence states domestic applicant scope")
+        if finding.question == "Q0" and not is_verbatim_excerpt(
+            finding.scope["programme"] or "", context
+        ):
+            raise ValueError("Q0 exact programme name is absent from the official evidence location")
+        if finding.question == "Q3" and observed_intake is not None:
+            declared = (finding.scope.get("intake") or "").casefold()
+            if observed_intake.casefold() != declared:
+                # A named September start may state the same fall intake. The
+                # production scope reader already normalizes programme starts.
+                raise ValueError("Official evidence states a different intake scope")
+        if finding.question == "Q4":
+            declared_year = _year_label(finding.scope.get("academic_year") or "")
+            year_context = local_context if re.search(r"\b20\d{2}\b", local_context) else context
+            published_years = {
+                _year_label(match.group(0))
+                for match in re.finditer(r"\b20\d{2}(?:\s*[/–—-]\s*(?:20\d{2}|\d{2}))?\b", year_context)
+            }
+            if not declared_year or declared_year not in published_years:
+>               raise ValueError("Q4 fee year is absent from its official evidence location")
+E               ValueError: Q4 fee year is absent from its official evidence location
+
+evaluation/research/expert/models.py:720: ValueError
+____ test_fee_year_support_is_exact_same_table_row_with_source_coordinates _____
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_fee_year_support_is_exact0')
+
+    def test_fee_year_support_is_exact_same_table_row_with_source_coordinates(tmp_path: Path) -> None:
+        html = """<h1>International bachelor tuition</h1><table>
+        <tr><th>Applicant</th><th>Year</th><th>Fee</th></tr>
+        <tr><td>International</td><td>2030/2031</td><td>EUR 19800</td></tr>
+        <tr><td>International</td><td>2031/2032</td><td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html,
+            "EUR 19800",
+            question="Q4",
+            id="fee",
+            claim_key="tuition",
+            value_json='"EUR 19800"',
+            scope=_scope(academic_year="2030/2031"),
+        )
+>       proof = _validate(tmp_path, _decision(fact), [action])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_expert_citations.py:809: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_expert_citations.py:150: in _validate
+    return validate_fact_citations(
+evaluation/research/expert/citations.py:256: in validate_fact_citations
+    _evidence_scope(check, scope_evidence, source)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+finding = QuestionFinding(question='Q4', status='unresolved', supporting_steps=[1], proposal_indices=[], evidence=[SourceEvidenc...ernational', 'qualification': None, 'academic_year': '2030/2031'}, observation='Mechanical citation-scope check only.')
+evidence = SourceEvidence(action_step=1, source_url=HttpUrl('https://example.edu/admissions'), excerpt='EUR 19800', location=EvidenceLocation(kind='document_ir', block_id='b3', section_path=['International bachelor tuition'], page=None))
+source = _SourceRead(url=HttpUrl('https://example.edu/admissions'), text='International bachelor tuition\n\nApplicant\nYear\nFe...w=2, col=2, row_headers=('International',), column_headers=('Fee',), caption='', label='')], links=[]), pdf_pages=None)
+
+    def _evidence_scope(
+        finding: QuestionFinding, evidence: SourceEvidence, source: _SourceRead
+    ) -> None:
+        """Reject visible contradictions; semantic applicability stays unreviewed."""
+        from app.adapters.scope_reader import read_scope
+        from app.domain.claim_verifier import is_verbatim_excerpt
+    
+        context = evidence.excerpt
+        local_context = context
+        if evidence.location.kind == "document_ir":
+            block = next(
+                block for block in source.document.blocks if block.id == evidence.location.block_id
+            )
+            local_context = " ".join(
+                [
+                    *block.row_headers,
+                    *block.column_headers,
+                    block.label,
+                    block.caption,
+                    block.text,
+                ]
+            )
+            context = " ".join([*block.section_path, local_context])
+        local_scope, section_scope = read_scope(local_context), read_scope(context)
+        observed_degree = local_scope.degree or section_scope.degree
+        observed_population = local_scope.population or section_scope.population
+        observed_intake = local_scope.intake or section_scope.intake
+        if observed_degree is not None and observed_degree != finding.scope.get("degree"):
+            raise ValueError("Official evidence states a different degree scope")
+        if observed_population == "domestic" and finding.scope.get("population") == "international":
+            raise ValueError("Official evidence states domestic applicant scope")
+        if finding.question == "Q0" and not is_verbatim_excerpt(
+            finding.scope["programme"] or "", context
+        ):
+            raise ValueError("Q0 exact programme name is absent from the official evidence location")
+        if finding.question == "Q3" and observed_intake is not None:
+            declared = (finding.scope.get("intake") or "").casefold()
+            if observed_intake.casefold() != declared:
+                # A named September start may state the same fall intake. The
+                # production scope reader already normalizes programme starts.
+                raise ValueError("Official evidence states a different intake scope")
+        if finding.question == "Q4":
+            declared_year = _year_label(finding.scope.get("academic_year") or "")
+            year_context = local_context if re.search(r"\b20\d{2}\b", local_context) else context
+            published_years = {
+                _year_label(match.group(0))
+                for match in re.finditer(r"\b20\d{2}(?:\s*[/–—-]\s*(?:20\d{2}|\d{2}))?\b", year_context)
+            }
+            if not declared_year or declared_year not in published_years:
+>               raise ValueError("Q4 fee year is absent from its official evidence location")
+E               ValueError: Q4 fee year is absent from its official evidence location
+
+evaluation/research/expert/models.py:720: ValueError
+_ test_page_label_cannot_fill_missing_or_wrong_year_in_the_selected_fee_row[] __
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_page_label_cannot_fill_mi0')
+row_year = ''
+
+    @pytest.mark.parametrize("row_year", ["", "unknown", "2031/2032"])
+    def test_page_label_cannot_fill_missing_or_wrong_year_in_the_selected_fee_row(
+        tmp_path: Path, row_year: str
+    ) -> None:
+        html = f"""<h1>International bachelor tuition</h1>
+        <div>Academic year 2030/2031</div><table>
+        <tr><th>Applicant</th><th>Year</th><th>Fee</th></tr>
+        <tr><td>International</td><td>{row_year}</td><td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:837: AssertionError
+_ test_page_label_cannot_fill_missing_or_wrong_year_in_the_selected_fee_row[unknown] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_page_label_cannot_fill_mi1')
+row_year = 'unknown'
+
+    @pytest.mark.parametrize("row_year", ["", "unknown", "2031/2032"])
+    def test_page_label_cannot_fill_missing_or_wrong_year_in_the_selected_fee_row(
+        tmp_path: Path, row_year: str
+    ) -> None:
+        html = f"""<h1>International bachelor tuition</h1>
+        <div>Academic year 2030/2031</div><table>
+        <tr><th>Applicant</th><th>Year</th><th>Fee</th></tr>
+        <tr><td>International</td><td>{row_year}</td><td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:837: AssertionError
+_ test_page_label_cannot_fill_missing_or_wrong_year_in_the_selected_fee_row[2031/2032] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_page_label_cannot_fill_mi2')
+row_year = '2031/2032'
+
+    @pytest.mark.parametrize("row_year", ["", "unknown", "2031/2032"])
+    def test_page_label_cannot_fill_missing_or_wrong_year_in_the_selected_fee_row(
+        tmp_path: Path, row_year: str
+    ) -> None:
+        html = f"""<h1>International bachelor tuition</h1>
+        <div>Academic year 2030/2031</div><table>
+        <tr><th>Applicant</th><th>Year</th><th>Fee</th></tr>
+        <tr><td>International</td><td>{row_year}</td><td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:837: AssertionError
+__ test_matching_year_in_another_campus_row_or_table_cannot_rescue_fee[False] __
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_matching_year_in_another_0')
+other_table = False
+
+    @pytest.mark.parametrize("other_table", [False, True])
+    def test_matching_year_in_another_campus_row_or_table_cannot_rescue_fee(
+        tmp_path: Path, other_table: bool
+    ) -> None:
+        boundary = (
+            "</table><table><tr><th>Campus</th><th>Year</th><th>Fee</th></tr>" if other_table else ""
+        )
+        html = f"""<h1>International bachelor tuition</h1><table>
+        <tr><th>Campus</th><th>Year</th><th>Fee</th></tr>
+        <tr><td>Campus A</td><td>2031/2032</td><td>EUR 19800</td></tr>{boundary}
+        <tr><td>Campus B</td><td>2030/2031</td><td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:856: AssertionError
+__ test_matching_year_in_another_campus_row_or_table_cannot_rescue_fee[True] ___
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_matching_year_in_another_1')
+other_table = True
+
+    @pytest.mark.parametrize("other_table", [False, True])
+    def test_matching_year_in_another_campus_row_or_table_cannot_rescue_fee(
+        tmp_path: Path, other_table: bool
+    ) -> None:
+        boundary = (
+            "</table><table><tr><th>Campus</th><th>Year</th><th>Fee</th></tr>" if other_table else ""
+        )
+        html = f"""<h1>International bachelor tuition</h1><table>
+        <tr><th>Campus</th><th>Year</th><th>Fee</th></tr>
+        <tr><td>Campus A</td><td>2031/2032</td><td>EUR 19800</td></tr>{boundary}
+        <tr><td>Campus B</td><td>2030/2031</td><td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:856: AssertionError
+_ test_ambiguous_year_columns_and_merged_cells_fail_without_union[<th>Year</th><th>Year</th></tr><tr><td>2030/2031</td><td>2031/2032</td>] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_ambiguous_year_columns_an0')
+years = '<th>Year</th><th>Year</th></tr><tr><td>2030/2031</td><td>2031/2032</td>'
+
+    @pytest.mark.parametrize(
+        "years",
+        [
+            "<th>Year</th><th>Year</th></tr><tr><td>2030/2031</td><td>2031/2032</td>",
+            "<th>Year</th><th>Year</th></tr><tr><td>2030/2031</td><td>2030/2031</td>",
+            '<th>Year</th></tr><tr><td colspan="2">2030/2031</td>',
+            '<th>Year</th></tr><tr><td rowspan="2">2030/2031</td>',
+        ],
+    )
+    def test_ambiguous_year_columns_and_merged_cells_fail_without_union(tmp_path: Path, years: str):
+        html = (
+            f"<h1>International bachelor tuition</h1><table><tr>{years}<td>EUR 19800</td></tr></table>"
+        )
+        # Give the fee column its explicit header, including malformed/merged layout variants.
+        html = html.replace("</tr><tr>", "<th>Fee</th></tr><tr>", 1)
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:879: Failed
+_ test_ambiguous_year_columns_and_merged_cells_fail_without_union[<th>Year</th><th>Year</th></tr><tr><td>2030/2031</td><td>2030/2031</td>] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_ambiguous_year_columns_an1')
+years = '<th>Year</th><th>Year</th></tr><tr><td>2030/2031</td><td>2030/2031</td>'
+
+    @pytest.mark.parametrize(
+        "years",
+        [
+            "<th>Year</th><th>Year</th></tr><tr><td>2030/2031</td><td>2031/2032</td>",
+            "<th>Year</th><th>Year</th></tr><tr><td>2030/2031</td><td>2030/2031</td>",
+            '<th>Year</th></tr><tr><td colspan="2">2030/2031</td>',
+            '<th>Year</th></tr><tr><td rowspan="2">2030/2031</td>',
+        ],
+    )
+    def test_ambiguous_year_columns_and_merged_cells_fail_without_union(tmp_path: Path, years: str):
+        html = (
+            f"<h1>International bachelor tuition</h1><table><tr>{years}<td>EUR 19800</td></tr></table>"
+        )
+        # Give the fee column its explicit header, including malformed/merged layout variants.
+        html = html.replace("</tr><tr>", "<th>Fee</th></tr><tr>", 1)
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:879: Failed
+_ test_ambiguous_year_columns_and_merged_cells_fail_without_union[<th>Year</th></tr><tr><td colspan="2">2030/2031</td>] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_ambiguous_year_columns_an2')
+years = '<th>Year</th></tr><tr><td colspan="2">2030/2031</td>'
+
+    @pytest.mark.parametrize(
+        "years",
+        [
+            "<th>Year</th><th>Year</th></tr><tr><td>2030/2031</td><td>2031/2032</td>",
+            "<th>Year</th><th>Year</th></tr><tr><td>2030/2031</td><td>2030/2031</td>",
+            '<th>Year</th></tr><tr><td colspan="2">2030/2031</td>',
+            '<th>Year</th></tr><tr><td rowspan="2">2030/2031</td>',
+        ],
+    )
+    def test_ambiguous_year_columns_and_merged_cells_fail_without_union(tmp_path: Path, years: str):
+        html = (
+            f"<h1>International bachelor tuition</h1><table><tr>{years}<td>EUR 19800</td></tr></table>"
+        )
+        # Give the fee column its explicit header, including malformed/merged layout variants.
+        html = html.replace("</tr><tr>", "<th>Fee</th></tr><tr>", 1)
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:879: Failed
+_ test_ambiguous_year_columns_and_merged_cells_fail_without_union[<th>Year</th></tr><tr><td rowspan="2">2030/2031</td>] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_ambiguous_year_columns_an3')
+years = '<th>Year</th></tr><tr><td rowspan="2">2030/2031</td>'
+
+    @pytest.mark.parametrize(
+        "years",
+        [
+            "<th>Year</th><th>Year</th></tr><tr><td>2030/2031</td><td>2031/2032</td>",
+            "<th>Year</th><th>Year</th></tr><tr><td>2030/2031</td><td>2030/2031</td>",
+            '<th>Year</th></tr><tr><td colspan="2">2030/2031</td>',
+            '<th>Year</th></tr><tr><td rowspan="2">2030/2031</td>',
+        ],
+    )
+    def test_ambiguous_year_columns_and_merged_cells_fail_without_union(tmp_path: Path, years: str):
+        html = (
+            f"<h1>International bachelor tuition</h1><table><tr>{years}<td>EUR 19800</td></tr></table>"
+        )
+        # Give the fee column its explicit header, including malformed/merged layout variants.
+        html = html.replace("</tr><tr>", "<th>Fee</th></tr><tr>", 1)
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:879: Failed
+_ test_year_support_never_supplies_or_changes_other_declared_scope[Domestic bachelor tuition-scope0-domestic] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_year_support_never_suppli0')
+context = 'Domestic bachelor tuition'
+scope = {'university': 'Example University', 'programme': None, 'degree': 'bachelor', 'field': None, ...}
+message = 'domestic'
+
+    @pytest.mark.parametrize(
+        "context,scope,message",
+        [
+            ("Domestic bachelor tuition", _scope(academic_year="2030/2031"), "domestic"),
+            ("International master tuition", _scope(academic_year="2030/2031"), "degree scope"),
+            (
+                "International bachelor Fictional Studies tuition",
+                _scope(programme="Different Studies", academic_year="2030/2031"),
+                "exact programme",
+            ),
+            (
+                "International bachelor tuition for fall 2030",
+                _scope(intake="fall 2031", academic_year="2030/2031"),
+                "intake scope",
+            ),
+        ],
+    )
+    def test_year_support_never_supplies_or_changes_other_declared_scope(
+        tmp_path: Path, context: str, scope: dict[str, str | None], message: str
+    ) -> None:
+        html = f"<h1>{context}</h1><div>Academic year 2030/2031</div><p>EUR 19800</p>"
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(html, "EUR 19800", question="Q4", scope=scope)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'domestic'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:906: AssertionError
+_ test_year_support_never_supplies_or_changes_other_declared_scope[International master tuition-scope1-degree scope] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_year_support_never_suppli1')
+context = 'International master tuition'
+scope = {'university': 'Example University', 'programme': None, 'degree': 'bachelor', 'field': None, ...}
+message = 'degree scope'
+
+    @pytest.mark.parametrize(
+        "context,scope,message",
+        [
+            ("Domestic bachelor tuition", _scope(academic_year="2030/2031"), "domestic"),
+            ("International master tuition", _scope(academic_year="2030/2031"), "degree scope"),
+            (
+                "International bachelor Fictional Studies tuition",
+                _scope(programme="Different Studies", academic_year="2030/2031"),
+                "exact programme",
+            ),
+            (
+                "International bachelor tuition for fall 2030",
+                _scope(intake="fall 2031", academic_year="2030/2031"),
+                "intake scope",
+            ),
+        ],
+    )
+    def test_year_support_never_supplies_or_changes_other_declared_scope(
+        tmp_path: Path, context: str, scope: dict[str, str | None], message: str
+    ) -> None:
+        html = f"<h1>{context}</h1><div>Academic year 2030/2031</div><p>EUR 19800</p>"
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(html, "EUR 19800", question="Q4", scope=scope)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'degree scope'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:906: AssertionError
+_ test_year_support_never_supplies_or_changes_other_declared_scope[International bachelor Fictional Studies tuition-scope2-exact programme] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_year_support_never_suppli2')
+context = 'International bachelor Fictional Studies tuition'
+scope = {'university': 'Example University', 'programme': 'Different Studies', 'degree': 'bachelor', 'field': None, ...}
+message = 'exact programme'
+
+    @pytest.mark.parametrize(
+        "context,scope,message",
+        [
+            ("Domestic bachelor tuition", _scope(academic_year="2030/2031"), "domestic"),
+            ("International master tuition", _scope(academic_year="2030/2031"), "degree scope"),
+            (
+                "International bachelor Fictional Studies tuition",
+                _scope(programme="Different Studies", academic_year="2030/2031"),
+                "exact programme",
+            ),
+            (
+                "International bachelor tuition for fall 2030",
+                _scope(intake="fall 2031", academic_year="2030/2031"),
+                "intake scope",
+            ),
+        ],
+    )
+    def test_year_support_never_supplies_or_changes_other_declared_scope(
+        tmp_path: Path, context: str, scope: dict[str, str | None], message: str
+    ) -> None:
+        html = f"<h1>{context}</h1><div>Academic year 2030/2031</div><p>EUR 19800</p>"
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(html, "EUR 19800", question="Q4", scope=scope)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'exact programme'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:906: AssertionError
+_ test_year_support_never_supplies_or_changes_other_declared_scope[International bachelor tuition for fall 2030-scope3-intake scope] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_year_support_never_suppli3')
+context = 'International bachelor tuition for fall 2030'
+scope = {'university': 'Example University', 'programme': None, 'degree': 'bachelor', 'field': None, ...}
+message = 'intake scope'
+
+    @pytest.mark.parametrize(
+        "context,scope,message",
+        [
+            ("Domestic bachelor tuition", _scope(academic_year="2030/2031"), "domestic"),
+            ("International master tuition", _scope(academic_year="2030/2031"), "degree scope"),
+            (
+                "International bachelor Fictional Studies tuition",
+                _scope(programme="Different Studies", academic_year="2030/2031"),
+                "exact programme",
+            ),
+            (
+                "International bachelor tuition for fall 2030",
+                _scope(intake="fall 2031", academic_year="2030/2031"),
+                "intake scope",
+            ),
+        ],
+    )
+    def test_year_support_never_supplies_or_changes_other_declared_scope(
+        tmp_path: Path, context: str, scope: dict[str, str | None], message: str
+    ) -> None:
+        html = f"<h1>{context}</h1><div>Academic year 2030/2031</div><p>EUR 19800</p>"
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(html, "EUR 19800", question="Q4", scope=scope)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'intake scope'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:906: AssertionError
+____ test_year_error_names_original_question_fact_dimension_and_source[Q2] _____
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_year_error_names_original0')
+question = 'Q2'
+
+    @pytest.mark.parametrize("question", ["Q2", "OTHER", "Q4"])
+    def test_year_error_names_original_question_fact_dimension_and_source(
+        tmp_path: Path, question: str
+    ) -> None:
+        quote = "Foundation years are not considered."
+        html = f"<h1>International bachelor qualifications</h1><p>{quote}</p>"
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html,
+            quote,
+            id="qualification_note",
+            question=question,
+            scope=_scope(academic_year="2030/2031"),
+        )
+        with pytest.raises(ValueError) as caught:
+            _validate(tmp_path, _decision(fact), [action])
+        message = str(caught.value)
+>       assert f"{question} fact qualification_note: academic_year" in message
+E       AssertionError: assert 'Q2 fact qualification_note: academic_year' in 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:927: AssertionError
+___ test_year_error_names_original_question_fact_dimension_and_source[OTHER] ___
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_year_error_names_original1')
+question = 'OTHER'
+
+    @pytest.mark.parametrize("question", ["Q2", "OTHER", "Q4"])
+    def test_year_error_names_original_question_fact_dimension_and_source(
+        tmp_path: Path, question: str
+    ) -> None:
+        quote = "Foundation years are not considered."
+        html = f"<h1>International bachelor qualifications</h1><p>{quote}</p>"
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html,
+            quote,
+            id="qualification_note",
+            question=question,
+            scope=_scope(academic_year="2030/2031"),
+        )
+        with pytest.raises(ValueError) as caught:
+            _validate(tmp_path, _decision(fact), [action])
+        message = str(caught.value)
+>       assert f"{question} fact qualification_note: academic_year" in message
+E       AssertionError: assert 'OTHER fact qualification_note: academic_year' in 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:927: AssertionError
+____ test_year_error_names_original_question_fact_dimension_and_source[Q4] _____
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_year_error_names_original2')
+question = 'Q4'
+
+    @pytest.mark.parametrize("question", ["Q2", "OTHER", "Q4"])
+    def test_year_error_names_original_question_fact_dimension_and_source(
+        tmp_path: Path, question: str
+    ) -> None:
+        quote = "Foundation years are not considered."
+        html = f"<h1>International bachelor qualifications</h1><p>{quote}</p>"
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html,
+            quote,
+            id="qualification_note",
+            question=question,
+            scope=_scope(academic_year="2030/2031"),
+        )
+        with pytest.raises(ValueError) as caught:
+            _validate(tmp_path, _decision(fact), [action])
+        message = str(caught.value)
+>       assert f"{question} fact qualification_note: academic_year" in message
+E       AssertionError: assert 'Q4 fact qualification_note: academic_year' in 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:927: AssertionError
+___ test_explicit_quotation_year_cannot_be_masked_by_matching_section_label ____
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_explicit_quotation_year_c0')
+
+    def test_explicit_quotation_year_cannot_be_masked_by_matching_section_label(tmp_path: Path) -> None:
+        quote = "International bachelor tuition for 2031/2032 is EUR 19800."
+        html = (
+            f"<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div><p>{quote}</p>"
+        )
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(html, quote, question="Q4", scope=_scope(academic_year="2030/2031"))
+>       with pytest.raises(ValueError, match="academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:940: AssertionError
+____ test_year_requirement_is_not_inferred_from_request_or_silently_filled _____
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_year_requirement_is_not_i0')
+
+    def test_year_requirement_is_not_inferred_from_request_or_silently_filled(tmp_path: Path) -> None:
+        quote = "Foundation years are not considered."
+        html = f"<h1>International bachelor qualifications</h1><p>{quote}</p>"
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(html, quote, question="Q2", scope=_scope(academic_year=None))
+        proof = _validate(tmp_path, _decision(fact), [action])
+        assert proof[0]["scope"]["academic_year"] is None
+        assert "academic_year_support" not in proof[0]
+        fact["scope"]["academic_year"] = "2030/2031"
+>       with pytest.raises(ValueError, match="academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:953: AssertionError
+________ test_table_caption_year_cannot_override_the_selected_rows_year ________
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_table_caption_year_cannot0')
+
+    def test_table_caption_year_cannot_override_the_selected_rows_year(tmp_path: Path) -> None:
+        html = """<h1>International bachelor tuition</h1><table><caption>Fees for 2030/2031</caption>
+        <tr><th>Applicant</th><th>Year</th><th>Fee</th></tr>
+        <tr><td>International</td><td>2031/2032</td><td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:967: Failed
+______ test_multiple_adjacent_year_labels_do_not_allow_any_matching_year _______
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_multiple_adjacent_year_la0')
+
+    def test_multiple_adjacent_year_labels_do_not_allow_any_matching_year(tmp_path: Path) -> None:
+        quote = "Foundation years are not considered."
+        html = f"""<h1>International bachelor qualifications</h1>
+        <div>Academic year 2030/2031</div><div>Academic year 2031/2032</div><p>{quote}</p>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(html, quote, question="Q2", scope=_scope(academic_year="2030/2031"))
+>       with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year evidence ambiguous'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:977: AssertionError
+_____ test_a_year_in_another_heading_scope_cannot_rescue_the_selected_note _____
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-518/test_a_year_in_another_heading0')
+
+    def test_a_year_in_another_heading_scope_cannot_rescue_the_selected_note(tmp_path: Path) -> None:
+        quote = "Foundation years are not considered."
+        html = f"""<h1>International bachelor qualifications</h1><p>{quote}</p>
+        <h1>Other campus</h1><div>Academic year 2030/2031</div><p>Unrelated policy.</p>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(html, quote, question="Q2", scope=_scope(academic_year="2030/2031"))
+>       with pytest.raises(ValueError, match="academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'academic_year'
+E         Actual message: 'Q4 fee year is absent from its official evidence location'
+
+tests/test_expert_citations.py:987: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_document_ir.py::test_explicit_adjacent_year_label_keeps_literal_text_and_exact_dom_provenance
+FAILED tests/test_document_ir.py::test_year_labels_in_navigation_or_controls_do_not_become_section_scope[nav]
+FAILED tests/test_document_ir.py::test_year_labels_in_navigation_or_controls_do_not_become_section_scope[aside]
+FAILED tests/test_document_ir.py::test_year_labels_in_navigation_or_controls_do_not_become_section_scope[footer]
+FAILED tests/test_document_ir.py::test_year_labels_in_navigation_or_controls_do_not_become_section_scope[header]
+FAILED tests/test_document_ir.py::test_year_labels_in_navigation_or_controls_do_not_become_section_scope[form]
+FAILED tests/test_document_ir.py::test_only_adjacent_explicit_academic_year_labels_are_kept[<div role="navigation">Academic year 2030/2031</div>]
+FAILED tests/test_document_ir.py::test_only_adjacent_explicit_academic_year_labels_are_kept[<div hidden>Academic year 2030/2031</div>]
+FAILED tests/test_document_ir.py::test_only_adjacent_explicit_academic_year_labels_are_kept[<div aria-hidden="true">Academic year 2030/2031</div>]
+FAILED tests/test_document_ir.py::test_only_adjacent_explicit_academic_year_labels_are_kept[<div><a href="/old">Academic year 2030/2031</a></div>]
+FAILED tests/test_document_ir.py::test_only_adjacent_explicit_academic_year_labels_are_kept[<p>Other unrelated content.</p><div>Academic year 2030/2031</div>]
+FAILED tests/test_document_ir.py::test_only_adjacent_explicit_academic_year_labels_are_kept[<div>Applications for fall 2030</div>]
+FAILED tests/test_document_ir.py::test_section_year_labels_stay_separate_between_heading_scopes
+FAILED tests/test_document_ir.py::test_footer_does_not_inherit_a_content_year_label
+FAILED tests/test_document_ir.py::test_year_cells_keep_same_row_and_original_blank_or_merged_coordinates
+FAILED tests/test_expert_citations.py::test_question_specific_visible_scope_conflicts_are_preserved[Q4-International bachelor tuition for 2030/2031 is EUR 1234 per year.-scope2-academic_year]
+FAILED tests/test_expert_citations.py::test_declared_scope_guards_apply_to_other_and_unreferenced_questions[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.-2031/2032-2030/2031-academic_year-OTHER]
+FAILED tests/test_expert_citations.py::test_declared_scope_guards_apply_to_other_and_unreferenced_questions[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.-2031/2032-2030/2031-academic_year-Q1]
+FAILED tests/test_expert_citations.py::test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.- Fees for 2031/2032 follow a different policy.-2031/2032-2030/2031-academic_year-application/pdf-OTHER]
+FAILED tests/test_expert_citations.py::test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.- Fees for 2031/2032 follow a different policy.-2031/2032-2030/2031-academic_year-application/pdf-Q1]
+FAILED tests/test_expert_citations.py::test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.- Fees for 2031/2032 follow a different policy.-2031/2032-2030/2031-academic_year-text/plain-OTHER]
+FAILED tests/test_expert_citations.py::test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.- Fees for 2031/2032 follow a different policy.-2031/2032-2030/2031-academic_year-text/plain-Q1]
+FAILED tests/test_expert_citations.py::test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.- Fees for 2031/2032 follow a different policy.-2031/2032-2030/2031-academic_year-application/xml-OTHER]
+FAILED tests/test_expert_citations.py::test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.- Fees for 2031/2032 follow a different policy.-2031/2032-2030/2031-academic_year-application/xml-Q1]
+FAILED tests/test_expert_citations.py::test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.- Fees for 2031/2032 follow a different policy.-2031/2032-2030/2031-academic_year-text/html-OTHER]
+FAILED tests/test_expert_citations.py::test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year[academic_year-International bachelor tuition for 2030/2031 is EUR 1234 per year.- Fees for 2031/2032 follow a different policy.-2031/2032-2030/2031-academic_year-text/html-Q1]
+FAILED tests/test_expert_citations.py::test_qualification_note_year_uses_only_its_explicit_adjacent_heading_label
+FAILED tests/test_expert_citations.py::test_fee_year_support_is_exact_same_table_row_with_source_coordinates
+FAILED tests/test_expert_citations.py::test_page_label_cannot_fill_missing_or_wrong_year_in_the_selected_fee_row[]
+FAILED tests/test_expert_citations.py::test_page_label_cannot_fill_missing_or_wrong_year_in_the_selected_fee_row[unknown]
+FAILED tests/test_expert_citations.py::test_page_label_cannot_fill_missing_or_wrong_year_in_the_selected_fee_row[2031/2032]
+FAILED tests/test_expert_citations.py::test_matching_year_in_another_campus_row_or_table_cannot_rescue_fee[False]
+FAILED tests/test_expert_citations.py::test_matching_year_in_another_campus_row_or_table_cannot_rescue_fee[True]
+FAILED tests/test_expert_citations.py::test_ambiguous_year_columns_and_merged_cells_fail_without_union[<th>Year</th><th>Year</th></tr><tr><td>2030/2031</td><td>2031/2032</td>]
+FAILED tests/test_expert_citations.py::test_ambiguous_year_columns_and_merged_cells_fail_without_union[<th>Year</th><th>Year</th></tr><tr><td>2030/2031</td><td>2030/2031</td>]
+FAILED tests/test_expert_citations.py::test_ambiguous_year_columns_and_merged_cells_fail_without_union[<th>Year</th></tr><tr><td colspan="2">2030/2031</td>]
+FAILED tests/test_expert_citations.py::test_ambiguous_year_columns_and_merged_cells_fail_without_union[<th>Year</th></tr><tr><td rowspan="2">2030/2031</td>]
+FAILED tests/test_expert_citations.py::test_year_support_never_supplies_or_changes_other_declared_scope[Domestic bachelor tuition-scope0-domestic]
+FAILED tests/test_expert_citations.py::test_year_support_never_supplies_or_changes_other_declared_scope[International master tuition-scope1-degree scope]
+FAILED tests/test_expert_citations.py::test_year_support_never_supplies_or_changes_other_declared_scope[International bachelor Fictional Studies tuition-scope2-exact programme]
+FAILED tests/test_expert_citations.py::test_year_support_never_supplies_or_changes_other_declared_scope[International bachelor tuition for fall 2030-scope3-intake scope]
+FAILED tests/test_expert_citations.py::test_year_error_names_original_question_fact_dimension_and_source[Q2]
+FAILED tests/test_expert_citations.py::test_year_error_names_original_question_fact_dimension_and_source[OTHER]
+FAILED tests/test_expert_citations.py::test_year_error_names_original_question_fact_dimension_and_source[Q4]
+FAILED tests/test_expert_citations.py::test_explicit_quotation_year_cannot_be_masked_by_matching_section_label
+FAILED tests/test_expert_citations.py::test_year_requirement_is_not_inferred_from_request_or_silently_filled
+FAILED tests/test_expert_citations.py::test_table_caption_year_cannot_override_the_selected_rows_year
+FAILED tests/test_expert_citations.py::test_multiple_adjacent_year_labels_do_not_allow_any_matching_year
+FAILED tests/test_expert_citations.py::test_a_year_in_another_heading_scope_cannot_rescue_the_selected_note

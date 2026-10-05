@@ -1,0 +1,190 @@
+{
+  "status": "prospective_unvalidated_source_draft",
+  "created_at": "2026-10-05T17:53:50.770368+00:00",
+  "predecessor_metadata": "b07213d",
+  "original_v12_source": "92dfdb6d4f1a4595865ea756f46b176ce0f6d891",
+  "primary_acceptance": false,
+  "new_source_model_calls": 0,
+  "reviewed_labels_read": 0,
+  "v12_frozen_helpers_results_edited": false,
+  "gates": {
+    "stop_actual_red": "24 failed/8 passed",
+    "stop_actual_combined_green": "171 passed",
+    "year_context_focused_initial": "380 passed/2 unsupported-phrase fixture failures",
+    "year_context_focused_corrected": "382 passed",
+    "completion_clock_draft": "10 failed/2 passed ->12 passed",
+    "full_source_gate": "not run",
+    "independent_year_boundary_findings": "pending v2 fix"
+  },
+  "clock_candidate_warning": "filename V13 with embedded V12 identifiers is an isolated clock draft; NOT coherent freeze or live-ready protocol",
+  "records": [
+    {
+      "original": "/tmp/unimatch-expert500-v13-year-context-actual-red-original.log",
+      "copy": "original/unimatch-expert500-v13-year-context-actual-red-original.log",
+      "sha256": "79fbb402f702f764a775a5754f0ef1cff9940a1c20b63b391d79222f224477a1",
+      "size_bytes": 90859
+    },
+    {
+      "original": "/tmp/unimatch-expert500-v13-year-context-actual-focused-original.log",
+      "copy": "original/unimatch-expert500-v13-year-context-actual-focused-original.log",
+      "sha256": "1aea6139cec4b5294e39d3f2ffd2da489ffcbb917f5ceef58c5d3673d25293ec",
+      "size_bytes": 98
+    },
+    {
+      "original": "/tmp/unimatch-expert500-v13-year-context-actual-focused-v2-original.log",
+      "copy": "original/unimatch-expert500-v13-year-context-actual-focused-v2-original.log",
+      "sha256": "9b57a6af66641e62b585ad19b99ebb6e3473b4f913c95faca804de3907cfb341",
+      "size_bytes": 4381
+    },
+    {
+      "original": "/tmp/unimatch-expert500-v13-year-context-actual-focused-v3-original.log",
+      "copy": "original/unimatch-expert500-v13-year-context-actual-focused-v3-original.log",
+      "sha256": "b3f06681865e698da731711aeda93b2ba2613f123f63edc72648d34991ad09f7",
+      "size_bytes": 500
+    },
+    {
+      "original": "/tmp/unimatch-expert500-v13-year-context-initial-mypy-original.log",
+      "copy": "original/unimatch-expert500-v13-year-context-initial-mypy-original.log",
+      "sha256": "e317872697c2cbfdefa321527a6efe73290dff3a390b0fa8723b87092eccba6a",
+      "size_bytes": 43
+    },
+    {
+      "original": "/tmp/unimatch-expert500-v13-mixed-stop-actual-red-original.log",
+      "copy": "original/unimatch-expert500-v13-mixed-stop-actual-red-original.log",
+      "sha256": "c935ce21eb9d75d86208f2c6da20448bd8112ec89d1f47af69f38b1195df8094",
+      "size_bytes": 48853
+    },
+    {
+      "original": "/tmp/unimatch-expert500-v13-mixed-stop-actual-green-original.log",
+      "copy": "original/unimatch-expert500-v13-mixed-stop-actual-green-original.log",
+      "sha256": "7f3f0827b791d8bf8adea0f39ad8d1e43159daaac61ee199fe4f5bb18a008f1b",
+      "size_bytes": 260
+    },
+    {
+      "original": "/tmp/unimatch-expert500-v13-mixed-stop-final-focused-original.log",
+      "copy": "original/unimatch-expert500-v13-mixed-stop-final-focused-original.log",
+      "sha256": "9761e1bb7c516224e0760e336e86b0378f855e5ae68a20b39adcf55f33b385b1",
+      "size_bytes": 99
+    },
+    {
+      "original": "/tmp/unimatch-expert500-v13-stop-ruff-original.log",
+      "copy": "original/unimatch-expert500-v13-stop-ruff-original.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "size_bytes": 19
+    },
+    {
+      "original": "/tmp/unimatch-expert500-v13-stop-mypy-original.log",
+      "copy": "original/unimatch-expert500-v13-stop-mypy-original.log",
+      "sha256": "3498faf2190e462bb1a7e3e2035f8de590fff5291c5d20fa54746e5faa35d278",
+      "size_bytes": 209
+    },
+    {
+      "original": "/tmp/unimatch-expert500-v13-stop-mypy-v2-original.log",
+      "copy": "original/unimatch-expert500-v13-stop-mypy-v2-original.log",
+      "sha256": "f9b031e5c45aa702cd4fef028d465551cb20a2c4698e0913c7b00766b20ac4d8",
+      "size_bytes": 43
+    },
+    {
+      "original": "/tmp/unimatch-expert500-v13-completion-clock-red-original.log",
+      "copy": "original/unimatch-expert500-v13-completion-clock-red-original.log",
+      "sha256": "028ef09a4190f8a8c5a40b3e9d210860192cc82bb1eb8ecb2799bdbb9e2523a6",
+      "size_bytes": 21448
+    },
+    {
+      "original": "/tmp/unimatch-expert500-v13-completion-clock-green-original.log",
+      "copy": "original/unimatch-expert500-v13-completion-clock-green-original.log",
+      "sha256": "b570a5d67c69943b7b8930c86ad3b5ffff08080dd2faa9ce80f836e82f76a84a",
+      "size_bytes": 2009
+    },
+    {
+      "original": "/tmp/unimatch-expert500-v13-completion-clock-quality-original.log",
+      "copy": "original/unimatch-expert500-v13-completion-clock-quality-original.log",
+      "sha256": "e7010553ecbc2a83ee3d9de6339e5b5cadd8bfed46008332de26ab208c7fd750",
+      "size_bytes": 2048
+    },
+    {
+      "original": "/tmp/unimatch-expert500-journal-pilot-v13.py",
+      "copy": "original/unimatch-expert500-journal-pilot-v13.py",
+      "sha256": "3a70a6bc1f318a2761eb5e16093f2b36bc512abb89382c8f293bd56975558cb5",
+      "size_bytes": 90889
+    },
+    {
+      "original": "/tmp/test_unimatch_expert500_completion_clock_v13.py",
+      "copy": "original/test_unimatch_expert500_completion_clock_v13.py",
+      "sha256": "e89c416dfb62c64df614b0507aba827b7ff394aded4832f47c27a0622bead9fb",
+      "size_bytes": 8400
+    },
+    {
+      "original": "/tmp/unimatch-expert500-v12-year-context-candidate.patch",
+      "copy": "original/unimatch-expert500-v12-year-context-candidate.patch",
+      "sha256": "8963f3578bd2cbb801d8963ae097807e3a5452b8fe757beac05a92785355dcca",
+      "size_bytes": 38500
+    },
+    {
+      "original": "/tmp/unimatch-expert500-v12-year-context-candidate.md",
+      "copy": "original/unimatch-expert500-v12-year-context-candidate.md",
+      "sha256": "226e5669ddaca4f37131eb5b4951656f401a35105ea85fc649b691e96b0ca4c3",
+      "size_bytes": 5980
+    },
+    {
+      "original": "/tmp/unimatch-expert500-controller-mixed-provider-stop.patch",
+      "copy": "original/unimatch-expert500-controller-mixed-provider-stop.patch",
+      "sha256": "924804f224e49305191a9e095bd6f266ddde8cdee3c2090e3bf09e829a5d2a06",
+      "size_bytes": 725
+    },
+    {
+      "original": "/tmp/test_expert_controller_mixed_provider_stop_candidate.py",
+      "copy": "original/test_expert_controller_mixed_provider_stop_candidate.py",
+      "sha256": "f8cca95c02951b99e9c652cb67bd8b234cfc4765b108f6b0e4780faaaa416a9b",
+      "size_bytes": 8778
+    },
+    {
+      "original": "/tmp/unimatch-expert500-v13-source-draft-recorder.py",
+      "copy": "original/unimatch-expert500-v13-source-draft-recorder.py",
+      "sha256": "ae836633f8eab56dec593ebee5357da19249a27ff4f806cbe6916dbc860334fb",
+      "size_bytes": 3633
+    },
+    {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/app/adapters/document_ir.py",
+      "copy": "source/backend/app/adapters/document_ir.py",
+      "sha256": "7d4dd829467ab55a25b9e07ccb9a4e7ffb8614be98a3bd1abcd2ebec056e7c44",
+      "size_bytes": 17276
+    },
+    {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/models.py",
+      "copy": "source/backend/evaluation/research/expert/models.py",
+      "sha256": "00e3523e5c8e39298cc31ca561e6cd3329962fb3bc9e517ced334d0a071dcf50",
+      "size_bytes": 54286
+    },
+    {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/citations.py",
+      "copy": "source/backend/evaluation/research/expert/citations.py",
+      "sha256": "75adaa1534c4680982922d5f2c646353840da6dd814e3e8bb97df8d3c812a3f7",
+      "size_bytes": 13146
+    },
+    {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/controller.py",
+      "copy": "source/backend/evaluation/research/expert/controller.py",
+      "sha256": "88482a7aaed79080c8c58df9df762cbe8c0bf734fa3c01b43764af7ef20d4fb4",
+      "size_bytes": 56679
+    },
+    {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/tests/test_document_ir.py",
+      "copy": "source/backend/tests/test_document_ir.py",
+      "sha256": "d14e7c7c25057f8d97eea34a6993b99f9c9a57add6937778b83289d25676132b",
+      "size_bytes": 8908
+    },
+    {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/tests/test_expert_citations.py",
+      "copy": "source/backend/tests/test_expert_citations.py",
+      "sha256": "d8841e705452d6e7980686a88c59afa417d8efa3fd8b1e873705ac96a31bda8a",
+      "size_bytes": 39030
+    },
+    {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/tests/test_expert_controller_mixed_provider_stop.py",
+      "copy": "source/backend/tests/test_expert_controller_mixed_provider_stop.py",
+      "sha256": "392d2102d0e97c406a090c02eb6da50a54e7827b777a50ea2d2dabdd996abe0c",
+      "size_bytes": 8776
+    }
+  ]
+}

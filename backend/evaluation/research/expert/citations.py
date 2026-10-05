@@ -12,19 +12,22 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
-from .compact import CompactDecision, _load_json, parse_compact_decision
+from .compact import CompactDecision, CompactFact, _load_json, parse_compact_decision
 from .controller import blocked
 from .models import (
     Action,
     EvidenceLocation,
     QuestionFinding,
     SourceEvidence,
+    _academic_year_evidence,
+    _AcademicYearEvidenceError,
     _check_controller_action,
     _evidence_scope,
     _official_source,
     _quote_matches,
     _source_read,
     _SourceRead,
+    _year_label,
 )
 
 
@@ -185,6 +188,20 @@ def _scope_context(evidence: SourceEvidence, source: _SourceRead) -> SourceEvide
     )
 
 
+def _check_fact_scope(
+    fact: CompactFact, finding: QuestionFinding, evidence: SourceEvidence, source: _SourceRead
+) -> None:
+    try:
+        _evidence_scope(finding, evidence, source)
+    except _AcademicYearEvidenceError as exc:
+        location = evidence.location.model_dump(mode="json")
+        raise ValueError(
+            f"{fact.question} fact {fact.id}: academic_year evidence {exc.reason}; "
+            f"declared={fact.scope.academic_year!r}, observed={list(exc.published)!r}, "
+            f"source_step={fact.source_step}, location={location!r}"
+        ) from exc
+
+
 def validate_fact_citations(
     decision: CompactDecision | str | Mapping[str, Any],
     actions: Sequence[Action | Mapping[str, Any]],
@@ -240,7 +257,7 @@ def validate_fact_citations(
         # literal quotation. Q1 leaves year/programme/intake to the real location.
         quote_check = QuestionFinding.model_validate({**check.model_dump(), "question": "Q1"})
         quote_evidence = evidence.model_copy(update={"location": EvidenceLocation(kind="text")})
-        _evidence_scope(quote_check, quote_evidence, source)
+        _check_fact_scope(fact, quote_check, quote_evidence, source)
         # Existing intake checks permit silence; year checks need a literal year
         # marker so a short quote may still use its exact saved location's year.
         for dimension, question in (("intake", "Q3"), ("academic_year", "Q4")):
@@ -251,9 +268,9 @@ def validate_fact_citations(
             literal_check = QuestionFinding.model_validate(
                 {**check.model_dump(), "question": question}
             )
-            _evidence_scope(literal_check, quote_evidence, source)
+            _check_fact_scope(fact, literal_check, quote_evidence, source)
         scope_evidence = _scope_context(evidence, source)
-        _evidence_scope(check, scope_evidence, source)
+        _check_fact_scope(fact, check, scope_evidence, source)
         # Explicit scope cannot evade an existing guard through its Q/OTHER
         # label or by remaining unreferenced in sparse question findings.
         for dimension, question in (("programme", "Q0"), ("intake", "Q3"), ("academic_year", "Q4")):
@@ -261,7 +278,12 @@ def validate_fact_citations(
                 dimension_check = QuestionFinding.model_validate(
                     {**check.model_dump(), "question": question}
                 )
-                _evidence_scope(dimension_check, scope_evidence, source)
+                _check_fact_scope(fact, dimension_check, scope_evidence, source)
+        year_support: list[dict[str, Any]] = []
+        if fact.scope.academic_year is not None:
+            _years, year_support = _academic_year_evidence(
+                scope_evidence, source, _year_label(fact.scope.academic_year)
+            )
         proof.append(
             {
                 "fact_id": fact.id,
@@ -272,6 +294,7 @@ def validate_fact_citations(
                 "quotation_sha256": hashlib.sha256(fact.quotation.encode()).hexdigest(),
                 "location": fact.location.model_dump(mode="json"),
                 "scope": fact.scope.model_dump(),
+                **({"academic_year_support": year_support} if year_support else {}),
             }
         )
     return proof

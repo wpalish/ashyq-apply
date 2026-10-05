@@ -8,7 +8,7 @@ import hashlib
 import json
 import math
 import re
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from datetime import date, datetime
 from pathlib import Path
 from typing import Any, Literal, Self
@@ -668,13 +668,20 @@ def _year_label(value: str) -> str:
     return first + (f"/{second[-2:]}" if second else "")
 
 
-def _evidence_scope(
-    finding: QuestionFinding, evidence: SourceEvidence, source: _SourceRead
-) -> None:
-    """Reject visible contradictions; semantic applicability stays unreviewed."""
-    from app.adapters.scope_reader import read_scope
-    from app.domain.claim_verifier import is_verbatim_excerpt
+class _AcademicYearEvidenceError(ValueError):
+    def __init__(self, declared: str, published: set[str], reason: str = "absent") -> None:
+        self.declared = declared
+        self.published = tuple(sorted(published))
+        self.reason = reason
+        # Preserve the legacy trace message; compact feedback adds original identity.
+        super().__init__(
+            "Q4 fee year is absent from its official evidence location"
+            if reason == "absent"
+            else "Q4 fee year evidence is ambiguous at its official location"
+        )
 
+
+def _scope_texts(evidence: SourceEvidence, source: _SourceRead) -> tuple[str, str]:
     context = evidence.excerpt
     local_context = context
     if evidence.location.kind == "document_ir":
@@ -682,15 +689,91 @@ def _evidence_scope(
             block for block in source.document.blocks if block.id == evidence.location.block_id
         )
         local_context = " ".join(
-            [
-                *block.row_headers,
-                *block.column_headers,
-                block.label,
-                block.caption,
-                block.text,
-            ]
+            [*block.row_headers, *block.column_headers, block.label, block.caption, block.text]
         )
         context = " ".join([*block.section_path, local_context])
+    return local_context, context
+
+
+def _published_years(text: str) -> set[str]:
+    return {
+        _year_label(match.group(0))
+        for match in re.finditer(r"\b20\d{2}(?:\s*[/–—-]\s*(?:20\d{2}|\d{2}))?\b", text)
+    }
+
+
+def _academic_year_evidence(
+    evidence: SourceEvidence, source: _SourceRead, declared: str
+) -> tuple[set[str], list[dict[str, Any]]]:
+    """A year-only structural join; other scope always uses the original block."""
+    local_context, context = _scope_texts(evidence, source)
+    local_has_year = re.search(r"\b20\d{2}\b", local_context)
+    published = _published_years(local_context if local_has_year else context)
+    if evidence.location.kind != "document_ir":
+        return published, []
+    block = next(b for b in source.document.blocks if b.id == evidence.location.block_id)
+    support: list[dict[str, Any]] = []
+    if block.row_year_cells:
+        for cell in block.row_year_cells:
+            year_block = next((b for b in source.document.blocks if b.id == cell.block_id), None)
+            if (
+                cell.table_id != block.table_id
+                or cell.row != block.row
+                or cell.rowspan != 1
+                or cell.colspan != 1
+                or (
+                    cell.text
+                    and (
+                        year_block is None
+                        or year_block.table_id != cell.table_id
+                        or year_block.row != cell.row
+                        or year_block.col != cell.col
+                        or year_block.section_path != block.section_path
+                        or year_block.text != cell.text
+                    )
+                )
+            ):
+                raise _AcademicYearEvidenceError(declared, set(), "ambiguous")
+            support.append(
+                {"kind": "table_cell", **asdict(cell), "section_path": block.section_path}
+            )
+    elif local_has_year:
+        return published, []
+    elif block.section_year_labels:
+        for label in block.section_year_labels:
+            if (
+                block.section_path[: len(label.section_path)] != label.section_path
+                or label.dom_path.rsplit("/", 1)[0] != label.heading_dom_path.rsplit("/", 1)[0]
+            ):
+                raise _AcademicYearEvidenceError(declared, set(), "ambiguous")
+            support.append({"kind": "section_label", **asdict(label)})
+    if not support:
+        return published, []
+    # Never union two Year columns or competing labels, even if one would match.
+    support_years = _published_years(support[0]["text"])
+    if len(support) != 1 or len(support_years) != 1:
+        raise _AcademicYearEvidenceError(declared, support_years, "ambiguous")
+    if not re.fullmatch(
+        r"(?:Academic\s+year\s*:?\s*)?20\d{2}(?:\s*[/–—-]\s*(?:20\d{2}|\d{2}))?",
+        support[0]["text"],
+        re.IGNORECASE,
+    ):
+        raise _AcademicYearEvidenceError(declared, support_years, "ambiguous")
+    # An explicit different range/year in the actual heading cannot be hidden.
+    supported = next(iter(support_years))
+    if any(year != supported and year != supported.split("/")[0] for year in published):
+        raise _AcademicYearEvidenceError(declared, published | support_years, "ambiguous")
+    return support_years, support
+
+
+def _evidence_scope(
+    finding: QuestionFinding, evidence: SourceEvidence, source: _SourceRead
+) -> None:
+    """Reject visible contradictions; semantic applicability stays unreviewed."""
+    from app.adapters.scope_reader import read_scope
+    from app.domain.claim_verifier import is_verbatim_excerpt
+
+    local_context, context = _scope_texts(evidence, source)
     local_scope, section_scope = read_scope(local_context), read_scope(context)
     observed_degree = local_scope.degree or section_scope.degree
     observed_population = local_scope.population or section_scope.population
@@ -711,13 +794,9 @@ def _evidence_scope(
             raise ValueError("Official evidence states a different intake scope")
     if finding.question == "Q4":
         declared_year = _year_label(finding.scope.get("academic_year") or "")
-        year_context = local_context if re.search(r"\b20\d{2}\b", local_context) else context
-        published_years = {
-            _year_label(match.group(0))
-            for match in re.finditer(r"\b20\d{2}(?:\s*[/–—-]\s*(?:20\d{2}|\d{2}))?\b", year_context)
-        }
+        published_years, _support = _academic_year_evidence(evidence, source, declared_year)
         if not declared_year or declared_year not in published_years:
-            raise ValueError("Q4 fee year is absent from its official evidence location")
+            raise _AcademicYearEvidenceError(declared_year, published_years)
 
 
 def _controller_budget(

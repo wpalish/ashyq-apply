@@ -1,0 +1,350 @@
+{"argv": ["/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/python", "-m", "pytest", "-o", "addopts=--strict-markers", "-q", "/tmp/test_unimatch_expert500_completion_clock_v13.py"], "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend", "input_sha256": {"/tmp/unimatch-expert500-journal-pilot-v13.py": "1922e117436afdc001bef7cbf867e8b91db4062fd0b98cfce044c3b980a74b72", "/tmp/test_unimatch_expert500_completion_clock_v13.py": "e89c416dfb62c64df614b0507aba827b7ff394aded4832f47c27a0622bead9fb", "/tmp/unimatch-expert500-journal-pilot-v12.py": "1922e117436afdc001bef7cbf867e8b91db4062fd0b98cfce044c3b980a74b72", "/tmp/test_unimatch_expert500_journal_pilot_v12.py": "fcbca530b952625d4e8fbe752fbf45692ee7c380f3f6c26fd83c9ad9e8a483a9"}, "PYTHONPATH": "."}
+.FFFFFFFFFF.                                                             [100%]
+=================================== FAILURES ===================================
+__________ test_action_file_hash_finishes_before_completion_clock[1] ___________
+
+harness = (Harness(runtime={'__name__': '<run_path>', '__doc__': 'V12 network-budget blind pilot: validate explicit incremental ...29), <module 'expert500_completion_clock_v13_frozen_fixture' from '/tmp/test_unimatch_expert500_journal_pilot_v12.py'>)
+hash_delay_us = 1
+
+    @pytest.mark.parametrize("hash_delay_us", [0, 1, 1000, 5000, 200_000])
+    def test_action_file_hash_finishes_before_completion_clock(
+        harness: tuple[Any, Any], hash_delay_us: int
+    ) -> None:
+        pilot, fixture = harness
+        queue_submission(pilot, fixture)
+        entered_at = delay_action_file_hash(pilot, fixture, delay=timedelta(microseconds=hash_delay_us))
+        result = pilot.run()
+        assert result["validated"] and result["status"] == "submitted"
+        assert len(entered_at) == 1
+        assert datetime.fromisoformat(result["finished_at"]) == (
+            entered_at[0] + timedelta(microseconds=hash_delay_us)
+        )
+>       assert_one_completion_instant(result)
+
+/tmp/test_unimatch_expert500_completion_clock_v13.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = {'case_id': 'u', 'status': 'submitted', 'source_counters_complete': True, 'completion_kind': 'explicit_commit', ...}
+
+    def assert_one_completion_instant(result: dict[str, Any]) -> None:
+        started = datetime.fromisoformat(result["wall_started_at"])
+        finished = datetime.fromisoformat(result["finished_at"])
+        elapsed = (finished - started).total_seconds()
+>       assert result["wall_elapsed_ms"] == math.ceil(elapsed * 1000)
+E       assert 24510 == 24511
+E        +  where 24511 = <built-in function ceil>((24.510001 * 1000))
+E        +    where <built-in function ceil> = math.ceil
+
+/tmp/test_unimatch_expert500_completion_clock_v13.py:94: AssertionError
+_________ test_action_file_hash_finishes_before_completion_clock[1000] _________
+
+harness = (Harness(runtime={'__name__': '<run_path>', '__doc__': 'V12 network-budget blind pilot: validate explicit incremental ...29), <module 'expert500_completion_clock_v13_frozen_fixture' from '/tmp/test_unimatch_expert500_journal_pilot_v12.py'>)
+hash_delay_us = 1000
+
+    @pytest.mark.parametrize("hash_delay_us", [0, 1, 1000, 5000, 200_000])
+    def test_action_file_hash_finishes_before_completion_clock(
+        harness: tuple[Any, Any], hash_delay_us: int
+    ) -> None:
+        pilot, fixture = harness
+        queue_submission(pilot, fixture)
+        entered_at = delay_action_file_hash(pilot, fixture, delay=timedelta(microseconds=hash_delay_us))
+        result = pilot.run()
+        assert result["validated"] and result["status"] == "submitted"
+        assert len(entered_at) == 1
+        assert datetime.fromisoformat(result["finished_at"]) == (
+            entered_at[0] + timedelta(microseconds=hash_delay_us)
+        )
+>       assert_one_completion_instant(result)
+
+/tmp/test_unimatch_expert500_completion_clock_v13.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = {'case_id': 'u', 'status': 'submitted', 'source_counters_complete': True, 'completion_kind': 'explicit_commit', ...}
+
+    def assert_one_completion_instant(result: dict[str, Any]) -> None:
+        started = datetime.fromisoformat(result["wall_started_at"])
+        finished = datetime.fromisoformat(result["finished_at"])
+        elapsed = (finished - started).total_seconds()
+>       assert result["wall_elapsed_ms"] == math.ceil(elapsed * 1000)
+E       assert 24510 == 24511
+E        +  where 24511 = <built-in function ceil>((24.511 * 1000))
+E        +    where <built-in function ceil> = math.ceil
+
+/tmp/test_unimatch_expert500_completion_clock_v13.py:94: AssertionError
+_________ test_action_file_hash_finishes_before_completion_clock[5000] _________
+
+harness = (Harness(runtime={'__name__': '<run_path>', '__doc__': 'V12 network-budget blind pilot: validate explicit incremental ...29), <module 'expert500_completion_clock_v13_frozen_fixture' from '/tmp/test_unimatch_expert500_journal_pilot_v12.py'>)
+hash_delay_us = 5000
+
+    @pytest.mark.parametrize("hash_delay_us", [0, 1, 1000, 5000, 200_000])
+    def test_action_file_hash_finishes_before_completion_clock(
+        harness: tuple[Any, Any], hash_delay_us: int
+    ) -> None:
+        pilot, fixture = harness
+        queue_submission(pilot, fixture)
+        entered_at = delay_action_file_hash(pilot, fixture, delay=timedelta(microseconds=hash_delay_us))
+        result = pilot.run()
+        assert result["validated"] and result["status"] == "submitted"
+        assert len(entered_at) == 1
+        assert datetime.fromisoformat(result["finished_at"]) == (
+            entered_at[0] + timedelta(microseconds=hash_delay_us)
+        )
+>       assert_one_completion_instant(result)
+
+/tmp/test_unimatch_expert500_completion_clock_v13.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = {'case_id': 'u', 'status': 'submitted', 'source_counters_complete': True, 'completion_kind': 'explicit_commit', ...}
+
+    def assert_one_completion_instant(result: dict[str, Any]) -> None:
+        started = datetime.fromisoformat(result["wall_started_at"])
+        finished = datetime.fromisoformat(result["finished_at"])
+        elapsed = (finished - started).total_seconds()
+>       assert result["wall_elapsed_ms"] == math.ceil(elapsed * 1000)
+E       assert 24510 == 24515
+E        +  where 24515 = <built-in function ceil>((24.515 * 1000))
+E        +    where <built-in function ceil> = math.ceil
+
+/tmp/test_unimatch_expert500_completion_clock_v13.py:94: AssertionError
+________ test_action_file_hash_finishes_before_completion_clock[200000] ________
+
+harness = (Harness(runtime={'__name__': '<run_path>', '__doc__': 'V12 network-budget blind pilot: validate explicit incremental ...29), <module 'expert500_completion_clock_v13_frozen_fixture' from '/tmp/test_unimatch_expert500_journal_pilot_v12.py'>)
+hash_delay_us = 200000
+
+    @pytest.mark.parametrize("hash_delay_us", [0, 1, 1000, 5000, 200_000])
+    def test_action_file_hash_finishes_before_completion_clock(
+        harness: tuple[Any, Any], hash_delay_us: int
+    ) -> None:
+        pilot, fixture = harness
+        queue_submission(pilot, fixture)
+        entered_at = delay_action_file_hash(pilot, fixture, delay=timedelta(microseconds=hash_delay_us))
+        result = pilot.run()
+        assert result["validated"] and result["status"] == "submitted"
+        assert len(entered_at) == 1
+        assert datetime.fromisoformat(result["finished_at"]) == (
+            entered_at[0] + timedelta(microseconds=hash_delay_us)
+        )
+>       assert_one_completion_instant(result)
+
+/tmp/test_unimatch_expert500_completion_clock_v13.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = {'case_id': 'u', 'status': 'submitted', 'source_counters_complete': True, 'completion_kind': 'explicit_commit', ...}
+
+    def assert_one_completion_instant(result: dict[str, Any]) -> None:
+        started = datetime.fromisoformat(result["wall_started_at"])
+        finished = datetime.fromisoformat(result["finished_at"])
+        elapsed = (finished - started).total_seconds()
+>       assert result["wall_elapsed_ms"] == math.ceil(elapsed * 1000)
+E       assert 24510 == 24710
+E        +  where 24710 = <built-in function ceil>((24.71 * 1000))
+E        +    where <built-in function ceil> = math.ceil
+
+/tmp/test_unimatch_expert500_completion_clock_v13.py:94: AssertionError
+____ test_hash_crossing_exact_guard_cannot_leave_submitted[2999-submitted] _____
+
+harness = (Harness(runtime={'__name__': '<run_path>', '__doc__': 'V12 network-budget blind pilot: validate explicit incremental ...29), <module 'expert500_completion_clock_v13_frozen_fixture' from '/tmp/test_unimatch_expert500_journal_pilot_v12.py'>)
+hash_delay_us = 2999, expected_status = 'submitted'
+
+    @pytest.mark.parametrize(
+        ("hash_delay_us", "expected_status"),
+        [(2999, "submitted"), (3000, "incomplete"), (3001, "incomplete"), (5000, "incomplete")],
+    )
+    def test_hash_crossing_exact_guard_cannot_leave_submitted(
+        harness: tuple[Any, Any], hash_delay_us: int, expected_status: str
+    ) -> None:
+        pilot, fixture = harness
+        # 12s bootstrap + 10ms source + 12s checkpoint + 875987ms commit
+        # leave exactly 3ms of the original immutable guard before the final hash.
+        queue_submission(pilot, fixture, commit_elapsed=875_987)
+        entered_at = delay_action_file_hash(pilot, fixture, delay=timedelta(microseconds=hash_delay_us))
+        result = pilot.run()
+        assert len(entered_at) == 1
+        deadline = datetime.fromisoformat(result["wall_deadline_at"])
+        assert entered_at[0] == deadline - timedelta(milliseconds=3)
+        assert result["status"] == expected_status
+        assert result["validated"] and result["source_counters_complete"]
+>       assert_one_completion_instant(result)
+
+/tmp/test_unimatch_expert500_completion_clock_v13.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = {'case_id': 'u', 'status': 'submitted', 'source_counters_complete': True, 'completion_kind': 'explicit_commit', ...}
+
+    def assert_one_completion_instant(result: dict[str, Any]) -> None:
+        started = datetime.fromisoformat(result["wall_started_at"])
+        finished = datetime.fromisoformat(result["finished_at"])
+        elapsed = (finished - started).total_seconds()
+>       assert result["wall_elapsed_ms"] == math.ceil(elapsed * 1000)
+E       assert 899997 == 900000
+E        +  where 900000 = <built-in function ceil>((899.999999 * 1000))
+E        +    where <built-in function ceil> = math.ceil
+
+/tmp/test_unimatch_expert500_completion_clock_v13.py:94: AssertionError
+____ test_hash_crossing_exact_guard_cannot_leave_submitted[3000-incomplete] ____
+
+harness = (Harness(runtime={'__name__': '<run_path>', '__doc__': 'V12 network-budget blind pilot: validate explicit incremental ...29), <module 'expert500_completion_clock_v13_frozen_fixture' from '/tmp/test_unimatch_expert500_journal_pilot_v12.py'>)
+hash_delay_us = 3000, expected_status = 'incomplete'
+
+    @pytest.mark.parametrize(
+        ("hash_delay_us", "expected_status"),
+        [(2999, "submitted"), (3000, "incomplete"), (3001, "incomplete"), (5000, "incomplete")],
+    )
+    def test_hash_crossing_exact_guard_cannot_leave_submitted(
+        harness: tuple[Any, Any], hash_delay_us: int, expected_status: str
+    ) -> None:
+        pilot, fixture = harness
+        # 12s bootstrap + 10ms source + 12s checkpoint + 875987ms commit
+        # leave exactly 3ms of the original immutable guard before the final hash.
+        queue_submission(pilot, fixture, commit_elapsed=875_987)
+        entered_at = delay_action_file_hash(pilot, fixture, delay=timedelta(microseconds=hash_delay_us))
+        result = pilot.run()
+        assert len(entered_at) == 1
+        deadline = datetime.fromisoformat(result["wall_deadline_at"])
+        assert entered_at[0] == deadline - timedelta(milliseconds=3)
+>       assert result["status"] == expected_status
+E       AssertionError: assert 'submitted' == 'incomplete'
+E         
+E         - incomplete
+E         + submitted
+
+/tmp/test_unimatch_expert500_completion_clock_v13.py:137: AssertionError
+____ test_hash_crossing_exact_guard_cannot_leave_submitted[3001-incomplete] ____
+
+harness = (Harness(runtime={'__name__': '<run_path>', '__doc__': 'V12 network-budget blind pilot: validate explicit incremental ...29), <module 'expert500_completion_clock_v13_frozen_fixture' from '/tmp/test_unimatch_expert500_journal_pilot_v12.py'>)
+hash_delay_us = 3001, expected_status = 'incomplete'
+
+    @pytest.mark.parametrize(
+        ("hash_delay_us", "expected_status"),
+        [(2999, "submitted"), (3000, "incomplete"), (3001, "incomplete"), (5000, "incomplete")],
+    )
+    def test_hash_crossing_exact_guard_cannot_leave_submitted(
+        harness: tuple[Any, Any], hash_delay_us: int, expected_status: str
+    ) -> None:
+        pilot, fixture = harness
+        # 12s bootstrap + 10ms source + 12s checkpoint + 875987ms commit
+        # leave exactly 3ms of the original immutable guard before the final hash.
+        queue_submission(pilot, fixture, commit_elapsed=875_987)
+        entered_at = delay_action_file_hash(pilot, fixture, delay=timedelta(microseconds=hash_delay_us))
+        result = pilot.run()
+        assert len(entered_at) == 1
+        deadline = datetime.fromisoformat(result["wall_deadline_at"])
+        assert entered_at[0] == deadline - timedelta(milliseconds=3)
+>       assert result["status"] == expected_status
+E       AssertionError: assert 'submitted' == 'incomplete'
+E         
+E         - incomplete
+E         + submitted
+
+/tmp/test_unimatch_expert500_completion_clock_v13.py:137: AssertionError
+____ test_hash_crossing_exact_guard_cannot_leave_submitted[5000-incomplete] ____
+
+harness = (Harness(runtime={'__name__': '<run_path>', '__doc__': 'V12 network-budget blind pilot: validate explicit incremental ...29), <module 'expert500_completion_clock_v13_frozen_fixture' from '/tmp/test_unimatch_expert500_journal_pilot_v12.py'>)
+hash_delay_us = 5000, expected_status = 'incomplete'
+
+    @pytest.mark.parametrize(
+        ("hash_delay_us", "expected_status"),
+        [(2999, "submitted"), (3000, "incomplete"), (3001, "incomplete"), (5000, "incomplete")],
+    )
+    def test_hash_crossing_exact_guard_cannot_leave_submitted(
+        harness: tuple[Any, Any], hash_delay_us: int, expected_status: str
+    ) -> None:
+        pilot, fixture = harness
+        # 12s bootstrap + 10ms source + 12s checkpoint + 875987ms commit
+        # leave exactly 3ms of the original immutable guard before the final hash.
+        queue_submission(pilot, fixture, commit_elapsed=875_987)
+        entered_at = delay_action_file_hash(pilot, fixture, delay=timedelta(microseconds=hash_delay_us))
+        result = pilot.run()
+        assert len(entered_at) == 1
+        deadline = datetime.fromisoformat(result["wall_deadline_at"])
+        assert entered_at[0] == deadline - timedelta(milliseconds=3)
+>       assert result["status"] == expected_status
+E       AssertionError: assert 'submitted' == 'incomplete'
+E         
+E         - incomplete
+E         + submitted
+
+/tmp/test_unimatch_expert500_completion_clock_v13.py:137: AssertionError
+_________ test_completion_guard_keeps_original_failure_and_checkpoint __________
+
+harness = (Harness(runtime={'__name__': '<run_path>', '__doc__': 'V12 network-budget blind pilot: validate explicit incremental ...29), <module 'expert500_completion_clock_v13_frozen_fixture' from '/tmp/test_unimatch_expert500_journal_pilot_v12.py'>)
+
+    def test_completion_guard_keeps_original_failure_and_checkpoint(harness: tuple[Any, Any]) -> None:
+        pilot, fixture = harness
+        fixture.bootstrap(pilot)
+        fixture.checkpoint(pilot)
+        pilot.queue(elapsed=875_987, error="selector_timeout")
+        delay_action_file_hash(pilot, fixture, delay=timedelta(milliseconds=5))
+        result = pilot.run()
+        assert result["status"] == "incomplete"
+        assert result["error"] == "selector_timeout"
+        assert result["validated"] and len(pilot.read("accepted-journal.json")["facts"]) == 1
+>       assert_one_completion_instant(result)
+
+/tmp/test_unimatch_expert500_completion_clock_v13.py:165: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = {'case_id': 'u', 'status': 'incomplete', 'source_counters_complete': True, 'error': 'selector_timeout', ...}
+
+    def assert_one_completion_instant(result: dict[str, Any]) -> None:
+        started = datetime.fromisoformat(result["wall_started_at"])
+        finished = datetime.fromisoformat(result["finished_at"])
+        elapsed = (finished - started).total_seconds()
+>       assert result["wall_elapsed_ms"] == math.ceil(elapsed * 1000)
+E       assert 899997 == 900002
+E        +  where 900002 = <built-in function ceil>((900.002 * 1000))
+E        +    where <built-in function ceil> = math.ceil
+
+/tmp/test_unimatch_expert500_completion_clock_v13.py:94: AssertionError
+_________________ test_completion_uses_one_utc_read_after_hash _________________
+
+harness = (Harness(runtime={'__name__': '<run_path>', '__doc__': 'V12 network-budget blind pilot: validate explicit incremental ...29), <module 'expert500_completion_clock_v13_frozen_fixture' from '/tmp/test_unimatch_expert500_journal_pilot_v12.py'>)
+
+    def test_completion_uses_one_utc_read_after_hash(harness: tuple[Any, Any]) -> None:
+        pilot, fixture = harness
+        queue_submission(pilot, fixture)
+        hash_completed = False
+        completion_reads: list[datetime] = []
+    
+        class CountingDatetime(datetime):
+            @classmethod
+            def now(cls, tz: Any = None) -> datetime:
+                value = fixture.FakeDatetime.now(tz or UTC)
+                if hash_completed:
+                    completion_reads.append(value)
+                return value
+    
+        def finished_hash() -> None:
+            nonlocal hash_completed
+            hash_completed = True
+    
+        pilot.runtime["datetime"] = CountingDatetime
+        delay_action_file_hash(
+            pilot, fixture, delay=timedelta(milliseconds=5), after_hash=finished_hash
+        )
+        result = pilot.run()
+        assert result["status"] == "submitted"
+>       assert len(completion_reads) == 1
+E       assert 2 == 1
+E        +  where 2 = len([datetime.datetime(2026, 10, 5, 17, 47, 51, 145595, tzinfo=datetime.timezone.utc), datetime.datetime(2026, 10, 5, 17, 47, 51, 145595, tzinfo=datetime.timezone.utc)])
+
+/tmp/test_unimatch_expert500_completion_clock_v13.py:197: AssertionError
+=============================== warnings summary ===============================
+test_unimatch_expert500_completion_clock_v13.py: 300 warnings
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/bs4/builder/_lxml.py:124: DeprecationWarning: The 'strip_cdata' option of HTMLParser() has never done anything and will eventually be removed.
+    parser = parser(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_completion_clock_v13.py::test_action_file_hash_finishes_before_completion_clock[1]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_completion_clock_v13.py::test_action_file_hash_finishes_before_completion_clock[1000]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_completion_clock_v13.py::test_action_file_hash_finishes_before_completion_clock[5000]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_completion_clock_v13.py::test_action_file_hash_finishes_before_completion_clock[200000]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_completion_clock_v13.py::test_hash_crossing_exact_guard_cannot_leave_submitted[2999-submitted]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_completion_clock_v13.py::test_hash_crossing_exact_guard_cannot_leave_submitted[3000-incomplete]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_completion_clock_v13.py::test_hash_crossing_exact_guard_cannot_leave_submitted[3001-incomplete]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_completion_clock_v13.py::test_hash_crossing_exact_guard_cannot_leave_submitted[5000-incomplete]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_completion_clock_v13.py::test_completion_guard_keeps_original_failure_and_checkpoint
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_completion_clock_v13.py::test_completion_uses_one_utc_read_after_hash
+10 failed, 2 passed, 300 warnings in 1.02s
+{"exit_code": 1, "after_sha256": {"/tmp/unimatch-expert500-journal-pilot-v13.py": "1922e117436afdc001bef7cbf867e8b91db4062fd0b98cfce044c3b980a74b72", "/tmp/test_unimatch_expert500_completion_clock_v13.py": "e89c416dfb62c64df614b0507aba827b7ff394aded4832f47c27a0622bead9fb", "/tmp/unimatch-expert500-journal-pilot-v12.py": "1922e117436afdc001bef7cbf867e8b91db4062fd0b98cfce044c3b980a74b72", "/tmp/test_unimatch_expert500_journal_pilot_v12.py": "fcbca530b952625d4e8fbe752fbf45692ee7c380f3f6c26fd83c9ad9e8a483a9"}}

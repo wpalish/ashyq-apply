@@ -7,6 +7,8 @@ language table has one column per section.
 
 from __future__ import annotations
 
+import pytest
+
 from app.adapters.document_ir import build_document_ir
 
 UBC = """<html><head><title>English language competency</title></head><body>
@@ -110,3 +112,87 @@ def test_block_text_is_verbatim_from_the_page():
 def test_rubbish_does_not_raise():
     assert build_document_ir("", "https://u.edu/x").blocks == []
     assert build_document_ir("<table><tr><td colspan='x'>a", "https://u.edu/x").blocks
+
+
+# Prospective synthetic regressions; no original university artifacts are read.
+def test_explicit_adjacent_year_label_keeps_literal_text_and_exact_dom_provenance():
+    html = """<main><div><div><h1>Qualification requirements</h1>
+    <div class="visual-subtitle">Academic year 2030/2031</div></div>
+    <div><p>Foundation years are not considered.</p></div></div></main>"""
+    doc = build_document_ir(html, "https://example.edu/qualifications")
+    note = next(b for b in doc.blocks if b.kind == "paragraph")
+    assert note.id == "b1"  # The added context creates no new quote block.
+    assert note.text == "Foundation years are not considered."
+    assert note.section_path == ("Qualification requirements",)
+    (label,) = note.section_year_labels
+    assert label.text == "Academic year 2030/2031"
+    assert label.section_path == note.section_path
+    assert label.heading_dom_path == "/html[1]/body[1]/main[1]/div[1]/div[1]/h1[1]"
+    assert label.dom_path == "/html[1]/body[1]/main[1]/div[1]/div[1]/div[1]"
+    assert not note.row_year_cells
+
+
+@pytest.mark.parametrize("wrapper", ["nav", "aside", "footer", "header", "form"])
+def test_year_labels_in_navigation_or_controls_do_not_become_section_scope(wrapper):
+    html = f"""<{wrapper}><h1>Menu</h1><div>Academic year 2030/2031</div></{wrapper}>
+    <main><h1>Qualifications</h1><p>Foundation years are not considered.</p></main>"""
+    doc = build_document_ir(html, "https://example.edu/x")
+    assert not next(
+        b for b in doc.blocks if b.text == "Foundation years are not considered."
+    ).section_year_labels
+
+
+@pytest.mark.parametrize(
+    "label",
+    [
+        '<div role="navigation">Academic year 2030/2031</div>',
+        "<div hidden>Academic year 2030/2031</div>",
+        '<div aria-hidden="true">Academic year 2030/2031</div>',
+        '<div><a href="/old">Academic year 2030/2031</a></div>',
+        "<p>Other unrelated content.</p><div>Academic year 2030/2031</div>",
+        "<div>Applications for fall 2030</div>",
+    ],
+)
+def test_only_adjacent_explicit_academic_year_labels_are_kept(label):
+    doc = build_document_ir(
+        f"<h1>Qualifications</h1>{label}<p>Policy.</p>", "https://example.edu/x"
+    )
+    assert not next(b for b in doc.blocks if b.text == "Policy.").section_year_labels
+
+
+def test_section_year_labels_stay_separate_between_heading_scopes():
+    html = """<h1>Campus A</h1><div>Academic year 2030/2031</div><p>Policy A.</p>
+    <h1>Campus B</h1><div>Academic year 2031/2032</div><p>Policy B.</p>"""
+    doc = build_document_ir(html, "https://example.edu/x")
+    a = next(b for b in doc.blocks if b.text == "Policy A.")
+    b = next(b for b in doc.blocks if b.text == "Policy B.")
+    assert a.section_year_labels[0].text == "Academic year 2030/2031"
+    assert b.section_year_labels[0].text == "Academic year 2031/2032"
+    assert a.section_year_labels[0].section_path == ("Campus A",)
+    assert b.section_year_labels[0].section_path == ("Campus B",)
+
+
+def test_footer_does_not_inherit_a_content_year_label():
+    doc = build_document_ir(
+        "<main><h1>Fees</h1><div>Academic year 2030/2031</div><p>Content.</p></main>"
+        "<footer><p>Footer note.</p></footer>",
+        "https://example.edu/x",
+    )
+    assert not next(b for b in doc.blocks if b.text == "Footer note.").section_year_labels
+
+
+def test_year_cells_keep_same_row_and_original_blank_or_merged_coordinates():
+    doc = build_document_ir(
+        """<table><tr><th>Applicant</th><th>Year</th><th>Fee</th></tr>
+    <tr><td>International</td><td>2030-2031</td><td>EUR 19800</td></tr>
+    <tr><td>Domestic</td><td></td><td>EUR 19800</td></tr></table>""",
+        "https://example.edu/x",
+    )
+    fees = [b for b in doc.blocks if b.text == "EUR 19800"]
+    (year,) = fees[0].row_year_cells
+    assert (year.table_id, year.row, year.col, year.rowspan, year.colspan) == (0, 1, 1, 1, 1)
+    assert year.dom_path == "/html[1]/body[1]/table[1]/tr[2]/td[2]"
+    assert year.text == "2030-2031" and year.column_headers == ("Year",)
+    (blank,) = fees[1].row_year_cells
+    assert blank.text == "" and blank.row == 2
+    assert fees[0].row_headers == ("International",)  # Year is not a row header.

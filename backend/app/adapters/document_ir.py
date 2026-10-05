@@ -20,7 +20,7 @@ the extractors' job, and they may only use what a block records.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Literal
 from urllib.parse import urljoin
 
@@ -33,10 +33,52 @@ BlockKind = Literal["heading", "paragraph", "list_item", "key_value", "table_cel
 _WS = re.compile(r"\s+")
 _HEADINGS = ("h1", "h2", "h3", "h4", "h5", "h6")
 _DROP = ("script", "style", "noscript", "svg", "template", "form")
+_YEAR_LABEL = re.compile(
+    r"Academic\s+year\s*:?\s*20\d{2}(?:\s*[/–—-]\s*(?:20\d{2}|\d{2}))?", re.IGNORECASE
+)
+_YEAR_HEADER = re.compile(r"(?:Academic\s+)?Year", re.IGNORECASE)
 
 
 def _text(tag: Tag) -> str:
     return _WS.sub(" ", tag.get_text(" ", strip=True)).strip()
+
+
+def _dom_path(node: Tag) -> str:
+    """An exact tag path in the parsed original source, independent of block IDs."""
+    parts: list[str] = []
+    while isinstance(node, Tag) and node.name != "[document]":
+        ordinal = 1 + sum(
+            isinstance(sibling, Tag) and sibling.name == node.name
+            for sibling in node.previous_siblings
+        )
+        parts.append(f"{node.name}[{ordinal}]")
+        node = node.parent  # type: ignore[assignment]
+    return "/" + "/".join(reversed(parts))
+
+
+@dataclass(frozen=True, slots=True)
+class SectionYearLabel:
+    """Literal year label directly adjacent to one content heading."""
+
+    text: str
+    dom_path: str
+    heading_dom_path: str
+    section_path: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True, slots=True)
+class RowYearCell:
+    """A Year column cell, including blanks and ambiguous merged cells."""
+
+    text: str
+    dom_path: str
+    table_id: int
+    row: int
+    col: int
+    rowspan: int
+    colspan: int
+    column_headers: tuple[str, ...]
+    block_id: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -58,6 +100,9 @@ class EvidenceBlock:
     caption: str = ""
     #: For a key-value block: the label (``<dt>``) the value (``text``) answers.
     label: str = ""
+    #: Dedicated year provenance; never included in programme/applicant scope text.
+    section_year_labels: tuple[SectionYearLabel, ...] = ()
+    row_year_cells: tuple[RowYearCell, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -142,13 +187,71 @@ def _unique(values: list[str]) -> tuple[str, ...]:
     return tuple(out)
 
 
+def _year_columns(
+    grid: list[list[_Cell | None]], head: int, table_id: int, dom_paths: dict[int, str]
+) -> dict[int, tuple[RowYearCell, ...]]:
+    """Keep Year cell coordinates without joining other row values into scope."""
+    result: dict[int, tuple[RowYearCell, ...]] = {}
+    by_id = {
+        str(cell.tag["id"]): cell.text
+        for row in grid
+        for cell in row
+        if cell is not None and cell.tag.get("id")
+    }
+    for r, row in enumerate(grid):
+        if r < head:
+            continue
+        refs: list[RowYearCell] = []
+        seen: set[tuple[int, int]] = set()
+        for c, cell in enumerate(row):
+            if cell is None or cell.origin in seen:
+                continue
+            seen.add(cell.origin)
+            explicit = [by_id[h] for h in str(cell.tag.get("headers", "")).split() if h in by_id]
+            headers = (
+                tuple(explicit)
+                if explicit
+                else _unique(
+                    [grid[h][c].text for h in range(head) if grid[h][c] is not None]  # type: ignore[union-attr]
+                )
+            )
+            if not any(_YEAR_HEADER.fullmatch(header) for header in headers):
+                continue
+            refs.append(
+                RowYearCell(
+                    text=cell.text,
+                    dom_path=dom_paths[id(cell.tag)],
+                    table_id=table_id,
+                    row=cell.origin[0],
+                    col=cell.origin[1],
+                    rowspan=_span(cell.tag.get("rowspan")),
+                    colspan=_span(cell.tag.get("colspan")),
+                    column_headers=headers,
+                )
+            )
+        result[r] = tuple(refs)
+    return result
+
+
 def _table_blocks(
-    table: Tag, table_id: int, section: tuple[str, ...], start: int
+    table: Tag,
+    table_id: int,
+    section: tuple[str, ...],
+    start: int,
+    *,
+    section_year_labels: tuple[SectionYearLabel, ...] = (),
+    dom_paths: dict[int, str] | None = None,
 ) -> list[EvidenceBlock]:
     caption_tag = table.find("caption")
     caption = _text(caption_tag) if caption_tag else ""
     grid = _grid(table)
     head = _header_rows(grid)
+    cell_paths = (
+        dom_paths
+        if dom_paths is not None
+        else {id(cell.tag): _dom_path(cell.tag) for row in grid for cell in row if cell is not None}
+    )
+    year_columns = _year_columns(grid, head, table_id, cell_paths)
     by_id = {th["id"]: _text(th) for th in table.find_all(["th", "td"]) if th.get("id")}
     blocks: list[EvidenceBlock] = []
     seen: set[tuple[int, int]] = set()
@@ -198,9 +301,21 @@ def _table_blocks(
                     row_headers=row_headers,
                     column_headers=column_headers,
                     caption=caption,
+                    section_year_labels=section_year_labels,
+                    row_year_cells=year_columns.get(r, ()),
                 )
             )
-    return blocks
+    cell_ids = {(block.row, block.col): block.id for block in blocks}
+    return [
+        replace(
+            block,
+            row_year_cells=tuple(
+                replace(cell, block_id=cell_ids.get((cell.row, cell.col)))
+                for cell in block.row_year_cells
+            ),
+        )
+        for block in blocks
+    ]
 
 
 #: Part of plan rule DOC-2 (documents/web_documents.py): a screen-reader label
@@ -216,6 +331,40 @@ def _form_only_container(node: Tag) -> bool:
         and not text.find_parent((*_HEADINGS, "form", "button", "script", "style", "svg"))
         for text in node.find_all(string=True)
     )
+
+
+def _non_content_year_location(node: Tag) -> bool:
+    return bool(
+        node.find_parent(["nav", "aside", "footer", "header", "form"])
+        or any(
+            str(parent.get("role", "")).casefold() in {"navigation", "complementary", "banner"}
+            or parent.has_attr("hidden")
+            or str(parent.get("aria-hidden", "")).casefold() == "true"
+            for parent in (node, *node.parents)
+            if isinstance(parent, Tag)
+        )
+    )
+
+
+def _heading_year_labels(heading: Tag) -> tuple[SectionYearLabel, ...]:
+    # Navigation, control and masthead labels cannot supply content scope.
+    if _non_content_year_location(heading):
+        return ()
+    labels: list[SectionYearLabel] = []
+    for sibling in heading.next_siblings:
+        if not isinstance(sibling, Tag):
+            if str(sibling).strip():
+                break
+            continue
+        text = _text(sibling)
+        if sibling.name not in {"div", "p", "span"} or not _YEAR_LABEL.fullmatch(text):
+            break
+        if _non_content_year_location(sibling) or sibling.find(
+            ["a", "button", "input", "select", "form"]
+        ):
+            break
+        labels.append(SectionYearLabel(text, _dom_path(sibling), _dom_path(heading)))
+    return tuple(labels)
 
 
 def build_document_ir(html: str, url: str) -> DocumentIR:
@@ -245,16 +394,26 @@ def build_document_ir(html: str, url: str) -> DocumentIR:
         )
         if hidden_form_label or control_only:
             form_headings.add(id(heading))
+    # Compute coordinates before dropped source tags could change ancestry.
+    heading_year_labels = {
+        id(heading): _heading_year_labels(heading) for heading in soup.find_all(_HEADINGS)
+    }
+    dom_paths = {id(cell): _dom_path(cell) for cell in soup.find_all(["td", "th"])}
     for tag in soup(_DROP):
         tag.decompose()
     body = soup.body or soup
-    section: list[tuple[int, str]] = []
+    section: list[tuple[int, str, tuple[SectionYearLabel, ...]]] = []
     tables = 0
 
     def path() -> tuple[str, ...]:
-        return tuple(text for _level, text in section)
+        return tuple(text for _level, text, _labels in section)
 
-    def add(kind: BlockKind, text: str, **extra: object) -> None:
+    def year_labels(node: Tag) -> tuple[SectionYearLabel, ...]:
+        if _non_content_year_location(node):
+            return ()
+        return next((labels for _level, _text, labels in reversed(section) if labels), ())
+
+    def add(kind: BlockKind, text: str, node: Tag, **extra: object) -> None:
         if text:
             doc.blocks.append(
                 EvidenceBlock(
@@ -262,6 +421,7 @@ def build_document_ir(html: str, url: str) -> DocumentIR:
                     kind=kind,
                     text=text,
                     section_path=path(),
+                    section_year_labels=year_labels(node),
                     **extra,  # type: ignore[arg-type]
                 )
             )
@@ -281,19 +441,32 @@ def build_document_ir(html: str, url: str) -> DocumentIR:
                 section.pop()
             text = _text(node)
             if text:
-                section.append((level, text))
-                add("heading", text)
+                section.append((level, text, ()))
+                labels = tuple(
+                    replace(label, section_path=path()) for label in heading_year_labels[id(node)]
+                )
+                section[-1] = (level, text, labels)
+                add("heading", text, node)
         elif name == "table" and not node.find_parent("table"):
-            doc.blocks.extend(_table_blocks(node, tables, path(), len(doc.blocks)))
+            doc.blocks.extend(
+                _table_blocks(
+                    node,
+                    tables,
+                    path(),
+                    len(doc.blocks),
+                    section_year_labels=year_labels(node),
+                    dom_paths=dom_paths,
+                )
+            )
             tables += 1
         elif name == "dt":
             dd = node.find_next_sibling("dd")
             if dd is not None:
-                add("key_value", _text(dd), label=_text(node))
+                add("key_value", _text(dd), node, label=_text(node))
         elif name == "li" and not node.find_parent("table") and not node.find(["ul", "ol"]):
-            add("list_item", _text(node))
+            add("list_item", _text(node), node)
         elif name == "p" and not node.find_parent(["table", "li", "dd"]):
-            add("paragraph", _text(node))
+            add("paragraph", _text(node), node)
         elif name == "a" and node.get("href"):
             href = str(node["href"]).strip()
             if href and not href.startswith(("#", "mailto:", "tel:", "javascript:")):

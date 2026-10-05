@@ -1,0 +1,81 @@
+........................................................................ [ 18%]
+..............................................FF........................ [ 37%]
+........................................................................ [ 56%]
+........................................................................ [ 75%]
+........................................................................ [ 94%]
+......................                                                   [100%]
+=================================== FAILURES ===================================
+_ test_year_support_never_supplies_or_changes_other_declared_scope[Domestic bachelor tuition-scope0-domestic] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-519/test_year_support_never_suppli0')
+context = 'Domestic bachelor tuition'
+scope = {'university': 'Example University', 'programme': None, 'degree': 'bachelor', 'field': None, ...}
+message = 'domestic'
+
+    @pytest.mark.parametrize(
+        "context,scope,message",
+        [
+            ("Domestic bachelor tuition", _scope(academic_year="2030/2031"), "domestic"),
+            ("International master tuition", _scope(academic_year="2030/2031"), "degree scope"),
+            (
+                "International bachelor Fictional Studies tuition",
+                _scope(programme="Different Studies", academic_year="2030/2031"),
+                "exact programme",
+            ),
+            (
+                "International bachelor tuition for fall 2030",
+                _scope(intake="fall 2031", academic_year="2030/2031"),
+                "intake scope",
+            ),
+        ],
+    )
+    def test_year_support_never_supplies_or_changes_other_declared_scope(
+        tmp_path: Path, context: str, scope: dict[str, str | None], message: str
+    ) -> None:
+        html = f"<h1>{context}</h1><div>Academic year 2030/2031</div><p>EUR 19800</p>"
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(html, "EUR 19800", question="Q4", scope=scope)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:906: Failed
+_ test_year_support_never_supplies_or_changes_other_declared_scope[International master tuition-scope1-degree scope] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-519/test_year_support_never_suppli1')
+context = 'International master tuition'
+scope = {'university': 'Example University', 'programme': None, 'degree': 'bachelor', 'field': None, ...}
+message = 'degree scope'
+
+    @pytest.mark.parametrize(
+        "context,scope,message",
+        [
+            ("Domestic bachelor tuition", _scope(academic_year="2030/2031"), "domestic"),
+            ("International master tuition", _scope(academic_year="2030/2031"), "degree scope"),
+            (
+                "International bachelor Fictional Studies tuition",
+                _scope(programme="Different Studies", academic_year="2030/2031"),
+                "exact programme",
+            ),
+            (
+                "International bachelor tuition for fall 2030",
+                _scope(intake="fall 2031", academic_year="2030/2031"),
+                "intake scope",
+            ),
+        ],
+    )
+    def test_year_support_never_supplies_or_changes_other_declared_scope(
+        tmp_path: Path, context: str, scope: dict[str, str | None], message: str
+    ) -> None:
+        html = f"<h1>{context}</h1><div>Academic year 2030/2031</div><p>EUR 19800</p>"
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(html, "EUR 19800", question="Q4", scope=scope)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:906: Failed
+=========================== short test summary info ============================
+FAILED tests/test_expert_citations.py::test_year_support_never_supplies_or_changes_other_declared_scope[Domestic bachelor tuition-scope0-domestic]
+FAILED tests/test_expert_citations.py::test_year_support_never_supplies_or_changes_other_declared_scope[International master tuition-scope1-degree scope]
+2 failed, 380 passed in 1.57s

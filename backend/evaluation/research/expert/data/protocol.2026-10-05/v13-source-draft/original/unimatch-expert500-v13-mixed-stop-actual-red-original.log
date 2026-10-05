@@ -1,0 +1,1156 @@
+FFFFFFFFFFFFFFFFFFFFFFFF........                                         [100%]
+=================================== FAILURES ===================================
+_ test_provider_stop_prevents_every_following_source_tool[False-strict_120-402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_provider_stop_prevents_ev0')
+status = 402, mode = 'strict_120', split_replay = False
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    @pytest.mark.parametrize("split_replay", [False, True])
+    def test_provider_stop_prevents_every_following_source_tool(
+        tmp_path: Path,
+        status: int,
+        mode: str,
+        split_replay: bool,
+    ) -> None:
+        clock = _Clock()
+        get_calls: list[str] = []
+        search_calls: list[int] = []
+    
+        async def get(url: str) -> FetchResult:
+            get_calls.append(url)
+            clock.advance(0.125)
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            search_calls.append(len(search_calls) + 1)
+            clock.advance(0.25)
+            # A later vendor refusal must never replace the first original cause.
+            later_status = 429 if status == 402 else 402
+            raise SearchUnavailable(
+                "Synthetic provider account refusal.",
+                http_status=status if len(search_calls) == 1 else later_status,
+            )
+    
+        later = [URL, dict(QUERY), {"tool": "fetcher", "url": URL}]
+        plan = (
+            _plan(mode, actions=later, replay=[dict(QUERY)])
+            if split_replay
+            else _plan(mode, actions=[dict(QUERY), *later])
+        )
+        logs = tmp_path / "logs"
+        summary = _execute(logs, plan, clock, get=get, search=search)
+>       assert get_calls == []
+E       AssertionError: assert ['https://u.e...du/synthetic'] == []
+E         
+E         Left contains 2 more items, first extra item: 'https://u.edu/synthetic'
+E         Use -v to get more diff
+
+tests/test_expert_controller_mixed_provider_stop.py:161: AssertionError
+_ test_provider_stop_prevents_every_following_source_tool[False-strict_120-429] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_provider_stop_prevents_ev1')
+status = 429, mode = 'strict_120', split_replay = False
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    @pytest.mark.parametrize("split_replay", [False, True])
+    def test_provider_stop_prevents_every_following_source_tool(
+        tmp_path: Path,
+        status: int,
+        mode: str,
+        split_replay: bool,
+    ) -> None:
+        clock = _Clock()
+        get_calls: list[str] = []
+        search_calls: list[int] = []
+    
+        async def get(url: str) -> FetchResult:
+            get_calls.append(url)
+            clock.advance(0.125)
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            search_calls.append(len(search_calls) + 1)
+            clock.advance(0.25)
+            # A later vendor refusal must never replace the first original cause.
+            later_status = 429 if status == 402 else 402
+            raise SearchUnavailable(
+                "Synthetic provider account refusal.",
+                http_status=status if len(search_calls) == 1 else later_status,
+            )
+    
+        later = [URL, dict(QUERY), {"tool": "fetcher", "url": URL}]
+        plan = (
+            _plan(mode, actions=later, replay=[dict(QUERY)])
+            if split_replay
+            else _plan(mode, actions=[dict(QUERY), *later])
+        )
+        logs = tmp_path / "logs"
+        summary = _execute(logs, plan, clock, get=get, search=search)
+>       assert get_calls == []
+E       AssertionError: assert ['https://u.e...du/synthetic'] == []
+E         
+E         Left contains 2 more items, first extra item: 'https://u.edu/synthetic'
+E         Use -v to get more diff
+
+tests/test_expert_controller_mixed_provider_stop.py:161: AssertionError
+_ test_provider_stop_prevents_every_following_source_tool[False-network_900-402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_provider_stop_prevents_ev2')
+status = 402, mode = 'network_900', split_replay = False
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    @pytest.mark.parametrize("split_replay", [False, True])
+    def test_provider_stop_prevents_every_following_source_tool(
+        tmp_path: Path,
+        status: int,
+        mode: str,
+        split_replay: bool,
+    ) -> None:
+        clock = _Clock()
+        get_calls: list[str] = []
+        search_calls: list[int] = []
+    
+        async def get(url: str) -> FetchResult:
+            get_calls.append(url)
+            clock.advance(0.125)
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            search_calls.append(len(search_calls) + 1)
+            clock.advance(0.25)
+            # A later vendor refusal must never replace the first original cause.
+            later_status = 429 if status == 402 else 402
+            raise SearchUnavailable(
+                "Synthetic provider account refusal.",
+                http_status=status if len(search_calls) == 1 else later_status,
+            )
+    
+        later = [URL, dict(QUERY), {"tool": "fetcher", "url": URL}]
+        plan = (
+            _plan(mode, actions=later, replay=[dict(QUERY)])
+            if split_replay
+            else _plan(mode, actions=[dict(QUERY), *later])
+        )
+        logs = tmp_path / "logs"
+        summary = _execute(logs, plan, clock, get=get, search=search)
+>       assert get_calls == []
+E       AssertionError: assert ['https://u.e...du/synthetic'] == []
+E         
+E         Left contains 2 more items, first extra item: 'https://u.edu/synthetic'
+E         Use -v to get more diff
+
+tests/test_expert_controller_mixed_provider_stop.py:161: AssertionError
+_ test_provider_stop_prevents_every_following_source_tool[False-network_900-429] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_provider_stop_prevents_ev3')
+status = 429, mode = 'network_900', split_replay = False
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    @pytest.mark.parametrize("split_replay", [False, True])
+    def test_provider_stop_prevents_every_following_source_tool(
+        tmp_path: Path,
+        status: int,
+        mode: str,
+        split_replay: bool,
+    ) -> None:
+        clock = _Clock()
+        get_calls: list[str] = []
+        search_calls: list[int] = []
+    
+        async def get(url: str) -> FetchResult:
+            get_calls.append(url)
+            clock.advance(0.125)
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            search_calls.append(len(search_calls) + 1)
+            clock.advance(0.25)
+            # A later vendor refusal must never replace the first original cause.
+            later_status = 429 if status == 402 else 402
+            raise SearchUnavailable(
+                "Synthetic provider account refusal.",
+                http_status=status if len(search_calls) == 1 else later_status,
+            )
+    
+        later = [URL, dict(QUERY), {"tool": "fetcher", "url": URL}]
+        plan = (
+            _plan(mode, actions=later, replay=[dict(QUERY)])
+            if split_replay
+            else _plan(mode, actions=[dict(QUERY), *later])
+        )
+        logs = tmp_path / "logs"
+        summary = _execute(logs, plan, clock, get=get, search=search)
+>       assert get_calls == []
+E       AssertionError: assert ['https://u.e...du/synthetic'] == []
+E         
+E         Left contains 2 more items, first extra item: 'https://u.edu/synthetic'
+E         Use -v to get more diff
+
+tests/test_expert_controller_mixed_provider_stop.py:161: AssertionError
+_ test_provider_stop_prevents_every_following_source_tool[False-network_diagnostic-402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_provider_stop_prevents_ev4')
+status = 402, mode = 'network_diagnostic', split_replay = False
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    @pytest.mark.parametrize("split_replay", [False, True])
+    def test_provider_stop_prevents_every_following_source_tool(
+        tmp_path: Path,
+        status: int,
+        mode: str,
+        split_replay: bool,
+    ) -> None:
+        clock = _Clock()
+        get_calls: list[str] = []
+        search_calls: list[int] = []
+    
+        async def get(url: str) -> FetchResult:
+            get_calls.append(url)
+            clock.advance(0.125)
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            search_calls.append(len(search_calls) + 1)
+            clock.advance(0.25)
+            # A later vendor refusal must never replace the first original cause.
+            later_status = 429 if status == 402 else 402
+            raise SearchUnavailable(
+                "Synthetic provider account refusal.",
+                http_status=status if len(search_calls) == 1 else later_status,
+            )
+    
+        later = [URL, dict(QUERY), {"tool": "fetcher", "url": URL}]
+        plan = (
+            _plan(mode, actions=later, replay=[dict(QUERY)])
+            if split_replay
+            else _plan(mode, actions=[dict(QUERY), *later])
+        )
+        logs = tmp_path / "logs"
+        summary = _execute(logs, plan, clock, get=get, search=search)
+>       assert get_calls == []
+E       AssertionError: assert ['https://u.e...du/synthetic'] == []
+E         
+E         Left contains 2 more items, first extra item: 'https://u.edu/synthetic'
+E         Use -v to get more diff
+
+tests/test_expert_controller_mixed_provider_stop.py:161: AssertionError
+_ test_provider_stop_prevents_every_following_source_tool[False-network_diagnostic-429] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_provider_stop_prevents_ev5')
+status = 429, mode = 'network_diagnostic', split_replay = False
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    @pytest.mark.parametrize("split_replay", [False, True])
+    def test_provider_stop_prevents_every_following_source_tool(
+        tmp_path: Path,
+        status: int,
+        mode: str,
+        split_replay: bool,
+    ) -> None:
+        clock = _Clock()
+        get_calls: list[str] = []
+        search_calls: list[int] = []
+    
+        async def get(url: str) -> FetchResult:
+            get_calls.append(url)
+            clock.advance(0.125)
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            search_calls.append(len(search_calls) + 1)
+            clock.advance(0.25)
+            # A later vendor refusal must never replace the first original cause.
+            later_status = 429 if status == 402 else 402
+            raise SearchUnavailable(
+                "Synthetic provider account refusal.",
+                http_status=status if len(search_calls) == 1 else later_status,
+            )
+    
+        later = [URL, dict(QUERY), {"tool": "fetcher", "url": URL}]
+        plan = (
+            _plan(mode, actions=later, replay=[dict(QUERY)])
+            if split_replay
+            else _plan(mode, actions=[dict(QUERY), *later])
+        )
+        logs = tmp_path / "logs"
+        summary = _execute(logs, plan, clock, get=get, search=search)
+>       assert get_calls == []
+E       AssertionError: assert ['https://u.e...du/synthetic'] == []
+E         
+E         Left contains 2 more items, first extra item: 'https://u.edu/synthetic'
+E         Use -v to get more diff
+
+tests/test_expert_controller_mixed_provider_stop.py:161: AssertionError
+__ test_provider_stop_prevents_every_following_source_tool[False-legacy-402] ___
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_provider_stop_prevents_ev6')
+status = 402, mode = 'legacy', split_replay = False
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    @pytest.mark.parametrize("split_replay", [False, True])
+    def test_provider_stop_prevents_every_following_source_tool(
+        tmp_path: Path,
+        status: int,
+        mode: str,
+        split_replay: bool,
+    ) -> None:
+        clock = _Clock()
+        get_calls: list[str] = []
+        search_calls: list[int] = []
+    
+        async def get(url: str) -> FetchResult:
+            get_calls.append(url)
+            clock.advance(0.125)
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            search_calls.append(len(search_calls) + 1)
+            clock.advance(0.25)
+            # A later vendor refusal must never replace the first original cause.
+            later_status = 429 if status == 402 else 402
+            raise SearchUnavailable(
+                "Synthetic provider account refusal.",
+                http_status=status if len(search_calls) == 1 else later_status,
+            )
+    
+        later = [URL, dict(QUERY), {"tool": "fetcher", "url": URL}]
+        plan = (
+            _plan(mode, actions=later, replay=[dict(QUERY)])
+            if split_replay
+            else _plan(mode, actions=[dict(QUERY), *later])
+        )
+        logs = tmp_path / "logs"
+        summary = _execute(logs, plan, clock, get=get, search=search)
+>       assert get_calls == []
+E       AssertionError: assert ['https://u.e...du/synthetic'] == []
+E         
+E         Left contains 2 more items, first extra item: 'https://u.edu/synthetic'
+E         Use -v to get more diff
+
+tests/test_expert_controller_mixed_provider_stop.py:161: AssertionError
+__ test_provider_stop_prevents_every_following_source_tool[False-legacy-429] ___
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_provider_stop_prevents_ev7')
+status = 429, mode = 'legacy', split_replay = False
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    @pytest.mark.parametrize("split_replay", [False, True])
+    def test_provider_stop_prevents_every_following_source_tool(
+        tmp_path: Path,
+        status: int,
+        mode: str,
+        split_replay: bool,
+    ) -> None:
+        clock = _Clock()
+        get_calls: list[str] = []
+        search_calls: list[int] = []
+    
+        async def get(url: str) -> FetchResult:
+            get_calls.append(url)
+            clock.advance(0.125)
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            search_calls.append(len(search_calls) + 1)
+            clock.advance(0.25)
+            # A later vendor refusal must never replace the first original cause.
+            later_status = 429 if status == 402 else 402
+            raise SearchUnavailable(
+                "Synthetic provider account refusal.",
+                http_status=status if len(search_calls) == 1 else later_status,
+            )
+    
+        later = [URL, dict(QUERY), {"tool": "fetcher", "url": URL}]
+        plan = (
+            _plan(mode, actions=later, replay=[dict(QUERY)])
+            if split_replay
+            else _plan(mode, actions=[dict(QUERY), *later])
+        )
+        logs = tmp_path / "logs"
+        summary = _execute(logs, plan, clock, get=get, search=search)
+>       assert get_calls == []
+E       AssertionError: assert ['https://u.e...du/synthetic'] == []
+E         
+E         Left contains 2 more items, first extra item: 'https://u.edu/synthetic'
+E         Use -v to get more diff
+
+tests/test_expert_controller_mixed_provider_stop.py:161: AssertionError
+_ test_provider_stop_prevents_every_following_source_tool[True-strict_120-402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_provider_stop_prevents_ev8')
+status = 402, mode = 'strict_120', split_replay = True
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    @pytest.mark.parametrize("split_replay", [False, True])
+    def test_provider_stop_prevents_every_following_source_tool(
+        tmp_path: Path,
+        status: int,
+        mode: str,
+        split_replay: bool,
+    ) -> None:
+        clock = _Clock()
+        get_calls: list[str] = []
+        search_calls: list[int] = []
+    
+        async def get(url: str) -> FetchResult:
+            get_calls.append(url)
+            clock.advance(0.125)
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            search_calls.append(len(search_calls) + 1)
+            clock.advance(0.25)
+            # A later vendor refusal must never replace the first original cause.
+            later_status = 429 if status == 402 else 402
+            raise SearchUnavailable(
+                "Synthetic provider account refusal.",
+                http_status=status if len(search_calls) == 1 else later_status,
+            )
+    
+        later = [URL, dict(QUERY), {"tool": "fetcher", "url": URL}]
+        plan = (
+            _plan(mode, actions=later, replay=[dict(QUERY)])
+            if split_replay
+            else _plan(mode, actions=[dict(QUERY), *later])
+        )
+        logs = tmp_path / "logs"
+        summary = _execute(logs, plan, clock, get=get, search=search)
+>       assert get_calls == []
+E       AssertionError: assert ['https://u.e...du/synthetic'] == []
+E         
+E         Left contains 2 more items, first extra item: 'https://u.edu/synthetic'
+E         Use -v to get more diff
+
+tests/test_expert_controller_mixed_provider_stop.py:161: AssertionError
+_ test_provider_stop_prevents_every_following_source_tool[True-strict_120-429] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_provider_stop_prevents_ev9')
+status = 429, mode = 'strict_120', split_replay = True
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    @pytest.mark.parametrize("split_replay", [False, True])
+    def test_provider_stop_prevents_every_following_source_tool(
+        tmp_path: Path,
+        status: int,
+        mode: str,
+        split_replay: bool,
+    ) -> None:
+        clock = _Clock()
+        get_calls: list[str] = []
+        search_calls: list[int] = []
+    
+        async def get(url: str) -> FetchResult:
+            get_calls.append(url)
+            clock.advance(0.125)
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            search_calls.append(len(search_calls) + 1)
+            clock.advance(0.25)
+            # A later vendor refusal must never replace the first original cause.
+            later_status = 429 if status == 402 else 402
+            raise SearchUnavailable(
+                "Synthetic provider account refusal.",
+                http_status=status if len(search_calls) == 1 else later_status,
+            )
+    
+        later = [URL, dict(QUERY), {"tool": "fetcher", "url": URL}]
+        plan = (
+            _plan(mode, actions=later, replay=[dict(QUERY)])
+            if split_replay
+            else _plan(mode, actions=[dict(QUERY), *later])
+        )
+        logs = tmp_path / "logs"
+        summary = _execute(logs, plan, clock, get=get, search=search)
+>       assert get_calls == []
+E       AssertionError: assert ['https://u.e...du/synthetic'] == []
+E         
+E         Left contains 2 more items, first extra item: 'https://u.edu/synthetic'
+E         Use -v to get more diff
+
+tests/test_expert_controller_mixed_provider_stop.py:161: AssertionError
+_ test_provider_stop_prevents_every_following_source_tool[True-network_900-402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_provider_stop_prevents_ev10')
+status = 402, mode = 'network_900', split_replay = True
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    @pytest.mark.parametrize("split_replay", [False, True])
+    def test_provider_stop_prevents_every_following_source_tool(
+        tmp_path: Path,
+        status: int,
+        mode: str,
+        split_replay: bool,
+    ) -> None:
+        clock = _Clock()
+        get_calls: list[str] = []
+        search_calls: list[int] = []
+    
+        async def get(url: str) -> FetchResult:
+            get_calls.append(url)
+            clock.advance(0.125)
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            search_calls.append(len(search_calls) + 1)
+            clock.advance(0.25)
+            # A later vendor refusal must never replace the first original cause.
+            later_status = 429 if status == 402 else 402
+            raise SearchUnavailable(
+                "Synthetic provider account refusal.",
+                http_status=status if len(search_calls) == 1 else later_status,
+            )
+    
+        later = [URL, dict(QUERY), {"tool": "fetcher", "url": URL}]
+        plan = (
+            _plan(mode, actions=later, replay=[dict(QUERY)])
+            if split_replay
+            else _plan(mode, actions=[dict(QUERY), *later])
+        )
+        logs = tmp_path / "logs"
+        summary = _execute(logs, plan, clock, get=get, search=search)
+>       assert get_calls == []
+E       AssertionError: assert ['https://u.e...du/synthetic'] == []
+E         
+E         Left contains 2 more items, first extra item: 'https://u.edu/synthetic'
+E         Use -v to get more diff
+
+tests/test_expert_controller_mixed_provider_stop.py:161: AssertionError
+_ test_provider_stop_prevents_every_following_source_tool[True-network_900-429] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_provider_stop_prevents_ev11')
+status = 429, mode = 'network_900', split_replay = True
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    @pytest.mark.parametrize("split_replay", [False, True])
+    def test_provider_stop_prevents_every_following_source_tool(
+        tmp_path: Path,
+        status: int,
+        mode: str,
+        split_replay: bool,
+    ) -> None:
+        clock = _Clock()
+        get_calls: list[str] = []
+        search_calls: list[int] = []
+    
+        async def get(url: str) -> FetchResult:
+            get_calls.append(url)
+            clock.advance(0.125)
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            search_calls.append(len(search_calls) + 1)
+            clock.advance(0.25)
+            # A later vendor refusal must never replace the first original cause.
+            later_status = 429 if status == 402 else 402
+            raise SearchUnavailable(
+                "Synthetic provider account refusal.",
+                http_status=status if len(search_calls) == 1 else later_status,
+            )
+    
+        later = [URL, dict(QUERY), {"tool": "fetcher", "url": URL}]
+        plan = (
+            _plan(mode, actions=later, replay=[dict(QUERY)])
+            if split_replay
+            else _plan(mode, actions=[dict(QUERY), *later])
+        )
+        logs = tmp_path / "logs"
+        summary = _execute(logs, plan, clock, get=get, search=search)
+>       assert get_calls == []
+E       AssertionError: assert ['https://u.e...du/synthetic'] == []
+E         
+E         Left contains 2 more items, first extra item: 'https://u.edu/synthetic'
+E         Use -v to get more diff
+
+tests/test_expert_controller_mixed_provider_stop.py:161: AssertionError
+_ test_provider_stop_prevents_every_following_source_tool[True-network_diagnostic-402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_provider_stop_prevents_ev12')
+status = 402, mode = 'network_diagnostic', split_replay = True
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    @pytest.mark.parametrize("split_replay", [False, True])
+    def test_provider_stop_prevents_every_following_source_tool(
+        tmp_path: Path,
+        status: int,
+        mode: str,
+        split_replay: bool,
+    ) -> None:
+        clock = _Clock()
+        get_calls: list[str] = []
+        search_calls: list[int] = []
+    
+        async def get(url: str) -> FetchResult:
+            get_calls.append(url)
+            clock.advance(0.125)
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            search_calls.append(len(search_calls) + 1)
+            clock.advance(0.25)
+            # A later vendor refusal must never replace the first original cause.
+            later_status = 429 if status == 402 else 402
+            raise SearchUnavailable(
+                "Synthetic provider account refusal.",
+                http_status=status if len(search_calls) == 1 else later_status,
+            )
+    
+        later = [URL, dict(QUERY), {"tool": "fetcher", "url": URL}]
+        plan = (
+            _plan(mode, actions=later, replay=[dict(QUERY)])
+            if split_replay
+            else _plan(mode, actions=[dict(QUERY), *later])
+        )
+        logs = tmp_path / "logs"
+        summary = _execute(logs, plan, clock, get=get, search=search)
+>       assert get_calls == []
+E       AssertionError: assert ['https://u.e...du/synthetic'] == []
+E         
+E         Left contains 2 more items, first extra item: 'https://u.edu/synthetic'
+E         Use -v to get more diff
+
+tests/test_expert_controller_mixed_provider_stop.py:161: AssertionError
+_ test_provider_stop_prevents_every_following_source_tool[True-network_diagnostic-429] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_provider_stop_prevents_ev13')
+status = 429, mode = 'network_diagnostic', split_replay = True
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    @pytest.mark.parametrize("split_replay", [False, True])
+    def test_provider_stop_prevents_every_following_source_tool(
+        tmp_path: Path,
+        status: int,
+        mode: str,
+        split_replay: bool,
+    ) -> None:
+        clock = _Clock()
+        get_calls: list[str] = []
+        search_calls: list[int] = []
+    
+        async def get(url: str) -> FetchResult:
+            get_calls.append(url)
+            clock.advance(0.125)
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            search_calls.append(len(search_calls) + 1)
+            clock.advance(0.25)
+            # A later vendor refusal must never replace the first original cause.
+            later_status = 429 if status == 402 else 402
+            raise SearchUnavailable(
+                "Synthetic provider account refusal.",
+                http_status=status if len(search_calls) == 1 else later_status,
+            )
+    
+        later = [URL, dict(QUERY), {"tool": "fetcher", "url": URL}]
+        plan = (
+            _plan(mode, actions=later, replay=[dict(QUERY)])
+            if split_replay
+            else _plan(mode, actions=[dict(QUERY), *later])
+        )
+        logs = tmp_path / "logs"
+        summary = _execute(logs, plan, clock, get=get, search=search)
+>       assert get_calls == []
+E       AssertionError: assert ['https://u.e...du/synthetic'] == []
+E         
+E         Left contains 2 more items, first extra item: 'https://u.edu/synthetic'
+E         Use -v to get more diff
+
+tests/test_expert_controller_mixed_provider_stop.py:161: AssertionError
+___ test_provider_stop_prevents_every_following_source_tool[True-legacy-402] ___
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_provider_stop_prevents_ev14')
+status = 402, mode = 'legacy', split_replay = True
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    @pytest.mark.parametrize("split_replay", [False, True])
+    def test_provider_stop_prevents_every_following_source_tool(
+        tmp_path: Path,
+        status: int,
+        mode: str,
+        split_replay: bool,
+    ) -> None:
+        clock = _Clock()
+        get_calls: list[str] = []
+        search_calls: list[int] = []
+    
+        async def get(url: str) -> FetchResult:
+            get_calls.append(url)
+            clock.advance(0.125)
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            search_calls.append(len(search_calls) + 1)
+            clock.advance(0.25)
+            # A later vendor refusal must never replace the first original cause.
+            later_status = 429 if status == 402 else 402
+            raise SearchUnavailable(
+                "Synthetic provider account refusal.",
+                http_status=status if len(search_calls) == 1 else later_status,
+            )
+    
+        later = [URL, dict(QUERY), {"tool": "fetcher", "url": URL}]
+        plan = (
+            _plan(mode, actions=later, replay=[dict(QUERY)])
+            if split_replay
+            else _plan(mode, actions=[dict(QUERY), *later])
+        )
+        logs = tmp_path / "logs"
+        summary = _execute(logs, plan, clock, get=get, search=search)
+>       assert get_calls == []
+E       AssertionError: assert ['https://u.e...du/synthetic'] == []
+E         
+E         Left contains 2 more items, first extra item: 'https://u.edu/synthetic'
+E         Use -v to get more diff
+
+tests/test_expert_controller_mixed_provider_stop.py:161: AssertionError
+___ test_provider_stop_prevents_every_following_source_tool[True-legacy-429] ___
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_provider_stop_prevents_ev15')
+status = 429, mode = 'legacy', split_replay = True
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    @pytest.mark.parametrize("split_replay", [False, True])
+    def test_provider_stop_prevents_every_following_source_tool(
+        tmp_path: Path,
+        status: int,
+        mode: str,
+        split_replay: bool,
+    ) -> None:
+        clock = _Clock()
+        get_calls: list[str] = []
+        search_calls: list[int] = []
+    
+        async def get(url: str) -> FetchResult:
+            get_calls.append(url)
+            clock.advance(0.125)
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            search_calls.append(len(search_calls) + 1)
+            clock.advance(0.25)
+            # A later vendor refusal must never replace the first original cause.
+            later_status = 429 if status == 402 else 402
+            raise SearchUnavailable(
+                "Synthetic provider account refusal.",
+                http_status=status if len(search_calls) == 1 else later_status,
+            )
+    
+        later = [URL, dict(QUERY), {"tool": "fetcher", "url": URL}]
+        plan = (
+            _plan(mode, actions=later, replay=[dict(QUERY)])
+            if split_replay
+            else _plan(mode, actions=[dict(QUERY), *later])
+        )
+        logs = tmp_path / "logs"
+        summary = _execute(logs, plan, clock, get=get, search=search)
+>       assert get_calls == []
+E       AssertionError: assert ['https://u.e...du/synthetic'] == []
+E         
+E         Left contains 2 more items, first extra item: 'https://u.edu/synthetic'
+E         Use -v to get more diff
+
+tests/test_expert_controller_mixed_provider_stop.py:161: AssertionError
+_ test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume[strict_120-402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_sticky_provider_stop_bloc0')
+status = 402, mode = 'strict_120'
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    def test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume(
+        tmp_path: Path, status: int, mode: str
+    ) -> None:
+        clock = _Clock()
+        get_calls = search_calls = 0
+    
+        async def get(url: str) -> FetchResult:
+            nonlocal get_calls
+            get_calls += 1
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            nonlocal search_calls
+            search_calls += 1
+            clock.advance(0.25)
+            raise SearchUnavailable("Synthetic refusal.", http_status=status)
+    
+        logs = tmp_path / "logs"
+        first = _execute(logs, _plan(mode, actions=[dict(QUERY)]), clock, get=get, search=search)
+        resumed = _execute(
+            logs,
+            _plan(
+                mode,
+                actions=[URL, dict(QUERY)],
+                resume_summary=first,
+                start_ms=first["final"]["elapsed_ms"],
+                start_calls=first["final"]["fetcher_calls"],
+                start_search_queries=first["final"]["search_queries"],
+                stop_reason=None,
+            ),
+            clock,
+            get=get,
+            search=search,
+        )
+>       assert get_calls == 0 and search_calls == 1
+E       assert (1 == 0)
+
+tests/test_expert_controller_mixed_provider_stop.py:212: AssertionError
+_ test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume[strict_120-429] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_sticky_provider_stop_bloc1')
+status = 429, mode = 'strict_120'
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    def test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume(
+        tmp_path: Path, status: int, mode: str
+    ) -> None:
+        clock = _Clock()
+        get_calls = search_calls = 0
+    
+        async def get(url: str) -> FetchResult:
+            nonlocal get_calls
+            get_calls += 1
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            nonlocal search_calls
+            search_calls += 1
+            clock.advance(0.25)
+            raise SearchUnavailable("Synthetic refusal.", http_status=status)
+    
+        logs = tmp_path / "logs"
+        first = _execute(logs, _plan(mode, actions=[dict(QUERY)]), clock, get=get, search=search)
+        resumed = _execute(
+            logs,
+            _plan(
+                mode,
+                actions=[URL, dict(QUERY)],
+                resume_summary=first,
+                start_ms=first["final"]["elapsed_ms"],
+                start_calls=first["final"]["fetcher_calls"],
+                start_search_queries=first["final"]["search_queries"],
+                stop_reason=None,
+            ),
+            clock,
+            get=get,
+            search=search,
+        )
+>       assert get_calls == 0 and search_calls == 1
+E       assert (1 == 0)
+
+tests/test_expert_controller_mixed_provider_stop.py:212: AssertionError
+_ test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume[network_900-402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_sticky_provider_stop_bloc2')
+status = 402, mode = 'network_900'
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    def test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume(
+        tmp_path: Path, status: int, mode: str
+    ) -> None:
+        clock = _Clock()
+        get_calls = search_calls = 0
+    
+        async def get(url: str) -> FetchResult:
+            nonlocal get_calls
+            get_calls += 1
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            nonlocal search_calls
+            search_calls += 1
+            clock.advance(0.25)
+            raise SearchUnavailable("Synthetic refusal.", http_status=status)
+    
+        logs = tmp_path / "logs"
+        first = _execute(logs, _plan(mode, actions=[dict(QUERY)]), clock, get=get, search=search)
+        resumed = _execute(
+            logs,
+            _plan(
+                mode,
+                actions=[URL, dict(QUERY)],
+                resume_summary=first,
+                start_ms=first["final"]["elapsed_ms"],
+                start_calls=first["final"]["fetcher_calls"],
+                start_search_queries=first["final"]["search_queries"],
+                stop_reason=None,
+            ),
+            clock,
+            get=get,
+            search=search,
+        )
+>       assert get_calls == 0 and search_calls == 1
+E       assert (1 == 0)
+
+tests/test_expert_controller_mixed_provider_stop.py:212: AssertionError
+_ test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume[network_900-429] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_sticky_provider_stop_bloc3')
+status = 429, mode = 'network_900'
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    def test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume(
+        tmp_path: Path, status: int, mode: str
+    ) -> None:
+        clock = _Clock()
+        get_calls = search_calls = 0
+    
+        async def get(url: str) -> FetchResult:
+            nonlocal get_calls
+            get_calls += 1
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            nonlocal search_calls
+            search_calls += 1
+            clock.advance(0.25)
+            raise SearchUnavailable("Synthetic refusal.", http_status=status)
+    
+        logs = tmp_path / "logs"
+        first = _execute(logs, _plan(mode, actions=[dict(QUERY)]), clock, get=get, search=search)
+        resumed = _execute(
+            logs,
+            _plan(
+                mode,
+                actions=[URL, dict(QUERY)],
+                resume_summary=first,
+                start_ms=first["final"]["elapsed_ms"],
+                start_calls=first["final"]["fetcher_calls"],
+                start_search_queries=first["final"]["search_queries"],
+                stop_reason=None,
+            ),
+            clock,
+            get=get,
+            search=search,
+        )
+>       assert get_calls == 0 and search_calls == 1
+E       assert (1 == 0)
+
+tests/test_expert_controller_mixed_provider_stop.py:212: AssertionError
+_ test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume[network_diagnostic-402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_sticky_provider_stop_bloc4')
+status = 402, mode = 'network_diagnostic'
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    def test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume(
+        tmp_path: Path, status: int, mode: str
+    ) -> None:
+        clock = _Clock()
+        get_calls = search_calls = 0
+    
+        async def get(url: str) -> FetchResult:
+            nonlocal get_calls
+            get_calls += 1
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            nonlocal search_calls
+            search_calls += 1
+            clock.advance(0.25)
+            raise SearchUnavailable("Synthetic refusal.", http_status=status)
+    
+        logs = tmp_path / "logs"
+        first = _execute(logs, _plan(mode, actions=[dict(QUERY)]), clock, get=get, search=search)
+        resumed = _execute(
+            logs,
+            _plan(
+                mode,
+                actions=[URL, dict(QUERY)],
+                resume_summary=first,
+                start_ms=first["final"]["elapsed_ms"],
+                start_calls=first["final"]["fetcher_calls"],
+                start_search_queries=first["final"]["search_queries"],
+                stop_reason=None,
+            ),
+            clock,
+            get=get,
+            search=search,
+        )
+>       assert get_calls == 0 and search_calls == 1
+E       assert (1 == 0)
+
+tests/test_expert_controller_mixed_provider_stop.py:212: AssertionError
+_ test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume[network_diagnostic-429] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_sticky_provider_stop_bloc5')
+status = 429, mode = 'network_diagnostic'
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    def test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume(
+        tmp_path: Path, status: int, mode: str
+    ) -> None:
+        clock = _Clock()
+        get_calls = search_calls = 0
+    
+        async def get(url: str) -> FetchResult:
+            nonlocal get_calls
+            get_calls += 1
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            nonlocal search_calls
+            search_calls += 1
+            clock.advance(0.25)
+            raise SearchUnavailable("Synthetic refusal.", http_status=status)
+    
+        logs = tmp_path / "logs"
+        first = _execute(logs, _plan(mode, actions=[dict(QUERY)]), clock, get=get, search=search)
+        resumed = _execute(
+            logs,
+            _plan(
+                mode,
+                actions=[URL, dict(QUERY)],
+                resume_summary=first,
+                start_ms=first["final"]["elapsed_ms"],
+                start_calls=first["final"]["fetcher_calls"],
+                start_search_queries=first["final"]["search_queries"],
+                stop_reason=None,
+            ),
+            clock,
+            get=get,
+            search=search,
+        )
+>       assert get_calls == 0 and search_calls == 1
+E       assert (1 == 0)
+
+tests/test_expert_controller_mixed_provider_stop.py:212: AssertionError
+_ test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume[legacy-402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_sticky_provider_stop_bloc6')
+status = 402, mode = 'legacy'
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    def test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume(
+        tmp_path: Path, status: int, mode: str
+    ) -> None:
+        clock = _Clock()
+        get_calls = search_calls = 0
+    
+        async def get(url: str) -> FetchResult:
+            nonlocal get_calls
+            get_calls += 1
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            nonlocal search_calls
+            search_calls += 1
+            clock.advance(0.25)
+            raise SearchUnavailable("Synthetic refusal.", http_status=status)
+    
+        logs = tmp_path / "logs"
+        first = _execute(logs, _plan(mode, actions=[dict(QUERY)]), clock, get=get, search=search)
+        resumed = _execute(
+            logs,
+            _plan(
+                mode,
+                actions=[URL, dict(QUERY)],
+                resume_summary=first,
+                start_ms=first["final"]["elapsed_ms"],
+                start_calls=first["final"]["fetcher_calls"],
+                start_search_queries=first["final"]["search_queries"],
+                stop_reason=None,
+            ),
+            clock,
+            get=get,
+            search=search,
+        )
+>       assert get_calls == 0 and search_calls == 1
+E       assert (1 == 0)
+
+tests/test_expert_controller_mixed_provider_stop.py:212: AssertionError
+_ test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume[legacy-429] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-520/test_sticky_provider_stop_bloc7')
+status = 429, mode = 'legacy'
+
+    @pytest.mark.parametrize("status", [402, 429])
+    @pytest.mark.parametrize("mode", MODES)
+    def test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume(
+        tmp_path: Path, status: int, mode: str
+    ) -> None:
+        clock = _Clock()
+        get_calls = search_calls = 0
+    
+        async def get(url: str) -> FetchResult:
+            nonlocal get_calls
+            get_calls += 1
+            return _page(url)
+    
+        async def search(**kwargs: Any) -> Any:
+            nonlocal search_calls
+            search_calls += 1
+            clock.advance(0.25)
+            raise SearchUnavailable("Synthetic refusal.", http_status=status)
+    
+        logs = tmp_path / "logs"
+        first = _execute(logs, _plan(mode, actions=[dict(QUERY)]), clock, get=get, search=search)
+        resumed = _execute(
+            logs,
+            _plan(
+                mode,
+                actions=[URL, dict(QUERY)],
+                resume_summary=first,
+                start_ms=first["final"]["elapsed_ms"],
+                start_calls=first["final"]["fetcher_calls"],
+                start_search_queries=first["final"]["search_queries"],
+                stop_reason=None,
+            ),
+            clock,
+            get=get,
+            search=search,
+        )
+>       assert get_calls == 0 and search_calls == 1
+E       assert (1 == 0)
+
+tests/test_expert_controller_mixed_provider_stop.py:212: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_provider_stop_prevents_every_following_source_tool[False-strict_120-402]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_provider_stop_prevents_every_following_source_tool[False-strict_120-429]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_provider_stop_prevents_every_following_source_tool[False-network_900-402]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_provider_stop_prevents_every_following_source_tool[False-network_900-429]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_provider_stop_prevents_every_following_source_tool[False-network_diagnostic-402]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_provider_stop_prevents_every_following_source_tool[False-network_diagnostic-429]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_provider_stop_prevents_every_following_source_tool[False-legacy-402]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_provider_stop_prevents_every_following_source_tool[False-legacy-429]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_provider_stop_prevents_every_following_source_tool[True-strict_120-402]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_provider_stop_prevents_every_following_source_tool[True-strict_120-429]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_provider_stop_prevents_every_following_source_tool[True-network_900-402]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_provider_stop_prevents_every_following_source_tool[True-network_900-429]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_provider_stop_prevents_every_following_source_tool[True-network_diagnostic-402]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_provider_stop_prevents_every_following_source_tool[True-network_diagnostic-429]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_provider_stop_prevents_every_following_source_tool[True-legacy-402]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_provider_stop_prevents_every_following_source_tool[True-legacy-429]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume[strict_120-402]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume[strict_120-429]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume[network_900-402]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume[network_900-429]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume[network_diagnostic-402]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume[network_diagnostic-429]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume[legacy-402]
+FAILED tests/test_expert_controller_mixed_provider_stop.py::test_sticky_provider_stop_blocks_fetch_and_search_after_exact_resume[legacy-429]
+24 failed, 8 passed in 1.16s

@@ -1,0 +1,12 @@
+--- a/backend/evaluation/research/expert/controller.py
++++ b/backend/evaluation/research/expert/controller.py
+@@ -705,7 +705,8 @@
+                             raise ValueError("Search result limit must be 1..100")
+                     except ValueError:
+                         refusal = "blocked_by_tool_policy"
+-                if tool == "search_provider" and stop_reason in {"http_402", "http_429"}:
++                # A provider account refusal stops every later source action.
++                if stop_reason in {"http_402", "http_429"}:
+                     refusal = f"stopped_after_{stop_reason}"
+                 wall_remaining_seconds: float | None = None
+                 network_timeout_at: float | None = None
