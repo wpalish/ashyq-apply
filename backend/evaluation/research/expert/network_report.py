@@ -290,23 +290,32 @@ def validate_source_run(
     ):
         raise ValueError("A failed source cannot expose a successful response")
     reason = raw.get("stop_reason")
-    if reason not in {None, "http_429", "budget_exhausted", "wall_guard_exhausted"}:
+    if reason not in {None, "http_402", "http_429", "budget_exhausted", "wall_guard_exhausted"}:
         raise ValueError("Unknown original network controller stop reason")
-    provider_429 = (
-        executed
-        and request["tool"] == "search_provider"
-        and any(
-            type(response.get(key)) is int and response[key] == 429
+    provider_stop_statuses = (
+        {
+            response[key]
             for key in ("http_status", "status_code")
-        )
+            if type(response.get(key)) is int and response[key] in {402, 429}
+        }
+        if executed and request["tool"] == "search_provider"
+        else set()
     )
+    if len(provider_stop_statuses) > 1:
+        raise ValueError("Actual provider HTTP status fields disagree")
+    provider_stop_status = next(iter(provider_stop_statuses), None)
     prior_reason = prior_summary["final"].get("stop_reason") if prior_summary else None
-    if provider_429:
-        if status != "failure" or reason != "http_429" or final.get("stop_reason") != "http_429":
+    if provider_stop_status is not None:
+        required_reason = f"http_{provider_stop_status}"
+        if (
+            status != "failure"
+            or reason != required_reason
+            or final.get("stop_reason") != required_reason
+        ):
             raise ValueError(
-                "Actual provider HTTP429 must retain the original raw/final http_429 latch"
+                f"Actual provider HTTP{provider_stop_status} must retain the original "
+                f"raw/final {required_reason} latch"
             )
-        required_reason = "http_429"
     elif prior_reason is not None:
         required_reason = prior_reason
     elif completed >= wall_guard.deadline_at or (

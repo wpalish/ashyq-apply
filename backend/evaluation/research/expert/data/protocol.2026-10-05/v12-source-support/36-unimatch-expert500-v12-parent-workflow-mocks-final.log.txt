@@ -1,0 +1,37 @@
+command=['/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/python', '-m', 'pytest', '-o', 'addopts=', '-q', '/tmp/test_unimatch_expert500_journal_pilot_v12.py', '/tmp/test_unimatch_expert500_workflow_v12.py']
+....................F................................................... [ 46%]
+........................................................................ [ 92%]
+...........                                                              [100%]
+=================================== FAILURES ===================================
+_ test_v12_actual_provider_refusal_stops_before_another_selector_or_case[402] __
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V12 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=402)
+status = 402
+
+    @pytest.mark.parametrize("status", [401, 402, 403, 429])
+    def test_v12_actual_provider_refusal_stops_before_another_selector_or_case(pilot, status):
+        pilot.search_error_status = status
+        pilot.queue(lambda prompt: decision(prompt, action=source_action("search_provider")))
+        result = pilot.run()
+        assert result["error"] == f"provider_http_{status}" and pilot.runtime["STOP"].is_set()
+        assert result["provider_failure"]["provider"] == "exa"
+        assert result["provider_failure"]["http_status"] == status
+        assert len(pilot.prompts) == len(pilot.queries) == len(pilot.plans) == 1
+        assert not pilot.calls and result["found"] == []
+        assert pilot.read("checkpoint-01.json")["facts"] == []
+        summary = json.loads((pilot.controller_dirs[0] / "artifact/summary.json").read_text())
+>       assert summary["final"]["stop_reason"] == ("http_429" if status == 429 else None)
+E       AssertionError: assert 'http_402' == None
+
+/tmp/test_unimatch_expert500_journal_pilot_v12.py:780: AssertionError
+=============================== warnings summary ===============================
+test_unimatch_expert500_journal_pilot_v12.py: 2856 warnings
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/bs4/builder/_lxml.py:124: DeprecationWarning: The 'strip_cdata' option of HTMLParser() has never done anything and will eventually be removed.
+    parser = parser(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v12.py::test_v12_actual_provider_refusal_stops_before_another_selector_or_case[402]
+1 failed, 154 passed, 2856 warnings in 4.52s
+
+exit_code=1

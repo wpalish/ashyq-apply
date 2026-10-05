@@ -1,0 +1,11 @@
+command=['/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/python', '-m', 'pytest', '-o', 'addopts=', '-q', '/tmp/test_unimatch_expert500_journal_pilot_v12.py', '-k', 'v12 and (baseline or current_controller or cohort_http402 or export)']
+..............................................                           [100%]
+=============================== warnings summary ===============================
+test_unimatch_expert500_journal_pilot_v12.py: 56 warnings
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/bs4/builder/_lxml.py:124: DeprecationWarning: The 'strip_cdata' option of HTMLParser() has never done anything and will eventually be removed.
+    parser = parser(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+46 passed, 71 deselected, 56 warnings in 1.11s
+
+exit_code=0

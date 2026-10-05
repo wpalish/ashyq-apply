@@ -1,0 +1,61 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend
+configfile: pytest.ini
+plugins: respx-0.22.0, cov-6.0.0, asyncio-1.4.0, platformdirs-4.12.1, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 14 items / 12 deselected / 2 selected
+
+tests/test_expert_network_report_402.py FF                               [100%]
+
+=================================== FAILURES ===================================
+_ test_rehashed_conflicting_provider_http_fields_cannot_pick_a_stop_cause[402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-509/test_rehashed_conflicting_prov0')
+status = 402
+
+    @pytest.mark.parametrize("status", [402, 429])
+    def test_rehashed_conflicting_provider_http_fields_cannot_pick_a_stop_cause(
+        tmp_path: Path, status: int
+    ) -> None:
+        source_plan = plan()
+        summary, raw = run_source(tmp_path, source_plan, status=status)
+        raw["response"]["status_code"] = 429 if status == 402 else 402
+        entry = summary["actions"][0]
+        raw_path = tmp_path / entry["raw_log_path"]
+        raw_path.write_text(json.dumps(raw, sort_keys=True))
+        sha = hashlib.sha256(raw_path.read_bytes()).hexdigest()
+        entry["raw_log_sha256"] = sha
+        summary["raw_logs"][raw_path.name] = sha
+>       with pytest.raises(ValueError, match="provider HTTP status fields disagree"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_network_report_402.py:171: Failed
+_ test_rehashed_conflicting_provider_http_fields_cannot_pick_a_stop_cause[429] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-509/test_rehashed_conflicting_prov1')
+status = 429
+
+    @pytest.mark.parametrize("status", [402, 429])
+    def test_rehashed_conflicting_provider_http_fields_cannot_pick_a_stop_cause(
+        tmp_path: Path, status: int
+    ) -> None:
+        source_plan = plan()
+        summary, raw = run_source(tmp_path, source_plan, status=status)
+        raw["response"]["status_code"] = 429 if status == 402 else 402
+        entry = summary["actions"][0]
+        raw_path = tmp_path / entry["raw_log_path"]
+        raw_path.write_text(json.dumps(raw, sort_keys=True))
+        sha = hashlib.sha256(raw_path.read_bytes()).hexdigest()
+        entry["raw_log_sha256"] = sha
+        summary["raw_logs"][raw_path.name] = sha
+>       with pytest.raises(ValueError, match="provider HTTP status fields disagree"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_network_report_402.py:171: Failed
+=========================== short test summary info ============================
+FAILED tests/test_expert_network_report_402.py::test_rehashed_conflicting_provider_http_fields_cannot_pick_a_stop_cause[402]
+FAILED tests/test_expert_network_report_402.py::test_rehashed_conflicting_provider_http_fields_cannot_pick_a_stop_cause[429]
+======================= 2 failed, 12 deselected in 0.75s =======================

@@ -1,0 +1,2239 @@
+"""V12: replay original network actions and accepted journals, seal, then score offline."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib.util
+import json
+import math
+import re
+import runpy
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any, cast
+
+from evaluation.research import live as research_live
+from evaluation.research.expert.blind_cli import selector_answer
+from evaluation.research.expert.compact import expand_submission, parse_compact_decision
+from evaluation.research.expert.journal import AcceptedJournal, parse_journal_decision
+from evaluation.research.expert.model_failure import model_batch_failure
+from evaluation.research.expert.models import validate_trace
+from evaluation.research.expert.network_budget import (
+    BUDGET_MODEL,
+    NETWORK_COMPARISON_MODE,
+    WALL_GUARD_MS,
+    WallGuard,
+    expert_budget,
+    parse_timestamp,
+    parse_wall_guard,
+    validate_expert_budget,
+)
+from evaluation.research.expert.network_report import (
+    SourceCounters,
+    diagnose_fact,
+    network_gate,
+    validate_diagnoses,
+    validate_source_run,
+)
+from evaluation.research.expert.network_turn_policy import (
+    NetworkBudgetIsolation as Isolation,
+)
+from evaluation.research.expert.network_turn_policy import (
+    TurnPhase,
+    command_proof,
+    journal_schema_for_turn,
+    parse_turn_decision,
+    policy_limits,
+    turn_window,
+)
+from evaluation.research.expert.packet import digest
+from evaluation.research.expert.question_contract import (
+    EFFECTIVE_JOURNAL_INSTRUCTIONS,
+    question_contract,
+)
+from evaluation.research.expert.representation import (
+    award_value,
+    closing_prompt,
+    closing_schema,
+)
+from evaluation.research.expert.workspace_policy import validate_selector_paths, validate_workspaces
+from evaluation.research.identities import IdentityMap
+from evaluation.research.live import COHORT
+from evaluation.research.mapping import (
+    CLAIM_KEYS,
+    STRUCTURED_KEYS,
+    normalize_claim,
+    normalize_subject_claims,
+)
+from evaluation.research.metrics import canonical_url, scope_matches, score
+from evaluation.research.schema import Capture, Dataset, Evidence, Observation, Prediction, Scope
+
+FROZEN_CLI = (
+    "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex"
+)
+PINNED_PROVIDER = "exa"
+FATAL_PROVIDER_STATUSES = frozenset({401, 402, 403, 429})
+REVIEWED_62_DATASET = Path(research_live.__file__).parent / "data/ground_truth.reviewed.json"
+
+PROTOCOL_MODULES = frozenset(
+    "evaluation.research." + name
+    for name in (
+        "expert.blind_cli",
+        "expert.selector",
+        "expert.compact",
+        "expert.journal",
+        "expert.citations",
+        "expert.controller",
+        "expert.models",
+        "expert.model_failure",
+        "expert.packet",
+        "expert.representation",
+        "expert.network_turn_policy",
+        "expert.network_budget",
+        "expert.network_report",
+        "expert.location_feedback",
+        "expert.workspace_policy",
+        "expert.question_contract",
+        "live",
+        "mapping",
+        "metrics",
+        "schema",
+        "identities",
+    )
+)
+
+
+def read(path: Path) -> Any:
+    return json.loads(path.read_text())
+
+
+def save(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+
+
+def file_hash(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def refused_provider_status(value: Any) -> int | None:
+    if not isinstance(value, dict):
+        return None
+    statuses = {
+        value[key]
+        for key in ("http_status", "status_code")
+        if type(value.get(key)) is int and value[key] in FATAL_PROVIDER_STATUSES
+    }
+    if len(statuses) > 1:
+        raise ValueError("Original Exa provider HTTP status fields disagree")
+    return next(iter(statuses), None)
+
+
+def canonical_turn(name: str, *, prefix: str, suffix: str = "") -> int:
+    matched = re.fullmatch(re.escape(prefix) + r"([0-9]+)" + re.escape(suffix), name)
+    if matched is None:
+        raise ValueError("Malformed original turn path")
+    turn = int(matched.group(1))
+    if turn <= 0 or name != f"{prefix}{turn:02d}{suffix}":
+        raise ValueError("Original turn path must be canonical and positive")
+    return turn
+
+
+def controller_directories(folder: Path) -> list[Path]:
+    """Preserve resume chronology for every canonical positive model turn."""
+    by_turn: dict[int, Path] = {}
+    for path in folder.glob("controller-*"):
+        turn = canonical_turn(path.name, prefix="controller-")
+        if not path.is_dir() or path.is_symlink() or turn in by_turn:
+            raise ValueError("Malformed or repeated original controller turn")
+        by_turn[turn] = path
+    return [by_turn[turn] for turn in sorted(by_turn)]
+
+
+def protocol_receipt_order(path: Path) -> tuple[str, int, str]:
+    name = path.name
+    if name.startswith("selector-"):
+        suffix = next(
+            (
+                "." + value
+                for value in (
+                    "decision.json",
+                    "answer.json",
+                    "meta.json",
+                    "request.json",
+                    "events.jsonl",
+                    "stderr.txt",
+                )
+                if name.endswith("." + value)
+            ),
+            "",
+        )
+        return "selector-", canonical_turn(name, prefix="selector-", suffix=suffix), suffix
+    for prefix in ("validation-", "checkpoint-"):
+        if name.startswith(prefix):
+            return prefix, canonical_turn(name, prefix=prefix, suffix=".json"), ".json"
+    return name, 0, ""
+
+
+def projected(item: dict[str, Any], identities: IdentityMap | None = None) -> list[tuple[str, Any]]:
+    """Only lossless fields already explicitly present in a submitted value."""
+    key, value = item["claim_key"], item["value"]
+    subject_value = award_value(key, value)
+    if subject_value is not None:
+        if identities is None:
+            raise ValueError("Award projection requires the frozen post-seal identity mapper")
+        subject, published = subject_value
+        raw = {
+            "subject_key": subject,
+            "normalized_value": published,
+            "source_url": item["source_url"],
+        }
+        return [
+            (output_key, published_value)
+            for output_key, published_value, _programme, _degree in normalize_subject_claims(
+                key, raw, identities
+            )
+        ]
+    if key in {"programme.exists", "program_exists"}:
+        if isinstance(value, dict) and type(value.get("exists")) is bool:
+            return [("programme.exists", value["exists"])]
+        return [("programme.exists", value)]
+    if key in CLAIM_KEYS or key in STRUCTURED_KEYS:
+        key, value, _, _ = normalize_claim(key, {"normalized_value": value})
+    return [(key, value)]
+
+
+def verified_cohort(root: Path, final: dict[str, Any], case_ids: Any) -> list[dict[str, Any]]:
+    entries = final["results"]
+    ids = [entry["case_id"] for entry in entries]
+    if final["stopped"] or len(ids) != len(set(ids)) or set(ids) != set(case_ids):
+        raise ValueError("All experts must be uniquely finalized before unsealing")
+    sealed = []
+    by_case = {entry["case_id"]: entry for entry in entries}
+    for case_id in case_ids:
+        recorded = read(root / "experts" / case_id / "result.json")
+        if recorded != by_case[case_id]:
+            raise ValueError("Aggregate differs from the per-case result being sealed")
+        sealed.append(recorded)
+    return sealed
+
+
+def immutable_seal(path: Path, seal: dict[str, Any]) -> dict[str, Any]:
+    if path.exists():
+        previous = read(path)
+        before = {k: v for k, v in previous.items() if k != "sealed_at"}
+        after = {k: v for k, v in seal.items() if k != "sealed_at"}
+        if before != after:
+            raise ValueError("Previous seal or fixed provenance differs")
+        return previous
+    save(path, seal)
+    return seal
+
+
+def exact_metering(result: dict[str, Any]) -> bool:
+    """Validate the entire cumulative ledger, not just its final sum."""
+    ledger = result.get("meter", [])
+    if not ledger or result.get("exact_metering") is not True:
+        return False
+    cumulative = 0
+    for entry in ledger:
+        elapsed = entry.get("elapsed_ms")
+        if type(elapsed) is not int or elapsed < 0:
+            return False
+        cumulative += elapsed
+        if type(entry.get("active_ms")) is not int or entry["active_ms"] != cumulative:
+            return False
+    return type(result.get("active_ms")) is int and result["active_ms"] == cumulative
+
+
+def protocol_hashes(folder: Path) -> list[dict[str, str]]:
+    selected = set(folder.glob("selector-*.decision.json"))
+    selected.update(folder.glob("selector-*.answer.json"))
+    selected.update(folder.glob("selector-*.meta.json"))
+    selected.update(folder.glob("selector-*.request.json"))
+    selected.update(folder.glob("selector-*.events.jsonl"))
+    selected.update(folder.glob("selector-*.stderr.txt"))
+    selected.update(folder.glob("validation-*.json"))
+    selected.update(folder.glob("checkpoint-*.json"))
+    selected.update(
+        directory / "transport-audit.json"
+        for directory in controller_directories(folder)
+        if (directory / "transport-audit.json").exists()
+    )
+    selected.update(
+        folder / name
+        for name in (
+            "accepted-journal.json",
+            "journal-events.json",
+            "compact-citation-proof.json",
+            "recorded-actions.json",
+            "isolation.json",
+            "navigation-outcomes.json",
+        )
+    )
+    return [
+        {"path": p.relative_to(folder).as_posix(), "sha256": file_hash(p)}
+        for p in sorted(
+            selected,
+            key=lambda path: (protocol_receipt_order(path), path.relative_to(folder).as_posix()),
+        )
+    ]
+
+
+def validate_frozen_provenance(root: Path, orchestrator: Path) -> dict[str, Any]:
+    trial = read(root / "trial.json")
+    start = root / "trial-at-baseline-start.json"
+    if not start.is_file() or file_hash(start) != file_hash(root / "trial.json"):
+        raise ValueError("Trial changed after the pre-baseline freeze")
+    if trial.get("protocol_version") != "journal-v12" or not trial.get("harness_sha"):
+        raise ValueError("Trial lacks the frozen journal protocol/source")
+    if any(
+        trial.get(key) != PINNED_PROVIDER
+        for key in ("search_provider", "algorithm_provider", "expert_provider")
+    ):
+        raise ValueError("Trial must pin both research arms to the same Exa provider")
+    if (
+        digest(trial.get("turn_policy")) != digest(policy_limits())
+        or trial.get("requested_reasoning_effort") is not None
+        or trial.get("reasoning_effort_source") != "cli_default"
+        or digest(trial.get("network_budget")) != digest(expert_budget())
+        or trial.get("comparison_mode") != NETWORK_COMPARISON_MODE
+        or trial.get("budget_model") != BUDGET_MODEL
+        or type(trial.get("wall_guard_ms")) is not int
+        or trial["wall_guard_ms"] != WALL_GUARD_MS
+    ):
+        raise ValueError("Trial lacks the frozen equal-action/default-effort network policy")
+    for name, field in (
+        ("workspace-locations.json", "workspace_assignments_sha256"),
+        ("workspace-receipts.json", "workspace_receipts_sha256"),
+    ):
+        if not (root / name).is_file() or trial.get(field) != file_hash(root / name):
+            raise ValueError("Original independently assigned workspace mappings changed")
+    validate_workspaces(
+        read(root / "workspace-locations.json"),
+        read(root / "workspace-receipts.json"),
+        case_ids=tuple(COHORT),
+    )
+    scripts = trial.get("scripts", {})
+    required_scripts = (
+        orchestrator,
+        Path(__file__),
+        Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+        Path("/tmp/unimatch-expert500-launch-v12.py"),
+    )
+    if any(scripts.get(str(path)) != file_hash(path) for path in required_scripts):
+        raise ValueError("Actual parent protocol differs from pre-run frozen scripts")
+    for name, expected in scripts.items():
+        if file_hash(Path(name)) != expected:
+            raise ValueError("Frozen parent script changed during research")
+    modules = trial.get("modules", {})
+    if set(modules) != PROTOCOL_MODULES:
+        raise ValueError("Frozen trial must bind the complete public protocol module set")
+    for name, expected in modules.items():
+        module = importlib.util.find_spec(name)
+        if module is None or module.origin is None or file_hash(Path(module.origin)) != expected:
+            raise ValueError("Frozen protocol module changed during research")
+    binding = trial.get("binding_registry", {})
+    from evaluation.research.live import REVIEWED_BINDINGS
+
+    if (
+        binding.get("path") != str(REVIEWED_BINDINGS.resolve())
+        or binding.get("sha256") != file_hash(REVIEWED_BINDINGS)
+        or type(trial.get("baseline_finalization_reserve_ms")) is not int
+        or trial.get("baseline_finalization_reserve_ms") != 1000
+    ):
+        raise ValueError("Trial must freeze unchanged private binding bytes and baseline reserve")
+    for case_id in COHORT:
+        baseline = read(root / "baseline" / case_id / "result.json")
+        packet = read(root / "baseline" / case_id / "public-packet.json")
+        if (
+            baseline["head_sha"] != trial["harness_sha"]
+            or packet["baseline_pipeline_sha"] != trial["harness_sha"]
+            or baseline.get("provider") != PINNED_PROVIDER
+        ):
+            raise ValueError("Fresh baseline source differs from the frozen trial")
+        capture = Capture.model_validate_json(Path(baseline["capture"]).read_text())
+        dispatch = read(root / "baseline" / case_id / "dispatch.json")
+        run = read(root / "baseline" / case_id / "run.json")
+        if (
+            dispatch["inputs"].get("search_provider") != PINNED_PROVIDER
+            or dispatch["inputs"].get("mode") != "expert_baseline"
+            or run.get("run_id") != baseline["run_id"]
+            or run.get("headSha") != trial["harness_sha"]
+            or run.get("conclusion") != "success"
+            or baseline["budget"].get("provider") != PINNED_PROVIDER
+            or baseline.get("provider_failure") != baseline["budget"].get("provider_failure")
+        ):
+            raise ValueError("Baseline original run/counter provider differs from the frozen trial")
+        if (
+            capture.pipeline_sha != trial["harness_sha"]
+            or capture.mode != "live"
+            or capture.config.get("strict_expert_budget") is not True
+            or capture.config.get("search_provider") != PINNED_PROVIDER
+            or len(capture.observations) != 1
+            or capture.observations[0].case_id != case_id
+            or not isinstance(capture.config.get("case_budgets"), dict)
+            or cast(dict[str, Any], capture.config["case_budgets"]).get(case_id)
+            != baseline["budget"]
+        ):
+            raise ValueError("Baseline capture differs from its fresh controlled result")
+        validate_baseline_reserve(capture, baseline["budget"])
+        validate_expert_budget(packet)
+        if (
+            not baseline_within_budget(baseline["budget"])
+            or capture.observations[0].error == "CAPTURE_IN_PROGRESS"
+        ):
+            raise ValueError(
+                "Baseline receipt is incomplete or outside its original 120000/60/6 caps"
+            )
+        folder = root / "experts" / case_id
+        result = read(folder / "result.json")
+        run_ids = {
+            entry["run_id"]
+            for entry in result["meter"]
+            if entry["stage"] == "controlled_source_action"
+        }
+        recorded_ids = set()
+        sources = [
+            entry for entry in result["meter"] if entry["stage"] == "controlled_source_action"
+        ]
+        if len(sources) != len(run_ids):
+            raise ValueError("Each controlled source run must have one unique meter entry")
+        for directory in controller_directories(folder):
+            path = directory / "run.json"
+            run = verified_controller_completion(directory, expected_head=trial["harness_sha"])
+            recorded_ids.add(run["run_id"])
+            source = next((entry for entry in sources if entry["run_id"] == run["run_id"]), None)
+            summary = read(path.parent / "artifact/summary.json")
+            dispatch = read(path.parent / "dispatch.json")
+            plan = json.loads(dispatch["inputs"]["plan"])
+            if (
+                source is None
+                or dispatch["inputs"].get("search_provider") != PINNED_PROVIDER
+                or plan.get("provider") != PINNED_PROVIDER
+                or summary.get("provider") != PINNED_PROVIDER
+                or source.get("source_ms") != summary["final"]["elapsed_ms"]
+                or source.get("source_elapsed_ms") != source["source_ms"] - plan["start_ms"]
+                or source.get("elapsed_ms") != 0
+            ):
+                raise ValueError("Source ledger differs from its independent controller clock")
+        if not run_ids or run_ids != recorded_ids:
+            raise ValueError("Controlled source ledger differs from recorded workflow executions")
+        isolation = read(folder / "isolation.json")
+        if not all(
+            isolation.get(k) is True
+            for k in ("allowed_read", "sealed_read_denied", "sealed_stdout_empty")
+        ):
+            raise ValueError("Real OS blinding proof failed")
+    return {
+        "comparison_mode": NETWORK_COMPARISON_MODE,
+        "budget_model": BUDGET_MODEL,
+        "network_budget": expert_budget(),
+        "turn_policy": policy_limits(),
+        "scripts": scripts,
+        "modules": modules,
+        "harness_sha": trial["harness_sha"],
+        "binding_registry": binding,
+        "baseline_finalization_reserve_ms": 1000,
+        "search_provider": PINNED_PROVIDER,
+        "algorithm_provider": PINNED_PROVIDER,
+        "expert_provider": PINNED_PROVIDER,
+    }
+
+
+def validate_baseline_reserve(capture: Capture, budget: dict[str, Any]) -> None:
+    """Bind exact declared original-clock deadlines; never fix recorded overruns."""
+    for values in (capture.config, budget):
+        if (
+            type(values.get("finalization_reserve_ms")) is not int
+            or values["finalization_reserve_ms"] != 1000
+            or type(values.get("source_work_deadline_ms")) not in (int, float)
+            or values["source_work_deadline_ms"] != 119000
+        ):
+            raise ValueError("Baseline must declare exact1000ms reserve within original120000ms")
+    for key in ("seconds_per_case", "child_active_seconds"):
+        if type(capture.config.get(key)) not in (int, float) or capture.config[key] != 120:
+            raise ValueError("Baseline original full clock must stay120 seconds")
+    if (
+        type(budget.get("max_active_seconds")) not in (int, float)
+        or budget["max_active_seconds"] != 120
+        or type(budget.get("max_fetcher_calls")) is not int
+        or budget["max_fetcher_calls"] != 60
+        or type(budget.get("max_search_queries")) is not int
+        or budget["max_search_queries"] != 6
+    ):
+        raise ValueError("Baseline declared original source caps changed")
+
+
+def baseline_within_budget(budget: dict[str, Any]) -> bool:
+    for key, limit in (("elapsed_ms", 120000), ("fetcher_calls", 60), ("search_queries", 6)):
+        if type(budget.get(key)) is not int or not 0 <= budget[key] <= limit:
+            return False
+    return (
+        budget.get("stop_reason") not in {"http_402", "http_429"}
+        and budget.get("provider_failure") is None
+        and budget.get("process_error") is None
+        and budget.get("active_checkpoint_available") is True
+    )
+
+
+def wall_guard_for(value: dict[str, Any]) -> WallGuard:
+    return parse_wall_guard(
+        wall_started_at=value.get("wall_started_at", ""),
+        wall_deadline_at=value.get("wall_deadline_at", ""),
+    )
+
+
+def controller_record(
+    directory: Path,
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], str]:
+    summary = read(directory / "artifact/summary.json")
+    produced = summary.get("actions")
+    if not isinstance(produced, list) or len(produced) != 1:
+        raise ValueError("Each source controller must retain one original action")
+    name = produced[0].get("raw_log_path")
+    if type(name) is not str or Path(name).name != name:
+        raise ValueError("Controller raw state must be a retained local source log")
+    path = directory / "artifact/logs" / name
+    sha = file_hash(path)
+    if sha != produced[0].get("raw_log_sha256") or summary.get("raw_logs", {}).get(name) != sha:
+        raise ValueError("Controller final state lacks its original raw source hash")
+    inputs = read(directory / "dispatch.json")["inputs"]
+    plan = json.loads(inputs["plan"])
+    if inputs.get("search_provider") != PINNED_PROVIDER or plan.get("provider") != PINNED_PROVIDER:
+        raise ValueError("Original source dispatch differs from the trial's pinned Exa provider")
+    raw = read(path)
+    request = raw.get("request")
+    if (
+        raw.get("executed") is True
+        and isinstance(request, dict)
+        and request.get("tool") == "search_provider"
+    ):
+        status = refused_provider_status(raw.get("response"))
+        if status is not None:
+            raise ValueError(
+                f"Original Exa provider HTTP{status} requires an unscored stopped cohort"
+            )
+    return plan, summary, raw, sha
+
+
+def verified_controller_completion(directory: Path, *, expected_head: str) -> dict[str, Any]:
+    """A cancelled run needs a verified, causally bound case-guard artifact receipt."""
+    run = read(directory / "run.json")
+    if (
+        type(run.get("run_id")) is not int
+        or run["run_id"] <= 0
+        or run.get("headSha") != expected_head
+        or run.get("conclusion") not in {"success", "cancelled"}
+    ):
+        raise ValueError("Actual source controller differs from the frozen trial")
+    plan, summary, raw, sha = controller_record(directory)
+    guard = wall_guard_for(plan)
+    path = directory / "transport-audit.json"
+    receipt = read(path) if path.is_file() and not path.is_symlink() else None
+    if receipt is not None and (
+        not isinstance(receipt, dict)
+        or receipt.get("stop_scope") == "batch"
+        or receipt.get("artifact_status") != "verified"
+        or receipt.get("source_counters_known") is not True
+    ):
+        raise ValueError("An unknown or invalid source artifact cannot be primary evidence")
+    guarded = (
+        run["conclusion"] == "cancelled"
+        or parse_timestamp(raw["completed_at"]) >= guard.deadline_at
+        or parse_timestamp(summary["final"]["completed_at"]) >= guard.deadline_at
+        or (
+            receipt is not None
+            and (receipt.get("self_guard_exhausted") is True or receipt.get("stop_scope") == "case")
+        )
+    )
+    if not guarded:
+        return run
+    if receipt is None:
+        raise ValueError("A guarded source termination lacks its durable verified receipt")
+    dispatch = read(directory / "dispatch.json")
+    tag, ref = dispatch["inputs"].get("run_tag"), dispatch.get("ref")
+    if (
+        type(tag) is not str
+        or re.fullmatch(r"e500-[0-9a-f]{16}", tag) is None
+        or type(ref) is not str
+        or not ref
+        or run.get("tag") != tag
+        or run.get("status") != "completed"
+        or any(
+            receipt.get(key) != value
+            for key, value in {
+                "schema_version": "1",
+                "protocol_version": "journal-v12",
+                "status": "recovered",
+                "case_id": plan["case_id"],
+                "provider": PINNED_PROVIDER,
+                "ref": ref,
+                "run_tag": tag,
+                "head_sha": expected_head,
+                "run_status": "completed",
+                "conclusion": run["conclusion"],
+                "stop_scope": "case",
+                "terminal_reason": "wall_guard_exhausted",
+                "error": None,
+                "source_stop_reason": summary["final"]["stop_reason"],
+                **guard.as_dict(),
+            }.items()
+        )
+        or type(receipt.get("run_id")) is not int
+        or receipt["run_id"] != run["run_id"]
+        or type(receipt.get("dispatch_count")) is not int
+        or receipt["dispatch_count"] != 1
+        or any(
+            receipt.get(key) is not True
+            for key in (
+                "dispatch_attempted",
+                "audit_only",
+                "guard_exhausted",
+                "self_guard_exhausted",
+                "artifact_verified",
+                "source_counters_known",
+            )
+        )
+        or type(receipt.get("cancel_attempted")) is not bool
+        or (run["conclusion"] == "cancelled" and receipt["cancel_attempted"] is not True)
+        or receipt.get("trigger_error") not in {"TimeoutError", "TimeoutExpired"}
+        or type(receipt.get("trigger_error_detail")) is not str
+        or not receipt["trigger_error_detail"]
+        or type(receipt.get("audit_window_ms")) is not int
+        or receipt["audit_window_ms"] != 60000
+        or type(receipt.get("audit_elapsed_ms")) is not int
+        or not 0 <= receipt["audit_elapsed_ms"] <= 60000
+        or receipt.get("provider_failures") != []
+    ):
+        raise ValueError("Guard receipt differs from its original terminal run and case policy")
+    if any(
+        type(receipt.get(key)) is not str
+        for key in ("triggered_at", "audit_started_at", "receipt_at")
+    ):
+        raise ValueError("Guard receipt requires its original aware timestamps")
+    triggered = parse_timestamp(receipt["triggered_at"], field="triggered_at")
+    audit_started = parse_timestamp(receipt["audit_started_at"], field="audit_started_at")
+    received = parse_timestamp(receipt["receipt_at"], field="receipt_at")
+    if (
+        not guard.deadline_at <= triggered <= audit_started <= received
+        or (received - audit_started).total_seconds() * 1000 > 60001
+        or parse_timestamp(summary["final"]["completed_at"]) > received
+    ):
+        raise ValueError("Guard artifact delivery chronology is not causal or bounded")
+    artifact, logs = directory / "artifact", directory / "artifact/logs"
+    originals = [
+        path,
+        directory / "run.json",
+        directory / "dispatch.json",
+        artifact / "plan.json",
+        artifact / "summary.json",
+    ]
+    if (
+        artifact.is_symlink()
+        or logs.is_symlink()
+        or not logs.is_dir()
+        or any(item.is_symlink() or not item.is_file() for item in originals)
+        or digest(read(artifact / "plan.json")) != digest(plan)
+        or receipt.get("plan_sha256") != file_hash(artifact / "plan.json")
+        or receipt.get("summary_sha256") != file_hash(artifact / "summary.json")
+        or receipt.get("raw_logs") != summary["raw_logs"]
+        or {item.name for item in logs.iterdir()} != set(summary["raw_logs"])
+        or any(
+            Path(name).name != name
+            or (logs / name).is_symlink()
+            or not (logs / name).is_file()
+            or file_hash(logs / name) != expected
+            for name, expected in summary["raw_logs"].items()
+        )
+    ):
+        raise ValueError(
+            "Guarded artifact lacks its complete original plan, summary and raw hashes"
+        )
+    resume = plan.get("resume_summary")
+    prior = (
+        SourceCounters(
+            resume["final"]["fetcher_calls"],
+            resume["final"]["search_queries"],
+            resume["final"]["elapsed_ms"],
+        )
+        if resume
+        else SourceCounters()
+    )
+    counters = validate_source_run(
+        plan,
+        summary,
+        raw,
+        case_id=plan["case_id"],
+        official_domains=plan["official_domains"],
+        wall_guard=guard,
+        raw_sha256=sha,
+        provider=PINNED_PROVIDER,
+        prior=prior,
+        prior_summary=resume,
+    )
+    declared = receipt.get("source_counters")
+    if (
+        not isinstance(declared, dict)
+        or set(declared) != set(counters.as_dict())
+        or any(type(value) is not int for value in declared.values())
+        or declared != counters.as_dict()
+    ):
+        raise ValueError("Guard receipt cannot invent or omit actual spent source counters")
+    return run
+
+
+def verified_controller_stop(directory: Path) -> str | None:
+    """Validate the raw policy before using an original source closure receipt."""
+    plan, summary, raw, sha = controller_record(directory)
+    resume = plan.get("resume_summary")
+    prior = (
+        SourceCounters(
+            resume["final"]["fetcher_calls"],
+            resume["final"]["search_queries"],
+            resume["final"]["elapsed_ms"],
+        )
+        if resume
+        else SourceCounters()
+    )
+    validate_source_run(
+        plan,
+        summary,
+        raw,
+        case_id=plan["case_id"],
+        official_domains=plan["official_domains"],
+        wall_guard=wall_guard_for(plan),
+        raw_sha256=sha,
+        provider=PINNED_PROVIDER,
+        prior=prior,
+        prior_summary=resume,
+    )
+    return summary["final"]["stop_reason"]
+
+
+def verify_source_ledger(
+    folder: Path, packet: dict[str, Any], result: dict[str, Any]
+) -> dict[str, Any]:
+    """Audit every actual controller, including a terminal failed source tail."""
+    guard = wall_guard_for(result)
+    counters, previous, actions = SourceCounters(), None, []
+    previous_completed = guard.started_at
+    paths = controller_directories(folder)
+    source_entries = [
+        entry for entry in result["meter"] if entry["stage"] == "controlled_source_action"
+    ]
+    if len(paths) != len(source_entries):
+        raise ValueError("Actual controller directories differ from the original source ledger")
+    seen_runs = set()
+    for directory in paths:
+        turn = canonical_turn(directory.name, prefix="controller-")
+        plan, summary, raw, sha = controller_record(directory)
+        next_counters = validate_source_run(
+            plan,
+            summary,
+            raw,
+            case_id=result["case_id"],
+            official_domains=[packet["cases"][0]["domain"]],
+            wall_guard=guard,
+            raw_sha256=sha,
+            provider=PINNED_PROVIDER,
+            prior=counters,
+            prior_summary=previous,
+        )
+        if parse_timestamp(raw["at"]) < previous_completed:
+            raise ValueError("Controller resume wall chronology moved backwards")
+        previous_completed = parse_timestamp(raw["completed_at"])
+        run = verified_controller_completion(
+            directory, expected_head=packet["baseline_pipeline_sha"]
+        )
+        matches = [entry for entry in source_entries if entry.get("turn") == turn]
+        if len(matches) != 1 or run.get("run_id") in seen_runs:
+            raise ValueError("Each actual source run needs its unique original meter receipt")
+        seen_runs.add(run["run_id"])
+        entry = matches[0]
+        if (
+            entry.get("run_id") != run["run_id"]
+            or entry.get("elapsed_ms") != 0
+            or type(entry.get("source_ms")) is not int
+            or entry["source_ms"] != next_counters.source_ms
+            or type(entry.get("source_elapsed_ms")) is not int
+            or entry["source_elapsed_ms"] != next_counters.source_ms - counters.source_ms
+        ):
+            raise ValueError(
+                "Source metering must contain only independently measured controller work"
+            )
+        for name, expected_sha in summary["raw_logs"].items():
+            if (
+                Path(name).name != name
+                or file_hash(directory / "artifact/logs" / name) != expected_sha
+            ):
+                raise ValueError("Resumed source raw bytes changed or disappeared")
+        actions.append(dict(summary["actions"][0]))
+        counters, previous = next_counters, summary
+    if type(result.get("source_ms")) is not int or result["source_ms"] != counters.source_ms:
+        raise ValueError("Terminal source_ms differs from all actual raw controller actions")
+    return {
+        "counters": counters.as_dict(),
+        "actions": actions,
+        "controller_count": len(paths),
+        "completed_at": previous_completed.isoformat(),
+    }
+
+
+def research_state(
+    *, recorded_source_count: int, processed_source_count: int, source_closed: bool = False
+) -> dict[str, Any]:
+    if (
+        any(type(v) is not int or v < 0 for v in (recorded_source_count, processed_source_count))
+        or type(source_closed) is not bool
+        or processed_source_count > recorded_source_count
+    ):
+        raise ValueError("Research routing requires exact original source receipts")
+    mode = "research"
+    phase = "bootstrap" if not recorded_source_count else "data"
+    if source_closed:
+        mode = (
+            "minimal_commit"
+            if recorded_source_count and processed_source_count == recorded_source_count
+            else "data_closure"
+        )
+        phase = "minimal_commit" if mode == "minimal_commit" else "data"
+    return {
+        "policy_version": BUDGET_MODEL,
+        "mode": mode,
+        "phase": phase,
+        "recorded_source_count": recorded_source_count,
+        "processed_source_count": processed_source_count,
+        "pending_source_count": recorded_source_count - processed_source_count,
+        "source_closed": source_closed,
+        "can_dispatch_source": not source_closed,
+    }
+
+
+def navigation_meter_receipts(
+    folder: Path,
+    events: list[dict[str, Any]],
+    result: dict[str, Any],
+) -> dict[int, dict[str, Any]]:
+    """Local outcomes must be recorded after their own commit and before the next state."""
+    outcomes = read(folder / "navigation-outcomes.json")
+    if not isinstance(outcomes, list) or digest(outcomes) != digest(
+        result.get("navigation_outcomes")
+    ):
+        raise ValueError("Original measured navigation outcomes differ from terminal result")
+    by_turn: dict[int, dict[str, Any]] = {}
+    meter = result["meter"]
+    accepted = {event["turn"] for event in events}
+    for outcome in outcomes:
+        if not isinstance(outcome, dict) or any(
+            type(outcome.get(key)) is not int or outcome[key] < 0
+            for key in (
+                "turn",
+                "source_action_count",
+                "processed_through_action_count",
+                "active_ms",
+            )
+        ):
+            raise ValueError("Navigation outcomes require strict original integer receipts")
+        turn = outcome["turn"]
+        if turn <= 0 or turn in by_turn or turn not in accepted:
+            raise ValueError("Each navigation outcome needs one original accepted turn")
+        by_turn[turn] = outcome
+        markers = [
+            i
+            for i, entry in enumerate(meter)
+            if entry["stage"] == "checkpoint_commit_marker_write"
+            and type(entry.get("turn")) is int
+            and entry["turn"] == turn
+        ]
+        if len(markers) != 1:
+            raise ValueError("Navigation outcome lacks its original accepted commit marker")
+        lower = markers[0]
+        upper = next(
+            (
+                i
+                for i in range(lower + 1, len(meter))
+                if meter[i]["stage"] == "research_state_policy"
+            ),
+            len(meter),
+        )
+        policies = [
+            i
+            for i, entry in enumerate(meter)
+            if entry["stage"] == "navigation_proposal_policy" and entry.get("turn") == turn
+        ]
+        if not policies or any(not lower < i < upper for i in policies):
+            raise ValueError("A future navigation policy cannot close an earlier selector")
+        status = outcome.get("status")
+        if status not in {"declined", "stored_view"}:
+            raise ValueError("Unknown original navigation outcome")
+        receipt_stage = (
+            "navigation_decline_record_construction"
+            if status == "declined"
+            else "stored_view_receipt_construction"
+        )
+        receipts = [
+            i
+            for i, entry in enumerate(meter)
+            if entry["stage"] == receipt_stage and entry.get("turn") == turn
+        ]
+        writes = [
+            i
+            for i, entry in enumerate(meter)
+            if entry["stage"] == "navigation_outcome_write" and entry.get("turn") == turn
+        ]
+        if (
+            len(receipts) != 1
+            or len(writes) != 1
+            or not policies[-1] < receipts[0] < writes[0] < upper
+            or writes[0] != receipts[0] + 1
+        ):
+            raise ValueError(
+                "Local navigation outcome lacks its original measured construction/write"
+            )
+        if status == "declined" and receipts[0] != policies[-1] + 1:
+            raise ValueError("Decline must be recorded immediately after its original policy")
+        if status == "stored_view":
+            index = outcome.get("view_meter_index")
+            if (
+                type(index) is not int
+                or index != policies[-1] + 1
+                or receipts[0] != index + 1
+                or meter[index]["stage"] != "stored_source_view"
+                or meter[index].get("turn") != turn
+            ):
+                raise ValueError(
+                    "Saved view lacks its actual execution before outcome construction"
+                )
+    return by_turn
+
+
+def recorded_actions(folder: Path, result: dict[str, Any]) -> list[dict[str, Any]]:
+    path = folder / "recorded-actions.json"
+    if result.get("recorded_actions_path") != str(path) or result.get(
+        "recorded_actions_sha256"
+    ) != file_hash(path):
+        raise ValueError("All actual source actions lack their original immutable receipt")
+    value = read(path)
+    if (
+        not isinstance(value, list)
+        or type(result.get("actions")) is not int
+        or result["actions"] != len(value)
+    ):
+        raise ValueError("Terminal action count differs from all actual source receipts")
+    return value
+
+
+def verify_navigation_binding(
+    folder: Path, trace: dict[str, Any], packet: dict[str, Any], events: list[dict[str, Any]]
+) -> None:
+    """Each actual request must be the recorded model choice at its accepted turn."""
+    from evaluation.research.expert.controller import _search_domains
+
+    result = read(folder / "result.json")
+    all_actions = recorded_actions(folder, result)
+    by_turn = {event["turn"]: event for event in events}
+    seen_paths: list[str] = []
+    for directory in controller_directories(folder):
+        turn = canonical_turn(directory.name, prefix="controller-")
+        event = by_turn.get(turn)
+        if event is None:
+            raise ValueError("An actual controller run requires its accepted model action")
+        decision = parse_journal_decision(
+            (folder / f"selector-{turn:02d}.decision.json").read_text()
+        )
+        if decision.kind != "action" or decision.action is None or decision.action.tool == "view":
+            raise ValueError("Only an accepted source navigation action can dispatch a controller")
+        requested = decision.action.controller_request()
+        dispatch = read(directory / "dispatch.json")
+        plan = json.loads(dispatch["inputs"]["plan"])
+        if (
+            digest(plan.get("actions")) != digest([requested])
+            or plan.get("case_id") != trace["case_id"]
+            or plan.get("official_domains") != [packet["cases"][0]["domain"]]
+            or plan.get("budget_origin") != NETWORK_COMPARISON_MODE
+            or plan.get("budget_model") != BUDGET_MODEL
+        ):
+            raise ValueError(
+                "Dispatched source plan differs from the accepted model request/policy"
+            )
+        expected = dict(requested)
+        if expected["tool"] == "search_provider":
+            expected["domains"] = _search_domains(expected, tuple(plan["official_domains"]))
+        summary = read(directory / "artifact/summary.json")
+        verified_controller_stop(directory)
+        fresh = summary.get("actions", [])
+        if len(fresh) != 1 or digest(fresh[0].get("request")) != digest(expected):
+            raise ValueError("Actual controller request differs from the accepted model navigation")
+        produced = fresh[0]
+        index = len(seen_paths)
+        if event["source_action_count"] != index or index >= len(all_actions):
+            raise ValueError("Controller chronology differs from the accepted action receipt")
+        action = all_actions[index]
+        keys = (
+            "at",
+            "tool",
+            "request",
+            "outcome",
+            "outcome_status",
+            "policy_mode",
+            "raw_log_path",
+            "raw_log_sha256",
+            "elapsed_ms",
+            "fetcher_calls_cumulative",
+            "elapsed_ms_cumulative",
+            "search_queries_cumulative",
+        )
+        if (
+            any(action[key] != produced[key] for key in keys)
+            or action["observed_before"] != decision.observation
+            or action.get("observed_from_step") != (index or None)
+        ):
+            raise ValueError("Final trace action differs from its controller/model source record")
+        seen_paths.append(produced["raw_log_path"])
+    if seen_paths != [action["raw_log_path"] for action in all_actions]:
+        raise ValueError("Every actual source action must come from an accepted model dispatch")
+    if trace["actions"] != all_actions[: len(trace["actions"])]:
+        raise ValueError("Primary trace must retain the exact complete accepted source prefix")
+
+
+def validate_navigation_policy(
+    value: Any, guard: WallGuard, *, source_closed: bool
+) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise ValueError("Navigation lacks its original measured wall policy")
+    at = parse_timestamp(value.get("observed_at", ""), field="navigation observed_at")
+    guard.remaining_seconds(now=at)
+    allowed = at < guard.deadline_at and not source_closed
+    reason = (
+        "wall_guard_exhausted"
+        if at >= guard.deadline_at
+        else "source_closed"
+        if source_closed
+        else "within_wall_guard"
+    )
+    expected = {
+        "policy_version": BUDGET_MODEL,
+        "observed_at": at.isoformat(),
+        **guard.as_dict(),
+        "source_closed": source_closed,
+        "dispatch_allowed": allowed,
+        "status": "dispatch_allowed" if allowed else "declined",
+        "reason": reason,
+    }
+    if digest(value) != digest(expected):
+        raise ValueError("Navigation policy differs from its immutable wall guard")
+    return expected
+
+
+def verify_navigation_outcomes(
+    folder: Path,
+    trace: dict[str, Any],
+    log_dir: Path,
+    events: list[dict[str, Any]],
+    result: dict[str, Any],
+) -> None:
+    """Each accepted navigation binds its original source, saved view or decline."""
+    from evaluation.research.expert.controller import expert_view
+
+    outcomes = navigation_meter_receipts(folder, events, result)
+    guard, meter = wall_guard_for(result), result["meter"]
+    seen = set()
+    for event in events:
+        turn = event["turn"]
+        chosen = parse_journal_decision(read(folder / f"selector-{turn:02d}.decision.json"))
+        outcome, controller = outcomes.get(turn), folder / f"controller-{turn:02d}"
+        if chosen.kind != "action":
+            if outcome is not None or controller.exists():
+                raise ValueError("Only an accepted action may produce a navigation outcome")
+            continue
+        assert chosen.action is not None
+        requested = chosen.action.controller_request()
+        policies = [
+            (i, e)
+            for i, e in enumerate(meter)
+            if e["stage"] == "navigation_proposal_policy" and e.get("turn") == turn
+        ]
+        if not policies:
+            raise ValueError("Accepted navigation lacks its measured absolute-wall decision")
+        request = read(folder / f"selector-{turn:02d}.request.json")
+        index, entry = policies[-1]
+        disposition = validate_navigation_policy(
+            entry.get("policy"), guard, source_closed=request["selector_mode"] != "research"
+        )
+        policy_at = parse_timestamp(disposition["observed_at"])
+        if policy_at < parse_timestamp(event["at"]):
+            raise ValueError("Navigation cannot occur before its accepted checkpoint")
+        if outcome is None:
+            if (
+                requested["tool"] == "view"
+                or not controller.exists()
+                or not disposition["dispatch_allowed"]
+            ):
+                raise ValueError(
+                    "Accepted proposal lacks its actual controlled route or local outcome"
+                )
+            plan, summary, raw, _sha = controller_record(controller)
+            if parse_timestamp(raw["at"]) < policy_at:
+                raise ValueError("Source controller started before its final navigation policy")
+            transports = [
+                i
+                for i, e in enumerate(meter)
+                if e["stage"] == "controller_transport" and e.get("turn") == turn
+            ]
+            sources = [
+                i
+                for i, e in enumerate(meter)
+                if e["stage"] == "controlled_source_action" and e.get("turn") == turn
+            ]
+            if (
+                len(transports) != 1
+                or transports[0] != index + 1
+                or len(sources) != 1
+                or sources[0] <= transports[0]
+            ):
+                raise ValueError("Actual controlled work must follow its original measured policy")
+            if plan["start_ms"] != summary["initial"]["start_ms"]:
+                raise ValueError(
+                    "Source resume clock differs from its independently recorded source ledger"
+                )
+            continue
+        seen.add(turn)
+        if controller.exists() or any(
+            outcome.get(key) != value
+            for key, value in {
+                "decision_sha256": event["decision_sha256"],
+                "accepted_journal_sha256": event["accepted_journal_sha256"],
+                "source_action_count": event["source_action_count"],
+                "processed_through_action_count": event["source_action_count"],
+                "action": requested,
+            }.items()
+        ):
+            raise ValueError("Local navigation outcome differs from the accepted checkpoint")
+        if outcome["status"] == "declined":
+            if (
+                disposition["dispatch_allowed"]
+                or outcome.get("policy_meter_index") != index
+                or digest(outcome.get("policy")) != digest(disposition)
+                or outcome.get("reason") != disposition["reason"]
+                or type(outcome.get("cutoff_ms")) is not int
+                or outcome["cutoff_ms"] != WALL_GUARD_MS
+                or any(outcome.get(key) != value for key, value in guard.as_dict().items())
+            ):
+                raise ValueError("Declined navigation lacks its exact absolute-wall receipt")
+        elif outcome["status"] == "stored_view":
+            if requested["tool"] != "view" or not disposition["dispatch_allowed"]:
+                raise ValueError("Stored view requires an accepted pure view within the guard")
+            started = parse_timestamp(outcome.get("view_started_at", ""), field="view_started_at")
+            finished = parse_timestamp(
+                outcome.get("view_finished_at", ""), field="view_finished_at"
+            )
+            if not policy_at <= started <= finished < guard.deadline_at:
+                raise ValueError("Saved view must actually complete inside the absolute guard")
+            step = requested["source_step"]
+            if type(step) is not int or not 1 <= step <= event["source_action_count"]:
+                raise ValueError("A saved view cannot read an unobserved source")
+            raw = read(log_dir / trace["actions"][step - 1]["raw_log_path"])
+            view = expert_view(
+                raw,
+                chars=11000,
+                links=45,
+                sections=60,
+                page=requested.get("page"),
+                offset=requested.get("offset", 0),
+                section_offset=requested.get("section_offset", 0),
+                link_offset=requested.get("link_offset", 0),
+            )
+            if outcome.get("view_sha256") != digest(view):
+                raise ValueError("Stored view changed the original saved source representation")
+        else:
+            raise ValueError("Unknown original local navigation outcome")
+    if seen != set(outcomes):
+        raise ValueError("Every retained navigation outcome requires its accepted model proposal")
+
+
+def verify_turn_policy_evidence(folder: Path, result: dict[str, Any]) -> None:
+    """Replay every attempted selector's declared phase/command and cumulative deadline."""
+    if (
+        result.get("status") not in {"submitted", "incomplete"}
+        or result.get("provider") != PINNED_PROVIDER
+        or result.get("provider_failure") is not None
+        or result.get("requested_model") != "gpt-6-astra"
+        or result.get("requested_reasoning_effort") is not None
+        or result.get("reasoning_effort_source") != "cli_default"
+        or digest(result.get("turn_policy")) != digest(policy_limits())
+        or digest(result.get("network_budget")) != digest(expert_budget())
+        or result.get("comparison_mode") != NETWORK_COMPARISON_MODE
+        or result.get("budget_model") != BUDGET_MODEL
+        or result.get("protocol_version") != "journal-v12"
+    ):
+        raise ValueError("Expert result lacks exact default-effort/network policy")
+    guard = wall_guard_for(result)
+    packet = read(folder.parent.parent / "baseline" / result["case_id"] / "public-packet.json")
+    finished = parse_timestamp(result.get("finished_at", ""), field="finished_at")
+    wall_elapsed = math.ceil((finished - guard.started_at).total_seconds() * 1000)
+    if (
+        finished < guard.started_at
+        or type(result.get("wall_elapsed_ms")) is not int
+        or abs(result["wall_elapsed_ms"] - wall_elapsed) > 1
+        or not exact_metering(result)
+    ):
+        raise ValueError("Descriptive wall ledger differs from recorded case timestamps")
+    validate_expert_budget(packet)
+    verify_source_ledger(folder, packet, result)
+    meter = result["meter"]
+    accepted_events = read(folder / "journal-events.json")
+    verified_outcomes = navigation_meter_receipts(folder, accepted_events, result)
+    accepted_turns = {event["turn"] for event in accepted_events}
+    isolation = read(folder / "isolation.json")
+    expected_profile = Isolation(
+        workspace=Path(isolation["workspace"]),
+        sealed_roots=tuple(Path(path) for path in isolation["sealed_roots"]),
+        sandbox_executable=isolation["sandbox_executable"],
+        codex_executable=isolation["codex_executable"],
+    ).profile()
+    if (
+        isolation.get("profile") != expected_profile
+        or isolation["codex_executable"] != result["codex_cli"]
+        or result["codex_cli"] != FROZEN_CLI
+    ):
+        raise ValueError("Selector isolation profile or frozen CLI changed")
+    receipts = read(folder.parent.parent / "workspace-receipts.json")
+    workspace = Path(isolation["workspace"])
+    locations = folder.parent.parent / "workspace-locations.json"
+    if not locations.is_file():
+        raise ValueError("Independent case workspace assignments must be retained")
+    assignments = read(locations)
+    if assignments.get(result["case_id"]) != str(workspace) or len(
+        set(assignments.values())
+    ) != len(assignments):
+        raise ValueError("Selector workspace differs from the original independently assigned case")
+    verified = validate_workspaces(assignments, receipts)
+    if verified.get(result["case_id"]) != workspace:
+        raise ValueError("Selector directory identity differs from original receipt")
+    roots = [Path(path).resolve() for path in isolation["sealed_roots"]]
+    required_roots = [
+        Path("/Users/wpalish/Documents/Codex"),
+        Path("/Users/wpalish/.codex/memories"),
+        Path("/Users/wpalish/.codex/sessions"),
+        Path("/Users/wpalish/.codex/attachments"),
+        Path("/Users/wpalish/Downloads"),
+        Path("/tmp/codex-remote-attachments"),
+        *[Path(path) for case, path in assignments.items() if case != result["case_id"]],
+    ]
+
+    def denied(path: Path) -> bool:
+        return any(path.resolve() == root or path.resolve().is_relative_to(root) for root in roots)
+
+    if any(not denied(path) for path in required_roots) or denied(workspace):
+        raise ValueError(
+            "Selector profile must deny research history and every other case workspace"
+        )
+    seen = set()
+    for index, entry in enumerate(meter):
+        if entry["stage"] not in {"checkpoint_selector", "closing_selector"}:
+            continue
+        turn = entry["turn"]
+        if type(turn) is not int or turn <= 0 or turn in seen:
+            raise ValueError("Repeated selector turn policy evidence")
+        seen.add(turn)
+        request = read(folder / f"selector-{turn:02d}.request.json")
+        meta = read(folder / f"selector-{turn:02d}.meta.json")
+        prior_events = [event for event in accepted_events if event["turn"] < turn]
+        prior = prior_events[-1] if prior_events else None
+        prior_hash = prior["accepted_journal_sha256"] if prior else AcceptedJournal.initial().sha256
+        processed = prior["source_action_count"] if prior else 0
+        controller_folders = [
+            path
+            for path in controller_directories(folder)
+            if canonical_turn(path.name, prefix="controller-") < turn
+        ]
+        observed = sum(
+            len(read(path / "artifact/summary.json")["actions"]) for path in controller_folders
+        )
+        count = request.get("source_action_count")
+        if (
+            type(count) is not int
+            or count != observed
+            or type(request.get("processed_through_action_count")) is not int
+            or request["processed_through_action_count"] != processed
+        ):
+            raise ValueError("Attempted selector source receipt differs from recorded controllers")
+        expected_phase = (
+            "minimal_commit"
+            if request.get("selector_mode") == "minimal_commit"
+            else "data"
+            if count
+            else "bootstrap"
+        )
+        if request.get("selector_phase") != expected_phase or digest(
+            request.get("turn_policy")
+        ) != digest(policy_limits()):
+            raise ValueError("Selector phase or network turn policy changed")
+        expected_schema = journal_schema_for_turn(
+            journal_sha256=prior_hash,
+            canonical_university=read(
+                folder.parent.parent / "baseline" / result["case_id"] / "public-packet.json"
+            )["cases"][0]["university"],
+            phase=cast(TurnPhase, expected_phase),
+        )
+        if request.get("selector_mode") == "data_closure":
+            expected_schema["properties"]["kind"]["enum"] = ["record", "submit"]
+        if request["schema"] != expected_schema:
+            raise ValueError("Every attempted selector must use the exact bound four-fact schema")
+        if expected_phase == "minimal_commit":
+            if (
+                not count
+                or processed != count
+                or request["prompt"] != closing_prompt(journal_sha256=prior_hash)
+            ):
+                raise ValueError("Attempted minimal closure cannot process a pending source")
+        elif (
+            request["prompt"].get("accepted_journal", {}).get("sha256") != prior_hash
+            or request["prompt"].get("processed_through_action_count") != processed
+        ):
+            raise ValueError("Attempted data selector lacks its exact prior journal/receipt")
+        if digest(request.get("network_budget")) != digest(expert_budget()) or any(
+            request.get(key) != value for key, value in guard.as_dict().items()
+        ):
+            raise ValueError("Attempted selector network/absolute guard changed")
+        state_entries = [
+            e
+            for e in meter[:index]
+            if e["stage"] == "research_state_policy" and e.get("turn") == turn
+        ]
+        if len(state_entries) != 1:
+            raise ValueError("Attempted selector lacks one original measured research state")
+        state_meter = state_entries[0]
+        prior_selector_modes = [
+            read(folder / f"selector-{e['turn']:02d}.request.json")["selector_mode"]
+            for e in meter[:index]
+            if e["stage"] in {"checkpoint_selector", "closing_selector"}
+        ]
+        state_index = meter.index(state_meter)
+        closed = (
+            any(mode != "research" for mode in prior_selector_modes)
+            or any(
+                item["status"] == "declined"
+                and prior < turn
+                and item["policy_meter_index"] < state_index
+                for prior, item in verified_outcomes.items()
+            )
+            or any(verified_controller_stop(path) for path in controller_folders)
+        )
+        expected_state = research_state(
+            recorded_source_count=count,
+            processed_source_count=processed,
+            source_closed=bool(closed),
+        )
+        if (
+            digest(request.get("research_state")) != digest(expected_state)
+            or request["selector_mode"] != expected_state["mode"]
+            or request["selector_phase"] != expected_state["phase"]
+        ):
+            raise ValueError(
+                "Attempted selector research routing differs from original clock/source receipts"
+            )
+        if expected_phase != "minimal_commit":
+            packet = read(
+                folder.parent.parent / "baseline" / result["case_id"] / "public-packet.json"
+            )
+            if request["prompt"].get("public_question_contract") != question_contract(
+                packet
+            ) or EFFECTIVE_JOURNAL_INSTRUCTIONS not in request["prompt"].get("task", ""):
+                raise ValueError("Attempted selector public question contract/instruction changed")
+        if request.get("schema_sha256") != digest(request["schema"]):
+            raise ValueError("Selector schema digest changed")
+        argv = request["selector_command"]
+        proof = command_proof(argv)
+        expected_paths = {
+            "-C": str(workspace),
+            "--output-schema": str(workspace / "decision.schema.json"),
+            "--output-last-message": str(workspace / f"answer-{turn:02d}.json"),
+        }
+        if argv[:4] != [
+            isolation["sandbox_executable"],
+            "-p",
+            expected_profile,
+            isolation["codex_executable"],
+        ] or any(argv[argv.index(key) + 1] != value for key, value in expected_paths.items()):
+            raise ValueError(
+                "Selector command does not bind the proved isolation/schema/turn output"
+            )
+        validate_selector_paths(
+            assignments,
+            receipts,
+            case_id=result["case_id"],
+            turn=turn,
+            workspace=workspace,
+            schema=Path(expected_paths["--output-schema"]),
+            output=Path(expected_paths["--output-last-message"]),
+        )
+        if proof != request.get("command_proof"):
+            raise ValueError("Recorded default-effort selector command proof changed")
+        preceding = [e for e in meter[:index] if e["stage"] == "selector_request_write"]
+        if not preceding:
+            raise ValueError("Selector lacks a metered request write")
+        written = preceding[-1]
+        basis = request.get("selector_policy_active_ms")
+        start = meta.get("selector_start_active_ms")
+        if (
+            type(basis) is not int
+            or basis != written["active_ms"] - written["elapsed_ms"]
+            or type(start) is not int
+            or start != written["active_ms"]
+            or start != entry["active_ms"] - entry["elapsed_ms"]
+        ):
+            raise ValueError("Selector policy clock differs from its recorded cumulative meter")
+        model_start = parse_timestamp(meta.get("model_started_at"), field="model_started_at")
+        model_end = parse_timestamp(meta.get("model_ended_at"), field="model_ended_at")
+        if model_end > finished or (prior and model_start < parse_timestamp(prior["at"])):
+            raise ValueError("Selector wall chronology differs from prior accepted checkpoint")
+        if controller_folders:
+            completed = max(
+                parse_timestamp(controller_record(path)[2]["completed_at"])
+                for path in controller_folders
+            )
+            if model_start < completed:
+                raise ValueError("Selector cannot observe a source before its recorded completion")
+        window = turn_window(
+            phase=cast(TurnPhase, expected_phase), wall_guard=guard, now=model_start
+        )
+        if (
+            window.timeout_ms is None
+            or digest(meta.get("selector_window")) != digest(window.as_dict())
+            or meta.get("selector_phase") != expected_phase
+            or type(meta.get("selector_timeout_ms")) not in (int, float)
+            or meta["selector_timeout_ms"] != window.timeout_ms
+            or type(meta.get("selector_timeout_seconds")) not in (int, float)
+            or meta["selector_timeout_seconds"] != window.timeout_seconds
+            or meta.get("reasoning_effort") is not None
+            or meta.get("reasoning_effort_source") != "cli_default"
+            or any(meta.get(key) != value for key, value in guard.as_dict().items())
+            or meta.get("schema_sha256") != request["schema_sha256"]
+            or meta.get("selector_command_sha256") != proof["argv_sha256"]
+            or meta.get("elapsed_ms") != entry["elapsed_ms"]
+            or model_end < model_start
+        ):
+            raise ValueError("Selector window/default effort/absolute guard does not replay")
+        if (
+            (
+                meta.get("returncode") is None
+                and meta.get("error_kind")
+                not in {
+                    "selector_timeout",
+                    "selector_process_unavailable",
+                    "selector_wall_guard_exhausted",
+                    "selector_wall_clock_invalid",
+                }
+            )
+            or (meta.get("returncode") is not None and type(meta.get("returncode")) is not int)
+            or type(meta.get("elapsed_ms")) is not int
+            or meta["elapsed_ms"] < 0
+        ):
+            raise ValueError("Selector process outcome lacks strict recorded types")
+        if (
+            meta["returncode"] is not None
+            and meta["returncode"] != 0
+            and meta.get("error_kind")
+            not in {
+                "selector_process_failed",
+                "selector_wall_clock_invalid",
+            }
+        ):
+            raise ValueError("Nonzero selector returncode lacks canonical error metadata")
+        errors = [error for error in result.get("turn_errors", []) if error.get("turn") == turn]
+        process_failed = meta.get("error_kind") is not None or meta["returncode"] != 0
+        exceeded = model_end >= guard.deadline_at
+        if process_failed:
+            if (
+                turn in accepted_turns
+                or result.get("status") == "submitted"
+                or not result.get("error")
+                or not any(
+                    error.get("kind") == meta.get("error_kind")
+                    and error.get("elapsed_ms") == meta["elapsed_ms"]
+                    for error in errors
+                )
+            ):
+                raise ValueError(
+                    "Failed selector must remain terminal and visible in result errors"
+                )
+            if any(later.get("turn", 0) > turn for later in meter[index + 1 :]):
+                raise ValueError(
+                    "Selector processing cannot continue after a terminal process failure"
+                )
+        elif exceeded:
+            if (
+                turn in accepted_turns
+                or result.get("status") == "submitted"
+                or not result.get("error")
+            ):
+                raise ValueError("Exceeded selector window cannot be accepted or hidden")
+        elif turn not in accepted_turns:
+            if not any(error.get("kind") == "rejected_checkpoint" for error in errors) and not (
+                result.get("status") == "incomplete" and result.get("error")
+            ):
+                raise ValueError(
+                    "Every completed unaccepted selector must retain its rejection/error"
+                )
+
+
+def verify_journal_replay(
+    folder: Path, trace: dict[str, Any], packet: dict[str, Any], log_dir: Path, citation_guard: Any
+) -> dict[str, Any]:
+    """Each accepted checkpoint must reproduce from completed original decisions."""
+    result = read(folder / "result.json")
+    verify_turn_policy_evidence(folder, result)
+    events = read(folder / "journal-events.json")
+    if not isinstance(events, list) or not events:
+        raise ValueError("Journal lacks explicit accepted decision checkpoints")
+    current = AcceptedJournal.initial()
+    prior_turn, prior_count = 0, 0
+    prior_at = datetime.fromisoformat(trace["started_at"])
+    final_at = datetime.fromisoformat(trace["ended_at"])
+    guard = wall_guard_for(result)
+    if (
+        trace.get("ended_at") != result.get("accepted_trace_ended_at")
+        or final_at > guard.deadline_at
+    ):
+        raise ValueError("Final primary trace must end at its actual accepted checkpoint")
+    commit_seen = False
+    for event in events:
+        turn, count = event["turn"], event["source_action_count"]
+        at = datetime.fromisoformat(event["at"])
+        if (
+            type(turn) is not int
+            or turn <= prior_turn
+            or type(count) is not int
+            or not prior_count <= count <= len(trace["actions"])
+            or at.tzinfo is None
+            or not prior_at <= at <= final_at
+            or commit_seen
+        ):
+            raise ValueError("Accepted journal event chronology/step count is invalid")
+        request = read(folder / f"selector-{turn:02d}.request.json")
+        if (
+            event.get("selector_request_sha256") != digest(request)
+            or request.get("source_action_count") != count
+            or type(request.get("source_action_count")) is not int
+            or request.get("processed_through_action_count") != prior_count
+            or type(request.get("processed_through_action_count")) is not int
+            or event.get("processed_through_action_count") != count
+            or type(event.get("processed_through_action_count")) is not int
+            or event.get("selector_mode") != request.get("selector_mode")
+        ):
+            raise ValueError("Accepted source-processing receipt or selector request changed")
+        mode = request.get("selector_mode")
+        if mode not in ("minimal_commit", "data_closure", "research"):
+            raise ValueError("Unknown frozen selector mode")
+        if mode == "minimal_commit":
+            if prior_count != count or not count:
+                raise ValueError("Hash-only closure cannot acknowledge an unprocessed source")
+            if request["prompt"] != closing_prompt(journal_sha256=current.sha256) or request[
+                "schema"
+            ] != closing_schema(journal_sha256=current.sha256):
+                raise ValueError("Hash-only closure must use only the minimal frozen envelope")
+        else:
+            expected_schema = journal_schema_for_turn(
+                journal_sha256=current.sha256,
+                canonical_university=packet["cases"][0]["university"],
+                phase=request["selector_phase"],
+            )
+            if mode == "data_closure":
+                expected_schema["properties"]["kind"]["enum"] = ["record", "submit"]
+            if (
+                request["schema"] != expected_schema
+                or request["prompt"].get("accepted_journal", {}).get("sha256") != current.sha256
+                or request["prompt"].get("processed_through_action_count") != prior_count
+            ):
+                raise ValueError(
+                    "Data selector must bind its exact prior journal and source receipt"
+                )
+            visible_steps = {
+                item["step"] for item in request["prompt"].get("current_source_views", [])
+            }
+            if count > prior_count and count not in visible_steps:
+                raise ValueError(
+                    "A new source needs its recorded view in the data-bearing selector"
+                )
+        if (
+            event.get("selector_phase") != request["selector_phase"]
+            or event.get("reasoning_effort") is not None
+            or event.get("reasoning_effort_source") != "cli_default"
+            or event.get("selector_schema_sha256") != digest(request["schema"])
+            or event.get("selector_command_sha256") != request["command_proof"]["argv_sha256"]
+        ):
+            raise ValueError("Accepted event phase/effort/schema/command proof changed")
+        decision = parse_turn_decision(
+            (folder / f"selector-{turn:02d}.decision.json").read_text(),
+            journal_sha256=current.sha256,
+            canonical_university=packet["cases"][0]["university"],
+            phase=request["selector_phase"],
+        )
+        if mode == "data_closure" and decision.kind == "action":
+            raise ValueError("Data closure cannot dispatch a source action")
+        if (
+            count > prior_count
+            and decision.kind == "submit"
+            and not decision.facts
+            and not decision.question_findings
+        ):
+            raise ValueError("Hash-only submit cannot acknowledge a pending recorded source")
+        meta = read(folder / f"selector-{turn:02d}.meta.json")
+        selector_entries = [
+            entry
+            for entry in result["meter"]
+            if entry.get("turn") == turn
+            and entry["stage"] in {"checkpoint_selector", "closing_selector"}
+        ]
+        if (
+            type(meta.get("returncode")) is not int
+            or meta["returncode"] != 0
+            or meta.get("error_kind") is not None
+            or type(meta.get("elapsed_ms")) is not int
+            or meta["elapsed_ms"] < 0
+            or len(selector_entries) != 1
+            or selector_entries[0]["elapsed_ms"] != meta["elapsed_ms"]
+        ):
+            raise ValueError("Accepted checkpoint selector process did not complete cleanly")
+        model_finished = parse_timestamp(meta.get("model_ended_at"))
+        if model_finished > at or at >= guard.deadline_at:
+            raise ValueError(
+                "An accepted checkpoint must follow a complete model output before900s"
+            )
+        raw_answer = (folder / f"selector-{turn:02d}.answer.json").read_text()
+        selector_answer((folder / f"selector-{turn:02d}.events.jsonl").read_text(), raw_answer)
+        if (
+            parse_turn_decision(
+                raw_answer,
+                journal_sha256=current.sha256,
+                canonical_university=packet["cases"][0]["university"],
+                phase=request["selector_phase"],
+            )
+            != decision
+        ):
+            raise ValueError("Accepted checkpoint differs from its completed tool-free selector")
+        if (
+            digest(decision.model_dump(mode="json")) != event["decision_sha256"]
+            or current.sha256 != event["prior_journal_sha256"]
+        ):
+            raise ValueError("Accepted decision or prior journal hash changed")
+        candidate = current.candidate(
+            decision, trace["actions"][:count], ended_at=at, case_id=trace["case_id"]
+        )
+        snapshot = AcceptedJournal.from_snapshot(read(folder / f"checkpoint-{turn:02d}.json"))
+        if (
+            snapshot.snapshot() != candidate.snapshot()
+            or candidate.sha256 != event["accepted_journal_sha256"]
+        ):
+            raise ValueError("Accepted checkpoint snapshot changed")
+        submission = candidate.as_submission()
+        expanded = expand_submission(
+            submission, trace["actions"][:count], ended_at=at, case_id=trace["case_id"]
+        )
+        proof: list[dict[str, Any]] = []
+        if count:
+            prefix = {
+                **trace,
+                "ended_at": event["at"],
+                "actions": trace["actions"][:count],
+                **expanded,
+            }
+            validate_trace(prefix, packet, logs_dir=log_dir)
+            proof = citation_guard(
+                submission, trace["actions"][:count], logs_dir=log_dir, packet=packet
+            )
+        elif submission.facts or submission.question_findings or decision.kind != "action":
+            raise ValueError("Empty bootstrap must contain only a navigation decision")
+        if digest(proof) != event["citation_proof_sha256"]:
+            raise ValueError("Accepted checkpoint citation proof changed")
+        current = candidate
+        prior_turn, prior_count, prior_at = turn, count, at
+        commit_seen = decision.kind == "submit"
+    verify_navigation_binding(folder, trace, packet, events)
+    verify_navigation_outcomes(folder, trace, log_dir, events, result)
+    final_journal = AcceptedJournal.from_snapshot(read(folder / "accepted-journal.json"))
+    if current.snapshot() != final_journal.snapshot() or current.sha256 != result["journal_sha256"]:
+        raise ValueError("Final journal differs from explicitly accepted checkpoints")
+    if current.as_submission().model_dump(mode="json") != read(folder / "compact-submission.json"):
+        raise ValueError("Mechanical final submission changed the accepted journal")
+    if (
+        result.get("explicit_commit") is not commit_seen
+        or result.get("accepted_turns") != len(events)
+        or (result.get("completion_kind") == "explicit_commit") != commit_seen
+    ):
+        raise ValueError("Explicit commit status or accepted event count changed")
+    all_actions = recorded_actions(folder, result)
+    if (
+        type(result.get("processed_through_action_count")) is not int
+        or result["processed_through_action_count"] != prior_count
+        or type(result.get("accepted_source_action_count")) is not int
+        or result["accepted_source_action_count"] != prior_count
+        or prior_count != len(trace["actions"])
+        or result.get("all_recorded_sources_processed") is not (prior_count == len(all_actions))
+        or result.get("accepted_trace_ended_at") != events[-1]["at"]
+    ):
+        raise ValueError("Primary prefix differs from complete accepted source checkpoints")
+    if not exact_metering(result):
+        raise ValueError("Journal clock ledger is not exact")
+    return {
+        "events": len(events),
+        "final_journal_sha256": current.sha256,
+        "explicit_commit": commit_seen,
+        "events_file_sha256": file_hash(folder / "journal-events.json"),
+        "snapshot_file_sha256": file_hash(folder / "accepted-journal.json"),
+    }
+
+
+def primary_receipt_eligible(result: dict[str, Any]) -> bool:
+    # A model/account failure invalidates the whole cohort. An ordinary
+    # per-case hang guard can still retain its fully replayed source prefix.
+    return (
+        result.get("validated") is True
+        and result.get("source_counters_complete", True) is True
+        and result.get("model_failure") is None
+        and result.get("provider") == PINNED_PROVIDER
+        and result.get("provider_failure") is None
+        and result.get("protocol_version") == "journal-v12"
+        and type(result.get("accepted_turns")) is int
+        and result["accepted_turns"] > 0
+        and type(result.get("accepted_source_action_count")) is int
+        and result["accepted_source_action_count"] > 0
+        and exact_metering(result)
+        and result.get("requested_model") == "gpt-6-astra"
+        and result.get("comparison_mode") == NETWORK_COMPARISON_MODE
+    )
+
+
+def scored_label_match(label: Any, prediction: Prediction) -> bool:
+    """The existing scorer's known-key matching; no looser diagnostic comparison."""
+    from urllib.parse import urlsplit
+
+    from evaluation.research.metrics import quote_supports
+
+    evidence = prediction.evidence
+    if label.status != "known" or prediction.key != label.key or evidence is None:
+        return False
+    typed = json.dumps(prediction.value, sort_keys=True) == json.dumps(label.value, sort_keys=True)
+    provenance = evidence.source_type in {"official", "government"}
+    scope = any(scope_matches(e.scope, evidence.scope) for e in label.evidence)
+    exact = any(
+        canonical_url(evidence.url) == canonical_url(e.url)
+        and quote_supports(evidence.excerpt, e.excerpt)
+        and not evidence.excerpt_truncated
+        for e in label.evidence
+    )
+    sibling = (
+        not evidence.excerpt_truncated
+        and bool(evidence.excerpt.strip())
+        and urlsplit(str(evidence.url)).hostname
+        in {urlsplit(str(e.url)).hostname for e in label.evidence}
+    )
+    supported = provenance and (
+        prediction.supported is True or (prediction.supported is None and (exact or sibling))
+    )
+    return bool(typed and scope and supported)
+
+
+def baseline_diagnosis_observations(
+    observation: Observation,
+    *,
+    capture_sha256: str,
+    capture_path: str,
+    source_url: str,
+    fact_id: str,
+    claim_key: str,
+) -> list[dict[str, Any]]:
+    support = []
+    for index, page in enumerate(observation.page_outcomes):
+        if canonical_url(page.url) != canonical_url(source_url):
+            continue
+        common = {
+            "fact_id": fact_id,
+            "claim_key": claim_key,
+            "source_url": source_url,
+            "artifact_sha256": capture_sha256,
+            "artifact_path": capture_path,
+            "path": f"observations[0].page_outcomes[{index}]",
+            "category": page.category,
+            "detail": page.detail,
+        }
+        if page.category in {"fetch-failed", "unreadable"}:
+            support.append(
+                {
+                    **common,
+                    "kind": "access_failure",
+                    "read_attempted": True,
+                    "failure": page.detail or page.category,
+                }
+            )
+        elif page.category == "classifier-rejected":
+            support.append({**common, "kind": "classifier_rejection", "stage_rejected": True})
+        # no-pattern-match alone establishes no particular missing fact/quote.
+    return support
+
+
+def json_location(value: Any, location: str) -> Any:
+    """Resolve a declared structural JSON path without eval or arbitrary traversal."""
+    if (
+        type(location) is not str
+        or re.fullmatch(r"\$(?:\.[A-Za-z_][A-Za-z0-9_-]*|\[[0-9]+\])*", location) is None
+    ):
+        raise ValueError("Diagnosis needs a strict structural JSON location")
+    for key, index in re.findall(r"\.([A-Za-z_][A-Za-z0-9_-]*)|\[([0-9]+)\]", location):
+        try:
+            value = value[key] if key else value[int(index)]
+        except (KeyError, IndexError, TypeError) as exc:
+            raise ValueError("Diagnosis location is absent from its original artifact") from exc
+    return value
+
+
+def verified_diagnosis_observations(
+    root: Path, seal: dict[str, Any], *, fact_id: str, source_url: str, claim_key: str
+) -> list[dict[str, Any]]:
+    path = root / "miss-cause-observations.json"
+    if not path.exists():
+        return []
+    frozen = {item["path"]: item["sha256"] for item in seal["baseline_artifacts"]}
+    declared = read(path)
+    if not isinstance(declared, list):
+        raise ValueError("Post-seal diagnosis observations must be explicit references")
+    observed = []
+    for item in declared:
+        if not isinstance(item, dict) or set(item) != {
+            "fact_id",
+            "source_url",
+            "claim_key",
+            "artifact_path",
+            "artifact_sha256",
+            "path",
+        }:
+            raise ValueError("Diagnostic annotation cannot invent predicate/support fields")
+        if item["fact_id"] != fact_id:
+            continue
+        source = Path(item["artifact_path"])
+        if (
+            item["source_url"] != source_url
+            or item["claim_key"] != claim_key
+            or frozen.get(str(source)) != item["artifact_sha256"]
+            or not source.is_file()
+            or source.is_symlink()
+            or file_hash(source) != item["artifact_sha256"]
+        ):
+            raise ValueError("Diagnostic support differs from original sealed baseline bytes")
+        value = json_location(read(source), item["path"])
+        if not isinstance(value, dict) or canonical_url(
+            value.get("source_url", value.get("url", ""))
+        ) != canonical_url(source_url):
+            raise ValueError("Diagnostic original observation lacks exact source binding")
+        if value.get("claim_key") not in {None, claim_key} or value.get("fact_id") not in {
+            None,
+            fact_id,
+        }:
+            raise ValueError("Diagnostic original observation contradicts its fact binding")
+        support = {
+            **value,
+            "fact_id": fact_id,
+            "claim_key": claim_key,
+            "source_url": source_url,
+            "artifact_sha256": item["artifact_sha256"],
+            "artifact_path": str(source),
+            "path": item["path"],
+        }
+        if value.get("category") in {"fetch-failed", "unreadable"}:
+            support.update(
+                kind="access_failure",
+                read_attempted=True,
+                failure=value.get("detail") or value["category"],
+            )
+        elif value.get("category") == "classifier-rejected":
+            support.update(kind="classifier_rejection", stage_rejected=True)
+        observed.append(support)
+    return observed
+
+
+def outside_observation_refs(root: Path) -> list[dict[str, Any]]:
+    """Opaque diagnostic receipts are observations, never promoted to facts."""
+    paths = (
+        set((root / "outside-policy").rglob("*")) if (root / "outside-policy").is_dir() else set()
+    )
+    path = root / "outside-policy-observations.json"
+    if path.is_file():
+        paths.add(path)
+    return [
+        {
+            "path": str(path),
+            "sha256": file_hash(path),
+            "status": "unverified_observation",
+            "citation_validated": False,
+            "excluded_from_gate": True,
+        }
+        for path in sorted(paths)
+        if path.is_file() and not path.is_symlink()
+    ]
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--dataset", type=Path, required=True)
+    parser.add_argument("--orchestrator", type=Path, required=True)
+    args = parser.parse_args()
+    root = args.root
+    if args.dataset.resolve() != REVIEWED_62_DATASET.resolve():
+        raise ValueError("The comparison requires the explicit fixed reviewed62 dataset")
+    transport_stop = root / "transport-batch-stop.json"
+    if transport_stop.exists() or transport_stop.is_symlink():
+        raise ValueError("Original transport batch stop requires a closed unscored cohort")
+    for case_id in COHORT:
+        provider_stop = root / "baseline" / case_id / "baseline-provider-stop.json"
+        if provider_stop.exists() or provider_stop.is_symlink():
+            raise ValueError("Original baseline provider stop requires a closed unscored cohort")
+    final = read(root / "experts-results.json")
+    sealed_results = verified_cohort(root, final, COHORT)
+    frozen_provenance = validate_frozen_provenance(root, args.orchestrator)
+    if (root / "model-batch-stop.json").exists():
+        raise ValueError("Original model batch stop requires a closed unscored cohort")
+    for result in sealed_results:
+        folder = root / "experts" / result["case_id"]
+        if result.get("model_failure") is not None:
+            raise ValueError("Original model refusal requires a closed unscored cohort")
+        raw_paths = set(folder.glob("selector-*.events.jsonl")) | {
+            meta.with_name(meta.name.replace(".meta.json", ".events.jsonl"))
+            for meta in folder.glob("selector-*.meta.json")
+        }
+        for raw in sorted(raw_paths):
+            meta = raw.with_name(raw.name.replace(".events.jsonl", ".meta.json"))
+            error_kind = read(meta).get("error_kind") if meta.is_file() else None
+            if model_batch_failure(raw.read_text(), error_kind=error_kind):
+                raise ValueError("Original failed model stream requires a closed unscored cohort")
+    citation_guard = runpy.run_path(str(args.orchestrator))["validate_all_fact_citations"]
+    submissions, traces, log_dirs = [], {}, {}
+    for case_id in COHORT:
+        folder = root / "experts" / case_id
+        result, packet = (
+            read(folder / "result.json"),
+            read(root / "baseline" / case_id / "public-packet.json"),
+        )
+        if not result.get("validated"):
+            raise ValueError(f"Unvalidated submission: {case_id}")
+        trace = read(folder / "trace.json")
+        latest = controller_directories(folder)[-1] / "artifact/summary.json"
+        log_dir = latest.parent / "logs"
+        validate_trace(trace, packet, logs_dir=log_dir)
+        if digest(trace) != result["trace_sha256"]:
+            raise ValueError("A submitted trace changed before unsealing")
+        compact_path = folder / "compact-submission.json"
+        if trace["proposals"] and not compact_path.is_file():
+            raise ValueError("Proposals lack their original compact coordinates")
+        if compact_path.is_file():
+            compact = parse_compact_decision(compact_path.read_text())
+            expanded = expand_submission(
+                compact,
+                trace["actions"],
+                ended_at=datetime.fromisoformat(trace["ended_at"]),
+                case_id=case_id,
+            )
+            if any(expanded[key] != trace[key] for key in ("proposals", "question_findings")):
+                raise ValueError("Final trace differs from its original compact submission")
+            proof = citation_guard(compact, trace["actions"], logs_dir=log_dir, packet=packet)
+            if digest(proof) != result.get("citation_proof_sha256") or proof != read(
+                folder / "compact-citation-proof.json"
+            ):
+                raise ValueError("Final compact citation proof changed")
+        journal_replay = verify_journal_replay(folder, trace, packet, log_dir, citation_guard)
+        traces[case_id], log_dirs[case_id] = trace, log_dir
+        submissions.append(
+            {
+                "case_id": case_id,
+                "trace_sha256": digest(trace),
+                "trace_file_sha256": file_hash(folder / "trace.json"),
+                "result_sha256": file_hash(folder / "result.json"),
+                "packet_sha256": digest(packet),
+                "compact_submission_sha256": file_hash(compact_path)
+                if compact_path.is_file()
+                else None,
+                "journal_replay": journal_replay,
+                "protocol_artifacts": protocol_hashes(folder),
+                "baseline_result_sha256": file_hash(root / "baseline" / case_id / "result.json"),
+                "baseline_capture_sha256": file_hash(
+                    Path(read(root / "baseline" / case_id / "result.json")["capture"])
+                ),
+                "baseline_dispatch_sha256": file_hash(
+                    root / "baseline" / case_id / "dispatch.json"
+                ),
+                "baseline_run_sha256": file_hash(root / "baseline" / case_id / "run.json"),
+                "raw_logs": [
+                    {"path": a["raw_log_path"], "sha256": a["raw_log_sha256"]}
+                    for a in trace["actions"]
+                ],
+            }
+        )
+    if not all(primary_receipt_eligible(r) for r in sealed_results):
+        raise ValueError("Every expert needs a validated complete accepted primary receipt")
+    baseline_artifacts = [
+        {"path": str(path), "sha256": file_hash(path)}
+        for case_id in COHORT
+        for path in sorted((root / "baseline" / case_id / "artifact").rglob("*"))
+        if path.is_file() and not path.is_symlink()
+    ]
+    baseline_artifacts.extend(
+        {
+            "path": str(Path(read(root / "baseline" / case_id / "result.json")["capture"])),
+            "sha256": file_hash(Path(read(root / "baseline" / case_id / "result.json")["capture"])),
+        }
+        for case_id in COHORT
+        if str(Path(read(root / "baseline" / case_id / "result.json")["capture"]))
+        not in {item["path"] for item in baseline_artifacts}
+    )
+    seal = {
+        "sealed_at": datetime.now(UTC).isoformat(),
+        "count": len(submissions),
+        "all_traces_validated_with_raw_logs": True,
+        "submissions": submissions,
+        "baseline_artifacts": baseline_artifacts,
+        "orchestrator_sha256": file_hash(args.orchestrator),
+        "legacy_transport_sha256": file_hash(Path("/tmp/unimatch-expert500-pilot-v1-frozen.py")),
+        "trial_file_sha256": file_hash(root / "trial.json"),
+        "trial_at_baseline_start_file_sha256": file_hash(root / "trial-at-baseline-start.json"),
+        "cohort_results_sha256": file_hash(root / "experts-results.json"),
+        "all_compact_fact_locations_validated": True,
+        "all_accepted_journal_deltas_replayed": True,
+        "scorer_file_sha256": file_hash(Path(__file__)),
+        "frozen_provenance": frozen_provenance,
+    }
+    seal_path = root / "submission-seal.json"
+    seal = immutable_seal(seal_path, seal)
+    # Private identity bytes are pinned before calls; content is loaded only now,
+    # after every result/raw log/accepted checkpoint has been immutably sealed.
+    binding = frozen_provenance["binding_registry"]
+    binding_bytes = Path(binding["path"]).read_bytes()
+    if hashlib.sha256(binding_bytes).hexdigest() != binding["sha256"]:
+        raise ValueError("Private identity registry drifted after immutable seal")
+    identities = IdentityMap.model_validate_json(binding_bytes)
+    baseline_parts = [
+        Capture.model_validate_json(
+            Path(read(root / "baseline" / c / "result.json")["capture"]).read_text()
+        )
+        for c in COHORT
+    ]
+    frozen_shas = {part.pipeline_sha for part in baseline_parts}
+    if len(frozen_shas) != 1:
+        raise ValueError("Baseline harness source drift")
+    baseline = Capture(
+        pipeline_sha=baseline_parts[0].pipeline_sha,
+        captured_at=baseline_parts[0].captured_at,
+        mode="live",
+        config={
+            "independent_ten_case_runs": True,
+            "strict_expert_budget": True,
+            "search_provider": PINNED_PROVIDER,
+            "max_pages": 60,
+            "seconds_per_case": 120,
+            "max_search_queries": 6,
+            "run_ids": {c: read(root / "baseline" / c / "result.json")["run_id"] for c in COHORT},
+        },
+        observations=[obs for part in baseline_parts for obs in part.observations],
+    )
+    save(root / "baseline-capture.json", baseline.model_dump(mode="json"))
+    normalization, expert_observations, excluded = [], [], []
+    by_proposal: dict[tuple[str, int], list[Any]] = {}
+    for case_id, trace in traces.items():
+        predictions = []
+        for index, proposal in enumerate(trace["proposals"]):
+            by_proposal[case_id, index] = []
+            for key, value in projected(proposal, identities):
+                try:
+                    evidence = Evidence(
+                        url=proposal["source_url"],
+                        excerpt=proposal["excerpt"],
+                        scope=Scope.model_validate(proposal["scope"]),
+                        accessed_on=proposal["accessed_on"],
+                        source_type="official",
+                    )
+                    prediction = Prediction(key=key, value=value, evidence=evidence)
+                    predictions.append(prediction)
+                    by_proposal[case_id, index].append(prediction)
+                    normalization.append(
+                        {
+                            "case_id": case_id,
+                            "proposal_index": index,
+                            "input_key": proposal["claim_key"],
+                            "input_value": proposal["value"],
+                            "key": key,
+                            "value": value,
+                        }
+                    )
+                except ValueError as exc:
+                    excluded.append(
+                        {"case_id": case_id, "proposal_index": index, "reason": str(exc)[:500]}
+                    )
+        expert_observations.append(
+            Observation(
+                case_id=case_id,
+                predictions=predictions,
+                programme_urls=list(
+                    dict.fromkeys(
+                        p["source_url"]
+                        for f in trace["question_findings"]
+                        if f["question"] == "Q0" and f["status"] == "found"
+                        for p in (trace["proposals"][i] for i in f["proposal_indices"])
+                    )
+                ),
+            )
+        )
+    expert_capture = Capture(
+        pipeline_sha="blind-experts@" + next(iter(frozen_shas)),
+        captured_at=seal["sealed_at"],
+        mode="live",
+        config={
+            "unreviewed_proposals": True,
+            "comparison_mode": NETWORK_COMPARISON_MODE,
+            "budget_model": BUDGET_MODEL,
+            "search_provider": PINNED_PROVIDER,
+            "algorithm_provider": PINNED_PROVIDER,
+            "expert_provider": PINNED_PROVIDER,
+            "expert_budget": expert_budget(),
+            "source_harness_sha": next(iter(frozen_shas)),
+            "lossless_projection": True,
+            "excluded": excluded,
+        },
+        observations=expert_observations,
+    )
+    save(root / "expert-capture.json", expert_capture.model_dump(mode="json"))
+    save(root / "expert-value-projections.json", normalization)
+    # The only reviewed-label read follows the immutable seal and deterministic
+    # projection; no answer label participates in representation or identity work.
+    dataset_bytes = args.dataset.read_bytes()
+    dataset_sha256 = hashlib.sha256(dataset_bytes).hexdigest()
+    dataset = Dataset.model_validate_json(dataset_bytes)
+    baseline_score, expert_score = score(dataset, baseline), score(dataset, expert_capture)
+    save(root / "baseline-score.json", baseline_score)
+    save(root / "expert-score.json", expert_score)
+    rows, all_diagnoses, expected_ids = [], [], []
+    by_baseline = {o.case_id: o for o in baseline.observations}
+    expert_by_case = {o.case_id: o for o in expert_capture.observations}
+    for result in sealed_results:
+        case_id = result["case_id"]
+        budget = read(root / "baseline" / case_id / "result.json")["budget"]
+        observation = by_baseline[case_id]
+        local = []
+        if dataset is not None:
+            case = next(c for c in dataset.cases if c.id == case_id)
+            for label in case.labels:
+                if label.status != "known":
+                    continue
+                wanted = [
+                    p for p in expert_by_case[case_id].predictions if scored_label_match(label, p)
+                ]
+                if not wanted or any(scored_label_match(label, p) for p in observation.predictions):
+                    continue
+                identity = case_id + ":" + label.key
+                expected_ids.append(identity)
+                assert wanted[0].evidence is not None
+                source = str(wanted[0].evidence.url)
+                capture_path = Path(read(root / "baseline" / case_id / "result.json")["capture"])
+                observations = baseline_diagnosis_observations(
+                    observation,
+                    capture_sha256=file_hash(capture_path),
+                    capture_path=str(capture_path),
+                    source_url=source,
+                    fact_id=identity,
+                    claim_key=label.key,
+                )
+                observations.extend(
+                    verified_diagnosis_observations(
+                        root, seal, fact_id=identity, source_url=source, claim_key=label.key
+                    )
+                )
+                diagnosis = diagnose_fact(
+                    fact_id=identity,
+                    source_url=source,
+                    claim_key=label.key,
+                    observations=observations,
+                )
+                local.append(diagnosis)
+                all_diagnoses.append(diagnosis)
+        rows.append(
+            {
+                "case_id": case_id,
+                "expert_status": result["status"],
+                "expert_error_type": result.get("error"),
+                "completion_kind": result.get("completion_kind"),
+                "accepted_turns": result.get("accepted_turns"),
+                "expert_source_ms": result["source_ms"],
+                "expert_wall_elapsed_ms": result["wall_elapsed_ms"],
+                "expert_reads": verify_source_ledger(
+                    root / "experts" / case_id,
+                    read(root / "baseline" / case_id / "public-packet.json"),
+                    result,
+                )["counters"]["fetcher_calls"],
+                "expert_queries": verify_source_ledger(
+                    root / "experts" / case_id,
+                    read(root / "baseline" / case_id / "public-packet.json"),
+                    result,
+                )["counters"]["search_queries"],
+                "miss_diagnosis": local,
+                "baseline_budget": budget,
+                "baseline_score": next(
+                    r for r in baseline_score["cases"] if r["case_id"] == case_id
+                ),
+                "expert_score": next(r for r in expert_score["cases"] if r["case_id"] == case_id),
+            }
+        )
+    diagnoses_complete = validate_diagnoses(expected_ids, all_diagnoses)
+    eligible = all(primary_receipt_eligible(r) for r in sealed_results) and all(
+        baseline_within_budget(row["baseline_budget"])
+        and by_baseline[row["case_id"]].error != "CAPTURE_IN_PROGRESS"
+        for row in rows
+    )
+    save(root / "expert-only-miss-diagnoses.json", all_diagnoses)
+    save(
+        root / "comparison.json",
+        {
+            "seal_sha256": digest(seal),
+            "dataset_file_sha256": dataset_sha256,
+            "comparison_mode": NETWORK_COMPARISON_MODE,
+            "budget_model": BUDGET_MODEL,
+            "search_provider": PINNED_PROVIDER,
+            "algorithm_provider": PINNED_PROVIDER,
+            "expert_provider": PINNED_PROVIDER,
+            "expert_budget": expert_budget(),
+            "baseline_metrics": baseline_score["metrics"],
+            "expert_metrics": expert_score["metrics"],
+            "cases": rows,
+            "outside_policy_included": False,
+            "outside_policy_facts": [],
+            "outside_policy_observations": outside_observation_refs(root),
+            "outside_policy_fact_collection_status": "no_separately_validated_facts",
+            "diagnostic_observations_file_sha256": file_hash(root / "miss-cause-observations.json")
+            if (root / "miss-cause-observations.json").is_file()
+            else None,
+            "protocol_eligible": eligible,
+            "diagnoses_complete": diagnoses_complete,
+            "report_status": "complete" if diagnoses_complete else "diagnostic_incomplete",
+            "expert_metric_gate": network_gate(
+                expert_score["metrics"], eligible=eligible, diagnoses_complete=True
+            ),
+            "protocol_gate": network_gate(
+                expert_score["metrics"], eligible=eligible, diagnoses_complete=diagnoses_complete
+            ),
+        },
+    )
+    print(
+        json.dumps(
+            {
+                "baseline": baseline_score["metrics"]["claim_recall"],
+                "expert": expert_score["metrics"]["claim_recall"],
+                "expert_precision": expert_score["metrics"]["claim_precision"],
+                "sealed_submissions": len(submissions),
+            },
+            ensure_ascii=False,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

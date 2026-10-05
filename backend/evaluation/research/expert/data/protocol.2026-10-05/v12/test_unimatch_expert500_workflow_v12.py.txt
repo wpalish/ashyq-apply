@@ -1,0 +1,699 @@
+"""Mock transport/clock checks of the actual V12 workflow function only."""
+
+from __future__ import annotations
+
+import ast
+import asyncio
+import hashlib
+import json
+import math
+import threading
+from dataclasses import dataclass, field
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from types import SimpleNamespace
+from typing import Any
+
+import pytest
+
+from app.adapters.fetching import FetchResult
+from app.adapters.search.base import SearchUnavailable
+from app.domain.enums import FetchOutcome
+from evaluation.research.expert.controller import execute
+from evaluation.research.expert.network_budget import (
+    BUDGET_MODEL,
+    NETWORK_COMPARISON_MODE,
+    WALL_GUARD_MS,
+    WallGuard,
+)
+
+PILOT = Path("/tmp/unimatch-expert500-journal-pilot-v12.py")
+START = datetime(2026, 10, 4, tzinfo=UTC)
+HEAD = "a" * 40
+RUN = 123
+
+
+@dataclass
+class Clock:
+    seconds: float = 100.0
+
+    def now(self, tz: Any = None) -> datetime:
+        assert tz is UTC
+        return START + timedelta(seconds=self.seconds)
+
+    def advance(self, seconds: float) -> None:
+        self.seconds += seconds
+
+
+def save(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, indent=2) + "\n")
+
+
+@dataclass
+class Harness:
+    root: Path
+    clock: Clock = field(default_factory=Clock)
+    stop: threading.Event = field(default_factory=threading.Event)
+    calls: list[dict[str, Any]] = field(default_factory=list)
+    dispatch_expiry: bool = False
+    ambiguous_dispatch: bool = False
+    known_expiry: bool = False
+    unidentified: bool = False
+    artifact_kind: str = "valid"
+    source_kind: str = "success"
+    provider_status: int = 503
+    cancelled: bool = False
+    cancel_error: bool = False
+    identity_change: bool = False
+    duplicate_tag: bool = False
+    invalid_identity: bool = False
+    audit_overrun: bool = False
+    partial_download: bool = False
+    receipt_expiry: bool = False
+    submitted: dict[str, Any] = field(default_factory=dict)
+    generated: dict[str, Any] = field(default_factory=dict)
+
+    @property
+    def guard(self) -> WallGuard:
+        return WallGuard(START, START + timedelta(milliseconds=WALL_GUARD_MS))
+
+    @property
+    def destination(self) -> Path:
+        return self.root / "controller-01"
+
+    def plan(self) -> dict[str, Any]:
+        tool = (
+            "search_provider" if self.source_kind in {"http_429", "provider_error"} else "fetcher"
+        )
+        action = (
+            {
+                "tool": tool,
+                "query": "site:u.edu public admissions",
+                "domains": ["u.edu"],
+            }
+            if tool == "search_provider"
+            else {"tool": tool, "url": "https://u.edu/admissions"}
+        )
+        return {
+            "case_id": "u",
+            "provider": "exa",
+            "log_prefix": "u",
+            "strict_budget": True,
+            "max_calls": 60,
+            "max_ms": WALL_GUARD_MS,
+            "max_search_queries": 6,
+            "budget_origin": NETWORK_COMPARISON_MODE,
+            "budget_model": BUDGET_MODEL,
+            **self.guard.as_dict(),
+            "official_domains": ["u.edu"],
+            "actions": [action],
+        }
+
+    def write_artifact(self, folder: Path) -> None:
+        folder.mkdir(parents=True, exist_ok=True)
+        plan = json.loads(self.submitted["plan"])
+        save(folder / "plan.json", plan)
+        source_clock = Clock(899.0 if self.source_kind == "timeout" else 10.0)
+        source_ms = [0.0]
+
+        async def get(url: str) -> FetchResult:
+            if self.source_kind == "timeout":
+                source_clock.advance(1.02)
+                source_ms[0] += 0.02
+                raise TimeoutError
+            if self.source_kind in {"fetcher_402", "fetcher_403"}:
+                return FetchResult(
+                    url=url,
+                    final_url=url,
+                    outcome=FetchOutcome.HTTP_ERROR,
+                    status_code=402 if self.source_kind == "fetcher_402" else 403,
+                    error="Synthetic university refusal",
+                )
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.OK,
+                final_url=url,
+                status_code=200,
+                content_type="text/html",
+                content=b"<p>Public synthetic source information.</p>",
+            )
+
+        async def search(**kwargs: Any) -> Any:
+            assert self.source_kind in {"http_429", "provider_error"}
+            raise SearchUnavailable(
+                "Synthetic provider failure",
+                http_status=429 if self.source_kind == "http_429" else self.provider_status,
+            )
+
+        summary = asyncio.run(
+            execute(
+                plan,
+                folder / "logs",
+                get=get,
+                search=search,
+                provider_name="exa",
+                now=lambda: source_clock.now(UTC),
+                monotonic=lambda: source_ms[0],
+            )
+        )
+        save(folder / "summary.json", summary)
+        self.generated = summary
+        name = summary["actions"][0]["raw_log_path"]
+        if self.artifact_kind == "missing":
+            (folder / "summary.json").unlink()
+        elif self.artifact_kind == "tampered":
+            (folder / "logs" / name).write_text("{}")
+        elif self.artifact_kind == "extra":
+            save(folder / "logs" / "u-002.json", {"executed": True})
+        elif self.artifact_kind == "wrong_plan":
+            plan["actions"][0]["url"] = "https://u.edu/other"
+            save(folder / "plan.json", plan)
+        elif self.artifact_kind == "symlink":
+            raw = folder / "logs" / name
+            elsewhere = folder / "outside.json"
+            elsewhere.write_bytes(raw.read_bytes())
+            raw.unlink()
+            raw.symlink_to(elsewhere)
+        elif self.artifact_kind in {"mixed_provider", "provider_error_as_success"}:
+            raw_path = folder / "logs" / name
+            raw_record = json.loads(raw_path.read_text())
+            if self.artifact_kind == "mixed_provider":
+                raw_record["provider"] = "exa_mcp"
+                summary["provider"] = "exa_mcp"
+            else:
+                raw_record["outcome_status"] = "success"
+                summary["actions"][0]["outcome_status"] = "success"
+                summary["actions"][0]["outcome"] = "ok"
+            save(raw_path, raw_record)
+            sha = hashlib.sha256(raw_path.read_bytes()).hexdigest()
+            summary["raw_logs"][name] = sha
+            summary["actions"][0]["raw_log_sha256"] = sha
+            save(folder / "summary.json", summary)
+
+    def command(
+        self,
+        argv: list[str],
+        *,
+        cwd: Path,
+        stdin: str | None = None,
+        timeout: float = 60,
+    ) -> str:
+        assert cwd == self.root
+        assert 0 < timeout <= 60
+        self.calls.append({"argv": argv, "timeout": timeout, "at": self.clock.seconds})
+        if argv[:3] == ["gh", "workflow", "run"]:
+            assert len([call for call in self.calls if call["argv"][1] == "workflow"]) == 1
+            self.submitted = json.loads(stdin or "{}")
+            assert self.submitted["search_provider"] == "exa"
+            assert (self.destination / "dispatch.json").is_file()
+            if self.dispatch_expiry or self.ambiguous_dispatch:
+                self.clock.seconds = 900.0
+            if self.ambiguous_dispatch:
+                raise TimeoutError("Ambiguous source dispatch")
+            return ""
+        assert argv[:2] == ["gh", "run"] and argv[2] in {
+            "list",
+            "view",
+            "cancel",
+            "download",
+        }
+        if self.audit_overrun:
+            self.clock.advance(60.001)
+            return "[]"
+        if argv[2] == "list":
+            if self.unidentified:
+                return "[]"
+            match = {
+                "databaseId": True if self.invalid_identity else RUN,
+                "displayTitle": "Synthetic capture " + self.submitted["run_tag"],
+                "headSha": HEAD,
+                "status": "in_progress",
+                "conclusion": None,
+            }
+            # A different existing run cannot be selected by list ordering.
+            result = [{**match, "databaseId": 999, "displayTitle": "other-tag"}, match]
+            if self.duplicate_tag:
+                result.append({**match, "databaseId": 456})
+            return json.dumps(result)
+        assert argv[3] == str(RUN)
+        if argv[2] == "view":
+            if self.known_expiry and self.clock.seconds < 900:
+                self.clock.seconds = 900.0
+                raise TimeoutError("Known source run expired")
+            pending = self.clock.seconds >= 900 and not self.cancelled
+            return json.dumps(
+                {
+                    "headSha": "b" * 40 if self.identity_change else HEAD,
+                    "status": "in_progress" if pending else "completed",
+                    "conclusion": "cancelled" if self.cancelled else "success",
+                    "url": "https://example.invalid/run/123",
+                }
+            )
+        if argv[2] == "cancel":
+            self.cancelled = True
+            if self.cancel_error:
+                raise RuntimeError("Cancel raced with completion")
+            return ""
+        assert argv[argv.index("--name") + 1] == f"expert-recovery-{RUN}"
+        folder = Path(argv[argv.index("--dir") + 1])
+        if self.partial_download and folder.name == "artifact":
+            folder.mkdir()
+            save(folder / "plan.json", json.loads(self.submitted["plan"]))
+            self.clock.seconds = 900.0
+            raise TimeoutError("Interrupted existing artifact download")
+        self.write_artifact(folder)
+        return ""
+
+    def workflow(self, **kwargs: Any) -> tuple[int, str]:
+        source = PILOT.read_text()
+        parsed = ast.parse(source)
+        function = next(
+            node
+            for node in parsed.body
+            if isinstance(node, ast.FunctionDef) and node.name == "workflow"
+        )
+        classes = [
+            node
+            for node in parsed.body
+            if isinstance(node, ast.ClassDef)
+            and node.name in {"CaseGuardEnded", "_ArtifactUnavailable", "_TransportIntegrityError"}
+        ]
+        assert len(classes) == 3
+        module = ast.Module(body=[*classes, function], type_ignores=[])
+
+        def saved(path: Path, value: Any) -> None:
+            save(path, value)
+            if self.receipt_expiry and path.name == "dispatch.json":
+                self.clock.seconds = 900.0
+
+        namespace: dict[str, Any] = {
+            "Path": Path,
+            "Any": Any,
+            "WallGuard": WallGuard,
+            "STOP": self.stop,
+            "legacy": {
+                "command": self.command,
+                "workflow": lambda *args: (777, HEAD),
+            },
+            "save": saved,
+            "emit": lambda **event: None,
+            "datetime": SimpleNamespace(now=self.clock.now),
+            "UTC": UTC,
+            "time": SimpleNamespace(monotonic=lambda: self.clock.seconds, sleep=self.clock.advance),
+            "json": json,
+            "math": math,
+            "hashlib": hashlib,
+        }
+        exec(compile(module, str(PILOT), "exec"), namespace)
+        return namespace["workflow"](
+            self.root,
+            "frozen-ref",
+            "u",
+            kwargs.pop("inputs", {"mode": "expert_actions", "plan": json.dumps(self.plan())}),
+            self.destination,
+            wall_guard=kwargs.pop("wall_guard", self.guard),
+            **kwargs,
+        )
+
+    def receipt(self) -> dict[str, Any]:
+        return json.loads((self.destination / "transport-audit.json").read_text())
+
+    def assert_single_dispatch(self) -> None:
+        assert sum(call["argv"][:3] == ["gh", "workflow", "run"] for call in self.calls) == 1
+        postguard = [call for call in self.calls if call["at"] >= 900]
+        assert all(
+            call["argv"][:2] == ["gh", "run"]
+            and call["argv"][2] in {"list", "view", "cancel", "download"}
+            for call in postguard
+        )
+
+
+def test_normal_workflow_verifies_original_artifact_without_audit_allowance(
+    tmp_path: Path,
+) -> None:
+    harness = Harness(tmp_path)
+    assert harness.workflow() == (RUN, HEAD)
+    receipt = harness.receipt()
+    assert receipt["status"] == "completed"
+    assert receipt["audit_only"] is False and receipt["audit_window_ms"] == 0
+    assert receipt["artifact_verified"] is True and receipt["dispatch_count"] == 1
+    assert receipt["provider"] == harness.generated["provider"] == "exa"
+    assert receipt["source_counters"] == {
+        "fetcher_calls": 1,
+        "search_queries": 0,
+        "elapsed_ms": 0,
+    }
+    assert (
+        receipt["summary_sha256"]
+        == hashlib.sha256((harness.destination / "artifact/summary.json").read_bytes()).hexdigest()
+    )
+    assert not harness.stop.is_set()
+    harness.assert_single_dispatch()
+
+
+@pytest.mark.parametrize("ambiguous", [False, True])
+def test_timeout_before_identification_recovers_same_tag_without_redispatch(
+    tmp_path: Path, ambiguous: bool
+) -> None:
+    harness = Harness(tmp_path, dispatch_expiry=True, ambiguous_dispatch=ambiguous)
+    assert harness.workflow() == (RUN, HEAD)
+    receipt = harness.receipt()
+    assert receipt["status"] == "recovered" and receipt["guard_exhausted"] is True
+    assert receipt["audit_only"] is True and receipt["audit_window_ms"] == 60000
+    assert receipt["cancel_attempted"] is True and receipt["cancel_outcome"] == "requested"
+    assert receipt["conclusion"] == "cancelled" and receipt["artifact_verified"] is True
+    assert 0 <= receipt["audit_elapsed_ms"] <= 60000
+    assert receipt["run_tag"] == harness.submitted["run_tag"]
+    assert not harness.stop.is_set()
+    harness.assert_single_dispatch()
+
+
+@pytest.mark.parametrize("source_kind", ["success", "timeout", "http_429"])
+def test_known_expiry_cancels_downloads_and_preserves_original_source_stop(
+    tmp_path: Path, source_kind: str
+) -> None:
+    harness = Harness(tmp_path, known_expiry=True, source_kind=source_kind)
+    assert harness.workflow() == (RUN, HEAD)
+    receipt = harness.receipt()
+    expected = {
+        "success": None,
+        "timeout": "wall_guard_exhausted",
+        "http_429": "http_429",
+    }
+    assert receipt["source_stop_reason"] == expected[source_kind]
+    assert receipt["source_counters"] == {
+        "fetcher_calls": int(source_kind != "http_429"),
+        "search_queries": int(source_kind == "http_429"),
+        "elapsed_ms": 20 if source_kind == "timeout" else 0,
+    }
+    assert receipt["raw_logs"] == harness.generated["raw_logs"]
+    assert harness.stop.is_set() is (source_kind == "http_429")
+    harness.assert_single_dispatch()
+
+
+def test_known_selfguard_missing_artifact_ends_only_case_with_unknown_counters(
+    tmp_path: Path,
+) -> None:
+    harness = Harness(tmp_path, known_expiry=True, artifact_kind="missing")
+    with pytest.raises(TimeoutError, match="wall_guard_exhausted") as caught:
+        harness.workflow()
+    receipt = harness.receipt()
+    assert type(caught.value).__name__ == "CaseGuardEnded"
+    assert receipt["status"] == "case_guard_ended" and receipt["stop_scope"] == "case"
+    assert receipt["self_guard_exhausted"] is True
+    assert receipt["artifact_verified"] is False
+    assert receipt["source_counters_known"] is False and receipt["source_counters"] is None
+    assert not harness.stop.is_set()
+    harness.assert_single_dispatch()
+
+
+@pytest.mark.parametrize("kind", ["tampered", "extra", "wrong_plan", "symlink"])
+def test_inconsistent_original_artifact_still_stops_batch(tmp_path: Path, kind: str) -> None:
+    harness = Harness(tmp_path, known_expiry=True, artifact_kind=kind)
+    with pytest.raises(RuntimeError, match="batch stopped"):
+        harness.workflow()
+    receipt = harness.receipt()
+    assert harness.stop.is_set() and receipt["status"] == "incomplete"
+    assert receipt["artifact_verified"] is False
+    harness.assert_single_dispatch()
+
+
+def test_unidentifiable_dispatch_exhausts_one_bounded_audit_and_stops_batch(
+    tmp_path: Path,
+) -> None:
+    harness = Harness(tmp_path, dispatch_expiry=True, unidentified=True)
+    with pytest.raises(RuntimeError, match="batch stopped"):
+        harness.workflow()
+    receipt = harness.receipt()
+    assert harness.clock.seconds == 960
+    assert receipt["audit_elapsed_ms"] == 60000 and receipt["run_id"] is None
+    assert harness.stop.is_set()
+    assert all(call["at"] < 960 for call in harness.calls)
+    assert all(call["timeout"] <= 960 - call["at"] for call in harness.calls[1:])
+    harness.assert_single_dispatch()
+
+
+def test_clean_precall_expiry_leaves_no_controller_directory(tmp_path: Path) -> None:
+    harness = Harness(tmp_path, clock=Clock(900))
+    with pytest.raises(TimeoutError, match="wall_guard_exhausted"):
+        harness.workflow()
+    assert harness.calls == [] and not harness.destination.exists()
+    assert not harness.stop.is_set()
+
+
+def test_expiry_after_dispatch_receipt_before_command_is_fail_closed(
+    tmp_path: Path,
+) -> None:
+    harness = Harness(tmp_path, receipt_expiry=True)
+    with pytest.raises(RuntimeError, match="no dispatch outcome"):
+        harness.workflow()
+    assert harness.calls == [] and harness.stop.is_set()
+    receipt = harness.receipt()
+    assert receipt["status"] == "incomplete" and receipt["dispatch_attempted"] is False
+
+
+def test_duplicate_tag_or_changed_source_identity_cannot_be_recovered(
+    tmp_path: Path,
+) -> None:
+    for name in ("duplicate_tag", "identity_change", "invalid_identity"):
+        harness = Harness(tmp_path / name, dispatch_expiry=True)
+        setattr(harness, name, True)
+        with pytest.raises(RuntimeError, match="batch stopped"):
+            harness.workflow()
+        assert harness.stop.is_set()
+        assert not any(call["argv"][2] == "download" for call in harness.calls)
+        harness.assert_single_dispatch()
+
+
+def test_cancel_race_can_recover_completed_original_artifact_without_cancel_retry(
+    tmp_path: Path,
+) -> None:
+    harness = Harness(tmp_path, known_expiry=True, cancel_error=True)
+    assert harness.workflow() == (RUN, HEAD)
+    assert harness.receipt()["cancel_outcome"] == "RuntimeError"
+    assert sum(call["argv"][2] == "cancel" for call in harness.calls) == 1
+    harness.assert_single_dispatch()
+
+
+def test_partial_download_preserved_and_fresh_download_is_same_original_run(
+    tmp_path: Path,
+) -> None:
+    harness = Harness(tmp_path, partial_download=True)
+    assert harness.workflow() == (RUN, HEAD)
+    assert (harness.destination / "artifact-incomplete/plan.json").is_file()
+    assert (harness.destination / "artifact/summary.json").is_file()
+    assert harness.receipt()["status"] == "recovered"
+    downloads = [call for call in harness.calls if call["argv"][2] == "download"]
+    assert len(downloads) == 2 and all(call["argv"][3] == str(RUN) for call in downloads)
+    harness.assert_single_dispatch()
+
+
+def test_actual_audit_overrun_is_recorded_unclamped_and_stops_batch(
+    tmp_path: Path,
+) -> None:
+    harness = Harness(tmp_path, dispatch_expiry=True, audit_overrun=True)
+    with pytest.raises(RuntimeError, match="batch stopped"):
+        harness.workflow()
+    assert harness.stop.is_set() and harness.receipt()["audit_elapsed_ms"] > 60000
+    assert len(harness.calls) == 2
+    harness.assert_single_dispatch()
+
+
+def test_existing_controller_destination_cannot_trigger_another_dispatch(
+    tmp_path: Path,
+) -> None:
+    harness = Harness(tmp_path)
+    harness.destination.mkdir()
+    save(harness.destination / "dispatch.json", {"existing": "immutable"})
+    with pytest.raises(RuntimeError, match="cannot reuse"):
+        harness.workflow()
+    assert harness.calls == [] and harness.stop.is_set()
+    assert json.loads((harness.destination / "dispatch.json").read_text()) == {
+        "existing": "immutable"
+    }
+
+
+def test_baseline_branch_stays_legacy_and_needs_no_expert_guard(tmp_path: Path) -> None:
+    harness = Harness(tmp_path)
+    assert harness.workflow(inputs={"mode": "expert_baseline"}, wall_guard=None) == (
+        777,
+        HEAD,
+    )
+    assert harness.calls == []
+    assert harness.destination.is_dir() and not any(harness.destination.iterdir())
+
+
+@pytest.mark.parametrize("provider", ["exa_mcp", "auto", "none", "serper"])
+def test_v12_rejects_foreign_configured_provider_before_dispatch(
+    tmp_path: Path, provider: str
+) -> None:
+    harness = Harness(tmp_path)
+    with pytest.raises(ValueError, match="pinned Exa"):
+        harness.workflow(
+            inputs={
+                "mode": "expert_actions",
+                "search_provider": provider,
+                "plan": json.dumps(harness.plan()),
+            }
+        )
+    assert not harness.calls and not harness.destination.exists() and harness.stop.is_set()
+
+
+@pytest.mark.parametrize("provider", [None, "exa_mcp", "auto"])
+def test_v12_requires_explicit_matching_plan_provider(tmp_path: Path, provider: str | None) -> None:
+    harness = Harness(tmp_path)
+    plan = harness.plan()
+    if provider is None:
+        del plan["provider"]
+    else:
+        plan["provider"] = provider
+    with pytest.raises(RuntimeError, match="controlled action plan"):
+        harness.workflow(inputs={"mode": "expert_actions", "plan": json.dumps(plan)})
+    assert not harness.calls and not harness.destination.exists()
+
+
+def test_v12_baseline_legacy_adapter_receives_explicit_exa(tmp_path: Path) -> None:
+    source = ast.parse(PILOT.read_text())
+    function = next(
+        n for n in source.body if isinstance(n, ast.FunctionDef) and n.name == "workflow"
+    )
+    seen: list[tuple[Any, ...]] = []
+
+    def legacy_workflow(*args: Any) -> tuple[int, str]:
+        seen.append(args)
+        return 777, HEAD
+
+    namespace: dict[str, Any] = {
+        "Path": Path,
+        "Any": Any,
+        "WallGuard": WallGuard,
+        "STOP": threading.Event(),
+        "legacy": {"workflow": legacy_workflow},
+    }
+    exec(compile(ast.Module(body=[function], type_ignores=[]), str(PILOT), "exec"), namespace)
+    assert namespace["workflow"](
+        tmp_path, "ref", "u", {"mode": "expert_baseline"}, tmp_path / "baseline"
+    ) == (777, HEAD)
+    assert seen[0][3]["search_provider"] == "exa"
+
+
+def test_v12_rehashed_mcp_artifact_is_not_accepted_as_exa(tmp_path: Path) -> None:
+    harness = Harness(tmp_path, known_expiry=True, artifact_kind="mixed_provider")
+    with pytest.raises(RuntimeError, match="batch stopped"):
+        harness.workflow()
+    assert harness.stop.is_set() and harness.receipt()["status"] == "incomplete"
+    assert not harness.receipt()["artifact_verified"]
+    harness.assert_single_dispatch()
+
+
+def test_v12_provider_failure_is_retained_as_failure_without_success_claim(tmp_path: Path) -> None:
+    harness = Harness(tmp_path, source_kind="provider_error")
+    assert harness.workflow() == (RUN, HEAD)
+    action = harness.generated["actions"][0]
+    assert action["executed"] is True and action["outcome_status"] == "failure"
+    assert harness.receipt()["source_counters"]["search_queries"] == 1
+    assert harness.receipt()["source_stop_reason"] is None
+
+
+def test_v12_rehashed_provider_error_cannot_be_accepted_as_success(tmp_path: Path) -> None:
+    harness = Harness(
+        tmp_path, source_kind="provider_error", artifact_kind="provider_error_as_success"
+    )
+    with pytest.raises(RuntimeError, match="batch stopped"):
+        harness.workflow()
+    assert harness.stop.is_set() and not harness.receipt()["artifact_verified"]
+    harness.assert_single_dispatch()
+
+
+@pytest.mark.parametrize("status", [401, 402, 403, 429])
+def test_v12_auth_credit_or_quota_refusal_retains_ledger_and_stops_batch(
+    tmp_path: Path, status: int
+) -> None:
+    harness = Harness(tmp_path, source_kind="provider_error", provider_status=status)
+    assert harness.workflow() == (RUN, HEAD)
+    receipt = harness.receipt()
+    raw_name = harness.generated["actions"][0]["raw_log_path"]
+    assert receipt["provider_failures"] == [
+        {
+            "provider": "exa",
+            "http_status": status,
+            "raw_log_path": raw_name,
+            "raw_log_sha256": harness.generated["raw_logs"][raw_name],
+        }
+    ]
+    assert receipt["source_counters"]["search_queries"] == 1 and harness.stop.is_set()
+    assert harness.generated["final"]["stop_reason"] == (
+        f"http_{status}" if status in {402, 429} else None
+    )
+    with pytest.raises(RuntimeError, match="live batch"):
+        harness.workflow()
+    harness.assert_single_dispatch()
+
+
+def test_v12_university_fetcher403_does_not_claim_provider_refusal(tmp_path: Path) -> None:
+    harness = Harness(tmp_path, source_kind="fetcher_403")
+    assert harness.workflow() == (RUN, HEAD)
+    assert harness.generated["actions"][0]["outcome_status"] == "failure"
+    assert harness.receipt()["provider_failures"] == [] and not harness.stop.is_set()
+    assert harness.receipt()["source_counters"] == {
+        "fetcher_calls": 1,
+        "search_queries": 0,
+        "elapsed_ms": 0,
+    }
+
+
+def test_v12_university_fetcher402_does_not_become_search_credit_failure(tmp_path: Path) -> None:
+    harness = Harness(tmp_path, source_kind="fetcher_402")
+    assert harness.workflow() == (RUN, HEAD)
+    assert harness.generated["final"]["stop_reason"] is None
+    assert harness.generated["final"]["search_queries"] == 0
+    assert harness.receipt()["provider_failures"] == []
+    assert not harness.stop.is_set()
+    harness.assert_single_dispatch()
+
+
+def test_v12_baseline_peer_cancellation_never_relabels_actual402_as429(tmp_path: Path) -> None:
+    source = ast.parse(PILOT.read_text())
+    function = next(
+        node
+        for node in source.body
+        if isinstance(node, ast.FunctionDef) and node.name == "workflow"
+    )
+    stop = threading.Event()
+    calls = []
+
+    def existing_workflow(*args: Any) -> tuple[int, str]:
+        calls.append(args)
+        stop.set()  # An origin has published its genuine cause before peer cancellation.
+        raise RuntimeError("Canceled in-flight run after batch provider429")
+
+    namespace: dict[str, Any] = {
+        "Path": Path,
+        "Any": Any,
+        "WallGuard": WallGuard,
+        "STOP": stop,
+        "legacy": {"workflow": existing_workflow},
+    }
+    exec(compile(ast.Module(body=[function], type_ignores=[]), str(PILOT), "exec"), namespace)
+    with pytest.raises(
+        RuntimeError, match="Original baseline run interrupted by batch stop"
+    ) as raised:
+        namespace["workflow"](
+            tmp_path,
+            "frozen-ref",
+            "u",
+            {"mode": "expert_baseline", "search_provider": "exa"},
+            tmp_path / "baseline",
+        )
+    assert len(calls) == 1 and stop.is_set()
+    assert str(raised.value.__cause__) == "Canceled in-flight run after batch provider429"
+    with pytest.raises(RuntimeError, match="Batch stopped before baseline dispatch"):
+        namespace["workflow"](
+            tmp_path,
+            "frozen-ref",
+            "peer",
+            {"mode": "expert_baseline", "search_provider": "exa"},
+            tmp_path / "queued",
+        )
+    assert len(calls) == 1 and not (tmp_path / "queued").exists()
