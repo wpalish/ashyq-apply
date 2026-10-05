@@ -1593,3 +1593,11 @@ Y «Орбита» replaces V/W/X with one system:
 - One family (Inter, which main already ships), one radius (18), one border colour.
 
 Image: `concepts/concept-Y.webp`.
+
+**Tab bar (owner, 2026-10-05: "мне не нравится нижняя плашка меню").** Four variants after 21st.dev's
+[tab bars](https://21st.dev/community/components/s/tab-bar) and [docks](https://21st.dev/community/components/s/dock):
+A white floating capsule, B navy capsule, C full-width bar with a gold "lamp", D capsule with every label
+(`concepts/concept-Y-tabbars.webp`). The owner chose **A**. Review fix I87: on night screens the white
+capsule was a glaring slab, so night uses a glass capsule (9 % white, blur) with a white active pill; day
+keeps the white capsule with a navy pill. Inactive tabs are icons only, so the build gives each an
+accessible name and a one-time hint on first visit.
