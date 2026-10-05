@@ -1,0 +1,356 @@
+{
+  "checked_at": "2026-10-05T19:23:21.436107+00:00",
+  "status": "all10_fresh_original_baselines_within_frozen_policy",
+  "source_harness_sha": "e327498d605d3dbe14da177a8a535c664818ce9b",
+  "trial_sha256": "581a3943880aad05d83079989ef9e8e708ffeb59dd165fbfc7d0bdc634a2ba05",
+  "cases": [
+    {
+      "case_id": "groningen",
+      "run_id": 37360873217,
+      "reads": 44,
+      "queries": 6,
+      "elapsed_ms": 119003,
+      "stop_reason": "source_work_deadline_exhausted",
+      "provider_failure": null
+    },
+    {
+      "case_id": "delft",
+      "run_id": 37360873305,
+      "reads": 35,
+      "queries": 6,
+      "elapsed_ms": 64485,
+      "stop_reason": null,
+      "provider_failure": null
+    },
+    {
+      "case_id": "aalto",
+      "run_id": 37360873373,
+      "reads": 27,
+      "queries": 6,
+      "elapsed_ms": 29658,
+      "stop_reason": null,
+      "provider_failure": null
+    },
+    {
+      "case_id": "vienna",
+      "run_id": 37361131214,
+      "reads": 37,
+      "queries": 6,
+      "elapsed_ms": 68907,
+      "stop_reason": "search_budget_exhausted",
+      "provider_failure": null
+    },
+    {
+      "case_id": "warsaw",
+      "run_id": 37361241099,
+      "reads": 32,
+      "queries": 6,
+      "elapsed_ms": 119011,
+      "stop_reason": "source_work_deadline_exhausted",
+      "provider_failure": null
+    },
+    {
+      "case_id": "ubc",
+      "run_id": 37361397137,
+      "reads": 41,
+      "queries": 6,
+      "elapsed_ms": 119584,
+      "stop_reason": "source_work_deadline_exhausted",
+      "provider_failure": null
+    },
+    {
+      "case_id": "toronto",
+      "run_id": 37361535214,
+      "reads": 27,
+      "queries": 6,
+      "elapsed_ms": 37674,
+      "stop_reason": null,
+      "provider_failure": null
+    },
+    {
+      "case_id": "hku",
+      "run_id": 37361672707,
+      "reads": 33,
+      "queries": 6,
+      "elapsed_ms": 73649,
+      "stop_reason": "search_budget_exhausted",
+      "provider_failure": null
+    },
+    {
+      "case_id": "ntu",
+      "run_id": 37361714446,
+      "reads": 39,
+      "queries": 4,
+      "elapsed_ms": 85976,
+      "stop_reason": null,
+      "provider_failure": null
+    },
+    {
+      "case_id": "kaist",
+      "run_id": 37361902272,
+      "reads": 25,
+      "queries": 6,
+      "elapsed_ms": 72326,
+      "stop_reason": null,
+      "provider_failure": null
+    }
+  ],
+  "reads": 340,
+  "queries": 58,
+  "records": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/groningen/result.json",
+      "bytes": 1373,
+      "sha256": "74fd6266ff851f1693565748a4d69363a846809fce29a138891e859b5a6e555a"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/groningen/public-packet.json",
+      "bytes": 2002,
+      "sha256": "6eb7f5855702a30f938b2a5ac99fc602fccedeaa95e42f93bdebeead8d506db3"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/groningen/dispatch.json",
+      "bytes": 359,
+      "sha256": "1addbce9ed3451561e7df5b020cb604decb0b498ac3a6228f06153e4d3fa6221"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/groningen/run.json",
+      "bytes": 247,
+      "sha256": "db6681bc719ac5fe87cdbad2a371fa79a41e8bc273bde434c2d5845b216f30b2"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/groningen/artifact/capture/20261005T190613Z/capture.json",
+      "bytes": 3353,
+      "sha256": "aa2a530a63de265d353e39e538bd57cf9034e7b07a129533a5ba34d59699a638"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/delft/result.json",
+      "bytes": 1326,
+      "sha256": "8bc7362721ef0aae34678539bf7f2f1aef41f8515dd7c5bf524bf757cbaf500d"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/delft/public-packet.json",
+      "bytes": 2627,
+      "sha256": "9442fa824af89b63e7eb42726328d40ab0199846e8117973c00e788a1c8d3c43"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/delft/dispatch.json",
+      "bytes": 355,
+      "sha256": "825cbf423d7c461402e664e331947fcbfa6dbf574c0f793002c90371d1af1e20"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/delft/run.json",
+      "bytes": 247,
+      "sha256": "2fed3a4749cdc036e1457ade4472b6d3362ff8042cae4ecbbf4729fb1e2f3465"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/delft/artifact/capture/20261005T190614Z/capture.json",
+      "bytes": 15873,
+      "sha256": "16eac6d1994142890122d492898e9e9757c1af75a5c3d61a2decf7af76929d04"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/aalto/result.json",
+      "bytes": 1331,
+      "sha256": "982dab3acc95fce252c3dfa55ee3b35da05564ca8e39033ff9f1b63a8c030ad4"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/aalto/public-packet.json",
+      "bytes": 2275,
+      "sha256": "3eca9eb5354b30c4b0ab42193e55994b619640a10aad25ebb668355311b60990"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/aalto/dispatch.json",
+      "bytes": 355,
+      "sha256": "384d154de67cdb837482bf6c9d0c7870f3af43a3dc764def1a0c0be39cf41e64"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/aalto/run.json",
+      "bytes": 247,
+      "sha256": "fd1e544e2b273b4221c4114a44cb87523f953faa5e4759b0f02850ed101ca0b6"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/aalto/artifact/capture/20261005T190903Z/capture.json",
+      "bytes": 7054,
+      "sha256": "280a7b0c112b9b88f39fae8e88399a300931dd9ece85b4e18c78fdee4937ec5e"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/vienna/result.json",
+      "bytes": 1355,
+      "sha256": "81e480d06bc9faf4ab3d7e064e0008007369ee0f9ed1104e1a449ad33640ee1e"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/vienna/public-packet.json",
+      "bytes": 2128,
+      "sha256": "e819b9dacbbdff28914e0a5a0d04c3a44845e10193ee6a3b05687467fb929ec9"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/vienna/dispatch.json",
+      "bytes": 356,
+      "sha256": "7bb0e3c82a03e7c820c0bdd6b4db8b0cf03bdcccd993cb483bcfa5152882a7ca"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/vienna/run.json",
+      "bytes": 247,
+      "sha256": "37debd05b9aef34e4df605032ebd0b1c865ea4bdff35dadd4ae332b961a318c2"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/vienna/artifact/capture/20261005T190932Z/capture.json",
+      "bytes": 7894,
+      "sha256": "b50f24ba1c4927d1660e097deb5bce1a24ebf3f00820d050bdc6a3cf20b77eaa"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/warsaw/result.json",
+      "bytes": 1359,
+      "sha256": "067b890d07ec88aeee8f4aead87e17995343be2f4d68256dd9ea4b242f063cd2"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/warsaw/public-packet.json",
+      "bytes": 1996,
+      "sha256": "85ac22f6830adfff10953141734596ce6fd212bb9b9b59a598a86f55d575321e"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/warsaw/dispatch.json",
+      "bytes": 356,
+      "sha256": "c5f8a4327f4752fe2eeba76f7e09d543307ab828f5261009f3a786cc673386db"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/warsaw/run.json",
+      "bytes": 247,
+      "sha256": "e5b376c43583f409242f36b7664e4c288ed92c2115977539d2eeccd9f964867e"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/warsaw/artifact/capture/20261005T190939Z/capture.json",
+      "bytes": 8986,
+      "sha256": "beff9cfaa5df603771586a3543ecc3fd9f984a9dfc04939213219e2cc74a783d"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/ubc/result.json",
+      "bytes": 1350,
+      "sha256": "a95bf3b8b3d44a8c6fb850fa56db740e48d693bd5c115d02685e23014c944402"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/ubc/public-packet.json",
+      "bytes": 2255,
+      "sha256": "3a2b80c1fc8906130d4671a0b8a2cc3a4ba4287c03504b7dbde097de1c90fe52"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/ubc/dispatch.json",
+      "bytes": 353,
+      "sha256": "39a6e62f5ee0af3ccf9084438a976563ecebeb166652e744ffb59fa540c57295"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/ubc/run.json",
+      "bytes": 247,
+      "sha256": "2a4e82e93e82cc629711753921dc7d0c5c462e64260ff06d23c5f6262445bb10"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/ubc/artifact/capture/20261005T191008Z/capture.json",
+      "bytes": 11075,
+      "sha256": "31ca8564a74dc7eecac4c0e0b596f250c7634b2f545aea45457a80cad3d1b26c"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/toronto/result.json",
+      "bytes": 1332,
+      "sha256": "7914a406957f592b4fa963748fa7eeaf57205dd7f6db0390d238f207a6e3ec74"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/toronto/public-packet.json",
+      "bytes": 2070,
+      "sha256": "f07d90c483b4fedb244fee2b1908753e16e8a3263e5139feb7ecd5da94452690"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/toronto/dispatch.json",
+      "bytes": 357,
+      "sha256": "862de9b13ccc048acb0db0058fa93d6d0c4bd82b5ca94fff83ee6dc7dcd19056"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/toronto/run.json",
+      "bytes": 247,
+      "sha256": "577c309c251a23124dbbd247043ad3d569a47b224438c8f6212f0767df92b3d1"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/toronto/artifact/capture/20261005T191113Z/capture.json",
+      "bytes": 5901,
+      "sha256": "ae81d46a085ecc4ee90a674abbfb3314fa2b47294a27c589bb8c755a975238cc"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/hku/result.json",
+      "bytes": 1346,
+      "sha256": "165c5d1c781dd6be7c8f27035ce795a490112f5b4ecd1a97e905563c88b2d03c"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/hku/public-packet.json",
+      "bytes": 2185,
+      "sha256": "bc725e0f155f48e51433d190d2c8cf74828f7512abea59e5d2ef6e3001f0521c"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/hku/dispatch.json",
+      "bytes": 353,
+      "sha256": "54ca09a96fd41f74a1181f0e386e572a675aae50eb4c73ab83ab871c22180fbe"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/hku/run.json",
+      "bytes": 247,
+      "sha256": "c7f671dd414b869564a3c7c77750129897a55645d1d3119b97d03522ca8af468"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/hku/artifact/capture/20261005T191225Z/capture.json",
+      "bytes": 8103,
+      "sha256": "fc93ec752ec3b68e7ac9bcc6b6717cb0d08d1b25daf99fa65712241ca154c55c"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/ntu/result.json",
+      "bytes": 1320,
+      "sha256": "79cd7a829b8e799a8721753bdd0016fe88fd2741e9434e6bf58bfa437180a59b"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/ntu/public-packet.json",
+      "bytes": 8405,
+      "sha256": "11af16c378bfe1aae7eb89780411e349cda3857f165773f6778f4ad0d8a2c435"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/ntu/dispatch.json",
+      "bytes": 353,
+      "sha256": "b2a05783cd5ac20ff015c129a8de6cd348a5826d5e96ab9e5fb267932265f3e9"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/ntu/run.json",
+      "bytes": 247,
+      "sha256": "4322d8c8ec933c54372d0dd64b01f9ca48f96796a17600c7386fa573c1fc7c79"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/ntu/artifact/capture/20261005T191248Z/capture.json",
+      "bytes": 109517,
+      "sha256": "0447f16bdc3dadf1c0fe0e322e658968ca6d1ccb0ac2cfa310b7879be564d4c5"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/kaist/result.json",
+      "bytes": 1331,
+      "sha256": "932ed5b81f46e1c43579833d88f424744ed86164896fee07d6441827e4405155"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/kaist/public-packet.json",
+      "bytes": 2075,
+      "sha256": "493e161d6e77096bd81a3a619e5fe4d62e02b1cdfbf7ce3177e0d7a277ee3008"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/kaist/dispatch.json",
+      "bytes": 355,
+      "sha256": "e3247f7aa70ca7b00ec06c6c572d91ee2003c1a88dfc8d215902156fa25101b0"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/kaist/run.json",
+      "bytes": 247,
+      "sha256": "bc3e7c0e5e1a865a2bb6e56ae369c376f6af2a5a4fac1be8c557c54b698a0096"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/baseline/kaist/artifact/capture/20261005T191420Z/capture.json",
+      "bytes": 4748,
+      "sha256": "a8fbdae2146e7b98ae9a1f0a10b6924e777c4f5fbfb88d7ca0c82bad00e2d276"
+    }
+  ],
+  "label_reads": 0,
+  "model_requests": 0,
+  "source_requests": 0,
+  "heldout150_untouched": true
+}

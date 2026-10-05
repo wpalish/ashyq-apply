@@ -1,0 +1,32 @@
+{
+  "recorded_at": "2026-10-05T19:15:45.023260+00:00",
+  "source_harness_sha": "e327498d605d3dbe14da177a8a535c664818ce9b",
+  "status": "actual_same_source_exact_dependency_cache_hit",
+  "cold_run": 37360873217,
+  "later_run": 37361131214,
+  "job": "expert",
+  "cold_venv_seconds": 2,
+  "cold_pip_seconds": 13,
+  "warm_restore_seconds": 2,
+  "warm_venv_and_pip_skipped": true,
+  "warm_environment_verified": true,
+  "scope": "existing expert job only; separate baseline capture job and whole-run timings are not an equal-work latency comparison",
+  "accuracy_claim": false,
+  "records": [
+    {
+      "path": "/tmp/unimatch-expert500-v13-cold-baseline-timing-original.json",
+      "bytes": 4187,
+      "sha256": "77002087de5379ea92eb2754248dbff3458e70361d5caa2cdcf48d6ee0962c92"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v13-later-baseline-timing-original.json",
+      "bytes": 4187,
+      "sha256": "4ec9a6f0416012df6b0e2498a3c4008db5fbe680327fe6a44db03f1dfdde7fd7"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v13-later-baseline-workflow-original.log",
+      "bytes": 75675,
+      "sha256": "51d31f85f9bb43bcc966ef70eec92df2117cf6c93995e81e306e7c0b2a85a4a3"
+    }
+  ]
+}

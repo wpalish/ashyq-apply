@@ -22,3 +22,15 @@ Changing live logs remain original in the fresh artifact root until stage comple
 Continue the existing baseline parent, require10 valid same-source Exa captures with no STOP, then start the independent experts once. Algorithm120s/60reads/6queries; expert60reads/6queries/default effort/immutable900s.
 All-ten raw replay and seal precede unchanged reviewed62 labels. Threshold40/62 and supported per-miss causes remain prerequisites for batches50.
 V12 remains CLOSED_UNSCORED with its unchanged originals. Heldout150 and signed8 remain untouched. No deployment or production readiness is claimed.
+
+## Completed baseline checkpoint — 19:25 UTC
+
+All10 fresh original baselines completed, stopped=false/remainingempty. The actual frozen report reserve/source/provider/equal-budget validators pass before experts. Algorithm340reads58queries, no provider refusal. Admission SHA256 `0ed1e89b3ad0823758a6923c4d5718794c5a21c0e87ff6cc011b90c4feec1f0c`.
+
+All118 original files/906029 bytes are preserved and readback-verified in `backend/evaluation/research/expert/data/runs.2026-10-05/v13-baseline/baseline-originals.tar.gz`, SHA256 `424e138070f2bd5b93d1222aeef3145136fb11fc9d313e22b561674a4457fda2`; manifest `198abd3e42e8f90f070382fd8d2a96189303e6fc1f2f046f05b667d8339a790b`,17 original support records. Private CLI account receipt is excluded; its redacted same-account ordinary-usage observation is preserved. No model call occurred in that read.
+
+Warsaw job finished successfully but GitHub overall run aggregation lagged; the original parent eventually observed success and retrieved the original artifact, without retry. Both the delayed API observation and final run receipt are preserved.
+
+The dependency-only exact cache actually hit on the later expert job: restore2s, venv/pip skipped, Python/package compatibility verified. Cold setup used venv2s/pip13s. These different university runs are not an equal-work total latency comparison. The original scope note implying a separate baseline capture job is superseded by v2; that job is skipped for expert_baseline mode. Both notes/raw timing/logs remain unchanged.
+
+Expert stage remains unstarted at this checkpoint; one fresh call follows the push. Reviewed62 labels/seal/score remain absent.

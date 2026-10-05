@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**CURRENT V13 BASELINES COMPLETE / EXPERTS READY [expert-500], 2026-10-05 19:25 UTC, holder gpt-6-astra:** current metadata6059806; frozen measured source e327498/tag unchanged. Original parent completed10/10/stoppedfalse/remainingempty. Frozen actual-report baseline gates validated all10 source/Exa/caps/reserve/complete originals;340reads58queries, no provider refusal. Admission0ed1e89b;118original files/906029bytes are preserved before experts in v13-baseline archive424e1380, manifest198abd3e/17support. Same-account ordinary CLI usage confirmed19:23UTC, model/source0, redactedbad2b296. Push originals, then one experts-stage invocation; no seal/62labels/score/50/deploy.
+
 **CURRENT V13 LIVE BASELINE [expert-500], 2026-10-05 19:06 UTC, holder gpt-6-astra:** selected source e327498d605d3dbe14da177a8a535c664818ce9b and immutable tag expert500-phase1-v13-2026-10-05-e327498 passed all12 branch/PR/tag jobs. Original CI8 records manifest65bdfeff; once-only fresh trial581a3943 allocated on exact clean selectedHEAD. Baseline parent started once, nativeexec session2668, first Groningen/Delft/Aalto dispatches active. Start8 records manifestc2e3fe3f preserved. No expert stage, seal, reviewed62 labels, score,50 admission or deployment. Source/helper/tag bytes stay frozen; metadata checkpoint may advance task HEAD.
 
 **CURRENT V13 FROZEN / SELECTED-SOURCE CI PENDING [expert-500], 2026-10-05 18:44 UTC, holder gpt-6-astra:** source4328/94.90/381, focusedyear462, final actual four-suite650, helper11, demo20/UBC bucket/head, freshneutral22/c1e8362c and realOS240/9fc9298f passed. Reviewed once-only freeze completed12helpers/21modules and pinned private registry bytes; new immutable protocol folder v13, local23-gate manifest129e7a88, full206-record source supportca6f4bc7. Source code checkpoint096f505 pushed. Publish frozen source/tag, require exact branch/PR/tag CI12/12 before one fresh whole-ten paired trial; fresh baseline/expert stage unstarted, no seal/62labels/score,40 unmeasured/no50. V12 originals stay closed unscored. No deployment, screenshot intent pending.
@@ -1967,6 +1969,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**CURRENT WRITE-AHEAD V13 experts once [expert-500], 2026-10-05 19:25 UTC:** checkpoint/push completed baseline preservation, then from backend invoke PYTHONPATH=. .venv/bin/python /tmp/unimatch-expert500-journal-pilot-v13-coherent.py --repo /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply --root /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05 --ref expert500-phase1-v13-2026-10-05-e327498 --stage experts exactly once, original log /tmp/unimatch-expert500-v13-experts-stage-original.log. Ten original baselines pass actual frozen report admission,118 originals archived/verified. Current existing account permits ordinary usage; no login/purchase/reset. Preserve original selector/controller/journal logs and per-case immutable900s/default effort/60reads/6queries; no changed source/helper/tag/old capture reuse. Root monitors until completion or originalSTOP; no restart. All-ten exact raw replay/seal precedes fixed62 scoring and supported missed-fact reasons. Outside_policy separate;40/62 and full diagnostics required for50. Heldout150/signed8 untouched; deployment intent pending.
 
 **CURRENT WRITE-AHEAD V13 live continuation [expert-500], 2026-10-05 19:06 UTC:** monitor the existing baseline parent session2668 and /tmp/unimatch-expert500-v13-baseline-stage-original.log; do not launch/retry baseline. Root artifacts/expert-500/phase1-v13-2026-10-05, source e327498, tag expert500-phase1-v13-2026-10-05-e327498, trial581a3943. Require all10 original captures complete, matching source/Exa/60reads/6queries/120s and no provider/transport STOP before one experts-stage invocation of frozen /tmp/unimatch-expert500-journal-pilot-v13-coherent.py with same repo/root/ref. Default gpt-6-astra effort/immutable900s remains. Preserve completed baseline originals and ordinary existing-account availability before expert stage if needed. All-ten original replay/seal precedes reviewed62 scoring and supported per-miss causes. Gate40/62 unchanged; failures close unscored without repair/retry. No labels/heldout150/signed8/production action while blind measurement is active; screenshot deployment question pending.
 
@@ -4082,6 +4086,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**CURRENT V13 baseline admission, 2026-10-05 19:25 UTC:** all10 exact fresh source/Exa original captures pass the frozen report reserve/equal-budget validators;340reads58queries; no provider failure, no CAPTURE_IN_PROGRESS, no source drift. Admission original0ed1e89b. CI12/12/source4328/94.90 and frozen helper gates unchanged. Cache-hit evidence is now actual: later existing expert-job restore2s, venv/pip skipped; original cold2s/13s, compatibility verified. This is setup evidence only, not equal-work total speed or search acceptance. Original cache scope wording is explicitly corrected in v2 and both retained. Reviewed62 remains unopened.
+
 **CURRENT V13 SELECTED-SOURCE CI, 2026-10-05 19:06 UTC:** e327498 branch37358070171 / PR37358078952 / tag37358148240 allcompleted success,4jobs each/12total; original CI manifest65bdfeff. Actual local source4328passed/94.90%, static381, actual-runtime650, helpers11, focused462, demo20/Groningenfirst/UBCOUT_OF_BUDGET/singlehead, freshneutral22/OS240 remain exact. Source CI success is a prerequisite; live accuracy/40of62 remains unmeasured.
 
 **2026-10-05 18:38 UTC source checkpoint:** actual backend4328/94.90, strict381 files green; focused462 and coherent protocol480 green. Fresh neutral22records/c1e8362c and realOS240 green; final pinned four-suite mock process46002 unfinalized. Current11-helper quality uses unchanged established explicit helper command (--ignore E501,B008,B023, --follow-imports=skip); direct inherited-config diagnostic102 B023 preserved separately. Source repo config/gate scopes unchanged. No full search acceptance or selected-source CI claim.
@@ -5388,6 +5394,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+- 2026-10-05 19:25 UTC | gpt-6-astra | [expert-500] | 6059806 -> fresh baseline10/10 complete/340reads58queries, admission0ed1e89b,118 originals424e1380/support17 manifest198abd3e. Same-account ordinary usage allowed; experts once next. No label/seal/score/deploy.
 
 - 2026-10-05 19:06 UTC | gpt-6-astra | [expert-500] | e327498 -> sourceCI12/12 / trial581a3943 / fresh baseline started once. CI8/start8 originals preserved; experts/labels/seal/score/deploy unstarted.
 

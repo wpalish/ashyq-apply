@@ -1,0 +1,66 @@
+"""One read-only availability check on the unchanged CLI/account before experts."""
+import hashlib
+import json
+import queue
+import subprocess
+import threading
+import time
+from datetime import UTC, datetime
+from pathlib import Path
+
+cli = Path('/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex')
+expected = '50ac633af64851511f9bbc71032cdae7f1ba20b3234c189687d61ba846c354c5'
+assert hashlib.sha256(cli.read_bytes()).hexdigest() == expected
+original = json.loads(Path('/tmp/unimatch-expert500-v10-cli-account-readonly-20261005.json').read_bytes())
+private = Path('/tmp/unimatch-expert500-v13-before-experts-availability-private.json')
+redacted = Path('/tmp/unimatch-expert500-v13-before-experts-availability-redacted.json')
+assert not private.exists() and not redacted.exists()
+stderr = Path('/tmp/unimatch-expert500-v13-before-experts-availability-stderr.log')
+responses = {}
+messages = queue.Queue()
+with stderr.open('xb') as err:
+    proc = subprocess.Popen([str(cli), 'app-server', '--stdio'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=err, text=True)
+    def read_lines():
+        for line in proc.stdout:
+            messages.put(line)
+    threading.Thread(target=read_lines, daemon=True).start()
+    def send(value):
+        proc.stdin.write(json.dumps(value) + '\n')
+        proc.stdin.flush()
+    def receive(required):
+        end = time.monotonic() + 25
+        while not set(required).issubset(responses):
+            line = messages.get(timeout=max(0.01,end-time.monotonic()))
+            value = json.loads(line)
+            if 'id' in value:
+                responses[value['id']] = value
+            if time.monotonic() >= end:
+                raise TimeoutError('Read-only existing-account response deadline exceeded')
+    try:
+        send({'id':1,'method':'initialize','params':{'clientInfo':{'name':'unimatch_v13_existing_account_gate','version':'1.0'},'capabilities':{'experimentalApi':True}}})
+        receive((1,))
+        send({'method':'initialized'})
+        send({'id':2,'method':'account/read','params':{'refreshToken':False}})
+        send({'id':3,'method':'account/rateLimits/read','params':{'excludeResetCreditDetails':True,'supportsLunaReserve':False}})
+        receive((2,3))
+    finally:
+        proc.stdin.close()
+        try:
+            proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            proc.terminate()
+            proc.wait(timeout=5)
+
+errors={str(k):v['error'] for k,v in responses.items() if 'error' in v}
+account = responses.get(2,{}).get('result',{}).get('account',{}) or {}
+usage = responses.get(3,{}).get('result',{})
+identity_matches = bool(usage.get('accountId')) and usage.get('accountId') == original['usage']['accountId']
+record = {'schema_version':'1','kind':'existing_cli_readonly_availability_before_v13_experts','checked_at':datetime.now(UTC).isoformat(),'cli':str(cli),'cli_sha256':expected,'methods':['initialize','initialized','account/read','account/rateLimits/read'],'model_requests':0,'source_requests':0,'account_mutations':0,'new_login':False,'responses':responses,'errors':errors,'stderr_bytes':stderr.stat().st_size,'same_original_account':identity_matches}
+raw=(json.dumps(record,ensure_ascii=False,indent=2)+'\n').encode()
+with private.open('xb') as f:f.write(raw)
+public={'schema_version':'1','kind':record['kind'],'checked_at':record['checked_at'],'cli':str(cli),'cli_sha256':expected,'methods':record['methods'],'model_requests':0,'source_requests':0,'account_mutations':0,'new_login':False,'same_original_account':identity_matches,'account_identity_sha256':hashlib.sha256(str(usage.get('accountId')).encode()).hexdigest(),'account_type':account.get('type'),'plan_type':account.get('planType'),'ordinaryUsageAllowed':usage.get('ordinaryUsageAllowed'),'rateLimits':usage.get('rateLimits'),'rateLimitsByLimitId':usage.get('rateLimitsByLimitId'),'rateLimitResetCredits':usage.get('rateLimitResetCredits'),'errors':errors,'stderr_bytes':record['stderr_bytes'],'private_original_sha256':hashlib.sha256(raw).hexdigest()}
+public_raw=(json.dumps(public,ensure_ascii=False,indent=2)+'\n').encode()
+with redacted.open('xb') as f:f.write(public_raw)
+print(json.dumps({'checked_at':public['checked_at'],'same_original_account':identity_matches,'ordinaryUsageAllowed':public['ordinaryUsageAllowed'],'plan_type':public['plan_type'],'errors':errors,'redacted_sha256':hashlib.sha256(public_raw).hexdigest(),'stderr_bytes':public['stderr_bytes']}))
+if errors or not identity_matches or usage.get('ordinaryUsageAllowed') is not True:
+    raise SystemExit('Original CLI is not available for ordinary usage; no expert dispatch allowed')

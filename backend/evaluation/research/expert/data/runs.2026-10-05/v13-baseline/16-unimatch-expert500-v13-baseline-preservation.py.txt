@@ -1,0 +1,34 @@
+"""Preserve completed original baseline bytes; zero model/university/label calls."""
+import gzip,hashlib,json,tarfile
+from datetime import UTC,datetime
+from pathlib import Path
+repo=Path('..').resolve();root=repo/'artifacts/expert-500/phase1-v13-2026-10-05'
+target=repo/'backend/evaluation/research/expert/data/runs.2026-10-05/v13-baseline'
+assert not target.exists()
+stage=json.loads((root/'baseline-results.json').read_text());assert len(stage['results'])==10 and stage['stopped'] is False and stage['remaining_case_ids']==[]
+admission=Path('/tmp/unimatch-expert500-v13-baseline-admission.json');assert json.loads(admission.read_text())['status']=='all10_fresh_original_baselines_within_frozen_policy'
+for r in json.loads(admission.read_text())['records']:assert hashlib.sha256(Path(r['path']).read_bytes()).hexdigest()==r['sha256']
+availability=Path('/tmp/unimatch-expert500-v13-before-experts-availability-redacted.json');a=json.loads(availability.read_text());assert a['ordinaryUsageAllowed'] is True and a['same_original_account'] is True and a['model_requests']==0 and a['source_requests']==0
+paths=sorted(p for p in (root/'baseline').rglob('*') if p.is_file())
+assert paths and not any(p.is_symlink() for p in paths)
+records=[{'path':str(p.relative_to(root)),'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in paths]
+target.mkdir(parents=True)
+archive=target/'baseline-originals.tar.gz'
+with archive.open('xb') as out:
+ with gzip.GzipFile(fileobj=out,mode='wb',mtime=0,filename='') as zipped:
+  with tarfile.open(fileobj=zipped,mode='w') as tar:
+   for p in paths:tar.add(p,arcname=str(p.relative_to(root)),recursive=False)
+with tarfile.open(archive,'r:gz') as tar:
+ assert len(tar.getmembers())==len(records)
+ for r in records:
+  raw=tar.extractfile(r['path']).read();assert len(raw)==r['bytes'] and hashlib.sha256(raw).hexdigest()==r['sha256']
+  assert hashlib.sha256((root/r['path']).read_bytes()).hexdigest()==r['sha256']
+originals=[root/'baseline-results.json',root/'baseline-stage-start.json',Path('/tmp/unimatch-expert500-v13-baseline-stage-original.log'),admission,Path('/tmp/unimatch-expert500-v13-baseline-admission.py'),Path('/tmp/unimatch-expert500-v13-baseline-admission-original.log'),availability,Path('/tmp/unimatch-expert500-v13-before-experts-availability.py'),Path('/tmp/unimatch-expert500-v13-before-experts-availability-original.log'),Path('/tmp/unimatch-expert500-v13-before-experts-availability-stderr.log'),Path('/tmp/unimatch-expert500-v13-cold-baseline-timing-original.json'),Path('/tmp/unimatch-expert500-v13-later-baseline-timing-original.json'),Path('/tmp/unimatch-expert500-v13-later-baseline-workflow-original.log'),Path('/tmp/unimatch-expert500-v13-cache-observation.json'),Path('/tmp/unimatch-expert500-v13-cache-observation-v2.json'),Path('/tmp/unimatch-expert500-v13-warsaw-delayed-state-original.json'),Path(__file__)]
+support=[]
+for i,p in enumerate(originals):
+ raw=p.read_bytes();name=f'{i:02d}-{p.name}'+('.txt' if p.suffix=='.py' else '')
+ with (target/name).open('xb') as out:out.write(raw)
+ support.append({'original':str(p),'snapshot':name,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()})
+value={'recorded_at':datetime.now(UTC).isoformat(),'status':'completed_original10_baselines_preserved_before_experts','source_harness_sha':'e327498d605d3dbe14da177a8a535c664818ce9b','trial_sha256':hashlib.sha256((root/'trial.json').read_bytes()).hexdigest(),'baseline_file_count':len(records),'baseline_bytes':sum(r['bytes'] for r in records),'baseline_records':records,'archive':{'snapshot':archive.name,'bytes':archive.stat().st_size,'sha256':hashlib.sha256(archive.read_bytes()).hexdigest()},'record_count':len(support),'records':support,'reads':340,'queries':58,'provider_failures':0,'label_reads':0,'model_requests':0,'source_requests':0,'heldout150_untouched':True,'expert_stage_started':False}
+with (target/'manifest.json').open('x') as out:out.write(json.dumps(value,indent=2)+'\n')
+print(json.dumps({'baseline_files':len(records),'baseline_bytes':value['baseline_bytes'],'archive_sha256':value['archive']['sha256'],'support_records':len(support),'manifest_sha256':hashlib.sha256((target/'manifest.json').read_bytes()).hexdigest()}))
