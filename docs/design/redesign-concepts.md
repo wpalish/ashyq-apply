@@ -1678,3 +1678,35 @@ became indigo, KR moss, so eight countries stay eight colours; I101 the plan tic
 still set ink text on the now-deep fills — switched to the pass text colour.
 
 Images: `concepts/concept-r11-unimatch-1.webp`, `-2.webp` (the eight screens).
+
+## 33. Desktop and the landing animation (2026-10-05)
+
+Owner: "делай" (desktop, then the landing animation, then the code).
+
+**Desktop (1440 × 900)** — `concepts/concept-r12-desktop-1-home.webp`, `-2-find.webp`, `-3-decide.webp`.
+The phone's floating capsule becomes a left rail with the same pill; Home opens on the night band with
+routes in country tints; Find shows the budget ladder and a grid of passes, and the opened pass sits
+beside the list (price − grant = left to pay, what the grant covers, the quoted line, the three
+answers) instead of over it; Decide is the fanned stack with keys 1 / 2 / 3 and Esc.
+Review I102–I104: the home globe framed Astana below the band (reframed, with a fade under the
+headline); the decide card was taller than its content; the reasons row under Decide showed choices
+before "Not for me" was pressed — now one line says it asks why.
+
+**Landing animation** — `landing/unimatch-landing-phone.mp4`, `unimatch-landing-desktop.mp4`,
+`landing/keyframes-phone.webp`; source `landing/landing_concept.py` (+ `land.json`, the land dots).
+Built on the scroll-video skill's model (a sticky stage, page height as the scrub distance, a smoothed
+playhead that follows scroll both ways) but drawn live on a canvas, because every frame is our own
+globe and our own numbers — there is no footage to make:
+
+1. the question — "Where can you study — and what will it cost?" — over a turning night globe, Astana lit;
+2. routes leave Astana one at a time in each country's tint; "From Astana to 15 countries";
+3. the globe rises and dims; three passes fly in and stack;
+4. the top pass opens line by line: price 32,663 − Talent Grant 30,815 = 1,848 left, if awarded;
+5. the three answers, the source line, "Start with your profile", and "None of this predicts an
+   admission decision — that is the university's."
+
+Honesty review I105–I107: I105 a count-up to "15 countries" showed "From Astana to 0 countries" on the
+first frames — the headline is now static and says six of the routes are drawn; I106 the pass counted
+down from 32,663 to 1,848 and showed in-between figures no page states — it now switches from the price
+to what is left, after the total row appears; I107 a frame with no headline between scenes 1 and 2.
+The pass carries "Example · demo data"; reduced motion shows the last frame still.
