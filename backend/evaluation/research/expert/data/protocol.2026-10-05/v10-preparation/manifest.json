@@ -1,0 +1,108 @@
+{
+  "schema_version": "1",
+  "recorded_at": "2026-10-05T08:07:42.725663+00:00",
+  "source_app_test_commit": "ab90817dc507663ce4095cd35b5f857cf563e8ed",
+  "status": "pre_final_protocol_repairs",
+  "app_backend_tests": 4092,
+  "app_coverage_percent": 94.86,
+  "frontend_tests": 232,
+  "pre_repair_combined_mocks": 444,
+  "all_backend_test_paths": "backend/tests only; evaluation pure policy will have separate final tests",
+  "model_requests": 0,
+  "university_requests": 0,
+  "trial_allocated": false,
+  "records": [
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-final-backend-tests.log",
+      "sha256": "f71d91f368f9fbb48d8d060394bd70226fadede71af1749325b6a9b15aea5d07",
+      "bytes": 16533,
+      "snapshot": "unimatch-expert500-v10-final-backend-tests.log"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-final-backend-ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19,
+      "snapshot": "unimatch-expert500-v10-final-backend-ruff.log"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-final-backend-format.log",
+      "sha256": "5e02de47569f8d0dab9b426b7814a7ce598f50e598afb588f3bd125ea39d5865",
+      "bytes": 28,
+      "snapshot": "unimatch-expert500-v10-final-backend-format.log"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-final-backend-mypy.log",
+      "sha256": "a06be59aff124b529ca564a154a77a5e74614b22bb8226a4ee05b8b46f483546",
+      "bytes": 8584,
+      "snapshot": "unimatch-expert500-v10-final-backend-mypy.log"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-final-combined-mocks.log",
+      "sha256": "0e42ad859901a7aa62f443e58e835e50aa6064dc21e83d28a77f9a6f323ed741",
+      "bytes": 560,
+      "snapshot": "unimatch-expert500-v10-final-combined-mocks.log"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-final-frontend-typecheck.log",
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02",
+      "bytes": 53,
+      "snapshot": "unimatch-expert500-v10-final-frontend-typecheck.log"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-final-frontend-lint.log",
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a",
+      "bytes": 65,
+      "snapshot": "unimatch-expert500-v10-final-frontend-lint.log"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-final-frontend-tests.log",
+      "sha256": "164bd9647960e3f9fc0475c950f65ad28db21b798639bf6f9dcc1b0abd81b7f9",
+      "bytes": 10235,
+      "snapshot": "unimatch-expert500-v10-final-frontend-tests.log"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-final-frontend-build.log",
+      "sha256": "abb05af0f45b389c00ec408539c06863962ccafb5fea54130392f57035f6bc44",
+      "bytes": 7315,
+      "snapshot": "unimatch-expert500-v10-final-frontend-build.log"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-final-demo.log",
+      "sha256": "59e914b6ada954b5351c7e54495ae81e03e1743f299af2f98662d4be81dcaf42",
+      "bytes": 5468,
+      "snapshot": "unimatch-expert500-v10-final-demo.log"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-final-alembic.log",
+      "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b",
+      "bytes": 20,
+      "snapshot": "unimatch-expert500-v10-final-alembic.log"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-cli-availability-redacted.json",
+      "sha256": "b369e24d91582714f2f1ff5e22bd67643141c9822f45f82725ddce03576c031d",
+      "bytes": 2784,
+      "snapshot": "unimatch-expert500-v10-cli-availability-redacted.json"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-final-neutral-reuse.log",
+      "snapshot": "unimatch-expert500-v10-final-neutral-reuse.log",
+      "sha256": "e6dd48b0e0e42973f13c0a50efd8942b7b813a51455c24bd9b242103c1a8b844",
+      "bytes": 2522
+    }
+  ],
+  "unchanged_trees": {
+    "frontend": "4aaba144e9642060a4915a22527ef016ee8cc83d",
+    "backend/migrations": "96469ee9697939efcd3c52b681838e1899989998",
+    ".github/workflows": "fc6cd24a90676173947f23fe262210a801ff9efc"
+  },
+  "prepared_at": "2026-10-05T08:12:36.416999+00:00",
+  "final_repairs_pending": [
+    "raw_terminal_model_refusal_without_metadata",
+    "exclusive_once_only_stage_and_destination"
+  ],
+  "original_draft_manifest_sha256": "bc8e1d7cd0e94d51705fab721f0b8610b09c620b698945339c0fa0c3b6d18adf",
+  "record_count": 13,
+  "total_original_bytes": 54186,
+  "raw_account_details_committed": false
+}
