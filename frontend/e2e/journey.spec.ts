@@ -49,7 +49,7 @@ test('preferences screen exposes the scoring weights and warns about live mode',
   await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(0).click();
   await page.getByTestId('load-demo-profile').click();
   await page.evaluate(() => { window.location.hash = '#/preferences'; });
-  await expect(page.getByRole('heading', { name: /Shape your perfect match/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Where would you study?' })).toBeVisible();
   await expect(page.getByText('It is not a probability of admission')).toBeVisible();
 
   await page.getByTestId('demo-toggle').uncheck();

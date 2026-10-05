@@ -6,8 +6,9 @@ describe('pass colours', () => {
     const map = passColours(['Japan', 'Netherlands', 'Belgium'], ['Belgium', 'Netherlands', 'Canada']);
     expect(map.get('Belgium')).toEqual({ slot: 1, pattern: false });
     expect(map.get('Netherlands')).toEqual({ slot: 2, pattern: false });
-    // Not picked, so after the picked ones; Canada is picked but has no result.
-    expect(map.get('Japan')).toEqual({ slot: 3, pattern: false });
+    // Canada is picked but has no result: it keeps colour 3, the one its chip
+    // showed, and Japan (not picked) comes after it.
+    expect(map.get('Japan')).toEqual({ slot: 4, pattern: false });
     expect(map.has('Canada')).toBe(false);
   });
 

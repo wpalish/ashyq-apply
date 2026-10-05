@@ -2,8 +2,9 @@
  * Which colour a country's passes wear (concept «Пропуск», palette E).
  *
  * Eight deep, muted colours (`--pass-1` … `--pass-8` in tokens.css) go to the
- * countries the applicant picked, in the order they were picked, then to the
- * other countries in the results in the order they first appear. A ninth
+ * countries the applicant picked, in the order they were picked - a picked
+ * country with no result keeps its colour, so the chip and the pass agree -
+ * then to the other countries in the results in the order they first appear. A ninth
  * country reuses a colour with a pattern rather than a ninth colour, so two
  * countries never look the same. Colour never means a verdict: the three
  * answers on the card are what judge a programme.
@@ -22,15 +23,16 @@ export function passColours(
   countries: readonly string[],
   preferred: readonly string[] = [],
 ): Map<string, PassColour> {
-  const present = new Set(countries);
+  // A picked country keeps its place even with no result, so the colour the
+  // applicant saw on the chip is the colour of every pass from it.
   const order: string[] = [];
-  for (const country of [...preferred.filter((c) => present.has(c)), ...countries]) {
+  for (const country of [...preferred, ...countries]) {
     if (!order.includes(country)) order.push(country);
   }
-  return new Map(order.map((country, i) => [
-    country,
-    { slot: (i % PASS_COLOURS) + 1, pattern: i >= PASS_COLOURS },
-  ]));
+  const present = new Set(countries);
+  return new Map(order
+    .map((country, i) => [country, { slot: (i % PASS_COLOURS) + 1, pattern: i >= PASS_COLOURS }] as const)
+    .filter(([country]) => present.has(country)));
 }
 
 /** The applicant's chosen countries, from a saved profile of any shape. */

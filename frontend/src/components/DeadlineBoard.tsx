@@ -18,46 +18,18 @@
 import { useState } from 'react';
 import { StatusChip } from '@/components/primitives';
 import { FIT_NOTE, awardNote, requirementNote, urlHost } from '@/components/ResultCard';
-import {
-  REQUIREMENT_WORD, flapDate, nextDeadline, rowText, spokenDate, type PlannedDeadline,
-} from '@/lib/deadlines';
+import { nextDeadline, spokenDate, type PlannedDeadline } from '@/lib/deadlines';
+import type { PassColour } from '@/lib/passColour';
+import { Ticket } from '@/components/Ticket';
 import { doneKey, itemsOf, timingOf } from '@/lib/docs';
 import {
   admissionsFitTone, date, eligibilityTone, fundingClassTone, money,
 } from '@/lib/format';
 import type { ProgramResult } from '@/types';
 
-function Flaps({ text }: { text: string }) {
-  return (
-    <span className="flaps" aria-hidden="true">
-      {[...text].map((ch, i) => (
-        ch === ' '
-          ? <span key={i} className="flaps__gap" />
-          : <span key={i} className="flaps__tile" style={{ ['--i' as string]: i }}>{ch}</span>
-      ))}
-    </span>
-  );
-}
 
-function days(p: PlannedDeadline): string {
-  if (p.daysLeft === null) return '—';
-  if (p.passed) return 'passed';
-  if (p.daysLeft === 0) return 'today';
-  return String(p.daysLeft);
-}
 
-function spokenDays(p: PlannedDeadline): string {
-  if (p.daysLeft === null) return 'no date';
-  if (p.passed) return 'passed';
-  if (p.daysLeft === 0) return 'today';
-  return p.daysLeft === 1 ? '1 day left' : `${p.daysLeft} days left`;
-}
 
-function wordTone(status: string): string {
-  if (status === 'MET' || status === 'NOT_APPLICABLE') return 'ok';
-  if (status === 'NEEDS_OFFICIAL_CLARIFICATION') return 'ask';
-  return 'act';
-}
 
 /** The page a row's date was read from: the award's own for a grant. */
 function sourceOf(p: PlannedDeadline): { url?: string; read: string | null } {
@@ -120,14 +92,15 @@ function RowDetail({ result, done, id }: { result: ProgramResult; done: Record<s
 }
 
 export function DeadlineBoard({
-  planned, done = {},
+  planned, done = {}, colourOf,
 }: {
   planned: PlannedDeadline[];
   /** The applicant's document ticks, for a row's detail. */
   done?: Record<string, boolean>;
+  /** Each country's pass colour, for the ticket's stub. */
+  colourOf?: (country: string) => PassColour | undefined;
 }) {
   const [open, setOpen] = useState<string | null>(null);
-  const next = nextDeadline(planned);
   const dated = planned.filter((p) => p.day !== null);
   const sources = sourcesLine(planned);
   const oldest = dated
@@ -137,91 +110,29 @@ export function DeadlineBoard({
 
   return (
     <section className="board" aria-labelledby="board-title" data-testid="deadline-board">
-      <div className="board__next" data-testid="board-next">
-        <h2 className="board__kicker" id="board-title">Next deadline</h2>
-        {next && next.day ? (
-          <>
-            <p className="board__flap-row">
-              <span className="visually-hidden">
-                {spokenDate(next.day)}, {spokenDays(next)}: {rowText(next).title}, {rowText(next).detail}.
-                {next.beforeAdmission && ' Due before the admission deadline.'}
-              </span>
-              <Flaps text={flapDate(next.day)} />
-              <span className="board__next-what" aria-hidden="true">
-                <strong>{rowText(next).title}</strong>
-                <span>{rowText(next).detail}</span>
-                {next.beforeAdmission && <span className="board__note">Due before the admission deadline</span>}
-              </span>
-              <span className="board__days" aria-hidden="true">
-                <Flaps text={days(next)} />
-                <span className="board__days-label">{next.daysLeft === 1 ? 'day left' : next.daysLeft === 0 ? '' : 'days left'}</span>
-              </span>
-            </p>
-          </>
-        ) : (
-          <p className="board__none">
-            {planned.length === 0
-              ? 'Nothing on your plan yet. Keep a programme on the shortlist, or mark it maybe, and its deadline appears here.'
-              : 'No upcoming deadline on your list: every date has passed or was not found.'}
-          </p>
-        )}
-      </div>
-
-      {planned.length > 0 && (
-        <ol className="board__rows" aria-label="Every deadline on your list">
-          <li className="board__head" aria-hidden="true">
-            <span>Date</span><span>Where</span><span>What</span><span>Days</span><span>Requirements</span>
-          </li>
+      <h2 className="visually-hidden" id="board-title">Every deadline on your list, nearest first</h2>
+      {planned.length > 0 && !nextDeadline(planned) && (
+        <p className="board__none">No upcoming deadline on your list: every date has passed or was not found.</p>
+      )}
+      {planned.length === 0 ? (
+        <p className="board__none">
+          Nothing on your plan yet. Keep a programme on Find, or mark it maybe, and its deadline
+          appears here.
+        </p>
+      ) : (
+        <ol className="tickets" aria-label="Every deadline on your list">
           {planned.map((p) => (
-            <li
+            <Ticket
               key={p.key}
-              className={`board__row${p.passed ? ' is-passed' : ''}${p === next ? ' is-next' : ''}`}
-              data-testid={`board-row-${p.key}`}
-              data-kind={p.kind}
+              planned={p}
+              colour={colourOf?.(p.result.country)}
+              source={false}
+              open={open === p.key}
+              onToggle={() => setOpen(open === p.key ? null : p.key)}
+              testId={`board-row-${p.key}`}
             >
-              <span className="board__date">
-                {p.day ? (
-                  <>
-                    <span aria-hidden="true">
-                      <span className="board__dd">{flapDate(p.day).slice(0, 2)}</span>{' '}
-                      <span className="board__mon">{flapDate(p.day).slice(3)}</span>
-                    </span>
-                    <span className="visually-hidden">{spokenDate(p.day)}</span>
-                  </>
-                ) : 'not found'}
-              </span>
-              <span className="board__where">{p.result.city || p.result.country}</span>
-              <span className="board__what">
-                <span className="board__uni">
-                  <button
-                    type="button"
-                    className="board__open"
-                    aria-expanded={open === p.key}
-                    aria-controls={`board-detail-${p.key}`}
-                    onClick={() => setOpen(open === p.key ? null : p.key)}
-                    data-testid={`board-open-${p.key}`}
-                  >
-                    {rowText(p).title}
-                  </button>
-                  {p.result.user_decision === 'maybe' && <span className="board__maybe"> · maybe</span>}
-                </span>
-                <span className="board__prog">{rowText(p).detail}</span>
-                {p.beforeAdmission && <span className="board__note">before the admission deadline</span>}
-                {/* An earlier cycle's date is a guide; this intake's is still to be asked for. */}
-                {p.kind === 'admission' && !p.day && p.result.previous_cycle_deadline && (
-                  <span className="board__note">previous cycle {date(p.result.previous_cycle_deadline)}; this intake's date not published yet</span>
-                )}
-              </span>
-              <span className="board__left">
-                <span aria-hidden="true">{days(p)}</span>
-                <span className="visually-hidden">{spokenDays(p)}</span>
-              </span>
-              <span className={`board__word board__word--${wordTone(p.status)}`}>
-                <span className="visually-hidden">Requirements: </span>
-                {REQUIREMENT_WORD[p.status] ?? p.status}
-              </span>
-              {open === p.key && <RowDetail result={p.result} done={done} id={`board-detail-${p.key}`} />}
-            </li>
+              <RowDetail result={p.result} done={done} id={`board-detail-${p.key}`} />
+            </Ticket>
           ))}
         </ol>
       )}
@@ -230,8 +141,8 @@ export function DeadlineBoard({
         <p className="board__foot">
           Dates as each university publishes them{sources ? <>, from {sources}</> : null}
           {oldest ? <>; the oldest was read {spokenDate(oldest.slice(0, 10))}</> : null}. Days are
-          counted from today. The last column is what the requirements ask of you, not a prediction
-          of the decision.
+          counted from today. The coloured line is what the requirements ask of you, not a
+          prediction of the decision.
         </p>
       )}
     </section>

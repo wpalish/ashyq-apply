@@ -1,6 +1,6 @@
 /**
- * The departures board: the nearest deadline on tiles, every one after it,
- * and a last column that says what the requirements ask - never a chance.
+ * The plan's tickets: every deadline in date order, each with its days, where
+ * the requirements stand and what is due - never a chance.
  */
 
 import { fireEvent, render, screen, within } from '@testing-library/react';
@@ -30,11 +30,13 @@ const list = () => planDeadlines([
 ], today);
 
 describe('the deadline board', () => {
-  it('puts the nearest upcoming deadline on the tiles with the days left', () => {
+  it('puts the nearest upcoming deadline first, with its date and the days left', () => {
     render(<DeadlineBoard planned={list()} />);
-    const next = screen.getByTestId('board-next');
-    expect(next).toHaveTextContent('1 December 2026, 67 days left: University of Tokyo');
-    expect(next.querySelectorAll('.flaps__tile').length).toBeGreaterThan(4);
+    const next = screen.getByTestId('board-row-tokyo');
+    expect(next).toHaveTextContent('in 67 days');
+    expect(next).toHaveTextContent('Deadline 1 December 2026.');
+    expect(next).toHaveTextContent('University of Tokyo');
+    expect(next).toHaveAttribute('data-days', '67');
   });
 
   it('lists every deadline in order, a passed one marked and a missing one not guessed', () => {
@@ -49,9 +51,9 @@ describe('the deadline board', () => {
     expect(screen.getByTestId('board-row-groningen')).toHaveTextContent('maybe');
   });
 
-  it('says what the requirements ask, in one word per row', () => {
+  it('says what the requirements ask on every ticket', () => {
     render(<DeadlineBoard planned={list()} />);
-    expect(screen.getByTestId('board-row-tokyo')).toHaveTextContent('Met');
+    expect(screen.getByTestId('board-row-tokyo')).toHaveTextContent('Requirements met');
     expect(screen.getByTestId('board-row-groningen')).toHaveTextContent('Action needed');
     expect(screen.getByTestId('board-row-leuven')).toHaveTextContent('Ask the university');
   });
@@ -70,13 +72,13 @@ describe('the deadline board', () => {
 
   it('explains an empty plan instead of showing an empty board', () => {
     render(<DeadlineBoard planned={[]} />);
-    expect(screen.getByTestId('board-next')).toHaveTextContent('Nothing on your plan yet');
+    expect(screen.getByText(/Nothing on your plan yet/)).toBeInTheDocument();
     expect(screen.queryByRole('list')).toBeNull();
   });
 
   it('says so when no deadline is still ahead', () => {
     render(<DeadlineBoard planned={planDeadlines([row({ admission_deadline: '2026-01-01' })], today)} />);
-    expect(screen.getByTestId('board-next')).toHaveTextContent('No upcoming deadline on your list');
+    expect(screen.getByText(/No upcoming deadline on your list/)).toBeInTheDocument();
   });
 
   it('shows a grant deadline as its own row, flagged when it comes before the admission date', () => {
@@ -93,9 +95,8 @@ describe('the deadline board', () => {
     const grant = screen.getByTestId('board-row-groningen:talent');
     expect(grant).toHaveAttribute('data-kind', 'award');
     expect(grant).toHaveTextContent('Groningen Talent Grant');
-    expect(grant).toHaveTextContent('Grant application · essays · University of Groningen');
+    expect(grant).toHaveTextContent('Groningen Talent Grant · grant application · essays');
     expect(grant).toHaveTextContent('before the admission deadline');
-    expect(screen.getByTestId('board-next')).toHaveTextContent('Due before the admission deadline');
     // The award's own page and read date, not the programme's.
     const foot = screen.getByText(/Dates as each university publishes them/);
     expect(foot).toHaveTextContent('rug.nl');
@@ -112,7 +113,7 @@ describe('the deadline board', () => {
       },
     } as unknown as Partial<ProgramResult>)], today);
     render(<DeadlineBoard planned={planned} done={{}} />);
-    const opener = screen.getByTestId('board-open-tokyo');
+    const opener = screen.getByTestId('ticket-open-tokyo');
     expect(opener).toHaveAttribute('aria-expanded', 'false');
     fireEvent.click(opener);
     expect(opener).toHaveAttribute('aria-expanded', 'true');

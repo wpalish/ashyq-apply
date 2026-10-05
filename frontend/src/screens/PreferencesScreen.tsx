@@ -5,6 +5,8 @@
  * defensible if the user can see and change what produced it.
  */
 
+import { passStyle } from '@/components/Pass';
+import { passColours } from '@/lib/passColour';
 import { useState } from 'react';
 import { CommaSeparatedInput } from '@/components/CommaSeparatedInput';
 import { Chip, Field, Notice, Panel } from '@/components/primitives';
@@ -76,6 +78,9 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
 
   const weights = (get(profileDraft, ['weights']) ?? {}) as Record<string, number>;
   const preferredCountries = (get(profileDraft, ['preferences', 'preferred_countries']) ?? []) as string[];
+  // The colour each country will wear: the picked ones in the order they
+  // were picked, then the rest of the suggestions (lib/passColour).
+  const chipColours = passColours(SUGGESTED_COUNTRIES, preferredCountries);
   const fundingCriticality = String(get(profileDraft, ['funding', 'funding_criticality']) ?? 'important');
   const toggleCountry = (country: string) => {
     const next = preferredCountries.includes(country)
@@ -102,28 +107,35 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
 
   return (
     <>
-      <div className="screen__head">
-        <p className="screen__eyebrow">Your journey · Preferences</p>
-        <h1 className="screen__title">Shape your perfect <span className="find-yellow">match.</span></h1>
-        <p className="screen__lede">
-          Tell us where you want to go and what you can afford. You can change these choices later.
+      <header className="step-head">
+        <p className="step-head__step">Preferences · where and how much</p>
+        <h1 className="step-head__title">Where would you study?</h1>
+        <p className="step-head__lede">
+          Tap every country you would consider. Each one keeps its colour on your passes and routes,
+          in the order you pick them.
         </p>
-      </div>
+      </header>
 
       <div className="stack stack--loose">
         <Panel title="Target countries and regions" hint="Choose the places you would consider studying. Select more than one.">
-          <div className="preference-country-grid" aria-label="Suggested countries">
-            {SUGGESTED_COUNTRIES.map((country) => (
-              <button
-                key={country}
-                type="button"
-                className="preference-country"
-                aria-pressed={preferredCountries.includes(country)}
-                onClick={() => toggleCountry(country)}
-              >
-                <span>{country}</span><span aria-hidden="true">{preferredCountries.includes(country) ? '✓' : '+'}</span>
-              </button>
-            ))}
+          <div className="preference-country-grid" role="group" aria-label="Suggested countries">
+            {SUGGESTED_COUNTRIES.map((country) => {
+              const on = preferredCountries.includes(country);
+              const colour = chipColours.get(country);
+              return (
+                <button
+                  key={country}
+                  type="button"
+                  className={`preference-country${on ? ' is-on' : ''}`}
+                  style={passStyle(colour)}
+                  aria-pressed={on}
+                  onClick={() => toggleCountry(country)}
+                >
+                  <span className="preference-country__mark" aria-hidden="true">{on ? '✓' : ''}</span>
+                  <span>{country}</span>
+                </button>
+              );
+            })}
           </div>
           <details className="preference-more">
             <summary>Other countries and location preferences</summary>

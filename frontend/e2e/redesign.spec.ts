@@ -302,16 +302,20 @@ test('the plan puts the nearest deadline on the board and every one after it in 
   expect(planned).toBeGreaterThanOrEqual(2);
   const applications = board.locator('[data-kind="admission"]');
   await expect(applications).toHaveCount(planned);
-  await expect(applications.filter({ hasText: 'University of Groningen' })).toContainText('Action needed');
+  // Each ticket says where the requirements stand, with the one that is open.
+  await expect(applications.filter({ hasText: 'University of Groningen' })).toContainText('Waiting on');
   // A grant with its own application is a deadline too, and Groningen's comes three months earlier.
   await expect(board.locator('[data-kind="award"]').filter({ hasText: 'Groningen Talent Grant' }))
     .toContainText('before the admission deadline');
 
   // Upcoming rows are in date order: the days left never go down.
-  const days = (await board.locator('.board__row:not(.is-passed) .board__left [aria-hidden]').allTextContents())
-    .map((text) => Number(text)).filter((n) => !Number.isNaN(n));
+  const days = (await board.locator('.ticket[data-days]').evaluateAll(
+    (els) => els.map((e) => Number(e.getAttribute('data-days'))),
+  )).filter((n) => !Number.isNaN(n));
   expect(days).toEqual([...days].sort((a, b) => a - b));
-  if (days.length) await expect(page.getByTestId('board-next')).toContainText(new RegExp(`${days[0]} days? left`));
+  if (days.length && days[0]! > 1) await expect(board.locator('.ticket[data-days]').first()).toContainText(`in ${days[0]} days`);
+  // This week's card says what to do before the lists exist.
+  await expect(page.getByTestId('this-week')).toContainText('Collect the document lists');
 
   // A row opens onto its programme: the three answers, the money and the documents.
   const opener = applications.filter({ hasText: 'University of Groningen' }).getByRole('button');

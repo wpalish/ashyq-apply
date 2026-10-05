@@ -7,8 +7,9 @@
  * rule this out in March" is a real question in October.
  */
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { DeadlineBoard } from '@/components/DeadlineBoard';
+import { passColours, preferredCountries } from '@/lib/passColour';
 import { Chip, Empty, Notice, Panel, StatusChip } from '@/components/primitives';
 import { planDeadlines } from '@/lib/deadlines';
 import { doneKey, nextToStart, useDocsDone } from '@/lib/docs';
@@ -17,7 +18,11 @@ import { useStore } from '@/lib/store';
 import type { ProgramResult, UserDecision } from '@/types';
 
 export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
-  const { results, run, collectDocuments, decide } = useStore();
+  const { results, run, collectDocuments, decide, savedProfile } = useStore();
+  const passes = useMemo(
+    () => passColours(results.map((r) => r.country), preferredCountries(savedProfile)),
+    [results, savedProfile],
+  );
   const [done, toggle] = useDocsDone();
 
   const group = (d: UserDecision) => results.filter((r) => r.user_decision === d);
@@ -32,20 +37,31 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
     (run?.stage === 'document_collection' && run.job_running);
 
   if (results.length === 0) return <Empty title="No results yet">Run the research first.</Empty>;
+  const planned = planDeadlines(results);
+  const datedCount = planned.filter((p) => p.day !== null).length;
 
   return (
     <>
-      <div className="screen__head">
-        <p className="screen__eyebrow">Plan</p>
-        <h1 className="screen__title">Your deadlines and decisions</h1>
-        <p className="screen__lede">
-          Every deadline on your list, nearest first. Documents are collected only for what you
-          keep: it is the slowest step, so it runs on the handful you intend to apply to.
+      <header className="plan-head">
+        <h1 className="plan-title">Plan</h1>
+        <p className="plan-sub">
+          {approved.length} kept programme{approved.length === 1 ? '' : 's'}
+          {maybe.length > 0 && <> · {maybe.length} maybe</>}
+          {' · '}{datedCount} date{datedCount === 1 ? '' : 's'}
         </p>
-      </div>
+      </header>
 
       <div className="stack stack--loose">
-        <DeadlineBoard planned={planDeadlines(results)} done={done} />
+        <ThisWeek
+          results={results}
+          done={done}
+          shortlisted={shortlisted}
+          collecting={Boolean(collecting)}
+          onCollect={async () => { await collectDocuments(); onCollect(); }}
+          onOpen={onCollect}
+        />
+
+        <DeadlineBoard planned={planned} done={done} colourOf={(c) => passes.get(c)} />
 
         <NextToStart results={results} done={done} toggle={toggle} />
 
@@ -227,5 +243,64 @@ function NextToStart({
         )}
       </div>
     </Panel>
+  );
+}
+
+/**
+ * The plan's black card (concept «Пропуск»): what to do this week. Before
+ * the document lists exist it asks for them; after, it names the documents
+ * whose start date falls within seven days - each one's due date minus the
+ * time it takes, from the lists - and opens the documents screen.
+ */
+function ThisWeek({
+  results, done, shortlisted, collecting, onCollect, onOpen,
+}: {
+  results: ProgramResult[];
+  done: Record<string, boolean>;
+  shortlisted: number;
+  collecting: boolean;
+  onCollect: () => void;
+  onOpen: () => void;
+}) {
+  const kept = results.filter((r) => r.user_decision === 'approved' || r.user_decision === 'maybe');
+  const collected = kept.some((r) => r.checklist);
+  const tasks = collected ? nextToStart(results, done) : [];
+  const week = tasks.filter(({ timing }) => timing.late || timing.daysToStart <= 7);
+  const names = [...new Set(week.map(({ item }) => item.name))];
+
+  let title: string;
+  let detail: string;
+  let action: { label: string; run: () => void; disabled?: boolean } | null;
+  if (shortlisted === 0) {
+    title = 'Keep a programme to start a plan';
+    detail = 'Its deadlines and the documents it asks for appear here.';
+    action = null;
+  } else if (!collected) {
+    title = `Collect the document lists for ${shortlisted} programme${shortlisted === 1 ? '' : 's'}`;
+    detail = 'The slowest step, so it runs only on what you keep.';
+    action = { label: collecting ? 'Collecting…' : 'Collect', run: onCollect, disabled: collecting };
+  } else if (names.length > 0) {
+    title = `${names.length} document${names.length === 1 ? '' : 's'} to start`;
+    detail = names.slice(0, 3).join(' · ') + (names.length > 3 ? ` · and ${names.length - 3} more` : '');
+    action = { label: 'Open', run: onOpen };
+  } else {
+    const next = tasks[0];
+    title = 'Nothing to start this week';
+    detail = next ? `Next: ${next.item.name}, by ${date(next.timing.start)}` : 'Every document with a known date is ready.';
+    action = { label: 'Open', run: onOpen };
+  }
+  return (
+    <section className="week" aria-labelledby="week-title" data-testid="this-week">
+      <div>
+        <p className="week__kicker">This week</p>
+        <h2 className="week__title" id="week-title">{title}</h2>
+        <p className="week__detail">{detail}</p>
+      </div>
+      {action && (
+        <button type="button" className="week__action" onClick={action.run} disabled={action.disabled} data-testid="this-week-action">
+          {action.label}
+        </button>
+      )}
+    </section>
   );
 }

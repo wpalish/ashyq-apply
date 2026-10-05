@@ -517,3 +517,76 @@
 
 /* The table's decision column is narrow: "Keep" takes a little less padding. */
 .shortlist-table .decision-btn { padding-inline: 0.4rem; }
+
+/* --- plan (concept «Пропуск»: the week's card, then the tickets) -------- */
+.plan-head { display: block; margin-bottom: 1rem; }
+.plan-title { margin: 0; font-size: clamp(2rem, 1.6rem + 1.6vw, 2.6rem); font-weight: 800; letter-spacing: -0.045em; line-height: 1.05; }
+.plan-sub { margin: 0.25rem 0 0; font-size: 0.9rem; color: var(--ink-muted); }
+.week {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 1rem 1.15rem; border-radius: 22px;
+  background: var(--surface-inverted); color: var(--ink-inverted);
+}
+.week__kicker { margin: 0; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.75; }
+.week__title { margin: 0.3rem 0 0; font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em; color: inherit; }
+.week__detail { margin: 0.15rem 0 0; font-size: 0.82rem; opacity: 0.8; }
+.week__action {
+  flex: none; min-height: 2.6rem; padding: 0 1.1rem; border: 0; border-radius: 999px;
+  background: var(--ink-inverted); color: var(--surface-inverted); font: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer;
+}
+.week__action:disabled { opacity: 0.6; cursor: progress; }
+.week__action:focus-visible { outline: 2px solid var(--ink-inverted); outline-offset: 3px; }
+.board { display: grid; gap: 0.75rem; }
+.board__none { margin: 0; padding: 1rem 1.1rem; border: 1px dashed var(--rule-strong); border-radius: 18px; color: var(--ink-muted); }
+.board__foot { margin: 0; font-size: 0.75rem; color: var(--ink-muted); }
+.ticket { display: block; }
+.ticket__row { display: flex; align-items: stretch; min-height: 4.9rem; }
+.ticket__open {
+  padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer;
+  text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 3px;
+}
+.ticket__open:hover, .ticket__open[aria-expanded='true'] { text-decoration-color: currentColor; }
+.ticket__open:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.ticket__maybe { color: var(--ink-muted); }
+.ticket__note { font-size: 0.75rem; color: var(--ink-muted); }
+.ticket__detail { padding: 0.75rem 1rem 1rem; border-top: 1px solid var(--rule); }
+.ticket.is-open { box-shadow: 0 0 0 2px var(--ink); }
+
+/* --- profile and preferences (concept «Пропуск»: five bars, one question) */
+.profile-steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.4rem; margin: 0 0 1.1rem; }
+.profile-steps button {
+  display: grid; gap: 0.4rem; min-width: 0; padding: 0; border: 0; background: none;
+  color: var(--ink-muted); font: inherit; font-size: 0.75rem; text-align: left; cursor: pointer;
+}
+.profile-steps button::before { content: ''; height: 0.5rem; border-radius: 999px; background: var(--rule-strong); }
+.profile-steps button.is-done::before, .profile-steps button[aria-current='step']::before { background: var(--ink); }
+.profile-steps button[aria-current='step'] { color: var(--ink); font-weight: 700; }
+.profile-steps button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.profile-steps__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.step-head { margin-bottom: 1.4rem; }
+.step-head__step { margin: 0; font-size: 0.85rem; font-weight: 600; color: var(--ink-muted); }
+.step-head__title { margin: 0.3rem 0 0; font-size: clamp(2rem, 1.6rem + 1.8vw, 2.8rem); font-weight: 800; letter-spacing: -0.045em; line-height: 1.04; }
+.step-head__lede { max-width: 38rem; margin: 0.6rem 0 0; font-size: 0.95rem; color: var(--ink-muted); }
+.profile-step-actions .profile-back { min-height: 3rem; padding: 0 1.4rem; border-radius: 999px; border-color: transparent; background: var(--surface); font-weight: 700; }
+.profile-step-actions .profile-next { min-height: 3rem; padding: 0 1.4rem; border-radius: 999px; gap: 0.5rem; }
+
+/* the country chips: the colour each country will wear */
+.preference-country-grid { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+.preference-country {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  min-height: 3rem; padding: 0 1.1rem 0 0.45rem; border: 1px solid var(--rule); border-radius: 999px;
+  background: var(--surface); color: var(--ink); font: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+}
+.preference-country__mark {
+  display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: 50%;
+  background: var(--pass, var(--pass-1)); color: var(--pass-ink); font-size: 0.95rem; font-weight: 800;
+}
+.preference-country.is-on { background: var(--pass, var(--pass-1)); border-color: transparent; color: var(--pass-ink); }
+.preference-country.is-on .preference-country__mark { background: var(--surface); color: var(--ink); }
+.preference-country:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+@media (max-width: 900px) {
+  .profile-steps__name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .profile-step-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .profile-step-actions .profile-next { flex: 1; justify-content: center; }
+}
