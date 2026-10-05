@@ -71,8 +71,9 @@ def provider(monkeypatch):
     return install
 
 
-def test_the_experiment_is_off_by_default():
-    assert web_requirements.TOPIC_SEARCH is False
+def test_the_rule_is_on_by_default():
+    """On since the 10-case paired run 37279746829 (owner approved 2026-10-05)."""
+    assert web_requirements.TOPIC_SEARCH is True
 
 
 async def test_one_official_page_per_topic_and_off_site_pages_are_skipped(provider):

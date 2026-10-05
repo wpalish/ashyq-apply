@@ -111,12 +111,13 @@ _WAIVER_NEGATION = re.compile(
 _WAIVER_OFFERED = re.compile(r"\b(available|offered|granted|waive[ds]?|waiving)\b", re.IGNORECASE)
 
 
-#: Experiment ER-08 (expert trace 2026-10-04), off until a paired run passes.
+#: Experiment ER-08 (expert trace 2026-10-04), on since the 10-case paired run
+#: 37279746829 (owner approved 2026-10-05); False turns it off.
 #: After a programme page is known, one public query per topic finds the
 #: official page that publishes it. Groningen, NTU and HKU each answered the
 #: English, fee and deadline questions on pages this adapter never opened,
 #: and each was the top same-institution result of one query.
-TOPIC_SEARCH = False
+TOPIC_SEARCH = True
 #: Topic name to the public query; only the institution name is filled in.
 _TOPIC_QUERIES = (
     ("english", "{name} undergraduate English language requirements international applicants"),
