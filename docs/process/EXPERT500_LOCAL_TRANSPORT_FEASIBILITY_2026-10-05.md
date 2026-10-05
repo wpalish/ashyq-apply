@@ -68,3 +68,19 @@ reveal its encrypted secret. No credential value was printed or committed.
 
 No local source/provider/model call, new trial, runner registration, deployment
 or `probe_access.py` execution occurred during this feasibility work.
+
+## Preserved independent audits
+
+Original notes are stored under
+`backend/evaluation/research/expert/data/protocol.2026-10-05/`:
+
+- `v13-final-queue-audit`: four terminal diagnostic originals, manifest
+  `dd4cb8636f84d9f8bbec692e30f384916b4075a6c4931236e4e6acf12492c90a`.
+- `local-transport-feasibility`: runtime audit and attribution correction,
+  manifest `3fc7d95765168a9b6054db79b125cdc2ca9206cbaeb9911aa34b5052f97213ab`.
+- `local-transport-contract-proposal`: independent minimum contract proposal,
+  manifest `8f7273d2aac8f60da4ffa0dc638cdc311abf81c91bafd7edf6ce0bc822d4406e`.
+
+All referenced originals/source hashes were checked unchanged. The prospective
+persistent-worker direction is the root engineer's choice; the owner specified
+the comparison method and budgets. Test outlines remain unexecuted.
