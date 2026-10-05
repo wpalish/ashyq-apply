@@ -111,12 +111,13 @@ _WAIVER_NEGATION = re.compile(
 _WAIVER_OFFERED = re.compile(r"\b(available|offered|granted|waive[ds]?|waiving)\b", re.IGNORECASE)
 
 
-#: Experiment ER-08 (expert trace 2026-10-04), off until a paired run passes.
+#: Experiment ER-08 (expert trace 2026-10-04), on since the 10-case paired run
+#: 37279746829 (owner approved 2026-10-05); False turns it off.
 #: After a programme page is known, one public query per topic finds the
 #: official page that publishes it. Groningen, NTU and HKU each answered the
 #: English, fee and deadline questions on pages this adapter never opened,
 #: and each was the top same-institution result of one query.
-TOPIC_SEARCH = False
+TOPIC_SEARCH = True
 #: Topic name to the public query; only the institution name is filled in.
 _TOPIC_QUERIES = (
     ("english", "{name} undergraduate English language requirements international applicants"),
@@ -473,6 +474,7 @@ class WebRequirementsAdapter:
         )
         from app.adapters.search import SearchError, get_search_provider
         from app.adapters.search.base import search_failure_diagnostic
+        from app.adapters.search.intent import DEFAULT_QUERY_BUDGET
 
         key = candidate.domain or candidate.name
         if key in self._topic_pages:
@@ -480,12 +482,20 @@ class WebRequirementsAdapter:
         self._topic_pages[key] = ()
         if not candidate.domain:
             return ()
+        # One institution gets DEFAULT_QUERY_BUDGET queries in all; topic
+        # search spends only what discovery left (English first).
+        remaining = DEFAULT_QUERY_BUDGET - candidate.search_queries_used
+        if remaining <= 0:
+            out.errors.append(
+                f"Topic search not run: discovery used the {DEFAULT_QUERY_BUDGET}-query budget"
+            )
+            return ()
         try:
             provider = get_search_provider()
         except SearchError:
             return ()
         found: list[tuple[str, str]] = []
-        for topic, template in _TOPIC_QUERIES:
+        for topic, template in _TOPIC_QUERIES[:remaining]:
             try:
                 response = await provider.search(
                     query=template.format(name=candidate.name),
