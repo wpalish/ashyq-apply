@@ -110,3 +110,25 @@ async def test_a_refusal_stops_the_topic_search_and_is_recorded(provider):
     assert pages == (("english", "https://www.rug.nl/a"),)
     assert len(built.queries) == 2
     assert any("Topic search (fees)" in e for e in out.errors)
+
+
+async def test_topic_search_spends_only_what_discovery_left(provider):
+    """One institution gets six queries in all, discovery's included."""
+    built = provider(["https://www.rug.nl/a", "https://www.rug.nl/b", "https://www.rug.nl/c"])
+    adapter = WebRequirementsAdapter(None, "2027/28")  # type: ignore[arg-type]
+    spent = candidate()
+    spent.search_queries_used = 5
+    pages = await adapter._find_topic_pages(spent, program(), AdapterResult())
+    assert [t for t, _ in pages] == ["english"]
+    assert len(built.queries) == 1
+
+
+async def test_no_topic_query_once_discovery_spent_the_budget(provider):
+    built = provider(["https://www.rug.nl/a"])
+    adapter = WebRequirementsAdapter(None, "2027/28")  # type: ignore[arg-type]
+    spent = candidate()
+    spent.search_queries_used = 6
+    out = AdapterResult()
+    assert await adapter._find_topic_pages(spent, program(), out) == ()
+    assert built.queries == []
+    assert any("Topic search not run" in e for e in out.errors)

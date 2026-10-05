@@ -474,6 +474,7 @@ class WebRequirementsAdapter:
         )
         from app.adapters.search import SearchError, get_search_provider
         from app.adapters.search.base import search_failure_diagnostic
+        from app.adapters.search.intent import DEFAULT_QUERY_BUDGET
 
         key = candidate.domain or candidate.name
         if key in self._topic_pages:
@@ -481,12 +482,20 @@ class WebRequirementsAdapter:
         self._topic_pages[key] = ()
         if not candidate.domain:
             return ()
+        # One institution gets DEFAULT_QUERY_BUDGET queries in all; topic
+        # search spends only what discovery left (English first).
+        remaining = DEFAULT_QUERY_BUDGET - candidate.search_queries_used
+        if remaining <= 0:
+            out.errors.append(
+                f"Topic search not run: discovery used the {DEFAULT_QUERY_BUDGET}-query budget"
+            )
+            return ()
         try:
             provider = get_search_provider()
         except SearchError:
             return ()
         found: list[tuple[str, str]] = []
-        for topic, template in _TOPIC_QUERIES:
+        for topic, template in _TOPIC_QUERIES[:remaining]:
             try:
                 response = await provider.search(
                     query=template.format(name=candidate.name),

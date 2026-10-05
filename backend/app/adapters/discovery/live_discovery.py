@@ -806,6 +806,9 @@ class DiscoveryTrace:
     public_fields: list[str] | None = None
     #: Subjects assigned a provider query in this run, for coverage accounting.
     queried_fields: list[str] = field(default_factory=list)
+    #: Provider queries discovery sent for this institution; later stages
+    #: spend only what remains of the per-institution query budget.
+    search_queries_sent: int = 0
     search_coverage: dict[str, int] = field(default_factory=dict)
     used_navigation_fallback: bool = False
     #: (url, link text) for leads found by a catalogue's own wording rather
@@ -1500,6 +1503,7 @@ class LiveDiscoveryAdapter:
         except SearchError as exc:
             trace.search_failures.append(search_failure_diagnostic(provider.name, exc))
             return
+        trace.search_queries_sent += len(report.queries_run)
 
         trace.search_failures.extend(report.failure_diagnostics)
         if report.throttled:
@@ -1649,6 +1653,7 @@ class LiveDiscoveryAdapter:
             # Counted before a throttle stop: the queries sent before the 429
             # were spent, and leaving them out understated the run's cost.
             query_count += len(report.queries_run)
+            trace.search_queries_sent += len(report.queries_run)
             failed_count += len(report.failed_queries)
             if report.throttled:
                 # One rate-limit answer ends the run's searching, not just this
@@ -1877,6 +1882,7 @@ class LiveDiscoveryAdapter:
         trace: DiscoveryTrace,
     ) -> None:
         """Attach what was found. A category with nothing stays None."""
+        candidate.search_queries_used = trace.search_queries_sent
         candidate.admissions_url = _first(selected[PageCategory.ADMISSIONS])
         candidate.costs_url = _first(selected[PageCategory.COSTS])
         candidate.scholarships_url = _first(selected[PageCategory.SCHOLARSHIPS])
