@@ -598,6 +598,24 @@ def main() -> None:
         help="experiment ER-05: links naming undergraduate admission become candidates",
     )
     parser.add_argument(
+        "--applicant-academic-year",
+        action="store_true",
+        help="plan rule AY-1: read fee and requirement tables for the applicant's academic "
+        "year (fall 2027 -> 2027/28) instead of the server default",
+    )
+    parser.add_argument(
+        "--shared-query-budget",
+        action="store_true",
+        help="plan rule BL-1: every stage's provider queries count against one budget of six "
+        "per institution; topic search leaves one for the scholarship search",
+    )
+    parser.add_argument(
+        "--deadline-v2",
+        action="store_true",
+        help="plan rule DL-2: abbreviated months, date-first 'Applications due' rows, and a "
+        "window table's catch-all qualification row",
+    )
+    parser.add_argument(
         "--walker-subject-cap",
         action="store_true",
         help="experiment ER-10: a catalogue walk reads at most three leads that name none "
@@ -692,6 +710,18 @@ def main() -> None:
             from app.adapters.discovery import live_discovery
 
             live_discovery.NAVIGATION_SLOT = True
+        if args.applicant_academic_year:
+            from app.pipeline import runner as runner_module
+
+            runner_module.APPLICANT_ACADEMIC_YEAR = True
+        if args.shared_query_budget:
+            from app.adapters.search import intent as intent_module
+
+            intent_module.SHARED_QUERY_BUDGET = True
+        if args.deadline_v2:
+            from app.adapters import extraction as extraction_module
+
+            extraction_module.DEADLINE_V2 = True
         if args.walker_subject_cap:
             from app.adapters.discovery import catalog_walker
 
@@ -785,6 +815,9 @@ def main() -> None:
                         *(["--topic-search"] if args.topic_search else []),
                         *(["--navigation-field-leads"] if args.navigation_field_leads else []),
                         *(["--walker-subject-cap"] if args.walker_subject_cap else []),
+                        *(["--deadline-v2"] if args.deadline_v2 else []),
+                        *(["--shared-query-budget"] if args.shared_query_budget else []),
+                        *(["--applicant-academic-year"] if args.applicant_academic_year else []),
                         "--search-funding-fallback"
                         if args.search_funding_fallback
                         else "--no-search-funding-fallback",

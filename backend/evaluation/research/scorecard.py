@@ -93,6 +93,8 @@ def label_outcomes(dataset: Dataset, capture: Capture) -> dict[str, Any]:
     labels_out: list[dict[str, Any]] = []
     wrong: list[dict[str, Any]] = []
     unlabelled: list[dict[str, Any]] = []
+    other_scope: list[dict[str, Any]] = []
+    partial: list[dict[str, Any]] = []
     for case in dataset.cases:
         observation = observed.get(case.id)
         predictions = _answered(observation.predictions) if observation else []
@@ -112,6 +114,16 @@ def label_outcomes(dataset: Dataset, capture: Capture) -> dict[str, Any]:
                         "label_status": label.status if label else None,
                     }
                 )
+            elif verdict.other_scope or verdict.partial:
+                (other_scope if verdict.other_scope else partial).append(
+                    {
+                        "case": case.id,
+                        "key": p.key,
+                        "value": p.value,
+                        "expected": label.value if label else None,
+                        "url": str(p.evidence.url) if p.evidence else None,
+                    }
+                )
             elif not verdict.correct:
                 wrong.append(
                     {
@@ -128,13 +140,18 @@ def label_outcomes(dataset: Dataset, capture: Capture) -> dict[str, Any]:
                 continue
             ours = by_key.get(label.key, [])
             verdicts = [adjudicate(p, label) for p in ours]
+            judged = [v for v in verdicts if v.adjudicated]
             if any(v.correct for v in verdicts):
                 outcome = "hit"
             elif not verdicts:
                 outcome = "missed"
-            elif any(v.value_matches and v.valid_scope for v in verdicts):
+            elif any(v.partial for v in verdicts):
+                outcome = "partial"
+            elif not judged:
+                outcome = "other_scope_only"
+            elif any(v.value_matches and v.valid_scope for v in judged):
                 outcome = "unsupported"
-            elif any(v.value_matches for v in verdicts):
+            elif any(v.value_matches for v in judged):
                 outcome = "wrong_scope"
             else:
                 outcome = "wrong_value"
@@ -147,7 +164,13 @@ def label_outcomes(dataset: Dataset, capture: Capture) -> dict[str, Any]:
                     "ours": [p.value for p in ours],
                 }
             )
-    return {"labels": labels_out, "wrong_claims": wrong, "unlabelled": unlabelled}
+    return {
+        "labels": labels_out,
+        "wrong_claims": wrong,
+        "unlabelled": unlabelled,
+        "other_scope": other_scope,
+        "partial": partial,
+    }
 
 
 def _why(verdict: Any) -> str:
@@ -315,6 +338,8 @@ _SHOWN = (
     "claim_precision",
     "claim_recall",
     "wrong_scope_claim_rate",
+    "other_scope_claim_rate",
+    "partial_claim_rate",
     "critical_field_coverage",
     "unsupported_claim_rate",
 )

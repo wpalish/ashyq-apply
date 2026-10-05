@@ -48,6 +48,54 @@ def test_import_is_idempotent_and_preserves_curated_identity(catalogue_session):
     assert retrieve(s, query="MIT")[0].name == "Massachusetts Institute of Technology"
 
 
+@pytest.mark.parametrize(
+    "query",
+    [
+        "Columbia University",
+        "University College Dublin",
+        "Durham University",
+        "Korea University",
+        "Northwestern University",
+    ],
+)
+def test_the_university_named_exactly_comes_first(catalogue_session, query):
+    """Top-500 audit (PR #44): these exact names put another university first."""
+    from app.domain.dedupe import normalize
+
+    first = retrieve(catalogue_session, query=query)[0]
+    assert normalize(query) in {normalize(first.name), *(normalize(a) for a in first.aliases or [])}
+
+
+def test_every_seed_name_finds_its_own_university_first(catalogue_session):
+    from app.catalogue.importer import identity_key
+
+    by_key = {u.identity_key: u for u in catalogue_session.scalars(select(University))}
+    misses = []
+    for record in snapshot()["universities"]:
+        own = by_key[identity_key(record["name"], record["country"])]
+        found = retrieve(catalogue_session, query=record["name"])
+        if not found or found[0].id != own.id:
+            misses.append(record["name"])
+    assert misses == []
+
+
+def test_an_empty_query_keeps_the_previous_order(catalogue_session):
+    rows = retrieve(catalogue_session)
+    assert [u.id for u in rows] == [
+        u.id
+        for u in sorted(
+            rows,
+            key=lambda u: (0 if u.registry_entry else 1, normalize_name(u.name), u.id),
+        )
+    ]
+
+
+def normalize_name(name: str) -> str:
+    from app.domain.dedupe import normalize
+
+    return normalize(name)
+
+
 def test_seed_history_does_not_overwrite_live_identity_or_roll_back(catalogue_session):
     s = catalogue_session
     uni = retrieve(s, query="Massachusetts Institute")[0]
