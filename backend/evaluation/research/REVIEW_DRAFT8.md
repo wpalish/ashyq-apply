@@ -6,7 +6,7 @@ was read on the official page that day; excerpts in
 signed**: changed cases are `draft` until the owner reviews them.
 
 **74/220 known labels** (signed corpus: 62/220). Canonical SHA-256
-`c6059054cd118153e5254565415c20712089a77736c3b6ec81d05dd145eba456`.
+`c46c21ef837514922176abcdbcfd884c517edb3d1f3b6e078282ef5bd6890eeb`.
 
 ## Why
 
