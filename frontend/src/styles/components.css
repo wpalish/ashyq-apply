@@ -1109,6 +1109,47 @@
   min-width: 0;
 }
 .rcard.is-open { grid-column: 1 / -1; border-color: var(--ink); }
+
+/* Concept «Пропуск»: the card's head is a pass in the country's colour, white
+   on a deep muted fill (5.7–9.6:1); the three answers stay on white below.
+   From the ninth country on the colour repeats, striped. */
+.rcard--pass { padding: 0 0 var(--space-3); overflow: hidden; border-radius: var(--radius-pass); }
+.rcard--pass > :not(.rcard__head) { margin-inline: var(--space-4); }
+.rcard--pass .rcard__head {
+  position: relative;
+  background-color: var(--pass);
+  color: var(--pass-ink);
+  padding: var(--space-4);
+  border-bottom: 2px dashed color-mix(in srgb, var(--pass-ink) 22%, var(--pass));
+  isolation: isolate;
+}
+.rcard--pass .rcard__head::after {
+  content: '';
+  position: absolute;
+  right: -2.25rem; top: -2.25rem;
+  width: 8rem; height: 8rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--pass-ink) 12%, transparent);
+  z-index: -1;
+}
+.rcard--pattern .rcard__head {
+  background-image: repeating-linear-gradient(135deg, color-mix(in srgb, var(--pass-ink) 12%, transparent) 0 6px, transparent 6px 14px);
+}
+.rcard__country {
+  margin: 0 0 2px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.rcard--pass .rcard__uni button { color: inherit; }
+.rcard--pass .rcard__uni button:focus-visible { outline-color: var(--pass-ink); }
+.rcard--pass .rcard__prog,
+.rcard--pass .rcard__per,
+.rcard--pass .rcard__amount--unknown { color: var(--pass-ink); }
+.rcard--pass .rcard__lines { border-top: 0; }
+.rcard--pass.is-open { border-color: var(--pass); box-shadow: 0 0 0 2px var(--pass); }
+.rcard--pass.is-rejected .rcard__head { filter: grayscale(0.75); }
 .rcard.is-rejected { background: var(--surface-sunken); }
 .rcard.is-rejected .rcard__uni button { text-decoration: line-through; text-decoration-color: var(--ink-faint); }
 .rcard__head { display: flex; justify-content: space-between; gap: var(--space-3); align-items: flex-start; }

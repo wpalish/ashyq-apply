@@ -15,6 +15,7 @@ import { StatusChip } from '@/components/primitives';
 import {
   admissionsFitTone, date, eligibilityTone, fundingClassTone, money,
 } from '@/lib/format';
+import type { PassColour } from '@/lib/passColour';
 import type { ProgramResult } from '@/types';
 
 /** The one requirement that explains an eligibility that is not simply met. */
@@ -80,7 +81,7 @@ function firstSentence(text: string | undefined): string {
 }
 
 export function ResultCard({
-  result, open, onToggle, decision, detail, compare,
+  result, open, onToggle, decision, detail, compare, pass,
 }: {
   result: ProgramResult;
   open: boolean;
@@ -91,6 +92,11 @@ export function ResultCard({
   detail?: ReactNode;
   /** The "compare" toggle, when the screen offers a comparison. */
   compare?: ReactNode;
+  /**
+   * The country's colour (concept «Пропуск»): the card's head becomes a pass
+   * in it. Undefined keeps the plain card.
+   */
+  pass?: PassColour;
 }) {
   const r = result;
   const gap = r.funding_gap;
@@ -99,11 +105,14 @@ export function ResultCard({
 
   return (
     <article
-      className={`rcard${open ? ' is-open' : ''}${r.user_decision === 'rejected' ? ' is-rejected' : ''}`}
+      className={`rcard${open ? ' is-open' : ''}${r.user_decision === 'rejected' ? ' is-rejected' : ''}${pass ? ' rcard--pass' : ''}${pass?.pattern ? ' rcard--pattern' : ''}`}
+      style={pass ? { ['--pass' as string]: `var(--pass-${pass.slot})` } : undefined}
+      data-pass={pass?.slot}
       data-testid={`card-${r.id}`}
     >
       <div className="rcard__head">
         <div className="rcard__names">
+          {pass && <p className="rcard__country">{r.country}</p>}
           <h3 className="rcard__uni">
             <button
               type="button"

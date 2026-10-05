@@ -15,11 +15,12 @@ const decide = vi.fn().mockResolvedValue(undefined);
 const saveNotes = vi.fn().mockResolvedValue(undefined);
 
 vi.mock('@/lib/store', () => ({
-  useStore: () => ({ results: [row, ...others], summary, shortlist: null, decide, saveNotes }),
+  useStore: () => ({ results: [row, ...others], summary, shortlist: null, decide, saveNotes, savedProfile }),
 }));
 
 let row: ProgramResult;
 let others: ProgramResult[] = [];
+let savedProfile: unknown = null;
 // The filters are built from the summary the API returns, not from the rows.
 const summary = {
   total: 1,
@@ -65,6 +66,7 @@ beforeEach(() => {
   saveNotes.mockClear();
   row = makeRow();
   others = [];
+  savedProfile = null;
   window.localStorage.removeItem('ashyq.compare');
   // These tests read the table; the cards view is the default and has its
   // own tests at the end.
@@ -300,6 +302,16 @@ describe('the cards view', () => {
       last_verified: '2026-09-14T10:00:00Z',
       admission_deadline: '2027-05-01',
     } as Partial<ProgramResult>);
+  });
+
+  it('wears its country\'s pass colour, the applicant\'s countries first', () => {
+    others = [makeRow({ id: 'result-2', university: 'University of Tokyo', country: 'Japan' })];
+    savedProfile = { preferences: { preferred_countries: ['Japan', 'Netherlands'] } };
+    render(<ShortlistScreen />);
+    // Japan was picked first, so it has the first colour although its row is second.
+    expect(screen.getByTestId('card-result-2')).toHaveAttribute('data-pass', '1');
+    expect(screen.getByTestId('card-result-1')).toHaveAttribute('data-pass', '2');
+    expect(screen.getByTestId('card-result-1')).toHaveTextContent('Netherlands');
   });
 
   it('is the default, with the price a year as the headline', () => {

@@ -21,6 +21,7 @@ import { ResultDetail } from '@/components/ResultDetail';
 import { LazyShareSheet } from '@/components/LazyShareSheet';
 import { Triage } from '@/components/Triage';
 import { UniversityCatalogue } from '@/components/UniversityCatalogue';
+import { passColours, preferredCountries } from '@/lib/passColour';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, STATUS_LABEL, admissionsFitTone, bucketTone, date, eligibilityTone,
@@ -164,6 +165,12 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress }: {
   const countries = useMemo(
     () => Array.from(new Set(results.map((r) => r.country))).sort(),
     [results],
+  );
+  // Each country's pass colour: the applicant's picks first, then the rest in
+  // the order the results list them, so a colour stays put while filtering.
+  const passes = useMemo(
+    () => passColours(results.map((r) => r.country), preferredCountries(savedProfile)),
+    [results, savedProfile],
   );
 
   const rows = useMemo(() => {
@@ -413,6 +420,7 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress }: {
     <ResultCard
       key={r.id}
       result={r}
+      pass={passes.get(r.country)}
       open={expanded === r.id}
       onToggle={() => setExpanded(expanded === r.id ? null : r.id)}
       decision={renderDecision(r)}
