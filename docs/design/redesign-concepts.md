@@ -1660,3 +1660,21 @@ Review (I96–I99), fixed before showing:
 
 Colour rule for later: eight pass colours (NL, BE, JP, DE, CA, GB, KR, AT) are assigned to the countries
 the applicant picks, in order; a ninth country reuses a hue with a pattern, never a ninth colour.
+
+## 32. Owner decisions: palette E «Чернила», name Unimatch (2026-10-05)
+
+Owner on round 10: "colours are not right" → four palettes (A pastel, B jewel, C earth, D sunset,
+`concepts/concept-r11-palettes-1.webp`) → "more moderate, more serious" → E ink, F stone, G stripe
+(`concept-r11-palettes-2.webp`). **Chosen: E «Чернила». Product name: Unimatch.**
+
+E is the round-10 «Пропуск × Горизонт» concept with deep, muted pass colours and white text
+(5.7–9.6:1, AA for body text): NL `#3E5C76` slate blue, BE `#5E4B6E` plum, JP `#7A3B3B` oxblood,
+DE `#3F6F6A` teal, CA `#6B5A2E` ochre, GB `#44497F` indigo, KR `#55623A` moss, AT `#6E4A55` rose-brown;
+ground `#F3F2EF`. Routes on the night globe use light tints of the same hues, because the deep fills
+vanish on near-black.
+
+Review (I100–I101): I100 the first E set had GB and KR within a shade of NL (three slate blues) — GB
+became indigo, KR moss, so eight countries stay eight colours; I101 the plan tickets and the opened pass
+still set ink text on the now-deep fills — switched to the pass text colour.
+
+Images: `concepts/concept-r11-unimatch-1.webp`, `-2.webp` (the eight screens).
