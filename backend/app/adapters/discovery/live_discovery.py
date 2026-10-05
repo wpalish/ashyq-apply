@@ -113,14 +113,15 @@ SKIP_REFUSED_SEARCH_HOSTS = False
 #: search and never reach a slot, so KAIST's undergraduate-admission page,
 #: linked from the department's own navigation, was never opened.
 NAVIGATION_SLOT = False
-#: Experiment ER-09 (expert trace 2026-10-04), off until a paired run passes.
+#: Experiment ER-09 (expert trace 2026-10-04), on since paired runs 37240128388
+#: and 37242447357 (owner approved 2026-10-05); False turns it off.
 #: When the applicant named a subject, the navigation fallback takes a link as
 #: a programme lead only if its URL or its own text names that subject.
 #: Groningen's bachelor hub links brochures, open days, campus tours and
 #: "webklassen" under the same path as its programmes; they filled every
 #: programme slot, the confirm stage spent its reads rejecting them, and the
 #: run timed out before reaching /bachelors/computing-science.
-NAVIGATION_FIELD_LEADS = False
+NAVIGATION_FIELD_LEADS = True
 #: Pages walked during the navigation fallback. Universities routinely nest
 #: "Degree programmes" -> "Bachelor programmes" -> a programme, so one hop is
 #: not enough; an unbounded walk would be a crawl.

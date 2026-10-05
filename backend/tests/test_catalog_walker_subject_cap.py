@@ -53,8 +53,9 @@ def _walker(read: list[str]) -> CatalogWalker:
 
 
 @pytest.mark.asyncio
-async def test_off_by_default_reads_every_lead():
-    assert cw.WALKER_SIGNAL_LESS_CAP is None
+async def test_on_by_default_and_none_reads_every_lead(monkeypatch):
+    assert cw.WALKER_SIGNAL_LESS_CAP == 3, "on by default since 2026-10-05"
+    monkeypatch.setattr(cw, "WALKER_SIGNAL_LESS_CAP", None)
     read: list[str] = []
     await _walker(read).walk_catalog(HUB)
     assert len(read) == len(JUNK) + 2

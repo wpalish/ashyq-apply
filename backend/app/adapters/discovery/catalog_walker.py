@@ -66,12 +66,12 @@ WALKER_TOP_N = 20
 
 #: Catalogues walked per institution, in discovery's own order of preference.
 WALKER_MAX_CATALOGS = 2
-#: Experiment ER-10 (expert trace 2026-10-04), off (None) until a paired run
-#: passes. When the applicant named a subject, at most this many leads that
+#: Experiment ER-10 (expert trace 2026-10-04), on since paired runs 37240128388
+#: and 37242447357 (owner approved 2026-10-05); None turns it off. When the applicant named a subject, at most this many leads that
 #: name none of the applicant's subjects are read per catalogue; leads that do
 #: name it are not limited. Groningen's "/education/bachelor" offered 16
 #: open-day, brochure and campus-tour pages, each read before "/bachelors".
-WALKER_SIGNAL_LESS_CAP: int | None = None
+WALKER_SIGNAL_LESS_CAP: int | None = 3
 #: Sub-catalogues the walk may descend into, found as leads of a catalogue.
 #: Two: Groningen's "Bachelor's degrees" is itself an index (A-Z, by subject,
 #: in English) and only the level below names the programmes (run 44).
