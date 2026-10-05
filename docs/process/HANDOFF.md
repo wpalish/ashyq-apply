@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**CURRENT BATON RELEASED, 2026-10-05 13:18 UTC [expert-500], holder nobody, branch task/expert-500-phase1, verified source65592067824af884e272071a70951c37927f56c4.** Official main74a7d8b integrated; repeated provider402 guard/source replay fixed. Exact branch37312426818 and PR37312432830 CI8/8 pass:4134 each SQLite/PostgreSQL, SQLite94.88%, frontend79 browser/6 auth plus unit/static/build/security/containers. Local4134/94.90%/425.51s/static374/demo20/one head pass. Original current sourceCI11 records2325618 bytes/fe428ff3 and local34/b744bff2 are verified; predecessor d9 branch4/d57cc269 remains separate. Original V11 still CLOSED_UNSCORED49/769273a0/04205429, zero experts/seal/score. Existing authenticated Exa dashboard and secret metadata read only; exact encrypted GitHub key-to-account mapping remains unconfirmed and owner question pending. No new provider/model request, credentials/account change, purchase/credit reset or trial. Metadata checkpoint only; complete-search acceptance remains pending.
+
 **CURRENT MAIN54 SOURCE LOCALLY GREEN, 2026-10-05 12:50 UTC [expert-500], holder gpt-6-astra, branch task/expert-500-phase1, merge parentsbe7f49f/main74a7d8b.** Routine conflict only HANDOFF; both additions retained verbatim with original conflict/resolution receipt. Current combined source4134 passed94.90%/425.51s, Ruff/format/mypy374, one synthetic demo20/Groningenfirst/UBCOUT_OF_BUDGET/d8e412c6a901 head. Current source support34/b744bff2 and predecessor d9 branchCI4/d57cc269 are immutable; no absent PR CI fabricated. Commit/push this official main integration, then exact new-source branch/PR CI. Reviewed62 blobb4552bbd unchanged, unsigned draft8 not selected/opened, official default-off DL-2/BL-1/AY-1 retained. V11 remains closed unscored; no new model/provider/pilot. Existing Exa account availability is still unknown.
 
 **CURRENT MAIN54 INTEGRATION WRITE-AHEAD, 2026-10-05 12:37 UTC [expert-500], holder gpt-6-astra, source HEADd9d23b9.** The narrow repeated402 repair is pushed and source branch CI37308941607 is in progress;3/4 jobs have passed. PR CI was not created because GitHub reports CONFLICTING after main advanced to74a7d8b/PR54. Preserve the original d9 source and its ongoing receipt, integrate current official main, resolve only actual overlaps, retain owner default-off DL-2/BL-1/AY-1 and current ER-08/09/10 defaults, and rerun affected/local release gates before the integrated-source checkpoint. Draft8 is unsigned and must not replace the unchanged reviewed62 or be opened for a new blind pilot. Exa account-state question remains pending; no new provider/model/pilot operation.
@@ -104,6 +106,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Current task status, 2026-10-05 13:18 UTC:** [expert-500] narrow source bug/integration fully verified and pushed6559206, metadata receipts checkpointed next. Phase1 expert acceptance still incomplete/awaiting owner account-key binding information. No40/62 or per-fact reviewed comparison exists for closed V11. PR46 remains draft, batches50 locked and HELDOUT150 untouched; search is not declared complete.
 
 **Current narrow source acceptance, 2026-10-05 12:50 UTC:** [expert-500] main54+HTTP402 source is locally green and the merge is being checkpointed; exact new-source branch/PR CI pending. Pilot acceptance remains incomplete: V11 CLOSED_UNSCORED on original402, zero experts and no40/62 score or primary miss labels. Batches50 locked/HELDOUT150 untouched. PR46 remains draft, not ready to merge or claim complete search.
 
@@ -212,6 +216,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+- 2026-10-05 13:18 UTC [expert-500] source6559206 integrates main74a7d8b and d9 HTTP402 guard; exact branch/PR8/8 pass in37312426818/37312432830. SQLite and PostgreSQL4134 each, SQLite94.88%, frontend79 browser/6 auth, unit/static/build/security/container checks pass.11 original CI/redacted observation records2325618 bytes have manifestfe428ff37181932864a9184512dbc085808b8db8922bf549f5541f44f4a0309a. Every original length/hash verified; source unchanged by following metadata checkpoint.
 
 - 2026-10-05 12:50 UTC [expert-500] d9d23b9 narrow future402 fix: final146/4107/94.87 local source gates and exact branch CI37308941607 all4 pass;5 original CI records manifestd57cc269. GitHub PR CI absent due main54 conflict, not a failed source job. Main54 integration now locally4134/94.90/static374; final merge hash/CI recorded in following checkpoint.
 
@@ -1752,6 +1758,8 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
+**Current 2026-10-05 13:18 UTC:** no remaining software gate or source edit for narrow402/main54 repair. Only this metadata/source-CI receipt checkpoint is being committed; final tree clean after push. Original V11 closed; no active university/model process, new trial, expert/seal/report/label work. The existing GitHub key-to-open-account mapping question remains unanswered.
+
 **Current 2026-10-05 12:50 UTC:** official main54 merge staged with only HANDOFF conflict resolved; no unreviewed local code invention. Current combined app/evaluation/tests20 source snapshots and14 original gates/merge receipts preserved34/b744bff2. Next commit/push merge, then exact head branch/PR CI. No current live pilot; pending same-account Exa availability question.
 
 **Current 2026-10-05 12:21 UTC [expert-500]:**7 authored source/test files and original support30/d488862c plus source-repair status docs await normal checkpoint. All local required gates green; current source CI not yet dispatched/claimed. V11 is closed and cannot be continued. No new pilot/source/model/seal/labels/score; owner Exa-account status question remains pending.
@@ -1929,6 +1937,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**CURRENT EXECUTABLE NEXT STEP, 2026-10-05 13:18 UTC [expert-500]:** await the owner answer to the already-presented question: does repository UNIMATCH_EXA_API_KEY belong to the currently open existing Exa account? GitHub secret values are unreadable; UI aggregate usage does not establish this binding. Do not infer it or API recovery from visible dashboard alone, elapsed time or generic continue. No old V11 stage/probe/retry, key/account/provider/IP substitution, credit reset or purchase. After legitimate existing-provider availability is established, fetch/merge current main, clone new prospective V12 helpers without touching frozenV11 originals, bind changed runtime to new source-free normal-effort neutral proof and affected external/OS gates, then once-only fresh freeze/new source commit/tag/exact source CI. Only then allocate fresh same-ten workspaces, one new baseline60/6/120s with1000ms reserve, one expert60/6/default effort/immutable900s, seal before unchanged62 labels and require40/62 plus grounded causes. Never reuse old baselines, read/select unsigned draft8, broaden batches50 or touch HELDOUT150 before acceptance.
+
+**READ-ONLY ACCOUNT STATE CHECK, 2026-10-05 12:53 UTC [expert-500]:** while source6559206 branch/PR CI runs, inspect enabled browser tab inventory for an already-open existing Exa account dashboard. If present and authenticated, read visible availability metadata only; no API-key reveal, provider search/read API probe, credit reset/purchase, account switch or messages. If absent or authentication requires the owner, keep the already-pending account-state question and do not infer availability. This UI observation cannot reopen V11 or authorize a new trial. Source remains unchanged.
 
 **CURRENT EXECUTABLE STEP, 2026-10-05 12:50 UTC [expert-500]:** commit/push the locally green official main74a7d8b integration with source402 fix intact; capture both exact new-head push and pull_request CI events/all8 successful jobs and original logs, then metadata checkpoint. Keep d9 branch4 original receipt separate from current merge acceptance. Do not rerun local gates absent an actual failure/source change. Existing Exa account-state question remains pending; legitimate availability is required before any new trial/freeze/provider/model request. Owner budgets60/6/900s/120s and62/40 unchanged; V11 cannot resume, unsigned draft8 cannot replace reviewed corpus, HELDOUT150 untouched.
 
@@ -3977,6 +3989,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**Final current source6559206, 2026-10-05 13:18 UTC [expert-500]:** all8 exact source branch/PR cloud jobs pass. SQLite4134/94.88% each, PostgreSQL4134 each; frontend browser79/auth6 each plus unit/type/lint/build; security/container checks pass. Local4134/94.90%/425.51s/static374/demo20/Groningenfirst/UBCOUT_OF_BUDGET/single d8e412c6a901 head pass. Original11-record sourceCIfe428ff3 and34-record local integrationb744bff2 verified; d9 CI4/d57cc269 is historical separate proof. Current metadata changes no app/tests/frontend/migrations/workflows/runtime. No full university/expert acceptance score, live product-flow or API availability is established by these software gates.
+
 **Main54 combined source, 2026-10-05 12:50 UTC [expert-500]:**4134 passed,2 warnings,94.90%/425.51s; Ruff/format/mypy374 pass. Synthetic demo20/Groningenfirst/UBCOUT_OF_BUDGET, one Alembic head d8e412c6a901. Wrong demo-zero-counters assertion failed once; empty original stdout retained,98/15 synthetic counters observed, corrected read-only sameDB verification passes without reseeding. Frontend4aaba144/migrations96469ee9/workflowsfc6cd24 byte-identical to verified d9 source; full4-job d9 cloud receipt includes browser/auth/security/containers. Current merged-source cloud CI is pending.34-record supportb744bff2 and prior5-record CId57cc269 verified. None proves40/62 or provider availability.
 
 **Narrow402 future source, 2026-10-05 12:21 UTC [expert-500]:**146 scoped regressions passed1.50s; full4107/94.87%/411.65s; Ruff/format/mypy371 passed. Demo synthetic20/Groningenfirst/UBCOUT_OF_BUDGET and single d8e412c6a901 head pass. Unchanged frontend4aaba144 exact earlier d898 branch/PR/tag CI type/lint/232/build/browser/auth proofs retained. Raw support30/d488862c includes5 initial red and2 intermediate red without overwriting. No new-source cloud result claimed until its exact commit CI passes. Original V11 cloud12/12 applies only d898; V11 algorithm provider stop prevents scoring.
@@ -4518,6 +4532,8 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+- 2026-10-05 13:18 UTC [expert-500] current software gates8/8 passed; remaining Phase1 blocker is provider account/key availability evidence. Existing authenticated dashboard inspected without key reveal or financial action; aggregate usage cannot bind GitHub encrypted UNIMATCH_EXA_API_KEY to that account. Existing secret metadata last updated2026-09-21, value unreadable. Owner mapping question is pending; no new source/model request or trial. Do not publish private dashboard billing/identity values, infer restored API service or replace credentials to work around original402.
+
 - 2026-10-05 12:50 UTC [expert-500] source integration conflict resolved locally; fresh combined-source CI is the next software gate. Original Exa402 remains the live blocker, exact account reason unknown. Owner existing-account availability question pending; no response inferred from time or generic continue wording. All authorized offline source work is completed and reviewable.
 
 - 2026-10-05 12:37 UTC [expert-500] GitHub PR46 reports CONFLICTING after main74a7d8b/PR54. This is a routine integration step authorized by the owner, being resolved with unchanged pilot contract; no owner code permission is needed. No PR CI exists yet for source d9d23b9. Existing Exa availability remains the separate live blocker.
@@ -4834,6 +4850,8 @@ next agent does not reopen it.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
+- 2026-10-05 13:18 UTC [expert-500] no additional contract change after source6559206: sourceCI8 exact-head gates and redacted UI observation delivered. Private financial/identity values and key values remain absent from Git. Reviewed62 hash/40 threshold, source budgets/reasoning/provider and frozen V9/V10/V11 remain unchanged.
+
 - 2026-10-05 12:50 UTC [expert-500] integrate official main74a7d8b/PR54: catalogue exact-name ordering, owner-approved scorer D1-D4/new other_scope and partial diagnostics, DL-2/BL-1/AY-1 experimental flags remain defaultFalse. No Phase1 budget/model/provider/62 threshold change; reviewed corpus blobb4552bbd unchanged and unsigned draft8 unselected. Shared402 source behavior from d9d23b9 retained.
 
 - 2026-10-05 12:21 UTC [expert-500] narrow future source permanent account refusal: app shared _ThrottleLatch stores original status402 or429 with unchanged300s cooldown/provider identity; reset test/operator API clears status and deadline together, no operational reset invoked. Strict capture/provider ledger adds stop_reason=http_402, charges only actually sent queries and ends cohort on402. Controller persists/restores first402/429 stop and refuses later search as stopped_after_http_402 without another request. University-page402/429 does not latch provider; transient500 retains original behavior. No schema/gold/binding/budget/timer/model-effort/admission/provider/account/HELDOUT change.
@@ -4969,6 +4987,8 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 | 2026-09-09 | security audit | `security.py`: `SCRYPT_R`, `SCRYPT_P`, `_maxmem(n, r)`; `routes_metrics` compares bytes | scrypt cost schedule and the 500-on-non-ASCII bearer. |
 
 ## 9. Traps and lessons (things that cost a session; keep them)
+
+- 2026-10-05 13:18 UTC [expert-500] dashboard access and aggregate usage do not prove encrypted GitHub key identity or recover a failed provider arm. Save only redacted technical observation2b15a1d3 in public sourceCI receipts; private structured observation is /tmp/unimatch-expert500-main54-account-ui-private-observation.json, never commit it. Current exact655 cloud coverage94.88 differs slightly from local94.90 due environment; report both honestly. CI logs include original whitespace; exclude only new immutable raw receipt directory from curated-source diff check, preserve originals.
 
 - 2026-10-05 [expert-500] a full staged git diff --check reports expected trailing whitespace in original GH logs and conflict markers in the deliberately preserved original HANDOFF conflict. Keep original evidence bytes; check source/docs with only these two new immutable raw-evidence directories excluded, never strip logs or their archived conflict markers. Original diagnostic is /tmp/unimatch-expert500-main54-raw-evidence-diff-check-observation.log.
 
@@ -5477,3 +5497,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-05 12:37 UTC | gpt-6-astra | [expert-500] | d9d23b9 -> current-main54 integration write-ahead: branch CI3/4, PR conflict prevents PR CI; resolve official main routine overlap with budgets/labels/free-only unchanged; live Exa account-state question pending.
 
 - 2026-10-05 12:50 UTC | gpt-6-astra | [expert-500] | be7f49f/main74a7d8b -> combined local gates green4134/94.90/static374/demo20; original34-record supportb744bff2 and d9 CI4/d57cc269 preserved; checkpoint merge then exact branch/PR CI, no new live request.
+
+- 2026-10-05 13:18 UTC | gpt-6-astra | [expert-500] |6559206 -> sourceCI metadata/baton released:8/8 exact branch/PR pass4134/94.88 cloud, local4134/94.90/static374;11 originalsfe428ff3 verified. Existing account-key binding question pending, no new trial/source/model; V11 closed unscored/40-of62 unmeasured/HELDOUT150 untouched.

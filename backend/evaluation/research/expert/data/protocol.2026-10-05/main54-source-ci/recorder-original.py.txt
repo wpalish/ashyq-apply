@@ -1,0 +1,61 @@
+"""Once-only original CI delivery; no university, model, key or account change."""
+import hashlib
+import json
+import subprocess
+from datetime import UTC, datetime
+from pathlib import Path
+
+REPO = Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply')
+SOURCE = '65592067824af884e272071a70951c37927f56c4'
+RUNS = (37312426818, 37312432830)
+TARGET = REPO / 'backend/evaluation/research/expert/data/protocol.2026-10-05/main54-source-ci'
+JOBS = {'backend (sqlite)', 'backend (postgresql)', 'frontend', 'security-and-containers'}
+assert not TARGET.exists()
+
+def call(*args):
+    return subprocess.check_output(args, cwd=REPO)
+
+receipts = {}
+seen = []
+for run_id in RUNS:
+    raw = call('gh', 'run', 'view', str(run_id), '--json', 'status,conclusion,headSha,event,headBranch,jobs,url,createdAt,updatedAt')
+    value = json.loads(raw)
+    assert value['headSha'] == SOURCE
+    assert value['status'] == 'completed' and value['conclusion'] == 'success'
+    assert len(value['jobs']) == 4 and {j['name'] for j in value['jobs']} == JOBS
+    assert all(j['status'] == 'completed' and j['conclusion'] == 'success' for j in value['jobs'])
+    seen.append((value['event'], value['headBranch']))
+    receipts[f'run-{run_id}.json'] = raw
+    receipts[f'run-{run_id}.log'] = call('gh', 'run', 'view', str(run_id), '--log')
+assert set(seen) == {('push', 'task/expert-500-phase1'), ('pull_request', 'task/expert-500-phase1')}
+for name in ['unimatch-expert500-main54-ci-push-watch-original.log', 'unimatch-expert500-main54-ci-pr-watch-original.log', 'unimatch-expert500-main54-source-ci-initial-original.json', 'unimatch-expert500-main54-pr-state-original.json', 'unimatch-expert500-main54-account-ui-redacted-observation.json', 'unimatch-expert500-main54-raw-evidence-diff-check-observation.log']:
+    p = Path('/tmp') / name
+    assert p.is_file()
+    receipts[name] = p.read_bytes()
+receipts['recorder-original.py.txt'] = Path(__file__).read_bytes()
+TARGET.mkdir()
+records = []
+for name, raw in receipts.items():
+    with (TARGET / name).open('xb') as f:
+        f.write(raw)
+    records.append({'snapshot': name, 'sha256': hashlib.sha256(raw).hexdigest(), 'bytes': len(raw)})
+manifest = {
+    'schema_version': '1', 'recorded_at': datetime.now(UTC).isoformat(),
+    'source_harness_sha': SOURCE, 'integrated_main_sha': '74a7d8b',
+    'status': 'both_integrated_source_ci_events_success', 'run_ids': list(RUNS),
+    'successful_jobs': 8, 'record_count': len(records),
+    'total_original_bytes': sum(r['bytes'] for r in records), 'records': records,
+    'local_integration_manifest_sha256': 'b744bff2191d7579f28983465a4b39a97a16d7f30bbd7e22ee4778db15576fc0',
+    'pre_main54_branch_only_ci_manifest_sha256': 'd57cc269d700ea331b58d6e3c4d76023af7858f0c2835f6202be6caeaca67887',
+    'v11_closed_unscored_unchanged': True, 'reviewed_62_unchanged': True,
+    'unsigned_draft8_unselected': True, 'same_provider_account_key_binding': 'unconfirmed_owner_question_pending',
+    'university_requests': 0, 'model_requests': 0, 'new_trial_allocated': False,
+    'private_dashboard_financial_identity_values_committed': False
+}
+raw = (json.dumps(manifest, ensure_ascii=False, indent=2) + '\n').encode()
+with (TARGET / 'manifest.json').open('xb') as f:
+    f.write(raw)
+for r in records:
+    raw = (TARGET / r['snapshot']).read_bytes()
+    assert len(raw) == r['bytes'] and hashlib.sha256(raw).hexdigest() == r['sha256']
+print(json.dumps({'target': str(TARGET), 'manifest_sha256': hashlib.sha256((TARGET / 'manifest.json').read_bytes()).hexdigest(), 'successful_jobs': 8, 'records': len(records)}))

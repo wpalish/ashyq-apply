@@ -94,6 +94,21 @@ synthetic counters98/15 and the required order without reseeding. All34
 records including20 tested-source snapshots/14 raw gate and merge originals
 are verified in protocol.2026-10-05/main54-integration, manifest
 b744bff2191d7579f28983465a4b39a97a16d7f30bbd7e22ee4778db15576fc0.
-Combined-source cloud CI remains pending until the exact merge commit is
-pushed and its branch/PR jobs pass. V11 remains closed/unscored,40/62 remains
-unmeasured and the existing Exa account availability question is pending.
+Combined source65592067824af884e272071a70951c37927f56c4 passed exact
+branch37312426818 and PR37312432830 jobs8/8. Each SQLite/PostgreSQL suite
+passed4134; SQLite cloud coverage94.88%, frontend browser79/auth6 plus
+unit/static/build/security/container checks passed. All11 original records
+2325618 bytes have verified manifest
+fe428ff37181932864a9184512dbc085808b8db8922bf549f5541f44f4a0309a.
+V11 remains closed/unscored and40/62 remains unmeasured.
+
+## Remaining provider binding (2026-10-05 13:18 UTC)
+
+Existing authenticated Exa dashboard was inspected read-only. Aggregate
+usage does not establish which account owns the encrypted GitHub repository
+UNIMATCH_EXA_API_KEY; secret metadata can be read, its value cannot. Owner
+was asked to confirm this mapping. Redacted technical observation2b15a1d3
+is preserved in current sourceCI receipts; private financial/identity values
+are omitted from Git. No key reveal/change, account/provider switch, purchase,
+credit reset, search/model probe or new trial. A visible dashboard cannot
+retroactively restore V11 or justify an unsupported API-availability claim.
