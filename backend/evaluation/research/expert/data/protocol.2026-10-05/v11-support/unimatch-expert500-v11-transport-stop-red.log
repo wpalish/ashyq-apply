@@ -1,0 +1,71 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0
+rootdir: /tmp
+plugins: respx-0.22.0, cov-6.0.0, asyncio-1.4.0, platformdirs-4.12.1, anyio-4.15.1
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 305 items / 303 deselected / 2 selected
+
+../../../../../../../../../tmp/test_unimatch_expert500_journal_report_v11.py F [ 50%]
+F                                                                        [100%]
+
+=================================== FAILURES ===================================
+_ test_v11_transport_batch_stop_cannot_be_hidden_by_false_aggregate_before_labels[regular] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V11 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V11: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a2f9f10>
+marker_kind = 'regular'
+
+    @pytest.mark.parametrize("marker_kind", ["regular", "dangling_symlink"])
+    def test_v11_transport_batch_stop_cannot_be_hidden_by_false_aggregate_before_labels(
+        pilot, report, monkeypatch, marker_kind
+    ):
+        prepare_reporting(pilot, report)
+        marker = pilot.root / "transport-batch-stop.json"
+        if marker_kind == "regular":
+            write(marker, {"stop_scope": "batch", "terminal_reason": "invalid_artifact"})
+        else:
+            marker.symlink_to(pilot.root / "missing-original-transport-stop.json")
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original transport batch stop"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v11.py:361: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+_ test_v11_transport_batch_stop_cannot_be_hidden_by_false_aggregate_before_labels[dangling_symlink] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V11 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V11: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10c160650>
+marker_kind = 'dangling_symlink'
+
+    @pytest.mark.parametrize("marker_kind", ["regular", "dangling_symlink"])
+    def test_v11_transport_batch_stop_cannot_be_hidden_by_false_aggregate_before_labels(
+        pilot, report, monkeypatch, marker_kind
+    ):
+        prepare_reporting(pilot, report)
+        marker = pilot.root / "transport-batch-stop.json"
+        if marker_kind == "regular":
+            write(marker, {"stop_scope": "batch", "terminal_reason": "invalid_artifact"})
+        else:
+            marker.symlink_to(pilot.root / "missing-original-transport-stop.json")
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original transport batch stop"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v11.py:361: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+=============================== warnings summary ===============================
+test_unimatch_expert500_journal_report_v11.py: 104 warnings
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/bs4/builder/_lxml.py:124: DeprecationWarning: The 'strip_cdata' option of HTMLParser() has never done anything and will eventually be removed.
+    parser = parser(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_report_v11.py::test_v11_transport_batch_stop_cannot_be_hidden_by_false_aggregate_before_labels[regular]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_report_v11.py::test_v11_transport_batch_stop_cannot_be_hidden_by_false_aggregate_before_labels[dangling_symlink]
+=============== 2 failed, 303 deselected, 104 warnings in 0.94s ================

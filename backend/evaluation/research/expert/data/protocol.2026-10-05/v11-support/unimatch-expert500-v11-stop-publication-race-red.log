@@ -1,0 +1,168 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_v11_origin_stop_is_durable_before_peer_can_publish_cancellation[provider] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-483/test_v11_origin_stop_is_durabl0')
+cause = 'provider'
+
+    @pytest.mark.parametrize("cause", ["provider", "integrity"])
+    def test_v11_origin_stop_is_durable_before_peer_can_publish_cancellation(tmp_path, cause):
+        trial = tmp_path / "trial"
+        trial.mkdir()
+        shared = threading.Event()
+        peer_waiting = threading.Event()
+        origin_receipt_waiting = threading.Event()
+        peer_finished = threading.Event()
+        failures = []
+    
+        def pause_origin_receipt(path, receipt):
+            if path.name == "transport-audit.json":
+                origin_receipt_waiting.set()
+                assert peer_finished.wait(timeout=10), "Peer never reached the forced interleaving"
+    
+        origin = V11TransportHarness(
+            tmp_path / "origin", save_hook=pause_origin_receipt,
+            source_kind="provider_error" if cause == "provider" else "success",
+            provider_status=402, artifact_kind="tampered" if cause == "integrity" else "valid",
+        )
+        peer = V11TransportHarness(tmp_path / "peer")
+        origin.original.stop = peer.original.stop = shared
+        old_command = peer.command
+        observed_cascade = []
+    
+        def peer_command(argv, **kwargs):
+            if argv[:3] == ["gh", "run", "view"]:
+                peer.calls.append({"argv": argv, "at": peer.clock.seconds, "timeout": kwargs["timeout"]})
+                if not observed_cascade:
+                    peer_waiting.set()
+                    assert origin_receipt_waiting.wait(timeout=10)
+                    observed_cascade.append(shared.is_set())
+                pending = observed_cascade[0] and not peer.cancelled
+                return json.dumps({
+                    "status": "in_progress" if pending else "completed",
+                    "conclusion": None if pending else "cancelled" if peer.cancelled else "success",
+                    "headSha": HEAD, "url": "https://example.invalid/run/123",
+                })
+            return old_command(argv, **kwargs)
+    
+        peer.command = peer_command
+    
+        def peer_worker():
+            try:
+                assert peer.run_workflow(trial_root=trial) == (123, HEAD)
+            except Exception as exc:
+                failures.append(exc)
+            finally:
+                peer_finished.set()
+    
+        def origin_worker():
+            try:
+                assert peer_waiting.wait(timeout=10)
+                if cause == "integrity":
+                    with pytest.raises(RuntimeError, match="batch stopped"):
+                        origin.run_workflow(trial_root=trial)
+                else:
+                    assert origin.run_workflow(trial_root=trial) == (123, HEAD)
+            except Exception as exc:
+                failures.append(exc)
+    
+        threads = [threading.Thread(target=peer_worker), threading.Thread(target=origin_worker)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join(timeout=15)
+            assert not thread.is_alive()
+        assert failures == []
+        marker = json.loads((trial / "transport-batch-stop.json").read_text())
+>       assert marker["reason"] == ("provider_http_402" if cause == "provider" else "source_integrity_failure")
+E       AssertionError: assert 'unexpected_w...ow_conclusion' == 'provider_http_402'
+E         
+E         - provider_http_402
+E         + unexpected_workflow_conclusion
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1927: AssertionError
+_ test_v11_origin_stop_is_durable_before_peer_can_publish_cancellation[integrity] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-483/test_v11_origin_stop_is_durabl1')
+cause = 'integrity'
+
+    @pytest.mark.parametrize("cause", ["provider", "integrity"])
+    def test_v11_origin_stop_is_durable_before_peer_can_publish_cancellation(tmp_path, cause):
+        trial = tmp_path / "trial"
+        trial.mkdir()
+        shared = threading.Event()
+        peer_waiting = threading.Event()
+        origin_receipt_waiting = threading.Event()
+        peer_finished = threading.Event()
+        failures = []
+    
+        def pause_origin_receipt(path, receipt):
+            if path.name == "transport-audit.json":
+                origin_receipt_waiting.set()
+                assert peer_finished.wait(timeout=10), "Peer never reached the forced interleaving"
+    
+        origin = V11TransportHarness(
+            tmp_path / "origin", save_hook=pause_origin_receipt,
+            source_kind="provider_error" if cause == "provider" else "success",
+            provider_status=402, artifact_kind="tampered" if cause == "integrity" else "valid",
+        )
+        peer = V11TransportHarness(tmp_path / "peer")
+        origin.original.stop = peer.original.stop = shared
+        old_command = peer.command
+        observed_cascade = []
+    
+        def peer_command(argv, **kwargs):
+            if argv[:3] == ["gh", "run", "view"]:
+                peer.calls.append({"argv": argv, "at": peer.clock.seconds, "timeout": kwargs["timeout"]})
+                if not observed_cascade:
+                    peer_waiting.set()
+                    assert origin_receipt_waiting.wait(timeout=10)
+                    observed_cascade.append(shared.is_set())
+                pending = observed_cascade[0] and not peer.cancelled
+                return json.dumps({
+                    "status": "in_progress" if pending else "completed",
+                    "conclusion": None if pending else "cancelled" if peer.cancelled else "success",
+                    "headSha": HEAD, "url": "https://example.invalid/run/123",
+                })
+            return old_command(argv, **kwargs)
+    
+        peer.command = peer_command
+    
+        def peer_worker():
+            try:
+                assert peer.run_workflow(trial_root=trial) == (123, HEAD)
+            except Exception as exc:
+                failures.append(exc)
+            finally:
+                peer_finished.set()
+    
+        def origin_worker():
+            try:
+                assert peer_waiting.wait(timeout=10)
+                if cause == "integrity":
+                    with pytest.raises(RuntimeError, match="batch stopped"):
+                        origin.run_workflow(trial_root=trial)
+                else:
+                    assert origin.run_workflow(trial_root=trial) == (123, HEAD)
+            except Exception as exc:
+                failures.append(exc)
+    
+        threads = [threading.Thread(target=peer_worker), threading.Thread(target=origin_worker)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join(timeout=15)
+            assert not thread.is_alive()
+        assert failures == []
+        marker = json.loads((trial / "transport-batch-stop.json").read_text())
+>       assert marker["reason"] == ("provider_http_402" if cause == "provider" else "source_integrity_failure")
+E       AssertionError: assert 'unexpected_w...ow_conclusion' == 'source_integrity_failure'
+E         
+E         - source_integrity_failure
+E         + unexpected_workflow_conclusion
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1927: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_origin_stop_is_durable_before_peer_can_publish_cancellation[provider]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_origin_stop_is_durable_before_peer_can_publish_cancellation[integrity]
+2 failed, 90 deselected in 1.49s

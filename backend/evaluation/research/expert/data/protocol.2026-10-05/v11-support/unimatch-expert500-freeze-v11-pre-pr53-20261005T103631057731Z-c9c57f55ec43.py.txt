@@ -1,0 +1,589 @@
+"""Prepare a fresh V11 byte freeze after recorded local and neutral gates.
+
+No source, model, Git or label operation is performed. The caller alone runs
+this helper after its prospective checks; an existing freeze is never reused.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import importlib.util
+import json
+import math
+import re
+import runpy
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any, cast
+
+from evaluation.research.expert.blind_cli import selector_answer
+from evaluation.research.expert.journal import AcceptedJournal
+from evaluation.research.expert.network_budget import (
+    BUDGET_MODEL,
+    NETWORK_COMPARISON_MODE,
+    WALL_GUARD_MS,
+    expert_budget,
+    parse_timestamp,
+    parse_wall_guard,
+)
+from evaluation.research.expert.network_turn_policy import (
+    TurnPhase,
+    command_proof,
+    journal_schema_for_turn,
+    parse_turn_decision,
+    policy_limits,
+    turn_window,
+)
+from evaluation.research.expert.packet import digest
+from evaluation.research.expert.workspace_policy import validate_selector_paths, validate_workspaces
+from evaluation.research.live import COHORT, REVIEWED_BINDINGS
+
+REPO = Path(
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply"
+)
+FOLDER = REPO / "backend/evaluation/research/expert/data/protocol.2026-10-05/v11"
+NEUTRAL = Path("/tmp/unimatch-expert500-v7-neutral-result.json")
+LOCAL_GATES = Path("/tmp/unimatch-expert500-v11-local-gates.json")
+OS_PREFLIGHT = Path("/tmp/unimatch-expert500-v11-isolation-preflight-result.json")
+OS_HELPER = Path("/tmp/unimatch-expert500-isolation-preflight-v11.py")
+V7_MANIFEST = REPO / "backend/evaluation/research/expert/data/protocol.2026-10-04/v7/manifest.json"
+V7_MANIFEST_SHA256 = "3561a5f63989d0b459d56bdabefeb7e3ebf452b3bfb0e488937baa24938fb8c0"
+PINNED_PROVIDER = "exa"
+COHORT_CASE_IDS = frozenset(
+    {"groningen", "delft", "aalto", "vienna", "warsaw", "ubc", "toronto", "hku", "ntu", "kaist"}
+)
+# Direct and transitive public imports used by the unchanged neutral selector.
+# Provider/report/controller modules were never part of its three-phase run.
+NEUTRAL_RUNTIME_MODULES = frozenset(
+    "evaluation.research." + name
+    for name in (
+        "expert.blind_cli",
+        "expert.selector",
+        "expert.compact",
+        "expert.journal",
+        "expert.models",
+        "expert.representation",
+        "expert.network_turn_policy",
+        "expert.network_budget",
+        "expert.workspace_policy",
+        "expert.question_contract",
+        "mapping",
+        "metrics",
+        "schema",
+        "identities",
+    )
+)
+REQUIRED_GATES = frozenset(
+    {
+        "backend_tests",
+        "backend_ruff",
+        "backend_format",
+        "backend_mypy",
+        "frontend_tests",
+        "frontend_typecheck",
+        "frontend_build",
+        "frontend_lint",
+        "evaluation_quality",
+        "combined_parent_mocks",
+        "actual_ten_case_launcher_preflight",
+        "demo_order",
+        "alembic_single_head",
+        "exa_provider_pin",
+        "actual_ten_case_os_isolation",
+    }
+)
+PHASES: tuple[TurnPhase, ...] = ("bootstrap", "data", "minimal_commit")
+
+
+def sha(path: Path) -> str:
+    if path.is_symlink() or not path.is_file():
+        raise ValueError("Original evidence must be a regular non-symlink file")
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def read(path: Path) -> dict[str, Any]:
+    value = json.loads(path.read_text())
+    if not isinstance(value, dict):
+        raise ValueError("Original gate/probe evidence must be an object")
+    return value
+
+
+def validate_local_gates(local: dict[str, Any]) -> None:
+    """Validate explicit passes and original log hashes without fixed test counts."""
+    coverage = local.get("backend_coverage_percent")
+    if type(coverage) not in {int, float}:
+        raise ValueError("Coverage must be a recorded finite percentage")
+    coverage_number = cast(int | float, coverage)
+    gates, logs = local.get("gates"), local.get("raw_logs")
+    if (
+        local.get("schema_version") != "1"
+        or local.get("protocol_version") != "journal-v11"
+        or local.get("all_passed") is not True
+        or local.get("actual_ten_case_launcher_preflight") is not True
+        or not math.isfinite(coverage_number)
+        or not 92 <= coverage_number <= 100
+        or any(
+            type(local.get(key)) is not int or local[key] <= 0
+            for key in ("backend_tests", "frontend_tests")
+        )
+        or not isinstance(gates, dict)
+        or not gates.keys() >= REQUIRED_GATES
+        or any(
+            type(name) is not str or not name or passed is not True
+            for name, passed in gates.items()
+        )
+        or not isinstance(logs, dict)
+        or set(logs) != set(gates)
+    ):
+        raise ValueError("Every current local gate, coverage>=92 and ten-case preflight must pass")
+    for evidence in logs.values():
+        if not isinstance(evidence, dict) or set(evidence) != {"path", "sha256"}:
+            raise ValueError("Each local gate must bind its original raw log")
+        path, expected = evidence["path"], evidence["sha256"]
+        if (
+            type(path) is not str
+            or not Path(path).is_absolute()
+            or type(expected) is not str
+            or re.fullmatch(r"[0-9a-f]{64}", expected) is None
+            or sha(Path(path)) != expected
+        ):
+            raise ValueError("Current local gate raw log changed or lacks its SHA256")
+
+
+def protocol_scripts() -> list[Path]:
+    names = (
+        "unimatch-expert500-journal-pilot-v11.py",
+        "unimatch-expert500-journal-report-v11.py",
+        "unimatch-expert500-pilot-v1-frozen.py",
+        "unimatch-expert500-neutral-v7.py",
+        "test_unimatch_expert500_journal_pilot_v11.py",
+        "test_unimatch_expert500_journal_report_v11.py",
+        "test_unimatch_expert500_actual_cohort_v11.py",
+        "unimatch-expert500-export-v11.py",
+        "unimatch-expert500-launch-v11.py",
+        "unimatch-expert500-freeze-v11.py",
+        "test_unimatch_expert500_workflow_v11.py",
+        "unimatch-expert500-isolation-preflight-v11.py",
+    )
+    required = {Path("/tmp") / name for name in names}
+    # Only actual dispatch helpers and their explicit offline gates are frozen.
+    for path in required:
+        sha(path)
+    return sorted(required)
+
+
+def validate_neutral_reuse() -> dict[str, Any]:
+    """Bind the original V7 proof only to runtime bytes used by that execution."""
+    if sha(V7_MANIFEST) != V7_MANIFEST_SHA256:
+        raise ValueError("Original V7 neutral provenance manifest changed")
+    original = read(V7_MANIFEST)
+    script = Path("/tmp/unimatch-expert500-neutral-v7.py")
+    probe = original["neutral_probe"]
+    if (
+        original.get("protocol_version") != "journal-v7"
+        or probe.get("original_result_path") != str(NEUTRAL)
+        or sha(NEUTRAL) != probe.get("original_result_sha256")
+        or sha(script) != original["scripts"].get(str(script))
+    ):
+        raise ValueError("The reused neutral must retain its exact original helper/result bytes")
+    runtime = {}
+    for name in sorted(NEUTRAL_RUNTIME_MODULES):
+        spec = importlib.util.find_spec(name)
+        if spec is None or spec.origin is None:
+            raise ValueError("Reused neutral runtime module is unavailable")
+        actual = sha(Path(spec.origin))
+        if original["modules"].get(name) != actual:
+            raise ValueError("A runtime used by the original neutral has changed")
+        runtime[name] = actual
+    return {
+        "reused_from_protocol": "journal-v7",
+        "original_manifest_path": str(V7_MANIFEST),
+        "original_manifest_sha256": V7_MANIFEST_SHA256,
+        "original_script_path": str(script),
+        "original_script_sha256": sha(script),
+        "original_result_path": str(NEUTRAL),
+        "original_result_sha256": probe["original_result_sha256"],
+        "unchanged_runtime_modules": runtime,
+    }
+
+
+def validate_neutral(probe: dict[str, Any], *, neutral_script: Path, frozen_cli: str) -> None:
+    """Replay the three original canonical completed transport phases, no calls."""
+    zeroes = ("university_requests", "source_requests", "tool_requests")
+    results = probe.get("results")
+    if (
+        probe.get("protocol_version") != "journal-v7"
+        or probe.get("probe_kind") != "synthetic_transport_only"
+        or probe.get("status") != "passed"
+        or probe.get("stopped") is not False
+        or probe.get("stop_reason") is not None
+        or probe.get("source_facts_accepted") is not False
+        or probe.get("requested_model") != "gpt-6-astra"
+        or "requested_reasoning_effort" not in probe
+        or probe["requested_reasoning_effort"] is not None
+        or probe.get("reasoning_effort_source") != "cli_default"
+        or probe.get("reasoning_override") is not None
+        or probe.get("turn_policy") != policy_limits()
+        or probe.get("journal_sha256") != AcceptedJournal.initial().sha256
+        or any(type(probe.get(key)) is not int or probe[key] != 0 for key in zeroes)
+        or type(probe.get("phases_completed")) is not int
+        or probe["phases_completed"] != 3
+        or not isinstance(results, list)
+        or len(results) != 3
+        or any(
+            probe.get(key) is not True
+            for key in ("canonical_workspace_preflight_passed", "completed_stream_replay_passed")
+        )
+        or probe.get("script") != str(neutral_script)
+        or probe.get("script_sha256") != sha(neutral_script)
+        or probe.get("codex_cli") != frozen_cli
+        or probe.get("codex_cli_version") != "codex-cli 0.159.2"
+        or probe.get("codex_cli_sha256") != sha(Path(frozen_cli))
+    ):
+        raise ValueError("Original default-effort three-phase neutral preflight did not pass")
+    guard_data = probe.get("wall_guard")
+    if not isinstance(guard_data, dict) or set(guard_data) != {
+        "wall_started_at",
+        "wall_deadline_at",
+    }:
+        raise ValueError("Neutral requires its one original absolute wall guard")
+    guard = parse_wall_guard(**guard_data)
+    if probe.get("started_at") != guard.as_dict()["wall_started_at"]:
+        raise ValueError("Neutral guard must begin before its preparation")
+    if not guard.started_at <= parse_timestamp(probe.get("finished_at")) < guard.deadline_at:
+        raise ValueError("Neutral finalization exceeded its immutable900s guard")
+    if probe.get("cohort") != ["neutral", "othercase"] or probe.get("case_id") != "neutral":
+        raise ValueError("Neutral must retain its exact source-free two-workspace allocation")
+    for key in ("workspace_assignments", "workspace_receipts"):
+        path = Path(probe[key + "_path"])
+        if sha(path) != probe[key + "_sha256"] or read(path) != probe[key]:
+            raise ValueError("Original neutral assignment/receipt bytes changed")
+    assignments, receipts = probe["workspace_assignments"], probe["workspace_receipts"]
+    verified = validate_workspaces(assignments, receipts, case_ids=probe["cohort"])
+    workspace = verified["neutral"]
+    proof = probe.get("isolation_proof")
+    if (
+        not isinstance(proof, dict)
+        or probe.get("workspace") != str(workspace)
+        or proof.get("workspace") != str(workspace)
+        or digest(proof) != probe.get("isolation_proof_sha256")
+        or any(
+            proof.get(key) is not True
+            for key in ("allowed_read", "sealed_read_denied", "sealed_stdout_empty")
+        )
+    ):
+        raise ValueError("Original harmless-sentinel OS proof differs")
+    public = runpy.run_path(str(neutral_script))
+    previous = guard.started_at
+    for turn, phase in enumerate(PHASES, 1):
+        result = results[turn - 1]
+        if (
+            not isinstance(result, dict)
+            or type(result.get("turn")) is not int
+            or result["turn"] != turn
+            or result.get("mode") != phase
+            or result.get("selector_phase") != phase
+            or result.get("status") != "passed"
+            or result.get("error_kind") is not None
+            or type(result.get("returncode")) is not int
+            or result["returncode"] != 0
+            or type(result.get("elapsed_ms")) is not int
+            or result["elapsed_ms"] < 0
+            or any(
+                result.get(key) is not True
+                for key in (
+                    "exact_paths_before",
+                    "exact_paths_after",
+                    "completed_tool_free",
+                    "atomic_output_matches_stdout",
+                )
+            )
+        ):
+            raise ValueError("Every neutral phase must have its complete original proof")
+        for key in ("request", "stdout", "stderr"):
+            if sha(Path(result[key + "_path"])) != result[key + "_sha256"]:
+                raise ValueError("Original neutral archived request/stream changed")
+        schema, output = Path(result["schema_path"]), Path(result["output_path"])
+        validate_selector_paths(
+            assignments,
+            receipts,
+            case_id="neutral",
+            turn=turn,
+            workspace=workspace,
+            schema=schema,
+            output=output,
+        )
+        if sha(output) != result["output_sha256"]:
+            raise ValueError("Original neutral atomic output changed")
+        request = read(Path(result["request_path"]))
+        expected_schema = journal_schema_for_turn(
+            journal_sha256=probe["journal_sha256"],
+            canonical_university=public["CANONICAL_UNIVERSITY"],
+            phase=phase,
+        )
+        if (
+            request.get("turn") != turn
+            or type(request.get("turn")) is not int
+            or request.get("selector_phase") != phase
+            or request.get("wall_guard") != guard.as_dict()
+            or request.get("schema") != expected_schema
+            or request.get("schema_sha256") != digest(expected_schema)
+            or result.get("schema_sha256") != digest(expected_schema)
+            or request.get("prompt") != public["prompt_for_phase"](phase, probe["journal_sha256"])
+            or any(
+                request.get(key + "_sha256") != probe[key + "_sha256"]
+                for key in ("workspace_assignments", "workspace_receipts")
+            )
+        ):
+            raise ValueError("Neutral original bound prompt/schema/workspace hashes differ")
+        argv_proof = command_proof(request.get("selector_command"))
+        argv = argv_proof["command"]
+        if (
+            argv_proof != request.get("command_proof")
+            or argv_proof != result.get("command_proof")
+            or argv != result.get("selector_command")
+        ):
+            raise ValueError("Neutral actual default-effort argv proof changed")
+        for option, expected in (
+            ("-C", str(workspace)),
+            ("--output-schema", str(schema)),
+            ("--output-last-message", str(output)),
+        ):
+            if argv[argv.index(option) + 1] != expected:
+                raise ValueError("Neutral argv is not its exact canonical phase assignment")
+        if (
+            argv[0] != proof.get("sandbox_executable")
+            or argv[2] != proof.get("profile")
+            or argv[3] != frozen_cli
+        ):
+            raise ValueError("Neutral command differs from its recorded OS wrapper")
+        started, finished = (
+            parse_timestamp(result["selector_started_at"]),
+            parse_timestamp(result["selector_finished_at"]),
+        )
+        if not previous <= started <= finished < guard.deadline_at:
+            raise ValueError("Neutral selector chronology exceeded its original guard")
+        expected_window = turn_window(phase=cast(TurnPhase, phase), wall_guard=guard, now=started)
+        if (
+            result.get("window") != expected_window.as_dict()
+            or result.get("timeout_seconds") != expected_window.timeout_seconds
+            or result.get("timeout_ms") != expected_window.timeout_ms
+        ):
+            raise ValueError("Neutral phase timeout must use only its remaining original guard")
+        raw = output.read_text()
+        completed = selector_answer(Path(result["stdout_path"]).read_text(), raw)
+        parsed = parse_turn_decision(
+            raw,
+            journal_sha256=probe["journal_sha256"],
+            canonical_university=public["CANONICAL_UNIVERSITY"],
+            phase=phase,
+        ).model_dump(mode="json")
+        if (
+            completed != parsed
+            or parsed != result.get("answer")
+            or digest(parsed) != result.get("bound_answer_sha256")
+            or digest(completed) != result.get("replayed_answer_sha256")
+        ):
+            raise ValueError("Original complete neutral output no longer replays exactly")
+        if phase == "data" and parsed != public["synthetic_record"](probe["journal_sha256"]):
+            raise ValueError("Neutral invented four-fact serialization changed")
+        if phase == "bootstrap" and (
+            parsed["kind"] != "action" or parsed["facts"] or parsed["question_findings"]
+        ):
+            raise ValueError("Neutral bootstrap must be an unexecuted empty-delta action")
+        if phase == "bootstrap" and parsed["action"] != {
+            "tool": "fetcher",
+            "url": "https://example.org/public-probe",
+            "query": None,
+            "domains": [],
+            "max_results": None,
+            "source_step": None,
+            "page": None,
+            "offset": None,
+            "section_offset": None,
+            "link_offset": None,
+        }:
+            raise ValueError("Neutral bootstrap must preserve the sole invented action")
+        previous = finished
+
+
+def main() -> None:
+    if FOLDER.exists() or FOLDER.is_symlink():
+        raise ValueError("A frozen V11 directory already exists; never overwrite it")
+    if type(COHORT) is not dict or set(COHORT) != COHORT_CASE_IDS:
+        raise ValueError("Freeze requires the original public ten-case cohort")
+    scripts = protocol_scripts()
+    report = runpy.run_path("/tmp/unimatch-expert500-journal-report-v11.py")
+    names = report["PROTOCOL_MODULES"]
+    if len(names) != 21 or {
+        "evaluation.research.expert.turn_policy",
+        "evaluation.research.expert.research_timing",
+    } & set(names):
+        raise ValueError(
+            "V11 requires its complete21module network protocol, without legacy timing"
+        )
+    modules, files = {}, []
+    for name in sorted(names):
+        spec = importlib.util.find_spec(name)
+        if spec is None or spec.origin is None:
+            raise ValueError("A frozen protocol module is unavailable")
+        source = Path(spec.origin)
+        modules[name] = sha(source)
+        files.append({"path": str(source.relative_to(REPO)), "sha256": modules[name]})
+    original_inputs = {
+        "neutral-probe.json": NEUTRAL,
+        "local-gates.json": LOCAL_GATES,
+        "neutral-original-v7-manifest.json": V7_MANIFEST,
+        "os-isolation-preflight.json": OS_PREFLIGHT,
+    }
+    input_hashes = {name: sha(path) for name, path in original_inputs.items()}
+    probe, local = read(NEUTRAL), read(LOCAL_GATES)
+    if any(sha(path) != input_hashes[name] for name, path in original_inputs.items()):
+        raise ValueError("Original input bytes changed while being parsed")
+    validate_local_gates(local)
+    os_proof = read(OS_PREFLIGHT)
+    runpy.run_path(str(OS_HELPER))["validate_result"](os_proof)
+    neutral_reuse = validate_neutral_reuse()
+    validate_neutral(
+        probe,
+        neutral_script=Path("/tmp/unimatch-expert500-neutral-v7.py"),
+        frozen_cli=report["FROZEN_CLI"],
+    )
+    script_hashes = {str(path): sha(path) for path in scripts}
+    binding = {"path": str(REVIEWED_BINDINGS.resolve()), "sha256": sha(REVIEWED_BINDINGS)}
+    FOLDER.mkdir(parents=True)
+    for source in scripts:
+        target = FOLDER / (source.name + ".txt")
+        with target.open("xb") as output:
+            output.write(source.read_bytes())
+        if sha(target) != script_hashes[str(source)]:
+            raise ValueError("Protocol source copy differs from validated bytes")
+        files.append(
+            {"path": target.name, "sha256": sha(target), "actual_parent_path": str(source)}
+        )
+    for name, source in original_inputs.items():
+        with (FOLDER / name).open("xb") as output:
+            output.write(source.read_bytes())
+        if sha(FOLDER / name) != input_hashes[name]:
+            raise ValueError("Original neutral/local JSON byte copy differs")
+        if name in {"neutral-original-v7-manifest.json", "os-isolation-preflight.json"}:
+            files.append(
+                {
+                    "path": name,
+                    "sha256": input_hashes[name],
+                    "original_evidence_path": str(source),
+                }
+            )
+    os_artifacts = Path(os_proof["artifacts"])
+    for source in sorted(os_artifacts.rglob("*")):
+        if source.is_symlink():
+            raise ValueError("Original OS proof tree cannot contain symlink evidence")
+        if source.is_file():
+            name = "os-isolation/" + str(source.relative_to(os_artifacts))
+            target = FOLDER / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            with target.open("xb") as output:
+                output.write(source.read_bytes())
+            if sha(target) != sha(source):
+                raise ValueError("Original OS proof artifact byte copy differs")
+            files.append(
+                {"path": name, "sha256": sha(target), "original_os_proof_path": str(source)}
+            )
+    local_log_copies = {}
+    for index, (gate, evidence) in enumerate(sorted(local["raw_logs"].items()), 1):
+        source, target_name = Path(evidence["path"]), f"local-gate-{index:02d}.log"
+        with (FOLDER / target_name).open("xb") as output:
+            output.write(source.read_bytes())
+        if sha(FOLDER / target_name) != evidence["sha256"]:
+            raise ValueError("Original local gate log changed before its byte copy")
+        files.append(
+            {"path": target_name, "sha256": evidence["sha256"], "original_log_path": str(source)}
+        )
+        local_log_copies[gate] = {"path": target_name, "sha256": evidence["sha256"]}
+    manifest = {
+        "prepared_at": datetime.now(UTC).isoformat(),
+        "protocol_version": "journal-v11",
+        "live_v11_started": False,
+        "cohort_case_ids": list(COHORT),
+        "search_provider": PINNED_PROVIDER,
+        "algorithm_provider": PINNED_PROVIDER,
+        "expert_provider": PINNED_PROVIDER,
+        "requested_model": "gpt-6-astra",
+        "requested_reasoning_effort": None,
+        "reasoning_effort_source": "cli_default",
+        "comparison_mode": NETWORK_COMPARISON_MODE,
+        "budget_model": BUDGET_MODEL,
+        "wall_guard_ms": WALL_GUARD_MS,
+        "network_budget": expert_budget(),
+        "turn_policy": policy_limits(),
+        "baseline_budget": {
+            "max_fetcher_calls": 60,
+            "max_search_queries": 6,
+            "max_elapsed_ms": 120000,
+            "browser_enabled": False,
+        },
+        "baseline_finalization_reserve_ms": 1000,
+        "baseline_source_work_deadline_ms": 119000,
+        "expert_time_basis": "Controller actions only; model and transport never enter source counters; absolute900s case hang guard",
+        "cli_version": "0.159.2",
+        "cli_source": "Existing ChatGPT.app bundled Codex CLI",
+        "neutral_probe": {
+            **neutral_reuse,
+            "successful": True,
+            "completed_tool_free": True,
+            "source_requests": 0,
+            "university_requests": 0,
+            "tool_requests": 0,
+            "canonical_workspace_preflight_passed": True,
+            "completed_stream_replay_passed": True,
+            "elapsed_ms_by_mode": {r["mode"]: r["elapsed_ms"] for r in probe["results"]},
+            "original_result_path": str(NEUTRAL),
+            "original_result_sha256": input_hashes["neutral-probe.json"],
+        },
+        "os_isolation_preflight": {
+            "successful": True,
+            "cases_passed": 10,
+            "original_result_path": str(OS_PREFLIGHT),
+            "original_result_sha256": input_hashes["os-isolation-preflight.json"],
+            "helper_sha256": sha(OS_HELPER),
+            "parent_sha256": os_proof["parent_sha256"],
+            "builder_sha256": os_proof["builder_sha256"],
+            "cat_processes": os_proof["cat_processes"],
+            "model_requests": 0,
+            "source_requests": 0,
+            "network_requests": 0,
+        },
+        "local_gates": {
+            **local,
+            "original_path": str(LOCAL_GATES),
+            "original_sha256": input_hashes["local-gates.json"],
+            "frozen_raw_logs": local_log_copies,
+        },
+        "max_parallel_experts": 3,
+        "files": files,
+        "modules": modules,
+        "scripts": script_hashes,
+        "binding_registry": binding,
+        "public_profile": "KZ national secondary / bachelor Computer Science / fall2027",
+        "parent_has_prior_review_context": True,
+        "selectors_have_no_gold_access": True,
+        "prior_results_preserved": True,
+        "acceptance_threshold_recovered_facts": 40,
+        "unchanged_reviewed_fact_count": 62,
+    }
+    with (FOLDER / "manifest.json").open("x") as output:
+        output.write(json.dumps(manifest, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
+    print(
+        json.dumps(
+            {
+                "scripts": len(scripts),
+                "modules": len(modules),
+                "binding_registry_bytes_pinned": True,
+                "folder": str(FOLDER),
+            }
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

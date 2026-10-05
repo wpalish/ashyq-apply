@@ -1,0 +1,299 @@
+{
+  "schema_version": "1",
+  "recorded_at": "2026-10-05T10:58:16.904037+00:00",
+  "kind": "prospective_v11_predecessor_and_original_negative_support",
+  "predecessor_runtime_tests": 570,
+  "runtime_gate_source_head": "231886d",
+  "runtime_elapsed_seconds": 146.7,
+  "parent_final_sha256": "41dd31b4771cb223e80fc7451e38c658a0b1889d79e270dbbe6d10670634fed5",
+  "report_final_sha256": "5e7bdc182cf2dd92aa09341f62b40526542ff79e65bce1f40fb61a7f6b145bd0",
+  "predecessor_neutral_runtime_policy": "Original V7 reuse; stale after legitimate main53 metrics refactor. The570 gate is predecessor proof, not final new-neutral binding proof.",
+  "network_source_requests": 0,
+  "model_requests": 0,
+  "records": [
+    {
+      "original_path": "/tmp/test_unimatch_expert500_actual_cohort_v11-pre-pr53-20261005T103631057731Z-c027f6bfa33d.py.txt",
+      "path": "test_unimatch_expert500_actual_cohort_v11-pre-pr53-20261005T103631057731Z-c027f6bfa33d.py.txt",
+      "sha256": "c027f6bfa33dd6da8806f07e61125a73831ed07c7f6e5fe88fc52f67216be7a3",
+      "bytes": 47208
+    },
+    {
+      "original_path": "/tmp/test_unimatch_expert500_actual_cohort_v11.py.before-root-config-import-sort.txt",
+      "path": "test_unimatch_expert500_actual_cohort_v11.py.before-root-config-import-sort.txt",
+      "sha256": "56da22692d1c6a472794f88aca9de2387b97cbb23056f4224f87247f8168a186",
+      "bytes": 47207
+    },
+    {
+      "original_path": "/tmp/test_unimatch_expert500_journal_pilot_v11_pre_stop_publication_repair.py.txt",
+      "path": "test_unimatch_expert500_journal_pilot_v11_pre_stop_publication_repair.py.txt",
+      "sha256": "61eb04048180f49d09fd95e4c8ecabb61ad579e709f89e8d630ad1a8474ecdbe",
+      "bytes": 72051
+    },
+    {
+      "original_path": "/tmp/test_unimatch_expert500_workflow_v11.py.before-root-config-import-sort.txt",
+      "path": "test_unimatch_expert500_workflow_v11.py.before-root-config-import-sort.txt",
+      "sha256": "7dcf1e94430a30ccb6d2cdd5b4aa7ba2c92813a8c4cc4260508d74a40596dde8",
+      "bytes": 25048
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-freeze-v11-pre-pr53-20261005T103631057731Z-c9c57f55ec43.py.txt",
+      "path": "unimatch-expert500-freeze-v11-pre-pr53-20261005T103631057731Z-c9c57f55ec43.py.txt",
+      "sha256": "c9c57f55ec43c21f9dec141da6b7e39c5f71c919bedbbd6f76a97a41fae1e6b8",
+      "bytes": 25739
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-journal-pilot-v11-pre-stop-publication-repair.py.txt",
+      "path": "unimatch-expert500-journal-pilot-v11-pre-stop-publication-repair.py.txt",
+      "sha256": "4065c72da1741e5d4636a70086644e23ddade609acdf7275d718eb3850714b32",
+      "bytes": 86518
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-launch-v11-pre-pr53-20261005T103631057731Z-2a052cc0c353.py.txt",
+      "path": "unimatch-expert500-launch-v11-pre-pr53-20261005T103631057731Z-2a052cc0c353.py.txt",
+      "sha256": "2a052cc0c353cffe854b92b254077d6c27553513c708ffd9b67a663039e4b443",
+      "bytes": 8269
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-all-helpers-format-original.log",
+      "path": "unimatch-expert500-v11-all-helpers-format-original.log",
+      "sha256": "34f6b3d47482c9a3337d6ab2160469564d16d226b4e0c13a90d562a50ab0902b",
+      "bytes": 642
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-all-helpers-mypy-original.log",
+      "path": "unimatch-expert500-v11-all-helpers-mypy-original.log",
+      "sha256": "b3cb593d7a73cdf322105ffaff846922b88c945006024ae20689552d077c716c",
+      "bytes": 16627
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-all-helpers-ruff-original.log",
+      "path": "unimatch-expert500-v11-all-helpers-ruff-original.log",
+      "sha256": "449a2610dc0a6ff405d458c26d5566a35c8146047ae20b7623e323c40485b085",
+      "bytes": 329372
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-catalogue-integration-audit.log",
+      "path": "unimatch-expert500-v11-catalogue-integration-audit.log",
+      "sha256": "a7eab2ab448a25e4a139de599fa59dd0a1e4f908fad217bc89b44c81f13d20d3",
+      "bytes": 14962
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-final-combined-runtime.log",
+      "path": "unimatch-expert500-v11-final-combined-runtime.log",
+      "sha256": "f32ed655eb665f22eb24491176ea88ef83250f488a9b7c88ff6252dcb207a2f9",
+      "bytes": 672
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-final-helper-format-configured.log",
+      "path": "unimatch-expert500-v11-final-helper-format-configured.log",
+      "sha256": "5b9f70ad96522f492ef846065642c069b5627379aff2ab3f74acd2e3b9ecfe34",
+      "bytes": 27
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-final-helper-mypy-configured.log",
+      "path": "unimatch-expert500-v11-final-helper-mypy-configured.log",
+      "sha256": "c992605465e69d9eadd7161755a0ddee9e6bb69db0da09118f6ec23d6df03614",
+      "bytes": 769
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-final-helper-ruff-configured.log",
+      "path": "unimatch-expert500-v11-final-helper-ruff-configured.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-final-helper-ruff.log",
+      "path": "unimatch-expert500-v11-final-helper-ruff.log",
+      "sha256": "31f1f3220ee7137185c96c793799818c686638f582b017ee37aeaa78c597bfec",
+      "bytes": 532
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-final-os-isolation.log",
+      "path": "unimatch-expert500-v11-final-os-isolation.log",
+      "sha256": "6301059d4f80c98eec9125b6ef66879dacf731f325c74bbfe22a511e52a5ee4d",
+      "bytes": 257
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-format-final.log",
+      "path": "unimatch-expert500-v11-format-final.log",
+      "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938",
+      "bytes": 26
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-format-origins-final.log",
+      "path": "unimatch-expert500-v11-format-origins-final.log",
+      "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938",
+      "bytes": 26
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-guard-transport-green-first.log",
+      "path": "unimatch-expert500-v11-guard-transport-green-first.log",
+      "sha256": "7081de092c273469718d644e38b0478bbdabaafa434063297632cc4f06237165",
+      "bytes": 640
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-guard-transport-red-corrected.log",
+      "path": "unimatch-expert500-v11-guard-transport-red-corrected.log",
+      "sha256": "519202c2aef0b60fbbd0d1de10b906575aa36fb672480378a4513dcf102d4fd0",
+      "bytes": 186036
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-guard-transport-red.log",
+      "path": "unimatch-expert500-v11-guard-transport-red.log",
+      "sha256": "13f168325429f49dd3878c6248320afb2f02a2d9b4809adb408d4da622b2f87c",
+      "bytes": 185855
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-model-stop-publication-race-green.log",
+      "path": "unimatch-expert500-v11-model-stop-publication-race-green.log",
+      "sha256": "224b9d80d7b31fbf14242d0e0b0f59579c71bb01e76c347bf758037c7e510116",
+      "bytes": 113
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-model-stop-publication-race-red.log",
+      "path": "unimatch-expert500-v11-model-stop-publication-race-red.log",
+      "sha256": "3e24aadcac5499aa26b624010e36cce96024e705d19a57f41ea27aa09d5ce0c0",
+      "bytes": 4301
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-mypy-final.log",
+      "path": "unimatch-expert500-v11-mypy-final.log",
+      "sha256": "f9b031e5c45aa702cd4fef028d465551cb20a2c4698e0913c7b00766b20ac4d8",
+      "bytes": 43
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-mypy-origins-final.log",
+      "path": "unimatch-expert500-v11-mypy-origins-final.log",
+      "sha256": "f9b031e5c45aa702cd4fef028d465551cb20a2c4698e0913c7b00766b20ac4d8",
+      "bytes": 43
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-parent-final.log",
+      "path": "unimatch-expert500-v11-parent-final.log",
+      "sha256": "19a7d1b62be35b0264cb7a98702866ad76792c5a8bb42bfadd5806ffa88c8e4c",
+      "bytes": 709
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-parent-origins-final.log",
+      "path": "unimatch-expert500-v11-parent-origins-final.log",
+      "sha256": "1c21f137f9082f01560ae98d7f2d73ec12f4de6ae58b8b0769a06af235f4859b",
+      "bytes": 709
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-report-focused-final.log",
+      "path": "unimatch-expert500-v11-report-focused-final.log",
+      "sha256": "bc0d043ca2888d90a40d06785d27b234868f03bd8deb0cc224dbc59116b40e82",
+      "bytes": 1467
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-report-format-final-after-marker.log",
+      "path": "unimatch-expert500-v11-report-format-final-after-marker.log",
+      "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938",
+      "bytes": 26
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-report-guard-red.log",
+      "path": "unimatch-expert500-v11-report-guard-red.log",
+      "sha256": "3e0eb684f3864249ebd99d3d06e7984bbfcbb79c52e84b773ef7b77bee793923",
+      "bytes": 28699
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-report-mypy-final-after-marker.log",
+      "path": "unimatch-expert500-v11-report-mypy-final-after-marker.log",
+      "sha256": "f9b031e5c45aa702cd4fef028d465551cb20a2c4698e0913c7b00766b20ac4d8",
+      "bytes": 43
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-report-static-final-after-marker.log",
+      "path": "unimatch-expert500-v11-report-static-final-after-marker.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-root-helpers-format-backend-final.log",
+      "path": "unimatch-expert500-v11-root-helpers-format-backend-final.log",
+      "sha256": "ef7d13d02214e98ca902b05257cdbe6a8e84f3b4714508efdc19766460b54209",
+      "bytes": 26
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-root-helpers-format-configured.log",
+      "path": "unimatch-expert500-v11-root-helpers-format-configured.log",
+      "sha256": "ef7d13d02214e98ca902b05257cdbe6a8e84f3b4714508efdc19766460b54209",
+      "bytes": 26
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-root-helpers-mypy-configured.log",
+      "path": "unimatch-expert500-v11-root-helpers-mypy-configured.log",
+      "sha256": "9e08b2668c2629ce386b01c64f24adb57dd8a0c19d4d32f2056c2b865ed9c435",
+      "bytes": 768
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-root-helpers-ruff-backend-final.log",
+      "path": "unimatch-expert500-v11-root-helpers-ruff-backend-final.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-root-helpers-ruff-configured-final.log",
+      "path": "unimatch-expert500-v11-root-helpers-ruff-configured-final.log",
+      "sha256": "537b6a71170a3b534418ab1f7f3aafe8f8bfd445afccd5a2abd3526e7ef57c18",
+      "bytes": 3382
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-root-helpers-ruff-configured.log",
+      "path": "unimatch-expert500-v11-root-helpers-ruff-configured.log",
+      "sha256": "537b6a71170a3b534418ab1f7f3aafe8f8bfd445afccd5a2abd3526e7ef57c18",
+      "bytes": 3382
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-root-test-import-sort-backend.log",
+      "path": "unimatch-expert500-v11-root-test-import-sort-backend.log",
+      "sha256": "6f4e3c8cb6a43f32a8b47add0b65207f17bd814c84308623b3720ad789c0d769",
+      "bytes": 39
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-root-test-import-sort.log",
+      "path": "unimatch-expert500-v11-root-test-import-sort.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-root-workflow-original.log",
+      "path": "unimatch-expert500-v11-root-workflow-original.log",
+      "sha256": "906a0e8f3eeec6b887a6237d42284337318c4edf330b3bb727fffa4fc0b46ad6",
+      "bytes": 99
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-ruff-final.log",
+      "path": "unimatch-expert500-v11-ruff-final.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-ruff-origins-final.log",
+      "path": "unimatch-expert500-v11-ruff-origins-final.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-stop-publication-race-green.log",
+      "path": "unimatch-expert500-v11-stop-publication-race-green.log",
+      "sha256": "59dc4cbc9a710c681e8b58279cac4c7efe9b7789234c62e24f775831f0742376",
+      "bytes": 113
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-stop-publication-race-red.log",
+      "path": "unimatch-expert500-v11-stop-publication-race-red.log",
+      "sha256": "5e64c741956b5848db70b7243c8a0f114bbf9cd8d41ab6ef057d2f761bc56837",
+      "bytes": 8012
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-transport-stop-red.log",
+      "path": "unimatch-expert500-v11-transport-stop-red.log",
+      "sha256": "381f8c266bd59b4661491d3aa387942d8695b68168ce918d11139846ea027ddc",
+      "bytes": 5291
+    }
+  ],
+  "quality_configuration_note": "Wrong cwd/88-column/no-MYPYPATH and explicit-select B008 re-enablement failures retained. Correct backend cwd100-column config with existing E501/B008 and established external B023 passes; test import-only sort precedes570.",
+  "recording_note": "Initial recorder requested absent report-ruff-final-after-marker.log and stopped before manifest. Correct original is report-static-final-after-marker.log; existing partial copies verified unchanged then remaining originals appended. Nothing was overwritten."
+}

@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**CURRENT FINAL V11 FREEZE, 2026-10-05 11:19 UTC [expert-500], holder gpt-6-astra, parent metadata HEADde7d96f.** Immutable v11 manifest47c801ee was created once11:09 UTC:12 helpers/21 modules/675 byte-bound entries/24 local gates. Current-main4eccbec/PR53 is integrated at03a1d18;4100/94.87%/427.88s and371 static pass, demo20/Groningenfirst/UBCOUT_OF_BUDGET and single Alembic head pass. Current runtime621 is178 parent/workflow/pure +305 report +138 actual-cohort; all11 helper quality passes. Ten-case OS240 proofa0658da9 and fresh neutral3 default-effort model phases/zero sources/runtime14/result33bdc0a1/archive487c1630 pass. Original support47 records7b2d16d2 and new provenance20 records296acf57 retain all negatives and exact green logs. No V11 trial/sourceCI/university action/label/seal/score yet. Root owns normal source commit/push/tag/exactCI and once-only allocation/baseline/expert/report. Never invoke freezer again or change helpers.
+
 **CURRENT PR53 GATES GREEN / V11 OFFLINE, 2026-10-05 10:45 UTC [expert-500], holder gpt-6-astra, source merge03a1d18.** Main4eccbec/PR53 included: ER08=true shares6 institution queries, ER09=true/ER10=3. Fresh4100/94.87%/427.88s and371 static pass; demo20/Groningenfirst/UBCOUT_OF_BUDGET and one Alembic head pass. New neutral invoked once at normal effort: all3 phases pass, runtime14 before==after/current and helpere8313268 fixed; source/tool/university0, model3. Its result33bdc0a1 and21 original records/623991bytes are preserved in v11-neutral487c1630; original V7/V10 untouched. Final new proof-bound freezer/launcher/cohort gates are pending; actual parent41dd31b4/report5e7bdc18 and OS240a0658da9 stay stable. No V11 final freeze/trial/university calls/labels/score.
 
 **CURRENT V11 OFFLINE / NEW MAIN PR53, 2026-10-05 10:33 UTC [expert-500], holder gpt-6-astra, metadata HEAD231886d.** Final actual-parent/report/cohort/workflow/pure runtime570 passed in146.70s; final ten external helper quality passed in backend config; actual-ten OS240 proofa0658da9 passes. Fetch discovers origin/main4eccbec/PR53: ER08 TOPIC_SEARCH=true shares six-query institution budget; metrics.py now refactors official adjudication for scorecards. Integrate before final freeze. Original V7 neutral no longer has all14 current runtime hashes, so do not relabel reuse as current: prepare one new source-free three-phase V11 neutral at unchanged default effort, with immutable raw proof. V11 final freeze/trial/live/labels/score absent; V10 remains CLOSED_UNSCORED.
@@ -91,6 +93,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Current [expert-500], 2026-10-05 11:19 UTC: V11 local source freeze complete, selected-source CI and same-ten live comparison pending.** Main4eccbec owner defaults remain ER08/ER09 enabled and ER10cap3; expert60 reads/6 queries/default reasoning/900s absolute hang guard, algorithm60/6/120s and unchanged62/40 admission remain fixed. V10 stays CLOSED_UNSCORED. PR46 is draft; batches50 and HELDOUT150 remain unavailable until eligible comparison and supported per-fact causes.
 
 **Current [expert-500], 2026-10-05 09:47 UTC: V10 CLOSED_UNSCORED; V11 is prospective offline correction.** Preserve all original evidence and owner60/6/default reasoning/900s case guard/algorithm120s/62 denominator/40 threshold. Repair case expiry and controller delivery without changing production search flags or acceptance. PR46 stays draft; batches50 and HELDOUT150 remain blocked on a valid same-ten comparison and grounded miss causes.
 
@@ -189,6 +193,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+- [expert-500] de7d96f56c4ff4964d19ff184b6fcf6b9e754565: pushed fresh current-main53 full/static/demo originals and21-record new-neutral archive487c1630/result33bdc0a1; main integration03a1d18. Final-freeze/current621/support originals below are prepared for this following normal source commit, not yet a pushed completion claim.
 
 **2026-10-05 V10 original algorithm arm, frozen source39a14c5:** all10 fresh workflows completed on the immutable V10 tag. Paired source/budget/provider validation1987aa55 passed with no provider failure; reads<=60/queries<=6/elapsed<=120000ms, original finalization reserve1000/source deadline119000ms. Preserve original126-record baseline corpus e64013b2/456ba6d4 before experts; no previous baseline reused and no reviewed fact loaded. This live evidence awaits the following metadata checkpoint; source and all original CI remain39a14c5.
 
@@ -1719,6 +1725,8 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
+**Current 2026-10-05 11:19 UTC [expert-500]:** final freezev11/47c801ee, predecessor-support47/7b2d16d2 and new-provenance20/296acf57 await the selected source commit/push with these docs. All current local gates pass. CI/trial/baselines/experts/report/seal/score remain pending. No live V11 root exists; do not resume historical V10 entries.
+
 **2026-10-05 10:04 UTC [expert-500]:** Current-main full/static/demo/Alembic is green;11 original evidence records plus completed manifest pending checkpoint. Parent89 scoped regressions reported green, final quality/main-queue regression pending; report303 inherited/new tests awaiting stable parent. Root workflow fixture guards corrected; actual-cohort/workflow/combined/helper-quality/freshOS still pending. No V11 freeze/live trial.
 
 **Current 2026-10-05 09:47 UTC [expert-500]:** V10 original closure v10-unscored995 records verified, causal report and updated current status pending checkpoint. V11 prospective /tmp parent/test and report/test are being prepared offline; no new trial or freeze. Main2eee04e integration and all affected V11 gates pending. Do not continue the older running-experts entries below: their process has ended; original5/10 is closed unscored.
@@ -1886,6 +1894,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**FINAL SOURCE WRITE-AHEAD, 2026-10-05 11:19 UTC [expert-500]:** normal commit/push the immutable v11/47c801ee and both support archives with this HANDOFF and V11 doc; tag the resulting exact source `expert500-phase1-v11-2026-10-05-<shortSHA>` once. Require release-gates push/PR/tag12 successful jobs for that full SHA; preserve original CI JSON/logs in /tmp. Keep GitHEAD equal to selected source until invoking `/tmp/unimatch-expert500-launch-v11.py --harness-sha <fullSHA> --frozen-ref <tag>` exactly once. Only then commit metadata/CI receipts. New root artifacts/expert-500/phase1-v11-2026-10-05 must have all10 independently allocated workspaces; invoke final parent41dd31b4 `--stage baseline` once and retain all10 original Exa60/6/120 captures before one experts-stage invocation. One ordinary same-original-account readonly availability check before experts; no login/purchase/account/model/effort changes. Monitor existing stages only. Frozen report5e7bdc18 runs once only after all10 originals are eligible; seal before unchanged62 reviewed labels.40/62 +every grounded expert-only cause required before50. Missing/failed traces close unscored without guessed causes; HELDOUT150 untouched.
 
 **PR53 / FRESH NEUTRAL WRITE-AHEAD, 2026-10-05 10:33 UTC [expert-500]:** Commit/push this plan, merge origin/main4eccbec without changing owner defaults; fresh full backend/static/evaluation/demo gates for the changed app and metrics. Root owns Git/main gates and the one future source-free neutral invocation. Catalogue agent may edit only new /tmp V11 neutral clone, freezer, launcher, actual-cohort tests to require a freshly completed bootstrap/data/minimal proof and bind exact current14 runtime hashes; retain all V7/V10 originals and predecessor V11 bytes/gates. No model/source/label/Git calls by native agents. Parent41dd31b4/report5e7bdc18 remain stable. Preserve original570 and OS240, rerun only affected provenance/cohort/quality gates after new neutral binding. No weakening, rerun of V10, changed effort/900s/60+6/62/40 or HELDOUT150.
 
@@ -3922,6 +3932,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**Final V11/current main53, 2026-10-05 11:19 UTC [expert-500]:**4100 backend passed94.87%/427.88s; Ruff/format/mypy371 app/tests/evaluation; demo20 correct order/UBCOUT_OF_BUDGET and single d8e412c6a901 head. Current helper runtime621 =178/4.26s parent-workflow-pure +305/30.70s report +138/135.01s actual-cohort; all11 external helper quality passes. Earlier570/146.70s is separate predecessor evidence, not current combined invocation. Fresh neutral3 default-effort phases pass8.542/19.993/6.467s with before/after current14 hashes;0 sources/tools/universities. OS240 proofa0658da9 passes. Unchanged frontend232/type/lint/build hash-bound originals retained. Immutable freeze47c801ee/24 gates/675 entries/12 helpers/21 modules verified. No exact-V11-source cloud CI or live result claimed.
+
 **Current PR53 source03a1d18, 2026-10-05 10:45 UTC [expert-500]:** backend4100 passed/94.87%/427.88s; Ruff/format/mypy371 source files passed. Same freshly migrated synthetic SQLite demo20/Groningenfirst/UBCOUT_OF_BUDGET verified through ranking.bucket/row.bucket; Alembic d8e412c6a901 single head. New neutral3 completed phases/zero source and tool calls/14 exact runtime hashes; result33bdc0a1, archive21 records487c1630. Frontend4aaba144/migrations96469ee9/workflowsfc6cd24 unchanged, original frontend232/type/lint/build proofs retained. Final neutral-bound external helpers/cohort and freeze/sourceCI/live still pending.
 
 **V11 prospective final predecessor gates, 2026-10-05 10:33 UTC [expert-500]:**570 actual runtime mocks passed146.70s (parent94/report305/cohort87/workflow36/pure48), external10 Ruff/format/mypy pass with established E501/B008/B023 exclusions, actual-ten OS240 passesa0658da9. Provider/integrity/model durable-first-cause red/green originals retained. Main PR53 integration makes original14-runtime neutral reuse stale; require new source-free exact-runtime proof before source freeze. Main PR52 app4092/94.83 remains historical proof until PR53 fresh full gates.
@@ -4763,6 +4775,8 @@ next agent does not reopen it.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
+- 2026-10-05 11:19 UTC [expert-500] final V11 freeze47c801ee binds fresh executed_for_protocol journal-v11 neutral archive487c1630 and exact current14 before/after runtime hashes/default3 phases; no old V7 reuse label. Final source also includes main4eccbec ER08/ER09/ER10 owner defaults. No change to expert60/6/900/default effort, algorithm60/6/120, accepted prefix, outside_policy,62 denominator,40 threshold or heldout policy.
+
 - 2026-10-05 [expert-500] prospective V11 evaluation only: delivery-first retrieval of the original controller within existing60s audit; typed self900s CaseGuardEnded remains case-local only for exact identified self-guard endings. Unknown raw/counters remain preseal ineligible. Last accepted predeadline prefix is closed offline, full recorded tail remains charged. error/error_recorded_at are separate from finalization_note; transport-batch-stop.json and model origins are durably published before shared STOP. Report rejects original raw failures and any transport STOP including a dangling symlink. Main PR53 legitimately changes metrics runtime: fresh neutralV11 must bind all14 before/after runtime hashes and three completed source-free default-effort phases plus original archive; original V7 reuse is not current. Owner60/6/900s/120s/62/40 and HELDOUT150 unchanged.
 
 - 2026-10-05 [expert-500] final prospective V10: immutable <stage>-stage-start.json is exclusively created/flushed/fsynced before workers; interrupted/empty/existing markers and outputs reject reentry. Case/controller destinations are atomically claimed before dispatch. Model-failure classification independently scans terminal raw error/turn.failed sequences and orphan tails; completed events clear stale specific attribution, canonical failed transport still stops. Contradictory nonzero returncode with absent/noncanonical failure metadata rejects before seal. No budget/model/effort/provider/app/gold change.
@@ -4892,6 +4906,8 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 | 2026-09-09 | security audit | `security.py`: `SCRYPT_R`, `SCRYPT_P`, `_maxmem(n, r)`; `routes_metrics` compares bytes | scrypt cost schedule and the 500-on-non-ASCII bearer. |
 
 ## 9. Traps and lessons (things that cost a session; keep them)
+
+- 2026-10-05 11:19 UTC [expert-500] fresh neutral fixture negatives are synthetic gate setup defects only: Isolation.command requires fresh output path; launcher now imports freezer so the actual canonical repo is redirected twice; minimal observation must use actual enum value. Preserve original98pass/1fail/39setup errors and pre-fix2941f355 snapshot; only cohort fixture changed, final138 passes with all12helpers/21modules unchanged. Full helper quality uses established backend exclusions E501/B008/B023; do not alter immutable helpers for incompatible root defaults. Seed_demo needs Alembic upgraded first; row.bucket/ranking.bucket verifies synthetic UBC, not nonexistent ProgramResult.bucket. Final freezer and live stages are once-only.
 
 **2026-10-05 V10 trap [expert-500]:** known run internal900s expiry followed by immediate external cancellation can destroy raw artifact delivery, then parent715 falsely escalates to shared STOP and1655 overwrites the causal error. Delivery-only audit after900s does not grant new source/model time; maintain original60s audit limit. Selector wall includes CLI/model, transport includes source; do not call all selector time pure thinking or compare transport seconds as network budget. Original V10 closed unscored and immutable; no0/62, no report rerun to manufacture a score.
 
@@ -5376,3 +5392,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-10-05 10:04 UTC | gpt-6-astra | [expert-500] |96d784e -> main source gates bound by11-record manifest; separately verified demo buckets omitted from seed stdout, prior originals unchanged. V11 scoped parent/report/combined/OS gates pending, no live/model/source/labels. |
 
 | 2026-10-05 10:13 UTC | gpt-6-astra | [expert-500] |231886d -> prospective V11 predecessor90/report305/integration123 recorded; independent first-cause marker race discovered, narrow parent/test repair authorized before final gates/freeze/live. Wrong-context quality originals preserved; no live/model/source/labels. |
+
+- 2026-10-05 11:19 UTC | gpt-6-astra | [expert-500] | de7d96f -> following final source: verified once-created47c801ee, current621/4100/94.87/371/OS240/default neutral3; source/tag/CI and one fresh whole-ten pilot next, no labels.
