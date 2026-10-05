@@ -1567,3 +1567,29 @@ eyebrow both said "step 2 of 5"; I86 a bare "Met" chip on the deadline row repea
 chip, now "Requirements met".
 
 Open for the owner: which concept, and the product name (README says ASHYQ Apply, main's UI says Unimatch).
+
+### 29b. Owner: "doesn't go together" — Y «Орбита» (2026-10-05)
+
+The owner's verdict on V/W/X was that the parts did not go together. The causes, read off the images and
+checked against [Duolingo onboarding](https://mobbin.com/explore/flows/0acc27c7-4e01-481c-83b2-99f8d741bef1)
+(the character drawn in the interface's own style and colour), [Airbnb listing detail](https://mobbin.com/explore/flows/acabe8c6-b01c-4787-aa8c-d056dd6d5bef)
+and [Revolut onboarding](https://mobbin.com/explore/flows/633b424d-a942-466c-a0ac-32d67d15033c) (one
+neutral surface, one strong colour with one job), and 21st.dev's [onboarding steppers](https://21st.dev/community/components/s/onboarding):
+
+1. A lit, glossy 3D figure on a flat paper card; a flat vector hill next to it (W).
+2. Yellow doing five jobs: buttons, the active tab, the next-step card, the selected tiles and a brown-gold
+   headline word.
+3. Light screens and one night screen with no rule for which is which.
+4. Two type families and three radii across one flow.
+
+Y «Орбита» replaces V/W/X with one system:
+- **Night is for moments, day is for work.** Home's hero band and the decide screen are night: navy, the
+  dotted globe, gold routes, and the mascot — a lit figure in a lit scene, sitting on the globe's horizon.
+  Find, profile and plan are day: paper, white cards, no mascot.
+- **Yellow means "act".** The primary button and the active tab only. Selection is navy (tiles, steps);
+  the only decoration is a gold full stop after a headline.
+- **One motif — the gold orbit:** the mascot's ring, the route arc, the step rail's progress and the ring
+  round the current step.
+- One family (Inter, which main already ships), one radius (18), one border colour.
+
+Image: `concepts/concept-Y.webp`.
