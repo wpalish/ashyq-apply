@@ -1534,3 +1534,36 @@ loads as its own chunk (7.2 KB gzipped), so the main bundle stays at 133.9 KB.
 
 **Gates at `2b1db21`:** typecheck, lint, **340 unit tests** (40 files) and build pass. Playwright: **101
 passed, 1 skipped**. No horizontal scroll at 320 px with the sheet open.
+
+## 29. Round 8: «Горизонт» with Unimatch's strengths (2026-10-05)
+
+PR #37 ("Unimatch", another agent, merged into main on 2026-10-02) redesigned the same screens. The owner
+prefers «Горизонт», someone else on the team prefers Unimatch, so this round takes Unimatch's strengths
+into our structure instead of choosing one whole.
+
+**Taken from Unimatch:** the Home tab with one "next step" card and three counters; the five areas
+Home · Find · Plan · Documents · Community (Me moves to the avatar); a headline with one accent-coloured
+word; Find with a search field and tabs (All · Kept · Maybe · To decide); Keep and Compare buttons on
+every card; the profile as a numbered five-step rail with country tiles; warm paper, Inter and the mascot
+(W, X only).
+
+**Not taken:** the illustration on every screen (it pushes the first result below the fold on a phone);
+the two-row phone header; three status chips without labels (ours keep Requirements / Your profile /
+Money); the monospace evidence table as the programme summary; a big "40 % / 100 %" on research.
+
+| | V «Горизонт+» | W «Тёплый Горизонт» | X «Unimatch × Горизонт» |
+|---|---|---|---|
+| Name | ASHYQ | ASHYQ | Unimatch |
+| Look | ours (Солнце, Montserrat + Onest) | warm paper, Inter, dawn band | Unimatch tokens, photo hero |
+| Mascot | none | Home, profile hint, decide | Home, profile hint, decide |
+| Flows | ours + Unimatch structure | same | same |
+
+Images: `concepts/concept-V.webp`, `concept-W.webp`, `concept-X.webp` (390 × 844 phone, demo data).
+
+Review (I82–I86), fixed before showing: I82 the decide globe drew dashed routes to Tokyo off the disc,
+only the programme on the table is drawn now; I83 Home said 19 to decide while Find said 17; I84
+"deadlines before New Year" is relative to a season, now "in the next 90 days"; I85 the step rail and the
+eyebrow both said "step 2 of 5"; I86 a bare "Met" chip on the deadline row repeated Unimatch's unlabeled
+chip, now "Requirements met".
+
+Open for the owner: which concept, and the product name (README says ASHYQ Apply, main's UI says Unimatch).
