@@ -5253,3 +5253,4 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-05: claude-opus-5 merges main (Unimatch, PR #37–#55) into PR #20 for the chosen concept «Пропуск» × «Горизонт» (palette E, name Unimatch): main's shell, our screens plus Unimatch's search/tabs/catalogue, main's profile steps; all frontend gates green. Next: palette E tokens.
 - 2026-10-05: claude-opus-5 lands palette E (ink action, pass colours, night glow) on PR #20; gates green. Next: Find as passes.
 - 2026-10-05: claude-opus-5: Find cards become country-coloured passes (lib/passColour.ts); gates green. Next: Home layout.
+- 2026-10-05: claude-opus-5: the navigation is the owner's capsule (variant A) again — the merge had brought Unimatch's full-width bar; desktop rail active = ink pill. Gates green.

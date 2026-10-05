@@ -16,18 +16,19 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.045em; }
 .nav__item {
   min-height: 3rem;
   padding: 0.7rem 0.95rem;
-  border-radius: 0.75rem;
+  border-radius: 999px;
   color: var(--ink-muted);
   font-size: 0.94rem;
   font-weight: 550;
 }
 .nav__item[aria-current='page'] {
-  color: var(--ink);
-  background: var(--accent-soft);
+  color: var(--ink-inverted);
+  background: var(--ink);
   box-shadow: none;
   font-weight: 700;
 }
-.nav__item:hover { background: var(--accent-soft); }
+.nav__item[aria-current='page'] .nav__badge { background: var(--surface); color: var(--ink); border-color: transparent; }
+.nav__item:hover:not([aria-current='page']) { background: var(--surface-sunken); color: var(--ink); }
 .sidebar__footer { margin-top: auto; padding: 0 0.65rem; }
 .sidebar__footer > p { font-size: 0.9rem; font-style: italic; line-height: 1.35; color: var(--ink-muted); }
 .sidebar__footer > p strong { color: var(--ink); }
@@ -388,13 +389,38 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.045em; }
 }
 @media (max-width: 900px) {
   .app { display: block; }
-  .sidebar { position: fixed; top: auto; bottom: 0; left: 0; right: 0; z-index: 30; height: auto; padding: 0.4rem max(0.5rem, env(safe-area-inset-right)); border: 0; border-top: 1px solid var(--rule); box-shadow: 0 -2px 16px #0b132c12; }
+  /* The owner's pick (concept Y, variant A): a floating capsule. The open area
+     is an ink pill with its name; the others are icons, still named for
+     assistive technology. */
+  .sidebar {
+    position: fixed; top: auto; left: 12px; right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    z-index: 30; height: auto;
+    padding: 8px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: var(--surface);
+    box-shadow: 0 10px 30px rgba(17, 17, 20, 0.14);
+  }
   .sidebar .brand, .sidebar__footer { display: none; }
-  .sidebar .nav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.2rem; }
-  .sidebar .nav__item { flex-direction: column; gap: 0.1rem; justify-content: center; text-align: center; min-width: 0; min-height: 3.2rem; padding: 0.4rem 0.2rem; font-size: 0.73rem; white-space: normal; }
+  .sidebar .nav { display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 2px; }
+  .sidebar .nav__item {
+    flex: none;
+    justify-content: center;
+    gap: 0.45rem;
+    width: 48px; min-width: 0; min-height: 48px; height: 48px;
+    padding: 0;
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+  .sidebar .nav__item[aria-current='page'] { width: auto; padding: 0 1rem; }
+  .sidebar .nav__item:not([aria-current='page']) > span:not(.nav__badge) {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
   .sidebar .nav__badge { display: none; }
   .topbar__brand { display: flex; }
-  .main { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); min-height: 100vh; }
+  .main { padding-bottom: calc(6rem + env(safe-area-inset-bottom)); min-height: 100vh; }
   .screen { padding: 1.2rem 1rem 3rem; }
 }
 @media (max-width: 650px) {
