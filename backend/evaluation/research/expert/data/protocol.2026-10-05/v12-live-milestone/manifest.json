@@ -1,0 +1,89 @@
+{
+  "schema_version": "1",
+  "recorded_at": "2026-10-05T16:14:44.817858+00:00",
+  "status": "ten_baselines_complete_expert_stage_live_unsealed_unscored",
+  "selected_source_sha": "92dfdb6d4f1a4595865ea756f46b176ce0f6d891",
+  "frozen_ref": "expert500-phase1-v12-2026-10-05-92dfdb6",
+  "trial_sha256": "c78aacedd2db9ecc82588e6a0f8eba4840186d80205720c06d82ab1ac50cf613",
+  "baseline_results_sha256": "632ffc20a288aec56f57eb6db610b61c0d7227d4f47a4c9579e9694c52773e7f",
+  "selected_source_ci_manifest_sha256": "d855cf0869d27890aaf0478950a7ec3593829508ca8ed17ae4991f4bff55ad60",
+  "baseline_cases_complete": 10,
+  "baseline_fetcher_calls": 353,
+  "baseline_search_queries": 58,
+  "provider_failures": 0,
+  "expert_stage_started_once": true,
+  "reviewed_label_reads": 0,
+  "seal_created": false,
+  "record_count": 11,
+  "records": [
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/baseline-results.json",
+      "snapshot": "baseline-results.json.txt",
+      "bytes": 14665,
+      "sha256": "632ffc20a288aec56f57eb6db610b61c0d7227d4f47a4c9579e9694c52773e7f"
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/baseline-stage-start.json",
+      "snapshot": "baseline-stage-start.json.txt",
+      "bytes": 344,
+      "sha256": "c80bca0156970652bd9bf07b93476f732fbdb7bac9bc8cc4dcb710e7deaad86e"
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts-stage-start.json",
+      "snapshot": "experts-stage-start.json.txt",
+      "bytes": 343,
+      "sha256": "3c9f1cfa9b92eec1aaa396a3319b6f936c1701fa888a4ee7d60ba01401e5525d"
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/trial.json",
+      "snapshot": "trial.json.txt",
+      "bytes": 449176,
+      "sha256": "c78aacedd2db9ecc82588e6a0f8eba4840186d80205720c06d82ab1ac50cf613"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v12-launch-original.log",
+      "snapshot": "unimatch-expert500-v12-launch-original.log.txt",
+      "bytes": 295,
+      "sha256": "2dcb67055c95727e68de262119c7e39a983ed2a5ce634c305c1c2da904062cd2"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v12-baseline-stage-original.log",
+      "snapshot": "unimatch-expert500-v12-baseline-stage-original.log.txt",
+      "bytes": 2391,
+      "sha256": "b3ee0f94a2a33a79dec4f65cc17c75c180ed79fc95fbee4cc672e817df8a9900"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v12-before-experts-redacted-observation.json",
+      "snapshot": "unimatch-expert500-v12-before-experts-redacted-observation.json.txt",
+      "bytes": 476,
+      "sha256": "230960e5261bd07e691fb076219cb98dbca7f78b5507a66f196a778f5c5c2fea"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v12-ten-baseline-admission-original.json",
+      "snapshot": "unimatch-expert500-v12-ten-baseline-admission-original.json.txt",
+      "bytes": 3231,
+      "sha256": "3edd48bf1e3d1876ede97102ef1ddba201d16ee9a126b51144c9b393960b5735"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v12-record-source-ci-original.log",
+      "snapshot": "unimatch-expert500-v12-record-source-ci-original.log.txt",
+      "bytes": 320,
+      "sha256": "12d575f62141a285387e13d0b2f4b3340f636443922f88b37d6221a9eac681d9"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v12-record-source-ci-py312-original.log",
+      "snapshot": "unimatch-expert500-v12-record-source-ci-py312-original.log.txt",
+      "bytes": 177,
+      "sha256": "8dbce9bec91784488a2d018e68fd5e3bf63c73f24bfab5776922a81ab46c85ef"
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v12-record-live-milestone.py",
+      "snapshot": "unimatch-expert500-v12-record-live-milestone.py.txt",
+      "bytes": 2937,
+      "sha256": "def256abdb3d4f60fb7e113bec31f53b89b46e7aa69952440feb90bb39f79c22"
+    }
+  ],
+  "heldout150_untouched": true,
+  "signed_reviewed8_unselected": true,
+  "v11_closed_unscored_unchanged": true
+}
