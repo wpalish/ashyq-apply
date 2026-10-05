@@ -866,7 +866,9 @@ def test_matching_year_in_another_campus_row_or_table_cannot_rescue_fee(
         '<th>Year</th></tr><tr><td rowspan="2">2030/2031</td>',
     ],
 )
-def test_ambiguous_year_columns_and_merged_cells_fail_without_union(tmp_path: Path, years: str):
+def test_ambiguous_year_columns_and_merged_cells_fail_without_union(
+    tmp_path: Path, years: str
+) -> None:
     html = (
         f"<h1>International bachelor tuition</h1><table><tr>{years}<td>EUR 19800</td></tr></table>"
     )
@@ -1005,4 +1007,133 @@ def test_valid_year_cannot_change_a_domestic_applicant_row_to_international(tmp_
         html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
     )
     with pytest.raises(ValueError, match="domestic"):
+        _validate(tmp_path, _decision(fact), [action])
+
+
+@pytest.mark.parametrize("container", ["main", "article", "section"])
+def test_a_label_cannot_supply_year_after_exiting_its_semantic_container(
+    tmp_path: Path, container: str
+) -> None:
+    quote = "Foundation years are not considered."
+    html = f"""<{container}><h2>International bachelor qualifications</h2>
+    <div>Academic year 2030/2031</div><p>First policy.</p></{container}>
+    <{container}><p>{quote}</p></{container}>"""
+    action, _ = _source(tmp_path, body=html.encode())
+    fact = _ir_fact_for_html(html, quote, question="Q2", scope=_scope(academic_year="2030/2031"))
+    with pytest.raises(ValueError, match="Q2 fact .*academic_year"):
+        _validate(tmp_path, _decision(fact), [action])
+
+
+@pytest.mark.parametrize(
+    "label",
+    [
+        "<div><span hidden>Academic year 2030/2031</span></div>",
+        '<div><span style="visibility: hidden">Academic year 2030/2031</span></div>',
+        "<div><nav>Academic year 2030/2031</nav></div>",
+        "<div><button>Academic year 2030/2031</button></div>",
+    ],
+)
+def test_non_content_label_descendants_cannot_become_citable_year_support(
+    tmp_path: Path, label: str
+) -> None:
+    quote = "Foundation years are not considered."
+    html = f"<main><h1>International bachelor qualifications</h1>{label}<p>{quote}</p></main>"
+    action, _ = _source(tmp_path, body=html.encode())
+    fact = _ir_fact_for_html(html, quote, question="Q2", scope=_scope(academic_year="2030/2031"))
+    with pytest.raises(ValueError, match="academic_year"):
+        _validate(tmp_path, _decision(fact), [action])
+
+
+@pytest.mark.parametrize(
+    "year_cell,year_header",
+    [
+        ("<td hidden>2030/2031</td>", '<th id="y">Year</th>'),
+        ("<td><nav>2030/2031</nav></td>", '<th id="y">Year</th>'),
+        ("<td><form>2030/2031</form></td>", '<th id="y">Year</th>'),
+        ("<td>2030/2031</td>", '<th id="y" hidden>Year</th>'),
+        ('<td headers="y">2030/2031</td>', '<th id="y"><span hidden>Year</span></th>'),
+        ("<td>2030/2031</td>", '<th id="y"><nav>Year</nav></th>'),
+    ],
+)
+def test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label(
+    tmp_path: Path, year_cell: str, year_header: str
+) -> None:
+    html = f"""<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div>
+    <table><tr><th>Applicant</th>{year_header}<th>Fee</th></tr>
+    <tr><td>International applicants</td>{year_cell}<td>EUR 19800</td></tr></table>"""
+    action, _ = _source(tmp_path, body=html.encode())
+    fact = _ir_fact_for_html(
+        html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+    )
+    with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
+        _validate(tmp_path, _decision(fact), [action])
+
+
+@pytest.mark.parametrize(
+    "headers,duplicate_id",
+    [("a", False), ("missing", False), ("", False), ("y y", False), ("y", True)],
+)
+def test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references(
+    tmp_path: Path, headers: str, duplicate_id: bool
+) -> None:
+    applicant_id = "y" if duplicate_id else "a"
+    html = f"""<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div><table>
+    <tr><th id="{applicant_id}">Applicant</th><th id="y">Year</th><th>Fee</th></tr>
+    <tr><td>International applicants</td><td headers="{headers}">2030/2031</td>
+    <td>EUR 19800</td></tr></table>"""
+    action, _ = _source(tmp_path, body=html.encode())
+    fact = _ir_fact_for_html(
+        html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+    )
+    with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
+        _validate(tmp_path, _decision(fact), [action])
+
+
+def test_exact_explicit_year_header_list_is_valid_and_conserves_header_coordinates(
+    tmp_path: Path,
+) -> None:
+    html = """<h1>International bachelor tuition</h1><table>
+    <tr><th>Applicant</th><th id="y">Year</th><th>Fee</th></tr>
+    <tr><td>International applicants</td><td headers="y">2030/2031</td><td>EUR 19800</td></tr></table>"""
+    action, _ = _source(tmp_path, body=html.encode())
+    fact = _ir_fact_for_html(
+        html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+    )
+    (support,) = _validate(tmp_path, _decision(fact), [action])[0]["academic_year_support"]
+    assert support["header_origin"] == "explicit"
+    assert support["header_dom_paths"] == ("/html[1]/body[1]/table[1]/tr[1]/th[2]",)
+    assert support["blocked_reason"] is None
+
+
+@pytest.mark.parametrize("row_scope", ['scope="row"', ""])
+def test_real_year_row_header_is_valid_without_nonexistent_value_block(
+    tmp_path: Path, row_scope: str
+) -> None:
+    html = f"""<h1>International bachelor tuition</h1><table>
+    <tr><th>Year</th><th>Fee</th></tr>
+    <tr><th {row_scope}>2030/2031</th><td>EUR 19800</td></tr></table>"""
+    action, _ = _source(tmp_path, body=html.encode())
+    fact = _ir_fact_for_html(
+        html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+    )
+    (support,) = _validate(tmp_path, _decision(fact), [action])[0]["academic_year_support"]
+    assert support["source_kind"] == "row_header" and support["source_tag"] == "th"
+    assert support["block_id"] is None and support["dom_path"].endswith("/tr[2]/th[1]")
+    assert support["header_dom_paths"] == ("/html[1]/body[1]/table[1]/tr[1]/th[1]",)
+    fact["scope"]["academic_year"] = "2031/2032"
+    with pytest.raises(ValueError, match="academic_year"):
+        _validate(tmp_path, _decision(fact), [action])
+
+
+def test_removing_a_control_keeps_original_year_header_unusable(tmp_path: Path) -> None:
+    html = (
+        "<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div>"
+        "<table><tr><th><form>Year</form></th><th>Fee</th></tr>"
+        "<tr><td>2030/2031</td><td>EUR 19800</td></tr></table>"
+    )
+    action, _ = _source(tmp_path, body=html.encode())
+    fact = _ir_fact_for_html(
+        html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+    )
+    with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
         _validate(tmp_path, _decision(fact), [action])

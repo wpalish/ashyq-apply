@@ -1,0 +1,238 @@
+import argparse
+import hashlib
+import json
+import runpy
+import subprocess
+from datetime import UTC, datetime
+from pathlib import Path
+
+from evaluation.research.expert.network_budget import (
+    BUDGET_MODEL,
+    NETWORK_COMPARISON_MODE,
+    WALL_GUARD_MS,
+    expert_budget,
+    validate_expert_budget,
+)
+from evaluation.research.expert.network_turn_policy import policy_limits
+from evaluation.research.expert.workspace_policy import allocate_workspaces
+from evaluation.research.live import COHORT
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--harness-sha", required=True)
+parser.add_argument("--frozen-ref", required=True)
+args = parser.parse_args()
+PINNED_PROVIDER = "exa"
+COHORT_CASE_IDS = frozenset(
+    {"groningen", "delft", "aalto", "vienna", "warsaw", "ubc", "toronto", "hku", "ntu", "kaist"}
+)
+NEUTRAL_RUNTIME_MODULES = frozenset(
+    "evaluation.research." + name
+    for name in (
+        "expert.blind_cli",
+        "expert.selector",
+        "expert.compact",
+        "expert.journal",
+        "expert.models",
+        "expert.representation",
+        "expert.network_turn_policy",
+        "expert.network_budget",
+        "expert.workspace_policy",
+        "expert.question_contract",
+        "mapping",
+        "metrics",
+        "schema",
+        "identities",
+    )
+)
+repo = Path(
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply"
+)
+root = repo / "artifacts/expert-500/phase1-v13-2026-10-05"
+if root.exists():
+    raise RuntimeError("Fresh trial directory already exists; do not reset/retry")
+manifest_path = (
+    repo / "backend/evaluation/research/expert/data/protocol.2026-10-05/v13/manifest.json"
+)
+manifest = json.loads(manifest_path.read_text())
+
+
+def sha(path):
+    if path.is_symlink() or not path.is_file():
+        raise ValueError("Frozen source evidence must be a regular non-symlink file")
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def validate_manifest(value):
+    """Reject provider/case/budget drift before Git checks or workspace allocation."""
+    if (
+        type(COHORT) is not dict
+        or set(COHORT) != COHORT_CASE_IDS
+        or value.get("protocol_version") != "journal-v13"
+        or any(
+            value.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        )
+        or type(value.get("cohort_case_ids")) is not list
+        or len(value["cohort_case_ids"]) != 10
+        or set(value["cohort_case_ids"]) != COHORT_CASE_IDS
+        or value.get("requested_model") != "gpt-6-astra"
+        or "requested_reasoning_effort" not in value
+        or value["requested_reasoning_effort"] is not None
+        or value.get("reasoning_effort_source") != "cli_default"
+        or value.get("comparison_mode") != NETWORK_COMPARISON_MODE
+        or value.get("budget_model") != BUDGET_MODEL
+        or type(value.get("wall_guard_ms")) is not int
+        or value["wall_guard_ms"] != WALL_GUARD_MS
+        or value.get("turn_policy") != policy_limits()
+        or value.get("network_budget") != expert_budget()
+        or type(value.get("baseline_finalization_reserve_ms")) is not int
+        or value["baseline_finalization_reserve_ms"] != 1000
+        or type(value.get("baseline_source_work_deadline_ms")) is not int
+        or value["baseline_source_work_deadline_ms"] != 119000
+        or type(value.get("unchanged_reviewed_fact_count")) is not int
+        or value["unchanged_reviewed_fact_count"] != 62
+        or type(value.get("acceptance_threshold_recovered_facts")) is not int
+        or value["acceptance_threshold_recovered_facts"] != 40
+    ):
+        raise ValueError(
+            "V13 must pin exact Exa providers, public cases and default-effort network policy"
+        )
+    validate_expert_budget(
+        {
+            "comparison_mode": value["comparison_mode"],
+            "expert_budget": value["network_budget"],
+            "baseline_budget": value.get("baseline_budget"),
+        }
+    )
+    if set(value["baseline_budget"]) != {
+        "max_fetcher_calls",
+        "max_search_queries",
+        "max_elapsed_ms",
+        "browser_enabled",
+    }:
+        raise ValueError("Baseline budget cannot contain an additional stage or allowance")
+    freeze = runpy.run_path("/tmp/unimatch-expert500-freeze-v13.py")
+    freeze["validate_baseline_capture_config"](value.get("baseline_capture_config"))
+    proof = value.get("neutral_probe", {})
+    if (
+        not isinstance(proof, dict)
+        or proof.get("executed_for_protocol") != "journal-v13"
+        or "reused_from_protocol" in proof
+        or proof.get("original_manifest_path")
+        != "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/data/protocol.2026-10-05/v13-neutral-provenance/manifest.json"
+        or proof.get("original_manifest_sha256")
+        != "c1e8362cdfe2b4dadbe0483772b384a3796433d5110237796852a2483b29a22d"
+        or sha(Path(proof["original_manifest_path"])) != proof["original_manifest_sha256"]
+        or proof.get("original_script_path") != "/tmp/unimatch-expert500-neutral-v13.py"
+        or proof.get("original_result_path") != "/tmp/unimatch-expert500-v13-neutral-result.json"
+        or proof.get("successful") is not True
+        or proof.get("completed_tool_free") is not True
+        or proof.get("runtime_unchanged") is not True
+        or proof.get("requested_model") != "gpt-6-astra"
+        or "requested_reasoning_effort" not in proof
+        or proof["requested_reasoning_effort"] is not None
+        or proof.get("reasoning_effort_source") != "cli_default"
+        or any(
+            type(proof.get(key)) is not int or proof[key] != 0
+            for key in ("source_requests", "university_requests", "tool_requests")
+        )
+        or sha(Path(proof["original_script_path"])) != proof.get("original_script_sha256")
+        or value.get("scripts", {}).get(proof["original_script_path"])
+        != proof.get("original_script_sha256")
+        or sha(Path(proof["original_result_path"])) != proof.get("original_result_sha256")
+        or not isinstance(proof.get("runtime_modules"), dict)
+        or set(proof["runtime_modules"]) != NEUTRAL_RUNTIME_MODULES
+        or any(
+            value.get("modules", {}).get(name) != expected
+            for name, expected in proof["runtime_modules"].items()
+        )
+    ):
+        raise ValueError("V13 requires a new successful exact-runtime source-free neutral")
+    archived = freeze["validate_neutral_archive"](
+        manifest_path=Path(proof["original_manifest_path"])
+    )
+    original = json.loads(archived[proof["original_result_path"]].read_text())
+    if sha(archived[proof["original_result_path"]]) != proof["original_result_sha256"]:
+        raise ValueError("New neutral result differs from its original archived byte copy")
+    freeze["validate_neutral"](
+        original,
+        neutral_script=Path(proof["original_script_path"]),
+        frozen_cli="/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
+        archived=archived,
+    )
+    if (
+        original.get("runtime_modules_before") != proof["runtime_modules"]
+        or original.get("runtime_modules_after") != proof["runtime_modules"]
+        or original.get("script_sha256") != proof["original_script_sha256"]
+        or original.get("script_sha256_after") != proof["original_script_sha256"]
+    ):
+        raise ValueError("Neutral reference differs from its new V13 execution hashes")
+    os_proof = value.get("os_isolation_preflight", {})
+    if (
+        not isinstance(os_proof, dict)
+        or os_proof.get("successful") is not True
+        or type(os_proof.get("cases_passed")) is not int
+        or os_proof["cases_passed"] != 10
+        or os_proof.get("helper_sha256")
+        != sha(Path("/tmp/unimatch-expert500-isolation-preflight-v13.py"))
+        or os_proof.get("parent_sha256")
+        != sha(Path("/tmp/unimatch-expert500-journal-pilot-v13-coherent.py"))
+        or sha(Path(os_proof["original_result_path"])) != os_proof.get("original_result_sha256")
+    ):
+        raise ValueError("V13 requires its real ten-case actual-builder OS proof")
+    proof_result = json.loads(Path(os_proof["original_result_path"]).read_text())
+    runpy.run_path("/tmp/unimatch-expert500-isolation-preflight-v13.py")["validate_result"](
+        proof_result
+    )
+
+
+validate_manifest(manifest)
+
+
+head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
+if head != args.harness_sha:
+    raise RuntimeError("Unexpected frozen source")
+if (
+    subprocess.check_output(
+        ["git", "rev-parse", args.frozen_ref + "^{commit}"], cwd=repo, text=True
+    ).strip()
+    != head
+):
+    raise RuntimeError("Frozen ref does not identify selected source")
+for actual, expected in manifest["scripts"].items():
+    if sha(Path(actual)) != expected:
+        raise RuntimeError("Actual frozen parent changed")
+for entry in manifest["files"]:
+    source = (
+        manifest_path.parent / entry["path"]
+        if entry["path"].startswith("os-isolation/")
+        else repo / entry["path"]
+    )
+    if "/" in entry["path"] and sha(source) != entry["sha256"]:
+        raise RuntimeError("Frozen module changed")
+if sha(Path(manifest["binding_registry"]["path"])) != manifest["binding_registry"]["sha256"]:
+    raise RuntimeError("Private registry drift")
+root.mkdir(parents=True)
+assignments, receipts = allocate_workspaces(tuple(COHORT))
+for name, value in (
+    ("workspace-locations.json", assignments),
+    ("workspace-receipts.json", receipts),
+):
+    (root / name).write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+trial = {
+    **manifest,
+    "prepared_at": datetime.now(UTC).isoformat(),
+    "harness_sha": head,
+    "frozen_ref": args.frozen_ref,
+    "workspace_assignments_sha256": sha(root / "workspace-locations.json"),
+    "workspace_receipts_sha256": sha(root / "workspace-receipts.json"),
+    "expert_protocol": {"files": manifest["files"], "manifest_file_sha256": sha(manifest_path)},
+}
+encoded = (json.dumps(trial, ensure_ascii=False, indent=2) + "\n").encode()
+(root / "trial.json").write_bytes(encoded)
+(root / "trial-at-baseline-start.json").write_bytes(encoded)
+print(
+    json.dumps(
+        {"root": str(root), "harness_sha": head, "trial_file_sha256": sha(root / "trial.json")}
+    )
+)

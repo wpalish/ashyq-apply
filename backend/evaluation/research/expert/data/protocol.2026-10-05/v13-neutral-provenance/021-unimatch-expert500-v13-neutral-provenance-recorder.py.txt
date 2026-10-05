@@ -1,0 +1,28 @@
+from pathlib import Path
+import hashlib,json
+from datetime import UTC,datetime
+repo=Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply')
+result_path=Path('/tmp/unimatch-expert500-v13-neutral-result.json');raw=result_path.read_bytes();v=json.loads(raw)
+assert v['status']=='passed' and v['stopped'] is False and len(v['results'])==3
+assert v['protocol_version']=='journal-v13' and v['requested_reasoning_effort'] is None and v['reasoning_effort_source']=='cli_default'
+assert all(v[k]==0 for k in ('source_requests','university_requests','tool_requests'))
+assert v['runtime_modules_before']==v['runtime_modules_after'] and len(v['runtime_modules_before'])==14
+script=Path('/tmp/unimatch-expert500-neutral-v13.py');assert hashlib.sha256(script.read_bytes()).hexdigest()==v['script_sha256']==v['script_sha256_after']=='8bc006048f0e337925a6cc976323435d87b89e269e10566ec3fd757d73e1a4a2'
+folder=repo/'backend/evaluation/research/expert/data/protocol.2026-10-05/v13-neutral-provenance';assert not folder.exists();folder.mkdir()
+sources=[]
+for key in ('workspace','artifacts'):
+    root=Path(v[key]);assert root.resolve(strict=True)==root
+    for p in sorted(root.rglob('*')):
+        assert not p.is_symlink()
+        if p.is_file():sources.append(p)
+sources += [script,Path('/tmp/unimatch-expert500-v13-before-neutral-availability-redacted.json'),Path('/tmp/unimatch-expert500-v13-neutral-original.log'),result_path,Path(__file__)]
+assert len(set(sources))==len(sources)
+records=[]
+for i,p in enumerate(sources):
+    assert p.is_file() and not p.is_symlink();data=p.read_bytes();sha=hashlib.sha256(data).hexdigest()
+    name=f'{i:03d}-{p.name}'+('.txt' if p.suffix=='.py' else '')
+    target=folder/name;target.open('xb').write(data);assert hashlib.sha256(target.read_bytes()).hexdigest()==sha and p.read_bytes()==data
+    records.append({'original_path':str(p),'path':name,'bytes':len(data),'sha256':sha})
+manifest={'schema_version':'1','kind':'fresh_source_free_v13_neutral_originals','protocol_version':'journal-v13','status':'passed','requested_model':'gpt-6-astra','requested_reasoning_effort':None,'reasoning_effort_source':'cli_default','account_private_identity_not_committed':True,'helper_sha256':v['script_sha256'],'runtime_modules_before':v['runtime_modules_before'],'runtime_modules_after':v['runtime_modules_after'],'model_requests':3,'source_requests':0,'university_requests':0,'tool_requests':0,'recorded_at':datetime.now(UTC).isoformat(),'result_path':str(result_path),'result_sha256':hashlib.sha256(raw).hexdigest(),'records':records}
+p=folder/'manifest.json';p.open('x').write(json.dumps(manifest,indent=2,ensure_ascii=False)+'\n')
+print(json.dumps({'status':'passed','records':len(records),'manifest_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'phase_ms':[x['elapsed_ms'] for x in v['results']],'audit_ms':v['audit_ms'],'source_requests':0}))

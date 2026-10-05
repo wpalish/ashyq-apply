@@ -717,18 +717,37 @@ def _academic_year_evidence(
         for cell in block.row_year_cells:
             year_block = next((b for b in source.document.blocks if b.id == cell.block_id), None)
             if (
-                cell.table_id != block.table_id
+                cell.blocked_reason is not None
+                or not cell.dom_path
+                or not cell.header_dom_paths
+                or not any(
+                    re.fullmatch(r"(?:Academic\s+)?Year", header, re.IGNORECASE)
+                    for header in cell.column_headers
+                )
+                or cell.table_id != block.table_id
                 or cell.row != block.row
                 or cell.rowspan != 1
                 or cell.colspan != 1
                 or (
+                    cell.source_kind == "row_header"
+                    and (
+                        cell.source_tag != "th"
+                        or cell.source_scope not in {"", "row"}
+                        or cell.block_id is not None
+                        or (cell.source_scope == "" and cell.text not in block.row_headers)
+                    )
+                )
+                or (
                     cell.text
+                    and cell.source_kind == "value"
                     and (
                         year_block is None
                         or year_block.table_id != cell.table_id
                         or year_block.row != cell.row
                         or year_block.col != cell.col
                         or year_block.section_path != block.section_path
+                        or year_block.semantic_container_dom_path
+                        != block.semantic_container_dom_path
                         or year_block.text != cell.text
                     )
                 )
@@ -743,6 +762,8 @@ def _academic_year_evidence(
         for label in block.section_year_labels:
             if (
                 block.section_path[: len(label.section_path)] != label.section_path
+                or not label.container_dom_path
+                or label.container_dom_path != block.semantic_container_dom_path
                 or label.dom_path.rsplit("/", 1)[0] != label.heading_dom_path.rsplit("/", 1)[0]
             ):
                 raise _AcademicYearEvidenceError(declared, set(), "ambiguous")

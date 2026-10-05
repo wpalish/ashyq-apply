@@ -1,0 +1,176 @@
+{
+  "schema_version": "1",
+  "kind": "v13_source_checkpoint_final_protocol_gate_still_running",
+  "recorded_at": "2026-10-05T18:38:11.010271+00:00",
+  "backend_tests": 4328,
+  "backend_coverage_percent": 94.9,
+  "configured_source_files": 381,
+  "completed_three_suite_mocks": 480,
+  "final_four_suite_mocks": "process46002 running; no final pass claim",
+  "neutral_manifest_sha256": "c1e8362cdfe2b4dadbe0483772b384a3796433d5110237796852a2483b29a22d",
+  "os_preflight_cat_processes": 240,
+  "records": [
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-actual-full-pytest-original.log",
+      "path": "000-unimatch-expert500-v13-actual-full-pytest-original.log",
+      "sha256": "63295feefaaf89cef153bb1b400bae225d9db01c5ce8ba74b7833cc8227812d9",
+      "bytes": 16924
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-actual-ruff-original.log",
+      "path": "001-unimatch-expert500-v13-actual-ruff-original.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-actual-format-original.log",
+      "path": "002-unimatch-expert500-v13-actual-format-original.log",
+      "sha256": "47becdc7bcfd38c7c036ee66cb757f0aa4e68da6ad6e174ff6513d36cf87332b",
+      "bytes": 28
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-actual-mypy-original.log",
+      "path": "003-unimatch-expert500-v13-actual-mypy-original.log",
+      "sha256": "a4f263e14678441240a3f48062ec58dc536f87a13f82bc7321962a2f938a3cff",
+      "bytes": 8584
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-actual-red-original.log",
+      "path": "004-unimatch-expert500-v13-year-context-v2-actual-red-original.log",
+      "sha256": "36c5ee0a2e2ab2cd01aabe7c3ef42ea03b8b09166b5a65bc8724bb5e05036e51",
+      "bytes": 82021
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-actual-green-v2-original.log",
+      "path": "005-unimatch-expert500-v13-year-context-v2-actual-green-v2-original.log",
+      "sha256": "8173d0fc26cabfcc26e533c95db3471f896ab98003c690a5ff9de975de5659be",
+      "bytes": 580
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-coherent-three-suite-mocks-original.log",
+      "path": "006-unimatch-expert500-v13-coherent-three-suite-mocks-original.log",
+      "sha256": "4f1302605fa0e4876f0e6dc71216f47236770f99cc914a47d6ee7afab8e44a38",
+      "bytes": 14799
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-workflow-cache-check-final.json",
+      "path": "007-unimatch-expert500-v13-workflow-cache-check-final.json",
+      "sha256": "f77dbadd680a9cc4ec1488b480436c1e7ddc96a48570e41c14359e27b690ed48",
+      "bytes": 618
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-actual-demo-original.log",
+      "path": "008-unimatch-expert500-v13-actual-demo-original.log",
+      "sha256": "d0e7c45035da84b69912221ff9c2af97ba2ebed0b355ccb0f09a80e52f93b9d9",
+      "bytes": 5469
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-actual-alembic-original.log",
+      "path": "009-unimatch-expert500-v13-actual-alembic-original.log",
+      "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b",
+      "bytes": 20
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-actual-public-pins.json",
+      "path": "010-unimatch-expert500-v13-actual-public-pins.json",
+      "sha256": "46f7b40acad80ecffa78a9e17393b495c80b9660de52aedb75060063d2665a79",
+      "bytes": 841
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-neutral-provenance-recorder-original.log",
+      "path": "011-unimatch-expert500-v13-neutral-provenance-recorder-original.log",
+      "sha256": "0acd1a2d791e99bb86d48deeaf7d961abfe530896158c0f2aaa5cca97be32476",
+      "bytes": 198
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-isolation-preflight-result.json",
+      "path": "012-unimatch-expert500-v13-isolation-preflight-result.json",
+      "sha256": "9fc9298fc673a8da20912f94c22c3ef4ba29378d997073ec9f72ca034dabda5e",
+      "bytes": 633615
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-final-helper-quality-original.log",
+      "path": "013-unimatch-expert500-v13-final-helper-quality-original.log",
+      "sha256": "b7f39626e8da756f36ecfa64d5e27980563bff1d02e8dd7b874259d395e83672",
+      "bytes": 3079
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-final-helper-inherited-config-diagnostic.log",
+      "path": "014-unimatch-expert500-v13-final-helper-inherited-config-diagnostic.log",
+      "sha256": "c14bcb0e7e3d62722af68b98f14c5afd67487e9308e96d9f5e9581f8598e80c8",
+      "bytes": 50264
+    },
+    {
+      "original_path": "/tmp/test_unimatch_expert500_actual_cohort_v13.py",
+      "path": "015-test_unimatch_expert500_actual_cohort_v13.py.txt",
+      "sha256": "2d8735f72d4764a93ae9af1f52c2ab6fc4ee7681f71ea699c2c3637c8e77adfb",
+      "bytes": 74107
+    },
+    {
+      "original_path": "/tmp/test_unimatch_expert500_journal_pilot_v13.py",
+      "path": "016-test_unimatch_expert500_journal_pilot_v13.py.txt",
+      "sha256": "da9aee26784b4e0d2f2383ec45286803d67244c5a90deb1e8f2f974843262e39",
+      "bytes": 100183
+    },
+    {
+      "original_path": "/tmp/test_unimatch_expert500_journal_report_v13.py",
+      "path": "017-test_unimatch_expert500_journal_report_v13.py.txt",
+      "sha256": "ba1ff10f7b6ad300fe54cd82cb54ef0402226abd3e437fdd5e48955e9d8e76e1",
+      "bytes": 101516
+    },
+    {
+      "original_path": "/tmp/test_unimatch_expert500_workflow_v13.py",
+      "path": "018-test_unimatch_expert500_workflow_v13.py.txt",
+      "sha256": "b22c0be90f5a3de965830d9db0af78d4bbf47346cd6e5158c53ee957f705f33d",
+      "bytes": 27293
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-export-v13.py",
+      "path": "019-unimatch-expert500-export-v13.py.txt",
+      "sha256": "2728061d190834b89b4955a60161e22dd4517ca013a2dc77ff6271cd1a12fbb1",
+      "bytes": 23413
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-freeze-v13.py",
+      "path": "020-unimatch-expert500-freeze-v13.py.txt",
+      "sha256": "05c43403778e9ff6e8dec13de0e740c173873370b5b8f5a5daadca93acfd5da1",
+      "bytes": 32850
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-isolation-preflight-v13.py",
+      "path": "021-unimatch-expert500-isolation-preflight-v13.py.txt",
+      "sha256": "2259c2bf6a0563c9da0ad87006a785e4264e38a4b95a987680ed00ec3404fdd6",
+      "bytes": 22848
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-journal-pilot-v13-coherent.py",
+      "path": "022-unimatch-expert500-journal-pilot-v13-coherent.py.txt",
+      "sha256": "c62fb07ec5e8fcf409672136709842867272b88e7194591a151bfe01ac52f395",
+      "bytes": 90889
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-journal-report-v13.py",
+      "path": "023-unimatch-expert500-journal-report-v13.py.txt",
+      "sha256": "205d2e475dc45ace08a182adfb697f19be75e30ae0faa01b5b1a1368503cc703",
+      "bytes": 100652
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-launch-v13.py",
+      "path": "024-unimatch-expert500-launch-v13.py.txt",
+      "sha256": "13b2fd04d6aaa8d3fdf81243b70acbb9f06466da5c76c131edfa8ca5c1bff2c2",
+      "bytes": 10402
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-neutral-v13.py",
+      "path": "025-unimatch-expert500-neutral-v13.py.txt",
+      "sha256": "8bc006048f0e337925a6cc976323435d87b89e269e10566ec3fd757d73e1a4a2",
+      "bytes": 24785
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-pilot-v1-frozen.py",
+      "path": "026-unimatch-expert500-pilot-v1-frozen.py.txt",
+      "sha256": "9eaa88effd037d17937bd96b16d341c711f02ac2825c74d0d6a1f5f95bb2c5a7",
+      "bytes": 25323
+    }
+  ]
+}
