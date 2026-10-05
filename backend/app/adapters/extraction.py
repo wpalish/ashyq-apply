@@ -385,6 +385,11 @@ _A_DATE = (
     rf"|(?:{_MONTH_NAMES})\s+\d{{1,2}},?\s+\d{{4}}"
     r"|\d{4}-\d{2}-\d{2}"
 )
+#: A window between two dates: "15 October 2026 - 19 March 2027", "… to …".
+_DATE_RANGE = re.compile(
+    rf"({_A_DATE})\s*(?:[-–—]|to|until)\s*({_A_DATE})",
+    re.IGNORECASE,
+)
 #: One row of a deadline table that names its population: Groningen's
 #: "non-EU/EEA students 01 May 2027 01 September 2027". The lookbehind keeps
 #: the "EU/EEA" inside "non-EU/EEA" from reading as a second row.
@@ -735,8 +740,22 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
             ),
         )
     deadline_match = None if rows else (_DEADLINE.search(text) or _APPLICATION_PERIOD.search(text))
+    deadline_raw = deadline_match.group(1) if deadline_match else None
     if deadline_match:
-        deadline = parse_date_string(deadline_match.group(1))
+        # A date that opens a range is a window start, never the deadline
+        # (NTU: "Online application 15 October 2026 - 19 March 2027" was read
+        # as a 15 October deadline, paired run 37234751647). The window's end
+        # is the deadline; when the page states several windows that end on
+        # different dates — one per qualification — none is claimed, because
+        # nothing here says which one applies to the applicant.
+        windows = {m.group(2) for m in _DATE_RANGE.finditer(text)}
+        opened = _DATE_RANGE.match(text, deadline_match.start(1))
+        if len(windows) > 1:
+            deadline_raw = None
+        elif opened is not None:
+            deadline_raw = opened.group(2)
+    if deadline_match and deadline_raw:
+        deadline = parse_date_string(deadline_raw)
         if deadline:
             ex = excerpt_around(text, deadline_match.start(), deadline_match.end())
             _keep(
@@ -806,6 +825,9 @@ _NOT_AN_INTAKE = re.compile(
     r"deadline|due\b|apply by|closes?\b|graduat|convocation|tuition|fee", re.I
 )
 
+#: The text just before a date that ends a range: "... to 19 March 2026".
+_ENDS_A_RANGE = re.compile(r"(?:\bto|\buntil|\btill|[-–—])\s*(?:\d{1,2}\s+)?$", re.I)
+
 
 def extract_intake_terms(text: str, builder: ClaimBuilder) -> list[Claim]:
     """Each intake term a page states as a start ("fall 2027"), once each.
@@ -826,6 +848,11 @@ def extract_intake_terms(text: str, builder: ClaimBuilder) -> list[Claim]:
         start, end = _sentence_bounds(text, m.start(), m.end())
         sentence = flat[start:end].strip()
         if _NOT_AN_INTAKE.search(sentence):
+            continue
+        term_at = m.start("season") if m.group("season") else m.start("month")
+        if _ENDS_A_RANGE.search(flat[max(0, term_at - 24) : term_at]):
+            # "Online Application ... to 19 March 2026" closes a window; the
+            # end of an application period is not the start of study (NTU).
             continue
         season = (
             m.group("season") or _MONTH_SEASON.get((m.group("month") or "").lower(), "")
@@ -931,7 +958,18 @@ _FLOOR_AT_TUITION: Final[frozenset[ClaimType]] = frozenset(
 )
 
 
-def _population_amounts(text: str, label: str) -> list[tuple[str, float, str, int, int]]:
+#: An academic year as fee tables print it: 2027-2028, 2027/28, 2027–28.
+_ACADEMIC_YEAR = re.compile(r"\b(20\d{2})\s*[-/–]\s*(?:20)?(\d{2})\b")
+
+
+def _year_key(text: str) -> str | None:
+    m = _ACADEMIC_YEAR.search(text or "")
+    return f"{m.group(1)}/{m.group(2)}" if m else None
+
+
+def _population_amounts(
+    text: str, label: str, academic_year: str | None = None
+) -> list[tuple[str, float, str, int, int]]:
     """One fee per population row of a fee table, or none at all.
 
     ``(population, amount, currency, start, end)`` — only when the table after
@@ -939,29 +977,41 @@ def _population_amounts(text: str, label: str) -> list[tuple[str, float, str, in
     before the next one begins. The statutory EU/EEA fee and the institutional
     non-EU/EEA fee are different numbers on one page, and the first-match
     reading quoted whichever came first to everybody.
+
+    The label must stand as a word, not inside a link slug: Groningen's
+    programme page says ``…/application-enrolment-tuition-fees/…`` in two
+    links before its "Tuition fees" table, and the first-match header read the
+    link and missed the table (expert trace, 2026-10-04). Every standalone
+    occurrence is tried until one yields a table. When a population has one
+    row per academic year, the row for ``academic_year`` is kept if present.
     """
-    header = re.search(label, text, re.IGNORECASE)
-    if header is None:
-        return []
-    names = [
-        m for m in _POPULATION_WORD.finditer(text, header.end()) if m.start() - header.end() < 600
-    ]
-    out: list[tuple[str, float, str, int, int]] = []
-    seen: set[str] = set()
-    for i, name in enumerate(names):
-        stop = names[i + 1].start() if i + 1 < len(names) else len(text)
-        segment = text[name.end() : min(stop, name.end() + 120)]
-        money = _MONEY.search(segment)
-        population = population_named(name.group(0))
-        parsed = parse_money(money.group(0)) if money else None
-        if money is None or parsed is None or population is None or population in seen:
-            continue
-        amount, currency = parsed
-        if amount < TUITION_FLOOR_AMOUNT:
-            continue
-        seen.add(population)
-        out.append((population, amount, currency, name.start(), name.end() + money.end()))
-    return out if len(out) >= 2 else []
+    want = _year_key(academic_year or "")
+    for header in re.finditer(rf"(?<![\w/-]){label}(?![\w/-])", text, re.IGNORECASE):
+        names = [
+            m
+            for m in _POPULATION_WORD.finditer(text, header.end())
+            if m.start() - header.end() < 600
+        ]
+        rows: dict[str, tuple[str, float, str, int, int]] = {}
+        for i, name in enumerate(names):
+            stop = names[i + 1].start() if i + 1 < len(names) else len(text)
+            segment = text[name.end() : min(stop, name.end() + 120)]
+            money = _MONEY.search(segment)
+            population = population_named(name.group(0))
+            parsed = parse_money(money.group(0)) if money else None
+            if money is None or parsed is None or population is None:
+                continue
+            amount, currency = parsed
+            if amount < TUITION_FLOOR_AMOUNT:
+                continue
+            row = (population, amount, currency, name.start(), name.end() + money.end())
+            if population not in rows or (
+                want is not None and _year_key(segment[: money.start()]) == want
+            ):
+                rows[population] = row
+        if len(rows) >= 2:
+            return list(rows.values())
+    return []
 
 
 def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
@@ -985,7 +1035,9 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
     )
     for ctype, label in patterns:
         if ctype is ClaimType.TUITION:
-            rows = _population_amounts(text, label)
+            rows = _population_amounts(
+                text, label, cast("str | None", builder.meta.get("academic_year"))
+            )
             for population, amount, currency, start, end in rows:
                 _keep(
                     found,
