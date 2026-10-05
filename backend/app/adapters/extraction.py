@@ -181,6 +181,8 @@ class ClaimBuilder:
             "scope": scope,
         }
         self.claims: list[Claim] = []
+        #: TY-1: the year the applicant asked for, apart from the page's own.
+        self.requested_academic_year: str | None = None
         self.rejected: list[tuple[ClaimType, str, RejectReason]] = []
         # Verification context, deliberately outside meta: these feed the
         # verifier only, and a Claim's persisted fields must not change.
@@ -1178,7 +1180,13 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
     for ctype, label in patterns:
         if ctype is ClaimType.TUITION:
             rows = _population_amounts(
-                text, label, cast("str | None", builder.meta.get("academic_year"))
+                text,
+                label,
+                cast(
+                    "str | None",
+                    (TUITION_ROW_YEAR and builder.requested_academic_year)
+                    or builder.meta.get("academic_year"),
+                ),
             )
             for population, amount, currency, start, end in rows:
                 _keep(
