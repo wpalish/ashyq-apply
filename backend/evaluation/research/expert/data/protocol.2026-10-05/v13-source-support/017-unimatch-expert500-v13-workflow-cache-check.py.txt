@@ -1,0 +1,38 @@
+from pathlib import Path
+import copy, hashlib, json, os, subprocess, sys, tempfile
+import yaml
+repo=Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply')
+original=Path('/tmp/unimatch-expert500-v13-workflow-pre-cache.yml')
+current=repo/'.github/workflows/benchmark-capture.yml'
+a=yaml.safe_load(original.read_text());b=yaml.safe_load(current.read_text())
+# Restore only the dependency-step delta; every remaining parsed byte of behavior stays equal.
+c=copy.deepcopy(b);old=a['jobs']['expert']['steps'];new=c['jobs']['expert']['steps']
+start=next(i for i,s in enumerate(new) if s.get('name')=='Bind the dependency environment')
+end=next(i for i,s in enumerate(new) if s.get('name')=='Select the search layer')
+assert start==2 and end==8
+new[1].pop('id');new[start:end]=copy.deepcopy(old[2:4]);assert c==a
+steps=b['jobs']['expert']['steps'];restore=steps[3];save=steps[7]
+assert restore['with']['path']==save['with']['path']=='backend/.venv'
+assert set(restore['with'])=={'path','key'} and set(save['with'])=={'path','key'}
+key=restore['with']['key']
+assert all(value in key for value in ('github.sha','expert-environment.outputs.identity',"hashFiles('backend/requirements*.txt')"))
+assert steps[4]['run']==old[2]['run'] and steps[5]['run']==old[3]['run']
+assert all(steps[i]['if']=="steps.expert-dependencies.outputs.cache-hit != 'true'" for i in (4,5,7))
+folder=Path(tempfile.mkdtemp(prefix='unimatch-v13-cache-static-'))
+output=folder/'outputs';output.touch()
+env={**os.environ,'GITHUB_OUTPUT':str(output),'RUNNER_OS':'Linux','RUNNER_ARCH':'X64','ImageOS':'ubuntu24','ImageVersion':'synthetic-001','GITHUB_WORKSPACE':'/tmp/synthetic-public-workspace'}
+# Run the actual identity shell script offline, keeping no account or credential environment.
+env={k:v for k,v in env.items() if k in {'PATH','HOME','TMPDIR','GITHUB_OUTPUT','RUNNER_OS','RUNNER_ARCH','ImageOS','ImageVersion','GITHUB_WORKSPACE'}}
+subprocess.run(['bash','-c',steps[2]['run']],env=env,check=True,capture_output=True,text=True)
+one=output.read_text().strip();assert len(one)==73 and one.startswith('identity=')
+output.write_text('');env['ImageVersion']='synthetic-002';subprocess.run(['bash','-c',steps[2]['run']],env=env,check=True,capture_output=True,text=True)
+assert output.read_text().strip()!=one
+for index in (2,6):subprocess.run(['bash','-n'],input=steps[index]['run'],text=True,check=True)
+# The exact installed environment verifier, with the interpreter's real base directory.
+verify=steps[6]['run'].replace('os.environ[\'pythonLocation\'] + \'/bin/python\'', 'os.environ[\'UNIMATCH_TEST_BASE_EXECUTABLE\']')
+assert verify!=steps[6]['run']
+# Use actual .venv Python; bypass no assertion, substitute the supported setup-python base path only.
+verify_env={**env,'UNIMATCH_TEST_BASE_EXECUTABLE':os.path.realpath(sys._base_executable)}
+subprocess.run(['bash','-c',verify],cwd=repo/'backend',env=verify_env,check=True,capture_output=True,text=True)
+result={'status':'offline_dependency_cache_config_verified','unchanged_other_workflow_behavior':True,'source_calls':0,'cache_scope':'backend/.venv only','original_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'new_sha256':hashlib.sha256(current.read_bytes()).hexdigest(),'warm_cache_speedup_measured':False,'primary_docs':['https://raw.githubusercontent.com/actions/cache/v4/restore/action.yml','https://raw.githubusercontent.com/actions/cache/v4/save/action.yml','https://github.com/actions/setup-python/blob/v5/action.yml']}
+p=Path('/tmp/unimatch-expert500-v13-workflow-cache-check.json');p.open('x').write(json.dumps(result,indent=2)+'\n');print(json.dumps(result))

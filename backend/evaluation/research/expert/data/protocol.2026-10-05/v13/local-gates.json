@@ -1,0 +1,146 @@
+{
+  "schema_version": "1",
+  "protocol_version": "journal-v13",
+  "recorded_at": "2026-10-05T18:40:26.369167+00:00",
+  "all_passed": true,
+  "actual_ten_case_launcher_preflight": true,
+  "backend_tests": 4328,
+  "backend_coverage_percent": 94.9,
+  "frontend_tests": 232,
+  "current_runtime_tests_total": 650,
+  "current_runtime_note": "One actual four-file invocation650; prior coherent three-suite480 separately preserved; immutable legacy excluded from current scope.",
+  "static_source_files": 381,
+  "parent_quality_files": 11,
+  "frozen_helpers": 12,
+  "source_calls_in_local_gates": 0,
+  "neutral_model_calls": 3,
+  "neutral_university_requests": 0,
+  "integrated_main": "ff7988e9225c1db3a5bf124a0e82ffaa273637e9",
+  "gates": {
+    "backend_tests": true,
+    "backend_ruff": true,
+    "backend_format": true,
+    "backend_mypy": true,
+    "evaluation_quality": true,
+    "combined_parent_mocks": true,
+    "actual_ten_case_launcher_preflight": true,
+    "demo_order": true,
+    "alembic_single_head": true,
+    "exa_provider_pin": true,
+    "actual_ten_case_os_isolation": true,
+    "fresh_neutral_default_effort_runtime": true,
+    "ordinary_cli_usage_available_before_neutral": true,
+    "fresh_neutral_archive_replay": true,
+    "current_helper_quality": true,
+    "year_context_scope_regressions": true,
+    "saved_source_ir_compatibility": true,
+    "dependency_cache_configuration": true,
+    "existing_workflow_shell_tests": true,
+    "frontend_tests": true,
+    "frontend_typecheck": true,
+    "frontend_build": true,
+    "frontend_lint": true
+  },
+  "raw_logs": {
+    "backend_tests": {
+      "path": "/tmp/unimatch-expert500-v13-actual-full-pytest-original.log",
+      "sha256": "63295feefaaf89cef153bb1b400bae225d9db01c5ce8ba74b7833cc8227812d9"
+    },
+    "backend_ruff": {
+      "path": "/tmp/unimatch-expert500-v13-actual-ruff-original.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "backend_format": {
+      "path": "/tmp/unimatch-expert500-v13-actual-format-original.log",
+      "sha256": "47becdc7bcfd38c7c036ee66cb757f0aa4e68da6ad6e174ff6513d36cf87332b"
+    },
+    "backend_mypy": {
+      "path": "/tmp/unimatch-expert500-v13-actual-mypy-original.log",
+      "sha256": "a4f263e14678441240a3f48062ec58dc536f87a13f82bc7321962a2f938a3cff"
+    },
+    "evaluation_quality": {
+      "path": "/tmp/unimatch-expert500-v13-actual-mypy-original.log",
+      "sha256": "a4f263e14678441240a3f48062ec58dc536f87a13f82bc7321962a2f938a3cff"
+    },
+    "combined_parent_mocks": {
+      "path": "/tmp/unimatch-expert500-v13-final-all-runtime-mocks-original.log",
+      "sha256": "74b9dc9a6f51936f538b74e52d76331b86e7e91dda0cb0b2e7420a4c947fad18"
+    },
+    "actual_ten_case_launcher_preflight": {
+      "path": "/tmp/unimatch-expert500-v13-final-all-runtime-mocks-original.log",
+      "sha256": "74b9dc9a6f51936f538b74e52d76331b86e7e91dda0cb0b2e7420a4c947fad18"
+    },
+    "demo_order": {
+      "path": "/tmp/unimatch-expert500-v13-actual-demo-original.log",
+      "sha256": "d0e7c45035da84b69912221ff9c2af97ba2ebed0b355ccb0f09a80e52f93b9d9"
+    },
+    "alembic_single_head": {
+      "path": "/tmp/unimatch-expert500-v13-actual-alembic-original.log",
+      "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b"
+    },
+    "exa_provider_pin": {
+      "path": "/tmp/unimatch-expert500-v13-actual-public-pins.json",
+      "sha256": "46f7b40acad80ecffa78a9e17393b495c80b9660de52aedb75060063d2665a79"
+    },
+    "actual_ten_case_os_isolation": {
+      "path": "/tmp/unimatch-expert500-v13-isolation-preflight-original.log",
+      "sha256": "e2a0ffd200823ddcb7c544f7212e69c15b2f98d7dcb415eab59c1ad46bc43472"
+    },
+    "fresh_neutral_default_effort_runtime": {
+      "path": "/tmp/unimatch-expert500-v13-neutral-result.json",
+      "sha256": "f8bbc9cfb0e952b08b40f5dd5dee87d76ec31f829416c9b84c87f750c3dd31cd"
+    },
+    "ordinary_cli_usage_available_before_neutral": {
+      "path": "/tmp/unimatch-expert500-v13-before-neutral-availability-redacted.json",
+      "sha256": "4eadc342f286cfe13f9b673786a0e0e8a00d507da6a7f3c326c129d4fdbecd16"
+    },
+    "fresh_neutral_archive_replay": {
+      "path": "/tmp/unimatch-expert500-v13-neutral-provenance-replay-original.log",
+      "sha256": "a218616a32ea8d1b7700402d22373341d62d616f4eb85b39a2f1a7876872885b"
+    },
+    "current_helper_quality": {
+      "path": "/tmp/unimatch-expert500-v13-final-helper-quality-original.log",
+      "sha256": "b7f39626e8da756f36ecfa64d5e27980563bff1d02e8dd7b874259d395e83672"
+    },
+    "year_context_scope_regressions": {
+      "path": "/tmp/unimatch-expert500-v13-year-context-v2-actual-green-v2-original.log",
+      "sha256": "8173d0fc26cabfcc26e533c95db3471f896ab98003c690a5ff9de975de5659be"
+    },
+    "saved_source_ir_compatibility": {
+      "path": "/tmp/unimatch-expert500-v13-saved-source-compatibility-original.log",
+      "sha256": "e99bc674eb46eed73a54b5782f359ff15106d707a6cbd5ef7221171faf0f4b64"
+    },
+    "dependency_cache_configuration": {
+      "path": "/tmp/unimatch-expert500-v13-workflow-cache-check-v3-original.log",
+      "sha256": "b2b469af30a1d587b60f387ecd3b0f1932791fc0879e1867fc3b05701c617627"
+    },
+    "existing_workflow_shell_tests": {
+      "path": "/tmp/unimatch-expert500-v13-workflow-existing-tests-original.log",
+      "sha256": "ea033970c1ccf41e8e70bdd72d4b62d06c1f158d74c9860686ca336fa945110f"
+    },
+    "frontend_tests": {
+      "path": "/tmp/unimatch-expert500-v10-final-frontend-tests.log",
+      "sha256": "164bd9647960e3f9fc0475c950f65ad28db21b798639bf6f9dcc1b0abd81b7f9"
+    },
+    "frontend_typecheck": {
+      "path": "/tmp/unimatch-expert500-v10-final-frontend-typecheck.log",
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02"
+    },
+    "frontend_build": {
+      "path": "/tmp/unimatch-expert500-v10-final-frontend-build.log",
+      "sha256": "abb05af0f45b389c00ec408539c06863962ccafb5fea54130392f57035f6bc44"
+    },
+    "frontend_lint": {
+      "path": "/tmp/unimatch-expert500-v10-final-frontend-lint.log",
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a"
+    }
+  },
+  "frontend_tree": "4aaba144e9642060a4915a22527ef016ee8cc83d",
+  "migration_tree": "96469ee9697939efcd3c52b681838e1899989998",
+  "frontend_proof_note": "Exact unchanged tree retains original V10 unit232/type/lint/build logs. Source-specific future CI required; no current sourceCI pass claim.",
+  "demo_proof_note": "Fresh once isolated synthetic demo20 migrated to d8e412c6a901; Groningen first and UBC ranking.bucket OUT_OF_BUDGET asserted.",
+  "neutral_provenance_manifest_sha256": "c1e8362cdfe2b4dadbe0483772b384a3796433d5110237796852a2483b29a22d",
+  "workflow_sha256": "81e37ba2ca56f968bf04052c12421b4b399b7139ddf2f1eaebc55f708af364f9",
+  "warm_cache_speedup_measured": false,
+  "legacy_quality_note": "Established external helper rule scope with B023 ignored retained; strict repo app/tests/evaluation381 gates unchanged; reconstructed inherited-config102 diagnostic preserved."
+}

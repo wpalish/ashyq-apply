@@ -1,0 +1,78 @@
+"""Candidate-only harness: fake app import, BeautifulSoup parser and AST year helper."""
+from __future__ import annotations
+
+import ast
+import dataclasses
+import importlib.util
+import os
+import re
+import sys
+import types
+from pathlib import Path
+from typing import Any
+
+from bs4 import BeautifulSoup
+
+base = Path(__file__).parent
+candidate = base / 'candidate'
+# No app/evaluation runtime from the repository is imported.
+for package in ('app', 'app.adapters'):
+    module = types.ModuleType(package)
+    module.__path__ = []
+    sys.modules[package] = module
+html_parse = types.ModuleType('app.adapters.html_parse')
+html_parse.parse_html = lambda text: BeautifulSoup(text, 'lxml')
+sys.modules[html_parse.__name__] = html_parse
+spec = importlib.util.spec_from_file_location('app.adapters.document_ir', candidate / 'backend/app/adapters/document_ir.py')
+assert spec is not None and spec.loader is not None
+ir = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = ir
+spec.loader.exec_module(ir)
+source = ast.parse((candidate / 'backend/evaluation/research/expert/models.py').read_text())
+names = {'_year_label', '_AcademicYearEvidenceError', '_scope_texts', '_published_years', '_academic_year_evidence'}
+selected = [node for node in source.body if isinstance(node, (ast.FunctionDef, ast.ClassDef)) and node.name in names]
+namespace = {'re': re, 'asdict': dataclasses.asdict, 'Any': Any}
+exec(compile(ast.fix_missing_locations(ast.Module(body=[ast.ImportFrom(module='__future__', names=[ast.alias(name='annotations')], level=0), *selected], type_ignores=[])), 'candidate-year-helpers', 'exec'), namespace)
+
+quote = 'Foundation years are not considered.'
+heading = '<h1>International bachelor qualifications</h1>'
+label = '<div>Academic year 2030/2031</div>'
+fee = 'EUR 19800'
+html_cases = [
+    ('closed_section', f'<main><section>{heading}{label}<p>First policy.</p></section><section><p>{quote}</p></section></main>', quote, False),
+    ('nested_div_positive', f'<main><div><div>{heading}{label}</div><div><p>{quote}</p></div></div></main>', quote, True),
+    ('hidden_label', f'{heading}<div><span hidden>Academic year 2030/2031</span></div><p>{quote}</p>', quote, False),
+    ('nav_label', f'{heading}<div><nav>Academic year 2030/2031</nav></div><p>{quote}</p>', quote, False),
+]
+for name, year_cell, year_header, valid in [
+    ('hidden_year', '<td hidden>2030/2031</td>', '<th id="y">Year</th>', False),
+    ('hidden_year_header', '<td>2030/2031</td>', '<th id="y" hidden>Year</th>', False),
+    ('non_year_explicit', '<td headers="a">2030/2031</td>', '<th id="y">Year</th>', False),
+    ('unresolved_explicit', '<td headers="missing">2030/2031</td>', '<th id="y">Year</th>', False),
+    ('explicit_year_positive', '<td headers="y">2030/2031</td>', '<th id="y">Year</th>', True),
+    ('row_header_positive', '<th scope="row">2030/2031</th>', '<th id="y">Year</th>', True),
+    ('implicit_row_header_positive', '<th>2030/2031</th>', '<th id="y">Year</th>', True),
+    ('control_year', '<td><form>2030/2031</form></td>', '<th id="y">Year</th>', False),
+    ('control_year_header', '<td>2030/2031</td>', '<th id="y"><form>Year</form></th>', False),
+]:
+    html = f'{heading}{label}<table><tr><th id="a">Applicant</th>{year_header}<th>Fee</th></tr><tr><td>International applicants</td>{year_cell}<td>{fee}</td></tr></table>'
+    html_cases.append((name, html, fee, valid))
+for name, html, target, expected in html_cases:
+    doc = ir.build_document_ir(html, 'https://example.edu/synthetic')
+    block = next(b for b in doc.blocks if b.text == target)
+    evidence = types.SimpleNamespace(excerpt=target, location=types.SimpleNamespace(kind='document_ir', block_id=block.id))
+    observed = False
+    try:
+        years, proof = namespace['_academic_year_evidence'](evidence, types.SimpleNamespace(document=doc), '2030/31')
+        observed = '2030/31' in years
+    except namespace['_AcademicYearEvidenceError']:
+        proof = []
+    assert observed is expected, (name, observed, expected, proof)
+    print(f'PASS {name}: supported={observed}')
+print(f'{len(html_cases)} candidate-only year-helper checks passed; no repository runtime imported.')
+os.environ['PYTEST_DISABLE_PLUGIN_AUTOLOAD'] = '1'
+import pytest
+raise SystemExit(pytest.main([
+    str(candidate / 'backend/tests/test_document_ir.py'), '-q', '-p', 'no:cacheprovider',
+    '-k', 'not block_text_is_verbatim_from_the_page',
+]))

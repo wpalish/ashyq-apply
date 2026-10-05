@@ -1,0 +1,87 @@
+{
+  "schema_version": "1",
+  "kind": "existing_cli_readonly_availability_before_v13_neutral",
+  "checked_at": "2026-10-05T18:21:39.117710+00:00",
+  "cli": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
+  "cli_sha256": "50ac633af64851511f9bbc71032cdae7f1ba20b3234c189687d61ba846c354c5",
+  "methods": [
+    "initialize",
+    "initialized",
+    "account/read",
+    "account/rateLimits/read"
+  ],
+  "model_requests": 0,
+  "source_requests": 0,
+  "account_mutations": 0,
+  "new_login": false,
+  "same_original_account": true,
+  "account_identity_sha256": "da7f44d40dcc0ff3b29291327be8f08191151b2c6a5ce7e4edaaa74d079d9051",
+  "account_type": "chatgpt",
+  "plan_type": "prolite",
+  "ordinaryUsageAllowed": true,
+  "rateLimits": {
+    "limitId": "codex",
+    "limitName": null,
+    "normalModelSlug": null,
+    "primary": {
+      "usedPercent": 77,
+      "windowDurationMins": 10080,
+      "resetsAt": 1791784416
+    },
+    "secondary": null,
+    "credits": {
+      "hasCredits": false,
+      "unlimited": false,
+      "balance": "0"
+    },
+    "individualLimit": null,
+    "spendControlReached": false,
+    "planType": "prolite",
+    "rateLimitReachedType": null
+  },
+  "rateLimitsByLimitId": {
+    "codex": {
+      "limitId": "codex",
+      "limitName": null,
+      "normalModelSlug": null,
+      "primary": {
+        "usedPercent": 77,
+        "windowDurationMins": 10080,
+        "resetsAt": 1791784416
+      },
+      "secondary": null,
+      "credits": {
+        "hasCredits": false,
+        "unlimited": false,
+        "balance": "0"
+      },
+      "individualLimit": null,
+      "spendControlReached": false,
+      "planType": "prolite",
+      "rateLimitReachedType": null
+    },
+    "base_model_inference": {
+      "limitId": "base_model_inference",
+      "limitName": "gpt-reserve",
+      "normalModelSlug": "gpt-5.6-luna",
+      "primary": {
+        "usedPercent": 0,
+        "windowDurationMins": 10080,
+        "resetsAt": 1791829298
+      },
+      "secondary": null,
+      "credits": null,
+      "individualLimit": null,
+      "spendControlReached": null,
+      "planType": "prolite",
+      "rateLimitReachedType": null
+    }
+  },
+  "rateLimitResetCredits": {
+    "availableCount": 0,
+    "credits": null
+  },
+  "errors": {},
+  "stderr_bytes": 0,
+  "private_original_sha256": "5d26a221b50006e1dd864a14906cdab22840a5f4c3aae9cf137204714babb65b"
+}

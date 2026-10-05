@@ -1,0 +1,102 @@
+{
+  "status": "saved_public_payload_compatibility_only",
+  "created_at": "2026-10-05T18:19:03.251144+00:00",
+  "primary_acceptance": false,
+  "source_model_calls": 0,
+  "reviewed_labels_read": 0,
+  "v12_originals_edited": false,
+  "current_ir_sha256": "199e48ba8b2396cda444049cbe9ca728386247b116facb713ab24320d5b6a4b2",
+  "original_ir_sha256": "ec8b1c2f1f000333670c0fd4be559149fc5057fbed7bc3af7562fd18b3edb605",
+  "observations": [
+    {
+      "id": "G1",
+      "raw_sha256": "684bfc1f9e45589d7c92db5eaa42f459966347329e356762959ac04813c57817",
+      "payload_sha256": "d1b583923fb598a32d015c209dcc5f24e19be55592ce770244b75ed4c780ef85",
+      "old_block_count": 323,
+      "old_fields_links_exact": true,
+      "selected_block": {
+        "id": "b165",
+        "kind": "table_cell",
+        "text": "€ 19800",
+        "section_path": [
+          "Computing Science",
+          "Tuition fees"
+        ],
+        "table_id": 5,
+        "row": 4,
+        "col": 2,
+        "row_headers": [
+          "non-EU/EEA"
+        ],
+        "column_headers": [
+          "Fee"
+        ],
+        "caption": "",
+        "label": "",
+        "section_year_labels": [],
+        "row_year_cells": [
+          {
+            "text": "2027-2028",
+            "dom_path": "/html[1]/body[1]/div[4]/div[3]/div[1]/div[1]/div[1]/div[1]/div[1]/div[4]/div[1]/div[2]/div[2]/table[1]/tbody[1]/tr[5]/td[2]",
+            "table_id": 5,
+            "row": 4,
+            "col": 1,
+            "rowspan": 1,
+            "colspan": 1,
+            "column_headers": [
+              "Year"
+            ],
+            "block_id": "b164",
+            "source_kind": "value",
+            "source_tag": "td",
+            "source_scope": "",
+            "header_origin": "positional",
+            "header_dom_paths": [
+              "/html[1]/body[1]/div[4]/div[3]/div[1]/div[1]/div[1]/div[1]/div[1]/div[4]/div[1]/div[2]/div[2]/table[1]/tbody[1]/tr[1]/th[2]"
+            ],
+            "blocked_reason": null
+          }
+        ],
+        "semantic_container_dom_path": "/html[1]/body[1]"
+      },
+      "actual_declared_year_support": "2027-2028"
+    },
+    {
+      "id": "G2",
+      "raw_sha256": "f5614c066527c4fd5bb53cd5c97f24e8a7bc089718fdc5edb1c14d9723980cef",
+      "payload_sha256": "df071ce4ea43e96478a5a71a9db07501886964e795c80396bb135ac8e02f4f37",
+      "old_block_count": 128,
+      "old_fields_links_exact": true,
+      "selected_block": {
+        "id": "b66",
+        "kind": "paragraph",
+        "text": "N.B. We do not consider Foundation years from other Dutch or non-Dutch Universities (with exception for the AltiusGroningen programme) when determining the overall end-level of your previous education.",
+        "section_path": [
+          "VWO-equivalent qualifications"
+        ],
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "row_headers": [],
+        "column_headers": [],
+        "caption": "",
+        "label": "",
+        "section_year_labels": [
+          {
+            "text": "Academic year 2026/2027",
+            "dom_path": "/html[1]/body[1]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]",
+            "heading_dom_path": "/html[1]/body[1]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/h1[1]",
+            "section_path": [
+              "VWO-equivalent qualifications"
+            ],
+            "container_dom_path": "/html[1]/body[1]"
+          }
+        ],
+        "row_year_cells": [],
+        "semantic_container_dom_path": "/html[1]/body[1]"
+      },
+      "published_year_preserved": "2026/2027",
+      "fall2027_applicability_established": false
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/tmp/unimatch-expert500-v13-workflow-cache-check.py", line 26, in <module>
+    subprocess.run(['bash','-c',steps[2]['run']],env=env,check=True,capture_output=True,text=True)
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['bash', '-c', "python - <<'PYENV'\nimport hashlib, json, os, platform, sys\nidentity = {\n    'python': sys.version,\n    'executable': sys.executable,\n    'platform': platform.platform(),\n    **{name: os.environ.get(name, '') for name in (\n        'RUNNER_OS', 'RUNNER_ARCH', 'ImageOS', 'ImageVersion', 'GITHUB_WORKSPACE'\n    )},\n}\nfingerprint = hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()\nwith open(os.environ['GITHUB_OUTPUT'], 'a') as output:\n    output.write(f'identity={fingerprint}\\n')\nPYENV\n"]' returned non-zero exit status 127.

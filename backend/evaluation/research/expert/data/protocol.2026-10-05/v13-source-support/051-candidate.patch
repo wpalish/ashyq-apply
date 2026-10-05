@@ -1,0 +1,705 @@
+--- a/backend/app/adapters/document_ir.py
++++ b/backend/app/adapters/document_ir.py
+@@ -56,6 +56,26 @@
+     return "/" + "/".join(reversed(parts))
+ 
+ 
++def _dom_paths(root: Tag) -> dict[int, str]:
++    """Assign original paths in one traversal, without rescanning prior siblings."""
++    paths = {id(root): ""}
++    for parent in (root, *root.find_all(True)):
++        counts: dict[str, int] = {}
++        for child in parent.children:
++            if not isinstance(child, Tag):
++                continue
++            counts[child.name] = counts.get(child.name, 0) + 1
++            paths[id(child)] = f"{paths[id(parent)]}/{child.name}[{counts[child.name]}]"
++    return paths
++
++
++def _semantic_container_path(node: Tag, dom_paths: dict[int, str]) -> str:
++    for parent in (node, *node.parents):
++        if isinstance(parent, Tag) and parent.name in {"main", "article", "section", "body"}:
++            return dom_paths[id(parent)]
++    return "/"
++
++
+ @dataclass(frozen=True, slots=True)
+ class SectionYearLabel:
+     """Literal year label directly adjacent to one content heading."""
+@@ -64,6 +84,7 @@
+     dom_path: str
+     heading_dom_path: str
+     section_path: tuple[str, ...] = ()
++    container_dom_path: str = ""
+ 
+ 
+ @dataclass(frozen=True, slots=True)
+@@ -79,6 +100,12 @@
+     colspan: int
+     column_headers: tuple[str, ...]
+     block_id: str | None = None
++    source_kind: Literal["value", "row_header"] = "value"
++    source_tag: str = "td"
++    source_scope: str = ""
++    header_origin: Literal["positional", "explicit"] = "positional"
++    header_dom_paths: tuple[str, ...] = ()
++    blocked_reason: str | None = None
+ 
+ 
+ @dataclass(frozen=True, slots=True)
+@@ -103,6 +130,7 @@
+     #: Dedicated year provenance; never included in programme/applicant scope text.
+     section_year_labels: tuple[SectionYearLabel, ...] = ()
+     row_year_cells: tuple[RowYearCell, ...] = ()
++    semantic_container_dom_path: str = ""
+ 
+ 
+ @dataclass(frozen=True, slots=True)
+@@ -187,17 +215,30 @@
+     return tuple(out)
+ 
+ 
++def _header_tokens(value: object) -> tuple[str, ...]:
++    # BeautifulSoup represents headers as AttributeValueList, not always a string.
++    if isinstance(value, str):
++        return tuple(value.split())
++    if isinstance(value, list | tuple) and all(isinstance(part, str) for part in value):
++        return tuple(token for part in value for token in part.split())
++    return ()
++
++
+ def _year_columns(
+-    grid: list[list[_Cell | None]], head: int, table_id: int, dom_paths: dict[int, str]
++    grid: list[list[_Cell | None]],
++    head: int,
++    table_id: int,
++    dom_paths: dict[int, str],
++    original_visibility: dict[int, bool],
++    original_texts: dict[int, str],
+ ) -> dict[int, tuple[RowYearCell, ...]]:
+-    """Keep Year cell coordinates without joining other row values into scope."""
++    """Record exact Year provenance; an explicit headers attribute is authoritative."""
+     result: dict[int, tuple[RowYearCell, ...]] = {}
+-    by_id = {
+-        str(cell.tag["id"]): cell.text
+-        for row in grid
+-        for cell in row
+-        if cell is not None and cell.tag.get("id")
+-    }
++    origins = {cell.origin: cell for row in grid for cell in row if cell is not None}
++    by_id: dict[str, list[_Cell]] = {}
++    for origin_cell in origins.values():
++        if origin_cell.tag.get("id"):
++            by_id.setdefault(str(origin_cell.tag["id"]), []).append(origin_cell)
+     for r, row in enumerate(grid):
+         if r < head:
+             continue
+@@ -207,26 +248,72 @@
+             if cell is None or cell.origin in seen:
+                 continue
+             seen.add(cell.origin)
+-            explicit = [by_id[h] for h in str(cell.tag.get("headers", "")).split() if h in by_id]
+-            headers = (
+-                tuple(explicit)
+-                if explicit
+-                else _unique(
+-                    [grid[h][c].text for h in range(head) if grid[h][c] is not None]  # type: ignore[union-attr]
+-                )
+-            )
+-            if not any(_YEAR_HEADER.fullmatch(header) for header in headers):
+-                continue
++            positional: dict[tuple[int, int], _Cell] = {}
++            for h in range(head):
++                header = grid[h][c]
++                if header is not None:
++                    positional[header.origin] = header
++            positional_year = any(
++                _YEAR_HEADER.fullmatch(original_texts[id(header.tag)])
++                for header in positional.values()
++            )
++            explicit = cell.tag.has_attr("headers")
++            blocked: str | None = None
++            if explicit:
++                tokens = _header_tokens(cell.tag.get("headers"))
++                header_cells = [
++                    by_id[token][0] for token in tokens if len(by_id.get(token, [])) == 1
++                ]
++                if not tokens:
++                    blocked = "empty_explicit_headers"
++                elif len(set(tokens)) != len(tokens):
++                    blocked = "duplicate_header_reference"
++                elif len(header_cells) != len(tokens):
++                    blocked = "unresolved_or_duplicate_header_id"
++                elif not any(
++                    _YEAR_HEADER.fullmatch(original_texts[id(header.tag)])
++                    for header in header_cells
++                ):
++                    blocked = "explicit_headers_are_not_year"
++                # Invalid explicit references must never fall back to a positional Year.
++                if (
++                    blocked
++                    and not positional_year
++                    and not any(
++                        _YEAR_HEADER.fullmatch(original_texts[id(header.tag)])
++                        for header in header_cells
++                    )
++                ):
++                    continue
++            else:
++                header_cells = list(positional.values())
++                if not positional_year:
++                    continue
++            if blocked is None and any(
++                not original_visibility[id(header.tag)] for header in header_cells
++            ):
++                blocked = "non_content_year_header"
++            if blocked is None and not original_visibility[id(cell.tag)]:
++                blocked = "non_content_year_cell"
++            scope = str(cell.tag.get("scope", "")).casefold()
+             refs.append(
+                 RowYearCell(
+-                    text=cell.text,
++                    text=original_texts[id(cell.tag)],
+                     dom_path=dom_paths[id(cell.tag)],
+                     table_id=table_id,
+                     row=cell.origin[0],
+                     col=cell.origin[1],
+                     rowspan=_span(cell.tag.get("rowspan")),
+                     colspan=_span(cell.tag.get("colspan")),
+-                    column_headers=headers,
++                    column_headers=_unique(
++                        [original_texts[id(header.tag)] for header in header_cells]
++                    ),
++                    source_kind="row_header" if cell.is_header and scope != "col" else "value",
++                    source_tag=cell.tag.name,
++                    source_scope=scope,
++                    header_origin="explicit" if explicit else "positional",
++                    header_dom_paths=tuple(dom_paths[id(header.tag)] for header in header_cells),
++                    blocked_reason=blocked,
+                 )
+             )
+         result[r] = tuple(refs)
+@@ -241,6 +328,9 @@
+     *,
+     section_year_labels: tuple[SectionYearLabel, ...] = (),
+     dom_paths: dict[int, str] | None = None,
++    original_visibility: dict[int, bool] | None = None,
++    original_texts: dict[int, str] | None = None,
++    semantic_container_dom_path: str = "",
+ ) -> list[EvidenceBlock]:
+     caption_tag = table.find("caption")
+     caption = _text(caption_tag) if caption_tag else ""
+@@ -251,7 +341,22 @@
+         if dom_paths is not None
+         else {id(cell.tag): _dom_path(cell.tag) for row in grid for cell in row if cell is not None}
+     )
+-    year_columns = _year_columns(grid, head, table_id, cell_paths)
++    visibility = (
++        original_visibility
++        if original_visibility is not None
++        else {
++            id(cell.tag): _year_content_visible(cell.tag)
++            for row in grid
++            for cell in row
++            if cell is not None
++        }
++    )
++    texts = (
++        original_texts
++        if original_texts is not None
++        else {id(cell.tag): cell.text for row in grid for cell in row if cell is not None}
++    )
++    year_columns = _year_columns(grid, head, table_id, cell_paths, visibility, texts)
+     by_id = {th["id"]: _text(th) for th in table.find_all(["th", "td"]) if th.get("id")}
+     blocks: list[EvidenceBlock] = []
+     seen: set[tuple[int, int]] = set()
+@@ -303,6 +408,7 @@
+                     caption=caption,
+                     section_year_labels=section_year_labels,
+                     row_year_cells=year_columns.get(r, ()),
++                    semantic_container_dom_path=semantic_container_dom_path,
+                 )
+             )
+     cell_ids = {(block.row, block.col): block.id for block in blocks}
+@@ -334,21 +440,39 @@
+ 
+ 
+ def _non_content_year_location(node: Tag) -> bool:
+-    return bool(
+-        node.find_parent(["nav", "aside", "footer", "header", "form"])
+-        or any(
+-            str(parent.get("role", "")).casefold() in {"navigation", "complementary", "banner"}
++    for parent in (node, *node.parents):
++        if not isinstance(parent, Tag):
++            continue
++        style = str(parent.get("style", ""))
++        classes = set(parent.get("class", []))
++        if (
++            parent.name in {"nav", "aside", "footer", "header", "form"}
++            or str(parent.get("role", "")).casefold() in {"navigation", "complementary", "banner"}
+             or parent.has_attr("hidden")
+             or str(parent.get("aria-hidden", "")).casefold() == "true"
+-            for parent in (node, *node.parents)
+-            if isinstance(parent, Tag)
+-        )
++            or classes & {"u-visually--hidden", "visually-hidden", "sr-only"}
++            or re.search(
++                r"(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*hidden)\s*(?:!important)?\s*(?:;|$)",
++                style,
++                re.IGNORECASE,
++            )
++        ):
++            return True
++    return False
++
++
++def _year_content_visible(node: Tag, *, label: bool = False) -> bool:
++    forbidden = {"button", "input", "select", "textarea", "option", *_DROP}
++    if label:
++        forbidden.add("a")
++    return not any(
++        child.name in forbidden or _non_content_year_location(child)
++        for child in (node, *node.find_all(True))
+     )
+ 
+ 
+-def _heading_year_labels(heading: Tag) -> tuple[SectionYearLabel, ...]:
+-    # Navigation, control and masthead labels cannot supply content scope.
+-    if _non_content_year_location(heading):
++def _heading_year_labels(heading: Tag, dom_paths: dict[int, str]) -> tuple[SectionYearLabel, ...]:
++    if not _year_content_visible(heading, label=True):
+         return ()
+     labels: list[SectionYearLabel] = []
+     for sibling in heading.next_siblings:
+@@ -359,11 +483,16 @@
+         text = _text(sibling)
+         if sibling.name not in {"div", "p", "span"} or not _YEAR_LABEL.fullmatch(text):
+             break
+-        if _non_content_year_location(sibling) or sibling.find(
+-            ["a", "button", "input", "select", "form"]
+-        ):
++        if not _year_content_visible(sibling, label=True):
+             break
+-        labels.append(SectionYearLabel(text, _dom_path(sibling), _dom_path(heading)))
++        labels.append(
++            SectionYearLabel(
++                text=text,
++                dom_path=dom_paths[id(sibling)],
++                heading_dom_path=dom_paths[id(heading)],
++                container_dom_path=_semantic_container_path(heading, dom_paths),
++            )
++        )
+     return tuple(labels)
+ 
+ 
+@@ -395,10 +524,16 @@
+         if hidden_form_label or control_only:
+             form_headings.add(id(heading))
+     # Compute coordinates before dropped source tags could change ancestry.
++    dom_paths = _dom_paths(soup)
+     heading_year_labels = {
+-        id(heading): _heading_year_labels(heading) for heading in soup.find_all(_HEADINGS)
++        id(heading): _heading_year_labels(heading, dom_paths)
++        for heading in soup.find_all(_HEADINGS)
+     }
+-    dom_paths = {id(cell): _dom_path(cell) for cell in soup.find_all(["td", "th"])}
++    # Visibility is bound before forms/scripts are dropped from the parsed tree.
++    original_visibility = {
++        id(cell): _year_content_visible(cell) for cell in soup.find_all(["td", "th"])
++    }
++    original_texts = {id(cell): _text(cell) for cell in soup.find_all(["td", "th"])}
+     for tag in soup(_DROP):
+         tag.decompose()
+     body = soup.body or soup
+@@ -411,7 +546,15 @@
+     def year_labels(node: Tag) -> tuple[SectionYearLabel, ...]:
+         if _non_content_year_location(node):
+             return ()
+-        return next((labels for _level, _text, labels in reversed(section) if labels), ())
++        container = _semantic_container_path(node, dom_paths)
++        return next(
++            (
++                labels
++                for _level, _text, labels in reversed(section)
++                if labels and all(label.container_dom_path == container for label in labels)
++            ),
++            (),
++        )
+ 
+     def add(kind: BlockKind, text: str, node: Tag, **extra: object) -> None:
+         if text:
+@@ -422,6 +565,7 @@
+                     text=text,
+                     section_path=path(),
+                     section_year_labels=year_labels(node),
++                    semantic_container_dom_path=_semantic_container_path(node, dom_paths),
+                     **extra,  # type: ignore[arg-type]
+                 )
+             )
+@@ -456,6 +600,9 @@
+                     len(doc.blocks),
+                     section_year_labels=year_labels(node),
+                     dom_paths=dom_paths,
++                    original_visibility=original_visibility,
++                    original_texts=original_texts,
++                    semantic_container_dom_path=_semantic_container_path(node, dom_paths),
+                 )
+             )
+             tables += 1
+--- a/backend/evaluation/research/expert/models.py
++++ b/backend/evaluation/research/expert/models.py
+@@ -717,18 +717,37 @@
+         for cell in block.row_year_cells:
+             year_block = next((b for b in source.document.blocks if b.id == cell.block_id), None)
+             if (
+-                cell.table_id != block.table_id
++                cell.blocked_reason is not None
++                or not cell.dom_path
++                or not cell.header_dom_paths
++                or not any(
++                    re.fullmatch(r"(?:Academic\s+)?Year", header, re.IGNORECASE)
++                    for header in cell.column_headers
++                )
++                or cell.table_id != block.table_id
+                 or cell.row != block.row
+                 or cell.rowspan != 1
+                 or cell.colspan != 1
+                 or (
++                    cell.source_kind == "row_header"
++                    and (
++                        cell.source_tag != "th"
++                        or cell.source_scope not in {"", "row"}
++                        or cell.block_id is not None
++                        or (cell.source_scope == "" and cell.text not in block.row_headers)
++                    )
++                )
++                or (
+                     cell.text
++                    and cell.source_kind == "value"
+                     and (
+                         year_block is None
+                         or year_block.table_id != cell.table_id
+                         or year_block.row != cell.row
+                         or year_block.col != cell.col
+                         or year_block.section_path != block.section_path
++                        or year_block.semantic_container_dom_path
++                        != block.semantic_container_dom_path
+                         or year_block.text != cell.text
+                     )
+                 )
+@@ -743,6 +762,8 @@
+         for label in block.section_year_labels:
+             if (
+                 block.section_path[: len(label.section_path)] != label.section_path
++                or not label.container_dom_path
++                or label.container_dom_path != block.semantic_container_dom_path
+                 or label.dom_path.rsplit("/", 1)[0] != label.heading_dom_path.rsplit("/", 1)[0]
+             ):
+                 raise _AcademicYearEvidenceError(declared, set(), "ambiguous")
+--- a/backend/tests/test_document_ir.py
++++ b/backend/tests/test_document_ir.py
+@@ -196,3 +196,138 @@
+     (blank,) = fees[1].row_year_cells
+     assert blank.text == "" and blank.row == 2
+     assert fees[0].row_headers == ("International",)  # Year is not a row header.
++
++
++@pytest.mark.parametrize("container", ["main", "article", "section"])
++def test_year_label_does_not_exit_into_a_distinct_unheaded_semantic_container(container):
++    html = f"""<{container}><h2>Qualifications</h2>
++    <div>Academic year 2030/2031</div><p>First policy.</p></{container}>
++    <{container}><p>Unheaded sibling policy.</p></{container}>"""
++    doc = build_document_ir(html, "https://example.edu/x")
++    first = next(b for b in doc.blocks if b.text == "First policy.")
++    sibling = next(b for b in doc.blocks if b.text == "Unheaded sibling policy.")
++    assert first.section_year_labels
++    assert not sibling.section_year_labels
++    assert first.semantic_container_dom_path != sibling.semantic_container_dom_path
++    assert first.section_year_labels[0].container_dom_path == first.semantic_container_dom_path
++
++
++def test_same_heading_text_in_different_sections_keeps_distinct_dom_origin():
++    html = """<main><section><h2>Qualifications</h2><div>Academic year 2030/2031</div>
++    <p>First policy.</p></section><section><h2>Qualifications</h2>
++    <div>Academic year 2031/2032</div><p>Second policy.</p></section></main>"""
++    doc = build_document_ir(html, "https://example.edu/x")
++    first = next(b for b in doc.blocks if b.text == "First policy.")
++    second = next(b for b in doc.blocks if b.text == "Second policy.")
++    assert first.section_path == second.section_path == ("Qualifications",)
++    assert first.section_year_labels[0].container_dom_path.endswith("/section[1]")
++    assert second.section_year_labels[0].container_dom_path.endswith("/section[2]")
++    assert second.section_year_labels[0].text == "Academic year 2031/2032"
++
++
++def test_nested_div_heading_wrapper_and_body_share_only_the_same_explicit_container():
++    html = """<main><div><div><h2>Qualifications</h2><div>Academic year 2030/2031</div></div>
++    <div><p>Same content policy.</p></div></div></main>"""
++    doc = build_document_ir(html, "https://example.edu/x")
++    note = next(b for b in doc.blocks if b.text == "Same content policy.")
++    (label,) = note.section_year_labels
++    assert (
++        label.container_dom_path == note.semantic_container_dom_path == "/html[1]/body[1]/main[1]"
++    )
++    assert note.id == "b1"
++
++
++@pytest.mark.parametrize(
++    "label",
++    [
++        "<div><span hidden>Academic year 2030/2031</span></div>",
++        '<div><span aria-hidden="true">Academic year 2030/2031</span></div>',
++        '<div><span style="display: none">Academic year 2030/2031</span></div>',
++        '<div><span class="sr-only">Academic year 2030/2031</span></div>',
++        "<div><nav>Academic year 2030/2031</nav></div>",
++        "<div><footer>Academic year 2030/2031</footer></div>",
++        '<div><span role="navigation">Academic year 2030/2031</span></div>',
++        "<div><button>Academic year 2030/2031</button></div>",
++        "<div><form>Academic year 2030/2031</form></div>",
++    ],
++)
++def test_year_label_checks_hidden_navigation_and_control_descendants(label):
++    doc = build_document_ir(
++        f"<main><h1>Qualifications</h1>{label}<p>Policy.</p></main>", "https://example.edu/x"
++    )
++    assert not next(b for b in doc.blocks if b.text == "Policy.").section_year_labels
++
++
++@pytest.mark.parametrize(
++    "year_cell,year_header,reason",
++    [
++        ("<td hidden>2030/2031</td>", "<th>Year</th>", "non_content_year_cell"),
++        (
++            '<td><span aria-hidden="true">2030/2031</span></td>',
++            "<th>Year</th>",
++            "non_content_year_cell",
++        ),
++        ("<td>2030/2031</td>", "<th hidden>Year</th>", "non_content_year_header"),
++        ("<td>2030/2031</td>", "<th><span hidden>Year</span></th>", "non_content_year_header"),
++        ("<td>2030/2031</td>", "<th><nav>Year</nav></th>", "non_content_year_header"),
++    ],
++)
++def test_hidden_or_navigation_year_sources_remain_explicitly_unusable(
++    year_cell, year_header, reason
++):
++    html = (
++        f"<table><tr>{year_header}<th>Fee</th></tr><tr>{year_cell}<td>EUR 19800</td></tr></table>"
++    )
++    fee = _cell(build_document_ir(html, "https://example.edu/x"), "EUR 19800")
++    (year,) = fee.row_year_cells
++    assert year.blocked_reason == reason
++    assert year.dom_path.endswith("/tr[2]/td[1]")
++    assert year.header_dom_paths == ("/html[1]/body[1]/table[1]/tr[1]/th[1]",)
++
++
++@pytest.mark.parametrize(
++    "headers", ['headers="a"', 'headers="missing"', 'headers=""', 'headers="y y"']
++)
++def test_explicit_non_year_or_unresolved_headers_never_fall_back_to_position(headers):
++    html = f"""<table><tr><th id="a">Applicant</th><th id="y">Year</th><th>Fee</th></tr>
++    <tr><td>International</td><td {headers}>2030/2031</td><td>EUR 19800</td></tr></table>"""
++    (year,) = _cell(build_document_ir(html, "https://example.edu/x"), "EUR 19800").row_year_cells
++    assert year.header_origin == "explicit"
++    assert year.blocked_reason is not None
++    assert year.column_headers != ("Year",) or headers == 'headers="y y"'
++
++
++def test_valid_explicit_year_header_list_has_exact_header_provenance():
++    html = """<table><tr><th id="y">Year</th><th>Fee</th></tr>
++    <tr><td headers="y">2030/2031</td><td>EUR 19800</td></tr></table>"""
++    (year,) = _cell(build_document_ir(html, "https://example.edu/x"), "EUR 19800").row_year_cells
++    assert year.header_origin == "explicit"
++    assert year.column_headers == ("Year",) and year.blocked_reason is None
++    assert year.header_dom_paths == ("/html[1]/body[1]/table[1]/tr[1]/th[1]",)
++
++
++def test_year_row_header_has_original_header_proof_without_inventing_a_value_block():
++    html = """<table><tr><th>Year</th><th>Fee</th></tr>
++    <tr><th scope="row">2030/2031</th><td>EUR 19800</td></tr></table>"""
++    doc = build_document_ir(html, "https://example.edu/x")
++    fee = _cell(doc, "EUR 19800")
++    (year,) = fee.row_year_cells
++    assert (
++        year.source_kind == "row_header" and year.source_tag == "th" and year.source_scope == "row"
++    )
++    assert year.block_id is None and year.blocked_reason is None
++    assert year.dom_path == "/html[1]/body[1]/table[1]/tr[2]/th[1]"
++    assert fee.row_headers == ("2030/2031",)
++    assert not any(b.text == "2030/2031" for b in doc.blocks)
++
++
++def test_dropped_control_cannot_erase_original_year_header_classification():
++    doc = build_document_ir(
++        "<table><tr><th><form>Year</form></th><th>Fee</th></tr>"
++        "<tr><td>2030/2031</td><td>EUR 19800</td></tr></table>",
++        "https://example.edu/x",
++    )
++    (year,) = _cell(doc, "EUR 19800").row_year_cells
++    assert year.column_headers == ("Year",)
++    assert year.blocked_reason == "non_content_year_header"
++    assert year.header_dom_paths == ("/html[1]/body[1]/table[1]/tr[1]/th[1]",)
+--- a/backend/tests/test_expert_citations.py
++++ b/backend/tests/test_expert_citations.py
+@@ -866,7 +866,9 @@
+         '<th>Year</th></tr><tr><td rowspan="2">2030/2031</td>',
+     ],
+ )
+-def test_ambiguous_year_columns_and_merged_cells_fail_without_union(tmp_path: Path, years: str):
++def test_ambiguous_year_columns_and_merged_cells_fail_without_union(
++    tmp_path: Path, years: str
++) -> None:
+     html = (
+         f"<h1>International bachelor tuition</h1><table><tr>{years}<td>EUR 19800</td></tr></table>"
+     )
+@@ -883,8 +885,16 @@
+ @pytest.mark.parametrize(
+     "context,scope,message",
+     [
+-        ("Domestic bachelor tuition", _scope(academic_year="2030/2031"), "domestic"),
+-        ("International master tuition", _scope(academic_year="2030/2031"), "degree scope"),
++        (
++            "Domestic applicants in a bachelor programme tuition",
++            _scope(academic_year="2030/2031"),
++            "domestic",
++        ),
++        (
++            "International applicants in a master programme tuition",
++            _scope(academic_year="2030/2031"),
++            "degree scope",
++        ),
+         (
+             "International bachelor Fictional Studies tuition",
+             _scope(programme="Different Studies", academic_year="2030/2031"),
+@@ -998,3 +1008,132 @@
+     )
+     with pytest.raises(ValueError, match="domestic"):
+         _validate(tmp_path, _decision(fact), [action])
++
++
++@pytest.mark.parametrize("container", ["main", "article", "section"])
++def test_a_label_cannot_supply_year_after_exiting_its_semantic_container(
++    tmp_path: Path, container: str
++) -> None:
++    quote = "Foundation years are not considered."
++    html = f"""<{container}><h2>International bachelor qualifications</h2>
++    <div>Academic year 2030/2031</div><p>First policy.</p></{container}>
++    <{container}><p>{quote}</p></{container}>"""
++    action, _ = _source(tmp_path, body=html.encode())
++    fact = _ir_fact_for_html(html, quote, question="Q2", scope=_scope(academic_year="2030/2031"))
++    with pytest.raises(ValueError, match="Q2 fact .*academic_year"):
++        _validate(tmp_path, _decision(fact), [action])
++
++
++@pytest.mark.parametrize(
++    "label",
++    [
++        "<div><span hidden>Academic year 2030/2031</span></div>",
++        '<div><span style="visibility: hidden">Academic year 2030/2031</span></div>',
++        "<div><nav>Academic year 2030/2031</nav></div>",
++        "<div><button>Academic year 2030/2031</button></div>",
++    ],
++)
++def test_non_content_label_descendants_cannot_become_citable_year_support(
++    tmp_path: Path, label: str
++) -> None:
++    quote = "Foundation years are not considered."
++    html = f"<main><h1>International bachelor qualifications</h1>{label}<p>{quote}</p></main>"
++    action, _ = _source(tmp_path, body=html.encode())
++    fact = _ir_fact_for_html(html, quote, question="Q2", scope=_scope(academic_year="2030/2031"))
++    with pytest.raises(ValueError, match="academic_year"):
++        _validate(tmp_path, _decision(fact), [action])
++
++
++@pytest.mark.parametrize(
++    "year_cell,year_header",
++    [
++        ("<td hidden>2030/2031</td>", '<th id="y">Year</th>'),
++        ("<td><nav>2030/2031</nav></td>", '<th id="y">Year</th>'),
++        ("<td><form>2030/2031</form></td>", '<th id="y">Year</th>'),
++        ("<td>2030/2031</td>", '<th id="y" hidden>Year</th>'),
++        ('<td headers="y">2030/2031</td>', '<th id="y"><span hidden>Year</span></th>'),
++        ("<td>2030/2031</td>", '<th id="y"><nav>Year</nav></th>'),
++    ],
++)
++def test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label(
++    tmp_path: Path, year_cell: str, year_header: str
++) -> None:
++    html = f"""<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div>
++    <table><tr><th>Applicant</th>{year_header}<th>Fee</th></tr>
++    <tr><td>International applicants</td>{year_cell}<td>EUR 19800</td></tr></table>"""
++    action, _ = _source(tmp_path, body=html.encode())
++    fact = _ir_fact_for_html(
++        html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
++    )
++    with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
++        _validate(tmp_path, _decision(fact), [action])
++
++
++@pytest.mark.parametrize(
++    "headers,duplicate_id",
++    [("a", False), ("missing", False), ("", False), ("y y", False), ("y", True)],
++)
++def test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references(
++    tmp_path: Path, headers: str, duplicate_id: bool
++) -> None:
++    applicant_id = "y" if duplicate_id else "a"
++    html = f"""<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div><table>
++    <tr><th id="{applicant_id}">Applicant</th><th id="y">Year</th><th>Fee</th></tr>
++    <tr><td>International applicants</td><td headers="{headers}">2030/2031</td>
++    <td>EUR 19800</td></tr></table>"""
++    action, _ = _source(tmp_path, body=html.encode())
++    fact = _ir_fact_for_html(
++        html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
++    )
++    with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
++        _validate(tmp_path, _decision(fact), [action])
++
++
++def test_exact_explicit_year_header_list_is_valid_and_conserves_header_coordinates(
++    tmp_path: Path,
++) -> None:
++    html = """<h1>International bachelor tuition</h1><table>
++    <tr><th>Applicant</th><th id="y">Year</th><th>Fee</th></tr>
++    <tr><td>International applicants</td><td headers="y">2030/2031</td><td>EUR 19800</td></tr></table>"""
++    action, _ = _source(tmp_path, body=html.encode())
++    fact = _ir_fact_for_html(
++        html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
++    )
++    (support,) = _validate(tmp_path, _decision(fact), [action])[0]["academic_year_support"]
++    assert support["header_origin"] == "explicit"
++    assert support["header_dom_paths"] == ("/html[1]/body[1]/table[1]/tr[1]/th[2]",)
++    assert support["blocked_reason"] is None
++
++
++@pytest.mark.parametrize("row_scope", ['scope="row"', ""])
++def test_real_year_row_header_is_valid_without_nonexistent_value_block(
++    tmp_path: Path, row_scope: str
++) -> None:
++    html = f"""<h1>International bachelor tuition</h1><table>
++    <tr><th>Year</th><th>Fee</th></tr>
++    <tr><th {row_scope}>2030/2031</th><td>EUR 19800</td></tr></table>"""
++    action, _ = _source(tmp_path, body=html.encode())
++    fact = _ir_fact_for_html(
++        html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
++    )
++    (support,) = _validate(tmp_path, _decision(fact), [action])[0]["academic_year_support"]
++    assert support["source_kind"] == "row_header" and support["source_tag"] == "th"
++    assert support["block_id"] is None and support["dom_path"].endswith("/tr[2]/th[1]")
++    assert support["header_dom_paths"] == ("/html[1]/body[1]/table[1]/tr[1]/th[1]",)
++    fact["scope"]["academic_year"] = "2031/2032"
++    with pytest.raises(ValueError, match="academic_year"):
++        _validate(tmp_path, _decision(fact), [action])
++
++
++def test_removing_a_control_keeps_original_year_header_unusable(tmp_path: Path) -> None:
++    html = (
++        "<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div>"
++        "<table><tr><th><form>Year</form></th><th>Fee</th></tr>"
++        "<tr><td>2030/2031</td><td>EUR 19800</td></tr></table>"
++    )
++    action, _ = _source(tmp_path, body=html.encode())
++    fact = _ir_fact_for_html(
++        html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
++    )
++    with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
++        _validate(tmp_path, _decision(fact), [action])

@@ -1,0 +1,42 @@
+"""Run only the bundled synthetic demo against a new isolated temporary database."""
+
+import asyncio
+import os
+import tempfile
+from pathlib import Path
+
+folder = Path(tempfile.mkdtemp(prefix="unimatch-expert500-v13-demo-"))
+os.environ.update(
+    UNIMATCH_DATABASE_URL=f"sqlite:///{folder / 'demo.db'}",
+    UNIMATCH_CACHE_DIR=str(folder / "cache"),
+    UNIMATCH_EXPORT_DIR=str(folder / "exports"),
+    UNIMATCH_DEMO_MODE="true",
+    UNIMATCH_ENABLE_BROWSER_TIER="false",
+    UNIMATCH_ENVIRONMENT="development",
+)
+
+from app.config import Settings, get_settings
+
+Settings.model_config["env_file"] = None
+get_settings.cache_clear()
+
+from app.db import migrate_to_head
+from seed_demo import main
+
+migrate_to_head()
+status = asyncio.run(main(False))
+if status:
+    raise SystemExit(status)
+from app.db import session_scope
+from app.models import ProgramResultRow
+from app.schemas.result import ProgramResult
+import json
+with session_scope() as session:
+    rows = session.query(ProgramResultRow).order_by(ProgramResultRow.score_total.desc()).all()
+    results = [ProgramResult.model_validate(row.payload) for row in rows]
+    first = results[0].university
+    ubc = [result for result in results if result.university == "University of British Columbia"]
+    passed = len(results) == 20 and first == "University of Groningen" and bool(ubc) and all(result.ranking is not None and result.ranking.bucket.value == "OUT_OF_BUDGET" for result in ubc)
+    print(json.dumps({"isolated_database": str(folder / "demo.db"), "source": "bundled synthetic demo only", "results": len(results), "first": first, "ubc_bucket": ubc[0].ranking.bucket.value if ubc and ubc[0].ranking is not None else None, "passed": passed}))
+    if not passed:
+        raise SystemExit(1)
