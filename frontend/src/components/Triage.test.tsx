@@ -5,7 +5,7 @@
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { Triage, globeHeightFor } from './Triage';
+import { Triage } from './Triage';
 import type { ProgramResult } from '@/types';
 
 function row(id: string): ProgramResult {
@@ -30,11 +30,12 @@ describe('triage', () => {
   it('shows one programme with its three judgements and its place in the queue', () => {
     render(<Triage queue={[row('a'), row('b')]} total={3} decide={vi.fn()} onClose={() => {}} />);
     expect(screen.getByText('2 of 3 to decide')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'University a' })).toBeInTheDocument();
-    expect(screen.getByText('Eligibility')).toBeInTheDocument();
-    expect(screen.getByText('Admissions fit')).toBeInTheDocument();
-    expect(screen.getByText('Funding')).toBeInTheDocument();
-    expect(screen.getByText('1,848 USD')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Groningen.*University a/ })).toBeInTheDocument();
+    // The three answers stay three, each labelled.
+    expect(screen.getByText('Requirements')).toBeInTheDocument();
+    expect(screen.getByText('Your profile')).toBeInTheDocument();
+    expect(screen.getByText('Money')).toBeInTheDocument();
+    expect(screen.getByTestId('triage-card-a')).toHaveTextContent('1,848USD a year left to pay');
   });
 
   it('never lets a remaining cost read as a grant already won', () => {
@@ -50,7 +51,8 @@ describe('triage', () => {
       ],
     } as ProgramResult['funding_gap'];
     render(<Triage queue={[r]} total={1} decide={vi.fn()} onClose={() => {}} />);
-    expect(screen.getByTestId('triage-price')).toHaveTextContent('if awarded · price 32,663 USD');
+    expect(screen.getByTestId('triage-card-a')).toHaveTextContent('USD a year left to pay, if awarded');
+    expect(screen.getByTestId('triage-price')).toHaveTextContent('price 32,663 USD before grants');
     const caveats = screen.getByTestId('triage-caveats');
     expect(caveats).toHaveTextContent('awarded by competitive selection');
     expect(caveats).toHaveTextContent('second caveat');
@@ -101,12 +103,12 @@ describe('triage', () => {
   it('moves focus to the next programme after an answer', async () => {
     const decide = vi.fn().mockResolvedValue(undefined);
     const { rerender } = render(<Triage queue={[row('a'), row('b')]} total={2} decide={decide} onClose={() => {}} />);
-    expect(screen.getByRole('heading', { name: 'University a' })).toHaveFocus();
+    expect(screen.getByRole('heading', { name: /University a/ })).toHaveFocus();
     fireEvent.click(screen.getByTestId('triage-reject'));
     fireEvent.click(screen.getByTestId('triage-reject-save'));
     await waitFor(() => expect(decide).toHaveBeenCalled());
     rerender(<Triage queue={[row('b')]} total={2} decide={decide} onClose={() => {}} />);
-    expect(screen.getByRole('heading', { name: 'University b' })).toHaveFocus();
+    expect(screen.getByRole('heading', { name: /University b/ })).toHaveFocus();
   });
 
   it('says so when every programme has an answer', () => {
@@ -117,47 +119,24 @@ describe('triage', () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  describe('the globe behind the card', () => {
-    const astana = { lat: 51.17, lon: 71.45, city: 'Astana' };
-    const withHeight = (h: number, run: () => void) => {
-      const before = window.innerHeight;
-      Object.defineProperty(window, 'innerHeight', { configurable: true, value: h });
-      try { run(); } finally { Object.defineProperty(window, 'innerHeight', { configurable: true, value: before }); }
-    };
-
-    it('shows the route to the programme on the table, and turns to the next', () => {
-      withHeight(900, () => {
-        const decide = vi.fn().mockResolvedValue(undefined);
-        const tokyo = { ...row('b'), city: 'Tokyo', country: 'Japan' } as ProgramResult;
-        const { rerender } = render(
-          <Triage queue={[row('a'), tokyo]} total={2} decide={decide} onClose={() => {}} home={astana} />,
-        );
-        expect(screen.getByText('The route from Astana to Groningen.')).toBeInTheDocument();
-        rerender(<Triage queue={[tokyo]} total={2} decide={decide} onClose={() => {}} home={astana} />);
-        expect(screen.getByText('The route from Astana to Tokyo.')).toBeInTheDocument();
-      });
+  describe('the pass on the table', () => {
+    it('wears its country colour, with the next ones fanned behind it', () => {
+      const tokyo = { ...row('b'), city: 'Tokyo', country: 'Japan' } as ProgramResult;
+      const colourOf = (c: string) => (c === 'Japan' ? { slot: 3, pattern: false } : { slot: 1, pattern: false });
+      const { container } = render(
+        <Triage queue={[row('a'), tokyo, row('c')]} total={3} decide={vi.fn()} onClose={() => {}} colourOf={colourOf} />,
+      );
+      expect(screen.getByTestId('triage-card-a').getAttribute('style')).toContain('--pass-1');
+      const behind = container.querySelectorAll('.triage__behind');
+      expect(behind).toHaveLength(2);
+      expect(behind[0]?.getAttribute('style')).toContain('--pass-3');
     });
 
-    it('keeps the globe steady and says why when a city cannot be placed', () => {
-      withHeight(900, () => {
-        const lost = { ...row('a'), city: 'Atlantis', country: 'Greece' } as ProgramResult;
-        render(<Triage queue={[lost]} total={1} decide={vi.fn()} onClose={() => {}} home={astana} />);
-        expect(screen.getByTestId('triage-globe')).toBeInTheDocument();
-        expect(screen.getByTestId('triage-globe-none')).toHaveTextContent('Atlantis is not in its table');
-      });
-    });
-
-    it('leaves the globe out on a short phone, so the answers stay above the tab bar', () => {
-      withHeight(740, () => {
-        render(<Triage queue={[row('a')]} total={1} decide={vi.fn()} onClose={() => {}} home={astana} />);
-        expect(screen.queryByTestId('triage-globe')).toBeNull();
-      });
-      expect(globeHeightFor(740)).toBe(0);
-      // Unimatch's two-row phone header leaves no room on an 844 px phone;
-      // a 932 px one keeps a 146 px band.
-      expect(globeHeightFor(844)).toBe(0);
-      expect(globeHeightFor(932)).toBe(194);
-      expect(globeHeightFor(1200)).toBe(200);
+    it('prints the route home with both ends named, and none without a home', () => {
+      const { rerender } = render(<Triage queue={[row('a')]} total={1} decide={vi.fn()} onClose={() => {}} home="Astana" />);
+      expect(screen.getByRole('figure', { name: 'Route from Groningen to Astana' })).toBeInTheDocument();
+      rerender(<Triage queue={[row('a')]} total={1} decide={vi.fn()} onClose={() => {}} home={null} />);
+      expect(screen.queryByRole('figure')).toBeNull();
     });
   });
 });

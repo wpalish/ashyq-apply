@@ -1,4 +1,4 @@
-import { expect, test, type Browser, type Page } from '@playwright/test';
+import { expect, test, type Browser, type Locator, type Page } from '@playwright/test';
 
 const SHOT_ROOT = '../docs/screenshots';
 
@@ -86,8 +86,11 @@ export async function runDemoResearch(page: Page): Promise<void> {
 
 export async function openShortlist(page: Page): Promise<void> {
   await goTo(page, 'shortlist');
+  await closePass(page);
   // Cards are the default view; the journeys assert on the table's rows, so
-  // they choose it the way a person would, with the view switch.
+  // they choose it the way a person would, with the view switch - which sits
+  // with the other ways to narrow the list, behind Filters.
+  await openFilters(page);
   const table = page.getByTestId('view-table');
   if ((await table.getAttribute('aria-pressed')) !== 'true') await table.click();
   await expect(page.getByTestId('shortlist-table')).toBeVisible();
@@ -122,4 +125,40 @@ export async function expandRow(page: Page, name: string) {
   // a control under it as "in view" - then waits forever to click it.
   await row.evaluate((element) => element.scrollIntoView({ block: 'start' }));
   return row;
+}
+
+/** Find's Filters panel: the view switch, regions, the globe and the filters. */
+export async function openFilters(page: Page): Promise<void> {
+  const toggle = page.getByTestId('find-filters');
+  if ((await toggle.getAttribute('aria-expanded')) !== 'true') await toggle.click();
+  await expect(page.getByTestId('find-more')).toBeVisible();
+}
+
+/** Find's passes, as a person first sees them: cards, with Filters folded. */
+export async function showCards(page: Page): Promise<void> {
+  await goTo(page, 'shortlist');
+  await closePass(page);
+  await openFilters(page);
+  await page.getByTestId('view-cards').click();
+  await page.getByTestId('find-filters').click();
+  await expect(page.getByTestId('find-more')).toHaveCount(0);
+}
+
+/** Close an opened programme, if one is open. */
+export async function closePass(page: Page): Promise<void> {
+  const close = page.getByTestId('sheet-close');
+  if (await close.isVisible().catch(() => false)) await close.click();
+}
+
+/** Open a programme's pass from the cards, wherever its card sits. */
+export async function openPass(page: Page, name: string): Promise<{ id: string; sheet: Locator }> {
+  await closePass(page);
+  const card = page.locator('main article[data-testid^="card-"]').filter({ hasText: name }).first();
+  const id = (await card.getAttribute('data-testid'))!.replace('card-', '');
+  // A set-aside programme sits in a section that is closed by default.
+  await card.evaluate((el) => { const section = el.closest('details'); if (section) section.open = true; });
+  await page.getByTestId(`card-open-${id}`).click();
+  const sheet = page.getByTestId(`sheet-${id}`);
+  await expect(sheet).toBeVisible();
+  return { id, sheet };
 }

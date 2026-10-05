@@ -22,10 +22,23 @@ const DECISION_WORD: Partial<Record<ProgramResult['user_decision'], string>> = {
   rejected: 'not for me',
 };
 
+/**
+ * Why a pass shows no amount, in the few words a pass has room for: the
+ * flags the backend sets, and only then the plain "no official cost". The
+ * full reason is on the card and in the opened programme.
+ */
+function missingWhy(gap: ProgramResult['funding_gap']): string {
+  if (gap?.year_mismatch) return 'the years do not match';
+  if (gap?.currency_mismatch) return 'the currencies do not match';
+  if (gap?.category_mismatch) return 'the costs do not compare';
+  if (gap && !gap.total_cost) return 'no official cost found';
+  return 'open for the reason';
+}
+
 /** "1,848" and "USD a year, if awarded"; or no amount, and why. */
 export function passPrice(result: ProgramResult): { amount: string | null; unit: string } {
   const gap = result.funding_gap;
-  if (!gap?.computable || !gap.gap) return { amount: null, unit: 'no official cost found' };
+  if (!gap?.computable || !gap.gap) return { amount: null, unit: missingWhy(gap) };
   const awarded = (gap.confirmed_aid?.amount ?? 0) > 0;
   const est = gap.gap.is_estimate ? ', estimate' : '';
   return {

@@ -9,7 +9,9 @@
 
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import { goTo, newSession, openShortlist, runDemoResearch, shot, settle } from './helpers';
+import {
+  closePass, goTo, newSession, openFilters, openPass, openShortlist, rowFor, runDemoResearch, settle, shot, showCards,
+} from './helpers';
 
 test.describe.configure({ mode: 'serial' });
 
@@ -57,21 +59,10 @@ test('one at a time: an answer moves to the next programme and shows in the tabl
   const card = page.locator('[data-testid^="triage-card-"]');
   await expect(card).toBeVisible();
   const firstId = (await card.getAttribute('data-testid'))!.replace('triage-card-', '');
-  // Concept P: a night globe behind the card with the route from home to
-  // this programme's city, both ends named.
-  // Unimatch's two-row phone header leaves room for the globe only on a tall
-  // phone (Triage.GLOBE_FLOOR + a 72 px band); a shorter one keeps the card alone.
-  const globe = page.getByTestId('triage-globe');
-  const roomy = page.viewportSize()!.height >= 786 + 72;
-  let firstCity = '';
-  if (roomy) {
-    await expect(globe).toBeVisible();
-    await expect(globe).not.toHaveAttribute('data-turning', 'true');
-    await expect(globe.locator('.globe__name--home')).toHaveText('Astana');
-    firstCity = await globe.locator('.globe__name:not(.globe__name--home)').innerText();
-  } else {
-    await expect(globe).toHaveCount(0);
-  }
+  // The pass on the table prints its route home, both ends named.
+  const route = card.locator('.pass-route figcaption');
+  await expect(route).toContainText('Astana');
+  const firstCity = (await card.locator('.triage__city').innerText()).split('\n')[0]!.trim();
   // The answers stay above a phone's tab bar (defect I27); on a wide screen
   // the tabs are at the top and the answers stay in the first screen.
   const answers = (await page.locator('.triage__answers').boundingBox())!;
@@ -83,13 +74,10 @@ test('one at a time: an answer moves to the next programme and shows in the tabl
 
   await page.getByTestId('triage-maybe').click();
   await expect(card).not.toHaveAttribute('data-testid', `triage-card-${firstId}`);
-  // The globe turns to the next programme's route.
-  if (roomy) {
-    await expect(globe).not.toHaveAttribute('data-turning', 'true');
-    const nextCity = (await card.locator('.triage__prog').innerText()).split(' · ').pop()!.split(',')[0]!.trim();
-    await expect(globe.locator('.globe__name:not(.globe__name--home)')).toHaveText(nextCity);
-    expect(firstCity).not.toBe('');
-  }
+  // The next pass prints its own route.
+  expect(firstCity).not.toBe('');
+  const nextCity = (await card.locator('.triage__city').innerText()).split('\n')[0]!.trim();
+  await expect(route).toContainText(nextCity);
 
   // A rejection still asks why before it is saved.
   await page.getByTestId('triage-reject').click();
@@ -100,39 +88,39 @@ test('one at a time: an answer moves to the next programme and shows in the tabl
   await expect(page.getByTestId(`maybe-${firstId}`)).toHaveAttribute('aria-pressed', 'true');
 });
 
-test('the shortlist reads as price cards, and a card opens its programme', async () => {
-  await goTo(page, 'shortlist');
-  await page.getByTestId('view-cards').click();
+test('the shortlist reads as passes, and a pass opens its programme', async () => {
+  await showCards(page);
   const cards = page.getByTestId('shortlist-cards');
   await expect(cards).toBeVisible();
   const groningen = cards.locator('article').filter({ hasText: 'University of Groningen' }).first();
-  await expect(groningen).toContainText('1,848 USD');
-  await expect(groningen).toContainText('a year after grants, if awarded');
-  for (const line of ['Requirements', 'Your profile', 'Money']) {
-    await expect(groningen).toContainText(line);
-  }
+  // The pass: its country's colour, the city, what is left to pay a year after grants.
+  await expect(groningen).toHaveAttribute('data-pass', /[1-8]/);
+  await expect(groningen).toContainText('Groningen');
+  await expect(groningen).toContainText('1,848');
+  await expect(groningen).toContainText('USD a year, if awarded');
   await expect(groningen).not.toContainText('%');
-  // The open programme carries across views: the ladder test above opened it.
-  const opener = groningen.getByRole('button', { name: 'University of Groningen' });
-  if ((await opener.getAttribute('aria-expanded')) !== 'true') await opener.click();
-  await expect(groningen.getByRole('tab', { name: 'Funding' })).toBeVisible();
-  // Concept 10: the programme opens on its route from home, both ends named.
-  const route = groningen.locator('[data-testid^="route-"]');
-  await expect(route).toBeVisible();
-  await expect(route.locator('.globe__name')).toHaveText(['Groningen', 'Astana']);
   await page.screenshot({ path: shot('15-shortlist-cards.png'), fullPage: false });
-  // The ladder folds into one line here, as the concept's budget sheet.
-  await expect(page.getByTestId('budget-ladder')).toContainText('3 within 6,000 USD');
-  // An earlier cycle's date is a guide on the card too, never "passed" (as in the table).
-  // Melbourne misses a requirement, so its card sits with the ones set aside, outside the ranked list.
-  const melbourne = page.locator('main article[data-testid^="card-"]').filter({ hasText: 'University of Melbourne' }).first();
-  await expect(melbourne).toContainText('previous cycle');
+
+  const { sheet } = await openPass(page, 'University of Groningen');
+  for (const line of ['Requirements', 'Your profile', 'Money']) await expect(sheet).toContainText(line);
+  await expect(sheet.getByRole('tab', { name: 'Funding' })).toBeVisible();
+  // The route printed on the pass names both its ends.
+  await expect(sheet.locator('.pass-route figcaption')).toHaveText(/Groningen\s*Astana/);
+  await expect(sheet).not.toContainText('%');
+  await closePass(page);
+
+  // The budget strip counts the passes by what is left to pay.
+  await expect(page.getByTestId('band-within')).toHaveAttribute('aria-label', /^3 programmes up to 6,000 USD/);
+  // An earlier cycle's date is a guide, never "passed" (as in the table).
+  const { sheet: melbourne } = await openPass(page, 'University of Melbourne');
+  await expect(melbourne.locator('.rcard__deadline')).toContainText('previous cycle');
   await expect(melbourne.locator('.rcard__deadline')).not.toContainText('passed');
+  await closePass(page);
 });
 
 test('region chips count the list and filter it', async () => {
-  await goTo(page, 'shortlist');
-  await page.getByTestId('view-cards').click();
+  await showCards(page);
+  await openFilters(page);
   const chips = page.getByTestId('region-chips');
   const total = Number((await chips.getByTestId('region-all').innerText()).replace(/\D/g, ''));
   const counts = await chips.locator('button:not([data-testid="region-all"]) .region-chips__n').allTextContents();
@@ -149,8 +137,8 @@ test('region chips count the list and filter it', async () => {
 });
 
 test('the globe places every programme at its city, turns by region and opens a card', async () => {
-  await goTo(page, 'shortlist');
-  await page.getByTestId('view-cards').click();
+  await showCards(page);
+  await openFilters(page);
   const globe = page.getByTestId('shortlist-globe');
   await expect(globe).toBeVisible();
   // Every demo city is in the checked table, so nothing is left off.
@@ -164,8 +152,9 @@ test('the globe places every programme at its city, turns by region and opens a 
   const marker = globe.locator('[data-testid^="globe-marker-"]').first();
   const id = (await marker.getAttribute('data-testid'))!.replace('globe-marker-', '');
   await marker.click();
-  await expect(page.getByTestId(`card-open-${id}`)).toHaveAttribute('aria-expanded', 'true');
-  await page.getByTestId(`card-open-${id}`).click();
+  // The marker opens its programme: beside the list on a desk, as the screen on a phone.
+  await expect(page.getByTestId(`sheet-${id}`)).toBeVisible();
+  await closePass(page);
   await page.getByTestId('region-all').click();
   await expect(globe).not.toHaveAttribute('data-turning', 'true');
 
@@ -254,12 +243,8 @@ test('a story card is drawn on the device, with the privacy defaults and the dem
 
   // "Requirements met" from a programme that meets them, with the
   // university's decision beside the headline.
-  await goTo(page, 'shortlist');
-  await page.getByTestId('view-cards').click();
-  const tokyo = page.locator('main article[data-testid^="card-"]').filter({ hasText: 'University of Tokyo' }).first();
-  const id = (await tokyo.getAttribute('data-testid'))!.replace('card-', '');
-  const opener = page.getByTestId(`card-open-${id}`);
-  if ((await opener.getAttribute('aria-expanded')) !== 'true') await opener.click();
+  await showCards(page);
+  const { id } = await openPass(page, 'University of Tokyo');
   await page.getByTestId(`share-${id}`).click();
   await sheet.getByTestId('share-kind-requirements').check();
   await expect(card).toHaveAttribute('aria-label', /Requirements met/);
@@ -268,16 +253,16 @@ test('a story card is drawn on the device, with the privacy defaults and the dem
   await expect(card).not.toHaveAttribute('aria-label', /mine/);
   await sheet.getByTestId('share-close').click();
   await expect(sheet).toHaveCount(0);
+  await closePass(page);
 });
 
 test('two programmes compare row by row, an unknown left unknown', async () => {
-  await goTo(page, 'shortlist');
-  await page.getByTestId('view-cards').click();
-  const cards = page.getByTestId('shortlist-cards');
+  await showCards(page);
   for (const name of ['University of Groningen', 'University of Toronto']) {
-    const card = cards.locator('article').filter({ hasText: name }).first();
-    await card.getByRole('button', { name: 'Compare', exact: true }).click();
-    await expect(card.getByRole('button', { name: 'In comparison' })).toHaveAttribute('aria-pressed', 'true');
+    const { sheet } = await openPass(page, name);
+    await sheet.getByRole('button', { name: 'Compare', exact: true }).click();
+    await expect(sheet.getByRole('button', { name: 'In comparison' })).toHaveAttribute('aria-pressed', 'true');
+    await closePass(page);
   }
   const tray = page.getByTestId('compare-tray');
   await expect(tray).toContainText('2 picked');
@@ -299,11 +284,9 @@ test('two programmes compare row by row, an unknown left unknown', async () => {
 });
 
 test('the plan puts the nearest deadline on the board and every one after it in order', async () => {
-  await goTo(page, 'shortlist');
-  await page.getByTestId('view-cards').click();
-  const cards = page.getByTestId('shortlist-cards');
+  await openShortlist(page);
   for (const name of ['University of Groningen', 'University of Tokyo']) {
-    const keep = cards.locator('article').filter({ hasText: name }).first().locator('.decision-btn--approve');
+    const keep = rowFor(page, name).locator('.decision-btn--approve');
     if ((await keep.getAttribute('aria-pressed')) !== 'true') await keep.click();
     await expect(keep).toHaveAttribute('aria-pressed', 'true');
   }
@@ -352,8 +335,9 @@ test('home, the reveal, the cards, the comparison, the plan and the triage have 
   const views: [string, () => Promise<void>][] = [
     ['home', async () => { await goTo(page, 'home'); }],
     ['reveal', async () => { await goTo(page, 'progress'); }],
-    ['cards', async () => { await goTo(page, 'shortlist'); await page.getByTestId('view-cards').click(); }],
-    ['compare', async () => { await page.getByTestId('compare-go').click(); }],
+    ['cards', async () => { await showCards(page); }],
+    ['a pass opened', async () => { await openPass(page, 'University of Groningen'); }],
+    ['compare', async () => { await closePass(page); await page.getByTestId('compare-go').click(); }],
     ['plan', async () => { await goTo(page, 'approved'); }],
     ['one at a time', async () => { await openShortlist(page); await page.getByTestId('triage-start').click(); }],
   ];

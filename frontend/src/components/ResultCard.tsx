@@ -13,9 +13,10 @@
 import type { ReactNode } from 'react';
 import { StatusChip } from '@/components/primitives';
 import {
-  admissionsFitTone, date, eligibilityTone, fundingClassTone, money,
+  admissionsFitTone, date, eligibilityTone, fundingClassTone,
 } from '@/lib/format';
 import type { PassColour } from '@/lib/passColour';
+import { Pass, PassAnswers } from '@/components/Pass';
 import type { ProgramResult } from '@/types';
 
 /** The one requirement that explains an eligibility that is not simply met. */
@@ -80,109 +81,103 @@ function firstSentence(text: string | undefined): string {
   return (match ? match[0] : text).trim();
 }
 
+/**
+ * The three answers, each labelled, each with the one reason that matters.
+ * Shared by the pass on Find, the opened programme and the triage card.
+ */
+export function ThreeAnswers({ result }: { result: ProgramResult }) {
+  const r = result;
+  return (
+    <dl className="rcard__lines">
+      <div className="rcard__line">
+        <dt>Requirements</dt>
+        <dd>
+          <StatusChip status={r.eligibility} tone={eligibilityTone[r.eligibility]} />
+          <span className="rcard__note">{requirementNote(r)}</span>
+        </dd>
+      </div>
+      <div className="rcard__line">
+        <dt>Your profile</dt>
+        <dd>
+          <StatusChip status={r.admissions_fit} tone={admissionsFitTone[r.admissions_fit]} />
+          <span className="rcard__note">{FIT_NOTE[r.admissions_fit] ?? ''}</span>
+        </dd>
+      </div>
+      <div className="rcard__line">
+        <dt>Money</dt>
+        <dd>
+          <StatusChip
+            status={r.best_funding_classification}
+            tone={fundingClassTone[r.best_funding_classification]}
+          />
+          <span className="rcard__note">{awardNote(r)}</span>
+        </dd>
+      </div>
+    </dl>
+  );
+}
+
+/** The deadline as a card states it: the date, "passed", an earlier cycle's date as a guide. */
+export function DeadlineNote({ result }: { result: ProgramResult }) {
+  const r = result;
+  return (
+    <span className="rcard__deadline">
+      {r.admission_deadline ? <>Deadline {date(r.admission_deadline)}</> : 'Deadline not found'}
+      {r.deadline_passed && <strong className="rcard__passed"> · passed</strong>}
+      {/* A date from an earlier cycle is a guide, not this intake's deadline. */}
+      {r.previous_cycle_deadline && <> · previous cycle {date(r.previous_cycle_deadline)}</>}
+    </span>
+  );
+}
+
+/**
+ * One programme on Find, as a pass (concept «Пропуск»): the country's colour,
+ * the city, what is left to pay a year after grants. On a phone the pass
+ * carries the three answers and what to do on white; on a desk it stays
+ * compact - the three answers as three marks - and opens beside the list.
+ */
 export function ResultCard({
-  result, open, onToggle, decision, detail, compare, pass,
+  result, open, onToggle, actions, pass, compact = false,
 }: {
   result: ProgramResult;
   open: boolean;
+  /** Open the programme (or close it again). */
   onToggle: () => void;
-  /** The same decision controls the table row has. */
-  decision: ReactNode;
-  /** The full detail, shown under the card when it is open. */
-  detail?: ReactNode;
-  /** The "compare" toggle, when the screen offers a comparison. */
-  compare?: ReactNode;
-  /**
-   * The country's colour (concept «Пропуск»): the card's head becomes a pass
-   * in it. Undefined keeps the plain card.
-   */
+  /** Open, keep, compare: what the pass offers under its answers. */
+  actions?: ReactNode;
+  /** The country's colour (lib/passColour). */
   pass?: PassColour;
+  /** The desk's pass: the head and three marks; the rest is in the panel. */
+  compact?: boolean;
 }) {
   const r = result;
-  const gap = r.funding_gap;
-  const aid = gap?.confirmed_aid?.amount ?? 0;
-  const priced = Boolean(gap?.computable && gap.gap);
-
   return (
-    <article
-      className={`rcard${open ? ' is-open' : ''}${r.user_decision === 'rejected' ? ' is-rejected' : ''}${pass ? ' rcard--pass' : ''}${pass?.pattern ? ' rcard--pattern' : ''}`}
-      style={pass ? { ['--pass' as string]: `var(--pass-${pass.slot})` } : undefined}
-      data-pass={pass?.slot}
-      data-testid={`card-${r.id}`}
+    <Pass
+      result={r}
+      colour={pass}
+      className={`rcard${open ? ' is-open' : ''}${r.user_decision === 'rejected' ? ' is-rejected' : ''}${compact ? ' rcard--compact' : ''}`}
+      testId={`card-${r.id}`}
+      title={(
+        <button type="button" onClick={onToggle} aria-expanded={open} data-testid={`card-open-${r.id}`}>
+          {r.city || r.university}
+        </button>
+      )}
     >
-      <div className="rcard__head">
-        <div className="rcard__names">
-          {pass && <p className="rcard__country">{r.country}</p>}
-          <h3 className="rcard__uni">
-            <button
-              type="button"
-              onClick={onToggle}
-              aria-expanded={open}
-              data-testid={`card-open-${r.id}`}
-            >
-              {r.university}
-            </button>
-          </h3>
-          <p className="rcard__prog">{r.program} · {r.city}, {r.country}</p>
-        </div>
-        <div className={`rcard__price${priced ? '' : ' rcard__price--unknown'}`}>
-          {priced && gap?.gap ? (
-            <>
-              <span className="rcard__amount">{money({ ...gap.gap, academic_year: null })}</span>
-              <span className="rcard__per">{aid > 0 ? 'a year after grants, if awarded' : 'a year'}</span>
-            </>
-          ) : (
-            <>
-              <span className="rcard__amount rcard__amount--unknown">Cost not computed</span>
-              <span className="rcard__per">{firstSentence(gap?.reason) || 'No official cost was found.'}</span>
-            </>
+      {compact ? (
+        <PassAnswers result={r} />
+      ) : (
+        <div className="rcard__inner">
+          {!(r.funding_gap?.computable && r.funding_gap.gap) && (
+            <p className="rcard__why">{firstSentence(r.funding_gap?.reason) || 'No official cost was found.'}</p>
           )}
+          <ThreeAnswers result={r} />
+          {actions && <div className="rcard__actions">{actions}</div>}
+          <p className="rcard__foot">
+            <span className="rcard__source">{sourceNote(r)}</span>
+            <DeadlineNote result={r} />
+          </p>
         </div>
-      </div>
-
-      <dl className="rcard__lines">
-        <div className="rcard__line">
-          <dt>Requirements</dt>
-          <dd>
-            <StatusChip status={r.eligibility} tone={eligibilityTone[r.eligibility]} />
-            <span className="rcard__note">{requirementNote(r)}</span>
-          </dd>
-        </div>
-        <div className="rcard__line">
-          <dt>Your profile</dt>
-          <dd>
-            <StatusChip status={r.admissions_fit} tone={admissionsFitTone[r.admissions_fit]} />
-            <span className="rcard__note">{FIT_NOTE[r.admissions_fit] ?? ''}</span>
-          </dd>
-        </div>
-        <div className="rcard__line">
-          <dt>Money</dt>
-          <dd>
-            <StatusChip
-              status={r.best_funding_classification}
-              tone={fundingClassTone[r.best_funding_classification]}
-            />
-            <span className="rcard__note">{awardNote(r)}</span>
-          </dd>
-        </div>
-      </dl>
-
-      <div className="rcard__foot">
-        <span className="rcard__source">
-          <span className="rcard__dot" aria-hidden="true" />
-          {sourceNote(r)}
-        </span>
-        <span className="rcard__deadline">
-          {r.admission_deadline ? <>Deadline {date(r.admission_deadline)}</> : 'Deadline not found'}
-          {r.deadline_passed && <strong className="rcard__passed"> · passed</strong>}
-          {/* A date from an earlier cycle is a guide, not this intake's deadline. */}
-          {r.previous_cycle_deadline && <> · previous cycle {date(r.previous_cycle_deadline)}</>}
-        </span>
-      </div>
-
-      <div className="rcard__decide">{decision}{compare}</div>
-
-      {open && detail && <div className="rcard__detail">{detail}</div>}
-    </article>
+      )}
+    </Pass>
   );
 }

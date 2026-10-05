@@ -265,7 +265,7 @@ test('screens have addresses: back, forward, reload and a gated link', async () 
 
   await page.goBack();
   await expect(page).toHaveURL(/#\/shortlist$/);
-  await expect(page.getByRole('heading', { name: /Find your best matches/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Find', exact: true })).toBeVisible();
 
   await page.goForward();
   await expect(page).toHaveURL(/#\/funding$/);

@@ -9,6 +9,7 @@
 import { useState } from 'react';
 import { MoneyArithmetic, type RateNote } from '@/components/MoneyArithmetic';
 import { ProgrammeRoute } from '@/components/ProgrammeRoute';
+import { DeadlineNote, ThreeAnswers, sourceNote } from '@/components/ResultCard';
 import type { LatLon } from '@/lib/globe';
 import { Chip, Notice, SourceLink, StatusChip } from '@/components/primitives';
 import {
@@ -29,7 +30,7 @@ const TABS: { id: Tab; label: string }[] = [
 ];
 
 export function ResultDetail({
-  result, rate, home, onShare,
+  result, rate, home, onShare, bare = false,
 }: {
   result: ProgramResult;
   rate?: RateNote | null;
@@ -37,8 +38,59 @@ export function ResultDetail({
   home?: (LatLon & { city: string }) | null;
   /** Opens the share sheet on this programme (concept Q). */
   onShare?: () => void;
+  /**
+   * Under a pass head that already names the programme and draws its route
+   * (ProgrammeSheet): no hero of its own - the money, the three answers, then
+   * the tabs.
+   */
+  bare?: boolean;
 }) {
   const [tab, setTab] = useState<Tab>('requirements');
+  const tabs = (
+    <>
+      <div className="tabs" role="tablist" aria-label={`${result.university} details`}>
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            role="tab"
+            className="tab"
+            aria-selected={tab === t.id}
+            onClick={() => setTab(t.id)}
+            data-testid={`tab-${t.id}`}
+          >
+            {t.label}
+            {t.id === 'sources' && result.conflicts.length > 0 && (
+              <span style={{ marginLeft: 6 }}><Chip tone="risk">{result.conflicts.length}</Chip></span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {tab === 'requirements' && <Requirements result={result} />}
+      {tab === 'funding' && <Funding result={result} />}
+      {tab === 'costs' && <Costs result={result} />}
+      {tab === 'documents' && <Documents result={result} />}
+      {tab === 'score' && <Score result={result} />}
+      {tab === 'sources' && <Sources result={result} />}
+    </>
+  );
+
+  if (bare) {
+    return (
+      <div className="detail detail--bare" data-testid={`detail-${result.id}`}>
+        <MoneyArithmetic result={result} rate={rate} />
+        <section className="detail__answers" aria-labelledby={`answers-${result.id}`}>
+          <h3 id={`answers-${result.id}`}>Three answers</h3>
+          <ThreeAnswers result={result} />
+          <p className="detail__answers-note">
+            <DeadlineNote result={result} /> · {sourceNote(result)} · none of these predicts a decision
+          </p>
+          {result.program_url && <SourceLink url={result.program_url} />}
+        </section>
+        {tabs}
+      </div>
+    );
+  }
 
   return (
     <div className="detail" data-testid={`detail-${result.id}`}>
@@ -77,30 +129,7 @@ export function ResultDetail({
         )}
         <MoneyArithmetic result={result} rate={rate} />
       </div>
-      <div className="tabs" role="tablist" aria-label={`${result.university} details`}>
-        {TABS.map((t) => (
-          <button
-            key={t.id}
-            role="tab"
-            className="tab"
-            aria-selected={tab === t.id}
-            onClick={() => setTab(t.id)}
-            data-testid={`tab-${t.id}`}
-          >
-            {t.label}
-            {t.id === 'sources' && result.conflicts.length > 0 && (
-              <span style={{ marginLeft: 6 }}><Chip tone="risk">{result.conflicts.length}</Chip></span>
-            )}
-          </button>
-        ))}
-      </div>
-
-      {tab === 'requirements' && <Requirements result={result} />}
-      {tab === 'funding' && <Funding result={result} />}
-      {tab === 'costs' && <Costs result={result} />}
-      {tab === 'documents' && <Documents result={result} />}
-      {tab === 'score' && <Score result={result} />}
-      {tab === 'sources' && <Sources result={result} />}
+      {tabs}
     </div>
   );
 }

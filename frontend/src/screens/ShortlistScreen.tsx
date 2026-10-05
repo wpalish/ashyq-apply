@@ -17,6 +17,10 @@ import { REGION_LABEL, REGION_ORDER, regionCounts, regionOf, type Region } from 
 import { Globe } from '@/components/Globe';
 import { REGION_VIEW, centroidOf, defaultView, homeOf, markersFor } from '@/lib/globe';
 import { ResultCard } from '@/components/ResultCard';
+import { LadderStrip, bandsOf, type Band } from '@/components/LadderStrip';
+import { ProgrammeSheet, intakeWords } from '@/components/ProgrammeSheet';
+import { useMedia, WIDE } from '@/lib/useMedia';
+import { Faders, MagnifyingGlass } from '@phosphor-icons/react';
 import { ResultDetail } from '@/components/ResultDetail';
 import { LazyShareSheet } from '@/components/LazyShareSheet';
 import { Triage } from '@/components/Triage';
@@ -123,6 +127,9 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
   const [view, setViewState] = useState<View>(storedView);
   const setView = (next: View) => {
     setViewState(next);
+    // A row opened in the table is not a programme opened on the cards: on a
+    // phone that would turn the whole screen into it unasked.
+    setExpanded(null);
     try {
       window.localStorage.setItem(VIEW_KEY, next);
     } catch {
@@ -135,6 +142,12 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
   // both only narrow what is shown; the saved results are untouched.
   const [query, setQuery] = useState('');
   const [tab, setTab] = useState<AnswerTab>('all');
+  // A band of the budget strip, the phone's search field, and the panel that
+  // holds every other way to narrow the list (concept: folded until wanted).
+  const [band, setBand] = useState<Band | null>(null);
+  const [searching, setSearching] = useState(false);
+  const [more, setMore] = useState(false);
+  const wide = useMedia(WIDE);
   const [country, setCountry] = useState('');
   const [region, setRegionState] = useState<Region | ''>('');
   // A cluster tapped on the globe: where to look, and how close. A region
@@ -185,12 +198,15 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
     [results, savedProfile],
   );
 
+  const ceiling = ceilingFrom(savedProfile);
+  const bands = useMemo(() => (ceiling ? bandsOf(results, ceiling) : null), [results, ceiling?.amount, ceiling?.currency]); // eslint-disable-line react-hooks/exhaustive-deps
   const rows = useMemo(() => {
     const needle = query.trim().toLocaleLowerCase();
     const tabDecision = TABS.find((t) => t.id === tab)?.decision;
     const filtered = results.filter(
       (r) =>
         (!region || regionOf(r.country) === region) &&
+        (!band || bands?.get(r.id) === band) &&
         (!needle || `${r.university} ${r.program} ${r.country} ${r.city}`.toLocaleLowerCase().includes(needle)) &&
         (tabDecision === undefined || r.user_decision === tabDecision) &&
         (!country || r.country === country) &&
@@ -212,7 +228,7 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
       const key = (r: ProgramResult) => r.ranking?.sort_key ?? r.preference_score?.total ?? 0;
       return key(b) - key(a) || a.id.localeCompare(b.id);
     });
-  }, [results, query, tab, region, country, eligibility, funding, hideRejected, sort]);
+  }, [results, query, tab, region, country, eligibility, funding, hideRejected, sort, band, bands]);
 
   // A row with no ranking is one assessed under v1; it still belongs in the
   // list rather than in a set-aside section it was never scored for.
@@ -231,7 +247,6 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
     );
   }
 
-  const ceiling = ceilingFrom(savedProfile);
   const undecided = rows.filter((r) => r.user_decision === 'undecided');
 
   /** Open a row's detail from the ladder, wherever the row sits. */
@@ -289,7 +304,9 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
           queue={undecided}
           total={triageTotal}
           decide={decide}
-          home={home}
+          home={home?.city ?? null}
+          colourOf={(c) => passes.get(c)}
+          intake={intakeWords(savedProfile)}
           onClose={() => {
             setTriageTotal(null);
             // Back where the person started; the title when nothing is left to decide.
@@ -319,7 +336,8 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
 
   /** Yes / Maybe / No, the reason and the note: one set of controls for the
    *  table row and the card, so both views decide the same way. */
-  const renderDecision = (r: ProgramResult) => (
+  // The table's column is narrow: there the last answer reads "No".
+  const renderDecision = (r: ProgramResult, short = false) => (
     <>
       <div className="decision-group" role="group" aria-label={`Decision for ${r.university}`}>
         <button
@@ -327,7 +345,7 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
           aria-pressed={r.user_decision === 'approved'}
           onClick={() => decideRow(r, 'approved')}
           data-testid={`approve-${r.id}`}
-        >Yes</button>
+        >Keep</button>
         <button
           className="decision-btn decision-btn--maybe"
           aria-pressed={r.user_decision === 'maybe'}
@@ -339,7 +357,7 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
           aria-pressed={r.user_decision === 'rejected'}
           onClick={() => decideRow(r, 'rejected')}
           data-testid={`reject-${r.id}`}
-        >No</button>
+        >{short ? 'No' : 'Not for me'}</button>
       </div>
       {rejectFor === r.id && (
         <div
@@ -428,32 +446,52 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
     </>
   );
 
+  /** Add to the comparison, or take out again; three at most. */
+  const compareButton = (r: ProgramResult) => {
+    const on = picked.some((p) => p.id === r.id);
+    const full = !on && picked.length >= COMPARE_MAX;
+    return (
+      <button
+        type="button"
+        className="btn btn--sm rcard__compare"
+        aria-pressed={on}
+        disabled={full}
+        title={full ? `Compare at most ${COMPARE_MAX} at a time` : undefined}
+        onClick={() => toggleCompare(r.id)}
+        data-testid={`compare-${r.id}`}
+      >
+        {on ? 'In comparison' : 'Compare'}
+      </button>
+    );
+  };
+
   const renderCard = (r: ProgramResult) => (
     <ResultCard
       key={r.id}
       result={r}
       pass={passes.get(r.country)}
       open={expanded === r.id}
+      compact={wide}
       onToggle={() => setExpanded(expanded === r.id ? null : r.id)}
-      decision={renderDecision(r)}
-      detail={<ResultDetail result={r} rate={rate} home={home} onShare={() => setShareFor(r.id)} />}
-      compare={(() => {
-        const on = picked.some((p) => p.id === r.id);
-        const full = !on && picked.length >= COMPARE_MAX;
-        return (
+      actions={(
+        <>
           <button
             type="button"
-            className="btn btn--sm rcard__compare"
-            aria-pressed={on}
-            disabled={full}
-            title={full ? `Compare at most ${COMPARE_MAX} at a time` : undefined}
-            onClick={() => toggleCompare(r.id)}
-            data-testid={`compare-${r.id}`}
-          >
-            {on ? 'In comparison' : 'Compare'}
-          </button>
-        );
-      })()}
+            className="btn btn--sm rcard__open"
+            onClick={() => setExpanded(r.id)}
+            aria-label={`Open ${r.city || r.university}`}
+            data-testid={`card-more-${r.id}`}
+          >Open</button>
+          <button
+            type="button"
+            className="btn btn--sm rcard__keep"
+            aria-pressed={r.user_decision === 'approved'}
+            onClick={() => decideRow(r, 'approved')}
+            data-testid={`keep-${r.id}`}
+          >{r.user_decision === 'approved' ? 'Kept' : 'Keep'}</button>
+          {compareButton(r)}
+        </>
+      )}
     />
   );
 
@@ -575,7 +613,7 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
                             )}
                           </td>
                         )}
-                        <td data-label="Decision">{renderDecision(r)}</td>
+                        <td data-label="Decision">{renderDecision(r, true)}</td>
                       </tr>
                       {open && (
                         <tr className="detail-row">
@@ -590,10 +628,142 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
           </div>
   );
 
+  // An opened programme on the cards view: the whole screen on a phone, a
+  // panel beside the list on a desk.
+  const opened = view === 'cards' && expanded ? results.find((r) => r.id === expanded) ?? null : null;
+  const closeSheet = () => {
+    const id = expanded;
+    setExpanded(null);
+    setTimeout(() => document.querySelector<HTMLElement>(`[data-testid="card-open-${id}"]`)?.focus(), 0);
+  };
+  const shareSheet = shareFor && (
+    <LazyShareSheet
+      results={results}
+      result={results.find((r) => r.id === shareFor) ?? null}
+      profile={savedProfile}
+      demo={Boolean(summary?.demo_data)}
+      onClose={() => setShareFor(null)}
+    />
+  );
+  const sheet = opened && (
+    <ProgrammeSheet
+      result={opened}
+      colour={passes.get(opened.country)}
+      side={wide}
+      intake={intakeWords(savedProfile)}
+      home={home?.city ?? null}
+      onClose={closeSheet}
+      actions={(
+        <>
+          {renderDecision(opened)}
+          {compareButton(opened)}
+          <button type="button" className="btn btn--sm" onClick={() => setShareFor(opened.id)} data-testid={`share-${opened.id}`}>
+            Share as a story
+          </button>
+        </>
+      )}
+    >
+      <ResultDetail result={opened} rate={rate} bare />
+    </ProgrammeSheet>
+  );
+
+  if (opened && !wide) {
+    return (
+      <>
+        <h1 className="visually-hidden">Find: {opened.city || opened.university}</h1>
+        {sheet}
+        {shareSheet}
+      </>
+    );
+  }
+
+  const narrowed = [region, country, eligibility, funding].filter(Boolean).length + (hideRejected ? 1 : 0);
+
   return (
-    <>
-      <div className="screen__head">
-        {searchSummary(savedProfile) && (
+    <div className={`find${opened ? ' find--with-sheet' : ''}`}>
+      <header className="find-head">
+        <div className="find-head__text">
+          <h1 className="find-title" id="shortlist-title" tabIndex={-1}>Find</h1>
+          <p className="find-sub">
+            {results.length} programme{results.length === 1 ? '' : 's'} in {countries.length} countr{countries.length === 1 ? 'y' : 'ies'}
+          </p>
+        </div>
+        <div className="find-head__tools">
+          <label className={`find-search${searching || query ? ' is-open' : ''}`}>
+            <MagnifyingGlass size={18} aria-hidden="true" />
+            <span className="visually-hidden">Search universities, programmes or countries</span>
+            <input
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search universities, cities…"
+              data-testid="find-search"
+            />
+          </label>
+          <button
+            type="button"
+            className="find-round find-round--search"
+            aria-expanded={searching || Boolean(query)}
+            onClick={() => {
+              setSearching(!searching);
+              setTimeout(() => document.querySelector<HTMLInputElement>('[data-testid="find-search"]')?.focus(), 0);
+            }}
+            data-testid="find-search-toggle"
+          >
+            <MagnifyingGlass size={19} aria-hidden="true" />
+            <span className="visually-hidden">Search</span>
+          </button>
+          <button
+            type="button"
+            className="find-round find-filters"
+            aria-expanded={more}
+            onClick={() => setMore(!more)}
+            data-testid="find-filters"
+          >
+            <Faders size={19} aria-hidden="true" />
+            <span className="find-filters__label">Filters</span>
+            {narrowed > 0 && <span className="find-filters__n">{narrowed}</span>}
+          </button>
+        </div>
+      </header>
+
+      {ceiling && <LadderStrip results={results} ceiling={ceiling} band={band} onBand={setBand} />}
+
+      <div className="find-bar">
+        <div className="find-tabs" role="group" aria-label="Show">
+          {TABS.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              aria-pressed={tab === t.id}
+              onClick={() => setTab(t.id)}
+              data-testid={`find-tab-${t.id}`}
+            >
+              {t.label} <span className="find-tabs__n">{t.decision ? results.filter((r) => r.user_decision === t.decision).length : results.length}</span>
+            </button>
+          ))}
+        </div>
+        {undecided.length > 0 && (
+          <button
+            type="button"
+            className="btn btn--primary find-decide"
+            onClick={() => setTriageTotal(undecided.length)}
+            data-testid="triage-start"
+          >
+            Decide one at a time <span aria-hidden="true">→</span>
+          </button>
+        )}
+      </div>
+
+      {summary?.demo_data && (
+        <p className="find-demo" data-testid="find-demo">
+          <strong>Demo data.</strong> Figures from a bundled synthetic corpus; every source is a <code>fixture://</code> address.
+        </p>
+      )}
+
+      {more && (
+        <section className="find-more" aria-label="More ways to narrow the list" data-testid="find-more">
+          {searchSummary(savedProfile) && (
           <button
             type="button"
             className="search-pill"
@@ -608,29 +778,8 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
             <span className="search-pill__text">{searchSummary(savedProfile)}</span>
           </button>
         )}
-        <p className="screen__eyebrow">
-          {results.length} programme{results.length === 1 ? '' : 's'} · {countries.length} countr{countries.length === 1 ? 'y' : 'ies'}
-        </p>
-        <h1 className="screen__title" id="shortlist-title" tabIndex={-1}>Find your best matches</h1>
-        <p className="screen__lede">
-          <strong>Requirements</strong>, your <strong>profile</strong> and <strong>money</strong>:
-          three separate answers per programme. None of them predicts a decision.
-        </p>
-        <div className="shortlist-actions">
-          {undecided.length > 0 && (
-            <>
-              <button
-                type="button"
-                className="btn btn--primary"
-                onClick={() => setTriageTotal(undecided.length)}
-                data-testid="triage-start"
-              >
-                Decide one at a time
-              </button>
-              <span className="small muted">{undecided.length} without an answer yet</span>
-            </>
-          )}
-          <div className="segmented" role="group" aria-label="View">
+          <div className="find-more__row">
+            <div className="segmented" role="group" aria-label="View">
             <button
               type="button"
               aria-pressed={view === 'cards'}
@@ -644,57 +793,8 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
               data-testid="view-table"
             >Table</button>
           </div>
-        </div>
-      </div>
-
-      <div className="stack stack--loose">
-        {summary?.demo_data && (
-          <Notice kind="demo">
-            <div>
-              <strong>Demo data.</strong> These figures come from a bundled synthetic corpus, not
-              from real university pages. Every source below is a <code>fixture://</code> address.
-            </div>
-          </Notice>
-        )}
-
-        <div className="find-toolbar">
-          <label className="find-search">
-            <span className="visually-hidden">Search universities, programmes or countries</span>
-            <input
-              type="search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search universities, programmes or countries…"
-              data-testid="find-search"
-            />
-          </label>
-          <div className="find-tabs" role="group" aria-label="Show">
-            {TABS.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                aria-pressed={tab === t.id}
-                onClick={() => setTab(t.id)}
-                data-testid={`find-tab-${t.id}`}
-              >
-                {t.label} <span className="find-tabs__n">{t.decision ? results.filter((r) => r.user_decision === t.decision).length : results.length}</span>
-              </button>
-            ))}
           </div>
-        </div>
-
-        {rows.length === 0 && (
-          <div className="find-empty" data-testid="find-empty">
-            <Empty title="Nothing matches these filters yet.">Try another search or clear the filters.</Empty>
-            <button
-              type="button"
-              className="btn"
-              onClick={() => { setQuery(''); setTab('all'); setRegion(''); setCountry(''); setEligibility(''); setFunding(''); setHideRejected(false); }}
-            >Clear filters</button>
-          </div>
-        )}
-
-        {/* Concept 07's region chips: counted from every result, so a chip
+          {/* Concept 07's region chips: counted from every result, so a chip
             never promises programmes the list will not show. */}
         <div className="region-chips" role="group" aria-label="Region" data-testid="region-chips">
           <button type="button" aria-pressed={region === ''} onClick={() => setRegion('')} data-testid="region-all">
@@ -714,10 +814,6 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
           ))}
         </div>
 
-        {/* Concept N's list over a small globe: the programmes the filters
-            show, at their cities; a region chip turns it to that region, and
-            a marker opens its card. The list stays the way through - the
-            globe is for looking. */}
         {view === 'cards' && (
           <div className="shortlist-globe">
             {globeCloser && (
@@ -766,103 +862,56 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
           </div>
         )}
 
-        {ceiling && (
-          <BudgetLadder results={rows} ceiling={ceiling} onOpen={openRow} folded={view === 'cards'} />
-        )}
+          {ceiling && <BudgetLadder results={rows} ceiling={ceiling} onOpen={openRow} />}
+          <div className="filters">
+            <Field label="Country" htmlFor="f-country">
+              <select id="f-country" value={country} onChange={(e) => setCountry(e.target.value)}>
+                <option value="">All ({results.length})</option>
+                {countries.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </Field>
+            <Field label="Eligibility" htmlFor="f-elig">
+              <select id="f-elig" value={eligibility} onChange={(e) => setEligibility(e.target.value)}>
+                <option value="">Any</option>
+                {Object.entries(summary?.by_eligibility ?? {}).map(([k, v]) => (
+                  // The value stays the enum; only the label is for humans.
+                  <option key={k} value={k}>{STATUS_LABEL[k] ?? humanize(k)} ({v})</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Funding" htmlFor="f-fund">
+              <select id="f-fund" value={funding} onChange={(e) => setFunding(e.target.value)}>
+                <option value="">Any</option>
+                {Object.entries(summary?.by_funding ?? {}).map(([k, v]) => (
+                  <option key={k} value={k}>{STATUS_LABEL[k] ?? humanize(k)} ({v})</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Sort by" htmlFor="f-sort">
+              <select id="f-sort" value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
+                {(Object.keys(SORT_LABEL) as SortKey[]).map((key) => (
+                  <option key={key} value={key}>{SORT_LABEL[key]}</option>
+                ))}
+              </select>
+            </Field>
+            <label className="row row--tight small" style={{ paddingBottom: 6 }}>
+              <input type="checkbox" checked={hideRejected} onChange={(e) => setHideRejected(e.target.checked)} />
+              Hide rejected
+            </label>
+          </div>
+        </section>
+      )}
 
-        {view === 'table' ? (
-          <Panel sunken>
-          <div className="filters">
-            <Field label="Country" htmlFor="f-country">
-              <select id="f-country" value={country} onChange={(e) => setCountry(e.target.value)}>
-                <option value="">All ({results.length})</option>
-                {countries.map((c) => <option key={c} value={c}>{c}</option>)}
-              </select>
-            </Field>
-            <Field label="Eligibility" htmlFor="f-elig">
-              <select id="f-elig" value={eligibility} onChange={(e) => setEligibility(e.target.value)}>
-                <option value="">Any</option>
-                {Object.entries(summary?.by_eligibility ?? {}).map(([k, v]) => (
-                  // The value stays the enum; only the label is for humans.
-                  <option key={k} value={k}>{STATUS_LABEL[k] ?? humanize(k)} ({v})</option>
-                ))}
-              </select>
-            </Field>
-            <Field label="Funding" htmlFor="f-fund">
-              <select id="f-fund" value={funding} onChange={(e) => setFunding(e.target.value)}>
-                <option value="">Any</option>
-                {Object.entries(summary?.by_funding ?? {}).map(([k, v]) => (
-                  <option key={k} value={k}>{STATUS_LABEL[k] ?? humanize(k)} ({v})</option>
-                ))}
-              </select>
-            </Field>
-            <Field label="Sort by" htmlFor="f-sort">
-              <select id="f-sort" value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
-                {(Object.keys(SORT_LABEL) as SortKey[]).map((key) => (
-                  <option key={key} value={key}>{SORT_LABEL[key]}</option>
-                ))}
-              </select>
-            </Field>
-            <label className="row row--tight small" style={{ paddingBottom: 6 }}>
-              <input type="checkbox" checked={hideRejected} onChange={(e) => setHideRejected(e.target.checked)} />
-              Hide rejected
-            </label>
+      <div className="stack stack--loose find-list">
+        {rows.length === 0 && (
+          <div className="find-empty" data-testid="find-empty">
+            <Empty title="Nothing matches these filters yet.">Try another search or clear the filters.</Empty>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => { setQuery(''); setTab('all'); setRegion(''); setCountry(''); setEligibility(''); setFunding(''); setHideRejected(false); }}
+            >Clear filters</button>
           </div>
-          </Panel>
-        ) : (
-          // One line in the cards view, as the concept's "best for you" sort:
-          // the same controls, folded until they are wanted.
-          <details className="panel panel--fold filters-fold" data-testid="filters-fold">
-            <summary className="panel__summary">
-              <span className="panel__summary-text">
-                <h2 className="panel__title">Sort and filter</h2>
-                <span className="panel__hint">
-                  {SORT_LABEL[sort]} · showing {rows.length} of {results.length}
-                </span>
-              </span>
-              <span className="panel__state">
-                {[region, country, eligibility, funding].filter(Boolean).length + (hideRejected ? 1 : 0) || 'none'} on
-              </span>
-            </summary>
-            <div className="panel__body">
-          <div className="filters">
-            <Field label="Country" htmlFor="f-country">
-              <select id="f-country" value={country} onChange={(e) => setCountry(e.target.value)}>
-                <option value="">All ({results.length})</option>
-                {countries.map((c) => <option key={c} value={c}>{c}</option>)}
-              </select>
-            </Field>
-            <Field label="Eligibility" htmlFor="f-elig">
-              <select id="f-elig" value={eligibility} onChange={(e) => setEligibility(e.target.value)}>
-                <option value="">Any</option>
-                {Object.entries(summary?.by_eligibility ?? {}).map(([k, v]) => (
-                  // The value stays the enum; only the label is for humans.
-                  <option key={k} value={k}>{STATUS_LABEL[k] ?? humanize(k)} ({v})</option>
-                ))}
-              </select>
-            </Field>
-            <Field label="Funding" htmlFor="f-fund">
-              <select id="f-fund" value={funding} onChange={(e) => setFunding(e.target.value)}>
-                <option value="">Any</option>
-                {Object.entries(summary?.by_funding ?? {}).map(([k, v]) => (
-                  <option key={k} value={k}>{STATUS_LABEL[k] ?? humanize(k)} ({v})</option>
-                ))}
-              </select>
-            </Field>
-            <Field label="Sort by" htmlFor="f-sort">
-              <select id="f-sort" value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
-                {(Object.keys(SORT_LABEL) as SortKey[]).map((key) => (
-                  <option key={key} value={key}>{SORT_LABEL[key]}</option>
-                ))}
-              </select>
-            </Field>
-            <label className="row row--tight small" style={{ paddingBottom: 6 }}>
-              <input type="checkbox" checked={hideRejected} onChange={(e) => setHideRejected(e.target.checked)} />
-              Hide rejected
-            </label>
-          </div>
-            </div>
-          </details>
         )}
 
         {view === 'table' && shortlist && shortlist.chosen.length > 0 && (
@@ -1012,15 +1061,8 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArr
           <UniversityCatalogue onStart={onStart} onProgress={onProgress} />
         </details>
       </div>
-      {shareFor && (
-        <LazyShareSheet
-          results={results}
-          result={results.find((r) => r.id === shareFor) ?? null}
-          profile={savedProfile}
-          demo={Boolean(summary?.demo_data)}
-          onClose={() => setShareFor(null)}
-        />
-      )}
-    </>
+      {sheet}
+      {shareSheet}
+    </div>
   );
 }

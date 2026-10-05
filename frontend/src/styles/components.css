@@ -789,98 +789,11 @@
   justify-self: start;
 }
 
-/* --- one-at-a-time triage (round 7, concept P) -----------------------------
-   A night "moment": the list goes away and one programme is on the table. */
-
-.triage {
-  background: var(--night);
-  color: var(--night-ink);
-  /* Keeps the card's edge on the dark appearance, where the page is night too. */
-  border: 1px solid var(--night-line);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  max-width: 44rem;
-}
-.triage__top { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); }
-.triage__count { font-size: var(--text-sm); font-weight: 700; color: var(--night-muted); }
-.triage__muted { color: var(--night-muted); font-size: var(--text-sm); }
-.triage__title { color: var(--night-ink); }
-.triage .btn.triage__close { background: var(--night-surface); color: var(--night-ink); border-color: var(--night-line); }
-.triage__card {
-  background: #FFFFFF;
-  color: #0F1E36;
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-.triage__uni { font-size: var(--text-lg); color: #0F1E36; }
-.triage__prog { margin: var(--space-1) 0 0; font-size: var(--text-sm); color: #5A6578; }
-.triage__judgements, .triage__facts {
-  display: grid;
-  /* Three judgements side by side at every width: stacked, they read as a
-     form to fill in rather than three answers to compare. */
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-3);
-  margin: 0;
-}
-.triage__judgements > div, .triage__facts > div { display: flex; flex-direction: column; gap: 0.3rem; }
-.triage__judgements dt, .triage__facts dt {
-  font-size: 0.6875rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #5A6578;
-}
-.triage__judgements dd, .triage__facts dd { margin: 0; font-weight: 700; }
-.triage__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.triage__judgements dt { overflow-wrap: anywhere; }
-.triage__sub { display: block; margin-top: 0.15rem; font-size: var(--text-xs); font-weight: 600; color: #5A6578; }
-/* The ranking's own caveats about the aid it subtracted (competitive, needs a
-   nomination, cannot be combined), in the card's warning tone. */
-.triage__foot { margin: 0; font-size: var(--text-xs); text-align: center; }
-@media (max-width: 520px) {
-  /* One caveat on a phone - the one that says whether the aid can be won -
-     so the three answers stay above the tab bar. The card's detail has all. */
-  .triage__caveats li + li { display: none; }
-}
-.triage__caveats {
-  margin: 0; padding: var(--space-2) var(--space-3) var(--space-2) 1.6rem;
-  background: #FFF3DB; color: #6B4600; border-radius: var(--radius-sm);
-  font-size: var(--text-xs); display: flex; flex-direction: column; gap: 0.25rem;
-}
-/* The card is always light, even in the dark appearance, so its chips use the light status palette. */
-.triage__card .chip { background: #FFFFFF; color: #5A6578; border-color: #9AA4B2; }
-.triage__card .chip--ok   { background: #E4F5EC; color: #177A4C; border-color: #A9DCC0; }
-.triage__card .chip--info { background: #E7F0FA; color: #1D4F91; border-color: #B5CCEA; }
-.triage__card .chip--warn { background: #FFF3DB; color: #8A5A00; border-color: #F0D08E; }
-.triage__card .chip--risk { background: #FDECEA; color: #B42318; border-color: #F2B8B0; }
-.triage__answers { display: flex; justify-content: center; gap: var(--space-5); }
-.triage__answer {
-  display: flex; flex-direction: column; align-items: center; gap: var(--space-2);
-  background: none; border: 0; color: var(--night-ink); font-weight: 700; font-size: var(--text-sm);
-  cursor: pointer; min-width: 5rem;
-}
-.triage__icon {
-  width: 3.5rem; height: 3.5rem; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--night-surface); border: 1px solid var(--night-line);
-  font-size: 1.35rem; font-weight: 800;
-}
-.triage__answer--keep .triage__icon { background: var(--sun); color: var(--sun-ink); border-color: var(--sun); }
-.triage__answer:disabled { opacity: 0.6; cursor: progress; }
-.triage__answer:focus-visible .triage__icon { outline: 2px solid var(--sun); outline-offset: 3px; }
-.triage__reason { display: flex; flex-direction: column; gap: var(--space-3); }
-.triage .btn.triage__chip { background: var(--night-surface); color: var(--night-ink); border-color: var(--night-line); }
-.triage .btn.triage__chip.is-on { background: var(--sun); color: var(--sun-ink); border-color: var(--sun); }
 
 @media (max-width: 700px) {
   .ladder__row { grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-1) var(--space-3); padding: var(--space-2); }
   .ladder__name { grid-column: 1 / -1; }
   .ladder__row--unknown { grid-template-columns: 1fr; }
-  .triage { padding: var(--space-4); }
-  .triage__card { padding: var(--space-4); }
-  .triage__answers { gap: var(--space-3); }
 }
 
 /* --- start: the three-field search (round 7, screen 01) ------------------
@@ -1098,77 +1011,8 @@
 .segmented button[aria-pressed='true'] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm); }
 
 .rcards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr)); gap: var(--space-3); }
-.rcard {
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4) var(--space-4) var(--space-3);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  min-width: 0;
-}
-.rcard.is-open { grid-column: 1 / -1; border-color: var(--ink); }
-
-/* Concept «Пропуск»: the card's head is a pass in the country's colour, white
-   on a deep muted fill (5.7–9.6:1); the three answers stay on white below.
-   From the ninth country on the colour repeats, striped. */
-.rcard--pass { padding: 0 0 var(--space-3); overflow: hidden; border-radius: var(--radius-pass); }
-.rcard--pass > :not(.rcard__head) { margin-inline: var(--space-4); }
-.rcard--pass .rcard__head {
-  position: relative;
-  background-color: var(--pass);
-  color: var(--pass-ink);
-  padding: var(--space-4);
-  border-bottom: 2px dashed color-mix(in srgb, var(--pass-ink) 22%, var(--pass));
-  isolation: isolate;
-}
-.rcard--pass .rcard__head::after {
-  content: '';
-  position: absolute;
-  right: -2.25rem; top: -2.25rem;
-  width: 8rem; height: 8rem;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--pass-ink) 12%, transparent);
-  z-index: -1;
-}
-.rcard--pattern .rcard__head {
-  background-image: repeating-linear-gradient(135deg, color-mix(in srgb, var(--pass-ink) 12%, transparent) 0 6px, transparent 6px 14px);
-}
-.rcard__country {
-  margin: 0 0 2px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.rcard--pass .rcard__uni button { color: inherit; }
-.rcard--pass .rcard__uni button:focus-visible { outline-color: var(--pass-ink); }
-.rcard--pass .rcard__prog,
-.rcard--pass .rcard__per,
-.rcard--pass .rcard__amount--unknown { color: var(--pass-ink); }
-.rcard--pass .rcard__lines { border-top: 0; }
-.rcard--pass.is-open { border-color: var(--pass); box-shadow: 0 0 0 2px var(--pass); }
-.rcard--pass.is-rejected .rcard__head { filter: grayscale(0.75); }
-.rcard.is-rejected { background: var(--surface-sunken); }
-.rcard.is-rejected .rcard__uni button { text-decoration: line-through; text-decoration-color: var(--ink-faint); }
-.rcard__head { display: flex; justify-content: space-between; gap: var(--space-3); align-items: flex-start; }
-.rcard__names { min-width: 0; }
-.rcard__uni { font-size: var(--text-md); line-height: 1.25; margin: 0; }
-.rcard__uni button {
-  all: unset;
-  cursor: pointer;
-  font-family: var(--font-display);
-  font-weight: 800;
-  color: var(--ink);
-}
-.rcard__uni button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
-.rcard__uni button:hover { text-decoration: underline; text-underline-offset: 3px; }
-.rcard__prog { margin: 2px 0 0; font-size: var(--text-xs); color: var(--ink-muted); }
-.rcard__price { display: flex; flex-direction: column; align-items: flex-end; text-align: right; flex: none; max-width: 45%; }
-.rcard__amount { font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; line-height: 1.1; white-space: nowrap; }
-.rcard__amount--unknown { font-family: var(--font-ui); font-size: var(--text-sm); font-weight: 700; color: var(--ink-muted); white-space: normal; }
-.rcard__per { font-size: 0.72rem; color: var(--ink-muted); line-height: 1.3; }
+/* A programme on Find is a pass (src/styles/pass.css); these are its three
+   answers, shared with the opened programme and the one-at-a-time card. */
 .rcard__lines { margin: 0; display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
 .rcard__line {
   display: grid;
@@ -1182,12 +1026,7 @@
 .rcard__line dd { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.5rem; min-width: 0; }
 .rcard__note { font-size: var(--text-xs); color: var(--ink-muted); overflow-wrap: anywhere; }
 .rcard__foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-1) var(--space-3); font-size: var(--text-xs); color: var(--ink-muted); }
-.rcard__source { display: inline-flex; align-items: center; gap: 0.4rem; }
-.rcard__dot { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--accent); flex: none; }
 .rcard__passed { color: var(--risk); }
-.rcard__decide { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
-.rcard__decide > div { flex: 0 1 auto; }
-.rcard__detail { border-top: 1px solid var(--rule); padding-top: var(--space-3); min-width: 0; }
 
 @media (max-width: 520px) {
   .rcard__line { grid-template-columns: 5.75rem minmax(0, 1fr); }
@@ -1240,7 +1079,6 @@
    each programme the same questions on one line. */
 
 .rcard__compare[aria-pressed='true'] { background: var(--ink); color: var(--ink-inverted); border-color: var(--ink); }
-.rcard__decide .rcard__compare { margin-left: auto; }
 
 .compare-tray {
   position: sticky;
@@ -1636,7 +1474,7 @@
 /* Night panels (the research moment, the reveal, one-at-a-time, the plan's
    board, the night globe): the action is an ink pill on paper, which would
    vanish on night, so inside them the same token is the warm glow. */
-.reveal, .triage, .board, .globe--night {
+.reveal, .board, .globe--night {
   --sun: var(--glow);
   --sun-hover: #FFFFFF;
   --sun-ink: #111114;
@@ -1793,9 +1631,6 @@ button.globe__edge { cursor: pointer; }
 /* The triage's night globe (concept P): the route to the programme on the
    table, turning as each answer brings the next one; the card sits over its
    lower part. */
-.triage { --triage-pad: var(--space-5); }
-.triage__globe { margin: 0 calc(-1 * var(--triage-pad)); }
-.triage__card--over { position: relative; z-index: 1; margin-top: calc(-1 * (var(--space-4) + var(--card-over))); }
 .route--steady { position: relative; }
 .route--steady .route__note {
   position: absolute; top: var(--space-2); left: 50%; transform: translateX(-50%);

@@ -61,6 +61,11 @@ function makeRow(overrides: Partial<ProgramResult> = {}): ProgramResult {
   } as unknown as ProgramResult;
 }
 
+/** Find keeps the view switch, regions and filters behind one button. */
+function openFilters() {
+  if (!screen.queryByTestId('find-more')) fireEvent.click(screen.getByTestId('find-filters'));
+}
+
 beforeEach(() => {
   decide.mockClear();
   saveNotes.mockClear();
@@ -132,6 +137,7 @@ describe('rejecting a programme', () => {
 describe('filter labels', () => {
   it('offers readable statuses, not raw enum tokens', () => {
     render(<ShortlistScreen />);
+    openFilters();
     const eligibility = screen.getByLabelText('Eligibility');
 
     expect(eligibility).toHaveTextContent('Met');
@@ -140,6 +146,7 @@ describe('filter labels', () => {
 
   it('keeps the enum as the option value, so filtering still works', () => {
     render(<ShortlistScreen />);
+    openFilters();
     const option = screen
       .getByLabelText('Eligibility')
       .querySelector('option[value="MET"]');
@@ -157,7 +164,7 @@ describe('Find search', () => {
 
   it('filters by university, programme and country without changing the saved results', () => {
     render(<ShortlistScreen />);
-    const search = screen.getByPlaceholderText('Search universities, programmes or countries…');
+    const search = screen.getByTestId('find-search');
     expect(screen.getByTestId('card-result-1')).toBeInTheDocument();
     fireEvent.change(search, { target: { value: 'Toronto' } });
     expect(screen.queryByTestId('card-result-1')).not.toBeInTheDocument();
@@ -169,8 +176,11 @@ describe('Find search', () => {
   it('opens a source-backed result and compares only selected programmes', () => {
     render(<ShortlistScreen />);
     fireEvent.click(screen.getByTestId('card-open-result-1'));
-    expect(screen.getByTestId('card-open-result-1')).toHaveAttribute('aria-expanded', 'true');
-    fireEvent.click(screen.getByTestId('compare-result-1'));
+    // On a phone the opened programme is the screen, its pass head on top.
+    const sheet = screen.getByTestId('sheet-result-1');
+    expect(within(sheet).getByRole('heading', { name: 'Groningen' })).toBeInTheDocument();
+    fireEvent.click(within(sheet).getByTestId('compare-result-1'));
+    fireEvent.click(screen.getByTestId('sheet-close'));
     expect(screen.getByTestId('compare-tray')).toHaveTextContent('University of Groningen');
     expect(screen.getByTestId('compare-tray')).toHaveTextContent('1 picked');
   });
@@ -318,8 +328,8 @@ describe('the cards view', () => {
     render(<ShortlistScreen />);
     expect(screen.queryByTestId('shortlist-table')).toBeNull();
     const card = screen.getByTestId('card-result-1');
-    expect(card).toHaveTextContent('1,848 USD');
-    expect(card).toHaveTextContent('a year after grants, if awarded');
+    expect(card).toHaveTextContent('1,848');
+    expect(card).toHaveTextContent('USD a year, if awarded');
   });
 
   it('keeps requirements, profile and money as three separate lines with their reasons', () => {
@@ -348,14 +358,25 @@ describe('the cards view', () => {
     expect(card).not.toHaveTextContent('More text.');
   });
 
-  it('decides with the same controls as the table', async () => {
+  it('keeps a programme from its pass, with the same decision as the table', async () => {
     render(<ShortlistScreen />);
-    fireEvent.click(screen.getByTestId('approve-result-1'));
+    fireEvent.click(screen.getByTestId('keep-result-1'));
     await waitFor(() => expect(decide).toHaveBeenCalledWith('result-1', 'approved', '', ''));
+  });
+
+  it('opens with every answer, the reason asked for and kept, as in the table', async () => {
+    row = makeRow();
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('card-more-result-1'));
+    fireEvent.click(screen.getByTestId('reject-result-1'));
+    fireEvent.click(screen.getByTestId('reject-chip-cost-result-1'));
+    fireEvent.click(screen.getByTestId('reject-save-result-1'));
+    await waitFor(() => expect(decide).toHaveBeenCalledWith('result-1', 'rejected', 'cost', ''));
   });
 
   it('switches to the table and remembers it', () => {
     render(<ShortlistScreen />);
+    openFilters();
     fireEvent.click(screen.getByTestId('view-table'));
     expect(screen.getByTestId('shortlist-table')).toBeInTheDocument();
     expect(window.localStorage.getItem('ashyq.shortlistView')).toBe('table');
@@ -440,6 +461,7 @@ describe('region chips', () => {
 
   it('counts every result by region', () => {
     render(<ShortlistScreen />);
+    openFilters();
     expect(screen.getByTestId('region-all')).toHaveTextContent('All 4');
     expect(screen.getByTestId('region-europe')).toHaveTextContent('Europe 2');
     expect(screen.getByTestId('region-americas')).toHaveTextContent('Americas 1');
@@ -449,6 +471,7 @@ describe('region chips', () => {
 
   it('filters the list to one region, and back', () => {
     render(<ShortlistScreen />);
+    openFilters();
     fireEvent.click(screen.getByTestId('region-europe'));
     expect(screen.getByTestId('region-europe')).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByTestId('card-result-1')).toBeInTheDocument();

@@ -13,38 +13,19 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { ProgrammeRoute } from '@/components/ProgrammeRoute';
-import { StatusChip } from '@/components/primitives';
-import {
-  admissionsFitTone, date, eligibilityTone, fundingClassTone, money,
-} from '@/lib/format';
+import { Check, Question, X } from '@phosphor-icons/react';
+import { PassRoute } from '@/components/PassRoute';
+import { passPrice, passStyle } from '@/components/Pass';
+import { DeadlineNote, ThreeAnswers, sourceNote } from '@/components/ResultCard';
+import { money } from '@/lib/format';
 import { orderCaveats } from '@/lib/caveats';
-import type { LatLon } from '@/lib/globe';
+import type { PassColour } from '@/lib/passColour';
 import type { ProgramResult, UserDecision } from '@/types';
-
-/** How much of the globe the card sits over, as in concept P. */
-const CARD_OVER = 48;
-
-/**
- * The globe takes what the screen has left once the card and the three
- * answers are above the tab bar (defect I27). Measured in Unimatch's shell on
- * a 412 x 839 phone: the header is 117 px (brand, then the applicant), the
- * card and answers need about 520 px below it, the floating navigation capsule
- * takes 78 px with its gap,
- * and a long programme name or caveat adds up to 40 px - 786 px before any
- * globe. What is left is the globe's visible band, up to 152 px; under 72 px
- * a route cannot be read, so a short phone keeps the card alone.
- */
-export const GLOBE_FLOOR = 786;
-export function globeHeightFor(viewportHeight: number): number {
-  const band = Math.min(152, viewportHeight - GLOBE_FLOOR);
-  return band < 72 ? 0 : band + CARD_OVER;
-}
 
 const REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
 
 export function Triage({
-  queue, total, decide, onClose, home,
+  queue, total, decide, onClose, home, colourOf, intake = '',
 }: {
   /** Undecided rows in the order the screen shows them. */
   queue: ProgramResult[];
@@ -52,32 +33,18 @@ export function Triage({
   total: number;
   decide: (id: string, decision: UserDecision, reason: string, notes: string) => Promise<void>;
   onClose: () => void;
-  /**
-   * The applicant's home: with it, a night globe behind the card turns to
-   * each programme's route (concept P). Undefined leaves the globe out.
-   */
-  home?: (LatLon & { city: string }) | null;
+  /** Home's city: the pass draws its route there. Without it, no route. */
+  home?: string | null;
+  /** Each country's pass colour (lib/passColour). */
+  colourOf?: (country: string) => PassColour | undefined;
+  /** "Fall 2027", for the pass's kicker. */
+  intake?: string;
 }) {
   const [asking, setAsking] = useState(false);
   const [reason, setReason] = useState('');
   const [busy, setBusy] = useState(false);
   const current = queue[0];
   const title = useRef<HTMLHeadingElement>(null);
-  const [globeHeight, setGlobeHeight] = useState(() => globeHeightFor(typeof window === 'undefined' ? 900 : window.innerHeight));
-  // A phone turned on its side has a new height; a phone's address bar
-  // folding away changes only the height, and must not make the globe come
-  // and go while the page scrolls - so only a new width re-measures.
-  useEffect(() => {
-    let width = window.innerWidth;
-    const onResize = () => {
-      if (window.innerWidth === width) return;
-      width = window.innerWidth;
-      setGlobeHeight(globeHeightFor(window.innerHeight));
-    };
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
-  const showGlobe = home !== undefined && globeHeight > 0;
   // Each new programme (and the final "every programme has an answer") takes
   // focus on its heading: the button that was pressed may be gone, and a
   // screen reader should hear which university is on the table now.
@@ -143,90 +110,73 @@ export function Triage({
   // What explains the figures first, then whether the aid can be won.
   const caveats = orderCaveats(gap?.warnings);
 
+  const price = passPrice(current);
+  // The next two programmes, in their colours, fanned behind the card: how
+  // many are left, at a glance. Decoration only - the count says it in words.
+  const behind = queue.slice(1, 3);
+
   return (
     <section className="triage" aria-labelledby="triage-title" data-testid="triage">
       <div className="triage__top">
         <span className="triage__count" aria-live="polite">{position} of {total} to decide</span>
-        <button type="button" className="btn btn--sm triage__close" onClick={onClose} data-testid="triage-close">
+        <button type="button" className="triage__back" onClick={onClose} data-testid="triage-close">
           Back to the list
         </button>
       </div>
 
-      {showGlobe && (
-        <div className="triage__globe">
-          <ProgrammeRoute
-            result={current}
-            home={home}
-            tone="night"
-            height={globeHeight}
-            covered={CARD_OVER}
-            steady
-            testId="triage-globe"
+      <div className="triage__deck">
+        {behind.map((r, i) => (
+          <span
+            key={r.id}
+            className={`triage__behind triage__behind--${i + 1}`}
+            style={passStyle(colourOf?.(r.country))}
+            aria-hidden="true"
           />
-        </div>
-      )}
-
-      <article
-        className={`triage__card${showGlobe ? ' triage__card--over' : ''}`}
-        style={showGlobe ? { ['--card-over' as string]: `${CARD_OVER}px` } : undefined}
-        data-testid={`triage-card-${current.id}`}
-      >
-        <div className="triage__head">
-          <h2 className="triage__uni" id="triage-title" tabIndex={-1} ref={title}>{current.university}</h2>
-          <p className="triage__prog">{current.program} · {current.city}, {current.country}</p>
-        </div>
-
-        <dl className="triage__judgements">
-          <div>
-            <dt>Eligibility</dt>
-            <dd><StatusChip status={current.eligibility} tone={eligibilityTone[current.eligibility]} /></dd>
+        ))}
+        <article
+          className={`triage__card pass${colourOf?.(current.country)?.pattern ? ' pass--pattern' : ''}`}
+          style={passStyle(colourOf?.(current.country))}
+          data-testid={`triage-card-${current.id}`}
+        >
+          <p className="pass__country">{[current.country, intake].filter(Boolean).join(' · ')}</p>
+          <h2 className="triage__city" id="triage-title" tabIndex={-1} ref={title}>
+            {current.city || current.university}
+            {/* Two programmes can share a city: the heading names which one. */}
+            <span className="visually-hidden">: {current.university}, {current.program}</span>
+          </h2>
+          <p className="triage__prog">{current.university} · {current.program}</p>
+          <PassRoute city={current.city} home={home} />
+          <p className="triage__price">
+            {price.amount ? (
+              <>
+                <strong>{price.amount}</strong>
+                <span>{gap?.gap?.currency} a year left to pay{aid > 0 ? ', if awarded' : ''}</span>
+              </>
+            ) : (
+              <>
+                <strong className="triage__price--none">Cost not computed</strong>
+                <span title={gap?.reason}>{price.unit}</span>
+              </>
+            )}
+          </p>
+          {gap?.computable && gap.gap && gap.total_cost && aid > 0 && (
+            <p className="triage__sub" data-testid="triage-price">
+              price {money({ ...gap.total_cost, academic_year: null })} before grants
+            </p>
+          )}
+          <div className="triage__inner">
+            <ThreeAnswers result={current} />
+            <p className="triage__source">
+              <DeadlineNote result={current} /> · {sourceNote(current)}
+            </p>
+            {caveats.length > 0 && (
+              <ul className="triage__caveats" data-testid="triage-caveats">
+                {caveats.map((text) => <li key={text}>{text}</li>)}
+              </ul>
+            )}
           </div>
-          <div>
-            <dt>Admissions fit</dt>
-            <dd><StatusChip status={current.admissions_fit} tone={admissionsFitTone[current.admissions_fit]} /></dd>
-          </div>
-          <div>
-            <dt>Funding</dt>
-            <dd>
-              <StatusChip
-                status={current.best_funding_classification}
-                tone={fundingClassTone[current.best_funding_classification]}
-              />
-            </dd>
-          </div>
-        </dl>
-
-        <dl className="triage__facts">
-          <div>
-            <dt>Left to pay a year</dt>
-            <dd>
-              {gap?.computable && gap.gap
-                ? money({ ...gap.gap, academic_year: null })
-                : <span className="triage__muted" title={gap?.reason}>not computable</span>}
-              {gap?.computable && gap.gap && gap.total_cost && aid > 0 && (
-                <span className="triage__sub" data-testid="triage-price">
-                  if awarded · price {money({ ...gap.total_cost, academic_year: null })}
-                </span>
-              )}
-            </dd>
-          </div>
-          <div>
-            <dt>Deadline</dt>
-            <dd>
-              {current.admission_deadline ? date(current.admission_deadline) : <span className="triage__muted">not found</span>}
-              {current.deadline_passed && ' · passed'}
-              {current.previous_cycle_deadline && (
-                <span className="triage__sub">previous cycle {date(current.previous_cycle_deadline)}</span>
-              )}
-            </dd>
-          </div>
-        </dl>
-        {caveats.length > 0 && (
-          <ul className="triage__caveats" data-testid="triage-caveats">
-            {caveats.map((text) => <li key={text}>{text}</li>)}
-          </ul>
-        )}
-      </article>
+        </article>
+      </div>
 
       {asking ? (
         <div className="triage__reason" data-testid="triage-reason" ref={reasons}>
@@ -250,7 +200,7 @@ export function Triage({
               onClick={() => answer('rejected', reason)}
               data-testid="triage-reject-save"
             >Save and next</button>
-            <button type="button" className="btn btn--sm triage__close" onClick={() => setAsking(false)}>
+            <button type="button" className="btn btn--sm" onClick={() => setAsking(false)}>
               Cancel
             </button>
           </div>
@@ -265,7 +215,7 @@ export function Triage({
             ref={notForMe}
             data-testid="triage-reject"
           >
-            <span className="triage__icon" aria-hidden="true">✕</span>Not for me
+            <span className="triage__icon" aria-hidden="true"><X size={22} weight="bold" /></span>Not for me
           </button>
           <button
             type="button"
@@ -274,7 +224,7 @@ export function Triage({
             onClick={() => answer('maybe')}
             data-testid="triage-maybe"
           >
-            <span className="triage__icon" aria-hidden="true">?</span>Maybe
+            <span className="triage__icon" aria-hidden="true"><Question size={22} weight="bold" /></span>Maybe
           </button>
           <button
             type="button"
@@ -283,7 +233,7 @@ export function Triage({
             onClick={() => answer('approved')}
             data-testid="triage-approve"
           >
-            <span className="triage__icon" aria-hidden="true">✓</span>Keep
+            <span className="triage__icon" aria-hidden="true"><Check size={22} weight="bold" /></span>Keep
           </button>
         </div>
       )}
