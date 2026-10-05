@@ -13,7 +13,7 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | [draft6](data/ground_truth.draft6.json) | 61/219 | 10/10 | 1/9 / 1/10 | 0/5 / 0/61 | 0/210 |
 | [draft7](data/ground_truth.draft7.json) | 62/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/62 | 0/210 |
 | **[reviewed](data/ground_truth.reviewed.json)** | 62/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/62 | 0/210 |
-| [draft8](data/ground_truth.draft8.json) | 74/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/74 | 0/208 |
+| [draft8](data/ground_truth.draft8.json) | 76/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/74 | 0/208 |
 
 **Scorer definition changed 2026-10-05 (owner: "Делай по своим рекомендациям", decisions D1–D4), and
 every published report was regenerated from the same frozen capture.** Two new rates and four rules:

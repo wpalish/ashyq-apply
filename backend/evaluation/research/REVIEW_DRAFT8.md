@@ -5,8 +5,8 @@ was read on the official page that day; excerpts in
 [the dataset](data/ground_truth.draft8.json) are verbatim. **Nothing here is
 signed**: changed cases are `draft` until the owner reviews them.
 
-**74/220 known labels** (signed corpus: 62/220). Canonical SHA-256
-`c46c21ef837514922176abcdbcfd884c517edb3d1f3b6e078282ef5bd6890eeb`.
+**76/220 known labels** (signed corpus: 62/220). Canonical SHA-256
+`5dc005fa6f96e90250b4a1c42b7c96407448dbbe0a7bd6da2ac9e4680fe346a9`.
 
 ## Why
 
@@ -62,3 +62,10 @@ pipeline's tuition claim. A deadline written without a year is not dated.
 "No band below 6.0" is 6.0 per band, as UBC's signed label. The academic year
 is written as the page writes it ("2027-2028"); the pipeline writes "2027/28",
 which the scorer currently treats as a different scope — an owner decision.
+
+## Added after gpt-6-astra's V10 expert leads (re-read 2026-10-05)
+
+| Case | Field | Value | Source |
+|---|---|---|---|
+| Delft | `deadline` | 2027-01-15 ("closes on 15 January 2027", CSE selection 2027/2028) | [selection procedure](https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/selection-procedure) |
+| Delft | `tuition` | EUR 20,563, institutional rate BSc 2027/2028 (non-EU/EEA) | [tuition fee & finances](https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances) |

@@ -640,19 +640,58 @@
         },
         {
           "key": "deadline",
-          "status": "unknown",
-          "value": null,
-          "evidence": [],
+          "status": "known",
+          "value": "2027-01-15",
+          "evidence": [
+            {
+              "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/selection-procedure",
+              "excerpt": "We can welcome 590 new bachelor students for the academic year 2027-2028. There are 345 spots reserved for the English track and 245 spots for the Bilingual track (Dutch-English). The application opens in October 2026 and closes on 15 January 2027.",
+              "scope": {
+                "university": "Delft University of Technology",
+                "programme": "Computer Science and Engineering",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
           "critical": true,
-          "notes": "Dates & Deadlines page: '15 January (23:59 CET)' for Numerus Clausus programmes incl. Computer Science and Engineering, international diploma; no year is printed, so no dated deadline is recorded."
+          "notes": "Matching & Selection (numerus fixus) procedure 2027/2028. Lead from gpt-6-astra's V10 expert journal; re-read on the official page 2026-10-05. The general Dates & Deadlines page prints '15 January (23:59 CET)' without a year."
         },
         {
           "key": "tuition",
-          "status": "unknown",
-          "value": null,
-          "evidence": [],
+          "status": "known",
+          "value": {
+            "amount": 20563.0,
+            "currency": "EUR"
+          },
+          "evidence": [
+            {
+              "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances",
+              "excerpt": "Institutional rate 2026/2027 2027/2028 Institutional rate BSc € 19.906 MSc € 25.633 BSc € 20.563 MSc € 26.479",
+              "scope": {
+                "university": "Delft University of Technology",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "non-EU/EEA",
+                "qualification": null,
+                "academic_year": "2027/2028"
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
           "critical": true,
-          "notes": "The BSc International '5. Tuition fees' page states no amount in its HTML or rendered text (fee tool); not established."
+          "notes": "Institutional rate, BSc, 2027/2028. The same page: 'You pay the institutional rate if you do not have any of the following nationalities: Dutch or that of another EU/EEA country, Swiss, or Surinamese; or if you do not have a Dutch residence permit...'. Lead from gpt-6-astra's V10 expert journal; re-read 2026-10-05."
         },
         {
           "key": "mandatory_fees",

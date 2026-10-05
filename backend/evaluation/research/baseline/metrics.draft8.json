@@ -13,7 +13,7 @@
       ]
     },
     {
-      "answerable_claims": 2,
+      "answerable_claims": 4,
       "case_id": "delft",
       "correct_claims": 0,
       "country": "Netherlands",
@@ -161,7 +161,7 @@
     ],
     "source_capture_sha256": "a59b5625707472d934ee3b50292b45b2c6c5703d23c809078d8f7a0dd0d7fae7"
   },
-  "dataset_sha256": "c46c21ef837514922176abcdbcfd884c517edb3d1f3b6e078282ef5bd6890eeb",
+  "dataset_sha256": "5dc005fa6f96e90250b4a1c42b7c96407448dbbe0a7bd6da2ac9e4680fe346a9",
   "dataset_version": "2026-10-05.draft8",
   "fields": {
     "country_credential": {
@@ -209,7 +209,7 @@
         "value": 0.0
       },
       "recall": {
-        "denominator": 5,
+        "denominator": 6,
         "numerator": 0,
         "value": 0.0
       }
@@ -932,7 +932,7 @@
         "value": 0.0
       },
       "recall": {
-        "denominator": 3,
+        "denominator": 4,
         "numerator": 0,
         "value": 0.0
       }
@@ -950,12 +950,12 @@
       "value": 0.0
     },
     "claim_recall": {
-      "denominator": 74,
+      "denominator": 76,
       "numerator": 0,
       "value": 0.0
     },
     "claim_recall_same_page": {
-      "denominator": 74,
+      "denominator": 76,
       "numerator": 0,
       "value": 0.0
     },
