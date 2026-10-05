@@ -1634,3 +1634,29 @@ I93 the back pass on Home showed half a city name; I94 "Full ride" wrapped insid
 decide buttons were explained by a footnote, now each has its label.
 
 Caveat for Атлас: Fraunces has no Cyrillic, so ru/kk would need another serif with Kazakh letters.
+
+## 31. Round 10: «Пропуск» developed, joined with «Горизонт» (2026-10-05)
+
+Owner: "мне нравится 3 вариант, давай его развивать, можно попробовать объединить с горизонт редизайном".
+
+From «Пропуск»: a programme is a pass, each country has its colour, kept programmes stack like a wallet,
+light grey ground, Inter 800, the floating capsule tab bar. From «Горизонт»: the night reveal with the
+globe — now one route colour per country —, the budget ladder, the price arithmetic, the deadline board,
+share stories and deciding one programme at a time.
+
+Eight phone screens (`concepts/concept-r10-propusk-1.webp`, `-2.webp`): Home (passes + next deadline),
+results reveal (night globe, routes in country colours), Find (budget ladder + passes), the pass opened
+(price − grant = left to pay, what the grant covers, the quoted line), decide (fanned stack), Plan
+(deadlines as tickets), profile (country chips that set the colours), share as a story.
+
+Review (I96–I99), fixed before showing:
+- I96 — accessibility, the important one: round 9's passes put white text on bright fills at 2.3–2.8:1
+  (AA needs 4.5). Passes now carry ink text, 7.0–11.3:1; colour is the fill, never the text.
+- I97 — the budget ladder's labels ran into each other where a band was narrow; each band now has a floor
+  width and a two-line label (count, range).
+- I98 — the reveal globe sat so low that Astana was under the button; raised.
+- I99 — on the share screen the kind chips covered the title and "Close"; the preview is scaled to fit,
+  and the tab bar gives way to Save image / Share… because the sheet is modal.
+
+Colour rule for later: eight pass colours (NL, BE, JP, DE, CA, GB, KR, AT) are assigned to the countries
+the applicant picks, in order; a ninth country reuses a hue with a pattern, never a ninth colour.
