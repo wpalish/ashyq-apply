@@ -412,14 +412,17 @@ _APPLICATION_PERIOD = re.compile(
     rf"\s*(?:to|until|[–-])\s*({_A_DATE})",
     re.IGNORECASE,
 )
-#: Plan rule DL-2 (error analysis 2026-10-05), off until a paired run passes.
+#: Plan rule DL-2 (error analysis 2026-10-05). On by default since 2026-10-05
+#: (owner: "Да"): three paired runs on exa_mcp, zero stable losses; NTU's
+#: deadline is right with its qualification wherever the page is reached,
+#: and the first readers never find it.
 #: Three forms the readers above never match, each found on a cohort page:
 #: abbreviated months (Aalto "Application period: 7 Jan 2027 – 22 Jan 2027"),
 #: a date that comes before its label (UBC "January 15, 2027 (11:59 p.m. PST)
 #: Applications due"), and a window table whose catch-all row is the one an
 #: unlisted qualification falls under (NTU "All other international
 #: qualifications not listed below ... 15 Oct 2026 - 20 Jan 2027").
-DEADLINE_V2 = False
+DEADLINE_V2 = True
 _MONTH_ABBREVIATIONS = r"Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept|Sep|Oct|Nov|Dec"
 _ANY_MONTH = rf"(?:{_MONTH_NAMES}|(?:{_MONTH_ABBREVIATIONS})\.?)(?![a-z])"
 _A_DATE_V2 = (
