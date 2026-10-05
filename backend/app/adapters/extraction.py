@@ -849,6 +849,10 @@ def extract_intake_terms(text: str, builder: ClaimBuilder) -> list[Claim]:
         sentence = flat[start:end].strip()
         if _NOT_AN_INTAKE.search(sentence):
             continue
+        if m.group("month") and re.search(r"\d", flat[m.start("month") : m.start("my")]):
+            # "Beginning January 21, 2026, TOEFL score reports ..." (Groningen):
+            # a day names an event; a term of study is a month or a season.
+            continue
         term_at = m.start("season") if m.group("season") else m.start("month")
         if _ENDS_A_RANGE.search(flat[max(0, term_at - 24) : term_at]):
             # "Online Application ... to 19 March 2026" closes a window; the
