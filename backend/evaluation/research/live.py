@@ -616,6 +616,12 @@ def main() -> None:
         "window table's catch-all qualification row",
     )
     parser.add_argument(
+        "--euro-grouping",
+        action="store_true",
+        help="plan rule EU-1: continental euro amounts ('€ 20.563', '€ 18.750,00') read a "
+        "dot as a thousands separator and a comma as the cents mark",
+    )
+    parser.add_argument(
         "--walker-subject-cap",
         action="store_true",
         help="experiment ER-10: a catalogue walk reads at most three leads that name none "
@@ -722,6 +728,10 @@ def main() -> None:
             from app.adapters import extraction as extraction_module
 
             extraction_module.DEADLINE_V2 = True
+        if args.euro_grouping:
+            from app.adapters import extraction as euro_module
+
+            euro_module.EURO_GROUPING = True
         if args.walker_subject_cap:
             from app.adapters.discovery import catalog_walker
 
@@ -816,6 +826,7 @@ def main() -> None:
                         *(["--navigation-field-leads"] if args.navigation_field_leads else []),
                         *(["--walker-subject-cap"] if args.walker_subject_cap else []),
                         *(["--deadline-v2"] if args.deadline_v2 else []),
+                        *(["--euro-grouping"] if args.euro_grouping else []),
                         *(["--shared-query-budget"] if args.shared_query_budget else []),
                         *(["--applicant-academic-year"] if args.applicant_academic_year else []),
                         "--search-funding-fallback"

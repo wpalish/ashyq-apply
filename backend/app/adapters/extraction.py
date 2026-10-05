@@ -518,8 +518,37 @@ _MONTHS = {
 }
 
 
+#: Euro amounts written the continental way: a dot groups thousands and a comma
+#: marks cents (Groningen "€ 20.563", Delft "€ 18.750,00"). Without this rule
+#: "€ 20.563" reads as 20.56 euros, a tuition fee below the floor.
+EURO_GROUPING = False
+_EURO_GROUPED = re.compile(
+    r"(?:€|EUR)\s*(\d{1,3}(?:\.\d{3})+)(?:,(\d{2}))?(?![\d.,]\d)"
+    r"|(\d{1,3}(?:\.\d{3})+)(?:,(\d{2}))?\s*(?:€|EUR)\b",
+    re.IGNORECASE,
+)
+
+
+def _euro_grouped(m: re.Match[str]) -> tuple[float, str]:
+    whole, cents = (m.group(1), m.group(2)) if m.group(1) else (m.group(3), m.group(4))
+    return float(whole.replace(".", "")) + (float(cents) / 100 if cents else 0.0), "EUR"
+
+
+def _money_search(text: str) -> re.Match[str] | None:
+    """The first money marker, a grouped euro amount included when the rule is on."""
+    m = _MONEY.search(text)
+    grouped = _EURO_GROUPED.search(text) if EURO_GROUPING else None
+    if grouped is not None and (m is None or grouped.start() <= m.start()):
+        return grouped
+    return m
+
+
 def parse_money(text: str) -> tuple[float, str] | None:
     m = _MONEY.search(text)
+    if EURO_GROUPING:
+        grouped = _EURO_GROUPED.search(text)
+        if grouped is not None and (m is None or grouped.start() <= m.start()):
+            return _euro_grouped(grouped)
     if not m:
         return None
     if m.group(2):
@@ -1094,9 +1123,9 @@ def _population_amounts(
         for i, name in enumerate(names):
             stop = names[i + 1].start() if i + 1 < len(names) else len(text)
             segment = text[name.end() : min(stop, name.end() + 120)]
-            money = _MONEY.search(segment)
+            money = _money_search(segment)
             population = population_named(name.group(0))
-            parsed = parse_money(money.group(0)) if money else None
+            parsed = parse_money(segment[money.start() :]) if money else None
             if money is None or parsed is None or population is None:
                 continue
             amount, currency = parsed
