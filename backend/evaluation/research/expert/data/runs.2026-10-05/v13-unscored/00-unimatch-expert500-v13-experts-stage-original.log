@@ -1,0 +1,21 @@
+{"case": "aalto", "state": "checkpoint", "turn": 1, "facts": 0, "journal_sha256": "947cdbcb8f1acc7d84fc085036c6c29d34424069a7fd244d10ecfbd256007cdc", "active_ms": 8598}
+{"case": "groningen", "state": "checkpoint", "turn": 1, "facts": 0, "journal_sha256": "947cdbcb8f1acc7d84fc085036c6c29d34424069a7fd244d10ecfbd256007cdc", "active_ms": 8923}
+{"case": "delft", "state": "checkpoint", "turn": 1, "facts": 0, "journal_sha256": "947cdbcb8f1acc7d84fc085036c6c29d34424069a7fd244d10ecfbd256007cdc", "active_ms": 10676}
+{"case": "delft", "mode": "expert_actions", "run_id": 37363418389, "state": "dispatched", "source": "e327498d605d3dbe14da177a8a535c664818ce9b"}
+{"case": "aalto", "mode": "expert_actions", "run_id": 37363415021, "state": "dispatched", "source": "e327498d605d3dbe14da177a8a535c664818ce9b"}
+{"case": "groningen", "mode": "expert_actions", "run_id": 37363415314, "state": "dispatched", "source": "e327498d605d3dbe14da177a8a535c664818ce9b"}
+{"case": "groningen", "state": "observed", "actions": 1, "active_ms": 55523, "reads": 1, "queries": 0}
+{"case": "delft", "state": "observed", "actions": 1, "active_ms": 61339, "reads": 1, "queries": 0}
+{"case": "groningen", "state": "checkpoint", "turn": 2, "facts": 0, "journal_sha256": "947cdbcb8f1acc7d84fc085036c6c29d34424069a7fd244d10ecfbd256007cdc", "active_ms": 64869}
+{"case": "delft", "state": "checkpoint", "turn": 2, "facts": 0, "journal_sha256": "947cdbcb8f1acc7d84fc085036c6c29d34424069a7fd244d10ecfbd256007cdc", "active_ms": 74960}
+{"case": "groningen", "state": "checkpoint", "turn": 3, "facts": 1, "journal_sha256": "aef930b3cadb6a05682932a7f836768b808c2f086890b2ef02aa3cb8e22a0dd9", "active_ms": 77767}
+{"case": "delft", "mode": "expert_actions", "run_id": 37363536608, "state": "dispatched", "source": "e327498d605d3dbe14da177a8a535c664818ce9b"}
+{"case": "groningen", "state": "checkpoint", "turn": 4, "facts": 4, "journal_sha256": "919c13162e87145badd8e49ab50c4048ce7dcccb4c6598563e11f791928b3fe2", "active_ms": 100102}
+{"case": "groningen", "mode": "expert_actions", "run_id": 37363581991, "state": "dispatched", "source": "e327498d605d3dbe14da177a8a535c664818ce9b"}
+{"case": "delft", "state": "observed", "actions": 2, "active_ms": 438112, "reads": 1, "queries": 1}
+{"case": "delft", "state": "checkpoint", "turn": 3, "facts": 0, "journal_sha256": "947cdbcb8f1acc7d84fc085036c6c29d34424069a7fd244d10ecfbd256007cdc", "active_ms": 446460}
+{"case": "delft", "mode": "expert_actions", "run_id": 37364223304, "state": "dispatched", "source": "e327498d605d3dbe14da177a8a535c664818ce9b"}
+{"case": "aalto", "state": "incomplete", "completion_kind": null, "validated": false, "found": [], "actions": 0, "active_ms": 918068}
+{"case": "delft", "state": "incomplete", "completion_kind": null, "validated": true, "found": [], "actions": 2, "active_ms": 932695}
+{"case": "groningen", "state": "incomplete", "completion_kind": null, "validated": true, "found": ["Q0"], "actions": 1, "active_ms": 933193}
+{"stage": "experts", "completed": 3, "stopped": true}

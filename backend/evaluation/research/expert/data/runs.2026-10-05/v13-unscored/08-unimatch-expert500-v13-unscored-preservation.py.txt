@@ -1,0 +1,37 @@
+"""Close the original transport-stopped V13 without seal, labels, repair or retry."""
+import gzip,hashlib,json,tarfile
+from pathlib import Path
+from datetime import UTC,datetime
+repo=Path('..').resolve();root=repo/'artifacts/expert-500/phase1-v13-2026-10-05'
+target=repo/'backend/evaluation/research/expert/data/runs.2026-10-05/v13-unscored'
+assert not target.exists()
+final=json.loads((root/'experts-results.json').read_text());stop=json.loads((root/'transport-batch-stop.json').read_text())
+assert final['stopped'] is True and len(final['results'])==3 and len(final['remaining_case_ids'])==7
+assert stop['reason']=='source_transport_audit_incomplete' and stop['case_id']=='aalto'
+assert not (root/'model-batch-stop.json').exists()
+assert not any(p.name in ('seal.json','comparison.json','expert-only-miss-diagnoses.json') for p in root.rglob('*'))
+paths=sorted(p for p in root.rglob('*') if p.is_file());assert paths and not any(p.is_symlink() for p in paths)
+records=[{'path':str(p.relative_to(root)),'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in paths]
+target.mkdir(parents=True);archive=target/'v13-originals.tar.gz'
+with archive.open('xb') as out:
+ with gzip.GzipFile(fileobj=out,mode='wb',mtime=0,filename='') as zipped:
+  with tarfile.open(fileobj=zipped,mode='w') as tar:
+   for p in paths:tar.add(p,arcname=str(p.relative_to(root)),recursive=False)
+with tarfile.open(archive,'r:gz') as tar:
+ assert len(tar.getmembers())==len(records)
+ for r in records:
+  raw=tar.extractfile(r['path']).read();assert len(raw)==r['bytes'] and hashlib.sha256(raw).hexdigest()==r['sha256']
+  assert hashlib.sha256((root/r['path']).read_bytes()).hexdigest()==r['sha256']
+extra=[Path('/tmp/unimatch-expert500-v13-experts-stage-original.log')]
+extra += [Path(f'/tmp/unimatch-expert500-v13-expert-delay-{id}-original.json') for id in (37363415021,37363536608,37363581991)]
+extra += [Path(f'/tmp/unimatch-expert500-v13-aalto-{n}-original.json') for n in ('final-workflow','final-job','check-run','check-annotations')]
+extra += [Path(__file__)]
+support=[]
+for i,p in enumerate(extra):
+ raw=p.read_bytes();name=f'{i:02d}-{p.name}'+('.txt' if p.suffix=='.py' else '')
+ with (target/name).open('xb') as out:out.write(raw)
+ support.append({'original':str(p),'snapshot':name,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()})
+value={'recorded_at':datetime.now(UTC).isoformat(),'status':'CLOSED_UNSCORED','reason':'source_transport_audit_incomplete','selected_source':'e327498d605d3dbe14da177a8a535c664818ce9b','frozen_ref':'expert500-phase1-v13-2026-10-05-e327498','trial_sha256':hashlib.sha256((root/'trial.json').read_bytes()).hexdigest(),'first_trigger_case':'aalto','expert_started':3,'expert_incomplete':3,'expert_unstarted':final['remaining_case_ids'],'baseline_completed':10,'baseline_reads':340,'baseline_queries':58,'original_file_count':len(records),'original_bytes':sum(r['bytes'] for r in records),'original_records':records,'archive':{'snapshot':archive.name,'bytes':archive.stat().st_size,'sha256':hashlib.sha256(archive.read_bytes()).hexdigest()},'record_count':len(support),'records':support,'worker_failure_observed':'The job was not acquired by Runner of type hosted even after multiple attempts','worker_job_runner_id':0,'worker_job_steps':[],'sealed':False,'reviewed62_labels_read':False,'score':None,'threshold40_measured':False,'batches50_admitted':False,'heldout150_untouched':True,'signed8_unselected':True,'provider_or_model_quota_workaround':False,'deployment_performed':False}
+with (target/'manifest.json').open('x') as out:out.write(json.dumps(value,indent=2)+'\n')
+for r in support:assert hashlib.sha256((target/r['snapshot']).read_bytes()).hexdigest()==r['sha256']
+print(json.dumps({'original_files':len(records),'original_bytes':value['original_bytes'],'archive_bytes':archive.stat().st_size,'archive_sha256':value['archive']['sha256'],'support_records':len(support),'manifest_sha256':hashlib.sha256((target/'manifest.json').read_bytes()).hexdigest()}))
