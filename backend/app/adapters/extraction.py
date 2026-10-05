@@ -1102,8 +1102,9 @@ _ACADEMIC_YEAR = re.compile(r"\b(20\d{2})\s*[-/–]\s*(?:20)?(\d{2})\b")
 #: Plan rule TY-1: a fee table row that prints its academic year ("non-EU/EEA
 #: 2027-2028 € 19800") records that year in the claim's scope. Without it the
 #: page-wide scope carries no year and a right fee for the right year is
-#: scored wrong-scope (Groningen, runs of 2026-10-05).
-TUITION_ROW_YEAR = False
+#: scored wrong-scope (Groningen, runs of 2026-10-05). On by default with AY-1
+#: since 2026-10-05 (owner: "да").
+TUITION_ROW_YEAR = True
 
 
 def _year_key(text: str) -> str | None:
