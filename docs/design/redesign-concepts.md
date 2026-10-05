@@ -1601,3 +1601,36 @@ A white floating capsule, B navy capsule, C full-width bar with a gold "lamp", D
 capsule was a glaring slab, so night uses a glass capsule (9 % white, blur) with a white active pill; day
 keeps the white capsule with a navy pill. Inactive tabs are icons only, so the build gives each an
 accessible name and a one-time hint on first visit.
+
+## 30. Round 9: away from navy and yellow (2026-10-05)
+
+Owner: Y «Орбита» still "not it" — move further from this look, find new references, keep the strong
+decisions. Both «Горизонт» and Unimatch are navy + yellow + a globe, so this round drops all three.
+
+**Kept (K1–K7):** three labelled judgements, never a bare chip; the price left to pay a year as the
+headline, always "if awarded"; a source and read date on every fact, demo data labelled, unknown stays
+unknown; decide one programme at a time with a reason kept for "no"; the route from home to the city;
+the floating capsule tab bar (owner's pick A); no score, %, or "chance".
+
+**References (new):** Mobbin's public [education](https://mobbin.com/explore/mobile/app-categories/education)
+(Babbel's single colour card, Headway's cream editorial), [travel](https://mobbin.com/explore/mobile/app-categories/travel-transportation)
+(Culture Trip, Kayak) and [finance](https://mobbin.com/explore/mobile/app-categories/finance) (Apple Wallet's
+stacked passes, Revolut) categories, and its site styles — [editorial](https://mobbin.com/explore/sites/styles/editorial-design)
+(KOBU), [Swiss](https://mobbin.com/explore/sites/styles/swiss-design), [clean](https://mobbin.com/explore/sites/styles/clean-design).
+
+| | 1 «Атлас» | 2 «Табло» | 3 «Пропуск» |
+|---|---|---|---|
+| Idea | a travel magazine: each programme is a place | Swiss grid + departures board | a wallet of passes, one colour per country |
+| Type | Fraunces serif + Inter | Inter 800 + JetBrains Mono | Inter 800 |
+| Colour | paper, ink, terracotta | white, black, one signal blue | light grey + a colour per country |
+| Decide | the city as a terracotta cover, route as a dotted line | boarding pass NQZ → GRQ | the top pass of a fanned stack |
+
+Images: `concepts/concept-r9-atlas.webp`, `concept-r9-tablo.webp`, `concept-r9-propusk.webp`.
+
+Review (I88–I95), fixed before showing: I88 "1 Dec" broke over two lines; I89 Atlas's spaced
+"REQUIREMENTS" label ran into its value; I90 the country list ran under Back/Continue; I91 a "4,630 km"
+label on the route was an unchecked figure — removed; I92 Табло used "AST" for Astana, whose code is NQZ;
+I93 the back pass on Home showed half a city name; I94 "Full ride" wrapped inside its pill; I95 the
+decide buttons were explained by a footnote, now each has its label.
+
+Caveat for Атлас: Fraunces has no Cyrillic, so ru/kk would need another serif with Kazakh letters.
