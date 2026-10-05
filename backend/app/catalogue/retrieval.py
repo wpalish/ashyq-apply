@@ -99,11 +99,25 @@ def retrieve(
             for t in tokens
         )
     ]
+    # A university whose own name or alias is the query comes first: alphabetical
+    # order put "University of British Columbia" above "Columbia University" for
+    # the query "Columbia University" — 29 of 500 exact-name queries missed their
+    # university at rank one (gpt-6-astra's top-500 audit, PR #44); this tier
+    # makes it 500/500 and changes no result set.
+    wanted = normalize(query)
+
+    def named(u: University) -> bool:
+        return bool(wanted) and wanted in {
+            normalize(u.name),
+            *(normalize(a) for a in u.aliases or []),
+        }
+
     # Known research routes help select useful first reads. QS prestige and
     # unscoped prices/tests do not determine applicant fit or exclude rows.
     return sorted(
         rows,
         key=lambda u: (
+            0 if named(u) else 1,
             0 if any(in_country(u.country, c) for c in preferred or []) else 1,
             0 if u.registry_entry else 1,
             normalize(u.name),

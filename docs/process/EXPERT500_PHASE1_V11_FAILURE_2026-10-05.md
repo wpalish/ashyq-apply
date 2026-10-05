@@ -71,4 +71,29 @@ has manifestd488862c0744b415bd0160d4c9135c0acd5c4761c253c61a3c350eb340208100.
 
 This is future source behavior, never a modification or rerun of V11. Existing
 Exa availability is not restored or established by these offline gates. Source
-CI for the following commit remains pending; no new pilot has been started.
+Pre-main54 source d9d23b9 passed its exact branch CI4/4 in37308941607;
+no pull_request event was created while main/head conflicted. Original5-record
+receipt manifestd57cc269 is distinct from the following combined-source gate.
+No new pilot has been started.
+
+## Official main54 integration (2026-10-05 12:50 UTC)
+
+Official main74a7d8b/PR54 was merged prospectively. Only HANDOFF conflicted;
+both original engineer additions were retained. Source402 fix and sticky
+controller resume remain intact. Main experimental DL-2/BL-1/AY-1 stay off;
+owner-approved scorer D1-D4 and exact-name catalogue order are retained.
+Reviewed corpus blobb4552bbd is unchanged; unsigned draft8 is unselected and
+its label values were not opened. No new source/model call, trial or scoring.
+
+Fresh combined4134 tests passed94.90%/425.51s; Ruff/format/mypy374. Same
+synthetic demo20/Groningenfirst/UBCOUT_OF_BUDGET and single d8e412c6a901 head
+pass. A local incorrect zero-demo-page-counter assertion failed once and its
+empty original stdout remains; observed stderr is labelled as an observation.
+Corrected read-only verification of the already seeded database establishes
+synthetic counters98/15 and the required order without reseeding. All34
+records including20 tested-source snapshots/14 raw gate and merge originals
+are verified in protocol.2026-10-05/main54-integration, manifest
+b744bff2191d7579f28983465a4b39a97a16d7f30bbd7e22ee4778db15576fc0.
+Combined-source cloud CI remains pending until the exact merge commit is
+pushed and its branch/PR jobs pass. V11 remains closed/unscored,40/62 remains
+unmeasured and the existing Exa account availability question is pending.

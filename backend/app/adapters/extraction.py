@@ -203,6 +203,7 @@ class ClaimBuilder:
         intake: str | None = None,
         degree: str | None = None,
         programme: str | None = None,
+        qualification: str | None = None,
     ) -> Claim | None:
         verdict = verify_claim(
             VerificationInput(
@@ -257,6 +258,7 @@ class ClaimBuilder:
                 ("intake", intake),
                 ("degree", degree),
                 ("programme", programme),
+                ("qualification", qualification),
             )
             if v
         }
@@ -408,6 +410,48 @@ _APPLICATION_PERIOD = re.compile(
     rf"\s*(?:to|until|[–-])\s*({_A_DATE})",
     re.IGNORECASE,
 )
+#: Plan rule DL-2 (error analysis 2026-10-05), off until a paired run passes.
+#: Three forms the readers above never match, each found on a cohort page:
+#: abbreviated months (Aalto "Application period: 7 Jan 2027 – 22 Jan 2027"),
+#: a date that comes before its label (UBC "January 15, 2027 (11:59 p.m. PST)
+#: Applications due"), and a window table whose catch-all row is the one an
+#: unlisted qualification falls under (NTU "All other international
+#: qualifications not listed below ... 15 Oct 2026 - 20 Jan 2027").
+DEADLINE_V2 = False
+_MONTH_ABBREVIATIONS = r"Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept|Sep|Oct|Nov|Dec"
+_ANY_MONTH = rf"(?:{_MONTH_NAMES}|(?:{_MONTH_ABBREVIATIONS})\.?)(?![a-z])"
+_A_DATE_V2 = (
+    rf"\d{{1,2}}\s+{_ANY_MONTH}\s+\d{{4}}"
+    rf"|{_ANY_MONTH}\s+\d{{1,2}},?\s+\d{{4}}"
+    r"|\d{4}-\d{2}-\d{2}"
+)
+_DATE_RANGE_V2 = re.compile(
+    rf"({_A_DATE_V2})\s*(?:[-–—]|to|until)\s*({_A_DATE_V2})",
+    re.IGNORECASE,
+)
+_DEADLINE_V2 = re.compile(
+    rf"(?:deadline|closes?|apply by|applications? close|due)[^.\n]{{0,60}}?({_A_DATE_V2})",
+    re.IGNORECASE,
+)
+_APPLICATION_PERIOD_V2 = re.compile(
+    rf"application period\s*:?\s*\d{{1,2}}\s+{_ANY_MONTH}(?:\s+\d{{4}})?"
+    rf"\s*(?:to|until|[–-])\s*({_A_DATE_V2})",
+    re.IGNORECASE,
+)
+#: The label right after the date says it is the application deadline; a
+#: scholarship or award deadline written the same way names itself instead.
+_DATE_FIRST_DEADLINE = re.compile(
+    rf"({_A_DATE_V2})\s*(?:\([^)]{{0,40}}\))?\s*"
+    r"(?:applications?\s+(?:are\s+)?due|deadline\s+to\s+apply)([^.\n]{0,120})",
+    re.IGNORECASE,
+)
+_CATCH_ALL_WINDOW = re.compile(
+    r"(all other (?:international )?qualifications(?: not listed(?: below)?)?)"
+    rf"[^\n]{{0,240}}?({_A_DATE_V2})\s*(?:[-–—]|to|until)\s*({_A_DATE_V2})",
+    re.IGNORECASE,
+)
+_SESSION_START = re.compile(rf"\(\s*({_MONTH_NAMES})\s+(\d{{4}})", re.IGNORECASE)
+
 #: Other date columns a deadline table carries beside the deadline itself.
 _OTHER_DATE_COLUMN = re.compile(
     r"\b(?:start(?:\s+(?:course|date|of\s+(?:studies|programme)))?|begins?|commencement)\b",
@@ -603,6 +647,35 @@ def _population_deadlines(text: str) -> list[tuple[str, str, int, int, str | Non
     return out if len(out) >= 2 else []
 
 
+def _deadline_v2(text: str) -> tuple[str, int, int, str | None, str | None] | None:
+    """The page's application deadline under rule DL-2: ``(raw date, start,
+    end, qualification, intake)``, or ``None`` when the page does not say
+    which date applies.
+
+    A date labelled "Applications due" wins. Otherwise a single window ends
+    on the deadline; several windows that end on different dates name a
+    deadline only through their catch-all row, recorded with that row's own
+    words as the qualification it is for.
+    """
+    due = _DATE_FIRST_DEADLINE.search(text)
+    if due:
+        session = _SESSION_START.search(due.group(2))
+        intake = intake_from_start(session.group(1), session.group(2)) if session else None
+        return due.group(1), due.start(), due.end(), None, intake
+    windows = list(_DATE_RANGE_V2.finditer(text))
+    if len({m.group(2) for m in windows}) > 1:
+        catch_all = _CATCH_ALL_WINDOW.search(text)
+        if catch_all is None:
+            return None
+        return catch_all.group(3), catch_all.start(), catch_all.end(), catch_all.group(1), None
+    match = _DEADLINE_V2.search(text) or _APPLICATION_PERIOD_V2.search(text)
+    if match is None:
+        return None
+    opened = _DATE_RANGE_V2.match(text, match.start(1))
+    raw = opened.group(2) if opened is not None else match.group(1)
+    return raw, match.start(), match.end(), None, None
+
+
 def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     """Pull admission requirements out of readable page text."""
     found: list[Claim] = []
@@ -739,7 +812,28 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
                 intake=intake,
             ),
         )
-    deadline_match = None if rows else (_DEADLINE.search(text) or _APPLICATION_PERIOD.search(text))
+    if DEADLINE_V2 and not rows:
+        read = _deadline_v2(text)
+        parsed = parse_date_string(read[0]) if read else None
+        if read and parsed:
+            _raw, start, end, qualification, intake = read
+            ex = excerpt_around(text, start, end)
+            _keep(
+                found,
+                builder.add(
+                    ClaimType.ADMISSION_DEADLINE,
+                    parsed.isoformat(),
+                    ex,
+                    notes=f"timezone: {parse_timezone(ex) or 'not stated on page'}",
+                    qualification=qualification,
+                    intake=intake,
+                ),
+            )
+    deadline_match = (
+        None
+        if rows or DEADLINE_V2
+        else (_DEADLINE.search(text) or _APPLICATION_PERIOD.search(text))
+    )
     deadline_raw = deadline_match.group(1) if deadline_match else None
     if deadline_match:
         # A date that opens a range is a window start, never the deadline

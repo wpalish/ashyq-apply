@@ -35,6 +35,13 @@ if TYPE_CHECKING:  # pragma: no cover - import kept out of the runtime path
 #: explode aliases into unlimited queries. A budget also bounds spend and the
 #: footprint left in a vendor's logs.
 DEFAULT_QUERY_BUDGET = 6
+#: Plan rule BL-1 (2026-10-05), off until a paired run passes: every stage's
+#: provider queries count against one budget of DEFAULT_QUERY_BUDGET per
+#: institution, kept on the candidate. Five cohort cases sent seven
+#: (discovery six, then the scholarship search one), run 37279746829.
+SHARED_QUERY_BUDGET = False
+#: Queries topic search leaves for the scholarship search that runs after it.
+SCHOLARSHIP_QUERY_RESERVE = 1
 
 #: Population markers that may appear in a query, and only for a country's
 #: public requirements page. They describe a published policy audience, not

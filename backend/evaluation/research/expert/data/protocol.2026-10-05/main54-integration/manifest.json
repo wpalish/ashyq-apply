@@ -1,0 +1,207 @@
+{
+  "schema_version": "1",
+  "recorded_at": "2026-10-05T12:48:21.260348+00:00",
+  "parent_source_sha": "d9d23b9e172369884ef348ee38fe9b5c1cb674bf",
+  "integrated_main_sha": "74a7d8ba243cd82cbb196dc5083efe013bb86642",
+  "status": "main54-integrated-local-gates-success-ci-pending",
+  "full_backend_passed": 4134,
+  "coverage_percent": 94.9,
+  "full_backend_seconds": 425.51,
+  "static_source_files": 374,
+  "demo": {
+    "synthetic": true,
+    "results": 20,
+    "first": "University of Groningen",
+    "ubc": "OUT_OF_BUDGET",
+    "single_alembic_head": "d8e412c6a901",
+    "run_id": "31ac6bc726024064ae35aff0ba5486b1",
+    "no_reseed_after_verification_error": true
+  },
+  "negative_observation": {
+    "failed_verification_original_bytes": 0,
+    "observed_tool_stderr": "Traceback (most recent call last):\n  File \"<stdin>\", line 8, in <module>\nAssertionError\n",
+    "reason": "wrong local assertion that demo page counters were zero; actual synthetic counters98/15; corrected read-only verification of same database",
+    "stderr_note": "stderr was observed in the tool result, not redirected to the empty original stdout file; this field is a recorded observation, not fabricated original stderr"
+  },
+  "record_count": 34,
+  "total_original_bytes": 1329565,
+  "records": [
+    {
+      "snapshot": "originals/unimatch-expert500-main54-merge-original.log",
+      "sha256": "475d36ada53fc70000ebe5a88e46445ef36ace7e87b9f5f252260111312600b5",
+      "bytes": 214
+    },
+    {
+      "snapshot": "originals/unimatch-expert500-main54-handoff-conflicted-original.txt",
+      "sha256": "9a2583d2e5f8ef10ab47c6ebc0cbd3e165bdf637c875930335265aa09ce93fca",
+      "bytes": 772014
+    },
+    {
+      "snapshot": "originals/unimatch-expert500-main54-handoff-resolution-original.json",
+      "sha256": "2c3daa287bbc61a74a457779fced47b5411547e537769d5d5981aee7c87f4d3d",
+      "bytes": 648
+    },
+    {
+      "snapshot": "originals/unimatch-expert500-main54-unchanged-proof-original.json",
+      "sha256": "81d9553ff08383418e10d4e3ecbdb63b4ff6bf113f8021feeb151a0bd94ee3d1",
+      "bytes": 1364
+    },
+    {
+      "snapshot": "originals/unimatch-expert500-main54-full-backend-original.log",
+      "sha256": "5d79933911179def3c4ef387c70dbca71d04f7e496fd891eb8c48d0310c974c5",
+      "bytes": 17837
+    },
+    {
+      "snapshot": "originals/unimatch-expert500-main54-ruff-original.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "snapshot": "originals/unimatch-expert500-main54-format-original.log",
+      "sha256": "cdaca55adb7f71bfd273c61456b389d15c843d51151b093d1a22721a473b1ab7",
+      "bytes": 28
+    },
+    {
+      "snapshot": "originals/unimatch-expert500-main54-mypy-original.log",
+      "sha256": "56ff71d8ad947a271d229903f32eb8fa3e1b8cd5395c32e978ead254d021c01a",
+      "bytes": 8584
+    },
+    {
+      "snapshot": "originals/unimatch-expert500-main54-demo-migrate-original.log",
+      "sha256": "808373af2029870e86053e68822b91376ef3a0151c9e2273b3ccdf3b172a102a",
+      "bytes": 2642
+    },
+    {
+      "snapshot": "originals/unimatch-expert500-main54-demo-original.log",
+      "sha256": "0d9df8d76c358770a0e61058a4df99b4a62d6dba5cc8db9f9667da824cfe3dc1",
+      "bytes": 2569
+    },
+    {
+      "snapshot": "originals/unimatch-expert500-main54-demo-verification-original.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "snapshot": "originals/unimatch-expert500-main54-demo-readonly-observation-original.log",
+      "sha256": "b357340a6e5a62596e905cf8ad3d02137a525e7e78bddc895f4ccebbac4e577e",
+      "bytes": 436
+    },
+    {
+      "snapshot": "originals/unimatch-expert500-main54-demo-verification-final-original.log",
+      "sha256": "dbb0b2bff829cba6508db3a4b91a3738434b40fc31ccbdd6cd3ea4c9ce680801",
+      "bytes": 472
+    },
+    {
+      "snapshot": "originals/unimatch-expert500-main54-alembic-original.log",
+      "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b",
+      "bytes": 20
+    },
+    {
+      "snapshot": "tested-source/backend/app/adapters/extraction.py.txt",
+      "sha256": "766c6e6e5730128ac13f3ff192fc36bcaee57b7c981e27415d610000a41dc596",
+      "bytes": 49583
+    },
+    {
+      "snapshot": "tested-source/backend/app/adapters/requirements/web_requirements.py.txt",
+      "sha256": "99c87e5d0078358705f46598465afeb3c2a4d78e245bb1bc2b21b4ca70cd6b41",
+      "bytes": 38559
+    },
+    {
+      "snapshot": "tested-source/backend/app/adapters/scholarship/web_scholarships.py.txt",
+      "sha256": "d1ce759b48ae5100676b9b8e80709b910f76ba9addd2f42f3eed711e45eb870e",
+      "bytes": 61487
+    },
+    {
+      "snapshot": "tested-source/backend/app/adapters/search/__init__.py.txt",
+      "sha256": "ce3ae88806c2d45fe5795775b8e3e0d20109f5165f2f6e29003ab09725b37ba6",
+      "bytes": 5406
+    },
+    {
+      "snapshot": "tested-source/backend/app/adapters/search/intent.py.txt",
+      "sha256": "43261ed775dc8877b6e2469fb367b55259a66c6060dbc51b0b727439c6f616ce",
+      "bytes": 12864
+    },
+    {
+      "snapshot": "tested-source/backend/app/catalogue/retrieval.py.txt",
+      "sha256": "134f1b22f857c26603ff6e83bb5b975a661d57d96fa2a0c62297d3ef35c6ed8b",
+      "bytes": 3515
+    },
+    {
+      "snapshot": "tested-source/backend/app/pipeline/runner.py.txt",
+      "sha256": "be5f95a9e8d19727f408a1a847d00c808c0ac2028c1d90cf74e6e44b55596c0f",
+      "bytes": 81184
+    },
+    {
+      "snapshot": "tested-source/backend/evaluation/research/expert/controller.py.txt",
+      "sha256": "ff29ee1c884e6ce310cce9eb0d873f62fc8f467db164aa9eff6f78197f8bdeb2",
+      "bytes": 56631
+    },
+    {
+      "snapshot": "tested-source/backend/evaluation/research/live.py.txt",
+      "sha256": "4fc2eb843b465a846e6932f8ac6d5597f3f31cb5ebea9225c8955d587d3dde6e",
+      "bytes": 42238
+    },
+    {
+      "snapshot": "tested-source/backend/evaluation/research/metrics.py.txt",
+      "sha256": "4c916cf8a83b49025496c7abd7b0803e8e25e63b246e222aa71fb65bf0c80dff",
+      "bytes": 20427
+    },
+    {
+      "snapshot": "tested-source/backend/evaluation/research/scorecard.py.txt",
+      "sha256": "867eaaa2f9676059fcdf8430c02e0ebb9c32009a403d0b4077dcabc56b2f871d",
+      "bytes": 18642
+    },
+    {
+      "snapshot": "tested-source/backend/tests/test_applicant_academic_year.py.txt",
+      "sha256": "52438d95bdc3bef27d734ae67af8e27d9ef51f1fdabc8da3edf3a33106abdc9f",
+      "bytes": 1307
+    },
+    {
+      "snapshot": "tested-source/backend/tests/test_deadline_v2.py.txt",
+      "sha256": "1d21ca6573c9b9f14332d1c64ee80809ae8f789a95e09d19e7988a5dc837cd6f",
+      "bytes": 4443
+    },
+    {
+      "snapshot": "tested-source/backend/tests/test_expert_controller_guard.py.txt",
+      "sha256": "93643bca4e0b3f6af27c39ef0f25f4df1e7e9a02b8f91b6996507ce59a783f84",
+      "bytes": 25106
+    },
+    {
+      "snapshot": "tested-source/backend/tests/test_expert_live_budget.py.txt",
+      "sha256": "e2561ba2677b3010366db00cc0bd20904da43f55ea575f6e62280ba5ddbbe6d1",
+      "bytes": 15533
+    },
+    {
+      "snapshot": "tested-source/backend/tests/test_expert_network_budget.py.txt",
+      "sha256": "5c155864fba4e69a5fa1641e5d0090fe99f6efc40babb68560d4bec1840e7325",
+      "bytes": 30983
+    },
+    {
+      "snapshot": "tested-source/backend/tests/test_research_benchmark.py.txt",
+      "sha256": "ef550faecc77e299021f633ef6294057bf9f33d5dfd8c4ee6c140f9c0b395f20",
+      "bytes": 34237
+    },
+    {
+      "snapshot": "tested-source/backend/tests/test_search_throttle_latch.py.txt",
+      "sha256": "a5fd4f8d77f27a0f716cda2d9f61ac1a00ed1c0dd9f8d2585ea039fa7d8accf5",
+      "bytes": 2781
+    },
+    {
+      "snapshot": "tested-source/backend/tests/test_shared_query_budget.py.txt",
+      "sha256": "42d6a1efd909b97a80d291c5acad286697d167168c874c28bad3853f830fa7ab",
+      "bytes": 2710
+    },
+    {
+      "snapshot": "tested-source/backend/tests/test_university_catalogue.py.txt",
+      "sha256": "7d8fcc68e5d547689d017418f8c92d413e74b7d7d73ede8a804d3beea210f86e",
+      "bytes": 15082
+    }
+  ],
+  "reviewed_corpus_blob_unchanged": "b4552bbd273c9ee8b7a84307f406b3e4117712b1",
+  "reviewed_corpus_values_opened": false,
+  "draft8_unsigned_and_not_selected": true,
+  "university_requests": 0,
+  "model_requests": 0,
+  "new_trial": false,
+  "v11_still_closed_unscored": true
+}

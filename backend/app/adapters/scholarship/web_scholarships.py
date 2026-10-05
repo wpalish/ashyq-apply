@@ -205,6 +205,16 @@ class WebScholarshipAdapter:
         if key in self._award_searches:
             return self._award_searches[key]
         self._award_searches[key] = ()
+        from app.adapters.search import intent as intent_module
+
+        if intent_module.SHARED_QUERY_BUDGET:
+            if candidate.search_queries_used >= intent_module.DEFAULT_QUERY_BUDGET:
+                out.errors.append(
+                    "Official scholarship search not run: earlier stages used the "
+                    f"{intent_module.DEFAULT_QUERY_BUDGET}-query budget"
+                )
+                return ()
+            candidate.search_queries_used += 1
         provider_name = "configured search provider"
         try:
             intent = DiscoveryIntent(

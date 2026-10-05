@@ -473,6 +473,7 @@ class WebRequirementsAdapter:
             same_institution,
         )
         from app.adapters.search import SearchError, get_search_provider
+        from app.adapters.search import intent as intent_module
         from app.adapters.search.base import search_failure_diagnostic
         from app.adapters.search.intent import DEFAULT_QUERY_BUDGET
 
@@ -485,6 +486,8 @@ class WebRequirementsAdapter:
         # One institution gets DEFAULT_QUERY_BUDGET queries in all; topic
         # search spends only what discovery left (English first).
         remaining = DEFAULT_QUERY_BUDGET - candidate.search_queries_used
+        if intent_module.SHARED_QUERY_BUDGET:
+            remaining -= intent_module.SCHOLARSHIP_QUERY_RESERVE
         if remaining <= 0:
             out.errors.append(
                 f"Topic search not run: discovery used the {DEFAULT_QUERY_BUDGET}-query budget"
@@ -496,6 +499,8 @@ class WebRequirementsAdapter:
             return ()
         found: list[tuple[str, str]] = []
         for topic, template in _TOPIC_QUERIES[:remaining]:
+            if intent_module.SHARED_QUERY_BUDGET:
+                candidate.search_queries_used += 1
             try:
                 response = await provider.search(
                     query=template.format(name=candidate.name),

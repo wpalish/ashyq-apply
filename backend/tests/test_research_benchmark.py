@@ -319,7 +319,7 @@ def test_live_budget_limits_and_explicit_opt_in(monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "suffix", ["", ".draft2", ".draft3", ".draft4", ".draft5", ".draft6", ".draft7"]
+    "suffix", ["", ".draft2", ".draft3", ".draft4", ".draft5", ".draft6", ".draft7", ".draft8"]
 )
 def test_draft_dataset_has_ten_cases_without_fabricated_human_signoff(suffix):
     root = Path(__file__).resolve().parents[1]
@@ -332,7 +332,7 @@ def test_draft_dataset_has_ten_cases_without_fabricated_human_signoff(suffix):
 
 @pytest.mark.parametrize(
     "suffix",
-    ["", ".draft2", ".draft3", ".draft4", ".draft5", ".draft6", ".draft7", ".reviewed"],
+    ["", ".draft2", ".draft3", ".draft4", ".draft5", ".draft6", ".draft7", ".reviewed", ".draft8"],
 )
 def test_published_baseline_replays_exactly_without_network(monkeypatch, suffix):
     """Scoring the frozen capture must reproduce the published numbers exactly.
@@ -846,6 +846,11 @@ def test_a_descriptive_corpus_population_accepts_silence_but_not_a_wrong_value()
     expected = Scope(university="U", population="Vancouver applicants using IELTS Academic")
     assert scope_matches(expected, Scope(university="U"))
     assert not scope_matches(expected, Scope(university="U", population="transfer"))
+    # D2 (owner, 2026-10-05): another description is compatible with the note.
+    assert scope_matches(
+        Scope(university="U", population="full-time undergraduate scholarship applicants"),
+        Scope(university="U", population="Singapore PRs and international students"),
+    )
     # A controlled population must still be recorded.
     assert not scope_matches(Scope(university="U", population="non-EU/EEA"), Scope(university="U"))
     assert scope_matches(

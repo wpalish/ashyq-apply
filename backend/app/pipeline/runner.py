@@ -366,7 +366,7 @@ class ResearchRunner:
             "candidate_limit": self.candidate_limit,
             "verify_limit": self.verify_limit,
             "candidate_limit_source": "run" if self.run.candidate_limit else "server default",
-            "academic_year": self.settings.academic_year,
+            "academic_year": self._academic_year(),
             "target_currency": self.settings.target_currency,
             "respect_robots": self.settings.respect_robots,
             "university_ids": self.run.university_ids or [],
@@ -426,6 +426,13 @@ class ResearchRunner:
             self.resumed_stages.append(stage.value)
             return
         await step(*args)
+
+    def _academic_year(self) -> str:
+        """The academic year adapters read tables for (rule AY-1 when on)."""
+        if APPLICANT_ACADEMIC_YEAR:
+            context = self.profile.context
+            return applicant_academic_year(context.intake_term, context.intake_year)
+        return self.settings.academic_year
 
     def _transition(self, stage: PipelineStage) -> None:
         self.run.stage = stage.value
@@ -505,8 +512,8 @@ class ResearchRunner:
         self._transition(PipelineStage.PROGRAM_VERIFICATION)
         self._save()
 
-        req = WebRequirementsAdapter(fetcher, self.settings.academic_year)
-        cost = WebCostAdapter(fetcher, self.settings.academic_year)
+        req = WebRequirementsAdapter(fetcher, self._academic_year())
+        cost = WebCostAdapter(fetcher, self._academic_year())
         gov = WebGovernmentAdapter(fetcher)
         # Both the value *and* the claims behind it. Caching only the string
         # meant the second candidate in a country showed a post-study-work
@@ -689,7 +696,7 @@ class ResearchRunner:
         self._transition(PipelineStage.FUNDING_DISCOVERY)
         self._save()
 
-        adapter = WebScholarshipAdapter(fetcher, self.settings.academic_year)
+        adapter = WebScholarshipAdapter(fetcher, self._academic_year())
         # Keyed on the normalized university key, not the display name: a
         # trailing comma or a renamed institution used to drop the row.
         by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}
@@ -1089,7 +1096,7 @@ class ResearchRunner:
         built = 0
         errors: list[str] = []
         async with fetcher:
-            adapter = WebDocumentsAdapter(fetcher, self.settings.academic_year)
+            adapter = WebDocumentsAdapter(fetcher, self._academic_year())
             by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}
             if not by_key:
                 disc = self._make_discovery_adapter(fetcher)
@@ -1623,6 +1630,24 @@ def _explanation_component(text: str):
 #: The questions a user actually needs answered before applying. Completeness is
 #: measured against these, not against whatever happened to be extracted -
 #: otherwise a page yielding one verified fact and nothing else reads as 100%.
+#: Plan rule AY-1 (2026-10-05), off until a paired run passes: fee and
+#: requirement tables are read for the applicant's academic year (fall 2027 ->
+#: 2027/28), not the server's default. Groningen's fee table lists 2026-2027
+#: and 2027-2028, and the default chose the 2026-2027 row for a fall 2027
+#: applicant (run 37279746829).
+APPLICANT_ACADEMIC_YEAR = False
+
+
+def applicant_academic_year(term: str, year: int) -> str:
+    """The academic year an intake begins in, written as settings write it.
+
+    A fall or winter(-semester) intake opens the year it names; a spring or
+    summer intake falls in the year that began the autumn before.
+    """
+    start = year if term in ("fall", "winter") else year - 1
+    return f"{start}/{str(start + 1)[-2:]}"
+
+
 CORE_QUESTIONS: tuple[tuple[ClaimType, ...], ...] = (
     (ClaimType.IELTS_MIN_OVERALL, ClaimType.TOEFL_MIN_TOTAL, ClaimType.DUOLINGO_MIN),
     (ClaimType.MIN_GPA,),
