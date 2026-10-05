@@ -11,6 +11,7 @@
  * When it finishes, the same list stays under "How the research went".
  */
 
+import { useMedia, WIDE } from '@/lib/useMedia';
 import { CountryLegend } from '@/components/CountryLegend';
 import { passColours, preferredCountries } from '@/lib/passColour';
 import { useEffect, useMemo, useState } from 'react';
@@ -65,6 +66,7 @@ function FoundList({ findings, more }: { findings: Finding[]; more: number }) {
 
 export function ProgressScreen({ onDone }: { onDone: () => void }) {
   const { run, cancelRun, retryRun, recheckNow, results, savedProfile } = useStore();
+  const wide = useMedia(WIDE);
   // Work the queue gave up on after exhausting its attempts. It is asked for
   // here, before the early return, because a hook cannot live behind one.
   const [deadJobs, setDeadJobs] = useState(0);
@@ -147,18 +149,11 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
           <h1 className="reveal__title" id="reveal-title">
             {results.length} programme{results.length === 1 ? '' : 's'} in {countries} countr{countries === 1 ? 'y' : 'ies'}
           </h1>
+          {/* Concept r11's three counts first; the grant count closes the row. */}
           <dl className="reveal__tiles">
             <div className="reveal__tile">
               <dt>meet every published requirement checked so far</dt>
               <dd>{met}</dd>
-            </div>
-            <div className="reveal__tile">
-              <dt>have a published grant for tuition and living</dt>
-              <dd>{livingGrant}</dd>
-            </div>
-            <div className="reveal__tile">
-              <dt>facts, each with a link to its page</dt>
-              <dd>{run.claims_recorded}</dd>
             </div>
             {withinBudget !== null && ceiling ? (
               <div className="reveal__tile">
@@ -171,12 +166,31 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
                 <dd>{run.pages_checked}</dd>
               </div>
             )}
+            <div className="reveal__tile">
+              <dt>facts, each with a link to its page</dt>
+              <dd>{run.claims_recorded}</dd>
+            </div>
+            <div className="reveal__tile">
+              <dt>have a published grant for tuition and living</dt>
+              <dd>{livingGrant}</dd>
+            </div>
           </dl>
           <CountryLegend results={results} passes={passes} shown={4} />
-          <p className="reveal__note">
-            Prices after grants, sources with dates, deadlines and documents are in the results.
-            Grants are mostly competitive, and admission is decided by the university.
-          </p>
+          {/* Concept N's reveal: the routes from home to every programme found,
+              each in its country's tint. */}
+          <Globe
+            layout="horizon"
+            tone="night"
+            height={wide ? 240 : 300}
+            markers={globe.markers}
+            home={home}
+            focus={defaultView(home)}
+            routes
+            plain
+            nameHome
+            caption={`A globe with ${globe.markers.length} of ${results.length} programmes at their cities${home ? `, routes from ${home.city}` : ''}.`}
+            testId="reveal-globe"
+          />
           <div className="reveal__actions">
             <button className="btn btn--primary reveal__cta" onClick={onDone} data-testid="to-shortlist">
               See your {results.length} pass{results.length === 1 ? '' : 'es'} <span aria-hidden="true">→</span>
@@ -186,18 +200,10 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
               Share my map
             </button>
           </div>
-          {/* Concept N's reveal: the routes from home to every programme found. */}
-          <Globe
-            layout="horizon"
-            tone="night"
-            height={220}
-            markers={globe.markers}
-            home={home}
-            focus={defaultView(home)}
-            routes
-            caption={`A globe with ${globe.markers.length} of ${results.length} programmes at their cities${home ? `, routes from ${home.city}` : ''}.`}
-            testId="reveal-globe"
-          />
+          <p className="reveal__note">
+            Prices after grants, sources with dates, deadlines and documents are in the results.
+            Grants are mostly competitive, and admission is decided by the university.
+          </p>
           {sharing && (
             <LazyShareSheet results={results} profile={savedProfile} demo={run.demo_mode} onClose={() => setSharing(false)} />
           )}

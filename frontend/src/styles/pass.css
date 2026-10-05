@@ -617,3 +617,50 @@
 .money__line--minus dd { color: var(--ok); }
 .money__line--result dt { font-weight: 800; }
 .money__line--result dd { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; }
+
+.reveal--globe { gap: 0.9rem; overflow: clip; }  /* clip, not hidden: the CTA can stick */
+.reveal--globe .reveal__tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.45rem; }
+.reveal--globe .reveal__tile { padding: 0.8rem; border: 0; border-radius: 18px; background: rgba(255, 255, 255, 0.07); }
+.reveal--globe .reveal__tile dd { font-size: 1.8rem; letter-spacing: -0.03em; }
+.reveal--globe .reveal__actions { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.5rem; }
+.reveal--globe .reveal__cta {
+  width: 100%; justify-content: center; gap: 0.5rem; min-height: 3.2rem; border-radius: 999px;
+  background: var(--night-ink); border-color: var(--night-ink); color: #111114;
+}
+.reveal--globe .btn.reveal__share { min-height: 3.2rem; border-radius: 999px; }
+.reveal--globe .reveal__note { border: 0; padding: 0; font-size: 0.78rem; }
+@media (max-width: 900px) {
+  /* The whole screen is the night, as in the concept. */
+  .reveal--globe {
+    max-width: none; margin: -1.2rem -1rem 0; padding: 1.4rem 1rem 1.6rem;
+    border: 0; border-radius: 0; min-height: calc(100vh - 3.5rem);
+  }
+  .reveal--globe .reveal__tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  /* The fourth count on a phone: one line under the three. */
+  .reveal--globe .reveal__tile:nth-child(4) {
+    grid-column: 1 / -1; flex-direction: row-reverse; justify-content: flex-end; align-items: baseline; gap: 0.5rem; padding: 0.6rem 0.8rem;
+  }
+  .reveal--globe .reveal__tile:nth-child(4) dd { font-size: 1.2rem; }
+  .reveal--globe .reveal__tile dt { font-size: 0.7rem; }
+  .reveal--globe .globe { margin-left: -1rem; margin-right: -1rem; }
+  /* The answer stays in reach above the navigation, over the globe. */
+  .reveal--globe .reveal__actions {
+    position: sticky; z-index: 2; bottom: calc(5.4rem + env(safe-area-inset-bottom));
+    margin-top: -4.5rem; padding-top: 1.5rem;
+    background: linear-gradient(to bottom, transparent, var(--night) 1.5rem);
+  }
+  /* The night reaches the header and the navigation too, as in the concept. */
+  .app:has(.reveal--globe) .topbar { background: var(--night); }
+  .app:has(.reveal--globe) .topbar__brand { color: var(--night-ink); }
+  .app:has(.reveal--globe) .sidebar { background: #1C1C22; border-color: #2C2C36; }
+  .app:has(.reveal--globe) .sidebar .nav__item { color: var(--night-muted); }
+  .app:has(.reveal--globe) .sidebar .nav__item[aria-current='page'] { background: var(--night-ink); color: #111114; }
+  .app:has(.reveal--globe) .account__avatar { background: var(--night-ink); color: #111114; }
+  .reveal--globe .reveal__cta { white-space: nowrap; font-size: 0.95rem; }
+  .reveal--globe .btn.reveal__share { padding: 0 1rem; white-space: nowrap; }
+}
+@media (max-width: 380px) {
+  /* Too narrow for both side by side: the share goes under the answer. */
+  .reveal--globe .reveal__actions { grid-template-columns: minmax(0, 1fr); gap: 0.4rem; }
+  .reveal--globe .btn.reveal__share { min-height: 2.6rem; }
+}
