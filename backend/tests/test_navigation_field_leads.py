@@ -54,8 +54,9 @@ def cs_profile(profile):
 
 
 @pytest.mark.asyncio
-async def test_off_by_default_keeps_structural_leads(tmp_path, cs_profile):
-    assert live_discovery.NAVIGATION_FIELD_LEADS is False
+async def test_off_keeps_structural_leads(tmp_path, cs_profile, monkeypatch):
+    assert live_discovery.NAVIGATION_FIELD_LEADS is True, "on by default since 2026-10-05"
+    monkeypatch.setattr(live_discovery, "NAVIGATION_FIELD_LEADS", False)
     leads, _ = await navigate(tmp_path, cs_profile)
     assert any("open-day" in u or "brochures" in u for u in leads)
 
