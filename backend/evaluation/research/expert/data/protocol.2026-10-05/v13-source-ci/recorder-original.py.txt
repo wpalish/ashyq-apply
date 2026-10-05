@@ -1,0 +1,40 @@
+"""Archive original exact selected-source CI; read-only, never dispatches sources."""
+import hashlib
+import json
+import subprocess
+from datetime import UTC, datetime
+from pathlib import Path
+
+REPO = Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply')
+SOURCE = 'e327498d605d3dbe14da177a8a535c664818ce9b'
+TAG = 'expert500-phase1-v13-2026-10-05-e327498'
+RUNS = (37358070171,37358078952,37358148240)
+# Keep the selected source checkout fully clean until the once-only live stage.
+# Copy this immutable original archive into the public protocol folder afterward.
+TARGET = Path('/tmp/unimatch-expert500-v13-source-ci')
+JOBS = {'backend (sqlite)','backend (postgresql)','frontend','security-and-containers'}
+assert not TARGET.exists()
+def call(*args):return subprocess.check_output(args,cwd=REPO)
+receipts={};events=[]
+for run_id in RUNS:
+ raw=call('gh','run','view',str(run_id),'--json','status,conclusion,headSha,event,headBranch,jobs,url,createdAt,updatedAt')
+ value=json.loads(raw)
+ assert value['headSha']==SOURCE and value['status']=='completed' and value['conclusion']=='success'
+ assert {j['name'] for j in value['jobs']}==JOBS and len(value['jobs'])==4
+ assert all(j['conclusion']=='success' and j['status']=='completed' for j in value['jobs'])
+ events.append((value['event'],value['headBranch']))
+ receipts[f'run-{run_id}.json']=raw
+ receipts[f'run-{run_id}.log']=call('gh','run','view',str(run_id),'--log')
+assert set(events)=={('push','task/expert-500-phase1'),('pull_request','task/expert-500-phase1'),('push',TAG)}
+receipts['recorder-original.py.txt']=Path(__file__).read_bytes()
+receipts['pr-current-original.json']=call('gh','pr','view','46','--json','state,isDraft,headRefOid,mergeable,url,body')
+assert json.loads(receipts['pr-current-original.json'])['headRefOid']==SOURCE
+TARGET.mkdir()
+records=[]
+for name,raw in receipts.items():
+ with (TARGET/name).open('xb') as out:out.write(raw)
+ records.append({'snapshot':name,'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw)})
+manifest={'schema_version':'1','recorded_at':datetime.now(UTC).isoformat(),'source_harness_sha':SOURCE,'frozen_ref':TAG,'status':'selected_source_branch_pr_tag_ci_success','run_ids':list(RUNS),'successful_jobs':12,'record_count':len(records),'records':records,'freeze_manifest_sha256':'50d0d35767f95a3051119f8b29b21c445a86924777658899b85cc5cb066ecd4b','neutral_provenance_manifest_sha256':'c1e8362cdfe2b4dadbe0483772b384a3796433d5110237796852a2483b29a22d','source_support_manifest_sha256':'ca6f4bc75c20716f46f0dbdf02eb1b3979959e57b5f99426b5f03c4b9798e90a','new_trial_started_by_recorder':False,'university_requests':0,'model_requests':0,'provider_queries':0,'reviewed62_unchanged':True,'signed_reviewed8_unselected':True,'heldout150_untouched':True}
+with (TARGET/'manifest.json').open('x') as out:out.write(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+for r in records:assert hashlib.sha256((TARGET/r['snapshot']).read_bytes()).hexdigest()==r['sha256']
+print(json.dumps({'target':str(TARGET),'records':len(records),'manifest_sha256':hashlib.sha256((TARGET/'manifest.json').read_bytes()).hexdigest(),'successful_jobs':12}))
