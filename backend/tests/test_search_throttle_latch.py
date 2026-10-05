@@ -42,13 +42,14 @@ class Answering:
 
 
 @pytest.mark.asyncio
-async def test_a_429_is_shared_by_a_second_adapter_instance():
-    first, second = Refusing(), Answering()
+@pytest.mark.parametrize("status", [402, 429])
+async def test_account_refusal_is_shared_by_a_second_adapter_instance(status):
+    first, second = Refusing(status=status), Answering()
     with pytest.raises(SearchUnavailable):
         await _ThrottleLatch(first).search(query="q")
     with pytest.raises(SearchUnavailable) as stopped:
         await _ThrottleLatch(second).search(query="q")
-    assert stopped.value.http_status == 429
+    assert stopped.value.http_status == status
     assert second.calls == 0
 
 
@@ -62,11 +63,12 @@ async def test_other_failures_do_not_latch():
 
 
 @pytest.mark.asyncio
-async def test_the_latch_is_per_provider_and_expires(monkeypatch):
+@pytest.mark.parametrize("status", [402, 429])
+async def test_the_latch_is_per_provider_and_expires(monkeypatch, status):
     import app.adapters.search as search
 
     with pytest.raises(SearchUnavailable):
-        await _ThrottleLatch(Refusing()).search(query="q")
+        await _ThrottleLatch(Refusing(status=status)).search(query="q")
     other = Answering()
     other.name = "tavily"
     await _ThrottleLatch(other).search(query="q")

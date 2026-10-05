@@ -54,3 +54,21 @@ A future same-ten pilot needs legitimate availability of the existing Exa
 account, current-main/source/helper gates and a fresh once-only source freeze.
 No purchase, reset-credit use, key/account/IP/provider substitution or quota
 retry is authorized by this preparation.
+
+## Prospective source repair completed locally
+
+The app shared refusal latch preserves402 or429 and skips later requests. The
+strict per-case meter and cohort retain http_402; source controller refusal
+survives replay/resume with no additional sent query. Seven additional status
+regressions cover shared instances, discovery/funding, cohort stop, same-case
+resume and university-source/provider separation. Original transient500 and
+429 behavior, provider identity and300s cooldown remain. First five red
+regressions and intermediate two resume failures were preserved, then146
+scoped tests passed1.50s. Full4107 passed94.87%/411.65s, Ruff/format/mypy371,
+synthetic demo20/Groningenfirst/UBCOUT_OF_BUDGET and one Alembic head passed.
+Original source support30 records in protocol.2026-10-05/http402-source-guard
+has manifestd488862c0744b415bd0160d4c9135c0acd5c4761c253c61a3c350eb340208100.
+
+This is future source behavior, never a modification or rerun of V11. Existing
+Exa availability is not restored or established by these offline gates. Source
+CI for the following commit remains pending; no new pilot has been started.

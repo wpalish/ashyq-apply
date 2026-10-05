@@ -134,10 +134,11 @@ class _ExpertBudget:
         self.remaining()
         if provider_name != self.provider_name or provider_name not in STRICT_PROVIDERS:
             raise SearchUnavailable("Strict capture refused a different provider identity")
-        if self.provider_failure and self.provider_failure.get("http_status") == 429:
+        if self.provider_failure and self.provider_failure.get("http_status") in {402, 429}:
+            status = self.provider_failure["http_status"]
             self.blocked_search_queries += 1
             raise SearchUnavailable(
-                "Strict capture stopped provider calls after HTTP 429", http_status=429
+                f"Strict capture stopped provider calls after HTTP {status}", http_status=status
             )
         if self.search_queries >= self.max_search_queries:
             self.blocked_search_queries += 1
@@ -168,8 +169,8 @@ class _ExpertBudget:
             "reason": reason.value if reason else None,
             "error": search_failure_diagnostic(self.provider_name, sanitized),
         }
-        if status == 429:
-            self.stop_reason = "http_429"
+        if status in {402, 429}:
+            self.stop_reason = f"http_{status}"
         return sanitized
 
     def snapshot(self) -> dict[str, Any]:
@@ -828,8 +829,9 @@ def main() -> None:
             budget_output = output.with_suffix(".budget.json")
             if budget_output.exists():
                 case_budgets[case_id] = json.loads(budget_output.read_text(encoding="utf-8"))
-                if case_budgets[case_id].get("stop_reason") == "http_429":
-                    batch_stop_reason = "http_429"
+                recorded_stop = case_budgets[case_id].get("stop_reason")
+                if recorded_stop in {"http_402", "http_429"}:
+                    batch_stop_reason = recorded_stop
             case_budgets.setdefault(case_id, {}).update(
                 parent_process_elapsed_seconds=process_elapsed_seconds,
                 process_error=error,

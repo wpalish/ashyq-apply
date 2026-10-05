@@ -283,7 +283,7 @@ def _existing_state(
     state: dict[str, Any] = {}
     previous = (0, 0, 0)
     previous_completed_at = wall_guard.started_at if wall_guard is not None else None
-    provider_stopped = False
+    provider_stop_reason = None
     for _number, path in sorted(numbered):
         data = path.read_bytes()
         if path.name in expected and hashlib.sha256(data).hexdigest() != expected[path.name]:
@@ -359,9 +359,11 @@ def _existing_state(
                 previous_completed_at = completed_at
             previous = counters
         state = record
-        provider_stopped = provider_stopped or record.get("stop_reason") == "http_429"
-    if provider_stopped:
-        state["stop_reason"] = "http_429"
+        recorded_stop = record.get("stop_reason")
+        if recorded_stop in {"http_402", "http_429"}:
+            provider_stop_reason = provider_stop_reason or recorded_stop
+    if provider_stop_reason:
+        state["stop_reason"] = provider_stop_reason
     first = _integer(plan, "first_log_number", max((n for n, _p in numbered), default=0) + 1)
     if first < 1 or any(first <= number for number, _path in numbered):
         raise ValueError("first_log_number would overwrite an existing log")
@@ -591,12 +593,13 @@ async def execute(
         search_queries=initial["start_search_queries"],
     )
     stop_reason = plan.get("stop_reason", state.get("stop_reason"))
-    allowed_stops = {None, "http_429", "budget_exhausted", "action_deadline_exhausted"}
+    allowed_stops = {None, "http_402", "http_429", "budget_exhausted", "action_deadline_exhausted"}
     if network:
         allowed_stops.add("wall_guard_exhausted")
     if stop_reason not in allowed_stops:
         raise ValueError("Unsupported stop_reason")
     if state.get("stop_reason") in {
+        "http_402",
         "http_429",
         "action_deadline_exhausted",
         "wall_guard_exhausted",
@@ -702,8 +705,8 @@ async def execute(
                             raise ValueError("Search result limit must be 1..100")
                     except ValueError:
                         refusal = "blocked_by_tool_policy"
-                if tool == "search_provider" and stop_reason == "http_429":
-                    refusal = "stopped_after_http_429"
+                if tool == "search_provider" and stop_reason in {"http_402", "http_429"}:
+                    refusal = f"stopped_after_{stop_reason}"
                 wall_remaining_seconds: float | None = None
                 network_timeout_at: float | None = None
                 if wall_guard is not None:
@@ -878,8 +881,9 @@ async def execute(
                         record["response"] = _failure(
                             exc, provider_name=provider_name if tool == "search_provider" else None
                         )
-                        if tool == "search_provider" and record["response"]["http_status"] == 429:
-                            stop_reason = "http_429"
+                        status = record["response"]["http_status"]
+                        if tool == "search_provider" and status in {402, 429}:
+                            stop_reason = f"http_{status}"
                     elapsed = (
                         max(0, math.ceil((monotonic() - began) * 1000)) if record["executed"] else 0
                     )

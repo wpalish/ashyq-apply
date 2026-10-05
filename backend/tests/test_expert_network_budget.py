@@ -543,15 +543,17 @@ def test_empty_initial_summary_still_binds_wall_guard(tmp_path: Path) -> None:
         )
 
 
-def test_network_429_is_sanitized_sticky_and_cannot_be_cleared_by_prefix_or_resume(
+@pytest.mark.parametrize("status", [402, 429])
+def test_network_account_refusal_is_sanitized_sticky_and_cannot_be_cleared_by_prefix_or_resume(
     tmp_path: Path,
+    status: int,
 ) -> None:
     calls = 0
 
     async def search(**kwargs: Any) -> Any:
         nonlocal calls
         calls += 1
-        raise SearchUnavailable("secret api_key=do-not-echo", http_status=429)
+        raise SearchUnavailable("secret api_key=do-not-echo", http_status=status)
 
     action = {"tool": "search_provider", "query": "programme"}
     first = _execute(tmp_path, _plan(actions=[action, action]), search=search)
@@ -560,8 +562,8 @@ def test_network_429_is_sanitized_sticky_and_cannot_be_cleared_by_prefix_or_resu
     resumed = _execute(
         tmp_path, _plan(resume_summary=first, stop_reason=None, actions=[action]), search=search
     )
-    assert calls == 1 and resumed["final"]["stop_reason"] == "http_429"
-    assert resumed["actions"][0]["outcome"] == "stopped_after_http_429"
+    assert calls == 1 and resumed["final"]["stop_reason"] == f"http_{status}"
+    assert resumed["actions"][0]["outcome"] == f"stopped_after_http_{status}"
     with pytest.raises(ValueError, match="log_prefix"):
         _execute(
             tmp_path,
@@ -571,8 +573,10 @@ def test_network_429_is_sanitized_sticky_and_cannot_be_cleared_by_prefix_or_resu
     assert calls == 1
 
 
-def test_university_429_is_a_source_failure_and_does_not_latch_provider_quota(
+@pytest.mark.parametrize("status", [402, 429])
+def test_university_account_refusal_is_a_source_failure_and_does_not_latch_provider_quota(
     tmp_path: Path,
+    status: int,
 ) -> None:
     calls = 0
 
@@ -580,7 +584,7 @@ def test_university_429_is_a_source_failure_and_does_not_latch_provider_quota(
         nonlocal calls
         calls += 1
         if calls == 1:
-            raise SearchUnavailable("University response detail withheld", http_status=429)
+            raise SearchUnavailable("University response detail withheld", http_status=status)
         return await _get(url)
 
     summary = _execute(tmp_path, _plan(actions=[URL, URL]), get=get)

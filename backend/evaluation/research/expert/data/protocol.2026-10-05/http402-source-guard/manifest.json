@@ -1,0 +1,211 @@
+{
+  "schema_version": "1",
+  "recorded_at": "2026-10-05T12:21:08.660469+00:00",
+  "kind": "grounded_HTTP402_repeated_request_source_repair",
+  "status": "local_source_gates_passed",
+  "tested_parent_head": "29d04bd",
+  "original_v11_source": "d89819084e4cc46e99c8af4f577e1b1ce6ea5547",
+  "original_v11_closure_manifest_sha256": "769273a0136d06857e484ba2841dc969a6124de8cc053b24d72b5dd8c2b310ef",
+  "initial_failed_regressions": 5,
+  "intermediate_failed_regressions": 2,
+  "current_scoped_tests": 146,
+  "full_backend_tests": 4107,
+  "backend_coverage_percent": 94.87,
+  "backend_test_seconds": 411.65,
+  "static_source_files": 371,
+  "frontend_tree_unchanged": "4aaba144e9642060a4915a22527ef016ee8cc83d",
+  "source_calls": 0,
+  "model_calls": 0,
+  "live_provider_availability_established": false,
+  "new_pilot_started": false,
+  "new_source_cloud_ci_claimed": false,
+  "record_count": 30,
+  "total_original_bytes": 424236,
+  "records": [
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-red-original.log",
+      "path": "unimatch-expert500-http402-red-original.log",
+      "sha256": "e67c8a7e584a4bc44ccecc1bc50b07069567c74a381229b2dba4666034f8c0cd",
+      "bytes": 12087
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-green-original.log",
+      "path": "unimatch-expert500-http402-green-original.log",
+      "sha256": "9e964261633bf3ebdebf4eecf6c52d0a443e931447e269cdcdc2ba8f11f67185",
+      "bytes": 3642
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-scoped-final-original.log",
+      "path": "unimatch-expert500-http402-scoped-final-original.log",
+      "sha256": "83306bd384885e6eca53fa3b97b5ceb987493ace16a73e9191792091c6c3bcd2",
+      "bytes": 260
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-test-format-original.log",
+      "path": "unimatch-expert500-http402-test-format-original.log",
+      "sha256": "a9c322be5811cf4bd7ab6927ecb6751d36851790b8b4de75d87f0c39a56d2c8d",
+      "bytes": 43
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-ruff-original.log",
+      "path": "unimatch-expert500-http402-ruff-original.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-format-original.log",
+      "path": "unimatch-expert500-http402-format-original.log",
+      "sha256": "64a4fa60ca2bda7893c1e4b8ea53a24a76e4ea49ffc3d32207015731000ca7cc",
+      "bytes": 28
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-mypy-original.log",
+      "path": "unimatch-expert500-http402-mypy-original.log",
+      "sha256": "62438cc7aa5c6e61cfa54ea208828033e41694c5c8eacc816ead469259840785",
+      "bytes": 8584
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-final-ruff-original.log",
+      "path": "unimatch-expert500-http402-final-ruff-original.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-final-format-original.log",
+      "path": "unimatch-expert500-http402-final-format-original.log",
+      "sha256": "64a4fa60ca2bda7893c1e4b8ea53a24a76e4ea49ffc3d32207015731000ca7cc",
+      "bytes": 28
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-final-mypy-original.log",
+      "path": "unimatch-expert500-http402-final-mypy-original.log",
+      "sha256": "62438cc7aa5c6e61cfa54ea208828033e41694c5c8eacc816ead469259840785",
+      "bytes": 8584
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-full-backend-original.log",
+      "path": "unimatch-expert500-http402-full-backend-original.log",
+      "sha256": "8dd8cbc850033b39faa95025ca7133b738e95ae7ece200d8fab0a60425bf2f9c",
+      "bytes": 29167
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-demo-migrate-original.log",
+      "path": "unimatch-expert500-http402-demo-migrate-original.log",
+      "sha256": "808373af2029870e86053e68822b91376ef3a0151c9e2273b3ccdf3b172a102a",
+      "bytes": 2642
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-demo-original.log",
+      "path": "unimatch-expert500-http402-demo-original.log",
+      "sha256": "5cd44796c3cccead3c3b1e2fa90ad28dcc2c35bcc0f74b1808823dfb6d539c2a",
+      "bytes": 2569
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-demo-verification-original.log",
+      "path": "unimatch-expert500-http402-demo-verification-original.log",
+      "sha256": "1689edde92e1a95aef01054a7e719e0b9f38f491e19ea5ae5a626dc23d31b9dc",
+      "bytes": 301
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-alembic-original.log",
+      "path": "unimatch-expert500-http402-alembic-original.log",
+      "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b",
+      "bytes": 20
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-pre-repair-originals/backend__app__adapters__search____init__.py",
+      "path": "pre-repair-originals/backend__app__adapters__search____init__.py.txt",
+      "sha256": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+      "bytes": 5167
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-pre-repair-originals/backend__evaluation__research__expert__controller.py",
+      "path": "pre-repair-originals/backend__evaluation__research__expert__controller.py.txt",
+      "sha256": "e9e08ee729fdcb8cf4ef8a4e5e93d073aea69356cf735801f76059194e33928e",
+      "bytes": 56419
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-pre-repair-originals/backend__evaluation__research__live.py",
+      "path": "pre-repair-originals/backend__evaluation__research__live.py.txt",
+      "sha256": "81f47805a0d72a1c458c0af230b8b6804282ececae86ff9519ce0cd1bc687cc5",
+      "bytes": 40600
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-pre-repair-originals/backend__tests__test_expert_controller_guard.py",
+      "path": "pre-repair-originals/backend__tests__test_expert_controller_guard.py.txt",
+      "sha256": "93643bca4e0b3f6af27c39ef0f25f4df1e7e9a02b8f91b6996507ce59a783f84",
+      "bytes": 25106
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-pre-repair-originals/backend__tests__test_expert_live_budget.py",
+      "path": "pre-repair-originals/backend__tests__test_expert_live_budget.py.txt",
+      "sha256": "e2561ba2677b3010366db00cc0bd20904da43f55ea575f6e62280ba5ddbbe6d1",
+      "bytes": 15533
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-pre-repair-originals/backend__tests__test_expert_network_budget.py",
+      "path": "pre-repair-originals/backend__tests__test_expert_network_budget.py.txt",
+      "sha256": "5c155864fba4e69a5fa1641e5d0090fe99f6efc40babb68560d4bec1840e7325",
+      "bytes": 30983
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-pre-repair-originals/backend__tests__test_search_throttle_latch.py",
+      "path": "pre-repair-originals/backend__tests__test_search_throttle_latch.py.txt",
+      "sha256": "a5fd4f8d77f27a0f716cda2d9f61ac1a00ed1c0dd9f8d2585ea039fa7d8accf5",
+      "bytes": 2781
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-http402-pre-repair-originals/manifest.json",
+      "path": "pre-repair-originals/manifest.json",
+      "sha256": "35413a2817324346c8b51c3638d267a1d9e9f6efc46d7396f1e386bd5e914b54",
+      "bytes": 2464
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/app/adapters/search/__init__.py",
+      "path": "tested-source/backend__app__adapters__search____init__.py.txt",
+      "sha256": "ce3ae88806c2d45fe5795775b8e3e0d20109f5165f2f6e29003ab09725b37ba6",
+      "bytes": 5406
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/live.py",
+      "path": "tested-source/backend__evaluation__research__live.py.txt",
+      "sha256": "7e19dc8b80da3406c4f51d51aba73a5a5e176b3cee5a0a7923d18a6b76927587",
+      "bytes": 40750
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/controller.py",
+      "path": "tested-source/backend__evaluation__research__expert__controller.py.txt",
+      "sha256": "ff29ee1c884e6ce310cce9eb0d873f62fc8f467db164aa9eff6f78197f8bdeb2",
+      "bytes": 56631
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/tests/test_search_throttle_latch.py",
+      "path": "tested-source/backend__tests__test_search_throttle_latch.py.txt",
+      "sha256": "a5fd4f8d77f27a0f716cda2d9f61ac1a00ed1c0dd9f8d2585ea039fa7d8accf5",
+      "bytes": 2781
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/tests/test_expert_live_budget.py",
+      "path": "tested-source/backend__tests__test_expert_live_budget.py.txt",
+      "sha256": "e2561ba2677b3010366db00cc0bd20904da43f55ea575f6e62280ba5ddbbe6d1",
+      "bytes": 15533
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/tests/test_expert_network_budget.py",
+      "path": "tested-source/backend__tests__test_expert_network_budget.py.txt",
+      "sha256": "5c155864fba4e69a5fa1641e5d0090fe99f6efc40babb68560d4bec1840e7325",
+      "bytes": 30983
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/tests/test_expert_controller_guard.py",
+      "path": "tested-source/backend__tests__test_expert_controller_guard.py.txt",
+      "sha256": "93643bca4e0b3f6af27c39ef0f25f4df1e7e9a02b8f91b6996507ce59a783f84",
+      "bytes": 25106
+    }
+  ],
+  "notes": [
+    "Original filename green-original.log is an intermediate two-failure log, not a green gate. The final146 pass is scoped-final-original.log.",
+    "Old V11/source/tag/trial/closure archives are unchanged. Only future source behavior gains402 account-refusal handling; owner budgets/model/denominator/admission unchanged.",
+    "The provider response body was not captured; actual billing/credit cause requires the existing account owner. No new provider/key/account/reset/purchase action."
+  ]
+}

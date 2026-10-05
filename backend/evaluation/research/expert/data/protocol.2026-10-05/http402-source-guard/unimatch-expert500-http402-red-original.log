@@ -1,0 +1,224 @@
+F..........F...F........................................................ [ 49%]
+....F..........................F........................................ [ 98%]
+..                                                                       [100%]
+=================================== FAILURES ===================================
+_______ test_account_refusal_is_shared_by_a_second_adapter_instance[402] _______
+
+status = 402
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("status", [402, 429])
+    async def test_account_refusal_is_shared_by_a_second_adapter_instance(status):
+        first, second = Refusing(status=status), Answering()
+        with pytest.raises(SearchUnavailable):
+            await _ThrottleLatch(first).search(query="q")
+>       with pytest.raises(SearchUnavailable) as stopped:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE SearchUnavailable
+
+tests/test_search_throttle_latch.py:50: Failed
+__ test_search_budget_wraps_cached_provider_across_discovery_and_funding[402] __
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-498/test_search_budget_wraps_cache1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10c69dfd0>
+failure_status = 402
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("failure_status", [None, 402, 429])
+    async def test_search_budget_wraps_cached_provider_across_discovery_and_funding(
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        failure_status: int | None,
+    ) -> None:
+        import app.adapters.search
+        from app.adapters.base import AdapterResult, Candidate, CandidateProgram
+        from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+        from app.adapters.search.exa_mcp import ExaMcpSearchProvider
+        from app.adapters.search.intent import DiscoveryIntent
+        from app.adapters.search.retrieval import discover_candidates
+    
+        queries: list[str] = []
+        cached = ExaMcpSearchProvider()
+    
+        async def search(self: Any, *, query: str, **kwargs: Any) -> SearchResponse:
+            queries.append(query)
+            if failure_status is not None:
+                raise SearchUnavailable("Bearer vendor-secret-key response", http_status=failure_status)
+            return SearchResponse(query=query, provider="exa_mcp", retrieved_at=datetime.now(UTC))
+    
+        monkeypatch.setattr(ExaMcpSearchProvider, "search", search)
+        monkeypatch.setattr(app.adapters.search, "get_search_provider", lambda: cached)
+        original = ExaMcpSearchProvider.search
+    
+        async def run(*args: Any) -> dict[str, Any]:
+            intent = DiscoveryIntent(
+                institution="University of Groningen",
+                domain="rug.nl",
+                degree=DegreeLevel.BACHELOR,
+                field="computer science",
+            )
+            await discover_candidates(cached, intent, query_budget=6)
+            adapter = object.__new__(WebScholarshipAdapter)
+            adapter._award_searches = {}
+            await adapter._search_awards(
+                Candidate(
+                    name="University of Groningen", country="NL", city="Groningen", domain="rug.nl"
+                ),
+                CandidateProgram(
+                    name="Computer Science", degree=DegreeLevel.BACHELOR, field="computer science"
+                ),
+                AdapterResult(),
+            )
+            return _report()
+    
+        monkeypatch.setattr(canary, "run_canary", run)
+        await live.capture_one("groningen", _output(tmp_path), 60, 120, strict_expert_budget=True)
+>       assert len(queries) == (1 if failure_status is not None else 6)
+E       assert 6 == 1
+E        +  where 6 = len(['site:rug.nl "computer science" "bachelor"', 'University of Groningen bachelor undergraduate first cycle computer sci...:rug.nl courses "computer science"', 'site:rug.nl undergraduate "computer science"', 'site:rug.nl admissions bachelor'])
+
+tests/test_expert_live_budget.py:187: AssertionError
+----------------------------- Captured stdout call -----------------------------
+search failed after 0.0s: SearchUnavailable
+search #1 took 0.0s (t=0s)
+search failed after 0.0s: SearchUnavailable
+search #2 took 0.0s (t=0s)
+search failed after 0.0s: SearchUnavailable
+search #3 took 0.0s (t=0s)
+search failed after 0.0s: SearchUnavailable
+search #4 took 0.0s (t=0s)
+search failed after 0.0s: SearchUnavailable
+search #5 took 0.0s (t=0s)
+search failed after 0.0s: SearchUnavailable
+search #6 took 0.0s (t=0s)
+----------------------------- Captured stderr call -----------------------------
+2026-10-05 17:02:26,662 WARNING [-] unimatch.search.retrieval: search query failed (field_and_degree): Search service unavailable (exa_mcp; HTTP 402).
+2026-10-05 17:02:26,663 WARNING [-] unimatch.search.retrieval: search query failed (natural_language): Search service unavailable (exa_mcp; HTTP 402).
+2026-10-05 17:02:26,663 WARNING [-] unimatch.search.retrieval: search query failed (programmes): Search service unavailable (exa_mcp; HTTP 402).
+2026-10-05 17:02:26,664 WARNING [-] unimatch.search.retrieval: search query failed (courses): Search service unavailable (exa_mcp; HTTP 402).
+2026-10-05 17:02:26,664 WARNING [-] unimatch.search.retrieval: search query failed (undergraduate): Search service unavailable (exa_mcp; HTTP 402).
+2026-10-05 17:02:26,665 WARNING [-] unimatch.search.retrieval: search query failed (admissions): Search service unavailable (exa_mcp; HTTP 402).
+------------------------------ Captured log call -------------------------------
+WARNING  unimatch.search.retrieval:retrieval.py:410 search query failed (field_and_degree): Search service unavailable (exa_mcp; HTTP 402).
+WARNING  unimatch.search.retrieval:retrieval.py:410 search query failed (natural_language): Search service unavailable (exa_mcp; HTTP 402).
+WARNING  unimatch.search.retrieval:retrieval.py:410 search query failed (programmes): Search service unavailable (exa_mcp; HTTP 402).
+WARNING  unimatch.search.retrieval:retrieval.py:410 search query failed (courses): Search service unavailable (exa_mcp; HTTP 402).
+WARNING  unimatch.search.retrieval:retrieval.py:410 search query failed (undergraduate): Search service unavailable (exa_mcp; HTTP 402).
+WARNING  unimatch.search.retrieval:retrieval.py:410 search query failed (admissions): Search service unavailable (exa_mcp; HTTP 402).
+_ test_strict_parent_forwards_budget_and_stops_cohort_after_recorded_account_refusal[402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-498/test_strict_parent_forwards_bu1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a0a86e0>
+failure_status = 402
+
+    @pytest.mark.parametrize("failure_status", [None, 402, 429])
+    def test_strict_parent_forwards_budget_and_stops_cohort_after_recorded_account_refusal(
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        failure_status: int | None,
+    ) -> None:
+        monkeypatch.setattr(
+            sys, "argv", ["live", "--live", "--out", str(tmp_path), "--strict-expert-budget"]
+        )
+        monkeypatch.setattr(
+            subprocess, "check_output", lambda *args, **kwargs: "app-and-harness-test-sha"
+        )
+        started: list[str] = []
+    
+        def child(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+            assert "--strict-expert-budget" in command
+            assert command[command.index("--max-pages") + 1] == "60"
+            assert command[command.index("--seconds-per-case") + 1] == "120"
+            assert kwargs["timeout"] == 135
+            assert kwargs["env"]["UNIMATCH_ENABLE_BROWSER_TIER"] == "false"
+            assert kwargs["env"]["UNIMATCH_RESPECT_ROBOTS"] == "true"
+            case_id = command[command.index("--case") + 1]
+            started.append(case_id)
+            output = Path(command[command.index("--out") + 1])
+            output.write_text(Observation(case_id=case_id).model_dump_json())
+            output.with_suffix(".budget.json").write_text(
+                json.dumps(
+                    {
+                        "stop_reason": f"http_{failure_status}" if failure_status is not None else None,
+                        "provider_failure": (
+                            {"http_status": failure_status} if failure_status is not None else None
+                        ),
+                        "fetcher_calls": 3,
+                        "search_queries": 1,
+                    }
+                )
+            )
+            return subprocess.CompletedProcess(command, 0)
+    
+        monkeypatch.setattr(subprocess, "run", child)
+        live.main()
+        capture = Capture.model_validate_json(next(tmp_path.rglob("capture.json")).read_text())
+>       assert len(started) == (1 if failure_status is not None else len(live.COHORT))
+E       AssertionError: assert 10 == 1
+E        +  where 10 = len(['groningen', 'delft', 'aalto', 'vienna', 'warsaw', 'ubc', ...])
+
+tests/test_expert_live_budget.py:271: AssertionError
+----------------------------- Captured stdout call -----------------------------
+search provider: exa_mcp
+groningen: complete
+delft: complete
+aalto: complete
+vienna: complete
+warsaw: complete
+ubc: complete
+toronto: complete
+hku: complete
+ntu: complete
+kaist: complete
+/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-498/test_strict_parent_forwards_bu1/20261005T120226Z/capture.json
+_ test_network_account_refusal_is_sanitized_sticky_and_cannot_be_cleared_by_prefix_or_resume[402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-498/test_network_account_refusal_i0')
+status = 402
+
+    @pytest.mark.parametrize("status", [402, 429])
+    def test_network_account_refusal_is_sanitized_sticky_and_cannot_be_cleared_by_prefix_or_resume(
+        tmp_path: Path,
+        status: int,
+    ) -> None:
+        calls = 0
+    
+        async def search(**kwargs: Any) -> Any:
+            nonlocal calls
+            calls += 1
+            raise SearchUnavailable("secret api_key=do-not-echo", http_status=status)
+    
+        action = {"tool": "search_provider", "query": "programme"}
+        first = _execute(tmp_path, _plan(actions=[action, action]), search=search)
+>       assert calls == 1 and first["final"]["search_queries"] == 1
+E       assert (2 == 1)
+
+tests/test_expert_network_budget.py:560: AssertionError
+_ test_provider_account_refusal_is_sanitized_stops_calls_and_survives_resume[402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-498/test_provider_account_refusal_0')
+status = 402
+
+    @pytest.mark.parametrize("status", [402, 429])
+    def test_provider_account_refusal_is_sanitized_stops_calls_and_survives_resume(
+        tmp_path: Path, status: int
+    ) -> None:
+        calls = 0
+    
+        async def search(**kwargs: Any) -> _Answer:
+            nonlocal calls
+            calls += 1
+            raise SearchUnavailable("Bearer sk-secret vendor URL ?api_key=hidden", http_status=status)
+    
+        action = {"tool": "search_provider", "query": "programme"}
+        first = _execute(tmp_path, _plan(actions=[action, action]), search=search)
+>       assert calls == 1
+E       assert 2 == 1
+
+tests/test_expert_controller_guard.py:136: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_search_throttle_latch.py::test_account_refusal_is_shared_by_a_second_adapter_instance[402]
+FAILED tests/test_expert_live_budget.py::test_search_budget_wraps_cached_provider_across_discovery_and_funding[402]
+FAILED tests/test_expert_live_budget.py::test_strict_parent_forwards_budget_and_stops_cohort_after_recorded_account_refusal[402]
+FAILED tests/test_expert_network_budget.py::test_network_account_refusal_is_sanitized_sticky_and_cannot_be_cleared_by_prefix_or_resume[402]
+FAILED tests/test_expert_controller_guard.py::test_provider_account_refusal_is_sanitized_stops_calls_and_survives_resume[402]
