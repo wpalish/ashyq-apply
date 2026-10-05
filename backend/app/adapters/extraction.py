@@ -204,6 +204,7 @@ class ClaimBuilder:
         degree: str | None = None,
         programme: str | None = None,
         qualification: str | None = None,
+        academic_year: str | None = None,
     ) -> Claim | None:
         verdict = verify_claim(
             VerificationInput(
@@ -259,6 +260,7 @@ class ClaimBuilder:
                 ("degree", degree),
                 ("programme", programme),
                 ("qualification", qualification),
+                ("academic_year", academic_year),
             )
             if v
         }
@@ -691,12 +693,15 @@ def _deadline_v2(text: str) -> tuple[str, int, int, str | None, str | None] | No
         session = _SESSION_START.search(due.group(2))
         intake = intake_from_start(session.group(1), session.group(2)) if session else None
         return due.group(1), due.start(), due.end(), None, intake
+    # A catch-all row says whom its window is for even when it is the only
+    # window read: NTU's run on 2026-10-05 dated the right day with no
+    # qualification because the page's other rows did not reach the reader.
+    catch_all = _CATCH_ALL_WINDOW.search(text)
+    if catch_all is not None:
+        return catch_all.group(3), catch_all.start(), catch_all.end(), catch_all.group(1), None
     windows = list(_DATE_RANGE_V2.finditer(text))
     if len({m.group(2) for m in windows}) > 1:
-        catch_all = _CATCH_ALL_WINDOW.search(text)
-        if catch_all is None:
-            return None
-        return catch_all.group(3), catch_all.start(), catch_all.end(), catch_all.group(1), None
+        return None
     match = _DEADLINE_V2.search(text) or _APPLICATION_PERIOD_V2.search(text)
     if match is None:
         return None
@@ -1089,6 +1094,13 @@ _FLOOR_AT_TUITION: Final[frozenset[ClaimType]] = frozenset(
 _ACADEMIC_YEAR = re.compile(r"\b(20\d{2})\s*[-/–]\s*(?:20)?(\d{2})\b")
 
 
+#: Plan rule TY-1: a fee table row that prints its academic year ("non-EU/EEA
+#: 2027-2028 € 19800") records that year in the claim's scope. Without it the
+#: page-wide scope carries no year and a right fee for the right year is
+#: scored wrong-scope (Groningen, runs of 2026-10-05).
+TUITION_ROW_YEAR = False
+
+
 def _year_key(text: str) -> str | None:
     m = _ACADEMIC_YEAR.search(text or "")
     return f"{m.group(1)}/{m.group(2)}" if m else None
@@ -1175,6 +1187,7 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
                         section="Fees and costs",
                         subject_key=population,
                         population=population,
+                        academic_year=_year_key(text[start:end]) if TUITION_ROW_YEAR else None,
                     ),
                 )
             if rows:

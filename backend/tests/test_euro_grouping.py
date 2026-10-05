@@ -57,3 +57,20 @@ def test_population_tuition_table_reads_grouped_euros() -> None:
     )
     amounts = {c.normalized_value["amount"] for c in extraction.extract_costs(text, builder)}
     assert amounts == {2601.0, 20563.0}
+
+
+def test_tuition_rows_record_their_academic_year(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Groningen's table, as the run of 2026-10-05 read it.
+    monkeypatch.setattr(extraction, "TUITION_ROW_YEAR", True)
+    text = (
+        "Tuition fees Nationality Year Fee Programme form EU/EEA 2027-2028 € 2771 "
+        "full-time non-EU/EEA 2027-2028 € 19800 full-time"
+    )
+    builder = ClaimBuilder(
+        source_url="https://example.edu/fees",
+        specificity=SourceSpecificity.PROGRAM_INTAKE,
+        official_domain=True,
+    )
+    claims = extraction.extract_costs(text, builder)
+    years = {c.scope.academic_year for c in claims if c.scope is not None}
+    assert years == {"2027/28"}

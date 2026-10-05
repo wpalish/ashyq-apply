@@ -622,6 +622,12 @@ def main() -> None:
         "dot as a thousands separator and a comma as the cents mark",
     )
     parser.add_argument(
+        "--tuition-row-year",
+        action="store_true",
+        help="plan rule TY-1: a fee table row that prints its academic year records it "
+        "in the claim's scope",
+    )
+    parser.add_argument(
         "--walker-subject-cap",
         action="store_true",
         help="experiment ER-10: a catalogue walk reads at most three leads that name none "
@@ -732,6 +738,10 @@ def main() -> None:
             from app.adapters import extraction as euro_module
 
             euro_module.EURO_GROUPING = True
+        if args.tuition_row_year:
+            from app.adapters import extraction as year_module
+
+            year_module.TUITION_ROW_YEAR = True
         if args.walker_subject_cap:
             from app.adapters.discovery import catalog_walker
 
@@ -827,6 +837,7 @@ def main() -> None:
                         *(["--walker-subject-cap"] if args.walker_subject_cap else []),
                         *(["--deadline-v2"] if args.deadline_v2 else []),
                         *(["--euro-grouping"] if args.euro_grouping else []),
+                        *(["--tuition-row-year"] if args.tuition_row_year else []),
                         *(["--shared-query-budget"] if args.shared_query_budget else []),
                         *(["--applicant-academic-year"] if args.applicant_academic_year else []),
                         "--search-funding-fallback"
