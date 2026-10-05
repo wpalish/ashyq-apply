@@ -29,27 +29,41 @@ def model_batch_failure(stdout: str, *, error_kind: str | None) -> dict[str, Any
     per-case guard timeout is not evidence of an account refusal. Unknown
     process failures still stop the batch, without guessing their cause.
     """
-    if error_kind is None:
-        return None
     stream_sha256 = hashlib.sha256(stdout.encode()).hexdigest()
+    terminal_errors: list[tuple[int, str, dict[str, Any]]] = []
     for index, line in enumerate(stdout.splitlines(), start=1):
         try:
             event = json.loads(line)
         except (ValueError, TypeError):
             continue
-        if not isinstance(event, dict) or event.get("type") not in {"error", "turn.failed"}:
+        if not isinstance(event, dict):
             continue
-        payload = event.get("error") if event.get("type") == "turn.failed" else event
-        if not isinstance(payload, dict):
-            continue
+        event_type = event.get("type")
+        if event_type == "turn.completed":
+            terminal_errors.clear()
+        elif event_type in {"error", "turn.failed"}:
+            payload = event.get("error") if event_type == "turn.failed" else event
+            terminal_errors.append(
+                (index, event_type, payload if isinstance(payload, dict) else {})
+            )
+
+    # Only the original terminal event sequence decides whether model failure
+    # exists. Editable metadata can describe it, but cannot erase it. A later
+    # completed turn clears stale attribution, while a canonical process failure
+    # still requires an unknown transport stop even if that turn completed.
+    if not terminal_errors and error_kind not in TRANSPORT_FAILURES:
+        return None
+    kind = "model_transport_failure"
+    event_line, failure_type = terminal_errors[0][:2] if terminal_errors else (None, None)
+    for index, event_type, payload in terminal_errors:
         message, code = payload.get("message"), payload.get("code")
         normalized = message.casefold().replace("\u2019", "'") if isinstance(message, str) else ""
-        kind = None
+        specific_kind = None
         if (isinstance(code, str) and code in USAGE_CODES) or any(
             phrase in normalized
             for phrase in ("hit your usage limit", "usage limit reached", "insufficient quota")
         ):
-            kind = "model_usage_limit"
+            specific_kind = "model_usage_limit"
         elif (isinstance(code, str) and code in AUTH_CODES) or any(
             phrase in normalized
             for phrase in (
@@ -60,21 +74,15 @@ def model_batch_failure(stdout: str, *, error_kind: str | None) -> dict[str, Any
                 "invalid api key",
             )
         ):
-            kind = "model_authentication_refusal"
-        if kind is not None:
-            return {
-                "kind": kind,
-                "selector_error_kind": error_kind,
-                "event_line": index,
-                "event_type": event["type"],
-                "stream_sha256": stream_sha256,
-            }
-    if error_kind in TRANSPORT_FAILURES:
-        return {
-            "kind": "model_transport_failure",
-            "selector_error_kind": error_kind,
-            "event_line": None,
-            "event_type": None,
-            "stream_sha256": stream_sha256,
-        }
-    return None
+            specific_kind = "model_authentication_refusal"
+        if specific_kind is None:
+            continue
+        kind, event_line, failure_type = specific_kind, index, event_type
+        break
+    return {
+        "kind": kind,
+        "selector_error_kind": error_kind,
+        "event_line": event_line,
+        "event_type": failure_type,
+        "stream_sha256": stream_sha256,
+    }

@@ -1,0 +1,1209 @@
+FFFFFFFFFFFFFFFF                                                         [100%]
+=================================== FAILURES ===================================
+__ test_v10_stage_start_receipt_blocks_restart_before_any_mutation[-baseline] __
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_stage_start_receipt_b0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1076ce570>
+stage = 'baseline', original = b''
+
+    @pytest.mark.parametrize("stage", ["baseline", "experts"])
+    @pytest.mark.parametrize("original", [b"", b'{"interrupted_before_first_result":true}\n'])
+    def test_v10_stage_start_receipt_blocks_restart_before_any_mutation(
+        tmp_path, monkeypatch, stage, original
+    ):
+        runtime, root, workspaces = _once_only_stage(tmp_path, monkeypatch, stage)
+        marker = root / f"{stage}-stage-start.json"
+        marker.write_bytes(original)
+        sentinel = root / "sealed-sentinel.txt"
+        sentinel.write_text("ORIGINAL_SENTINEL")
+        calls = []
+        monkeypatch.setitem(runtime, "baseline", lambda *args: calls.append("baseline"))
+        monkeypatch.setitem(runtime, "expert", lambda *args: calls.append("model"))
+        with pytest.raises(ValueError, match="reset or retry"):
+>           runtime["main"]()
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1177: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def main() -> None:
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--repo", type=Path, required=True)
+        parser.add_argument("--root", type=Path, required=True)
+        parser.add_argument("--ref", required=True)
+        parser.add_argument("--stage", choices=["baseline", "experts"], required=True)
+        args = parser.parse_args()
+        if (args.root / "model-batch-stop.json").exists():
+            raise ValueError("Do not restart a trial with an original model batch stop")
+        trial = json.loads((args.root / "trial.json").read_text())
+        if (
+            trial["protocol_version"] != "journal-v10"
+            or trial["frozen_ref"] != args.ref
+            or trial.get("algorithm_provider") != "exa"
+            or trial.get("expert_provider") != "exa"
+            or trial.get("search_provider") != "exa"
+        ):
+            raise ValueError("Stage does not match original frozen V10 trial")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if hashlib.sha256((args.root / name).read_bytes()).hexdigest() != trial[field]:
+                raise ValueError("Original independently allocated workspace contract changed")
+        assignments = json.loads((args.root / "workspace-locations.json").read_text())
+        receipts = json.loads((args.root / "workspace-receipts.json").read_text())
+        workspaces = validate_workspaces(assignments, receipts, case_ids=tuple(legacy["COHORT"]))
+        if args.stage == "experts":
+            baselines = json.loads((args.root / "baseline-results.json").read_text())
+            if (
+                baselines["stopped"]
+                or baselines["remaining_case_ids"]
+                or any(
+                    result.get("provider") != "exa"
+                    or result.get("provider_failure") is not None
+                    or result.get("budget", {}).get("provider_failure") is not None
+                    for result in baselines["results"]
+                )
+            ):
+                raise ValueError("Provider-stopped/incomplete baseline cannot start experts")
+        if (args.root / f"{args.stage}-results.json").exists():
+            raise ValueError("Do not reset or retry a stage in an existing trial")
+        (args.root / "sealed-sentinel.txt").write_text("SEALED_HARMLESS_SENTINEL")
+        results = []
+        cohort = legacy["COHORT"]
+        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+            pending = {}
+            iterator = iter(cohort)
+    
+            def submit_next() -> None:
+                if STOP.is_set():
+                    return
+                case_id = next(iterator, None)
+                if case_id is None:
+                    return
+                function: Callable[..., dict[str, Any]] = (
+                    baseline if args.stage == "baseline" else expert
+                )
+                params = (args.repo, args.ref, args.root, case_id)
+                future = pool.submit(
+                    function, *params, *(() if args.stage == "baseline" else (workspaces,))
+                )
+                pending[future] = case_id
+    
+            for _ in range(3):
+                submit_next()
+            while pending:
+                done, _ = concurrent.futures.wait(
+                    pending, return_when=concurrent.futures.FIRST_COMPLETED
+                )
+                for future in done:
+                    case_id = pending.pop(future)
+                    try:
+                        result = future.result()
+                        results.append(result)
+                        if result.get("model_failure") is not None:
+                            STOP.set()
+                    except Exception as exc:
+                        failure = {
+                            "case_id": case_id,
+                            "status": "failed",
+                            "error": type(exc).__name__ + ": " + str(exc),
+                        }
+                        results.append(failure)
+                        save(args.root / args.stage / case_id / "orchestration-error.json", failure)
+                        emit(**failure)
+                        STOP.set()
+                if not STOP.is_set():
+                    for _ in done:
+                        submit_next()
+                save(
+                    args.root / f"{args.stage}-results.json",
+                    {
+                        "results": results,
+                        "stopped": STOP.is_set(),
+                        "remaining_case_ids": [
+                            case_id
+                            for case_id in cohort
+>                           if case_id not in {r["case_id"] for r in results}
+                                               ^^^^^^^^^^^^
+                        ],
+                    },
+                )
+E               TypeError: 'NoneType' object is not subscriptable
+
+/tmp/unimatch-expert500-journal-pilot-v10.py:1767: TypeError
+----------------------------- Captured stdout call -----------------------------
+{"case_id": "u", "status": "failed", "error": "AttributeError: 'NoneType' object has no attribute 'get'"}
+__ test_v10_stage_start_receipt_blocks_restart_before_any_mutation[-experts] ___
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_stage_start_receipt_b1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10925df40>
+stage = 'experts', original = b''
+
+    @pytest.mark.parametrize("stage", ["baseline", "experts"])
+    @pytest.mark.parametrize("original", [b"", b'{"interrupted_before_first_result":true}\n'])
+    def test_v10_stage_start_receipt_blocks_restart_before_any_mutation(
+        tmp_path, monkeypatch, stage, original
+    ):
+        runtime, root, workspaces = _once_only_stage(tmp_path, monkeypatch, stage)
+        marker = root / f"{stage}-stage-start.json"
+        marker.write_bytes(original)
+        sentinel = root / "sealed-sentinel.txt"
+        sentinel.write_text("ORIGINAL_SENTINEL")
+        calls = []
+        monkeypatch.setitem(runtime, "baseline", lambda *args: calls.append("baseline"))
+        monkeypatch.setitem(runtime, "expert", lambda *args: calls.append("model"))
+        with pytest.raises(ValueError, match="reset or retry"):
+>           runtime["main"]()
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1177: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def main() -> None:
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--repo", type=Path, required=True)
+        parser.add_argument("--root", type=Path, required=True)
+        parser.add_argument("--ref", required=True)
+        parser.add_argument("--stage", choices=["baseline", "experts"], required=True)
+        args = parser.parse_args()
+        if (args.root / "model-batch-stop.json").exists():
+            raise ValueError("Do not restart a trial with an original model batch stop")
+        trial = json.loads((args.root / "trial.json").read_text())
+        if (
+            trial["protocol_version"] != "journal-v10"
+            or trial["frozen_ref"] != args.ref
+            or trial.get("algorithm_provider") != "exa"
+            or trial.get("expert_provider") != "exa"
+            or trial.get("search_provider") != "exa"
+        ):
+            raise ValueError("Stage does not match original frozen V10 trial")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if hashlib.sha256((args.root / name).read_bytes()).hexdigest() != trial[field]:
+                raise ValueError("Original independently allocated workspace contract changed")
+        assignments = json.loads((args.root / "workspace-locations.json").read_text())
+        receipts = json.loads((args.root / "workspace-receipts.json").read_text())
+        workspaces = validate_workspaces(assignments, receipts, case_ids=tuple(legacy["COHORT"]))
+        if args.stage == "experts":
+            baselines = json.loads((args.root / "baseline-results.json").read_text())
+            if (
+                baselines["stopped"]
+                or baselines["remaining_case_ids"]
+                or any(
+                    result.get("provider") != "exa"
+                    or result.get("provider_failure") is not None
+                    or result.get("budget", {}).get("provider_failure") is not None
+                    for result in baselines["results"]
+                )
+            ):
+                raise ValueError("Provider-stopped/incomplete baseline cannot start experts")
+        if (args.root / f"{args.stage}-results.json").exists():
+            raise ValueError("Do not reset or retry a stage in an existing trial")
+        (args.root / "sealed-sentinel.txt").write_text("SEALED_HARMLESS_SENTINEL")
+        results = []
+        cohort = legacy["COHORT"]
+        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+            pending = {}
+            iterator = iter(cohort)
+    
+            def submit_next() -> None:
+                if STOP.is_set():
+                    return
+                case_id = next(iterator, None)
+                if case_id is None:
+                    return
+                function: Callable[..., dict[str, Any]] = (
+                    baseline if args.stage == "baseline" else expert
+                )
+                params = (args.repo, args.ref, args.root, case_id)
+                future = pool.submit(
+                    function, *params, *(() if args.stage == "baseline" else (workspaces,))
+                )
+                pending[future] = case_id
+    
+            for _ in range(3):
+                submit_next()
+            while pending:
+                done, _ = concurrent.futures.wait(
+                    pending, return_when=concurrent.futures.FIRST_COMPLETED
+                )
+                for future in done:
+                    case_id = pending.pop(future)
+                    try:
+                        result = future.result()
+                        results.append(result)
+                        if result.get("model_failure") is not None:
+                            STOP.set()
+                    except Exception as exc:
+                        failure = {
+                            "case_id": case_id,
+                            "status": "failed",
+                            "error": type(exc).__name__ + ": " + str(exc),
+                        }
+                        results.append(failure)
+                        save(args.root / args.stage / case_id / "orchestration-error.json", failure)
+                        emit(**failure)
+                        STOP.set()
+                if not STOP.is_set():
+                    for _ in done:
+                        submit_next()
+                save(
+                    args.root / f"{args.stage}-results.json",
+                    {
+                        "results": results,
+                        "stopped": STOP.is_set(),
+                        "remaining_case_ids": [
+                            case_id
+                            for case_id in cohort
+>                           if case_id not in {r["case_id"] for r in results}
+                                               ^^^^^^^^^^^^
+                        ],
+                    },
+                )
+E               TypeError: 'NoneType' object is not subscriptable
+
+/tmp/unimatch-expert500-journal-pilot-v10.py:1767: TypeError
+----------------------------- Captured stdout call -----------------------------
+{"case_id": "u", "status": "failed", "error": "AttributeError: 'NoneType' object has no attribute 'get'"}
+_ test_v10_stage_start_receipt_blocks_restart_before_any_mutation[{"interrupted_before_first_result":true}\n-baseline] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_stage_start_receipt_b2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1091df230>
+stage = 'baseline', original = b'{"interrupted_before_first_result":true}\n'
+
+    @pytest.mark.parametrize("stage", ["baseline", "experts"])
+    @pytest.mark.parametrize("original", [b"", b'{"interrupted_before_first_result":true}\n'])
+    def test_v10_stage_start_receipt_blocks_restart_before_any_mutation(
+        tmp_path, monkeypatch, stage, original
+    ):
+        runtime, root, workspaces = _once_only_stage(tmp_path, monkeypatch, stage)
+        marker = root / f"{stage}-stage-start.json"
+        marker.write_bytes(original)
+        sentinel = root / "sealed-sentinel.txt"
+        sentinel.write_text("ORIGINAL_SENTINEL")
+        calls = []
+        monkeypatch.setitem(runtime, "baseline", lambda *args: calls.append("baseline"))
+        monkeypatch.setitem(runtime, "expert", lambda *args: calls.append("model"))
+        with pytest.raises(ValueError, match="reset or retry"):
+>           runtime["main"]()
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1177: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def main() -> None:
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--repo", type=Path, required=True)
+        parser.add_argument("--root", type=Path, required=True)
+        parser.add_argument("--ref", required=True)
+        parser.add_argument("--stage", choices=["baseline", "experts"], required=True)
+        args = parser.parse_args()
+        if (args.root / "model-batch-stop.json").exists():
+            raise ValueError("Do not restart a trial with an original model batch stop")
+        trial = json.loads((args.root / "trial.json").read_text())
+        if (
+            trial["protocol_version"] != "journal-v10"
+            or trial["frozen_ref"] != args.ref
+            or trial.get("algorithm_provider") != "exa"
+            or trial.get("expert_provider") != "exa"
+            or trial.get("search_provider") != "exa"
+        ):
+            raise ValueError("Stage does not match original frozen V10 trial")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if hashlib.sha256((args.root / name).read_bytes()).hexdigest() != trial[field]:
+                raise ValueError("Original independently allocated workspace contract changed")
+        assignments = json.loads((args.root / "workspace-locations.json").read_text())
+        receipts = json.loads((args.root / "workspace-receipts.json").read_text())
+        workspaces = validate_workspaces(assignments, receipts, case_ids=tuple(legacy["COHORT"]))
+        if args.stage == "experts":
+            baselines = json.loads((args.root / "baseline-results.json").read_text())
+            if (
+                baselines["stopped"]
+                or baselines["remaining_case_ids"]
+                or any(
+                    result.get("provider") != "exa"
+                    or result.get("provider_failure") is not None
+                    or result.get("budget", {}).get("provider_failure") is not None
+                    for result in baselines["results"]
+                )
+            ):
+                raise ValueError("Provider-stopped/incomplete baseline cannot start experts")
+        if (args.root / f"{args.stage}-results.json").exists():
+            raise ValueError("Do not reset or retry a stage in an existing trial")
+        (args.root / "sealed-sentinel.txt").write_text("SEALED_HARMLESS_SENTINEL")
+        results = []
+        cohort = legacy["COHORT"]
+        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+            pending = {}
+            iterator = iter(cohort)
+    
+            def submit_next() -> None:
+                if STOP.is_set():
+                    return
+                case_id = next(iterator, None)
+                if case_id is None:
+                    return
+                function: Callable[..., dict[str, Any]] = (
+                    baseline if args.stage == "baseline" else expert
+                )
+                params = (args.repo, args.ref, args.root, case_id)
+                future = pool.submit(
+                    function, *params, *(() if args.stage == "baseline" else (workspaces,))
+                )
+                pending[future] = case_id
+    
+            for _ in range(3):
+                submit_next()
+            while pending:
+                done, _ = concurrent.futures.wait(
+                    pending, return_when=concurrent.futures.FIRST_COMPLETED
+                )
+                for future in done:
+                    case_id = pending.pop(future)
+                    try:
+                        result = future.result()
+                        results.append(result)
+                        if result.get("model_failure") is not None:
+                            STOP.set()
+                    except Exception as exc:
+                        failure = {
+                            "case_id": case_id,
+                            "status": "failed",
+                            "error": type(exc).__name__ + ": " + str(exc),
+                        }
+                        results.append(failure)
+                        save(args.root / args.stage / case_id / "orchestration-error.json", failure)
+                        emit(**failure)
+                        STOP.set()
+                if not STOP.is_set():
+                    for _ in done:
+                        submit_next()
+                save(
+                    args.root / f"{args.stage}-results.json",
+                    {
+                        "results": results,
+                        "stopped": STOP.is_set(),
+                        "remaining_case_ids": [
+                            case_id
+                            for case_id in cohort
+>                           if case_id not in {r["case_id"] for r in results}
+                                               ^^^^^^^^^^^^
+                        ],
+                    },
+                )
+E               TypeError: 'NoneType' object is not subscriptable
+
+/tmp/unimatch-expert500-journal-pilot-v10.py:1767: TypeError
+----------------------------- Captured stdout call -----------------------------
+{"case_id": "u", "status": "failed", "error": "AttributeError: 'NoneType' object has no attribute 'get'"}
+_ test_v10_stage_start_receipt_blocks_restart_before_any_mutation[{"interrupted_before_first_result":true}\n-experts] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_stage_start_receipt_b3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10925ef90>
+stage = 'experts', original = b'{"interrupted_before_first_result":true}\n'
+
+    @pytest.mark.parametrize("stage", ["baseline", "experts"])
+    @pytest.mark.parametrize("original", [b"", b'{"interrupted_before_first_result":true}\n'])
+    def test_v10_stage_start_receipt_blocks_restart_before_any_mutation(
+        tmp_path, monkeypatch, stage, original
+    ):
+        runtime, root, workspaces = _once_only_stage(tmp_path, monkeypatch, stage)
+        marker = root / f"{stage}-stage-start.json"
+        marker.write_bytes(original)
+        sentinel = root / "sealed-sentinel.txt"
+        sentinel.write_text("ORIGINAL_SENTINEL")
+        calls = []
+        monkeypatch.setitem(runtime, "baseline", lambda *args: calls.append("baseline"))
+        monkeypatch.setitem(runtime, "expert", lambda *args: calls.append("model"))
+        with pytest.raises(ValueError, match="reset or retry"):
+>           runtime["main"]()
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1177: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def main() -> None:
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--repo", type=Path, required=True)
+        parser.add_argument("--root", type=Path, required=True)
+        parser.add_argument("--ref", required=True)
+        parser.add_argument("--stage", choices=["baseline", "experts"], required=True)
+        args = parser.parse_args()
+        if (args.root / "model-batch-stop.json").exists():
+            raise ValueError("Do not restart a trial with an original model batch stop")
+        trial = json.loads((args.root / "trial.json").read_text())
+        if (
+            trial["protocol_version"] != "journal-v10"
+            or trial["frozen_ref"] != args.ref
+            or trial.get("algorithm_provider") != "exa"
+            or trial.get("expert_provider") != "exa"
+            or trial.get("search_provider") != "exa"
+        ):
+            raise ValueError("Stage does not match original frozen V10 trial")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if hashlib.sha256((args.root / name).read_bytes()).hexdigest() != trial[field]:
+                raise ValueError("Original independently allocated workspace contract changed")
+        assignments = json.loads((args.root / "workspace-locations.json").read_text())
+        receipts = json.loads((args.root / "workspace-receipts.json").read_text())
+        workspaces = validate_workspaces(assignments, receipts, case_ids=tuple(legacy["COHORT"]))
+        if args.stage == "experts":
+            baselines = json.loads((args.root / "baseline-results.json").read_text())
+            if (
+                baselines["stopped"]
+                or baselines["remaining_case_ids"]
+                or any(
+                    result.get("provider") != "exa"
+                    or result.get("provider_failure") is not None
+                    or result.get("budget", {}).get("provider_failure") is not None
+                    for result in baselines["results"]
+                )
+            ):
+                raise ValueError("Provider-stopped/incomplete baseline cannot start experts")
+        if (args.root / f"{args.stage}-results.json").exists():
+            raise ValueError("Do not reset or retry a stage in an existing trial")
+        (args.root / "sealed-sentinel.txt").write_text("SEALED_HARMLESS_SENTINEL")
+        results = []
+        cohort = legacy["COHORT"]
+        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+            pending = {}
+            iterator = iter(cohort)
+    
+            def submit_next() -> None:
+                if STOP.is_set():
+                    return
+                case_id = next(iterator, None)
+                if case_id is None:
+                    return
+                function: Callable[..., dict[str, Any]] = (
+                    baseline if args.stage == "baseline" else expert
+                )
+                params = (args.repo, args.ref, args.root, case_id)
+                future = pool.submit(
+                    function, *params, *(() if args.stage == "baseline" else (workspaces,))
+                )
+                pending[future] = case_id
+    
+            for _ in range(3):
+                submit_next()
+            while pending:
+                done, _ = concurrent.futures.wait(
+                    pending, return_when=concurrent.futures.FIRST_COMPLETED
+                )
+                for future in done:
+                    case_id = pending.pop(future)
+                    try:
+                        result = future.result()
+                        results.append(result)
+                        if result.get("model_failure") is not None:
+                            STOP.set()
+                    except Exception as exc:
+                        failure = {
+                            "case_id": case_id,
+                            "status": "failed",
+                            "error": type(exc).__name__ + ": " + str(exc),
+                        }
+                        results.append(failure)
+                        save(args.root / args.stage / case_id / "orchestration-error.json", failure)
+                        emit(**failure)
+                        STOP.set()
+                if not STOP.is_set():
+                    for _ in done:
+                        submit_next()
+                save(
+                    args.root / f"{args.stage}-results.json",
+                    {
+                        "results": results,
+                        "stopped": STOP.is_set(),
+                        "remaining_case_ids": [
+                            case_id
+                            for case_id in cohort
+>                           if case_id not in {r["case_id"] for r in results}
+                                               ^^^^^^^^^^^^
+                        ],
+                    },
+                )
+E               TypeError: 'NoneType' object is not subscriptable
+
+/tmp/unimatch-expert500-journal-pilot-v10.py:1767: TypeError
+----------------------------- Captured stdout call -----------------------------
+{"case_id": "u", "status": "failed", "error": "AttributeError: 'NoneType' object has no attribute 'get'"}
+_ test_v10_first_stage_saves_persistent_receipt_and_completed_stage_cannot_restart[baseline] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_first_stage_saves_per0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10925ede0>
+stage = 'baseline'
+
+    @pytest.mark.parametrize("stage", ["baseline", "experts"])
+    def test_v10_first_stage_saves_persistent_receipt_and_completed_stage_cannot_restart(
+        tmp_path, monkeypatch, stage
+    ):
+        runtime, root, _ = _once_only_stage(tmp_path, monkeypatch, stage)
+        calls = []
+    
+        def controlled_callback(*args):
+            assert (root / f"{stage}-stage-start.json").is_file()
+            calls.append(args[3])
+            return {"case_id": args[3], "provider": "exa"}
+    
+        monkeypatch.setitem(runtime, "baseline" if stage == "baseline" else "expert", controlled_callback)
+        runtime["main"]()
+        marker = root / f"{stage}-stage-start.json"
+>       original = marker.read_bytes()
+                   ^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_first_stage_saves_per0/trial/baseline-stage-start.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_first_stage_saves_per0/trial/baseline-stage-start.json'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1013: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+{"case_id": "u", "status": "failed", "error": "AssertionError: assert False\n +  where False = is_file()\n +    where is_file = (PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_first_stage_saves_per0/trial') / 'baseline-stage-start.json').is_file"}
+{"stage": "baseline", "completed": 1, "stopped": true}
+_ test_v10_first_stage_saves_persistent_receipt_and_completed_stage_cannot_restart[experts] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_first_stage_saves_per1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1091dee10>
+stage = 'experts'
+
+    @pytest.mark.parametrize("stage", ["baseline", "experts"])
+    def test_v10_first_stage_saves_persistent_receipt_and_completed_stage_cannot_restart(
+        tmp_path, monkeypatch, stage
+    ):
+        runtime, root, _ = _once_only_stage(tmp_path, monkeypatch, stage)
+        calls = []
+    
+        def controlled_callback(*args):
+            assert (root / f"{stage}-stage-start.json").is_file()
+            calls.append(args[3])
+            return {"case_id": args[3], "provider": "exa"}
+    
+        monkeypatch.setitem(runtime, "baseline" if stage == "baseline" else "expert", controlled_callback)
+        runtime["main"]()
+        marker = root / f"{stage}-stage-start.json"
+>       original = marker.read_bytes()
+                   ^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_first_stage_saves_per1/trial/experts-stage-start.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_first_stage_saves_per1/trial/experts-stage-start.json'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1013: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+{"case_id": "u", "status": "failed", "error": "AssertionError: assert False\n +  where False = is_file()\n +    where is_file = (PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_first_stage_saves_per1/trial') / 'experts-stage-start.json').is_file"}
+{"stage": "experts", "completed": 1, "stopped": true}
+_ test_v10_crash_before_first_result_keeps_stage_claim_and_blocks_new_workers[baseline] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_crash_before_first_re0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10925d6d0>
+stage = 'baseline'
+
+    @pytest.mark.parametrize("stage", ["baseline", "experts"])
+    def test_v10_crash_before_first_result_keeps_stage_claim_and_blocks_new_workers(
+        tmp_path, monkeypatch, stage
+    ):
+        runtime, root, _ = _once_only_stage(tmp_path, monkeypatch, stage)
+        calls = []
+    
+        def interrupted_executor(*args, **kwargs):
+            calls.append("worker_creation")
+            assert (root / f"{stage}-stage-start.json").is_file()
+            raise RuntimeError("Synthetic crash before first worker/result")
+    
+        monkeypatch.setattr(runtime["concurrent"].futures, "ThreadPoolExecutor", interrupted_executor)
+        with pytest.raises(RuntimeError, match="Synthetic crash"):
+>           runtime["main"]()
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1230: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-pilot-v10.py:1714: in main
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (), kwargs = {'max_workers': 3}
+
+    def interrupted_executor(*args, **kwargs):
+        calls.append("worker_creation")
+>       assert (root / f"{stage}-stage-start.json").is_file()
+E       AssertionError: assert False
+E        +  where False = is_file()
+E        +    where is_file = (PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_crash_before_first_re0/trial') / 'baseline-stage-start.json').is_file
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1225: AssertionError
+_ test_v10_crash_before_first_result_keeps_stage_claim_and_blocks_new_workers[experts] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_crash_before_first_re1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109294440>
+stage = 'experts'
+
+    @pytest.mark.parametrize("stage", ["baseline", "experts"])
+    def test_v10_crash_before_first_result_keeps_stage_claim_and_blocks_new_workers(
+        tmp_path, monkeypatch, stage
+    ):
+        runtime, root, _ = _once_only_stage(tmp_path, monkeypatch, stage)
+        calls = []
+    
+        def interrupted_executor(*args, **kwargs):
+            calls.append("worker_creation")
+            assert (root / f"{stage}-stage-start.json").is_file()
+            raise RuntimeError("Synthetic crash before first worker/result")
+    
+        monkeypatch.setattr(runtime["concurrent"].futures, "ThreadPoolExecutor", interrupted_executor)
+        with pytest.raises(RuntimeError, match="Synthetic crash"):
+>           runtime["main"]()
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1230: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-pilot-v10.py:1714: in main
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (), kwargs = {'max_workers': 3}
+
+    def interrupted_executor(*args, **kwargs):
+        calls.append("worker_creation")
+>       assert (root / f"{stage}-stage-start.json").is_file()
+E       AssertionError: assert False
+E        +  where False = is_file()
+E        +    where is_file = (PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_crash_before_first_re1/trial') / 'experts-stage-start.json').is_file
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1225: AssertionError
+_ test_v10_concurrent_parent_cannot_start_duplicate_stage_before_first_completion[baseline] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_concurrent_parent_can0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1092962a0>
+stage = 'baseline'
+
+    @pytest.mark.parametrize("stage", ["baseline", "experts"])
+    def test_v10_concurrent_parent_cannot_start_duplicate_stage_before_first_completion(
+        tmp_path, monkeypatch, stage
+    ):
+        runtime, root, _ = _once_only_stage(tmp_path, monkeypatch, stage)
+        entered, release = threading.Event(), threading.Event()
+        calls, errors = [], {}
+    
+        def controlled_callback(*args):
+            calls.append(args[3])
+            entered.set()
+            assert release.wait(timeout=10)
+            return {"case_id": args[3], "provider": "exa"}
+    
+        def run_parent(name):
+            try:
+                runtime["main"]()
+            except Exception as error:
+                errors[name] = error
+    
+        monkeypatch.setitem(runtime, "baseline" if stage == "baseline" else "expert", controlled_callback)
+        first = threading.Thread(target=run_parent, args=("first",))
+        second = threading.Thread(target=run_parent, args=("second",))
+        first.start()
+        try:
+            assert entered.wait(timeout=10)
+            assert not (root / f"{stage}-results.json").exists()
+            second.start()
+            second.join(timeout=2)
+>           assert not second.is_alive(), "Second parent queued duplicate work before first completion"
+E           AssertionError: Second parent queued duplicate work before first completion
+E           assert not True
+E            +  where True = is_alive()
+E            +    where is_alive = <Thread(Thread-2 (run_parent), started 6219345920)>.is_alive
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1269: AssertionError
+----------------------------- Captured stdout call -----------------------------
+{"stage": "baseline", "completed": 1, "stopped": false}
+{"stage": "baseline", "completed": 1, "stopped": false}
+_ test_v10_concurrent_parent_cannot_start_duplicate_stage_before_first_completion[experts] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_concurrent_parent_can1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1092eaea0>
+stage = 'experts'
+
+    @pytest.mark.parametrize("stage", ["baseline", "experts"])
+    def test_v10_concurrent_parent_cannot_start_duplicate_stage_before_first_completion(
+        tmp_path, monkeypatch, stage
+    ):
+        runtime, root, _ = _once_only_stage(tmp_path, monkeypatch, stage)
+        entered, release = threading.Event(), threading.Event()
+        calls, errors = [], {}
+    
+        def controlled_callback(*args):
+            calls.append(args[3])
+            entered.set()
+            assert release.wait(timeout=10)
+            return {"case_id": args[3], "provider": "exa"}
+    
+        def run_parent(name):
+            try:
+                runtime["main"]()
+            except Exception as error:
+                errors[name] = error
+    
+        monkeypatch.setitem(runtime, "baseline" if stage == "baseline" else "expert", controlled_callback)
+        first = threading.Thread(target=run_parent, args=("first",))
+        second = threading.Thread(target=run_parent, args=("second",))
+        first.start()
+        try:
+            assert entered.wait(timeout=10)
+            assert not (root / f"{stage}-results.json").exists()
+            second.start()
+            second.join(timeout=2)
+>           assert not second.is_alive(), "Second parent queued duplicate work before first completion"
+E           AssertionError: Second parent queued duplicate work before first completion
+E           assert not True
+E            +  where True = is_alive()
+E            +    where is_alive = <Thread(Thread-4 (run_parent), started 6219345920)>.is_alive
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1269: AssertionError
+----------------------------- Captured stdout call -----------------------------
+{"stage": "experts", "completed": 1, "stopped": false}
+{"stage": "experts", "completed": 1, "stopped": false}
+_ test_v10_orphan_case_dispatch_prevents_new_stage_claim_or_external_call[baseline] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_orphan_case_dispatch_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1092e9970>
+stage = 'baseline'
+
+    @pytest.mark.parametrize("stage", ["baseline", "experts"])
+    def test_v10_orphan_case_dispatch_prevents_new_stage_claim_or_external_call(
+        tmp_path, monkeypatch, stage
+    ):
+        runtime, root, _ = _once_only_stage(tmp_path, monkeypatch, stage)
+        case = root / stage / "u"
+        case.mkdir(parents=True)
+        dispatch = case / "dispatch.json"
+        original = b'{"original_run_tag":"synthetic-interrupted-dispatch"}\n'
+        dispatch.write_bytes(original)
+        calls = []
+        monkeypatch.setitem(runtime, "baseline", lambda *args: calls.append("source"))
+        monkeypatch.setitem(runtime, "expert", lambda *args: calls.append("model"))
+        with pytest.raises(ValueError, match="reset or retry"):
+>           runtime["main"]()
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1295: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def main() -> None:
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--repo", type=Path, required=True)
+        parser.add_argument("--root", type=Path, required=True)
+        parser.add_argument("--ref", required=True)
+        parser.add_argument("--stage", choices=["baseline", "experts"], required=True)
+        args = parser.parse_args()
+        if (args.root / "model-batch-stop.json").exists():
+            raise ValueError("Do not restart a trial with an original model batch stop")
+        trial = json.loads((args.root / "trial.json").read_text())
+        if (
+            trial["protocol_version"] != "journal-v10"
+            or trial["frozen_ref"] != args.ref
+            or trial.get("algorithm_provider") != "exa"
+            or trial.get("expert_provider") != "exa"
+            or trial.get("search_provider") != "exa"
+        ):
+            raise ValueError("Stage does not match original frozen V10 trial")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if hashlib.sha256((args.root / name).read_bytes()).hexdigest() != trial[field]:
+                raise ValueError("Original independently allocated workspace contract changed")
+        assignments = json.loads((args.root / "workspace-locations.json").read_text())
+        receipts = json.loads((args.root / "workspace-receipts.json").read_text())
+        workspaces = validate_workspaces(assignments, receipts, case_ids=tuple(legacy["COHORT"]))
+        if args.stage == "experts":
+            baselines = json.loads((args.root / "baseline-results.json").read_text())
+            if (
+                baselines["stopped"]
+                or baselines["remaining_case_ids"]
+                or any(
+                    result.get("provider") != "exa"
+                    or result.get("provider_failure") is not None
+                    or result.get("budget", {}).get("provider_failure") is not None
+                    for result in baselines["results"]
+                )
+            ):
+                raise ValueError("Provider-stopped/incomplete baseline cannot start experts")
+        if (args.root / f"{args.stage}-results.json").exists():
+            raise ValueError("Do not reset or retry a stage in an existing trial")
+        (args.root / "sealed-sentinel.txt").write_text("SEALED_HARMLESS_SENTINEL")
+        results = []
+        cohort = legacy["COHORT"]
+        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+            pending = {}
+            iterator = iter(cohort)
+    
+            def submit_next() -> None:
+                if STOP.is_set():
+                    return
+                case_id = next(iterator, None)
+                if case_id is None:
+                    return
+                function: Callable[..., dict[str, Any]] = (
+                    baseline if args.stage == "baseline" else expert
+                )
+                params = (args.repo, args.ref, args.root, case_id)
+                future = pool.submit(
+                    function, *params, *(() if args.stage == "baseline" else (workspaces,))
+                )
+                pending[future] = case_id
+    
+            for _ in range(3):
+                submit_next()
+            while pending:
+                done, _ = concurrent.futures.wait(
+                    pending, return_when=concurrent.futures.FIRST_COMPLETED
+                )
+                for future in done:
+                    case_id = pending.pop(future)
+                    try:
+                        result = future.result()
+                        results.append(result)
+                        if result.get("model_failure") is not None:
+                            STOP.set()
+                    except Exception as exc:
+                        failure = {
+                            "case_id": case_id,
+                            "status": "failed",
+                            "error": type(exc).__name__ + ": " + str(exc),
+                        }
+                        results.append(failure)
+                        save(args.root / args.stage / case_id / "orchestration-error.json", failure)
+                        emit(**failure)
+                        STOP.set()
+                if not STOP.is_set():
+                    for _ in done:
+                        submit_next()
+                save(
+                    args.root / f"{args.stage}-results.json",
+                    {
+                        "results": results,
+                        "stopped": STOP.is_set(),
+                        "remaining_case_ids": [
+                            case_id
+                            for case_id in cohort
+>                           if case_id not in {r["case_id"] for r in results}
+                                               ^^^^^^^^^^^^
+                        ],
+                    },
+                )
+E               TypeError: 'NoneType' object is not subscriptable
+
+/tmp/unimatch-expert500-journal-pilot-v10.py:1767: TypeError
+----------------------------- Captured stdout call -----------------------------
+{"case_id": "u", "status": "failed", "error": "AttributeError: 'NoneType' object has no attribute 'get'"}
+_ test_v10_orphan_case_dispatch_prevents_new_stage_claim_or_external_call[experts] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_orphan_case_dispatch_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10929f4a0>
+stage = 'experts'
+
+    @pytest.mark.parametrize("stage", ["baseline", "experts"])
+    def test_v10_orphan_case_dispatch_prevents_new_stage_claim_or_external_call(
+        tmp_path, monkeypatch, stage
+    ):
+        runtime, root, _ = _once_only_stage(tmp_path, monkeypatch, stage)
+        case = root / stage / "u"
+        case.mkdir(parents=True)
+        dispatch = case / "dispatch.json"
+        original = b'{"original_run_tag":"synthetic-interrupted-dispatch"}\n'
+        dispatch.write_bytes(original)
+        calls = []
+        monkeypatch.setitem(runtime, "baseline", lambda *args: calls.append("source"))
+        monkeypatch.setitem(runtime, "expert", lambda *args: calls.append("model"))
+        with pytest.raises(ValueError, match="reset or retry"):
+>           runtime["main"]()
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1295: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def main() -> None:
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--repo", type=Path, required=True)
+        parser.add_argument("--root", type=Path, required=True)
+        parser.add_argument("--ref", required=True)
+        parser.add_argument("--stage", choices=["baseline", "experts"], required=True)
+        args = parser.parse_args()
+        if (args.root / "model-batch-stop.json").exists():
+            raise ValueError("Do not restart a trial with an original model batch stop")
+        trial = json.loads((args.root / "trial.json").read_text())
+        if (
+            trial["protocol_version"] != "journal-v10"
+            or trial["frozen_ref"] != args.ref
+            or trial.get("algorithm_provider") != "exa"
+            or trial.get("expert_provider") != "exa"
+            or trial.get("search_provider") != "exa"
+        ):
+            raise ValueError("Stage does not match original frozen V10 trial")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if hashlib.sha256((args.root / name).read_bytes()).hexdigest() != trial[field]:
+                raise ValueError("Original independently allocated workspace contract changed")
+        assignments = json.loads((args.root / "workspace-locations.json").read_text())
+        receipts = json.loads((args.root / "workspace-receipts.json").read_text())
+        workspaces = validate_workspaces(assignments, receipts, case_ids=tuple(legacy["COHORT"]))
+        if args.stage == "experts":
+            baselines = json.loads((args.root / "baseline-results.json").read_text())
+            if (
+                baselines["stopped"]
+                or baselines["remaining_case_ids"]
+                or any(
+                    result.get("provider") != "exa"
+                    or result.get("provider_failure") is not None
+                    or result.get("budget", {}).get("provider_failure") is not None
+                    for result in baselines["results"]
+                )
+            ):
+                raise ValueError("Provider-stopped/incomplete baseline cannot start experts")
+        if (args.root / f"{args.stage}-results.json").exists():
+            raise ValueError("Do not reset or retry a stage in an existing trial")
+        (args.root / "sealed-sentinel.txt").write_text("SEALED_HARMLESS_SENTINEL")
+        results = []
+        cohort = legacy["COHORT"]
+        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+            pending = {}
+            iterator = iter(cohort)
+    
+            def submit_next() -> None:
+                if STOP.is_set():
+                    return
+                case_id = next(iterator, None)
+                if case_id is None:
+                    return
+                function: Callable[..., dict[str, Any]] = (
+                    baseline if args.stage == "baseline" else expert
+                )
+                params = (args.repo, args.ref, args.root, case_id)
+                future = pool.submit(
+                    function, *params, *(() if args.stage == "baseline" else (workspaces,))
+                )
+                pending[future] = case_id
+    
+            for _ in range(3):
+                submit_next()
+            while pending:
+                done, _ = concurrent.futures.wait(
+                    pending, return_when=concurrent.futures.FIRST_COMPLETED
+                )
+                for future in done:
+                    case_id = pending.pop(future)
+                    try:
+                        result = future.result()
+                        results.append(result)
+                        if result.get("model_failure") is not None:
+                            STOP.set()
+                    except Exception as exc:
+                        failure = {
+                            "case_id": case_id,
+                            "status": "failed",
+                            "error": type(exc).__name__ + ": " + str(exc),
+                        }
+                        results.append(failure)
+                        save(args.root / args.stage / case_id / "orchestration-error.json", failure)
+                        emit(**failure)
+                        STOP.set()
+                if not STOP.is_set():
+                    for _ in done:
+                        submit_next()
+                save(
+                    args.root / f"{args.stage}-results.json",
+                    {
+                        "results": results,
+                        "stopped": STOP.is_set(),
+                        "remaining_case_ids": [
+                            case_id
+                            for case_id in cohort
+>                           if case_id not in {r["case_id"] for r in results}
+                                               ^^^^^^^^^^^^
+                        ],
+                    },
+                )
+E               TypeError: 'NoneType' object is not subscriptable
+
+/tmp/unimatch-expert500-journal-pilot-v10.py:1767: TypeError
+----------------------------- Captured stdout call -----------------------------
+{"case_id": "u", "status": "failed", "error": "AttributeError: 'NoneType' object has no attribute 'get'"}
+____ test_v10_baseline_wrapper_cannot_reuse_existing_destination[directory] ____
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_baseline_wrapper_cann0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1095a5f10>
+kind = 'directory'
+
+    @pytest.mark.parametrize("kind", ["directory", "dispatch", "dangling_symlink"])
+    def test_v10_baseline_wrapper_cannot_reuse_existing_destination(tmp_path, monkeypatch, kind):
+        runtime = runpy.run_path(str(PILOT))["workflow"].__globals__
+        runtime["STOP"].clear()
+        destination = tmp_path / "baseline/u"
+        destination.parent.mkdir()
+        original = b'{"original_dispatch":true}\n'
+        if kind == "dangling_symlink":
+            destination.symlink_to(tmp_path / "absent")
+        else:
+            destination.mkdir()
+            if kind == "dispatch":
+                (destination / "dispatch.json").write_bytes(original)
+        calls = []
+        monkeypatch.setitem(runtime["legacy"], "workflow", lambda *args: calls.append("GH_DISPATCH"))
+>       with pytest.raises(RuntimeError, match="cannot reuse"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE RuntimeError
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1316: Failed
+____ test_v10_baseline_wrapper_cannot_reuse_existing_destination[dispatch] _____
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_baseline_wrapper_cann1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1095a6390>
+kind = 'dispatch'
+
+    @pytest.mark.parametrize("kind", ["directory", "dispatch", "dangling_symlink"])
+    def test_v10_baseline_wrapper_cannot_reuse_existing_destination(tmp_path, monkeypatch, kind):
+        runtime = runpy.run_path(str(PILOT))["workflow"].__globals__
+        runtime["STOP"].clear()
+        destination = tmp_path / "baseline/u"
+        destination.parent.mkdir()
+        original = b'{"original_dispatch":true}\n'
+        if kind == "dangling_symlink":
+            destination.symlink_to(tmp_path / "absent")
+        else:
+            destination.mkdir()
+            if kind == "dispatch":
+                (destination / "dispatch.json").write_bytes(original)
+        calls = []
+        monkeypatch.setitem(runtime["legacy"], "workflow", lambda *args: calls.append("GH_DISPATCH"))
+>       with pytest.raises(RuntimeError, match="cannot reuse"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE RuntimeError
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1316: Failed
+_ test_v10_baseline_wrapper_cannot_reuse_existing_destination[dangling_symlink] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_baseline_wrapper_cann2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10956ef90>
+kind = 'dangling_symlink'
+
+    @pytest.mark.parametrize("kind", ["directory", "dispatch", "dangling_symlink"])
+    def test_v10_baseline_wrapper_cannot_reuse_existing_destination(tmp_path, monkeypatch, kind):
+        runtime = runpy.run_path(str(PILOT))["workflow"].__globals__
+        runtime["STOP"].clear()
+        destination = tmp_path / "baseline/u"
+        destination.parent.mkdir()
+        original = b'{"original_dispatch":true}\n'
+        if kind == "dangling_symlink":
+            destination.symlink_to(tmp_path / "absent")
+        else:
+            destination.mkdir()
+            if kind == "dispatch":
+                (destination / "dispatch.json").write_bytes(original)
+        calls = []
+        monkeypatch.setitem(runtime["legacy"], "workflow", lambda *args: calls.append("GH_DISPATCH"))
+>       with pytest.raises(RuntimeError, match="cannot reuse"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE RuntimeError
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1316: Failed
+____ test_v10_existing_expert_destination_refuses_before_new_guard_or_model ____
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+
+    def test_v10_existing_expert_destination_refuses_before_new_guard_or_model(pilot):
+        pilot.folder.mkdir(parents=True)
+        original = b'{"original_case_wall_started_at":"synthetic"}\n'
+        receipt = pilot.folder / "original-case.json"
+        receipt.write_bytes(original)
+        pilot.queue()
+        with pytest.raises(RuntimeError, match="cannot reuse"):
+>           pilot.run()
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:1333: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:190: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v10.py:996: in expert
+    selected = select(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+isolation = NetworkBudgetIsolation(workspace=PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish.../sandbox', codex_executable='/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex')
+schema = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_existing_expert_desti0/unimatch-blind-u-mp1iv8cn/decision.schema.json')
+output = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-462/test_v10_existing_expert_desti0/unimatch-blind-u-mp1iv8cn/answer-02.json')
+prompt = {'task': 'Independently audit this public university packet using only your own\ncontrolled source observations. Unive...request supplies evidence. Full\njournal, raw-log, quotation, location and scope validation remains mandatory.\n', ...}
+kwargs = {'wall_guard': WallGuard(started_at=datetime.datetime(2026, 10, 5, 8, 10, 19, 274890, tzinfo=datetime.timezone.utc), d...etime.datetime(2026, 10, 5, 8, 25, 19, 274890, tzinfo=datetime.timezone.utc)), 'phase': 'data', 'model': 'gpt-6-astra'}
+
+    def select(isolation, schema, output, prompt, **kwargs):
+        harness.prompts.append((copy.deepcopy(prompt), dict(kwargs)))
+        harness.commands.append(isolation.command(schema, output=output, model=kwargs.get("model")))
+>       assert harness.pending, "Unexpected selector call after closure"
+E       AssertionError: Unexpected selector call after closure
+E       assert []
+E        +  where [] = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429).pending
+
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:338: AssertionError
+=============================== warnings summary ===============================
+test_unimatch_expert500_journal_pilot_v10.py::test_v10_existing_expert_destination_refuses_before_new_guard_or_model
+test_unimatch_expert500_journal_pilot_v10.py::test_v10_existing_expert_destination_refuses_before_new_guard_or_model
+test_unimatch_expert500_journal_pilot_v10.py::test_v10_existing_expert_destination_refuses_before_new_guard_or_model
+test_unimatch_expert500_journal_pilot_v10.py::test_v10_existing_expert_destination_refuses_before_new_guard_or_model
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/bs4/builder/_lxml.py:124: DeprecationWarning: The 'strip_cdata' option of HTMLParser() has never done anything and will eventually be removed.
+    parser = parser(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v10.py::test_v10_stage_start_receipt_blocks_restart_before_any_mutation[-baseline]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v10.py::test_v10_stage_start_receipt_blocks_restart_before_any_mutation[-experts]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v10.py::test_v10_stage_start_receipt_blocks_restart_before_any_mutation[{"interrupted_before_first_result":true}\n-baseline]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v10.py::test_v10_stage_start_receipt_blocks_restart_before_any_mutation[{"interrupted_before_first_result":true}\n-experts]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v10.py::test_v10_first_stage_saves_persistent_receipt_and_completed_stage_cannot_restart[baseline]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v10.py::test_v10_first_stage_saves_persistent_receipt_and_completed_stage_cannot_restart[experts]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v10.py::test_v10_crash_before_first_result_keeps_stage_claim_and_blocks_new_workers[baseline]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v10.py::test_v10_crash_before_first_result_keeps_stage_claim_and_blocks_new_workers[experts]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v10.py::test_v10_concurrent_parent_cannot_start_duplicate_stage_before_first_completion[baseline]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v10.py::test_v10_concurrent_parent_cannot_start_duplicate_stage_before_first_completion[experts]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v10.py::test_v10_orphan_case_dispatch_prevents_new_stage_claim_or_external_call[baseline]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v10.py::test_v10_orphan_case_dispatch_prevents_new_stage_claim_or_external_call[experts]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v10.py::test_v10_baseline_wrapper_cannot_reuse_existing_destination[directory]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v10.py::test_v10_baseline_wrapper_cannot_reuse_existing_destination[dispatch]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v10.py::test_v10_baseline_wrapper_cannot_reuse_existing_destination[dangling_symlink]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v10.py::test_v10_existing_expert_destination_refuses_before_new_guard_or_model
+16 failed, 48 deselected, 4 warnings in 6.20s

@@ -1,0 +1,58 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend
+configfile: pytest.ini
+plugins: respx-0.22.0, cov-6.0.0, asyncio-1.4.0, platformdirs-4.12.1, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 318 items
+
+evaluation/research/tests/test_expert_model_failure.py ................. [  5%]
+...............................                                          [ 15%]
+. .............F........................................................ [ 37%]
+........................................................................ [ 59%]
+........................................................................ [ 82%]
+........................................................                 [100%]
+
+=================================== FAILURES ===================================
+_ test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event2-null_kind] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b3cc800>
+metadata = 'null_kind'
+event = {'type': 'error', 'message': 'Unknown model transport failure'}
+
+    @pytest.mark.parametrize("metadata", ["missing_kind", "null_kind", "missing_meta"])
+    @pytest.mark.parametrize(
+        "event",
+        [
+            {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+            {"type": "error", "code": "invalid_api_key", "message": "Authentication failed"},
+            {"type": "error", "message": "Unknown model transport failure"},
+            {"type": "turn.failed", "error": {"message": "Unknown terminal failure"}},
+        ],
+    )
+    def test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers(
+        pilot, report, monkeypatch, metadata, event
+    ):
+        prepare_reporting(pilot, report)
+        assert replay(pilot, report)["explicit_commit"] is True
+        raw = pilot.folder / "selector-99.events.jsonl"
+        original = json.dumps(event) + "\n"
+        raw.write_text(original)
+        if metadata != "missing_meta":
+            write(
+                pilot.folder / "selector-99.meta.json",
+                {"error_kind": None} if metadata == "null_kind" else {},
+            )
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original failed model stream"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Original failed model stream'
+E         Actual message: 'Actual parent protocol differs from pre-run frozen scripts'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:404: AssertionError
+=========================== short test summary info ============================
+FAILED ::test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event2-null_kind]
+======================== 1 failed, 317 passed in 19.07s ========================

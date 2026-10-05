@@ -89,9 +89,7 @@ def test_complete_turn_with_disabled_capability_diagnostic_is_not_global_failure
     assert model_batch_failure(raw, error_kind=None) is None
 
 
-@pytest.mark.parametrize(
-    "raw", ["", "not-json", "[]\nnull\n1\n", '{"type":"turn.failed","error":"unknown"}\n']
-)
+@pytest.mark.parametrize("raw", ["", "not-json", "[]\nnull\n1\n"])
 def test_unknown_process_failure_stops_without_guessing_quota(raw):
     failure = model_batch_failure(raw, error_kind="selector_process_failed")
     assert failure["kind"] == "model_transport_failure"
@@ -110,4 +108,104 @@ def test_only_trusted_quota_receipt_promotes_other_terminal_error_to_shared_stop
 
 def test_completed_model_transport_cannot_be_reclassified_by_stale_error_event():
     raw = stream({"type": "error", "message": LIMIT}, {"type": "turn.completed"})
+    assert model_batch_failure(raw, error_kind=None) is None
+
+
+@pytest.mark.parametrize("error_kind", [None, "selector_timeout", "selector_process_failed"])
+@pytest.mark.parametrize(
+    "event,kind",
+    [
+        (
+            {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+            "model_usage_limit",
+        ),
+        ({"type": "error", "code": "invalid_api_key"}, "model_authentication_refusal"),
+        ({"type": "error", "message": "Unknown transport failure"}, "model_transport_failure"),
+        ({"type": "turn.failed", "error": {"message": "Unknown"}}, "model_transport_failure"),
+    ],
+)
+def test_terminal_raw_failure_does_not_depend_on_editable_error_kind(error_kind, event, kind):
+    raw = stream({"type": "turn.started"}, event)
+    assert model_batch_failure(raw, error_kind=error_kind) == {
+        "kind": kind,
+        "selector_error_kind": error_kind,
+        "event_line": 2,
+        "event_type": event["type"],
+        "stream_sha256": hashlib.sha256(raw.encode()).hexdigest(),
+    }
+
+
+@pytest.mark.parametrize(
+    "error_kind", [None, "selector_process_failed", "selector_output_rejected"]
+)
+@pytest.mark.parametrize("event_type", ["error", "turn.failed"])
+def test_completed_turn_clears_stale_attribution_but_preserves_failed_transport(
+    error_kind, event_type
+):
+    event = (
+        {"type": "error", "code": "usage_limit_reached"}
+        if event_type == "error"
+        else {"type": "turn.failed", "error": {"code": "usage_limit_reached"}}
+    )
+    raw = stream(event, {"type": "turn.completed"})
+    failure = model_batch_failure(raw, error_kind=error_kind)
+    if error_kind is None:
+        assert failure is None
+    else:
+        assert failure == {
+            "kind": "model_transport_failure",
+            "selector_error_kind": error_kind,
+            "event_line": None,
+            "event_type": None,
+            "stream_sha256": hashlib.sha256(raw.encode()).hexdigest(),
+        }
+
+
+@pytest.mark.parametrize(
+    "code,kind",
+    [("quota_exceeded", "model_usage_limit"), ("invalid_api_key", "model_authentication_refusal")],
+)
+def test_terminal_failure_after_completed_event_keeps_its_original_location(code, kind):
+    raw = stream(
+        {"type": "error", "message": "Stale transport failure"},
+        {"type": "turn.completed"},
+        {"type": "turn.failed", "error": {"code": code}},
+    )
+    failure = model_batch_failure(raw, error_kind=None)
+    assert failure["kind"] == kind and failure["event_line"] == 3
+    assert failure["event_type"] == "turn.failed"
+    assert failure["stream_sha256"] == hashlib.sha256(raw.encode()).hexdigest()
+
+
+@pytest.mark.parametrize("error_kind", [None, "selector_timeout", "selector_wall_guard_exhausted"])
+def test_partial_timeout_with_only_expected_startup_diagnostic_is_not_global(error_kind):
+    raw = stream(
+        {"type": "thread.started", "thread_id": "synthetic"},
+        {
+            "type": "item.completed",
+            "item": {"type": "error", "message": DISABLED_CODE_MODE_DIAGNOSTIC},
+        },
+        {"type": "turn.started"},
+    )
+    assert model_batch_failure(raw, error_kind=error_kind) is None
+
+
+def test_unknown_terminal_failure_with_malformed_payload_still_stops_without_metadata():
+    raw = stream({"type": "turn.failed", "error": "unknown"})
+    failure = model_batch_failure(raw, error_kind=None)
+    assert failure["kind"] == "model_transport_failure"
+    assert failure["event_line"] == 1 and failure["event_type"] == "turn.failed"
+
+
+def test_agent_message_containing_raw_failure_json_is_not_a_failure_event():
+    raw = stream(
+        {
+            "type": "item.completed",
+            "item": {
+                "type": "agent_message",
+                "text": json.dumps({"type": "turn.failed", "error": {"message": LIMIT}}),
+            },
+        },
+        {"type": "turn.completed"},
+    )
     assert model_batch_failure(raw, error_kind=None) is None

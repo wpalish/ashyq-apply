@@ -1,0 +1,423 @@
+"""Owner-authorized pilot orchestration; university I/O occurs only in controller CI."""
+from __future__ import annotations
+
+import argparse
+import concurrent.futures
+import hashlib
+import json
+import math
+import os
+import subprocess
+import tempfile
+import threading
+import time
+import uuid
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
+from evaluation.research.expert.blind_cli import Isolation, selector_answer
+from evaluation.research.expert.catalogue import PUBLIC_PROFILE
+from evaluation.research.expert.controller import expert_view
+from evaluation.research.expert.models import QUESTIONS, validate_trace
+from evaluation.research.expert.packet import digest
+from evaluation.research.live import COHORT
+from evaluation.research.mapping import CLAIM_KEYS, STRUCTURED_KEYS
+
+STOP = threading.Event()
+PRINT = threading.Lock()
+
+
+def emit(**value: Any) -> None:
+    with PRINT:
+        print(json.dumps(value, ensure_ascii=False), flush=True)
+
+
+def save(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+
+
+def command(args: list[str], *, cwd: Path, stdin: str | None = None, timeout: float = 60) -> str:
+    completed = subprocess.run(args, cwd=cwd, input=stdin, text=True, capture_output=True,
+                               timeout=timeout, check=False)
+    if completed.returncode:
+        raise RuntimeError(f"{args[0]} exit {completed.returncode}: {completed.stderr[-1200:]}")
+    return completed.stdout
+
+
+def workflow(repo: Path, ref: str, case_id: str, inputs: dict[str, str], destination: Path) -> tuple[int, str]:
+    if STOP.is_set():
+        raise RuntimeError("Batch stopped after observed provider429")
+    tag = "e500-" + uuid.uuid4().hex[:16]
+    inputs = {"runner": "ubuntu-latest", "case": case_id, "run_tag": tag,
+              "seconds_per_case": "120", "max_pages": "60", "search_provider": "exa_mcp", **inputs}
+    destination.mkdir(parents=True, exist_ok=True)
+    save(destination / "dispatch.json", {"ref": ref, "inputs": inputs})
+    command(["gh", "workflow", "run", "benchmark-capture.yml", "--ref", ref, "--json"],
+            cwd=repo, stdin=json.dumps(inputs))
+    run_id = None
+    began = time.monotonic()
+    while time.monotonic() - began < 90:
+        runs = json.loads(command(["gh", "run", "list", "--workflow", "benchmark-capture.yml",
+             "--branch", ref, "--event", "workflow_dispatch", "--limit", "40", "--json",
+             "databaseId,displayTitle,headSha,status,conclusion"], cwd=repo))
+        match = next((r for r in runs if r["displayTitle"].endswith(tag)), None)
+        if match:
+            run_id = match["databaseId"]
+            head_sha = match["headSha"]
+            break
+        time.sleep(5)
+    if run_id is None:
+        raise RuntimeError("Dispatched run not identifiable; do not redispatch")
+    emit(case=case_id, mode=inputs["mode"], run_id=run_id, state="dispatched", source=head_sha)
+    save(destination / "run.json", {"run_id": run_id, "head_sha": head_sha, "tag": tag})
+    while time.monotonic() - began < 900:
+        state = json.loads(command(["gh", "run", "view", str(run_id), "--json",
+                                   "status,conclusion,headSha,url"], cwd=repo))
+        if state["headSha"] != head_sha:
+            raise RuntimeError("Workflow source changed unexpectedly")
+        if state["status"] == "completed":
+            save(destination / "run.json", {"run_id": run_id, "tag": tag, **state})
+            break
+        if STOP.is_set():
+            command(["gh", "run", "cancel", str(run_id)], cwd=repo)
+            raise RuntimeError("Canceled in-flight run after batch provider429")
+        time.sleep(10)
+    else:
+        raise RuntimeError(f"Run {run_id} still pending; preserve it, do not retry")
+    artifact = destination / "artifact"
+    command(["gh", "run", "download", str(run_id), "--name", f"expert-recovery-{run_id}",
+             "--dir", str(artifact)], cwd=repo)
+    emit(case=case_id, mode=inputs["mode"], run_id=run_id, state=state["conclusion"])
+    if state["conclusion"] != "success":
+        raise RuntimeError(f"Workflow {run_id} did not complete successfully; inspect its artifact")
+    return run_id, head_sha
+
+
+def baseline(repo: Path, ref: str, root: Path, case_id: str) -> dict[str, Any]:
+    case_root = root / "baseline" / case_id
+    run_id, head_sha = workflow(repo, ref, case_id,
+        {"mode": "expert_baseline", "extra_args": "--strict-expert-budget"}, case_root)
+    artifacts = case_root / "artifact"
+    captures = list(artifacts.glob("capture/**/capture.json"))
+    if len(captures) != 1:
+        raise RuntimeError(f"Expected one independently saved baseline capture, found {len(captures)}")
+    capture = json.loads(captures[0].read_text())
+    if capture["pipeline_sha"] != head_sha or capture["config"]["search_provider"] != "exa_mcp":
+        raise RuntimeError("Baseline revision/provider mismatch")
+    if not capture["config"].get("strict_expert_budget"):
+        raise RuntimeError("Baseline did not use strict equal-budget mode")
+    budget = capture["config"]["case_budgets"][case_id]
+    if budget.get("stop_reason") == "http_429":
+        STOP.set()
+    packet = json.loads((artifacts / "packet.json").read_text())
+    packet["public_profile"] = dict(PUBLIC_PROFILE)
+    packet["comparison_mode"] = "independent_full_budget"
+    packet["baseline_budget"]["max_search_queries"] = 6
+    save(case_root / "public-packet.json", packet)
+    result = {"case_id": case_id, "run_id": run_id, "head_sha": head_sha,
+              "capture": str(captures[0]), "packet": str(case_root / "public-packet.json"),
+              "budget": budget}
+    save(case_root / "result.json", result)
+    return result
+
+
+def decision_schema() -> dict[str, Any]:
+    text = {"type": "string"}
+    nullable_text = {"type": ["string", "null"]}
+    scope = {"type": "object", "additionalProperties": False,
+        "properties": {key: nullable_text for key in (
+            "university", "programme", "degree", "field", "intake", "population", "qualification", "academic_year")}}
+    scope["required"] = list(scope["properties"])
+
+    def obj(properties: dict[str, Any]) -> dict[str, Any]:
+        return {"type": "object", "properties": properties, "required": list(properties),
+                "additionalProperties": False}
+
+    numbers = {"type": "array", "items": {"type": "integer", "minimum": 0}}
+    location = obj({"kind": {"type": "string", "enum": ["text", "document_ir", "pdf"]},
+        "block_id": nullable_text, "section_path": {"type": "array", "items": text},
+        "page": {"type": ["integer", "null"]}})
+    proposal = obj({"claim_key": text, "value_json": text, "source_url": text, "excerpt": text,
+        "accessed_on": text, "scope": scope, "supporting_steps": numbers})
+    evidence = obj({"action_step": {"type": "integer"}, "source_url": text,
+                    "excerpt": text, "location": location})
+    finding = obj({"question": {"type": "string", "enum": list(QUESTIONS)},
+        "status": {"type": "string", "enum": ["found", "not_published", "inaccessible", "unresolved"]},
+        "supporting_steps": numbers, "proposal_indices": numbers,
+        "evidence": {"type": "array", "items": evidence}, "scope": scope, "observation": text})
+    action = obj({"tool": {"type": "string", "enum": ["fetcher", "search_provider", "view"]},
+        "url": nullable_text, "query": nullable_text,
+        "domains": {"type": "array", "items": text}, "intent": text,
+        "source_step": {"type": ["integer", "null"]},
+        "page": {"type": ["integer", "null"]},
+        "offset": {"type": ["integer", "null"]},
+        "section_offset": {"type": ["integer", "null"]},
+        "link_offset": {"type": ["integer", "null"]}})
+    return obj({"decision": {"type": "string", "enum": ["act", "submit"]},
+        "observation": text, "actions": {"type": "array", "items": action, "maxItems": 3},
+        "proposals": {"type": "array", "items": proposal},
+        "question_findings": {"type": "array", "items": finding, "minItems": 7, "maxItems": 7}})
+
+
+INSTRUCTIONS = """Audit this university independently with only the supplied public packet/context and controller outputs.
+Q0 exact bachelor Computer Science programme exists; Q1 English IELTS/TOEFL/Duolingo minima;
+Q2 international secondary qualification and KZ/NIS/additional-year eligibility;
+Q3 deadline for the requested international intake; Q4 international tuition for the requested academic year;
+Q5 bachelor scholarship exists; Q6 international eligibility/conditions for that exact scholarship.
+Return concise public observations and next actions, never hidden reasoning. No local files/tools.
+Start by choosing exactly one official page read/search. Search snippets cannot prove facts.
+You may plan at most3 tool actions from your current observations, then inspect actual returned outputs.
+To inspect more text/links/blocks or an exact PDF page from an already recorded read, choose only one view
+action with source_step plus page/offset/section_offset/link_offset. This performs pure saved-byte parsing,
+not a new fetch/query, and evidence still cites the original source action. Other view arguments are null.
+Maintain all7 question findings each turn, plus every observed proposed fact. Use unresolved when not settled.
+Found requires a proposal and same exact evidence excerpt/source/action in its finding. Not_published requires
+an explicit official publication/absence statement; failed search is unresolved. Inaccessible needs a failed
+official page read. Empty quotation never proves anything. Only propose evidence already actually read.
+For programme existence name the exact programme/degree/field published by the source. Unknown published scope
+stays null. Q4 found requires an expressly published academic year covering fall2027; older tariffs remain
+observations but cannot answer that question. A requested year/nationality is never proof of source scope.
+Canonical scope formatting is degree=bachelor, field=computer science, intake=fall 2027,
+population=international, qualification=KZ national secondary and university=the packet university.
+Use these canonical strings only if actually proved by the source; otherwise that dimension stays null.
+For each proposal use value_json encoding its typed value, exact case-sensitive quotation and source URL,
+accessed_on from source fetched_at, supporting action steps, and scope matching its question's scope.
+For HTML prefer exact DocumentIR block_id/section_path shown in output; use text location only for whole-text
+quotations. For PDF cite exact page number (1–40). Never cite unshown/truncated text or a future action.
+You can submit after reading sufficient evidence; otherwise return act. All facts remain unreviewed.
+With less than15active seconds left, submit current evidence and unresolved gaps; do not force guesses.
+Public direct key ontology is supplied for representation only. Additional keys may name precise observed
+document/award facts; include the official award/document name in values, never infer sealed benchmark IDs.
+"""
+
+
+def expert(repo: Path, ref: str, root: Path, case_id: str, workspaces: dict[str, Path]) -> dict[str, Any]:
+    baseline_result = json.loads((root / "baseline" / case_id / "result.json").read_text())
+    packet = json.loads(Path(baseline_result["packet"]).read_text())
+    case = packet["cases"][0]
+    context = (repo / "backend/evaluation/research/expert/ALGORITHM_CONTEXT.md").read_text()
+    case_root = root / "experts" / case_id
+    case_root.mkdir(parents=True, exist_ok=True)
+    workspace = workspaces[case_id]
+    roots = [Path('/Users/wpalish/Documents/Codex'), Path('/Users/wpalish/.codex/memories'),
+             Path('/Users/wpalish/.codex/sessions'), Path('/Users/wpalish/.codex/attachments'),
+             Path('/Users/wpalish/Downloads'), Path('/tmp/codex-remote-attachments')]
+    roots += [path for name, path in workspaces.items() if name != case_id]
+    isolation = Isolation.local(workspace, roots)
+    allowed = workspace / "public-sentinel.txt"; allowed.write_text("PUBLIC_PACKET_SENTINEL")
+    sealed = root / "sealed-sentinel.txt"
+    save(case_root / "isolation.json", isolation.prove_access(allowed, sealed))
+    schema = workspace / "decision.schema.json"; save(schema, decision_schema())
+    history: list[dict[str, Any]] = []
+    actions: list[dict[str, Any]] = []
+    proposals: list[dict[str, Any]] = []
+    findings = [{"question": q, "status": "unresolved", "supporting_steps": [],
+        "proposal_indices": [], "evidence": [], "scope": {},
+        "observation": "No observed evidence settles this question."} for q in QUESTIONS]
+    started = datetime.now(UTC).isoformat()
+    active_ms = 0
+    summary = None
+    prior_run = None
+    log_dir = None
+    feedback = None
+    result: dict[str, Any] = {"case_id": case_id, "status": "incomplete"}
+    for turn in range(1, 16):
+        if STOP.is_set() or active_ms >= 120000:
+            break
+        prompt = {"task": INSTRUCTIONS, "public_packet": packet, "algorithm_context": context,
+            "public_claim_keys": CLAIM_KEYS, "public_structured_keys": STRUCTURED_KEYS,
+            "controller_history": history, "previous_proposals": proposals,
+            "previous_question_findings": findings, "validation_feedback": feedback,
+            "remaining_active_ms": 120000-active_ms, "read_limit": 60, "query_limit": 6}
+        output = workspace / f"answer-{turn:02d}.json"
+        began = time.monotonic()
+        try:
+            model = subprocess.run(isolation.command(schema, output=output), cwd=workspace,
+                input=json.dumps(prompt, ensure_ascii=False), text=True, capture_output=True,
+                timeout=min(55, (120000-active_ms)/1000), check=False)
+            active_ms += math.ceil((time.monotonic()-began)*1000)
+            (case_root / f"selector-{turn:02d}.events.jsonl").write_text(model.stdout)
+            (case_root / f"selector-{turn:02d}.stderr.txt").write_text(model.stderr)
+            if model.returncode or not output.is_file():
+                raise RuntimeError(f"Selector failed with exit{model.returncode}")
+            chosen = selector_answer(model.stdout, output.read_text())
+            save(case_root / f"selector-{turn:02d}.decision.json", chosen)
+            new_proposals = []
+            for item in chosen["proposals"]:
+                item = dict(item)
+                item["value"] = json.loads(item.pop("value_json"))
+                item["status"] = "unreviewed"
+                new_proposals.append(item)
+            candidate_findings = chosen["question_findings"]
+            if actions:
+                tentative = make_trace(case_id, packet, started, actions, new_proposals, candidate_findings)
+                validate_trace(tentative, packet, logs_dir=log_dir)
+                proposals, findings, feedback = new_proposals, candidate_findings, None
+            elif new_proposals or any(f["status"] != "unresolved" for f in candidate_findings):
+                raise ValueError("Before any actual source read, proposals and settled findings are unsupported")
+            if chosen["decision"] == "submit":
+                if not actions:
+                    feedback = "A valid expert trace requires at least one actual controlled source action."
+                    continue
+                result["status"] = "submitted"
+                break
+            if active_ms >= 120000:
+                break
+            views = [item for item in chosen["actions"] if item["tool"] == "view"]
+            if views:
+                if len(chosen["actions"]) != 1:
+                    raise ValueError("A pure stored view must be the only selected action")
+                item = views[0]
+                step = item["source_step"]
+                if type(step) is not int or not 1 <= step <= len(actions) or log_dir is None:
+                    raise ValueError("Stored view must reference an existing source action")
+                began = time.monotonic()
+                record = json.loads((log_dir / actions[step-1]["raw_log_path"]).read_text())
+                view = expert_view(record, chars=18000, links=100, sections=120,
+                    page=item["page"], offset=item["offset"] or 0,
+                    section_offset=item["section_offset"] or 0, link_offset=item["link_offset"] or 0)
+                active_ms += math.ceil((time.monotonic()-began)*1000)
+                history.append({"step": step, "pure_saved_view": True,
+                                "observation": chosen["observation"], "view": view})
+                continue
+            planned = []
+            for item in chosen["actions"]:
+                if item["tool"] == "fetcher":
+                    planned.append({"tool": "fetcher", "url": item["url"]})
+                else:
+                    planned.append({"tool": "search_provider", "query": item["query"],
+                                    "domains": item["domains"], "max_results": 10})
+            if not planned:
+                feedback = "Choose a permitted source action or submit the existing trace."
+                continue
+            if not actions and len(planned) != 1:
+                raise ValueError("Choose exactly one initial action before any controller observation")
+            previous_step = len(actions) or None
+            plan = {"case_id": case_id, "log_prefix": case_id, "strict_budget": True,
+                "official_domains": [case["domain"]], "max_calls": 60, "max_ms": 120000,
+                "max_search_queries": 6, "budget_origin": "independent_full_budget",
+                "start_ms": active_ms, "actions": planned}
+            inputs = {"mode": "expert_actions", "plan": json.dumps(plan, ensure_ascii=False)}
+            if summary:
+                plan["start_calls"] = summary["final"]["fetcher_calls"]
+                plan["start_search_queries"] = summary["final"]["search_queries"]
+                plan["resume_summary"] = {key: summary[key] for key in (
+                    "case_id", "provider", "log_prefix", "budget_origin", "raw_logs", "final")}
+                inputs.update(plan=json.dumps(plan, ensure_ascii=False), resume_run_id=str(prior_run))
+            round_root = case_root / f"controller-{turn:02d}"
+            prior_run, actual_sha = workflow(repo, ref, case_id, inputs, round_root)
+            if actual_sha != baseline_result["head_sha"]:
+                raise RuntimeError("Expert controller differs from the frozen baseline harness revision")
+            summary = json.loads((round_root / "artifact/summary.json").read_text())
+            log_dir = round_root / "artifact/logs"
+            active_ms = summary["final"]["elapsed_ms"]
+            for entry, intent in zip(summary["actions"], chosen["actions"], strict=True):
+                step = len(actions)+1
+                record = json.loads((log_dir / entry["raw_log_path"]).read_text())
+                action = {key: entry[key] for key in (
+                    "at", "tool", "request", "outcome", "outcome_status", "policy_mode",
+                    "raw_log_path", "raw_log_sha256", "elapsed_ms", "fetcher_calls_cumulative",
+                    "elapsed_ms_cumulative", "search_queries_cumulative")}
+                action.update(step=step, observed_before=chosen["observation"],
+                    observed_from_step=previous_step if step>1 else None,
+                    action=intent["intent"], stage="candidate_generation" if entry["tool"]=="search_provider" else "page_understanding",
+                    url=entry["request"].get("url"), final_url=entry.get("final_url"))
+                actions.append(action)
+                view = expert_view(record, chars=18000, links=100, sections=120)
+                pdf = view.get("pdf_pages", [])
+                if pdf:
+                    view["exact_pdf_text_pages"] = [expert_view(record, chars=10000, links=0,
+                        sections=0, page=meta["page"]) for meta in pdf[:8] if meta["has_text"]]
+                history.append({"step": step, "action": action, "view": view})
+            if summary["final"].get("stop_reason") == "http_429":
+                STOP.set()
+                break
+            if summary["final"].get("stop_reason") == "budget_exhausted":
+                break
+            emit(case=case_id, state="observed", actions=len(actions), active_ms=active_ms,
+                 reads=summary["final"]["fetcher_calls"], queries=summary["final"]["search_queries"])
+        except (ValueError, json.JSONDecodeError) as exc:
+            feedback = str(exc)[:1600]
+            save(case_root / f"validation-{turn:02d}.json", {"feedback": feedback})
+            emit(case=case_id, state="structural_feedback", turn=turn, detail=feedback[:180])
+        except Exception as exc:
+            result["error"] = type(exc).__name__ + ": " + str(exc)
+            break
+    if actions:
+        trace = make_trace(case_id, packet, started, actions, proposals, findings)
+        save(case_root / "trace.json", trace)
+        try:
+            validate_trace(trace, packet, logs_dir=log_dir)
+            result.update(validated=True, trace_sha256=digest(trace), trace=str(case_root/"trace.json"))
+        except Exception as exc:
+            result.update(validated=False, validation_error=str(exc))
+    else:
+        result["validated"] = False
+    result.update(active_ms=active_ms, actions=len(actions), logical_expert=f"expert500-{case_id}",
+                  comparison_mode="independent_full_budget", provider="exa_mcp",
+                  real_elapsed_seconds=(datetime.now(UTC)-datetime.fromisoformat(started)).total_seconds(),
+                  active_time_basis="selector process + controller action time; excludes GitHub queue/install/control transport",
+                  found=[f["question"] for f in findings if f["status"]=="found"])
+    save(case_root/"result.json", result)
+    emit(case=case_id, state=result["status"], validated=result["validated"], found=result["found"],
+         actions=len(actions), active_ms=active_ms)
+    return result
+
+
+def make_trace(case_id: str, packet: dict[str, Any], started: str, actions: list[dict[str, Any]],
+               proposals: list[dict[str, Any]], findings: list[dict[str, Any]]) -> dict[str, Any]:
+    return {"schema_version":"1", "case_id":case_id, "packet_sha256":digest(packet),
+        "baseline_pipeline_sha":packet["baseline_pipeline_sha"], "max_fetcher_calls":60,
+        "max_elapsed_ms":120000, "max_search_queries":6, "initial_fetcher_calls":0,
+        "initial_elapsed_ms":0, "initial_search_queries":0, "started_at":started,
+        "ended_at":datetime.now(UTC).isoformat(), "actions":actions, "proposals":proposals,
+        "question_findings":findings, "review_status":"unreviewed"}
+
+
+def main() -> None:
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--repo',type=Path,required=True)
+    parser.add_argument('--root',type=Path,required=True)
+    parser.add_argument('--ref',required=True)
+    parser.add_argument('--stage',choices=['baseline','experts'],required=True)
+    args=parser.parse_args();args.root.mkdir(parents=True,exist_ok=True)
+    (args.root/'sealed-sentinel.txt').write_text('SEALED_HARMLESS_SENTINEL')
+    # Prepare all separate workspaces before a selector starts, so each is
+    # OS-denied every other expert's workspace, including its future outputs.
+    workspaces={case:Path(tempfile.mkdtemp(prefix=f'unimatch-blind-{case}-')) for case in COHORT}
+    save(args.root/'workspace-locations.json',{key:str(value) for key,value in workspaces.items()})
+    results=[]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+        pending={}
+        iterator=iter(COHORT)
+        def submit_next() -> None:
+            if STOP.is_set():return
+            case=next(iterator,None)
+            if case is None:return
+            function=baseline if args.stage=='baseline' else expert
+            params=(args.repo,args.ref,args.root,case)
+            future=pool.submit(function,*params,*(() if args.stage=='baseline' else (workspaces,)))
+            pending[future]=case
+        for _ in range(3):submit_next()
+        while pending:
+            done,_=concurrent.futures.wait(pending,return_when=concurrent.futures.FIRST_COMPLETED)
+            for future in done:
+                case=pending.pop(future)
+                try:results.append(future.result())
+                except Exception as exc:
+                    result={'case_id':case,'status':'failed','error':type(exc).__name__+': '+str(exc)}
+                    results.append(result);save(args.root/args.stage/case/'orchestration-error.json',result)
+                    emit(**result)
+                    # Failed orchestration is not an excuse for fresh provider
+                    # attempts. Stop new dispatch; preserve pending results.
+                    STOP.set()
+            if not STOP.is_set():
+                for _ in done:submit_next()
+            save(args.root/f'{args.stage}-results.json',{'results':results,'stopped':STOP.is_set(),
+                'remaining_case_ids':[case for case in COHORT if case not in {r['case_id'] for r in results}]})
+    emit(stage=args.stage,completed=len(results),stopped=STOP.is_set())
+
+
+if __name__=='__main__':main()

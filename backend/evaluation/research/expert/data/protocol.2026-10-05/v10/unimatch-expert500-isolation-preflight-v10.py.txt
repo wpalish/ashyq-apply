@@ -1,0 +1,501 @@
+"""Real ten-workspace V10 OS preflight using only invented harmless sentinels.
+
+No model, source, provider, network, registry, label or Git operation is allowed.
+The original V8 root statements are evaluated only against this temporary mock
+repository. Their own-workspace rejection is retained beside actual V10 proofs.
+"""
+
+from __future__ import annotations
+
+import argparse
+import ast
+import hashlib
+import inspect
+import json
+import runpy
+import subprocess
+import sys
+import tempfile
+import time
+from collections.abc import Mapping
+from dataclasses import replace
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
+from evaluation.research.expert.network_turn_policy import NetworkBudgetIsolation
+from evaluation.research.expert.workspace_policy import allocate_workspaces, validate_workspaces
+from evaluation.research.live import COHORT
+
+PARENT = Path("/tmp/unimatch-expert500-journal-pilot-v10.py")
+ORIGINAL_PARENT = Path("/tmp/unimatch-expert500-journal-pilot-v8.py")
+RESULT = Path("/tmp/unimatch-expert500-v10-isolation-preflight-result.json")
+CASE_IDS = frozenset(
+    {"groningen", "delft", "aalto", "vienna", "warsaw", "ubc", "toronto", "hku", "ntu", "kaist"}
+)
+CHECKS_PER_CASE = 12
+
+
+def sha(path: Path) -> str:
+    if path.is_symlink() or not path.is_file():
+        raise ValueError("OS proof evidence must be a regular non-symlink file")
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def save(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("x") as output:
+        output.write(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
+
+
+def read(path: Path) -> Any:
+    sha(path)
+    return json.loads(path.read_text())
+
+
+def canonical_evidence(path: Path, *, expected: Path) -> None:
+    if path != expected or not path.is_absolute() or path.resolve(strict=True) != path:
+        raise ValueError("Original OS evidence must retain its exact canonical coordinate")
+
+
+def original_root_statements() -> tuple[ast.Module, str]:
+    """Extract exactly V8's root collection, stopping before Isolation.local."""
+    source = ORIGINAL_PARENT.read_text()
+    tree = ast.parse(source)
+    expert = next(
+        node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "expert"
+    )
+    statements: list[ast.stmt] = []
+    collecting = False
+    for node in expert.body:
+        if isinstance(node, ast.Assign):
+            names = [target.id for target in node.targets if isinstance(target, ast.Name)]
+            if "sealed_roots" in names:
+                collecting = True
+            if collecting and "isolation" in names:
+                break
+        if collecting:
+            if not isinstance(node, ast.Assign | ast.AugAssign | ast.For):
+                raise ValueError("Original root extraction encountered an unexpected statement")
+            statements.append(node)
+    if len(statements) != 5 or not isinstance(statements[-1], ast.For):
+        raise ValueError("Original V8 root loop no longer has its immutable shape")
+    literal_source = "\n".join(ast.get_source_segment(source, node) or "" for node in statements)
+    return ast.Module(body=statements, type_ignores=[]), hashlib.sha256(
+        literal_source.encode()
+    ).hexdigest()
+
+
+def run_preflight(artifacts: Path) -> dict[str, Any]:
+    """Allocate the public ten once; execute only real harmless OS cat probes."""
+    if sys.platform != "darwin" or type(COHORT) is not dict or set(COHORT) != CASE_IDS:
+        raise ValueError("Real preflight requires macOS and the exact original public ten")
+    if (
+        artifacts.is_symlink()
+        or artifacts.resolve(strict=True) != artifacts
+        or not artifacts.is_relative_to(Path(tempfile.gettempdir()).resolve(strict=True))
+        or not artifacts.is_dir()
+        or any(artifacts.iterdir())
+    ):
+        raise ValueError("Preflight requires one empty canonical temporary evidence directory")
+    started = datetime.now(UTC).isoformat()
+    parent = runpy.run_path(str(PARENT))
+    if parent["Isolation"] is not NetworkBudgetIsolation:
+        raise ValueError("The actual parent must use the unchanged real Isolation class")
+    builder = parent["sealed_roots_for"]
+    builder_sha = hashlib.sha256(inspect.getsource(builder).encode()).hexdigest()
+    parent_sha, original_sha = sha(PARENT), sha(ORIGINAL_PARENT)
+    old_statements, old_loop_sha = original_root_statements()
+    old_code = compile(old_statements, str(ORIGINAL_PARENT), "exec")
+    repo = artifacts / "mock-repo"
+    root = repo / "artifacts/expert-500/phase1-v10-preflight"
+    previous_root = repo / "artifacts/expert-500/phase1-previous-preflight"
+    root.mkdir(parents=True)
+    previous_root.mkdir()
+    previous_workspace = artifacts / "previous-workspace"
+    previous_workspace.mkdir()
+    assignments, receipts = allocate_workspaces(tuple(COHORT), temp_root=artifacts)
+    workspaces = validate_workspaces(assignments, receipts, case_ids=tuple(COHORT))
+    save(root / "workspace-locations.json", assignments)
+    save(root / "workspace-receipts.json", receipts)
+    save(
+        previous_root / "workspace-locations.json", {"synthetic_previous": str(previous_workspace)}
+    )
+    repository_sentinel = repo / "repository-sentinel.txt"
+    prior_sentinel = previous_workspace / "prior-sentinel.txt"
+    trial_sentinel = root / "sealed-sentinel.txt"
+    for path in (repository_sentinel, prior_sentinel, trial_sentinel):
+        path.write_text("INVENTED_SEALED_SENTINEL_ONLY")
+    sentinels = {}
+    for case_id, workspace in workspaces.items():
+        path = workspace / "public-sentinel.txt"
+        path.write_text("INVENTED_PUBLIC_SENTINEL_ONLY_" + case_id)
+        sentinels[case_id] = path
+    results, old_results = [], []
+    actual_run = subprocess.run
+    for case_id, workspace in workspaces.items():
+        old_globals = {
+            "Path": Path,
+            "json": json,
+            "repo": repo,
+            "case_id": case_id,
+            "workspaces": workspaces,
+        }
+        exec(old_code, old_globals, old_globals)
+        old_roots = old_globals["sealed_roots"]
+        if workspace not in {path.resolve() for path in old_roots}:
+            raise ValueError(
+                "Original current-mapping loop did not reproduce the own-workspace defect"
+            )
+        try:
+            NetworkBudgetIsolation.local(workspace, old_roots)
+        except ValueError as error:
+            old_results.append(
+                {
+                    "case_id": case_id,
+                    "own_workspace_sealed": True,
+                    "error_type": type(error).__name__,
+                    "error": str(error),
+                }
+            )
+        else:
+            raise ValueError("Original V8 root collection unexpectedly passed real Isolation.local")
+        sealed = builder(repo, root, case_id, workspaces)
+        isolation = replace(
+            NetworkBudgetIsolation.local(workspace, sealed), codex_executable=parent["CLI"]
+        )
+        if type(isolation) is not NetworkBudgetIsolation:
+            raise ValueError("OS preflight may not replace the actual Isolation implementation")
+        targets = {"peer:" + other: sentinels[other] for other in COHORT if other != case_id}
+        targets.update(
+            repository=repository_sentinel,
+            previous_trial=prior_sentinel,
+            current_trial=trial_sentinel,
+        )
+        checks = []
+        for index, (kind, denied) in enumerate(targets.items(), 1):
+            raw: list[dict[str, Any]] = []
+            prefix = artifacts / "raw" / case_id / f"check-{index:02d}"
+            prefix.mkdir(parents=True)
+            expected_command = [isolation.sandbox_executable, "-p", isolation.profile(), "/bin/cat"]
+
+            def capture(
+                command: Any,
+                *,
+                expected_command: list[str] = expected_command,
+                allowed: Path = sentinels[case_id],
+                denied: Path = denied,
+                prefix: Path = prefix,
+                raw: list[dict[str, Any]] = raw,
+                **kwargs: Any,
+            ) -> subprocess.CompletedProcess[bytes]:
+                if command not in (
+                    [*expected_command, str(allowed)],
+                    [*expected_command, str(denied)],
+                ) or kwargs != {"capture_output": True, "timeout": 10, "check": False}:
+                    raise ValueError("Only the actual harmless sentinel cat commands are allowed")
+                began = time.monotonic_ns()
+                completed = actual_run(command, **kwargs)
+                if len(raw) >= 2:
+                    raise ValueError("A sentinel proof exceeded its exact two commands")
+                stdout, stderr = (
+                    prefix / f"process-{len(raw) + 1}.stdout.bin",
+                    prefix / f"process-{len(raw) + 1}.stderr.bin",
+                )
+                for path, payload in ((stdout, completed.stdout), (stderr, completed.stderr)):
+                    with path.open("xb") as output:
+                        output.write(payload)
+                raw.append(
+                    {
+                        "command": command,
+                        "returncode": completed.returncode,
+                        "elapsed_ns": time.monotonic_ns() - began,
+                        "stdout_path": str(stdout),
+                        "stdout_sha256": sha(stdout),
+                        "stderr_path": str(stderr),
+                        "stderr_sha256": sha(stderr),
+                    }
+                )
+                return completed
+
+            try:
+                subprocess.run = capture  # type: ignore[assignment]
+                proof = isolation.prove_access(sentinels[case_id], denied)
+            finally:
+                subprocess.run = actual_run
+            receipt = {
+                "kind": kind,
+                "allowed_sentinel": str(sentinels[case_id]),
+                "allowed_sentinel_sha256": sha(sentinels[case_id]),
+                "denied_sentinel": str(denied),
+                "denied_sentinel_sha256": sha(denied),
+                "proof": proof,
+                "raw_processes": raw,
+            }
+            receipt_path = prefix / "proof.json"
+            save(receipt_path, receipt)
+            checks.append({"kind": kind, "path": str(receipt_path), "sha256": sha(receipt_path)})
+        results.append(
+            {
+                "case_id": case_id,
+                "workspace": str(workspace),
+                "sealed_roots": [str(path) for path in isolation.sealed_roots],
+                "sandbox_executable": isolation.sandbox_executable,
+                "profile_sha256": hashlib.sha256(isolation.profile().encode()).hexdigest(),
+                "checks": checks,
+            }
+        )
+    result = {
+        "schema_version": "1",
+        "protocol_version": "journal-v10",
+        "probe_kind": "actual_ten_case_os_isolation",
+        "status": "passed",
+        "stopped": False,
+        "started_at": started,
+        "finished_at": datetime.now(UTC).isoformat(),
+        "script": str(Path(__file__)),
+        "script_sha256": sha(Path(__file__)),
+        "parent": str(PARENT),
+        "parent_sha256": parent_sha,
+        "builder_sha256": builder_sha,
+        "original_parent": str(ORIGINAL_PARENT),
+        "original_parent_sha256": original_sha,
+        "original_root_statements_sha256": old_loop_sha,
+        "original_loop_rejected": old_results,
+        "allocation_count": 1,
+        "artifacts": str(artifacts),
+        "repo": str(repo),
+        "root": str(root),
+        "cohort_case_ids": list(COHORT),
+        "workspace_assignments": assignments,
+        "workspace_receipts": receipts,
+        "workspace_assignments_path": str(root / "workspace-locations.json"),
+        "workspace_assignments_sha256": sha(root / "workspace-locations.json"),
+        "workspace_receipts_path": str(root / "workspace-receipts.json"),
+        "workspace_receipts_sha256": sha(root / "workspace-receipts.json"),
+        "results": results,
+        "cases_passed": 10,
+        "cat_processes": 10 * CHECKS_PER_CASE * 2,
+        "model_requests": 0,
+        "source_requests": 0,
+        "university_requests": 0,
+        "network_requests": 0,
+        "tool_requests": 0,
+        "git_requests": 0,
+    }
+    if sha(PARENT) != parent_sha or sha(ORIGINAL_PARENT) != original_sha:
+        raise ValueError("Parent source changed during its OS proof")
+    validate_result(result)
+    return result
+
+
+def validate_result(result: Mapping[str, Any]) -> None:
+    """Replay original file/command/stream evidence, without starting any process."""
+    if (
+        result.get("schema_version") != "1"
+        or result.get("protocol_version") != "journal-v10"
+        or result.get("probe_kind") != "actual_ten_case_os_isolation"
+        or result.get("status") != "passed"
+        or result.get("stopped") is not False
+        or result.get("script") != str(Path(__file__))
+        or result.get("script_sha256") != sha(Path(__file__))
+        or result.get("parent") != str(PARENT)
+        or result.get("parent_sha256") != sha(PARENT)
+        or result.get("original_parent") != str(ORIGINAL_PARENT)
+        or result.get("original_parent_sha256") != sha(ORIGINAL_PARENT)
+        or type(result.get("allocation_count")) is not int
+        or result["allocation_count"] != 1
+        or type(result.get("cases_passed")) is not int
+        or result["cases_passed"] != 10
+        or type(result.get("cat_processes")) is not int
+        or result["cat_processes"] != 10 * CHECKS_PER_CASE * 2
+        or any(
+            type(result.get(key)) is not int or result[key] != 0
+            for key in (
+                "model_requests",
+                "source_requests",
+                "university_requests",
+                "network_requests",
+                "tool_requests",
+                "git_requests",
+            )
+        )
+        or result.get("cohort_case_ids") != list(COHORT)
+    ):
+        raise ValueError("Original real-ten OS preflight did not pass unchanged")
+    parent = runpy.run_path(str(PARENT))
+    builder = parent["sealed_roots_for"]
+    if (
+        result["builder_sha256"] != hashlib.sha256(inspect.getsource(builder).encode()).hexdigest()
+        or result["original_root_statements_sha256"] != original_root_statements()[1]
+    ):
+        raise ValueError("Original OS preflight root-builder source changed")
+    artifacts = Path(result["artifacts"])
+    if (
+        not artifacts.is_absolute()
+        or artifacts.resolve(strict=True) != artifacts
+        or not artifacts.is_relative_to(Path(tempfile.gettempdir()).resolve(strict=True))
+        or not artifacts.is_dir()
+    ):
+        raise ValueError("Original OS preflight must retain its safe canonical temporary root")
+    repo = artifacts / "mock-repo"
+    root = repo / "artifacts/expert-500/phase1-v10-preflight"
+    if result["repo"] != str(repo) or result["root"] != str(root):
+        raise ValueError("Original OS preflight repository/trial coordinates changed")
+    assignments, receipts = result["workspace_assignments"], result["workspace_receipts"]
+    if not isinstance(assignments, dict) or set(assignments) != CASE_IDS:
+        raise ValueError("Original OS preflight workspace mapping omitted a public case")
+    for case_id, value in assignments.items():
+        path = Path(value)
+        if path.parent != artifacts or not path.name.startswith("unimatch-blind-" + case_id + "-"):
+            raise ValueError("Original OS workspace must remain inside its own safe allocation")
+    for key in ("workspace_assignments", "workspace_receipts"):
+        path = Path(result[key + "_path"])
+        canonical_evidence(
+            path,
+            expected=root
+            / (
+                "workspace-locations.json"
+                if key == "workspace_assignments"
+                else "workspace-receipts.json"
+            ),
+        )
+        if sha(path) != result[key + "_sha256"] or read(path) != result[key]:
+            raise ValueError("Original OS preflight canonical mapping bytes changed")
+    workspaces = validate_workspaces(assignments, receipts, case_ids=tuple(COHORT))
+    original = result["original_loop_rejected"]
+    if (
+        len(original) != 10
+        or {item["case_id"] for item in original} != CASE_IDS
+        or any(
+            item.get("own_workspace_sealed") is not True or item.get("error_type") != "ValueError"
+            for item in original
+        )
+    ):
+        raise ValueError("Original V8 own-workspace defect must be reproduced for all ten")
+    cases = result["results"]
+    if len(cases) != 10 or {case["case_id"] for case in cases} != CASE_IDS:
+        raise ValueError("OS proof must cover the exact original ten")
+    for case in cases:
+        case_id, workspace = case["case_id"], workspaces[case["case_id"]]
+        # The original /tmp inventory is part of the literal recorded OS profile.
+        # New proof-result/helper files may appear later; replay its saved profile.
+        isolation = NetworkBudgetIsolation.local(
+            workspace, [Path(path) for path in case["sealed_roots"]]
+        )
+        mandatory = {
+            repo,
+            artifacts / "previous-workspace",
+            *[other for name, other in workspaces.items() if name != case_id],
+        }
+        if not mandatory.issubset(set(isolation.sealed_roots)):
+            raise ValueError("Original OS profile omitted the repository, prior trial or a peer")
+        if (
+            case["workspace"] != str(workspace)
+            or case["sealed_roots"] != [str(path) for path in isolation.sealed_roots]
+            or case["sandbox_executable"] != isolation.sandbox_executable
+            or case["profile_sha256"] != hashlib.sha256(isolation.profile().encode()).hexdigest()
+        ):
+            raise ValueError("Actual parent OS profile no longer matches its original proof")
+        targets = {
+            "peer:" + other: workspaces[other] / "public-sentinel.txt"
+            for other in COHORT
+            if other != case_id
+        }
+        targets.update(
+            repository=repo / "repository-sentinel.txt",
+            previous_trial=artifacts / "previous-workspace/prior-sentinel.txt",
+            current_trial=root / "sealed-sentinel.txt",
+        )
+        if len(case["checks"]) != CHECKS_PER_CASE or [
+            check["kind"] for check in case["checks"]
+        ] != list(targets):
+            raise ValueError("OS proof omitted a peer, repository or prior/current trial")
+        for check_index, check in enumerate(case["checks"], 1):
+            path = Path(check["path"])
+            canonical_evidence(
+                path,
+                expected=artifacts / "raw" / case_id / f"check-{check_index:02d}" / "proof.json",
+            )
+            if sha(path) != check["sha256"]:
+                raise ValueError("Original OS cat proof receipt changed")
+            receipt = read(path)
+            if receipt["kind"] != check["kind"] or any(
+                receipt["proof"].get(key) is not True
+                for key in ("allowed_read", "sealed_read_denied", "sealed_stdout_empty")
+            ):
+                raise ValueError("Original harmless cat access proof did not pass")
+            allowed, denied = Path(receipt["allowed_sentinel"]), Path(receipt["denied_sentinel"])
+            canonical_evidence(allowed, expected=workspace / "public-sentinel.txt")
+            canonical_evidence(denied, expected=targets[check["kind"]])
+            if (
+                allowed.read_bytes() != ("INVENTED_PUBLIC_SENTINEL_ONLY_" + case_id).encode()
+                or sha(allowed) != receipt["allowed_sentinel_sha256"]
+                or sha(denied) != receipt["denied_sentinel_sha256"]
+                or not any(denied.is_relative_to(root) for root in isolation.sealed_roots)
+            ):
+                raise ValueError("OS proof sentinel identity or source scope changed")
+            raw = receipt["raw_processes"]
+            if len(raw) != 2:
+                raise ValueError("Each OS proof requires two actual original cat processes")
+            for index, process in enumerate(raw):
+                stdout, stderr = Path(process["stdout_path"]), Path(process["stderr_path"])
+                canonical_evidence(stdout, expected=path.parent / f"process-{index + 1}.stdout.bin")
+                canonical_evidence(stderr, expected=path.parent / f"process-{index + 1}.stderr.bin")
+                expected = [
+                    isolation.sandbox_executable,
+                    "-p",
+                    isolation.profile(),
+                    "/bin/cat",
+                    str(allowed if index == 0 else denied),
+                ]
+                if (
+                    process["command"] != expected
+                    or type(process["returncode"]) is not int
+                    or type(process.get("elapsed_ns")) is not int
+                    or process["elapsed_ns"] < 0
+                    or sha(stdout) != process["stdout_sha256"]
+                    or sha(stderr) != process["stderr_sha256"]
+                ):
+                    raise ValueError("Actual harmless cat command or raw streams changed")
+                if index == 0 and (
+                    process["returncode"] != 0 or stdout.read_bytes() != allowed.read_bytes()
+                ):
+                    raise ValueError("Original own-workspace sentinel was not readable")
+                if index == 1 and (
+                    process["returncode"] == 0
+                    or stdout.read_bytes()
+                    or not any(
+                        message in stderr.read_bytes()
+                        for message in (b"Operation not permitted", b"Permission denied")
+                    )
+                ):
+                    raise ValueError("Original protected sentinel was not denied by the OS")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--result", type=Path, default=RESULT)
+    args = parser.parse_args()
+    if args.result.exists() or args.result.is_symlink():
+        raise ValueError("Original OS proof result already exists; never overwrite it")
+    artifacts = Path(tempfile.mkdtemp(prefix="expert500-v10-os-")).resolve(strict=True)
+    result = run_preflight(artifacts)
+    save(args.result, result)
+    print(
+        json.dumps(
+            {
+                "status": result["status"],
+                "cases_passed": result["cases_passed"],
+                "cat_processes": result["cat_processes"],
+                "result": str(args.result),
+                "sha256": sha(args.result),
+                "source_requests": 0,
+                "model_requests": 0,
+            }
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

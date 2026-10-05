@@ -1,0 +1,52 @@
+/tmp/test_unimatch_expert500_journal_report_v10.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Independent V10 replay/sealing tests; no reviewed data or live I/O is used."""
+ 2 |
+ 3 | / import base64
+ 4 | | import copy
+ 5 | | import hashlib
+ 6 | | import importlib.util
+ 7 | | import json
+ 8 | | import runpy
+ 9 | | import shutil
+10 | | import sys
+11 | | from datetime import UTC, datetime, timedelta
+12 | | from pathlib import Path
+13 | |
+14 | | import pytest
+15 | | from evaluation.research.expert.network_budget import (
+16 | |     BUDGET_MODEL,
+17 | |     NETWORK_COMPARISON_MODE,
+18 | |     WALL_GUARD_MS,
+19 | |     WallGuard,
+20 | |     expert_budget,
+21 | | )
+22 | | from evaluation.research.expert.network_report import (
+23 | |     MISS_CAUSES,
+24 | |     SourceCounters,
+25 | |     diagnose_fact,
+26 | |     network_gate,
+27 | |     validate_diagnoses,
+28 | |     validate_source_run,
+29 | | )
+30 | | from evaluation.research.schema import Capture, Observation
+31 | | from test_unimatch_expert500_journal_pilot_v10 import (
+32 | |     HEAD,
+33 | |     PILOT,
+34 | |     REPORT,
+35 | |     URL,
+36 | |     bootstrap,
+37 | |     checkpoint,
+38 | |     commit,
+39 | |     completed_events,
+40 | |     decision,
+41 | |     fact,
+42 | | )
+   | |_^ I001
+43 |
+44 |   pytest_plugins = ["test_unimatch_expert500_journal_pilot_v10"]
+   |
+   = help: Organize imports
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.

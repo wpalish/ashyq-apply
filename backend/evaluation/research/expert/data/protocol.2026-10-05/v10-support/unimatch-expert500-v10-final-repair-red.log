@@ -1,0 +1,1143 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend
+configfile: pytest.ini
+plugins: respx-0.22.0, cov-6.0.0, asyncio-1.4.0, platformdirs-4.12.1, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 319 items / 274 deselected / 45 selected
+
+evaluation/research/tests/test_expert_model_failure.py F..F..FFFFFF.FF.F [ 37%]
+FFF...F                                                                  [ 53%]
+. FFFFFFFFFFFFFFFFFFFFF                                                  [100%]
+
+=================================== FAILURES ===================================
+_ test_terminal_raw_failure_does_not_depend_on_editable_error_kind[event0-model_usage_limit-None] _
+
+error_kind = None
+event = {'type': 'turn.failed', 'error': {'code': 'usage_limit_reached'}}
+kind = 'model_usage_limit'
+
+    @pytest.mark.parametrize("error_kind", [None, "selector_timeout", "selector_process_failed"])
+    @pytest.mark.parametrize(
+        "event,kind",
+        [
+            (
+                {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+                "model_usage_limit",
+            ),
+            ({"type": "error", "code": "invalid_api_key"}, "model_authentication_refusal"),
+            ({"type": "error", "message": "Unknown transport failure"}, "model_transport_failure"),
+            ({"type": "turn.failed", "error": {"message": "Unknown"}}, "model_transport_failure"),
+        ],
+    )
+    def test_terminal_raw_failure_does_not_depend_on_editable_error_kind(error_kind, event, kind):
+        raw = stream({"type": "turn.started"}, event)
+>       assert model_batch_failure(raw, error_kind=error_kind) == {
+            "kind": kind,
+            "selector_error_kind": error_kind,
+            "event_line": 2,
+            "event_type": event["type"],
+            "stream_sha256": hashlib.sha256(raw.encode()).hexdigest(),
+        }
+E       assert None == {'kind': 'model_usage_limit', 'selector_error_kind': None, 'event_line': 2, 'event_type': 'turn.failed', ...}
+E        +  where None = model_batch_failure('{"type": "turn.started"}\n{"type": "turn.failed", "error": {"code": "usage_limit_reached"}}\n', error_kind=None)
+
+evaluation/research/tests/test_expert_model_failure.py:131: AssertionError
+_ test_terminal_raw_failure_does_not_depend_on_editable_error_kind[event1-model_authentication_refusal-None] _
+
+error_kind = None, event = {'type': 'error', 'code': 'invalid_api_key'}
+kind = 'model_authentication_refusal'
+
+    @pytest.mark.parametrize("error_kind", [None, "selector_timeout", "selector_process_failed"])
+    @pytest.mark.parametrize(
+        "event,kind",
+        [
+            (
+                {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+                "model_usage_limit",
+            ),
+            ({"type": "error", "code": "invalid_api_key"}, "model_authentication_refusal"),
+            ({"type": "error", "message": "Unknown transport failure"}, "model_transport_failure"),
+            ({"type": "turn.failed", "error": {"message": "Unknown"}}, "model_transport_failure"),
+        ],
+    )
+    def test_terminal_raw_failure_does_not_depend_on_editable_error_kind(error_kind, event, kind):
+        raw = stream({"type": "turn.started"}, event)
+>       assert model_batch_failure(raw, error_kind=error_kind) == {
+            "kind": kind,
+            "selector_error_kind": error_kind,
+            "event_line": 2,
+            "event_type": event["type"],
+            "stream_sha256": hashlib.sha256(raw.encode()).hexdigest(),
+        }
+E       assert None == {'kind': 'model_authentication_refusal', 'selector_error_kind': None, 'event_line': 2, 'event_type': 'error', ...}
+E        +  where None = model_batch_failure('{"type": "turn.started"}\n{"type": "error", "code": "invalid_api_key"}\n', error_kind=None)
+
+evaluation/research/tests/test_expert_model_failure.py:131: AssertionError
+_ test_terminal_raw_failure_does_not_depend_on_editable_error_kind[event2-model_transport_failure-None] _
+
+error_kind = None
+event = {'type': 'error', 'message': 'Unknown transport failure'}
+kind = 'model_transport_failure'
+
+    @pytest.mark.parametrize("error_kind", [None, "selector_timeout", "selector_process_failed"])
+    @pytest.mark.parametrize(
+        "event,kind",
+        [
+            (
+                {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+                "model_usage_limit",
+            ),
+            ({"type": "error", "code": "invalid_api_key"}, "model_authentication_refusal"),
+            ({"type": "error", "message": "Unknown transport failure"}, "model_transport_failure"),
+            ({"type": "turn.failed", "error": {"message": "Unknown"}}, "model_transport_failure"),
+        ],
+    )
+    def test_terminal_raw_failure_does_not_depend_on_editable_error_kind(error_kind, event, kind):
+        raw = stream({"type": "turn.started"}, event)
+>       assert model_batch_failure(raw, error_kind=error_kind) == {
+            "kind": kind,
+            "selector_error_kind": error_kind,
+            "event_line": 2,
+            "event_type": event["type"],
+            "stream_sha256": hashlib.sha256(raw.encode()).hexdigest(),
+        }
+E       assert None == {'kind': 'model_transport_failure', 'selector_error_kind': None, 'event_line': 2, 'event_type': 'error', ...}
+E        +  where None = model_batch_failure('{"type": "turn.started"}\n{"type": "error", "message": "Unknown transport failure"}\n', error_kind=None)
+
+evaluation/research/tests/test_expert_model_failure.py:131: AssertionError
+_ test_terminal_raw_failure_does_not_depend_on_editable_error_kind[event2-model_transport_failure-selector_timeout] _
+
+error_kind = 'selector_timeout'
+event = {'type': 'error', 'message': 'Unknown transport failure'}
+kind = 'model_transport_failure'
+
+    @pytest.mark.parametrize("error_kind", [None, "selector_timeout", "selector_process_failed"])
+    @pytest.mark.parametrize(
+        "event,kind",
+        [
+            (
+                {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+                "model_usage_limit",
+            ),
+            ({"type": "error", "code": "invalid_api_key"}, "model_authentication_refusal"),
+            ({"type": "error", "message": "Unknown transport failure"}, "model_transport_failure"),
+            ({"type": "turn.failed", "error": {"message": "Unknown"}}, "model_transport_failure"),
+        ],
+    )
+    def test_terminal_raw_failure_does_not_depend_on_editable_error_kind(error_kind, event, kind):
+        raw = stream({"type": "turn.started"}, event)
+>       assert model_batch_failure(raw, error_kind=error_kind) == {
+            "kind": kind,
+            "selector_error_kind": error_kind,
+            "event_line": 2,
+            "event_type": event["type"],
+            "stream_sha256": hashlib.sha256(raw.encode()).hexdigest(),
+        }
+E       assert None == {'kind': 'model_transport_failure', 'selector_error_kind': 'selector_timeout', 'event_line': 2, 'event_type': 'error', ...}
+E        +  where None = model_batch_failure('{"type": "turn.started"}\n{"type": "error", "message": "Unknown transport failure"}\n', error_kind='selector_timeout')
+
+evaluation/research/tests/test_expert_model_failure.py:131: AssertionError
+_ test_terminal_raw_failure_does_not_depend_on_editable_error_kind[event2-model_transport_failure-selector_process_failed] _
+
+error_kind = 'selector_process_failed'
+event = {'type': 'error', 'message': 'Unknown transport failure'}
+kind = 'model_transport_failure'
+
+    @pytest.mark.parametrize("error_kind", [None, "selector_timeout", "selector_process_failed"])
+    @pytest.mark.parametrize(
+        "event,kind",
+        [
+            (
+                {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+                "model_usage_limit",
+            ),
+            ({"type": "error", "code": "invalid_api_key"}, "model_authentication_refusal"),
+            ({"type": "error", "message": "Unknown transport failure"}, "model_transport_failure"),
+            ({"type": "turn.failed", "error": {"message": "Unknown"}}, "model_transport_failure"),
+        ],
+    )
+    def test_terminal_raw_failure_does_not_depend_on_editable_error_kind(error_kind, event, kind):
+        raw = stream({"type": "turn.started"}, event)
+>       assert model_batch_failure(raw, error_kind=error_kind) == {
+            "kind": kind,
+            "selector_error_kind": error_kind,
+            "event_line": 2,
+            "event_type": event["type"],
+            "stream_sha256": hashlib.sha256(raw.encode()).hexdigest(),
+        }
+E       AssertionError: assert {'kind': 'mod...e': None, ...} == {'kind': 'mod... 'error', ...}
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing items:
+E         {'event_type': None} != {'event_type': 'error'}
+E         {'event_line': None} != {'event_line': 2}
+E         Use -v to get more diff
+
+evaluation/research/tests/test_expert_model_failure.py:131: AssertionError
+_ test_terminal_raw_failure_does_not_depend_on_editable_error_kind[event3-model_transport_failure-None] _
+
+error_kind = None
+event = {'type': 'turn.failed', 'error': {'message': 'Unknown'}}
+kind = 'model_transport_failure'
+
+    @pytest.mark.parametrize("error_kind", [None, "selector_timeout", "selector_process_failed"])
+    @pytest.mark.parametrize(
+        "event,kind",
+        [
+            (
+                {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+                "model_usage_limit",
+            ),
+            ({"type": "error", "code": "invalid_api_key"}, "model_authentication_refusal"),
+            ({"type": "error", "message": "Unknown transport failure"}, "model_transport_failure"),
+            ({"type": "turn.failed", "error": {"message": "Unknown"}}, "model_transport_failure"),
+        ],
+    )
+    def test_terminal_raw_failure_does_not_depend_on_editable_error_kind(error_kind, event, kind):
+        raw = stream({"type": "turn.started"}, event)
+>       assert model_batch_failure(raw, error_kind=error_kind) == {
+            "kind": kind,
+            "selector_error_kind": error_kind,
+            "event_line": 2,
+            "event_type": event["type"],
+            "stream_sha256": hashlib.sha256(raw.encode()).hexdigest(),
+        }
+E       assert None == {'kind': 'model_transport_failure', 'selector_error_kind': None, 'event_line': 2, 'event_type': 'turn.failed', ...}
+E        +  where None = model_batch_failure('{"type": "turn.started"}\n{"type": "turn.failed", "error": {"message": "Unknown"}}\n', error_kind=None)
+
+evaluation/research/tests/test_expert_model_failure.py:131: AssertionError
+_ test_terminal_raw_failure_does_not_depend_on_editable_error_kind[event3-model_transport_failure-selector_timeout] _
+
+error_kind = 'selector_timeout'
+event = {'type': 'turn.failed', 'error': {'message': 'Unknown'}}
+kind = 'model_transport_failure'
+
+    @pytest.mark.parametrize("error_kind", [None, "selector_timeout", "selector_process_failed"])
+    @pytest.mark.parametrize(
+        "event,kind",
+        [
+            (
+                {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+                "model_usage_limit",
+            ),
+            ({"type": "error", "code": "invalid_api_key"}, "model_authentication_refusal"),
+            ({"type": "error", "message": "Unknown transport failure"}, "model_transport_failure"),
+            ({"type": "turn.failed", "error": {"message": "Unknown"}}, "model_transport_failure"),
+        ],
+    )
+    def test_terminal_raw_failure_does_not_depend_on_editable_error_kind(error_kind, event, kind):
+        raw = stream({"type": "turn.started"}, event)
+>       assert model_batch_failure(raw, error_kind=error_kind) == {
+            "kind": kind,
+            "selector_error_kind": error_kind,
+            "event_line": 2,
+            "event_type": event["type"],
+            "stream_sha256": hashlib.sha256(raw.encode()).hexdigest(),
+        }
+E       assert None == {'kind': 'model_transport_failure', 'selector_error_kind': 'selector_timeout', 'event_line': 2, 'event_type': 'turn.failed', ...}
+E        +  where None = model_batch_failure('{"type": "turn.started"}\n{"type": "turn.failed", "error": {"message": "Unknown"}}\n', error_kind='selector_timeout')
+
+evaluation/research/tests/test_expert_model_failure.py:131: AssertionError
+_ test_terminal_raw_failure_does_not_depend_on_editable_error_kind[event3-model_transport_failure-selector_process_failed] _
+
+error_kind = 'selector_process_failed'
+event = {'type': 'turn.failed', 'error': {'message': 'Unknown'}}
+kind = 'model_transport_failure'
+
+    @pytest.mark.parametrize("error_kind", [None, "selector_timeout", "selector_process_failed"])
+    @pytest.mark.parametrize(
+        "event,kind",
+        [
+            (
+                {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+                "model_usage_limit",
+            ),
+            ({"type": "error", "code": "invalid_api_key"}, "model_authentication_refusal"),
+            ({"type": "error", "message": "Unknown transport failure"}, "model_transport_failure"),
+            ({"type": "turn.failed", "error": {"message": "Unknown"}}, "model_transport_failure"),
+        ],
+    )
+    def test_terminal_raw_failure_does_not_depend_on_editable_error_kind(error_kind, event, kind):
+        raw = stream({"type": "turn.started"}, event)
+>       assert model_batch_failure(raw, error_kind=error_kind) == {
+            "kind": kind,
+            "selector_error_kind": error_kind,
+            "event_line": 2,
+            "event_type": event["type"],
+            "stream_sha256": hashlib.sha256(raw.encode()).hexdigest(),
+        }
+E       AssertionError: assert {'kind': 'mod...e': None, ...} == {'kind': 'mod....failed', ...}
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing items:
+E         {'event_type': None} != {'event_type': 'turn.failed'}
+E         {'event_line': None} != {'event_line': 2}
+E         Use -v to get more diff
+
+evaluation/research/tests/test_expert_model_failure.py:131: AssertionError
+_ test_completed_turn_clears_stale_failure_events_without_inventing_global_failure[error-selector_process_failed] _
+
+error_kind = 'selector_process_failed', event_type = 'error'
+
+    @pytest.mark.parametrize("error_kind", [None, "selector_process_failed", "selector_output_rejected"])
+    @pytest.mark.parametrize("event_type", ["error", "turn.failed"])
+    def test_completed_turn_clears_stale_failure_events_without_inventing_global_failure(
+        error_kind, event_type
+    ):
+        event = (
+            {"type": "error", "code": "usage_limit_reached"}
+            if event_type == "error"
+            else {"type": "turn.failed", "error": {"code": "usage_limit_reached"}}
+        )
+        raw = stream(event, {"type": "turn.completed"})
+>       assert model_batch_failure(raw, error_kind=error_kind) is None
+E       assert {'kind': 'model_usage_limit', 'selector_error_kind': 'selector_process_failed', 'event_line': 1, 'event_type': 'error', ...} is None
+E        +  where {'kind': 'model_usage_limit', 'selector_error_kind': 'selector_process_failed', 'event_line': 1, 'event_type': 'error', ...} = model_batch_failure('{"type": "error", "code": "usage_limit_reached"}\n{"type": "turn.completed"}\n', error_kind='selector_process_failed')
+
+evaluation/research/tests/test_expert_model_failure.py:151: AssertionError
+_ test_completed_turn_clears_stale_failure_events_without_inventing_global_failure[error-selector_output_rejected] _
+
+error_kind = 'selector_output_rejected', event_type = 'error'
+
+    @pytest.mark.parametrize("error_kind", [None, "selector_process_failed", "selector_output_rejected"])
+    @pytest.mark.parametrize("event_type", ["error", "turn.failed"])
+    def test_completed_turn_clears_stale_failure_events_without_inventing_global_failure(
+        error_kind, event_type
+    ):
+        event = (
+            {"type": "error", "code": "usage_limit_reached"}
+            if event_type == "error"
+            else {"type": "turn.failed", "error": {"code": "usage_limit_reached"}}
+        )
+        raw = stream(event, {"type": "turn.completed"})
+>       assert model_batch_failure(raw, error_kind=error_kind) is None
+E       assert {'kind': 'model_usage_limit', 'selector_error_kind': 'selector_output_rejected', 'event_line': 1, 'event_type': 'error', ...} is None
+E        +  where {'kind': 'model_usage_limit', 'selector_error_kind': 'selector_output_rejected', 'event_line': 1, 'event_type': 'error', ...} = model_batch_failure('{"type": "error", "code": "usage_limit_reached"}\n{"type": "turn.completed"}\n', error_kind='selector_output_rejected')
+
+evaluation/research/tests/test_expert_model_failure.py:151: AssertionError
+_ test_completed_turn_clears_stale_failure_events_without_inventing_global_failure[turn.failed-selector_process_failed] _
+
+error_kind = 'selector_process_failed', event_type = 'turn.failed'
+
+    @pytest.mark.parametrize("error_kind", [None, "selector_process_failed", "selector_output_rejected"])
+    @pytest.mark.parametrize("event_type", ["error", "turn.failed"])
+    def test_completed_turn_clears_stale_failure_events_without_inventing_global_failure(
+        error_kind, event_type
+    ):
+        event = (
+            {"type": "error", "code": "usage_limit_reached"}
+            if event_type == "error"
+            else {"type": "turn.failed", "error": {"code": "usage_limit_reached"}}
+        )
+        raw = stream(event, {"type": "turn.completed"})
+>       assert model_batch_failure(raw, error_kind=error_kind) is None
+E       assert {'kind': 'model_usage_limit', 'selector_error_kind': 'selector_process_failed', 'event_line': 1, 'event_type': 'turn.failed', ...} is None
+E        +  where {'kind': 'model_usage_limit', 'selector_error_kind': 'selector_process_failed', 'event_line': 1, 'event_type': 'turn.failed', ...} = model_batch_failure('{"type": "turn.failed", "error": {"code": "usage_limit_reached"}}\n{"type": "turn.completed"}\n', error_kind='selector_process_failed')
+
+evaluation/research/tests/test_expert_model_failure.py:151: AssertionError
+_ test_completed_turn_clears_stale_failure_events_without_inventing_global_failure[turn.failed-selector_output_rejected] _
+
+error_kind = 'selector_output_rejected', event_type = 'turn.failed'
+
+    @pytest.mark.parametrize("error_kind", [None, "selector_process_failed", "selector_output_rejected"])
+    @pytest.mark.parametrize("event_type", ["error", "turn.failed"])
+    def test_completed_turn_clears_stale_failure_events_without_inventing_global_failure(
+        error_kind, event_type
+    ):
+        event = (
+            {"type": "error", "code": "usage_limit_reached"}
+            if event_type == "error"
+            else {"type": "turn.failed", "error": {"code": "usage_limit_reached"}}
+        )
+        raw = stream(event, {"type": "turn.completed"})
+>       assert model_batch_failure(raw, error_kind=error_kind) is None
+E       assert {'kind': 'model_usage_limit', 'selector_error_kind': 'selector_output_rejected', 'event_line': 1, 'event_type': 'turn.failed', ...} is None
+E        +  where {'kind': 'model_usage_limit', 'selector_error_kind': 'selector_output_rejected', 'event_line': 1, 'event_type': 'turn.failed', ...} = model_batch_failure('{"type": "turn.failed", "error": {"code": "usage_limit_reached"}}\n{"type": "turn.completed"}\n', error_kind='selector_output_rejected')
+
+evaluation/research/tests/test_expert_model_failure.py:151: AssertionError
+_ test_terminal_failure_after_completed_event_keeps_its_original_location[quota_exceeded-model_usage_limit] _
+
+code = 'quota_exceeded', kind = 'model_usage_limit'
+
+    @pytest.mark.parametrize("code,kind", [("quota_exceeded", "model_usage_limit"), ("invalid_api_key", "model_authentication_refusal")])
+    def test_terminal_failure_after_completed_event_keeps_its_original_location(code, kind):
+        raw = stream(
+            {"type": "error", "message": "Stale transport failure"},
+            {"type": "turn.completed"},
+            {"type": "turn.failed", "error": {"code": code}},
+        )
+        failure = model_batch_failure(raw, error_kind=None)
+>       assert failure["kind"] == kind and failure["event_line"] == 3
+               ^^^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+evaluation/research/tests/test_expert_model_failure.py:162: TypeError
+_ test_terminal_failure_after_completed_event_keeps_its_original_location[invalid_api_key-model_authentication_refusal] _
+
+code = 'invalid_api_key', kind = 'model_authentication_refusal'
+
+    @pytest.mark.parametrize("code,kind", [("quota_exceeded", "model_usage_limit"), ("invalid_api_key", "model_authentication_refusal")])
+    def test_terminal_failure_after_completed_event_keeps_its_original_location(code, kind):
+        raw = stream(
+            {"type": "error", "message": "Stale transport failure"},
+            {"type": "turn.completed"},
+            {"type": "turn.failed", "error": {"code": code}},
+        )
+        failure = model_batch_failure(raw, error_kind=None)
+>       assert failure["kind"] == kind and failure["event_line"] == 3
+               ^^^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+evaluation/research/tests/test_expert_model_failure.py:162: TypeError
+_ test_unknown_terminal_failure_with_malformed_payload_still_stops_without_metadata _
+
+    def test_unknown_terminal_failure_with_malformed_payload_still_stops_without_metadata():
+        raw = stream({"type": "turn.failed", "error": "unknown"})
+        failure = model_batch_failure(raw, error_kind=None)
+>       assert failure["kind"] == "model_transport_failure"
+               ^^^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+evaluation/research/tests/test_expert_model_failure.py:183: TypeError
+_ test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event0-missing_kind] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bf0b740>
+metadata = 'missing_kind'
+event = {'type': 'turn.failed', 'error': {'code': 'usage_limit_reached'}}
+
+    @pytest.mark.parametrize("metadata", ["missing_kind", "null_kind", "missing_meta"])
+    @pytest.mark.parametrize(
+        "event",
+        [
+            {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+            {"type": "error", "code": "invalid_api_key", "message": "Authentication failed"},
+            {"type": "error", "message": "Unknown model transport failure"},
+            {"type": "turn.failed", "error": {"message": "Unknown terminal failure"}},
+        ],
+    )
+    def test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers(
+        pilot, report, monkeypatch, metadata, event
+    ):
+        prepare_reporting(pilot, report)
+        assert replay(pilot, report)["explicit_commit"] is True
+        raw = pilot.folder / "selector-99.events.jsonl"
+        original = json.dumps(event) + "\n"
+        raw.write_text(original)
+        if metadata != "missing_meta":
+            write(
+                pilot.folder / "selector-99.meta.json",
+                {"error_kind": None} if metadata == "null_kind" else {},
+            )
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original failed model stream"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:404: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+_ test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event0-null_kind] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10da43830>
+metadata = 'null_kind'
+event = {'type': 'turn.failed', 'error': {'code': 'usage_limit_reached'}}
+
+    @pytest.mark.parametrize("metadata", ["missing_kind", "null_kind", "missing_meta"])
+    @pytest.mark.parametrize(
+        "event",
+        [
+            {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+            {"type": "error", "code": "invalid_api_key", "message": "Authentication failed"},
+            {"type": "error", "message": "Unknown model transport failure"},
+            {"type": "turn.failed", "error": {"message": "Unknown terminal failure"}},
+        ],
+    )
+    def test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers(
+        pilot, report, monkeypatch, metadata, event
+    ):
+        prepare_reporting(pilot, report)
+        assert replay(pilot, report)["explicit_commit"] is True
+        raw = pilot.folder / "selector-99.events.jsonl"
+        original = json.dumps(event) + "\n"
+        raw.write_text(original)
+        if metadata != "missing_meta":
+            write(
+                pilot.folder / "selector-99.meta.json",
+                {"error_kind": None} if metadata == "null_kind" else {},
+            )
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original failed model stream"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:404: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+_ test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event0-missing_meta] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10da416a0>
+metadata = 'missing_meta'
+event = {'type': 'turn.failed', 'error': {'code': 'usage_limit_reached'}}
+
+    @pytest.mark.parametrize("metadata", ["missing_kind", "null_kind", "missing_meta"])
+    @pytest.mark.parametrize(
+        "event",
+        [
+            {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+            {"type": "error", "code": "invalid_api_key", "message": "Authentication failed"},
+            {"type": "error", "message": "Unknown model transport failure"},
+            {"type": "turn.failed", "error": {"message": "Unknown terminal failure"}},
+        ],
+    )
+    def test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers(
+        pilot, report, monkeypatch, metadata, event
+    ):
+        prepare_reporting(pilot, report)
+        assert replay(pilot, report)["explicit_commit"] is True
+        raw = pilot.folder / "selector-99.events.jsonl"
+        original = json.dumps(event) + "\n"
+        raw.write_text(original)
+        if metadata != "missing_meta":
+            write(
+                pilot.folder / "selector-99.meta.json",
+                {"error_kind": None} if metadata == "null_kind" else {},
+            )
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original failed model stream"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:404: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+_ test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event1-missing_kind] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10db61490>
+metadata = 'missing_kind'
+event = {'type': 'error', 'code': 'invalid_api_key', 'message': 'Authentication failed'}
+
+    @pytest.mark.parametrize("metadata", ["missing_kind", "null_kind", "missing_meta"])
+    @pytest.mark.parametrize(
+        "event",
+        [
+            {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+            {"type": "error", "code": "invalid_api_key", "message": "Authentication failed"},
+            {"type": "error", "message": "Unknown model transport failure"},
+            {"type": "turn.failed", "error": {"message": "Unknown terminal failure"}},
+        ],
+    )
+    def test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers(
+        pilot, report, monkeypatch, metadata, event
+    ):
+        prepare_reporting(pilot, report)
+        assert replay(pilot, report)["explicit_commit"] is True
+        raw = pilot.folder / "selector-99.events.jsonl"
+        original = json.dumps(event) + "\n"
+        raw.write_text(original)
+        if metadata != "missing_meta":
+            write(
+                pilot.folder / "selector-99.meta.json",
+                {"error_kind": None} if metadata == "null_kind" else {},
+            )
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original failed model stream"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:404: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+_ test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event1-null_kind] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dbe4dd0>
+metadata = 'null_kind'
+event = {'type': 'error', 'code': 'invalid_api_key', 'message': 'Authentication failed'}
+
+    @pytest.mark.parametrize("metadata", ["missing_kind", "null_kind", "missing_meta"])
+    @pytest.mark.parametrize(
+        "event",
+        [
+            {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+            {"type": "error", "code": "invalid_api_key", "message": "Authentication failed"},
+            {"type": "error", "message": "Unknown model transport failure"},
+            {"type": "turn.failed", "error": {"message": "Unknown terminal failure"}},
+        ],
+    )
+    def test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers(
+        pilot, report, monkeypatch, metadata, event
+    ):
+        prepare_reporting(pilot, report)
+        assert replay(pilot, report)["explicit_commit"] is True
+        raw = pilot.folder / "selector-99.events.jsonl"
+        original = json.dumps(event) + "\n"
+        raw.write_text(original)
+        if metadata != "missing_meta":
+            write(
+                pilot.folder / "selector-99.meta.json",
+                {"error_kind": None} if metadata == "null_kind" else {},
+            )
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original failed model stream"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:404: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+_ test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event1-missing_meta] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10db62b70>
+metadata = 'missing_meta'
+event = {'type': 'error', 'code': 'invalid_api_key', 'message': 'Authentication failed'}
+
+    @pytest.mark.parametrize("metadata", ["missing_kind", "null_kind", "missing_meta"])
+    @pytest.mark.parametrize(
+        "event",
+        [
+            {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+            {"type": "error", "code": "invalid_api_key", "message": "Authentication failed"},
+            {"type": "error", "message": "Unknown model transport failure"},
+            {"type": "turn.failed", "error": {"message": "Unknown terminal failure"}},
+        ],
+    )
+    def test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers(
+        pilot, report, monkeypatch, metadata, event
+    ):
+        prepare_reporting(pilot, report)
+        assert replay(pilot, report)["explicit_commit"] is True
+        raw = pilot.folder / "selector-99.events.jsonl"
+        original = json.dumps(event) + "\n"
+        raw.write_text(original)
+        if metadata != "missing_meta":
+            write(
+                pilot.folder / "selector-99.meta.json",
+                {"error_kind": None} if metadata == "null_kind" else {},
+            )
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original failed model stream"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:404: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+_ test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event2-missing_kind] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dbf2840>
+metadata = 'missing_kind'
+event = {'type': 'error', 'message': 'Unknown model transport failure'}
+
+    @pytest.mark.parametrize("metadata", ["missing_kind", "null_kind", "missing_meta"])
+    @pytest.mark.parametrize(
+        "event",
+        [
+            {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+            {"type": "error", "code": "invalid_api_key", "message": "Authentication failed"},
+            {"type": "error", "message": "Unknown model transport failure"},
+            {"type": "turn.failed", "error": {"message": "Unknown terminal failure"}},
+        ],
+    )
+    def test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers(
+        pilot, report, monkeypatch, metadata, event
+    ):
+        prepare_reporting(pilot, report)
+        assert replay(pilot, report)["explicit_commit"] is True
+        raw = pilot.folder / "selector-99.events.jsonl"
+        original = json.dumps(event) + "\n"
+        raw.write_text(original)
+        if metadata != "missing_meta":
+            write(
+                pilot.folder / "selector-99.meta.json",
+                {"error_kind": None} if metadata == "null_kind" else {},
+            )
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original failed model stream"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:404: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+_ test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event2-null_kind] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dc69e20>
+metadata = 'null_kind'
+event = {'type': 'error', 'message': 'Unknown model transport failure'}
+
+    @pytest.mark.parametrize("metadata", ["missing_kind", "null_kind", "missing_meta"])
+    @pytest.mark.parametrize(
+        "event",
+        [
+            {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+            {"type": "error", "code": "invalid_api_key", "message": "Authentication failed"},
+            {"type": "error", "message": "Unknown model transport failure"},
+            {"type": "turn.failed", "error": {"message": "Unknown terminal failure"}},
+        ],
+    )
+    def test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers(
+        pilot, report, monkeypatch, metadata, event
+    ):
+        prepare_reporting(pilot, report)
+        assert replay(pilot, report)["explicit_commit"] is True
+        raw = pilot.folder / "selector-99.events.jsonl"
+        original = json.dumps(event) + "\n"
+        raw.write_text(original)
+        if metadata != "missing_meta":
+            write(
+                pilot.folder / "selector-99.meta.json",
+                {"error_kind": None} if metadata == "null_kind" else {},
+            )
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original failed model stream"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:404: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+_ test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event2-missing_meta] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dcd26f0>
+metadata = 'missing_meta'
+event = {'type': 'error', 'message': 'Unknown model transport failure'}
+
+    @pytest.mark.parametrize("metadata", ["missing_kind", "null_kind", "missing_meta"])
+    @pytest.mark.parametrize(
+        "event",
+        [
+            {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+            {"type": "error", "code": "invalid_api_key", "message": "Authentication failed"},
+            {"type": "error", "message": "Unknown model transport failure"},
+            {"type": "turn.failed", "error": {"message": "Unknown terminal failure"}},
+        ],
+    )
+    def test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers(
+        pilot, report, monkeypatch, metadata, event
+    ):
+        prepare_reporting(pilot, report)
+        assert replay(pilot, report)["explicit_commit"] is True
+        raw = pilot.folder / "selector-99.events.jsonl"
+        original = json.dumps(event) + "\n"
+        raw.write_text(original)
+        if metadata != "missing_meta":
+            write(
+                pilot.folder / "selector-99.meta.json",
+                {"error_kind": None} if metadata == "null_kind" else {},
+            )
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original failed model stream"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:404: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+_ test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event3-missing_kind] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d8cde50>
+metadata = 'missing_kind'
+event = {'type': 'turn.failed', 'error': {'message': 'Unknown terminal failure'}}
+
+    @pytest.mark.parametrize("metadata", ["missing_kind", "null_kind", "missing_meta"])
+    @pytest.mark.parametrize(
+        "event",
+        [
+            {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+            {"type": "error", "code": "invalid_api_key", "message": "Authentication failed"},
+            {"type": "error", "message": "Unknown model transport failure"},
+            {"type": "turn.failed", "error": {"message": "Unknown terminal failure"}},
+        ],
+    )
+    def test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers(
+        pilot, report, monkeypatch, metadata, event
+    ):
+        prepare_reporting(pilot, report)
+        assert replay(pilot, report)["explicit_commit"] is True
+        raw = pilot.folder / "selector-99.events.jsonl"
+        original = json.dumps(event) + "\n"
+        raw.write_text(original)
+        if metadata != "missing_meta":
+            write(
+                pilot.folder / "selector-99.meta.json",
+                {"error_kind": None} if metadata == "null_kind" else {},
+            )
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original failed model stream"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:404: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+_ test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event3-null_kind] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dc93590>
+metadata = 'null_kind'
+event = {'type': 'turn.failed', 'error': {'message': 'Unknown terminal failure'}}
+
+    @pytest.mark.parametrize("metadata", ["missing_kind", "null_kind", "missing_meta"])
+    @pytest.mark.parametrize(
+        "event",
+        [
+            {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+            {"type": "error", "code": "invalid_api_key", "message": "Authentication failed"},
+            {"type": "error", "message": "Unknown model transport failure"},
+            {"type": "turn.failed", "error": {"message": "Unknown terminal failure"}},
+        ],
+    )
+    def test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers(
+        pilot, report, monkeypatch, metadata, event
+    ):
+        prepare_reporting(pilot, report)
+        assert replay(pilot, report)["explicit_commit"] is True
+        raw = pilot.folder / "selector-99.events.jsonl"
+        original = json.dumps(event) + "\n"
+        raw.write_text(original)
+        if metadata != "missing_meta":
+            write(
+                pilot.folder / "selector-99.meta.json",
+                {"error_kind": None} if metadata == "null_kind" else {},
+            )
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original failed model stream"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:404: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+_ test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event3-missing_meta] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d92c860>
+metadata = 'missing_meta'
+event = {'type': 'turn.failed', 'error': {'message': 'Unknown terminal failure'}}
+
+    @pytest.mark.parametrize("metadata", ["missing_kind", "null_kind", "missing_meta"])
+    @pytest.mark.parametrize(
+        "event",
+        [
+            {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+            {"type": "error", "code": "invalid_api_key", "message": "Authentication failed"},
+            {"type": "error", "message": "Unknown model transport failure"},
+            {"type": "turn.failed", "error": {"message": "Unknown terminal failure"}},
+        ],
+    )
+    def test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers(
+        pilot, report, monkeypatch, metadata, event
+    ):
+        prepare_reporting(pilot, report)
+        assert replay(pilot, report)["explicit_commit"] is True
+        raw = pilot.folder / "selector-99.events.jsonl"
+        original = json.dumps(event) + "\n"
+        raw.write_text(original)
+        if metadata != "missing_meta":
+            write(
+                pilot.folder / "selector-99.meta.json",
+                {"error_kind": None} if metadata == "null_kind" else {},
+            )
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original failed model stream"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:404: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+_ test_accepted_prefix_does_not_rescue_original_failed_model_with_omitted_metadata[event0] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10be63860>
+event = {'type': 'turn.failed', 'error': {'code': 'usage_limit_reached'}}
+
+    @pytest.mark.parametrize("event", [
+        {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+        {"type": "error", "code": "invalid_api_key"},
+        {"type": "turn.failed", "error": {"message": "Unknown model transport failure"}},
+    ])
+    def test_accepted_prefix_does_not_rescue_original_failed_model_with_omitted_metadata(
+        pilot, report, monkeypatch, event
+    ):
+        result = prepare_reporting(pilot, report, failed=True)
+        assert replay(pilot, report)["events"] == 2
+        raw = pilot.folder / "selector-03.events.jsonl"
+        original = json.dumps(event) + "\n"
+        raw.write_text(original)
+        meta = pilot.read("selector-03.meta.json")
+        meta.update(error_kind=None, returncode=7, model_failure=None)
+        write(pilot.folder / "selector-03.meta.json", meta)
+        result["turn_errors"][-1]["kind"] = None
+        result.update(error="unclassified_process_failure", model_failure=None)
+        persist_result(pilot, result)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original failed model stream"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:430: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+_ test_accepted_prefix_does_not_rescue_original_failed_model_with_omitted_metadata[event1] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dc40f50>
+event = {'type': 'error', 'code': 'invalid_api_key'}
+
+    @pytest.mark.parametrize("event", [
+        {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+        {"type": "error", "code": "invalid_api_key"},
+        {"type": "turn.failed", "error": {"message": "Unknown model transport failure"}},
+    ])
+    def test_accepted_prefix_does_not_rescue_original_failed_model_with_omitted_metadata(
+        pilot, report, monkeypatch, event
+    ):
+        result = prepare_reporting(pilot, report, failed=True)
+        assert replay(pilot, report)["events"] == 2
+        raw = pilot.folder / "selector-03.events.jsonl"
+        original = json.dumps(event) + "\n"
+        raw.write_text(original)
+        meta = pilot.read("selector-03.meta.json")
+        meta.update(error_kind=None, returncode=7, model_failure=None)
+        write(pilot.folder / "selector-03.meta.json", meta)
+        result["turn_errors"][-1]["kind"] = None
+        result.update(error="unclassified_process_failure", model_failure=None)
+        persist_result(pilot, result)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original failed model stream"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:430: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+_ test_accepted_prefix_does_not_rescue_original_failed_model_with_omitted_metadata[event2] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dcd0500>
+event = {'type': 'turn.failed', 'error': {'message': 'Unknown model transport failure'}}
+
+    @pytest.mark.parametrize("event", [
+        {"type": "turn.failed", "error": {"code": "usage_limit_reached"}},
+        {"type": "error", "code": "invalid_api_key"},
+        {"type": "turn.failed", "error": {"message": "Unknown model transport failure"}},
+    ])
+    def test_accepted_prefix_does_not_rescue_original_failed_model_with_omitted_metadata(
+        pilot, report, monkeypatch, event
+    ):
+        result = prepare_reporting(pilot, report, failed=True)
+        assert replay(pilot, report)["events"] == 2
+        raw = pilot.folder / "selector-03.events.jsonl"
+        original = json.dumps(event) + "\n"
+        raw.write_text(original)
+        meta = pilot.read("selector-03.meta.json")
+        meta.update(error_kind=None, returncode=7, model_failure=None)
+        write(pilot.folder / "selector-03.meta.json", meta)
+        result["turn_errors"][-1]["kind"] = None
+        result.update(error="unclassified_process_failure", model_failure=None)
+        persist_result(pilot, result)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Original failed model stream"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:430: Failed
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"numerator": 0, "denominator": 0, "value": null}, "expert": {"numerator": 0, "denominator": 0, "value": null}, "expert_precision": {"numerator": 0, "denominator": 0, "value": null}, "sealed_submissions": 1}
+_ test_nonzero_process_returncode_requires_canonical_error_metadata_before_seal[None] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e0f9880>
+error_kind = None
+
+    @pytest.mark.parametrize("error_kind", [None, "", "selector_timeout", "selector_output_rejected", "unclassified_process_failure"])
+    def test_nonzero_process_returncode_requires_canonical_error_metadata_before_seal(
+        pilot, report, monkeypatch, error_kind
+    ):
+        result = prepare_reporting(pilot, report, failed=True)
+        assert replay(pilot, report)["events"] == 2
+        meta = pilot.read("selector-03.meta.json")
+        meta.update(error_kind=error_kind, returncode=7, model_failure=None)
+        write(pilot.folder / "selector-03.meta.json", meta)
+        result["turn_errors"][-1]["kind"] = error_kind
+        result.update(error="unclassified_process_failure", model_failure=None)
+        persist_result(pilot, result)
+>       with pytest.raises(ValueError, match="canonical error metadata"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:448: Failed
+_ test_nonzero_process_returncode_requires_canonical_error_metadata_before_seal[] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d9081a0>
+error_kind = ''
+
+    @pytest.mark.parametrize("error_kind", [None, "", "selector_timeout", "selector_output_rejected", "unclassified_process_failure"])
+    def test_nonzero_process_returncode_requires_canonical_error_metadata_before_seal(
+        pilot, report, monkeypatch, error_kind
+    ):
+        result = prepare_reporting(pilot, report, failed=True)
+        assert replay(pilot, report)["events"] == 2
+        meta = pilot.read("selector-03.meta.json")
+        meta.update(error_kind=error_kind, returncode=7, model_failure=None)
+        write(pilot.folder / "selector-03.meta.json", meta)
+        result["turn_errors"][-1]["kind"] = error_kind
+        result.update(error="unclassified_process_failure", model_failure=None)
+        persist_result(pilot, result)
+>       with pytest.raises(ValueError, match="canonical error metadata"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:448: Failed
+_ test_nonzero_process_returncode_requires_canonical_error_metadata_before_seal[selector_timeout] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dba9220>
+error_kind = 'selector_timeout'
+
+    @pytest.mark.parametrize("error_kind", [None, "", "selector_timeout", "selector_output_rejected", "unclassified_process_failure"])
+    def test_nonzero_process_returncode_requires_canonical_error_metadata_before_seal(
+        pilot, report, monkeypatch, error_kind
+    ):
+        result = prepare_reporting(pilot, report, failed=True)
+        assert replay(pilot, report)["events"] == 2
+        meta = pilot.read("selector-03.meta.json")
+        meta.update(error_kind=error_kind, returncode=7, model_failure=None)
+        write(pilot.folder / "selector-03.meta.json", meta)
+        result["turn_errors"][-1]["kind"] = error_kind
+        result.update(error="unclassified_process_failure", model_failure=None)
+        persist_result(pilot, result)
+>       with pytest.raises(ValueError, match="canonical error metadata"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:448: Failed
+_ test_nonzero_process_returncode_requires_canonical_error_metadata_before_seal[selector_output_rejected] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e019e20>
+error_kind = 'selector_output_rejected'
+
+    @pytest.mark.parametrize("error_kind", [None, "", "selector_timeout", "selector_output_rejected", "unclassified_process_failure"])
+    def test_nonzero_process_returncode_requires_canonical_error_metadata_before_seal(
+        pilot, report, monkeypatch, error_kind
+    ):
+        result = prepare_reporting(pilot, report, failed=True)
+        assert replay(pilot, report)["events"] == 2
+        meta = pilot.read("selector-03.meta.json")
+        meta.update(error_kind=error_kind, returncode=7, model_failure=None)
+        write(pilot.folder / "selector-03.meta.json", meta)
+        result["turn_errors"][-1]["kind"] = error_kind
+        result.update(error="unclassified_process_failure", model_failure=None)
+        persist_result(pilot, result)
+>       with pytest.raises(ValueError, match="canonical error metadata"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:448: Failed
+_ test_nonzero_process_returncode_requires_canonical_error_metadata_before_seal[unclassified_process_failure] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10db61d30>
+error_kind = 'unclassified_process_failure'
+
+    @pytest.mark.parametrize("error_kind", [None, "", "selector_timeout", "selector_output_rejected", "unclassified_process_failure"])
+    def test_nonzero_process_returncode_requires_canonical_error_metadata_before_seal(
+        pilot, report, monkeypatch, error_kind
+    ):
+        result = prepare_reporting(pilot, report, failed=True)
+        assert replay(pilot, report)["events"] == 2
+        meta = pilot.read("selector-03.meta.json")
+        meta.update(error_kind=error_kind, returncode=7, model_failure=None)
+        write(pilot.folder / "selector-03.meta.json", meta)
+        result["turn_errors"][-1]["kind"] = error_kind
+        result.update(error="unclassified_process_failure", model_failure=None)
+        persist_result(pilot, result)
+>       with pytest.raises(ValueError, match="canonical error metadata"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:448: Failed
+_____ test_ordinary_terminal_timeout_with_accepted_prefix_remains_sealable _____
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e1be840>
+
+    def test_ordinary_terminal_timeout_with_accepted_prefix_remains_sealable(pilot, report, monkeypatch):
+        result = prepare_reporting(pilot, report, failed=True)
+>       assert result["model_failure"] is None and result["status"] == "incomplete"
+               ^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'model_failure'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:455: KeyError
+=========================== short test summary info ============================
+FAILED evaluation/research/tests/test_expert_model_failure.py::test_terminal_raw_failure_does_not_depend_on_editable_error_kind[event0-model_usage_limit-None]
+FAILED evaluation/research/tests/test_expert_model_failure.py::test_terminal_raw_failure_does_not_depend_on_editable_error_kind[event1-model_authentication_refusal-None]
+FAILED evaluation/research/tests/test_expert_model_failure.py::test_terminal_raw_failure_does_not_depend_on_editable_error_kind[event2-model_transport_failure-None]
+FAILED evaluation/research/tests/test_expert_model_failure.py::test_terminal_raw_failure_does_not_depend_on_editable_error_kind[event2-model_transport_failure-selector_timeout]
+FAILED evaluation/research/tests/test_expert_model_failure.py::test_terminal_raw_failure_does_not_depend_on_editable_error_kind[event2-model_transport_failure-selector_process_failed]
+FAILED evaluation/research/tests/test_expert_model_failure.py::test_terminal_raw_failure_does_not_depend_on_editable_error_kind[event3-model_transport_failure-None]
+FAILED evaluation/research/tests/test_expert_model_failure.py::test_terminal_raw_failure_does_not_depend_on_editable_error_kind[event3-model_transport_failure-selector_timeout]
+FAILED evaluation/research/tests/test_expert_model_failure.py::test_terminal_raw_failure_does_not_depend_on_editable_error_kind[event3-model_transport_failure-selector_process_failed]
+FAILED evaluation/research/tests/test_expert_model_failure.py::test_completed_turn_clears_stale_failure_events_without_inventing_global_failure[error-selector_process_failed]
+FAILED evaluation/research/tests/test_expert_model_failure.py::test_completed_turn_clears_stale_failure_events_without_inventing_global_failure[error-selector_output_rejected]
+FAILED evaluation/research/tests/test_expert_model_failure.py::test_completed_turn_clears_stale_failure_events_without_inventing_global_failure[turn.failed-selector_process_failed]
+FAILED evaluation/research/tests/test_expert_model_failure.py::test_completed_turn_clears_stale_failure_events_without_inventing_global_failure[turn.failed-selector_output_rejected]
+FAILED evaluation/research/tests/test_expert_model_failure.py::test_terminal_failure_after_completed_event_keeps_its_original_location[quota_exceeded-model_usage_limit]
+FAILED evaluation/research/tests/test_expert_model_failure.py::test_terminal_failure_after_completed_event_keeps_its_original_location[invalid_api_key-model_authentication_refusal]
+FAILED evaluation/research/tests/test_expert_model_failure.py::test_unknown_terminal_failure_with_malformed_payload_still_stops_without_metadata
+FAILED ::test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event0-missing_kind]
+FAILED ::test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event0-null_kind]
+FAILED ::test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event0-missing_meta]
+FAILED ::test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event1-missing_kind]
+FAILED ::test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event1-null_kind]
+FAILED ::test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event1-missing_meta]
+FAILED ::test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event2-missing_kind]
+FAILED ::test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event2-null_kind]
+FAILED ::test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event2-missing_meta]
+FAILED ::test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event3-missing_kind]
+FAILED ::test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event3-null_kind]
+FAILED ::test_orphan_terminal_raw_stream_cannot_be_hidden_by_removed_tail_markers[event3-missing_meta]
+FAILED ::test_accepted_prefix_does_not_rescue_original_failed_model_with_omitted_metadata[event0]
+FAILED ::test_accepted_prefix_does_not_rescue_original_failed_model_with_omitted_metadata[event1]
+FAILED ::test_accepted_prefix_does_not_rescue_original_failed_model_with_omitted_metadata[event2]
+FAILED ::test_nonzero_process_returncode_requires_canonical_error_metadata_before_seal[None]
+FAILED ::test_nonzero_process_returncode_requires_canonical_error_metadata_before_seal[]
+FAILED ::test_nonzero_process_returncode_requires_canonical_error_metadata_before_seal[selector_timeout]
+FAILED ::test_nonzero_process_returncode_requires_canonical_error_metadata_before_seal[selector_output_rejected]
+FAILED ::test_nonzero_process_returncode_requires_canonical_error_metadata_before_seal[unclassified_process_failure]
+FAILED ::test_ordinary_terminal_timeout_with_accepted_prefix_remains_sealable
+================= 36 failed, 9 passed, 274 deselected in 3.62s =================
