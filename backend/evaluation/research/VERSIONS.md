@@ -15,6 +15,27 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | **[reviewed](data/ground_truth.reviewed.json)** | 62/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/62 | 0/210 |
 | [draft8](data/ground_truth.draft8.json) | 74/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/74 | 0/208 |
 
+**Scorer definition changed 2026-10-05 (owner: "Делай по своим рекомендациям", decisions D1–D4), and
+every published report was regenerated from the same frozen capture.** Two new rates and four rules:
+
+- **D1, other scope.** A claim whose own scope names another controlled population ("EU/EEA" against a
+  "non-EU/EEA" label) or another programme (identity not YES) is not an answer to that label: it is
+  counted in the new `other_scope_claim_rate` and in neither `claim_precision` nor
+  `wrong_scope_claim_rate`. Silence is not other scope: a claim that names no population is still judged.
+- **D2.** A descriptive corpus population is a note: compatible with silence (2026-09-26) and now with another description; a recorded controlled population ("transfer") still does not match it.
+- **D3.** Academic years compare in one spelling ("2027-2028" = "2027/2028" = "2027/28").
+- **D4, partial.** For two scholarship keys whose corpus vocabulary is finer than the pipeline's
+  (`applicability.application_mode` "separate" vs "separate_after_admission_application";
+  `applicability.degree` {"degree": "bachelor", "applies": "yes"} vs "bachelor_full_time"), a coarser
+  right value is counted in the new `partial_claim_rate`, never as a hit and never as wrong.
+
+Effect on the frozen V2-01 capture, every corpus version: `wrong_scope_claim_rate` 4/5 → **0/1**,
+`claim_precision` 0/5 → 0/1, `claim_adjudication_rate` 5/13 → 1/13, `other_scope_claim_rate` **4/5**.
+The four claims did not become right. They moved: each names a programme or population other than the
+label's, which is what D1 separates from a wrong answer. The programme-identity failure behind them is
+still measured where it belongs, in `programme_page_precision` / `programme_page_recall` (1/9, 1/10,
+unchanged). Numbers before and after 2026-10-05 are not comparable without this note.
+
 **Scorer definition changed 2026-09-22, and every row's `wrong_scope_claim_rate` moved with it:
 5/5 → 4/5, in all eight versions.** The owner settled that the scorer compares programme *identity*
 rather than programme strings, so NTU's "Bachelor of Computing (Hons) in Computer Science" now answers

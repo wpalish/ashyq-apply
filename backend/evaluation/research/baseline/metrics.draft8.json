@@ -501,7 +501,7 @@
         "value": 0.4
       },
       "precision": {
-        "denominator": 5,
+        "denominator": 1,
         "numerator": 0,
         "value": 0.0
       },
@@ -941,11 +941,11 @@
   "metrics": {
     "claim_adjudication_rate": {
       "denominator": 13,
-      "numerator": 5,
-      "value": 0.38461538461538464
+      "numerator": 1,
+      "value": 0.07692307692307693
     },
     "claim_precision": {
-      "denominator": 5,
+      "denominator": 1,
       "numerator": 0,
       "value": 0.0
     },
@@ -978,6 +978,16 @@
       "denominator": 0,
       "numerator": 0,
       "value": null
+    },
+    "other_scope_claim_rate": {
+      "denominator": 5,
+      "numerator": 4,
+      "value": 0.8
+    },
+    "partial_claim_rate": {
+      "denominator": 5,
+      "numerator": 0,
+      "value": 0.0
     },
     "primary_source_rate": {
       "denominator": 13,
@@ -1045,9 +1055,9 @@
       "value": 0.0
     },
     "wrong_scope_claim_rate": {
-      "denominator": 5,
-      "numerator": 4,
-      "value": 0.8
+      "denominator": 1,
+      "numerator": 0,
+      "value": 0.0
     }
   },
   "mode": "live",

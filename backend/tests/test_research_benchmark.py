@@ -846,6 +846,11 @@ def test_a_descriptive_corpus_population_accepts_silence_but_not_a_wrong_value()
     expected = Scope(university="U", population="Vancouver applicants using IELTS Academic")
     assert scope_matches(expected, Scope(university="U"))
     assert not scope_matches(expected, Scope(university="U", population="transfer"))
+    # D2 (owner, 2026-10-05): another description is compatible with the note.
+    assert scope_matches(
+        Scope(university="U", population="full-time undergraduate scholarship applicants"),
+        Scope(university="U", population="Singapore PRs and international students"),
+    )
     # A controlled population must still be recorded.
     assert not scope_matches(Scope(university="U", population="non-EU/EEA"), Scope(university="U"))
     assert scope_matches(
