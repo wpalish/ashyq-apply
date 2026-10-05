@@ -40,6 +40,8 @@ class Candidate:
     attributes: dict[str, str] = field(default_factory=dict)
     discovery_source: str = ""
     notes: str = ""
+    #: Provider queries discovery already spent on this institution.
+    search_queries_used: int = 0
 
     @property
     def verifiable(self) -> bool:
