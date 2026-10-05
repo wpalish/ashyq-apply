@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/tmp/unimatch-expert500-journal-report-v9.py", line 2019, in <module>
+    main()
+  File "/tmp/unimatch-expert500-journal-report-v9.py", line 1691, in main
+    frozen_provenance = validate_frozen_provenance(root, args.orchestrator)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/unimatch-expert500-journal-report-v9.py", line 412, in validate_frozen_provenance
+    raise ValueError("Controlled source ledger differs from recorded workflow executions")
+ValueError: Controlled source ledger differs from recorded workflow executions
