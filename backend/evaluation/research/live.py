@@ -598,6 +598,12 @@ def main() -> None:
         help="experiment ER-05: links naming undergraduate admission become candidates",
     )
     parser.add_argument(
+        "--shared-query-budget",
+        action="store_true",
+        help="plan rule BL-1: every stage's provider queries count against one budget of six "
+        "per institution; topic search leaves one for the scholarship search",
+    )
+    parser.add_argument(
         "--deadline-v2",
         action="store_true",
         help="plan rule DL-2: abbreviated months, date-first 'Applications due' rows, and a "
@@ -698,6 +704,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery
 
             live_discovery.NAVIGATION_SLOT = True
+        if args.shared_query_budget:
+            from app.adapters.search import intent as intent_module
+
+            intent_module.SHARED_QUERY_BUDGET = True
         if args.deadline_v2:
             from app.adapters import extraction as extraction_module
 
@@ -796,6 +806,7 @@ def main() -> None:
                         *(["--navigation-field-leads"] if args.navigation_field_leads else []),
                         *(["--walker-subject-cap"] if args.walker_subject_cap else []),
                         *(["--deadline-v2"] if args.deadline_v2 else []),
+                        *(["--shared-query-budget"] if args.shared_query_budget else []),
                         "--search-funding-fallback"
                         if args.search_funding_fallback
                         else "--no-search-funding-fallback",
