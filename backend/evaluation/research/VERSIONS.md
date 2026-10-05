@@ -14,6 +14,13 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | [draft7](data/ground_truth.draft7.json) | 62/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/62 | 0/210 |
 | **[reviewed](data/ground_truth.reviewed.json)** | 62/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/62 | 0/210 |
 | [draft8](data/ground_truth.draft8.json) | 76/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/74 | 0/208 |
+| **[reviewed8](data/ground_truth.reviewed8.json)** | 76/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/74 | 0/208 |
+
+**Draft8 signed 2026-10-05 by Диас ("Подписываю draft8")**, after the [REVIEW_DRAFT8](REVIEW_DRAFT8.md)
+worksheet, including its changes to signed NTU labels (IELTS 6 → 6.5; two credential labels → unknown).
+`reviewed8` is draft8 with the eight draft cases marked `human_verified`; every metric is identical to
+draft8's and it scores strictly. It is the scorecard's default corpus from this date. `reviewed`
+(2026-09-21) stays frozen as signed.
 
 **Scorer definition changed 2026-10-05 (owner: "Делай по своим рекомендациям", decisions D1–D4), and
 every published report was regenerated from the same frozen capture.** Two new rates and four rules:
