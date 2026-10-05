@@ -44,6 +44,20 @@ export async function waitForResults(page: Page, timeout = 120_000): Promise<voi
   await expect(page.getByTestId('to-shortlist')).toBeVisible({ timeout });
 }
 
+/**
+ * Let finite animations and transitions end before a check reads colours.
+ *
+ * Axe samples the page at one instant: a navigation pill fading out of its
+ * open state is, for a frame, grey text on grey, and CI once caught exactly
+ * that frame. Infinite ones (the globe's pulse) never finish, so they are
+ * left alone.
+ */
+export async function settle(page: Page): Promise<void> {
+  await page.evaluate(() => Promise.all(document.getAnimations()
+    .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity)
+    .map((a) => a.finished.catch(() => undefined))));
+}
+
 /** The five areas the shell keeps in its main navigation (Unimatch's). */
 const PRIMARY = new Set(['home', 'shortlist', 'approved', 'documents', 'feed']);
 

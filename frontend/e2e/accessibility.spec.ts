@@ -7,7 +7,7 @@
 
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import { goTo, newSession, openShortlist, runDemoResearch, shot } from './helpers';
+import { goTo, newSession, openShortlist, runDemoResearch, shot, settle } from './helpers';
 
 const BREAKPOINTS = [
   { name: '320', width: 320, height: 720 },
@@ -166,6 +166,7 @@ test('every reachable workflow screen has no serious axe violations', async () =
 
   for (const screen of screens) {
     await goTo(page, screen);
+    await settle(page);
     const report = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
       .analyze();

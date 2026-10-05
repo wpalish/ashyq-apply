@@ -9,7 +9,7 @@
 
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import { goTo, newSession, openShortlist, runDemoResearch, shot } from './helpers';
+import { goTo, newSession, openShortlist, runDemoResearch, shot, settle } from './helpers';
 
 test.describe.configure({ mode: 'serial' });
 
@@ -359,6 +359,7 @@ test('home, the reveal, the cards, the comparison, the plan and the triage have 
   ];
   for (const [name, open] of views) {
     await open();
+    await settle(page);
     const report = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
       .analyze();
