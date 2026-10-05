@@ -1,0 +1,87 @@
+{
+  "schema_version": "1",
+  "recorded_at": "2026-10-05T10:45:44.362472+00:00",
+  "source_head": "03a1d18417903b1361bdb15120a567e8453d2ca6",
+  "merged_main": "4eccbec680f5cacf5e4e77661748d0d993d85b0e",
+  "backend_tests": 4100,
+  "backend_coverage_percent": 94.87,
+  "backend_elapsed_seconds": 427.88,
+  "backend_static_files": 371,
+  "main_default_navigation_field_leads": true,
+  "main_default_walker_signal_less_cap": 3,
+  "topic_search_enabled": true,
+  "frontend_tree": "4aaba144e9642060a4915a22527ef016ee8cc83d",
+  "migration_tree": "96469ee9697939efcd3c52b681838e1899989998",
+  "workflows_tree": "fc6cd24a90676173947f23fe262210a801ff9efc",
+  "new_neutral_original_manifest_sha256": "487c1630699ef3e4b931da92c7cd7a58614222b73f6639086700a78c97b82add",
+  "new_live_trial_started": false,
+  "records": [
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-main53-alembic.log",
+      "path": "unimatch-expert500-v11-main53-alembic.log",
+      "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b",
+      "bytes": 20
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-main53-backend-format.log",
+      "path": "unimatch-expert500-v11-main53-backend-format.log",
+      "sha256": "64a4fa60ca2bda7893c1e4b8ea53a24a76e4ea49ffc3d32207015731000ca7cc",
+      "bytes": 28
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-main53-backend-mypy.log",
+      "path": "unimatch-expert500-v11-main53-backend-mypy.log",
+      "sha256": "62438cc7aa5c6e61cfa54ea208828033e41694c5c8eacc816ead469259840785",
+      "bytes": 8584
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-main53-backend-ruff.log",
+      "path": "unimatch-expert500-v11-main53-backend-ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-main53-backend-tests.log",
+      "path": "unimatch-expert500-v11-main53-backend-tests.log",
+      "sha256": "4352c6bdd5dcb999d6df052af2f44aee01bec7b8b5d7e5e0287e973e1c394ffe",
+      "bytes": 16533
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-main53-demo-migrate.log",
+      "path": "unimatch-expert500-v11-main53-demo-migrate.log",
+      "sha256": "808373af2029870e86053e68822b91376ef3a0151c9e2273b3ccdf3b172a102a",
+      "bytes": 2642
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-main53-demo-migrated.log",
+      "path": "unimatch-expert500-v11-main53-demo-migrated.log",
+      "sha256": "d8d755e636a9d7086230a08ca61c5e4a8922216095b021354870fd04596b25a9",
+      "bytes": 2569
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-main53-demo-verification-corrected.log",
+      "path": "unimatch-expert500-v11-main53-demo-verification-corrected.log",
+      "sha256": "42d7d5768de172fd4f677c8ac5a8d40aa0bc2255e393384e9e85bf53c731daa5",
+      "bytes": 301
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-main53-demo-verification.log",
+      "path": "unimatch-expert500-v11-main53-demo-verification.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-main53-demo.log",
+      "path": "unimatch-expert500-v11-main53-demo.log",
+      "sha256": "b316ea9e172e22c4a6268fcca2c5a331cbe92c4967d7a8e2edd56746f301e6e1",
+      "bytes": 1602
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-main53-pr-read.json",
+      "path": "unimatch-expert500-v11-main53-pr-read.json",
+      "sha256": "3ecd70d558b7438cf26e7bc6477ce7781d7cd6528ce7691f9536c389b6e8e550",
+      "bytes": 2680
+    }
+  ],
+  "setup_negatives_preserved": "Initial seed on fresh unmigrated SQLite refused correctly; after Alembic upgrade head synthetic seed passed. Initial readonly inspection used ProgramResult.bucket instead of ranking.bucket; corrected query only inspected the same synthetic run. No app/source change or real applicant access."
+}
