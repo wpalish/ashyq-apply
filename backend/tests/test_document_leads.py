@@ -63,10 +63,11 @@ async def _collect(fetcher: _Fetcher):
 
 
 @pytest.mark.asyncio
-async def test_off_by_default_only_the_programme_page_is_read() -> None:
+async def test_off_only_the_programme_page_is_read(monkeypatch) -> None:
+    assert web_documents.DOCUMENT_LEADS is True
+    monkeypatch.setattr(web_documents, "DOCUMENT_LEADS", False)
     fetcher = _Fetcher()
     checklist = await _collect(fetcher)
-    assert web_documents.DOCUMENT_LEADS is False
     assert fetcher.calls == [PROGRAMME]
     assert checklist.admission_documents == []
 

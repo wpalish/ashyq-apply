@@ -140,7 +140,9 @@ DOCUMENT_RULES_V2 = False
 #: programme page (paired run claude-doc2-paired-2: the stage read only the
 #: programme page and Groningen's checklist sat two links away). Same site
 #: only; at most two route pages scanned and two documents pages read.
-DOCUMENT_LEADS = False
+#: On by default since 2026-10-05 (owner: "да"; run claude-doc3-paired-3:
+#: two stable gains, zero losses, precision 1.0).
+DOCUMENT_LEADS = True
 MAX_ROUTE_PAGES = 2
 MAX_DOCUMENT_LEADS = 2
 _DOCUMENT_LEAD = re.compile(

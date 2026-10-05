@@ -343,6 +343,7 @@ def test_draft_dataset_has_ten_cases_without_fabricated_human_signoff(suffix):
         ".reviewed",
         ".draft8",
         ".reviewed8",
+        ".reviewed9",
     ],
 )
 def test_published_baseline_replays_exactly_without_network(monkeypatch, suffix):
