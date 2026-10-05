@@ -319,7 +319,7 @@ def test_live_budget_limits_and_explicit_opt_in(monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "suffix", ["", ".draft2", ".draft3", ".draft4", ".draft5", ".draft6", ".draft7"]
+    "suffix", ["", ".draft2", ".draft3", ".draft4", ".draft5", ".draft6", ".draft7", ".draft8"]
 )
 def test_draft_dataset_has_ten_cases_without_fabricated_human_signoff(suffix):
     root = Path(__file__).resolve().parents[1]
@@ -332,7 +332,7 @@ def test_draft_dataset_has_ten_cases_without_fabricated_human_signoff(suffix):
 
 @pytest.mark.parametrize(
     "suffix",
-    ["", ".draft2", ".draft3", ".draft4", ".draft5", ".draft6", ".draft7", ".reviewed"],
+    ["", ".draft2", ".draft3", ".draft4", ".draft5", ".draft6", ".draft7", ".reviewed", ".draft8"],
 )
 def test_published_baseline_replays_exactly_without_network(monkeypatch, suffix):
     """Scoring the frozen capture must reproduce the published numbers exactly.
