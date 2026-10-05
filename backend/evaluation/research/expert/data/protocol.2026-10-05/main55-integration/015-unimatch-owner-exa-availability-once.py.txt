@@ -1,0 +1,38 @@
+from getpass import getpass
+import asyncio,json,subprocess,time
+from datetime import datetime,timezone
+from pathlib import Path
+import httpx
+from app.adapters.search.exa import ExaSearchProvider
+from app.adapters.search.base import SearchUnavailable
+OUTPUT=Path('/tmp/unimatch-owner-exa-availability-once.json')
+PRIVATE=Path('/tmp/unimatch-owner-exa-availability-response-private.json')
+if OUTPUT.exists() or PRIVATE.exists():
+ raise SystemExit('Existing diagnostic cannot be rerun')
+key=getpass('Existing Exa key for single diagnostic (hidden): ').strip()
+async def main():
+ calls=[]
+ async def record(response):
+  await response.aread()
+  body=response.text
+  if key in body:
+   raise RuntimeError('Credential detected in vendor response; body discarded')
+  PRIVATE.touch(mode=0o600,exist_ok=False)
+  PRIVATE.write_text(json.dumps({'http_status':response.status_code,'body':body}))
+  calls.append(response.status_code)
+ started=time.monotonic()
+ receipt={'observed_at':datetime.now(timezone.utc).isoformat(),'source':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'provider':'exa','account':'owner supplied existing account','query':'Exa API documentation','max_results':1,'purpose':'neutral credential availability, not pilot','page_reads':0,'model_calls':0,'retries':0}
+ try:
+  async with httpx.AsyncClient(timeout=15,follow_redirects=False,event_hooks={'response':[record]}) as client:
+   provider=ExaSearchProvider(key,client=client)
+   result=await provider.search(query='Exa API documentation',domains=['docs.exa.ai'],max_results=1)
+   receipt.update({'status':'available','results':len(result.results)})
+ except SearchUnavailable as exc:
+  receipt.update({'status':'unavailable','http_status':exc.http_status})
+ except Exception as exc:
+  receipt.update({'status':'diagnostic_error','error_class':type(exc).__name__})
+ receipt.update({'response_statuses':calls,'network_searches':len(calls),'elapsed_seconds':round(time.monotonic()-started,3)})
+ OUTPUT.write_text(json.dumps(receipt,indent=2)+'\n')
+ print(json.dumps(receipt))
+asyncio.run(main())
+key=''

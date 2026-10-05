@@ -108,3 +108,17 @@ def test_population_rows_are_unchanged(v2):
         "15 April 2027 01 September 2027"
     )
     assert sorted(d for d, _, _ in deadlines(groningen)) == ["2027-04-15", "2027-05-01"]
+
+
+def test_a_lone_catch_all_window_keeps_its_qualification() -> None:
+    # Run 2026-10-05: NTU's reader saw only the catch-all row; the date was
+    # right and the scope was not, because a single window skipped the row.
+    text = (
+        "Application window Deadline for Document submission All other international "
+        "qualifications not listed below (including German Abitur etc.) Closed "
+        "15 Oct 2026 - 20 Jan 2027 Upload documents"
+    )
+    read = extraction._deadline_v2(text)
+    assert read is not None
+    assert read[0] == "20 Jan 2027"
+    assert read[3] == "All other international qualifications not listed below"

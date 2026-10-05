@@ -332,7 +332,18 @@ def test_draft_dataset_has_ten_cases_without_fabricated_human_signoff(suffix):
 
 @pytest.mark.parametrize(
     "suffix",
-    ["", ".draft2", ".draft3", ".draft4", ".draft5", ".draft6", ".draft7", ".reviewed", ".draft8"],
+    [
+        "",
+        ".draft2",
+        ".draft3",
+        ".draft4",
+        ".draft5",
+        ".draft6",
+        ".draft7",
+        ".reviewed",
+        ".draft8",
+        ".reviewed8",
+    ],
 )
 def test_published_baseline_replays_exactly_without_network(monkeypatch, suffix):
     """Scoring the frozen capture must reproduce the published numbers exactly.
@@ -388,6 +399,25 @@ def test_the_reviewed_corpus_is_signed_and_scores_strictly():
     assert report == json.loads(
         (root / "baseline/metrics.reviewed.json").read_text(encoding="utf-8")
     )
+
+
+def test_the_draft8_signature_scores_strictly_and_moves_no_number():
+    """Signed by Диас on 2026-10-05 ("Подписываю draft8"): strict, and equal to draft8."""
+    import json
+
+    root = Path(__file__).resolve().parents[1] / "evaluation/research"
+    dataset = Dataset.model_validate_json(
+        (root / "data/ground_truth.reviewed8.json").read_text(encoding="utf-8")
+    )
+    capture = Capture.model_validate_json(
+        (root / "baseline/capture.json").read_text(encoding="utf-8")
+    )
+    assert len(dataset.cases) == 10
+    assert all(c.review.status == "human_verified" and c.review.reviewer for c in dataset.cases)
+    report = score(dataset, capture)
+    assert report["provisional"] is False
+    draft8 = json.loads((root / "baseline/metrics.draft8.json").read_text(encoding="utf-8"))
+    assert report["metrics"] == draft8["metrics"]
 
 
 def test_certification_changes_no_measured_value():

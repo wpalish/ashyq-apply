@@ -204,6 +204,7 @@ class ClaimBuilder:
         degree: str | None = None,
         programme: str | None = None,
         qualification: str | None = None,
+        academic_year: str | None = None,
     ) -> Claim | None:
         verdict = verify_claim(
             VerificationInput(
@@ -259,6 +260,7 @@ class ClaimBuilder:
                 ("degree", degree),
                 ("programme", programme),
                 ("qualification", qualification),
+                ("academic_year", academic_year),
             )
             if v
         }
@@ -518,8 +520,37 @@ _MONTHS = {
 }
 
 
+#: Euro amounts written the continental way: a dot groups thousands and a comma
+#: marks cents (Groningen "€ 20.563", Delft "€ 18.750,00"). Without this rule
+#: "€ 20.563" reads as 20.56 euros, a tuition fee below the floor.
+EURO_GROUPING = False
+_EURO_GROUPED = re.compile(
+    r"(?:€|EUR)\s*(\d{1,3}(?:\.\d{3})+)(?:,(\d{2}))?(?![\d.,]\d)"
+    r"|(\d{1,3}(?:\.\d{3})+)(?:,(\d{2}))?\s*(?:€|EUR)\b",
+    re.IGNORECASE,
+)
+
+
+def _euro_grouped(m: re.Match[str]) -> tuple[float, str]:
+    whole, cents = (m.group(1), m.group(2)) if m.group(1) else (m.group(3), m.group(4))
+    return float(whole.replace(".", "")) + (float(cents) / 100 if cents else 0.0), "EUR"
+
+
+def _money_search(text: str) -> re.Match[str] | None:
+    """The first money marker, a grouped euro amount included when the rule is on."""
+    m = _MONEY.search(text)
+    grouped = _EURO_GROUPED.search(text) if EURO_GROUPING else None
+    if grouped is not None and (m is None or grouped.start() <= m.start()):
+        return grouped
+    return m
+
+
 def parse_money(text: str) -> tuple[float, str] | None:
     m = _MONEY.search(text)
+    if EURO_GROUPING:
+        grouped = _EURO_GROUPED.search(text)
+        if grouped is not None and (m is None or grouped.start() <= m.start()):
+            return _euro_grouped(grouped)
     if not m:
         return None
     if m.group(2):
@@ -662,12 +693,15 @@ def _deadline_v2(text: str) -> tuple[str, int, int, str | None, str | None] | No
         session = _SESSION_START.search(due.group(2))
         intake = intake_from_start(session.group(1), session.group(2)) if session else None
         return due.group(1), due.start(), due.end(), None, intake
+    # A catch-all row says whom its window is for even when it is the only
+    # window read: NTU's run on 2026-10-05 dated the right day with no
+    # qualification because the page's other rows did not reach the reader.
+    catch_all = _CATCH_ALL_WINDOW.search(text)
+    if catch_all is not None:
+        return catch_all.group(3), catch_all.start(), catch_all.end(), catch_all.group(1), None
     windows = list(_DATE_RANGE_V2.finditer(text))
     if len({m.group(2) for m in windows}) > 1:
-        catch_all = _CATCH_ALL_WINDOW.search(text)
-        if catch_all is None:
-            return None
-        return catch_all.group(3), catch_all.start(), catch_all.end(), catch_all.group(1), None
+        return None
     match = _DEADLINE_V2.search(text) or _APPLICATION_PERIOD_V2.search(text)
     if match is None:
         return None
@@ -1060,6 +1094,13 @@ _FLOOR_AT_TUITION: Final[frozenset[ClaimType]] = frozenset(
 _ACADEMIC_YEAR = re.compile(r"\b(20\d{2})\s*[-/–]\s*(?:20)?(\d{2})\b")
 
 
+#: Plan rule TY-1: a fee table row that prints its academic year ("non-EU/EEA
+#: 2027-2028 € 19800") records that year in the claim's scope. Without it the
+#: page-wide scope carries no year and a right fee for the right year is
+#: scored wrong-scope (Groningen, runs of 2026-10-05).
+TUITION_ROW_YEAR = False
+
+
 def _year_key(text: str) -> str | None:
     m = _ACADEMIC_YEAR.search(text or "")
     return f"{m.group(1)}/{m.group(2)}" if m else None
@@ -1094,9 +1135,9 @@ def _population_amounts(
         for i, name in enumerate(names):
             stop = names[i + 1].start() if i + 1 < len(names) else len(text)
             segment = text[name.end() : min(stop, name.end() + 120)]
-            money = _MONEY.search(segment)
+            money = _money_search(segment)
             population = population_named(name.group(0))
-            parsed = parse_money(money.group(0)) if money else None
+            parsed = parse_money(segment[money.start() :]) if money else None
             if money is None or parsed is None or population is None:
                 continue
             amount, currency = parsed
@@ -1146,6 +1187,7 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
                         section="Fees and costs",
                         subject_key=population,
                         population=population,
+                        academic_year=_year_key(text[start:end]) if TUITION_ROW_YEAR else None,
                     ),
                 )
             if rows:

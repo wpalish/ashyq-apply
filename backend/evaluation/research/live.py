@@ -239,6 +239,10 @@ async def _jev_shadow(case_id: str, queued: list[str], profile: Any) -> None:
     )
 
 
+#: D7: seconds the documents stage gets after the decision stage; 0 skips it.
+DOCUMENT_SECONDS = 0.0
+
+
 async def capture_one(
     case_id: str,
     output: Path,
@@ -257,7 +261,8 @@ async def capture_one(
     from app.adapters import fetching
     from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, PageCategory
     from app.adapters.search.exa import ExaSearchProvider
-    from app.models.research import ClaimRow
+    from app.domain.enums import UserDecision
+    from app.models.research import ClaimRow, ProgramResultRow
     from scripts import canary_discovery as canary
 
     budget = None
@@ -307,6 +312,10 @@ async def capture_one(
     )
 
     fetchers: list[Any] = []
+    #: D7: the runner, kept for the documents stage that follows the decision.
+    runners: list[Any] = []
+    recorded_claims: set[str] = set()
+    documents_phase = False
 
     def budget_checkpoint() -> None:
         assert budget is not None
@@ -424,7 +433,11 @@ async def capture_one(
                 # and until 2026-09-23 that repeat still spent the budget: run
                 # 20 ended Delft, Vienna and UBC in the funding stage with up
                 # to a fifth of their 60 calls being cache hits.
-                if budget:
+                if documents_phase:
+                    # The documents stage has its own clock (D7); its reads
+                    # never spend the decision stage's budget.
+                    pass
+                elif budget:
                     budget.before_fetch()
                     observation.telemetry.http_fetches = budget.fetcher_calls
                     kwargs["use_cache"] = False
@@ -435,7 +448,7 @@ async def capture_one(
                 # Written before the read, so a read that never returns still
                 # names itself in the log.
                 print(f"get #{requests} start t={began - started:.0f}s {url[:120]}", flush=True)
-                if budget:
+                if budget and not documents_phase:
                     checkpoint()
                     if budget.finalization_reserve_ms:
                         budget.remaining()
@@ -448,6 +461,11 @@ async def capture_one(
                     f"{getattr(result, 'outcome', '?')}",
                     flush=True,
                 )
+                if documents_phase:
+                    observation.telemetry.document_reads = (
+                        observation.telemetry.document_reads or 0
+                    ) + 1
+                    return result
                 if not getattr(result, "from_cache", False):
                     network_reads += 1
                 if result.ok and result.is_pdf and not result.from_cache:
@@ -476,33 +494,40 @@ async def capture_one(
                     )
                     for record in canary.page_outcomes(self.run)
                 ]
-                for row in self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id):
-                    raw = row.payload
-                    raw_claims.append(raw)
-                    # With the owner-approved identity bindings (2026-09-23),
-                    # the same split the offline mapper makes: an award or a
-                    # document claim becomes the fields of the identity it is
-                    # bound to, and an unbound one stays under its raw key.
-                    mapped = normalize_subject_claims(row.claim_type, raw, identities)
-                    excerpt = raw.get("original_text_excerpt")
-                    for key, value, programme, degree in mapped:
-                        evidence = None
-                        if excerpt and str(row.source_url).startswith(("http://", "https://")):
-                            evidence = Evidence(
-                                url=row.source_url,
-                                excerpt=excerpt,
-                                scope=evidence_scope(
-                                    raw,
-                                    university=next(iter(self._candidates)).name
-                                    if self._candidates
-                                    else case_id,
-                                    programme=programme,
-                                    degree=degree,
-                                ),
-                                accessed_on=row.accessed_at.date(),
-                                source_type="official" if raw.get("official_domain") else "unknown",
-                            )
-                        predictions.append(Prediction(key=key, value=value, evidence=evidence))
+                runners.append(self)
+                self.record_claims()
+
+        def record_claims(self) -> None:
+            for row in self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id):
+                if row.id in recorded_claims:
+                    continue
+                recorded_claims.add(row.id)
+                raw = row.payload
+                raw_claims.append(raw)
+                # With the owner-approved identity bindings (2026-09-23),
+                # the same split the offline mapper makes: an award or a
+                # document claim becomes the fields of the identity it is
+                # bound to, and an unbound one stays under its raw key.
+                mapped = normalize_subject_claims(row.claim_type, raw, identities)
+                excerpt = raw.get("original_text_excerpt")
+                for key, value, programme, degree in mapped:
+                    evidence = None
+                    if excerpt and str(row.source_url).startswith(("http://", "https://")):
+                        evidence = Evidence(
+                            url=row.source_url,
+                            excerpt=excerpt,
+                            scope=evidence_scope(
+                                raw,
+                                university=next(iter(self._candidates)).name
+                                if self._candidates
+                                else case_id,
+                                programme=programme,
+                                degree=degree,
+                            ),
+                            accessed_on=row.accessed_at.date(),
+                            source_type="official" if raw.get("official_domain") else "unknown",
+                        )
+                    predictions.append(Prediction(key=key, value=value, evidence=evidence))
 
     with (
         patch.object(canary, "CanaryRunner", ObservedRunner),
@@ -540,6 +565,34 @@ async def capture_one(
     observation.error = report["run_error"] or None
     if budget is None or not budget.finalization_reserve_ms:
         checkpoint()
+    if DOCUMENT_SECONDS and runners:
+        # D7: the documents stage, after the decision stage is measured and on
+        # its own clock, so the decision metrics stay comparable with runs
+        # that never collected documents. Every row is approved, as an
+        # applicant approving the whole shortlist would.
+        documents_phase = True
+        began = time.monotonic()
+        runner = runners[-1]
+        for row in runner.session.query(ProgramResultRow).filter(
+            ProgramResultRow.run_id == runner.run.id
+        ):
+            row.user_decision = UserDecision.APPROVED.value
+        runner.session.flush()
+        try:
+            await asyncio.wait_for(runner.collect_documents(), DOCUMENT_SECONDS)
+            observation.telemetry.document_stop = "completed"
+        except TimeoutError:
+            observation.telemetry.document_stop = "document_seconds_exhausted"
+        except Exception as exc:  # recorded, never raised: the decision stage stands
+            observation.telemetry.document_stop = f"{type(exc).__name__}: {exc}"[:200]
+        runner.record_claims()
+        observation.telemetry.document_seconds = time.monotonic() - began
+        print(
+            f"documents stage {observation.telemetry.document_stop} in "
+            f"{observation.telemetry.document_seconds:.1f}s, "
+            f"{observation.telemetry.document_reads or 0} reads",
+            flush=True,
+        )
     # Preserve raw output for mapping/adjudication; do not invent unsupported counters.
     output.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
     output.with_suffix(".raw.json").write_text(
@@ -615,6 +668,32 @@ def main() -> None:
         action="store_true",
         help="plan rule DL-2: abbreviated months, date-first 'Applications due' rows, and a "
         "window table's catch-all qualification row",
+    )
+    parser.add_argument(
+        "--euro-grouping",
+        action="store_true",
+        help="plan rule EU-1: continental euro amounts ('€ 20.563', '€ 18.750,00') read a "
+        "dot as a thousands separator and a comma as the cents mark",
+    )
+    parser.add_argument(
+        "--with-documents",
+        type=float,
+        default=0.0,
+        metavar="SECONDS",
+        help="D7: after the decision stage, approve every row and run the documents stage "
+        "on its own clock of SECONDS; the decision stage's budget is untouched",
+    )
+    parser.add_argument(
+        "--document-rules-v2",
+        action="store_true",
+        help="plan rule DOC-2: gpt-6-astra's PR #41 document rules (measured only with "
+        "--with-documents)",
+    )
+    parser.add_argument(
+        "--tuition-row-year",
+        action="store_true",
+        help="plan rule TY-1: a fee table row that prints its academic year records it "
+        "in the claim's scope",
     )
     parser.add_argument(
         "--walker-subject-cap",
@@ -723,6 +802,23 @@ def main() -> None:
             from app.adapters import extraction as extraction_module
 
             extraction_module.DEADLINE_V2 = True
+        if args.euro_grouping:
+            from app.adapters import extraction as euro_module
+
+            euro_module.EURO_GROUPING = True
+        if args.with_documents:
+            global DOCUMENT_SECONDS
+            DOCUMENT_SECONDS = args.with_documents
+        if args.document_rules_v2:
+            from app.adapters import document_ir
+            from app.adapters.documents import web_documents
+
+            web_documents.DOCUMENT_RULES_V2 = True
+            document_ir.FORM_LABEL_HEADINGS = True
+        if args.tuition_row_year:
+            from app.adapters import extraction as year_module
+
+            year_module.TUITION_ROW_YEAR = True
         if args.walker_subject_cap:
             from app.adapters.discovery import catalog_walker
 
@@ -817,6 +913,14 @@ def main() -> None:
                         *(["--navigation-field-leads"] if args.navigation_field_leads else []),
                         *(["--walker-subject-cap"] if args.walker_subject_cap else []),
                         *(["--deadline-v2"] if args.deadline_v2 else []),
+                        *(["--euro-grouping"] if args.euro_grouping else []),
+                        *(["--tuition-row-year"] if args.tuition_row_year else []),
+                        *(["--document-rules-v2"] if args.document_rules_v2 else []),
+                        *(
+                            ["--with-documents", str(args.with_documents)]
+                            if args.with_documents
+                            else []
+                        ),
                         *(["--shared-query-budget"] if args.shared_query_budget else []),
                         *(["--applicant-academic-year"] if args.applicant_academic_year else []),
                         "--search-funding-fallback"
@@ -834,9 +938,12 @@ def main() -> None:
                     env=environment,
                     stdout=log,
                     stderr=log,
-                    timeout=args.seconds_per_case + STRICT_PROCESS_RESERVE_SECONDS
-                    if args.strict_expert_budget
-                    else args.seconds_per_case,
+                    timeout=(
+                        args.seconds_per_case + STRICT_PROCESS_RESERVE_SECONDS
+                        if args.strict_expert_budget
+                        else args.seconds_per_case
+                    )
+                    + args.with_documents,
                     check=False,
                 )
                 error = f"PROCESS_EXIT_{completed.returncode}" if completed.returncode else None
