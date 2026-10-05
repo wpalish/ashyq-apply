@@ -1,0 +1,59 @@
+"""Preserve completed-case read-only audits; never change live V12 bytes."""
+import hashlib
+import json
+from datetime import UTC, datetime
+from pathlib import Path
+
+REPO = Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply')
+BASE = REPO / 'backend/evaluation/research/expert/data/protocol.2026-10-05'
+ROOT = REPO / 'artifacts/expert-500/phase1-v12-2026-10-05'
+DEST = BASE / 'v12-offline-audits'
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def frozen_hashes():
+    manifest = json.loads((BASE / 'v12/manifest.json').read_text())
+    paths = {Path(p): h for p, h in manifest['scripts'].items()}
+    paths.update({REPO / 'backend' / (name.replace('.', '/') + '.py'): h
+                  for name, h in manifest['modules'].items()})
+    assert len(manifest['scripts']) == 12 and len(manifest['modules']) == 21
+    for path, expected in paths.items():
+        assert sha(path) == expected, str(path)
+    return {str(path): sha(path) for path in paths}
+
+before = frozen_hashes()
+paths = [Path('/tmp/unimatch-expert500-v12-' + name + '-audit.' + ext)
+         for name in ('controller-timing', 'citation-failure', 'protocol-feasibility')
+         for ext in ('json', 'md')]
+paths.append(Path(__file__))
+assert not DEST.exists()
+for path in paths:
+    assert path.is_file() and not path.is_symlink(), str(path)
+assert not (ROOT / 'submission-seal.json').exists()
+assert not (ROOT / 'comparison.json').exists()
+DEST.mkdir()
+records = []
+for path in paths:
+    data = path.read_bytes()
+    name = path.name + '.txt'
+    with (DEST / name).open('xb') as out:
+        out.write(data)
+    records.append({'original_path': str(path), 'snapshot': name,
+                    'bytes': len(data), 'sha256': sha(path)})
+assert before == frozen_hashes()
+manifest = {'schema_version': '1', 'recorded_at': datetime.now(UTC).isoformat(),
+            'status': 'read_only_completed_three_audits_live_cohort_unsealed_unscored',
+            'selected_source_sha': '92dfdb6d4f1a4595865ea756f46b176ce0f6d891',
+            'trial_sha256': sha(ROOT / 'trial.json'),
+            'audit_scope_cases': ['groningen', 'delft', 'aalto'],
+            'new_source_or_cli_calls': 0, 'reviewed_label_reads': 0,
+            'audit_findings_are_primary_facts': False,
+            'frozen_scripts_and_modules_unchanged': before,
+            'records': records}
+with (DEST / 'manifest.json').open('x') as out:
+    out.write(json.dumps(manifest, indent=2) + '\n')
+for record in records:
+    assert sha(DEST / record['snapshot']) == record['sha256']
+print(json.dumps({'destination': str(DEST), 'records': len(records),
+                  'manifest_sha256': sha(DEST / 'manifest.json')}))

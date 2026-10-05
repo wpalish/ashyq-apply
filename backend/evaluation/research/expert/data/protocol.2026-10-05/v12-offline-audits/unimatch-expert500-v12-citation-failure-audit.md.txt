@@ -1,0 +1,71 @@
+# V12 completed-case citation failure audit
+
+Bounded offline inspection of original Groningen and Aalto expert artifacts only. No source/model/provider calls, labels, scoring, or changes to original evidence. All read originals were rehashed unchanged. Source declared by parent: `92dfdb6`; metadata `00cb167`.
+
+## Groningen: two demonstrated structural context gaps
+
+**Tuition turns 4 and 6.** The selected fee is `€ 19800` in IR block `b165`, table 5 row 4. The exact same saved HTML row contains `non-EU/EEA`, `2027-2028`, that fee and `full-time`; the Year cell is IR `b164`. The guard builds fee context from b165’s row/column headers, label, caption and text, excluding b164. A pure replay against those saved bytes reproduces `Q4 fee year is absent from its official evidence location`. This is not evidence that the page omitted the year.
+
+[selector-04.decision.json](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/groningen/selector-04.decision.json) — SHA256 `9bcfde2bd12eae615230b2e63659cdb0c24fd350f46d56e58541a58005804b92`, JSON `/facts/1;` bytes `1391:2176`.
+[validation-04.json](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/groningen/validation-04.json) — SHA256 `6d3644c7ef7ca1a1c1e050478b3a0793506e7365b5317b8cab34dd31cabe643f`, JSON `/feedback;` bytes `16:380`.
+[groningen-001.json](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/groningen/controller-01/artifact/logs/groningen-001.json) — SHA256 `684bfc1f9e45589d7c92db5eaa42f459966347329e356762959ac04813c57817`, JSON `/response/content_b64;` bytes `1000:140302`.
+
+Decoded saved HTML SHA256 `d1b583923fb598a32d015c209dcc5f24e19be55592ce770244b75ed4c780ef85`, exact row UTF-8 bytes `52612:52704`:
+
+```html
+<tr>
+<td>non-EU/EEA</td><td>2027-2028</td><td>&euro;&nbsp;19800</td><td>full-time</td>
+</tr>
+```
+
+**Turns 12–30.** These 19 rejected candidates are Q2 fact f7, a foundation-year qualification note, carrying `academic_year="2026/2027"` and exact IR location b66. They are not tuition claims. Turns 23 and 27 omit only the `N.B.` quote prefix. Saved HTML and readable text explicitly state `Academic year 2026/2027` immediately below the VWO heading, but the styled div label is absent from IR block text/section metadata. The selected b66 context therefore has no year; the explicit scope guard reuses the Q4 fee-year error. Exact quote matching succeeds in the read-only reproduction while the declared-year check fails.
+
+[selector-12.decision.json](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/groningen/selector-12.decision.json) — SHA256 `e67ff3ab9c00868d23e8835b8a82519c7d70a1d8dec623b1f063257b11ac57c8`, JSON `/facts/0;` bytes `704:1727`.
+[validation-12.json](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/groningen/validation-12.json) — SHA256 `3f40806dc67efed67757aa2acdfe2d52d6a707bd4e989da66cc08d5f068d9ac8`, JSON `/feedback;` bytes `16:379`.
+[groningen-005.json](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/groningen/controller-10/artifact/logs/groningen-005.json) — SHA256 `f5614c066527c4fd5bb53cd5c97f24e8a7bc089718fdc5edb1c14d9723980cef`, JSON `/response/content_b64;` bytes `1143:91521`.
+
+Decoded saved HTML SHA256 `df071ce4ea43e96478a5a71a9db07501886964e795c80396bb135ac8e02f4f37`, page-label bytes `33483:33560`:
+
+```html
+<div class="rug-h3 rug-font-neutral rug-mt-xxs">Academic year 2026/2027</div>
+```
+
+These retries report 321,942 ms of selector elapsed time. Source and processed counts remain 5. Feedback states the same error and supplies empty question-scope/location diagnostics. This repetition is observed; the model’s internal reason is unknown.
+
+[selector-13.request.json](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/groningen/selector-13.request.json) — SHA256 `9cf351662fb15b0a693a1c4c187496c14c628378a99e5709daa9924cc45c476e`, JSON `/prompt/validation_feedback;` bytes `245341:245728`.
+
+Turn 31 accepts the same f7 payload after only its scope `academic_year` becomes null. The original final journal has seven facts. This observation does not endorse dropping a published year, does not establish fall-2027 applicability, and does not change the original rejected checkpoints. The result retains a truthful accepted prefix of 5 source actions against 6 recorded actions, with the last action unprocessed.
+
+[selector-31.decision.json](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/groningen/selector-31.decision.json) — SHA256 `f23b80ccb525f2c87f555a4f1d633b9cf19201cad09a2d4f7c3e642b07bdf40e`, JSON `/facts/0;` bytes `715:1731`.
+[journal-events.json](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/groningen/journal-events.json) — SHA256 `ddcf4847d9212ba34eb9aaccd90c51623bae75c3925ebd86b651c590c57e38fe`, JSON `/9;` bytes `8633:9588`.
+[result.json](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/groningen/result.json) — SHA256 `ba234e096f6703c8dcecdabd032fcec70ad07909928cfbd334ade9d02219aa19`, JSON `/all_recorded_sources_processed;` bytes `17253:17258`.
+
+## Aalto: recorded access failure; no failed citation candidate
+
+Four discovery searches succeeded; eight page reads were recorded as `robots_disallowed`, blocked, executed and same policy, with empty saved payloads. All 13 selector decisions contain zero facts; no validation-rejection feedback file exists. The final explicit commit records Q0/Q2 inaccessible observations with supporting failed steps and leaves the other questions unresolved. There is no successful authoritative page text available to quote.
+
+[aalto-002.json](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/aalto/controller-02/artifact/logs/aalto-002.json) — SHA256 `9934cc704d7c2fe10e49c3bd276bc1b1b847b91667fe6853c952541a3f9130e9`, JSON `/response/outcome;` bytes `1436:1455`.
+[aalto-002.json](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/aalto/controller-02/artifact/logs/aalto-002.json) — SHA256 `9934cc704d7c2fe10e49c3bd276bc1b1b847b91667fe6853c952541a3f9130e9`, JSON `/response/content_b64;` bytes `1034:1036`.
+[aalto-012.json](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/aalto/controller-12/artifact/logs/aalto-012.json) — SHA256 `b5f5258b0cf80b2dc002c7efaf0715811adc16a5794a2389d3e56ba2962dc286`, JSON `/response/outcome;` bytes `1553:1572`.
+[aalto-012.json](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/aalto/controller-12/artifact/logs/aalto-012.json) — SHA256 `b5f5258b0cf80b2dc002c7efaf0715811adc16a5794a2389d3e56ba2962dc286`, JSON `/response/content_b64;` bytes `1093:1095`.
+[selector-13.decision.json](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/aalto/selector-13.decision.json) — SHA256 `0ddc199f91d908620ee08994334306ee209305ab8d724420e104db0974e1e82f`, JSON `/observation;` bytes `39:252`.
+[selector-13.decision.json](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/aalto/selector-13.decision.json) — SHA256 `0ddc199f91d908620ee08994334306ee209305ab8d724420e104db0974e1e82f`, JSON `/question_findings;` bytes `398:1533`.
+
+This supports an original controlled access failure, not “not published”. The audit did not recheck live robots policy. Search-result snippets cannot substitute for a successful exact official-source read. No Aalto citation representation defect is demonstrated.
+
+## Frozen validation path
+
+[models.py](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/models.py) — SHA256 `6dfdecc74b22f9cad8e27943a5b6779f978e4bf0a73ce9ec56b27d3a101ebe56`, lines 672–720.
+[citations.py](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/citations.py) — SHA256 `ad857e4bb3c58b9afd18e11bd2207f18b7058396ecba343758bbd1f369d4136e`, lines 211–270.
+[question_contract.py](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/question_contract.py) — SHA256 `c8c5d56f56fa83d40f83a879315898ccae8dc860314f7754f0843dd4348c29d7`, lines 149–214.
+[unimatch-expert500-journal-report-v12.py](/tmp/unimatch-expert500-journal-report-v12.py) — SHA256 `5a36256591fe4b76186a36448c4c6a3d0a8eeab989b427eb4031ebf00405a4fb`, lines 1665–1683.
+
+## Prospective correction only
+
+1. Preserve explicit content-heading academic-year labels with exact structural provenance; exclude navigation/sidebar years and unrelated sections.
+2. Allow fee year support from the Year cell in the same exact table row, citing both original coordinates; retain applicant/programme/campus/intake/year checks and reject ambiguous joins.
+3. Return question-specific scope feedback with fact ID, academic-year dimension and source location. Keep the semantic year requirement. Do not infer a target year from the request or omit a real published year to bypass it.
+
+Aalto offers no basis for weakening evidence requirements or bypassing access controls. No primary facts, diagnoses or score were added.
+
+Full original-file hash inventory, per-turn evidence and byte locations: [JSON audit](/tmp/unimatch-expert500-v12-citation-failure-audit.json).
