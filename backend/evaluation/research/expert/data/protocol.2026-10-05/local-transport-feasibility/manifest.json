@@ -1,0 +1,88 @@
+{
+  "recorded_at": "2026-10-05T20:07:43.628363+00:00",
+  "kind": "offline_prospective_feasibility_only",
+  "selected_source": "e327498d605d3dbe14da177a8a535c664818ce9b",
+  "records": [
+    {
+      "original": "/tmp/unimatch-expert500-local-runtime-audit.md",
+      "snapshot": "unimatch-expert500-local-runtime-audit.md",
+      "bytes": 25726,
+      "sha256": "23284a381316db7ee7cb328bb4d5729c9d6933bcc27b0e03b05f38fc5955a4ac"
+    },
+    {
+      "snapshot": "attribution-correction.md",
+      "bytes": 531,
+      "sha256": "8ab24c7212bd4fbc4408279507c83054bb7923deb04daa34e72883d0d20ff9e7"
+    }
+  ],
+  "audited_static_source_records": [
+    {
+      "path": "backend/evaluation/research/expert/controller.py",
+      "sha256": "88482a7aaed79080c8c58df9df762cbe8c0bf734fa3c01b43764af7ef20d4fb4"
+    },
+    {
+      "path": "backend/evaluation/research/live.py",
+      "sha256": "f3e67276795e8b338fbd13077b7557de82a087ad164beaa1c157c3dd9faf3326"
+    },
+    {
+      "path": "backend/evaluation/research/expert/network_budget.py",
+      "sha256": "c37afa4435e4d7fb1bb02fea5ca6843cfee138f12bbf61d903b18bd80d6e0c87"
+    },
+    {
+      "path": "backend/evaluation/research/expert/network_turn_policy.py",
+      "sha256": "931a8fd22638003fe8b9918936858203536ebf418ecf166773e5ed3594e8d1eb"
+    },
+    {
+      "path": "backend/evaluation/research/expert/blind_cli.py",
+      "sha256": "c529d0847008701c6f6b2711fd0ac10207d9c4dcd22bfac06dee532fc0ffd4aa"
+    },
+    {
+      "path": "backend/app/config.py",
+      "sha256": "ee8bf0ecbd105941733da95283836844e1bee97c56db7ce59677aed33ab56539"
+    },
+    {
+      "path": "backend/app/adapters/fetching.py",
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895"
+    },
+    {
+      "path": "backend/app/adapters/network_policy.py",
+      "sha256": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f"
+    },
+    {
+      "path": "backend/app/adapters/search/base.py",
+      "sha256": "6c6e2f451b8d8d86430743fc6c87b17758f72379e269d522e08376d55eac6652"
+    },
+    {
+      "path": "backend/app/adapters/search/__init__.py",
+      "sha256": "ce3ae88806c2d45fe5795775b8e3e0d20109f5165f2f6e29003ab09725b37ba6"
+    },
+    {
+      "path": "backend/app/adapters/search/exa.py",
+      "sha256": "70149ed992c6a34938585045461d77e55102815766dd85b51c0df72a5b6a4a45"
+    },
+    {
+      "path": "backend/app/domain/site_identity.py",
+      "sha256": "2a86ca15effc55fc736fba42a26df78d33c69533e282ab0e137993b9fa1c3986"
+    },
+    {
+      "path": "backend/requirements.txt",
+      "sha256": "4d98978db7324e2a4529fdae5a51130375fb6e5417b2324d42a5b04d69601267"
+    },
+    {
+      "path": "backend/requirements-dev.txt",
+      "sha256": "85814cfe94af7cf668284c455de6354d641b6b82480e3e3c435df507bc887a17"
+    }
+  ],
+  "static_source_bytes_match": true,
+  "runtime_implemented": false,
+  "synthetic_test_outlines": 14,
+  "tests_executed": 0,
+  "network_calls": 0,
+  "source_calls": 0,
+  "provider_calls": 0,
+  "model_calls": 0,
+  "credential_values_read": false,
+  "labels_read": false,
+  "launch_ready": false,
+  "deployment_performed": false
+}

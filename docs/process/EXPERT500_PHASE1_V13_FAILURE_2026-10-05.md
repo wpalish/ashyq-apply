@@ -23,6 +23,16 @@ Manifest SHA256 `e7cb894062537e484ccd58cfdf0caf84a375d8408a87d7569c42fdd38d752ee
 
 All frozen source/helper/tag/trial bytes remain unchanged. Heldout150 and signed8 stay untouched. No deployment was performed.
 
+The final independent queue audit is preserved separately under
+`protocol.2026-10-05/v13-final-queue-audit/`: four original notes/JSONs, manifest
+`dd4cb8636f84d9f8bbec692e30f384916b4075a6c4931236e4e6acf12492c90a`.
+Root verified all23 referenced originals unchanged. This audit explains timing
+and the allocation failure; it does not make the trial eligible for scoring.
+
 ## Next
 
 Only offline prospective local stock-Fetcher/controller transport feasibility is active. Same owned Exa provider and exact network/time/default-effort/privacy/blinding contracts are prerequisites; no access/IP/quota/identity bypass. The local existing credential is currently missing and specific owner input is pending; empty ignored backend/.env is prepared. No live local run or new trial is permitted by this checkpoint. A future measurement needs a new complete immutable transport/source provenance contract and fresh whole-ten baselines, never this V13 baseline reused.
+
+See `EXPERT500_LOCAL_TRANSPORT_FEASIBILITY_2026-10-05.md` for the prospective
+direction and unproved gates. The runtime audit's14 source hashes match current
+bytes; its14 synthetic cases are test outlines only, not executed tests.

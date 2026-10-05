@@ -1,0 +1,507 @@
+{
+  "aalto_allocation_evidence": {
+    "case_wall_deadline_at": "2026-10-05T19:41:25.548661+00:00",
+    "check_conclusion": "cancelled",
+    "failure_annotation": {
+      "json_pointer": "/0",
+      "level": "failure",
+      "message": "The job was not acquired by Runner of type hosted even after multiple attempts",
+      "path": "/tmp/unimatch-expert500-v13-aalto-check-annotations-original.json"
+    },
+    "head_sha": "e327498d605d3dbe14da177a8a535c664818ce9b",
+    "interpretation": "Hosted runner acquisition failed. Populated job started_at does not prove active execution; runner_id=0, empty runner_name and steps support no worker execution. This is not a controlled raw/counter artifact.",
+    "job_completed_at": "2026-10-05T19:41:41Z",
+    "job_conclusion": "cancelled",
+    "job_created_at": "2026-10-05T19:26:39Z",
+    "job_metadata_interval_seconds": 902.0,
+    "job_started_at": "2026-10-05T19:26:39Z",
+    "job_status": "completed",
+    "job_steps": [],
+    "job_terminal_after_case_deadline_seconds": 15.451339,
+    "original_job_id": 111943047441,
+    "original_run_id": 37363415021,
+    "other_annotation_count": 3,
+    "other_annotation_levels": [
+      "notice",
+      "notice",
+      "notice"
+    ],
+    "runner_id": 0,
+    "runner_name": "",
+    "workflow_conclusion": "failure",
+    "workflow_created_at": "2026-10-05T19:26:37Z",
+    "workflow_creation_to_job_terminal_seconds": 904.0,
+    "workflow_status": "completed",
+    "workflow_updated_at": "2026-10-05T19:41:42Z"
+  },
+  "calls": {
+    "gh": 0,
+    "model": 0,
+    "network": 0,
+    "provider": 0,
+    "source": 0
+  },
+  "case_timing_summaries": [
+    {
+      "accepted_source_action_count": 0,
+      "accepted_trace_ended_at": "2026-10-05T19:26:35.345708+00:00",
+      "active_ms": 918068,
+      "case_id": "aalto",
+      "confirmed_source_prefix_ms": 0,
+      "controller_transport_ms": 909465,
+      "error": "RuntimeError: Source dispatch transport audit is incomplete; batch stopped",
+      "finalization_note": null,
+      "finished_at": "2026-10-05T19:41:44.888409+00:00",
+      "model_process_ms": 8561,
+      "other_meter_ms": 42,
+      "recorded_action_count": 0,
+      "source_counters_complete": false,
+      "status": "incomplete",
+      "wall_deadline_at": "2026-10-05T19:41:25.548661+00:00",
+      "wall_elapsed_ms": 919340,
+      "wall_minus_active_ms": 1272,
+      "wall_started_at": "2026-10-05T19:26:25.548661+00:00"
+    },
+    {
+      "accepted_source_action_count": 2,
+      "accepted_trace_ended_at": "2026-10-05T19:33:53.161981+00:00",
+      "active_ms": 932695,
+      "case_id": "delft",
+      "confirmed_source_prefix_ms": 3626,
+      "controller_transport_ms": 900012,
+      "error": "RuntimeError: Source dispatch transport audit is incomplete; batch stopped",
+      "finalization_note": "active_budget_exhausted_during_closing_validation",
+      "finished_at": "2026-10-05T19:41:59.463939+00:00",
+      "model_process_ms": 32538,
+      "other_meter_ms": 145,
+      "recorded_action_count": 2,
+      "source_counters_complete": false,
+      "status": "incomplete",
+      "wall_deadline_at": "2026-10-05T19:41:25.548610+00:00",
+      "wall_elapsed_ms": 933916,
+      "wall_minus_active_ms": 1221,
+      "wall_started_at": "2026-10-05T19:26:25.548610+00:00"
+    },
+    {
+      "accepted_source_action_count": 1,
+      "accepted_trace_ended_at": "2026-10-05T19:28:06.829808+00:00",
+      "active_ms": 933193,
+      "case_id": "groningen",
+      "confirmed_source_prefix_ms": 1112,
+      "controller_transport_ms": 879166,
+      "error": "RuntimeError: Source dispatch transport audit is incomplete; batch stopped",
+      "finalization_note": "active_budget_exhausted_during_closing_validation",
+      "finished_at": "2026-10-05T19:41:59.986048+00:00",
+      "model_process_ms": 52585,
+      "other_meter_ms": 1442,
+      "recorded_action_count": 1,
+      "source_counters_complete": false,
+      "status": "incomplete",
+      "wall_deadline_at": "2026-10-05T19:41:25.548575+00:00",
+      "wall_elapsed_ms": 934438,
+      "wall_minus_active_ms": 1245,
+      "wall_started_at": "2026-10-05T19:26:25.548575+00:00"
+    }
+  ],
+  "cohort_terminal_header": {
+    "remaining_case_ids": [
+      "vienna",
+      "warsaw",
+      "ubc",
+      "toronto",
+      "hku",
+      "ntu",
+      "kaist"
+    ],
+    "result_count": 3,
+    "stopped": true
+  },
+  "earlier_diagnostic_preserved": [
+    {
+      "path": "/tmp/unimatch-expert500-v13-queued-guard-audit.json",
+      "sha256": "09df379ab7898235df28cd9f1fba63e32e1f7b61bb8257212a58d7339e3746ab"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v13-queued-guard-audit.md",
+      "sha256": "41ce6fdbafcf186495e80d88914af06b50349d0226d64534b74d61a730093435"
+    }
+  ],
+  "earlier_diagnostic_update": "The earlier note said the upstream workflow failure reason was unavailable. The four subsequently authorized original GH records establish failure to acquire a hosted runner; earlier note bytes are preserved.",
+  "earlier_stage_log_prefix": {
+    "bytes": 2550,
+    "lines": 17,
+    "path": "/tmp/unimatch-expert500-v13-experts-stage-original.log",
+    "sha256": "a9b7c0e5ae35a8dfbd7e63789e178bb371908e4025ed55a273d3a94b31dd4e7f"
+  },
+  "final_stage_log": {
+    "bytes": 3012,
+    "lines": 21
+  },
+  "first_batch_stop": {
+    "case_id": "aalto",
+    "protocol_version": "journal-v13",
+    "reason": "source_transport_audit_incomplete",
+    "receipt_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts/aalto/controller-01/transport-audit.json",
+    "receipt_sha256": "a635cdb2db44409e732a674b83ae8d854ee9cda009647a64218e949f51f9cd2e",
+    "recorded_at": "2026-10-05T19:41:25.553591+00:00",
+    "schema_version": "1"
+  },
+  "frozen_parent_references": [
+    {
+      "lines": [
+        511,
+        573
+      ],
+      "path": "/tmp/unimatch-expert500-journal-pilot-v13-coherent.py",
+      "topic": "receipt, durable initiating cause, then peer-visible STOP"
+    },
+    {
+      "lines": [
+        647,
+        672
+      ],
+      "path": "/tmp/unimatch-expert500-journal-pilot-v13-coherent.py",
+      "topic": "same-run delivery grace and audit-only cancellation"
+    },
+    {
+      "lines": [
+        847,
+        908
+      ],
+      "path": "/tmp/unimatch-expert500-journal-pilot-v13-coherent.py",
+      "topic": "guard expiry, audit, run-level conclusion and case-local admission"
+    },
+    {
+      "lines": [
+        1107,
+        1109
+      ],
+      "path": "/tmp/unimatch-expert500-journal-pilot-v13-coherent.py",
+      "topic": "single immutable wall guard"
+    },
+    {
+      "lines": [
+        1644,
+        1751
+      ],
+      "path": "/tmp/unimatch-expert500-journal-pilot-v13-coherent.py",
+      "topic": "previous controlled source time separate from workflow/model time"
+    }
+  ],
+  "kind": "read_only_terminal_transport_diagnostic",
+  "limitations": [
+    "No labels, reviewed facts, pending-case folders, report or seal were read.",
+    "Workflow conclusion failure and job/check conclusion cancelled are distinct actual fields; frozen admission checks workflow/run conclusion and own-cancel flag.",
+    "Unreturned source tails remain explicitly unknown. Allocation metadata is not substituted for controlled raw logs or counters.",
+    "Queued snapshots lack collection-as-of timestamps and execution steps, so exact pure queue durations cannot be established for all three runs.",
+    "Transport spans include queue, setup, poll and delivery; confirmed controlled source time is nested in those spans.",
+    "Postguard audit/finalization is recorded actual wall time, not renewed source/model allowance.",
+    "No billing, quota or account cause is inferred from the hosted-runner allocation annotation.",
+    "No retry, current-run change, workaround or score is proposed."
+  ],
+  "original_inputs": [
+    {
+      "bytes": 679,
+      "path": "/tmp/unimatch-expert500-v13-expert-delay-37363415021-original.json",
+      "sha256": "b34bd29ead87204c99de35a6208d1be721e52b46c0313592dabb1a154865a9a8"
+    },
+    {
+      "bytes": 679,
+      "path": "/tmp/unimatch-expert500-v13-expert-delay-37363536608-original.json",
+      "sha256": "530991783536b5a48a520976a888d1e537ca150ab834830617246212be328c05"
+    },
+    {
+      "bytes": 679,
+      "path": "/tmp/unimatch-expert500-v13-expert-delay-37363581991-original.json",
+      "sha256": "524025112ad6701a1243d7175550f9a3e857bbef56d3aa6c4b07737623fa840c"
+    },
+    {
+      "bytes": 4252,
+      "path": "/tmp/unimatch-expert500-v13-warsaw-delayed-state-original.json",
+      "sha256": "398d72766a07fedefe8600aff1ba1d7b2070f50ffd425713d48d9526664df1a3"
+    },
+    {
+      "bytes": 90889,
+      "path": "/tmp/unimatch-expert500-journal-pilot-v13-coherent.py",
+      "sha256": "c62fb07ec5e8fcf409672136709842867272b88e7194591a151bfe01ac52f395"
+    },
+    {
+      "bytes": 3012,
+      "path": "/tmp/unimatch-expert500-v13-experts-stage-original.log",
+      "sha256": "7bdb3e3255e4255a16e4901eaa7f4440f0094f69ea46458813548964f128af06"
+    },
+    {
+      "bytes": 482,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/transport-batch-stop.json",
+      "sha256": "6ff96a404003b7934efbd2ff259736e69baa7be33489553356cf008ba7a6522f"
+    },
+    {
+      "bytes": 49001,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts-results.json",
+      "sha256": "d6a1a76eb05308447914a15f628bff824b1edd0266e0585ef3da632611b18ee8"
+    },
+    {
+      "bytes": 1218,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts/aalto/controller-01/transport-audit.json",
+      "sha256": "a635cdb2db44409e732a674b83ae8d854ee9cda009647a64218e949f51f9cd2e"
+    },
+    {
+      "bytes": 6085,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts/aalto/result.json",
+      "sha256": "64b120c139f259e766762024968b39cc5c7cb17c57b5345e8a11133499318b1f"
+    },
+    {
+      "bytes": 1480,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts/delft/controller-01/transport-audit.json",
+      "sha256": "ccb9e33d8f155e0e2809eb80e21171396c7c4dc92e7eea91b77ed79500906571"
+    },
+    {
+      "bytes": 1570,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts/delft/controller-02/transport-audit.json",
+      "sha256": "37c741955bc260dd09abd9344b20029d35b7b0106337be554cc883319d36329d"
+    },
+    {
+      "bytes": 1226,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts/delft/controller-03/transport-audit.json",
+      "sha256": "3615aa13187ede0e0c317ee1987a6d4a45a8f97adf925c3f32b5dc22f7e0b01b"
+    },
+    {
+      "bytes": 16000,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts/delft/result.json",
+      "sha256": "20ee76ad06f369a2278436b6547be053dd72a14660759e5652feca4e83f624a8"
+    },
+    {
+      "bytes": 1488,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts/groningen/controller-01/transport-audit.json",
+      "sha256": "cb4c11d3645fe70f61600ffa16dd2e023a1cdada004c9cdb04581a38f6eb37d3"
+    },
+    {
+      "bytes": 1230,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts/groningen/controller-04/transport-audit.json",
+      "sha256": "a54a92335c10d6d1c9b9f13418627779a4b220072c835883ffa08c96ef94fdb7"
+    },
+    {
+      "bytes": 20181,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts/groningen/result.json",
+      "sha256": "cb11cc9fd1bdce775ec470da23d15323280181f19c624478a8d6dcdf8c5426be"
+    },
+    {
+      "bytes": 773,
+      "path": "/tmp/unimatch-expert500-v13-aalto-final-workflow-original.json",
+      "sha256": "759851943dda2980cba81d5dd3074255806573a5653df90adda2f0831d41af06"
+    },
+    {
+      "bytes": 912,
+      "path": "/tmp/unimatch-expert500-v13-aalto-final-job-original.json",
+      "sha256": "6b6a5bfbcb31a0d1feacd5c98fe5db61945597c9c4518182c8e4b09c00f07411"
+    },
+    {
+      "bytes": 3054,
+      "path": "/tmp/unimatch-expert500-v13-aalto-check-run-original.json",
+      "sha256": "54cbbbfc4e1aaf72622dfc18560b7ee3cd1a779cea407f8941e4e1cff74a6237"
+    },
+    {
+      "bytes": 1607,
+      "path": "/tmp/unimatch-expert500-v13-aalto-check-annotations-original.json",
+      "sha256": "1031c7a95e25d5f1a672121766001fca20617d1c12399aec3a70ff58251bc288"
+    }
+  ],
+  "original_inputs_checked_unchanged_before_and_after": true,
+  "primary_comparison_evidence": false,
+  "schema_version": "1",
+  "status": "CLOSED_UNSCORED",
+  "transport_receipts": [
+    {
+      "artifact_status": "unavailable",
+      "artifact_verified": false,
+      "audit_elapsed_ms": 19330,
+      "audit_only": true,
+      "audit_started_at": "2026-10-05T19:41:25.554024+00:00",
+      "audit_window_ms": 60000,
+      "cancel_attempted": false,
+      "cancel_outcome": null,
+      "case_id": "aalto",
+      "conclusion": "failure",
+      "error": "_ArtifactUnavailable",
+      "guard_exhausted": true,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts/aalto/controller-01/transport-audit.json",
+      "receipt_at": "2026-10-05T19:41:44.883867+00:00",
+      "run_id": 37363415021,
+      "run_status": "completed",
+      "self_guard_exhausted": true,
+      "source_counters": null,
+      "source_counters_known": false,
+      "status": "incomplete",
+      "stop_scope": "batch",
+      "terminal_reason": "source_transport_audit_incomplete",
+      "trigger_error": "TimeoutError",
+      "trigger_error_detail": "wall_guard_exhausted",
+      "triggered_at": "2026-10-05T19:41:25.553591+00:00",
+      "wall_deadline_at": "2026-10-05T19:41:25.548661+00:00",
+      "wall_started_at": "2026-10-05T19:26:25.548661+00:00"
+    },
+    {
+      "artifact_status": "verified",
+      "artifact_verified": true,
+      "audit_elapsed_ms": 0,
+      "audit_only": false,
+      "audit_started_at": null,
+      "audit_window_ms": 0,
+      "cancel_attempted": false,
+      "cancel_outcome": null,
+      "case_id": "delft",
+      "conclusion": "success",
+      "error": null,
+      "guard_exhausted": false,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts/delft/controller-01/transport-audit.json",
+      "provider_failures": [],
+      "receipt_at": "2026-10-05T19:27:28.074121+00:00",
+      "run_id": 37363418389,
+      "run_status": "completed",
+      "self_guard_exhausted": false,
+      "source_counters": {
+        "elapsed_ms": 2732,
+        "fetcher_calls": 1,
+        "search_queries": 0
+      },
+      "source_counters_known": true,
+      "source_stop_reason": null,
+      "status": "completed",
+      "stop_scope": null,
+      "terminal_reason": null,
+      "trigger_error": null,
+      "trigger_error_detail": null,
+      "triggered_at": null,
+      "wall_deadline_at": "2026-10-05T19:41:25.548610+00:00",
+      "wall_started_at": "2026-10-05T19:26:25.548610+00:00"
+    },
+    {
+      "artifact_status": "verified",
+      "artifact_verified": true,
+      "audit_elapsed_ms": 0,
+      "audit_only": false,
+      "audit_started_at": null,
+      "audit_window_ms": 0,
+      "cancel_attempted": false,
+      "cancel_outcome": null,
+      "case_id": "delft",
+      "conclusion": "success",
+      "error": null,
+      "guard_exhausted": false,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts/delft/controller-02/transport-audit.json",
+      "provider_failures": [],
+      "receipt_at": "2026-10-05T19:33:44.824192+00:00",
+      "run_id": 37363536608,
+      "run_status": "completed",
+      "self_guard_exhausted": false,
+      "source_counters": {
+        "elapsed_ms": 3626,
+        "fetcher_calls": 1,
+        "search_queries": 1
+      },
+      "source_counters_known": true,
+      "source_stop_reason": null,
+      "status": "completed",
+      "stop_scope": null,
+      "terminal_reason": null,
+      "trigger_error": null,
+      "trigger_error_detail": null,
+      "triggered_at": null,
+      "wall_deadline_at": "2026-10-05T19:41:25.548610+00:00",
+      "wall_started_at": "2026-10-05T19:26:25.548610+00:00"
+    },
+    {
+      "artifact_status": "unavailable",
+      "artifact_verified": false,
+      "audit_elapsed_ms": 33893,
+      "audit_only": true,
+      "audit_started_at": "2026-10-05T19:41:25.556683+00:00",
+      "audit_window_ms": 60000,
+      "cancel_attempted": true,
+      "cancel_outcome": "requested",
+      "case_id": "delft",
+      "conclusion": "cancelled",
+      "error": "_ArtifactUnavailable",
+      "guard_exhausted": true,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts/delft/controller-03/transport-audit.json",
+      "receipt_at": "2026-10-05T19:41:59.448950+00:00",
+      "run_id": 37364223304,
+      "run_status": "completed",
+      "self_guard_exhausted": true,
+      "source_counters": null,
+      "source_counters_known": false,
+      "status": "incomplete",
+      "stop_scope": "batch",
+      "terminal_reason": "source_transport_audit_incomplete",
+      "trigger_error": "TimeoutError",
+      "trigger_error_detail": "wall_guard_exhausted",
+      "triggered_at": "2026-10-05T19:41:25.556640+00:00",
+      "wall_deadline_at": "2026-10-05T19:41:25.548610+00:00",
+      "wall_started_at": "2026-10-05T19:26:25.548610+00:00"
+    },
+    {
+      "artifact_status": "verified",
+      "artifact_verified": true,
+      "audit_elapsed_ms": 0,
+      "audit_only": false,
+      "audit_started_at": null,
+      "audit_window_ms": 0,
+      "cancel_attempted": false,
+      "cancel_outcome": null,
+      "case_id": "groningen",
+      "conclusion": "success",
+      "error": null,
+      "guard_exhausted": false,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts/groningen/controller-01/transport-audit.json",
+      "provider_failures": [],
+      "receipt_at": "2026-10-05T19:27:22.024894+00:00",
+      "run_id": 37363415314,
+      "run_status": "completed",
+      "self_guard_exhausted": false,
+      "source_counters": {
+        "elapsed_ms": 1112,
+        "fetcher_calls": 1,
+        "search_queries": 0
+      },
+      "source_counters_known": true,
+      "source_stop_reason": null,
+      "status": "completed",
+      "stop_scope": null,
+      "terminal_reason": null,
+      "trigger_error": null,
+      "trigger_error_detail": null,
+      "triggered_at": null,
+      "wall_deadline_at": "2026-10-05T19:41:25.548575+00:00",
+      "wall_started_at": "2026-10-05T19:26:25.548575+00:00"
+    },
+    {
+      "artifact_status": "unavailable",
+      "artifact_verified": false,
+      "audit_elapsed_ms": 34189,
+      "audit_only": true,
+      "audit_started_at": "2026-10-05T19:41:25.560697+00:00",
+      "audit_window_ms": 60000,
+      "cancel_attempted": true,
+      "cancel_outcome": "requested",
+      "case_id": "groningen",
+      "conclusion": "cancelled",
+      "error": "_ArtifactUnavailable",
+      "guard_exhausted": true,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v13-2026-10-05/experts/groningen/controller-04/transport-audit.json",
+      "receipt_at": "2026-10-05T19:41:59.749494+00:00",
+      "run_id": 37363581991,
+      "run_status": "completed",
+      "self_guard_exhausted": true,
+      "source_counters": null,
+      "source_counters_known": false,
+      "status": "incomplete",
+      "stop_scope": "batch",
+      "terminal_reason": "source_transport_audit_incomplete",
+      "trigger_error": "TimeoutError",
+      "trigger_error_detail": "wall_guard_exhausted",
+      "triggered_at": "2026-10-05T19:41:25.560655+00:00",
+      "wall_deadline_at": "2026-10-05T19:41:25.548575+00:00",
+      "wall_started_at": "2026-10-05T19:26:25.548575+00:00"
+    }
+  ]
+}
