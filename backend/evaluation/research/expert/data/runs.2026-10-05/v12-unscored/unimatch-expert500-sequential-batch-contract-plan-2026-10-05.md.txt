@@ -1,0 +1,116 @@
+# Prospective small sequential batch contract
+
+**Design only.** No current V12 code, schema, helper, test, stage, workspace, clock, proof or completed audit changes. Root decides implementation/version only after the original V12 replay, seal, report and export. This plan reads no labels, bindings or pending cases and makes no source, model, network or Git calls.
+
+## Fixed conditions
+
+Keep Exa for both arms, algorithm 60 reads/6 queries/120 seconds, expert 60 reads/6 queries and one immutable 900-second wall guard. Model thinking stays outside network counts and controller source time, and inside the wall along with queue, transport, source and validation. Keep gpt-6-astra, normal CLI default effort, no override, smaller phase caps or reserves. Preserve browser/tool-free canonical isolation, the unchanged public profile/default algorithm flags, DOCUMENT_SECONDS=0, original 62 denominator and 40 gate. Those constants are preserved, not rescored or verified from labels here.
+
+A batch contains **1–4 ordered independent network actions explicitly chosen by the model**. Four is a ceiling, not a target. The parent cannot add URLs, auto-read links, retry, substitute requests or issue parallel source calls. Per decision retain 4 new facts/2new findings, typed literal values, source scope/null, exact quote/coordinates and every original journal/raw/trace/citation gate. Review records do not become admissions claims.
+
+## Known before execution
+
+Bind each proposal to the current journal SHA and a separate original current-case source-prefix SHA/order/counters. The eligible namespace includes the allowlisted public packet and the **existing authorized public-start allowance**, plus saved pre-batch current-case sources. Preserve a legitimate packet-known official start if the frozen gate already permits it; do not invent extra paths or remove that start because the source prefix is empty.
+
+Every additional fetch URL needs exact provenance in the saved pre-batch candidate/link prefix and the existing official URL/domain/final-URL policy. Record original source step/raw SHA and real discovery coordinate. Never use another case, prior trial, baseline ranked routes, private aliases or label hints. A same-batch search cannot authorize a later content-dependent fetch from its unseen results. A general model query may share a batch with a previously known independent candidate. Every query and its parameters are model-selected before execution.
+
+## Proposed public envelope
+
+Add a pure prospective `BatchTurnDecision`, rather than silently changing a single-action original:
+
+| Field | Contract |
+|---|---|
+| kind | action, record or submit |
+| journal_sha256 / source_prefix_sha256 / batch_id | Current exact bound enums |
+| actions | Ordered 0–4 typed source actions with known-before-batch provenance |
+| facts / question_findings | Existing types, at most 4 / 2 NEW entries |
+| source_reviews | At most4 explicit model assessments bound to source step, original raw SHA and delivered view SHA |
+| observation | Bounded model text; never scored as a fact |
+
+All fields required; reject duplicate/unknown keys, stale hashes and coercion. `action` needs 1–4 declared items. `record` has no network action and a nonempty fact/finding/review delta. `submit` has no action; empty minimal hash closure requires all pending responses processed. Pure saved views remain separate from network batch items.
+
+Do not truncate an action list into the first item to reuse the old parser. Keep the exact original model envelope/hash and a deterministic, explicitly sealed journal-delta adapter. Reuse unchanged fact/finding gates; an adapter is not the model original. Never append contradictory16/7 instructions.
+
+## Execution and processing barrier
+
+```mermaid
+flowchart LR
+    A[Current prefix and no pending responses] --> B[Model selects known independent actions]
+    B --> C[Validate proposal and checkpoint delta]
+    C --> D[Sequential source items with STOP and caps before each I/O]
+    D --> E[Replay complete original tail]
+    E --> F[Deliver every new response]
+    F --> G[Model reviews responses and submits facts]
+    G --> H{All response reviews valid?}
+    H -- No --> F
+    H -- Yes --> A
+```
+
+1. Fully gate an optional old-prefix fact delta before dispatch. Upcoming items cannot support facts. A rejected atomic candidate dispatches nothing.
+2. Dispatch exactly the selected ordered list with the same original guard, Exa, case, counter floors and source_ms. Count only actual attempts; no per-batch60/6 reset and no model time injected into source_ms.
+3. Before **every fetcher or search_provider I/O**, check shared fatal STOP, own terminal state,60/6 and wall; recheck at actual I/O. Execute sequentially. Retain original request/raw/order/counters for each item.
+4. Replay the actual complete original plan/summary/raw census, dispatch/run and terminal receipts. Do not manufacture single-item summaries or discard spent/cancelled tails.
+5. Keep an immutable manifest of ALL returned responses with raw SHA, outcome, delivered view SHA, read_scope and layout coordinates. `history[-2:]` cannot evict unprocessed items. A bounded bundle can deliver all 4; if size requires processing windows/pure views, pause network dispatch and keep undisplayed items pending.
+6. Require authentic completed tool-free model assessment for each response. A source review references its actual delivered view/coordinates and compatible fact IDs, or explicitly reports no new supported fact/need for saved view/actual failed response. It does not settle a question or create a fact. Hash echo alone is insufficient. This proves delivery and an assessment record, not mental comprehension.
+7. Partial valid fact/review checkpoints may survive, but `processed_through` stays at the **previous batch boundary until ALL new responses have valid model reviews**. A fact about one page never acknowledges all 4. Reject a bad current delta atomically; prior facts/coverage stay unchanged.
+8. Only the complete response barrier allows the next model-selected batch or minimal closure. Timeout/STOP retains prior checkpoints and original spent tail with incomplete/ineligible status, never automatic response processing or inferred question/case outcome.
+
+An accepted prefix k and original spent tail k+j, 0≤j≤4, must remain distinct. A recovered late tail is accounting, not new evidence. Missing raw artifacts, unknown counters or invalid proof remain ineligible. Nonexecuted items may be recorded only as explicit refused records with zero counter increment; never fabricate success.
+
+## Shared STOP is a prerequisite
+
+The current controller accepts action lists, but its 402/429 condition at controller.py:708–710 suppresses only later searches. Current one-action parent reads that tail before another dispatch. The prospective controller must stop **every later source tool** and retain existing auth/integrity/model failure rules. Preserve ordinary university-page402/429 versus vendor quota classification.
+
+Publish/fsync the original first-cause marker before exposing shared STOP, so a peer cancellation cannot steal origin. A remote multi-item job must observe a trusted shared fence before each item, including failure from another case. **A parent-local Event checked after workflow return is insufficient.** Specify and prove that cross-run mechanism before enabling batches; otherwise retain single controlled proposals while amortizing transport. No retry/provider/account switch follows refusal.
+
+## Narrow implementation surface
+
+- New pure `expert/batch.py`: strict envelope, prefix URL provenance, response manifest and coverage rules.
+- Prospective `network_turn_policy.py`: bound batch schema/parser/card only; normal isolated Astra/default effort/remaining guard unchanged.
+- Prospective `controller.py`: all-tool refusal and trusted pre-I/O shared STOP while preserving ordered originals/counters/guard.
+- Prospective `network_report.py`: additive full-original `validate_source_batch`. Existing `validate_source_run()` at189–192 explicitly requires one original action; preserve its legacy behavior and share strict transition checks without fake summaries.
+- New version parent/report helpers: exact batch plan, complete pending-view queue, model reviews, atomic marker, full spent-tail replay/seal. Review text never enters claim projection.
+- Launch/freeze/export/workflow/cohort copies: only new version/inventory/schema/receipt bindings. Preserve once-only stages, actual10 canonical OS isolation and raw gates. Include every new/changed imported module honestly; a changed runtime cannot reuse the old neutral execution as unchanged.
+
+No changes to production matching/Fetcher policy, CompactFact/CompactFinding, question/scope/citation semantics, award representation, private registry/mapping or scorer62/40 are needed. V12 originals remain immutable. The controller agent has an unapplied mixed-provider draft; its reported synthetic positives are not a final gate or authorization to apply it.
+
+## Meaningful negative gates
+
+| Gate | Required failure proof |
+|---|---|
+| Shape/default policy |0 or>4 items, stale/hash mismatch, duplicate JSON, bool counters, explicit low effort/phase caps reject before I/O |
+| Known URL / independence | Guessed path, wrong raw/link hash, other case/trial/baseline candidate, future/same-batch discovery, extra/reordered actual action reject |
+| Mixed refusal / shared race | Inject402/429 before a later fetch and query; no later tool call. Peer between items observes trusted STOP; durable origin remains first. Retain ordinary-site and 401/403 tests |
+|60/6/900 | At 59 reads / 5 queries only remaining attempts run; no reset. Expiry during prep/queue/source/processing and late bytes never admit evidence |
+| Every response delivered |4 views cannot lose the first 2. Missing, duplicate, unseen or wrong-view review cannot clear the barrier |
+| Atomic processing | One source fact cannot mark 4 processed; a later invalid fact/review preserves prior journal; receipt text cannot become a fact/scope/answer |
+| Full tail / resume | Missing/reordered/extra raw, changed body/request/hash, overwritten name, omitted cancelled tail or counter reset refuses before seal |
+| Closure/authenticity | Pending sources forbid hash-only acknowledgement; tools/incomplete stream/output mismatch/late model cannot accept delta |
+| Blinding/seal/legacy | No private/prior-case prompt material; missing artifact or altered source/provider/inventory refuses; old one-action/once-only/OS/replay guards retained |
+
+Use actual prospective parent/controller/report mocks with synthetic sources, not tests that merely mirror the implementation. All raw gate logs must bind final bytes. No live/model/provider calls occur in unit/mocks; source-free neutral and OS execution remain separately authorized owner steps.
+
+## Generic feasibility, not score prediction
+
+Let N be network actions, B≤4 batch size, W=ceil(N/B) only if all groups are independent/full, and M≥W+1 selector turns if a response-processing turn can also propose the next batch:
+
+`wall = preparation + validation + extra processing turns + M·selector time + W·non-source workflow envelope + sequential source durations`
+
+The completed immutable audit measured53.50–55.26 seconds of non-source workflow envelope per action. If that startup envelope persists per batch,66 possible actions become17 workflows, saving 49dispatches (~74.24%) but consuming **909.57–939.48 seconds of envelope alone**. Max4 batching alone therefore cannot promise use of the full60/6 ceiling within900 seconds. Intrinsic source I/O stays sequential and charged; larger model bundles may increase model/serialization time.
+
+For illustration only, assuming55 seconds envelope/workflow,15 seconds/selector,1 second/source action and zero preparation/validation/extra turns:
+
+| B | Workflows for 66 actions | Minimum selector turns | Synthetic total seconds |
+|---:|---:|---:|---:|
+|1|66|67|4701|
+|2|33|34|2391|
+|3|22|23|1621|
+|4|17|18|1271|
+
+In the optimistic B=4 illustration, envelope must fall to ≤33.18 seconds/workflow even before real preparation/validation. These values introduce no new cap, reserve or effort setting and are not observed batch performance. There is **no counterfactual40/62 claim**, completeness guarantee or university outcome inference. Fewer actions may suffice for some facts; no labels were used to estimate that.
+
+## Delivery order and provenance
+
+Wait for original V12 report/export, choose a distinct write-ahead/version, resolve shared STOP/public-start semantics, then implement pure/offline gates and the actual mock chain. Freeze only final bytes with exact inventories/raw logs. If selector/runtime/schema changes, bind fresh source-free neutral evidence under root authorization. Root alone decides a new fresh blind live trial afterward.
+
+The companion JSON records contract/state/gates/formula and original public-code/audit SHA references. Completed audit JSON remains `fc022bf3715d188f9ab34ca48553799cc46afcaee3c8dcb7573a16c29a78686d`; Markdown remains `bbe6adc61100629da86a5beda5019b2fb117a81fc9cbae1442e731e580f4039c`.

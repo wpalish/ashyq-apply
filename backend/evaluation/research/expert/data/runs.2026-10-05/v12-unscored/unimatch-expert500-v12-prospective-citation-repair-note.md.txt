@@ -1,0 +1,39 @@
+# Prospective citation repair note — no V12 changes
+
+Planning only, based on the completed-case [audit](/tmp/unimatch-expert500-v12-citation-failure-audit.json). No implementation, test edits/runs, new admissions facts or score changes. Preserve frozen V12 parser/helper and original evidence bytes; a future parser change requires a distinct prospective protocol/source pin.
+
+## 1. Preserve explicit academic-year labels in heading context
+
+[document_ir.py](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/app/adapters/document_ir.py) — SHA256 `ec8b1c2f1f000333670c0fd4be559149fc5057fbed7bc3af7562fd18b3edb605`; `EvidenceBlock`, `build_document_ir`, especially the heading traversal and `path()` context.
+
+The recorded Groningen label is a styled content `div` immediately following the VWO `h1` inside its heading container. The current traversal admits actual h1–h6, p, list, definition and table blocks; that div contributes no block or section metadata. Preserve the literal label and its structural association to that exact content heading. Prefer typed section-year context with the original DOM/label coordinates over adding an arbitrary year to every descendant or copying a request year. Retain stable quote/block provenance for the new protocol; never reinterpret frozen V12 block IDs using changed parsing.
+
+Synthetic regressions in `test_document_ir.py`: the observed h1+adjacent explicit Academic year label attaches to the correct content section; the same literal in navigation/sidebar/footer does not; labels under two separate programme/campus headings stay separate; ambiguous/multiple labels remain distinguishable; generic dates and intake labels are not academic-year labels; row/campus heading tests and form-label handling stay strict.
+
+[test_document_ir.py](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/tests/test_document_ir.py) — SHA256 `019ac32def81723003686d0082d3bea8476c065596e9e5c78aa04e0164d9e5fc`; existing section/row tests `test_a_groningen_style_table_ties_each_band_to_its_section_and_test`, `test_spans_are_expanded_so_a_merged_header_covers_every_column`, `test_links_are_absolute_and_carry_their_section`.
+
+## 2. Same-row year proof with both exact source coordinates
+
+[document_ir.py](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/app/adapters/document_ir.py) — SHA256 `ec8b1c2f1f000333670c0fd4be559149fc5057fbed7bc3af7562fd18b3edb605`; `_table_blocks`, `EvidenceBlock.table_id/row/col`, `DocumentIR.table_cells`.
+[models.py](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/models.py) — SHA256 `6dfdecc74b22f9cad8e27943a5b6779f978e4bf0a73ce9ec56b27d3a101ebe56`; `_evidence_scope` and `_quote_matches`.
+[citations.py](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/citations.py) — SHA256 `ad857e4bb3c58b9afd18e11bd2207f18b7058396ecba343758bbd1f369d4136e`; `validate_fact_citations`, `_scope_context`.
+
+Groningen fee b165 already has exact table=5,row=4,col=2; Year b164 is table=5,row=4,col=1. A future year-support lookup may use only the Year cell from that same exact table row and section, selected by an explicit year header and unambiguous grid association. Keep the fee quotation at b165 and record the supporting year block b164 separately with table/row/column, section and original raw-source hash. Do not union the entire table or page into the fee evidence. Existing `row_headers` should keep their meaning; adding unrelated sibling text there would lose the coordinate proof.
+
+Required synthetic citation regressions: exact fee/year row accepts when all declared scopes are supported; equal fee amounts in 2026 and 2027 rows cannot cross-join; different tables/programmes/campuses/applicant rows cannot supply a year; a wrong or missing row year rejects; domestic/international, bachelor/master and intake contradictions still reject; merged or ambiguous cells require explicit disambiguation. Page context must not mask a literal quotation contradiction.
+
+[test_expert_citations.py](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/tests/test_expert_citations.py) — SHA256 `8ea9c29336be61fb367655aedf894c92f8e2d1e3be1088560f4f833273816a00`; existing `test_question_specific_visible_scope_conflicts_are_preserved`, `test_declared_scope_guards_apply_to_other_and_unreferenced_questions`, `test_mixed_context_cannot_mask_the_original_quotes_declared_intake_or_year`, `test_document_ir_quote_requires_its_exact_block_and_section_path`.
+[test_expert_catalogue_trace.py](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/tests/test_expert_catalogue_trace.py) — SHA256 `ea04e62df826513665901ccb00ff3d0bc5cd079a441b3554c9a3fcf074b170ec`; existing `test_found_question_scope_must_match_the_public_applicant_and_intake`, `test_found_answers_cannot_omit_their_required_scope`, `test_scope_cannot_be_copied_from_the_request_onto_contradicting_source_words`.
+
+## 3. Question-specific academic-year rejection
+
+[citations.py](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/citations.py) — SHA256 `ad857e4bb3c58b9afd18e11bd2207f18b7058396ecba343758bbd1f369d4136e`; `validate_fact_citations` explicit declared-scope loop.
+[models.py](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/models.py) — SHA256 `6dfdecc74b22f9cad8e27943a5b6779f978e4bf0a73ce9ec56b27d3a101ebe56`; `_evidence_scope` current Q4 year-error branch.
+
+The citation wrapper temporarily sets `question=Q4` to reuse academic-year checks for Q2/OTHER facts. That implementation detail should not become the user-facing claim description. Preserve the same year predicate; report the original fact ID/question, failing dimension `academic_year`, source step and exact evidence location. A narrow wrapper around the year-check error can retain that information without inferring values or changing acceptance. Q2 qualification evidence must be described as Q2; a Q4 fee remains Q4. Distinguish missing contextual year from contradictory declared year, when the observed context supports that distinction.
+
+Synthetic regressions: Q2 and OTHER with explicit unsupported academic years still reject and identify their original question/fact; correct same-section/same-row year provenance may pass; Q4 found still requires its true applicant/intake/academic-year scopes and target first-year comparison; nulls are never filled from the request; feedback cannot accept or mutate an atomic rejected delta. Empty sparse question diagnostics do not certify all fact scopes.
+
+## Limits
+
+A real 2026/2027 label must remain 2026/2027. This repair cannot establish that those rules apply to fall 2027, and must not remove the label merely to permit acceptance. No parser or feedback correction resolves Aalto’s recorded robots-disallowed empty reads; successful official-source evidence remains required. No admissions facts or diagnosis codes are added by this note.

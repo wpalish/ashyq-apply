@@ -1,0 +1,48 @@
+"""Offline simulation only: retain original V12 failure; never seal/read labels."""
+import json
+import math
+import runpy
+import sys
+from datetime import datetime
+from pathlib import Path
+
+ROOT = Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05')
+REPORT = Path('/tmp/unimatch-expert500-journal-report-v12.py')
+ns = runpy.run_path(str(REPORT))['main'].__globals__
+original = ns['verify_turn_policy_evidence']
+observations = []
+
+def hypothetical_policy(folder, result):
+    copied = dict(result)
+    expected = math.ceil((datetime.fromisoformat(result['finished_at']) -
+                          datetime.fromisoformat(result['wall_started_at'])).total_seconds() * 1000)
+    observations.append({'case': result['case_id'], 'original_wall_elapsed_ms': result['wall_elapsed_ms'],
+                         'hypothetical_timestamp_derived_ms': expected,
+                         'original_result_not_changed': True})
+    copied['wall_elapsed_ms'] = expected
+    return original(folder, copied)
+
+class StopBeforeSeal(Exception):
+    pass
+
+def no_seal(path, seal):
+    assert not path.exists()
+    assert seal['count'] == 10
+    raise StopBeforeSeal()
+
+ns['verify_turn_policy_evidence'] = hypothetical_policy
+ns['immutable_seal'] = no_seal
+sys.argv = [str(REPORT), '--root', str(ROOT), '--dataset',
+            '/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/data/ground_truth.reviewed.json',
+            '--orchestrator', '/tmp/unimatch-expert500-journal-pilot-v12.py']
+try:
+    ns['main']()
+except StopBeforeSeal:
+    assert not (ROOT / 'submission-seal.json').exists()
+    assert not (ROOT / 'comparison.json').exists()
+    print(json.dumps({'status': 'hypothetical_replay_reached_seal_boundary_then_stopped',
+                      'primary_acceptance': False, 'original_v12_remains_unscored': True,
+                      'seal_created': False, 'reviewed_labels_read': 0, 'new_source_model_calls': 0,
+                      'hypothetical_header_observations': observations}))
+else:
+    raise RuntimeError('Diagnostic must never proceed beyond seal boundary')
