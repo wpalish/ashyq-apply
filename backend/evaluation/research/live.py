@@ -683,6 +683,12 @@ def main() -> None:
         "on its own clock of SECONDS; the decision stage's budget is untouched",
     )
     parser.add_argument(
+        "--document-leads",
+        action="store_true",
+        help="plan rule DOC-3: the documents stage also reads the institution's own "
+        "application-documents page, at most two links from the programme page",
+    )
+    parser.add_argument(
         "--document-rules-v2",
         action="store_true",
         help="plan rule DOC-2: gpt-6-astra's PR #41 document rules (measured only with "
@@ -808,6 +814,10 @@ def main() -> None:
         if args.with_documents:
             global DOCUMENT_SECONDS
             DOCUMENT_SECONDS = args.with_documents
+        if args.document_leads:
+            from app.adapters.documents import web_documents as leads_module
+
+            leads_module.DOCUMENT_LEADS = True
         if args.document_rules_v2:
             from app.adapters import document_ir
             from app.adapters.documents import web_documents
@@ -915,6 +925,7 @@ def main() -> None:
                         *(["--euro-grouping"] if args.euro_grouping else []),
                         *(["--tuition-row-year"] if args.tuition_row_year else []),
                         *(["--document-rules-v2"] if args.document_rules_v2 else []),
+                        *(["--document-leads"] if args.document_leads else []),
                         *(
                             ["--with-documents", str(args.with_documents)]
                             if args.with_documents
