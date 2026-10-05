@@ -8,7 +8,8 @@
 
 import { useEffect, useState } from 'react';
 import { ApiError, api } from '@/api/client';
-import { Chip, Field, FoldPanel, Notice, Panel } from '@/components/primitives';
+import { CommaSeparatedInput } from '@/components/CommaSeparatedInput';
+import { Chip, Field, Notice, Panel } from '@/components/primitives';
 import { castInput, get, setIn, type Path } from '@/lib/immutable';
 import { useStore } from '@/lib/store';
 import type { TranscriptSuggestion } from '@/types';
@@ -31,30 +32,17 @@ const SEVERITY_LABEL: Record<string, string> = {
   medium: 'Noticeable effect',
   low: 'Minor effect',
 };
+const PROFILE_STEPS = ['Personal details', 'Academic background', 'Tests & scores', 'Activities & achievements', 'Review'] as const;
 
 export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const {
     profileDraft, setProfileDraft, validation, saveProfile, loading,
-    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft,
+    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft, dirty,
   } = useStore();
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [step, setStep] = useState(1);
   const [confirmingReplace, setConfirmingReplace] = useState<'demo' | 'clear' | null>(null);
-  // Bumped whenever the whole draft is replaced, so folded sections re-fold to
-  // what the new profile holds instead of what the last one did.
-  const [generation, setGeneration] = useState(0);
-  // Switching applicant (or starting a new case) replaces the draft too; the
-  // first save of a new profile only gives it an id, and must not re-fold
-  // a section the person has just opened.
-  const profileId = savedProfile?.id ?? null;
-  const [lastProfileId, setLastProfileId] = useState(profileId);
-  if (profileId !== lastProfileId) {
-    setLastProfileId(profileId);
-    if (lastProfileId !== null) setGeneration((value) => value + 1);
-  }
-  const replacing = (action: () => void) => () => {
-    action();
-    setGeneration((value) => value + 1);
-  };
   const [methods, setMethods] = useState<
     { key: string; description: string; source: string; caveat: string; to_scale: string }[]
   >([]);
@@ -68,10 +56,27 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
     api.conversionMethods(scaleLabel).then((r) => setMethods(r.methods)).catch(() => setMethods([]));
   }, [scaleLabel]);
 
+  useEffect(() => {
+    if (!savedProfile || !dirty || loading) return;
+    const timer = window.setTimeout(() => {
+      setSaving(true);
+      void saveProfile().then(() => setSaved(true)).catch(() => setSaved(false)).finally(() => setSaving(false));
+    }, 1500);
+    return () => window.clearTimeout(timer);
+  }, [savedProfile, dirty, loading, profileDraft, saveProfile]);
+
   const bind = (path: Path, cast: 'string' | 'number' | 'float' = 'string') => ({
     value: String(get(profileDraft, path) ?? ''),
     onChange: (e: { target: { value: string } }) => {
       setProfileDraft((d) => setIn(d, path, castInput(e.target.value, cast)));
+      setSaved(false);
+    },
+  });
+
+  const bindList = (path: Path) => ({
+    items: get(profileDraft, path) as string[] | undefined,
+    onItemsChange: (items: string[]) => {
+      setProfileDraft((d) => setIn(d, path, items));
       setSaved(false);
     },
   });
@@ -139,14 +144,6 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const otherTests = (get(profileDraft, ['academics', 'other_tests']) as Record<string, unknown>[]) ?? [];
   const activities = (get(profileDraft, ['activities']) as Record<string, unknown>[]) ?? [];
   const achievements = (get(profileDraft, ['achievements']) as Record<string, unknown>[]) ?? [];
-  // A test counts as taken when it carries a score; a scale maximum on its own
-  // is a default, not an answer.
-  const scored = (test: string) => {
-    const values = get(profileDraft, ['academics', test]) as Record<string, unknown> | null | undefined;
-    return Boolean(values) && Object.entries(values as Record<string, unknown>)
-      .some(([key, value]) => key !== 'max_score' && typeof value === 'number');
-  };
-  const testsFilled = ['sat', 'act', 'toefl', 'duolingo'].some(scored) || otherTests.length > 0;
 
   const append = (path: Path, item: Record<string, unknown>) => {
     const current = (get(profileDraft, path) as Record<string, unknown>[]) ?? [];
@@ -160,13 +157,16 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Me · Profile</p>
-        <h1 className="screen__title">Who is applying</h1>
+        <p className="screen__eyebrow">CREATE YOUR PROFILE · {String(step).padStart(2, '0')} / 05</p>
+        <h1 className="screen__title">Tell us about <span className="find-yellow">yourself.</span></h1>
         <p className="screen__lede">
-          Nothing here is converted or inferred behind your back. Grades keep their original scale,
-          and every blank below is listed with exactly what it costs you in the results.
+          A few simple details help us find the right matches for you. Your information stays editable.
         </p>
       </div>
+
+      <nav className="profile-steps" aria-label="Profile steps">
+        {PROFILE_STEPS.map((name, index) => <button key={name} type="button" aria-current={step === index + 1 ? 'step' : undefined} onClick={() => setStep(index + 1)}><span>{index + 1}</span>{name}</button>)}
+      </nav>
 
       <div className="stack stack--loose">
         {draftRestored && (
@@ -177,7 +177,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                 not saved. Your saved profile on the server is untouched until you press Save.
               </div>
               <div className="row">
-                <button className="btn btn--sm" onClick={replacing(discardDraft)} data-testid="discard-draft">
+                <button className="btn btn--sm" onClick={discardDraft} data-testid="discard-draft">
                   Discard these edits
                 </button>
               </div>
@@ -194,6 +194,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </Notice>
         )}
 
+        <div className="profile-step-content" hidden={step !== 1}>
         <Panel
           title="Start from"
           hint="Demo data is never loaded on your behalf. Choose it explicitly, and it is clearly labelled everywhere it appears."
@@ -202,14 +203,14 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             <button
               className="btn btn--sm"
               data-testid="clear-profile"
-              onClick={savedProfile ? () => setConfirmingReplace('clear') : replacing(clearProfile)}
+              onClick={() => (savedProfile ? setConfirmingReplace('clear') : clearProfile())}
             >
               Blank profile
             </button>
             <button
               className="btn btn--sm"
               data-testid="load-demo-profile"
-              onClick={savedProfile ? () => setConfirmingReplace('demo') : replacing(loadDemoProfile)}
+              onClick={() => (savedProfile ? setConfirmingReplace('demo') : loadDemoProfile())}
             >
               Load synthetic demo
             </button>
@@ -229,7 +230,6 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                     onClick={() => {
                       if (confirmingReplace === 'demo') loadDemoProfile();
                       else clearProfile();
-                      setGeneration((value) => value + 1);
                       setConfirmingReplace(null);
                     }}
                   >
@@ -255,16 +255,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               </select>
             </Field>
             <Field label="Field of study" htmlFor="field" hint="Drives which programmes are searched.">
-              <input
-                id="field"
-                value={((get(profileDraft, ['context', 'intended_fields']) as string[]) ?? []).join(', ')}
-                onChange={(e) =>
-                  setProfileDraft((d) =>
-                    setIn(d, ['context', 'intended_fields'],
-                      e.target.value.split(',').map((s) => s.trim()).filter(Boolean)),
-                  )
-                }
-              />
+              <CommaSeparatedInput id="field" {...bindList(['context', 'intended_fields'])} />
             </Field>
             <Field label="Intake term" htmlFor="term">
               <select id="term" {...bind(['context', 'intake_term'])}>
@@ -305,12 +296,12 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             </Field>
           </div>
         </Panel>
+        </div>
 
-        <FoldPanel
+        <div className="profile-step-content" hidden={step !== 2}>
+        <Panel
           title="Read it off your transcript"
           hint="Optional. The file is read and discarded — it is never saved, and nothing is filled in until you say so."
-          hasData={Boolean(transcriptBusy || transcriptNote || suggestions.length)}
-          testId="fold-transcript" key={`transcript-${generation}`}
         >
           <div className="stack stack--tight">
             <Field label="Transcript (PDF)" htmlFor="transcript-file">
@@ -345,11 +336,11 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               </div>
             ))}
           </div>
-        </FoldPanel>
+        </Panel>
 
         <Panel
           title="Grades"
-          hint="Enter the grade exactly as it appears on your transcript. ASHYQ Apply does not convert it silently."
+          hint="Enter the grade exactly as it appears on your transcript. Unimatch does not convert it silently."
         >
           <div className="grid-2">
             <Field label="GPA / average" htmlFor="gpa">
@@ -411,7 +402,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             </div>
           )}
         </Panel>
+        </div>
 
+        <div className="profile-step-content" hidden={step !== 3}>
         <Panel
           title="English language"
           hint="Subscores matter: many programmes publish a per-section minimum on top of the overall band."
@@ -438,12 +431,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </div>
         </Panel>
 
-        <FoldPanel
-          title="Standardised tests"
-          hint="Leave blank if not taken — test-optional programmes are unaffected."
-          hasData={testsFilled}
-          testId="fold-tests" key={`tests-${generation}`}
-        >
+        <Panel title="Standardised tests" hint="Leave blank if not taken — test-optional programmes are unaffected.">
           <div className="grid-3">
             <Field label="SAT total" htmlFor="sat"><input id="sat" type="number" {...bind(['academics', 'sat', 'total'], 'number')} /></Field>
             <Field label="SAT Math" htmlFor="satm"><input id="satm" type="number" {...bind(['academics', 'sat', 'math'], 'number')} /></Field>
@@ -479,9 +467,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               <input id="duolingo-max" type="number" {...bind(['academics', 'duolingo', 'max_score'], 'float')} />
             </Field>
             <Field label="Planned retakes" htmlFor="planned-retakes" hint="Comma-separated.">
-              <input id="planned-retakes"
-                value={((get(profileDraft, ['academics', 'planned_retakes']) as string[]) ?? []).join(', ')}
-                onChange={(event) => setProfileDraft((draft) => setIn(draft, ['academics', 'planned_retakes'], event.target.value.split(',').map((value) => value.trim()).filter(Boolean)))} />
+              <CommaSeparatedInput id="planned-retakes" {...bindList(['academics', 'planned_retakes'])} />
             </Field>
           </div>
           <div className="stack stack--tight" style={{ marginTop: 'var(--space-4)' }}>
@@ -499,9 +485,11 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               name: '', score: null, max_score: null, dates: { taken_on: null, planned_retake_on: null },
             })}>+ Add another test</button>
           </div>
-        </FoldPanel>
+        </Panel>
+        </div>
 
-        <FoldPanel title="Subject grades" hint="Keep the original transcript scale for every subject." count={subjectGrades.length} hasData={subjectGrades.length > 0} testId="fold-subjects" key={`subjects-${generation}`}>
+        <div className="profile-step-content" hidden={step !== 2}>
+        <Panel title="Subject grades" hint="Keep the original transcript scale for every subject.">
           <div className="stack stack--tight">
             {subjectGrades.map((_, index) => (
               <div className="panel panel--sunken" key={`subject-${index}`}>
@@ -518,9 +506,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               subject: '', grade: { raw_value: null, raw_scale_max: null, raw_scale_label: '', status: 'applicant_confirmed' },
             })}>+ Add subject grade</button>
           </div>
-        </FoldPanel>
+        </Panel>
 
-        <FoldPanel title="AP, IB and A-Level results" hint="Add achieved and predicted curriculum results exactly as reported." count={curriculumResults.length} hasData={curriculumResults.length > 0} testId="fold-curriculum" key={`curriculum-${generation}`}>
+        <Panel title="AP, IB and A-Level results" hint="Add achieved and predicted curriculum results exactly as reported.">
           <div className="stack stack--tight">
             {curriculumResults.map((item, index) => (
               <div className="grid-3 panel panel--sunken" key={`curriculum-${index}`}>
@@ -540,9 +528,11 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               framework: 'AP', subject: '', result: '', year: null, predicted: false,
             })}>+ Add curriculum result</button>
           </div>
-        </FoldPanel>
+        </Panel>
+        </div>
 
-        <FoldPanel title="Extracurricular activities" hint="Depth, responsibility and measurable impact matter more than a long list." count={activities.length} hasData={activities.length > 0} testId="fold-activities" key={`activities-${generation}`}>
+        <div className="profile-step-content" hidden={step !== 4}>
+        <Panel title="Extracurricular activities" hint="Depth, responsibility and measurable impact matter more than a long list.">
           <div className="stack stack--tight">
             {activities.map((_, index) => (
               <div className="panel panel--sunken" key={`activity-${index}`}>
@@ -561,9 +551,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                   <Field label="Measurable outcome" htmlFor={`activity-outcome-${index}`}><textarea id={`activity-outcome-${index}`} {...bind(['activities', index, 'measurable_outcome'])} /></Field>
                   <Field label="Impact on others" htmlFor={`activity-impact-${index}`}><textarea id={`activity-impact-${index}`} {...bind(['activities', index, 'impact_on_others'])} /></Field>
                   <Field label="Evidence links" htmlFor={`activity-links-${index}`} hint="Comma-separated URLs.">
-                    <input id={`activity-links-${index}`}
-                      value={((get(profileDraft, ['activities', index, 'evidence_links']) as string[]) ?? []).join(', ')}
-                      onChange={(event) => setProfileDraft((draft) => setIn(draft, ['activities', index, 'evidence_links'], event.target.value.split(',').map((value) => value.trim()).filter(Boolean)))} />
+                    <CommaSeparatedInput id={`activity-links-${index}`} {...bindList(['activities', index, 'evidence_links'])} />
                   </Field>
                 </div>
                 <button className="btn btn--sm btn--danger" type="button" onClick={() => remove(['activities'], index)}>Remove activity</button>
@@ -575,9 +563,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               impact_on_others: null, evidence_links: [],
             })}>+ Add activity</button>
           </div>
-        </FoldPanel>
+        </Panel>
 
-        <FoldPanel title="Achievements" hint="Include level, placement and how recipients were selected." count={achievements.length} hasData={achievements.length > 0} testId="fold-achievements" key={`achievements-${generation}`}>
+        <Panel title="Achievements" hint="Include level, placement and how recipients were selected.">
           <div className="stack stack--tight">
             {achievements.map((_, index) => (
               <div className="grid-3 panel panel--sunken" key={`achievement-${index}`}>
@@ -591,9 +579,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                 <Field label="Placement" htmlFor={`achievement-place-${index}`}><input id={`achievement-place-${index}`} {...bind(['achievements', index, 'placement'])} /></Field>
                 <Field label="Selection criterion" htmlFor={`achievement-select-${index}`}><textarea id={`achievement-select-${index}`} {...bind(['achievements', index, 'selection_criterion'])} /></Field>
                 <Field label="Evidence links" htmlFor={`achievement-links-${index}`} hint="Comma-separated URLs.">
-                  <input id={`achievement-links-${index}`}
-                    value={((get(profileDraft, ['achievements', index, 'evidence_links']) as string[]) ?? []).join(', ')}
-                    onChange={(event) => setProfileDraft((draft) => setIn(draft, ['achievements', index, 'evidence_links'], event.target.value.split(',').map((value) => value.trim()).filter(Boolean)))} />
+                  <CommaSeparatedInput id={`achievement-links-${index}`} {...bindList(['achievements', index, 'evidence_links'])} />
                 </Field>
                 <button className="btn btn--sm btn--danger" type="button" onClick={() => remove(['achievements'], index)}>Remove</button>
               </div>
@@ -603,8 +589,10 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               selection_criterion: null, evidence_links: [],
             })}>+ Add achievement</button>
           </div>
-        </FoldPanel>
+        </Panel>
+        </div>
 
+        <div className="profile-step-content" hidden={step !== 5}>
         {validation && (
           <Panel
             title="What is missing, and what it costs you"
@@ -632,22 +620,26 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             )}
           </Panel>
         )}
+        {!validation && <Panel title="Ready to review"><p className="muted">Save your profile to check which information is blocking, recommended or optional.</p></Panel>}
+        </div>
 
-        <div className="row">
+        <div className="profile-step-actions">
+          {step > 1 && <button className="btn" type="button" onClick={() => setStep(step - 1)}>← Back</button>}
           <button
             className="btn"
-            disabled={loading}
+            disabled={loading || saving}
             data-testid="save-profile"
             onClick={async () => {
               await saveProfile();
               setSaved(true);
             }}
           >
-            {loading ? 'Saving…' : 'Save profile'}
+            {loading || saving ? 'Saving…' : 'Save profile'}
           </button>
-          {saved && <Chip tone="ok">Saved</Chip>}
-          <button className="btn btn--primary" onClick={onNext} data-testid="to-preferences">
-            Next: preferences &amp; budget →
+          {saved && !dirty && !saving && <Chip tone="ok">Saved</Chip>}
+          {dirty && !saving && <span className="xs muted">Unsaved changes stay on this device</span>}
+          <button className="btn btn--primary" onClick={() => step < PROFILE_STEPS.length ? setStep(step + 1) : onNext()} data-testid="to-preferences">
+            {step < PROFILE_STEPS.length ? 'Continue →' : 'Continue to preferences →'}
           </button>
         </div>
       </div>

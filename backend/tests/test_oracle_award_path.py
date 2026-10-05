@@ -31,3 +31,17 @@ def test_an_unbound_page_binds_nothing_to_the_award():
         "https://www.ntu.edu.sg/other-award", PAGE, datetime(2026, 9, 28, tzinfo=UTC)
     )
     assert not any(k.startswith("scholarships.nanyang_global") for k, _ in ungated)
+
+
+def test_a_documents_page_is_read_under_its_certified_identity():
+    from evaluation.research.oracle import _document_claims
+
+    rug = (
+        "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/"
+        "application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents"
+        "?lang=en"
+    )
+    page = "<html><body><ul><li>Full academic transcript of your secondary school</li></ul></body></html>"
+    gated, ungated = _document_claims(rug, page, datetime(2026, 9, 28, tzinfo=UTC))
+    assert gated == ungated
+    assert all(isinstance(k, str) for k, _ in gated)

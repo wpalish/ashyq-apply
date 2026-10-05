@@ -11,6 +11,7 @@ from __future__ import annotations
 import ast
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import cast
 
 import pytest
 
@@ -23,10 +24,33 @@ from app.adapters.search import (
     SearchUnavailable,
     get_search_provider,
 )
+from app.adapters.search.base import SearchFailureReason, search_failure_diagnostic
 from app.adapters.search.fake import FakeSearchProvider
 from app.config import Settings
 
 NOW = datetime(2026, 9, 21, 12, 0, tzinfo=UTC)
+
+
+@pytest.mark.parametrize("status", [None, 99, 200, 600, True])
+def test_public_failure_message_excludes_arbitrary_exception_and_provider_text(status):
+    message = search_failure_diagnostic(
+        "secret-provider-key", SearchUnavailable("secret body and query", http_status=status)
+    )
+    assert message == "Search service unavailable (configured search provider)."
+
+
+@pytest.mark.parametrize("reason", list(SearchFailureReason))
+def test_public_failure_reason_comes_only_from_the_fixed_enum(reason):
+    error = SearchUnavailable("private provider body and applicant query", reason=reason)
+    assert search_failure_diagnostic("exa_mcp", error) == (
+        f"Search service unavailable (exa_mcp; {reason.value})."
+    )
+
+
+@pytest.mark.parametrize("reason", ["secret provider body", "quota exhausted", "MCP tool error"])
+def test_arbitrary_reason_strings_cannot_enter_public_diagnostics(reason):
+    error = SearchUnavailable("private message", reason=cast(SearchFailureReason, reason))
+    assert search_failure_diagnostic("exa_mcp", error) == "Search service unavailable (exa_mcp)."
 
 
 def a_result(**kw) -> SearchResult:
@@ -216,7 +240,7 @@ class TestNobodySearchesByAccident:
         monkeypatch.setenv("UNIMATCH_SEARCH_PROVIDER", "fake")
         try:
             provider = get_search_provider()
-            assert isinstance(provider, FakeSearchProvider)
+            assert isinstance(provider.inner, FakeSearchProvider)
             assert provider.name == "fake"
         finally:
             get_settings.cache_clear()
@@ -232,7 +256,15 @@ class TestNobodySearchesByAccident:
             settings._validate_search()
 
     def test_every_known_name_is_one_this_build_can_actually_build(self):
-        assert set(KNOWN_SEARCH_PROVIDERS) == {"none", "fake", "exa", "tavily", "brave", "serper"}
+        assert set(KNOWN_SEARCH_PROVIDERS) == {
+            "none",
+            "fake",
+            "exa",
+            "exa_mcp",
+            "tavily",
+            "brave",
+            "serper",
+        }
 
 
 class TestTheContractItself:

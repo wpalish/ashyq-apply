@@ -55,6 +55,7 @@ def _payments_on(
         cors_origins="https://ashyq.example",
         email_sender="smtp",
         smtp_host="smtp.example",
+        smtp_from="no-reply@example.test",
         public_base_url="https://ashyq.example",
         metrics_enabled=False,
     )

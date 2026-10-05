@@ -23,7 +23,7 @@ import { dateTime } from '@/lib/format';
 import { useStore } from '@/lib/store';
 
 const STAGE_LABELS: Record<string, string> = {
-  queued: 'Starting the research',
+  queued: 'Preparing the research queue',
   profile_validation: 'Checking your profile',
   candidate_discovery: 'Finding candidate universities',
   program_verification: 'Reading official programme pages',
@@ -36,6 +36,7 @@ const STAGE_LABELS: Record<string, string> = {
 
 function errorCategory(message: string): string {
   const value = message.toLowerCase();
+  if (/search service unavailable|official scholarship search unavailable|searchunavailable/.test(value)) return 'Search service unavailable';
   if (/timeout|429|rate limit|temporar|network|server error/.test(value)) return 'Temporary fetch issue';
   if (/no known|no .*url|not found|missing page/.test(value)) return 'Official page not located';
   if (/not applicable|degree|intake|citizenship/.test(value)) return 'Page not applicable to this applicant';
@@ -239,9 +240,9 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
             <div className="meter__fill" style={{ width: `${Math.max(3, run.progress * 100)}%` }} />
           </div>
           <div className="row" style={{ justifyContent: 'space-between' }}>
-            <span className="xs muted">{Math.round(run.progress * 100)}% of stages complete</span>
+            <span className="xs muted">{Math.round(run.progress * 100)}% of stages complete · {STAGE_LABELS[run.stage] ?? run.stage.replace(/_/g, ' ')}</span>
             <span className="xs faint">
-              started {dateTime(run.started_at)}
+              {run.started_at ? `started ${dateTime(run.started_at)}` : 'Waiting for the worker'}
               {run.finished_at && ` · finished ${dateTime(run.finished_at)}`}
             </span>
           </div>
@@ -384,8 +385,8 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
         )}
 
         {run.errors.length > 0 && (
-          <Panel title="Fetch failures" data-testid="failures-panel"
-            hint={`${run.errors.length} pages could not be read at all. Anything that depended on them is unknown, never guessed.`}>
+          <Panel title="Research failures" data-testid="failures-panel"
+            hint={`${run.errors.length} issues limited this research. Affected information remains unknown.`}>
             <div className="stack stack--tight">
               {Object.entries(groupedErrors).map(([category, messages]) => (
                 <details key={category}>

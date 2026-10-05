@@ -131,6 +131,10 @@ class Telemetry(Strict):
     latency_seconds: float | None = Field(default=None, ge=0)
     cost_usd: float | None = Field(default=None, ge=0)
     human_review_required: bool | None = None
+    #: D7: the documents stage, on its own clock after the decision stage.
+    document_reads: int | None = Field(default=None, ge=0)
+    document_seconds: float | None = Field(default=None, ge=0)
+    document_stop: str | None = None
 
 
 class PageOutcome(Strict):

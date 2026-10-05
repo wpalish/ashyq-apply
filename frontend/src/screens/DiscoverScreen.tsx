@@ -47,8 +47,10 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
   const filtered = Object.values(filters).some(Boolean);
 
   return (
-    <div className="stack">
+    <div className="community-page">
+    <div className="stack community-column">
       <div className="screen__head">
+        <p className="screen__eyebrow">GLOBAL COMMUNITY</p>
         <h1 className="screen__title">{t('discover.title')}</h1>
         <p className="screen__lede">{t('discover.lede')}</p>
       </div>
@@ -107,6 +109,15 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
           {t('discover.more')}
         </button>
       )}
+    </div>
+    <aside className="community-aside" aria-label="About student discovery">
+      <img src="/brand/unimatch-journey.png" alt="Unimatch mascot looking toward a mountain campus" />
+      <div>
+        <p className="screen__eyebrow">MORE THAN UNIVERSITIES</p>
+        <h2>A clearer you starts with real people.</h2>
+        <p>Explore public student profiles and open a conversation where their message settings allow it.</p>
+      </div>
+    </aside>
     </div>
   );
 }

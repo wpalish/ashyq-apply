@@ -1,0 +1,308 @@
+{
+  "schema_version": "1",
+  "case_id": "kaist",
+  "packet_sha256": "c11cc91e66e717d8b2805faeb1503b9822a526455a0c76dbc00311aca228c383",
+  "baseline_pipeline_sha": "9421884465cbc986ce0ab017102126731fe2589d",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T04:00:59.755864+00:00",
+  "ended_at": "2026-10-04T04:06:03.924159+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T04:01:39.419271+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://cs.kaist.ac.kr/content?menu=318"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-001.json",
+      "raw_log_sha256": "3892eb0d628ec6289cd8340c032c7998eb71484a0116aa91a1fce797db0daa56",
+      "elapsed_ms": 2817,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 11335,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Begin with the supplied official computer science programme page.",
+      "observed_from_step": null,
+      "action": "fetcher: https://cs.kaist.ac.kr/content?menu=318",
+      "stage": "page_understanding",
+      "url": "https://cs.kaist.ac.kr/content?menu=318",
+      "final_url": "https://cs.kaist.ac.kr/content?menu=318"
+    },
+    {
+      "at": "2026-10-04T04:02:34.241323+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-002.json",
+      "raw_log_sha256": "73a1d8c17b9970b48466c6bf851c696ae86c31becf15fb7848a8811b79c5c492",
+      "elapsed_ms": 1791,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 21959,
+      "search_queries_cumulative": 0,
+      "step": 2,
+      "observed_before": "The computing page contains bachelor curriculum requirements; next inspect international undergraduate admissions and its linked guidance.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://admission.kaist.ac.kr/intl-undergraduate/before/sub01",
+      "stage": "page_understanding",
+      "url": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01",
+      "final_url": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01"
+    },
+    {
+      "at": "2026-10-04T04:03:45.314927+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/guide"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-003.json",
+      "raw_log_sha256": "f7d9483943440099f3114d3b77a78174a782a0cf06ac1a8387a9f31c31843b05",
+      "elapsed_ms": 11816,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 43948,
+      "search_queries_cumulative": 0,
+      "step": 3,
+      "observed_before": "The international admissions page lists Computer Science and links to application guidance; inspect that guidance for requirements and dates.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/guide",
+      "stage": "page_understanding",
+      "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/guide",
+      "final_url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/guide"
+    },
+    {
+      "at": "2026-10-04T04:04:46.611004+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub02"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-004.json",
+      "raw_log_sha256": "87e8f0c6573f561ef8358df7748c52d998618ec35c58cb6948d303c0c0192c98",
+      "elapsed_ms": 11314,
+      "fetcher_calls_cumulative": 4,
+      "elapsed_ms_cumulative": 64854,
+      "search_queries_cumulative": 0,
+      "step": 4,
+      "observed_before": "Application guidance is blocked by robots policy. Inspect the separately linked eligibility page.",
+      "observed_from_step": 3,
+      "action": "fetcher: https://admission.kaist.ac.kr/intl-undergraduate/before/sub02",
+      "stage": "page_understanding",
+      "url": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub02",
+      "final_url": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub02"
+    }
+  ],
+  "proposals": [
+    {
+      "claim_key": "programme.exists",
+      "value": true,
+      "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01",
+      "excerpt": "Computer Science (https://engineering.kaist.ac.kr/education/departmentDetail?idx=77)",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "KAIST",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        2
+      ],
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "programme.admission_route",
+      "value": "Freshmen enter with an undecided major; students choose their department/division in sophomore year without additional requirements or admission procedures.",
+      "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01",
+      "excerpt": "※ KAIST holds 【non-declared major system】 at the freshmen year, applicant will get their admission offers as “undecided major”.\n\nOn sophomore year, students will choose the department/division for their degree year without any additional requirements or admission procedures.",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        2
+      ],
+      "status": "unreviewed"
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "supporting_steps": [
+        2
+      ],
+      "proposal_indices": [
+        0
+      ],
+      "evidence": [
+        {
+          "action_step": 2,
+          "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01",
+          "excerpt": "Computer Science (https://engineering.kaist.ac.kr/education/departmentDetail?idx=77)",
+          "location": {
+            "kind": "text",
+            "block_id": null,
+            "section_path": [],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "KAIST",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "International undergraduate programme navigation explicitly lists Computer Science."
+    },
+    {
+      "question": "Q1",
+      "status": "inaccessible",
+      "supporting_steps": [
+        3
+      ],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Application Guidelines was blocked by robots policy; English test minima could not be verified."
+    },
+    {
+      "question": "Q2",
+      "status": "inaccessible",
+      "supporting_steps": [
+        3,
+        4
+      ],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Eligibility and Application Guidelines were blocked. Kazakhstan secondary, NIS and additional-year eligibility remain unverified."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No fall 2027 international deadline was established. The linked calendar was not read."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No tuition evidence for the academic year containing fall 2027 was read."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [
+        2
+      ],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Navigation links to KAIST Scholarship, but the scholarship page was not read."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Eligibility for the linked KAIST Scholarship was not established."
+    }
+  ],
+  "review_status": "unreviewed"
+}

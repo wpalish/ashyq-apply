@@ -3,7 +3,9 @@
 import hashlib
 import json
 import math
+import re
 from collections import defaultdict
+from dataclasses import dataclass
 from typing import Any
 from urllib.parse import urlsplit, urlunsplit
 
@@ -11,7 +13,7 @@ from app.adapters.search.ontology import titles_name_same_programme
 from app.domain.claim_verifier import registrable_domain
 from app.domain.programme_identity import Verdict
 
-from .schema import Capture, Dataset, Observation, Scope
+from .schema import Capture, Dataset, Label, Observation, Prediction, Scope
 
 
 def canonical_url(url: object) -> str:
@@ -74,20 +76,70 @@ def dimension_matches(key: str, value: object, recorded: object) -> bool:
         return bool(recorded) and (
             titles_name_same_programme(str(value), str(recorded)) is Verdict.YES
         )
-    if (
-        key == "population"
-        and recorded is None
-        and str(value).casefold() not in CONTROLLED_POPULATIONS
-    ):
+    if key == "population" and str(value).casefold() not in CONTROLLED_POPULATIONS:
         # A descriptive corpus population ("Vancouver applicants using IELTS
         # Academic") is a note on who the source addresses, not a value any
-        # page reading can emit; silence is compatible with it. A population we
-        # did record must still match, and a controlled one ("non-EU/EEA") must
-        # be recorded. Owner delegated this choice on 2026-09-26 (VERSIONS.md).
-        return True
+        # page reading can emit. Owner delegated silence on 2026-09-26; on
+        # 2026-10-05 (D2) another description is compatible too: NTU's bond
+        # read "Singapore PRs and international students" against "full-time
+        # undergraduate scholarship applicants", both true of the page. A
+        # recorded controlled population ("transfer") is a stated group the
+        # note cannot be compared with, so it still does not match.
+        return recorded is None or str(recorded).casefold() not in CONTROLLED_POPULATIONS
+    if key == "academic_year":
+        # Spelling is not meaning (D3, owner 2026-10-05): the corpus quotes
+        # "2027-2028" as the page writes it, the pipeline writes "2027/28".
+        return recorded is not None and _academic_year(recorded) == _academic_year(value)
     # Case is not meaning: the pipeline writes "Fall 2027", the corpus
     # "fall 2027" (definition fixed 2026-09-23, recorded in VERSIONS.md).
     return recorded is not None and _plain(recorded) == _plain(value)
+
+
+_YEAR_SPAN = re.compile(r"(\d{4})\s*[-/–]\s*(\d{2,4})")
+
+
+def _academic_year(text: object) -> str:
+    """One spelling for an academic year: "2027-2028", "2027/2028", "2027/28" -> "2027/28"."""
+    found = _YEAR_SPAN.search(str(text))
+    return f"{found[1]}/{found[2][-2:]}" if found else _plain(text)
+
+
+def names_another_subject(expected: Scope, actual: Scope) -> bool:
+    """Whether a claim's own scope says it is about somebody else (D1).
+
+    Owner decision 2026-10-05: a claim whose page reading names another
+    controlled population ("EU/EEA" against a "non-EU/EEA" label) or another
+    programme is not an answer to the label's question, so it is neither right
+    nor wrong; the product shows it under its own scope. Silence is not this:
+    a claim that names no population is still judged, and still wrong-scope.
+    """
+    if expected.population and actual.population:
+        label, ours = expected.population.casefold(), actual.population.casefold()
+        if label in CONTROLLED_POPULATIONS and ours in CONTROLLED_POPULATIONS and label != ours:
+            return True
+    return bool(
+        expected.programme
+        and actual.programme
+        and titles_name_same_programme(expected.programme, actual.programme) is not Verdict.YES
+    )
+
+
+#: Keys whose corpus value can be a finer reading of the pipeline's value (D4,
+#: owner 2026-10-05). The pipeline's ``separate`` is true of NTU's "separate,
+#: after the admission application", only less exact; a coarser right value is
+#: partial, never a hit and never a wrong claim. Deliberately a short list:
+#: each entry is a stated vocabulary difference, not a fuzzy match.
+def _coarser(key: str, ours: object, label: object) -> bool:
+    if key.endswith(".applicability.application_mode"):
+        return isinstance(ours, str) and isinstance(label, str) and label.startswith(ours + "_")
+    if key.endswith(".applicability.degree"):
+        return (
+            isinstance(ours, dict)
+            and ours.get("applies") == "yes"
+            and isinstance(label, str)
+            and label.split("_", 1)[0] == ours.get("degree")
+        )
+    return False
 
 
 def scope_matches(expected: Scope, actual: Scope) -> bool:
@@ -107,6 +159,117 @@ def scope_matches(expected: Scope, actual: Scope) -> bool:
         if value is not None and not dimension_matches(key, value, getattr(actual, key)):
             return False
     return True
+
+
+@dataclass(frozen=True)
+class PredictionVerdict:
+    """How the scorer judged one prediction against the label for its key.
+
+    ``score`` counts these; the scorecard lists them. Both read this one
+    function, so a per-label explanation can never disagree with a metric.
+    """
+
+    #: A label with status ``known`` exists for the key.
+    labelled: bool
+    value_matches: bool
+    provenance: bool
+    exact_evidence: bool
+    supported: bool
+    supported_same_page: bool
+    support_known: bool
+    #: Only judged for a labelled prediction; False otherwise.
+    valid_scope: bool
+    #: D1: the claim's own scope names another population or programme.
+    other_scope: bool = False
+    #: D4: a coarser reading of the label's value, in scope.
+    partial: bool = False
+
+    @property
+    def adjudicated(self) -> bool:
+        """Counted in precision: labelled, about the label's subject, not partial."""
+        return self.labelled and not self.other_scope and not self.partial
+
+    @property
+    def correct(self) -> bool:
+        return self.adjudicated and self.value_matches and self.valid_scope and self.supported
+
+
+def adjudicate(p: Prediction, label: Label | None) -> PredictionVerdict:
+    """Judge one prediction against the label for its key, or against none."""
+    value_matches = label is not None and json.dumps(p.value, sort_keys=True) == json.dumps(
+        label.value, sort_keys=True
+    )
+    evidence = p.evidence
+    provenance = bool(evidence and evidence.source_type in {"official", "government"})
+    exact_evidence = bool(
+        label
+        and evidence
+        and not evidence.excerpt_truncated
+        and any(
+            canonical_url(e.url) == canonical_url(evidence.url)
+            and quote_supports(evidence.excerpt, e.excerpt)
+            for e in label.evidence
+        )
+    )
+    # Owner decision 2026-09-23: another official page of the same
+    # university may support a label. The reviewer cites one page;
+    # universities publish the same deadline or fee on several, and a
+    # right value quoted from the fees page instead of the programme
+    # page was scored as unsupported. The strict reading stays beside
+    # it as ``claim_recall_same_page``.
+    sibling_evidence = bool(
+        label
+        and evidence
+        and not evidence.excerpt_truncated
+        and evidence.excerpt.strip()
+        and _domain(evidence.url) in {_domain(e.url) for e in label.evidence}
+    )
+    supported_same_page = provenance and (
+        p.supported is True
+        or (p.supported is None and exact_evidence and label is not None and value_matches)
+    )
+    supported = supported_same_page or (
+        provenance
+        and p.supported is None
+        and sibling_evidence
+        and label is not None
+        and value_matches
+    )
+    support_known = not provenance or p.supported is not None or exact_evidence
+    labelled = bool(label and label.status == "known")
+    valid_scope = bool(
+        labelled
+        and label
+        and evidence
+        and any(scope_matches(e.scope, evidence.scope) for e in label.evidence)
+    )
+    other_scope = bool(
+        labelled
+        and label
+        and evidence
+        and label.evidence
+        and all(names_another_subject(e.scope, evidence.scope) for e in label.evidence)
+    )
+    partial = bool(
+        labelled
+        and label
+        and not other_scope
+        and valid_scope
+        and not value_matches
+        and _coarser(p.key, p.value, label.value)
+    )
+    return PredictionVerdict(
+        labelled=labelled,
+        value_matches=value_matches,
+        provenance=provenance,
+        exact_evidence=exact_evidence,
+        supported=supported,
+        supported_same_page=supported_same_page,
+        support_known=support_known,
+        valid_scope=valid_scope,
+        other_scope=other_scope,
+        partial=partial,
+    )
 
 
 def ratio(numerator: int, denominator: int) -> dict[str, Any]:
@@ -162,64 +325,27 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
         adjudicated = 0
         for p in predictions.values():
             label = labels.get(p.key)
-            value_matches = label is not None and json.dumps(p.value, sort_keys=True) == json.dumps(
-                label.value, sort_keys=True
-            )
-            evidence = p.evidence
-            provenance = bool(evidence and evidence.source_type in {"official", "government"})
-            exact_evidence = bool(
-                label
-                and evidence
-                and not evidence.excerpt_truncated
-                and any(
-                    canonical_url(e.url) == canonical_url(evidence.url)
-                    and quote_supports(evidence.excerpt, e.excerpt)
-                    for e in label.evidence
-                )
-            )
-            # Owner decision 2026-09-23: another official page of the same
-            # university may support a label. The reviewer cites one page;
-            # universities publish the same deadline or fee on several, and a
-            # right value quoted from the fees page instead of the programme
-            # page was scored as unsupported. The strict reading stays beside
-            # it as ``claim_recall_same_page``.
-            sibling_evidence = bool(
-                label
-                and evidence
-                and not evidence.excerpt_truncated
-                and evidence.excerpt.strip()
-                and _domain(evidence.url) in {_domain(e.url) for e in label.evidence}
-            )
-            supported_same_page = provenance and (
-                p.supported is True
-                or (p.supported is None and exact_evidence and label is not None and value_matches)
-            )
-            supported = supported_same_page or (
-                provenance
-                and p.supported is None
-                and sibling_evidence
-                and label is not None
-                and value_matches
-            )
-            support_known = not provenance or p.supported is not None or exact_evidence
+            verdict = adjudicate(p, label)
+            supported = verdict.supported
+            support_known = verdict.support_known
             if support_known:
                 add("unsupported_claim_rate", int(not supported), 1)
             add("support_adjudication_rate", int(support_known), 1)
-            add("primary_source_rate", int(provenance), 1)
+            add("primary_source_rate", int(verdict.provenance), 1)
             add(
-                "verbatim_evidence_rate", int(exact_evidence), 1
-            ) if label and label.status == "known" else None
+                "verbatim_evidence_rate", int(verdict.exact_evidence), 1
+            ) if verdict.labelled else None
             if p.current is not None:
                 add("current_evidence_rate", int(p.current), 1)
             if p.conflict_visible is not None:
                 add("conflict_visibility_rate", int(p.conflict_visible), 1)
-            if label and label.status == "known":
-                valid_scope = bool(
-                    evidence and any(scope_matches(e.scope, evidence.scope) for e in label.evidence)
-                )
-                add("wrong_scope_claim_rate", int(not valid_scope), 1)
-                correct = value_matches and valid_scope and supported
-                if value_matches and valid_scope and supported_same_page:
+            if verdict.labelled:
+                add("other_scope_claim_rate", int(verdict.other_scope), 1)
+                add("partial_claim_rate", int(verdict.partial), 1)
+            if verdict.adjudicated:
+                add("wrong_scope_claim_rate", int(not verdict.valid_scope), 1)
+                correct = verdict.correct
+                if verdict.value_matches and verdict.valid_scope and verdict.supported_same_page:
                     correct_same_page_keys.add(p.key)
                 correct_predictions += int(correct)
                 adjudicated += 1
@@ -278,6 +404,8 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
         "claim_recall_same_page",
         "unsupported_claim_rate",
         "wrong_scope_claim_rate",
+        "other_scope_claim_rate",
+        "partial_claim_rate",
         "critical_field_coverage",
         "scholarship_discovery_recall",
         "scholarship_applicability_precision",

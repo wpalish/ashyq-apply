@@ -135,6 +135,75 @@
       ],
       "policy_guard": "Reads via Fetcher only; slot changes discovery order, never evidence rules.",
       "validation_artifact": "backend/evaluation/research/expert/data/runs.2026-09-27/er07.paired.txt"
+    },
+    {
+      "id": "ER-08",
+      "status": "tested",
+      "case_ids": [
+        "groningen",
+        "ntu",
+        "hku",
+        "ubc",
+        "vienna",
+        "delft",
+        "warsaw"
+      ],
+      "observation": "2026-10-04 expert traces (claude-opus-5, not blind: gold seen earlier in session): Groningen, NTU and HKU publish the English minimum, the international fee and the deadline on topic pages the requirements adapter never opens (it reads program.url + admissions_url only); one Exa query per topic ranked that page first among the institution's results. Paired run 37234751647 (off/on x2, 120 s / 60 reads, exa): NTU core questions 2/6 -> 4/6 in both on arms (IELTS 6.5, subscores 6.5, TOEFL 90 correct); one wrong value: admission_deadline 2026-10-15 is the application window start (window 15 Oct 2026 - 20 Jan 2027) read by the existing deadline extractor from the newly reached important-dates page. Groningen times out before a programme page is known in both arms (ER-08 needs program.url); HKU robots-unreachable from runners; UBC page budget; Vienna unchanged. No other regression. Re-pair 37237138067 (after the window-start fix, 7 cases off/on x2): NTU deadline now abstains and IELTS 6.5/subscores/TOEFL 90 stay; Delft gains TOEFL iBT 90 (correct, bsc-international-diploma admission page); UBC gains intake.open (Nov 15 2026 apply page); one new wrong value: NTU intake 'spring 2026' read from the end of an application window ('... to 19 March 2026') - fixed by a range guard in extract_intake_terms. Groningen/HKU/Vienna/Warsaw unchanged; no lost values. Combined run 37242447357 (ER-08+ER-09+ER-10 on, 7 cases off/on x2): Groningen off 0 answers/timeout -> on language English, deadline 2027-05-01, tuition EUR 19,800 non-EU (EUR 2,694 EU-scoped beside it); NTU IELTS 6.5/subscores/TOEFL 90; UBC timeout -> IELTS, Duolingo 125, faculty, intake open; Delft TOEFL 90; Warsaw timeout -> finishes; Vienna/HKU unchanged. One wrong value: Groningen intake 'spring 2026' from 'Beginning January 21, 2026, TOEFL score reports' - fixed (0b4d351, a dated event is not a term).",
+      "proposed_rule": "After a programme page is known, send one public query per topic (English requirements, international tuition, application deadline) restricted to the institution domain; read the first same-institution result outside excluded paths and other degree levels; read tuition tables on programme and fee pages.",
+      "integration_seam": "backend/app/adapters/requirements/web_requirements.py TOPIC_SEARCH, _find_topic_pages; live.py --topic-search",
+      "counterexample": "A date-range or multi-qualification page (NTU important dates) makes the existing deadline extractor take a window start for the deadline.",
+      "falsification": "Enable only if a paired run shows more correct core answers with no new wrong value; fix the date-range deadline reading first and re-run the pair.",
+      "evidence_artifacts": [
+        "GitHub Actions run 37234751647 (expert_paired, --topic-search)",
+        "expert rounds 37233683465, 37234315038, 37234319749, 37234446204, 37234324417, 37234450457",
+        "GitHub Actions run 37237138067 (expert_paired re-pair, --topic-search)",
+        "GitHub Actions run 37242447357 (expert_paired, all three flags)"
+      ],
+      "policy_guard": "Only the institution name enters a query; pages are read through the Fetcher with robots and official-domain checks; snippets never become facts.",
+      "validation_artifact": "backend/tests/test_topic_search.py"
+    },
+    {
+      "id": "ER-09",
+      "status": "tested",
+      "case_ids": [
+        "groningen"
+      ],
+      "observation": "2026-10-04 Groningen discovery read order (run 37234751647): publicSitemap-00001.xml is too_large, the navigation fallback reads /education/bachelor and takes brochures, open-day, campus-tour, webklassen and nederlandse-studenten pages as programme leads on URL structure alone; confirm and walker spend ~20 reads rejecting them and the wall clock ends before /bachelors/computing-science (which states deadline 1 May 2027 non-EU and fee EUR 19,800 non-EU 2027-28). Paired run 37237341528 (ER-09 alone): Groningen saved 3 reads but still timed out - the catalogue walker, not navigation, spent the budget; other cases unchanged.",
+      "proposed_rule": "When the applicant named a subject, the navigation fallback keeps a programme-page lead only if its URL or its link text names that subject (strong aliases included); catalogue-shaped links are still followed.",
+      "integration_seam": "backend/app/adapters/discovery/live_discovery.py NAVIGATION_FIELD_LEADS in _navigation_fallback; live.py --navigation-field-leads",
+      "counterexample": "A programme linked under an opaque URL and a label that is not the subject's name (e.g. a faculty brand name) would be dropped from navigation; the catalogue walker still reads it.",
+      "falsification": "Enable only if a paired run reaches the Groningen programme page within budget with no lost programme page on the other cases.",
+      "evidence_artifacts": [
+        "GitHub Actions run 37234751647 groningen-off logs (reads #4-#39)",
+        "GitHub Actions run 37237341528 (expert_paired, --navigation-field-leads)"
+      ],
+      "policy_guard": "Fewer reads, no new sources; nothing is read that the fallback would not have read.",
+      "validation_artifact": "backend/tests/test_navigation_field_leads.py"
+    },
+    {
+      "id": "ER-10",
+      "status": "tested",
+      "case_ids": [
+        "groningen",
+        "ntu",
+        "hku",
+        "ubc",
+        "vienna",
+        "delft",
+        "warsaw"
+      ],
+      "observation": "Paired run 37237341528 showed the catalogue walker reading 16 /education/bachelor/* pages (open day, brochures, campus tour) before /bachelors on Groningen. Paired run 37240128388 (off/on x2, --walker-subject-cap --navigation-field-leads, exa): Groningen off = timeout, 0 answers; on = /bachelors/computing-science found in 60 reads, deadline 2027-05-01 (correct: non-EU deadline 1 May 2027 on the programme page) and language English. Warsaw off = timeout; on = S1-INF programme found in 56 reads. UBC 63-65 -> 47-49 reads and no timeout, Vienna 65 -> 49, Delft 41 -> 29, all with identical answers. NTU and HKU unchanged. No lost or wrong value. Combined run 37242447357 (ER-08+ER-09+ER-10 on, 7 cases off/on x2): Groningen off 0 answers/timeout -> on language English, deadline 2027-05-01, tuition EUR 19,800 non-EU (EUR 2,694 EU-scoped beside it); NTU IELTS 6.5/subscores/TOEFL 90; UBC timeout -> IELTS, Duolingo 125, faculty, intake open; Delft TOEFL 90; Warsaw timeout -> finishes; Vienna/HKU unchanged. One wrong value: Groningen intake 'spring 2026' from 'Beginning January 21, 2026, TOEFL score reports' - fixed (0b4d351, a dated event is not a term).",
+      "proposed_rule": "When the applicant named a subject, a catalogue walk reads every lead that names the subject but at most three that do not, listing pages (catalogue-shaped URL, or a label ending in a plural listing word such as programmes or opleidingen) first.",
+      "integration_seam": "backend/app/adapters/discovery/catalog_walker.py WALKER_SIGNAL_LESS_CAP, _names_a_list; live.py --walker-subject-cap",
+      "counterexample": "A catalogue whose programme links carry neither the subject's name nor a strong alias in URL or label (opaque codes) relies on its three signal-less reads and on search.",
+      "falsification": "Enable by default only with owner approval after the golden demo is checked; a case that loses a programme page or an answer rejects it.",
+      "evidence_artifacts": [
+        "GitHub Actions run 37240128388 (expert_paired, --walker-subject-cap --navigation-field-leads)",
+        "GitHub Actions run 37237341528",
+        "GitHub Actions run 37242447357 (expert_paired, all three flags)"
+      ],
+      "policy_guard": "Fewer reads, no new sources; nothing is read that the walker would not have read.",
+      "validation_artifact": "backend/tests/test_catalog_walker_subject_cap.py"
     }
   ]
 }

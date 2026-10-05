@@ -9,6 +9,7 @@ SQLAlchemy==2.0.36
 alembic==1.14.0
 psycopg[binary]==3.3.4
 httpx==0.28.1
+tldextract==5.3.2         # bundled PSL, including private hosted domains; no runtime fetch
 beautifulsoup4==4.12.3
 lxml==6.1.0
 pypdf>=6.15.0              # 20 advisories incl. malformed-PDF DoS in our parse path

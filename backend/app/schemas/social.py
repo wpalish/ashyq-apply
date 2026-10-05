@@ -89,6 +89,9 @@ class PersonCard(BaseModel):
     #: writing to them is possible at all.
     dm_policy: str
     bio: str
+    # Present on a viewed profile: evaluated for the current viewer, including
+    # shared public threads and an existing private conversation.
+    can_message: bool | None = None
 
 
 class MyProfileView(BaseModel):

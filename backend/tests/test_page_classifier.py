@@ -5,6 +5,54 @@ from __future__ import annotations
 from app.adapters.page_classifier import PageType, classify_page
 
 
+class TestLabelledTeachingLanguage:
+    def test_warsaws_language_field_is_read(self):
+        from app.adapters.page_classifier import _language
+
+        assert _language("full-time, 3-year studies\nLanguage: Polish\nJump to:") == "polish"
+
+    def test_viennas_label_and_value_may_be_on_separate_lines(self):
+        from app.adapters.page_classifier import _language
+
+        assert _language("Language\n\nGerman\n\nTest language\nEnglish") == "german"
+
+    def test_a_foreign_language_exam_is_not_the_teaching_language(self):
+        from app.adapters.page_classifier import _language
+
+        assert _language("Foreign language exam (B2)\nPolish\nGerman proficiency: A2") is None
+
+    def test_conflicting_language_fields_are_not_reduced_to_one(self):
+        from app.adapters.page_classifier import _language
+
+        assert _language("Language: Polish\nLanguage: English") is None
+
+
+class TestContinuingCourses:
+    def test_topic_courses_are_not_a_degree_named_in_their_enrolment_rules(self):
+        page = classify_page(
+            url="https://uni.edu/undergraduate-students/topic-courses/computer-science-topic-courses",
+            html="<h1>Computer Science Topic Courses</h1><p>Fall 2026. "
+            "Senior undergraduate course. Priority for Computer Science Major students.</p>",
+        )
+        assert page.page_type is PageType.IRRELEVANT
+
+    def test_a_teacher_course_is_not_a_degree_its_audience_holds(self):
+        page = classify_page(
+            url="https://uni.edu/lifelong/computer-science-courses-teachers-informatics/id",
+            html="<h1>Computer Science</h1><p>Courses for teachers of informatics. "
+            "Applicants hold a bachelor degree. Computer Science topics.</p>",
+        )
+        assert page.page_type is PageType.IRRELEVANT
+
+    def test_a_degree_is_preserved_when_it_mentions_a_teacher_course_in_the_body(self):
+        page = classify_page(
+            url="https://uni.edu/bachelors/computer-science",
+            html="<h1>BSc Computer Science</h1><p>A three-year degree. "
+            "We also offer courses for teachers.</p>",
+        )
+        assert page.page_type is PageType.PROGRAM_DETAIL
+
+
 class TestADegreeWordIsNotAProgramme:
     """V2-29 — headings a live run actually claimed a programme from.
 

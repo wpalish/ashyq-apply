@@ -20,6 +20,7 @@ import { ResultCard } from '@/components/ResultCard';
 import { ResultDetail } from '@/components/ResultDetail';
 import { LazyShareSheet } from '@/components/LazyShareSheet';
 import { Triage } from '@/components/Triage';
+import { UniversityCatalogue } from '@/components/UniversityCatalogue';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, STATUS_LABEL, admissionsFitTone, bucketTone, date, eligibilityTone,
@@ -45,6 +46,14 @@ const SET_ASIDE_HINT: Record<string, string> = {
 //: The four reasons applicants actually give, as one-click chips. Free text
 //: stays available because these will never cover every case.
 const REJECTION_REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
+
+type AnswerTab = 'all' | 'kept' | 'maybe' | 'undecided';
+const TABS: { id: AnswerTab; label: string; decision?: UserDecision }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'kept', label: 'Kept', decision: 'approved' },
+  { id: 'maybe', label: 'Maybe', decision: 'maybe' },
+  { id: 'undecided', label: 'To decide', decision: 'undecided' },
+];
 
 const SORT_LABEL: Record<SortKey, string> = {
   key: 'Match, discounted by what is unverified',
@@ -97,7 +106,12 @@ function searchSummary(profile: unknown): string | null {
   return [fields.join(', ') || 'any subject', where, budget].join(' · ');
 }
 
-export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } = {}) {
+export function ShortlistScreen({ onEditSearch, onStart, onProgress }: {
+  onEditSearch?: () => void;
+  /** The local catalogue can start a research run or open the one running. */
+  onStart?: () => void;
+  onProgress?: () => void;
+} = {}) {
   const { results, summary, shortlist, decide, saveNotes, savedProfile, capabilities } = useStore();
   const rate = capabilities?.currency
     ? { date: capabilities.currency.rate_date, source: capabilities.currency.rate_source }
@@ -113,6 +127,10 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
   };
   const [expanded, setExpanded] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>('key');
+  // Find's search box and answer tabs (Unimatch's, with the concept's tabs):
+  // both only narrow what is shown; the saved results are untouched.
+  const [query, setQuery] = useState('');
+  const [tab, setTab] = useState<AnswerTab>('all');
   const [country, setCountry] = useState('');
   const [region, setRegionState] = useState<Region | ''>('');
   // A cluster tapped on the globe: where to look, and how close. A region
@@ -149,9 +167,13 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
   );
 
   const rows = useMemo(() => {
+    const needle = query.trim().toLocaleLowerCase();
+    const tabDecision = TABS.find((t) => t.id === tab)?.decision;
     const filtered = results.filter(
       (r) =>
         (!region || regionOf(r.country) === region) &&
+        (!needle || `${r.university} ${r.program} ${r.country} ${r.city}`.toLocaleLowerCase().includes(needle)) &&
+        (tabDecision === undefined || r.user_decision === tabDecision) &&
         (!country || r.country === country) &&
         (!eligibility || r.eligibility === eligibility) &&
         (!funding || r.best_funding_classification === funding) &&
@@ -171,7 +193,7 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
       const key = (r: ProgramResult) => r.ranking?.sort_key ?? r.preference_score?.total ?? 0;
       return key(b) - key(a) || a.id.localeCompare(b.id);
     });
-  }, [results, region, country, eligibility, funding, hideRejected, sort]);
+  }, [results, query, tab, region, country, eligibility, funding, hideRejected, sort]);
 
   // A row with no ranking is one assessed under v1; it still belongs in the
   // list rather than in a set-aside section it was never scored for.
@@ -181,7 +203,13 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
   const globeZoom = globeCloser?.zoom ?? (region && REGION_VIEW[region] ? REGION_VIEW[region].zoom : 1);
 
   if (results.length === 0) {
-    return <Empty title="No results yet">Run the research first.</Empty>;
+    return (
+      <div className="find-page">
+        <div className="screen__head"><p className="screen__eyebrow">FIND YOUR PATH</p><h1 className="screen__title">Find your best <span className="find-yellow">matches.</span></h1><p className="screen__lede">Research begins with your profile and preferences.</p></div>
+        <div className="find-empty"><Empty title="No results yet">Start research to find programmes supported by available sources.</Empty>{onStart && <button className="btn btn--primary" type="button" onClick={onStart}>Start research →</button>}</div>
+        <UniversityCatalogue onStart={onStart} onProgress={onProgress} />
+      </div>
+    );
   }
 
   const ceiling = ceilingFrom(savedProfile);
@@ -563,7 +591,7 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
         <p className="screen__eyebrow">
           {results.length} programme{results.length === 1 ? '' : 's'} · {countries.length} countr{countries.length === 1 ? 'y' : 'ies'}
         </p>
-        <h1 className="screen__title" id="shortlist-title" tabIndex={-1}>The shortlist</h1>
+        <h1 className="screen__title" id="shortlist-title" tabIndex={-1}>Find your best matches</h1>
         <p className="screen__lede">
           <strong>Requirements</strong>, your <strong>profile</strong> and <strong>money</strong>:
           three separate answers per programme. None of them predicts a decision.
@@ -607,6 +635,43 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
               from real university pages. Every source below is a <code>fixture://</code> address.
             </div>
           </Notice>
+        )}
+
+        <div className="find-toolbar">
+          <label className="find-search">
+            <span className="visually-hidden">Search universities, programmes or countries</span>
+            <input
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search universities, programmes or countries…"
+              data-testid="find-search"
+            />
+          </label>
+          <div className="find-tabs" role="group" aria-label="Show">
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                aria-pressed={tab === t.id}
+                onClick={() => setTab(t.id)}
+                data-testid={`find-tab-${t.id}`}
+              >
+                {t.label} <span className="find-tabs__n">{t.decision ? results.filter((r) => r.user_decision === t.decision).length : results.length}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {rows.length === 0 && (
+          <div className="find-empty" data-testid="find-empty">
+            <Empty title="Nothing matches these filters yet.">Try another search or clear the filters.</Empty>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => { setQuery(''); setTab('all'); setRegion(''); setCountry(''); setEligibility(''); setFunding(''); setHideRejected(false); }}
+            >Clear filters</button>
+          </div>
         )}
 
         {/* Concept 07's region chips: counted from every result, so a chip
@@ -878,7 +943,6 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
           );
         })}
 
-
         {view === 'table' && (
           <p className="xs faint">
             Showing {rows.length} of {results.length}. Rejected rows are kept with their reason so the
@@ -920,6 +984,13 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
             </button>
           </div>
         )}
+
+        {/* Unimatch's local catalogue: universities beyond this run, read from the
+            bundled list, with a way to start research on them. */}
+        <details className="catalogue-expand" data-testid="catalogue-expand">
+          <summary>Explore more universities from the local catalogue</summary>
+          <UniversityCatalogue onStart={onStart} onProgress={onProgress} />
+        </details>
       </div>
       {shareFor && (
         <LazyShareSheet

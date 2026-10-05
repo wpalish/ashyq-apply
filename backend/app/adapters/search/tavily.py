@@ -103,7 +103,9 @@ class TavilySearchProvider:
 
         if response.status_code != httpx.codes.OK:
             # The body is external text and may echo the request; not repeated.
-            raise SearchUnavailable(f"Tavily answered {response.status_code}")
+            raise SearchUnavailable(
+                f"Tavily answered {response.status_code}", http_status=response.status_code
+            )
         if len(response.content) > MAX_RESPONSE_BYTES:
             raise SearchUnavailable(
                 f"Tavily returned {len(response.content)} bytes, over the {MAX_RESPONSE_BYTES} cap"

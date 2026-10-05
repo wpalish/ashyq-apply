@@ -1,0 +1,227 @@
+{
+  "schema_version": "1",
+  "case_id": "ntu",
+  "packet_sha256": "bf1ec95d71d7a3d6d70cba0ee1ac2db93d87693e8dbaf07222ef3902712e54ba",
+  "baseline_pipeline_sha": "9421884465cbc986ce0ab017102126731fe2589d",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T03:56:26.083269+00:00",
+  "ended_at": "2026-10-04T04:03:04.821997+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T03:57:02.159304+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ntu-001.json",
+      "raw_log_sha256": "12d12296b81d782ffb0da1b23ec76883c3da7be5b2744e40dbb32d73caba36a9",
+      "elapsed_ms": 2059,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 10828,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Open the exact Computer Science programme candidate to verify its identity and admissions links.",
+      "observed_from_step": null,
+      "action": "fetcher: https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+      "stage": "page_understanding",
+      "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+      "final_url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science"
+    },
+    {
+      "at": "2026-10-04T03:57:53.589321+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.ntu.edu.sg/admissions/ug"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ntu-002.json",
+      "raw_log_sha256": "3b3ef13c47509479490cd1849b833eb18e21b800fc9c7a135020d840fb207fd3",
+      "elapsed_ms": 2924,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 22269,
+      "search_queries_cumulative": 0,
+      "step": 2,
+      "observed_before": "The programme page explicitly describes the bachelor Computer Science degree. Open undergraduate admissions for qualification and funding routes.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://www.ntu.edu.sg/admissions/ug",
+      "stage": "page_understanding",
+      "url": "https://www.ntu.edu.sg/admissions/ug",
+      "final_url": "https://www.ntu.edu.sg/admissions/undergraduate"
+    },
+    {
+      "at": "2026-10-04T03:58:51.467726+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements/international-qualifications/other-international-qualifications"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ntu-003.json",
+      "raw_log_sha256": "00b1cfb0a1415c499f342b4aa5551570f2c6c9221222e5404d2e6dd2fd931cf2",
+      "elapsed_ms": 1402,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 30118,
+      "search_queries_cumulative": 0,
+      "step": 3,
+      "observed_before": "Undergraduate admissions links to Other International Qualifications, the relevant route to check Kazakhstan credentials and English requirements.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements/international-qualifications/other-international-qualifications",
+      "stage": "page_understanding",
+      "url": "https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements/international-qualifications/other-international-qualifications",
+      "final_url": "https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements/international-qualifications/other-international-qualifications"
+    },
+    {
+      "at": "2026-10-04T04:00:06.341401+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.ntu.edu.sg/undergraduate/important-dates"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ntu-004.json",
+      "raw_log_sha256": "072d1318b4426cf7725aadb27766d81795a6fabc8cc090d59bae09e985d0dc90",
+      "elapsed_ms": 2842,
+      "fetcher_calls_cumulative": 4,
+      "elapsed_ms_cumulative": 50254,
+      "search_queries_cumulative": 0,
+      "step": 4,
+      "observed_before": "The qualifications page gives Kazakhstan/NIS distinctions and conditional English minima, but no 2027 deadline. Check the linked important dates.",
+      "observed_from_step": 3,
+      "action": "fetcher: https://www.ntu.edu.sg/undergraduate/important-dates",
+      "stage": "page_understanding",
+      "url": "https://www.ntu.edu.sg/undergraduate/important-dates",
+      "final_url": "https://www.ntu.edu.sg/admissions/undergraduate/important-links/important-dates"
+    },
+    {
+      "at": "2026-10-04T04:01:10.468586+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.ntu.edu.sg/admissions/undergraduate/fees-and-funding/tuition-fees"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ntu-005.json",
+      "raw_log_sha256": "edb12eaa37e5102a2a9de2b452f0c57aae35fadb55951fa4907e84788e5578ee",
+      "elapsed_ms": 1211,
+      "fetcher_calls_cumulative": 5,
+      "elapsed_ms_cumulative": 61576,
+      "search_queries_cumulative": 0,
+      "step": 5,
+      "observed_before": "The dates page lists 20 January 2027 for other international qualifications. Check tuition for the requested academic year.",
+      "observed_from_step": 4,
+      "action": "fetcher: https://www.ntu.edu.sg/admissions/undergraduate/fees-and-funding/tuition-fees",
+      "stage": "page_understanding",
+      "url": "https://www.ntu.edu.sg/admissions/undergraduate/fees-and-funding/tuition-fees",
+      "final_url": "https://www.ntu.edu.sg/admissions/undergraduate/fees-and-funding/tuition-fees"
+    },
+    {
+      "at": "2026-10-04T04:02:04.423819+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "ntu-006.json",
+      "raw_log_sha256": "2d0cbd095cbc0e732623f9138cb7b56929e4b2be902925a0a6a5fae75c5384c4",
+      "elapsed_ms": 1447,
+      "fetcher_calls_cumulative": 6,
+      "elapsed_ms_cumulative": 73935,
+      "search_queries_cumulative": 0,
+      "step": 6,
+      "observed_before": "The tuition table is for 2026/2027, so it cannot settle fall 2027 fees. Open the undergraduate scholarship listing to identify an award and its eligibility.",
+      "observed_from_step": 5,
+      "action": "fetcher: https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards",
+      "stage": "page_understanding",
+      "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards",
+      "final_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

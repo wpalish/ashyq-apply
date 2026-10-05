@@ -310,12 +310,12 @@ def to_xlsx(results: list[ProgramResult], meta: dict | None = None) -> bytes:
                     neutralize(r.university),
                     neutralize(r.program),
                     claim.claim_type.value,
-                    neutralize(str(claim.normalized_value)[:200]),
+                    neutralize(str(claim.normalized_value)),
                     claim.status.value,
                     claim.source_specificity.value,
                     claim.accessed_at.isoformat(),
                     neutralize(claim.source_url),
-                    neutralize(claim.original_text_excerpt[:400]),
+                    neutralize(claim.original_text_excerpt),
                 ]
             )
     for col, width in zip("ABCDEFGHI", (28, 30, 26, 30, 22, 22, 26, 52, 70), strict=False):

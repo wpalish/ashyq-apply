@@ -27,14 +27,16 @@ const CARD_OVER = 48;
 
 /**
  * The globe takes what the screen has left once the card and the three
- * answers are above the tab bar (defect I27): on a 390 x 844 phone the card
- * and answers end about 606 px down, the tab bar starts 64 px from the
- * bottom, and a long programme name or caveat adds up to 40 px. What is left
- * is the globe's visible band, up to 152 px; under 72 px a route cannot be
- * read, so a short phone keeps the card alone.
+ * answers are above the tab bar (defect I27). Measured in Unimatch's shell on
+ * a 412 x 839 phone: the header is 117 px (brand, then the applicant), the
+ * card and answers need about 520 px below it, the bottom navigation is 67 px,
+ * and a long programme name or caveat adds up to 40 px - 786 px before any
+ * globe. What is left is the globe's visible band, up to 152 px; under 72 px
+ * a route cannot be read, so a short phone keeps the card alone.
  */
+export const GLOBE_FLOOR = 786;
 export function globeHeightFor(viewportHeight: number): number {
-  const band = Math.min(152, viewportHeight - 722);
+  const band = Math.min(152, viewportHeight - GLOBE_FLOOR);
   return band < 72 ? 0 : band + CARD_OVER;
 }
 

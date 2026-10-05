@@ -7,7 +7,7 @@ import json
 import httpx
 import pytest
 
-from app.adapters.search.base import SearchUnavailable
+from app.adapters.search.base import SearchUnavailable, search_failure_diagnostic
 from app.adapters.search.serper import (
     MAX_RESPONSE_BYTES,
     MAX_RESULTS_PER_QUERY,
@@ -78,11 +78,23 @@ async def test_no_organic_block_means_no_results():
     assert response.results == ()
 
 
-@pytest.mark.parametrize("status", [401, 402, 422, 429, 500])
+@pytest.mark.parametrize("status", [400, 401, 402, 422, 429, 500])
 async def test_any_non_200_is_unavailable_without_retry(status):
     handler = answering(status=status, body={"error": "no"})
-    with pytest.raises(SearchUnavailable, match=str(status)):
+    with pytest.raises(SearchUnavailable, match=str(status)) as caught:
         await provider(handler).search(query="q")
+    assert caught.value.http_status == status
+    assert len(handler.calls) == 1
+
+
+async def test_failure_diagnostics_keep_status_without_echoing_vendor_body_or_key():
+    handler = answering(status=400, body={"error": "test-key-not-a-real-one private query"})
+    with pytest.raises(SearchUnavailable) as caught:
+        await provider(handler).search(query="public programme query")
+    assert str(caught.value) == "Serper answered 400"
+    assert search_failure_diagnostic("serper", caught.value) == (
+        "Search service unavailable (serper; HTTP 400)."
+    )
     assert len(handler.calls) == 1
 
 

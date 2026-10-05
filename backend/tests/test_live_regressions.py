@@ -1198,6 +1198,38 @@ class TestDegreeApplicabilityOnRealShapes:
         )
         assert assess_degree_applicability(neutral, "bachelor").verdict == "unknown"
 
+    def test_prior_study_grades_do_not_make_a_graduate_award_undergraduate(self):
+        from app.adapters.applicability import assess_degree_applicability
+
+        text = (
+            "Eligible candidates must be enrolled in a Master's program. "
+            "Undergraduate degree must be in engineering. "
+            "GPA equivalent to 3.25/4.0 required for undergraduate studies."
+        )
+        assert assess_degree_applicability(text, "bachelor").verdict == "no"
+        assert assess_degree_applicability(text, "master").verdict == "yes"
+
+    def test_a_prior_diploma_score_is_not_the_funded_degree(self):
+        from app.adapters.applicability import assess_degree_applicability
+
+        text = (
+            "For training in Master's and Doctoral programmes the average score of the "
+            "Bachelor's diploma must correspond to 3.0 out of 4.0."
+        )
+        assert assess_degree_applicability(text, "bachelor").verdict == "no"
+        assert assess_degree_applicability(text, "master").verdict == "yes"
+
+    def test_line_separated_qualification_and_grade_requirements_are_not_award_levels(self):
+        from app.adapters.applicability import assess_degree_applicability
+
+        text = (
+            "Must be enrolled or accepted into a Master's or higher-level program\n"
+            "Undergraduate degree (Bachelor’s) must be in engineering\n"
+            "GPA equivalent to 3.25/4.0 required for undergraduate studies"
+        )
+        assert assess_degree_applicability(text, "bachelor").verdict == "no"
+        assert assess_degree_applicability(text, "master").verdict == "yes"
+
 
 # ---------------------------------------------------------------------------
 # T27 / L01 + audit FPs. RED at baseline 28d729c. Three audit false positives,

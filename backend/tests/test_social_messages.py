@@ -122,6 +122,7 @@ class TestWhoMayWriteFirst:
         client.post("/api/auth/logout")
         join_as(client, "stranger")
 
+        assert client.get(f"/api/social/people/{listener}").json()["can_message"] is False
         blocked = client.post(f"/api/social/messages/{listener}", json={"body": "Привет"})
         assert blocked.status_code == 403
         assert "answered" in blocked.json()["detail"]
@@ -135,6 +136,7 @@ class TestWhoMayWriteFirst:
 
         # The person who answered may now write privately...
         sign_in(client, "answerer")
+        assert client.get(f"/api/social/people/{asker}").json()["can_message"] is True
         assert (
             client.post(f"/api/social/messages/{asker}", json={"body": "Могу помочь"}).status_code
             == 201
@@ -176,6 +178,7 @@ class TestWhoMayWriteFirst:
 
         refused = client.post(f"/api/social/messages/{quiet_id}", json={"body": "Ну пожалуйста"})
         assert refused.status_code == 403
+        assert client.get(f"/api/social/people/{quiet_id}").json()["can_message"] is False
 
     def test_the_policy_only_guards_the_first_message(self, client):
         """Closing your inbox does not silence a conversation you already have."""
@@ -204,6 +207,7 @@ class TestWhoMayWriteFirst:
         )
         client.post("/api/auth/logout")
         sign_in(client, "guest2")
+        assert client.get(f"/api/social/people/{host}").json()["can_message"] is True
         assert client.post(f"/api/social/messages/{host}", json={"body": "И я"}).status_code == 201
 
     def test_a_policy_the_product_does_not_define_is_refused(self, client):

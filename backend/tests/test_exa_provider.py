@@ -225,7 +225,7 @@ class TestConfiguration:
         monkeypatch.setenv("UNIMATCH_SEARCH_PROVIDER", "exa")
         monkeypatch.setenv("UNIMATCH_EXA_API_KEY", "k")
         try:
-            assert isinstance(get_search_provider(), ExaSearchProvider)
+            assert isinstance(get_search_provider().inner, ExaSearchProvider)
         finally:
             get_settings.cache_clear()
 

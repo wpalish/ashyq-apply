@@ -221,6 +221,75 @@ class TestReextractSupersedesAndAppendsAtomically:
     lastmod_seen and completes the job. A fenced or crashed attempt writes
     neither side."""
 
+    def test_requirements_refresh_preserves_document_evidence_it_does_not_read(
+        self, pg_worker_env, pg_factory, settings, profile, monkeypatch
+    ):
+        from tests.conftest import make_claim
+
+        url = "https://example.edu/programme"
+        ScriptedFetcher(
+            {
+                url: FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.OK,
+                    status_code=200,
+                    text=fake_page_body(),
+                    content_type="text/html",
+                    content_hash="ab" * 32,
+                )
+            }
+        ).install(monkeypatch)
+        with pg_factory() as session:
+            page = _seed_page(session, url, content_hash="cd" * 32)
+            run, result_id, requirements = _seed_run_result_claims(session, page, profile)
+            requirement_id = requirements[0].id
+            original_documents = {}
+            for kind, value in (
+                ("required_document", "Full academic transcript"),
+                ("essay_prompt", {"document": "Personal statement", "word_limit": 500}),
+                ("recommendation_requirement", "Academic reference"),
+                (
+                    "document_by_completion",
+                    {
+                        "document": "Full academic transcript",
+                        "status": "not_completed",
+                        "form": "school_course_list",
+                    },
+                ),
+            ):
+                claim = make_claim(
+                    kind, value, url=url, accessed_at=datetime.now(UTC) - timedelta(days=2)
+                )
+                document = ClaimRow(
+                    run_id=run.id,
+                    result_id=result_id,
+                    claim_type=kind,
+                    status=claim.status.value,
+                    source_url=url,
+                    source_specificity=claim.source_specificity.value,
+                    accessed_at=claim.accessed_at,
+                    payload=claim.model_dump(mode="json"),
+                    source_page_id=page.id,
+                )
+                session.add(document)
+                session.flush()
+                original_documents[document.id] = (dict(document.payload), document.accessed_at)
+            job_id = _enqueue_reextract(session, run, page, result_id)
+            session.commit()
+
+        assert _drain(settings) == 1
+        with pg_factory() as check:
+            assert check.get(Job, job_id).status == JobStatus.SUCCEEDED.value
+            for claim_id, (payload, read_at) in original_documents.items():
+                document = check.get(ClaimRow, claim_id)
+                assert document.status == "VERIFIED_CURRENT"
+                assert document.payload == payload
+                assert document.accessed_at == read_at, "unread proof must not gain a fresh date"
+                assert document.superseded_at is None and document.superseded_by_id is None
+            assert check.get(ClaimRow, requirement_id).status == "SUPERSEDED", (
+                "the requirements reader must still record real changes it can verify"
+            )
+
     def test_a_forced_page_change_supersedes_old_and_appends_new_in_one_commit(
         self, pg_worker_env, pg_factory, settings, profile, monkeypatch
     ):

@@ -2,6 +2,85 @@
 
 This package is offline evaluation tooling. It changes no production discovery or claim decision. It turns a failed bounded run into a blinded task for an expert, validates a recorded-action trace, and keeps scored diagnosis separate from the expert's workspace.
 
+## Catalogue audit protocol (2026-10-04)
+
+`prepare-catalogue` accepts any of the501 stable public catalogue IDs and a
+same-ID capture. It uses the production importer in a disposable in-memory
+database, exports no seed admission hints/curated research routes, and never
+opens the application database. `prepare` retains its ten-case allowlist.
+
+```sh
+python -m evaluation.research.expert split-catalogue --out artifacts/split.json
+python -m evaluation.research.expert prepare-catalogue \
+  --capture artifacts/capture.json --case STABLE_CATALOGUE_ID \
+  --out artifacts/public-packet.json
+```
+
+The committed `data/catalogue_split.2026-10-04.json` freezes350DEV/150HELDOUT
+seed identities, reserving the ten previous public pilot identities in DEV.
+The additional501st curated identity is preparable but outside the500 split.
+Do not regenerate the allocation to improve results or inspect HELDOUT facts
+before the final evaluation. The public profile is KZ/bachelor/Computer Science/
+fall2027, with no private scores, contact details or documents.
+
+Q0–Q6 findings are optional for old traces and complete when present. Their
+statuses are found/not_published/inaccessible/unresolved. A missing answer is
+unresolved; not_published needs explicit source proof of absence. Found answers
+link proposals to saved official text and exact DocumentIR block/section or
+PDF page. A separate `TraceAdjudication` assigns an observed miss cause after
+submission, with a submitted-trace hash and supporting controller fields.
+Structural validation leaves all proposals unreviewed.
+
+Fresh plans opt in with `strict_budget: true`, `official_domains`,
+`max_calls:60`, `max_ms:120000`, `max_search_queries:6`, and an explicit
+`budget_origin`. Strict mode permits exa/exa_mcp only, enforces caps before
+I/O, captures response bytes/hashes, suppresses off-policy final URLs and
+stops additional searches after provider429. `resume_summary` verifies every
+old raw-log hash and binds prefix/provider/domain/budget/origin/counter floors.
+The workflow `resume_run_id` restores those prior logs from its saved artifact;
+it does not replay old requests. Model decision time is added to `start_ms`.
+
+`independent_full_budget` gives an expert a separate fresh bounded run.
+`baseline_intervention` continues already spent baseline counters. Never report
+the former as proof of recovery within the baseline's remaining budget.
+
+For an equal-budget baseline, use:
+
+```sh
+python -m evaluation.research.live --live --out artifacts/capture \
+  --strict-expert-budget --search-provider exa_mcp \
+  --max-pages 60 --seconds-per-case 120
+```
+
+This opt-in
+evaluation wrapper leaves the app unchanged, shares cold get/query caps across
+discovery/funding, and stops the cohort after provider429. Active time begins
+at `capture_one` entry and includes setup/stages; a separate15s parent process
+reserve permits startup/cancellation/output. Report app revision, harness
+revision and both time bases. The legacy harness remains unchanged.
+
+`controller.expert_view` returns bounded text, DocumentIR blocks and official
+links from saved bytes; offsets allow further pure views without refetching.
+For PDF, `page=N` selects the exact page within the first40; metadata contains
+page hashes/text lengths, not text dumps. Empty/scanned/invalid PDFs remain
+unresolved. Pure parsing cannot add unsupported OCR/browser capabilities.
+
+An ordinary collaboration subagent shares the repository and is not blind.
+`blind_cli.Isolation` wraps an ephemeral tool-free Codex selector in a macOS
+OS access policy sealing repository/gold/history/memory/other-expert roots.
+The subprocess cwd must be its separate allowed workspace. Prove allowed and
+denied reads using existing harmless sentinels, then validate a real neutral
+model turn. Preserve raw event streams and reject tools/unknown events,
+unfinished turns and stale/mismatched output files. Only the precise known
+startup diagnostic about disabled code-mode host is allowed before the turn.
+Copy only the public packet/context/controller views into the selector prompt.
+
+The first gate is ten fresh pilot cases with at most three selectors active.
+Finalize and validate traces before opening sealed gold, then report expert vs
+algorithm,62-label recall/precision, separate CORE completeness and miss causes.
+Publish that pilot report before any50-case batches. General rules need20DEV
+observations and equal-budget ABBA evaluation before default promotion.
+
 ## Existing evidence and its limits
 
 - `data/ground_truth.reviewed.json`: signed development corpus, 62 known labels across ten cases. It is sealed during expert navigation.

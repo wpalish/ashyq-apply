@@ -33,3 +33,20 @@ def test_a_listing_naming_only_another_field_confirms_nothing() -> None:
         "https://x.edu/cds", LISTING, WHEN, "mechanical engineering", "bachelor"
     )
     assert ("programme.exists", True) not in gated
+
+
+def test_the_oracle_reads_the_stated_teaching_language_as_the_adapter_does():
+    from datetime import UTC, datetime
+
+    from evaluation.research.oracle import _claims_on
+
+    html = (
+        "<html><head><title>Computer Science (BSc) | University</title></head><body>"
+        "<h1>Bachelor of Science in Computer Science</h1>"
+        "<p>Language of instruction: German. Duration: 6 semesters.</p></body></html>"
+    )
+    _type, gated, ungated = _claims_on(
+        "https://www.example.ac.at/en/computer-science", html, datetime(2026, 9, 28, tzinfo=UTC)
+    )
+    assert ("programme.language", "German") in gated
+    assert ("programme.exists", True) in gated

@@ -73,7 +73,7 @@ describe('PaymentModal', () => {
     expect(document.body.textContent).not.toContain('87071234455');
   });
 
-  it('shows the QR payload when QR is chosen', async () => {
+  it('renders the payment payload as a scannable QR when QR is chosen', async () => {
     vi.spyOn(api, 'openOrder').mockResolvedValue({
       ...order,
       method: 'qr',
@@ -85,7 +85,9 @@ describe('PaymentModal', () => {
     open();
     fireEvent.click(screen.getByRole('button', { name: 'QR' }));
     fireEvent.click(screen.getByRole('button', { name: /^Оплатить/ }));
-    await waitFor(() => expect(screen.getByText(/pay.kaspi.test/)).toBeInTheDocument());
+    const qr = await screen.findByRole('img', { name: 'QR-код для оплаты в Kaspi' });
+    expect(qr.querySelector('svg')).toBeInTheDocument();
+    expect(document.body.textContent).not.toContain('pay.kaspi.test');
   });
 
   it('reports a failure to open the order instead of spinning', async () => {

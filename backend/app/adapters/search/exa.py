@@ -123,7 +123,9 @@ class ExaSearchProvider:
             # appears in it, but it is not echoed either — a provider message
             # is external text and belongs in a log, not in an exception that
             # may reach a user.
-            raise SearchUnavailable(f"Exa answered {response.status_code}")
+            raise SearchUnavailable(
+                f"Exa answered {response.status_code}", http_status=response.status_code
+            )
 
         if len(response.content) > MAX_RESPONSE_BYTES:
             raise SearchUnavailable(

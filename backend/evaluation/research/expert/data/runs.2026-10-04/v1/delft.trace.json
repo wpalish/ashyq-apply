@@ -1,0 +1,296 @@
+{
+  "schema_version": "1",
+  "case_id": "delft",
+  "packet_sha256": "35ac1f3e8bce8cd791f9bddaaad313a7d37061799ebdf9ec2b369aacea8c7942",
+  "baseline_pipeline_sha": "e5988bd7733e9be9ea0da85ca17692bd0fbb7da0",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T02:09:30.629283+00:00",
+  "ended_at": "2026-10-04T02:12:53.216245+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T02:10:17.990780+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "delft-001.json",
+      "raw_log_sha256": "03ed13bd67c573f46f370b82409a01f29da5269e632cd419ee0fcbb16b7ad6cb",
+      "elapsed_ms": 934,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 23426,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Open the official TU Delft programme page first to verify the exact bachelor programme and discover official admissions links.",
+      "observed_from_step": null,
+      "action": "Verify the exact bachelor Computer Science programme and identify official links for admissions requirements, deadlines, tuition, and scholarships.",
+      "stage": "page_understanding",
+      "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+      "final_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering"
+    },
+    {
+      "at": "2026-10-04T02:12:20.270611+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/admission-requirements"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "delft-002.json",
+      "raw_log_sha256": "38df1ce61c23ed91183ba3c5ebb5c4f3480a62e2c20d16c2c358de78777a53ff",
+      "elapsed_ms": 1174,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 102953,
+      "search_queries_cumulative": 0,
+      "step": 2,
+      "observed_before": "The official programme page establishes the exact bachelor programme, an English track, a September start, and a numerus-fixus date. Read the linked official admission-requirements page next to investigate English-test and international-secondary-qualification requirements.",
+      "observed_from_step": 1,
+      "action": "Verify IELTS/TOEFL/Duolingo minima and eligibility rules for international secondary qualifications, including Kazakhstan credentials.",
+      "stage": "page_understanding",
+      "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/admission-requirements",
+      "final_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/admission-requirements"
+    }
+  ],
+  "proposals": [
+    {
+      "claim_key": "programme.exists",
+      "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+      "excerpt": "Bachelor of Computer Science and Engineering",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": "Bachelor of Computer Science and Engineering",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        1
+      ],
+      "value": {
+        "name": "Bachelor of Computer Science and Engineering",
+        "exists": true
+      },
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "intake",
+      "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+      "excerpt": "Start: September",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": "Bachelor of Computer Science and Engineering",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        1
+      ],
+      "value": "September",
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "deadline",
+      "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+      "excerpt": "Numerus fixus : January 15th",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": "Bachelor of Computer Science and Engineering",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        1
+      ],
+      "value": "January 15th",
+      "status": "unreviewed"
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "supporting_steps": [
+        1
+      ],
+      "proposal_indices": [
+        0
+      ],
+      "evidence": [
+        {
+          "action_step": 1,
+          "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+          "excerpt": "Bachelor of Computer Science and Engineering",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b33",
+            "section_path": [
+              "Bachelor of Computer Science and Engineering"
+            ],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": "Bachelor of Computer Science and Engineering",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The official TU Delft page names the exact programme Bachelor of Computer Science and Engineering."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": "Bachelor of Computer Science and Engineering",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The programme page identifies an English track but publishes no observed IELTS, TOEFL, or Duolingo minimum."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": "Bachelor of Computer Science and Engineering",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": "international",
+        "qualification": "KZ national secondary",
+        "academic_year": null
+      },
+      "observation": "No observed evidence yet addresses Kazakhstan national secondary, NIS, or an additional-year route."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [
+        1
+      ],
+      "proposal_indices": [],
+      "evidence": [
+        {
+          "action_step": 1,
+          "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+          "excerpt": "Numerus fixus : January 15th",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b44",
+            "section_path": [
+              "Bachelor of Computer Science and Engineering",
+              "Important dates"
+            ],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": "Bachelor of Computer Science and Engineering",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The page publishes January 15th for numerus fixus, but does not expressly tie it to fall 2027 or an international population."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": "Bachelor of Computer Science and Engineering",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No tuition amount for an academic year covering fall 2027 has been observed."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": "Bachelor of Computer Science and Engineering",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No bachelor scholarship has yet been observed."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": "Bachelor of Computer Science and Engineering",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "No exact bachelor scholarship or its international eligibility conditions have yet been observed."
+    }
+  ],
+  "review_status": "unreviewed"
+}

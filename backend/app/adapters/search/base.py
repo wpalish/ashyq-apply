@@ -27,6 +27,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from datetime import datetime
+from enum import StrEnum
 from typing import Protocol, runtime_checkable
 
 
@@ -44,6 +45,20 @@ class SearchProviderNotConfigured(SearchError):
     """
 
 
+class SearchFailureReason(StrEnum):
+    """Fixed operational categories; never populated from provider text."""
+
+    TIMEOUT = "timeout"
+    TRANSPORT = "transport error"
+    NETWORK_POLICY = "network policy"
+    RPC_ERROR = "MCP RPC error"
+    TOOL_ERROR = "MCP tool error"
+    MALFORMED_RESPONSE = "malformed response"
+    RESPONSE_TOO_LARGE = "response too large"
+    UNSUPPORTED_PROTOCOL = "unsupported protocol"
+    UNEXPECTED_STATUS = "unexpected HTTP status"
+
+
 class SearchUnavailable(SearchError):
     """The configured provider could not answer: timeout, quota, transport.
 
@@ -51,6 +66,38 @@ class SearchUnavailable(SearchError):
     different behaviour. This one is retryable and is a degraded run; that one
     is a deployment that was never asked to search at all.
     """
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        http_status: int | None = None,
+        reason: SearchFailureReason | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.http_status = http_status
+        self.reason = reason
+
+
+def search_failure_diagnostic(provider: str, error: Exception) -> str:
+    """Public failure metadata, never arbitrary transport or response text.
+
+    A status alone does not establish the cause (for example, exhausted credit).
+    Keep that distinction and exclude keys, queries and vendor response bodies.
+    """
+    name = (
+        provider
+        if provider in {"exa", "exa_mcp", "tavily", "brave", "serper", "fake"}
+        else "configured search provider"
+    )
+    status = error.http_status if isinstance(error, SearchUnavailable) else None
+    detail = (
+        f"; HTTP {status}" if type(status) is int and 100 <= status <= 599 and status != 200 else ""
+    )
+    reason = error.reason if isinstance(error, SearchUnavailable) else None
+    if isinstance(reason, SearchFailureReason):
+        detail += f"; {reason.value}"
+    return f"Search service unavailable ({name}{detail})."
 
 
 @dataclass(frozen=True, slots=True)

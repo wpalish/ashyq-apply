@@ -1,0 +1,203 @@
+{
+  "schema_version": "1",
+  "case_id": "toronto",
+  "packet_sha256": "2cff2dc56c9d9cb501b9f60427a6c4b8a440ab174240ce58e8bf3a6caec2a705",
+  "baseline_pipeline_sha": "9421884465cbc986ce0ab017102126731fe2589d",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T03:55:08.237803+00:00",
+  "ended_at": "2026-10-04T04:00:59.515651+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T03:55:50.630333+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-001.json",
+      "raw_log_sha256": "6419240a56402c70cbfa904acf717837d6d36cd2e20d03a990e44179c1c84f67",
+      "elapsed_ms": 923,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 9797,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Start with the supplied official Mississauga Computer Science programme page.",
+      "observed_from_step": null,
+      "action": "fetcher: https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+      "stage": "page_understanding",
+      "url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+      "final_url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science"
+    },
+    {
+      "at": "2026-10-04T03:56:52.668558+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.utm.utoronto.ca/future-students/admissions/requirements"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-002.json",
+      "raw_log_sha256": "584c5e31622eaf2f2b3474ddfee480e5321d1c6872df3594fcf573231f36b7fd",
+      "elapsed_ms": 5573,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 24294,
+      "search_queries_cumulative": 0,
+      "step": 2,
+      "observed_before": "The Mississauga page lists undergraduate Computer Science and links to admissions requirements.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://www.utm.utoronto.ca/future-students/admissions/requirements",
+      "stage": "page_understanding",
+      "url": "https://www.utm.utoronto.ca/future-students/admissions/requirements",
+      "final_url": "https://www.utm.utoronto.ca/future-students/admissions/requirements"
+    },
+    {
+      "at": "2026-10-04T03:58:02.227201+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://future.utoronto.ca/apply/requirements/international-high-school-secondary/"
+      },
+      "outcome": "http_error",
+      "outcome_status": "failure",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-003.json",
+      "raw_log_sha256": "8eb897586dcd3d098533cf4c356e3a2d52b32f6ccf71ef575a4602376963810e",
+      "elapsed_ms": 101,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 41581,
+      "search_queries_cumulative": 0,
+      "step": 3,
+      "observed_before": "The admissions page links to central international secondary-school requirements; open these for Kazakhstan eligibility.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://future.utoronto.ca/apply/requirements/international-high-school-secondary/",
+      "stage": "page_understanding",
+      "url": "https://future.utoronto.ca/apply/requirements/international-high-school-secondary/",
+      "final_url": "https://future.utoronto.ca/apply/requirements/international-high-school-secondary/"
+    },
+    {
+      "at": "2026-10-04T03:58:45.892954+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-004.json",
+      "raw_log_sha256": "6edf04bb7cc1e5eddf223b42c8ce6e5c5f0cc519ab2f78068425b7beaf3583b6",
+      "elapsed_ms": 4407,
+      "fetcher_calls_cumulative": 4,
+      "elapsed_ms_cumulative": 56556,
+      "search_queries_cumulative": 0,
+      "step": 4,
+      "observed_before": "Central international requirements returned HTTP 403; next read the linked Mississauga English requirements.",
+      "observed_from_step": 3,
+      "action": "fetcher: https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements",
+      "stage": "page_understanding",
+      "url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements",
+      "final_url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements"
+    },
+    {
+      "at": "2026-10-04T03:59:50.577080+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.utm.utoronto.ca/future-students/finances/entrance-scholarships"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-005.json",
+      "raw_log_sha256": "95e4280bdf7be4a3dd347b80c71648388a830ffd4b20d78ce47413f7781f8bfe",
+      "elapsed_ms": 1290,
+      "fetcher_calls_cumulative": 5,
+      "elapsed_ms_cumulative": 67519,
+      "search_queries_cumulative": 0,
+      "step": 5,
+      "observed_before": "The English page publishes IELTS, Duolingo and date-dependent TOEFL minima. Next inspect entrance scholarships and their eligibility.",
+      "observed_from_step": 4,
+      "action": "fetcher: https://www.utm.utoronto.ca/future-students/finances/entrance-scholarships",
+      "stage": "page_understanding",
+      "url": "https://www.utm.utoronto.ca/future-students/finances/entrance-scholarships",
+      "final_url": "https://www.utm.utoronto.ca/future-students/finances/entrance-scholarships"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

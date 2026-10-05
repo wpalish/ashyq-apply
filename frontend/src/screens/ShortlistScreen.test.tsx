@@ -146,6 +146,43 @@ describe('filter labels', () => {
   });
 });
 
+// Unimatch's Find tests, on the merged screen: the search narrows the cards
+// view (the default), and comparing goes through the cards' own toggle.
+describe('Find search', () => {
+  beforeEach(() => {
+    window.localStorage.removeItem('ashyq.shortlistView');
+  });
+
+  it('filters by university, programme and country without changing the saved results', () => {
+    render(<ShortlistScreen />);
+    const search = screen.getByPlaceholderText('Search universities, programmes or countries…');
+    expect(screen.getByTestId('card-result-1')).toBeInTheDocument();
+    fireEvent.change(search, { target: { value: 'Toronto' } });
+    expect(screen.queryByTestId('card-result-1')).not.toBeInTheDocument();
+    expect(screen.getByText('Nothing matches these filters yet.')).toBeInTheDocument();
+    fireEvent.change(search, { target: { value: 'netherlands' } });
+    expect(screen.getByTestId('card-result-1')).toBeInTheDocument();
+  });
+
+  it('opens a source-backed result and compares only selected programmes', () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('card-open-result-1'));
+    expect(screen.getByTestId('card-open-result-1')).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.click(screen.getByTestId('compare-result-1'));
+    expect(screen.getByTestId('compare-tray')).toHaveTextContent('University of Groningen');
+    expect(screen.getByTestId('compare-tray')).toHaveTextContent('1 picked');
+  });
+
+  it('narrows to one answer with the tabs, and says so when none has it', () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('find-tab-kept'));
+    expect(screen.queryByTestId('card-result-1')).not.toBeInTheDocument();
+    expect(screen.getByTestId('find-empty')).toHaveTextContent('Nothing matches these filters yet.');
+    fireEvent.click(screen.getByTestId('find-tab-undecided'));
+    expect(screen.getByTestId('card-result-1')).toBeInTheDocument();
+  });
+});
+
 describe('notes', () => {
   it('saves a note without deciding the row', async () => {
     render(<ShortlistScreen />);

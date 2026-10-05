@@ -107,6 +107,6 @@ def test_tls_is_established_before_the_credentials_are_offered(monkeypatch) -> N
     assert order == ["starttls", "login"]
 
 
-def test_the_console_sender_is_the_only_other_option() -> None:
+def test_the_console_sender_is_the_development_default() -> None:
     assert isinstance(get_sender(Settings(email_sender="console")), ConsoleSender)
-    assert isinstance(get_sender(Settings(email_sender="anything-else")), ConsoleSender)
+    assert isinstance(get_sender(Settings()), ConsoleSender)

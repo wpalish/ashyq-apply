@@ -9,6 +9,7 @@ keeps the sentence it came from.
 from __future__ import annotations
 
 import re
+from dataclasses import replace
 from datetime import UTC, datetime
 from urllib.parse import urljoin, urlparse, urlsplit, urlunsplit
 
@@ -31,7 +32,8 @@ from app.adapters.extraction import (
 )
 from app.adapters.fetching import Fetcher, FetchResult
 from app.adapters.html_parse import parse_html
-from app.adapters.page_classifier import PageType, classify_page
+from app.adapters.page_classifier import PageType, classify_page, main_content
+from app.adapters.scholarship.conditional_benefits import read_conditional_policy
 from app.adapters.scope_reader import read_scope
 from app.domain.enums import (
     ApplicationMode,
@@ -41,8 +43,14 @@ from app.domain.enums import (
     SourceSpecificity,
 )
 from app.domain.funding import roll_up_availability
+from app.schemas.claim import MAX_EXCERPT_CHARS
 from app.schemas.money import Money
 from app.schemas.result import Coverage, CoverageBreakdown, Scholarship
+
+#: One official-award query after an empty walk for a confirmed programme.
+SEARCH_FUNDING_FALLBACK = True
+#: Measured separately: generic scholarship queries can return only indices.
+TARGET_AWARD_SEARCH = True
 
 _COVERAGE_LABELS = {
     "tuition": CostCategory.TUITION,
@@ -152,12 +160,14 @@ class WebScholarshipAdapter:
         #: is as far as that goes — holding every university's HTML for the
         #: whole run would be tens of megabytes of dead weight for no gain.
         self._pages_for: str | None = None
+        self._award_searches: dict[str, tuple[str, ...]] = {}
 
     def _memo_for(self, candidate: Candidate) -> None:
         """Point the page memo at this university, dropping the last one's."""
         key = f"{candidate.name}::{candidate.country}"
         if key != self._pages_for:
             self._pages = {}
+            self._award_searches = {}
             self._pages_for = key
 
     async def _read(self, url: str) -> FetchResult:
@@ -170,8 +180,81 @@ class WebScholarshipAdapter:
             self._pages[_page_key(url)] = page
         return page
 
+    async def _search_awards(
+        self, candidate: Candidate, program: CandidateProgram, out: AdapterResult
+    ) -> tuple[str, ...]:
+        """One bounded public-policy query when an index exposes no usable awards.
+
+        No applicant attributes enter the query. Search summaries cannot become
+        evidence; the ordinary queue fetches and classifies every returned URL.
+        """
+        from app.adapters.discovery.live_discovery import (
+            canonical_url,
+            names_other_degree_level,
+            registrable_domain,
+            same_institution,
+        )
+        from app.adapters.search import get_search_provider
+        from app.adapters.search.base import SearchError, search_failure_diagnostic
+        from app.adapters.search.intent import DiscoveryIntent, queries_for
+
+        # The scholarship query contains the degree, but no programme field.
+        # Programmes at the same level therefore share its discovery results;
+        # fetched awards are still re-parsed with each programme's own scope.
+        key = str(program.degree)
+        if key in self._award_searches:
+            return self._award_searches[key]
+        self._award_searches[key] = ()
+        from app.adapters.search import intent as intent_module
+
+        if intent_module.SHARED_QUERY_BUDGET:
+            if candidate.search_queries_used >= intent_module.DEFAULT_QUERY_BUDGET:
+                out.errors.append(
+                    "Official scholarship search not run: earlier stages used the "
+                    f"{intent_module.DEFAULT_QUERY_BUDGET}-query budget"
+                )
+                return ()
+            candidate.search_queries_used += 1
+        provider_name = "configured search provider"
+        try:
+            intent = DiscoveryIntent(
+                institution=candidate.name,
+                domain=registrable_domain(candidate.domain) or candidate.domain,
+                degree=program.degree,
+                field=program.field or "degree programme",
+                population_marker="international",
+            )
+            provider = get_search_provider()
+            provider_name = provider.name
+            family = "award_policy" if TARGET_AWARD_SEARCH else "scholarships"
+            query = queries_for(intent, families=(family,), budget=1)[0]
+            response = await provider.search(
+                query=query.text, domains=[intent.domain], max_results=5
+            )
+        except (SearchError, ValueError) as exc:
+            out.errors.append(
+                f"Official scholarship search: {search_failure_diagnostic(provider_name, exc)}"
+            )
+            return ()
+        urls: list[str] = []
+        for found in response.results:
+            url = canonical_url(found.url)
+            if urlparse(url).scheme not in ("http", "https"):
+                continue
+            if not same_institution(url, candidate.domain):
+                continue
+            if names_other_degree_level(url, str(program.degree)) or url in urls:
+                continue
+            urls.append(url)
+        self._award_searches[key] = tuple(urls[:3])
+        out.errors.append(
+            f"Official scholarship search ({family}) supplied {len(urls[:3])} leads; "
+            "facts require fetched award pages"
+        )
+        return self._award_searches[key]
+
     async def find(
-        self, candidate: Candidate, program: CandidateProgram, profile
+        self, candidate: Candidate, program: CandidateProgram, profile, *, allow_search: bool = True
     ) -> tuple[list[Scholarship], AdapterResult]:
         out = AdapterResult()
         self._memo_for(candidate)
@@ -199,6 +282,7 @@ class WebScholarshipAdapter:
         indexes_read = 0
         linked_an_award = False
         fallback_used = primary == program.url
+        search_used = False
 
         while queue:
             url, depth = queue.pop(0)
@@ -370,6 +454,17 @@ class WebScholarshipAdapter:
                 fallback_used = True
                 queue.append((program.url, 0))
 
+            if (
+                SEARCH_FUNDING_FALLBACK
+                and allow_search
+                and not queue
+                and not scholarships
+                and not search_used
+            ):
+                search_used = True
+                leads = await self._search_awards(candidate, program, out)
+                queue.extend((u, 1) for u in leads if _page_key(u) not in seen_pages)
+
         return scholarships, out
 
     def _parse_award(
@@ -391,6 +486,13 @@ class WebScholarshipAdapter:
             or (soup.find("h1").get_text(strip=True) if soup.find("h1") else title).split(" - ")[0]
         )
 
+        award_scope = read_scope(text, title=title)
+        if re.search(r"\bopen to all nationalities\b", text, re.I):
+            # A statement covering every nationality must not acquire a
+            # narrower audience merely because a later benefit/bond paragraph
+            # mentions international students. Eligibility is read separately.
+            award_scope = replace(award_scope, population=None)
+
         # Every claim from this page is about this one award; the subject key
         # keeps a second award at the same university from looking like a
         # contradiction of the first.
@@ -407,7 +509,7 @@ class WebScholarshipAdapter:
             # Eligibility prose names a population far more often than
             # requirements prose does, and an award claimed for the wrong one
             # is the most expensive wrong answer this product can give.
-            scope=read_scope(text, title=title),
+            scope=award_scope,
             # The verifier's context (adversarial review, 2026-09-25): without
             # it the verbatim and domain checks were skipped.
             page_text=text,
@@ -504,6 +606,22 @@ class WebScholarshipAdapter:
             for c in sch.coverage:
                 c.claim_ids.append(url)
 
+        # Keep conditional scheme evidence without turning it into aid the
+        # applicant can count on. Only the existing table route sets coverage.
+        if not sch.coverage:
+            policy = read_conditional_policy(html, builder.claims)
+            if policy is not None:
+                builder.add(
+                    ClaimType.SCHOLARSHIP_COVERAGE,
+                    policy.value,
+                    policy.quote,
+                    section="Benefits of award",
+                    notes=(
+                        "These conditional benefits are stated by the scheme. Applicant eligibility "
+                        "and other award terms must be checked separately before counting them as aid."
+                    ),
+                )
+
         # --- eligibility -------------------------------------------------
         # This award page exists and names an award; that alone is the only
         # thing "opportunity_exists" asserts.
@@ -566,34 +684,87 @@ class WebScholarshipAdapter:
             sch.international_eligible = "unknown"
 
         # --- degree applicability -----------------------------------------
-        applicability = assess_degree_applicability(text, str(program.degree))
+        # Global navigation names other degree levels; only the award's own
+        # content can establish applicability (Groningen live capture).
+        award_content = main_content(parse_html(html))
+        award_text = readable_text(str(award_content))
+        policy_statements = _award_policy_statements(award_content)
+        applicability = assess_degree_applicability(award_text, str(program.degree))
         sch.degree_applicability = applicability.verdict
         sch.degree_applicability_reason = applicability.reason
         sch.applies_to_degrees = list(applicability.mentioned_degrees)
+        study_mode = _study_mode_restriction(award_text)
+        if study_mode:
+            # The current programme/profile has no confirmed study mode.
+            # Keep this as an unresolved programme condition; level yes alone
+            # is insufficient to call the applicant eligible.
+            sch.program_restrictions.append(study_mode)
         if applicability.verdict != "unknown":
+            evidence = applicability.evidence
+            reason = applicability.reason
+            if study_mode:
+                reason += "; study mode must be confirmed: " + study_mode
+                if (
+                    applicability.verdict == "yes"
+                    and str(program.degree)
+                    in assess_degree_applicability(
+                        study_mode, str(program.degree)
+                    ).mentioned_degrees
+                ):
+                    evidence = study_mode
             # Only real page text goes in the excerpt; the rationale is a note.
             builder.add(
                 ClaimType.SCHOLARSHIP_PROGRAM_RESTRICTION,
                 {"degree": str(program.degree), "applies": applicability.verdict},
-                applicability.evidence,
-                confidence=0.85 if applicability.evidence else 0.6,
-                notes=applicability.reason,
+                evidence,
+                confidence=0.85 if evidence else 0.6,
+                notes=reason,
             )
 
         # --- application mode ------------------------------------------
+        application_order = _admission_application_first(policy_statements)
         if "nominated by the department" in low or "direct applications are not accepted" in low:
             sch.application_mode = ApplicationMode.NOMINATION
         elif "no separate application is required" in low or "considered automatically" in low:
             sch.application_mode = ApplicationMode.AUTOMATIC
-        elif "separate scholarship application" in low or "must be submitted in addition" in low:
+        elif (
+            "separate scholarship application" in low
+            or "must be submitted in addition" in low
+            or application_order
+        ):
             sch.application_mode = ApplicationMode.SEPARATE
         if sch.application_mode != ApplicationMode.UNKNOWN:
+            ordered_separate = bool(
+                application_order and sch.application_mode is ApplicationMode.SEPARATE
+            )
             builder.add(
                 ClaimType.SCHOLARSHIP_APPLICATION_MODE,
                 sch.application_mode.value,
-                _line_with(text, "how to apply") or _line_with(text, "application"),
+                application_order
+                if ordered_separate
+                else _line_with(text, "how to apply") or _line_with(text, "application"),
+                notes=(
+                    "The admission application must be submitted before the scholarship application."
+                    if ordered_separate
+                    else ""
+                ),
             )
-        sch.requires_extra_essays = "additional essays" in low or "statement of motivation" in low
+        sch.requires_extra_essays = _required_extra_essay(policy_statements)
+
+        grant_bond = _tuition_grant_bond(policy_statements, name)
+        if grant_bond:
+            value, quote = grant_bond
+            builder.add(
+                ClaimType.SCHOLARSHIP_BOND,
+                value,
+                quote,
+                population="Singapore PRs and international students",
+                notes=(
+                    "The scholarship has no separate award bond; the stated three-year obligation "
+                    "belongs to the MOE Tuition Grant Scheme for Singapore PRs and international "
+                    "students."
+                ),
+            )
 
         # --- deadline ----------------------------------------------------
         dl_line = _line_with(text, "scholarship deadline") or _line_with(text, "deadline is")
@@ -698,7 +869,7 @@ class WebScholarshipAdapter:
         # Is the award on offer at all? Read here, where the page and the
         # builder are, and before the roll-up that consumes it: a withdrawn
         # award needs no eligibility assessment.
-        withdrawn = _line_matching(text, _AWARD_WITHDRAWN)
+        withdrawn = _withdrawn_award_quote(text)
         if withdrawn:
             sch.currently_available = "no"
             sch.award_current_for_intake = "no"
@@ -818,6 +989,32 @@ def _restricted_to(text: str, pattern: re.Pattern[str]) -> re.Match[str] | None:
     return pattern.search(" ".join((text or "").split()))
 
 
+def _study_mode_restriction(text: str) -> str:
+    """Retain an explicit awardee programme-mode condition in its own words."""
+    flat = " ".join(text.split())
+    requirement = re.compile(
+        r"\b(?:successful\s+awardees?|scholarship\s+holders?|recipients?|applicants?)\s+"
+        r"(?:must|should|(?:are|is)\s+required\s+to)\s+"
+        r"(?:read|pursue|be\s+enrolled\s+in)\s+"
+        r"(?:an?\s+)?full[- ]time\s+"
+        r"(?:undergraduate|bachelor['’]?s?|master['’]?s?|postgraduate|doctoral)\s+"
+        r"(?:degree\s+)?(?:programmes?|programs?|degrees?|courses?)\b",
+        re.I,
+    )
+    for sentence in re.split(r"(?<=[.!?])\s+", flat):
+        if len(sentence) > 300 or re.search(r"\b(?:if|when|unless)\b", sentence, re.I):
+            continue
+        match = requirement.search(sentence)
+        if match and not re.search(
+            r"\b(?:not\s+(?:required|necessary|obligatory)|no\s+requirement)\s+"
+            r"(?:(?:that|for)\s+)?$",
+            sentence[: match.start()],
+            re.I,
+        ):
+            return sentence
+    return ""
+
+
 #: A path that says an award or list is for the university's own citizens.
 _DOMESTIC_ONLY = re.compile(r"/[\w-]*\b(?:domestic|canadian|home)-students?\b", re.IGNORECASE)
 
@@ -861,6 +1058,92 @@ _PER_YEAR = re.compile(
     r"\b(?:per|a|each)\s+(?:academic\s+)?(?:year|annum)\b|\bannual(?:ly)?\b", re.I
 )
 _PER_MONTH = re.compile(r"\b(?:per|a|each)\s+month\b|\bmonthly\b", re.I)
+
+_ADMISSION_APPLICATION_FIRST = re.compile(
+    r"^applicants\s+(?:are required to|must)\s+submit their application for admission\s+"
+    r"before submitting their application for scholarship\b",
+    re.I,
+)
+_EXTRA_ESSAY = re.compile(
+    r"\b(?:personal essay|additional essays?|statement of motivation)\b", re.I
+)
+_ESSAY_REQUIRED = re.compile(r"\b(?:requires?|required|must|compulsory|mandatory)\b", re.I)
+_OPTIONAL_POLICY = re.compile(
+    r"\b(?:optional|voluntary|may|might|could)\b"
+    r"|\b(?:not|never)\s+(?:required|compulsory|mandatory)\b"
+    r"|\b(?:do|does)\s+not\s+(?:require|need|submit)\b"
+    r"|\bno\s+requirement\b",
+    re.I,
+)
+_TUITION_GRANT_BOND = re.compile(
+    r"^no bond is attached to (?P<award>.+?) apart from the (?:three|3)[- ]year bond "
+    r"applicable to all Singapore PRs and international students under the "
+    r"MOE Tuition Grant Scheme\b",
+    re.I,
+)
+
+
+def _award_policy_statements(content: BeautifulSoup) -> list[str]:
+    """Complete sentences from the award's own paragraphs and list items.
+
+    A wrapped clause belongs to its HTML block. A complete statement above
+    the evidence cap is omitted, rather than losing an exception to clipping.
+    """
+    out: list[str] = []
+    for block in content.find_all(["p", "li"]):
+        text = " ".join(block.get_text(" ", strip=True).split())
+        for statement in re.split(r"(?<=[.!?])\s+", text):
+            if statement and len(statement) <= MAX_EXCERPT_CHARS and statement not in out:
+                out.append(statement)
+    return out
+
+
+def _admission_application_first(statements: list[str]) -> str:
+    """Two submitted applications establish order, not an admission offer."""
+    for statement in statements:
+        if (
+            _ADMISSION_APPLICATION_FIRST.search(statement)
+            and not _OPTIONAL_POLICY.search(statement)
+            and not re.search(r"\b(?:if|when|unless)\b", statement, re.I)
+        ):
+            return statement
+    return ""
+
+
+def _required_extra_essay(statements: list[str]) -> bool:
+    for statement in statements:
+        if (
+            _EXTRA_ESSAY.search(statement)
+            and _ESSAY_REQUIRED.search(statement)
+            and not _OPTIONAL_POLICY.search(statement)
+            and not re.search(r"\b(?:if|when|unless)\b", statement, re.I)
+            and not re.search(r"\b(?:must|shall|should)\s+not\b", statement, re.I)
+            and not re.search(
+                r"\bno\s+(?:(?:required|compulsory|mandatory)\s+)?"
+                r"(?:personal essay|additional essays?|statement of motivation)\b",
+                statement,
+                re.I,
+            )
+        ):
+            return True
+    return False
+
+
+def _tuition_grant_bond(statements: list[str], name: str) -> tuple[dict[str, object], str] | None:
+    """Keep the grant exception when the award itself has no service bond."""
+    for statement in statements:
+        match = _TUITION_GRANT_BOND.search(statement)
+        if (
+            match
+            and match.group("award").casefold() in (name.casefold(), "the " + name.casefold())
+            and not _OPTIONAL_POLICY.search(statement)
+        ):
+            return {
+                "years": 3,
+                "basis": "MOE_Tuition_Grant",
+                "population": ["Singapore_PR", "international"],
+            }, statement
+    return None
 
 
 _ALL_NATIONALITIES = re.compile(
@@ -986,6 +1269,8 @@ def _award_links(html: str, base: str) -> list[str]:
     has to look like an award in its text or its path to be followed.
     """
     soup = parse_html(html)
+    if SEARCH_FUNDING_FALLBACK:
+        soup = main_content(soup)
     seen: set[str] = set()
     out: list[str] = []
     base_host = urlparse(base).netloc
@@ -1104,6 +1389,55 @@ def _line_matching(text: str, pattern: re.Pattern[str]) -> str:
     for line in text.splitlines():
         if pattern.search(line):
             return line.strip()[:300]
+    return ""
+
+
+def _withdrawn_award_quote(text: str) -> str:
+    """Read scheme closure without treating a holder's revocation as closure.
+
+    Evaluate each statement independently: a retention condition cannot hide
+    a later actual cancellation on the same page. A wrapped if/when/unless
+    clause belongs to the preceding statement, rather than a different award.
+    """
+    statements = [part.strip() for part in re.split(r"(?<=[.!?])\s+|\n+", text) if part.strip()]
+    for index, statement in enumerate(statements):
+        context = statement
+        if (
+            not statement.endswith((".", "!", "?"))
+            and index + 1 < len(statements)
+            and re.match(r"^(?:if|when|unless)\b", statements[index + 1], re.I)
+        ):
+            context += " " + statements[index + 1]
+        for match in _AWARD_WITHDRAWN.finditer(statement):
+            prefix = statement[: match.start()]
+            denied = re.search(
+                r"\b(?:not|never)\s+(?:(?:been|ever|previously|actually|formally|yet)\s+){0,3}$",
+                prefix,
+                re.I,
+            )
+            if denied:
+                continue
+            if match.group().lower() == "withdrawn":
+                # Possible or conditional holder withdrawal does not say
+                # that the entire scholarship scheme has closed.
+                possible = re.search(r"\b(?:may|might|can|could|would)\b.{0,120}$", prefix, re.I)
+                conditional = re.search(r"\b(?:if|when|unless)\b", context, re.I)
+                individual = re.search(
+                    r"\b(?:your|his|her|their)\s+(?:scholarship|award|offer)\b"
+                    r"|\b(?:scholarship|award|admission)\s+offer\b",
+                    prefix,
+                    re.I,
+                ) or re.search(
+                    r"\bfrom\s+(?:(?:an?|the)\s+)?(?:holder|recipient|student|scholar)\b",
+                    statement[match.end() :],
+                    re.I,
+                )
+                if possible or conditional or individual:
+                    continue
+            # Keep the complete decisive statement in the existing quote cap.
+            # Truncating away its predicate would manufacture closure evidence.
+            if len(statement) <= 300:
+                return statement
     return ""
 
 

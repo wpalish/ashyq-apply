@@ -24,6 +24,7 @@ from app.models import (
     JobStatus,
     ProgramResultRow,
     ResearchRun,
+    University,
 )
 from app.models.base import ensure_utc
 from app.payments.entitlements import has_full_access
@@ -35,6 +36,7 @@ router = APIRouter(prefix="/api/runs", tags=["research"])
 
 class StartRunIn(BaseModel):
     profile_id: str
+    university_ids: list[str] | None = Field(default=None, min_length=1, max_length=50)
     demo_mode: bool | None = Field(
         default=None, description="Defaults to the server setting; live mode fetches real sites."
     )
@@ -136,12 +138,12 @@ def _view(
     # "Running" is a property of the job, not of the stage the run stopped at.
     job_running = job is not None and job.status == JobStatus.RUNNING.value
     lease_expiry = ensure_utc(job.lease_expires_at) if job else None
-    stale = is_lease_expired(run.stage, run.heartbeat_at, lease_seconds=lease_seconds) or (
-        job is not None
-        and job.status == JobStatus.RUNNING.value
-        and lease_expiry is not None
-        and lease_expiry < datetime.now(UTC)
-    )
+    if job_running and lease_expiry is not None:
+        # A slow stage may not have saved progress yet, while the worker keeps
+        # renewing its fenced job lease. That lease decides whether it is alive.
+        stale = lease_expiry < now
+    else:
+        stale = is_lease_expired(run.stage, run.heartbeat_at, lease_seconds=lease_seconds, now=now)
     if counts is None:
         results = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id)
         counts = (
@@ -238,6 +240,14 @@ def start_run(
             "Wait for it to finish, or cancel it first.",
         )
 
+    selected_ids = list(dict.fromkeys(payload.university_ids or []))
+    if selected_ids:
+        if payload.demo_mode is True:
+            raise HTTPException(422, "Catalogue universities require live research mode")
+        found = session.query(University).filter(University.id.in_(selected_ids)).count()
+        if found != len(selected_ids):
+            raise HTTPException(422, "Unknown catalogue university")
+
     # Quota is spent only after the guards above: a replayed request or a
     # double click must not cost a school one of its cases.
     #
@@ -257,6 +267,8 @@ def start_run(
         ).granted
 
     candidate_limit = payload.candidate_limit
+    if selected_ids:
+        candidate_limit = min(candidate_limit or len(selected_ids), len(selected_ids))
     if not full_access:
         candidate_limit = min(
             candidate_limit or settings.free_candidate_limit, settings.free_candidate_limit
@@ -266,9 +278,12 @@ def start_run(
         client_request_key=idempotency_key,
         profile_id=payload.profile_id,
         stage=PipelineStage.QUEUED.value,
-        demo_mode=settings.demo_mode if payload.demo_mode is None else payload.demo_mode,
+        demo_mode=False
+        if selected_ids
+        else (settings.demo_mode if payload.demo_mode is None else payload.demo_mode),
         candidate_limit=candidate_limit,
         verify_limit=payload.verify_limit,
+        university_ids=selected_ids or None,
         access_tier="full" if full_access else "free",
         stage_state=RunState.load(None).dump(),
     )

@@ -22,7 +22,7 @@ def _award(**over) -> Scholarship:
         {
             "id": "sch-1",
             "name": "Example Award",
-            "source_urls": ["fixture://nus/scholarship-0.html"],
+            "source_urls": ["fixture://u-toronto/program-0.html"],
             **over,
         }
     )

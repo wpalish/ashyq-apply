@@ -1,0 +1,159 @@
+{
+  "schema_version": "1",
+  "case_id": "toronto",
+  "packet_sha256": "795049dd1d63c2c39cfc179daeec174b6fa45930aabb16c34962bef2a799fadc",
+  "baseline_pipeline_sha": "2f4491eeb44442b8052bfe99e720415d2fd821ea",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T09:11:34.430550+00:00",
+  "ended_at": "2026-10-04T09:14:46.445871+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T09:12:13.132156+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site.utoronto.ca undergraduate computer science admissions English requirements Kazakhstan Lester Pearson scholarship",
+        "domains": [
+          "utoronto.ca"
+        ],
+        "max_results": 6
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-001.json",
+      "raw_log_sha256": "eca6bc0ed671474ba18c4df7a84be531e637f73694fcdab50fa4f507095611eb",
+      "elapsed_ms": 2893,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 12341,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "Locate official Computer Science programme and admissions pages.",
+      "observed_from_step": null,
+      "action": "search_provider: site.utoronto.ca undergraduate computer science admissions English requirements Kazakhstan Lester Pearson scholarship",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T09:13:12.712024+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://future.utoronto.ca/program/computer-science"
+      },
+      "outcome": "http_error",
+      "outcome_status": "failure",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-002.json",
+      "raw_log_sha256": "ee75a478dfe71cfca110547241ea3de8c5bb5c4f6fba9bfe6605213774c6b8d3",
+      "elapsed_ms": 237,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 21155,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Open the official Computer Science programme page.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://future.utoronto.ca/program/computer-science",
+      "stage": "page_understanding",
+      "url": "https://future.utoronto.ca/program/computer-science",
+      "final_url": "https://future.utoronto.ca/program/computer-science"
+    },
+    {
+      "at": "2026-10-04T09:14:07.218442+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.utsc.utoronto.ca/admissions/programs/computer-science"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-003.json",
+      "raw_log_sha256": "34921f0c734f9d0dc72570b690d31e9dfa9574d52a264872c69f904ad3264993",
+      "elapsed_ms": 658,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 32845,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "The central programme page returned 403; inspect the official Scarborough programme page.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://www.utsc.utoronto.ca/admissions/programs/computer-science",
+      "stage": "page_understanding",
+      "url": "https://www.utsc.utoronto.ca/admissions/programs/computer-science",
+      "final_url": "https://www.utsc.utoronto.ca/admissions/programs/computer-science"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

@@ -15,10 +15,19 @@ import '@fontsource/onest/600.css';
 import '@fontsource/onest/700.css';
 import '@fontsource/montserrat/700.css';
 import '@fontsource/montserrat/800.css';
+// Inter (and Fraunces) are Unimatch's faces; the port to palette E moves text to Inter.
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '@fontsource/fraunces/400.css';
+import '@fontsource/fraunces/600.css';
+import '@fontsource/fraunces/700.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/500.css';
 import './styles/global.css';
 import './styles/components.css';
+import './styles/unimatch.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

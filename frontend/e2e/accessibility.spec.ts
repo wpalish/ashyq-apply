@@ -180,6 +180,7 @@ test('both themes render with a painted background and readable text', async () 
   await page.setViewportSize({ width: 1440, height: 900 });
   await openShortlist(page);
 
+  await page.locator('.sidebar__settings summary').click();
   for (const theme of ['light', 'dark'] as const) {
     await page.selectOption('#theme', theme);
     await page.waitForTimeout(200);

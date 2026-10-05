@@ -1,0 +1,231 @@
+{
+  "schema_version": "1",
+  "case_id": "hku",
+  "packet_sha256": "34ddd57d9f308936bebb5f0b079a54b5cf0b32b707f63d3b85383a7c15b5309f",
+  "baseline_pipeline_sha": "9421884465cbc986ce0ab017102126731fe2589d",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T03:55:18.425612+00:00",
+  "ended_at": "2026-10-04T04:01:18.761312+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T03:55:50.274095+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-001.json",
+      "raw_log_sha256": "2fc0ba44e6ad01488749c3dbbf1db8d54e489ff1bdf359a267f0494018de61c1",
+      "elapsed_ms": 4667,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 13465,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Start with the supplied official undergraduate programme page.",
+      "observed_from_step": null,
+      "action": "fetcher: https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+      "stage": "page_understanding",
+      "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+      "final_url": "https://www.cds.hku.hk/prospective-students/undergraduate-old-2026/6999-computing-and-data-science/"
+    },
+    {
+      "at": "2026-10-04T03:56:40.776495+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://admissions.hku.hk/apply/overview"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-002.json",
+      "raw_log_sha256": "753fd7413b4d38cf19eea459b8a8b617611f224571286a5fc395f445add620e4",
+      "elapsed_ms": 1066,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 21110,
+      "search_queries_cumulative": 0,
+      "step": 2,
+      "observed_before": "The programme page explicitly lists BEng in Computer Science and links to central admissions; its redirect is an older programme path.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://admissions.hku.hk/apply/overview",
+      "stage": "page_understanding",
+      "url": "https://admissions.hku.hk/apply/overview",
+      "final_url": "https://admissions.hku.hk/apply/overview"
+    },
+    {
+      "at": "2026-10-04T03:57:34.353357+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.cds.hku.hk/prospective-students/scholarships/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-003.json",
+      "raw_log_sha256": "e067413b9e4b9d3fe1cdbb108c94a796102d8648a7b3cf07350781e5591e87c7",
+      "elapsed_ms": 3926,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 32352,
+      "search_queries_cumulative": 0,
+      "step": 3,
+      "observed_before": "Central admissions is blocked by robots policy. The school page provides a separate official scholarships link.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://www.cds.hku.hk/prospective-students/scholarships/",
+      "stage": "page_understanding",
+      "url": "https://www.cds.hku.hk/prospective-students/scholarships/",
+      "final_url": "https://www.cds.hku.hk/prospective-students/scholarships/"
+    },
+    {
+      "at": "2026-10-04T03:58:29.351942+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:hku.hk undergraduate admissions Kazakhstan IELTS TOEFL international 2027 requirements",
+        "domains": [
+          "hku.hk"
+        ],
+        "max_results": 6
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-004.json",
+      "raw_log_sha256": "6d6d4f46df8f8806d8b936ca971439e266e65a4faf6d521815ca5a12079a1711",
+      "elapsed_ms": 7954,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 49850,
+      "search_queries_cumulative": 1,
+      "step": 4,
+      "observed_before": "The school publishes named undergraduate scholarships with non-local eligibility. Central admissions was blocked; search for official qualification and English requirements.",
+      "observed_from_step": 3,
+      "action": "search_provider: site:hku.hk undergraduate admissions Kazakhstan IELTS TOEFL international 2027 requirements",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T03:59:26.768551+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.admissions.hku.hk/sites/default/files/2026-09/HKU%20International%20UG%20Admissions%20Pamphlet%202027%20%28Sep%202026%29_0.pdf"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-005.json",
+      "raw_log_sha256": "4274c0e79cb2e97ef05f5e8747b45c9c27170856f2c0dbfe4267a6e696da557f",
+      "elapsed_ms": 1413,
+      "fetcher_calls_cumulative": 4,
+      "elapsed_ms_cumulative": 61526,
+      "search_queries_cumulative": 1,
+      "step": 5,
+      "observed_before": "Search located an official 2027 admissions pamphlet covering deadlines and international tuition; its contents need a page read.",
+      "observed_from_step": 4,
+      "action": "fetcher: https://www.admissions.hku.hk/sites/default/files/2026-09/HKU%20International%20UG%20Admissions%20Pamphlet%202027%20%28Sep%202026%29_0.pdf",
+      "stage": "page_understanding",
+      "url": "https://www.admissions.hku.hk/sites/default/files/2026-09/HKU%20International%20UG%20Admissions%20Pamphlet%202027%20%28Sep%202026%29_0.pdf",
+      "final_url": "https://www.admissions.hku.hk/sites/default/files/2026-09/HKU%20International%20UG%20Admissions%20Pamphlet%202027%20%28Sep%202026%29_0.pdf"
+    },
+    {
+      "at": "2026-10-04T04:00:21.115563+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://admissions.hku.hk/node/2273"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-006.json",
+      "raw_log_sha256": "0fad2c5fdc9012099fff896afc0b8ea24d52ea911ee60aed578f8e96564d561e",
+      "elapsed_ms": 955,
+      "fetcher_calls_cumulative": 5,
+      "elapsed_ms_cumulative": 70948,
+      "search_queries_cumulative": 1,
+      "step": 6,
+      "observed_before": "The 2027 pamphlet is robots-blocked. Read the specific Kazakhstan qualification page to check whether eligibility evidence is accessible.",
+      "observed_from_step": 5,
+      "action": "fetcher: https://admissions.hku.hk/node/2273",
+      "stage": "page_understanding",
+      "url": "https://admissions.hku.hk/node/2273",
+      "final_url": "https://admissions.hku.hk/node/2273"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No submitted evidence settles this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

@@ -161,6 +161,8 @@ def request_password_reset(
     single-use reset token out of the answer.
     """
     settings = get_settings()
+    if not settings.password_reset_enabled:
+        raise HTTPException(403, "Password recovery is disabled on this site.")
     address = _client_address(request)
     if not _limiter_allows(f"reset:{address}", settings.auth_rate_limit_per_minute):
         raise HTTPException(429, "Too many reset requests. Try again in a minute.")
@@ -225,6 +227,8 @@ def confirm_password_reset(
     session: Session = Depends(get_session),
 ) -> PrincipalView:
     """Redeem a reset token exactly once, and sign the person back in."""
+    if not get_settings().password_reset_enabled:
+        raise HTTPException(403, "Password recovery is disabled on this site.")
     now = datetime.now(UTC)
     token = (
         session.query(PasswordResetToken)

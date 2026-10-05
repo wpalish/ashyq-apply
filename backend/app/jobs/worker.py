@@ -470,6 +470,7 @@ def reconcile_startup(*, arm_source_scans: bool = True) -> dict[str, int]:
 
 def main() -> int:  # pragma: no cover - process entry point
     settings = get_settings()
+    settings.validate_runtime()
     configure_logging(settings.log_level, settings.log_format)
     if not wait_for_schema():
         return 1

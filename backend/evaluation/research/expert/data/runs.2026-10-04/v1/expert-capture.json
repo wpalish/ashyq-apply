@@ -1,0 +1,540 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "blind-experts@e5988bd7733e9be9ea0da85ca17692bd0fbb7da0",
+  "captured_at": "2026-10-04T02:25:40.440891+00:00",
+  "mode": "live",
+  "config": {
+    "unreviewed_proposals": true,
+    "comparison_mode": "independent_full_budget",
+    "source_harness_sha": "e5988bd7733e9be9ea0da85ca17692bd0fbb7da0",
+    "lossless_projection": true,
+    "excluded": []
+  },
+  "observations": [
+    {
+      "case_id": "groningen",
+      "programme_urls": [
+        "https://www.rug.nl/bachelors/computing-science/?lang=en"
+      ],
+      "ranked_urls": null,
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+            "excerpt": "If you enjoy problem-solving and want to work at the forefront of digital innovation, the Bachelor's degree in Computing Science at the University of Groningen is the programme for you.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.degree_award",
+          "value": "BSc in Computing Science",
+          "evidence": {
+            "url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+            "excerpt": "BSc in Computing Science",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.instruction_and_population",
+          "value": {
+            "language": "English",
+            "description": "international programme",
+            "duration": "three-year"
+          },
+          "evidence": {
+            "url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+            "excerpt": "The Bachelor's in Computing Science is a three-year, English-taught international programme.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": "international",
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "delft",
+      "programme_urls": [
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering"
+      ],
+      "ranked_urls": null,
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+            "excerpt": "Bachelor of Computer Science and Engineering",
+            "scope": {
+              "university": "Delft University of Technology",
+              "programme": "Bachelor of Computer Science and Engineering",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "intake",
+          "value": "September",
+          "evidence": {
+            "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+            "excerpt": "Start: September",
+            "scope": {
+              "university": "Delft University of Technology",
+              "programme": "Bachelor of Computer Science and Engineering",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "deadline",
+          "value": "January 15th",
+          "evidence": {
+            "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+            "excerpt": "Numerus fixus : January 15th",
+            "scope": {
+              "university": "Delft University of Technology",
+              "programme": "Bachelor of Computer Science and Engineering",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "aalto",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "vienna",
+      "programme_urls": [
+        "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+      ],
+      "ranked_urls": null,
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+            "excerpt": "Computer Science (bachelor's programme)",
+            "scope": {
+              "university": "University of Vienna",
+              "programme": "Computer Science",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.degree_award",
+          "value": "Bachelor of Science (BSc)",
+          "evidence": {
+            "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+            "excerpt": "Bachelor of Science (BSc)",
+            "scope": {
+              "university": "University of Vienna",
+              "programme": "Computer Science",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.language",
+          "value": "German (admission requirement)",
+          "evidence": {
+            "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+            "excerpt": "German (admission requirement)",
+            "scope": {
+              "university": "University of Vienna",
+              "programme": "Computer Science",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "application_period.observed",
+          "value": "2 March to 4 May 2026",
+          "evidence": {
+            "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+            "excerpt": "2 March to 4 May 2026",
+            "scope": {
+              "university": "University of Vienna",
+              "programme": "Computer Science",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": "2026"
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "application_fee",
+          "value": {
+            "amount": 50,
+            "currency": "EUR",
+            "description": "entrance exam administration fee"
+          },
+          "evidence": {
+            "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+            "excerpt": "€ 50 administration fee",
+            "scope": {
+              "university": "University of Vienna",
+              "programme": "Computer Science",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": "2026"
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "warsaw",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "ubc",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "toronto",
+      "programme_urls": [
+        "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science"
+      ],
+      "ranked_urls": null,
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+            "excerpt": "Computer Science (Specialist, Major)",
+            "scope": {
+              "university": "University of Toronto",
+              "programme": "Computer Science (Specialist, Major)",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "hku",
+      "programme_urls": [
+        "https://www.cds.hku.hk/prospective-students/undergraduate-old-2026/6999-computing-and-data-science/"
+      ],
+      "ranked_urls": null,
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.cds.hku.hk/prospective-students/undergraduate-old-2026/6999-computing-and-data-science/",
+            "excerpt": "Computing and Data Science (programme code: 6999) offers the choices of three professional degree programmes, namely: (1) Bachelor of Engineering in Computer Science [BEng(CompSc)] , (2) Bachelor of Engineering in Artificial Intelligence and Data Science [BEng(AI&DataSc)] , and (3) Bachelor of Arts and Sciences in Applied Artificial Intelligence [BASc(AppliedAI)] .",
+            "scope": {
+              "university": "University of Hong Kong",
+              "programme": "6999 Computing and Data Science",
+              "degree": "bachelor",
+              "field": "computer science",
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-04",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "ntu",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "kaist",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": null
+    }
+  ]
+}

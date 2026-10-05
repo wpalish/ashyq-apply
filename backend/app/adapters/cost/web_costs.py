@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from app.adapters.base import AdapterResult, Candidate, PageOutcome
+from app.adapters.document_ir import build_document_ir
 from app.adapters.extraction import (
     ClaimBuilder,
-    extract_costs,
     html_title,
     is_official_domain,
     pdf_to_text,
@@ -13,8 +13,14 @@ from app.adapters.extraction import (
     verification_domains,
 )
 from app.adapters.fetching import Fetcher
-from app.adapters.page_classifier import classify_page
+from app.adapters.html_parse import parse_html
+from app.adapters.page_classifier import classify_page, main_content
 from app.adapters.scope_reader import read_scope
+from app.adapters.structured_costs import (
+    StructuredCosts,
+    extract_structured_costs,
+    extract_unhandled_costs,
+)
 from app.domain.enums import ClaimType, CostCategory, SourceSpecificity
 from app.schemas.money import Money
 from app.schemas.result import CostBreakdown
@@ -99,13 +105,22 @@ class WebCostAdapter:
             page_text=text,
             allowed_domains=verification_domains(candidate.costs_url, candidate.domain),
         )
-        claims = extract_costs(text, builder)
+        structured = StructuredCosts()
+        if not res.is_pdf:
+            document = build_document_ir(
+                str(main_content(parse_html(res.text))), candidate.costs_url
+            )
+            structured = extract_structured_costs(document, builder, html=res.text)
+        unhandled = extract_unhandled_costs(text, builder, structured.handled_types)
+        claims = [*structured.claims, *unhandled]
         out.claims.extend(claims)
 
         breakdown.academic_year = year
         breakdown.source_urls.append(candidate.costs_url)
-        by_population = _tuition_by_population(claims)
-        for c in claims:
+        # Qualified tariffs and named housing alternatives are source facts.
+        # This adapter has no confirmed applicant tariff or housing selection.
+        by_population = _tuition_by_population(unhandled)
+        for c in unhandled:
             category = _CLAIM_TO_CATEGORY.get(c.claim_type)
             value = c.normalized_value
             if not isinstance(value, dict):
@@ -115,11 +130,15 @@ class WebCostAdapter:
                 currency=value["currency"],
                 academic_year=year,
                 source_url=candidate.costs_url,
+                range_low=value.get("range_low"),
+                range_high=value.get("range_high"),
             )
             if c.claim_type == ClaimType.TOTAL_COST_OF_ATTENDANCE:
                 breakdown.total = money
             elif category is not None:
                 breakdown.items[category] = money
+            if money.range_low is not None or money.range_high is not None:
+                breakdown.is_range = True
         if by_population is not None:
             low, high, currency = by_population
             # The applicant's fee population here is not inferred, so the
@@ -135,7 +154,7 @@ class WebCostAdapter:
             )
             breakdown.is_range = True
 
-        if not breakdown.items and breakdown.total is None:
+        if not claims and not breakdown.items and breakdown.total is None:
             out.errors.append(
                 f"{candidate.costs_url}: page was read but no cost figures could be extracted."
             )

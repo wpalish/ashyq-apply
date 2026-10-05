@@ -1,0 +1,211 @@
+{
+  "schema_version": "1",
+  "case_id": "kaist",
+  "packet_sha256": "7b73a92544bd55b138350a9f0612e40a1b6b7e90cf0cc08cf246e6c73bfb34a6",
+  "baseline_pipeline_sha": "2f4491eeb44442b8052bfe99e720415d2fd821ea",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T09:14:46.618340+00:00",
+  "ended_at": "2026-10-04T09:20:30.819562+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T09:15:28.896548+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:kaist.ac.kr international undergraduate admission scholarship computer science 2027",
+        "domains": [
+          "kaist.ac.kr"
+        ],
+        "max_results": 6
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-001.json",
+      "raw_log_sha256": "1ec4060037d8cda3c76bf15ad83a96f3596e8c6078f481f58c0f7355f2fa83c0",
+      "elapsed_ms": 1728,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 11354,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "Locate official undergraduate programme and international admissions sources.",
+      "observed_from_step": null,
+      "action": "search_provider: site:kaist.ac.kr international undergraduate admission scholarship computer science 2027",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T09:16:25.712781+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://admission.kaist.ac.kr/wz/api/common/files/view/intl-undergraduate/pdf/Admissions_Guide_for_2027_admission.pdf"
+      },
+      "outcome": "too_large",
+      "outcome_status": "failure",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-002.json",
+      "raw_log_sha256": "8918686d4d9a44d53f0545d2f1678b152604703c2909cadc69dba8caa34b10fc",
+      "elapsed_ms": 1943,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 23169,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Read the official 2027 undergraduate admissions guide.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://admission.kaist.ac.kr/wz/api/common/files/view/intl-undergraduate/pdf/Admissions_Guide_for_2027_admission.pdf",
+      "stage": "page_understanding",
+      "url": "https://admission.kaist.ac.kr/wz/api/common/files/view/intl-undergraduate/pdf/Admissions_Guide_for_2027_admission.pdf",
+      "final_url": "https://admission.kaist.ac.kr/wz/api/common/files/view/intl-undergraduate/pdf/Admissions_Guide_for_2027_admission.pdf"
+    },
+    {
+      "at": "2026-10-04T09:17:24.960678+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-003.json",
+      "raw_log_sha256": "a8f94a25d8a85a40c84be2ec5682c0899d6fddc85694a4d1321cca47cfbaf590",
+      "elapsed_ms": 11467,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 45057,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "The admissions PDF exceeded the fetch limit; inspect the official HTML admissions calendar.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+      "stage": "page_understanding",
+      "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+      "final_url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline"
+    },
+    {
+      "at": "2026-10-04T09:18:25.492579+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:kaist.ac.kr undergraduate computer science international admission IELTS scholarship",
+        "domains": [
+          "kaist.ac.kr"
+        ],
+        "max_results": 6
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-004.json",
+      "raw_log_sha256": "6ee116e1a96528bfa7d3461df79e9a7f12847e596cb53eb2dc06517938350214",
+      "elapsed_ms": 11428,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 65886,
+      "search_queries_cumulative": 2,
+      "step": 4,
+      "observed_before": "The admissions PDF exceeded the fetch limit and the timeline page was blocked. Search official sources for programme and admissions evidence.",
+      "observed_from_step": 3,
+      "action": "search_provider: site:kaist.ac.kr undergraduate computer science international admission IELTS scholarship",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T09:19:45.762063+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-005.json",
+      "raw_log_sha256": "d0187eb73d68248907cee67daa80e5e604d9bf6fb53d01b99ce87199e43b8b9b",
+      "elapsed_ms": 10325,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 93607,
+      "search_queries_cumulative": 2,
+      "step": 5,
+      "observed_before": "Admissions timeline is blocked; inspect the official scholarship page.",
+      "observed_from_step": 4,
+      "action": "fetcher: https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+      "stage": "page_understanding",
+      "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+      "final_url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

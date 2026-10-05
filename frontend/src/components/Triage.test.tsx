@@ -153,7 +153,10 @@ describe('triage', () => {
         expect(screen.queryByTestId('triage-globe')).toBeNull();
       });
       expect(globeHeightFor(740)).toBe(0);
-      expect(globeHeightFor(844)).toBe(170);
+      // Unimatch's two-row phone header leaves no room on an 844 px phone;
+      // a 932 px one keeps a 146 px band.
+      expect(globeHeightFor(844)).toBe(0);
+      expect(globeHeightFor(932)).toBe(194);
       expect(globeHeightFor(1200)).toBe(200);
     });
   });

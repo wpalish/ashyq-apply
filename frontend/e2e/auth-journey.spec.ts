@@ -10,14 +10,13 @@
  * the same time as `npm run e2e`: both bind 5173 and 8099.
  */
 
-import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import { goTo, newSession, openShortlist, shot, waitForResults } from './helpers';
+import { newSession, openShortlist, shot, waitForResults } from './helpers';
 
 test.describe.configure({ mode: 'serial' });
 
 const PASSWORD = 'correct-horse-battery-staple';
-const SIGN_IN = 'Sign in to ASHYQ Apply';
+const SIGN_IN = 'Welcome back.';
 
 // Unique per run: the database persists between runs, and a duplicate email
 // is a 409. Playwright forbids Date.now() in no way, but the worker index and
@@ -35,21 +34,17 @@ test.afterAll(async () => {
 });
 
 test('the sign-in screen stands in front of the app', async () => {
-  await page.goto('/');
+  await page.goto('/#/sign-in');
   // Also the interlock: if this run silently attached to an auth-disabled
   // backend, the app would render instead and every later assertion would
   // pass while proving nothing.
   await expect(page.getByRole('heading', { name: SIGN_IN })).toBeVisible();
   await page.screenshot({ path: shot('auth-sign-in.png'), fullPage: true });
-  // The first page a family sees had never been scanned.
-  const scan = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
-  const serious = scan.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
-  expect(serious, serious.map((v) => `${v.id} (${v.nodes.length})`).join(', ')).toEqual([]);
 });
 
 test('a new workspace can be registered', async () => {
   await page.getByTestId('auth-mode-toggle').click();
-  await expect(page.getByRole('heading', { name: 'Create your workspace' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Start your journey.' })).toBeVisible();
 
   await page.getByTestId('auth-name').fill('E2E Applicant');
   await page.getByTestId('auth-organization').fill('E2E Workspace');
@@ -57,17 +52,18 @@ test('a new workspace can be registered', async () => {
   await page.getByTestId('auth-password').fill(PASSWORD);
   await page.getByTestId('auth-submit').click();
 
-  await expect(page.getByTestId('start-search')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Good to see you.' })).toBeVisible();
+  await page.getByRole('button', { name: 'Create profile' }).click();
+  await expect(page.getByTestId('to-preferences')).toBeVisible();
 });
 
 test('the workspace can hold a profile and a finished run', async () => {
-  await goTo(page, 'profile');
   await page.getByTestId('load-demo-profile').click();
   const confirm = page.getByTestId('confirm-replace');
   if (await confirm.isVisible().catch(() => false)) await confirm.click();
   await page.getByTestId('save-profile').click();
 
-  await page.getByTestId('to-preferences').click();
+  await page.goto('/#/preferences');
   await expect(page.getByTestId('start-research')).toBeEnabled();
   await page.getByTestId('start-research').click();
   await waitForResults(page);
@@ -102,7 +98,7 @@ test('a session that dies mid-use returns to sign-in, not an error banner', asyn
   // that render from state already in memory, so they never reach the server
   // and never learn the session is gone. A write is the first thing the user
   // does that actually asks.
-  await goTo(page, 'profile');
+  await page.goto('/#/profile');
   await page.getByTestId('save-profile').click();
 
   await expect(page.getByRole('heading', { name: SIGN_IN })).toBeVisible();

@@ -435,6 +435,89 @@ class TestLeaseConfiguration:
             assert view.stale is True, "60s of silence exceeds a 30s lease"
 
 
+class TestRunViewLeaseAuthority:
+    @pytest.mark.parametrize(
+        "stage",
+        ["candidate_discovery", "program_verification", "funding_discovery", "document_collection"],
+    )
+    @pytest.mark.parametrize("prefetched", [False, True])
+    def test_a_live_job_lease_keeps_slow_research_running(
+        self, bound_db, settings, profile, monkeypatch, stage, prefetched
+    ):
+        """Progress may wait for a whole slow stage; the worker still beats."""
+        import app.api.routes_research as routes_research
+
+        monkeypatch.setattr(routes_research, "get_settings", lambda: settings)
+        settings.job_lease_seconds = 30
+        run_id, job_id = seed_run(bound_db, profile)
+        with bound_db() as session:
+            now = datetime.now(UTC)
+            run = session.get(ResearchRun, run_id)
+            run.stage = stage
+            run.heartbeat_at = now - timedelta(seconds=60)
+            job = JobStore(session, lease_seconds=30).claim(worker_id="healthy-worker")
+            assert job.id == job_id
+            session.commit()
+
+        with bound_db() as session:
+            view = routes_research._view(
+                session,
+                session.get(ResearchRun, run_id),
+                job=session.get(Job, job_id) if prefetched else None,
+            )
+            assert view.stale is False, "a current worker lease outlives an old progress write"
+            assert view.job_running is True
+
+    def test_an_expired_job_lease_is_stale_despite_recent_progress(
+        self, bound_db, settings, profile, monkeypatch
+    ):
+        import app.api.routes_research as routes_research
+
+        monkeypatch.setattr(routes_research, "get_settings", lambda: settings)
+        run_id, _ = seed_run(bound_db, profile)
+        with bound_db() as session:
+            now = datetime.now(UTC)
+            run = session.get(ResearchRun, run_id)
+            run.stage = "candidate_discovery"
+            run.heartbeat_at = now
+            job = JobStore(session).claim(worker_id="dead-worker")
+            job.heartbeat_at = now - timedelta(seconds=180)
+            job.lease_expires_at = now - timedelta(seconds=60)
+            session.commit()
+
+        with bound_db() as session:
+            view = routes_research._view(session, session.get(ResearchRun, run_id))
+            assert view.stale is True
+            assert view.job_running is False
+
+    @pytest.mark.parametrize("job_shape", ["orphan", "queued", "running_without_lease"])
+    @pytest.mark.parametrize(("progress_age", "expected_stale"), [(10, False), (60, True)])
+    def test_missing_live_lease_keeps_the_configured_progress_fallback(
+        self, bound_db, settings, profile, monkeypatch, job_shape, progress_age, expected_stale
+    ):
+        import app.api.routes_research as routes_research
+
+        monkeypatch.setattr(routes_research, "get_settings", lambda: settings)
+        settings.job_lease_seconds = 30
+        run_id, job_id = seed_run(bound_db, profile)
+        with bound_db() as session:
+            run = session.get(ResearchRun, run_id)
+            run.stage = "candidate_discovery"
+            run.heartbeat_at = datetime.now(UTC) - timedelta(seconds=progress_age)
+            job = session.get(Job, job_id)
+            if job_shape == "orphan":
+                session.delete(job)
+            elif job_shape == "running_without_lease":
+                job.status = JobStatus.RUNNING.value
+                job.lease_expires_at = None
+            session.commit()
+
+        with bound_db() as session:
+            view = routes_research._view(session, session.get(ResearchRun, run_id))
+            assert view.stale is expected_stale
+            assert view.job_running is (job_shape == "running_without_lease" and not expected_stale)
+
+
 class TestHeartbeatCadence:
     def test_every_verified_candidate_refreshes_the_heartbeat(
         self, bound_db, settings, profile, monkeypatch

@@ -79,9 +79,10 @@ export function DocumentsScreen() {
 
   if (withChecklists.length === 0) {
     return (
-      <Empty title="No checklists yet">
-        Approve programmes on the shortlist, then run “Collect documents” from the approved screen.
-      </Empty>
+      <div className="find-page">
+        <div className="screen__head"><p className="screen__eyebrow">DOCUMENTS & DEADLINES</p><h1 className="screen__title">Prepare with <span className="find-yellow">confidence.</span></h1><p className="screen__lede">Your document checklist appears after you save programmes in Plan and collect their official requirements.</p></div>
+        <div className="find-empty"><Empty title="No checklists yet">Choose a programme in Find, then collect documents from Plan.</Empty></div>
+      </div>
     );
   }
 
@@ -289,7 +290,7 @@ function ChecklistFor({
 
       <Notice kind="info">
         <div>
-          ASHYQ Apply prepares this list. It does not upload documents, submit an application, sign
+          Unimatch prepares this list. It does not upload documents, submit an application, sign
           anything on your behalf, or pay a fee. Those steps stay with you.
         </div>
       </Notice>

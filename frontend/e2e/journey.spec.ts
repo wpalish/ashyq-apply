@@ -23,25 +23,33 @@ test.afterAll(async () => {
 });
 
 test('profile screen states the cost of every gap', async () => {
-  // The first screen is now the three-field search; the full profile is its
-  // own address under Me.
   await page.goto('/#/profile');
-  await expect(page.getByRole('heading', { name: 'Who is applying' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Tell us about yourself/ })).toBeVisible();
   await expect(page.locator('.topbar').getByText('Demo data')).toBeVisible();
+  await expect(page.getByLabel('Field of study')).toHaveValue('');
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(2).click();
+  await expect(page.getByTestId('ielts-overall')).toHaveValue('');
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(0).click();
+  await page.getByTestId('load-demo-profile').click();
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(2).click();
   await page.screenshot({ path: shot('01-profile.png'), fullPage: true });
 
   // Removing the English scores must produce a gap that explains the consequence.
   await page.getByTestId('ielts-overall').fill('');
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(4).click();
   await expect(page.getByTestId('gap-list')).toContainText('English-language minimums', {
     timeout: 10_000,
   });
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(2).click();
   await page.getByTestId('ielts-overall').fill('7');
 });
 
 test('preferences screen exposes the scoring weights and warns about live mode', async () => {
   await page.goto('/#/profile');
-  await page.getByTestId('to-preferences').click();
-  await expect(page.getByRole('heading', { name: 'What matters to you' })).toBeVisible();
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(0).click();
+  await page.getByTestId('load-demo-profile').click();
+  await page.evaluate(() => { window.location.hash = '#/preferences'; });
+  await expect(page.getByRole('heading', { name: /Shape your perfect match/ })).toBeVisible();
   await expect(page.getByText('It is not a probability of admission')).toBeVisible();
 
   await page.getByTestId('demo-toggle').uncheck();
@@ -58,7 +66,8 @@ test('research runs to completion and reports what it could not read', async () 
   await page.screenshot({ path: shot('03-progress-running.png'), fullPage: true });
 
   await waitForResults(page);
-  await expect(page.getByText('Research complete')).toBeVisible();
+  // The night reveal names what the run found (the redesign's results moment).
+  await expect(page.getByRole('heading', { name: /\d+ programmes? in \d+ countr(y|ies)/ })).toBeVisible();
   // Unreadable pages are surfaced, not swallowed.
   await expect(page.getByText(/Pages that could not be read/)).toBeVisible();
   await page.screenshot({ path: shot('04-progress-complete.png'), fullPage: true });
@@ -164,7 +173,7 @@ test('conflicting official sources are shown with a drafted question', async () 
   await openShortlist(page);
   await goTo(page, 'sources');
 
-  await expect(page.getByRole('heading', { name: 'What we could not settle' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /See the proof behind every match/ })).toBeVisible();
   await expect(page.getByTestId('conflict-list')).toContainText('minimum overall IELTS band');
   await expect(page.getByTestId('conflict-list')).toContainText('more specific source');
 
@@ -196,7 +205,7 @@ test('approve, collect documents, and export', async () => {
   await page.screenshot({ path: shot('10-approved.png'), fullPage: true });
 
   await page.getByTestId('collect-documents').click();
-  await expect(page.getByRole('heading', { name: 'What to prepare, and when' })).toBeVisible({
+  await expect(page.getByRole('heading', { name: /Prepare with confidence/ })).toBeVisible({
     timeout: 60_000,
   });
   await expect(page.locator('.doc').first()).toBeVisible({ timeout: 30_000 });
@@ -256,7 +265,7 @@ test('screens have addresses: back, forward, reload and a gated link', async () 
 
   await page.goBack();
   await expect(page).toHaveURL(/#\/shortlist$/);
-  await expect(page.getByRole('heading', { name: 'The shortlist' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Find your best matches/ })).toBeVisible();
 
   await page.goForward();
   await expect(page).toHaveURL(/#\/funding$/);
@@ -270,9 +279,9 @@ test('screens have addresses: back, forward, reload and a gated link', async () 
 test('a link to a screen that is not reachable yet explains itself', async ({ browser }) => {
   // A bookmark made before there were any results, opened in a clean session.
   const fresh = await browser.newPage();
-  await fresh.goto('/#/shortlist');
+  await fresh.goto('/#/funding');
   await expect(fresh.getByTestId('redirect-notice')).toBeVisible();
   await expect(fresh.getByTestId('redirect-notice')).toContainText('No results yet');
-  await expect(fresh).toHaveURL(/#\/start$/);
+  await expect(fresh).toHaveURL(/#\/profile$/);
   await fresh.close();
 });

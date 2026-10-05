@@ -1,0 +1,282 @@
+{
+  "schema_version": "1",
+  "case_id": "hku",
+  "packet_sha256": "163916b930bcbf0e64e14a36352b7c6487d4ba55efecc883d057556a9cdd3d88",
+  "baseline_pipeline_sha": "2f4491eeb44442b8052bfe99e720415d2fd821ea",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T09:11:47.407069+00:00",
+  "ended_at": "2026-10-04T09:18:30.170070+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T09:12:29.808980+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site.hku.hk bachelor computer science international admissions English requirements scholarships",
+        "domains": [
+          "hku.hk"
+        ],
+        "max_results": 6
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-001.json",
+      "raw_log_sha256": "49afd18b3dbb89dd65ac228987fe5bd8d9b87fcc379a84e141226f123dbec75a",
+      "elapsed_ms": 2247,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 11886,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "Find official programme and international undergraduate admissions pages.",
+      "observed_from_step": null,
+      "action": "search_provider: site.hku.hk bachelor computer science international admissions English requirements scholarships",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T09:13:26.188036+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.cs.hku.hk/programmes/beng-compsc/admission"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-002.json",
+      "raw_log_sha256": "e600a23b91dd326921ed6e3909f6394ecbf6e1dbc58f88f69826fc2c49434e8a",
+      "elapsed_ms": 3738,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 25082,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Open the official Computer Science admission page to verify the exact degree.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://www.cs.hku.hk/programmes/beng-compsc/admission",
+      "stage": "page_understanding",
+      "url": "https://www.cs.hku.hk/programmes/beng-compsc/admission",
+      "final_url": "https://www.cs.hku.hk/programmes/beng-compsc/admission"
+    },
+    {
+      "at": "2026-10-04T09:14:24.277569+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.admissions.hku.hk/sites/default/files/2026-09/HKU%20International%20UG%20Admissions%20Pamphlet%202027%20%28Sep%202026%29_0.pdf"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-003.json",
+      "raw_log_sha256": "6d7a13fc6d0c0e97192f720331f4e7a65562855e51d4249ba4cf6b6aa8178e54",
+      "elapsed_ms": 1916,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 45696,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "The department explicitly lists the Bachelor of Engineering in Computer Science and an international admissions route. Next inspect the 2027 admissions pamphlet.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://www.admissions.hku.hk/sites/default/files/2026-09/HKU%20International%20UG%20Admissions%20Pamphlet%202027%20%28Sep%202026%29_0.pdf",
+      "stage": "page_understanding",
+      "url": "https://www.admissions.hku.hk/sites/default/files/2026-09/HKU%20International%20UG%20Admissions%20Pamphlet%202027%20%28Sep%202026%29_0.pdf",
+      "final_url": "https://www.admissions.hku.hk/sites/default/files/2026-09/HKU%20International%20UG%20Admissions%20Pamphlet%202027%20%28Sep%202026%29_0.pdf"
+    },
+    {
+      "at": "2026-10-04T09:15:23.554141+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://admissions.hku.hk/apply/international-qualifications"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-004.json",
+      "raw_log_sha256": "1c2579992c9ea262ad33c1da056ad2f003fd5da7c88cd52889f96d06fe6f5282",
+      "elapsed_ms": 705,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 56675,
+      "search_queries_cumulative": 1,
+      "step": 4,
+      "observed_before": "The admissions pamphlet was blocked; inspect the official international admissions page instead.",
+      "observed_from_step": 3,
+      "action": "fetcher: https://admissions.hku.hk/apply/international-qualifications",
+      "stage": "page_understanding",
+      "url": "https://admissions.hku.hk/apply/international-qualifications",
+      "final_url": "https://admissions.hku.hk/apply/international-qualifications"
+    },
+    {
+      "at": "2026-10-04T09:16:26.059002+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:hku.hk undergraduate international admissions 2027 IELTS Kazakhstan scholarships tuition",
+        "domains": [
+          "hku.hk"
+        ],
+        "max_results": 8
+      },
+      "outcome": "provider_unavailable",
+      "outcome_status": "failure",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-005.json",
+      "raw_log_sha256": "ceea659c39b86eb642637b7c8eb5a05da208503c1fa6548153ffb939a6ebd48a",
+      "elapsed_ms": 376,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 66709,
+      "search_queries_cumulative": 2,
+      "step": 5,
+      "observed_before": "International admissions sources were robots-blocked. Search for other official admissions and scholarship publications.",
+      "observed_from_step": 4,
+      "action": "search_provider: site:hku.hk undergraduate international admissions 2027 IELTS Kazakhstan scholarships tuition",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T09:18:06.255950+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science/"
+      },
+      "outcome": "action_timeout",
+      "outcome_status": "failure",
+      "policy_mode": "same_policy",
+      "raw_log_path": "hku-006.json",
+      "raw_log_sha256": "d2fe7bb6e12f9e31955319c0985bdf2076afa2c664a2521c6d814b0ebdc5928e",
+      "elapsed_ms": 6957,
+      "fetcher_calls_cumulative": 4,
+      "elapsed_ms_cumulative": 95007,
+      "search_queries_cumulative": 2,
+      "step": 6,
+      "observed_before": "Inspect the linked undergraduate admissions page for official requirements and related links.",
+      "observed_from_step": 5,
+      "action": "fetcher: https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science/",
+      "stage": "page_understanding",
+      "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science/",
+      "final_url": null
+    }
+  ],
+  "proposals": [
+    {
+      "claim_key": "programme.exists",
+      "value": true,
+      "source_url": "https://www.cs.hku.hk/programmes/beng-compsc/admission",
+      "excerpt": "Applicants who wish to apply for admission to the Bachelor of Engineering in Computer Science (BEng(CompSc)) may apply through one of the following schemes, namely JUPAS, Non-JUPAS, International Admissions Scheme and Admission of Undergraduate Students from the Mainland*, in the same admission year.",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Hong Kong",
+        "programme": "Bachelor of Engineering in Computer Science (BEng(CompSc))",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        2
+      ],
+      "status": "unreviewed"
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "supporting_steps": [
+        2
+      ],
+      "proposal_indices": [
+        0
+      ],
+      "evidence": [
+        {
+          "action_step": 2,
+          "source_url": "https://www.cs.hku.hk/programmes/beng-compsc/admission",
+          "excerpt": "Applicants who wish to apply for admission to the Bachelor of Engineering in Computer Science (BEng(CompSc)) may apply through one of the following schemes, namely JUPAS, Non-JUPAS, International Admissions Scheme and Admission of Undergraduate Students from the Mainland*, in the same admission year.",
+          "location": {
+            "kind": "text",
+            "block_id": null,
+            "section_path": [],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "University of Hong Kong",
+        "programme": "Bachelor of Engineering in Computer Science (BEng(CompSc))",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Exact bachelor programme explicitly named; this does not establish a 2027 intake."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

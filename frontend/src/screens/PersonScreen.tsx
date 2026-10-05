@@ -313,7 +313,7 @@ export function PersonScreen({
             )}
             {/* Offered only when it would work. A button that leads to a 403 is
                 worse than none: it invites the person to be refused. */}
-            {!isMe && card.dm_policy !== 'nobody' && (
+            {!isMe && card.can_message && (
               <button
                 className="btn btn--sm btn--primary"
                 type="button"
@@ -322,7 +322,7 @@ export function PersonScreen({
                 {t('messages.write')}
               </button>
             )}
-            {!isMe && card.dm_policy === 'nobody' && (
+            {!isMe && !card.can_message && (
               <span className="xs faint">{t('messages.closed')}</span>
             )}
             {!isMe && (

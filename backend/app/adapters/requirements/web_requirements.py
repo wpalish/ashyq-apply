@@ -23,6 +23,8 @@ from app.adapters.extraction import (
     ClaimBuilder,
     excerpt_around,
     extract_admission_route,
+    extract_costs,
+    extract_programme_faculty,
     extract_requirements,
     for_matching,
     html_title,
@@ -31,7 +33,7 @@ from app.adapters.extraction import (
     readable_text,
     verification_domains,
 )
-from app.adapters.fetching import Fetcher
+from app.adapters.fetching import Fetcher, same_source_site
 from app.adapters.matching import degree_matches, program_matches
 from app.adapters.page_classifier import (
     PageType,
@@ -42,8 +44,10 @@ from app.adapters.page_classifier import (
 from app.adapters.scope_reader import read_scope
 from app.adapters.search.ontology import titles_name_same_programme
 from app.adapters.structured_extraction import extract_table_requirements
+from app.domain.claim_verifier import is_verbatim_excerpt
 from app.domain.enums import ClaimType, FetchOutcome, SourceSpecificity
 from app.domain.programme_identity import Verdict
+from app.schemas.claim import MAX_EXCERPT_CHARS
 
 #: An intake is open only when a page says so. Each pattern must capture the
 #: sentence it matched, which becomes the claim's excerpt.
@@ -107,12 +111,29 @@ _WAIVER_NEGATION = re.compile(
 _WAIVER_OFFERED = re.compile(r"\b(available|offered|granted|waive[ds]?|waiving)\b", re.IGNORECASE)
 
 
+#: Experiment ER-08 (expert trace 2026-10-04), on since the 10-case paired run
+#: 37279746829 (owner approved 2026-10-05); False turns it off.
+#: After a programme page is known, one public query per topic finds the
+#: official page that publishes it. Groningen, NTU and HKU each answered the
+#: English, fee and deadline questions on pages this adapter never opened,
+#: and each was the top same-institution result of one query.
+TOPIC_SEARCH = True
+#: Topic name to the public query; only the institution name is filled in.
+_TOPIC_QUERIES = (
+    ("english", "{name} undergraduate English language requirements international applicants"),
+    ("fees", "{name} undergraduate tuition fees international students"),
+    ("deadline", "{name} undergraduate application deadline international students"),
+)
+
+
 @dataclass(frozen=True)
 class _Target:
     url: str
     specificity: SourceSpecificity
     #: Reached by following an English-requirement link from an official page.
     language_follow: bool = False
+    #: Found by experiment ER-08 for this topic.
+    topic: str | None = None
 
 
 #: Language-requirement pages followed per programme, beyond the two targets.
@@ -147,6 +168,9 @@ class WebRequirementsAdapter:
     def __init__(self, fetcher: Fetcher, academic_year: str) -> None:
         self.fetcher = fetcher
         self.academic_year = academic_year
+        #: Topic pages found per institution: programmes of one university
+        #: share them, so each query is sent once per run.
+        self._topic_pages: dict[str, tuple[tuple[str, str], ...]] = {}
 
     async def verify(
         self, candidate: Candidate, program: CandidateProgram, intake: str
@@ -163,6 +187,11 @@ class WebRequirementsAdapter:
         ]
         queue = [t for t in targets if t]
         visited = {t.url for t in queue}
+        if TOPIC_SEARCH and program.url:
+            for topic, url in await self._find_topic_pages(candidate, program, out):
+                if url not in visited:
+                    visited.add(url)
+                    queue.append(_Target(url, SourceSpecificity.UNIVERSITY_ADMISSIONS, topic=topic))
         followed = 0
         while queue:
             target = queue.pop(0)
@@ -185,6 +214,19 @@ class WebRequirementsAdapter:
                 ):
                     out.retry_urls.append(target.url)
                 continue
+            if not same_source_site(target.url, res.final_url or target.url):
+                out.pages_failed += 1
+                out.errors.append(
+                    f"{target.url}: redirected off the source site; no requirements verified"
+                )
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=target.url,
+                        category="fetch-failed",
+                        detail="redirected off the source site",
+                    )
+                )
+                continue
 
             text = pdf_to_text(res.content) if res.is_pdf else readable_text(res.text)
             if not text.strip():
@@ -201,12 +243,35 @@ class WebRequirementsAdapter:
                 )
                 continue
 
-            page = classify_page(url=target.url, html="" if res.is_pdf else res.text, text=text)
+            page_url = res.final_url or target.url
+            page = classify_page(url=page_url, html="" if res.is_pdf else res.text, text=text)
             out.page_types.append((target.url, page.page_type.value))
 
-            page_title = html_title(res.text) if not res.is_pdf else target.url.rsplit("/", 1)[-1]
+            if (
+                target.url == program.url
+                and page.accepts("program_exists")
+                and page.degree_level
+                and program.degree
+                and str(page.degree_level) != str(program.degree)
+            ):
+                out.errors.append(
+                    f"{target.url}: final page {page_url} names {page.degree_level}; "
+                    f"cannot verify the requested {program.degree} programme"
+                )
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=target.url,
+                        category="classifier-rejected",
+                        page_type=page.page_type.value,
+                        readable_chars=len(text),
+                        detail="final page names a different degree level",
+                    )
+                )
+                continue
+
+            page_title = html_title(res.text) if not res.is_pdf else page_url.rsplit("/", 1)[-1]
             builder = ClaimBuilder(
-                source_url=target.url,
+                source_url=page_url,
                 page_title=page_title,
                 specificity=(
                     SourceSpecificity.PROGRAM_INTAKE
@@ -216,8 +281,8 @@ class WebRequirementsAdapter:
                 program=program.name,
                 intake=intake,
                 academic_year=page.academic_year or self.academic_year,
-                official_domain=target.url.startswith("fixture://")
-                or is_official_domain(target.url, [candidate.domain]),
+                official_domain=page_url.startswith("fixture://")
+                or is_official_domain(page_url, [candidate.domain]),
                 extraction_method="fixture" if target.url.startswith("fixture://") else "html_rule",
                 accessed_at=res.fetched_at,
                 # Read from the page's own words only. The programme, intake
@@ -230,7 +295,7 @@ class WebRequirementsAdapter:
                 # claim (found in the owner's adversarial review, 2026-09-25).
                 page_text=text,
                 page_type=page.page_type.value,
-                allowed_domains=verification_domains(target.url, candidate.domain),
+                allowed_domains=verification_domains(page_url, candidate.domain),
             )
 
             if not page.accepts("requirements"):
@@ -242,6 +307,10 @@ class WebRequirementsAdapter:
                 if page.page_type in _LISTING_PAGE_TYPES and self._claim_listed_programme(
                     program, builder, text
                 ):
+                    # The page that confirms the programme may state its faculty
+                    # in a labelled field; one value only (HKU, 2026-09-28).
+                    if not res.is_pdf:
+                        extract_programme_faculty(text, builder)
                     out.claims.extend(builder.claims)
                     out.page_outcomes.append(
                         PageOutcome(
@@ -260,7 +329,7 @@ class WebRequirementsAdapter:
                     # whatever type it reads as. Only the structural IELTS reader runs;
                     # verbatim and domain checks still apply to what it reads.
                     tabled = extract_table_requirements(
-                        build_document_ir(res.text, target.url), builder
+                        build_document_ir(res.text, page_url), builder
                     )
                     if tabled:
                         out.claims.extend(builder.claims)
@@ -313,14 +382,16 @@ class WebRequirementsAdapter:
                 )
                 continue
 
-            self._claim_program_exists(page, program, builder, out, text)
+            self._claim_program_exists(page, program, builder, out, text, identity_text=page_title)
+            if page.accepts("program_exists") and not res.is_pdf:
+                extract_programme_faculty(text, builder)
             if page.accepts("requirements"):
                 # Structure first: a table row states the test, the column and the
                 # value together (V2-30C). A prose claim of a type the table
                 # already answered is dropped, so one page never states two
                 # IELTS minimums from two readings of itself.
                 tabled = (
-                    extract_table_requirements(build_document_ir(res.text, target.url), builder)
+                    extract_table_requirements(build_document_ir(res.text, page_url), builder)
                     if not res.is_pdf
                     else []
                 )
@@ -334,6 +405,15 @@ class WebRequirementsAdapter:
             self._claim_english_test_types(text, builder)
             self._claim_english_waiver(text, builder)
             self._claim_fees(text, builder)
+            if (
+                TOPIC_SEARCH
+                and page.accepts("costs")
+                and (target.topic is not None or target.url == program.url)
+            ):
+                # A programme page or a fee page states the tuition table
+                # (Groningen: non-EU/EEA per academic year on the programme
+                # page), which the university-level cost adapter never reads.
+                extract_costs(text, builder)
 
             out.claims.extend(builder.claims)
             out.page_outcomes.append(
@@ -360,7 +440,7 @@ class WebRequirementsAdapter:
                 and not res.is_pdf
                 and not any(c.claim_type is ClaimType.IELTS_MIN_OVERALL for c in out.claims)
             ):
-                for url in _language_links(res.text, target.url, candidate.domain):
+                for url in _language_links(res.text, page_url, candidate.domain):
                     if url in visited or followed >= _MAX_LANGUAGE_FOLLOWS:
                         continue
                     visited.add(url)
@@ -376,9 +456,81 @@ class WebRequirementsAdapter:
             )
         return out
 
+    async def _find_topic_pages(
+        self, candidate: Candidate, program: CandidateProgram, out: AdapterResult
+    ) -> tuple[tuple[str, str], ...]:
+        """One official page per topic, from one public query each, or nothing.
+
+        Only the institution's name enters a query. A result counts only on the
+        institution's own domain, outside excluded paths and not naming another
+        degree level. A provider failure (a 429 included) ends the search for
+        this institution; nothing is retried.
+        """
+        from app.adapters.discovery.live_discovery import (
+            is_excluded_path,
+            names_other_degree_level,
+            registrable_domain,
+            same_institution,
+        )
+        from app.adapters.search import SearchError, get_search_provider
+        from app.adapters.search import intent as intent_module
+        from app.adapters.search.base import search_failure_diagnostic
+        from app.adapters.search.intent import DEFAULT_QUERY_BUDGET
+
+        key = candidate.domain or candidate.name
+        if key in self._topic_pages:
+            return self._topic_pages[key]
+        self._topic_pages[key] = ()
+        if not candidate.domain:
+            return ()
+        # One institution gets DEFAULT_QUERY_BUDGET queries in all; topic
+        # search spends only what discovery left (English first).
+        remaining = DEFAULT_QUERY_BUDGET - candidate.search_queries_used
+        if intent_module.SHARED_QUERY_BUDGET:
+            remaining -= intent_module.SCHOLARSHIP_QUERY_RESERVE
+        if remaining <= 0:
+            out.errors.append(
+                f"Topic search not run: discovery used the {DEFAULT_QUERY_BUDGET}-query budget"
+            )
+            return ()
+        try:
+            provider = get_search_provider()
+        except SearchError:
+            return ()
+        found: list[tuple[str, str]] = []
+        for topic, template in _TOPIC_QUERIES[:remaining]:
+            if intent_module.SHARED_QUERY_BUDGET:
+                candidate.search_queries_used += 1
+            try:
+                response = await provider.search(
+                    query=template.format(name=candidate.name),
+                    domains=[registrable_domain(candidate.domain) or candidate.domain],
+                    max_results=5,
+                )
+            except SearchError as exc:
+                out.errors.append(
+                    f"Topic search ({topic}): {search_failure_diagnostic(provider.name, exc)}"
+                )
+                break
+            taken = {u for _, u in found}
+            for result in response.results:
+                url = result.url
+                if (
+                    same_institution(url, candidate.domain)
+                    and not is_excluded_path(url)
+                    and not names_other_degree_level(url, str(program.degree))
+                    and url not in taken
+                ):
+                    found.append((topic, url))
+                    break
+        self._topic_pages[key] = tuple(found)
+        return self._topic_pages[key]
+
     # --- individual claims ------------------------------------------------
 
-    def _claim_program_exists(self, page, program, builder, out, text: str) -> None:
+    def _claim_program_exists(
+        self, page, program, builder, out, text: str, *, identity_text: str | None = None
+    ) -> None:
         """Only a programme page whose own subject matches may confirm existence."""
         if not page.accepts("program_exists"):
             if page.page_type in _LISTING_PAGE_TYPES and self._claim_listed_programme(
@@ -426,21 +578,50 @@ class WebRequirementsAdapter:
             return
 
         excerpt = _first_sentence_containing(text, page.subject) or page.subject or ""
-        builder.add(
-            ClaimType.PROGRAM_EXISTS,
-            {
-                "program": page.subject,
-                "degree": page.degree_level,
-                "language": page.language_of_instruction,
-                "matched_because": why,
-            },
-            excerpt,
-            confidence=0.9,
-            section="Programme identity",
-            # The programme's own title states its degree; a stray "master's"
-            # elsewhere on the page must not re-scope it (run 76, HKU).
-            degree=str(page.degree_level) if page.degree_level else None,
+        language = page.language_of_instruction
+        identity_only = (
+            not is_verbatim_excerpt(excerpt, text)
+            and bool(identity_text)
+            and is_verbatim_excerpt(page.subject or "", identity_text or "")
         )
+        if identity_only:
+            # This is the actual fetched title (or h1 fallback), outside the
+            # selected article. It proves identity only; never join it to body
+            # text to manufacture language or requirement evidence.
+            excerpt = identity_text or ""
+            language = None
+        if not identity_only and page.language_evidence is not None:
+            proof = _complete_language_excerpt(text, page.language_evidence)
+            if proof:
+                excerpt = proof
+            else:
+                language = None
+        reading_context = builder.page_text
+        try:
+            if identity_only:
+                builder.page_text = identity_text
+            claim = builder.add(
+                ClaimType.PROGRAM_EXISTS,
+                {
+                    "program": page.subject,
+                    "degree": page.degree_level,
+                    "language": language,
+                    "matched_because": why,
+                },
+                excerpt,
+                confidence=0.9,
+                section="Programme identity",
+                # The programme's own title states its degree; a stray "master's"
+                # elsewhere on the page must not re-scope it (run 76, HKU).
+                degree=str(page.degree_level) if page.degree_level else None,
+            )
+        finally:
+            builder.page_text = reading_context
+        if claim is None and builder.rejected:
+            out.errors.append(
+                f"{builder.meta['source_url']}: programme identity rejected: "
+                f"{builder.rejected[-1][2].value}"
+            )
 
     @staticmethod
     def _claim_listed_programme(program, builder, text: str) -> bool:
@@ -463,7 +644,7 @@ class WebRequirementsAdapter:
                 "language": None,
                 "matched_because": "named by its full degree title on a listing page",
             },
-            _first_sentence_containing(text, title) or title,
+            _first_sentence_containing(text, title, max_characters=300) or title,
             confidence=0.7,
             section="Programme identity",
             degree=str(degree) if degree else None,
@@ -642,7 +823,20 @@ def _listed_programme(text: str, program) -> tuple[str, str | None] | None:
     return None
 
 
-def _first_sentence_containing(text: str, needle: str | None) -> str:
+def _complete_language_excerpt(text: str, evidence: str) -> str:
+    """Locate the whole main-content proof in the reader's original text."""
+    if not evidence:
+        return ""
+    pattern = re.compile(r"\s+".join(re.escape(word) for word in evidence.split()), re.I)
+    match = pattern.search(text)
+    if match is None or match.end() - match.start() > MAX_EXCERPT_CHARS:
+        return ""
+    return match.group()
+
+
+def _first_sentence_containing(
+    text: str, needle: str | None, *, max_characters: int | None = None
+) -> str:
     """A real quote from the page, or empty. Never a sentence we wrote."""
     if not needle:
         return ""
@@ -650,7 +844,12 @@ def _first_sentence_containing(text: str, needle: str | None) -> str:
     index = flat.lower().find(needle.lower())
     if index < 0:
         return ""
-    return excerpt_around(flat, index, index + len(needle))
+    if max_characters is None:
+        return excerpt_around(flat, index, index + len(needle))
+    # Keep the full programme title within the owner's 300-character support
+    # window; unrelated surrounding prose otherwise obscures listing evidence.
+    radius = max(0, (max_characters - len(needle)) // 2)
+    return excerpt_around(flat, index, index + len(needle), radius=radius)
 
 
 def _fee(line: str) -> dict[str, object] | None:

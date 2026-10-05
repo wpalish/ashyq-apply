@@ -7,6 +7,7 @@ than from the beginning.
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 import socket
@@ -19,12 +20,21 @@ from app.adapters.base import Candidate, CandidateProgram, PageOutcome
 from app.adapters.cost.web_costs import WebCostAdapter
 from app.adapters.discovery.catalog_walker import CatalogRenderer
 from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
-from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, registry_campuses
-from app.adapters.documents.web_documents import WebDocumentsAdapter
+from app.adapters.discovery.live_discovery import (
+    MAX_PAGES_PER_CATEGORY,
+    LiveDiscoveryAdapter,
+    registry_campuses,
+)
+from app.adapters.documents.web_documents import (
+    DOCUMENT_CLAIM_TYPES,
+    WebDocumentsAdapter,
+    retain_failed_documents,
+)
 from app.adapters.fetching import Fetcher
 from app.adapters.government.web_government import WebGovernmentAdapter
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+from app.catalogue.discovery import CatalogueDiscoveryAdapter
 from app.config import Settings
 from app.domain import dedupe, diagnostics
 from app.domain.campus import withhold_other_campuses
@@ -67,9 +77,9 @@ from app.models import (
 )
 from app.models.base import ensure_utc
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState
-from app.schemas.claim import ClaimOut, UnresolvedQuestion
+from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
 from app.schemas.profile import ApplicantProfileIn
-from app.schemas.result import ProgramResult, Tristate
+from app.schemas.result import CostBreakdown, ProgramResult, Tristate
 
 log = logging.getLogger("unimatch.pipeline")
 
@@ -170,8 +180,11 @@ class ResearchRunner:
         """Build discovery with source-page recording only on the live path."""
         if self.demo:
             return FixtureDiscoveryAdapter(fetcher)
-        return LiveDiscoveryAdapter(
+        return CatalogueDiscoveryAdapter(
             fetcher,
+            session=self.session,
+            university_ids=self.run.university_ids,
+            live_limit=self.verify_limit,
             page_recorder=lambda **fields: SourcePage.record(self.session, **fields),
         )
 
@@ -353,9 +366,10 @@ class ResearchRunner:
             "candidate_limit": self.candidate_limit,
             "verify_limit": self.verify_limit,
             "candidate_limit_source": "run" if self.run.candidate_limit else "server default",
-            "academic_year": self.settings.academic_year,
+            "academic_year": self._academic_year(),
             "target_currency": self.settings.target_currency,
             "respect_robots": self.settings.respect_robots,
+            "university_ids": self.run.university_ids or [],
         }
         fetcher = self._make_fetcher()
         browser = self._make_browser(fetcher)
@@ -413,6 +427,13 @@ class ResearchRunner:
             return
         await step(*args)
 
+    def _academic_year(self) -> str:
+        """The academic year adapters read tables for (rule AY-1 when on)."""
+        if APPLICANT_ACADEMIC_YEAR:
+            context = self.profile.context
+            return applicant_academic_year(context.intake_term, context.intake_year)
+        return self.settings.academic_year
+
     def _transition(self, stage: PipelineStage) -> None:
         self.run.stage = stage.value
         self.session.add(self.run)
@@ -445,6 +466,20 @@ class ResearchRunner:
 
         adapter = self._make_discovery_adapter(fetcher)
         self._candidates = await adapter.discover(self.profile, self.candidate_limit)
+        if isinstance(adapter, LiveDiscoveryAdapter):
+            failures = dict.fromkeys(
+                message for trace in adapter.traces for message in trace.search_failures
+            )
+            limitations = dict.fromkeys(
+                message for trace in adapter.traces for message in trace.search_limitations
+            )
+            self._record_diagnostics(
+                [
+                    message
+                    for message in (*failures, *limitations)
+                    if message not in (self.run.errors or [])
+                ]
+            )
         # An adapter that over-delivers must not silently widen the run.
         if len(self._candidates) > self.candidate_limit:
             self._candidates = self._candidates[: self.candidate_limit]
@@ -477,8 +512,8 @@ class ResearchRunner:
         self._transition(PipelineStage.PROGRAM_VERIFICATION)
         self._save()
 
-        req = WebRequirementsAdapter(fetcher, self.settings.academic_year)
-        cost = WebCostAdapter(fetcher, self.settings.academic_year)
+        req = WebRequirementsAdapter(fetcher, self._academic_year())
+        cost = WebCostAdapter(fetcher, self._academic_year())
         gov = WebGovernmentAdapter(fetcher)
         # Both the value *and* the claims behind it. Caching only the string
         # meant the second candidate in a country showed a post-study-work
@@ -503,7 +538,10 @@ class ResearchRunner:
                     url=None,
                 )
             ]
-            for prog in programs[:2]:
+            # Discovery supplies up to three programme leads. Cutting that list
+            # to two silently lost the real programme behind two noisy search
+            # results (Warsaw, 2026-09-28).
+            for prog in programs[:MAX_PAGES_PER_CATEGORY]:
                 key = dedupe.program_key(
                     cand.name, prog.name, prog.degree, self.intake, cand.country
                 )
@@ -554,6 +592,7 @@ class ResearchRunner:
 
                 if cand.country not in gov_cache:
                     gr = await gov.post_study_work(cand.country)
+                    errors.extend(gr.errors)
                     self._record_page_outcomes(gr.page_outcomes)
                     self.run.pages_checked += gr.pages_checked
                     self.run.pages_failed += gr.pages_failed
@@ -657,7 +696,7 @@ class ResearchRunner:
         self._transition(PipelineStage.FUNDING_DISCOVERY)
         self._save()
 
-        adapter = WebScholarshipAdapter(fetcher, self.settings.academic_year)
+        adapter = WebScholarshipAdapter(fetcher, self._academic_year())
         # Keyed on the normalized university key, not the display name: a
         # trailing comma or a renamed institution used to drop the row.
         by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}
@@ -693,7 +732,12 @@ class ResearchRunner:
             prog = CandidateProgram(
                 name=result.program, field="", degree=result.degree, url=result.program_url
             )
-            scholarships, ar = await adapter.find(cand, prog, self.profile)
+            scholarships, ar = await adapter.find(
+                cand,
+                prog,
+                self.profile,
+                allow_search=any(c.claim_type is ClaimType.PROGRAM_EXISTS for c in result.claims),
+            )
             errors.extend(ar.errors)
             self._record_page_outcomes(ar.page_outcomes)
             self.run.pages_checked += ar.pages_checked
@@ -1020,7 +1064,7 @@ class ResearchRunner:
             result.preference_score = score_result(result, self.profile)
             result.preference_score.components.append(_explanation_component(fit_reason))
             result.ranking = rank_result(result, self.profile, gamma=self.settings.ranking_gamma)
-            result.verification_completeness = _completeness(claims)
+            result.verification_completeness = _completeness(claims, result.costs)
             result.career_notes = result.career_notes or ""
 
             self._update_result(row, result)
@@ -1052,7 +1096,7 @@ class ResearchRunner:
         built = 0
         errors: list[str] = []
         async with fetcher:
-            adapter = WebDocumentsAdapter(fetcher, self.settings.academic_year)
+            adapter = WebDocumentsAdapter(fetcher, self._academic_year())
             by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}
             if not by_key:
                 disc = self._make_discovery_adapter(fetcher)
@@ -1093,10 +1137,33 @@ class ResearchRunner:
                 checklist.result_id = result.id
                 self.run.pages_checked += ar.pages_checked
                 self.run.pages_failed += ar.pages_failed
+                errors.extend(ar.errors)
+                read_urls = {
+                    page.url
+                    for page in ar.page_outcomes
+                    if page.category in {"fetched-ok", "no-pattern-match"}
+                }
+                failed_urls = {
+                    page.url
+                    for page in ar.page_outcomes
+                    if page.category in {"fetch-failed", "unreadable"}
+                } - read_urls
+                retain_failed_documents(checklist, result.checklist, failed_urls)
                 result.checklist = checklist
                 row.checklist = checklist.model_dump(mode="json")
+                added_claims = self._merge_document_claims(row.id, result, ar.claims, read_urls)
+                self.run.claims_recorded += added_claims
+                result.source_urls = sorted(
+                    set(result.source_urls) | {c.source_url for c in ar.claims}
+                )
                 self._update_result(row, result)
-                self._audit("checklist_built", "result", row.id, documents=len(ar.claims))
+                self._audit(
+                    "checklist_built",
+                    "result",
+                    row.id,
+                    documents=len(ar.claims),
+                    added_claims=added_claims,
+                )
                 built += 1
                 st.items_done = i + 1
                 self._save()
@@ -1273,20 +1340,94 @@ class ResearchRunner:
             synchronize_session=False
         )
 
-    def _store_claims(self, result_id: str, claims) -> None:
-        for c in claims:
-            self.session.add(
-                ClaimRow(
-                    run_id=self.run.id,
-                    result_id=result_id,
-                    claim_type=c.claim_type.value,
-                    status=c.status.value,
-                    source_url=c.source_url,
-                    source_specificity=c.source_specificity.value,
-                    accessed_at=c.accessed_at,
-                    payload=c.model_dump(mode="json"),
-                )
+    def _merge_document_claims(
+        self, result_id: str, result: ProgramResult, claims: list[Claim], read_urls: set[str]
+    ) -> int:
+        """Persist document proof, refreshing identical reads without losing history.
+
+        A read timestamp does not make a new fact. The remaining value, scope
+        and provenance do: never collapse different forms or populations.
+        Failed reads add nothing and leave earlier evidence untouched.
+        """
+        stored_by_key = {
+            _document_claim_key(Claim.model_validate(row.payload)): row
+            for row in self.session.query(ClaimRow).filter(
+                ClaimRow.result_id == result_id,
+                ClaimRow.claim_type.in_([kind.value for kind in DOCUMENT_CLAIM_TYPES]),
+                ClaimRow.status != ClaimStatus.SUPERSEDED.value,
             )
+        }
+        indices = {
+            _document_claim_key(_from_out(claim)): index
+            for index, claim in enumerate(result.claims)
+            if claim.claim_type in DOCUMENT_CLAIM_TYPES
+            and claim.status is not ClaimStatus.SUPERSEDED
+        }
+        previous = dict(stored_by_key)
+        reread: dict[str, ClaimRow] = {}
+        added = 0
+        for claim in claims:
+            key = _document_claim_key(claim)
+            stored = stored_by_key.get(key)
+            if stored is None:
+                stored = self._store_claims(result_id, [claim])[0]
+                stored_by_key[key] = stored
+                added += 1
+            else:
+                stored.accessed_at = claim.accessed_at
+                stored.payload = claim.model_dump(mode="json")
+            reread[key] = stored
+            out = _to_out(claim, stored.id)
+            if key in indices:
+                result.claims[indices[key]] = out
+            else:
+                indices[key] = len(result.claims)
+                result.claims.append(out)
+        if added:
+            # The self-FK requires new successors to exist before history
+            # rows can point at them, including on PostgreSQL.
+            self.session.flush()
+        for key, stored in previous.items():
+            if key in reread or stored.source_url not in read_urls:
+                continue
+            old = Claim.model_validate(stored.payload)
+            stored.status = ClaimStatus.SUPERSEDED.value
+            stored.payload = old.model_copy(update={"status": ClaimStatus.SUPERSEDED}).model_dump(
+                mode="json"
+            )
+            stored.superseded_at = datetime.now(UTC)
+            successors = [
+                row
+                for row in reread.values()
+                if _document_subject(Claim.model_validate(row.payload)) == _document_subject(old)
+            ]
+            # Several source blocks can name this subject. A lineage link is
+            # safe only when this read states exactly one replacement.
+            if len(successors) == 1:
+                stored.superseded_by_id = successors[0].id
+            if key in indices:
+                result.claims[indices[key]] = result.claims[indices[key]].model_copy(
+                    update={"status": ClaimStatus.SUPERSEDED}
+                )
+        return added
+
+    def _store_claims(self, result_id: str, claims) -> list[ClaimRow]:
+        rows = []
+        for c in claims:
+            row = ClaimRow(
+                id=new_id(),
+                run_id=self.run.id,
+                result_id=result_id,
+                claim_type=c.claim_type.value,
+                status=c.status.value,
+                source_url=c.source_url,
+                source_specificity=c.source_specificity.value,
+                accessed_at=c.accessed_at,
+                payload=c.model_dump(mode="json"),
+            )
+            self.session.add(row)
+            rows.append(row)
+        return rows
 
     def _store_conflicts(self, result_id: str, conflicts) -> None:
         for c in conflicts:
@@ -1302,6 +1443,29 @@ class ResearchRunner:
 
 
 # --- small helpers ------------------------------------------------------
+
+
+def _document_claim_key(claim: Claim) -> str:
+    return json.dumps(
+        claim.model_dump(mode="json", exclude={"accessed_at"}),
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+
+
+def _document_subject(claim: Claim) -> tuple:
+    value = claim.normalized_value
+    subject = (value.get("document"), value.get("status")) if isinstance(value, dict) else value
+    return (
+        claim.claim_type,
+        claim.source_url,
+        claim.subject_key,
+        subject,
+        claim.program,
+        claim.intake,
+        claim.academic_year,
+        claim.scope,
+    )
 
 
 def _to_out(claim, claim_id: str) -> ClaimOut:
@@ -1466,6 +1630,24 @@ def _explanation_component(text: str):
 #: The questions a user actually needs answered before applying. Completeness is
 #: measured against these, not against whatever happened to be extracted -
 #: otherwise a page yielding one verified fact and nothing else reads as 100%.
+#: Plan rule AY-1 (2026-10-05), off until a paired run passes: fee and
+#: requirement tables are read for the applicant's academic year (fall 2027 ->
+#: 2027/28), not the server's default. Groningen's fee table lists 2026-2027
+#: and 2027-2028, and the default chose the 2026-2027 row for a fall 2027
+#: applicant (run 37279746829).
+APPLICANT_ACADEMIC_YEAR = False
+
+
+def applicant_academic_year(term: str, year: int) -> str:
+    """The academic year an intake begins in, written as settings write it.
+
+    A fall or winter(-semester) intake opens the year it names; a spring or
+    summer intake falls in the year that began the autumn before.
+    """
+    start = year if term in ("fall", "winter") else year - 1
+    return f"{start}/{str(start + 1)[-2:]}"
+
+
 CORE_QUESTIONS: tuple[tuple[ClaimType, ...], ...] = (
     (ClaimType.IELTS_MIN_OVERALL, ClaimType.TOEFL_MIN_TOTAL, ClaimType.DUOLINGO_MIN),
     (ClaimType.MIN_GPA,),
@@ -1476,14 +1658,43 @@ CORE_QUESTIONS: tuple[tuple[ClaimType, ...], ...] = (
 )
 
 
-def _completeness(claims) -> float:
-    """Share of the core questions answered by a current, official claim."""
+def _completeness(claims, costs: CostBreakdown | None = None) -> float:
+    """Core questions answered by accepted evidence and applicant cost projection.
+
+    A published tariff remains evidence when its applicant applicability is
+    unknown. It only answers the cost question alongside the matching tuition
+    item or total actually projected into the applicant's cost breakdown.
+    """
     from app.domain.enums import ClaimStatus
+
+    def has_cost_projection(claim: Claim) -> bool:
+        if claim.claim_type not in (ClaimType.TUITION, ClaimType.TOTAL_COST_OF_ATTENDANCE):
+            return True
+        if costs is None:
+            return False
+        money = (
+            costs.items.get(CostCategory.TUITION)
+            if claim.claim_type is ClaimType.TUITION
+            else costs.total
+        )
+        value = claim.normalized_value
+        if money is None or not isinstance(value, dict):
+            return False
+        return (
+            value.get("amount") == money.amount
+            and value.get("currency") == money.currency
+            and (
+                not claim.academic_year
+                or not money.academic_year
+                or claim.academic_year == money.academic_year
+            )
+        )
 
     verified = {
         c.claim_type
         for c in claims
         if c.status in (ClaimStatus.VERIFIED_CURRENT, ClaimStatus.POSSIBLY_STALE)
+        and has_cost_projection(c)
     }
     answered = sum(1 for group in CORE_QUESTIONS if verified & set(group))
     return round(answered / len(CORE_QUESTIONS), 3)

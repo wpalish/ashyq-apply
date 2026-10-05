@@ -24,7 +24,7 @@ from app.adapters.extraction import ClaimBuilder
 from app.adapters.scope_reader import read_scope
 from app.domain.claim_scope import ClaimScope
 from app.domain.enums import ClaimType
-from app.schemas.claim import Claim
+from app.schemas.claim import MAX_EXCERPT_CHARS, Claim
 
 _IELTS = re.compile(r"\bIELTS\b|International English Language Testing System", re.I)
 _SECTIONS = ("listening", "reading", "writing", "speaking")
@@ -78,15 +78,26 @@ def _scope_for(block: EvidenceBlock, page_scope: object) -> object:
 
 
 def _extract(doc: DocumentIR, builder: ClaimBuilder, page_scope: object) -> list[Claim]:
+    rows: dict[tuple[int, int], list[EvidenceBlock]] = {}
+    for block in doc.blocks:
+        if block.kind != "table_cell" or not _IELTS.search(" ".join(block.row_headers)):
+            # A caption mentioning IELTS does not make every test row IELTS.
+            continue
+        if block.table_id is None or block.row is None:
+            continue
+        rows.setdefault((block.table_id, block.row), []).append(block)
+    return [claim for row in rows.values() for claim in _extract_row(row, builder, page_scope)]
+
+
+def _extract_row(
+    row: list[EvidenceBlock], builder: ClaimBuilder, page_scope: object
+) -> list[Claim]:
+    """One published requirement; cells from another row cannot complete it."""
     found: list[Claim] = []
     overall_done = False
     bands: dict[str, float] = {}
     band_block: EvidenceBlock | None = None
-    for block in doc.blocks:
-        if block.kind != "table_cell" or not _IELTS.search(" ".join(block.row_headers)):
-            # The row must be the IELTS row: a caption naming IELTS over a table
-            # of several tests does not make every number an IELTS band.
-            continue
+    for block in row:
         headers = " ".join(block.column_headers).lower()
         floor = _BAND_WITH_FLOOR.match(block.text)
         if floor and not overall_done:
@@ -121,12 +132,20 @@ def _extract(doc: DocumentIR, builder: ClaimBuilder, page_scope: object) -> list
                 found.append(claim)
             overall_done = True
     if bands and band_block is not None:
+        row_excerpt = " ".join(block.text for block in row)
+        if len(row_excerpt) > MAX_EXCERPT_CHARS:
+            # Claim clips long quotes. Abstain before a later band can disappear
+            # from stored evidence while remaining in the claimed map.
+            return found
         # Sections named one by one, as the prose extractor records them: a map.
         builder.meta["scope"] = _scope_for(band_block, page_scope)
         claim = builder.add(
             ClaimType.IELTS_MIN_SUBSCORE,
             dict(sorted(bands.items())),
-            band_block.text,
+            # Keep every cell in source order, including intervening text. A
+            # quote of the first band alone cannot support the remaining bands.
+            # ClaimBuilder checks the contiguous row against the page text.
+            row_excerpt,
             section=_section(band_block) + " (per section: " + ", ".join(sorted(bands)) + ")",
         )
         if claim is not None:

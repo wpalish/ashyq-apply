@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from email.utils import parseaddr
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import SecretStr
+from pydantic import SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BACKEND_ROOT = Path(__file__).resolve().parent.parent
@@ -17,6 +18,15 @@ MIN_WEBHOOK_SECRET_CHARS = 16
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="UNIMATCH_", env_file=".env", extra="ignore")
+
+    @field_validator("database_url")
+    @classmethod
+    def _installed_postgres_driver(cls, url: str) -> str:
+        """Provider URLs use the psycopg3 driver installed by this application."""
+        for prefix in ("postgresql://", "postgres://"):
+            if url.startswith(prefix):
+                return "postgresql+psycopg://" + url.removeprefix(prefix)
+        return url
 
     #: Demo mode uses the bundled synthetic corpus and never touches the network.
     demo_mode: bool = True
@@ -87,11 +97,15 @@ class Settings(BaseSettings):
     #: Public origin of the frontend, used to build links a person clicks from
     #: their email. HTTPS in production, where startup refuses anything else.
     public_base_url: str = "http://127.0.0.1:5173"
+    #: Explicitly disabling recovery disables both reset endpoints and is exposed
+    #: to the sign-in screen. Authentication and password changes still work;
+    #: no mail configuration is needed while no recovery mail can be requested.
+    password_reset_enabled: bool = True
     #: Password reset. The link is single-use and short-lived on purpose.
     password_reset_ttl_minutes: int = 60
     #: Where reset links are sent. "console" logs them (development and the
-    #: demo); "smtp" uses the settings below. There is no third option, and
-    #: production refuses to start on "console".
+    #: demo); "smtp" uses the settings below. Production requires SMTP whenever
+    #: password recovery is enabled; explicitly disabled recovery sends no mail.
     email_sender: str = "console"
     smtp_host: str = ""
     smtp_port: int = 587
@@ -147,6 +161,8 @@ class Settings(BaseSettings):
     #: Web search layer for discovery. ``none`` means this deployment has no
     #: search provider at all, which is a supported configuration: the registry,
     #: sitemaps and the catalogue walker do not need one.
+    #: exa_mcp is an explicit keyless, rate-limited hosted search alternative.
+    #: Provider quotas still cause visible SearchUnavailable; no automatic retries.
     search_provider: str = "none"
 
     #: SecretStr like every other credential. Read from UNIMATCH_EXA_API_KEY
@@ -222,13 +238,32 @@ class Settings(BaseSettings):
             )
         if self.session_ttl_hours < 1 or self.session_ttl_hours > 24 * 30:
             raise RuntimeError("UNIMATCH_SESSION_TTL_HOURS must be between 1 and 720.")
-        if self.is_production and self.email_sender == "console":
+        if self.email_sender not in {"console", "smtp"}:
+            raise RuntimeError("UNIMATCH_EMAIL_SENDER must be either 'console' or 'smtp'.")
+        if self.password_reset_enabled and self.is_production and self.email_sender != "smtp":
             raise RuntimeError(
                 "UNIMATCH_EMAIL_SENDER=console only logs reset links. Configure SMTP before "
                 "running in production, or password reset silently does nothing."
             )
-        if self.email_sender == "smtp" and not self.smtp_host:
+        if self.password_reset_enabled and self.email_sender == "smtp" and not self.smtp_host:
             raise RuntimeError("UNIMATCH_SMTP_HOST is required when the sender is smtp.")
+        if self.password_reset_enabled and self.is_production:
+            sender = parseaddr(self.smtp_from)[1]
+            local, separator, domain = sender.rpartition("@")
+            if (
+                not local
+                or not separator
+                or not domain
+                or domain.casefold() == "example"
+                or domain.casefold().endswith(".example")
+                or any(character.isspace() for character in sender)
+                or "\n" in self.smtp_from
+                or "\r" in self.smtp_from
+            ):
+                raise RuntimeError(
+                    "UNIMATCH_SMTP_FROM must be an explicit sender address in production; "
+                    "the default .example address cannot deliver password reset mail."
+                )
         if self.is_production and not self.public_base_url.startswith("https://"):
             raise RuntimeError("UNIMATCH_PUBLIC_BASE_URL must be an HTTPS origin in production.")
         if self.is_production and self.password_scrypt_log2 < 17:

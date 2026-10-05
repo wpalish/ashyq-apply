@@ -45,6 +45,7 @@ from app.models.subscription import (
     Subscription,
     SubscriptionStatus,
 )
+from app.models.university import University, UniversityObservation
 
 __all__ = [
     "CURRENT_SCHEMA_VERSION",
@@ -88,6 +89,8 @@ __all__ = [
     "Subscription",
     "SubscriptionStatus",
     "TimestampedBase",
+    "University",
+    "UniversityObservation",
     "User",
     "new_id",
     "utcnow",

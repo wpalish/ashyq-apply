@@ -59,15 +59,24 @@ test('one at a time: an answer moves to the next programme and shows in the tabl
   const firstId = (await card.getAttribute('data-testid'))!.replace('triage-card-', '');
   // Concept P: a night globe behind the card with the route from home to
   // this programme's city, both ends named.
+  // Unimatch's two-row phone header leaves room for the globe only on a tall
+  // phone (Triage.GLOBE_FLOOR + a 72 px band); a shorter one keeps the card alone.
   const globe = page.getByTestId('triage-globe');
-  await expect(globe).toBeVisible();
-  await expect(globe).not.toHaveAttribute('data-turning', 'true');
-  await expect(globe.locator('.globe__name--home')).toHaveText('Astana');
-  const firstCity = await globe.locator('.globe__name:not(.globe__name--home)').innerText();
+  const roomy = page.viewportSize()!.height >= 786 + 72;
+  let firstCity = '';
+  if (roomy) {
+    await expect(globe).toBeVisible();
+    await expect(globe).not.toHaveAttribute('data-turning', 'true');
+    await expect(globe.locator('.globe__name--home')).toHaveText('Astana');
+    firstCity = await globe.locator('.globe__name:not(.globe__name--home)').innerText();
+  } else {
+    await expect(globe).toHaveCount(0);
+  }
   // The answers stay above a phone's tab bar (defect I27); on a wide screen
   // the tabs are at the top and the answers stay in the first screen.
   const answers = (await page.locator('.triage__answers').boundingBox())!;
-  const tabs = (await page.locator('.navtabs').boundingBox())!;
+  // The shell's navigation: a bar along the bottom on a phone, a rail on the left on a desk.
+  const tabs = (await page.locator('.sidebar').boundingBox())!;
   const floor = tabs.y > answers.y ? tabs.y : page.viewportSize()!.height;
   expect(answers.y + answers.height).toBeLessThanOrEqual(floor);
   await page.screenshot({ path: shot('14-one-at-a-time.png'), fullPage: false });
@@ -75,10 +84,12 @@ test('one at a time: an answer moves to the next programme and shows in the tabl
   await page.getByTestId('triage-maybe').click();
   await expect(card).not.toHaveAttribute('data-testid', `triage-card-${firstId}`);
   // The globe turns to the next programme's route.
-  await expect(globe).not.toHaveAttribute('data-turning', 'true');
-  const nextCity = (await card.locator('.triage__prog').innerText()).split(' · ').pop()!.split(',')[0]!.trim();
-  await expect(globe.locator('.globe__name:not(.globe__name--home)')).toHaveText(nextCity);
-  expect(firstCity).not.toBe('');
+  if (roomy) {
+    await expect(globe).not.toHaveAttribute('data-turning', 'true');
+    const nextCity = (await card.locator('.triage__prog').innerText()).split(' · ').pop()!.split(',')[0]!.trim();
+    await expect(globe.locator('.globe__name:not(.globe__name--home)')).toHaveText(nextCity);
+    expect(firstCity).not.toBe('');
+  }
 
   // A rejection still asks why before it is saved.
   await page.getByTestId('triage-reject').click();
@@ -192,8 +203,6 @@ test('the globe places every programme at its city, turns by region and opens a 
 
   await goTo(page, 'progress');
   await expect(page.getByTestId('reveal-globe')).toBeVisible();
-  await goTo(page, 'start');
-  await expect(page.getByTestId('start-globe')).toBeAttached();
 });
 
 test('the results reveal counts what the run found', async () => {
@@ -339,9 +348,9 @@ test('the plan puts the nearest deadline on the board and every one after it in 
   await page.screenshot({ path: shot('18-plan-board.png'), fullPage: false });
 });
 
-test('the start, the reveal, the cards, the comparison, the plan and the triage have no serious axe violations', async () => {
+test('home, the reveal, the cards, the comparison, the plan and the triage have no serious axe violations', async () => {
   const views: [string, () => Promise<void>][] = [
-    ['start', async () => { await goTo(page, 'start'); }],
+    ['home', async () => { await goTo(page, 'home'); }],
     ['reveal', async () => { await goTo(page, 'progress'); }],
     ['cards', async () => { await goTo(page, 'shortlist'); await page.getByTestId('view-cards').click(); }],
     ['compare', async () => { await page.getByTestId('compare-go').click(); }],
@@ -358,21 +367,4 @@ test('the start, the reveal, the cards, the comparison, the plan and the triage 
     );
     expect(serious, `${name}: ${serious.map((v) => `${v.id} (${v.nodes.length})`).join(', ')}`).toEqual([]);
   }
-});
-
-test('optional profile sections fold while empty and open on request', async () => {
-  await goTo(page, 'profile');
-  const activities = page.getByTestId('fold-activities');
-  // The demo profile has activities, so the section starts open.
-  await expect(activities).toHaveAttribute('open', '');
-
-  await page.getByTestId('clear-profile').click();
-  const confirm = page.getByTestId('confirm-replace');
-  if (await confirm.count()) await confirm.click();
-
-  await expect(activities).not.toHaveAttribute('open');
-  await expect(activities).toContainText('optional');
-  await activities.locator('summary').click();
-  await expect(activities).toHaveAttribute('open', '');
-  await expect(activities.getByRole('button', { name: /Add activity/ })).toBeVisible();
 });

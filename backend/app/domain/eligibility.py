@@ -423,6 +423,25 @@ def evaluate_program(
         )
 
     outcome = _summarise(checks)
+    assessed_entry_requirements = [
+        check
+        for check in checks
+        if check.requirement not in {"Admission deadline", "Intake accepting applications"}
+        and check.status != EligibilityStatus.NOT_APPLICABLE
+    ]
+    if outcome.status == EligibilityStatus.MET and not assessed_entry_requirements:
+        # An open application window (or one optional test) says nothing about
+        # whether this applicant meets the programme's entry requirements.
+        # Keep the individual date/policy verdict, but do not turn it into a
+        # positive academic utility and a recommendation.
+        outcome.status = EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION
+        outcome.checks.append(
+            RequirementCheck(
+                requirement="Academic entry requirements",
+                status=EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION,
+                explanation="No assessable academic entry requirements were found. A future deadline or optional test policy does not establish eligibility.",
+            )
+        )
     outcome.out_of_scope = out_of_scope_claims(claims, requested)
     return outcome
 

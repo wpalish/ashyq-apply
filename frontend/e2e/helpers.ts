@@ -44,40 +44,29 @@ export async function waitForResults(page: Page, timeout = 120_000): Promise<voi
   await expect(page.getByTestId('to-shortlist')).toBeVisible({ timeout });
 }
 
-/** Which tab holds each screen: the «Горизонт» navigation, as App.tsx has it. */
-const TAB_OF: Record<string, string> = {
-  start: 'match', progress: 'match', shortlist: 'match', funding: 'match', sources: 'match',
-  approved: 'plan',
-  documents: 'documents',
-  feed: 'people', discover: 'people', messages: 'people',
-  profile: 'me', preferences: 'me', me: 'me', export: 'me', moderation: 'me', legal: 'me',
-};
-/** Tabs with one screen have no sub-navigation: the tab is the screen. */
-const SINGLE = new Set(['approved', 'documents']);
+/** The five areas the shell keeps in its main navigation (Unimatch's). */
+const PRIMARY = new Set(['home', 'shortlist', 'approved', 'documents', 'feed']);
 
 /**
- * Open a screen the way a person would: its tab, then its sub-navigation item.
- *
- * Every screen used to sit in one sidebar, one click away from anywhere. Under
- * five tabs a screen in another tab is two clicks away, and a test that clicks
- * `nav-*` directly only works from inside the same tab.
+ * Open a screen: a main area through its navigation button, the rest through
+ * its address, the way the shell's Explore menu and links reach them.
  */
 export async function goTo(page: Page, screen: string): Promise<void> {
   const item = page.getByTestId(`nav-${screen}`);
-  if (!SINGLE.has(screen) && (await item.isVisible().catch(() => false))) {
+  if (PRIMARY.has(screen) && (await item.isVisible().catch(() => false))) {
     await item.click();
     return;
   }
-  await page.getByTestId(`navtab-${TAB_OF[screen]}`).click();
-  if (SINGLE.has(screen)) return;
-  await page.getByTestId(`nav-${screen}`).click();
+  await page.evaluate((id) => { window.location.hash = `#/${id}`; }, screen);
 }
 
-/** The three-field search on the start screen, with the demo applicant's values. */
+/** The demo applicant's profile, then a research run from the preferences. */
 export async function runDemoResearch(page: Page): Promise<void> {
-  await page.goto('/');
-  await expect(page.getByTestId('start-search')).toBeEnabled();
-  await page.getByTestId('start-search').click();
+  await page.goto('/#/profile');
+  await page.getByTestId('load-demo-profile').click();
+  await page.goto('/#/preferences');
+  await expect(page.getByTestId('start-research')).toBeEnabled();
+  await page.getByTestId('start-research').click();
   await waitForResults(page);
 }
 

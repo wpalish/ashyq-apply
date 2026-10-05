@@ -1,0 +1,91 @@
+"""Two real tool-free schema probes; no university reads or source actions."""
+
+import json
+import tempfile
+from dataclasses import replace
+from pathlib import Path
+
+from evaluation.research.expert.blind_cli import Isolation
+from evaluation.research.expert.journal import AcceptedJournal, JOURNAL_INSTRUCTIONS
+from evaluation.research.expert.representation import (
+    closing_prompt,
+    closing_schema,
+    journal_schema_for_case,
+    parse_bound_journal_decision,
+)
+from evaluation.research.expert.selector import select
+
+workspace = Path(tempfile.mkdtemp(prefix="unimatch-blind-v4-probe-"))
+isolation = replace(
+    Isolation.local(
+        workspace,
+        [
+            Path("/Users/wpalish/Documents/Codex"),
+            Path("/Users/wpalish/.codex/memories"),
+            Path("/Users/wpalish/.codex/sessions"),
+            Path("/Users/wpalish/.codex/attachments"),
+            Path("/Users/wpalish/Downloads"),
+        ],
+    ),
+    codex_executable="/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
+)
+hash_value = AcceptedJournal.initial().sha256
+results = []
+for closing in (False, True):
+    name = "closing" if closing else "bound-journal"
+    schema = workspace / (name + ".schema.json")
+    schema.write_text(
+        json.dumps(
+            closing_schema(journal_sha256=hash_value)
+            if closing
+            else journal_schema_for_case(
+                journal_sha256=hash_value, canonical_university="Synthetic University"
+            )
+        )
+    )
+    prompt = (
+        closing_prompt(journal_sha256=hash_value)
+        if closing
+        else {
+            "task": JOURNAL_INSTRUCTIONS,
+            "accepted_journal": {"sha256": hash_value},
+            "neutral_probe": "No university research or tool action is executed. Return kind=action, "
+            "one fetcher action for https://example.org/public-probe, observation=neutral probe, "
+            "all irrelevant action fields null, domains=[], facts=[], question_findings=[]. "
+            "journal_sha256 must equal the supplied empty journal hash.",
+        }
+    )
+    output = workspace / (name + ".answer.json")
+    result = select(isolation, schema, output, prompt, timeout_seconds=22, model="gpt-6-astra")
+    (workspace / (name + ".events.jsonl")).write_text(result.stdout)
+    (workspace / (name + ".stderr.txt")).write_text(result.stderr)
+    answer = (
+        parse_bound_journal_decision(
+            output.read_text(),
+            journal_sha256=hash_value,
+            canonical_university="Synthetic University",
+            closing_only=closing,
+        ).model_dump(mode="json")
+        if result.answer
+        else None
+    )
+    results.append(
+        {
+            "mode": name,
+            "elapsed_ms": result.elapsed_ms,
+            "error_kind": result.error_kind,
+            "returncode": result.returncode,
+            "answer": answer,
+        }
+    )
+    if result.error_kind:
+        break
+print(
+    json.dumps(
+        {"workspace": str(workspace), "university_requests": 0, "results": results},
+        ensure_ascii=False,
+    ),
+    flush=True,
+)
+if len(results) != 2 or any(r["error_kind"] for r in results):
+    raise SystemExit(1)
