@@ -1,5 +1,8 @@
 # Draft8: the six core questions, and sources that moved
 
+> **Signed 2026-10-05 by Диас** ("Подписываю draft8"). The signed corpus is
+> [ground_truth.reviewed8.json](data/ground_truth.reviewed8.json); this worksheet is kept as written.
+
 Prepared by claude-opus-5 on 2026-10-05 (plan phase 0.2). Every value below
 was read on the official page that day; excerpts in
 [the dataset](data/ground_truth.draft8.json) are verbatim. **Nothing here is
