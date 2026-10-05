@@ -2,7 +2,8 @@
 
 ## State
 
-The source correction is prepared for review. No V10 trial, live model/source
+The source correction f4e935235fc7ed901ff1d7a274ec6255163e2823 is pushed and
+passed both exact-source CI events, 8 jobs total. No V10 trial, live model/source
 request, final protocol freeze, source tag, primary seal or reviewed-label
 comparison has been created. V9 remains CLOSED UNSCORED; its original records,
 source62efd47, tag and closure manifest are unchanged. The same Codex CLI account
@@ -51,6 +52,7 @@ manifest is a recovery snapshot, not the final once-only trial freeze.
 | Prospective external helper Ruff/format/mypy |10 files passed |
 | Isolated synthetic demo |20 rows, Groningen first, UBC OUT_OF_BUDGET |
 | Alembic |one head,d8e412c6a901 |
+| Exact-source cloud CI |8/8 jobs onf4e9352; runs37274400981/37274404579 |
 
 The combined444 run includes the real ten-workspace sandbox constructor and
 240 harmless cat processes; model/source/network/Git requests are zero. A final
@@ -60,8 +62,12 @@ or protocol behavior changed after that combined run.
 
 The unchanged frontend/migration/workflow Git trees match fully verified source
 1ec0433 exactly. Its232 frontend tests/typecheck/lint/build are explicitly reused
-old-source evidence. New-head cloud CI is a separate result; old CI is not
-relabeled. All initial failed fixture/config/import/style outputs are preserved
+old-source evidence. The fresh f4e9352 cloud events independently passed both
+database suites4091 each, SQLite94.84% app coverage, frontend232 plus79 browser
+and6 auth scenarios. Their five original full-log/JSON/watch records are saved
+separately under protocol.2026-10-05/v10-draft-ci; manifestc7abf990,2060322 bytes.
+Subsequent evidence/handoff metadata is not a new-head CI claim. All initial
+failed fixture/config/import/style outputs are preserved
 alongside the successful logs, rather than removed from the record. The existing
 external helper B023 exception applies only to synchronous charge closures, as
 in V9; app/tests/evaluation gates retain the repository rules.

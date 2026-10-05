@@ -1,0 +1,67 @@
+{
+  "schema_version": "1",
+  "recorded_at": "2026-10-05T07:10:09.459927+00:00",
+  "state": "exact_source_ci_success",
+  "source_commit": "f4e935235fc7ed901ff1d7a274ec6255163e2823",
+  "runs": [
+    {
+      "run_id": 37274400981,
+      "url": "https://github.com/wpalish/ashyq-apply/actions/runs/37274400981",
+      "source_commit": "f4e935235fc7ed901ff1d7a274ec6255163e2823",
+      "jobs": 4,
+      "conclusion": "success"
+    },
+    {
+      "run_id": 37274404579,
+      "url": "https://github.com/wpalish/ashyq-apply/actions/runs/37274404579",
+      "source_commit": "f4e935235fc7ed901ff1d7a274ec6255163e2823",
+      "jobs": 4,
+      "conclusion": "success"
+    }
+  ],
+  "jobs_passed": 8,
+  "records": [
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-source-ci-push-complete.json",
+      "snapshot": "unimatch-expert500-v10-source-ci-push-complete.json",
+      "sha256": "6797e8dd8b914dd2c257e419f09640236f5846781af29ec108868b87cdfb73bd",
+      "bytes": 10300
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-source-ci-push-complete.log",
+      "snapshot": "unimatch-expert500-v10-source-ci-push-complete.log",
+      "sha256": "bdaf8bd638aaec999fb64b81ebb8b548ec94e87439426beb216fc6174449876a",
+      "bytes": 1011441
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-source-ci-pr-complete.json",
+      "snapshot": "unimatch-expert500-v10-source-ci-pr-complete.json",
+      "sha256": "eaf2664044e9aec6950c49dfc139350f596234d762e60caa616ca6b485a8cd2a",
+      "bytes": 10300
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-source-ci-pr-complete.log",
+      "snapshot": "unimatch-expert500-v10-source-ci-pr-complete.log",
+      "sha256": "e51dba8ad087a752dc2aefbef6338b41ded7bda9cfb2e2ee52cde3da321413d9",
+      "bytes": 1016356
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v10-source-ci-push-watch.log",
+      "snapshot": "unimatch-expert500-v10-source-ci-push-watch.log",
+      "sha256": "e6a35002b025069760b4c1fb0a0968624c4897950cc43fc37a3d6cab0f507b83",
+      "bytes": 11925
+    }
+  ],
+  "counts": {
+    "backend_sqlite": 4091,
+    "backend_postgresql": 4091,
+    "sqlite_app_coverage_percent": 94.84,
+    "frontend_unit": 232,
+    "frontend_e2e": 79,
+    "frontend_auth_e2e": 6
+  },
+  "live_v10_trial_allocated": false,
+  "primary_seal_created": false,
+  "live_reviewed_comparison_available": false,
+  "note": "Both source events passed on f4e9352; subsequent handoff/evidence metadata is not a new-head CI claim. Original draft and V9 manifests unchanged."
+}
