@@ -598,6 +598,12 @@ def main() -> None:
         help="experiment ER-05: links naming undergraduate admission become candidates",
     )
     parser.add_argument(
+        "--applicant-academic-year",
+        action="store_true",
+        help="plan rule AY-1: read fee and requirement tables for the applicant's academic "
+        "year (fall 2027 -> 2027/28) instead of the server default",
+    )
+    parser.add_argument(
         "--shared-query-budget",
         action="store_true",
         help="plan rule BL-1: every stage's provider queries count against one budget of six "
@@ -704,6 +710,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery
 
             live_discovery.NAVIGATION_SLOT = True
+        if args.applicant_academic_year:
+            from app.pipeline import runner as runner_module
+
+            runner_module.APPLICANT_ACADEMIC_YEAR = True
         if args.shared_query_budget:
             from app.adapters.search import intent as intent_module
 
@@ -807,6 +817,7 @@ def main() -> None:
                         *(["--walker-subject-cap"] if args.walker_subject_cap else []),
                         *(["--deadline-v2"] if args.deadline_v2 else []),
                         *(["--shared-query-budget"] if args.shared_query_budget else []),
+                        *(["--applicant-academic-year"] if args.applicant_academic_year else []),
                         "--search-funding-fallback"
                         if args.search_funding_fallback
                         else "--no-search-funding-fallback",
