@@ -85,13 +85,14 @@ test('every community screen is reachable on a phone', async ({ page }) => {
   await page.goto('/');
 
   // The compact five-area navigation stays usable on a phone; contextual
-  // community destinations are available through Explore.
+  // community destinations are available through Explore, in the
+  // applicant's menu.
   const overflow = await page.locator('.nav').evaluate((nav) => nav.scrollWidth - nav.clientWidth);
   expect(overflow, 'the navigation must not hide primary areas in a scroller').toBeLessThanOrEqual(1);
   await expect(page.getByTestId('nav-feed')).toBeInViewport();
-  await page.locator('.journey-menu summary').click();
+  await page.locator('.account > summary').click();
   for (const label of ['Feed', 'Find applicants', 'My community profile']) {
-    await expect(page.locator('.journey-menu').getByRole('button', { name: label, exact: true })).toBeVisible();
+    await expect(page.locator('.journey-menu__list').getByRole('button', { name: label, exact: true })).toBeVisible();
   }
 });
 

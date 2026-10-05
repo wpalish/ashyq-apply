@@ -10,7 +10,7 @@
  * collapsing them would hide which one is the problem.
  */
 
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { BudgetLadder, ceilingFrom } from '@/components/BudgetLadder';
 import { CompareView } from '@/components/CompareView';
 import { REGION_LABEL, REGION_ORDER, regionCounts, regionOf, type Region } from '@/lib/regions';
@@ -107,8 +107,11 @@ function searchSummary(profile: unknown): string | null {
   return [fields.join(', ') || 'any subject', where, budget].join(' · ');
 }
 
-export function ShortlistScreen({ onEditSearch, onStart, onProgress }: {
+export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArrival, onArrived }: {
   onEditSearch?: () => void;
+  /** Home asked to decide one at a time: open straight into it. */
+  decideOnArrival?: boolean;
+  onArrived?: () => void;
   /** The local catalogue can start a research run or open the one running. */
   onStart?: () => void;
   onProgress?: () => void;
@@ -149,6 +152,15 @@ export function ShortlistScreen({ onEditSearch, onStart, onProgress }: {
   const [rejectFor, setRejectFor] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState('');
   const [triageTotal, setTriageTotal] = useState<number | null>(null);
+  // Home's "Decide one at a time" lands here: open the first undecided
+  // programme at once, and only once.
+  useEffect(() => {
+    if (!decideOnArrival) return;
+    onArrived?.();
+    const waiting = results.filter((r) => r.user_decision === 'undecided').length;
+    if (waiting > 0) setTriageTotal(waiting);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [decideOnArrival]);
   // The programme a story card is being made for (concept Q).
   const [shareFor, setShareFor] = useState<string | null>(null);
   const [compareIds, setCompareIds] = useState<string[]>(storedCompare);

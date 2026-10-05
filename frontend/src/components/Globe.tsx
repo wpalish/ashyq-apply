@@ -27,6 +27,11 @@ export interface GlobeMarker extends LatLon {
   name?: string;
   /** The region: markers the globe hides are named at its edge by region. */
   group?: string;
+  /**
+   * The country's pass colour, 1-8 (lib/passColour): its route and marker
+   * take that colour - the deep one by day, its light tint by night.
+   */
+  slot?: number;
 }
 
 export interface GlobeProps {
@@ -41,6 +46,13 @@ export interface GlobeProps {
   fit?: LatLon[];
   /** Name every place on the globe, home included, whatever the zoom. */
   names?: boolean;
+  /** Name home only: the start of every route. */
+  nameHome?: boolean;
+  /**
+   * A picture, not a control: every marker as a dot, no crowds and no chips
+   * at the edge. For a band where the globe sits behind words.
+   */
+  plain?: boolean;
   /** Pixels at the bottom that something sits over (a card): the view keeps above them. */
   covered?: number;
   /** Day on a light page; night inside the navy panels. */
@@ -300,7 +312,9 @@ function draw(
         pen = seen;
       }
       ctx.lineWidth = on ? 2.5 : 1.4;
-      ctx.strokeStyle = route;
+      ctx.strokeStyle = m.slot
+        ? cssVar(canvas, props.tone === 'night' ? `--pass-tint-${m.slot}` : `--pass-${m.slot}`, route)
+        : route;
       ctx.globalAlpha = on ? 1 : props.selected ? 0.35 : 0.75;
       ctx.stroke();
     }
@@ -391,7 +405,7 @@ function namesThatFit(points: Placed[]): Placed[] {
 
 export function Globe(props: GlobeProps) {
   const {
-    markers, home, focus, fit, names, covered = 0, tone, layout, height, selected, onSelect, onCluster, onEdge,
+    markers, home, focus, fit, names, nameHome, plain, covered = 0, tone, layout, height, selected, onSelect, onCluster, onEdge,
     caption, testId,
   } = props;
   const wrap = useRef<HTMLDivElement>(null);
@@ -511,12 +525,12 @@ export function Globe(props: GlobeProps) {
     .filter(({ x, y }) => x >= 0 && x <= g.width && y >= 0 && y <= g.height);
   const shown = new Set(inView.map(({ m }) => m.id));
   // Said once the globe has settled: mid-turn, chips would flicker in and out.
-  const edges = moving ? [] : edgesOf(markers.filter((m) => !shown.has(m.id)), center, g);
+  const edges = moving || plain ? [] : edgesOf(markers.filter((m) => !shown.has(m.id)), center, g);
 
   const groups = crowds(inView);
   // Close enough in, a step of 26 px is a few kilometres: a crowd is then
   // set round its place rather than folded into a cluster that cannot open.
-  const closeIn = shownZoom >= 10;
+  const closeIn = plain || shownZoom >= 10;
   const clusters = closeIn ? [] : groups.filter((group) => group.length >= CLUSTER_FROM);
   const placed = groups.filter((group) => closeIn || group.length < CLUSTER_FROM).flatMap(spread);
   const label = placed.find(({ m }) => m.id === selected);
@@ -548,8 +562,11 @@ export function Globe(props: GlobeProps) {
             key={m.id}
             type="button"
             tabIndex={-1}
-            className={`globe__marker${m.id === selected ? ' is-selected' : ''}`}
-            style={{ left: x, top: y }}
+            className={`globe__marker${m.id === selected ? ' is-selected' : ''}${m.slot ? ' globe__marker--pass' : ''}`}
+            style={{
+              left: x, top: y,
+              ...(m.slot ? { ['--marker' as string]: `var(${tone === 'night' ? '--pass-tint-' : '--pass-'}${m.slot})` } : {}),
+            }}
             onClick={() => onSelect?.(m.id)}
             title={m.label}
             data-testid={`globe-marker-${m.id}`}
@@ -583,7 +600,7 @@ export function Globe(props: GlobeProps) {
           : shownZoom >= 4 && namesThatFit(placed.filter(({ m }) => m.id !== selected && m.name)).map(({ m, x, y }) => (
             <span key={`name-${m.id}`} className="globe__name" style={{ left: x, top: y }}>{m.name}</span>
           ))}
-        {names && homeSeen && home && (
+        {(names || nameHome) && homeSeen && home && (
           <span className="globe__name globe__name--below globe__name--home" style={{ left: homeSeen.x, top: homeSeen.y }}>
             {home.city}
           </span>

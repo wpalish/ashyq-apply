@@ -181,7 +181,8 @@ test('both themes render with a painted background and readable text', async () 
   await page.setViewportSize({ width: 1440, height: 900 });
   await openShortlist(page);
 
-  await page.locator('.sidebar__settings summary').click();
+  // Appearance lives in the applicant's menu.
+  await page.locator('.account > summary').click();
   for (const theme of ['light', 'dark'] as const) {
     await page.selectOption('#theme', theme);
     await page.waitForTimeout(200);
@@ -193,6 +194,8 @@ test('both themes render with a painted background and readable text', async () 
     expect(fg).not.toBe(bg);
     await page.screenshot({ path: shot(`theme-${theme}.png`), fullPage: false });
   }
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.account')).not.toHaveAttribute('open', '');
 });
 
 test('no console errors during the full journey', async () => {

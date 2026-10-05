@@ -52,8 +52,8 @@ test('a new workspace can be registered', async () => {
   await page.getByTestId('auth-password').fill(PASSWORD);
   await page.getByTestId('auth-submit').click();
 
-  await expect(page.getByRole('heading', { name: 'Good to see you.' })).toBeVisible();
-  await page.getByRole('button', { name: 'Create profile' }).click();
+  await expect(page.getByRole('heading', { name: /Where can you study/ })).toBeVisible();
+  await page.getByTestId('home-cta').click();
   await expect(page.getByTestId('to-preferences')).toBeVisible();
 });
 
@@ -70,6 +70,8 @@ test('the workspace can hold a profile and a finished run', async () => {
 });
 
 test('signing out returns to the sign-in screen', async () => {
+  // Signing out lives in the applicant's menu.
+  await page.locator('.account > summary').click();
   await page.getByTestId('sign-out').click();
   await expect(page.getByRole('heading', { name: SIGN_IN })).toBeVisible();
 });

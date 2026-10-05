@@ -1688,6 +1688,7 @@
   box-shadow: 0 0 0 2px var(--sun-ink);
 }
 .globe--night .globe__marker::after { box-shadow: 0 0 0 2px var(--night); }
+.globe__marker--pass::after { background: var(--marker); }
 .globe__marker.is-selected::after { width: 14px; height: 14px; margin: -7px 0 0 -7px; box-shadow: 0 0 0 3px var(--sun-ink), 0 0 0 6px color-mix(in srgb, var(--sun) 45%, transparent); }
 .globe__label {
   position: absolute;
