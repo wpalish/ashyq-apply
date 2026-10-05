@@ -1592,26 +1592,36 @@
    Dots and routes on a canvas, markers as buttons over it. Colours are
    tokens, so the globe follows the appearance. */
 
+/* Night panels (the research moment, the reveal, one-at-a-time, the plan's
+   board, the night globe): the action is an ink pill on paper, which would
+   vanish on night, so inside them the same token is the warm glow. */
+.reveal, .triage, .board, .globe--night {
+  --sun: var(--glow);
+  --sun-hover: #FFFFFF;
+  --sun-ink: #111114;
+}
+
 .globe { position: relative; margin: 0; width: 100%; overflow: hidden; }
 .globe__canvas { display: block; }
 .globe__markers { position: absolute; inset: 0; pointer-events: none; }
 .globe--day {
-  --globe-land: #7C8BA3;
+  --globe-land: #9C99A3;
   --globe-sea: color-mix(in srgb, var(--surface-sunken) 70%, transparent);
   --globe-limb: var(--rule);
   --globe-route: var(--route);
   --globe-home: var(--ink);
 }
 .globe--night {
-  --globe-land: #C9D3E3;
+  --globe-land: #B8B8C4;
   --globe-sea: rgba(255, 255, 255, 0.03);
   --globe-limb: var(--night-line);
-  --globe-route: var(--sun);
+  /* the action colour is ink now; routes on the night globe use a country tint */
+  --globe-route: var(--pass-tint-1);
   --globe-home: #FFFFFF;
 }
-:root[data-theme='dark'] .globe--day { --globe-land: #8FA0BB; }
+:root[data-theme='dark'] .globe--day { --globe-land: #8E8C96; }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .globe--day { --globe-land: #8FA0BB; }
+  :root:not([data-theme='light']) .globe--day { --globe-land: #8E8C96; }
 }
 .globe__marker {
   position: absolute;

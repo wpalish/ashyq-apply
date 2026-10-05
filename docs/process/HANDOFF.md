@@ -2042,6 +2042,12 @@ removed (unreachable in main's shell). Tokens: our set plus `--accent-text`; Int
 header, so an 839 px phone keeps the card alone. Gates at the merge: typecheck, lint, 379 unit tests, build,
 npm audit, Playwright 103 passed + 1 skipped (desktop + mobile), auth journey 6/6. **Next (§5):** palette E
 tokens (ink action, country pass colours), then the Find passes, then Home/Plan in the concept's layout.
+Palette E landed (next commit after the merge): ink action pill (`--sun` keeps its name), slate-blue links,
+warm paper, eight `--pass-N` country colours with `--pass-tint-N` for night routes, and `--glow` — inside
+the night panels (`.reveal`, `.triage`, `.board`, `.globe--night`) the action token becomes the glow,
+because an ink pill vanishes on night. Axe: no serious violation on 10 screens at 1440 and 390 with real
+results; Playwright 103 + 1 skipped. **Next (§5):** Find as passes (country colour per programme, the
+ladder on top, the tabs), then Home and Plan in the concept's layout, then the one-row phone header.
 
 Write-ahead (claude-opus-5, 2026-09-25, redesign part 8; owner: "продолжай" after part 7 offered the two
 globe follow-ups). Reuse `components/Globe`; frontend only:
@@ -5237,3 +5243,4 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-04 10:12UTC: gpt-6-astra freezes/pushes V4 source24865069715f82a22d83ade810b367c0d5442c67/tag expert500-phase1-v4-2026-10-04-2486506. Pre-baseline trial SHA52b8bce9f3fb963224a5829b866599ec3b8673b11001e50e6447d81aa7ea58eb is byte-identical to trial-at-baseline-start; fresh paired source measurement started. Do not edit frozen scripts/modules, reset/retry cases or duplicate dispatch.
 
 - 2026-10-05: claude-opus-5 merges main (Unimatch, PR #37–#55) into PR #20 for the chosen concept «Пропуск» × «Горизонт» (palette E, name Unimatch): main's shell, our screens plus Unimatch's search/tabs/catalogue, main's profile steps; all frontend gates green. Next: palette E tokens.
+- 2026-10-05: claude-opus-5 lands palette E (ink action, pass colours, night glow) on PR #20; gates green. Next: Find as passes.

@@ -1,60 +1,73 @@
 /*
- * Design tokens — «Горизонт», palette «Солнце».
+ * Design tokens — Unimatch, palette E «Чернила» (docs/design/redesign-concepts.md §31–§33).
  *
- * Direction (docs/design/redesign-concepts.md §17–§18): navy ink and a sun
- * yellow main action on calm cloud-grey paper for work; a night palette for
- * the moments (research running, results ready) and for the dark appearance.
- * Headings are Montserrat, text and numbers Onest: both carry every Kazakh
- * letter and the tenge sign, which the previous faces did not.
+ * Ink on warm paper for work; the action is an ink pill, not a colour. Colour
+ * belongs to the countries: each programme's pass is filled with its
+ * country's deep, muted hue and carries white text (5.7–9.6:1), and the
+ * night moments draw routes in light tints of the same hues. Inter carries
+ * every Kazakh letter (Ә Ғ Қ Ң Ө Ұ Ү Һ) and the tenge sign.
  *
  * Status colours keep one meaning each and follow the tones in
- * src/lib/format.ts (ok, info, warn, risk, neutral). The sun yellow is the
- * main button only; the warn status is always a pale amber pill with dark
- * amber text, never solid yellow, so the two cannot be confused.
+ * src/lib/format.ts (ok, info, warn, risk, neutral); they are never used as a
+ * country's colour, so a pass is never read as a verdict.
  */
 
 :root {
   color-scheme: light;
 
   /* --- surfaces --- */
-  --paper:            #F6F7F9;   /* cloud 50 */
+  --paper:            #F3F2EF;   /* cloud 50 */
   --surface:          #FFFFFF;
-  --surface-sunken:   #EEF1F5;   /* cloud 100 */
+  --surface-sunken:   #EBE9E4;   /* cloud 100 */
   --surface-raised:   #FFFFFF;
-  --surface-inverted: #0F1E36;   /* navy 900 */
+  --surface-inverted: #111114;   /* navy 900 */
 
-  --ink:              #0F1E36;   /* navy 900 */
-  --ink-muted:        #5A6578;   /* slate 600: 5.1:1 on white */
-  --ink-faint:        #5A6578;
+  --ink:              #111114;   /* navy 900 */
+  --ink-muted:        #5E5E6A;   /* slate 600: 5.1:1 on white */
+  --ink-faint:        #5E5E6A;
   --ink-inverted:     #FFFFFF;
 
-  --rule:             #E3E7ED;   /* cloud 150 */
-  --rule-strong:      #C2CAD6;   /* slate 300 */
+  --rule:             #E3E1DC;   /* cloud 150 */
+  --rule-strong:      #C9C6BF;   /* slate 300 */
 
-  /* --- brand: the sun is the main action; routes are lines, never text --- */
-  --sun:              #FFC23D;
-  --sun-hover:        #F7B41F;
-  --sun-ink:          #0F1E36;
-  --route:            #E8A317;
-  --night:            #0B1628;   /* navy 950 */
-  --night-surface:    #16263F;
-  --night-line:       #2A3D61;
+  /* --- the action is an ink pill (the token keeps its old name, --sun) --- */
+  --sun:              #111114;
+  --sun-hover:        #2C2C33;
+  --sun-ink:          #FFFFFF;
+  --route:            #3E5C76;
+  --night:            #101014;   /* navy 950 */
+  --night-surface:    #1C1C22;
+  --night-line:       #2C2C36;
   --night-ink:        #FFFFFF;
-  --night-muted:      #A7B1C2;
+  --night-muted:      #A9A9B6;
+  /* the highlight on night panels, where the ink action would vanish */
+  --glow:             #E8E2D0;
   /* status words on the night board, in both appearances */
-  --night-ok:         #6BE3A4;
-  --night-act:        #FFD27A;
-  --night-ask:        #9CCBDC;
-  --night-passed:     #FF9C8F;
-  --flap:             #1C2E4D;
-  --kicker:           #8A5A00;   /* labels above titles: amber 700 */
+  --night-ok:         #93C7BE;
+  --night-act:        #D2BE8C;
+  --night-ask:        #9DBAD3;
+  --night-passed:     #D9A1A1;
+  --flap:             #1C1C22;
+  --kicker:           #5E5E6A;   /* labels above titles: amber 700 */
 
-  /* --- accent: links and focus --- */
-  --accent:           #0B6F93;   /* teal 700: 5.7:1 on white */
-  --accent-hover:     #08587A;
-  --accent-soft:      #E3F1F6;
-  --accent-border:    #9CCBDC;
-  --accent-text:      #8A5A00;   /* Unimatch's label colour; same as --kicker */
+  /* --- accent: links and focus (slate blue, 6.9:1 on white) --- */
+  --accent:           #3E5C76;   /* teal 700: 5.7:1 on white */
+  --accent-hover:     #2F4A61;
+  --accent-soft:      #E6ECF2;
+  --accent-border:    #9DBAD3;
+  --accent-text:      #5E5E6A;   /* Unimatch's label colour; same as --kicker */
+
+  /* --- passes: one deep colour per country, white text; tints for night routes --- */
+  --pass-1: #3E5C76;  --pass-tint-1: #9DBAD3;   /* slate blue */
+  --pass-2: #5E4B6E;  --pass-tint-2: #BCA9D0;   /* plum */
+  --pass-3: #7A3B3B;  --pass-tint-3: #D9A1A1;   /* oxblood */
+  --pass-4: #3F6F6A;  --pass-tint-4: #93C7BE;   /* teal */
+  --pass-5: #6B5A2E;  --pass-tint-5: #D2BE8C;   /* ochre */
+  --pass-6: #44497F;  --pass-tint-6: #A9ADE0;   /* indigo */
+  --pass-7: #55623A;  --pass-tint-7: #B9C79A;   /* moss */
+  --pass-8: #6E4A55;  --pass-tint-8: #CFA3B0;   /* rose-brown */
+  --pass-ink: #FFFFFF;
+  --radius-pass: 24px;
 
   /* --- semantic status: each maps to one product meaning --- */
   --ok:               #177A4C;   /* MET, STRONGER_FIT, FULL_RIDE_CONFIRMED */
@@ -113,9 +126,9 @@
   --radius-lg: 22px;
   --radius-pill: 999px;
 
-  --shadow-sm: 0 1px 2px rgba(15, 30, 54, 0.06);
-  --shadow: 0 6px 18px rgba(15, 30, 54, 0.10);
-  --shadow-lg: 0 16px 40px rgba(15, 30, 54, 0.14);
+  --shadow-sm: 0 1px 2px rgba(17, 17, 20, 0.06);
+  --shadow: 0 6px 18px rgba(17, 17, 20, 0.10);
+  --shadow-lg: 0 16px 40px rgba(17, 17, 20, 0.14);
 
   --duration-fast: 120ms;
   --duration-normal: 220ms;
@@ -132,29 +145,31 @@
   :root:not([data-theme='light']) {
     color-scheme: dark;
 
-    --paper:            #0B1628;
-    --surface:          #16263F;
-    --surface-sunken:   #0F1D33;
-    --surface-raised:   #1B2D4D;
-    --surface-inverted: #F6F7F9;
+    --paper:            #101014;
+    --surface:          #1A1A20;
+    --surface-sunken:   #141418;
+    --surface-raised:   #22222A;
+    --surface-inverted: #F3F2EF;
 
-    --ink:              #F2F4F8;
-    --ink-muted:        #A7B1C2;
-    --ink-faint:        #A7B1C2;
-    --ink-inverted:     #0F1E36;
+    --ink:              #F2F2F4;
+    --ink-muted:        #A9A9B6;
+    --ink-faint:        #A9A9B6;
+    --ink-inverted:     #111114;
 
-    --rule:             #2A3D61;
-    --rule-strong:      #3C4E70;
+    --rule:             #2C2C36;
+    --rule-strong:      #3C3C48;
 
-    --sun-hover:        #FFD06A;
-    --route:            #FFC23D;
-    --kicker:           #FFD27A;
-    --accent-text:      #F7C948;
+    --sun:              #F2F2F4;
+    --sun-hover:        #FFFFFF;
+    --sun-ink:          #111114;
+    --route:            #9DBAD3;
+    --kicker:           #A9A9B6;
+    --accent-text:      #CFCFD8;
 
-    --accent:           #8FD3F4;
-    --accent-hover:     #B7E4F9;
-    --accent-soft:      #173A55;
-    --accent-border:    #2F6A8E;
+    --accent:           #9DBAD3;
+    --accent-hover:     #BFD3E5;
+    --accent-soft:      #1E2A36;
+    --accent-border:    #3E5C76;
 
     --ok:               #6BE3A4;
     --ok-soft:          #12352A;
@@ -189,29 +204,31 @@
 :root[data-theme='dark'] {
   color-scheme: dark;
 
-  --paper:            #0B1628;
-  --surface:          #16263F;
-  --surface-sunken:   #0F1D33;
-  --surface-raised:   #1B2D4D;
-  --surface-inverted: #F6F7F9;
+  --paper:            #101014;
+  --surface:          #1A1A20;
+  --surface-sunken:   #141418;
+  --surface-raised:   #22222A;
+  --surface-inverted: #F3F2EF;
 
-  --ink:              #F2F4F8;
-  --ink-muted:        #A7B1C2;
-  --ink-faint:        #A7B1C2;
-  --ink-inverted:     #0F1E36;
+  --ink:              #F2F2F4;
+  --ink-muted:        #A9A9B6;
+  --ink-faint:        #A9A9B6;
+  --ink-inverted:     #111114;
 
-  --rule:             #2A3D61;
-  --rule-strong:      #3C4E70;
+  --rule:             #2C2C36;
+  --rule-strong:      #3C3C48;
 
-  --sun-hover:        #FFD06A;
-  --route:            #FFC23D;
-  --kicker:           #FFD27A;
-  --accent-text:      #F7C948;
+  --sun:              #F2F2F4;
+    --sun-hover:        #FFFFFF;
+    --sun-ink:          #111114;
+  --route:            #9DBAD3;
+  --kicker:           #A9A9B6;
+  --accent-text:      #CFCFD8;
 
-  --accent:           #8FD3F4;
-  --accent-hover:     #B7E4F9;
-  --accent-soft:      #173A55;
-  --accent-border:    #2F6A8E;
+  --accent:           #9DBAD3;
+  --accent-hover:     #BFD3E5;
+  --accent-soft:      #1E2A36;
+  --accent-border:    #3E5C76;
 
   --ok:               #6BE3A4;
   --ok-soft:          #12352A;
