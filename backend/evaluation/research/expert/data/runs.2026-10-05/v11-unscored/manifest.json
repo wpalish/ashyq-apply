@@ -1,0 +1,351 @@
+{
+  "schema_version": "1",
+  "closed_at": "2026-10-05T11:54:55.427323+00:00",
+  "state": "CLOSED_UNSCORED",
+  "reason": "original Exa HTTP402 observed in Aalto baseline; cohort stopped before expert dispatch",
+  "source_harness_sha": "d89819084e4cc46e99c8af4f577e1b1ce6ea5547",
+  "frozen_ref": "expert500-phase1-v11-2026-10-05-d898190",
+  "trial_file_sha256": "4f5f5ab85ce5cde7ff21ab3622c2a45d3674e5dd1f8714f1ccd04413501c3672",
+  "protocol_manifest_sha256": "47c801ee5457404380767225a80339a74deec3f27290fb06320b2bbbe6f8cf8e",
+  "started_baseline_case_ids": [
+    "groningen",
+    "delft",
+    "aalto"
+  ],
+  "completed_primary_baseline_case_ids": [
+    "aalto"
+  ],
+  "canceled_baseline_case_ids": [
+    "groningen",
+    "delft"
+  ],
+  "unstarted_case_ids": [
+    "vienna",
+    "warsaw",
+    "ubc",
+    "toronto",
+    "hku",
+    "ntu",
+    "kaist"
+  ],
+  "first_observed_provider_failure": {
+    "http_status": 402,
+    "reason": null,
+    "error": "Search service unavailable (exa; HTTP 402)."
+  },
+  "expert_results": 0,
+  "expert_model_calls": 0,
+  "primary_seal_created": false,
+  "reviewed_labels_loaded": false,
+  "numerical_score_available": false,
+  "per_reviewed_fact_diagnoses_available": false,
+  "heldout150_read": false,
+  "notes": [
+    "Peer original cancellation text says provider429 generically; the recorded origin is HTTP402. Preserve both bytes; do not relabel the original.",
+    "All six Aalto provider requests failed with HTTP402. The adapter does not store the provider response body; credit/billing root reason is unproven.",
+    "Canceled original Groningen/Delft workflow artifacts were retrieved read-only from those known runs after cancellation, without source/model redispatch. They remain partial, not valid fresh complete baselines.",
+    "Do not invoke any V11 stage or report again, change the source/tag/trial, restore budgets, swap provider/account/credentials, consume reset credits or retry quota.",
+    "No0/62 is inferred. A future pilot requires restored legitimate existing Exa availability and new source-bound whole-ten originals."
+  ],
+  "archive": "originals.tar.gz",
+  "archive_sha256": "04205429f731c4bb4664c2d947b51b5596cb620018d4b8dadf69df8d7fe90572",
+  "archive_bytes": 127495,
+  "record_count": 49,
+  "total_original_bytes": 1168493,
+  "records": [
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/aalto/artifact/capture/20261005T114216Z/aalto.budget.json",
+      "archive_path": "baseline/aalto/artifact/capture/20261005T114216Z/aalto.budget.json",
+      "sha256": "3d14addc26f97ae30beda51736f29340a3a1500115fb70363a8d7f9e828e7dc5",
+      "bytes": 709
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/aalto/artifact/capture/20261005T114216Z/aalto.json",
+      "archive_path": "baseline/aalto/artifact/capture/20261005T114216Z/aalto.json",
+      "sha256": "d3a3dc383e9597838e96e322807294292f63eee9576d580caf7d5c2156fe221e",
+      "bytes": 1334
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/aalto/artifact/capture/20261005T114216Z/aalto.log",
+      "archive_path": "baseline/aalto/artifact/capture/20261005T114216Z/aalto.log",
+      "sha256": "64a047fa88cca7899ebdb8345ef835bb3e234387af7771cbb8470b5689f4541c",
+      "bytes": 2002
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/aalto/artifact/capture/20261005T114216Z/aalto.raw.json",
+      "archive_path": "baseline/aalto/artifact/capture/20261005T114216Z/aalto.raw.json",
+      "sha256": "7bbd7a2f8b7314de2fdab8e9e521d72e938d3b27ea3ee740120c95f96e75f89d",
+      "bytes": 8110
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/aalto/artifact/capture/20261005T114216Z/capture.json",
+      "archive_path": "baseline/aalto/artifact/capture/20261005T114216Z/capture.json",
+      "sha256": "508811e34de8944cd14de66d755eeb38a0a6171a66ce3767c13b296b7a0c7ba8",
+      "bytes": 4332
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/aalto/artifact/capture.log",
+      "archive_path": "baseline/aalto/artifact/capture.log",
+      "sha256": "a67d6349e796c8acbd38f0eec421218ee03a571ab5bea51d6d5381e2d79d18fe",
+      "bytes": 79
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/aalto/artifact/config.txt",
+      "archive_path": "baseline/aalto/artifact/config.txt",
+      "sha256": "157750743c4b014661145a5a5bbccc03dac1b68da0482b9a6a6653d632f61c70",
+      "bytes": 129
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/aalto/artifact/packet.json",
+      "archive_path": "baseline/aalto/artifact/packet.json",
+      "sha256": "b78061d2136821ebb6c04d1b22a09b9db5197ecb6e9d0f323fcd1da259055bf8",
+      "bytes": 1199
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/aalto/dispatch.json",
+      "archive_path": "baseline/aalto/dispatch.json",
+      "sha256": "8bee51ab67149c99bbcdba94dae5840ea5ef5cf1498ea3820c1f8c887f9a1400",
+      "bytes": 355
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/aalto/public-packet.json",
+      "archive_path": "baseline/aalto/public-packet.json",
+      "sha256": "e2034a5ca4f6d7c0b4c7351b14ff679267931d5429ce38dc035c53358b497c60",
+      "bytes": 1956
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/aalto/result.json",
+      "archive_path": "baseline/aalto/result.json",
+      "sha256": "76b6d53e57d29f678221ddc3b331e40f063f0751ccb6baa911ec410169065c14",
+      "bytes": 1547
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/aalto/run.json",
+      "archive_path": "baseline/aalto/run.json",
+      "sha256": "ec4ff9e6f9a83f7063fb6459625a3737b110dbe47f17e67fc3a67505511f91f1",
+      "bytes": 247
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/delft/dispatch.json",
+      "archive_path": "baseline/delft/dispatch.json",
+      "sha256": "3350c6f99e3cce07351901e28ae9e44c53013cfa55c4be8972d0070d38c3d6f6",
+      "bytes": 355
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/delft/orchestration-error.json",
+      "archive_path": "baseline/delft/orchestration-error.json",
+      "sha256": "281c302036e9a1a69a6e5e9122b92a4c31a6aab5043c8c8575d07854789062e6",
+      "bytes": 122
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/delft/run.json",
+      "archive_path": "baseline/delft/run.json",
+      "sha256": "3c294bd4df66f5a2788e513941ea01760108530211702838c49f30f3e3d97a9f",
+      "bytes": 120
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/groningen/dispatch.json",
+      "archive_path": "baseline/groningen/dispatch.json",
+      "sha256": "59bf3bd127f5d1354f05889b75172e2d2dc12de4fd6c5583c91227f548142788",
+      "bytes": 359
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/groningen/orchestration-error.json",
+      "archive_path": "baseline/groningen/orchestration-error.json",
+      "sha256": "6a5a9ebbbc38f4017d87cea3c20db746222ca84095311f1e590794cfd81e8dab",
+      "bytes": 126
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline/groningen/run.json",
+      "archive_path": "baseline/groningen/run.json",
+      "sha256": "cae42bb82194c6ec9753a0a31d67485d684f8690b1df9b8fa14519f29ebcea30",
+      "bytes": 120
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline-results.json",
+      "archive_path": "baseline-results.json",
+      "sha256": "1c854c7581f788013b0ca6f271fa6dc86178767b6d573cbea9bd6de0dba4fe58",
+      "bytes": 2146
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/baseline-stage-start.json",
+      "archive_path": "baseline-stage-start.json",
+      "sha256": "74dd1928e593cda06d843e14a7ec50afc0b67252d0ed982eb1d070988a493f05",
+      "bytes": 344
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/closure.json",
+      "archive_path": "closure.json",
+      "sha256": "9891d12091e278b536e51572dde214da0f120ab5eee4f870f73b982ab38ed296",
+      "bytes": 2085
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/sealed-sentinel.txt",
+      "archive_path": "sealed-sentinel.txt",
+      "sha256": "7defa88bba39614cac654beb052916229cf09cd397b00ab8a6f2a6b8212b9d58",
+      "bytes": 24
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/trial-at-baseline-start.json",
+      "archive_path": "trial-at-baseline-start.json",
+      "sha256": "4f5f5ab85ce5cde7ff21ab3622c2a45d3674e5dd1f8714f1ccd04413501c3672",
+      "bytes": 448529
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/trial.json",
+      "archive_path": "trial.json",
+      "sha256": "4f5f5ab85ce5cde7ff21ab3622c2a45d3674e5dd1f8714f1ccd04413501c3672",
+      "bytes": 448529
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/workspace-locations.json",
+      "archive_path": "workspace-locations.json",
+      "sha256": "e0708bd604c1f53dd0885ee4959de853fca005802af1399c96e45b827c089063",
+      "bytes": 1017
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v11-2026-10-05/workspace-receipts.json",
+      "archive_path": "workspace-receipts.json",
+      "sha256": "75d2e3c3a7a61755dff9297c5d8ff8c0e581d84dbf91aa1fbba89d45c4e9c5ff",
+      "bytes": 1677
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/aalto/artifacts-original.json",
+      "archive_path": "terminal-controller-originals/aalto/artifacts-original.json",
+      "sha256": "6c64d8cff2667cb792dac1b65eece222337713799fef6652264047ced9e05f70",
+      "bytes": 758
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/aalto/workflow-original.log",
+      "archive_path": "terminal-controller-originals/aalto/workflow-original.log",
+      "sha256": "42c87a36059fd6cdd09ba9f5563b45bb650b8730a679d6b14cd9d13b53a8aae9",
+      "bytes": 52504
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/aalto/workflow-status.json",
+      "archive_path": "terminal-controller-originals/aalto/workflow-status.json",
+      "sha256": "6fa7436f74dff3382c6a5e7f1967005e4994408993bc5aa430383808a08bad62",
+      "bytes": 3711
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/delft/artifacts-original.json",
+      "archive_path": "terminal-controller-originals/delft/artifacts-original.json",
+      "sha256": "74f109c0f1ab071491134d46d62994a0f72d80162a0ba8501794fc58bf81bb8a",
+      "bytes": 759
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/delft/delivered-artifact/capture/20261005T114213Z/capture.json",
+      "archive_path": "terminal-controller-originals/delft/delivered-artifact/capture/20261005T114213Z/capture.json",
+      "sha256": "5e884ec4c1f310cc350b9bdbd34a8b65b325696a1e4fc47cc75baacff16ab305",
+      "bytes": 9874
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/delft/delivered-artifact/capture/20261005T114213Z/delft.budget.json",
+      "archive_path": "terminal-controller-originals/delft/delivered-artifact/capture/20261005T114213Z/delft.budget.json",
+      "sha256": "6a1ad65a78231a6cb7b82bd6cbd0d949e1070cef4c5b8358f7eea85f7b461559",
+      "bytes": 710
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/delft/delivered-artifact/capture/20261005T114213Z/delft.json",
+      "archive_path": "terminal-controller-originals/delft/delivered-artifact/capture/20261005T114213Z/delft.json",
+      "sha256": "82c44b359f12638f4b1ef82a0ca999d95fb74982a780289d6b42e755dc4305bf",
+      "bytes": 6435
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/delft/delivered-artifact/capture/20261005T114213Z/delft.log",
+      "archive_path": "terminal-controller-originals/delft/delivered-artifact/capture/20261005T114213Z/delft.log",
+      "sha256": "1e5b8d96493b08f9e965b51e485f9c534d6b7b1f70cac26dc1c3042ac0bf98bd",
+      "bytes": 4536
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/delft/delivered-artifact/capture/20261005T114213Z/delft.raw.json",
+      "archive_path": "terminal-controller-originals/delft/delivered-artifact/capture/20261005T114213Z/delft.raw.json",
+      "sha256": "52e398774e28cfeaf3bc362284483e8f394128cf131bce9046627d4c36f15136",
+      "bytes": 39341
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/delft/delivered-artifact/capture.log",
+      "archive_path": "terminal-controller-originals/delft/delivered-artifact/capture.log",
+      "sha256": "6512e1570f2ad23f838b0ea7306acb07d2ae206a0657d706c34ac581efeeae7a",
+      "bytes": 79
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/delft/delivered-artifact/config.txt",
+      "archive_path": "terminal-controller-originals/delft/delivered-artifact/config.txt",
+      "sha256": "157750743c4b014661145a5a5bbccc03dac1b68da0482b9a6a6653d632f61c70",
+      "bytes": 129
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/delft/delivered-artifact/packet.json",
+      "archive_path": "terminal-controller-originals/delft/delivered-artifact/packet.json",
+      "sha256": "59d9e7809047f6d62a779fc698865221b17db15824f0dacd44597fbbd7eee50d",
+      "bytes": 1756
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/delft/workflow-original.log",
+      "archive_path": "terminal-controller-originals/delft/workflow-original.log",
+      "sha256": "5b24b3802a892721844f3d099bb8537d66796e250774f6120a8121bb7eb597af",
+      "bytes": 58727
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/delft/workflow-status.json",
+      "archive_path": "terminal-controller-originals/delft/workflow-status.json",
+      "sha256": "d68020f997ee3f649a313583b11dab5143a88686061a65f2eeea861cce755a9b",
+      "bytes": 3715
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/groningen/artifacts-original.json",
+      "archive_path": "terminal-controller-originals/groningen/artifacts-original.json",
+      "sha256": "a364554c6a209e050f9bfc2824923c491240324acd9eb2c151ffdde39b85d5cc",
+      "bytes": 758
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/groningen/delivered-artifact/capture/20261005T114220Z/groningen.budget.json",
+      "archive_path": "terminal-controller-originals/groningen/delivered-artifact/capture/20261005T114220Z/groningen.budget.json",
+      "sha256": "658428d3bce9e986f6805713efca2ba73da4c9e6e463e1a77e5491ffc9ad7ab4",
+      "bytes": 606
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/groningen/delivered-artifact/capture/20261005T114220Z/groningen.json",
+      "archive_path": "terminal-controller-originals/groningen/delivered-artifact/capture/20261005T114220Z/groningen.json",
+      "sha256": "17ac467fc8b2417e99532e9b125c035f4d88299e553b85e93e12bb5eb594e451",
+      "bytes": 423
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/groningen/delivered-artifact/capture/20261005T114220Z/groningen.log",
+      "archive_path": "terminal-controller-originals/groningen/delivered-artifact/capture/20261005T114220Z/groningen.log",
+      "sha256": "f81d66ab0013848eef537d2d15b8807a7819afd9f2f0f1a248f3a5c5fe477bac",
+      "bytes": 2620
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/groningen/delivered-artifact/capture.log",
+      "archive_path": "terminal-controller-originals/groningen/delivered-artifact/capture.log",
+      "sha256": "128ff4d2e0dfa793fe7a7121aea0983a2752d0bd3460d6d6e6a9b32ceff4d6fb",
+      "bytes": 21
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/groningen/delivered-artifact/config.txt",
+      "archive_path": "terminal-controller-originals/groningen/delivered-artifact/config.txt",
+      "sha256": "0b31435cb528741c424ef4f31f25d55733d751fd9c2c5bf9c3ecb795a7fa9169",
+      "bytes": 64
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/groningen/workflow-original.log",
+      "archive_path": "terminal-controller-originals/groningen/workflow-original.log",
+      "sha256": "25ee92e80cbf4827d319f16bcef5a6df0929c5c13bea2197e0b64f6abfdb2cd9",
+      "bytes": 48884
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-terminal-controller-originals/groningen/workflow-status.json",
+      "archive_path": "terminal-controller-originals/groningen/workflow-status.json",
+      "sha256": "e7e990192578c8714949754119e2d90322a13bd90b5c054f364287030857b406",
+      "bytes": 3717
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-baseline-parent-original.log",
+      "archive_path": "parent/unimatch-expert500-v11-baseline-parent-original.log",
+      "sha256": "75580fae28f6e0fd30ef536ff0a8f8e414baa02332a81a367fee71510cfce723",
+      "bytes": 814
+    }
+  ]
+}

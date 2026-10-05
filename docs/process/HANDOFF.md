@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**CURRENT V11 CLOSED UNSCORED / PROVIDER402, 2026-10-05 11:57 UTC [expert-500], holder gpt-6-astra, metadata HEAD078e046, original source/tagd898190 immutable.** All12 selected-source CI jobs passed and one trial4f5f5ab8/baseline11:41:45UTC ran. Aalto37304584197 records Exa HTTP402 (reason null),11 reads/6 queries/12472ms; original six queries all failed402. Parent STOP canceled Groningen37304584252/Delft37304584227; remaining7 never started. Existing canceled artifacts were delivered read-only separately; no redispatch. Expert/model0, no seal/labels/score. V11 closure49 records/1168493bytes manifest769273a0/archive04205429 fully verified. Never restart/score/reuse V11. Prospective narrow402 latch repair/tests only, no new source/model calls or credential/account/provider/reset/purchase changes.
+
 **CURRENT V11 LIVE BASELINES, 2026-10-05 11:44 UTC [expert-500], holder gpt-6-astra, selected source/tagd898190.** Exact source12/12 release-gates jobs succeeded: branch37302226491, PR37302231473, tag37302284212; original8-record CI manifest2e5c61a9. Fresh V11 trial allocated exactly once on sourceHEAD; trial and baseline-start original4f5f5ab8 identical,10 independent workspaces; allocation8 recordsd4795ad8. Baseline stage began once11:41:45.513034 UTC, original /tmp/unimatch-expert500-v11-baseline-parent-original.log, execsession39866. First original controllers Groningen37304584252/Delft37304584227/Aalto37304584197 dispatched; continue existing stage only. No V11 expert/model/label/seal/score. Root owns original monitoring/Git/HANDOFF; selected helper/runtime bytes remain fixed.
 
 **CURRENT FINAL V11 FREEZE, 2026-10-05 11:19 UTC [expert-500], holder gpt-6-astra, parent metadata HEADde7d96f.** Immutable v11 manifest47c801ee was created once11:09 UTC:12 helpers/21 modules/675 byte-bound entries/24 local gates. Current-main4eccbec/PR53 is integrated at03a1d18;4100/94.87%/427.88s and371 static pass, demo20/Groningenfirst/UBCOUT_OF_BUDGET and single Alembic head pass. Current runtime621 is178 parent/workflow/pure +305 report +138 actual-cohort; all11 helper quality passes. Ten-case OS240 proofa0658da9 and fresh neutral3 default-effort model phases/zero sources/runtime14/result33bdc0a1/archive487c1630 pass. Original support47 records7b2d16d2 and new provenance20 records296acf57 retain all negatives and exact green logs. No V11 trial/sourceCI/university action/label/seal/score yet. Root owns normal source commit/push/tag/exactCI and once-only allocation/baseline/expert/report. Never invoke freezer again or change helpers.
@@ -95,6 +97,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Current [expert-500], 2026-10-05 11:57 UTC: V11 CLOSED_UNSCORED due original Exa HTTP402; source availability required for another pilot.** Complete offline correction of the demonstrated repeated402 calls, preserving429/transient-error behavior, actual status/counters and fixed owner method. Reviewable source repair and original closure do not establish40/62, diagnoses or complete-search readiness. HELDOUT150 remains untouched.
 
 **Current [expert-500], 2026-10-05 11:44 UTC: V11 selected-source CI12/12 complete; the one fresh same-ten paired pilot is in its algorithm stage.** Experts remain locked until all10 valid new source-bound Exa60/6/120 originals are complete. Later unchanged expert60/6/default effort/900s and62/40 admission +supported per-fact causes apply. PR46 stays draft; HELDOUT150 untouched.
 
@@ -197,6 +201,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+- [expert-500] 078e046: pushed original V11 sourceCI12/12 manifest2e5c61a9 and once-allocationd4795ad8/trial4f5f5ab8. Existing baseline completed3-result stopped cohort; one primary Aalto provider402 plus two cancelled peers,7 unstarted. This following closure checkpoint preserves all49 original records769273a0/04205429 and grounded causal note; no expert/seal/labels/score.
 
 - [expert-500] d89819084e4cc46e99c8af4f577e1b1ce6ea5547: pushed final current-main V11 freeze47c801ee (12helpers/21modules/675 entries/24 gates), predecessor support7b2d16d2 and fresh support296acf57. Annotated tag expert500-phase1-v11-2026-10-05-d898190 is immutable. All12 selected-source CI jobs green; new CI/allocation receipts are in this following metadata checkpoint.
 
@@ -1731,6 +1737,8 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
+**Current 2026-10-05 11:57 UTC [expert-500]:** verified V11 closure49/769273a0 and causal report/status docs await checkpoint. All live processes ended; no new live invocation is pending. Permanent402 was sent six times; new source correction/tests are prospective, not yet implemented. Existing Exa capacity/account billing reason is unknown because the adapter stores only status, not vendor body.
+
 **Current 2026-10-05 11:44 UTC [expert-500]:** immutable source CI and initial trial-allocation receipts plus status docs await metadata checkpoint. Existing baseline stage39866 is active from11:41:45UTC; changing case/controller files are not called completed evidence. Require all10 originals before expert start. No source/helper change, model/label/seal/score.
 
 **Current 2026-10-05 11:19 UTC [expert-500]:** final freezev11/47c801ee, predecessor-support47/7b2d16d2 and new-provenance20/296acf57 await the selected source commit/push with these docs. All current local gates pass. CI/trial/baselines/experts/report/seal/score remain pending. No live V11 root exists; do not resume historical V10 entries.
@@ -1902,6 +1910,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**PROVIDER402 WRITE-AHEAD, 2026-10-05 11:57 UTC [expert-500]:** first commit/push immutable V11 closure and failure report, then offline tests for backend/app/adapters/search/__init__.py shared latch, evaluation/research/live.py strict case/batch meter and evaluation/research/expert/controller.py persisted source STOP on402. Reproduce first402 -> later calls not sent (across adapter instances and resumed controller); preserve exact first code402, genuine429, provider identity/cooldown and transient500 behavior; no vendor body/key/applicant exposure. Keep actual sent-call counters accurate and never grant/reset budgets. Red originals then narrow source repair, scoped regressions/full backend/static/demo and unchanged-frontend proof; checkpoint source. All V11 helpers/archives/source/tag immutable; do not run report or another pilot. Restore legitimate existing Exa availability before any new source-bound whole-ten trial; no purchases, account/credential/provider/IP/reset substitution or quota retry. Owner60/6/default reasoning/900/120/62/40 and HELDOUT150 unchanged.
 
 **MONITOR EXISTING V11 BASELINES, 2026-10-05 11:44 UTC [expert-500]:** checkpoint/push these immutable CI2e5c61a9 and allocationd4795ad8 receipts after the already-completed once-only launch (HEAD equality was met at launch). Monitor existing execsession39866 and /tmp/unimatch-expert500-v11-baseline-parent-original.log; never invoke launch/baseline again. Once original baseline-results.json has10 unique cases/stopped=false/remaining=[], invoke `/tmp/unimatch-expert500-v11-validate-baselines.py` once (source-only original verification, no labels) then `/tmp/unimatch-expert500-v11-preserve-baselines.py` once to immutable runs.2026-10-05/v11-baseline. Save all original hashes and push before experts. One same-original-account readonly availability check before the once-only final parent41dd31b4 experts stage. Preserve provider/model/integrity STOP without retry; ordinary900 case guard remains local, unknown raw/counters ineligible. All10 traces must qualify before report5e7bdc18 once and seal/unchanged62 labels.40/62 +grounded misses before50; HELDOUT150 unchanged.
 
@@ -3942,6 +3952,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**V11 original live outcome, 2026-10-05 11:57 UTC [expert-500]:** CLOSED_UNSCORED provider HTTP402. Source12/12 CI and current local4100/94.87/371/621/OS240/source-free neutral3 remain source preparation proofs only. Algorithm1 complete provider-failed receipt +2 original peer cancellations +7 unstarted; experts0. No valid all10 algorithm arms, numerical comparison or per-fact diagnoses. Original49-record closure verified. New offline402 correction gates pending.
+
 **Selected V11 source d898190, 2026-10-05 11:44 UTC [expert-500]:**12/12 cloud jobs pass for exact branch/PR/tag runs37302226491/37302231473/37302284212. Every original JSON/log is preserved in CI2e5c61a9/8 records. Current local4100/94.87/371 +621 external partitions178/305/138,11 helper quality, frontend232 unchanged, OS240/newneutral3 source-free remain valid. No completed V11 algorithm/expert numerical result yet.
 
 **Final V11/current main53, 2026-10-05 11:19 UTC [expert-500]:**4100 backend passed94.87%/427.88s; Ruff/format/mypy371 app/tests/evaluation; demo20 correct order/UBCOUT_OF_BUDGET and single d8e412c6a901 head. Current helper runtime621 =178/4.26s parent-workflow-pure +305/30.70s report +138/135.01s actual-cohort; all11 external helper quality passes. Earlier570/146.70s is separate predecessor evidence, not current combined invocation. Fresh neutral3 default-effort phases pass8.542/19.993/6.467s with before/after current14 hashes;0 sources/tools/universities. OS240 proofa0658da9 passes. Unchanged frontend232/type/lint/build hash-bound originals retained. Immutable freeze47c801ee/24 gates/675 entries/12 helpers/21 modules verified. No exact-V11-source cloud CI or live result claimed.
@@ -4477,6 +4489,8 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+- 2026-10-05 11:57 UTC [expert-500] current Exa API returns HTTP402 in original Aalto/Delft receipts. Exact account/credit/billing reason is not available in the stored sanitized failure. Another free same-provider trial requires legitimate availability of that existing account. Do not pay, consume reset credits, rotate/substitute keys/accounts/providers/IP or send another probe to work around refusal. V11 is closed unscored and cannot be resumed. Offline repeated402 correction remains possible and is being completed before a readiness claim.
+
 **Current measured blocker, 2026-10-05 09:47 UTC [expert-500]:** V10 controller selfguard transport failure cascaded to the queue. A valid ten-case primary cohort/40-of62 comparison and per-fact miss causes are unavailable. Legitimate same-account CLI availability passed before original experts; no saved evidence attributes this stop to provider/model quota. Prospective offline repair can proceed autonomously. Source-counter unknown tails cannot be scored; no request to change owner budgets/default reasoning/threshold. PR46 not ready to merge or broaden.
 
 **CURRENT AVAILABILITY UPDATE, 2026-10-05 07:54 UTC:** the original bundled CLI read-only usage endpoint now allows ordinary Codex usage on accountId matching the desktop host (prolite, 4% used; zero paid credits and reset credits). This is live availability evidence, not assumed from elapsed time or the pending user question. The prior quota refusal remains an original V9 failure. Current-source integration/gates/freeze and a fresh whole-ten pilot remain necessary before score or search readiness.
@@ -4918,6 +4932,8 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 | 2026-09-09 | security audit | `security.py`: `SCRYPT_R`, `SCRYPT_P`, `_maxmem(n, r)`; `routes_metrics` compares bytes | scrypt cost schedule and the 500-on-non-ASCII bearer. |
 
 ## 9. Traps and lessons (things that cost a session; keep them)
+
+- 2026-10-05 11:57 UTC [expert-500] legacy peer-cancel exception says provider429 for any shared STOP; actual V11 origin is Exa402. Preserve original text and cite typed origin budget/capture, never diagnose429 from the peer string. Shared throttle/meter only latch429, so fatal402 was repeated6 times in Aalto. Canceled workflow artifacts can still be delivered afterward; retrieve the same known original run read-only into a separate directory, keep them partial and do not replace initial run/error receipts or relabel a valid baseline.
 
 - 2026-10-05 11:44 UTC [expert-500] gh run view --job --log refuses even a completed job while its parent workflow is still in progress. The original one read-only attempted retrieval failed before any file write; wait for full workflow completion, then preserve the completed original full log. This is a CLI retrieval limitation, not a failed job or reason to retry source/model work. Launcher required sourceHEAD==tag; metadata checkpoints happen only after original fresh allocation.
 
@@ -5410,3 +5426,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-05 11:19 UTC | gpt-6-astra | [expert-500] | de7d96f -> following final source: verified once-created47c801ee, current621/4100/94.87/371/OS240/default neutral3; source/tag/CI and one fresh whole-ten pilot next, no labels.
 
 - 2026-10-05 11:44 UTC | gpt-6-astra | [expert-500] | d898190 -> metadata checkpoint: sourceCI12/12, once allocation4f5f5ab8 and baseline11:41:45UTC; continue original stage39866, no experts/labels.
+
+- 2026-10-05 11:57 UTC | gpt-6-astra | [expert-500] | 078e046 -> following closure: V11 sourceCI12/12 but baseline Exa402 stopped3/7;49 original records closed unscored, no experts/labels; offline repeated402 repair next.
