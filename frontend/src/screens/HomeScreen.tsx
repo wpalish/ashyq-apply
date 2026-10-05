@@ -15,6 +15,7 @@ import { useStore } from '@/lib/store';
 import type { ScreenId } from '@/App';
 import { Globe } from '@/components/Globe';
 import { Pass, PassAnswers } from '@/components/Pass';
+import { CountryLegend } from '@/components/CountryLegend';
 import { Ticket } from '@/components/Ticket';
 import { ceilingFrom, groupByBudget } from '@/components/BudgetLadder';
 import { nextDeadline, planDeadlines } from '@/lib/deadlines';
@@ -100,7 +101,7 @@ export function HomeScreen({ onNavigate, onDecide }: HomeScreenProps) {
               </button>
             )}
           </div>
-          {wide && results.length > 0 && <Legend results={results} passes={passes} />}
+          {wide && results.length > 0 && <CountryLegend results={results} passes={passes} className="home__legend" />}
         </div>
       </section>
 
@@ -131,6 +132,11 @@ export function HomeScreen({ onNavigate, onDecide }: HomeScreenProps) {
               </div>
             ) : (
               <p className="home__empty">Keep a programme, or mark it maybe, and its pass appears here.</p>
+            )}
+            {mine.length > 0 && (
+              <p className="home__source">
+                Prices after the grants each university publishes, if awarded; open a pass for its page and the date it was read.
+              </p>
             )}
             {mine.length > 3 && (
               <button className="home__more" type="button" onClick={() => onNavigate('approved')}>
@@ -184,24 +190,6 @@ function HomeStats({ results, profile, claims, kept, maybe }: {
       <div><dt>kept{maybe ? ` · ${maybe} maybe` : ' so far'}</dt><dd>{kept}</dd></div>
       {claims !== null && <div><dt>facts, each with a link to its page</dt><dd>{claims}</dd></div>}
     </dl>
-  );
-}
-
-/** The countries in the results, in their route colours. */
-function Legend({ results, passes }: { results: ProgramResult[]; passes: Map<string, { slot: number }> }) {
-  const counts = new Map<string, number>();
-  for (const r of results) counts.set(r.country, (counts.get(r.country) ?? 0) + 1);
-  const order = [...passes.keys()].filter((c) => counts.has(c));
-  const shown = order.slice(0, 5);
-  return (
-    <ul className="home__legend" aria-label="Countries in the results">
-      {shown.map((c) => (
-        <li key={c} style={{ ['--tint' as string]: `var(--pass-tint-${passes.get(c)?.slot ?? 1})` }}>
-          {c} {counts.get(c)}
-        </li>
-      ))}
-      {order.length > shown.length && <li className="home__legend-more">+{order.length - shown.length} more countries</li>}
-    </ul>
   );
 }
 

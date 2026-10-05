@@ -226,7 +226,7 @@ test('a story card is drawn on the device, with the privacy defaults and the dem
   await expect(card).toHaveAttribute('aria-label', /20 programmes\. 15 countries/);
   await expect(card).not.toHaveAttribute('aria-label', /%|chance|probab|will get in/i);
   const [download] = await Promise.all([page.waitForEvent('download'), sheet.getByTestId('share-save').click()]);
-  expect(download.suggestedFilename()).toBe('ashyq-map.png');
+  expect(download.suggestedFilename()).toBe('unimatch-map.png');
   const png = await download.createReadStream().then(async (stream) => {
     const chunks: Buffer[] = [];
     for await (const chunk of stream) chunks.push(chunk as Buffer);

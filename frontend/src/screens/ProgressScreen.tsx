@@ -11,6 +11,8 @@
  * When it finishes, the same list stays under "How the research went".
  */
 
+import { CountryLegend } from '@/components/CountryLegend';
+import { passColours, preferredCountries } from '@/lib/passColour';
 import { useEffect, useMemo, useState } from 'react';
 import { api } from '@/api/client';
 import { ceilingFrom, groupByBudget } from '@/components/BudgetLadder';
@@ -81,7 +83,16 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
 
   // Memoised, and above the early return: this screen re-renders on every
   // poll, and a new marker list would redraw the globe each time.
-  const globe = useMemo(() => markersFor(results), [results]);
+  // Each country's pass colour (lib/passColour): its routes take its tint.
+  const passes = useMemo(
+    () => passColours(results.map((r) => r.country), preferredCountries(savedProfile)),
+    [results, savedProfile],
+  );
+  const globe = useMemo(() => {
+    const placed = markersFor(results);
+    const country = new Map(results.map((r) => [r.id, r.country]));
+    return { ...placed, markers: placed.markers.map((m) => ({ ...m, slot: passes.get(country.get(m.id) ?? '')?.slot })) };
+  }, [results, passes]);
 
   if (!run) {
     return (
@@ -161,13 +172,14 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
               </div>
             )}
           </dl>
+          <CountryLegend results={results} passes={passes} shown={4} />
           <p className="reveal__note">
             Prices after grants, sources with dates, deadlines and documents are in the results.
             Grants are mostly competitive, and admission is decided by the university.
           </p>
           <div className="reveal__actions">
             <button className="btn btn--primary reveal__cta" onClick={onDone} data-testid="to-shortlist">
-              See {results.length} programme{results.length === 1 ? '' : 's'}
+              See your {results.length} pass{results.length === 1 ? '' : 'es'} <span aria-hidden="true">→</span>
             </button>
             {/* Concept Q: the map of the search, as a story card. */}
             <button className="btn reveal__share" onClick={() => setSharing(true)} data-testid="share-map">

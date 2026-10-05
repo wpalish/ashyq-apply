@@ -99,7 +99,7 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.045em; }
 .landing { min-height: 100vh; background: var(--surface); }
 .landing__header, .landing__footer { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; width: min(100%, 1540px); margin: auto; padding: 1rem clamp(1rem, 4vw, 4rem); }
 .landing__header { min-height: 5.3rem; }
-.landing__brand { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--ink); font-size: 1.45rem; font-weight: 800; letter-spacing: -0.07em; text-decoration: none; }
+.landing__brand { display: inline-flex; align-items: center; gap: 0.6rem; color: var(--ink); font-size: 1.45rem; font-weight: 800; letter-spacing: -0.07em; text-decoration: none; }
 .landing__brand:hover { color: var(--ink); }
 .landing__brand img { width: 2.6rem; height: 2.6rem; object-fit: contain; }
 .landing__header nav { display: flex; align-items: center; gap: clamp(1rem, 2.5vw, 2.5rem); }

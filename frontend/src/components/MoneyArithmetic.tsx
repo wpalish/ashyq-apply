@@ -59,27 +59,27 @@ export function MoneyArithmetic({ result, rate }: { result: ProgramResult; rate?
   const published = result.costs?.total;
   const converted = Boolean(published && computedIn && published.currency !== computedIn);
   const caveats = orderCaveats(gap.warnings);
+  const aid = gap.confirmed_aid?.amount ?? 0;
+  const priced = Object.keys(result.costs?.items ?? {});
 
   return (
-    <section className="money" aria-label="Money a year" data-testid={`money-${result.id}`}>
-      <h3 className="money__title">Money a year</h3>
+    <section className="money" aria-label="The money, line by line" data-testid={`money-${result.id}`}>
+      <h3 className="money__title">The money, line by line</h3>
       {gap.computable && gap.gap && gap.total_cost ? (
-        <div className="money__sum" data-testid="money-sum">
-          <div className="money__term">
-            <span className="money__value">{plain(gap.total_cost)}</span>
-            <span className="money__label">price</span>
+        <dl className="money__lines" data-testid="money-sum">
+          <div className="money__line">
+            <dt>Price a year<span>{priced.length ? priced.map(humanize).join(', ').toLowerCase() : 'as published'}</span></dt>
+            <dd>{plain(gap.total_cost)}</dd>
           </div>
-          <span className="money__op" aria-hidden="true">−</span>
-          <div className="money__term">
-            <span className="money__value">{plain(gap.confirmed_aid)}</span>
-            <span className="money__label">grants, if awarded</span>
+          <div className="money__line money__line--minus">
+            <dt>{award && aid > 0 ? award.name : 'Grants'}<span>grants, if awarded</span></dt>
+            <dd><span aria-hidden="true">− </span><span className="visually-hidden">minus </span>{plain(gap.confirmed_aid)}</dd>
           </div>
-          <span className="money__op" aria-hidden="true">=</span>
-          <div className="money__term money__term--result">
-            <span className="money__value">{plain(gap.gap)}</span>
-            <span className="money__label">left to pay</span>
+          <div className="money__line money__line--result">
+            <dt>Left to pay a year<span>{aid > 0 ? 'if the grant is awarded' : 'no grant counted'}</span></dt>
+            <dd>{plain(gap.gap)}</dd>
           </div>
-        </div>
+        </dl>
       ) : (
         <p className="money__unknown" data-testid="money-unknown">
           <strong>Not computed.</strong> {gap.reason}

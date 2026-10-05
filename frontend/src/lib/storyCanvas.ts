@@ -19,8 +19,9 @@ const SAFE_TOP = Math.round(STORY_H * 0.14);
 const SAFE_BOTTOM = Math.round(STORY_H * 0.82);
 const M = 96;
 
-const DISPLAY = "'Montserrat', system-ui, sans-serif";
-const UI = "'Onest', system-ui, sans-serif";
+// The app's own face (Inter, palette E): it carries every Kazakh letter.
+const DISPLAY = "'Inter', system-ui, sans-serif";
+const UI = "'Inter', system-ui, sans-serif";
 
 interface Palette {
   bg: string;
@@ -35,20 +36,28 @@ interface Palette {
   link: string;
 }
 
+/*
+ * Palette E «Чернила» (tokens.css): night is the reveal's ink, "sun" - the
+ * programme card - is a pass in slate blue with white text, and day is the
+ * paper. The colours are the app's own, so a story looks like the app.
+ */
 const PALETTES: Record<StoryModel['tone'], Palette> = {
   night: {
-    bg: '#0B1628', ink: '#FFFFFF', muted: '#A7B1C2', accent: '#FFC23D', land: '#C9D3E3', route: '#FFC23D',
-    panel: '#16263F', chipBg: 'rgba(107, 227, 164, 0.16)', chipInk: '#6BE3A4', link: '#8FD3F4',
+    bg: '#101014', ink: '#FFFFFF', muted: '#A9A9B6', accent: '#E8E2D0', land: '#B8B8C4', route: '#9DBAD3',
+    panel: '#1C1C22', chipBg: 'rgba(147, 199, 190, 0.16)', chipInk: '#93C7BE', link: '#9DBAD3',
   },
   sun: {
-    bg: '#FFC23D', ink: '#0F1E36', muted: '#3F3217', accent: '#0F1E36', land: '#0F1E36', route: '#0F1E36',
-    panel: 'rgba(255, 255, 255, 0.6)', chipBg: '#0F1E36', chipInk: '#FFC23D', link: '#0F1E36',
+    bg: '#3E5C76', ink: '#FFFFFF', muted: '#DCE5EE', accent: '#FFFFFF', land: '#DCE5EE', route: '#FFFFFF',
+    panel: 'rgba(255, 255, 255, 0.14)', chipBg: '#FFFFFF', chipInk: '#111114', link: '#FFFFFF',
   },
   day: {
-    bg: '#F6F7F9', ink: '#0F1E36', muted: '#5A6578', accent: '#E8A317', land: '#7C8BA3', route: '#E8A317',
-    panel: '#FFFFFF', chipBg: '#FFFFFF', chipInk: '#0F1E36', link: '#0B6F93',
+    bg: '#F3F2EF', ink: '#111114', muted: '#5E5E6A', accent: '#111114', land: '#9C99A3', route: '#3E5C76',
+    panel: '#FFFFFF', chipBg: '#FFFFFF', chipInk: '#111114', link: '#3E5C76',
   },
 };
+
+/** The pass colours, for the mark's tile (tokens.css --pass-1 … --pass-6). */
+const MARK = ['#3E5C76', '#7A3B3B', '#5E4B6E', '#44497F', '#3F6F6A', '#3E5C76'];
 
 async function fontsReady(): Promise<void> {
   if (typeof document === 'undefined' || !document.fonts) return;
@@ -110,26 +119,24 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
   ctx.closePath();
 }
 
-/** The brand's sun and door, as in the app's header. */
-function brandMark(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, sun: string, door: string) {
-  const s = size / 32;
+/** The mark, as in the app's header: a tile of the countries' colours. */
+function brandMark(ctx: CanvasRenderingContext2D, x: number, y: number, size: number) {
   ctx.save();
-  ctx.translate(x, y);
-  ctx.scale(s, s);
-  ctx.beginPath();
-  ctx.arc(16, 16, 16, 0, Math.PI * 2);
-  ctx.fillStyle = sun;
-  ctx.fill();
-  ctx.fillStyle = door;
-  ctx.fill(new Path2D('M10.5 32V22.5a5.5 5.5 0 0 1 11 0V32Z'));
+  roundRect(ctx, x, y, size, size, size * 0.3);
+  ctx.clip();
+  const fill = typeof ctx.createConicGradient === 'function'
+    ? ctx.createConicGradient((200 * Math.PI) / 180, x + size / 2, y + size / 2)
+    : ctx.createLinearGradient(x, y, x + size, y + size);
+  MARK.forEach((colour, i) => fill.addColorStop(i / (MARK.length - 1), colour));
+  ctx.fillStyle = fill;
+  ctx.fillRect(x, y, size, size);
   ctx.restore();
 }
 
 function header(ctx: CanvasRenderingContext2D, model: StoryModel, p: Palette) {
   const y = SAFE_TOP + 24;
-  const onSun = model.tone === 'sun';
-  brandMark(ctx, M, y - 44, 56, onSun ? '#0F1E36' : '#FFC23D', onSun ? '#FFC23D' : '#0F1E36');
-  text(ctx, 'ASHYQ', M + 72, y, `800 44px ${DISPLAY}`, p.ink);
+  brandMark(ctx, M, y - 44, 56);
+  text(ctx, 'unimatch', M + 72, y, `800 44px ${DISPLAY}`, p.ink);
   if (model.who) text(ctx, model.who, STORY_W - M, y, `600 34px ${UI}`, p.muted, 600, 1.25, 'right');
   if (model.demo) {
     // Demo data says so on the card itself, inside the safe area.
@@ -156,7 +163,7 @@ function globe(
   ctx.clip();
   ctx.beginPath();
   ctx.arc(f.cx, f.cy, f.r, 0, Math.PI * 2);
-  ctx.fillStyle = p.bg === '#0B1628' ? 'rgba(255, 255, 255, 0.04)' : 'rgba(15, 30, 54, 0.04)';
+  ctx.fillStyle = p === PALETTES.night ? 'rgba(255, 255, 255, 0.04)' : 'rgba(17, 17, 20, 0.04)';
   ctx.fill();
   const lat0 = (f.center.lat * Math.PI) / 180;
   const lon0 = (f.center.lon * Math.PI) / 180;
@@ -215,7 +222,7 @@ function globe(
       ctx.lineWidth = 6;
       ctx.strokeStyle = p.bg;
       ctx.stroke();
-      text(ctx, String(g.n), g.x, g.y + 12, `800 34px ${DISPLAY}`, '#0F1E36', 80, 1.25, 'center');
+      text(ctx, String(g.n), g.x, g.y + 12, `800 34px ${DISPLAY}`, '#111114', 80, 1.25, 'center');
     } else {
       ctx.arc(g.x, g.y, 13, 0, Math.PI * 2);
       ctx.fillStyle = p.bg;
@@ -425,13 +432,13 @@ function map(ctx: CanvasRenderingContext2D, model: StoryModel, p: Palette, dots:
   if (model.note) text(ctx, model.note, M, noteY, `700 36px ${UI}`, p.ink);
   text(ctx, model.source, M, sourceY, `400 30px ${UI}`, p.muted);
   // The brand band, in the reply-bar zone where nothing needs reading.
-  ctx.fillStyle = '#0F1E36';
+  ctx.fillStyle = '#111114';
   ctx.fillRect(0, STORY_H - 230, STORY_W, 230);
   ctx.font = `800 48px ${DISPLAY}`;
-  const brandW = ctx.measureText('ASHYQ Apply').width;
+  const brandW = ctx.measureText('unimatch').width;
   const bx = (STORY_W - brandW - 76) / 2;
-  brandMark(ctx, bx, STORY_H - 150, 60, '#FFC23D', '#0F1E36');
-  text(ctx, 'ASHYQ Apply', bx + 76, STORY_H - 102, `800 48px ${DISPLAY}`, '#FFFFFF', 600);
+  brandMark(ctx, bx, STORY_H - 150, 60);
+  text(ctx, 'unimatch', bx + 76, STORY_H - 102, `800 48px ${DISPLAY}`, '#FFFFFF', 600);
 }
 
 /** Draws the card; resolves once fonts and land dots are in. */

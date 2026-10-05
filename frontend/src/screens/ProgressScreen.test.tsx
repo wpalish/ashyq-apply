@@ -290,7 +290,7 @@ describe('the results reveal', () => {
     render(<ProgressScreen onDone={onDone} />);
     fireEvent.click(screen.getByTestId('to-shortlist'));
     expect(onDone).toHaveBeenCalled();
-    expect(screen.getByTestId('to-shortlist')).toHaveTextContent('See 3 programmes');
+    expect(screen.getByTestId('to-shortlist')).toHaveTextContent('See your 3 passes');
   });
 
   it('is not shown while the research still runs', () => {

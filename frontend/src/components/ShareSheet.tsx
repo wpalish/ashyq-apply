@@ -80,7 +80,7 @@ export function ShareSheet({
     return () => { live = false; };
   }, [model]);
 
-  const fileName = `ashyq-${kind}.png`;
+  const fileName = `unimatch-${kind}.png`;
   const canShareFiles = typeof navigator !== 'undefined' && typeof navigator.canShare === 'function'
     && typeof File !== 'undefined'
     && navigator.canShare({ files: [new File([''], fileName, { type: 'image/png' })] });

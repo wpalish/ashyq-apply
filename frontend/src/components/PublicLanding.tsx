@@ -3,7 +3,7 @@ export function PublicLanding() {
     <div className="landing">
       <header className="landing__header">
         <a className="landing__brand" href="#/welcome" aria-label="Unimatch home">
-          <img src="/brand/unimatch-mark.png" alt="" /> Unimatch
+          <span className="logo-tile" aria-hidden="true" /> Unimatch
         </a>
         <nav aria-label="Public navigation">
           <a href="#how-it-works">How it works</a>

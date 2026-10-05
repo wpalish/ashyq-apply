@@ -1710,3 +1710,38 @@ first frames — the headline is now static and says six of the routes are drawn
 down from 32,663 to 1,848 and showed in-between figures no page states — it now switches from the price
 to what is left, after the total row appears; I107 a frame with no headline between scenes 1 and 2.
 The pass carries "Example · demo data"; reduced motion shows the last frame still.
+
+## 34. The approved concept, in the code (2026-10-05)
+
+The owner, seeing the merged app: "we approved a different concept — what is this?". It was right:
+only the palette, the passes on Find and the capsule had landed; every screen still had the old
+layout. This round rebuilt the screens to concept r11 (phone) and r12 (desk), one at a time, each
+checked side by side against the concept image and sent to the owner.
+
+| Concept screen | In the code |
+|---|---|
+| Header | One row: the mark, "Demo data", the applicant's avatar. Case switcher, new case, Explore, appearance, language, settings and sign-out live in the applicant's menu. On a desk the same header is the applicant card at the foot of the sidebar; its menu opens beside it. |
+| Home | "N programmes / wait for your answer", Decide one at a time (opens Find straight into the triage), the kept and maybe passes stacked like a wallet, the next deadline as a ticket. Desk: the night band with routes from home in country tints, the counts the run stands behind, passes beside deadlines. |
+| Find | "Find", the count, search and Filters; the budget strip (four bands, each a filter); answer tabs; passes. Phone passes carry the three answers and Open / Keep / Compare; desk passes stay compact with three marks. Regions, globe, the full budget list, filters and the table switch are folded behind Filters. |
+| Detail | The pass grown into a page: country, city, route home printed on it, the answer, compare, share; then the money line by line and the three answers. The screen on a phone, a right panel on a desk. |
+| Decide | One pass on the table, the next two fanned behind in their colours, the route, what is left to pay, the three answers; Not for me / Maybe / Keep, kept in reach above the capsule. |
+| Plan | "Plan / N kept · N dates", the black This-week card, every deadline as a ticket with a country stub that opens onto its programme. |
+| Profile | Five bars, "Step N of 5", one question per step, Back / Next: <step>. Preferences: "Where would you study?" with country chips in the colour each will wear. |
+| Reveal, stories | Routes and a key in country tints; story cards in palette E with the unimatch mark, set in Inter. |
+
+Decisions taken on the way (owner's standing instruction: decide by the recommendation):
+
+- **D1 — a picked country keeps its colour.** The chip in Preferences promises a colour; a country
+  picked but with no result now keeps its slot, so the chip and every pass from it agree.
+- **D2 — the table keeps "No".** The passes and Decide say "Not for me"; the table's decision column
+  is too narrow for it at 1440 px and keeps "Keep / Maybe / No".
+- **D3 — a pass with no price says why.** "The years do not match", "the currencies do not match",
+  "the costs do not compare", or "no official cost found" — read off the backend's flags, never a
+  blanket "no official cost".
+
+Defects found and fixed in review (I108–I115): I108 the primary button's hover turned its text navy
+on ink (a rule from main); I109 a programme left open in the table opened full-screen when the phone
+switched to cards; I110 the account menu covered the sidebar (now opens beside the card); I111 Find
+overflowed at 320 px (tabs and the Filters panel); I112 the phone search covered the title (now its
+own row); I113 the desk programme panel collapsed its head (grid min-size); I114 the Filters button had
+no name on phones; I115 a class name shared with the community card broke the step header.
