@@ -1,0 +1,4045 @@
+{
+ "dataset_version": "2026-10-05.reviewed9",
+ "arms": {
+  "off": {
+   "repetitions": [
+    {
+     "pipeline_sha": "87ee25c500cb5171c1676f94b39d02eb7ac9cfd3",
+     "metrics": {
+      "programme_page_recall": {
+       "numerator": 4,
+       "denominator": 10,
+       "value": 0.4
+      },
+      "programme_page_precision": {
+       "numerator": 4,
+       "denominator": 16,
+       "value": 0.25
+      },
+      "recall_at_5": {
+       "numerator": 3,
+       "denominator": 10,
+       "value": 0.3
+      },
+      "recall_at_10": {
+       "numerator": 3,
+       "denominator": 10,
+       "value": 0.3
+      },
+      "recall_at_20": {
+       "numerator": 3,
+       "denominator": 10,
+       "value": 0.3
+      },
+      "claim_precision": {
+       "numerator": 17,
+       "denominator": 17,
+       "value": 1.0
+      },
+      "claim_recall": {
+       "numerator": 12,
+       "denominator": 73,
+       "value": 0.1643835616438356
+      },
+      "claim_recall_same_page": {
+       "numerator": 4,
+       "denominator": 73,
+       "value": 0.0547945205479452
+      },
+      "unsupported_claim_rate": {
+       "numerator": 0,
+       "denominator": 6,
+       "value": 0.0
+      },
+      "wrong_scope_claim_rate": {
+       "numerator": 0,
+       "denominator": 17,
+       "value": 0.0
+      },
+      "other_scope_claim_rate": {
+       "numerator": 3,
+       "denominator": 20,
+       "value": 0.15
+      },
+      "partial_claim_rate": {
+       "numerator": 0,
+       "denominator": 20,
+       "value": 0.0
+      },
+      "critical_field_coverage": {
+       "numerator": 6,
+       "denominator": 208,
+       "value": 0.028846153846153848
+      },
+      "scholarship_discovery_recall": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "scholarship_applicability_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "scholarship_applicability_recall": {
+       "numerator": 0,
+       "denominator": 7,
+       "value": 0.0
+      },
+      "scholarship_coverage_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "primary_source_rate": {
+       "numerator": 33,
+       "denominator": 33,
+       "value": 1.0
+      },
+      "verbatim_evidence_rate": {
+       "numerator": 6,
+       "denominator": 20,
+       "value": 0.3
+      },
+      "current_evidence_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "conflict_visibility_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "support_adjudication_rate": {
+       "numerator": 6,
+       "denominator": 33,
+       "value": 0.18181818181818182
+      },
+      "claim_adjudication_rate": {
+       "numerator": 17,
+       "denominator": 33,
+       "value": 0.5151515151515151
+      },
+      "human_review_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      }
+     },
+     "outcomes": {
+      "labels": [
+       {
+        "case": "groningen",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "reading": 6.5,
+         "listening": 6.5,
+         "speaking": 6.5,
+         "writing": 6.5
+        },
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "deadline",
+        "outcome": "hit",
+        "expected": "2027-05-01",
+        "ours": [
+         "2027-05-01",
+         "2027-05-01"
+        ]
+       },
+       {
+        "case": "groningen",
+        "key": "tuition",
+        "outcome": "hit",
+        "expected": {
+         "amount": 19800.0,
+         "currency": "EUR"
+        },
+        "ours": [
+         {
+          "amount": 2771.0,
+          "currency": "EUR"
+         },
+         {
+          "amount": 19800.0,
+          "currency": "EUR"
+         }
+        ]
+       },
+       {
+        "case": "groningen",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true
+        ]
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.secondary_diploma.completed",
+        "outcome": "missed",
+        "expected": "diploma",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.secondary_diploma.not_completed",
+        "outcome": "missed",
+        "expected": "school_enrolment_statement",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.transcript.completed",
+        "outcome": "missed",
+        "expected": "academic_record",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.transcript.not_completed",
+        "outcome": "missed",
+        "expected": "school_course_list",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.translation.required_unless_language_in",
+        "outcome": "missed",
+        "expected": [
+         "English",
+         "Dutch",
+         "French",
+         "German"
+        ],
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.programme.course_descriptions.initial_upload",
+        "outcome": "missed",
+        "expected": "blank_allowed",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.programme.course_descriptions.board_may_request",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "country_credential.nis_grade12.level_equivalence",
+        "outcome": "missed",
+        "expected": "Dutch VWO",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "subjects.mathematics.required",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "delft",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "delft",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-15",
+        "ours": []
+       },
+       {
+        "case": "delft",
+        "key": "tuition",
+        "outcome": "missed",
+        "expected": {
+         "amount": 20563.0,
+         "currency": "EUR"
+        },
+        "ours": []
+       },
+       {
+        "case": "delft",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true,
+         true
+        ]
+       },
+       {
+        "case": "aalto",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-22",
+        "ours": []
+       },
+       {
+        "case": "aalto",
+        "key": "tuition",
+        "outcome": "missed",
+        "expected": {
+         "amount": 12000.0,
+         "currency": "EUR"
+        },
+        "ours": []
+       },
+       {
+        "case": "aalto",
+        "key": "programme.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "aalto",
+        "key": "programme.language",
+        "outcome": "missed",
+        "expected": "English",
+        "ours": []
+       },
+       {
+        "case": "vienna",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true
+        ]
+       },
+       {
+        "case": "vienna",
+        "key": "programme.language",
+        "outcome": "missed",
+        "expected": "German",
+        "ours": []
+       },
+       {
+        "case": "vienna",
+        "key": "german.application_minimum",
+        "outcome": "missed",
+        "expected": "A2",
+        "ours": []
+       },
+       {
+        "case": "vienna",
+        "key": "german.enrolment_minimum",
+        "outcome": "missed",
+        "expected": "C1",
+        "ours": []
+       },
+       {
+        "case": "warsaw",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true
+        ]
+       },
+       {
+        "case": "warsaw",
+        "key": "programme.language",
+        "outcome": "hit",
+        "expected": "Polish",
+        "ours": [
+         "Polish"
+        ]
+       },
+       {
+        "case": "ubc",
+        "key": "ielts.overall",
+        "outcome": "hit",
+        "expected": 6.5,
+        "ours": [
+         6.5,
+         6.5
+        ]
+       },
+       {
+        "case": "ubc",
+        "key": "ielts.subscores",
+        "outcome": "hit",
+        "expected": {
+         "reading": 6.0,
+         "listening": 6.0,
+         "speaking": 6.0,
+         "writing": 6.0
+        },
+        "ours": [
+         {
+          "listening": 6.0,
+          "reading": 6.0,
+          "speaking": 6.0,
+          "writing": 6.0
+         },
+         {
+          "listening": 6.0,
+          "reading": 6.0,
+          "speaking": 6.0,
+          "writing": 6.0
+         }
+        ]
+       },
+       {
+        "case": "ubc",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-15",
+        "ours": []
+       },
+       {
+        "case": "ubc",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true,
+         true
+        ]
+       },
+       {
+        "case": "toronto",
+        "key": "country_credential",
+        "outcome": "missed",
+        "expected": "Certificate of Completed Secondary Education",
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 6.0,
+         "reading": 6.0,
+         "speaking": 6.0,
+         "writing": 6.0
+        },
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-15",
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "intake",
+        "outcome": "missed",
+        "expected": "fall 2027",
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "programme.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "documents.programme.supplemental_application.required",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "hku",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true
+        ]
+       },
+       {
+        "case": "hku",
+        "key": "programme.faculty",
+        "outcome": "missed",
+        "expected": "School of Computing and Data Science",
+        "ours": []
+       },
+       {
+        "case": "hku",
+        "key": "scholarships.entrance.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "hku",
+        "key": "scholarships.entrance.applicability.application_mode",
+        "outcome": "missed",
+        "expected": "automatic_after_admission_application",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-20",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true,
+         true,
+         true
+        ]
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.applicability.nationality",
+        "outcome": "missed",
+        "expected": "all",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.applicability.degree",
+        "outcome": "missed",
+        "expected": "bachelor_full_time",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.applicability.application_mode",
+        "outcome": "missed",
+        "expected": "separate_after_admission_application",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.coverage.tuition",
+        "outcome": "missed",
+        "expected": {
+         "fraction": 1.0,
+         "basis": "subsidised_after_tuition_grant"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.coverage.living",
+        "outcome": "missed",
+        "expected": {
+         "currency": "SGD",
+         "amount": 6500,
+         "period": "academic_year"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.coverage.housing",
+        "outcome": "missed",
+        "expected": {
+         "currency": "SGD",
+         "maximum": 2000,
+         "period": "academic_year",
+         "requires": "NTU_hostel_residence"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.coverage.travel",
+        "outcome": "missed",
+        "expected": {
+         "currency": "SGD",
+         "maximum": 8000,
+         "requires": "eligible_overseas_programme"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.duration",
+        "outcome": "missed",
+        "expected": "normal_programme_duration",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.renewal",
+        "outcome": "missed",
+        "expected": {
+         "cgpa_gte": 3.5,
+         "scale": 5.0,
+         "review": "each_semester"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.bond",
+        "outcome": "missed",
+        "expected": {
+         "years": 3,
+         "basis": "MOE_Tuition_Grant",
+         "population": [
+          "Singapore_PR",
+          "international"
+         ]
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.essay.required",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.essay.maximum_words",
+        "outcome": "missed",
+        "expected": 250,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.referee.required",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.referee.role",
+        "outcome": "missed",
+        "expected": "school_teacher",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.referee.family_or_relative_allowed",
+        "outcome": "missed",
+        "expected": false,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "english_evidence.sat.minimum",
+        "outcome": "missed",
+        "expected": 1250,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "tuition",
+        "outcome": "missed",
+        "expected": {
+         "amount": 6866000.0,
+         "currency": "KRW"
+        },
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "programme.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "programme.admission_route",
+        "outcome": "missed",
+        "expected": "undeclared_then_major_selection",
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.applicability.offer",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.applicability.application_mode",
+        "outcome": "missed",
+        "expected": "admission_form_checkbox",
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.coverage.tuition",
+        "outcome": "missed",
+        "expected": {
+         "fraction": 1.0,
+         "semesters": 8
+        },
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.coverage.living",
+        "outcome": "missed",
+        "expected": {
+         "currency": "KRW",
+         "amount": 350000,
+         "period": "month"
+        },
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.coverage.insurance",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.renewal",
+        "outcome": "missed",
+        "expected": {
+         "gpa_gt": 2.7,
+         "scale": 4.3,
+         "after": "freshman_year"
+        },
+        "ours": []
+       }
+      ],
+      "wrong_claims": [],
+      "unlabelled": [
+       {
+        "case": "groningen",
+        "key": "programme.language",
+        "value": "English",
+        "url": "https://www.rug.nl/bachelors/computing-science/",
+        "label_status": null
+       },
+       {
+        "case": "delft",
+        "key": "unmapped.scholarship_exists",
+        "value": "Costas Lemos Innovation Programme Scholarship",
+        "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+        "label_status": null
+       },
+       {
+        "case": "delft",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "no"
+        },
+        "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+        "label_status": null
+       },
+       {
+        "case": "delft",
+        "key": "unmapped.scholarship_exists",
+        "value": "Costas Lemos Innovation Programme Scholarship",
+        "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+        "label_status": null
+       },
+       {
+        "case": "delft",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "no"
+        },
+        "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+        "label_status": null
+       },
+       {
+        "case": "vienna",
+        "key": "deadline",
+        "value": "2026-05-04",
+        "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+        "label_status": "unknown"
+       },
+       {
+        "case": "ubc",
+        "key": "programme.faculty",
+        "value": "Faculty of Arts",
+        "url": "https://you.ubc.ca/programs/computer-science-vancouver-ba",
+        "label_status": null
+       },
+       {
+        "case": "ubc",
+        "key": "unmapped.duolingo_min",
+        "value": 125,
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+        "label_status": null
+       },
+       {
+        "case": "ubc",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic"
+        ],
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+        "label_status": null
+       },
+       {
+        "case": "ubc",
+        "key": "unmapped.duolingo_min",
+        "value": 125,
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+        "label_status": null
+       },
+       {
+        "case": "ubc",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic"
+        ],
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+        "label_status": null
+       },
+       {
+        "case": "kaist",
+        "key": "unmapped.interview_required",
+        "value": true,
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+        "label_status": null
+       },
+       {
+        "case": "kaist",
+        "key": "unmapped.credential_evaluation_required",
+        "value": true,
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+        "label_status": null
+       }
+      ],
+      "other_scope": [
+       {
+        "case": "groningen",
+        "key": "deadline",
+        "value": "2027-05-01",
+        "expected": "2027-05-01",
+        "url": "https://www.rug.nl/bachelors/computing-science/"
+       },
+       {
+        "case": "groningen",
+        "key": "tuition",
+        "value": {
+         "amount": 2771.0,
+         "currency": "EUR"
+        },
+        "expected": {
+         "amount": 19800.0,
+         "currency": "EUR"
+        },
+        "url": "https://www.rug.nl/bachelors/computing-science/"
+       },
+       {
+        "case": "ntu",
+        "key": "programme.exists",
+        "value": true,
+        "expected": true,
+        "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences"
+       }
+      ],
+      "partial": []
+     },
+     "core": {
+      "aalto": [],
+      "delft": [
+       "scholarship"
+      ],
+      "groningen": [
+       "deadline",
+       "cost"
+      ],
+      "hku": [],
+      "kaist": [],
+      "ntu": [],
+      "toronto": [],
+      "ubc": [
+       "english"
+      ],
+      "vienna": [
+       "deadline"
+      ],
+      "warsaw": []
+     },
+     "cost": {
+      "aalto": {
+       "search_calls": 6,
+       "http_fetches": 1,
+       "latency_seconds": 20.4,
+       "over_budget": 0
+      },
+      "delft": {
+       "search_calls": 6,
+       "http_fetches": 29,
+       "latency_seconds": 54.9,
+       "over_budget": 0
+      },
+      "groningen": {
+       "search_calls": 7,
+       "http_fetches": 55,
+       "latency_seconds": 115.0,
+       "over_budget": 1
+      },
+      "hku": {
+       "search_calls": 7,
+       "http_fetches": 25,
+       "latency_seconds": 72.0,
+       "over_budget": 1
+      },
+      "kaist": {
+       "search_calls": 1,
+       "http_fetches": 15,
+       "latency_seconds": 23.2,
+       "over_budget": 0
+      },
+      "ntu": {
+       "search_calls": 1,
+       "http_fetches": 19,
+       "latency_seconds": 29.8,
+       "over_budget": 0
+      },
+      "toronto": {
+       "search_calls": 6,
+       "http_fetches": 30,
+       "latency_seconds": 35.5,
+       "over_budget": 0
+      },
+      "ubc": {
+       "search_calls": 7,
+       "http_fetches": 50,
+       "latency_seconds": 100.4,
+       "over_budget": 1
+      },
+      "vienna": {
+       "search_calls": 7,
+       "http_fetches": 47,
+       "latency_seconds": 84.6,
+       "over_budget": 1
+      },
+      "warsaw": {
+       "search_calls": 6,
+       "http_fetches": 49,
+       "latency_seconds": 115.0,
+       "over_budget": 0
+      }
+     }
+    },
+    {
+     "pipeline_sha": "87ee25c500cb5171c1676f94b39d02eb7ac9cfd3",
+     "metrics": {
+      "programme_page_recall": {
+       "numerator": 4,
+       "denominator": 10,
+       "value": 0.4
+      },
+      "programme_page_precision": {
+       "numerator": 4,
+       "denominator": 14,
+       "value": 0.2857142857142857
+      },
+      "recall_at_5": {
+       "numerator": 3,
+       "denominator": 10,
+       "value": 0.3
+      },
+      "recall_at_10": {
+       "numerator": 3,
+       "denominator": 10,
+       "value": 0.3
+      },
+      "recall_at_20": {
+       "numerator": 3,
+       "denominator": 10,
+       "value": 0.3
+      },
+      "claim_precision": {
+       "numerator": 16,
+       "denominator": 16,
+       "value": 1.0
+      },
+      "claim_recall": {
+       "numerator": 11,
+       "denominator": 73,
+       "value": 0.1506849315068493
+      },
+      "claim_recall_same_page": {
+       "numerator": 4,
+       "denominator": 73,
+       "value": 0.0547945205479452
+      },
+      "unsupported_claim_rate": {
+       "numerator": 0,
+       "denominator": 6,
+       "value": 0.0
+      },
+      "wrong_scope_claim_rate": {
+       "numerator": 0,
+       "denominator": 16,
+       "value": 0.0
+      },
+      "other_scope_claim_rate": {
+       "numerator": 3,
+       "denominator": 19,
+       "value": 0.15789473684210525
+      },
+      "partial_claim_rate": {
+       "numerator": 0,
+       "denominator": 19,
+       "value": 0.0
+      },
+      "critical_field_coverage": {
+       "numerator": 6,
+       "denominator": 208,
+       "value": 0.028846153846153848
+      },
+      "scholarship_discovery_recall": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "scholarship_applicability_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "scholarship_applicability_recall": {
+       "numerator": 0,
+       "denominator": 7,
+       "value": 0.0
+      },
+      "scholarship_coverage_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "primary_source_rate": {
+       "numerator": 32,
+       "denominator": 32,
+       "value": 1.0
+      },
+      "verbatim_evidence_rate": {
+       "numerator": 6,
+       "denominator": 19,
+       "value": 0.3157894736842105
+      },
+      "current_evidence_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "conflict_visibility_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "support_adjudication_rate": {
+       "numerator": 6,
+       "denominator": 32,
+       "value": 0.1875
+      },
+      "claim_adjudication_rate": {
+       "numerator": 16,
+       "denominator": 32,
+       "value": 0.5
+      },
+      "human_review_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      }
+     },
+     "outcomes": {
+      "labels": [
+       {
+        "case": "groningen",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "reading": 6.5,
+         "listening": 6.5,
+         "speaking": 6.5,
+         "writing": 6.5
+        },
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "deadline",
+        "outcome": "hit",
+        "expected": "2027-05-01",
+        "ours": [
+         "2027-05-01",
+         "2027-05-01"
+        ]
+       },
+       {
+        "case": "groningen",
+        "key": "tuition",
+        "outcome": "hit",
+        "expected": {
+         "amount": 19800.0,
+         "currency": "EUR"
+        },
+        "ours": [
+         {
+          "amount": 2771.0,
+          "currency": "EUR"
+         },
+         {
+          "amount": 19800.0,
+          "currency": "EUR"
+         }
+        ]
+       },
+       {
+        "case": "groningen",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true
+        ]
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.secondary_diploma.completed",
+        "outcome": "missed",
+        "expected": "diploma",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.secondary_diploma.not_completed",
+        "outcome": "missed",
+        "expected": "school_enrolment_statement",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.transcript.completed",
+        "outcome": "missed",
+        "expected": "academic_record",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.transcript.not_completed",
+        "outcome": "missed",
+        "expected": "school_course_list",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.translation.required_unless_language_in",
+        "outcome": "missed",
+        "expected": [
+         "English",
+         "Dutch",
+         "French",
+         "German"
+        ],
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.programme.course_descriptions.initial_upload",
+        "outcome": "missed",
+        "expected": "blank_allowed",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.programme.course_descriptions.board_may_request",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "country_credential.nis_grade12.level_equivalence",
+        "outcome": "missed",
+        "expected": "Dutch VWO",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "subjects.mathematics.required",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "delft",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "delft",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-15",
+        "ours": []
+       },
+       {
+        "case": "delft",
+        "key": "tuition",
+        "outcome": "missed",
+        "expected": {
+         "amount": 20563.0,
+         "currency": "EUR"
+        },
+        "ours": []
+       },
+       {
+        "case": "delft",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true,
+         true
+        ]
+       },
+       {
+        "case": "aalto",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-22",
+        "ours": []
+       },
+       {
+        "case": "aalto",
+        "key": "tuition",
+        "outcome": "missed",
+        "expected": {
+         "amount": 12000.0,
+         "currency": "EUR"
+        },
+        "ours": []
+       },
+       {
+        "case": "aalto",
+        "key": "programme.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "aalto",
+        "key": "programme.language",
+        "outcome": "missed",
+        "expected": "English",
+        "ours": []
+       },
+       {
+        "case": "vienna",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true
+        ]
+       },
+       {
+        "case": "vienna",
+        "key": "programme.language",
+        "outcome": "missed",
+        "expected": "German",
+        "ours": []
+       },
+       {
+        "case": "vienna",
+        "key": "german.application_minimum",
+        "outcome": "missed",
+        "expected": "A2",
+        "ours": []
+       },
+       {
+        "case": "vienna",
+        "key": "german.enrolment_minimum",
+        "outcome": "missed",
+        "expected": "C1",
+        "ours": []
+       },
+       {
+        "case": "warsaw",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true
+        ]
+       },
+       {
+        "case": "warsaw",
+        "key": "programme.language",
+        "outcome": "hit",
+        "expected": "Polish",
+        "ours": [
+         "Polish"
+        ]
+       },
+       {
+        "case": "ubc",
+        "key": "ielts.overall",
+        "outcome": "hit",
+        "expected": 6.5,
+        "ours": [
+         6.5,
+         6.5
+        ]
+       },
+       {
+        "case": "ubc",
+        "key": "ielts.subscores",
+        "outcome": "hit",
+        "expected": {
+         "reading": 6.0,
+         "listening": 6.0,
+         "speaking": 6.0,
+         "writing": 6.0
+        },
+        "ours": [
+         {
+          "listening": 6.0,
+          "reading": 6.0,
+          "speaking": 6.0,
+          "writing": 6.0
+         },
+         {
+          "listening": 6.0,
+          "reading": 6.0,
+          "speaking": 6.0,
+          "writing": 6.0
+         }
+        ]
+       },
+       {
+        "case": "ubc",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-15",
+        "ours": []
+       },
+       {
+        "case": "ubc",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true,
+         true
+        ]
+       },
+       {
+        "case": "toronto",
+        "key": "country_credential",
+        "outcome": "missed",
+        "expected": "Certificate of Completed Secondary Education",
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 6.0,
+         "reading": 6.0,
+         "speaking": 6.0,
+         "writing": 6.0
+        },
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-15",
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "intake",
+        "outcome": "missed",
+        "expected": "fall 2027",
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "programme.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "documents.programme.supplemental_application.required",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "hku",
+        "key": "programme.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "hku",
+        "key": "programme.faculty",
+        "outcome": "missed",
+        "expected": "School of Computing and Data Science",
+        "ours": []
+       },
+       {
+        "case": "hku",
+        "key": "scholarships.entrance.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "hku",
+        "key": "scholarships.entrance.applicability.application_mode",
+        "outcome": "missed",
+        "expected": "automatic_after_admission_application",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-20",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true,
+         true,
+         true
+        ]
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.applicability.nationality",
+        "outcome": "missed",
+        "expected": "all",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.applicability.degree",
+        "outcome": "missed",
+        "expected": "bachelor_full_time",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.applicability.application_mode",
+        "outcome": "missed",
+        "expected": "separate_after_admission_application",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.coverage.tuition",
+        "outcome": "missed",
+        "expected": {
+         "fraction": 1.0,
+         "basis": "subsidised_after_tuition_grant"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.coverage.living",
+        "outcome": "missed",
+        "expected": {
+         "currency": "SGD",
+         "amount": 6500,
+         "period": "academic_year"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.coverage.housing",
+        "outcome": "missed",
+        "expected": {
+         "currency": "SGD",
+         "maximum": 2000,
+         "period": "academic_year",
+         "requires": "NTU_hostel_residence"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.coverage.travel",
+        "outcome": "missed",
+        "expected": {
+         "currency": "SGD",
+         "maximum": 8000,
+         "requires": "eligible_overseas_programme"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.duration",
+        "outcome": "missed",
+        "expected": "normal_programme_duration",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.renewal",
+        "outcome": "missed",
+        "expected": {
+         "cgpa_gte": 3.5,
+         "scale": 5.0,
+         "review": "each_semester"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.bond",
+        "outcome": "missed",
+        "expected": {
+         "years": 3,
+         "basis": "MOE_Tuition_Grant",
+         "population": [
+          "Singapore_PR",
+          "international"
+         ]
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.essay.required",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.essay.maximum_words",
+        "outcome": "missed",
+        "expected": 250,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.referee.required",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.referee.role",
+        "outcome": "missed",
+        "expected": "school_teacher",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.referee.family_or_relative_allowed",
+        "outcome": "missed",
+        "expected": false,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "english_evidence.sat.minimum",
+        "outcome": "missed",
+        "expected": 1250,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "tuition",
+        "outcome": "missed",
+        "expected": {
+         "amount": 6866000.0,
+         "currency": "KRW"
+        },
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "programme.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "programme.admission_route",
+        "outcome": "missed",
+        "expected": "undeclared_then_major_selection",
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.applicability.offer",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.applicability.application_mode",
+        "outcome": "missed",
+        "expected": "admission_form_checkbox",
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.coverage.tuition",
+        "outcome": "missed",
+        "expected": {
+         "fraction": 1.0,
+         "semesters": 8
+        },
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.coverage.living",
+        "outcome": "missed",
+        "expected": {
+         "currency": "KRW",
+         "amount": 350000,
+         "period": "month"
+        },
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.coverage.insurance",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.renewal",
+        "outcome": "missed",
+        "expected": {
+         "gpa_gt": 2.7,
+         "scale": 4.3,
+         "after": "freshman_year"
+        },
+        "ours": []
+       }
+      ],
+      "wrong_claims": [],
+      "unlabelled": [
+       {
+        "case": "groningen",
+        "key": "programme.language",
+        "value": "English",
+        "url": "https://www.rug.nl/bachelors/computing-science/",
+        "label_status": null
+       },
+       {
+        "case": "delft",
+        "key": "unmapped.scholarship_exists",
+        "value": "Costas Lemos Innovation Programme Scholarship",
+        "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+        "label_status": null
+       },
+       {
+        "case": "delft",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "no"
+        },
+        "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+        "label_status": null
+       },
+       {
+        "case": "delft",
+        "key": "unmapped.scholarship_exists",
+        "value": "Costas Lemos Innovation Programme Scholarship",
+        "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+        "label_status": null
+       },
+       {
+        "case": "delft",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "no"
+        },
+        "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+        "label_status": null
+       },
+       {
+        "case": "vienna",
+        "key": "deadline",
+        "value": "2026-05-04",
+        "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+        "label_status": "unknown"
+       },
+       {
+        "case": "ubc",
+        "key": "programme.faculty",
+        "value": "Faculty of Arts",
+        "url": "https://you.ubc.ca/programs/computer-science-vancouver-ba",
+        "label_status": null
+       },
+       {
+        "case": "ubc",
+        "key": "unmapped.duolingo_min",
+        "value": 125,
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+        "label_status": null
+       },
+       {
+        "case": "ubc",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic"
+        ],
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+        "label_status": null
+       },
+       {
+        "case": "ubc",
+        "key": "unmapped.duolingo_min",
+        "value": 125,
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+        "label_status": null
+       },
+       {
+        "case": "ubc",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic"
+        ],
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+        "label_status": null
+       },
+       {
+        "case": "kaist",
+        "key": "unmapped.interview_required",
+        "value": true,
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+        "label_status": null
+       },
+       {
+        "case": "kaist",
+        "key": "unmapped.credential_evaluation_required",
+        "value": true,
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+        "label_status": null
+       }
+      ],
+      "other_scope": [
+       {
+        "case": "groningen",
+        "key": "deadline",
+        "value": "2027-05-01",
+        "expected": "2027-05-01",
+        "url": "https://www.rug.nl/bachelors/computing-science/"
+       },
+       {
+        "case": "groningen",
+        "key": "tuition",
+        "value": {
+         "amount": 2771.0,
+         "currency": "EUR"
+        },
+        "expected": {
+         "amount": 19800.0,
+         "currency": "EUR"
+        },
+        "url": "https://www.rug.nl/bachelors/computing-science/"
+       },
+       {
+        "case": "ntu",
+        "key": "programme.exists",
+        "value": true,
+        "expected": true,
+        "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences"
+       }
+      ],
+      "partial": []
+     },
+     "core": {
+      "aalto": [],
+      "delft": [
+       "scholarship"
+      ],
+      "groningen": [
+       "deadline",
+       "cost"
+      ],
+      "hku": [],
+      "kaist": [],
+      "ntu": [],
+      "toronto": [],
+      "ubc": [
+       "english"
+      ],
+      "vienna": [
+       "deadline"
+      ],
+      "warsaw": []
+     },
+     "cost": {
+      "aalto": {
+       "search_calls": 6,
+       "http_fetches": 1,
+       "latency_seconds": 15.1,
+       "over_budget": 0
+      },
+      "delft": {
+       "search_calls": 6,
+       "http_fetches": 29,
+       "latency_seconds": 44.4,
+       "over_budget": 0
+      },
+      "groningen": {
+       "search_calls": 7,
+       "http_fetches": 59,
+       "latency_seconds": 115.0,
+       "over_budget": 1
+      },
+      "hku": {
+       "search_calls": 1,
+       "http_fetches": 12,
+       "latency_seconds": 15.2,
+       "over_budget": 0
+      },
+      "kaist": {
+       "search_calls": 1,
+       "http_fetches": 15,
+       "latency_seconds": 20.0,
+       "over_budget": 0
+      },
+      "ntu": {
+       "search_calls": 1,
+       "http_fetches": 19,
+       "latency_seconds": 29.5,
+       "over_budget": 0
+      },
+      "toronto": {
+       "search_calls": 6,
+       "http_fetches": 30,
+       "latency_seconds": 24.3,
+       "over_budget": 0
+      },
+      "ubc": {
+       "search_calls": 7,
+       "http_fetches": 47,
+       "latency_seconds": 79.2,
+       "over_budget": 1
+      },
+      "vienna": {
+       "search_calls": 7,
+       "http_fetches": 47,
+       "latency_seconds": 58.3,
+       "over_budget": 1
+      },
+      "warsaw": {
+       "search_calls": 7,
+       "http_fetches": 58,
+       "latency_seconds": 115.0,
+       "over_budget": 1
+      }
+     }
+    }
+   ],
+   "access": {
+    "aalto": [
+     "BLOCKED",
+     27,
+     27
+    ],
+    "delft": [
+     "REACHED",
+     35,
+     0
+    ],
+    "hku": [
+     "PARTIALLY_BLOCKED",
+     35,
+     15
+    ],
+    "kaist": [
+     "REACHED",
+     12,
+     3
+    ],
+    "ntu": [
+     "REACHED",
+     27,
+     7
+    ],
+    "toronto": [
+     "REACHED",
+     27,
+     18
+    ],
+    "ubc": [
+     "PARTIALLY_BLOCKED",
+     52,
+     9
+    ],
+    "vienna": [
+     "REACHED",
+     40,
+     8
+    ]
+   }
+  },
+  "on": {
+   "repetitions": [
+    {
+     "pipeline_sha": "87ee25c500cb5171c1676f94b39d02eb7ac9cfd3",
+     "metrics": {
+      "programme_page_recall": {
+       "numerator": 5,
+       "denominator": 10,
+       "value": 0.5
+      },
+      "programme_page_precision": {
+       "numerator": 5,
+       "denominator": 18,
+       "value": 0.2777777777777778
+      },
+      "recall_at_5": {
+       "numerator": 3,
+       "denominator": 10,
+       "value": 0.3
+      },
+      "recall_at_10": {
+       "numerator": 3,
+       "denominator": 10,
+       "value": 0.3
+      },
+      "recall_at_20": {
+       "numerator": 3,
+       "denominator": 10,
+       "value": 0.3
+      },
+      "claim_precision": {
+       "numerator": 17,
+       "denominator": 17,
+       "value": 1.0
+      },
+      "claim_recall": {
+       "numerator": 12,
+       "denominator": 73,
+       "value": 0.1643835616438356
+      },
+      "claim_recall_same_page": {
+       "numerator": 4,
+       "denominator": 73,
+       "value": 0.0547945205479452
+      },
+      "unsupported_claim_rate": {
+       "numerator": 0,
+       "denominator": 6,
+       "value": 0.0
+      },
+      "wrong_scope_claim_rate": {
+       "numerator": 0,
+       "denominator": 17,
+       "value": 0.0
+      },
+      "other_scope_claim_rate": {
+       "numerator": 3,
+       "denominator": 20,
+       "value": 0.15
+      },
+      "partial_claim_rate": {
+       "numerator": 0,
+       "denominator": 20,
+       "value": 0.0
+      },
+      "critical_field_coverage": {
+       "numerator": 6,
+       "denominator": 208,
+       "value": 0.028846153846153848
+      },
+      "scholarship_discovery_recall": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "scholarship_applicability_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "scholarship_applicability_recall": {
+       "numerator": 0,
+       "denominator": 7,
+       "value": 0.0
+      },
+      "scholarship_coverage_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "primary_source_rate": {
+       "numerator": 33,
+       "denominator": 33,
+       "value": 1.0
+      },
+      "verbatim_evidence_rate": {
+       "numerator": 6,
+       "denominator": 20,
+       "value": 0.3
+      },
+      "current_evidence_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "conflict_visibility_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "support_adjudication_rate": {
+       "numerator": 6,
+       "denominator": 33,
+       "value": 0.18181818181818182
+      },
+      "claim_adjudication_rate": {
+       "numerator": 17,
+       "denominator": 33,
+       "value": 0.5151515151515151
+      },
+      "human_review_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      }
+     },
+     "outcomes": {
+      "labels": [
+       {
+        "case": "groningen",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "reading": 6.5,
+         "listening": 6.5,
+         "speaking": 6.5,
+         "writing": 6.5
+        },
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "deadline",
+        "outcome": "hit",
+        "expected": "2027-05-01",
+        "ours": [
+         "2027-05-01",
+         "2027-05-01"
+        ]
+       },
+       {
+        "case": "groningen",
+        "key": "tuition",
+        "outcome": "hit",
+        "expected": {
+         "amount": 19800.0,
+         "currency": "EUR"
+        },
+        "ours": [
+         {
+          "amount": 2771.0,
+          "currency": "EUR"
+         },
+         {
+          "amount": 19800.0,
+          "currency": "EUR"
+         }
+        ]
+       },
+       {
+        "case": "groningen",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true
+        ]
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.secondary_diploma.completed",
+        "outcome": "missed",
+        "expected": "diploma",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.secondary_diploma.not_completed",
+        "outcome": "missed",
+        "expected": "school_enrolment_statement",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.transcript.completed",
+        "outcome": "missed",
+        "expected": "academic_record",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.transcript.not_completed",
+        "outcome": "missed",
+        "expected": "school_course_list",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.translation.required_unless_language_in",
+        "outcome": "missed",
+        "expected": [
+         "English",
+         "Dutch",
+         "French",
+         "German"
+        ],
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.programme.course_descriptions.initial_upload",
+        "outcome": "missed",
+        "expected": "blank_allowed",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.programme.course_descriptions.board_may_request",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "country_credential.nis_grade12.level_equivalence",
+        "outcome": "missed",
+        "expected": "Dutch VWO",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "subjects.mathematics.required",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "delft",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "delft",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-15",
+        "ours": []
+       },
+       {
+        "case": "delft",
+        "key": "tuition",
+        "outcome": "missed",
+        "expected": {
+         "amount": 20563.0,
+         "currency": "EUR"
+        },
+        "ours": []
+       },
+       {
+        "case": "delft",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true,
+         true
+        ]
+       },
+       {
+        "case": "aalto",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-22",
+        "ours": []
+       },
+       {
+        "case": "aalto",
+        "key": "tuition",
+        "outcome": "missed",
+        "expected": {
+         "amount": 12000.0,
+         "currency": "EUR"
+        },
+        "ours": []
+       },
+       {
+        "case": "aalto",
+        "key": "programme.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "aalto",
+        "key": "programme.language",
+        "outcome": "missed",
+        "expected": "English",
+        "ours": []
+       },
+       {
+        "case": "vienna",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true
+        ]
+       },
+       {
+        "case": "vienna",
+        "key": "programme.language",
+        "outcome": "missed",
+        "expected": "German",
+        "ours": []
+       },
+       {
+        "case": "vienna",
+        "key": "german.application_minimum",
+        "outcome": "missed",
+        "expected": "A2",
+        "ours": []
+       },
+       {
+        "case": "vienna",
+        "key": "german.enrolment_minimum",
+        "outcome": "missed",
+        "expected": "C1",
+        "ours": []
+       },
+       {
+        "case": "warsaw",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true
+        ]
+       },
+       {
+        "case": "warsaw",
+        "key": "programme.language",
+        "outcome": "hit",
+        "expected": "Polish",
+        "ours": [
+         "Polish"
+        ]
+       },
+       {
+        "case": "ubc",
+        "key": "ielts.overall",
+        "outcome": "hit",
+        "expected": 6.5,
+        "ours": [
+         6.5,
+         6.5
+        ]
+       },
+       {
+        "case": "ubc",
+        "key": "ielts.subscores",
+        "outcome": "hit",
+        "expected": {
+         "reading": 6.0,
+         "listening": 6.0,
+         "speaking": 6.0,
+         "writing": 6.0
+        },
+        "ours": [
+         {
+          "listening": 6.0,
+          "reading": 6.0,
+          "speaking": 6.0,
+          "writing": 6.0
+         },
+         {
+          "listening": 6.0,
+          "reading": 6.0,
+          "speaking": 6.0,
+          "writing": 6.0
+         }
+        ]
+       },
+       {
+        "case": "ubc",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-15",
+        "ours": []
+       },
+       {
+        "case": "ubc",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true,
+         true
+        ]
+       },
+       {
+        "case": "toronto",
+        "key": "country_credential",
+        "outcome": "missed",
+        "expected": "Certificate of Completed Secondary Education",
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 6.0,
+         "reading": 6.0,
+         "speaking": 6.0,
+         "writing": 6.0
+        },
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-15",
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "intake",
+        "outcome": "missed",
+        "expected": "fall 2027",
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "programme.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "documents.programme.supplemental_application.required",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "hku",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true
+        ]
+       },
+       {
+        "case": "hku",
+        "key": "programme.faculty",
+        "outcome": "missed",
+        "expected": "School of Computing and Data Science",
+        "ours": []
+       },
+       {
+        "case": "hku",
+        "key": "scholarships.entrance.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "hku",
+        "key": "scholarships.entrance.applicability.application_mode",
+        "outcome": "missed",
+        "expected": "automatic_after_admission_application",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-20",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true,
+         true,
+         true
+        ]
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.applicability.nationality",
+        "outcome": "missed",
+        "expected": "all",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.applicability.degree",
+        "outcome": "missed",
+        "expected": "bachelor_full_time",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.applicability.application_mode",
+        "outcome": "missed",
+        "expected": "separate_after_admission_application",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.coverage.tuition",
+        "outcome": "missed",
+        "expected": {
+         "fraction": 1.0,
+         "basis": "subsidised_after_tuition_grant"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.coverage.living",
+        "outcome": "missed",
+        "expected": {
+         "currency": "SGD",
+         "amount": 6500,
+         "period": "academic_year"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.coverage.housing",
+        "outcome": "missed",
+        "expected": {
+         "currency": "SGD",
+         "maximum": 2000,
+         "period": "academic_year",
+         "requires": "NTU_hostel_residence"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.coverage.travel",
+        "outcome": "missed",
+        "expected": {
+         "currency": "SGD",
+         "maximum": 8000,
+         "requires": "eligible_overseas_programme"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.duration",
+        "outcome": "missed",
+        "expected": "normal_programme_duration",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.renewal",
+        "outcome": "missed",
+        "expected": {
+         "cgpa_gte": 3.5,
+         "scale": 5.0,
+         "review": "each_semester"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.bond",
+        "outcome": "missed",
+        "expected": {
+         "years": 3,
+         "basis": "MOE_Tuition_Grant",
+         "population": [
+          "Singapore_PR",
+          "international"
+         ]
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.essay.required",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.essay.maximum_words",
+        "outcome": "missed",
+        "expected": 250,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.referee.required",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.referee.role",
+        "outcome": "missed",
+        "expected": "school_teacher",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.referee.family_or_relative_allowed",
+        "outcome": "missed",
+        "expected": false,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "english_evidence.sat.minimum",
+        "outcome": "missed",
+        "expected": 1250,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "tuition",
+        "outcome": "missed",
+        "expected": {
+         "amount": 6866000.0,
+         "currency": "KRW"
+        },
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "programme.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "programme.admission_route",
+        "outcome": "missed",
+        "expected": "undeclared_then_major_selection",
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.applicability.offer",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.applicability.application_mode",
+        "outcome": "missed",
+        "expected": "admission_form_checkbox",
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.coverage.tuition",
+        "outcome": "missed",
+        "expected": {
+         "fraction": 1.0,
+         "semesters": 8
+        },
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.coverage.living",
+        "outcome": "missed",
+        "expected": {
+         "currency": "KRW",
+         "amount": 350000,
+         "period": "month"
+        },
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.coverage.insurance",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.renewal",
+        "outcome": "missed",
+        "expected": {
+         "gpa_gt": 2.7,
+         "scale": 4.3,
+         "after": "freshman_year"
+        },
+        "ours": []
+       }
+      ],
+      "wrong_claims": [],
+      "unlabelled": [
+       {
+        "case": "groningen",
+        "key": "programme.language",
+        "value": "English",
+        "url": "https://www.rug.nl/bachelors/computing-science/",
+        "label_status": null
+       },
+       {
+        "case": "delft",
+        "key": "unmapped.scholarship_exists",
+        "value": "Costas Lemos Innovation Programme Scholarship",
+        "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+        "label_status": null
+       },
+       {
+        "case": "delft",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "no"
+        },
+        "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+        "label_status": null
+       },
+       {
+        "case": "delft",
+        "key": "unmapped.scholarship_exists",
+        "value": "Costas Lemos Innovation Programme Scholarship",
+        "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+        "label_status": null
+       },
+       {
+        "case": "delft",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "no"
+        },
+        "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+        "label_status": null
+       },
+       {
+        "case": "vienna",
+        "key": "deadline",
+        "value": "2026-05-04",
+        "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+        "label_status": "unknown"
+       },
+       {
+        "case": "ubc",
+        "key": "programme.faculty",
+        "value": "Faculty of Arts",
+        "url": "https://you.ubc.ca/programs/computer-science-vancouver-ba",
+        "label_status": null
+       },
+       {
+        "case": "ubc",
+        "key": "unmapped.duolingo_min",
+        "value": 125,
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+        "label_status": null
+       },
+       {
+        "case": "ubc",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic"
+        ],
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+        "label_status": null
+       },
+       {
+        "case": "ubc",
+        "key": "unmapped.duolingo_min",
+        "value": 125,
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+        "label_status": null
+       },
+       {
+        "case": "ubc",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic"
+        ],
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+        "label_status": null
+       },
+       {
+        "case": "kaist",
+        "key": "unmapped.interview_required",
+        "value": true,
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+        "label_status": null
+       },
+       {
+        "case": "kaist",
+        "key": "unmapped.credential_evaluation_required",
+        "value": true,
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+        "label_status": null
+       }
+      ],
+      "other_scope": [
+       {
+        "case": "groningen",
+        "key": "deadline",
+        "value": "2027-05-01",
+        "expected": "2027-05-01",
+        "url": "https://www.rug.nl/bachelors/computing-science/"
+       },
+       {
+        "case": "groningen",
+        "key": "tuition",
+        "value": {
+         "amount": 2771.0,
+         "currency": "EUR"
+        },
+        "expected": {
+         "amount": 19800.0,
+         "currency": "EUR"
+        },
+        "url": "https://www.rug.nl/bachelors/computing-science/"
+       },
+       {
+        "case": "ntu",
+        "key": "programme.exists",
+        "value": true,
+        "expected": true,
+        "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences"
+       }
+      ],
+      "partial": []
+     },
+     "core": {
+      "aalto": [],
+      "delft": [
+       "scholarship"
+      ],
+      "groningen": [
+       "deadline",
+       "cost"
+      ],
+      "hku": [],
+      "kaist": [],
+      "ntu": [],
+      "toronto": [],
+      "ubc": [
+       "english"
+      ],
+      "vienna": [
+       "deadline"
+      ],
+      "warsaw": []
+     },
+     "cost": {
+      "aalto": {
+       "search_calls": 6,
+       "http_fetches": 1,
+       "latency_seconds": 13.9,
+       "over_budget": 0
+      },
+      "delft": {
+       "search_calls": 6,
+       "http_fetches": 29,
+       "latency_seconds": 45.8,
+       "over_budget": 0
+      },
+      "groningen": {
+       "search_calls": 7,
+       "http_fetches": 60,
+       "latency_seconds": 112.0,
+       "over_budget": 1
+      },
+      "hku": {
+       "search_calls": 7,
+       "http_fetches": 25,
+       "latency_seconds": 48.3,
+       "over_budget": 1
+      },
+      "kaist": {
+       "search_calls": 1,
+       "http_fetches": 15,
+       "latency_seconds": 19.9,
+       "over_budget": 0
+      },
+      "ntu": {
+       "search_calls": 1,
+       "http_fetches": 19,
+       "latency_seconds": 31.9,
+       "over_budget": 0
+      },
+      "toronto": {
+       "search_calls": 6,
+       "http_fetches": 30,
+       "latency_seconds": 25.4,
+       "over_budget": 0
+      },
+      "ubc": {
+       "search_calls": 7,
+       "http_fetches": 43,
+       "latency_seconds": 71.2,
+       "over_budget": 1
+      },
+      "vienna": {
+       "search_calls": 7,
+       "http_fetches": 47,
+       "latency_seconds": 60.1,
+       "over_budget": 1
+      },
+      "warsaw": {
+       "search_calls": 6,
+       "http_fetches": 49,
+       "latency_seconds": 115.0,
+       "over_budget": 0
+      }
+     }
+    },
+    {
+     "pipeline_sha": "87ee25c500cb5171c1676f94b39d02eb7ac9cfd3",
+     "metrics": {
+      "programme_page_recall": {
+       "numerator": 5,
+       "denominator": 10,
+       "value": 0.5
+      },
+      "programme_page_precision": {
+       "numerator": 5,
+       "denominator": 18,
+       "value": 0.2777777777777778
+      },
+      "recall_at_5": {
+       "numerator": 3,
+       "denominator": 10,
+       "value": 0.3
+      },
+      "recall_at_10": {
+       "numerator": 3,
+       "denominator": 10,
+       "value": 0.3
+      },
+      "recall_at_20": {
+       "numerator": 3,
+       "denominator": 10,
+       "value": 0.3
+      },
+      "claim_precision": {
+       "numerator": 15,
+       "denominator": 15,
+       "value": 1.0
+      },
+      "claim_recall": {
+       "numerator": 10,
+       "denominator": 73,
+       "value": 0.136986301369863
+      },
+      "claim_recall_same_page": {
+       "numerator": 3,
+       "denominator": 73,
+       "value": 0.0410958904109589
+      },
+      "unsupported_claim_rate": {
+       "numerator": 0,
+       "denominator": 5,
+       "value": 0.0
+      },
+      "wrong_scope_claim_rate": {
+       "numerator": 0,
+       "denominator": 15,
+       "value": 0.0
+      },
+      "other_scope_claim_rate": {
+       "numerator": 3,
+       "denominator": 18,
+       "value": 0.16666666666666666
+      },
+      "partial_claim_rate": {
+       "numerator": 0,
+       "denominator": 18,
+       "value": 0.0
+      },
+      "critical_field_coverage": {
+       "numerator": 5,
+       "denominator": 208,
+       "value": 0.02403846153846154
+      },
+      "scholarship_discovery_recall": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "scholarship_applicability_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "scholarship_applicability_recall": {
+       "numerator": 0,
+       "denominator": 7,
+       "value": 0.0
+      },
+      "scholarship_coverage_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "primary_source_rate": {
+       "numerator": 31,
+       "denominator": 31,
+       "value": 1.0
+      },
+      "verbatim_evidence_rate": {
+       "numerator": 5,
+       "denominator": 18,
+       "value": 0.2777777777777778
+      },
+      "current_evidence_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "conflict_visibility_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "support_adjudication_rate": {
+       "numerator": 5,
+       "denominator": 31,
+       "value": 0.16129032258064516
+      },
+      "claim_adjudication_rate": {
+       "numerator": 15,
+       "denominator": 31,
+       "value": 0.4838709677419355
+      },
+      "human_review_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      }
+     },
+     "outcomes": {
+      "labels": [
+       {
+        "case": "groningen",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "reading": 6.5,
+         "listening": 6.5,
+         "speaking": 6.5,
+         "writing": 6.5
+        },
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "deadline",
+        "outcome": "hit",
+        "expected": "2027-05-01",
+        "ours": [
+         "2027-05-01",
+         "2027-05-01"
+        ]
+       },
+       {
+        "case": "groningen",
+        "key": "tuition",
+        "outcome": "hit",
+        "expected": {
+         "amount": 19800.0,
+         "currency": "EUR"
+        },
+        "ours": [
+         {
+          "amount": 2771.0,
+          "currency": "EUR"
+         },
+         {
+          "amount": 19800.0,
+          "currency": "EUR"
+         }
+        ]
+       },
+       {
+        "case": "groningen",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true
+        ]
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.secondary_diploma.completed",
+        "outcome": "missed",
+        "expected": "diploma",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.secondary_diploma.not_completed",
+        "outcome": "missed",
+        "expected": "school_enrolment_statement",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.transcript.completed",
+        "outcome": "missed",
+        "expected": "academic_record",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.transcript.not_completed",
+        "outcome": "missed",
+        "expected": "school_course_list",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.admission.translation.required_unless_language_in",
+        "outcome": "missed",
+        "expected": [
+         "English",
+         "Dutch",
+         "French",
+         "German"
+        ],
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.programme.course_descriptions.initial_upload",
+        "outcome": "missed",
+        "expected": "blank_allowed",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "documents.programme.course_descriptions.board_may_request",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "country_credential.nis_grade12.level_equivalence",
+        "outcome": "missed",
+        "expected": "Dutch VWO",
+        "ours": []
+       },
+       {
+        "case": "groningen",
+        "key": "subjects.mathematics.required",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "delft",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "delft",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-15",
+        "ours": []
+       },
+       {
+        "case": "delft",
+        "key": "tuition",
+        "outcome": "missed",
+        "expected": {
+         "amount": 20563.0,
+         "currency": "EUR"
+        },
+        "ours": []
+       },
+       {
+        "case": "delft",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true,
+         true
+        ]
+       },
+       {
+        "case": "aalto",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-22",
+        "ours": []
+       },
+       {
+        "case": "aalto",
+        "key": "tuition",
+        "outcome": "missed",
+        "expected": {
+         "amount": 12000.0,
+         "currency": "EUR"
+        },
+        "ours": []
+       },
+       {
+        "case": "aalto",
+        "key": "programme.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "aalto",
+        "key": "programme.language",
+        "outcome": "missed",
+        "expected": "English",
+        "ours": []
+       },
+       {
+        "case": "vienna",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true
+        ]
+       },
+       {
+        "case": "vienna",
+        "key": "programme.language",
+        "outcome": "missed",
+        "expected": "German",
+        "ours": []
+       },
+       {
+        "case": "vienna",
+        "key": "german.application_minimum",
+        "outcome": "missed",
+        "expected": "A2",
+        "ours": []
+       },
+       {
+        "case": "vienna",
+        "key": "german.enrolment_minimum",
+        "outcome": "missed",
+        "expected": "C1",
+        "ours": []
+       },
+       {
+        "case": "warsaw",
+        "key": "programme.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "warsaw",
+        "key": "programme.language",
+        "outcome": "missed",
+        "expected": "Polish",
+        "ours": []
+       },
+       {
+        "case": "ubc",
+        "key": "ielts.overall",
+        "outcome": "hit",
+        "expected": 6.5,
+        "ours": [
+         6.5,
+         6.5
+        ]
+       },
+       {
+        "case": "ubc",
+        "key": "ielts.subscores",
+        "outcome": "hit",
+        "expected": {
+         "reading": 6.0,
+         "listening": 6.0,
+         "speaking": 6.0,
+         "writing": 6.0
+        },
+        "ours": [
+         {
+          "listening": 6.0,
+          "reading": 6.0,
+          "speaking": 6.0,
+          "writing": 6.0
+         },
+         {
+          "listening": 6.0,
+          "reading": 6.0,
+          "speaking": 6.0,
+          "writing": 6.0
+         }
+        ]
+       },
+       {
+        "case": "ubc",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-15",
+        "ours": []
+       },
+       {
+        "case": "ubc",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true,
+         true
+        ]
+       },
+       {
+        "case": "toronto",
+        "key": "country_credential",
+        "outcome": "missed",
+        "expected": "Certificate of Completed Secondary Education",
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 6.0,
+         "reading": 6.0,
+         "speaking": 6.0,
+         "writing": 6.0
+        },
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-15",
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "intake",
+        "outcome": "missed",
+        "expected": "fall 2027",
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "programme.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "toronto",
+        "key": "documents.programme.supplemental_application.required",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "hku",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true
+        ]
+       },
+       {
+        "case": "hku",
+        "key": "programme.faculty",
+        "outcome": "missed",
+        "expected": "School of Computing and Data Science",
+        "ours": []
+       },
+       {
+        "case": "hku",
+        "key": "scholarships.entrance.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "hku",
+        "key": "scholarships.entrance.applicability.application_mode",
+        "outcome": "missed",
+        "expected": "automatic_after_admission_application",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-01-20",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "programme.exists",
+        "outcome": "hit",
+        "expected": true,
+        "ours": [
+         true,
+         true,
+         true
+        ]
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.applicability.nationality",
+        "outcome": "missed",
+        "expected": "all",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.applicability.degree",
+        "outcome": "missed",
+        "expected": "bachelor_full_time",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.applicability.application_mode",
+        "outcome": "missed",
+        "expected": "separate_after_admission_application",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.coverage.tuition",
+        "outcome": "missed",
+        "expected": {
+         "fraction": 1.0,
+         "basis": "subsidised_after_tuition_grant"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.coverage.living",
+        "outcome": "missed",
+        "expected": {
+         "currency": "SGD",
+         "amount": 6500,
+         "period": "academic_year"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.coverage.housing",
+        "outcome": "missed",
+        "expected": {
+         "currency": "SGD",
+         "maximum": 2000,
+         "period": "academic_year",
+         "requires": "NTU_hostel_residence"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.coverage.travel",
+        "outcome": "missed",
+        "expected": {
+         "currency": "SGD",
+         "maximum": 8000,
+         "requires": "eligible_overseas_programme"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.duration",
+        "outcome": "missed",
+        "expected": "normal_programme_duration",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.renewal",
+        "outcome": "missed",
+        "expected": {
+         "cgpa_gte": 3.5,
+         "scale": 5.0,
+         "review": "each_semester"
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "scholarships.nanyang_global.bond",
+        "outcome": "missed",
+        "expected": {
+         "years": 3,
+         "basis": "MOE_Tuition_Grant",
+         "population": [
+          "Singapore_PR",
+          "international"
+         ]
+        },
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.essay.required",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.essay.maximum_words",
+        "outcome": "missed",
+        "expected": 250,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.referee.required",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.referee.role",
+        "outcome": "missed",
+        "expected": "school_teacher",
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "documents.scholarship.nanyang_global.referee.family_or_relative_allowed",
+        "outcome": "missed",
+        "expected": false,
+        "ours": []
+       },
+       {
+        "case": "ntu",
+        "key": "english_evidence.sat.minimum",
+        "outcome": "missed",
+        "expected": 1250,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "tuition",
+        "outcome": "missed",
+        "expected": {
+         "amount": 6866000.0,
+         "currency": "KRW"
+        },
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "programme.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "programme.admission_route",
+        "outcome": "missed",
+        "expected": "undeclared_then_major_selection",
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.applicability.offer",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.applicability.application_mode",
+        "outcome": "missed",
+        "expected": "admission_form_checkbox",
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.coverage.tuition",
+        "outcome": "missed",
+        "expected": {
+         "fraction": 1.0,
+         "semesters": 8
+        },
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.coverage.living",
+        "outcome": "missed",
+        "expected": {
+         "currency": "KRW",
+         "amount": 350000,
+         "period": "month"
+        },
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.coverage.insurance",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaist",
+        "key": "scholarships.kaist.renewal",
+        "outcome": "missed",
+        "expected": {
+         "gpa_gt": 2.7,
+         "scale": 4.3,
+         "after": "freshman_year"
+        },
+        "ours": []
+       }
+      ],
+      "wrong_claims": [],
+      "unlabelled": [
+       {
+        "case": "groningen",
+        "key": "programme.language",
+        "value": "English",
+        "url": "https://www.rug.nl/bachelors/computing-science/",
+        "label_status": null
+       },
+       {
+        "case": "delft",
+        "key": "unmapped.scholarship_exists",
+        "value": "Costas Lemos Innovation Programme Scholarship",
+        "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+        "label_status": null
+       },
+       {
+        "case": "delft",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "no"
+        },
+        "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+        "label_status": null
+       },
+       {
+        "case": "delft",
+        "key": "unmapped.scholarship_exists",
+        "value": "Costas Lemos Innovation Programme Scholarship",
+        "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+        "label_status": null
+       },
+       {
+        "case": "delft",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "no"
+        },
+        "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+        "label_status": null
+       },
+       {
+        "case": "vienna",
+        "key": "deadline",
+        "value": "2026-05-04",
+        "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+        "label_status": "unknown"
+       },
+       {
+        "case": "ubc",
+        "key": "programme.faculty",
+        "value": "Faculty of Arts",
+        "url": "https://you.ubc.ca/programs/computer-science-vancouver-ba",
+        "label_status": null
+       },
+       {
+        "case": "ubc",
+        "key": "unmapped.duolingo_min",
+        "value": 125,
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+        "label_status": null
+       },
+       {
+        "case": "ubc",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic"
+        ],
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+        "label_status": null
+       },
+       {
+        "case": "ubc",
+        "key": "unmapped.duolingo_min",
+        "value": 125,
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+        "label_status": null
+       },
+       {
+        "case": "ubc",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic"
+        ],
+        "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+        "label_status": null
+       },
+       {
+        "case": "kaist",
+        "key": "unmapped.interview_required",
+        "value": true,
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+        "label_status": null
+       },
+       {
+        "case": "kaist",
+        "key": "unmapped.credential_evaluation_required",
+        "value": true,
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+        "label_status": null
+       }
+      ],
+      "other_scope": [
+       {
+        "case": "groningen",
+        "key": "deadline",
+        "value": "2027-05-01",
+        "expected": "2027-05-01",
+        "url": "https://www.rug.nl/bachelors/computing-science/"
+       },
+       {
+        "case": "groningen",
+        "key": "tuition",
+        "value": {
+         "amount": 2771.0,
+         "currency": "EUR"
+        },
+        "expected": {
+         "amount": 19800.0,
+         "currency": "EUR"
+        },
+        "url": "https://www.rug.nl/bachelors/computing-science/"
+       },
+       {
+        "case": "ntu",
+        "key": "programme.exists",
+        "value": true,
+        "expected": true,
+        "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences"
+       }
+      ],
+      "partial": []
+     },
+     "core": {
+      "aalto": [],
+      "delft": [
+       "scholarship"
+      ],
+      "groningen": [
+       "deadline",
+       "cost"
+      ],
+      "hku": [],
+      "kaist": [],
+      "ntu": [],
+      "toronto": [],
+      "ubc": [
+       "english"
+      ],
+      "vienna": [
+       "deadline"
+      ],
+      "warsaw": []
+     },
+     "cost": {
+      "aalto": {
+       "search_calls": 6,
+       "http_fetches": 1,
+       "latency_seconds": 14.2,
+       "over_budget": 0
+      },
+      "delft": {
+       "search_calls": 6,
+       "http_fetches": 29,
+       "latency_seconds": 44.5,
+       "over_budget": 0
+      },
+      "groningen": {
+       "search_calls": 7,
+       "http_fetches": 60,
+       "latency_seconds": 110.2,
+       "over_budget": 1
+      },
+      "hku": {
+       "search_calls": 6,
+       "http_fetches": 25,
+       "latency_seconds": 43.3,
+       "over_budget": 0
+      },
+      "kaist": {
+       "search_calls": 1,
+       "http_fetches": 15,
+       "latency_seconds": 20.0,
+       "over_budget": 0
+      },
+      "ntu": {
+       "search_calls": 1,
+       "http_fetches": 19,
+       "latency_seconds": 28.8,
+       "over_budget": 0
+      },
+      "toronto": {
+       "search_calls": 6,
+       "http_fetches": 30,
+       "latency_seconds": 25.7,
+       "over_budget": 0
+      },
+      "ubc": {
+       "search_calls": 7,
+       "http_fetches": 47,
+       "latency_seconds": 77.2,
+       "over_budget": 1
+      },
+      "vienna": {
+       "search_calls": 7,
+       "http_fetches": 47,
+       "latency_seconds": 58.0,
+       "over_budget": 1
+      },
+      "warsaw": {
+       "search_calls": 6,
+       "http_fetches": 47,
+       "latency_seconds": 115.0,
+       "over_budget": 0
+      }
+     }
+    }
+   ],
+   "access": {
+    "aalto": [
+     "BLOCKED",
+     27,
+     27
+    ],
+    "delft": [
+     "REACHED",
+     35,
+     0
+    ],
+    "groningen": [
+     "PARTIALLY_BLOCKED",
+     51,
+     3
+    ],
+    "hku": [
+     "PARTIALLY_BLOCKED",
+     35,
+     15
+    ],
+    "kaist": [
+     "REACHED",
+     12,
+     3
+    ],
+    "ntu": [
+     "REACHED",
+     27,
+     7
+    ],
+    "toronto": [
+     "REACHED",
+     27,
+     18
+    ],
+    "ubc": [
+     "PARTIALLY_BLOCKED",
+     53,
+     13
+    ],
+    "vienna": [
+     "REACHED",
+     40,
+     8
+    ]
+   }
+  }
+ },
+ "changes": {
+  "gained": [],
+  "lost": [],
+  "unstable": []
+ },
+ "targets": [
+  {
+   "arm": "off",
+   "metric": "claim_precision",
+   "worst": 1.0,
+   "target": ">= 0.95",
+   "met": true
+  },
+  {
+   "arm": "off",
+   "metric": "wrong_scope_claim_rate",
+   "worst": 0.0,
+   "target": "<= 0.03",
+   "met": true
+  },
+  {
+   "arm": "off",
+   "metric": "cases_over_budget",
+   "worst": 8,
+   "target": "== 0",
+   "met": false
+  },
+  {
+   "arm": "on",
+   "metric": "claim_precision",
+   "worst": 1.0,
+   "target": ">= 0.95",
+   "met": true
+  },
+  {
+   "arm": "on",
+   "metric": "wrong_scope_claim_rate",
+   "worst": 0.0,
+   "target": "<= 0.03",
+   "met": true
+  },
+  {
+   "arm": "on",
+   "metric": "cases_over_budget",
+   "worst": 7,
+   "target": "== 0",
+   "met": false
+  }
+ ]
+}
