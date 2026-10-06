@@ -15,6 +15,14 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | **[reviewed](data/ground_truth.reviewed.json)** | 62/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/62 | 0/210 |
 | [draft8](data/ground_truth.draft8.json) | 76/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/74 | 0/208 |
 | **[reviewed8](data/ground_truth.reviewed8.json)** | 76/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/74 | 0/208 |
+| **[reviewed9](data/ground_truth.reviewed9.json)** | 73/220 | 10/10 | 1/9 / 1/10 | 0/1 / 0/73 | 0/208 |
+
+**reviewed9 (2026-10-05, owner: "1").** NTU's three IELTS labels (`ielts.overall`, `ielts.subscores`,
+`english_evidence.ielts.minimum`) are `unknown`: two current official NTU pages disagree. The general
+admission requirements page states 6.5 / 6.5 / 6.5 (draft8's source); the "other international
+qualifications" page, under which a Kazakhstan certificate falls, states 6 / 6 / 6. Draft8 proposed 6.5
+from the first page alone; run 37351314325 surfaced the second. The conflict is recorded in each label's
+notes; the safe target for an applicant is 6.5. reviewed9 is the scorecard's default; reviewed8 stays frozen.
 
 **Draft8 signed 2026-10-05 by Диас ("Подписываю draft8")**, after the [REVIEW_DRAFT8](REVIEW_DRAFT8.md)
 worksheet, including its changes to signed NTU labels (IELTS 6 → 6.5; two credential labels → unknown).

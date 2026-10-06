@@ -143,3 +143,28 @@ async def test_no_documents_stage_by_default(
     await live.capture_one("groningen", output, 5, 120, strict_expert_budget=True)
     assert rows[0].user_decision is None
     assert Observation.model_validate_json(output.read_text()).telemetry.document_stop is None
+
+
+@pytest.mark.asyncio
+async def test_documents_stage_runs_after_the_decision_stage_runs_out_of_clock(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    async def documents(self: Any) -> int:
+        await self._make_fetcher().get("https://rug.nl/documents")
+        return 1
+
+    calls, rows, _session = _arrange(monkeypatch, documents)
+
+    async def slow_decide(self: Any) -> None:
+        await self._make_fetcher().get("https://rug.nl/decision")
+        await asyncio.sleep(5)
+
+    monkeypatch.setattr(canary.CanaryRunner, "run_to_decision", slow_decide)
+    monkeypatch.setattr(live, "DOCUMENT_SECONDS", 30.0)
+    output = tmp_path / "groningen.json"
+    await live.capture_one("groningen", output, 5, 0.2)
+    observation = Observation.model_validate_json(output.read_text())
+    assert observation.error == "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+    assert observation.telemetry.document_stop == "completed"
+    assert "https://rug.nl/documents" in calls
+    assert rows[0].user_decision == UserDecision.APPROVED.value
