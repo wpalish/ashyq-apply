@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { ApiError, api } from '@/api/client';
 import type { AuthStatus } from '@/types';
 import { PublicLanding } from '@/components/PublicLanding';
+import { Logo } from '@/components/Logo';
 import { LegalScreen } from '@/screens/LegalScreen';
 
 const MIN_PASSWORD = 12;
@@ -44,7 +45,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   if (route.startsWith('#/legal')) {
     return (
       <div className="public-legal">
-        <header><a className="landing__brand" href={status?.authenticated ? '#/home' : '#/welcome'}><span className="logo-tile" aria-hidden="true" /> Unimatch</a><a href={status?.authenticated ? '#/home' : '#/welcome'}>Back</a></header>
+        <header><a className="landing__brand" href={status?.authenticated ? '#/home' : '#/welcome'}><Logo /></a><a href={status?.authenticated ? '#/home' : '#/welcome'}>Back</a></header>
         <main><LegalScreen /></main>
       </div>
     );
@@ -173,7 +174,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
         </div>
       <form className="panel auth-card stack" onSubmit={submit}>
         <div>
-          <a className="landing__brand" href="#/welcome"><span className="logo-tile" aria-hidden="true" /> Unimatch</a>
+          <a className="landing__brand" href="#/welcome"><Logo /></a>
           <div className="auth-tabs" role="tablist" aria-label="Account">
             <button type="button" role="tab" aria-selected={mode === 'login'} onClick={() => setMode('login')}>Sign in</button>
             {status.registration_enabled && <button type="button" role="tab" aria-selected={mode === 'register'} onClick={() => setMode('register')}>Create account</button>}

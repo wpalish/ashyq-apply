@@ -136,13 +136,6 @@ button { font: inherit; color: inherit; }
 }
 
 .brand { display: flex; flex-direction: column; gap: 2px; }
-.brand__mark {
-  font-family: var(--font-display);
-  font-size: 1.45rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  font-variation-settings: 'opsz' 90;
-}
 .brand__tag {
   font-size: var(--text-xs);
   color: var(--ink-faint);

@@ -29,6 +29,7 @@ import { HomeScreen } from '@/screens/HomeScreen';
 import { SettingsScreen } from '@/screens/SettingsScreen';
 import { BillingScreen } from '@/screens/BillingScreen';
 import { Chip } from '@/components/primitives';
+import { Logo } from '@/components/Logo';
 import { api } from '@/api/client';
 import { LOCALES, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
 import { useTranslation } from '@/lib/useTranslation';
@@ -322,8 +323,7 @@ export default function App() {
     <div className="app">
       <aside className="sidebar">
         <div className="brand">
-          <span className="logo-tile" aria-hidden="true" />
-          <span className="brand__mark">unimatch</span>
+          <Logo className="brand__logo" />
         </div>
 
         <nav className="nav" aria-label="Main navigation">
@@ -350,7 +350,7 @@ export default function App() {
             the applicant's menu; on a desk the same header is the card at the
             foot of the sidebar. */}
         <header className="topbar">
-          <span className="topbar__brand"><span className="logo-tile" aria-hidden="true" />unimatch</span>
+          <span className="topbar__brand"><Logo /></span>
           <Chip tone={capabilities?.demo_mode ? 'demo' : 'accent'}>
             {capabilities ? (capabilities.demo_mode ? 'Demo data' : 'Live sources') : 'connecting…'}
           </Chip>

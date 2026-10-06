@@ -10,12 +10,11 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.045em; }
   gap: 2.75rem;
 }
 .brand { flex-direction: row; align-items: center; gap: 0.6rem; padding: 0 0.55rem; }
-.brand__mark { font-family: var(--font-ui); font-size: 1.35rem; font-weight: 800; letter-spacing: -0.04em; }
-/* The mark: a tile of the countries' colours, the passes in one square. */
-.logo-tile {
-  flex: none; display: inline-block; width: 1.75rem; height: 1.75rem; border-radius: 0.55rem;
-  background: conic-gradient(from 200deg, var(--pass-1), var(--pass-3), var(--pass-2), var(--pass-6), var(--pass-4), var(--pass-1));
-}
+/* The wordmark (components/Logo): its height sets its size; it takes the text colour. */
+.logo { display: block; flex: none; width: auto; height: 1.5rem; }
+.brand__logo { height: 1.55rem; color: var(--ink); }
+.topbar__brand .logo { height: 1.3rem; }
+.landing__brand .logo { height: 1.55rem; }
 .nav { gap: 0.35rem; }
 .nav__item {
   min-height: 3rem;
@@ -47,7 +46,6 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.045em; }
   background: var(--surface); backdrop-filter: none;
 }
 .topbar__brand { display: none; align-items: center; gap: 0.5rem; font-size: 1.2rem; font-weight: 800; letter-spacing: -0.04em; }
-.topbar__brand .logo-tile { width: 1.6rem; height: 1.6rem; border-radius: 0.5rem; }
 .topbar .chip { flex: none; }
 .account { position: relative; width: 100%; }
 .account > summary {

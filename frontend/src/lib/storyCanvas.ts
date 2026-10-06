@@ -12,6 +12,7 @@ import {
   centroidOf, greatCircle, loadLandDots, project, projectRad, type LatLon,
 } from '@/lib/globe';
 import type { StoryModel } from '@/lib/story';
+import { LOGO_H, LOGO_PATHS, LOGO_RATIO } from '@/lib/logo';
 
 export const STORY_W = 1080;
 export const STORY_H = 1920;
@@ -57,7 +58,6 @@ const PALETTES: Record<StoryModel['tone'], Palette> = {
 };
 
 /** The pass colours, for the mark's tile (tokens.css --pass-1 … --pass-6). */
-const MARK = ['#3E5C76', '#7A3B3B', '#5E4B6E', '#44497F', '#3F6F6A', '#3E5C76'];
 
 async function fontsReady(): Promise<void> {
   if (typeof document === 'undefined' || !document.fonts) return;
@@ -119,24 +119,27 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
   ctx.closePath();
 }
 
-/** The mark, as in the app's header: a tile of the countries' colours. */
-function brandMark(ctx: CanvasRenderingContext2D, x: number, y: number, size: number) {
+/** The wordmark, as in the app's header (src/lib/logo.ts); returns its width. */
+function wordmark(ctx: CanvasRenderingContext2D, x: number, y: number, height: number, colour: string): number {
+  if (typeof Path2D !== 'function') {
+    text(ctx, 'unimatch', x, y + height * 0.86, `800 ${Math.round(height * 1.05)}px ${DISPLAY}`, colour);
+    return LOGO_RATIO * height;
+  }
+  const scale = height / LOGO_H;
   ctx.save();
-  roundRect(ctx, x, y, size, size, size * 0.3);
-  ctx.clip();
-  const fill = typeof ctx.createConicGradient === 'function'
-    ? ctx.createConicGradient((200 * Math.PI) / 180, x + size / 2, y + size / 2)
-    : ctx.createLinearGradient(x, y, x + size, y + size);
-  MARK.forEach((colour, i) => fill.addColorStop(i / (MARK.length - 1), colour));
-  ctx.fillStyle = fill;
-  ctx.fillRect(x, y, size, size);
+  ctx.translate(x, y);
+  ctx.scale(scale, scale);
+  ctx.translate(0, LOGO_H);
+  ctx.scale(0.1, -0.1);
+  ctx.fillStyle = colour;
+  for (const d of LOGO_PATHS) ctx.fill(new Path2D(d));
   ctx.restore();
+  return LOGO_RATIO * height;
 }
 
 function header(ctx: CanvasRenderingContext2D, model: StoryModel, p: Palette) {
   const y = SAFE_TOP + 24;
-  brandMark(ctx, M, y - 44, 56);
-  text(ctx, 'unimatch', M + 72, y, `800 44px ${DISPLAY}`, p.ink);
+  wordmark(ctx, M, y - 46, 50, p.ink);
   if (model.who) text(ctx, model.who, STORY_W - M, y, `600 34px ${UI}`, p.muted, 600, 1.25, 'right');
   if (model.demo) {
     // Demo data says so on the card itself, inside the safe area.
@@ -434,11 +437,8 @@ function map(ctx: CanvasRenderingContext2D, model: StoryModel, p: Palette, dots:
   // The brand band, in the reply-bar zone where nothing needs reading.
   ctx.fillStyle = '#111114';
   ctx.fillRect(0, STORY_H - 230, STORY_W, 230);
-  ctx.font = `800 48px ${DISPLAY}`;
-  const brandW = ctx.measureText('unimatch').width;
-  const bx = (STORY_W - brandW - 76) / 2;
-  brandMark(ctx, bx, STORY_H - 150, 60);
-  text(ctx, 'unimatch', bx + 76, STORY_H - 102, `800 48px ${DISPLAY}`, '#FFFFFF', 600);
+  const markH = 56;
+  wordmark(ctx, (STORY_W - LOGO_RATIO * markH) / 2, STORY_H - 150, markH, '#FFFFFF');
 }
 
 /** Draws the card; resolves once fonts and land dots are in. */

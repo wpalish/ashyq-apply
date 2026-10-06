@@ -5,6 +5,7 @@
  */
 
 import { LandingStory } from '@/components/LandingStory';
+import { Logo } from '@/components/Logo';
 
 const STEPS = [
   { n: '1', title: 'Your profile', text: 'What you study, your results and where you would go. Nothing is guessed for you.' },
@@ -18,7 +19,7 @@ export function PublicLanding() {
     <div className="landing">
       <header className="landing__header">
         <a className="landing__brand" href="#/welcome" aria-label="Unimatch home">
-          <span className="logo-tile" aria-hidden="true" /> unimatch
+          <Logo decorative />
         </a>
         <nav aria-label="Public navigation">
           <a href="#how-it-works">How it works</a>
