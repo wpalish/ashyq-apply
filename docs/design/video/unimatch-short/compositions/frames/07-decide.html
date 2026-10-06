@@ -1,0 +1,112 @@
+<template>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+@font-face{font-family:"Inter";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Inter-400.woff2") format("woff2");}@font-face{font-family:"Inter";font-weight:500;font-style:normal;font-display:block;src:url("assets/fonts/Inter-500.woff2") format("woff2");}@font-face{font-family:"Inter";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Inter-600.woff2") format("woff2");}@font-face{font-family:"Inter";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Inter-700.woff2") format("woff2");}@font-face{font-family:"Inter";font-weight:800;font-style:normal;font-display:block;src:url("assets/fonts/Inter-800.woff2") format("woff2");}
+#root { position: absolute; inset: 0; overflow: hidden; font-family: "Inter"; -webkit-font-smoothing: antialiased; }
+#f07-bg { position: absolute; inset: 0; background: #F3F2EF; }
+#f07-stage { position: absolute; inset: 0; }
+#f07-cam { position: absolute; inset: 0; transform-origin: 50% 40%; }
+.f07-abs { position: absolute; }
+.f07-kicker { position: absolute; left: 64px; margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+.f07-display { position: absolute; left: 64px; right: 64px; margin: 0; display: grid; justify-items: start; font-weight: 800; letter-spacing: -0.045em; line-height: 0.95; }
+.f07-line { display: block; }
+
+.f07-pass { position: absolute; left: 64px; width: 952px; min-height: 300px; box-sizing: border-box; padding: 40px 44px; display: grid; align-content: start; justify-items: start; border-radius: 40px; color: #fff; overflow: hidden; box-shadow: 0 24px 48px rgba(17,17,20,0.18); }
+.f07-pass::before { content: ""; position: absolute; right: -90px; top: -90px; width: 320px; height: 320px; border-radius: 50%; background: rgba(255,255,255,0.12); }
+.f07-pass p { position: relative; margin: 0; }
+.f07-pc { font-size: 22px; font-weight: 700; letter-spacing: 0.08em; color: rgba(255,255,255,0.88); }
+.f07-pn { font-size: 78px; font-weight: 800; letter-spacing: -0.045em; line-height: 1.1; margin-top: 14px !important; }
+.f07-ps { font-size: 27px; font-weight: 600; margin-top: 16px !important; max-width: 560px; line-height: 1.3; }
+.f07-pp { position: absolute; right: 44px; top: 40px; display: grid; justify-items: end; text-align: right; }
+.f07-pp b { font-size: 58px; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.f07-pp span { font-size: 21px; font-weight: 600; color: rgba(255,255,255,0.9); margin-top: 4px; }
+.f07-demo { position: relative; margin-top: 18px; padding: 7px 16px; border-radius: 999px; background: rgba(255,255,255,0.18); font-size: 20px; font-weight: 700; letter-spacing: 0.04em; }
+
+#f07-p3 { top: 600px; } #f07-p2 { top: 645px; } #f07-p1 { top: 690px; }
+#f07-btns { position: absolute; left: 64px; right: 64px; top: 1130px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.f07-btn { display: grid; place-items: center; height: 126px; border-radius: 999px; border: 3px solid #111114; color: #111114; font-size: 38px; font-weight: 700; }
+.f07-keep { background: #111114; color: #fff; }
+#f07-piles { position: absolute; left: 64px; top: 1310px; display: flex; gap: 22px; }
+.f07-pile { position: relative; padding: 16px 32px; border-radius: 999px; background: #fff; color: #111114; font-size: 34px; font-weight: 700; box-shadow: 0 8px 20px rgba(17,17,20,0.08); }
+.f07-pile i { font-style: normal; display: inline-block; min-width: 0.7em; }
+#f07-k1, #f07-m1 { position: absolute; right: 28px; opacity: 0; }
+
+</style>
+<div id="root" data-composition-id="07-decide" data-width="1080" data-height="1920">
+  <div id="f07-bg" class="clip" data-start="0" data-duration="3" data-track-index="0"></div>
+  <div id="f07-stage" class="clip" data-start="0" data-duration="3" data-track-index="1">
+    <div id="f07-cam">
+      <div class="f07-display" style="top:200px;font-size:124px;color:#111114">
+        <span class="f07-line" id="f07-h1">decide</span>
+        <span class="f07-line" id="f07-h2">one at a time.</span>
+      </div>
+      <div class="f07-pass" id="f07-p3" style="background:#7A3B3B">
+        <p class="f07-pc" data-layout-allow-overlap>JAPAN</p>
+        <p class="f07-pn" data-layout-allow-overlap>Tokyo</p>
+        <p class="f07-ps" data-layout-allow-overlap>University of Tokyo · PEAK</p>
+        <div class="f07-pp"><b data-layout-allow-overlap>1,986</b><span data-layout-allow-overlap>USD a year, if awarded</span></div>
+        
+      </div>
+      <div class="f07-pass" id="f07-p2" style="background:#5E4B6E">
+        <p class="f07-pc" data-layout-allow-overlap>BELGIUM</p>
+        <p class="f07-pn" data-layout-allow-overlap>Leuven</p>
+        <p class="f07-ps" data-layout-allow-overlap>KU Leuven · BSc Informatics</p>
+        <div class="f07-pp"><b data-layout-allow-overlap>7,554</b><span data-layout-allow-overlap>USD a year, if awarded</span></div>
+        
+      </div>
+      <div class="f07-pass" id="f07-p1" style="background:#3E5C76">
+        <p class="f07-pc" data-layout-allow-overlap>NETHERLANDS</p>
+        <p class="f07-pn" data-layout-allow-overlap>Groningen</p>
+        <p class="f07-ps" data-layout-allow-overlap>University of Groningen · BSc Computing Science</p>
+        <div class="f07-pp"><b data-layout-allow-overlap>1,848</b><span data-layout-allow-overlap>USD a year left, if awarded</span></div>
+        
+      </div>
+      <div id="f07-btns">
+        <span class="f07-btn" id="f07-b0">Not for me</span>
+        <span class="f07-btn" id="f07-b1">Maybe</span>
+        <span class="f07-btn f07-keep" id="f07-b2">Keep</span>
+      </div>
+      <div id="f07-piles" data-layout-allow-overlap>
+        <span class="f07-pile" id="f07-kept">Kept · <i id="f07-k0" data-layout-allow-overlap>0</i><i id="f07-k1" data-layout-allow-overlap>1</i></span>
+        <span class="f07-pile" id="f07-maybe">Maybe · <i id="f07-m0" data-layout-allow-overlap>0</i><i id="f07-m1" data-layout-allow-overlap>1</i></span>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const tl = gsap.timeline({ paused: true });
+  const D = 3;
+  tl.fromTo("#f07-cam", { scale: 1 }, { scale: 1.04, duration: D, ease: "none" }, 0);
+  tl.fromTo("#f07-h1", { y: 36, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "power3.out" }, 0.05);
+  tl.fromTo("#f07-h2", { y: 36, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "power3.out" }, 0.2);
+  tl.set("#f07-p2 > *, #f07-p3 > *", { opacity: 0 }, 0);
+  tl.to("#f07-p2 > *", { opacity: 1, duration: 0.3 }, 1.35);
+  tl.to("#f07-p3 > *", { opacity: 1, duration: 0.3 }, 2.35);
+  tl.fromTo("#f07-p1", { y: 900, rotation: 6, opacity: 0 }, { y: 0, rotation: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, 0.1);
+  tl.fromTo("#f07-p2", { y: 45, rotation: 0, opacity: 0 }, { y: 0, rotation: -4, opacity: 1, duration: 0.4, ease: "power3.out" }, 0.6);
+  tl.fromTo("#f07-p3", { y: 90, rotation: 0, opacity: 0 }, { y: 0, rotation: 6, opacity: 1, duration: 0.4, ease: "power3.out" }, 0.7);
+  tl.fromTo("#f07-btns", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 0.55);
+  tl.fromTo("#f07-piles", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 0.7);
+  tl.fromTo("#f07-b2", { scale: 1 }, { scale: 0.9, duration: 0.1, ease: "power2.out" }, 1.0);
+  tl.to("#f07-b2", { scale: 1, duration: 0.18, ease: "power2.out" }, 1.1);
+  tl.to("#f07-p1", { x: -300, y: 640, scale: 0.18, rotation: -8, opacity: 0, duration: 0.45, ease: "power3.in" }, 1.08);
+  tl.to("#f07-k0", { opacity: 0, duration: 0.1 }, 1.5);
+  tl.to("#f07-k1", { opacity: 1, duration: 0.1 }, 1.5);
+  tl.fromTo("#f07-kept", { scale: 1 }, { scale: 1.12, duration: 0.12, ease: "power2.out" }, 1.5);
+  tl.to("#f07-kept", { scale: 1, duration: 0.2 }, 1.62);
+  tl.to("#f07-p2", { y: 40, rotation: 0, duration: 0.4, ease: "power3.out" }, 1.3);
+  tl.to("#f07-p3", { y: 20, rotation: -3, duration: 0.4, ease: "power3.out" }, 1.35);
+  tl.fromTo("#f07-b1", { scale: 1 }, { scale: 0.9, duration: 0.1, ease: "power2.out" }, 2.0);
+  tl.to("#f07-b1", { scale: 1, duration: 0.18, ease: "power2.out" }, 2.1);
+  tl.to("#f07-p2", { x: -40, y: 680, scale: 0.18, rotation: 6, opacity: 0, duration: 0.45, ease: "power3.in" }, 2.08);
+  tl.to("#f07-m0", { opacity: 0, duration: 0.1 }, 2.5);
+  tl.to("#f07-m1", { opacity: 1, duration: 0.1 }, 2.5);
+  tl.fromTo("#f07-maybe", { scale: 1 }, { scale: 1.12, duration: 0.12, ease: "power2.out" }, 2.5);
+  tl.to("#f07-maybe", { scale: 1, duration: 0.2 }, 2.62);
+  tl.to("#f07-p3", { y: 80, rotation: 0, duration: 0.4, ease: "power3.out" }, 2.3);
+
+  window.__timelines["07-decide"] = tl;
+})();
+</script>
+</template>

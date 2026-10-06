@@ -1,0 +1,82 @@
+<template>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+@font-face{font-family:"Inter";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Inter-400.woff2") format("woff2");}@font-face{font-family:"Inter";font-weight:500;font-style:normal;font-display:block;src:url("assets/fonts/Inter-500.woff2") format("woff2");}@font-face{font-family:"Inter";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Inter-600.woff2") format("woff2");}@font-face{font-family:"Inter";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Inter-700.woff2") format("woff2");}@font-face{font-family:"Inter";font-weight:800;font-style:normal;font-display:block;src:url("assets/fonts/Inter-800.woff2") format("woff2");}
+#root { position: absolute; inset: 0; overflow: hidden; font-family: "Inter"; -webkit-font-smoothing: antialiased; }
+#f05-bg { position: absolute; inset: 0; background: #F3F2EF; }
+#f05-stage { position: absolute; inset: 0; }
+#f05-cam { position: absolute; inset: 0; transform-origin: 50% 40%; }
+.f05-abs { position: absolute; }
+.f05-kicker { position: absolute; left: 64px; margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+.f05-display { position: absolute; left: 64px; right: 64px; margin: 0; display: grid; justify-items: start; font-weight: 800; letter-spacing: -0.045em; line-height: 0.95; }
+.f05-line { display: block; }
+
+.f05-pass { position: absolute; left: 64px; width: 952px; min-height: 300px; box-sizing: border-box; padding: 40px 44px; display: grid; align-content: start; justify-items: start; border-radius: 40px; color: #fff; overflow: hidden; box-shadow: 0 24px 48px rgba(17,17,20,0.18); }
+.f05-pass::before { content: ""; position: absolute; right: -90px; top: -90px; width: 320px; height: 320px; border-radius: 50%; background: rgba(255,255,255,0.12); }
+.f05-pass p { position: relative; margin: 0; }
+.f05-pc { font-size: 22px; font-weight: 700; letter-spacing: 0.08em; color: rgba(255,255,255,0.88); }
+.f05-pn { font-size: 78px; font-weight: 800; letter-spacing: -0.045em; line-height: 1.1; margin-top: 14px !important; }
+.f05-ps { font-size: 27px; font-weight: 600; margin-top: 16px !important; max-width: 560px; line-height: 1.3; }
+.f05-pp { position: absolute; right: 44px; top: 40px; display: grid; justify-items: end; text-align: right; }
+.f05-pp b { font-size: 58px; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.f05-pp span { font-size: 21px; font-weight: 600; color: rgba(255,255,255,0.9); margin-top: 4px; }
+.f05-demo { position: relative; margin-top: 18px; padding: 7px 16px; border-radius: 999px; background: rgba(255,255,255,0.18); font-size: 20px; font-weight: 700; letter-spacing: 0.04em; }
+
+#f05-p1 { top: 470px; }
+#f05-pp-b { opacity: 0; }
+#f05-sheet { position: absolute; left: 48px; width: 984px; top: 850px; box-sizing: border-box; padding: 26px 44px 18px; border-radius: 36px; background: #fff; color: #111114; box-shadow: 0 18px 40px rgba(17,17,20,0.10); }
+.f05-row { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; padding: 26px 0; border-top: 2px solid #E3E1DC; }
+.f05-row:first-child { border-top: 0; }
+.f05-row span { display: grid; gap: 6px; }
+.f05-row span b { font-size: 38px; font-weight: 700; letter-spacing: -0.02em; }
+.f05-row small { font-size: 26px; color: #5E5E6A; font-weight: 500; }
+.f05-row > b { font-size: 46px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.f05-total > b { font-size: 96px; font-weight: 800; letter-spacing: -0.04em; }
+#f05-stamp { position: absolute; left: 64px; top: 1370px; padding: 14px 30px; border: 5px solid #6B5A2E; border-radius: 16px; color: #6B5A2E; font-size: 40px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+
+</style>
+<div id="root" data-composition-id="05-money" data-width="1080" data-height="1920">
+  <div id="f05-bg" class="clip" data-start="0" data-duration="4" data-track-index="0"></div>
+  <div id="f05-stage" class="clip" data-start="0" data-duration="4" data-track-index="1">
+    <div id="f05-cam">
+      <div class="f05-display" style="top:200px;font-size:124px;color:#111114">
+        <span class="f05-line" id="f05-h1">what's left</span>
+        <span class="f05-line" id="f05-h2">to pay.</span>
+      </div>
+      <div id="f05-sheet">
+        <div class="f05-row" id="f05-r1"><span><b>Price a year</b><small>tuition, housing, living, fees</small></span><b>32,663</b></div>
+        <div class="f05-row" id="f05-r2"><span><b>Groningen Talent Grant</b><small>competitive · if awarded</small></span><b style="color:#177A4C">− 30,815</b></div>
+        <div class="f05-row f05-total" id="f05-r3"><span><b>Left to pay a year</b><small>if the grant is awarded</small></span><b>1,848</b></div>
+      </div>
+      <div class="f05-pass" id="f05-p1" style="background:#3E5C76">
+        <p class="f05-pc">NETHERLANDS · FALL 2027</p>
+        <p class="f05-pn">Groningen</p>
+        <p class="f05-ps">University of Groningen · BSc Computing Science</p>
+        <div class="f05-pp" id="f05-pp-a"><b>32,663</b><span>USD a year, price</span></div><div class="f05-pp" id="f05-pp-b"><b>1,848</b><span>USD a year left, if awarded</span></div><span class="f05-demo">Example · demo data</span>
+      </div>
+      <div id="f05-stamp">if awarded</div>
+      <p class="f05-abs" id="f05-src" style="left:64px;top:1480px;margin:0;font-size:26px;font-weight:600;color:rgba(17,17,20,0.55)">rug.nl · demo fixture · read Oct 05</p>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const tl = gsap.timeline({ paused: true });
+  const D = 4;
+  tl.fromTo("#f05-cam", { scale: 1 }, { scale: 1.04, duration: D, ease: "none" }, 0);
+  tl.fromTo("#f05-h1", { y: 36, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "power3.out" }, 0.05);
+  tl.fromTo("#f05-h2", { y: 36, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "power3.out" }, 0.25);
+  tl.fromTo("#f05-p1", { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, 0.4);
+  tl.fromTo("#f05-sheet", { y: -260, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 0.95);
+  tl.fromTo("#f05-r1", { y: 26, opacity: 0, filter: "blur(4px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "power3.out" }, 1.05);
+  tl.fromTo("#f05-r2", { y: 26, opacity: 0, filter: "blur(4px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "power3.out" }, 1.55);
+  tl.fromTo("#f05-r3", { y: 26, opacity: 0, filter: "blur(4px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "power3.out" }, 2.5);
+  tl.fromTo("#f05-pp-a", { y: 0, opacity: 1 }, { y: -30, opacity: 0, duration: 0.25, ease: "power2.in" }, 2.55);
+  tl.fromTo("#f05-pp-b", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, 2.75);
+  tl.fromTo("#f05-stamp", { scale: 1.6, rotation: -14, opacity: 0 }, { scale: 1, rotation: -6, opacity: 1, duration: 0.35, ease: "expo.out" }, 3.0);
+  tl.fromTo("#f05-src", { y: 12, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.4, ease: "power3.out" }, 3.2);
+
+  window.__timelines["05-money"] = tl;
+})();
+</script>
+</template>

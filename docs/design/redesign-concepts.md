@@ -1785,3 +1785,20 @@ centre (a global max-width on paragraphs); I122 the globe used the app's land, f
 the concept's (8,441 dots against 1,891) — brighter than approved, and about 20 frames a second on a
 4× slowed CPU; it is thinned on the sphere to the concept's spacing (some 1,900 dots), and the 90th
 percentile frame went from 67 to 33 ms on the same throttle.
+
+## 36. The logo, and a short (2026-10-06)
+
+**Logo.** The owner supplied the wordmark (`brand/unimatch-logo-source.jpg`): lowercase "unimatch",
+its m drawn as two interlocking strokes. It is traced to one-colour vectors (`brand/unimatch-logo.svg`;
+potrace, checked against the artwork) and replaces the conic tile + typeset name everywhere the mark
+appeared: the sidebar, the phone header, the landing header (white on night), sign-in and
+registration, and both places on the story cards (drawn from the same paths on the canvas). It takes
+the surrounding text colour, so it follows the theme and the night screens. The favicon, still the
+old sun-and-arch from ASHYQ, is now the wordmark's u in paper on an ink tile — the m cannot stand
+alone (it is one contour with the a).
+
+**Short.** `video/unimatch-short/` — a 30 s vertical promo built with HyperFrames
+(`product-launch-video`, autonomous): a repurpose of a horizontal SaaS promo that keeps its idea and
+pacing and replaces everything else — Unimatch's globe, passes, money sheet, three answers, tickets,
+the logo opening out of the dot of its i — over an original synthesized bed. Its README has the beat
+map, the honesty notes and how to rebuild it.
