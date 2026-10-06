@@ -596,7 +596,8 @@ class _FlakyServer(McpServer):
         return super().__call__(request)
 
 
-async def test_the_rate_limit_is_named_not_malformed(make_provider):
+async def test_the_rate_limit_is_named_not_malformed(make_provider, monkeypatch):
+    monkeypatch.setattr(module, "RATE_LIMIT_RETRY", False)
     server = McpServer(result=RATE_LIMITED)
     with pytest.raises(SearchUnavailable) as caught:
         await make_provider(server).search(query="public programme query")
@@ -605,7 +606,9 @@ async def test_the_rate_limit_is_named_not_malformed(make_provider):
     assert server.methods.count("tools/call") == 1
 
 
-async def test_rate_limit_retry_is_off_by_default(make_provider):
+async def test_rate_limit_retry_can_be_switched_off(make_provider, monkeypatch):
+    assert module.RATE_LIMIT_RETRY is True
+    monkeypatch.setattr(module, "RATE_LIMIT_RETRY", False)
     server = _FlakyServer()
     with pytest.raises(SearchUnavailable):
         await make_provider(server).search(query="public programme query")

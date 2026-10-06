@@ -30,8 +30,9 @@ PROTOCOL_VERSION = "2025-03-26"
 DEFAULT_TIMEOUT_SECONDS = 15.0
 #: Plan rule SR-1: one retry after a short pause when the keyless Exa MCP
 #: reports its rate limit. The limit is brief; the next query in the same
-#: run usually succeeds. Off until a paired run measures it.
-RATE_LIMIT_RETRY = False
+#: run usually succeeds. On by default since 2026-10-06 (owner: "Да"; run
+#: claude-sr1-paired-1: rate-limit failures 8 -> 4, zero losses).
+RATE_LIMIT_RETRY = True
 RATE_LIMIT_BACKOFF_SECONDS = 2.0
 MAX_RESPONSE_BYTES = 1024 * 1024
 MAX_RESULTS_PER_QUERY = 25
