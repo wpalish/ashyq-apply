@@ -91,8 +91,8 @@ export function DocumentsScreen() {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Documents</p>
-        <h1 className="screen__title">What to prepare, and when</h1>
+        <p className="screen__eyebrow">Documents & deadlines</p>
+        <h1 className="screen__title">Prepare with <span className="find-yellow">confidence.</span></h1>
         <p className="screen__lede">
           Ordered by lead time, not by deadline. The items at the top depend on other people, so
           they are the ones that need starting first.
