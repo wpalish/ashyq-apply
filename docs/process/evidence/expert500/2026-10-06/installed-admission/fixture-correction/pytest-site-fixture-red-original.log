@@ -1,0 +1,66 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+__________ test_real_university_http_error_is_not_provider_stop[402] ___________
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-552/test_real_university_http_erro0')
+status = 402
+
+    @pytest.mark.parametrize("status", [402, 429])
+    def test_real_university_http_error_is_not_provider_stop(tmp_path: Path, status: int) -> None:
+        gate = _gate(tmp_path / "gate")
+        seen: list[str] = []
+    
+        async def get(url: str) -> FetchResult:
+            seen.append(url)
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.ERROR,
+                status_code=status,
+                error="Site unavailable",
+                fetched_at=START,
+            )
+    
+        result = _run(tmp_path / "logs", gate=gate, plan=_plan(actions=[URL, URL]), get=get)
+        assert len(seen) == result["final"]["fetcher_calls"] == 2
+        assert result["source_admission_stop"] is None
+        assert all(a["executed"] for a in result["actions"])
+        for action in result["actions"]:
+            raw = _raw(tmp_path / "logs", action)
+>           assert raw["response"]["status_code"] == status
+E           assert None == 402
+
+/tmp/test_expert_source_admission_installed_candidate_v2_ea0b0fdd91.py:238: AssertionError
+__________ test_real_university_http_error_is_not_provider_stop[429] ___________
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-552/test_real_university_http_erro1')
+status = 429
+
+    @pytest.mark.parametrize("status", [402, 429])
+    def test_real_university_http_error_is_not_provider_stop(tmp_path: Path, status: int) -> None:
+        gate = _gate(tmp_path / "gate")
+        seen: list[str] = []
+    
+        async def get(url: str) -> FetchResult:
+            seen.append(url)
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.ERROR,
+                status_code=status,
+                error="Site unavailable",
+                fetched_at=START,
+            )
+    
+        result = _run(tmp_path / "logs", gate=gate, plan=_plan(actions=[URL, URL]), get=get)
+        assert len(seen) == result["final"]["fetcher_calls"] == 2
+        assert result["source_admission_stop"] is None
+        assert all(a["executed"] for a in result["actions"])
+        for action in result["actions"]:
+            raw = _raw(tmp_path / "logs", action)
+>           assert raw["response"]["status_code"] == status
+E           assert None == 429
+
+/tmp/test_expert_source_admission_installed_candidate_v2_ea0b0fdd91.py:238: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../tmp/test_expert_source_admission_installed_candidate_v2_ea0b0fdd91.py::test_real_university_http_error_is_not_provider_stop[402]
+FAILED ../../../../../../../../../tmp/test_expert_source_admission_installed_candidate_v2_ea0b0fdd91.py::test_real_university_http_error_is_not_provider_stop[429]
+2 failed, 66 deselected in 0.39s

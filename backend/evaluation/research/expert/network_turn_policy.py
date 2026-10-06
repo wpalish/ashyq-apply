@@ -296,6 +296,7 @@ def select(
     model: str | None = ASTRA_MODEL,
     clock: Callable[[], datetime] = utc_now,
     monotonic: Callable[[], float] = time.monotonic,
+    environment: Mapping[str, str] | None = None,
 ) -> NetworkSelectorTurn:
     """Spawn once within the remaining guard, preserving every failed stream.
 
@@ -306,6 +307,22 @@ def select(
     """
     if not isinstance(isolation, NetworkBudgetIsolation):
         raise ValueError("Network selector requires the default-effort isolated wrapper")
+    explicit_environment = None
+    if environment is not None:
+        if not isinstance(environment, Mapping) or any(
+            not isinstance(key, str)
+            or not key
+            or "=" in key
+            or "\0" in key
+            or not isinstance(value, str)
+            or "\0" in value
+            for key, value in environment.items()
+        ):
+            raise ValueError("Selector environment must be an explicit string mapping")
+        explicit_environment = dict(environment)
+    environment_arguments: dict[str, Any] = (
+        {"env": explicit_environment} if explicit_environment is not None else {}
+    )
     began = monotonic()
     window = turn_window(phase=phase, wall_guard=wall_guard, clock=clock)
     ended = window.observed_at
@@ -330,6 +347,7 @@ def select(
                 capture_output=True,
                 timeout=window.timeout_seconds,
                 check=False,
+                **environment_arguments,
             )
             stdout, stderr, code = completed.stdout, completed.stderr, completed.returncode
             if code or not output.is_file():

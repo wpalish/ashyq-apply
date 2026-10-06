@@ -1,0 +1,1024 @@
+"""Installed source-admission regressions; synthetic effects only, no external calls."""
+
+from __future__ import annotations
+
+import ast
+import asyncio
+import fcntl
+import hashlib
+import importlib.util
+import json
+import multiprocessing
+import os
+import subprocess
+import sys
+import threading
+import time
+from collections.abc import Callable
+from contextlib import contextmanager
+from datetime import UTC, datetime, timedelta
+from importlib.machinery import SourceFileLoader
+from pathlib import Path
+from types import MappingProxyType, SimpleNamespace
+from typing import Any
+
+import pytest
+
+from app.adapters.fetching import FetchResult
+from app.adapters.search.base import SearchResponse, SearchUnavailable
+from app.domain.enums import FetchOutcome
+from evaluation.research import live
+from evaluation.research.expert import controller
+from evaluation.research.expert import network_turn_policy as turn_policy
+from evaluation.research.expert import source_admission as admission
+from evaluation.research.expert.network_budget import (
+    BUDGET_MODEL,
+    NETWORK_COMPARISON_MODE,
+    WallGuard,
+)
+from evaluation.research.expert.source_admission import SourceAdmission
+
+START = datetime(2026, 10, 6, tzinfo=UTC)
+URL = "https://u.edu/public"
+LIVE_SOURCE = Path(live.__file__).resolve()
+LEGACY_CONTROLLER = (
+    Path(controller.__file__).resolve().parents[4]
+    / "docs/process/evidence/expert500-v14-source-admission-controller-original.py.txt"
+)
+LEGACY_CONTROLLER_SHA256 = "88482a7aaed79080c8c58df9df762cbe8c0bf734fa3c01b43764af7ef20d4fb4"
+
+
+def _legacy_controller() -> Any:
+    """Only the hash-bound, non-executable evidence fixture is loaded as legacy."""
+    data = LEGACY_CONTROLLER.read_bytes()
+    if hashlib.sha256(data).hexdigest() != LEGACY_CONTROLLER_SHA256:
+        raise ValueError("Preserved compatibility controller fixture hash changed")
+    name = "evaluation.research.expert._compatibility_controller_before_source_admission"
+    loader = SourceFileLoader(name, str(LEGACY_CONTROLLER))
+    spec = importlib.util.spec_from_loader(name, loader)
+    assert spec is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    loader.exec_module(module)
+    return module
+
+
+original = _legacy_controller()
+
+
+def _gate(root: Path, **kwargs: Any) -> Any:
+    return admission.SourceAdmission(
+        root, run_id="synthetic-run", provider="exa", now=lambda: START, **kwargs
+    )
+
+
+def _plan(case_id: str = "case", **extra: Any) -> dict[str, Any]:
+    return {
+        "case_id": case_id,
+        "strict_budget": True,
+        "official_domains": ["u.edu"],
+        "max_calls": 60,
+        "max_ms": 900_000,
+        "max_search_queries": 6,
+        "budget_origin": NETWORK_COMPARISON_MODE,
+        "budget_model": BUDGET_MODEL,
+        "wall_started_at": START.isoformat(),
+        "wall_deadline_at": (START + timedelta(seconds=900)).isoformat(),
+        **extra,
+    }
+
+
+async def _get(url: str) -> FetchResult:
+    return FetchResult(
+        url=url,
+        final_url=url,
+        outcome=FetchOutcome.OK,
+        status_code=200,
+        content=b"<p>Public synthetic information.</p>",
+        fetched_at=START,
+    )
+
+
+async def _search(**kwargs: Any) -> SearchResponse:
+    return SearchResponse(query=kwargs["query"], provider="exa", retrieved_at=START)
+
+
+def _search_action() -> dict[str, Any]:
+    return {"tool": "search_provider", "query": "site:u.edu public programme", "domains": ["u.edu"]}
+
+
+def _run(logs: Path, *, plan: dict[str, Any], gate: Any = None, **kwargs: Any) -> dict[str, Any]:
+    return asyncio.run(
+        controller.execute(
+            plan,
+            logs,
+            source_admission=gate,
+            get=kwargs.pop("get", _get),
+            search=kwargs.pop("search", _search),
+            provider_name="exa",
+            now=kwargs.pop("now", lambda: START),
+            monotonic=kwargs.pop("monotonic", lambda: 0.0),
+            **kwargs,
+        )
+    )
+
+
+def _raw(logs: Path, action: dict[str, Any]) -> dict[str, Any]:
+    data = (logs / action["raw_log_path"]).read_bytes()
+    assert hashlib.sha256(data).hexdigest() == action["raw_log_sha256"]
+    return json.loads(data)
+
+
+def _budget(
+    gate: Any, *, case_id: str = "baseline", clock: Callable[[], float] = lambda: 0.0
+) -> Any:
+    return live._ExpertBudget(
+        60,
+        120,
+        "exa",
+        0.0,
+        clock=clock,
+        finalization_reserve_ms=1000,
+        source_admission=gate,
+        case_id=case_id,
+    )
+
+
+@pytest.mark.parametrize("tool", ["fetcher", "search_provider"])
+def test_receipt_is_independent_and_stop_survives_a_fresh_worker(tmp_path: Path, tool: str) -> None:
+    gate = _gate(tmp_path / "gate")
+    receipt = asyncio.run(
+        gate.admit(
+            case_id="origin", tool="search_provider", action_id="q1", remaining=lambda: 900.0
+        )
+    )
+    record = admission.validate_receipt(
+        receipt.as_dict(), root=gate.root, run_id="synthetic-run", provider="exa", kind="admission"
+    )
+    assert record["admission_id"] and record["admitted_at"] == START.isoformat()
+    stopped = gate.publish_provider_failure(
+        case_id="origin", action_id="q1", http_status=402, origin_admission=receipt
+    )
+    before = (gate.root / "stop.json").read_bytes()
+    peer = _gate(tmp_path / "gate")
+    with pytest.raises(admission.SourceAdmissionRefused) as failure:
+        asyncio.run(peer.admit(case_id="peer", tool=tool, action_id="a1", remaining=lambda: 900.0))
+    assert failure.value.stop_record == stopped.as_dict()
+    peer.publish_integrity_failure(case_id="peer", action_id="a1", reason="worker_receipt_invalid")
+    assert before == (gate.root / "stop.json").read_bytes()
+
+
+@pytest.mark.parametrize("status", [401, 402, 403, 429, 500, None])
+@pytest.mark.parametrize("next_tool", ["fetcher", "search_provider"])
+def test_controller_fault_publishes_before_any_next_source(
+    tmp_path: Path, status: int | None, next_tool: str
+) -> None:
+    gate = _gate(tmp_path / "gate")
+    calls: list[str] = []
+
+    async def search(**kwargs: Any) -> SearchResponse:
+        calls.append("search")
+        raise SearchUnavailable("vendor-secret-key body", http_status=status)
+
+    async def get(url: str) -> FetchResult:
+        calls.append("get")
+        return await _get(url)
+
+    following = URL if next_tool == "fetcher" else _search_action()
+    summary = _run(
+        tmp_path / "logs",
+        gate=gate,
+        plan=_plan(actions=[_search_action(), following]),
+        get=get,
+        search=search,
+    )
+    assert calls == ["search"]
+    assert summary["final"]["fetcher_calls"] == 0 and summary["final"]["search_queries"] == 1
+    first, second = (_raw(tmp_path / "logs", a) for a in summary["actions"])
+    assert first["executed"] is True and first["response"]["http_status"] == status
+    assert second["executed"] is False and second["charged_elapsed_ms"] == 0
+    assert second["outcome_status"] == "blocked" and second["policy_mode"] == "outside_policy"
+    stop = summary["source_admission_stop"]
+    assert stop["case_id"] == "case" and stop["http_status"] == status
+    assert stop["stop_kind"] == "provider_failure"
+    assert "vendor-secret" not in json.dumps(summary) + (gate.root / "stop.json").read_text()
+    peer = _run(
+        tmp_path / "peer",
+        gate=_gate(tmp_path / "gate"),
+        plan=_plan("peer", actions=[URL, _search_action()]),
+        get=get,
+        search=search,
+    )
+    assert calls == ["search"] and all(not a["executed"] for a in peer["actions"])
+    assert peer["source_admission_stop"] == stop
+    assert peer["final"]["stop_reason"] is None  # Never invent a per-case HTTP failure.
+
+
+@pytest.mark.parametrize("status", [402, 429])
+def test_real_university_http_error_is_not_provider_stop(tmp_path: Path, status: int) -> None:
+    gate = _gate(tmp_path / "gate")
+    seen: list[str] = []
+
+    async def get(url: str) -> FetchResult:
+        seen.append(url)
+        return FetchResult(
+            url=url,
+            outcome=FetchOutcome.HTTP_ERROR,
+            status_code=status,
+            error="Site unavailable",
+            fetched_at=START,
+        )
+
+    result = _run(tmp_path / "logs", gate=gate, plan=_plan(actions=[URL, URL]), get=get)
+    assert len(seen) == result["final"]["fetcher_calls"] == 2
+    assert result["source_admission_stop"] is None
+    assert all(a["executed"] for a in result["actions"])
+    for action in result["actions"]:
+        raw = _raw(tmp_path / "logs", action)
+        assert raw["response"]["status_code"] == status
+        assert raw["response"]["outcome"] == FetchOutcome.HTTP_ERROR.value
+        assert raw["response"]["ok"] is False
+        assert raw["response"]["outcome_status"] == "failure"
+
+
+def test_stop_during_preparation_refuses_before_execute_and_counter_flip(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    gate = _gate(tmp_path / "gate")
+    original_reserve = controller._reserve_log
+
+    @contextmanager
+    def reserve(*args: Any, **kwargs: Any) -> Any:
+        with original_reserve(*args, **kwargs) as output:
+            gate.publish_integrity_failure(
+                case_id="origin", action_id="origin.setup", reason="source_hash_mismatch"
+            )
+            yield output
+
+    monkeypatch.setattr(controller, "_reserve_log", reserve)
+    called: list[str] = []
+
+    async def get(url: str) -> FetchResult:
+        called.append(url)
+        return await _get(url)
+
+    result = _run(tmp_path / "logs", gate=gate, plan=_plan(actions=[URL]), get=get)
+    assert called == [] and result["final"]["fetcher_calls"] == 0
+    record = _raw(tmp_path / "logs", result["actions"][0])
+    assert record["executed"] is False and record["dispatch_at"] is None
+    assert record["elapsed_ms"] == record["charged_elapsed_ms"] == 0
+
+
+def test_wall_crossing_during_receipt_is_explicit_admission_without_io(tmp_path: Path) -> None:
+    wall = [START]
+
+    class LateGate(SourceAdmission):
+        async def admit(self, **kwargs: Any) -> Any:
+            receipt = await super().admit(**kwargs)
+            wall[0] = START + timedelta(seconds=900)
+            return receipt
+
+    gate = LateGate(tmp_path / "gate", run_id="synthetic-run", provider="exa", now=lambda: wall[0])
+    called: list[str] = []
+
+    async def get(url: str) -> FetchResult:
+        called.append(url)
+        return await _get(url)
+
+    result = _run(
+        tmp_path / "logs", gate=gate, plan=_plan(actions=[URL]), get=get, now=lambda: wall[0]
+    )
+    record = _raw(tmp_path / "logs", result["actions"][0])
+    assert record["source_admission"]["admitted_at"] == START.isoformat()
+    assert not record["executed"] and record["dispatch_at"] is None and called == []
+    assert result["final"]["stop_reason"] == "wall_guard_exhausted"
+    assert result["final"]["fetcher_calls"] == result["final"]["elapsed_ms"] == 0
+    assert gate.stop_snapshot() is None
+
+
+def test_pending_gate_lock_expiry_and_cancellation_never_admit_in_background(
+    tmp_path: Path,
+) -> None:
+    async def scenario() -> None:
+        gate = _gate(tmp_path / "gate")
+        fd = os.open(gate.root / ".lock", os.O_RDWR)
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        remaining = [1.0]
+        task = asyncio.create_task(
+            gate.admit(
+                case_id="case", tool="fetcher", action_id="expired", remaining=lambda: remaining[0]
+            )
+        )
+        await asyncio.sleep(0)
+        remaining[0] = 0.0
+        with pytest.raises(admission.SourceAdmissionDeadline):
+            await task
+        cancelled = asyncio.create_task(
+            gate.admit(
+                case_id="case", tool="fetcher", action_id="cancelled", remaining=lambda: 900.0
+            )
+        )
+        await asyncio.sleep(0)
+        cancelled.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await cancelled
+        os.close(fd)
+        await asyncio.sleep(0)
+        assert list((gate.root / "admissions").iterdir()) == []
+        assert gate.stop_snapshot() is None
+
+    asyncio.run(scenario())
+
+
+def test_already_admitted_tail_is_charged_but_next_action_is_refused(tmp_path: Path) -> None:
+    async def scenario() -> None:
+        gate = _gate(tmp_path / "gate")
+        entered, release = asyncio.Event(), asyncio.Event()
+
+        async def slow_get(url: str) -> FetchResult:
+            entered.set()
+            await release.wait()
+            return await _get(url)
+
+        peer = asyncio.create_task(
+            controller.execute(
+                _plan("peer", actions=[URL, URL]),
+                tmp_path / "peer",
+                get=slow_get,
+                search=_search,
+                provider_name="exa",
+                now=lambda: START,
+                monotonic=lambda: 0.0,
+                source_admission=gate,
+            )
+        )
+        await entered.wait()
+
+        async def bad_search(**kwargs: Any) -> SearchResponse:
+            raise SearchUnavailable("secret", http_status=429)
+
+        origin = await controller.execute(
+            _plan("origin", actions=[_search_action()]),
+            tmp_path / "origin",
+            get=_get,
+            search=bad_search,
+            provider_name="exa",
+            now=lambda: START,
+            monotonic=lambda: 0.0,
+            source_admission=gate,
+        )
+        release.set()
+        tail = await peer
+        assert tail["final"]["fetcher_calls"] == 1
+        assert tail["actions"][0]["executed"] is True and tail["actions"][1]["executed"] is False
+        assert tail["source_admission_stop"] == origin["source_admission_stop"]
+
+    asyncio.run(scenario())
+
+
+def test_durable_origin_precedes_peer_visibility_during_delayed_fsync(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    async def scenario() -> None:
+        gate = _gate(tmp_path / "gate")
+        permit = await gate.admit(
+            case_id="origin", tool="search_provider", action_id="q1", remaining=lambda: 900.0
+        )
+        paused, release = threading.Event(), threading.Event()
+        errors: list[BaseException] = []
+        original_fsync = admission.os.fsync
+
+        def fsync(fd: int) -> None:
+            if threading.current_thread().name == "origin" and not paused.is_set():
+                paused.set()
+                assert release.wait(2)
+            original_fsync(fd)
+
+        monkeypatch.setattr(admission.os, "fsync", fsync)
+
+        def publish() -> None:
+            try:
+                gate.publish_provider_failure(
+                    case_id="origin", action_id="q1", http_status=402, origin_admission=permit
+                )
+            except BaseException as exc:
+                errors.append(exc)
+
+        thread = threading.Thread(target=publish, name="origin")
+        thread.start()
+        while not paused.is_set():
+            await asyncio.sleep(0)
+        peer = asyncio.create_task(
+            gate.admit(case_id="peer", tool="fetcher", action_id="next", remaining=lambda: 900.0)
+        )
+        await asyncio.sleep(0)
+        assert not peer.done()
+        release.set()
+        with pytest.raises(admission.SourceAdmissionRefused) as refusal:
+            await peer
+        thread.join(2)
+        assert not thread.is_alive() and errors == []
+        assert refusal.value.stop_record["case_id"] == "origin"
+        assert refusal.value.stop_record["http_status"] == 402
+
+    asyncio.run(scenario())
+
+
+def _process_publish(path: str) -> None:
+    gate = _gate(Path(path))
+    gate.publish_provider_failure(case_id="process", action_id="q1", http_status=402)
+
+
+def test_shared_stop_across_independent_processes(tmp_path: Path) -> None:
+    gate = _gate(tmp_path / "gate")
+    process = multiprocessing.get_context("spawn").Process(
+        target=_process_publish, args=(str(gate.root),)
+    )
+    process.start()
+    process.join(10)
+    assert process.exitcode == 0
+    with pytest.raises(admission.SourceAdmissionRefused) as refusal:
+        asyncio.run(
+            gate.admit(case_id="parent", tool="fetcher", action_id="a1", remaining=lambda: 900.0)
+        )
+    assert (
+        refusal.value.stop_record["case_id"] == "process"
+        and refusal.value.stop_record["http_status"] == 402
+    )
+
+
+@pytest.mark.parametrize(
+    "tamper", ["bytes", "proof", "symlink", "path", "provider", "duplicate_action"]
+)
+def test_confinement_tampering_and_duplicate_action_fail_closed(
+    tmp_path: Path, tamper: str
+) -> None:
+    gate = _gate(tmp_path / "gate")
+    receipt = asyncio.run(
+        gate.admit(case_id="case", tool="fetcher", action_id="a1", remaining=lambda: 900.0)
+    )
+    proof = receipt.as_dict()
+    path = gate.root / proof["receipt_path"]
+    if tamper == "duplicate_action":
+        with pytest.raises(admission.SourceAdmissionIntegrityError):
+            asyncio.run(
+                gate.admit(case_id="case", tool="fetcher", action_id="a1", remaining=lambda: 900.0)
+            )
+        assert gate.stop_snapshot()["terminal_reason"] == "duplicate_source_action"
+        return
+    if tamper == "bytes":
+        path.write_text("{}")
+    elif tamper == "proof":
+        proof["action_id"] = "invented"
+    elif tamper == "symlink":
+        saved = tmp_path / "other.json"
+        path.rename(saved)
+        path.symlink_to(saved)
+    elif tamper == "path":
+        proof["receipt_path"] = "../other.json"
+    else:
+        proof["provider"] = "exa_mcp"
+    with pytest.raises(admission.SourceAdmissionIntegrityError):
+        admission.validate_receipt(
+            proof, root=gate.root, run_id="synthetic-run", provider="exa", kind="admission"
+        )
+
+
+def test_resume_policy_and_raw_hash_integrity_publish_before_new_io(tmp_path: Path) -> None:
+    gate = _gate(tmp_path / "gate")
+    logs = tmp_path / "logs"
+    result = _run(logs, gate=gate, plan=_plan(actions=[URL]))
+    raw = logs / result["actions"][0]["raw_log_path"]
+    raw.write_bytes(raw.read_bytes() + b" ")
+    with pytest.raises(ValueError, match="hash mismatch"):
+        _run(logs, gate=gate, plan=_plan(actions=[URL], resume_summary=result))
+    assert gate.stop_snapshot()["terminal_reason"] == "source_resume_invalid"
+    assert len(result["actions"]) == 1
+
+
+def _model_marker(root: Path, *, kind: str = "model_usage_limit") -> tuple[Path, str]:
+    path = root.parent / "model-batch-stop.json"
+    data = {
+        "kind": kind,
+        "selector_error_kind": "selector_process_failed",
+        "event_line": 1,
+        "event_type": "turn.failed",
+        "stream_sha256": "a" * 64,
+        "case_id": "origin",
+        "turn": 1,
+        "model_finished_at": START.isoformat(),
+    }
+    path.write_text(json.dumps(data))
+    return path, hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+@pytest.mark.parametrize(
+    "kind", ["model_usage_limit", "model_authentication_refusal", "model_transport_failure"]
+)
+def test_model_origin_is_bound_without_source_reattribution(tmp_path: Path, kind: str) -> None:
+    gate = _gate(tmp_path / "gate")
+    path, sha = _model_marker(gate.root, kind=kind)
+    with pytest.raises(admission.SourceAdmissionRefused) as failure:
+        asyncio.run(
+            gate.admit(case_id="peer", tool="fetcher", action_id="a1", remaining=lambda: 900.0)
+        )
+    stop = failure.value.stop_record
+    assert stop["terminal_reason"] == kind and stop["stop_kind"] == "model_failure"
+    assert stop["http_status"] is None and stop["case_id"] == "origin"
+    assert stop["origin_external"]["receipt_path"] == str(path)
+    assert stop["origin_external"]["receipt_sha256"] == sha
+    admission.validate_receipt(
+        stop, root=gate.root, run_id="synthetic-run", provider="exa", kind="stop"
+    )
+
+
+def test_unknown_model_marker_is_integrity_not_fabricated_refusal(tmp_path: Path) -> None:
+    gate = _gate(tmp_path / "gate")
+    _model_marker(gate.root, kind="unknown secret text")
+    with pytest.raises(admission.SourceAdmissionIntegrityError):
+        asyncio.run(
+            gate.admit(case_id="peer", tool="fetcher", action_id="a1", remaining=lambda: 900.0)
+        )
+    assert (
+        not (gate.root / "stop.json").exists() and list((gate.root / "admissions").iterdir()) == []
+    )
+
+
+@pytest.mark.parametrize("status", [402, 429])
+@pytest.mark.parametrize("tool", ["fetcher", "search_provider"])
+def test_baseline_and_expert_share_same_gate_and_original_cause(
+    tmp_path: Path, status: int, tool: str
+) -> None:
+    gate = _gate(tmp_path / "gate")
+    budget = _budget(gate, case_id="baseline-origin")
+    receipt = asyncio.run(budget.admit_source("search_provider", provider_name="exa"))
+    failure = budget.failed_search(
+        SearchUnavailable("vendor-secret", http_status=status), origin_admission=receipt
+    )
+    assert failure.http_status == status and budget.search_queries == 1
+    peer = _budget(_gate(tmp_path / "gate"), case_id="baseline-peer")
+    with pytest.raises(admission.SourceAdmissionRefused):
+        asyncio.run(peer.admit_source(tool, provider_name="exa"))
+    assert peer.fetcher_calls == peer.search_queries == 0
+    expert = _run(
+        tmp_path / "expert", gate=gate, plan=_plan("expert-peer", actions=[URL, _search_action()])
+    )
+    assert expert["final"]["fetcher_calls"] == expert["final"]["search_queries"] == 0
+    assert expert["source_admission_stop"]["case_id"] == "baseline-origin"
+
+
+def _wrapper(name: str, namespace: dict[str, Any]) -> Any:
+    tree = ast.parse(LIVE_SOURCE.read_text())
+    capture = next(
+        n for n in tree.body if isinstance(n, ast.AsyncFunctionDef) and n.name == "capture_one"
+    )
+    node = next(
+        n
+        for n in capture.body
+        if isinstance(n, ast.AsyncFunctionDef | ast.ClassDef) and n.name == name
+    )
+    future = ast.ImportFrom(module="__future__", names=[ast.alias(name="annotations")], level=0)
+    code = compile(
+        ast.fix_missing_locations(ast.Module(body=[future, node], type_ignores=[])),
+        str(LIVE_SOURCE),
+        "exec",
+    )
+    exec(code, namespace)
+    return namespace[name]
+
+
+@pytest.mark.parametrize("tool", ["fetcher", "search_provider"])
+@pytest.mark.parametrize("boundary", ["stop", "expiry"])
+def test_actual_async_baseline_wrappers_recheck_after_checkpoint(
+    tmp_path: Path, tool: str, boundary: str
+) -> None:
+    gate = _gate(tmp_path / "gate")
+    clock = [0.0]
+    budget = _budget(gate, clock=lambda: clock[0])
+    calls: list[str] = []
+
+    def checkpoint() -> None:
+        if boundary == "stop":
+            gate.publish_integrity_failure(
+                case_id="origin", action_id="setup", reason="source_hash_mismatch"
+            )
+        else:
+            clock[0] = 119.0
+
+    namespace: dict[str, Any] = {
+        "budget": budget,
+        "source_admission": gate,
+        "checkpoint": checkpoint,
+        "time": SimpleNamespace(monotonic=lambda: clock[0]),
+        "started": 0.0,
+        "observation": SimpleNamespace(telemetry=SimpleNamespace(search_calls=0, http_fetches=0)),
+    }
+    if tool == "search_provider":
+
+        async def search(provider: Any, **kwargs: Any) -> SearchResponse:
+            calls.append("search")
+            return await _search(**kwargs)
+
+        wrapper = _wrapper("counted_search", namespace)
+        call = wrapper(search, SimpleNamespace(name="exa"), query="public")
+    else:
+
+        class FakeFetcher:
+            async def get(self, url: str, **kwargs: Any) -> FetchResult:
+                calls.append("get")
+                return await _get(url)
+
+        class Runner:
+            def _make_fetcher(self) -> FakeFetcher:
+                return FakeFetcher()
+
+        namespace.update(
+            canary=SimpleNamespace(CanaryRunner=Runner),
+            fetchers=[],
+            documents_phase=False,
+            max_pages=60,
+        )
+        runner = _wrapper("ObservedRunner", namespace)()
+        call = runner._make_fetcher().get(URL)
+    with pytest.raises(admission.SourceAdmissionRefused if boundary == "stop" else TimeoutError):
+        asyncio.run(call)
+    assert calls == [] and budget.fetcher_calls == budget.search_queries == 0
+    assert budget.snapshot()["source_admission_actions"] == []
+
+
+@pytest.mark.parametrize("tool", ["fetcher", "search_provider"])
+def test_actual_async_baseline_wrappers_record_the_real_counter_flip(
+    tmp_path: Path, tool: str
+) -> None:
+    gate = _gate(tmp_path / "gate")
+    budget = _budget(gate)
+    seen: list[dict[str, Any]] = []
+    namespace: dict[str, Any] = {
+        "budget": budget,
+        "source_admission": gate,
+        "case_id": "baseline",
+        "checkpoint": lambda: None,
+        "time": SimpleNamespace(monotonic=lambda: 0.0),
+        "started": 0.0,
+        "observation": SimpleNamespace(telemetry=SimpleNamespace(search_calls=0, http_fetches=0)),
+        "SourceAdmissionIntegrityError": admission.SourceAdmissionIntegrityError,
+    }
+    if tool == "search_provider":
+
+        async def search(provider: Any, **kwargs: Any) -> SearchResponse:
+            seen.append(budget.snapshot()["source_admission_actions"][0].copy())
+            return await _search(**kwargs)
+
+        call = _wrapper("counted_search", namespace)(
+            search, SimpleNamespace(name="exa"), query="public"
+        )
+    else:
+
+        class FakeFetcher:
+            async def get(self, url: str, **kwargs: Any) -> FetchResult:
+                seen.append(budget.snapshot()["source_admission_actions"][0].copy())
+                return await _get(url)
+
+        class Runner:
+            def _make_fetcher(self) -> FakeFetcher:
+                return FakeFetcher()
+
+        namespace.update(
+            canary=SimpleNamespace(CanaryRunner=Runner),
+            fetchers=[],
+            documents_phase=False,
+            max_pages=60,
+        )
+        call = _wrapper("ObservedRunner", namespace)()._make_fetcher().get(URL)
+    asyncio.run(call)
+    assert len(seen) == 1
+    action = seen[0]
+    expected_after = {
+        "fetcher_calls": int(tool == "fetcher"),
+        "search_queries": int(tool == "search_provider"),
+    }
+    assert action["executed"] is True and action["tool"] == tool
+    assert action["counter_before"] == {"fetcher_calls": 0, "search_queries": 0}
+    assert action["counter_after"] == expected_after
+    assert budget.fetcher_calls == expected_after["fetcher_calls"]
+    assert budget.search_queries == expected_after["search_queries"]
+    assert action["source_admission"] == budget.admission_receipts[0]
+    assert action["action_id"] == f"baseline.{tool}.001"
+    original = admission.validate_receipt(
+        action["source_admission"],
+        root=gate.root,
+        run_id="synthetic-run",
+        provider="exa",
+        kind="admission",
+    )
+    assert original["action_id"] == action["action_id"] and original["tool"] == tool
+
+
+@pytest.mark.parametrize("network", [True, False])
+def test_default_none_keeps_original_controller_raw_bytes_and_budget_methods(
+    tmp_path: Path, network: bool
+) -> None:
+    plan = _plan(actions=[URL, _search_action()])
+    if not network:
+        plan.update(max_ms=120_000, budget_origin="independent_full_budget")
+        for key in ("budget_model", "wall_started_at", "wall_deadline_at"):
+            plan.pop(key)
+    args: dict[str, Any] = {
+        "get": _get,
+        "search": _search,
+        "provider_name": "exa",
+        "now": lambda: START,
+        "monotonic": lambda: 0.0,
+    }
+    old = asyncio.run(original.execute(plan, tmp_path / "old", **args))
+    new = asyncio.run(controller.execute(plan, tmp_path / "new", **args))
+    assert old == new
+    for action in old["actions"]:
+        assert (tmp_path / "old" / action["raw_log_path"]).read_bytes() == (
+            tmp_path / "new" / action["raw_log_path"]
+        ).read_bytes()
+    budget = live._ExpertBudget(60, 120, "exa", 0.0, clock=lambda: 0.0)
+    budget.before_fetch()
+    budget.before_search("exa")
+    assert budget.fetcher_calls == budget.search_queries == 1
+    assert "source_admission" not in budget.snapshot()
+
+
+@pytest.mark.parametrize("tool", ["fetcher", "search_provider"])
+def test_opt_in_preserves_sixty_six_caps_without_admitting_overflow(
+    tmp_path: Path, tool: str
+) -> None:
+    gate = _gate(tmp_path / "gate")
+    maximum = 60 if tool == "fetcher" else 6
+    action = URL if tool == "fetcher" else _search_action()
+    summary = _run(tmp_path / "logs", gate=gate, plan=_plan(actions=[action] * (maximum + 1)))
+    count = "fetcher_calls" if tool == "fetcher" else "search_queries"
+    assert summary["final"][count] == maximum and not summary["actions"][-1]["executed"]
+    assert len(list((gate.root / "admissions").iterdir())) == maximum
+    assert summary["source_admission_stop"] is None  # A local cap is not a provider failure.
+
+
+def test_resume_uses_exact_previous_source_ledger_and_cannot_switch_gate(tmp_path: Path) -> None:
+    gate = _gate(tmp_path / "gate")
+    logs = tmp_path / "logs"
+    first = _run(logs, gate=gate, plan=_plan(actions=[URL]))
+    second = _run(logs, gate=gate, plan=_plan(actions=[URL], resume_summary=first))
+    assert second["initial"] == {"start_calls": 1, "start_ms": 0, "start_search_queries": 0}
+    assert second["final"]["fetcher_calls"] == 2
+    different = _gate(tmp_path / "different-gate")
+    with pytest.raises(ValueError, match="Resume source admission"):
+        _run(logs, gate=different, plan=_plan(actions=[URL], resume_summary=second))
+    assert different.stop_snapshot()["terminal_reason"] == "source_resume_invalid"
+    assert len(list(logs.iterdir())) == 2
+
+
+@pytest.mark.parametrize("kind", ["foreign_provider", "conflicting_status"])
+def test_actual_search_integrity_failure_keeps_attempt_and_revokes_peers(
+    tmp_path: Path, kind: str
+) -> None:
+    gate = _gate(tmp_path / "gate")
+
+    async def search(**kwargs: Any) -> SearchResponse:
+        if kind == "foreign_provider":
+            return SearchResponse(query=kwargs["query"], provider="exa_mcp", retrieved_at=START)
+        error = SearchUnavailable("vendor-secret", http_status=402)
+        error.response = SimpleNamespace(status_code=429)  # type: ignore[attr-defined]
+        raise error
+
+    result = _run(
+        tmp_path / "logs", gate=gate, plan=_plan(actions=[_search_action(), URL]), search=search
+    )
+    assert result["final"]["search_queries"] == 1 and result["final"]["fetcher_calls"] == 0
+    assert result["actions"][0]["executed"] and not result["actions"][1]["executed"]
+    stop = result["source_admission_stop"]
+    assert stop["stop_kind"] == "integrity_failure" and stop["http_status"] is None
+    expected = (
+        "provider_identity_mismatch"
+        if kind == "foreign_provider"
+        else "conflicting_provider_http_status"
+    )
+    assert stop["terminal_reason"] == expected
+
+
+def test_baseline_provider_identity_mismatch_stops_before_any_query_count(tmp_path: Path) -> None:
+    gate = _gate(tmp_path / "gate")
+    budget = _budget(gate)
+    with pytest.raises(admission.SourceAdmissionIntegrityError):
+        asyncio.run(budget.admit_source("search_provider", provider_name="exa_mcp"))
+    assert budget.search_queries == 0
+    assert gate.stop_snapshot()["terminal_reason"] == "provider_identity_mismatch"
+
+
+@pytest.mark.parametrize("tool", ["fetcher", "search_provider"])
+def test_baseline_receipt_after_work_expiry_is_not_an_attempt(tmp_path: Path, tool: str) -> None:
+    clock = [0.0]
+
+    class LateGate(SourceAdmission):
+        async def admit(self, **kwargs: Any) -> Any:
+            permit = await super().admit(**kwargs)
+            clock[0] = 119.0
+            return permit
+
+    gate = LateGate(tmp_path / "gate", run_id="synthetic-run", provider="exa", now=lambda: START)
+    budget = _budget(gate, clock=lambda: clock[0])
+    with pytest.raises(TimeoutError):
+        asyncio.run(budget.admit_source(tool, provider_name="exa"))
+    assert budget.fetcher_calls == budget.search_queries == 0
+    assert len(budget.admission_receipts) == 1
+    snapshot = budget.snapshot()
+    assert snapshot["elapsed_ms"] == 119_000
+    assert snapshot["source_admission_actions"] == [
+        {
+            "source_admission": budget.admission_receipts[0],
+            "tool": tool,
+            "action_id": f"baseline.{tool}.001",
+            "counter_before": {"fetcher_calls": 0, "search_queries": 0},
+            "counter_after": {"fetcher_calls": 0, "search_queries": 0},
+            "executed": False,
+        }
+    ]
+    proof = budget.admission_receipts[0]
+    assert (
+        hashlib.sha256((gate.root / proof["receipt_path"]).read_bytes()).hexdigest()
+        == proof["receipt_sha256"]
+    )
+    assert gate.stop_snapshot() is None
+
+
+@pytest.mark.parametrize(
+    "arguments",
+    [
+        ["--source-admission-root", "/synthetic/root"],
+        ["--source-admission-run-id", "synthetic-run"],
+        [
+            "--source-admission-root",
+            "/synthetic/root",
+            "--source-admission-run-id",
+            "synthetic-run",
+        ],
+        [
+            "--strict-expert-budget",
+            "--source-admission-root",
+            "/synthetic/root",
+            "--source-admission-run-id",
+            "synthetic-run",
+            "--with-documents",
+            "1",
+        ],
+    ],
+)
+def test_cli_admission_is_paired_strict_and_has_no_extra_documents_clock(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, arguments: list[str]
+) -> None:
+    import app.config
+
+    def forbidden(*args: Any, **kwargs: Any) -> Any:
+        raise AssertionError("No settings, credentials, process or source construction")
+
+    monkeypatch.setattr(app.config, "Settings", forbidden)
+    monkeypatch.setattr(app.config, "get_settings", forbidden)
+    monkeypatch.setattr(live.subprocess, "run", forbidden)
+    monkeypatch.setattr(sys, "argv", ["live", "--live", "--out", str(tmp_path / "out"), *arguments])
+    with pytest.raises(SystemExit) as error:
+        live.main()
+    assert error.value.code == 2 and not (tmp_path / "out").exists()
+
+
+def test_programmatic_admission_refuses_separate_document_clock_before_setup(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(live, "DOCUMENT_SECONDS", 1.0)
+    gate = _gate(tmp_path / "gate")
+    with pytest.raises(ValueError, match="separate documents clock"):
+        asyncio.run(
+            live.capture_one(
+                "synthetic",
+                tmp_path / "out",
+                60,
+                120,
+                strict_expert_budget=True,
+                source_admission=gate,
+            )
+        )
+    assert not (tmp_path / "out").exists()
+
+
+@pytest.mark.parametrize("tool", ["fetcher", "search_provider"])
+def test_callback_timeout_is_distinct_from_case_wall_expiry(tmp_path: Path, tool: str) -> None:
+    gate = _gate(tmp_path / "gate")
+
+    async def get(url: str) -> FetchResult:
+        raise TimeoutError("site-secret")
+
+    async def search(**kwargs: Any) -> SearchResponse:
+        raise TimeoutError("provider-secret")
+
+    first = URL if tool == "fetcher" else _search_action()
+    result = _run(
+        tmp_path / "logs", gate=gate, plan=_plan(actions=[first, URL]), get=get, search=search
+    )
+    assert result["final"]["stop_reason"] is None
+    assert "timeout_reason" not in _raw(tmp_path / "logs", result["actions"][0])
+    if tool == "search_provider":
+        assert result["source_admission_stop"]["stop_kind"] == "provider_failure"
+        assert result["final"]["search_queries"] == 1 and result["final"]["fetcher_calls"] == 0
+    else:
+        assert result["source_admission_stop"] is None and result["final"]["fetcher_calls"] == 2
+
+
+def test_real_pending_action_deadline_charges_tail_without_global_provider_stop(
+    tmp_path: Path,
+) -> None:
+    began = time.monotonic()
+
+    def clock() -> datetime:
+        return START + timedelta(seconds=899.95 + time.monotonic() - began)
+
+    gate = admission.SourceAdmission(
+        tmp_path / "gate", run_id="synthetic-run", provider="exa", now=clock
+    )
+    cancelled = False
+
+    async def get(url: str) -> FetchResult:
+        nonlocal cancelled
+        try:
+            await asyncio.sleep(10)
+        except asyncio.CancelledError:
+            cancelled = True
+            raise
+        raise AssertionError("No successful tail is possible")
+
+    result = _run(
+        tmp_path / "logs",
+        gate=gate,
+        plan=_plan(actions=[URL]),
+        get=get,
+        now=clock,
+        monotonic=time.monotonic,
+    )
+    assert cancelled and result["actions"][0]["executed"]
+    assert result["final"]["fetcher_calls"] == 1 and result["final"]["elapsed_ms"] > 0
+    assert result["final"]["stop_reason"] == "wall_guard_exhausted"
+    assert result["source_admission_stop"] is None
+
+
+@pytest.mark.parametrize(
+    "environment", [None, {}, {"HOME": "/synthetic-home", "PUBLIC_MODE": "tool-free"}]
+)
+def test_selector_explicit_environment_is_exact_and_none_keeps_inheritance(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, environment: dict[str, str] | None
+) -> None:
+    workspace = tmp_path.resolve()
+    schema, output = workspace / "schema.json", workspace / "answer.json"
+    schema.write_text("{}")
+    isolation = turn_policy.NetworkBudgetIsolation(
+        workspace, (workspace / "sealed",), "sandbox-exec-mock", "codex-mock"
+    )
+    observed: list[dict[str, Any]] = []
+
+    def run(argv: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        observed.append(kwargs)
+        return subprocess.CompletedProcess(argv, 1, stdout="", stderr="synthetic unavailable")
+
+    monkeypatch.setattr(turn_policy.subprocess, "run", run)
+    mapping = MappingProxyType(environment) if environment is not None else None
+    result = turn_policy.select(
+        isolation,
+        schema,
+        output,
+        {"public": True},
+        wall_guard=WallGuard(START, START + timedelta(seconds=900)),
+        phase="bootstrap",
+        clock=lambda: START,
+        monotonic=lambda: 0.0,
+        environment=mapping,
+    )
+    assert result.error_kind == "selector_process_failed" and len(observed) == 1
+    assert observed[0].get("env") == environment
+    assert ("env" in observed[0]) == (environment is not None)
+    if environment is not None:
+        assert observed[0]["env"] is not environment
+
+
+@pytest.mark.parametrize("environment", [{"A=B": "v"}, {"A": "\x00"}, {"": "v"}, {"A": None}])
+def test_invalid_selector_environment_is_rejected_before_spawn(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, environment: Any
+) -> None:
+    isolation = turn_policy.NetworkBudgetIsolation(
+        tmp_path.resolve(), (tmp_path / "sealed",), "mock", "mock"
+    )
+
+    def run(*args: Any, **kwargs: Any) -> None:
+        raise AssertionError("No subprocess is allowed")
+
+    monkeypatch.setattr(turn_policy.subprocess, "run", run)
+    with pytest.raises(ValueError, match="environment"):
+        turn_policy.select(
+            isolation,
+            tmp_path / "schema",
+            tmp_path / "answer",
+            {},
+            wall_guard=WallGuard(START, START + timedelta(seconds=900)),
+            phase="bootstrap",
+            environment=environment,
+        )

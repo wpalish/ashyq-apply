@@ -27,7 +27,7 @@ import subprocess
 import sys
 import time
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -35,6 +35,12 @@ from unittest.mock import patch
 
 from pydantic import HttpUrl
 
+from .expert.source_admission import (
+    SourceAdmission,
+    SourceAdmissionIntegrityError,
+    StoredReceipt,
+    Tool,
+)
 from .identities import IdentityMap
 from .mapping import evidence_scope, normalize_subject_claims
 from .schema import Capture, Evidence, Observation, PageOutcome, Prediction, Telemetry
@@ -93,6 +99,76 @@ class _ExpertBudget:
     network_http_requests: int = 0
     stop_reason: str | None = None
     provider_failure: dict[str, Any] | None = None
+    source_admission: SourceAdmission | None = None
+    case_id: str = ""
+    admission_receipts: list[dict[str, Any]] = field(default_factory=list)
+    admission_actions: list[dict[str, Any]] = field(default_factory=list)
+    document_rules_v2: bool | None = None
+    document_leads: bool | None = None
+
+    def __post_init__(self) -> None:
+        if (
+            self.source_admission is not None
+            and self.source_admission.provider != self.provider_name
+        ):
+            self.source_admission.publish_integrity_failure(
+                case_id=self.case_id or "unknown_case",
+                action_id="baseline.setup",
+                tool="search_provider",
+                reason="provider_identity_mismatch",
+            )
+            raise SourceAdmissionIntegrityError("provider_identity_mismatch")
+
+    async def admit_source(self, tool: Tool, *, provider_name: str | None = None) -> StoredReceipt:
+        assert self.source_admission is not None
+        if tool == "search_provider" and provider_name != self.provider_name:
+            self.source_admission.publish_integrity_failure(
+                case_id=self.case_id,
+                action_id="baseline.provider-identity",
+                tool=tool,
+                reason="provider_identity_mismatch",
+            )
+            raise SourceAdmissionIntegrityError("provider_identity_mismatch")
+        if tool == "fetcher":
+            self._check_fetch()
+            number = self.fetcher_calls + 1
+        else:
+            self._check_search(provider_name or "")
+            number = self.search_queries + 1
+        if tool not in {"fetcher", "search_provider"}:
+            raise SourceAdmissionIntegrityError()
+        receipt = await self.source_admission.admit(
+            case_id=self.case_id,
+            tool=tool,
+            action_id=f"baseline.{tool}.{number:03d}",
+            remaining=self.remaining,
+        )
+        proof = receipt.as_dict()
+        self.admission_receipts.append(proof)
+        before = {"fetcher_calls": self.fetcher_calls, "search_queries": self.search_queries}
+        action: dict[str, Any] = {
+            "source_admission": dict(proof),
+            "tool": tool,
+            "action_id": receipt.record["action_id"],
+            "counter_before": before,
+            "counter_after": dict(before),
+            "executed": False,
+        }
+        self.admission_actions.append(action)
+        # Persistence/wait cannot create more time or an invented source count.
+        self.remaining()
+        if tool == "fetcher":
+            self.before_fetch()
+        else:
+            self.before_search(provider_name or "")
+        # No await separates this real counter flip from the stock source call.
+        # A permit persisted after expiry remains an explicit false/zero action.
+        action["executed"] = True
+        action["counter_after"] = {
+            "fetcher_calls": self.fetcher_calls,
+            "search_queries": self.search_queries,
+        }
+        return receipt
 
     @property
     def source_work_deadline_ms(self) -> int:
@@ -121,14 +197,17 @@ class _ExpertBudget:
             raise TimeoutError("BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED")
         return remaining
 
-    def before_fetch(self) -> None:
+    def _check_fetch(self) -> None:
         self.remaining()
         if self.fetcher_calls >= self.max_fetcher_calls:
             self.stop_reason = self.stop_reason or "page_budget_exhausted"
             raise RuntimeError("BENCHMARK_PAGE_BUDGET_EXHAUSTED")
+
+    def before_fetch(self) -> None:
+        self._check_fetch()
         self.fetcher_calls += 1
 
-    def before_search(self, provider_name: str) -> None:
+    def _check_search(self, provider_name: str) -> None:
         from app.adapters.search.base import SearchUnavailable
 
         self.remaining()
@@ -144,9 +223,14 @@ class _ExpertBudget:
             self.blocked_search_queries += 1
             self.stop_reason = self.stop_reason or "search_budget_exhausted"
             raise SearchUnavailable("Strict capture search query budget exhausted")
+
+    def before_search(self, provider_name: str) -> None:
+        self._check_search(provider_name)
         self.search_queries += 1
 
-    def failed_search(self, exc: Exception) -> Exception:
+    def failed_search(
+        self, exc: Exception, *, origin_admission: StoredReceipt | None = None
+    ) -> Exception:
         """Keep a fixed diagnostic/status, never vendor exception text or keys."""
         from app.adapters.search.base import (
             SearchFailureReason,
@@ -169,6 +253,34 @@ class _ExpertBudget:
             "reason": reason.value if reason else None,
             "error": search_failure_diagnostic(self.provider_name, sanitized),
         }
+        if self.source_admission is not None:
+            declared = getattr(exc, "http_status", None)
+            transport = getattr(getattr(exc, "response", None), "status_code", None)
+            action_id = (
+                origin_admission.record["action_id"] if origin_admission else "baseline.search"
+            )
+            if (
+                type(declared) is int
+                and 100 <= declared <= 599
+                and type(transport) is int
+                and 100 <= transport <= 599
+                and declared != transport
+            ):
+                self.source_admission.publish_integrity_failure(
+                    case_id=self.case_id,
+                    tool="search_provider",
+                    action_id=action_id,
+                    reason="conflicting_provider_http_status",
+                    origin_admission=origin_admission,
+                )
+            else:
+                self.source_admission.publish_provider_failure(
+                    case_id=self.case_id,
+                    action_id=action_id,
+                    http_status=status,
+                    failure_reason=reason.value if reason else None,
+                    origin_admission=origin_admission,
+                )
         if status in {402, 429}:
             self.stop_reason = f"http_{status}"
         return sanitized
@@ -190,6 +302,20 @@ class _ExpertBudget:
             "stop_reason": self.stop_reason,
             "provider_failure": self.provider_failure,
             "active_time_basis": self.active_time_basis,
+            **(
+                {
+                    "source_admission": self.source_admission.policy(),
+                    "source_admission_stop": self.source_admission.stop_snapshot(),
+                    "source_admission_receipts": self.admission_receipts,
+                    "source_admission_actions": self.admission_actions,
+                    "capture_scope": "decision/discovery/requirements/funding; documents stage not run",
+                    "documents_seconds": 0,
+                    "document_rules_v2": self.document_rules_v2,
+                    "document_leads": self.document_leads,
+                }
+                if self.source_admission is not None
+                else {}
+            ),
         }
 
 
@@ -251,8 +377,13 @@ async def capture_one(
     *,
     strict_expert_budget: bool = False,
     finalization_reserve_ms: int = 0,
+    source_admission: SourceAdmission | None = None,
 ) -> None:
     entered = time.monotonic()
+    if source_admission is not None and not strict_expert_budget:
+        raise ValueError("Shared source admission requires strict expert budget mode")
+    if source_admission is not None and DOCUMENT_SECONDS:
+        raise ValueError("Shared source admission does not permit a separate documents clock")
     if type(finalization_reserve_ms) is not int or finalization_reserve_ms < 0:
         raise ValueError("Finalization reserve must be a nonnegative integer in milliseconds")
     if finalization_reserve_ms and not strict_expert_budget:
@@ -285,6 +416,13 @@ async def capture_one(
             raise ValueError("Strict live capture requires configured exa or exa_mcp")
         if settings.enable_browser_tier or not settings.respect_robots:
             raise ValueError("Strict live capture requires browser tier off and robots respected")
+        document_rules_v2 = document_leads = None
+        if source_admission is not None:
+            from app.adapters.documents import web_documents
+
+            document_rules_v2 = web_documents.DOCUMENT_RULES_V2
+            document_leads = web_documents.DOCUMENT_LEADS
+
         budget = _ExpertBudget(
             max_pages,
             seconds,
@@ -292,6 +430,10 @@ async def capture_one(
             entered,
             clock=time.monotonic,
             finalization_reserve_ms=finalization_reserve_ms,
+            source_admission=source_admission,
+            case_id=case_id,
+            document_rules_v2=document_rules_v2,
+            document_leads=document_leads,
         )
 
     predictions: list[Prediction] = []
@@ -373,7 +515,8 @@ async def capture_one(
         # case that runs out of wall clock after two fetches spent the time
         # somewhere, and search is the first place to look.
         if budget:
-            budget.before_search(getattr(provider, "name", ""))
+            if source_admission is None:
+                budget.before_search(getattr(provider, "name", ""))
             observation.telemetry.search_calls = budget.search_queries
         else:
             observation.telemetry.search_calls = (observation.telemetry.search_calls or 0) + 1
@@ -382,12 +525,40 @@ async def capture_one(
             checkpoint()
             if budget.finalization_reserve_ms:
                 budget.remaining()
+        origin_admission = None
+        if budget and source_admission is not None:
+            origin_admission = await budget.admit_source(
+                "search_provider",
+                provider_name=getattr(provider, "name", ""),
+            )
+            observation.telemetry.search_calls = budget.search_queries
         try:
-            return await original_search(provider, *args, **kwargs)
+            answer = await original_search(provider, *args, **kwargs)
+            if source_admission is not None and (
+                getattr(answer, "provider", None) != source_admission.provider
+                or any(
+                    getattr(result, "provider", None) != source_admission.provider
+                    for result in answer.results
+                )
+            ):
+                raise SourceAdmissionIntegrityError("provider_identity_mismatch")
+            return answer
+        except SourceAdmissionIntegrityError as exc:
+            assert budget is not None and source_admission is not None
+            source_admission.publish_integrity_failure(
+                case_id=case_id,
+                tool="search_provider",
+                action_id=origin_admission.record["action_id"]
+                if origin_admission
+                else "baseline.search",
+                reason=exc.reason,
+                origin_admission=origin_admission,
+            )
+            raise
         except Exception as exc:
             print(f"search failed after {time.monotonic() - began:.1f}s: {type(exc).__name__}")
             if budget:
-                raise budget.failed_search(exc) from None
+                raise budget.failed_search(exc, origin_admission=origin_admission) from None
             raise
         finally:
             print(
@@ -438,7 +609,8 @@ async def capture_one(
                     # never spend the decision stage's budget.
                     pass
                 elif budget:
-                    budget.before_fetch()
+                    if source_admission is None:
+                        budget.before_fetch()
                     observation.telemetry.http_fetches = budget.fetcher_calls
                     kwargs["use_cache"] = False
                 elif network_reads >= max_pages:
@@ -452,6 +624,9 @@ async def capture_one(
                     checkpoint()
                     if budget.finalization_reserve_ms:
                         budget.remaining()
+                if budget and source_admission is not None and not documents_phase:
+                    await budget.admit_source("fetcher")
+                    observation.telemetry.http_fetches = budget.fetcher_calls
                 result = await original(url, **kwargs)
                 # One line per page read, so a case that runs out of wall
                 # clock shows which reads took it: its own log is printed by
@@ -753,8 +928,16 @@ def main() -> None:
         default=web_scholarships.TARGET_AWARD_SEARCH,
         help="experiment: target award policies instead of generic scholarship indices",
     )
+    parser.add_argument("--source-admission-root", type=Path, default=None)
+    parser.add_argument("--source-admission-run-id", default=None)
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
+    if bool(args.source_admission_root) != bool(args.source_admission_run_id):
+        parser.error("Shared source admission requires both root and run ID")
+    if args.source_admission_root and not args.strict_expert_budget:
+        parser.error("Shared source admission requires --strict-expert-budget")
+    if args.source_admission_root and args.with_documents:
+        parser.error("Shared source admission forbids a separate documents stage clock")
     if args.max_pages is None:
         args.max_pages = STRICT_MAX_FETCHER_CALLS if args.strict_expert_budget else 40
     if not 1 <= args.seconds_per_case <= 600 or not 1 <= args.max_pages <= 100:
@@ -872,6 +1055,12 @@ def main() -> None:
                 strict_arguments: dict[str, Any] = (
                     {"strict_expert_budget": True} if args.strict_expert_budget else {}
                 )
+                if args.source_admission_root:
+                    strict_arguments["source_admission"] = SourceAdmission(
+                        args.source_admission_root,
+                        run_id=args.source_admission_run_id,
+                        provider=search_provider,
+                    )
                 if args.finalization_reserve_ms is not None:
                     strict_arguments["finalization_reserve_ms"] = finalization_reserve_ms
                 asyncio.run(
@@ -922,6 +1111,16 @@ def main() -> None:
                         *(
                             ["--finalization-reserve-ms", str(finalization_reserve_ms)]
                             if args.finalization_reserve_ms is not None
+                            else []
+                        ),
+                        *(
+                            [
+                                "--source-admission-root",
+                                str(args.source_admission_root),
+                                "--source-admission-run-id",
+                                args.source_admission_run_id,
+                            ]
+                            if args.source_admission_root
                             else []
                         ),
                         *(["--search-provider", search_provider] if args.search_provider else []),
@@ -994,6 +1193,12 @@ def main() -> None:
                 recorded_stop = case_budgets[case_id].get("stop_reason")
                 if recorded_stop in {"http_402", "http_429"}:
                     batch_stop_reason = recorded_stop
+                if args.source_admission_root and case_budgets[case_id].get(
+                    "source_admission_stop"
+                ):
+                    batch_stop_reason = case_budgets[case_id]["source_admission_stop"][
+                        "terminal_reason"
+                    ]
             case_budgets.setdefault(case_id, {}).update(
                 parent_process_elapsed_seconds=process_elapsed_seconds,
                 process_error=error,
@@ -1059,7 +1264,9 @@ def main() -> None:
         print(f"{case_id}: {observation.error or 'complete'}", flush=True)
         if batch_stop_reason:
             print(
-                "Capture stopped after provider HTTP 429; remaining cases were not attempted.",
+                f"Capture stopped after {batch_stop_reason}; remaining cases were not attempted."
+                if args.source_admission_root
+                else "Capture stopped after provider HTTP 429; remaining cases were not attempted.",
                 flush=True,
             )
             break
