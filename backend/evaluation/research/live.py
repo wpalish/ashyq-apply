@@ -384,7 +384,11 @@ async def capture_one(
         try:
             return await original_search(provider, *args, **kwargs)
         except Exception as exc:
-            print(f"search failed after {time.monotonic() - began:.1f}s: {type(exc).__name__}")
+            reason = getattr(getattr(exc, "reason", None), "value", None)
+            print(
+                f"search failed after {time.monotonic() - began:.1f}s: {type(exc).__name__}"
+                f" ({reason or 'no reason'}, http {getattr(exc, 'http_status', None)})"
+            )
             if budget:
                 raise budget.failed_search(exc) from None
             raise
@@ -694,6 +698,27 @@ def main() -> None:
         "on its own clock of SECONDS; the decision stage's budget is untouched",
     )
     parser.add_argument(
+        "--search-429-retry",
+        action="store_true",
+        help="plan rule SR-2: one retry, after 6 s, when the keyless Exa MCP answers 429",
+    )
+    parser.add_argument(
+        "--search-pacing",
+        action="store_true",
+        help="plan rule SP-1: at least 1.5 s between two Exa MCP queries",
+    )
+    parser.add_argument(
+        "--topic-search-continue",
+        action="store_true",
+        help="plan rule TS-2: a failed topic query no longer ends topic search",
+    )
+    parser.add_argument(
+        "--fee-year-columns",
+        action="store_true",
+        help="plan rule DF-1: fee tables with academic years as columns and named "
+        "tariffs (statutory / institutional rate) as rows",
+    )
+    parser.add_argument(
         "--search-rate-limit-retry",
         action="store_true",
         help="plan rule SR-1: one retry, after a short pause, when the keyless Exa MCP "
@@ -831,6 +856,21 @@ def main() -> None:
         if args.with_documents:
             global DOCUMENT_SECONDS
             DOCUMENT_SECONDS = args.with_documents
+        if args.search_429_retry or args.search_pacing:
+            from app.adapters.search import exa_mcp as pacing_module
+
+            if args.search_429_retry:
+                pacing_module.RETRY_429_ONCE = True
+            if args.search_pacing:
+                pacing_module.MIN_QUERY_INTERVAL_SECONDS = 1.5
+        if args.topic_search_continue:
+            from app.adapters.requirements import web_requirements as ts2_module
+
+            ts2_module.TOPIC_SEARCH_CONTINUE = True
+        if args.fee_year_columns:
+            from app.adapters import extraction as fee_module
+
+            fee_module.FEE_YEAR_COLUMNS = True
         if args.search_rate_limit_retry:
             from app.adapters.search import exa_mcp as exa_mcp_module
 
@@ -948,6 +988,10 @@ def main() -> None:
                         *(["--document-rules-v2"] if args.document_rules_v2 else []),
                         *(["--document-leads"] if args.document_leads else []),
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
+                        *(["--fee-year-columns"] if args.fee_year_columns else []),
+                        *(["--topic-search-continue"] if args.topic_search_continue else []),
+                        *(["--search-429-retry"] if args.search_429_retry else []),
+                        *(["--search-pacing"] if args.search_pacing else []),
                         *(
                             ["--with-documents", str(args.with_documents)]
                             if args.with_documents

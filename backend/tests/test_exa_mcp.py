@@ -632,3 +632,63 @@ async def test_rate_limit_retry_happens_once_only(make_provider, monkeypatch):
         await make_provider(server).search(query="public programme query")
     assert caught.value.reason is SearchFailureReason.RATE_LIMITED
     assert server.methods.count("tools/call") == 2
+
+
+class _ThrottledOnce(McpServer):
+    """HTTP 429 on the first query, answering on every later one."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.queries = 0
+
+    def __call__(self, request: httpx.Request) -> httpx.Response:
+        payload = json.loads(request.content)
+        if payload["method"] == "tools/call":
+            self.queries += 1
+            if self.queries == 1:
+                self.calls.append(request)
+                return httpx.Response(429)
+        return super().__call__(request)
+
+
+async def test_429_retry_is_off_by_default(make_provider):
+    assert module.RETRY_429_ONCE is False
+    server = _ThrottledOnce()
+    with pytest.raises(SearchUnavailable) as caught:
+        await make_provider(server).search(query="public programme query")
+    assert caught.value.http_status == 429
+    assert server.queries == 1
+
+
+async def test_429_retried_once_after_a_pause(make_provider, monkeypatch):
+    monkeypatch.setattr(module, "RETRY_429_ONCE", True)
+    monkeypatch.setattr(module, "THROTTLE_BACKOFF_SECONDS", 0.0)
+    server = _ThrottledOnce()
+    response = await make_provider(server).search(query="public programme query")
+    assert server.queries == 2
+    assert response.results
+
+
+async def test_a_second_429_is_final(make_provider, monkeypatch):
+    monkeypatch.setattr(module, "RETRY_429_ONCE", True)
+    monkeypatch.setattr(module, "THROTTLE_BACKOFF_SECONDS", 0.0)
+    server = McpServer(overrides={"tools/call": lambda request: httpx.Response(429)})
+    with pytest.raises(SearchUnavailable) as caught:
+        await make_provider(server).search(query="public programme query")
+    assert caught.value.http_status == 429
+    assert server.methods.count("tools/call") == 2
+
+
+async def test_queries_are_paced(make_provider, monkeypatch):
+    slept: list[float] = []
+
+    async def sleep(seconds: float) -> None:
+        slept.append(seconds)
+
+    monkeypatch.setattr(module, "MIN_QUERY_INTERVAL_SECONDS", 1.5)
+    monkeypatch.setattr(module, "_last_query_at", None)
+    monkeypatch.setattr(module.asyncio, "sleep", sleep)
+    provider = make_provider(McpServer())
+    await provider.search(query="first public query")
+    await provider.search(query="second public query")
+    assert len(slept) == 1 and 0 < slept[0] <= 1.5

@@ -1159,10 +1159,93 @@ def _population_amounts(
     return []
 
 
+#: Plan rule DF-1: a fee table whose columns are academic years and whose rows
+#: are named tariffs (TU Delft, 2026-10-06: "2026/2027 2027/2028 Institutional
+#: rate BSc € 19.906 MSc € 25.633 BSc € 20.563 MSc € 26.479"). Only the tariff
+#: names below are read, each to the population the institution's own page
+#: defines it for; any other row name is left alone. The column must be the
+#: year asked for; no year, no claim. On by default since 2026-10-06 (owner:
+#: "да"; run claude-df1-paired-2: Delft tuition a stable gain, zero losses).
+FEE_YEAR_COLUMNS = True
+_TARIFF_POPULATION = {
+    "statutory rate": "EU/EEA",
+    "institutional rate": "non-EU/EEA",
+}
+_YEAR_HEADER = re.compile(r"((?:20\d{2}\s*/\s*20\d{2}\s+){2,})")
+_TARIFF_CELL = re.compile(
+    r"(?:BSc\s*(?P<bsc>€\s*\d{1,3}(?:[.,]\d{3})+)\s*MSc\s*€\s*\d{1,3}(?:[.,]\d{3})+"
+    r"|(?P<single>€\s*\d{1,3}(?:[.,]\d{3})+))\s*"
+)
+
+
+def _euro_amount(raw: str) -> float:
+    digits = re.sub(r"[^\d.,]", "", raw)
+    return float(re.sub(r"[.,]", "", digits))
+
+
+def _year_column_fees(
+    text: str, want: str | None
+) -> list[tuple[str, float, str | None, str, int, int]]:
+    """``(population, amount, degree, year, start, end)`` per tariff row."""
+    if not want:
+        return []
+    rows = []
+    for header in _YEAR_HEADER.finditer(text):
+        years = [_year_key(y) for y in re.findall(r"20\d{2}\s*/\s*20\d{2}", header.group(1))]
+        if want not in years:
+            continue
+        column = years.index(want)
+        rest = text[header.end() :]
+        label = re.match(r"(statutory rate|institutional rate)\s*", rest, re.I)
+        if label is None:
+            continue
+        position = label.end()
+        cells = []
+        for _ in years:
+            cell = _TARIFF_CELL.match(rest, position)
+            if cell is None:
+                break
+            cells.append(cell)
+            position = cell.end()
+        if len(cells) != len(years):
+            continue
+        cell = cells[column]
+        raw = cell.group("bsc") or cell.group("single")
+        rows.append(
+            (
+                _TARIFF_POPULATION[label.group(1).lower()],
+                _euro_amount(raw),
+                "bachelor" if cell.group("bsc") else None,
+                want,
+                header.start(),
+                header.end() + position,
+            )
+        )
+    return rows
+
+
 def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
     """Pull cost figures out of a fees page."""
     found: list[Claim] = []
     text = for_matching(text)
+    if FEE_YEAR_COLUMNS:
+        want = _year_key(
+            cast("str", builder.requested_academic_year or builder.meta.get("academic_year") or "")
+        )
+        for population, amount, degree, year, start, end in _year_column_fees(text, want):
+            _keep(
+                found,
+                builder.add(
+                    ClaimType.TUITION,
+                    {"amount": amount, "currency": "EUR"},
+                    excerpt_around(text, start, end),
+                    section="Fees and costs",
+                    subject_key=population,
+                    population=population,
+                    degree=degree,
+                    academic_year=year,
+                ),
+            )
     patterns = (
         (ClaimType.TUITION, r"(?:tuition|tuition fee|programme fee|course fee)"),
         (ClaimType.HOUSING_COST, r"(?:housing|accommodation|residence|room)"),

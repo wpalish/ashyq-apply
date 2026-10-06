@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import time
 from collections.abc import Sequence
 from datetime import UTC, datetime
 from typing import Any
@@ -34,6 +35,29 @@ DEFAULT_TIMEOUT_SECONDS = 15.0
 #: claude-sr1-paired-1: rate-limit failures 8 -> 4, zero losses).
 RATE_LIMIT_RETRY = True
 RATE_LIMIT_BACKOFF_SECONDS = 2.0
+#: Plan rule SR-2: one retry, after a longer pause, when the keyless endpoint
+#: answers HTTP 429. Run claude-ts2-paired-1 named the failures that broke NTU
+#: (7 of 8 were 429, the rest a timeout); one polite retry is not the loop
+#: of rephrasings the 429 stop in retrieval.py guards against. Owner: "1 + 2".
+RETRY_429_ONCE = False
+THROTTLE_BACKOFF_SECONDS = 6.0
+#: Plan rule SP-1: at least this many seconds between two queries to the
+#: keyless endpoint, from any provider instance. 0 sends at once.
+MIN_QUERY_INTERVAL_SECONDS = 0.0
+_last_query_at: float | None = None
+
+
+async def _pace() -> None:
+    """Wait out the minimum interval since the previous query (SP-1)."""
+    global _last_query_at
+    now = time.monotonic()
+    if MIN_QUERY_INTERVAL_SECONDS > 0 and _last_query_at is not None:
+        wait = _last_query_at + MIN_QUERY_INTERVAL_SECONDS - now
+        if wait > 0:
+            await asyncio.sleep(wait)
+    _last_query_at = time.monotonic()
+
+
 MAX_RESPONSE_BYTES = 1024 * 1024
 MAX_RESULTS_PER_QUERY = 25
 EMPTY_SEARCH_MESSAGE = (
@@ -216,12 +240,18 @@ class ExaMcpSearchProvider:
         domains: Sequence[str] = (),
         max_results: int = 10,
     ) -> SearchResponse:
+        await _pace()
         try:
             return await self._search_once(query=query, domains=domains, max_results=max_results)
         except SearchUnavailable as exc:
-            if not RATE_LIMIT_RETRY or exc.reason is not SearchFailureReason.RATE_LIMITED:
+            if RATE_LIMIT_RETRY and exc.reason is SearchFailureReason.RATE_LIMITED:
+                delay = RATE_LIMIT_BACKOFF_SECONDS
+            elif RETRY_429_ONCE and exc.http_status == 429:
+                delay = THROTTLE_BACKOFF_SECONDS
+            else:
                 raise
-        await asyncio.sleep(RATE_LIMIT_BACKOFF_SECONDS)
+        await asyncio.sleep(delay)
+        await _pace()
         return await self._search_once(query=query, domains=domains, max_results=max_results)
 
     async def _search_once(

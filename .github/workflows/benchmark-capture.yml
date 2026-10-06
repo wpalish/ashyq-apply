@@ -534,21 +534,26 @@ jobs:
       - name: Paired rule experiment (same runner, ABBA order)
         if: inputs.mode == 'expert_paired'
         # inputs.case is a space-separated list; inputs.extra_args is the rule
-        # switch under test. Each case runs off/on/on/off so a drift in the
-        # site or provider during the job hits both arms alike.
+        # switch under test. Each case still runs off/on/on/off so a drift in
+        # the site or provider hits both arms alike, but in two passes: the
+        # list forwards (off, on), then reversed (on, off). The keyless search
+        # quota runs out late in a job, and with case-major order the last
+        # cases (NTU, KAIST) met it in every repetition (runs of 2026-10-06);
+        # now every case has one early and one late pass.
         run: |
           set -o pipefail
           mkdir -p out
-          for c in ${{ inputs.case }}; do
-            for arm in off on on off; do
-              flags="${{ inputs.base_args }}"; [ "$arm" = on ] && flags="$flags ${{ inputs.extra_args }}"
-              .venv/bin/python -m evaluation.research.live --live --out "out/$c-$arm" \
-                --case "$c" --seconds-per-case "${{ inputs.seconds_per_case }}" \
-                --max-pages "${{ inputs.max_pages }}" $flags \
-                --search-provider "$UNIMATCH_SEARCH_PROVIDER" | tail -n 2
-            done
-          done
-          echo "extra_args=${{ inputs.extra_args }} base_args=${{ inputs.base_args }}" >> out/config.txt
+          capture() {
+            flags="${{ inputs.base_args }}"; [ "$2" = on ] && flags="$flags ${{ inputs.extra_args }}"
+            .venv/bin/python -m evaluation.research.live --live --out "out/$1-$2" \
+              --case "$1" --seconds-per-case "${{ inputs.seconds_per_case }}" \
+              --max-pages "${{ inputs.max_pages }}" $flags \
+              --search-provider "$UNIMATCH_SEARCH_PROVIDER" | tail -n 2
+          }
+          cases="${{ inputs.case }}"
+          for c in $cases; do capture "$c" off; capture "$c" on; done
+          for c in $(printf '%s\n' $cases | tac); do capture "$c" on; capture "$c" off; done
+          echo "extra_args=${{ inputs.extra_args }} base_args=${{ inputs.base_args }} order=two-pass" >> out/config.txt
 
       - name: Validate the resume request
         if: inputs.mode == 'expert_actions' && inputs.resume_run_id != ''

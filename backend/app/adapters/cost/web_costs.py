@@ -105,6 +105,9 @@ class WebCostAdapter:
             page_text=text,
             allowed_domains=verification_domains(candidate.costs_url, candidate.domain),
         )
+        # As in the requirements adapter: a fee table picks the applicant's
+        # year, not the first year the page prints (Delft, run 37500440224).
+        builder.requested_academic_year = self.academic_year
         structured = StructuredCosts()
         if not res.is_pdf:
             document = build_document_ir(

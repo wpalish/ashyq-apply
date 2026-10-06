@@ -119,6 +119,10 @@ _WAIVER_OFFERED = re.compile(r"\b(available|offered|granted|waive[ds]?|waiving)\
 #: and each was the top same-institution result of one query.
 TOPIC_SEARCH = True
 #: Topic name to the public query; only the institution name is filled in.
+#: Plan rule TS-2: a failed topic query no longer ends topic search for the
+#: institution; the next topic is still asked (NTU, run claude-sr1-paired-1:
+#: two of four repetitions lost all three topics to one failed query).
+TOPIC_SEARCH_CONTINUE = False
 _TOPIC_QUERIES = (
     ("english", "{name} undergraduate English language requirements international applicants"),
     ("fees", "{name} undergraduate tuition fees international students"),
@@ -514,6 +518,10 @@ class WebRequirementsAdapter:
                 out.errors.append(
                     f"Topic search ({topic}): {search_failure_diagnostic(provider.name, exc)}"
                 )
+                # TS-2: one failed topic need not cost the others; a 429 still
+                # stops, as it does in discovery.
+                if TOPIC_SEARCH_CONTINUE and getattr(exc, "http_status", None) != 429:
+                    continue
                 break
             taken = {u for _, u in found}
             for result in response.results:
