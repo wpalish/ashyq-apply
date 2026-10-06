@@ -1,0 +1,126 @@
+{
+  "schema_version": "1",
+  "status": "offline_candidate_ready",
+  "actual_freeze_or_launch_performed": false,
+  "actual_model_source_provider_network_requests": 0,
+  "private_registry_bytes_read": false,
+  "files": [
+    {
+      "path": "/tmp/unimatch-expert500-freeze-v14-local-candidate.py",
+      "bytes": 50482,
+      "sha256": "bbaa94487f931c7b182b256273b4a8ea32dacca6c0fb54631aea5dd67dccd3ce"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-launch-v14-local-candidate.py",
+      "bytes": 16996,
+      "sha256": "76569f1f3712de8cba35798187e37433bfd062fb12f5555d21f58fcd690c147d"
+    },
+    {
+      "path": "/tmp/test_unimatch_expert500_freeze_launch_v14_local_candidate.py",
+      "bytes": 31637,
+      "sha256": "26e4e45f29a6ad920d8ffb702196fa8c8232e6e33c3530941f092e10cf9f3054"
+    }
+  ],
+  "contract": {
+    "path": "/tmp/unimatch-expert500-v14-freeze-launch-candidates-ea0b0fdd91/CONTRACT.md",
+    "bytes": 8169,
+    "sha256": "dab2f1f2832eeb77a7c2f3285494393f5a22d39a7b2506bdc888bfb2f5e06620"
+  },
+  "gates": {
+    "synthetic_tests": {
+      "exit_code": 0,
+      "count": 60,
+      "elapsed_seconds": 0.63
+    },
+    "ruff": {
+      "exit_code": 0
+    },
+    "format": {
+      "exit_code": 0
+    },
+    "mypy": {
+      "exit_code": 0,
+      "files": 3
+    }
+  },
+  "original_logs": [
+    {
+      "path": "/tmp/unimatch-expert500-v14-freeze-launch-candidates-ea0b0fdd91/format-expanded-original.log",
+      "bytes": 26,
+      "sha256": "eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v14-freeze-launch-candidates-ea0b0fdd91/format-final-original.log",
+      "bytes": 26,
+      "sha256": "eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v14-freeze-launch-candidates-ea0b0fdd91/mypy-expanded-original.log",
+      "bytes": 229,
+      "sha256": "248f86e17cabccb7117bde766e42ed8b4a798c214c159e8c5202248f47d75013"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v14-freeze-launch-candidates-ea0b0fdd91/mypy-final-original.log",
+      "bytes": 43,
+      "sha256": "8228fcc5ce46d42d01caf3cd941f4e9c5f2bcc372bb5b147a2f0572d2dd675a8"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v14-freeze-launch-candidates-ea0b0fdd91/mypy-initial-original.log",
+      "bytes": 671,
+      "sha256": "28511ddd7f9e0990e5e3fc311f50fa8dd33a47d6d6a7ad06bcf54f120ee9c7fd"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v14-freeze-launch-candidates-ea0b0fdd91/pytest-expanded-original.log",
+      "bytes": 99,
+      "sha256": "fd0ee7b1546b1db97bcf95421079e55e430de15302141d33daf27109a73a0845"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v14-freeze-launch-candidates-ea0b0fdd91/pytest-final-original.log",
+      "bytes": 99,
+      "sha256": "a73013319078c9212681e2e57c4f1e9df8e38468f1d7f0da284b532d18f2694c"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v14-freeze-launch-candidates-ea0b0fdd91/pytest-initial-original.log",
+      "bytes": 99,
+      "sha256": "533b29e95229e1b6af5fdcc87330d0f482d8efc9901cc78afc7b3d0ef73be27f"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v14-freeze-launch-candidates-ea0b0fdd91/ruff-expanded-original.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v14-freeze-launch-candidates-ea0b0fdd91/ruff-final-original.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v14-freeze-launch-candidates-ea0b0fdd91/ruff-initial-original.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    }
+  ],
+  "v13_originals_unchanged": {
+    "/tmp/unimatch-expert500-freeze-v13.py": {
+      "bytes": 32850,
+      "sha256": "05c43403778e9ff6e8dec13de0e740c173873370b5b8f5a5daadca93acfd5da1"
+    },
+    "/tmp/unimatch-expert500-launch-v13.py": {
+      "bytes": 10402,
+      "sha256": "13b2fd04d6aaa8d3fdf81243b70acbb9f06466da5c76c131edfa8ca5c1bff2c2"
+    }
+  },
+  "pending_genuine_inputs": [
+    "selected clean source/runtime configuration",
+    "original e327498 private registry metadata",
+    "completed selected-source release-gates metadata",
+    "current local gate bundle",
+    "fresh V14 neutral archive",
+    "fresh V14 240-cat OS proof",
+    "secret-free runtime import-origin preflight"
+  ],
+  "exporter_and_test_required_inventory": [
+    "/tmp/unimatch-expert500-export-v14-local-candidate.py",
+    "/tmp/test_unimatch_expert500_export_v14_local_candidate.py"
+  ]
+}

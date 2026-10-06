@@ -1,0 +1,5 @@
+/tmp/unimatch-expert500-freeze-v14-local-candidate.py:894: error: Value of type "Any | None" is not indexable  [index]
+/tmp/unimatch-expert500-freeze-v14-local-candidate.py:1015: error: Incompatible types in assignment (expression has type "Path", variable has type "str")  [assignment]
+/tmp/unimatch-expert500-freeze-v14-local-candidate.py:1022: error: Argument 1 to "copy" has incompatible type "str"; expected "Path"  [arg-type]
+/tmp/test_unimatch_expert500_freeze_launch_v14_local_candidate.py:92: error: Argument 1 to "dict" has incompatible type "Collection[str]"; expected "Iterable[tuple[Any, Any]]"  [arg-type]
+Found 4 errors in 2 files (checked 3 source files)

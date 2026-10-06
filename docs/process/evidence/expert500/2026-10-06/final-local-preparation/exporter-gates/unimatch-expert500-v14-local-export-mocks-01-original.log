@@ -1,0 +1,31 @@
+...........................F..................                           [100%]
+=================================== FAILURES ===================================
+__ test_canonical_local_nested_paths_are_supported[selector-01.request.json] ___
+
+exporter = {'__name__': '<run_path>', '__doc__': 'Copy original post-seal V14 local receipts, including unsuccessful controller t...parate and unverified. Reviewed dataset/registry content is not copied.\n', '__package__': '', '__loader__': None, ...}
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-565/test_canonical_local_nested_pa2')
+name = 'selector-01.request.json'
+
+    @pytest.mark.parametrize("name", ["controller-01/artifact/logs/u-001.json", "controller-100/local-receipt.json", "selector-01.request.json"])
+    def test_canonical_local_nested_paths_are_supported(exporter, tmp_path, name):
+        path = tmp_path.resolve() / name
+>       path.parent.mkdir(parents=True)
+
+/tmp/test_unimatch_expert500_export_v14_local_candidate.py:184: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-565/test_canonical_local_nested_pa2')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileExistsError: [Errno 17] File exists: '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-565/test_canonical_local_nested_pa2'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileExistsError
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_export_v14_local_candidate.py::test_canonical_local_nested_paths_are_supported[selector-01.request.json]
+1 failed, 45 passed in 4.90s

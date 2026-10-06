@@ -1,0 +1,778 @@
+........................................................................ [ 22%]
+.................................FFFFFFFFFFFFFFFFFFFF................... [ 45%]
+..F..................................................................... [ 67%]
+........................................................................ [ 90%]
+................................                                         [100%]
+=================================== FAILURES ===================================
+_ test_network_parent_accepts_model_thinking_above_old120seconds_without_source_debit _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+
+    def test_network_parent_accepts_model_thinking_above_old120seconds_without_source_debit(pilot):
+        pilot.queue(elapsed=180_000)
+        checkpoint(pilot, elapsed=160_000)
+        commit(pilot)
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:479: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+_______ test_resumed_source_ledger_preserves_only_measured_controller_ms _______
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+
+    def test_resumed_source_ledger_preserves_only_measured_controller_ms(pilot):
+        bootstrap(pilot)
+        checkpoint(pilot, kind="action", elapsed=200_000)
+        commit(pilot, acknowledge_source=2)
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:497: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+___ test_wall_guard_timeout_keeps_only_already_accepted_complete_checkpoint ____
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+
+    def test_wall_guard_timeout_keeps_only_already_accepted_complete_checkpoint(pilot):
+        bootstrap(pilot)
+        checkpoint(pilot)
+        pilot.queue(elapsed=880_000, error="selector_timeout")
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:514: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+_____ test_no_completed_model_answer_after_guard_is_accepted_or_dispatched _____
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+
+    def test_no_completed_model_answer_after_guard_is_accepted_or_dispatched(pilot):
+        pilot.queue(elapsed=900_001)
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:551: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+__________ test_original_source_and_query_caps_and_baseline_unchanged __________
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+
+    def test_original_source_and_query_caps_and_baseline_unchanged(pilot):
+        bootstrap(pilot)
+        checkpoint(pilot)
+        commit(pilot)
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:561: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+____ test_network_mode_does_not_weaken_atomic_source_citation_guards[quote] ____
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+bad = 'quote'
+
+    @pytest.mark.parametrize("bad", ["quote", "location", "stale_hash", "duplicate_fact"])
+    def test_network_mode_does_not_weaken_atomic_source_citation_guards(pilot, bad):
+        bootstrap(pilot)
+        checkpoint(pilot)
+    
+        def malformed(prompt):
+            extra = fact(id="extra", question="OTHER")
+            if bad == "quote":
+                extra["quotation"] = "Never published in the synthetic source."
+            elif bad == "location":
+                extra["location"] = {
+                    "kind": "document_ir",
+                    "block_id": "missing",
+                    "section_path": [],
+                    "page": None,
+                }
+            elif bad == "duplicate_fact":
+                extra = fact()
+            answer = decision(prompt, "record", facts=[extra])
+            if bad == "stale_hash":
+                answer["journal_sha256"] = "f" * 64
+            return answer
+    
+        pilot.queue(malformed)
+        commit(pilot)
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:598: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+__ test_network_mode_does_not_weaken_atomic_source_citation_guards[location] ___
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+bad = 'location'
+
+    @pytest.mark.parametrize("bad", ["quote", "location", "stale_hash", "duplicate_fact"])
+    def test_network_mode_does_not_weaken_atomic_source_citation_guards(pilot, bad):
+        bootstrap(pilot)
+        checkpoint(pilot)
+    
+        def malformed(prompt):
+            extra = fact(id="extra", question="OTHER")
+            if bad == "quote":
+                extra["quotation"] = "Never published in the synthetic source."
+            elif bad == "location":
+                extra["location"] = {
+                    "kind": "document_ir",
+                    "block_id": "missing",
+                    "section_path": [],
+                    "page": None,
+                }
+            elif bad == "duplicate_fact":
+                extra = fact()
+            answer = decision(prompt, "record", facts=[extra])
+            if bad == "stale_hash":
+                answer["journal_sha256"] = "f" * 64
+            return answer
+    
+        pilot.queue(malformed)
+        commit(pilot)
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:598: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+_ test_network_mode_does_not_weaken_atomic_source_citation_guards[stale_hash] __
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+bad = 'stale_hash'
+
+    @pytest.mark.parametrize("bad", ["quote", "location", "stale_hash", "duplicate_fact"])
+    def test_network_mode_does_not_weaken_atomic_source_citation_guards(pilot, bad):
+        bootstrap(pilot)
+        checkpoint(pilot)
+    
+        def malformed(prompt):
+            extra = fact(id="extra", question="OTHER")
+            if bad == "quote":
+                extra["quotation"] = "Never published in the synthetic source."
+            elif bad == "location":
+                extra["location"] = {
+                    "kind": "document_ir",
+                    "block_id": "missing",
+                    "section_path": [],
+                    "page": None,
+                }
+            elif bad == "duplicate_fact":
+                extra = fact()
+            answer = decision(prompt, "record", facts=[extra])
+            if bad == "stale_hash":
+                answer["journal_sha256"] = "f" * 64
+            return answer
+    
+        pilot.queue(malformed)
+        commit(pilot)
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:598: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+_ test_network_mode_does_not_weaken_atomic_source_citation_guards[duplicate_fact] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+bad = 'duplicate_fact'
+
+    @pytest.mark.parametrize("bad", ["quote", "location", "stale_hash", "duplicate_fact"])
+    def test_network_mode_does_not_weaken_atomic_source_citation_guards(pilot, bad):
+        bootstrap(pilot)
+        checkpoint(pilot)
+    
+        def malformed(prompt):
+            extra = fact(id="extra", question="OTHER")
+            if bad == "quote":
+                extra["quotation"] = "Never published in the synthetic source."
+            elif bad == "location":
+                extra["location"] = {
+                    "kind": "document_ir",
+                    "block_id": "missing",
+                    "section_path": [],
+                    "page": None,
+                }
+            elif bad == "duplicate_fact":
+                extra = fact()
+            answer = decision(prompt, "record", facts=[extra])
+            if bad == "stale_hash":
+                answer["journal_sha256"] = "f" * 64
+            return answer
+    
+        pilot.queue(malformed)
+        commit(pilot)
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:598: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+___________ test_provider429_still_stops_entire_batch_without_retry ____________
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+
+    def test_provider429_still_stops_entire_batch_without_retry(pilot):
+        pilot.queue(lambda prompt: decision(prompt, action=source_action("search_provider")))
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:606: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+_ test_selector_receipts_bind_exact_full_remaining_guard_and_no_short_phase_caps _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+
+    def test_selector_receipts_bind_exact_full_remaining_guard_and_no_short_phase_caps(pilot):
+        pilot.queue(elapsed=180_000)
+        checkpoint(pilot, elapsed=60_000)
+        commit(pilot)
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:617: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+__ test_blind_public_packet_does_not_expose_baseline_or_previous_run_answers ___
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+
+    def test_blind_public_packet_does_not_expose_baseline_or_previous_run_answers(pilot):
+        bootstrap(pilot)
+        checkpoint(pilot)
+        commit(pilot)
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:632: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+____ test_selector_preparation_is_not_counted_twice_against_prespawn_window ____
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+
+    def test_selector_preparation_is_not_counted_twice_against_prespawn_window(pilot):
+        pilot.queue(preparation=860_000, elapsed=20_000)
+        checkpoint(pilot, elapsed=500)
+        commit(pilot, elapsed=500)
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:644: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+_ test_v14_local_candidate_actual_provider_refusal_stops_before_another_selector_or_case[401] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=401)
+status = 401
+
+    @pytest.mark.parametrize("status", [401, 402, 403, 429])
+    def test_v14_local_candidate_actual_provider_refusal_stops_before_another_selector_or_case(
+        pilot, status
+    ):
+        pilot.search_error_status = status
+        pilot.queue(lambda prompt: decision(prompt, action=source_action("search_provider")))
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:659: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+_ test_v14_local_candidate_actual_provider_refusal_stops_before_another_selector_or_case[402] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=402)
+status = 402
+
+    @pytest.mark.parametrize("status", [401, 402, 403, 429])
+    def test_v14_local_candidate_actual_provider_refusal_stops_before_another_selector_or_case(
+        pilot, status
+    ):
+        pilot.search_error_status = status
+        pilot.queue(lambda prompt: decision(prompt, action=source_action("search_provider")))
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:659: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+_ test_v14_local_candidate_actual_provider_refusal_stops_before_another_selector_or_case[403] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=403)
+status = 403
+
+    @pytest.mark.parametrize("status", [401, 402, 403, 429])
+    def test_v14_local_candidate_actual_provider_refusal_stops_before_another_selector_or_case(
+        pilot, status
+    ):
+        pilot.search_error_status = status
+        pilot.queue(lambda prompt: decision(prompt, action=source_action("search_provider")))
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:659: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+_ test_v14_local_candidate_actual_provider_refusal_stops_before_another_selector_or_case[429] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+status = 429
+
+    @pytest.mark.parametrize("status", [401, 402, 403, 429])
+    def test_v14_local_candidate_actual_provider_refusal_stops_before_another_selector_or_case(
+        pilot, status
+    ):
+        pilot.search_error_status = status
+        pilot.queue(lambda prompt: decision(prompt, action=source_action("search_provider")))
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:659: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+_____ test_v14_local_candidate_provider_error_cannot_become_a_source_fact ______
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=503)
+
+    def test_v14_local_candidate_provider_error_cannot_become_a_source_fact(pilot):
+        pilot.search_error_status = 503
+        pilot.queue(lambda prompt: decision(prompt, action=source_action("search_provider")))
+        checkpoint(pilot)
+        pilot.queue(elapsed=900_000, error="selector_timeout")
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:675: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+______ test_outer_guard_starts_before_university_setup_and_is_never_reset ______
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a58f4d0>
+
+    def test_outer_guard_starts_before_university_setup_and_is_never_reset(pilot, monkeypatch):
+        original = Isolation.prove_access
+    
+        def slow_setup(self, *args):
+            FakeDatetime.current += timedelta(milliseconds=900_001)
+            return original(self, *args)
+    
+        monkeypatch.setattr(Isolation, "prove_access", slow_setup)
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:690: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+_ test_expert_can_use_more_than_twenty_source_actions_before_network_or_wall_limits _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate explic...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+
+    def test_expert_can_use_more_than_twenty_source_actions_before_network_or_wall_limits(pilot):
+        pilot.queue(
+            lambda prompt: decision(prompt, action=source_action(url="https://u.edu/admissions/1")),
+            elapsed=500,
+        )
+        for source_step in range(1, 23):
+    
+            def observe_then_read(prompt, step=source_step):
+                return decision(
+                    prompt,
+                    "action",
+                    facts=[fact(id=f"english_{step}", question="OTHER", source_step=step)],
+                    action=source_action(url=f"https://u.edu/admissions/{step + 1}"),
+                )
+    
+            pilot.queue(observe_then_read, elapsed=500)
+        commit(pilot, elapsed=500, acknowledge_source=23)
+>       result = pilot.run()
+                 ^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:714: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:199: in run
+    return self.runtime["expert"](
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1005: in expert
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+___ test_stage_claim_creates_only_container_before_actual_ten_stub_callbacks ___
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-568/test_stage_claim_creates_only_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a119af0>
+
+    def test_stage_claim_creates_only_container_before_actual_ten_stub_callbacks(tmp_path, monkeypatch):
+        runtime = runpy.run_path(str(PILOT))["main"].__globals__
+        runtime["STOP"].clear()
+        root = tmp_path.resolve() / "trial"
+        root.mkdir()
+        cases = tuple(runtime["legacy"]["COHORT"])
+        assert cases == (
+            "groningen",
+            "delft",
+            "aalto",
+            "vienna",
+            "warsaw",
+            "ubc",
+            "toronto",
+            "hku",
+            "ntu",
+            "kaist",
+        )
+        assignments, receipts = allocate_workspaces(cases, temp_root=tmp_path.resolve())
+        for name, value in (
+            ("workspace-locations.json", assignments),
+            ("workspace-receipts.json", receipts),
+        ):
+            (root / name).write_text(json.dumps(value))
+        public = public_cases(runtime)
+        model_environment = {"HOME": str(tmp_path), "PATH": "/usr/bin:/bin", "TMPDIR": str(tmp_path)}
+        trial = {
+            "protocol_version": "journal-v14-local",
+            "transport_kind": "local_process_v1",
+            "frozen_ref": "synthetic-frozen",
+            "search_provider": "exa",
+            "algorithm_provider": "exa",
+            "expert_provider": "exa",
+            "public_cases": public,
+            "public_cases_sha256": runtime["digest"](
+                {"version": "expert500-v14-public-v1", "cases": public}
+            ),
+            "selector_environment": model_environment,
+            "selector_environment_sha256": runtime["digest"](model_environment),
+            "workspace_assignments_sha256": hashlib.sha256(
+                (root / "workspace-locations.json").read_bytes()
+            ).hexdigest(),
+            "workspace_receipts_sha256": hashlib.sha256(
+                (root / "workspace-receipts.json").read_bytes()
+            ).hexdigest(),
+        }
+        (root / "trial.json").write_text(json.dumps(trial))
+        monkeypatch.setitem(runtime, "_LOCAL_FACTORY", object())
+        seen = []
+    
+        def baseline_callback(_repo, _ref, actual_root, case):
+            assert (actual_root / "baseline-stage-start.json").exists()
+            assert (actual_root / "baseline").is_dir()
+            assert not (actual_root / "baseline" / case).exists()
+            seen.append(case)
+            return {"case_id": case, "provider": "exa", "provider_failure": None}
+    
+        monkeypatch.setitem(runtime, "baseline", baseline_callback)
+        monkeypatch.setattr(
+            sys,
+            "argv",
+            [
+                str(PILOT),
+                "--repo",
+                str(tmp_path),
+                "--root",
+                str(root),
+                "--ref",
+                "synthetic-frozen",
+                "--stage",
+                "baseline",
+            ],
+        )
+>       runtime["main"]()
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:1346: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:1966: in main
+    assert_secret_free_model_environment()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+names = None
+
+    def assert_secret_free_model_environment(names: Any = None) -> None:
+        if _SOURCE_SECRET_NAMES.intersection(os.environ if names is None else names):
+>           raise ValueError("Source credentials must not enter the selector environment")
+E           ValueError: Source credentials must not enter the selector environment
+
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:438: ValueError
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_network_parent_accepts_model_thinking_above_old120seconds_without_source_debit
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_resumed_source_ledger_preserves_only_measured_controller_ms
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_wall_guard_timeout_keeps_only_already_accepted_complete_checkpoint
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_no_completed_model_answer_after_guard_is_accepted_or_dispatched
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_original_source_and_query_caps_and_baseline_unchanged
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_network_mode_does_not_weaken_atomic_source_citation_guards[quote]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_network_mode_does_not_weaken_atomic_source_citation_guards[location]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_network_mode_does_not_weaken_atomic_source_citation_guards[stale_hash]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_network_mode_does_not_weaken_atomic_source_citation_guards[duplicate_fact]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_provider429_still_stops_entire_batch_without_retry
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_selector_receipts_bind_exact_full_remaining_guard_and_no_short_phase_caps
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_blind_public_packet_does_not_expose_baseline_or_previous_run_answers
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_selector_preparation_is_not_counted_twice_against_prespawn_window
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_v14_local_candidate_actual_provider_refusal_stops_before_another_selector_or_case[401]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_v14_local_candidate_actual_provider_refusal_stops_before_another_selector_or_case[402]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_v14_local_candidate_actual_provider_refusal_stops_before_another_selector_or_case[403]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_v14_local_candidate_actual_provider_refusal_stops_before_another_selector_or_case[429]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_v14_local_candidate_provider_error_cannot_become_a_source_fact
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_outer_guard_starts_before_university_setup_and_is_never_reset
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_expert_can_use_more_than_twenty_source_actions_before_network_or_wall_limits
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_stage_claim_creates_only_container_before_actual_ten_stub_callbacks
+21 failed, 299 passed in 10.93s

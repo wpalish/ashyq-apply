@@ -1,0 +1,62 @@
+{
+  "started_at": "2026-10-06T17:42:00.525296+00:00",
+  "finished_at": "2026-10-06T17:42:10.995255+00:00",
+  "argv": [
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/python",
+    "-B",
+    "-m",
+    "pytest",
+    "--rootdir",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend",
+    "-o",
+    "addopts=--strict-markers",
+    "-q",
+    "/tmp/test_unimatch_expert500_local_worker_v1_candidate.py",
+    "/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py",
+    "/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py",
+    "/tmp/test_unimatch_expert500_freeze_launch_v14_local_candidate.py",
+    "/tmp/test_unimatch_expert500_export_v14_local_candidate.py"
+  ],
+  "cwd": "/private/tmp/unimatch-expert500-v14-root-clean-combined-gates-20261006/empty-cwd",
+  "environment": {
+    "HOME": "/Users/wpalish",
+    "PATH": "/usr/bin:/bin:/usr/sbin:/sbin",
+    "LANG": "en_US.UTF-8",
+    "LC_ALL": "en_US.UTF-8",
+    "TMPDIR": "/tmp",
+    "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "returncode": 0,
+  "before": {
+    "/tmp/unimatch-expert500-local-worker-v1-candidate.py": "8fbede0eaa700e7268367000705f111846835ac368a8e46ef80e7f1ad735195d",
+    "/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py": "29f8893e4cf0b2bb0df3d98a15732a458cb97f64c534feb4d0bc94f213ac2b28",
+    "/tmp/unimatch-expert500-journal-report-v14-local-candidate.py": "1a770b781d8fca4569cb8b4cb9613e0383383161f8926b6ffbc89e145c1b8cd1",
+    "/tmp/unimatch-expert500-freeze-v14-local-candidate.py": "bbaa94487f931c7b182b256273b4a8ea32dacca6c0fb54631aea5dd67dccd3ce",
+    "/tmp/unimatch-expert500-launch-v14-local-candidate.py": "76569f1f3712de8cba35798187e37433bfd062fb12f5555d21f58fcd690c147d",
+    "/tmp/unimatch-expert500-export-v14-local-candidate.py": "bc97b0124d64edc094ea6643f3c741b5ba4a216985c3172379b0e84ef6029aca",
+    "/tmp/test_unimatch_expert500_local_worker_v1_candidate.py": "85f83f298fe2999ded4318836da15e0dad1aaa95d0ee8999579913194a240d34",
+    "/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py": "61b92dd04ebc9f23ebdf02ea2d7c86c00a6f3a4c8dd971f82dea56b057c803c6",
+    "/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py": "ba01b5e95b44db57da86d4f3f4aa94cd88da01639f29338d53fb55b8764573ef",
+    "/tmp/test_unimatch_expert500_freeze_launch_v14_local_candidate.py": "26e4e45f29a6ad920d8ffb702196fa8c8232e6e33c3530941f092e10cf9f3054",
+    "/tmp/test_unimatch_expert500_export_v14_local_candidate.py": "23413c74fc58cd09bee079e69c58eba3718955ffa69d214708329e1fd51571e3"
+  },
+  "after": {
+    "/tmp/unimatch-expert500-local-worker-v1-candidate.py": "8fbede0eaa700e7268367000705f111846835ac368a8e46ef80e7f1ad735195d",
+    "/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py": "29f8893e4cf0b2bb0df3d98a15732a458cb97f64c534feb4d0bc94f213ac2b28",
+    "/tmp/unimatch-expert500-journal-report-v14-local-candidate.py": "1a770b781d8fca4569cb8b4cb9613e0383383161f8926b6ffbc89e145c1b8cd1",
+    "/tmp/unimatch-expert500-freeze-v14-local-candidate.py": "bbaa94487f931c7b182b256273b4a8ea32dacca6c0fb54631aea5dd67dccd3ce",
+    "/tmp/unimatch-expert500-launch-v14-local-candidate.py": "76569f1f3712de8cba35798187e37433bfd062fb12f5555d21f58fcd690c147d",
+    "/tmp/unimatch-expert500-export-v14-local-candidate.py": "bc97b0124d64edc094ea6643f3c741b5ba4a216985c3172379b0e84ef6029aca",
+    "/tmp/test_unimatch_expert500_local_worker_v1_candidate.py": "85f83f298fe2999ded4318836da15e0dad1aaa95d0ee8999579913194a240d34",
+    "/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py": "61b92dd04ebc9f23ebdf02ea2d7c86c00a6f3a4c8dd971f82dea56b057c803c6",
+    "/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py": "ba01b5e95b44db57da86d4f3f4aa94cd88da01639f29338d53fb55b8764573ef",
+    "/tmp/test_unimatch_expert500_freeze_launch_v14_local_candidate.py": "26e4e45f29a6ad920d8ffb702196fa8c8232e6e33c3530941f092e10cf9f3054",
+    "/tmp/test_unimatch_expert500_export_v14_local_candidate.py": "23413c74fc58cd09bee079e69c58eba3718955ffa69d214708329e1fd51571e3"
+  },
+  "log_sha256": "8bd879241ddbb6507e27405abbbbbbc5e1dab5013aa4331ee5dc1cc29af6d157",
+  "source_requests": 0,
+  "model_requests": 0,
+  "source_credential_names_absent": true,
+  "cwd_dotenv_absent": true
+}
