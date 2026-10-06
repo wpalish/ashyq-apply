@@ -1745,3 +1745,43 @@ switched to cards; I110 the account menu covered the sidebar (now opens beside t
 overflowed at 320 px (tabs and the Filters panel); I112 the phone search covered the title (now its
 own row); I113 the desk programme panel collapsed its head (grid min-size); I114 the Filters button had
 no name on phones; I115 a class name shared with the community card broke the step header.
+
+## 35. The landing story, in the code (2026-10-06)
+
+Owner: "Дальше" — after the screens, the landing animation of §33 goes into the code.
+
+`components/LandingStory.tsx` draws the approved concept live: one sticky night stage under a sticky
+header, the track's height (640 vh) as the scrub distance, a smoothed playhead that follows the scroll
+both ways, the globe and the six routes on a canvas (`lib/globe`'s projection and land dots), the words,
+passes and the opened sheet as DOM over it. The five scenes, their timings and every figure are the
+concept's. Under the story, on paper: how it works in four steps, why Unimatch, the footer; the robot
+hero, its image and the old landing rules are gone. Frames at the concept's keyframes were compared side
+by side on a phone (390 × 844) and a desk (1440 × 900) and sent to the owner.
+
+What the concept did not have to survive, and the code does:
+
+- **Any height.** Cards stack under the words they follow, measured, not at fixed fractions; on a
+  short screen the opened sheet rises over the pass's lower edge (never above its city and price)
+  rather than run into the way in. Headings scale with the height. Checked at 360 × 620 – 690,
+  390 × 664 (an iPhone with its bars), 390 × 844, 820 × 1180, 1024 × 768 and 1440 × 900.
+- **Still.** Under reduced motion, or a screen under 640 px tall (a phone held sideways, the first
+  iPhone SE), nothing scrubs: the question, the opened pass with every line and the way in stand in
+  the page's flow over the globe.
+- **Reading order.** Scenes fade by opacity only, so a screen reader reads the whole story in order
+  wherever the page is scrolled; the two passes behind and the pass's changing figure are hidden from
+  it (the lines under it read the same figures); the way in shows when a keyboard reaches it.
+- **Cost.** The loop runs only while the stage is on screen and the playhead moves; at rest it
+  draws nothing. Each land dot's trigonometry is worked out once, the dots are drawn in three
+  batches by depth, and once the globe holds still (the late scenes) it is reused from a layer.
+
+Review (I116–I122): I116 the example's money answer said "Full ride" beside 1,848 USD left to pay, for
+a grant the sheet calls competitive — it is now "Competitive", the app's word for a grant that is
+awarded by selection; I117 "20 programmes that match what you study" read as a promise to the visitor
+— it now says they are the demo run's, for one applicant from Astana; I118 the way in could not be
+tapped at the end of the story (a scene's pointer events fell back to the stylesheet's "none"); I119
+on 320 × 568 and 360 × 620 the last scene ran into the way in; I120 under reduced motion the question
+— the page's h1 — was hidden, and faded scenes left the reading order; I121 the scroll hint sat off
+centre (a global max-width on paragraphs); I122 the globe used the app's land, four times as dense as
+the concept's (8,441 dots against 1,891) — brighter than approved, and about 20 frames a second on a
+4× slowed CPU; it is thinned on the sphere to the concept's spacing (some 1,900 dots), and the 90th
+percentile frame went from 67 to 33 ms on the same throttle.

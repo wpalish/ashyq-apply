@@ -1,9 +1,24 @@
+/**
+ * The public landing (palette E, Unimatch): the scroll story first - the
+ * question, the routes from home, a pass opened line by line, the three
+ * answers - then how it works and what it will not do, in plain words.
+ */
+
+import { LandingStory } from '@/components/LandingStory';
+
+const STEPS = [
+  { n: '1', title: 'Your profile', text: 'What you study, your results and where you would go. Nothing is guessed for you.' },
+  { n: '2', title: 'We read the pages', text: 'Official programme, fee and grant pages — each fact keeps its source and the date it was read.' },
+  { n: '3', title: 'Decide one at a time', text: 'Every programme as a pass: what is left to pay, and three separate answers.' },
+  { n: '4', title: 'Your plan', text: 'The deadlines on what you keep, and the documents each one asks for.' },
+];
+
 export function PublicLanding() {
   return (
     <div className="landing">
       <header className="landing__header">
         <a className="landing__brand" href="#/welcome" aria-label="Unimatch home">
-          <span className="logo-tile" aria-hidden="true" /> Unimatch
+          <span className="logo-tile" aria-hidden="true" /> unimatch
         </a>
         <nav aria-label="Public navigation">
           <a href="#how-it-works">How it works</a>
@@ -14,36 +29,38 @@ export function PublicLanding() {
       </header>
 
       <main>
-        <section className="landing__hero" aria-labelledby="landing-title">
-          <div className="landing__hero-copy">
-            <span className="home-eyebrow">SAME STUDENTS. BIGGER HORIZONS.</span>
-            <h1 id="landing-title">Find a university<br />that fits <em>you.</em></h1>
-            <p>Personalized recommendations. Real data. Global opportunities. Your path, made clearer.</p>
-            <div className="landing__actions">
-              <a className="landing__cta" href="#/sign-in?create=1">Start your journey <span aria-hidden="true">→</span></a>
-              <a className="landing__secondary" href="#how-it-works">See how it works</a>
-            </div>
-          </div>
-          <img src="/brand/unimatch-journey.png" alt="A small Unimatch robot looks toward a university across a mountain lake" />
-        </section>
+        <LandingStory />
 
         <section className="landing__steps" id="how-it-works" aria-labelledby="steps-title">
-          <span className="home-eyebrow">A CLEARER PATH</span>
-          <h2 id="steps-title">Four simple steps. One brighter future.</h2>
+          <p className="landing__kicker">How it works</p>
+          <h2 id="steps-title">Four steps, each one yours</h2>
           <ol>
-            <li><strong>01 · Build your profile</strong><span>Share your goals and academic background.</span></li>
-            <li><strong>02 · We research</strong><span>We check available university and programme sources.</span></li>
-            <li><strong>03 · Compare with clarity</strong><span>See matches, unknowns and evidence together.</span></li>
-            <li><strong>04 · Plan your next step</strong><span>Keep decisions and document requirements organized.</span></li>
+            {STEPS.map((s) => (
+              <li key={s.n}>
+                <span className="landing__n" aria-hidden="true">{s.n}</span>
+                <strong>{s.title}</strong>
+                <span>{s.text}</span>
+              </li>
+            ))}
           </ol>
         </section>
 
-        <section className="landing__promise" id="why-unimatch">
+        <section className="landing__promise" id="why-unimatch" aria-labelledby="promise-title">
           <div>
-            <span className="home-eyebrow">MORE THAN A SEARCH</span>
-            <h2>Real information.<br /><em>Brighter choices.</em></h2>
+            <p className="landing__kicker">Why Unimatch</p>
+            <h2 id="promise-title">What a page says, what it does not — and no guesses</h2>
           </div>
-          <p>Unimatch shows what a source confirms, what remains unknown, and which questions are worth asking. You make the decision with a clearer view.</p>
+          <div className="landing__promise-text">
+            <p>
+              Every price, requirement and deadline comes with the page it was read from and the date.
+              What a page does not publish stays unknown — it is never filled in for you.
+            </p>
+            <p>
+              Requirements, your profile and money stay three separate answers. None of them predicts
+              an admission decision: that is the university&apos;s.
+            </p>
+            <a className="landing__cta" href="#/sign-in?create=1">Start with your profile <span aria-hidden="true">→</span></a>
+          </div>
         </section>
       </main>
 

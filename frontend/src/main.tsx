@@ -20,6 +20,7 @@ import './styles/global.css';
 import './styles/components.css';
 import './styles/unimatch.css';
 import './styles/pass.css';
+import './styles/landing.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

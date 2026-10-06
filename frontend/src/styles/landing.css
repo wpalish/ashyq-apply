@@ -1,0 +1,168 @@
+/*
+ * The public landing (palette E): a night header and the scroll story, then
+ * how it works on paper. docs/design/redesign-concepts.md §33.
+ */
+.landing { min-height: 100vh; background: var(--paper); color: var(--ink); }
+.landing__header {
+  background: #101014; color: #fff;
+  width: 100%; max-width: none; margin: 0; min-height: 4rem;
+  padding: 0.85rem clamp(1rem, 4vw, 4rem);
+  /* It stays over the story, as in the concept: the stage is the same night. */
+  position: sticky; top: 0; z-index: 5;
+}
+.landing__header .landing__brand, .landing__header .landing__brand:hover { color: #fff; letter-spacing: -0.04em; font-size: 1.3rem; }
+.landing__header nav a { color: #B9B9C4; }
+.landing__header nav a:hover { color: #fff; }
+.landing__header .landing__sign-in { background: #fff; color: #111114; border-radius: 999px; }
+.landing__header .landing__sign-in:hover { background: #E8E2D0; color: #111114; }
+
+/* --- the scroll story ------------------------------------------------------ */
+/* Faded scenes stay in the reading order (LandingStory); until the script
+   runs, only the question shows. */
+.ls { position: relative; height: 640vh; background: #101014; color: #fff; }
+.ls__stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.ls__globe { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.ls__card { display: contents; }
+.ls__layer { position: absolute; left: 0; right: 0; top: clamp(5rem, 14svh, 6.25rem); padding: 0 22px; will-change: opacity, transform; }
+.ls__layer + .ls__layer:not(.ls__layer--bottom) { opacity: 0; }
+.ls__layer--tight { top: clamp(4.75rem, 13.5svh, 6rem); }
+.ls__layer--bottom { top: auto; bottom: clamp(1.25rem, 5svh, 2.75rem); bottom: calc(clamp(1.25rem, 5svh, 2.75rem) + env(safe-area-inset-bottom)); opacity: 0; pointer-events: none; }
+/* A keyboard reaches the way in wherever the page is scrolled. */
+.ls__layer--bottom:focus-within { opacity: 1 !important; transform: none !important; pointer-events: auto !important; }
+.ls__eb { margin: 0; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+.ls__eb--1 { color: var(--pass-tint-1); }
+.ls__eb--2 { color: var(--pass-tint-2); }
+.ls__eb--3 { color: var(--pass-tint-3); }
+.ls__eb--4 { color: var(--pass-tint-4); }
+.ls__eb--5 { color: var(--pass-tint-5); }
+.ls__h1 {
+  margin: 0.6rem 0 0; max-width: none; color: #fff;
+  font-size: min(2.375rem, 5.6vh); font-size: min(2.375rem, 5.6svh);
+  line-height: 1.04; font-weight: 800; letter-spacing: -0.045em;
+}
+.ls__h1--sm { font-size: min(1.875rem, 4.4vh); font-size: min(1.875rem, 4.4svh); }
+.ls__sub { max-width: 34rem; margin: 0.75rem 0 0; font-size: 0.95rem; line-height: 1.5; color: #B9B9C4; text-shadow: 0 0 4px #101014, 0 0 14px #101014; }
+
+.ls__pass {
+  position: absolute; left: 22px; right: 22px; top: 0; padding: 18px 20px; overflow: hidden;
+  border-radius: 26px; background-color: var(--pass); color: #fff; opacity: 0;
+  will-change: transform, opacity; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+.ls__pass::before { content: ''; position: absolute; right: -40px; top: -40px; width: 150px; height: 150px; border-radius: 50%; background: rgba(255, 255, 255, 0.12); }
+.ls__pass p { margin: 0; position: relative; max-width: none; }
+.ls__c { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.07em; color: rgba(255, 255, 255, 0.88); }
+.ls__n { font-size: 1.9rem; font-weight: 800; line-height: 1.05; letter-spacing: -0.045em; }
+.ls__s { margin-top: 0.4rem !important; font-size: 0.82rem; font-weight: 600; }
+.ls__p { position: absolute !important; right: 20px; top: 18px; display: grid; justify-items: end; text-align: right; }
+.ls__p b { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em; }
+.ls__p span { font-size: 0.66rem; font-weight: 600; color: rgba(255, 255, 255, 0.88); }
+.ls__demo { position: relative; display: inline-block; margin-top: 0.65rem; padding: 3px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.16); font-size: 0.64rem; font-weight: 700; letter-spacing: 0.04em; }
+
+.ls__sheet {
+  position: absolute; left: 14px; right: 14px; top: 0; padding: 6px 16px 10px;
+  border-radius: 22px; background: #fff; color: #111114; opacity: 0; will-change: transform, opacity;
+}
+.ls__row { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 10px 0; overflow: hidden; max-height: 80px; border-top: 1px solid #E3E1DC; }
+.ls__row:first-child { border-top: 0; }
+.ls__row span { display: grid; }
+.ls__row b { font-size: 0.95rem; font-weight: 600; }
+.ls__row small { font-size: 0.75rem; color: #5E5E6A; }
+.ls__row--total > b { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.03em; }
+.ls__row--total span b { font-weight: 700; }
+.ls__minus { color: #177A4C; }
+.ls__answers { overflow: hidden; max-height: 0; }
+.ls__j { display: flex; align-items: center; gap: 8px; max-width: none; margin: 0; padding: 8px 0; border-top: 1px solid #E3E1DC; font-size: 0.8rem; line-height: 1.35; }
+.ls__j em { flex: none; width: 80px; font-style: normal; font-size: 0.72rem; font-weight: 600; color: #5E5E6A; }
+.ls__j i { flex: none; padding: 4px 9px; border-radius: 999px; font-style: normal; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+.ls__j i.tone-warn { background: #FFF3DB; color: #8A5A00; }
+.ls__j i.tone-info { background: #E7F0FA; color: #1D4F91; }
+.ls__j i.tone-ok { background: #E4F5EC; color: #177A4C; }
+.ls__src { margin: 0; padding-top: 6px; font-size: 0.7rem; color: #5E5E6A; }
+
+.ls__cta {
+  display: inline-flex; align-items: center; gap: 8px; height: 52px; padding: 0 24px;
+  border-radius: 999px; background: #fff; color: #111114; font-size: 1rem; font-weight: 700; text-decoration: none;
+}
+.ls__cta:hover { background: #E8E2D0; color: #111114; }
+.ls__cta:focus-visible { outline: 3px solid var(--pass-tint-1); outline-offset: 3px; }
+.ls__fine { max-width: 30rem; margin: 0.65rem 0 0; font-size: 0.75rem; line-height: 1.5; color: #A9A9B6; text-shadow: 0 0 4px #101014, 0 0 12px #101014; }
+.ls__hint { position: absolute; left: 0; right: 0; bottom: 26px; max-width: none; margin: 0; text-align: center; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #8E8E9C; }
+
+/* A tablet held upright: the cards keep their desk width, at the right. */
+@media (min-width: 600px) and (max-width: 899px) {
+  .ls__pass, .ls__sheet { left: auto; right: 22px; width: 440px; }
+}
+
+/* Too narrow for the city and its price on one line: the price goes under it. */
+@media (max-width: 359px) {
+  .ls__p { position: relative !important; right: auto; top: auto; justify-items: start; text-align: left; margin-top: 0.4rem !important; }
+}
+
+@media (min-width: 900px) {
+  .ls__layer { padding: 0 max(22px, calc(50vw - 520px)); }
+  .ls__h1 { font-size: min(4rem, 7.4vh); font-size: min(4rem, 7.4svh); }
+  .ls__h1--sm { font-size: min(3.25rem, 6vh); font-size: min(3.25rem, 6svh); }
+  .ls__pass, .ls__sheet { left: auto; right: max(22px, calc(50vw - 520px)); width: 440px; }
+  .ls__j { font-size: 0.85rem; }
+  .ls__j em { width: 92px; }
+}
+
+/* Still: reduced motion, or too short a screen to stack the last scene
+   (LandingStory's STILL). The question, the opened pass and the way in, in
+   the page's flow over the globe; nothing scrubs. */
+@media (prefers-reduced-motion: reduce), (max-height: 639px) {
+  .ls { height: auto; }
+  .ls__stage {
+    position: relative; height: auto; display: grid; gap: 1.75rem; align-content: start;
+    padding: 2.5rem 22px 3rem;
+  }
+  .ls__layer, .ls__pass, .ls__sheet {
+    position: relative; inset: auto; width: auto; padding-inline: 0; opacity: 1; transform: none; pointer-events: auto;
+  }
+  .ls__card { display: grid; position: relative; }
+  .ls__pass { padding: 18px 20px; }
+  .ls__sheet { margin: 8px -8px 0; padding: 6px 16px 10px; }
+  .ls__answers { max-height: none; }
+  .ls__h1 { font-size: 2.375rem; }
+  .ls__card { max-width: 560px; }
+  [data-ls='s2'], [data-ls='s3'], [data-ls='s4'], [data-ls='s5'], [data-ls='pass-jp'], [data-ls='pass-be'], .ls__hint { display: none; }
+  @media (min-width: 900px) {
+    .ls__stage { grid-template-columns: minmax(0, 1fr) 440px; column-gap: 3rem; padding: 4rem max(22px, calc(50vw - 520px)) 4rem; }
+    [data-ls='s1'] { grid-column: 1; grid-row: 1; }
+    .ls__layer--bottom { grid-column: 1; grid-row: 2; align-self: end; }
+    .ls__h1 { font-size: 3.5rem; }
+    .ls__card { grid-column: 2; grid-row: 1 / 3; max-width: none; }
+    .ls__pass, .ls__sheet { right: auto; width: auto; }
+  }
+}
+
+/* --- after the story, on paper ------------------------------------------- */
+.landing__kicker { margin: 0; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted); }
+.landing__steps, .landing__promise { width: min(calc(100% - 2rem), 1120px); margin: 5rem auto; padding: 0; scroll-margin-top: 6rem; }
+.landing__steps h2, .landing__promise h2 { margin: 0.6rem 0 1.75rem; font-size: clamp(2rem, 1.6rem + 1.8vw, 3rem); font-weight: 800; letter-spacing: -0.045em; line-height: 1.05; }
+.landing__steps ol { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.8rem; margin: 0; padding: 0; list-style: none; }
+.landing__steps li { display: grid; align-content: start; gap: 0.5rem; min-height: 0; padding: 1.25rem; border: 1px solid var(--rule); border-radius: 22px; background: var(--surface); }
+.landing__steps li strong { font-size: 1.05rem; color: var(--ink); }
+.landing__steps li span:last-child { font-size: 0.9rem; line-height: 1.5; color: var(--ink-muted); }
+.landing__n { display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--ink); color: var(--ink-inverted); font-weight: 800; }
+.landing__promise { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; align-items: start; padding-top: 3rem; border-top: 1px solid var(--rule); }
+.landing__promise-text p { max-width: 44ch; margin: 0 0 1rem; font-size: 1.05rem; line-height: 1.55; color: var(--ink-muted); }
+.landing__promise .landing__cta {
+  display: inline-flex; align-items: center; gap: 0.5rem; min-height: 3rem; padding: 0 1.4rem;
+  border-radius: 999px; background: var(--ink); color: var(--ink-inverted); font-weight: 700; text-decoration: none;
+}
+.landing__promise .landing__cta:hover { background: var(--sun-hover); color: var(--ink-inverted); }
+.landing__footer { width: min(calc(100% - 2rem), 1120px); padding: 1.25rem 0 2rem; }
+
+@media (max-width: 900px) {
+  .landing__steps ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .landing__promise { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .landing__header nav { display: none; }
+  .landing__steps ol { grid-template-columns: minmax(0, 1fr); }
+  .landing__steps, .landing__promise { margin: 3.5rem auto; }
+  .landing__promise { gap: 1rem; }
+  .landing__promise h2 { margin-bottom: 0.5rem; }
+  .landing__footer { display: grid; gap: 0.5rem; }
+}
