@@ -172,8 +172,9 @@ def _language_links(html: str, base: str, domain: str | None) -> list[str]:
 #: deadline and the English minimum often sit two or three official links below
 #: the admissions hub the adapter reads (Delft: hub -> "BSc - International
 #: diploma" -> "Admission Requirements" / "Dates & Deadlines"; UBC: hub ->
-#: "Dates and deadlines"). False keeps the adapter as it was.
-ROUTE_LEADS = False
+#: "Dates and deadlines"). On since paired run 37545452839 (2 stable gains,
+#: 0 losses; owner delegation 2026-10-06). False turns it off.
+ROUTE_LEADS = True
 #: Route and deadline pages followed per programme, beyond every other target.
 _MAX_ROUTE_FOLLOWS = 4
 _DEADLINE_LEAD = re.compile(
