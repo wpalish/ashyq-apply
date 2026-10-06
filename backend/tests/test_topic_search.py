@@ -112,8 +112,16 @@ async def test_a_refusal_stops_the_topic_search_and_is_recorded(provider):
     assert any("Topic search (fees)" in e for e in out.errors)
 
 
-async def test_topic_search_spends_only_what_discovery_left(provider):
-    """One institution gets six queries in all, discovery's included."""
+async def test_topic_search_spends_only_what_discovery_left(provider, monkeypatch):
+    """One institution gets six queries in all, discovery's included.
+
+    Pinned to the reader before BL-1; under BL-1 (default since 2026-10-06)
+    the last query is the scholarship search's, which
+    test_shared_query_budget covers.
+    """
+    from app.adapters.search import intent
+
+    monkeypatch.setattr(intent, "SHARED_QUERY_BUDGET", False)
     built = provider(["https://www.rug.nl/a", "https://www.rug.nl/b", "https://www.rug.nl/c"])
     adapter = WebRequirementsAdapter(None, "2027/28")  # type: ignore[arg-type]
     spent = candidate()
