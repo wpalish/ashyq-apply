@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**CURRENT evidence placement correction [expert-500], 2026-10-06 16:12 UTC, holder gpt-6-astra:** published merge452edba has a real failed CI37491235027 sqlite static gate; original six snapshot E402/I001 errors confirmed, postgres/frontend/security jobs passed. Original18-record bundle moved byte-identically outside executable evaluation to docs/process/evidence/expert500/2026-10-06/main57-integration; manifest6904e0f4 unchanged, no semantic source/test/config change. Fresh static382 green; full4335/94.85/frontend232/demo20 evidence retained. Five new originals/manifest54d110d4 record failed CI and actual corrected static checks. Current V14 helpers still candidates, no actual neutral/OS/source/pilot/deployment execution.
+
 **CURRENT main57 integration green [expert-500], 2026-10-06 15:54 UTC, holder gpt-6-astra:** clean no-conflict merge parents fb46ff1/origin-main87ee25c staged, source unchanged during actual gates. Backend4335passed/94.85%, static382, frontend232/28files/type/lint/build/npmci0vulnerabilities, isolated synthetic demo20/Groningenfirst/UBCOUT_OF_BUDGET, one Alembic d8e412c6a901. Gate18 originals/sourcehash snapshot manifest6904e0f48b118bec15513e4ea680d09e3c9fa7b48c756233a0e13f882c73b880 under protocol.2026-10-06/main57-integration. Owner existing local key is saved/ignored/private, not yet queried. V13 remains CLOSED_UNSCORED; current source is not a measured pilot or ready product.
 
 **CURRENT BATON TAKEN [expert-500], 2026-10-06 15:34 UTC, holder gpt-6-astra:** task/expert-500-phase1 at76426a5, clean/fully pushed/one Alembic d8e412c6a901 head. Owner pasted the existing Exa credential into ignored backend/.env on a standalone line; root relocated that single token into the empty named field, saved atomically/private, and verified presence/match booleans only. No value/digest/output/Git/provider request. Missing local credential input is resolved, API availability not yet measured. Fetch reveals origin/main87ee25c (11 new commits, PR56/57); integrate before prospective local runtime implementation. Original V13 e327498/tag/trial remains CLOSED_UNSCORED and immutable; signed reviewed9 must not replace original62/40 or be read for the blind pilot. No deploy/screenshot intent assumed.
@@ -250,6 +252,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**Evidence correction after452edba [expert-500], 2026-10-06 16:12 UTC:** eighteen-record bundle including391-public-source hash map relocated without editing any original byte or manifest, to docs/process/evidence/expert500/2026-10-06/main57-integration. Five original CI/static records at main57-evidence-correction, manifest54d110d4143d938938b9fc24471700355fe4f0b0282e07ce4df2cc7a3f723120. CI37491235027 remains recorded failed, no rerun or success relabel. Fresh Ruff/format/mypy382 green after coordinate correction; source behavior unchanged, actual4335/94.85 tests retained. New V14 source-free neutral/OS/availability helper bytes prepared only, old V13 helpers untouched.
 
 **Integration checkpoint after fb46ff1 [expert-500], 2026-10-06 15:54 UTC:** official main87ee25c integrated without conflicts; preserved V13 year provenance and official DOC2/3 defaults. Gates and demo green as §6; eighteen original gate logs/receipts/runners plus391 public source hashes readback verified, manifest6904e0f4. No actual model/provider/source request, label/report/seal/deployment or old trial replay. Current commit records the merge; exact commit to be added after push.
 
@@ -1989,6 +1993,12 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**WRITE-AHEAD evidence coordinate correction [expert-500], 2026-10-06 16:10 UTC:** combined-source CI37491235027 fails static scanning because the two preserved executable .py originals were added under evaluation after local gates. Local actual Ruff reproduces6errors only in demo-readonly snapshot (E402/I001). Move the entire18-record original bundle/manifest byte-for-byte into docs/process/evidence/expert500/2026-10-06/main57-integration, outside executable evaluation scope. Do not edit original script/log/manifest bytes or change lint scope/rules. Rehash allrecords/manifest and fresh static gates; no semantic source/test/default change or pilot. Preserve original source CI state as failed, never relabel it green.
+
+
+**WRITE-AHEAD root V14 source-free preflights [expert-500], 2026-10-06 16:03 UTC:** create fresh /tmp/unimatch-expert500-neutral-v14-local-candidate.py and isolation-preflight-v14-local-candidate.py from immutable V13 originals without editing those originals. New protocol/path/helper binding and explicit sanitized selector environment; bind actual parent/report/worker/admission bytes before/after. Prepare only now: no model/OS preflight execution until reviewed candidate source/helper mocks and source gates pass. Root availability helper also fresh, same original CLI/account read-only, no auth reset/new identity. OS sentinel proof is filesystem blinding, never claimed as network denial.
+
 
 **NEXT prospective local runtime [expert-500], 2026-10-06 15:54 UTC:** publish green official-main integration first. Review existing three agents' /tmp-only admission/hooks, persistent worker, local parent/report/freeze candidates and tests; install only with a new exact write-ahead after review. Execute meaningful synthetic tests and actual source/static gates, secret-free exact-runtime neutral/default Astra and OS denial proofs; then immutable new source/transport freeze, real source CI and once-only fresh whole-ten local pair. Never reuse V13 baselines or mutate frozen helpers. Keep60reads/6queries/default effort/expert900UTC guard/algorithm120s+reserve, original62/40, blinding/immutable seal/reason map/outside_policy/heldout150. Any unavailable provider/model/account stops rather than quota or identity workaround.
 
@@ -4122,6 +4132,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**CURRENT correction gates [expert-500], 2026-10-06 16:12 UTC:** failed sourceCI37491235027 (sqlite static6 snapshot errors only; postgres/frontend/security success) preserved. Byte-identical bundle relocation removes snapshots from executable evaluation scope; actual fresh Ruff check/format/mypy382 exit0. Existing actual4335/94.85, frontend232/type/lint/build/npmci, isolateddemo20/head1 remain unchanged semantic-source prerequisites. Manifest54d110d4 preserves original failure plus fresh static outputs; selected-source remoteCI green is not claimed.
+
 **CURRENT combined-main local gates [expert-500], 2026-10-06 15:54 UTC:** actual pytest4335passed/2warnings/509.59s/coverage94.85%; Ruff check+format and mypy app/tests/evaluation382 green. Actual npmci0vulnerabilities/type/lint/test232in28files/build all exit0. New isolated demo migration/seed/read-only20/Groningen#1/UBCOUT_OF_BUDGET passed; single Alembic d8e412c6a901. Source remained unchanged throughout gates. Original logs/receipts/executed runner preserved under protocol.2026-10-06/main57-integration with manifest6904e0f4 and391 public source hashes. Real key overridden empty for gates. These are integration prerequisites only; no V14 runtime/neutral/OS/sourceCI/live accuracy/40of62 claim.
 
 **CURRENT V13 terminal state, 2026-10-05 19:54 UTC:** sourceCI12/12, local4328/94.90/381, helper650/11 and baseline10/10/340reads58queries remain green exact-source evidence. Original expert stage is ineligible:3incomplete/7unstarted, first shared cause source_transport_audit_incomplete after Aalto immutable900s. Terminal Aalto source counters are unknown due missing artifact; never replace with0. GH job steps[]/runner_id0 and failure annotation identify compute allocation failure, not model reasoning or an observed Exa refusal. No report run/seal/62labels/score;40of62 remains unmeasured. CLOSED_UNSCORED originals preserved unchanged.
@@ -5436,6 +5448,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+- 2026-10-06 16:12 UTC | gpt-6-astra | [expert-500] | 452edba -> byte-identical evidence relocation after CI reproduced6 snapshot-lint errors; actual static382 green,5 original CI/static records manifest54d110d4. No semantic source/pilot/label/deploy; V14preflights prepared only.
 
 - 2026-10-06 15:54 UTC | gpt-6-astra | [expert-500] | fb46ff1 + origin/main87ee25c -> conflict-free integration; actual4335/94.85/static382/frontend232/demo20/head1 green,18 originals manifest6904e0f4. Local credential resolved privately; three existing agents implement /tmp-only candidates, no live calls/labels/deploy.
 

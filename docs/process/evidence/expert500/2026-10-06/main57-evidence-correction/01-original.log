@@ -1,0 +1,81 @@
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	﻿2026-10-06T15:54:58.5448822Z ##[group]Run .venv/bin/ruff check app tests evaluation
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.5449264Z ^[[36;1m.venv/bin/ruff check app tests evaluation^[[0m
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.5449648Z ^[[36;1m.venv/bin/ruff format --check app tests evaluation^[[0m
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.5450024Z ^[[36;1m.venv/bin/mypy app tests evaluation^[[0m
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.5450557Z ^[[36;1mUNIMATCH_DATABASE_URL=sqlite:////tmp/unimatch-ci.db .venv/bin/pytest --cov=app --cov-fail-under=92^[[0m
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.5513927Z shell: /usr/bin/bash -e {0}
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.5514207Z env:
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.5514491Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.5514956Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.5515425Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.5515839Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.5516488Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.5516902Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.5517279Z ##[endgroup]
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6754657Z evaluation/research/data/protocol.2026-10-06/main57-integration/unimatch-expert500-main57-demo-readonly.py:7:1: E402 Module level import not at top of file
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6755604Z   |
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6755907Z 5 | root = Path('/tmp/unimatch-expert500-main57-gates-20261006')
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6757124Z 6 | os.environ.update(UNIMATCH_EXA_API_KEY='', UNIMATCH_DATABASE_URL=f'sqlite:///{root / "demo.db"}', UNIMATCH_DEMO_MODE='true', UNIMATCH_…
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6757774Z 7 | from app.config import Settings, get_settings
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6758104Z   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6758416Z 8 | Settings.model_config['env_file'] = None
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6758719Z 9 | get_settings.cache_clear()
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6758957Z   |
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6759059Z 
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6759616Z evaluation/research/data/protocol.2026-10-06/main57-integration/unimatch-expert500-main57-demo-readonly.py:7:1: I001 [*] Import block is un-sorted or un-formatted
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6760339Z   |
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6760613Z 5 | root = Path('/tmp/unimatch-expert500-main57-gates-20261006')
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6761729Z 6 | os.environ.update(UNIMATCH_EXA_API_KEY='', UNIMATCH_DATABASE_URL=f'sqlite:///{root / "demo.db"}', UNIMATCH_DEMO_MODE='true', UNIMATCH_…
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6762372Z 7 | from app.config import Settings, get_settings
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6762699Z   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ I001
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6763016Z 8 | Settings.model_config['env_file'] = None
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6785909Z 9 | get_settings.cache_clear()
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6786604Z   |
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6786956Z   = help: Organize imports
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6787218Z 
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6788152Z evaluation/research/data/protocol.2026-10-06/main57-integration/unimatch-expert500-main57-demo-readonly.py:10:1: E402 Module level import not at top of file
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6789387Z    |
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6789773Z  8 | Settings.model_config['env_file'] = None
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6790311Z  9 | get_settings.cache_clear()
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6790630Z 10 | from app.db import session_scope
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6790916Z    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6791223Z 11 | from app.models import ProgramResultRow
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6791579Z 12 | from app.schemas.result import ProgramResult
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6791878Z    |
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6791980Z 
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6792539Z evaluation/research/data/protocol.2026-10-06/main57-integration/unimatch-expert500-main57-demo-readonly.py:10:1: I001 [*] Import block is un-sorted or un-formatted
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6793249Z    |
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6793476Z  8 |   Settings.model_config['env_file'] = None
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6793780Z  9 |   get_settings.cache_clear()
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6794054Z 10 | / from app.db import session_scope
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6794361Z 11 | | from app.models import ProgramResultRow
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6794955Z 12 | | from app.schemas.result import ProgramResult
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6795289Z    | |____________________________________________^ I001
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6795605Z 13 |   with session_scope() as session:
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6796413Z 14 |       rows = session.query(ProgramResultRow).order_by(ProgramResultRow.score_total.desc()).all()
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6796912Z    |
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6797116Z    = help: Organize imports
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6797275Z 
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6797818Z evaluation/research/data/protocol.2026-10-06/main57-integration/unimatch-expert500-main57-demo-readonly.py:11:1: E402 Module level import not at top of file
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6798509Z    |
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6798714Z  9 | get_settings.cache_clear()
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6798984Z 10 | from app.db import session_scope
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6799283Z 11 | from app.models import ProgramResultRow
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6799588Z    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6799913Z 12 | from app.schemas.result import ProgramResult
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6800233Z 13 | with session_scope() as session:
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6800484Z    |
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6800587Z 
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6801115Z evaluation/research/data/protocol.2026-10-06/main57-integration/unimatch-expert500-main57-demo-readonly.py:12:1: E402 Module level import not at top of file
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6801820Z    |
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6802041Z 10 | from app.db import session_scope
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6802389Z 11 | from app.models import ProgramResultRow
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6802723Z 12 | from app.schemas.result import ProgramResult
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6803039Z    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6803338Z 13 | with session_scope() as session:
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6803811Z 14 |     rows = session.query(ProgramResultRow).order_by(ProgramResultRow.score_total.desc()).all()
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6804278Z    |
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6804377Z 
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6804466Z Found 6 errors.
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6804714Z [*] 2 fixable with the `--fix` option.
+backend (sqlite)	Run .venv/bin/ruff check app tests evaluation	2026-10-06T15:54:58.6813875Z ##[error]Process completed with exit code 1.
