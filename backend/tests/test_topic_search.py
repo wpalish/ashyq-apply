@@ -140,3 +140,49 @@ async def test_no_topic_query_once_discovery_spent_the_budget(provider):
     assert await adapter._find_topic_pages(spent, program(), out) == ()
     assert built.queries == []
     assert any("Topic search not run" in e for e in out.errors)
+
+
+class _FailsOnce(Provider):
+    """The first topic query fails without a 429; the rest answer."""
+
+    async def search(self, *, query, domains=(), max_results=10):
+        if not self.queries:
+            self.queries.append(query)
+            raise SearchUnavailable("transient")
+        return await super().search(query=query, domains=domains, max_results=max_results)
+
+
+def _install(monkeypatch, built):
+    monkeypatch.setattr(search_pkg, "get_search_provider", lambda: built)
+    return built
+
+
+async def test_ts2_off_one_failed_topic_ends_topic_search(monkeypatch):
+    built = _install(monkeypatch, _FailsOnce(["https://www.rug.nl/a", "https://www.rug.nl/b"]))
+    adapter = WebRequirementsAdapter(None, "2027/28")  # type: ignore[arg-type]
+    pages = await adapter._find_topic_pages(candidate(), program(), AdapterResult())
+    assert pages == ()
+    assert len(built.queries) == 1
+
+
+async def test_ts2_on_the_other_topics_are_still_asked(monkeypatch):
+    from app.adapters.requirements import web_requirements
+
+    monkeypatch.setattr(web_requirements, "TOPIC_SEARCH_CONTINUE", True)
+    built = _install(monkeypatch, _FailsOnce(["https://www.rug.nl/a", "https://www.rug.nl/b"]))
+    adapter = WebRequirementsAdapter(None, "2027/28")  # type: ignore[arg-type]
+    out = AdapterResult()
+    pages = await adapter._find_topic_pages(candidate(), program(), out)
+    assert [t for t, _ in pages] == ["fees", "deadline"]
+    assert len(built.queries) == 3
+    assert any("Topic search (english)" in e for e in out.errors)
+
+
+async def test_ts2_on_a_429_still_stops(monkeypatch, provider):
+    from app.adapters.requirements import web_requirements
+
+    monkeypatch.setattr(web_requirements, "TOPIC_SEARCH_CONTINUE", True)
+    built = provider(["https://www.rug.nl/a"], fail=1)
+    adapter = WebRequirementsAdapter(None, "2027/28")  # type: ignore[arg-type]
+    assert await adapter._find_topic_pages(candidate(), program(), AdapterResult()) == ()
+    assert len(built.queries) == 1

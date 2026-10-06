@@ -384,7 +384,11 @@ async def capture_one(
         try:
             return await original_search(provider, *args, **kwargs)
         except Exception as exc:
-            print(f"search failed after {time.monotonic() - began:.1f}s: {type(exc).__name__}")
+            reason = getattr(getattr(exc, "reason", None), "value", None)
+            print(
+                f"search failed after {time.monotonic() - began:.1f}s: {type(exc).__name__}"
+                f" ({reason or 'no reason'}, http {getattr(exc, 'http_status', None)})"
+            )
             if budget:
                 raise budget.failed_search(exc) from None
             raise
@@ -694,6 +698,11 @@ def main() -> None:
         "on its own clock of SECONDS; the decision stage's budget is untouched",
     )
     parser.add_argument(
+        "--topic-search-continue",
+        action="store_true",
+        help="plan rule TS-2: a failed topic query no longer ends topic search",
+    )
+    parser.add_argument(
         "--fee-year-columns",
         action="store_true",
         help="plan rule DF-1: fee tables with academic years as columns and named "
@@ -837,6 +846,10 @@ def main() -> None:
         if args.with_documents:
             global DOCUMENT_SECONDS
             DOCUMENT_SECONDS = args.with_documents
+        if args.topic_search_continue:
+            from app.adapters.requirements import web_requirements as ts2_module
+
+            ts2_module.TOPIC_SEARCH_CONTINUE = True
         if args.fee_year_columns:
             from app.adapters import extraction as fee_module
 
@@ -959,6 +972,7 @@ def main() -> None:
                         *(["--document-leads"] if args.document_leads else []),
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
+                        *(["--topic-search-continue"] if args.topic_search_continue else []),
                         *(
                             ["--with-documents", str(args.with_documents)]
                             if args.with_documents
