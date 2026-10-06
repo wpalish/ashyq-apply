@@ -1,0 +1,32 @@
+tests/test_expert_live_budget.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Offline actual-wrapper checks for comparable strict algorithm captures."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | import asyncio
+ 6 | | import json
+ 7 | | import subprocess
+ 8 | | import sys
+ 9 | | from datetime import UTC, datetime
+10 | | from pathlib import Path
+11 | | from types import SimpleNamespace
+12 | | from typing import Any
+13 | |
+14 | | import pytest
+15 | |
+16 | | import app.config
+17 | |
+18 | | from app.adapters.fetching import FetchResult
+19 | | from app.adapters.search.base import SearchResponse, SearchUnavailable
+20 | | from app.config import get_settings
+21 | | from app.domain.enums import DegreeLevel, FetchOutcome
+22 | | from evaluation.research import live
+23 | | from evaluation.research.schema import Capture, Observation
+24 | | from scripts import canary_discovery as canary
+   | |______________________________________________^ I001
+   |
+   = help: Organize imports
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.

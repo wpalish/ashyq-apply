@@ -1,0 +1,42 @@
+{
+  "started_at": "2026-10-06T17:56:40.327902+00:00",
+  "finished_at": "2026-10-06T17:56:40.415165+00:00",
+  "gate": "static",
+  "results": [
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "backend",
+      "returncode": 0,
+      "log": "/tmp/unimatch-expert500-v14-deadline-final-gates-20261006/static-00-original.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "backend",
+      "returncode": 1,
+      "log": "/tmp/unimatch-expert500-v14-deadline-final-gates-20261006/static-01-original.log",
+      "bytes": 106,
+      "sha256": "0ee9f761fb5887f6c895d3892c6998bf5b5e20a10bfebf6b3a721e108e2fa7f8"
+    }
+  ],
+  "credential_environment_override_empty": true,
+  "measured_pilot": false
+}
