@@ -70,8 +70,9 @@ def v2(monkeypatch):
     monkeypatch.setattr(extraction, "DEADLINE_V2", True)
 
 
-def test_off_by_default_and_the_first_readers_miss_all_three():
-    assert extraction.DEADLINE_V2 is False
+def test_on_by_default_and_the_first_readers_miss_all_three(monkeypatch):
+    assert extraction.DEADLINE_V2 is True
+    monkeypatch.setattr(extraction, "DEADLINE_V2", False)
     assert deadlines(UBC) == []
     assert deadlines(AALTO) == []
     assert deadlines(NTU) == []

@@ -135,6 +135,27 @@ _DOCUMENT_ACTION = re.compile(
 #: and a secondary-school completion cell stops before the higher-education
 #: group. Off until a paired run with the documents stage (D7) measures it.
 DOCUMENT_RULES_V2 = False
+#: Plan rule DOC-3: the documents stage also reads the institution's own
+#: application-documents page, found by link text at most two hops from the
+#: programme page (paired run claude-doc2-paired-2: the stage read only the
+#: programme page and Groningen's checklist sat two links away). Same site
+#: only; at most two route pages scanned and two documents pages read.
+#: On by default since 2026-10-05 (owner: "да"; run claude-doc3-paired-3:
+#: two stable gains, zero losses, precision 1.0).
+DOCUMENT_LEADS = True
+MAX_ROUTE_PAGES = 2
+MAX_DOCUMENT_LEADS = 2
+_DOCUMENT_LEAD = re.compile(
+    r"\b(?:application|applicant|admission|required|supporting)\s+documents?\b"
+    r"|\bdocuments?\s+(?:to\s+submit|required|checklist)\b|\bdocument\s+checklist\b",
+    re.I,
+)
+_ROUTE_LEAD = re.compile(
+    r"\binternational\s+(?:diploma|qualifications?|applicants?|students?)\b"
+    r"|\bnon-?dutch\b|\bhow\s+to\s+apply\b|\bapplication\s+procedure\b"
+    r"|\badmission\s+(?:procedure|requirements)\b",
+    re.I,
+)
 _REQUIRED_WORD = re.compile(r"\b(?:required|mandatory|compulsory)\b", re.I)
 _QUALIFICATION_WORD = re.compile(r"\b(?:possess|hold|qualifications?|achievements?)\b", re.I)
 
@@ -206,6 +227,15 @@ class WebDocumentsAdapter:
         admission_docs = await self._from_page(
             candidate, program, program.url, DocumentPurpose.ADMISSION, out
         )
+        if DOCUMENT_LEADS and program.url:
+            seen_names = {d.name for d in admission_docs}
+            for lead in await self._document_leads(program.url):
+                for d in await self._from_page(
+                    candidate, program, lead, DocumentPurpose.ADMISSION, out
+                ):
+                    if d.name not in seen_names:
+                        seen_names.add(d.name)
+                        admission_docs.append(d)
         checklist.admission_documents = admission_docs
 
         for sch in scholarships:
@@ -261,6 +291,48 @@ class WebDocumentsAdapter:
         else:
             checklist.completeness = "official" if out.pages_failed == 0 else "partial"
         return checklist, out
+
+    async def _links(self, url: str) -> list[tuple[str, str]]:
+        res = await self.fetcher.get(url)
+        if not res.ok or res.is_pdf:
+            return []
+        base = res.final_url or url
+        return [
+            (link.text, link.url)
+            for link in build_document_ir(res.text, base).links
+            if same_source_site(url, link.url)
+        ]
+
+    async def _document_leads(self, programme_url: str) -> list[str]:
+        """DOC-3: the institution's own application-documents page, at most two hops away.
+
+        Groningen's programme page links "International diploma"; that page
+        links "Bachelor's application documents", where the checklist is.
+        The documents stage read the programme page only and found nothing.
+        """
+        leads: list[str] = []
+
+        def take(links: list[tuple[str, str]]) -> None:
+            for text, url in links:
+                if (
+                    _DOCUMENT_LEAD.search(text)
+                    and url != programme_url
+                    and url not in leads
+                    and len(leads) < MAX_DOCUMENT_LEADS
+                ):
+                    leads.append(url)
+
+        links = await self._links(programme_url)
+        take(links)
+        routes: list[str] = []
+        for text, url in links:
+            if _ROUTE_LEAD.search(text) and url not in routes and url != programme_url:
+                routes.append(url)
+        for route in routes[:MAX_ROUTE_PAGES]:
+            if len(leads) >= MAX_DOCUMENT_LEADS:
+                break
+            take(await self._links(route))
+        return leads
 
     async def _from_page(
         self,

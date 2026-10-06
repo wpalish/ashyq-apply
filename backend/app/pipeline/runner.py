@@ -428,8 +428,12 @@ class ResearchRunner:
         await step(*args)
 
     def _academic_year(self) -> str:
-        """The academic year adapters read tables for (rule AY-1 when on)."""
-        if APPLICANT_ACADEMIC_YEAR:
+        """The academic year adapters read tables for (rule AY-1 when on).
+
+        Live runs only: the demo's fixtures were written for the server's
+        year, and the golden demo payload must not move.
+        """
+        if APPLICANT_ACADEMIC_YEAR and not self.demo:
             context = self.profile.context
             return applicant_academic_year(context.intake_term, context.intake_year)
         return self.settings.academic_year
@@ -1630,12 +1634,14 @@ def _explanation_component(text: str):
 #: The questions a user actually needs answered before applying. Completeness is
 #: measured against these, not against whatever happened to be extracted -
 #: otherwise a page yielding one verified fact and nothing else reads as 100%.
-#: Plan rule AY-1 (2026-10-05), off until a paired run passes: fee and
+#: Plan rule AY-1 (2026-10-05), on by default since 2026-10-05 with TY-1
+#: (owner: "да"; run claude-ay1-over-ty1-2: Groningen tuition a stable gain,
+#: zero losses, precision 1.0): fee and
 #: requirement tables are read for the applicant's academic year (fall 2027 ->
 #: 2027/28), not the server's default. Groningen's fee table lists 2026-2027
 #: and 2027-2028, and the default chose the 2026-2027 row for a fall 2027
 #: applicant (run 37279746829).
-APPLICANT_ACADEMIC_YEAR = False
+APPLICANT_ACADEMIC_YEAR = True
 
 
 def applicant_academic_year(term: str, year: int) -> str:

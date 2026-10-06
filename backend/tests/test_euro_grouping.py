@@ -74,3 +74,30 @@ def test_tuition_rows_record_their_academic_year(monkeypatch: pytest.MonkeyPatch
     claims = extraction.extract_costs(text, builder)
     years = {c.scope.academic_year for c in claims if c.scope is not None}
     assert years == {"2027/28"}
+
+
+def test_tuition_rows_pick_the_requested_year_over_the_pages_first(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Groningen, run of 2026-10-05: the page names 2026-2027 first, the
+    # applicant asks for 2027/28; the row read must be the applicant's.
+    monkeypatch.setattr(extraction, "TUITION_ROW_YEAR", True)
+    text = (
+        "Tuition fees Nationality Year Fee EU/EEA 2026-2027 € 2694 full-time "
+        "non-EU/EEA 2026-2027 € 18900 full-time EU/EEA 2027-2028 € 2771 full-time "
+        "non-EU/EEA 2027-2028 € 19800 full-time"
+    )
+    builder = ClaimBuilder(
+        source_url="https://example.edu/fees",
+        specificity=SourceSpecificity.PROGRAM_INTAKE,
+        official_domain=True,
+        academic_year="2026/27",
+    )
+    builder.requested_academic_year = "2027/28"
+    claims = extraction.extract_costs(text, builder)
+    rows = {(c.normalized_value["amount"], c.scope.academic_year) for c in claims if c.scope}
+    assert rows == {(2771.0, "2027/28"), (19800.0, "2027/28")}
+    monkeypatch.setattr(extraction, "TUITION_ROW_YEAR", False)
+    builder.claims.clear()
+    old = {c.normalized_value["amount"] for c in extraction.extract_costs(text, builder)}
+    assert old == {2694.0, 18900.0}
