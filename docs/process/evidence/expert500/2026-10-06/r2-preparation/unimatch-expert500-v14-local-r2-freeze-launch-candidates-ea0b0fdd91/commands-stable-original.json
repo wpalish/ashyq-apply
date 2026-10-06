@@ -1,0 +1,173 @@
+{
+  "environment": {
+    "HOME": "/Users/wpalish",
+    "PATH": "/usr/bin:/bin:/usr/sbin:/sbin",
+    "LANG": "en_US.UTF-8",
+    "LC_ALL": "en_US.UTF-8",
+    "TMPDIR": "/tmp",
+    "MYPYPATH": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend",
+    "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend"
+  },
+  "commands": [
+    {
+      "log": "/tmp/unimatch-expert500-v14-local-r2-freeze-launch-candidates-ea0b0fdd91/ruff-stable-original.log",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/ruff",
+        "check",
+        "--config",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/ruff.toml",
+        "--ignore",
+        "E501,B023",
+        "/tmp/unimatch-expert500-freeze-v14-local-r2-candidate.py",
+        "/tmp/unimatch-expert500-launch-v14-local-r2-candidate.py",
+        "/tmp/test_unimatch_expert500_freeze_launch_v14_local_r2_candidate.py"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend",
+      "returncode": 0
+    },
+    {
+      "log": "/tmp/unimatch-expert500-v14-local-r2-freeze-launch-candidates-ea0b0fdd91/mypy-stable-original.log",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/python",
+        "-B",
+        "-m",
+        "mypy",
+        "--config-file",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/mypy.ini",
+        "--follow-imports=skip",
+        "/tmp/unimatch-expert500-freeze-v14-local-r2-candidate.py",
+        "/tmp/unimatch-expert500-launch-v14-local-r2-candidate.py",
+        "/tmp/test_unimatch_expert500_freeze_launch_v14_local_r2_candidate.py"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend",
+      "returncode": 0
+    },
+    {
+      "log": "/tmp/unimatch-expert500-v14-local-r2-freeze-launch-candidates-ea0b0fdd91/format-stable-original.log",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/ruff",
+        "format",
+        "--config",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/ruff.toml",
+        "--check",
+        "/tmp/unimatch-expert500-freeze-v14-local-r2-candidate.py",
+        "/tmp/unimatch-expert500-launch-v14-local-r2-candidate.py",
+        "/tmp/test_unimatch_expert500_freeze_launch_v14_local_r2_candidate.py"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend",
+      "returncode": 0
+    },
+    {
+      "log": "/tmp/unimatch-expert500-v14-local-r2-freeze-launch-candidates-ea0b0fdd91/pytest-r2-stable-original.log",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-c",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/pytest.ini",
+        "--rootdir",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/tmp/test_unimatch_expert500_freeze_launch_v14_local_r2_candidate.py"
+      ],
+      "cwd": "/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-r2-sourcefree-stable-k8hd8si9",
+      "returncode": 0
+    }
+  ],
+  "inputs_before": {
+    "/tmp/unimatch-expert500-freeze-v14-local-r2-candidate.py": {
+      "sha256": "7fc3cd34cf90311ab1b20f93fdba2468b1e1aae0993447cd56d1ad426ae02057",
+      "bytes": 52229
+    },
+    "/tmp/unimatch-expert500-launch-v14-local-r2-candidate.py": {
+      "sha256": "089e5c2aaf47450a97c376a2b70b8e4985e11c2d2908a82cc6970e8e22834400",
+      "bytes": 17052
+    },
+    "/tmp/test_unimatch_expert500_freeze_launch_v14_local_r2_candidate.py": {
+      "sha256": "01474af29878aefe6b2ee69073797ccdadebac666213bceccc09d8afde34b5ad",
+      "bytes": 36633
+    },
+    "/tmp/unimatch-expert500-neutral-v14-local-r2-candidate.py": {
+      "sha256": "080903547ab72e3ef74ce2007b6652a85d25a434136f06195513cc1d3a431346",
+      "bytes": 26968
+    },
+    "/tmp/unimatch-expert500-isolation-preflight-v14-local-r2-candidate.py": {
+      "sha256": "86c041dbf95a5970324042be419e5d91a4a7bcf16671f44a2e04af2d4331bcb1",
+      "bytes": 24410
+    },
+    "/tmp/unimatch-expert500-journal-pilot-v14-local-r2-candidate.py": {
+      "sha256": "4390b1e51ef6ef89e1b378cc5f89c31f13289d5dd6b408c0dabf35f7190aeeae",
+      "bytes": 90054
+    },
+    "/tmp/unimatch-expert500-journal-report-v14-local-r2-candidate.py": {
+      "sha256": "d548969e87e1cae861ffb671e39a8f6cebd6ee42fa3d7186c1c098d4d1192bce",
+      "bytes": 119286
+    },
+    "/tmp/unimatch-expert500-export-v14-local-r2-candidate.py": {
+      "sha256": "7b4923cc0019102f2b71aa650ff8bc888f802b6919bf6a78f93c166bc39dda2a",
+      "bytes": 34227
+    },
+    "/tmp/unimatch-expert500-local-worker-v1-candidate.py": {
+      "sha256": "8fbede0eaa700e7268367000705f111846835ac368a8e46ef80e7f1ad735195d",
+      "bytes": 103611
+    }
+  },
+  "inputs_after": {
+    "/tmp/unimatch-expert500-freeze-v14-local-r2-candidate.py": {
+      "sha256": "7fc3cd34cf90311ab1b20f93fdba2468b1e1aae0993447cd56d1ad426ae02057",
+      "bytes": 52229
+    },
+    "/tmp/unimatch-expert500-launch-v14-local-r2-candidate.py": {
+      "sha256": "089e5c2aaf47450a97c376a2b70b8e4985e11c2d2908a82cc6970e8e22834400",
+      "bytes": 17052
+    },
+    "/tmp/test_unimatch_expert500_freeze_launch_v14_local_r2_candidate.py": {
+      "sha256": "01474af29878aefe6b2ee69073797ccdadebac666213bceccc09d8afde34b5ad",
+      "bytes": 36633
+    },
+    "/tmp/unimatch-expert500-neutral-v14-local-r2-candidate.py": {
+      "sha256": "080903547ab72e3ef74ce2007b6652a85d25a434136f06195513cc1d3a431346",
+      "bytes": 26968
+    },
+    "/tmp/unimatch-expert500-isolation-preflight-v14-local-r2-candidate.py": {
+      "sha256": "86c041dbf95a5970324042be419e5d91a4a7bcf16671f44a2e04af2d4331bcb1",
+      "bytes": 24410
+    },
+    "/tmp/unimatch-expert500-journal-pilot-v14-local-r2-candidate.py": {
+      "sha256": "4390b1e51ef6ef89e1b378cc5f89c31f13289d5dd6b408c0dabf35f7190aeeae",
+      "bytes": 90054
+    },
+    "/tmp/unimatch-expert500-journal-report-v14-local-r2-candidate.py": {
+      "sha256": "d548969e87e1cae861ffb671e39a8f6cebd6ee42fa3d7186c1c098d4d1192bce",
+      "bytes": 119286
+    },
+    "/tmp/unimatch-expert500-export-v14-local-r2-candidate.py": {
+      "sha256": "7b4923cc0019102f2b71aa650ff8bc888f802b6919bf6a78f93c166bc39dda2a",
+      "bytes": 34227
+    },
+    "/tmp/unimatch-expert500-local-worker-v1-candidate.py": {
+      "sha256": "8fbede0eaa700e7268367000705f111846835ac368a8e46ef80e7f1ad735195d",
+      "bytes": 103611
+    }
+  },
+  "inputs_unchanged": true,
+  "r1_originals_unchanged": true,
+  "old_inputs": {
+    "/tmp/unimatch-expert500-freeze-v14-local-candidate.py": {
+      "sha256": "bbaa94487f931c7b182b256273b4a8ea32dacca6c0fb54631aea5dd67dccd3ce",
+      "bytes": 50482
+    },
+    "/tmp/unimatch-expert500-launch-v14-local-candidate.py": {
+      "sha256": "76569f1f3712de8cba35798187e37433bfd062fb12f5555d21f58fcd690c147d",
+      "bytes": 16996
+    },
+    "/tmp/test_unimatch_expert500_freeze_launch_v14_local_candidate.py": {
+      "sha256": "26e4e45f29a6ad920d8ffb702196fa8c8232e6e33c3530941f092e10cf9f3054",
+      "bytes": 31637
+    }
+  }
+}

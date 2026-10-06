@@ -1,0 +1,413 @@
+"""Offline r2 regression: real CLI discovery, mocked processes and exact replay.
+
+No CLI, OS sentinel, source, model, provider, Git or private-input call executes.
+The real isolation constructor only discovers executable files and binds paths.
+"""
+
+from __future__ import annotations
+
+import asyncio
+import copy
+import hashlib
+import importlib.util
+import json
+import os
+import shutil
+import subprocess
+import sys
+from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from types import SimpleNamespace
+from typing import Any
+
+import pytest
+
+from evaluation.research.expert.network_turn_policy import NetworkBudgetIsolation, command_proof
+from evaluation.research.expert.representation import CLOSING_OBSERVATION
+from evaluation.research.expert.workspace_policy import allocate_workspaces
+
+NEUTRAL = Path("/tmp/unimatch-expert500-neutral-v14-local-r2-candidate.py")
+OS_PROBE = Path("/tmp/unimatch-expert500-isolation-preflight-v14-local-r2-candidate.py")
+PARENT = Path("/tmp/unimatch-expert500-journal-pilot-v14-local-r2-candidate.py")
+REPORT = Path("/tmp/unimatch-expert500-journal-report-v14-local-r2-candidate.py")
+FREEZER = Path("/tmp/unimatch-expert500-freeze-v14-local-r2-candidate.py")
+CLI = "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex"
+SYSTEM_PATH = "/usr/bin:/bin:/usr/sbin:/sbin"
+MODEL_PATH = str(Path(CLI).parent) + ":" + SYSTEM_PATH
+ORIGINALS = {
+    "/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py": "29f8893e4cf0b2bb0df3d98a15732a458cb97f64c534feb4d0bc94f213ac2b28",
+    "/tmp/unimatch-expert500-journal-report-v14-local-candidate.py": "1a770b781d8fca4569cb8b4cb9613e0383383161f8926b6ffbc89e145c1b8cd1",
+    "/tmp/unimatch-expert500-export-v14-local-candidate.py": "bc97b0124d64edc094ea6643f3c741b5ba4a216985c3172379b0e84ef6029aca",
+    "/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py": "61b92dd04ebc9f23ebdf02ea2d7c86c00a6f3a4c8dd971f82dea56b057c803c6",
+    "/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py": "ba01b5e95b44db57da86d4f3f4aa94cd88da01639f29338d53fb55b8764573ef",
+    "/tmp/test_unimatch_expert500_export_v14_local_candidate.py": "23413c74fc58cd09bee079e69c58eba3718955ffa69d214708329e1fd51571e3",
+    "/tmp/unimatch-expert500-neutral-v14-local-candidate.py": "7c9e414d355f88f09798db2646699191dbb59de3330e3c93dd6d8fe454ca4e4c",
+    "/tmp/unimatch-expert500-isolation-preflight-v14-local-candidate.py": "5be7c6c88d3069f1e2268d75e2b3bdab395274fff2eb429669dd822e505ecd2d",
+}
+
+
+def forbidden(*args: Any, **kwargs: Any) -> Any:
+    raise AssertionError("No actual process, model or source call is allowed")
+
+
+@pytest.fixture(autouse=True)
+def no_actual_calls(monkeypatch: pytest.MonkeyPatch) -> Any:
+    monkeypatch.setattr(subprocess, "run", forbidden)
+    monkeypatch.setattr(subprocess, "Popen", forbidden)
+    monkeypatch.setattr(asyncio, "create_subprocess_exec", forbidden)
+    monkeypatch.setattr(asyncio, "create_subprocess_shell", forbidden)
+    monkeypatch.setattr(os, "killpg", forbidden)
+    original_read = Path.read_bytes
+    original_text = Path.read_text
+
+    def allowed(path: Path) -> None:
+        if (
+            any(
+                token in str(path).lower()
+                for token in (
+                    "ground_truth",
+                    "identity_bindings",
+                    "reviewed8",
+                    "reviewed9",
+                    "heldout",
+                )
+            )
+            or path.name == ".env"
+        ):
+            raise AssertionError("Private inputs are forbidden")
+
+    def read_bytes(path: Path) -> bytes:
+        allowed(path)
+        return original_read(path)
+
+    def read_text(path: Path, *args: Any, **kwargs: Any) -> str:
+        allowed(path)
+        return original_text(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_bytes", read_bytes)
+    monkeypatch.setattr(Path, "read_text", read_text)
+    for path, expected in ORIGINALS.items():
+        assert hashlib.sha256(Path(path).read_bytes()).hexdigest() == expected
+    yield
+    for path, expected in ORIGINALS.items():
+        assert hashlib.sha256(Path(path).read_bytes()).hexdigest() == expected
+
+
+def load(path: Path, monkeypatch: pytest.MonkeyPatch) -> Any:
+    name = "_r2_probe_test_" + path.stem.replace("-", "_")
+    spec = importlib.util.spec_from_file_location(name, path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    monkeypatch.setitem(sys.modules, name, module)
+    spec.loader.exec_module(module)
+    return module
+
+
+@dataclass
+class Clock:
+    elapsed_ms: int = 0
+
+    def now(self) -> datetime:
+        return datetime(2026, 10, 6, 12, tzinfo=UTC) + timedelta(milliseconds=self.elapsed_ms)
+
+    def monotonic(self) -> float:
+        return self.elapsed_ms / 1000
+
+
+def events(answer: dict[str, Any]) -> str:
+    return "\n".join(
+        json.dumps(event)
+        for event in (
+            {"type": "thread.started", "thread_id": "invented-neutral-only"},
+            {"type": "turn.started"},
+            {
+                "type": "item.completed",
+                "item": {"type": "agent_message", "text": json.dumps(answer)},
+            },
+            {"type": "turn.completed", "usage": {"input_tokens": 1, "output_tokens": 1}},
+        )
+    )
+
+
+@pytest.fixture
+def probe(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Any:
+    neutral = load(NEUTRAL, monkeypatch)
+    result_path = tmp_path / "synthetic-neutral-result.json"
+    monkeypatch.setattr(neutral, "RESULT_PATH", result_path)
+    monkeypatch.setenv("PATH", MODEL_PATH)
+    monkeypatch.setattr(
+        neutral,
+        "allocate_workspaces",
+        lambda cases: allocate_workspaces(cases, temp_root=tmp_path.resolve()),
+    )
+    monkeypatch.setattr(
+        NetworkBudgetIsolation,
+        "prove_access",
+        lambda self, *args: {
+            "allowed_read": True,
+            "sealed_read_denied": True,
+            "sealed_stdout_empty": True,
+            "mock_only": True,
+        },
+    )
+    return SimpleNamespace(module=neutral, clock=Clock(), calls=[], fault=None, result=result_path)
+
+
+def mock_processes(probe: Any, monkeypatch: pytest.MonkeyPatch) -> None:
+    def run(argv: list[str], **kwargs: Any) -> Any:
+        if argv == [CLI, "--version"]:
+            assert set(kwargs) == {"capture_output", "text", "check", "timeout"}
+            return SimpleNamespace(stdout="codex-cli 0.159.2\n")
+        proof = command_proof(argv)
+        assert proof["model_reasoning_effort"] is None
+        assert proof["reasoning_effort_source"] == "cli_default"
+        assert kwargs["env"] == probe.module.PUBLIC_MODEL_ENVIRONMENT
+        assert kwargs["env"]["PATH"] == MODEL_PATH
+        assert set(kwargs["env"]) == {"HOME", "PATH", "LANG", "LC_ALL", "TMPDIR"}
+        assert kwargs["cwd"] == Path(argv[argv.index("-C") + 1])
+        assert kwargs["timeout"] == (900000 - probe.clock.elapsed_ms) / 1000
+        prompt = json.loads(kwargs["input"])
+        output = Path(argv[argv.index("--output-last-message") + 1])
+        phase = probe.module.PHASES[len(probe.calls)]
+        journal_hash = probe.module.AcceptedJournal.initial().sha256
+        if phase == "bootstrap":
+            answer = {
+                "kind": "action",
+                "observation": "neutral probe",
+                "journal_sha256": journal_hash,
+                "action": {
+                    "tool": "fetcher",
+                    "url": "https://example.org/public-probe",
+                    "query": None,
+                    "domains": [],
+                    "max_results": None,
+                    "source_step": None,
+                    "page": None,
+                    "offset": None,
+                    "section_offset": None,
+                    "link_offset": None,
+                },
+                "facts": [],
+                "question_findings": [],
+            }
+        elif phase == "data":
+            answer = copy.deepcopy(prompt["synthetic_record"])
+        else:
+            answer = {
+                "kind": "submit",
+                "observation": CLOSING_OBSERVATION,
+                "journal_sha256": journal_hash,
+                "action": None,
+                "facts": [],
+                "question_findings": [],
+            }
+        stdout = events(answer)
+        output_value = copy.deepcopy(answer)
+        if probe.fault == "output_mismatch":
+            output_value["observation"] = "A different atomic output."
+        elif probe.fault == "wrong_hash":
+            output_value["journal_sha256"] = "f" * 64
+            stdout = events(output_value)
+        elif probe.fault == "tool_event":
+            stdout = stdout.replace('"agent_message"', '"command_execution"')
+        elif probe.fault == "failed_event":
+            stdout += '\n{"type":"turn.failed"}'
+        elif probe.fault == "wrong_closing" and phase == "minimal_commit":
+            output_value["observation"] = "A replacement closing instruction."
+            stdout = events(output_value)
+        output.write_text(json.dumps(output_value))
+        probe.calls.append({"phase": phase, "argv": argv, "environment": kwargs["env"]})
+        probe.clock.elapsed_ms += 900000 if probe.fault == "deadline" else 100
+        return SimpleNamespace(stdout=stdout, stderr="", returncode=0)
+
+    monkeypatch.setattr(subprocess, "run", run)
+
+
+def test_real_isolation_old_path_fails_before_any_process(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("PATH", SYSTEM_PATH)
+    assert shutil.which("codex") is None
+    workspace, sealed = tmp_path / "workspace", tmp_path / "sealed"
+    workspace.mkdir()
+    sealed.mkdir()
+    with pytest.raises(RuntimeError, match="existing Codex login"):
+        NetworkBudgetIsolation.local(workspace, [sealed])
+
+
+def test_real_isolation_pinned_path_constructs_exact_default_effort_argv(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("PATH", MODEL_PATH)
+    assert shutil.which("codex") == CLI
+    assert shutil.which("sandbox-exec") == "/usr/bin/sandbox-exec"
+    workspace, sealed = tmp_path / "workspace", tmp_path / "sealed"
+    workspace.mkdir()
+    sealed.mkdir()
+    isolation = NetworkBudgetIsolation.local(workspace, [sealed])
+    schema, output = workspace / "schema.json", workspace / "output.json"
+    schema.write_text("{}")
+    argv = isolation.command(schema, output=output)
+    proof = command_proof(argv)
+    assert argv[3] == CLI
+    assert proof["model_reasoning_effort"] is None
+    assert proof["reasoning_effort_source"] == "cli_default"
+    assert not any("reasoning_effort=" in item for item in argv)
+
+
+@pytest.mark.parametrize("helper", [NEUTRAL, OS_PROBE])
+@pytest.mark.parametrize("path", [SYSTEM_PATH, "", "/tmp:" + MODEL_PATH, MODEL_PATH + ":/tmp"])
+def test_discovery_rejects_missing_or_ambient_path(
+    helper: Path, path: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load(helper, monkeypatch)
+    with pytest.raises(ValueError, match="pinned public model PATH"):
+        module.cli_discovery(path)
+
+
+@pytest.mark.parametrize("helper", [NEUTRAL, OS_PROBE])
+def test_discovery_proof_is_exact_and_source_free(
+    helper: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load(helper, monkeypatch)
+    assert module.cli_discovery(MODEL_PATH) == {
+        "path": MODEL_PATH,
+        "codex_executable": CLI,
+        "sandbox_executable": "/usr/bin/sandbox-exec",
+        "path_matches_public_model_environment": True,
+    }
+
+
+@pytest.mark.parametrize("helper", [NEUTRAL, OS_PROBE])
+def test_discovery_refuses_unavailable_exact_cli(
+    helper: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load(helper, monkeypatch)
+    monkeypatch.setattr(shutil, "which", lambda *args, **kwargs: None)
+    with pytest.raises(ValueError, match="exact bundled CLI"):
+        module.cli_discovery(MODEL_PATH)
+
+
+def test_neutral_three_phase_actual_orchestrator_mock_replays_exactly(
+    probe: Any, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    mock_processes(probe, monkeypatch)
+    result = probe.module.run_probe(clock=probe.clock.now, monotonic=probe.clock.monotonic)
+    assert result["status"] == "passed" and result["stopped"] is False
+    assert [call["phase"] for call in probe.calls] == ["bootstrap", "data", "minimal_commit"]
+    assert result["phases_completed"] == 3
+    assert (
+        result["source_requests"] == result["tool_requests"] == result["university_requests"] == 0
+    )
+    assert result["source_facts_accepted"] is False
+    assert result["runtime_modules_before"] == result["runtime_modules_after"]
+    assert (
+        len(result["runtime_modules_before"]) == 18
+    )  # Fifteen runtime modules plus three helpers.
+    assert result["public_model_environment"]["PATH"] == MODEL_PATH
+    assert result["cli_discovery"] == probe.module.cli_discovery(MODEL_PATH)
+    assert result["cli_discovery_sha256"] == probe.module.digest(result["cli_discovery"])
+    assert result["selector_elapsed_ms"] == 300
+    assert result["turn_policy"]["wall_guard_ms"] == 900000
+    assert result["turn_policy"]["max_calls"] == 60
+    assert result["turn_policy"]["max_search_queries"] == 6
+    assert result["requested_reasoning_effort"] is None
+    assert result["reasoning_effort_source"] == "cli_default"
+    assert all(item["completed_tool_free"] for item in result["results"])
+    assert result["results"][0]["answer"]["facts"] == []
+    assert len(result["results"][1]["answer"]["facts"]) == 4
+    assert result["results"][2]["answer"]["kind"] == "submit"
+    assert result["results"][2]["answer"]["facts"] == []
+    assert result["results"][2]["answer"]["question_findings"] == []
+    assert result["results"][2]["answer"]["action"] is None
+    freezer = load(FREEZER, monkeypatch)
+    freezer.validate_neutral(result, neutral_script=NEUTRAL, frozen_cli=CLI)
+
+
+@pytest.mark.parametrize(
+    "fault", ["output_mismatch", "wrong_hash", "tool_event", "failed_event", "deadline"]
+)
+def test_neutral_failed_replay_stops_once_without_later_phases(
+    probe: Any, fault: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    probe.fault = fault
+    mock_processes(probe, monkeypatch)
+    result = probe.module.run_probe(clock=probe.clock.now, monotonic=probe.clock.monotonic)
+    assert result["status"] == "failed" and result["stopped"] is True
+    assert result["phases_completed"] == 0
+    assert len(probe.calls) == 1
+    assert (
+        result["source_requests"] == result["tool_requests"] == result["university_requests"] == 0
+    )
+    assert result["completed_stream_replay_passed"] is False
+
+
+def test_neutral_wrong_outer_path_stops_before_allocation(
+    probe: Any, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("PATH", SYSTEM_PATH)
+    monkeypatch.setattr(probe.module, "allocate_workspaces", forbidden)
+    result = probe.module.run_probe(clock=probe.clock.now, monotonic=probe.clock.monotonic)
+    assert result["status"] == "failed" and result["stopped"] is True
+    assert result["results"] == [] and probe.calls == []
+    assert "workspace" not in result
+    assert "pinned public model PATH" in result["stop_reason"]
+
+
+def test_neutral_cannot_change_frozen_minimal_closing_shape(
+    probe: Any, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    probe.fault = "wrong_closing"
+    mock_processes(probe, monkeypatch)
+    result = probe.module.run_probe(clock=probe.clock.now, monotonic=probe.clock.monotonic)
+    assert result["status"] == "failed" and result["stopped"] is True
+    assert result["phases_completed"] == 2
+    assert len(probe.calls) == 3
+    assert "Hash-only closing" in result["stop_reason"]
+    assert result["source_facts_accepted"] is False
+
+
+def test_neutral_original_result_cannot_be_overwritten_or_retried(probe: Any) -> None:
+    probe.result.write_text("SYNTHETIC_ORIGINAL_BYTES")
+    with pytest.raises(ValueError, match="overwrite or retry"):
+        probe.module.run_probe(clock=probe.clock.now, monotonic=probe.clock.monotonic)
+    assert probe.result.read_text() == "SYNTHETIC_ORIGINAL_BYTES"
+    assert probe.calls == []
+
+
+def test_os_wrong_path_stops_before_parent_or_allocation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    os_probe = load(OS_PROBE, monkeypatch)
+    monkeypatch.setenv("PATH", SYSTEM_PATH)
+    monkeypatch.setattr(os_probe.runpy, "run_path", forbidden)
+    monkeypatch.setattr(os_probe, "allocate_workspaces", forbidden)
+    with pytest.raises(ValueError, match="pinned public model PATH"):
+        os_probe.run_preflight(tmp_path.resolve())
+
+
+@pytest.mark.parametrize("helper", [PARENT, REPORT])
+@pytest.mark.parametrize("path", [SYSTEM_PATH, "/tmp:" + MODEL_PATH])
+def test_parent_and_report_reject_unpinned_selector_environment_before_process(
+    helper: Path, path: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load(helper, monkeypatch)
+    root = tmp_path / "trial"
+    folder = root / "experts" / "synthetic"
+    folder.mkdir(parents=True)
+    environment = {"HOME": str(tmp_path), "PATH": path, "TMPDIR": str(tmp_path)}
+    (root / "trial.json").write_text(
+        json.dumps(
+            {
+                "selector_environment": environment,
+                "selector_environment_sha256": module.digest(environment),
+            }
+        )
+    )
+    if helper == PARENT:
+        with pytest.raises(ValueError, match="secret-free selector environment"):
+            module._selector_environment(root)
+    else:
+        with pytest.raises(ValueError, match="complete public allowlist"):
+            module.verify_selector_environment_evidence(folder)

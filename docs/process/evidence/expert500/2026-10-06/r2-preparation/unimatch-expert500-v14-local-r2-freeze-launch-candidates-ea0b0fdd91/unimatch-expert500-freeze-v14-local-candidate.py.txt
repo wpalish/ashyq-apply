@@ -1,0 +1,1146 @@
+"""Prepare a fresh V14 local byte freeze after recorded local and neutral gates.
+
+No source, model, Git or label operation is performed. The caller alone runs
+this helper after its prospective checks; an existing freeze is never reused.
+"""
+
+from __future__ import annotations
+
+import argparse
+import ast
+import hashlib
+import importlib.util
+import json
+import math
+import os
+import re
+import runpy
+import subprocess
+from datetime import UTC, datetime
+from importlib import import_module
+from pathlib import Path
+from typing import Any, cast
+
+from evaluation.research.expert.blind_cli import selector_answer
+from evaluation.research.expert.journal import AcceptedJournal
+from evaluation.research.expert.network_budget import (
+    BUDGET_MODEL,
+    NETWORK_COMPARISON_MODE,
+    WALL_GUARD_MS,
+    expert_budget,
+    parse_timestamp,
+    parse_wall_guard,
+)
+from evaluation.research.expert.network_turn_policy import (
+    TurnPhase,
+    command_proof,
+    journal_schema_for_turn,
+    parse_turn_decision,
+    policy_limits,
+    turn_window,
+)
+from evaluation.research.expert.packet import digest
+from evaluation.research.expert.workspace_policy import validate_selector_paths, validate_workspaces
+from evaluation.research.live import COHORT
+
+REPO = Path(
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply"
+)
+FOLDER = REPO / "backend/evaluation/research/expert/data/protocol.2026-10-06/v14-local"
+NEUTRAL = Path("/tmp/unimatch-expert500-v14-local-neutral-result.json")
+NEUTRAL_SCRIPT = Path("/tmp/unimatch-expert500-neutral-v14-local-candidate.py")
+FROZEN_CLI = (
+    "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex"
+)
+NEUTRAL_MANIFEST = (
+    REPO
+    / "backend/evaluation/research/expert/data/protocol.2026-10-06/v14-local-neutral-provenance/manifest.json"
+)
+# Root supplies the authentic fresh V14 local manifest hash before final gates/freezing.
+NEUTRAL_MANIFEST_SHA256: str | None = None
+SELECTOR_ENVIRONMENT: dict[str, str] = {}
+LOCAL_GATES = Path("/tmp/unimatch-expert500-v14-local-gates.json")
+OS_PREFLIGHT = Path("/tmp/unimatch-expert500-v14-local-isolation-preflight-result.json")
+OS_HELPER = Path("/tmp/unimatch-expert500-isolation-preflight-v14-local-candidate.py")
+PINNED_PROVIDER = "exa"
+COHORT_CASE_IDS = frozenset(
+    {"groningen", "delft", "aalto", "vienna", "warsaw", "ubc", "toronto", "hku", "ntu", "kaist"}
+)
+# Public imports and the three local helpers bound by the fresh neutral invocation.
+NEUTRAL_RUNTIME_MODULES = frozenset(
+    "evaluation.research." + name
+    for name in (
+        "expert.blind_cli",
+        "expert.selector",
+        "expert.compact",
+        "expert.journal",
+        "expert.models",
+        "expert.representation",
+        "expert.network_turn_policy",
+        "expert.network_budget",
+        "expert.source_admission",
+        "expert.workspace_policy",
+        "expert.question_contract",
+        "mapping",
+        "metrics",
+        "schema",
+        "identities",
+    )
+)
+NEUTRAL_LOCAL_HELPERS = (
+    Path("/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py"),
+    Path("/tmp/unimatch-expert500-journal-report-v14-local-candidate.py"),
+    Path("/tmp/unimatch-expert500-local-worker-v1-candidate.py"),
+)
+REQUIRED_GATES = frozenset(
+    {
+        "backend_tests",
+        "backend_ruff",
+        "backend_format",
+        "backend_mypy",
+        "frontend_tests",
+        "frontend_typecheck",
+        "frontend_build",
+        "frontend_lint",
+        "evaluation_quality",
+        "combined_parent_mocks",
+        "actual_ten_case_launcher_preflight",
+        "demo_order",
+        "alembic_single_head",
+        "exa_provider_pin",
+        "actual_ten_case_os_isolation",
+    }
+)
+PHASES: tuple[TurnPhase, ...] = ("bootstrap", "data", "minimal_commit")
+BASELINE_CAPTURE_DEFAULTS = {
+    "DOCUMENT_SECONDS": ("evaluation.research.live", 0.0),
+    "DOCUMENT_RULES_V2": ("app.adapters.documents.web_documents", True),
+    "DOCUMENT_LEADS": ("app.adapters.documents.web_documents", True),
+    "FORM_LABEL_HEADINGS": ("app.adapters.document_ir", True),
+    "EURO_GROUPING": ("app.adapters.extraction", False),
+    "TUITION_ROW_YEAR": ("app.adapters.extraction", False),
+    "DEADLINE_V2": ("app.adapters.extraction", False),
+    "SHARED_QUERY_BUDGET": ("app.adapters.search.intent", False),
+    "APPLICANT_ACADEMIC_YEAR": ("app.pipeline.runner", False),
+}
+
+
+def baseline_capture_config() -> dict[str, Any]:
+    """Require the stock public defaults and no optional capture experiments."""
+    defaults = {}
+    for name, (module_name, expected) in BASELINE_CAPTURE_DEFAULTS.items():
+        actual = getattr(import_module(module_name), name, None)
+        if type(actual) is not type(expected) or actual != expected:
+            raise ValueError(f"Baseline capture default changed: {name}")
+        defaults[name] = actual
+    return {"module_defaults": defaults, "optional_capture_arguments": []}
+
+
+def validate_baseline_capture_config(value: Any) -> None:
+    """Reject flag, stage, value-type or optional-argument changes before launch."""
+    expected = baseline_capture_config()
+    if (
+        type(value) is not dict
+        or set(value) != set(expected)
+        or type(value.get("module_defaults")) is not dict
+        or set(value["module_defaults"]) != set(expected["module_defaults"])
+        or any(
+            type(value["module_defaults"][name]) is not type(default)
+            or value["module_defaults"][name] != default
+            for name, default in expected["module_defaults"].items()
+        )
+        or type(value.get("optional_capture_arguments")) is not list
+        or value["optional_capture_arguments"]
+    ):
+        raise ValueError("Baseline capture must retain stock defaults and no optional flags")
+
+
+def sha(path: Path) -> str:
+    if path.is_symlink() or not path.is_file():
+        raise ValueError("Original evidence must be a regular non-symlink file")
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def read(path: Path) -> dict[str, Any]:
+    value = json.loads(path.read_text())
+    if not isinstance(value, dict):
+        raise ValueError("Original gate/probe evidence must be an object")
+    return value
+
+
+def validate_local_gates(local: dict[str, Any]) -> None:
+    """Validate explicit passes and original log hashes without fixed test counts."""
+    coverage = local.get("backend_coverage_percent")
+    if type(coverage) not in {int, float}:
+        raise ValueError("Coverage must be a recorded finite percentage")
+    coverage_number = cast(int | float, coverage)
+    gates, logs = local.get("gates"), local.get("raw_logs")
+    if (
+        local.get("schema_version") != "1"
+        or local.get("protocol_version") != "journal-v14-local"
+        or local.get("all_passed") is not True
+        or local.get("actual_ten_case_launcher_preflight") is not True
+        or not math.isfinite(coverage_number)
+        or not 92 <= coverage_number <= 100
+        or any(
+            type(local.get(key)) is not int or local[key] <= 0
+            for key in ("backend_tests", "frontend_tests")
+        )
+        or not isinstance(gates, dict)
+        or not gates.keys() >= REQUIRED_GATES
+        or any(
+            type(name) is not str or not name or passed is not True
+            for name, passed in gates.items()
+        )
+        or not isinstance(logs, dict)
+        or set(logs) != set(gates)
+    ):
+        raise ValueError("Every current local gate, coverage>=92 and ten-case preflight must pass")
+    for evidence in logs.values():
+        if not isinstance(evidence, dict) or set(evidence) != {"path", "sha256"}:
+            raise ValueError("Each local gate must bind its original raw log")
+        path, expected = evidence["path"], evidence["sha256"]
+        if (
+            type(path) is not str
+            or not Path(path).is_absolute()
+            or type(expected) is not str
+            or re.fullmatch(r"[0-9a-f]{64}", expected) is None
+            or sha(Path(path)) != expected
+        ):
+            raise ValueError("Current local gate raw log changed or lacks its SHA256")
+
+
+def protocol_scripts() -> list[Path]:
+    return sorted(set(HELPER_PATHS.values()))
+
+
+def current_neutral_runtime() -> dict[str, str]:
+    """Bind exactly fifteen public modules and three actual local helper files."""
+    runtime = {}
+    for name in sorted(NEUTRAL_RUNTIME_MODULES):
+        spec = importlib.util.find_spec(name)
+        if spec is None or spec.origin is None:
+            raise ValueError("Neutral runtime module is unavailable")
+        runtime[name] = sha(Path(spec.origin))
+    for path in NEUTRAL_LOCAL_HELPERS:
+        runtime[str(path)] = sha(path)
+    return runtime
+
+
+def validate_neutral_environment(record: dict[str, Any], *, top_level: bool = False) -> None:
+    """Require the actual original allowlist and its hash at every selector boundary."""
+    field = "public_model_environment" if top_level else "selector_environment"
+    if record.get(field) != SELECTOR_ENVIRONMENT or record.get(field + "_sha256") != digest(
+        SELECTOR_ENVIRONMENT
+    ):
+        raise ValueError("Neutral selector environment differs from its explicit public proof")
+
+
+def validate_neutral_runtime(probe: dict[str, Any], *, neutral_script: Path) -> None:
+    runtime = current_neutral_runtime()
+    if (
+        probe.get("runtime_unchanged") is not True
+        or probe.get("script_sha256_after") != sha(neutral_script)
+        or any(
+            not isinstance(probe.get(key), dict) or probe[key] != runtime
+            for key in ("runtime_modules_before", "runtime_modules_after")
+        )
+    ):
+        raise ValueError("New V14 local neutral must bind unchanged before/after runtime bytes")
+
+
+def validate_neutral_archive(*, manifest_path: Path = NEUTRAL_MANIFEST) -> dict[str, Path]:
+    """Verify the immutable new-neutral archive and every original byte copy."""
+    if (
+        not isinstance(NEUTRAL_MANIFEST_SHA256, str)
+        or not re.fullmatch(r"[a-f0-9]{64}", NEUTRAL_MANIFEST_SHA256)
+        or sha(manifest_path) != NEUTRAL_MANIFEST_SHA256
+    ):
+        raise ValueError("Original fresh V14 local neutral provenance manifest changed")
+    archived = read(manifest_path)
+    runtime = current_neutral_runtime()
+    if (
+        archived.get("schema_version") != "1"
+        or archived.get("kind") != "fresh_source_free_v14_local_neutral_originals"
+        or archived.get("protocol_version") != "journal-v14-local"
+        or archived.get("status") != "passed"
+        or archived.get("requested_model") != "gpt-6-astra"
+        or "requested_reasoning_effort" not in archived
+        or archived["requested_reasoning_effort"] is not None
+        or archived.get("reasoning_effort_source") != "cli_default"
+        or archived.get("account_private_identity_not_committed") is not True
+        or archived.get("helper_sha256") != sha(NEUTRAL_SCRIPT)
+        or archived.get("runtime_modules_before") != runtime
+        or archived.get("runtime_modules_after") != runtime
+        or type(archived.get("model_requests")) is not int
+        or archived["model_requests"] != 3
+        or any(
+            type(archived.get(key)) is not int or archived[key] != 0
+            for key in ("source_requests", "university_requests", "tool_requests")
+        )
+        or not isinstance(archived.get("records"), list)
+        or not archived["records"]
+    ):
+        raise ValueError("Fresh neutral archive differs from its original source-free execution")
+    originals, destinations = {}, set()
+    for record in archived["records"]:
+        if not isinstance(record, dict):
+            raise ValueError("Neutral archive record must name a confined original byte copy")
+        original, relative = record.get("original_path"), record.get("path")
+        if (
+            type(original) is not str
+            or not Path(original).is_absolute()
+            or original in originals
+            or type(relative) is not str
+            or relative in destinations
+            or not relative
+            or Path(relative).is_absolute()
+            or any(part in {"", ".", ".."} for part in relative.split("/"))
+            or "\\" in relative
+            or type(record.get("bytes")) is not int
+            or record["bytes"] < 0
+        ):
+            raise ValueError("Neutral archive original/copy identity is duplicate or unconfined")
+        target = manifest_path.parent / relative
+        if (
+            any(parent.is_symlink() for parent in target.parents if parent != manifest_path.parent)
+            or sha(target) != record.get("sha256")
+            or target.stat().st_size != record["bytes"]
+        ):
+            raise ValueError("Original fresh neutral raw byte copy changed")
+        originals[original] = target
+        destinations.add(relative)
+    if (
+        str(NEUTRAL) not in originals
+        or str(NEUTRAL_SCRIPT) not in originals
+        or sha(originals[str(NEUTRAL)]) != archived.get("result_sha256")
+        or sha(originals[str(NEUTRAL_SCRIPT)]) != archived.get("helper_sha256")
+    ):
+        raise ValueError("Neutral archive lacks its exact original result/helper copies")
+    return originals
+
+
+def validate_neutral_current() -> dict[str, Any]:
+    """Require the new V14 local invocation and replay all original completed streams."""
+    original_hash = sha(NEUTRAL)
+    archived = validate_neutral_archive(manifest_path=NEUTRAL_MANIFEST)
+    probe = read(archived[str(NEUTRAL)])
+    if sha(archived[str(NEUTRAL)]) != original_hash:
+        raise ValueError("Fresh neutral result differs from its immutable byte archive")
+    validate_neutral(probe, neutral_script=NEUTRAL_SCRIPT, frozen_cli=FROZEN_CLI, archived=archived)
+    if sha(NEUTRAL) != original_hash:
+        raise ValueError("Original V14 local neutral result changed during replay")
+    return {
+        "executed_for_protocol": "journal-v14-local",
+        "original_manifest_path": str(NEUTRAL_MANIFEST),
+        "original_manifest_sha256": NEUTRAL_MANIFEST_SHA256,
+        "original_script_path": str(NEUTRAL_SCRIPT),
+        "original_script_sha256": sha(NEUTRAL_SCRIPT),
+        "original_result_path": str(NEUTRAL),
+        "original_result_sha256": original_hash,
+        "runtime_modules": dict(probe["runtime_modules_before"]),
+        "runtime_unchanged": True,
+        "successful": True,
+        "completed_tool_free": True,
+        "source_requests": 0,
+        "university_requests": 0,
+        "tool_requests": 0,
+        "requested_model": "gpt-6-astra",
+        "requested_reasoning_effort": None,
+        "reasoning_effort_source": "cli_default",
+        "selector_environment": dict(probe["public_model_environment"]),
+        "selector_environment_sha256": probe["public_model_environment_sha256"],
+    }
+
+
+def validate_neutral(
+    probe: dict[str, Any],
+    *,
+    neutral_script: Path,
+    frozen_cli: str,
+    archived: dict[str, Path] | None = None,
+) -> None:
+    """Replay the three original canonical completed transport phases, no calls."""
+
+    def original(path: Path) -> Path:
+        if archived is None:
+            return path
+        if str(path) not in archived:
+            raise ValueError("Neutral archive is missing an original request/stream/output receipt")
+        return archived[str(path)]
+
+    zeroes = ("university_requests", "source_requests", "tool_requests")
+    results = probe.get("results")
+    if (
+        probe.get("protocol_version") != "journal-v14-local"
+        or probe.get("probe_kind") != "synthetic_transport_only"
+        or probe.get("status") != "passed"
+        or probe.get("stopped") is not False
+        or probe.get("stop_reason") is not None
+        or probe.get("source_facts_accepted") is not False
+        or probe.get("requested_model") != "gpt-6-astra"
+        or "requested_reasoning_effort" not in probe
+        or probe["requested_reasoning_effort"] is not None
+        or probe.get("reasoning_effort_source") != "cli_default"
+        or "reasoning_override" not in probe
+        or probe["reasoning_override"] is not None
+        or probe.get("turn_policy") != policy_limits()
+        or probe.get("journal_sha256") != AcceptedJournal.initial().sha256
+        or any(type(probe.get(key)) is not int or probe[key] != 0 for key in zeroes)
+        or type(probe.get("phases_completed")) is not int
+        or probe["phases_completed"] != 3
+        or not isinstance(results, list)
+        or len(results) != 3
+        or any(
+            probe.get(key) is not True
+            for key in ("canonical_workspace_preflight_passed", "completed_stream_replay_passed")
+        )
+        or probe.get("script") != str(neutral_script)
+        or probe.get("script_sha256") != sha(neutral_script)
+        or probe.get("codex_cli") != frozen_cli
+        or not isinstance(probe.get("codex_cli_version"), str)
+        or re.fullmatch(r"codex-cli [0-9]+\.[0-9]+\.[0-9]+", probe["codex_cli_version"]) is None
+        or probe.get("codex_cli_sha256") != sha(Path(frozen_cli))
+    ):
+        raise ValueError("Original default-effort three-phase neutral preflight did not pass")
+    validate_neutral_environment(probe, top_level=True)
+    validate_neutral_runtime(probe, neutral_script=neutral_script)
+    guard_data = probe.get("wall_guard")
+    if not isinstance(guard_data, dict) or set(guard_data) != {
+        "wall_started_at",
+        "wall_deadline_at",
+    }:
+        raise ValueError("Neutral requires its one original absolute wall guard")
+    guard = parse_wall_guard(**guard_data)
+    if probe.get("started_at") != guard.as_dict()["wall_started_at"]:
+        raise ValueError("Neutral guard must begin before its preparation")
+    if not guard.started_at <= parse_timestamp(probe.get("finished_at")) < guard.deadline_at:
+        raise ValueError("Neutral finalization exceeded its immutable900s guard")
+    if probe.get("cohort") != ["neutral", "othercase"] or probe.get("case_id") != "neutral":
+        raise ValueError("Neutral must retain its exact source-free two-workspace allocation")
+    for key in ("workspace_assignments", "workspace_receipts"):
+        path = Path(probe[key + "_path"])
+        if sha(original(path)) != probe[key + "_sha256"] or read(original(path)) != probe[key]:
+            raise ValueError("Original neutral assignment/receipt bytes changed")
+    assignments, receipts = probe["workspace_assignments"], probe["workspace_receipts"]
+    verified = validate_workspaces(assignments, receipts, case_ids=probe["cohort"])
+    workspace = verified["neutral"]
+    proof = probe.get("isolation_proof")
+    if (
+        not isinstance(proof, dict)
+        or probe.get("workspace") != str(workspace)
+        or proof.get("workspace") != str(workspace)
+        or digest(proof) != probe.get("isolation_proof_sha256")
+        or any(
+            proof.get(key) is not True
+            for key in ("allowed_read", "sealed_read_denied", "sealed_stdout_empty")
+        )
+    ):
+        raise ValueError("Original harmless-sentinel OS proof differs")
+    public = runpy.run_path(str(neutral_script))
+    previous = guard.started_at
+    for turn, phase in enumerate(PHASES, 1):
+        result = results[turn - 1]
+        if (
+            not isinstance(result, dict)
+            or type(result.get("turn")) is not int
+            or result["turn"] != turn
+            or result.get("mode") != phase
+            or result.get("selector_phase") != phase
+            or result.get("status") != "passed"
+            or "error_kind" not in result
+            or result["error_kind"] is not None
+            or type(result.get("returncode")) is not int
+            or result["returncode"] != 0
+            or type(result.get("elapsed_ms")) is not int
+            or result["elapsed_ms"] < 0
+            or any(
+                result.get(key) is not True
+                for key in (
+                    "exact_paths_before",
+                    "exact_paths_after",
+                    "completed_tool_free",
+                    "atomic_output_matches_stdout",
+                )
+            )
+        ):
+            raise ValueError("Every neutral phase must have its complete original proof")
+        validate_neutral_environment(result)
+        for key in ("request", "stdout", "stderr"):
+            if sha(original(Path(result[key + "_path"]))) != result[key + "_sha256"]:
+                raise ValueError("Original neutral archived request/stream changed")
+        schema, output = Path(result["schema_path"]), Path(result["output_path"])
+        validate_selector_paths(
+            assignments,
+            receipts,
+            case_id="neutral",
+            turn=turn,
+            workspace=workspace,
+            schema=schema,
+            output=output,
+        )
+        if sha(original(output)) != result["output_sha256"]:
+            raise ValueError("Original neutral atomic output changed")
+        request = read(original(Path(result["request_path"])))
+        validate_neutral_environment(request)
+        expected_schema = journal_schema_for_turn(
+            journal_sha256=probe["journal_sha256"],
+            canonical_university=public["CANONICAL_UNIVERSITY"],
+            phase=phase,
+        )
+        if (
+            (
+                not any(later.get("schema_path") == str(schema) for later in results[turn:])
+                and original(schema).read_text()
+                != json.dumps(expected_schema, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
+            )
+            or request.get("turn") != turn
+            or type(request.get("turn")) is not int
+            or request.get("selector_phase") != phase
+            or request.get("wall_guard") != guard.as_dict()
+            or request.get("schema") != expected_schema
+            or request.get("schema_sha256") != digest(expected_schema)
+            or result.get("schema_sha256") != digest(expected_schema)
+            or request.get("prompt") != public["prompt_for_phase"](phase, probe["journal_sha256"])
+            or any(
+                request.get(key + "_sha256") != probe[key + "_sha256"]
+                for key in ("workspace_assignments", "workspace_receipts")
+            )
+        ):
+            raise ValueError("Neutral original bound prompt/schema/workspace hashes differ")
+        argv_proof = command_proof(request.get("selector_command"))
+        argv = argv_proof["command"]
+        if (
+            argv_proof != request.get("command_proof")
+            or argv_proof != result.get("command_proof")
+            or argv != result.get("selector_command")
+        ):
+            raise ValueError("Neutral actual default-effort argv proof changed")
+        for option, expected in (
+            ("-C", str(workspace)),
+            ("--output-schema", str(schema)),
+            ("--output-last-message", str(output)),
+        ):
+            if argv[argv.index(option) + 1] != expected:
+                raise ValueError("Neutral argv is not its exact canonical phase assignment")
+        if (
+            argv[0] != proof.get("sandbox_executable")
+            or argv[2] != proof.get("profile")
+            or argv[3] != frozen_cli
+        ):
+            raise ValueError("Neutral command differs from its recorded OS wrapper")
+        started, finished = (
+            parse_timestamp(result["selector_started_at"]),
+            parse_timestamp(result["selector_finished_at"]),
+        )
+        if not previous <= started <= finished < guard.deadline_at:
+            raise ValueError("Neutral selector chronology exceeded its original guard")
+        expected_window = turn_window(phase=cast(TurnPhase, phase), wall_guard=guard, now=started)
+        if (
+            result.get("window") != expected_window.as_dict()
+            or result.get("timeout_seconds") != expected_window.timeout_seconds
+            or result.get("timeout_ms") != expected_window.timeout_ms
+        ):
+            raise ValueError("Neutral phase timeout must use only its remaining original guard")
+        raw = original(output).read_text()
+        completed = selector_answer(original(Path(result["stdout_path"])).read_text(), raw)
+        parsed = parse_turn_decision(
+            raw,
+            journal_sha256=probe["journal_sha256"],
+            canonical_university=public["CANONICAL_UNIVERSITY"],
+            phase=phase,
+        ).model_dump(mode="json")
+        if (
+            completed != parsed
+            or parsed != result.get("answer")
+            or digest(parsed) != result.get("bound_answer_sha256")
+            or digest(completed) != result.get("replayed_answer_sha256")
+        ):
+            raise ValueError("Original complete neutral output no longer replays exactly")
+        if phase == "data" and parsed != public["synthetic_record"](probe["journal_sha256"]):
+            raise ValueError("Neutral invented four-fact serialization changed")
+        if phase == "bootstrap" and (
+            parsed["kind"] != "action" or parsed["facts"] or parsed["question_findings"]
+        ):
+            raise ValueError("Neutral bootstrap must be an unexecuted empty-delta action")
+        if phase == "bootstrap" and parsed["action"] != {
+            "tool": "fetcher",
+            "url": "https://example.org/public-probe",
+            "query": None,
+            "domains": [],
+            "max_results": None,
+            "source_step": None,
+            "page": None,
+            "offset": None,
+            "section_offset": None,
+            "link_offset": None,
+        }:
+            raise ValueError("Neutral bootstrap must preserve the sole invented action")
+        previous = finished
+
+
+PROTOCOL = "journal-v14-local"
+TRANSPORT_KIND = "local_process_v1"
+BASELINE_REGISTRY_SOURCE_SHA = "e327498d605d3dbe14da177a8a535c664818ce9b"
+WORKER_PATH = Path("/tmp/unimatch-expert500-local-worker-v1-candidate.py")
+PARENT_PATH = Path("/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py")
+REPORT_PATH = Path("/tmp/unimatch-expert500-journal-report-v14-local-candidate.py")
+HELPER_PATHS = {
+    "parent": PARENT_PATH,
+    "report": REPORT_PATH,
+    "legacy_public": Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+    "worker": WORKER_PATH,
+    "neutral": NEUTRAL_SCRIPT,
+    "os": OS_HELPER,
+    "freeze": Path(__file__),
+    "launcher": Path("/tmp/unimatch-expert500-launch-v14-local-candidate.py"),
+    "parent_test": Path("/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py"),
+    "report_test": Path("/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py"),
+    "worker_test": Path("/tmp/test_unimatch_expert500_local_worker_v1_candidate.py"),
+    "admission_test": REPO / "backend/tests/test_expert_source_admission.py",
+    "freeze_launch_test": Path("/tmp/test_unimatch_expert500_freeze_launch_v14_local_candidate.py"),
+    "export": Path("/tmp/unimatch-expert500-export-v14-local-candidate.py"),
+    "export_test": Path("/tmp/test_unimatch_expert500_export_v14_local_candidate.py"),
+}
+RUNTIME_KEYS = {
+    "source_cwd",
+    "source_manifest",
+    "interpreter",
+    "runtime_files",
+    "runtime_import_roots",
+    "public_environment",
+}
+PUBLIC_ENV_KEYS = {"HOME", "PATH", "LANG", "LC_ALL", "TMPDIR"}
+CORE_MODULES = frozenset(
+    "evaluation.research." + name
+    for name in (
+        "expert.blind_cli",
+        "expert.selector",
+        "expert.compact",
+        "expert.journal",
+        "expert.citations",
+        "expert.controller",
+        "expert.models",
+        "expert.model_failure",
+        "expert.packet",
+        "expert.representation",
+        "expert.network_turn_policy",
+        "expert.network_budget",
+        "expert.network_report",
+        "expert.source_admission",
+        "expert.location_feedback",
+        "expert.workspace_policy",
+        "expert.question_contract",
+        "live",
+        "mapping",
+        "metrics",
+        "schema",
+        "identities",
+    )
+)
+EXPECTED_ALGORITHM_DEFAULTS = {
+    "document_rules_v2": True,
+    "document_leads": True,
+    "form_label_headings": True,
+    "recover_search_candidates": True,
+    "search_funding_fallback": True,
+    "target_award_search": True,
+    "document_seconds": 0.0,
+}
+_DEFAULT_FILES = {
+    "document_rules_v2": ("app/adapters/documents/web_documents.py", "DOCUMENT_RULES_V2"),
+    "document_leads": ("app/adapters/documents/web_documents.py", "DOCUMENT_LEADS"),
+    "form_label_headings": ("app/adapters/document_ir.py", "FORM_LABEL_HEADINGS"),
+    "recover_search_candidates": (
+        "app/adapters/discovery/live_discovery.py",
+        "RECOVER_SEARCH_CANDIDATES",
+    ),
+    "search_funding_fallback": (
+        "app/adapters/scholarship/web_scholarships.py",
+        "SEARCH_FUNDING_FALLBACK",
+    ),
+    "target_award_search": ("app/adapters/scholarship/web_scholarships.py", "TARGET_AWARD_SEARCH"),
+    "document_seconds": ("evaluation/research/live.py", "DOCUMENT_SECONDS"),
+}
+# These are actual merged main defaults, not optional experiment arguments.
+BASELINE_CAPTURE_DEFAULTS["TUITION_ROW_YEAR"] = ("app.adapters.extraction", True)
+BASELINE_CAPTURE_DEFAULTS["DEADLINE_V2"] = ("app.adapters.extraction", True)
+BASELINE_CAPTURE_DEFAULTS["APPLICANT_ACADEMIC_YEAR"] = ("app.pipeline.runner", True)
+
+
+def _hex(value: Any, *, size: int = 64) -> str:
+    if type(value) is not str or re.fullmatch(f"[0-9a-f]{{{size}}}", value) is None:
+        raise ValueError("An exact original hash is required")
+    return value
+
+
+def canonical_directory(value: Any) -> Path:
+    if type(value) is not str or not Path(value).is_absolute():
+        raise ValueError("An explicit canonical absolute directory is required")
+    path = Path(value)
+    if path != path.resolve(strict=True) or path.is_symlink() or not path.is_dir():
+        raise ValueError("Directory is aliased, missing or replaced")
+    return path
+
+
+def public_environment(value: Any) -> dict[str, str]:
+    if (
+        not isinstance(value, dict)
+        or not {"HOME", "PATH", "TMPDIR"} <= set(value)
+        or set(value) - PUBLIC_ENV_KEYS
+    ):
+        raise ValueError("Complete explicit public environment required")
+    if any(
+        type(key) is not str or type(item) is not str or not item or "\0" in item
+        for key, item in value.items()
+    ):
+        raise ValueError("Public environment contains an invalid value")
+    return dict(value)
+
+
+def evidence(pointer: Any) -> tuple[Path, dict[str, Any]]:
+    if not isinstance(pointer, dict) or set(pointer) != {"path", "sha256"}:
+        raise ValueError("Exact original evidence path/hash required")
+    path = Path(pointer["path"])
+    if (
+        not path.is_absolute()
+        or path != path.resolve(strict=True)
+        or sha(path) != _hex(pointer["sha256"])
+    ):
+        raise ValueError("Original evidence path/hash differs")
+    return path, read(path)
+
+
+def validate_private_registry(
+    value: Any, source_sha: Any, runtime: dict[str, Any], repo: Path
+) -> dict[str, str]:
+    """Only opaque path/hash metadata; this helper never reads registry bytes."""
+    if (
+        not isinstance(value, dict)
+        or set(value) != {"path", "sha256"}
+        or source_sha != BASELINE_REGISTRY_SOURCE_SHA
+    ):
+        raise ValueError("Only the original e327498 private producer metadata is allowed")
+    if type(value["path"]) is not str or not Path(value["path"]).is_absolute():
+        raise ValueError("Private producer path must be explicit")
+    path = Path(value["path"])
+    if path != path.resolve(strict=False) or path.is_symlink():
+        raise ValueError("Private producer path cannot be aliased")
+    if (
+        path.is_relative_to(repo)
+        or path.is_relative_to(Path(runtime["source_cwd"]))
+        or any(path.is_relative_to(Path(p)) for p in runtime["runtime_import_roots"])
+    ):
+        raise ValueError("Private producer input must lie outside source and import roots")
+    return {"path": str(path), "sha256": _hex(value["sha256"])}
+
+
+def validate_public_cases(value: Any) -> dict[str, Any]:
+    from evaluation.research.expert.packet import REQUEST_FIELDS
+
+    if (
+        not isinstance(value, list)
+        or len(value) != 10
+        or any(not isinstance(case, dict) for case in value)
+    ):
+        raise ValueError("Exactly the original ten public cases are required")
+    if (
+        len({case.get("id") for case in value}) != 10
+        or {case.get("id") for case in value} != COHORT_CASE_IDS
+    ):
+        raise ValueError("Original public case identity differs")
+    for case in value:
+        if set(case) != {"id", "university", "domain", "request"} or any(
+            type(case[key]) is not str or not case[key] for key in ("id", "university", "domain")
+        ):
+            raise ValueError("Only public identity/request fields are allowed")
+        if case["domain"] != COHORT[case["id"]]:
+            raise ValueError("Original public official domain differs")
+        request = dict.fromkeys(REQUEST_FIELDS)
+        request.update(
+            university=case["university"],
+            degree="bachelor",
+            field="computer science",
+            intake="fall 2027",
+        )
+        if case["request"] != request:
+            raise ValueError("Public request differs from the frozen bachelor/CS/fall2027 contract")
+    return {"version": "expert500-v14-public-v1", "cases": value}
+
+
+def clean_head(directory: Path, expected: str, *, ref: str | None = None) -> None:
+    _hex(expected, size=40)
+
+    def git(*parts: str) -> str:
+        return subprocess.check_output(["git", *parts], cwd=directory, text=True).strip()
+
+    if git("rev-parse", "HEAD") != expected or git(
+        "status", "--porcelain", "--untracked-files=all"
+    ):
+        raise ValueError("Selected source must be the exact clean HEAD")
+    if ref is not None and git("rev-parse", ref + "^{commit}") != expected:
+        raise ValueError("Frozen ref does not identify selected source HEAD")
+
+
+def validate_runtime(value: Any) -> tuple[dict[str, Any], dict[str, Any]]:
+    if not isinstance(value, dict) or set(value) != RUNTIME_KEYS:
+        raise ValueError("Complete six-field local runtime configuration required")
+    source = canonical_directory(value["source_cwd"])
+    roots = value["runtime_import_roots"]
+    if not isinstance(roots, list) or not roots or len(roots) != len(set(roots)):
+        raise ValueError("Explicit unique import roots required")
+    import_roots = [canonical_directory(item) for item in roots]
+    if any(
+        root == source or root.is_relative_to(source) or source.is_relative_to(root)
+        for root in import_roots
+    ):
+        raise ValueError("Dependency roots must be separate from public source")
+    if (source / ".env").exists() or (source / ".env").is_symlink():
+        raise ValueError("Clean source cannot expose a dotenv file")
+    source_manifest = value["source_manifest"]
+    if not isinstance(source_manifest, dict) or not source_manifest:
+        raise ValueError("Public source hashes are required")
+    for relative, expected in source_manifest.items():
+        if (
+            type(relative) is not str
+            or not relative
+            or "\\" in relative
+            or Path(relative).is_absolute()
+            or any(part in {"", ".", ".."} for part in relative.split("/"))
+            or any(
+                token in part.lower()
+                for part in Path(relative).parts
+                for token in (".env", "ground_truth", "heldout", "reviewed", "signed")
+            )
+        ):
+            raise ValueError("Source manifest is not confined public code")
+        path = source / relative
+        if path != path.resolve(strict=True) or sha(path) != _hex(expected):
+            raise ValueError("Public source bytes differ")
+    required_python = {
+        str(path.relative_to(source))
+        for directory in (source / "app", source / "evaluation")
+        for path in directory.rglob("*.py")
+    }
+    if not required_python or not required_python <= set(source_manifest):
+        raise ValueError("Every public application/evaluation Python file must be pinned")
+    runtime_files = value["runtime_files"]
+    if not isinstance(runtime_files, dict) or not runtime_files:
+        raise ValueError("Dependency/interpreter manifest required")
+    interpreter = Path(value["interpreter"])
+    if (
+        not interpreter.is_absolute()
+        or interpreter.parent != interpreter.parent.resolve(strict=True)
+        or not interpreter.is_file()
+    ):
+        raise ValueError("Exact interpreter invocation path required")
+    target = interpreter.resolve(strict=True)
+    if str(target) not in runtime_files:
+        raise ValueError("Actual interpreter target bytes must be pinned")
+    configuration_file = interpreter.parent.parent / "pyvenv.cfg"
+    if configuration_file.exists() and str(configuration_file) not in runtime_files:
+        raise ValueError("Actual venv configuration must be pinned")
+    for name, expected in runtime_files.items():
+        path = Path(name)
+        if (
+            not path.is_absolute()
+            or path != path.resolve(strict=True)
+            or not (
+                path in (target, configuration_file)
+                or any(path.is_relative_to(root) for root in import_roots)
+            )
+        ):
+            raise ValueError("Runtime hashes may name only interpreter/dependency bytes")
+        if sha(path) != _hex(expected):
+            raise ValueError("Interpreter/dependency bytes differ")
+    required_runtime = {
+        str(path)
+        for root in import_roots
+        for path in root.rglob("*")
+        if path.is_file() and not path.is_symlink()
+    }
+    if not required_runtime <= set(runtime_files):
+        raise ValueError("Every dependency-root file must be independently pinned")
+    if any(path.is_symlink() for root in import_roots for path in root.rglob("*")):
+        raise ValueError("Unpinned aliased dependency contents are not allowed")
+    defaults = {}
+    for name, (relative, constant) in _DEFAULT_FILES.items():
+        if relative not in source_manifest:
+            raise ValueError("Actual stock defaults are missing from source hashes")
+        tree = ast.parse((source / relative).read_bytes())
+        nodes = [
+            node.value
+            for node in tree.body
+            if isinstance(node, ast.Assign)
+            and any(
+                isinstance(target, ast.Name) and target.id == constant for target in node.targets
+            )
+        ]
+        if len(nodes) != 1:
+            raise ValueError("Stock default has ambiguous/nonliteral provenance")
+        defaults[name] = ast.literal_eval(nodes[0])
+        expected = EXPECTED_ALGORITHM_DEFAULTS[name]
+        if type(defaults[name]) is not type(expected) or defaults[name] != expected:
+            raise ValueError("Actual merged main algorithm defaults differ")
+    runtime = {**value, "public_environment": public_environment(value["public_environment"])}
+    return runtime, defaults
+
+
+def validate_ci(pointer: Any, source_sha: str) -> dict[str, Any]:
+    path, raw = evidence(pointer)
+    if (
+        type(raw.get("id")) is not int
+        or raw["id"] <= 0
+        or raw.get("head_sha") != source_sha
+        or raw.get("status") != "completed"
+        or raw.get("conclusion") != "success"
+        or raw.get("path") != ".github/workflows/ci.yml"
+        or type(raw.get("name")) is not str
+        or not raw["name"].strip()
+        or raw.get("repository", {}).get("full_name") != "wpalish/ashyq-apply"
+        or raw.get("html_url") != f"https://github.com/wpalish/ashyq-apply/actions/runs/{raw['id']}"
+    ):
+        raise ValueError("Actual successful CI source proof required")
+    return {
+        **pointer,
+        "run_id": raw["id"],
+        "head_sha": source_sha,
+        "status": "completed",
+        "conclusion": "success",
+        "url": raw["html_url"],
+        "workflow_name": raw["name"],
+        "workflow_path": raw["path"],
+    }
+
+
+def configure_proofs(configuration: dict[str, Any]) -> None:
+    global NEUTRAL_MANIFEST, NEUTRAL_MANIFEST_SHA256, SELECTOR_ENVIRONMENT
+    proof = configuration.get("neutral_originals")
+    if not isinstance(proof, dict):
+        raise ValueError("Exact fresh neutral evidence pointer required")
+    path, _value = evidence(proof)
+    NEUTRAL_MANIFEST, NEUTRAL_MANIFEST_SHA256 = path, proof["sha256"]
+    SELECTOR_ENVIRONMENT = public_environment(configuration.get("selector_environment"))
+
+
+def validate_configuration(configuration: dict[str, Any], repo: Path) -> dict[str, Any]:
+    if (
+        configuration.get("protocol_version") != PROTOCOL
+        or configuration.get("transport_kind") != TRANSPORT_KIND
+    ):
+        raise ValueError("A distinct V14 local protocol is required")
+    head = _hex(configuration.get("harness_sha"), size=40)
+    runtime, defaults = validate_runtime(configuration.get("local_runtime"))
+    selector = public_environment(configuration.get("selector_environment"))
+    registry = validate_private_registry(
+        configuration.get("baseline_identity_registry"),
+        configuration.get("baseline_identity_registry_source_sha"),
+        runtime,
+        repo,
+    )
+    cases = validate_public_cases(configuration.get("public_cases"))
+    if any(
+        configuration.get(key) != "exa"
+        for key in ("search_provider", "algorithm_provider", "expert_provider")
+    ):
+        raise ValueError("Both source arms must pin Exa")
+    if (
+        type(configuration.get("frozen_ref")) is not str
+        or not configuration["frozen_ref"]
+        or configuration["frozen_ref"].startswith("-")
+    ):
+        raise ValueError("An exact source ref is required")
+    return {
+        "harness_sha": head,
+        "frozen_ref": configuration["frozen_ref"],
+        "local_runtime": runtime,
+        "algorithm_defaults": defaults,
+        "selector_environment": selector,
+        "selector_environment_sha256": digest(selector),
+        "public_cases": cases["cases"],
+        "public_cases_sha256": digest(cases),
+        "baseline_identity_registry": registry,
+        "binding_registry": registry,
+        "baseline_identity_registry_source_sha": BASELINE_REGISTRY_SOURCE_SHA,
+    }
+
+
+def prepare_freeze(
+    configuration: dict[str, Any], *, repo: Path, destination: Path
+) -> dict[str, Any]:
+    if destination.exists() or destination.is_symlink():
+        raise ValueError("A freeze destination already exists; never reuse/reset it")
+    if not destination.is_absolute() or destination.parent != destination.parent.resolve(
+        strict=True
+    ):
+        raise ValueError("Freeze destination parent must be canonical")
+    repo = canonical_directory(str(repo))
+    selected = validate_configuration(configuration, repo)
+    clean_head(repo, selected["harness_sha"], ref=selected["frozen_ref"])
+    clean_head(Path(selected["local_runtime"]["source_cwd"]), selected["harness_sha"])
+    if destination.is_relative_to(Path(selected["local_runtime"]["source_cwd"])):
+        raise ValueError("Freeze output cannot modify the clean source tree")
+    ci = validate_ci(configuration.get("ci_source_proof"), selected["harness_sha"])
+    configure_proofs(configuration)
+    local_path, local = evidence(configuration.get("local_gates"))
+    validate_local_gates(local)
+    neutral = validate_neutral_current()
+    os_path, os_proof = evidence(configuration.get("os_preflight"))
+    if os_path != OS_PREFLIGHT.resolve(strict=True):
+        raise ValueError("Fresh V14 original OS result path differs")
+    runpy.run_path(str(OS_HELPER))["validate_result"](os_proof)
+    if (
+        os_proof.get("protocol_version") != PROTOCOL
+        or os_proof.get("parent_sha256") != sha(PARENT_PATH)
+        or os_proof.get("cat_processes") != 240
+        or any(
+            os_proof.get(key) != 0 or type(os_proof.get(key)) is not int
+            for key in ("source_requests", "model_requests", "network_requests")
+        )
+    ):
+        raise ValueError("Fresh V14 exact-parent ten-case/240-cat OS proof required")
+    report = runpy.run_path(str(REPORT_PATH))
+    if (
+        report.get("PROTOCOL_MODULES") != CORE_MODULES
+        or len(CORE_MODULES) != 22
+        or report.get("FROZEN_CLI") != FROZEN_CLI
+    ):
+        raise ValueError("V14 must bind the exact22module local/default-effort runtime")
+    # These are invocation coordinates, also used verbatim by the actual parent/report.
+    scripts = {str(path): sha(path) for path in protocol_scripts()}
+    admission_file = REPO / "backend/evaluation/research/expert/source_admission.py"
+    scripts[str(admission_file)] = sha(admission_file)
+    modules, source_files = {}, []
+    for name in sorted(CORE_MODULES):
+        spec = importlib.util.find_spec(name)
+        if spec is None or spec.origin is None:
+            raise ValueError("Frozen protocol module is unavailable")
+        source = Path(spec.origin).resolve(strict=True)
+        modules[name] = sha(source)
+        relative = name.replace(".", "/") + ".py"
+        if selected["local_runtime"]["source_manifest"].get(relative) != modules[name]:
+            raise ValueError("Actual parent import differs from selected clean source")
+        source_files.append({"path": str(source.relative_to(repo)), "sha256": modules[name]})
+    capture = baseline_capture_config()
+    destination.mkdir(mode=0o700)
+    files = list(source_files)
+
+    def copy(original: Path, relative: str) -> None:
+        expected = sha(original)
+        target = destination / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with target.open("xb") as stream:
+            stream.write(original.read_bytes())
+            stream.flush()
+            os.fsync(stream.fileno())
+        if sha(target) != expected or sha(original) != expected:
+            raise ValueError("Original evidence changed during exclusive byte copy")
+        files.append({"path": relative, "sha256": expected, "actual_parent_path": str(original)})
+
+    for index, (original, expected) in enumerate(sorted(scripts.items()), 1):
+        copy(Path(original), f"helpers/{index:02d}-{Path(original).name}.txt")
+        if sha(Path(original)) != expected:
+            raise ValueError("Helper changed while being frozen")
+    for label, original_path in (
+        ("local-gates.json", local_path),
+        ("neutral-original-manifest.json", NEUTRAL_MANIFEST),
+        ("neutral-probe.json", NEUTRAL),
+        ("os-isolation-preflight.json", os_path),
+        ("ci-source-proof.json", Path(ci["path"])),
+    ):
+        copy(original_path, label)
+    neutral_originals = validate_neutral_archive(manifest_path=NEUTRAL_MANIFEST)
+    for index, (original_name, archived_path) in enumerate(sorted(neutral_originals.items()), 1):
+        copy(archived_path, f"neutral-originals/{index:03d}-{Path(original_name).name}.txt")
+    os_artifacts = canonical_directory(os_proof.get("artifacts"))
+    for artifact in sorted(os_artifacts.rglob("*")):
+        if artifact.is_symlink():
+            raise ValueError("Original OS proof tree contains an alias")
+        if artifact.is_file():
+            copy(artifact, "os-originals/" + str(artifact.relative_to(os_artifacts)))
+    for index, (gate, proof) in enumerate(sorted(local["raw_logs"].items()), 1):
+        copy(Path(proof["path"]), f"gates/{index:02d}-{gate}.log")
+    manifest = {
+        "schema_version": "1",
+        "prepared_at": datetime.now(UTC).isoformat(),
+        "protocol_version": PROTOCOL,
+        "transport_kind": TRANSPORT_KIND,
+        "live_v14_started": False,
+        **selected,
+        "cohort_case_ids": list(COHORT),
+        "search_provider": "exa",
+        "algorithm_provider": "exa",
+        "expert_provider": "exa",
+        "requested_model": "gpt-6-astra",
+        "requested_reasoning_effort": None,
+        "reasoning_effort_source": "cli_default",
+        "comparison_mode": NETWORK_COMPARISON_MODE,
+        "budget_model": BUDGET_MODEL,
+        "wall_guard_ms": WALL_GUARD_MS,
+        "network_budget": expert_budget(),
+        "turn_policy": policy_limits(),
+        "baseline_budget": {
+            "max_fetcher_calls": 60,
+            "max_search_queries": 6,
+            "max_elapsed_ms": 120000,
+            "browser_enabled": False,
+        },
+        "baseline_finalization_reserve_ms": 1000,
+        "baseline_source_work_deadline_ms": 119000,
+        "baseline_capture_config": capture,
+        "unchanged_reviewed_fact_count": 62,
+        "acceptance_threshold_recovered_facts": 40,
+        "max_parallel_experts": 3,
+        "expert_time_basis": "Actual controlled source actions; thinking excluded; immutable900s case guard",
+        "cli_path": FROZEN_CLI,
+        "cli_sha256": sha(Path(FROZEN_CLI)),
+        "neutral_probe": neutral,
+        "neutral_originals": dict(configuration["neutral_originals"]),
+        "os_isolation_preflight": {
+            **configuration["os_preflight"],
+            "successful": True,
+            "cases_passed": 10,
+            "parent_sha256": os_proof["parent_sha256"],
+            "helper_sha256": sha(OS_HELPER),
+            "cat_processes": 240,
+        },
+        "local_gates": {"path": str(local_path), "sha256": sha(local_path)},
+        "ci_source_proof": ci,
+        "scripts": scripts,
+        "modules": modules,
+        "files": files,
+        "source_manifest_sha256": digest(selected["local_runtime"]["source_manifest"]),
+        "runtime_files_sha256": digest(selected["local_runtime"]["runtime_files"]),
+        "runtime_import_roots_sha256": digest(selected["local_runtime"]["runtime_import_roots"]),
+        "public_environment_sha256": digest(selected["local_runtime"]["public_environment"]),
+        "private_registry_bytes_read_by_freezer": False,
+    }
+    with (destination / "manifest.json").open("x") as stream:
+        json.dump(manifest, stream, ensure_ascii=False, indent=2, allow_nan=False)
+        stream.write("\n")
+        stream.flush()
+        os.fsync(stream.fileno())
+    return manifest
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--configuration", type=Path, required=True)
+    parser.add_argument("--repo", type=Path, required=True)
+    parser.add_argument("--out", type=Path, required=True)
+    args = parser.parse_args()
+    result = prepare_freeze(read(args.configuration), repo=args.repo, destination=args.out)
+    print(
+        json.dumps(
+            {
+                "folder": str(args.out),
+                "manifest_sha256": sha(args.out / "manifest.json"),
+                "modules": len(result["modules"]),
+                "scripts": len(result["scripts"]),
+            }
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

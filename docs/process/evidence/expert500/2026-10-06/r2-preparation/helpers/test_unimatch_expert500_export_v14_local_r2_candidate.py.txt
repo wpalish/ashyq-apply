@@ -1,0 +1,667 @@
+"""Export only synthetic original local receipts; no source/model/private input I/O."""
+
+from __future__ import annotations
+
+import asyncio
+import copy
+import hashlib
+import importlib.util
+import json
+import os
+import runpy
+import subprocess
+import sys
+import uuid
+from datetime import timedelta
+from pathlib import Path
+from types import SimpleNamespace
+from typing import Any
+
+import pytest
+
+EXPORT = Path("/tmp/unimatch-expert500-export-v14-local-r2-candidate.py")
+PILOT_TEST = Path("/tmp/test_unimatch_expert500_journal_pilot_v14_local_r2_candidate.py")
+REPORT = Path("/tmp/unimatch-expert500-journal-report-v14-local-r2-candidate.py")
+
+
+def load_module(name: str, path: Path) -> Any:
+    spec = importlib.util.spec_from_file_location(name, path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+pilot_helpers = load_module("_v14_export_pilot_synthetic_fixtures", PILOT_TEST)
+
+
+def write(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, sort_keys=True, allow_nan=False))
+
+
+def sha(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+@pytest.fixture(autouse=True)
+def no_actual_process_or_private_input(monkeypatch: pytest.MonkeyPatch) -> None:
+    def denied(*_args: Any, **_kwargs: Any) -> Any:
+        raise AssertionError("Only synthetic source/process callbacks are authorized")
+
+    monkeypatch.setattr(subprocess, "Popen", denied)
+    monkeypatch.setattr(subprocess, "run", denied)
+    monkeypatch.setattr(asyncio, "create_subprocess_exec", denied)
+    monkeypatch.setattr(os, "killpg", denied)
+    original_bytes, original_text = Path.read_bytes, Path.read_text
+
+    def private(path: Path) -> bool:
+        return any(
+            token in str(path).lower()
+            for token in ("ground_truth", "identity_bindings", "heldout", "/.env")
+        )
+
+    def read_bytes(path: Path) -> bytes:
+        if private(path):
+            raise AssertionError("Private facts or credentials must not be read")
+        return original_bytes(path)
+
+    def read_text(path: Path, *args: Any, **kwargs: Any) -> str:
+        if private(path):
+            raise AssertionError("Private facts or credentials must not be read")
+        return original_text(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_bytes", read_bytes)
+    monkeypatch.setattr(Path, "read_text", read_text)
+
+
+@pytest.fixture
+def exporter() -> dict[str, Any]:
+    return runpy.run_path(str(EXPORT))["main"].__globals__
+
+
+@pytest.fixture
+def local_evidence(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, exporter: dict[str, Any]
+) -> Any:
+    client = pilot_helpers.local_client.__wrapped__(tmp_path, monkeypatch)
+    parent = client.runtime
+    parent["legacy"]["COHORT"] = {"u": "example.edu"}
+    public = pilot_helpers.public_cases(parent)
+    client.trial.update(
+        public_cases=public,
+        public_cases_sha256=parent["digest"](
+            {"version": "expert500-v14-public-v1", "cases": public}
+        ),
+    )
+    write(client.root / "trial.json", client.trial)
+    baseline = parent["baseline"](Path("/unused"), "synthetic-frozen", client.root, "u")
+    guard = parent["WallGuard"](client.clock.start, client.clock.start + timedelta(seconds=900))
+    config = parent["_session_config"](client.root, "u", "expert", guard)
+    first = parent["workflow"](
+        Path("/unused"),
+        "synthetic-frozen",
+        "u",
+        {
+            "mode": "expert_actions",
+            "search_provider": "exa",
+            "plan": json.dumps(client.helpers.plan(config)),
+        },
+        client.root / "experts/u/controller-01",
+        wall_guard=guard,
+        trial_root=client.root,
+    )
+    client.clock.advance(180)
+    second = parent["workflow"](
+        Path("/unused"),
+        "synthetic-frozen",
+        "u",
+        {
+            "mode": "expert_actions",
+            "search_provider": "exa",
+            "plan": json.dumps(client.helpers.plan(config, first)),
+        },
+        client.root / "experts/u/controller-02",
+        wall_guard=guard,
+        trial_root=client.root,
+        prior_delivery=first,
+    )
+    terminal = parent["close_source_session"](client.root, "u", "expert")
+    result = {
+        "case_id": "u",
+        "transport_kind": "local_process_v1",
+        "source_counters_complete": True,
+        "source_ms": second.source_counters["elapsed_ms"],
+        "source_session_terminal": terminal,
+        **guard.as_dict(),
+    }
+    write(client.root / "experts/u/result.json", result)
+    replay = runpy.run_path(str(REPORT))["main"].__globals__
+    replay["_LOCAL_WORKER_MODULE"] = client.worker
+    replay["_LOCAL_ADMISSION_MODULE"] = client.helpers.admission_module
+    monkeypatch.setitem(exporter, "COHORT", {"u": "example.edu"})
+    monkeypatch.setitem(exporter, "_REPORT", replay)
+    baseline_delivery = replay["verify_local_delivery"](
+        client.root / "baseline/u",
+        expected_case_id="u",
+        expected_stage="baseline",
+        expected_source_sha=config.source_sha,
+    )
+    deliveries = [baseline_delivery, first, second]
+    sessions = replay["local_session_originals"](baseline_delivery) + replay[
+        "local_session_originals"
+    ](second)
+    seal = {
+        "local_source_session_artifacts": sessions,
+        "source_admission_artifacts": replay["source_admission_originals"](client.root, deliveries),
+    }
+    return SimpleNamespace(
+        client=client,
+        root=client.root,
+        trial=client.trial,
+        seal=seal,
+        first=first,
+        second=second,
+        baseline=baseline,
+        replay=replay,
+        result=result,
+    )
+
+
+def test_export_replays_actual_mocked_local_processes_and_keeps_all_source_tails(
+    exporter, local_evidence
+):
+    evidence = local_evidence
+    deliveries = exporter["validate_local_originals"](evidence.root, evidence.seal, evidence.trial)
+    assert len(deliveries) == 3
+    assert deliveries[-1].source_counters["fetcher_calls"] == 2
+    assert 20 <= deliveries[-1].source_counters["elapsed_ms"] <= 21
+    assert len(deliveries[-1].summary["raw_logs"]) == 2
+    assert len(evidence.seal["local_source_session_artifacts"]) == 12
+    index = [exporter["local_receipt"](delivery) for delivery in deliveries]
+    assert len({row["local_run_id"] for row in index}) == 3
+    assert index[1]["session_id"] == index[2]["session_id"]
+    assert index[0]["stage"] == "baseline"
+    assert all(not {"run_id", "headSha", "conclusion"}.intersection(row) for row in index)
+    assert b"DUMMY_NOT_A_REAL_KEY" not in json.dumps(index).encode()
+
+
+@pytest.mark.parametrize(
+    "stage,name",
+    [
+        ("expert", "worker.stdin"),
+        ("expert", "worker.stdout"),
+        ("expert", "worker.stderr"),
+        ("expert", "session-start.json"),
+        ("expert", "session-final.json"),
+        ("baseline", "worker.stdout"),
+    ],
+)
+def test_missing_original_process_or_control_stream_is_ineligible(
+    exporter, local_evidence, stage, name
+):
+    evidence = local_evidence
+    (evidence.root / "source-workers" / stage / "u" / name).unlink()
+    with pytest.raises((ValueError, FileNotFoundError)):
+        exporter["validate_local_originals"](evidence.root, evidence.seal, evidence.trial)
+
+
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "baseline/u/artifact/child.stdout",
+        "baseline/u/artifact/child-process.json",
+        "baseline/u/worker-response.jsonl",
+        "experts/u/controller-02/artifact/logs/u-002.json",
+        "experts/u/controller-01/local-receipt.json",
+    ],
+)
+def test_missing_original_child_receipt_or_spent_raw_tail_is_ineligible(
+    exporter, local_evidence, relative
+):
+    evidence = local_evidence
+    (evidence.root / relative).unlink()
+    with pytest.raises((ValueError, FileNotFoundError)):
+        exporter["validate_local_originals"](evidence.root, evidence.seal, evidence.trial)
+
+
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "source-workers/expert/u/worker.stderr",
+        "experts/u/controller-02/artifact/logs/u-002.json",
+        "baseline/u/artifact/child-command.json",
+    ],
+)
+def test_tampered_original_hash_is_ineligible(exporter, local_evidence, relative):
+    evidence = local_evidence
+    with (evidence.root / relative).open("ab") as stream:
+        stream.write(b"unrecorded mutation")
+    with pytest.raises(ValueError):
+        exporter["validate_local_originals"](evidence.root, evidence.seal, evidence.trial)
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("status", "unavailable"),
+        ("source_counters_known", False),
+        ("source_counters", None),
+        ("run_id", "invented-gh-id"),
+    ],
+)
+def test_unknown_tail_or_fabricated_gh_identity_never_exported_as_primary(
+    exporter, local_evidence, field, value
+):
+    evidence = local_evidence
+    path = evidence.second.receipt_path
+    value_record = json.loads(path.read_bytes())
+    value_record[field] = value
+    write(path, value_record)
+    with pytest.raises(ValueError):
+        exporter["validate_local_originals"](evidence.root, evidence.seal, evidence.trial)
+
+
+@pytest.mark.parametrize("field", ["local_source_session_artifacts", "source_admission_artifacts"])
+def test_seal_cannot_omit_hash_or_duplicate_original_local_artifact(
+    exporter, local_evidence, field
+):
+    evidence = local_evidence
+    altered = copy.deepcopy(evidence.seal)
+    altered[field].pop()
+    with pytest.raises(ValueError):
+        exporter["validate_local_originals"](evidence.root, altered, evidence.trial)
+    duplicated = copy.deepcopy(evidence.seal)
+    duplicated[field].append(duplicated[field][0])
+    with pytest.raises(ValueError):
+        exporter["validate_local_originals"](evidence.root, duplicated, evidence.trial)
+
+
+@pytest.mark.parametrize(
+    "marker",
+    [
+        "model-batch-stop.json",
+        "transport-batch-stop.json",
+        "source-admission/stop.json",
+        "baseline/groningen/baseline-provider-stop.json",
+    ],
+)
+def test_original_stop_refuses_before_comparison_or_private_input_read(exporter, tmp_path, marker):
+    write(tmp_path / marker, {"original": True})
+    with pytest.raises(ValueError, match="stop"):
+        exporter["validate_export_contract"](tmp_path, tmp_path / "absent-protocol")
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "controller-01/artifact/logs/u-001.json",
+        "controller-100/local-receipt.json",
+        "selector-01.request.json",
+    ],
+)
+def test_canonical_local_nested_paths_are_supported(exporter, tmp_path, name):
+    path = tmp_path.resolve() / name
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(b"synthetic original")
+    assert exporter["protocol_artifact_path"](tmp_path.resolve(), name) == path
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "../secret",
+        "/tmp/secret",
+        "controller-1/local-receipt.json",
+        "controller-00/local-receipt.json",
+        "controller-01/../../secret",
+        "other/record.json",
+        "controller-01//artifact.json",
+        "controller-01\\record.json",
+    ],
+)
+def test_export_paths_cannot_escape_or_change_canonical_controller_number(exporter, tmp_path, name):
+    with pytest.raises((ValueError, FileNotFoundError)):
+        exporter["protocol_artifact_path"](tmp_path.resolve(), name)
+
+
+def test_parent_and_leaf_symlink_aliases_refused(exporter, tmp_path):
+    folder = tmp_path / "case"
+    folder.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "record.json").write_bytes(b"outside")
+    (folder / "controller-01").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(ValueError):
+        exporter["protocol_artifact_path"](folder, "controller-01/record.json")
+    (folder / "selector-01.request.json").symlink_to(outside / "record.json")
+    with pytest.raises(ValueError):
+        exporter["protocol_artifact_path"](folder, "selector-01.request.json")
+
+
+def neutral_archive(tmp_path):
+    archive = tmp_path.resolve() / "fresh-neutral"
+    stream = archive / "artifacts/selector-01.events.jsonl"
+    stream.parent.mkdir(parents=True)
+    stream.write_bytes(b'{"type":"turn.completed"}\n')
+    value = {
+        "records": [
+            {
+                "path": stream.relative_to(archive).as_posix(),
+                "original_path": "/synthetic/neutral/events.jsonl",
+                "sha256": sha(stream),
+                "bytes": stream.stat().st_size,
+            }
+        ]
+    }
+    write(archive / "manifest.json", value)
+    pointer = {"path": str(archive / "manifest.json"), "sha256": sha(archive / "manifest.json")}
+    return archive, value, pointer
+
+
+def test_neutral_raw_archive_is_preserved_without_ephemeral_paths(exporter, tmp_path):
+    archive, _, pointer = neutral_archive(tmp_path)
+    records = exporter["neutral_originals"](
+        {"neutral_originals": pointer}, {"neutral_originals": pointer}
+    )
+    assert len(records) == 2
+    assert all(Path(record["path"]).is_relative_to(archive) for record in records)
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        "missing_stream",
+        "changed_stream",
+        "duplicate",
+        "traversal",
+        "alias",
+        "wrong_size",
+        "private_producer",
+    ],
+)
+def test_neutral_archive_cannot_lose_or_substitute_original_raw_bytes(exporter, tmp_path, bad):
+    archive, value, pointer = neutral_archive(tmp_path)
+    stream = archive / value["records"][0]["path"]
+    trial = {"neutral_originals": pointer}
+    if bad == "missing_stream":
+        stream.unlink()
+    elif bad == "changed_stream":
+        stream.write_bytes(b"changed")
+    elif bad == "duplicate":
+        value["records"].append(copy.deepcopy(value["records"][0]))
+    elif bad == "traversal":
+        value["records"][0]["path"] = "../outside"
+    elif bad == "alias":
+        outside = tmp_path / "outside-stream"
+        outside.write_bytes(stream.read_bytes())
+        stream.unlink()
+        stream.symlink_to(outside)
+    elif bad == "wrong_size":
+        value["records"][0]["bytes"] = True
+    elif bad == "private_producer":
+        trial["baseline_identity_registry"] = {"path": value["records"][0]["original_path"]}
+    write(archive / "manifest.json", value)
+    pointer["sha256"] = sha(archive / "manifest.json")
+    with pytest.raises((ValueError, FileNotFoundError)):
+        exporter["neutral_originals"]({"neutral_originals": pointer}, trial)
+
+
+def test_export_refuses_existing_destination_without_any_source_validation(
+    exporter, tmp_path, monkeypatch
+):
+    root, protocol, destination = (tmp_path / name for name in ("trial", "protocol", "export"))
+    for path in (root, protocol, destination):
+        path.mkdir()
+    sentinel = destination / "original"
+    sentinel.write_bytes(b"preserve existing byte")
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            str(EXPORT),
+            "--root",
+            str(root),
+            "--protocol",
+            str(protocol),
+            "--destination",
+            str(destination),
+        ],
+    )
+    with pytest.raises(ValueError, match="already exists"):
+        exporter["main"]()
+    assert sentinel.read_bytes() == b"preserve existing byte"
+
+
+@pytest.fixture
+def copy_fixture(exporter, tmp_path, monkeypatch):
+    """Synthetic ten-case copy plan; real receipt replay is tested above separately."""
+    root = tmp_path.resolve() / "trial"
+    root.mkdir()
+    protocol = tmp_path / "protocol"
+    protocol.mkdir()
+    archive, _, pointer = neutral_archive(tmp_path)
+    source = tmp_path / "public-source"
+    source_name = "evaluation/research/expert/source_admission.py"
+    (source / source_name).parent.mkdir(parents=True)
+    (source / source_name).write_bytes(b"# synthetic frozen public source\n")
+    helper = protocol / "helpers/01-helper.py.txt"
+    helper.parent.mkdir()
+    helper.write_bytes(b"# synthetic helper; never executed\n")
+    files = [
+        {"path": "helpers/01-helper.py.txt", "sha256": sha(helper)},
+        {"path": "backend/" + source_name, "sha256": sha(source / source_name)},
+    ]
+    manifest = {"files": files, "neutral_originals": pointer}
+    write(protocol / "manifest.json", manifest)
+    trial = {
+        "harness_sha": "1" * 40,
+        "local_runtime": {
+            "source_cwd": str(source),
+            "source_manifest": {source_name: sha(source / source_name)},
+        },
+        "baseline_identity_registry": {"path": str(tmp_path / "private-producer-never-read")},
+        "expert_protocol": {
+            "files": files,
+            "manifest_file_sha256": sha(protocol / "manifest.json"),
+        },
+        "neutral_originals": pointer,
+    }
+    submissions, deliveries, sessions, baseline_artifacts = [], [], [], []
+    for case_id in exporter["COHORT"]:
+        baseline = root / "baseline" / case_id
+        expert = root / "experts" / case_id
+        controller = expert / "controller-01"
+        source_log = controller / "artifact/logs/synthetic-001.json"
+        source_log.parent.mkdir(parents=True)
+        source_log.write_bytes(b'{"synthetic_original_source":true}\n')
+        recorded = [{"raw_log_path": source_log.name, "raw_log_sha256": sha(source_log)}]
+        write(expert / "recorded-actions.json", recorded)
+        write(expert / "trace.json", {"actions": []})
+        write(expert / "result.json", {"actions": 1})
+        write(baseline / "public-packet.json", {"synthetic_public_case_id": case_id})
+        write(baseline / "result.json", {"provider": "exa"})
+        for name in (
+            "child.stdout",
+            "child.stderr",
+            "child-command.json",
+            "capture/local/capture.json",
+        ):
+            path = baseline / "artifact" / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"synthetic original child bytes")
+            baseline_artifacts.append({"path": str(path), "sha256": sha(path)})
+        for stage, destination in (("baseline", baseline), ("expert", controller)):
+            receipt = {
+                "case_id": case_id,
+                "stage": stage,
+                "transport_kind": "local_process_v1",
+                "local_run_id": str(uuid.uuid4()),
+                "session_id": str(uuid.uuid4()),
+                "source_sha": trial["harness_sha"],
+                "status": "verified",
+                "terminal_reason": None,
+                "source_counters_known": True,
+                "source_counters": {"fetcher_calls": 1, "search_queries": 0, "elapsed_ms": 1},
+            }
+            for name in (
+                "request.json",
+                "worker-receipt.json",
+                "worker-response.jsonl",
+                "local-receipt.json",
+            ):
+                write(destination / name, receipt)
+            deliveries.append(
+                SimpleNamespace(
+                    receipt=receipt,
+                    receipt_path=destination / "local-receipt.json",
+                    receipt_sha256=sha(destination / "local-receipt.json"),
+                )
+            )
+            session = root / "source-workers" / stage / case_id
+            for name in (
+                "session-bootstrap.json",
+                "session-start.json",
+                "session-final.json",
+                "worker.stdin",
+                "worker.stdout",
+                "worker.stderr",
+            ):
+                path = session / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(b"synthetic original process/control bytes")
+                sessions.append({"path": str(path), "sha256": sha(path)})
+        artifacts = [
+            {"path": path.relative_to(expert).as_posix(), "sha256": sha(path)}
+            for path in sorted(controller.rglob("*"))
+            if path.is_file()
+        ]
+        artifacts.append(
+            {"path": "recorded-actions.json", "sha256": sha(expert / "recorded-actions.json")}
+        )
+        submissions.append(
+            {
+                "case_id": case_id,
+                "trace_file_sha256": sha(expert / "trace.json"),
+                "result_sha256": sha(expert / "result.json"),
+                "baseline_result_sha256": sha(baseline / "result.json"),
+                "protocol_artifacts": artifacts,
+                "raw_logs": [],
+                "compact_submission_sha256": None,
+            }
+        )
+    gate = root / "source-admission"
+    admissions = []
+    for name in ("identity.json", ".lock", "admissions/synthetic.json"):
+        path = gate / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"synthetic original shared gate bytes")
+        admissions.append({"path": str(path), "sha256": sha(path)})
+    write(root / "trial.json", trial)
+    (root / "trial-at-baseline-start.json").write_bytes((root / "trial.json").read_bytes())
+    write(root / "experts-results.json", {"count": 10})
+    seal = {
+        "submissions": submissions,
+        "local_source_session_artifacts": sessions,
+        "source_admission_artifacts": admissions,
+        "baseline_artifacts": baseline_artifacts,
+        "trial_file_sha256": sha(root / "trial.json"),
+        "cohort_results_sha256": sha(root / "experts-results.json"),
+        "all_accepted_journal_deltas_replayed": True,
+    }
+    write(root / "submission-seal.json", seal)
+    comparison = {"protocol_eligible": False, "protocol_gate": False}
+    write(root / "comparison.json", comparison)
+    for name in (
+        "workspace-locations.json",
+        "workspace-receipts.json",
+        "launch-start.json",
+        "baseline-stage-start.json",
+        "experts-stage-start.json",
+        "baseline-results.json",
+        "baseline-capture.json",
+        "expert-capture.json",
+        "expert-value-projections.json",
+        "baseline-score.json",
+        "expert-score.json",
+    ):
+        write(root / name, {"synthetic_original": name})
+    write(root / "outside-policy-observations.json", [{"synthetic": "unverified observation"}])
+    monkeypatch.setitem(
+        exporter, "validate_export_contract", lambda *_args: (seal, comparison, trial)
+    )
+    monkeypatch.setitem(exporter, "validate_local_originals", lambda *_args: deliveries)
+    destination = tmp_path / "export"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            str(EXPORT),
+            "--root",
+            str(root),
+            "--protocol",
+            str(protocol),
+            "--destination",
+            str(destination),
+        ],
+    )
+    return SimpleNamespace(
+        root=root,
+        protocol=protocol,
+        destination=destination,
+        seal=seal,
+        trial=trial,
+        archive=archive,
+        source_log=source_log,
+    )
+
+
+def test_actual_export_main_preserves_exact_local_nested_bytes_and_negative_gate(
+    exporter, copy_fixture
+):
+    fixture = copy_fixture
+    exporter["main"]()
+    manifest = json.loads((fixture.destination / "manifest.json").read_bytes())
+    assert manifest["baseline_local_runs"] == manifest["expert_local_runs"] == 10
+    assert manifest["protocol_gate"] is False and manifest["protocol_eligible"] is False
+    assert manifest["unchanged_reviewed_fact_count"] == 62
+    assert manifest["acceptance_threshold_recovered_facts"] == 40
+    assert manifest["private_identity_registry_exported"] is False
+    assert all(
+        row["accepted_trace_actions"] == 0 and row["recorded_source_actions"] == 1
+        for row in manifest["accepted_trace_prefixes"]
+    )
+    assert len(manifest["outside_policy_observations"]) == 1
+    assert manifest["outside_policy_observations"][0]["status"] == "unverified_observation"
+    assert not (fixture.destination / "workflow-runs.json").exists()
+    for record in manifest["all_files"]:
+        target = fixture.destination / record["path"]
+        assert sha(target) == record["sha256"]
+        if "original_path" in record:
+            assert target.read_bytes() == Path(record["original_path"]).read_bytes()
+    index = json.loads((fixture.destination / "local-process-runs.json").read_bytes())
+    assert len(index) == 20 and len({row["local_run_id"] for row in index}) == 20
+    assert all(not {"run_id", "headSha", "conclusion"}.intersection(row) for row in index)
+    assert (fixture.destination / "source-workers/expert/groningen/worker.stderr").is_file()
+    assert (fixture.destination / "baseline-receipts/groningen/artifact/child.stdout").is_file()
+    assert (
+        fixture.destination / "controllers/groningen/controller-01/worker-response.jsonl"
+    ).is_file()
+    assert (fixture.destination / "source-admission/admissions/synthetic.json").is_file()
+    assert (
+        fixture.destination / "protocol/neutral-originals/artifacts/selector-01.events.jsonl"
+    ).is_file()
+
+
+def test_export_main_detects_changed_sealed_source_bytes_and_keeps_partial_original(
+    exporter, copy_fixture
+):
+    fixture = copy_fixture
+    fixture.source_log.write_bytes(b"changed after original seal")
+    with pytest.raises(ValueError, match="sealed"):
+        exporter["main"]()
+    assert fixture.destination.is_dir()
+    assert not (fixture.destination / "manifest.json").exists()
+    original = fixture.destination / "submission-seal.json"
+    assert original.read_bytes() == (fixture.root / "submission-seal.json").read_bytes()
