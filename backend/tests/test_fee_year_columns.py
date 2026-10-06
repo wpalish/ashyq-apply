@@ -35,8 +35,9 @@ def _fees(text: str, year: str | None) -> set[tuple[float, str | None, str | Non
     }
 
 
-def test_off_by_default() -> None:
-    assert extraction.FEE_YEAR_COLUMNS is False
+def test_on_by_default_and_off_reads_nothing(monkeypatch: pytest.MonkeyPatch) -> None:
+    assert extraction.FEE_YEAR_COLUMNS is True
+    monkeypatch.setattr(extraction, "FEE_YEAR_COLUMNS", False)
     assert _fees(DELFT, "2027/28") == set()
 
 

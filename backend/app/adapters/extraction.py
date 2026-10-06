@@ -1164,8 +1164,9 @@ def _population_amounts(
 #: rate BSc € 19.906 MSc € 25.633 BSc € 20.563 MSc € 26.479"). Only the tariff
 #: names below are read, each to the population the institution's own page
 #: defines it for; any other row name is left alone. The column must be the
-#: year asked for; no year, no claim.
-FEE_YEAR_COLUMNS = False
+#: year asked for; no year, no claim. On by default since 2026-10-06 (owner:
+#: "да"; run claude-df1-paired-2: Delft tuition a stable gain, zero losses).
+FEE_YEAR_COLUMNS = True
 _TARIFF_POPULATION = {
     "statutory rate": "EU/EEA",
     "institutional rate": "non-EU/EEA",
