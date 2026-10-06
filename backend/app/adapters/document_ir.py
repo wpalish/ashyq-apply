@@ -205,7 +205,7 @@ def _table_blocks(
 
 #: Part of plan rule DOC-2 (documents/web_documents.py): a screen-reader label
 #: of a form picker is not a heading for the evidence after it.
-FORM_LABEL_HEADINGS = False
+FORM_LABEL_HEADINGS = True
 
 
 def _form_only_container(node: Tag) -> bool:
