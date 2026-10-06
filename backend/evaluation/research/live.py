@@ -694,6 +694,12 @@ def main() -> None:
         "on its own clock of SECONDS; the decision stage's budget is untouched",
     )
     parser.add_argument(
+        "--fee-year-columns",
+        action="store_true",
+        help="plan rule DF-1: fee tables with academic years as columns and named "
+        "tariffs (statutory / institutional rate) as rows",
+    )
+    parser.add_argument(
         "--search-rate-limit-retry",
         action="store_true",
         help="plan rule SR-1: one retry, after a short pause, when the keyless Exa MCP "
@@ -831,6 +837,10 @@ def main() -> None:
         if args.with_documents:
             global DOCUMENT_SECONDS
             DOCUMENT_SECONDS = args.with_documents
+        if args.fee_year_columns:
+            from app.adapters import extraction as fee_module
+
+            fee_module.FEE_YEAR_COLUMNS = True
         if args.search_rate_limit_retry:
             from app.adapters.search import exa_mcp as exa_mcp_module
 
@@ -948,6 +958,7 @@ def main() -> None:
                         *(["--document-rules-v2"] if args.document_rules_v2 else []),
                         *(["--document-leads"] if args.document_leads else []),
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
+                        *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(
                             ["--with-documents", str(args.with_documents)]
                             if args.with_documents
