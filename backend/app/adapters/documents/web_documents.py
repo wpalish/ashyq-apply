@@ -133,8 +133,9 @@ _DOCUMENT_ACTION = re.compile(
 #: translation exception keeps its languages, a referee's role stays with the
 #: reference, a supplemental-application row applies to its programme only,
 #: and a secondary-school completion cell stops before the higher-education
-#: group. Off until a paired run with the documents stage (D7) measures it.
-DOCUMENT_RULES_V2 = False
+#: group. On by default since 2026-10-06 (owner: "Да"; run claude-doc2-over-doc3:
+#: two stable gains, zero losses, precision 1.0).
+DOCUMENT_RULES_V2 = True
 #: Plan rule DOC-3: the documents stage also reads the institution's own
 #: application-documents page, found by link text at most two hops from the
 #: programme page (paired run claude-doc2-paired-2: the stage read only the
