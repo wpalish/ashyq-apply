@@ -713,6 +713,12 @@ def main() -> None:
         help="plan rule TS-2: a failed topic query no longer ends topic search",
     )
     parser.add_argument(
+        "--route-leads",
+        action="store_true",
+        help="plan rule RL-1: follow official deadline and foreign-diploma route links "
+        "below the admissions page",
+    )
+    parser.add_argument(
         "--fee-year-columns",
         action="store_true",
         help="plan rule DF-1: fee tables with academic years as columns and named "
@@ -867,6 +873,10 @@ def main() -> None:
             from app.adapters.requirements import web_requirements as ts2_module
 
             ts2_module.TOPIC_SEARCH_CONTINUE = True
+        if args.route_leads:
+            from app.adapters.requirements import web_requirements as rl1_module
+
+            rl1_module.ROUTE_LEADS = True
         if args.fee_year_columns:
             from app.adapters import extraction as fee_module
 
@@ -989,6 +999,7 @@ def main() -> None:
                         *(["--document-leads"] if args.document_leads else []),
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
+                        *(["--route-leads"] if args.route_leads else []),
                         *(["--topic-search-continue"] if args.topic_search_continue else []),
                         *(["--search-429-retry"] if args.search_429_retry else []),
                         *(["--search-pacing"] if args.search_pacing else []),

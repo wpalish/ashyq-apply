@@ -138,6 +138,8 @@ class _Target:
     language_follow: bool = False
     #: Found by experiment ER-08 for this topic.
     topic: str | None = None
+    #: Reached by following a route or deadline link (plan rule RL-1).
+    route_follow: bool = False
 
 
 #: Language-requirement pages followed per programme, beyond the two targets.
@@ -163,6 +165,64 @@ def _language_links(html: str, base: str, domain: str | None) -> list[str]:
         named = _LANGUAGE_LINK.search(link.text) or _LANGUAGE_LINK.search(url.replace("/", " "))
         if named and url not in out and url.rstrip("/") != base.rstrip("/"):
             out.append(url)
+    return out
+
+
+#: Plan rule RL-1 (control run claude-control-twopass-1, 2026-10-06): the
+#: deadline and the English minimum often sit two or three official links below
+#: the admissions hub the adapter reads (Delft: hub -> "BSc - International
+#: diploma" -> "Admission Requirements" / "Dates & Deadlines"; UBC: hub ->
+#: "Dates and deadlines"). False keeps the adapter as it was.
+ROUTE_LEADS = False
+#: Route and deadline pages followed per programme, beyond every other target.
+_MAX_ROUTE_FOLLOWS = 4
+_DEADLINE_LEAD = re.compile(
+    r"\bdates?\s*(?:&|and)\s*deadlines?\b|\bapplication\s+deadlines?\b|\bkey\s+dates\b", re.I
+)
+#: The undergraduate route for an applicant with a foreign school diploma.
+_ROUTE_LEAD = re.compile(
+    r"\binternational\s+(?:diploma|high\s+schools?|secondary|qualifications?)\b"
+    r"|\bnon[\s-]dutch\b|\bforeign\s+(?:diploma|qualifications?)\b",
+    re.I,
+)
+#: A bare "Admission requirements" link, followed only from a page that is
+#: already on the international route, so a domestic route is never read.
+_REQUIREMENTS_LEAD = re.compile(r"^\s*(?:admission|entry)\s+requirements\s*$", re.I)
+_ON_ROUTE = re.compile(r"international|non-dutch|foreign", re.I)
+_GRADUATE_LEAD = re.compile(r"\b(?:msc|master'?s?|phd|doctoral|postgraduate|graduate)\b", re.I)
+
+
+def _route_links(
+    html: str, base: str, domain: str | None, *, deadline: bool, requirements: bool
+) -> list[tuple[str, bool]]:
+    """Same-site links to the deadline or the foreign-diploma route (RL-1).
+
+    Each item is ``(url, is_requirements_page)``. Link text decides; a link
+    that names a graduate route is never followed.
+    """
+    if not domain:
+        return []
+    on_route = bool(_ON_ROUTE.search(base))
+    out: list[tuple[str, bool]] = []
+    seen: set[str] = set()
+    for link in build_document_ir(html, base).links:
+        url = link.url.split("#")[0]
+        text = " ".join(link.text.split())
+        if not url.startswith(("https://", "http://", "fixture://")) or url in seen:
+            continue
+        if not (url.startswith("fixture://") or is_official_domain(url, [domain])):
+            continue
+        if url.rstrip("/") == base.rstrip("/") or _GRADUATE_LEAD.search(text):
+            continue
+        if (deadline and _DEADLINE_LEAD.search(text)) or (
+            requirements and _ROUTE_LEAD.search(text)
+        ):
+            out.append((url, False))
+        elif requirements and on_route and _REQUIREMENTS_LEAD.search(text):
+            out.append((url, True))
+        else:
+            continue
+        seen.add(url)
     return out
 
 
@@ -197,6 +257,7 @@ class WebRequirementsAdapter:
                     visited.add(url)
                     queue.append(_Target(url, SourceSpecificity.UNIVERSITY_ADMISSIONS, topic=topic))
         followed = 0
+        routed = 0
         while queue:
             target = queue.pop(0)
             res = await self.fetcher.get(target.url)
@@ -454,6 +515,29 @@ class WebRequirementsAdapter:
                     followed += 1
                     queue.append(
                         _Target(url, SourceSpecificity.UNIVERSITY_ADMISSIONS, language_follow=True)
+                    )
+            if ROUTE_LEADS and routed < _MAX_ROUTE_FOLLOWS and not res.is_pdf:
+                have = {c.claim_type for c in out.claims}
+                want_deadline = ClaimType.ADMISSION_DEADLINE not in have
+                want_english = ClaimType.IELTS_MIN_OVERALL not in have
+                for url, is_requirements in _route_links(
+                    res.text,
+                    page_url,
+                    candidate.domain,
+                    deadline=want_deadline,
+                    requirements=want_english,
+                ):
+                    if url in visited or routed >= _MAX_ROUTE_FOLLOWS:
+                        continue
+                    visited.add(url)
+                    routed += 1
+                    queue.append(
+                        _Target(
+                            url,
+                            SourceSpecificity.UNIVERSITY_ADMISSIONS,
+                            language_follow=is_requirements,
+                            route_follow=True,
+                        )
                     )
 
         if not out.claims and out.pages_checked == 0:
