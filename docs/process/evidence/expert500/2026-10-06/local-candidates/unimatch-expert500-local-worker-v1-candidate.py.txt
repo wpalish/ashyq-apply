@@ -1,0 +1,2387 @@
+"""Prospective local source transport. Offline candidate; never imported by production.
+
+The public client holds no source tools. One privately keyed worker keeps a stock
+Fetcher/provider alive for one expert case. Baseline uses the stock strict live
+child. Real execution requires the separately reviewed opt-in admission hooks.
+No selector/model is launched here. Tests inject tools/processes and use no network.
+"""
+
+from __future__ import annotations
+
+import argparse
+import ast
+import asyncio
+import contextlib
+import hashlib
+import importlib
+import inspect
+import io
+import json
+import math
+import os
+import queue
+import re
+import signal
+import stat
+import subprocess
+import sys
+import threading
+import time
+import uuid
+from collections.abc import Awaitable, Callable, Mapping
+from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from typing import Any
+
+PROTOCOL = "journal-v14-local"
+TRANSPORT = "local_process_v1"
+KEY_NAME = "UNIMATCH_EXA_API_KEY"
+MAX_FRAME_BYTES = 16 * 1024 * 1024
+CLOSE_SECONDS = 5.0
+_SAFE_CASE = re.compile(r"[a-z][a-z0-9_-]{0,63}\Z")
+_SHA = re.compile(r"[0-9a-f]{64}\Z")
+_SOURCE_SHA = re.compile(r"[0-9a-f]{40}\Z")
+PUBLIC_ENV_NAMES = frozenset({"HOME", "PATH", "LANG", "LC_ALL", "TMPDIR"})
+_FORBIDDEN_SOURCE_PARTS = frozenset({".env", "ground_truth", "heldout", "reviewed", "signed"})
+
+
+def utc_now() -> datetime:
+    return datetime.now(UTC)
+
+
+def canonical_bytes(value: Any) -> bytes:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+
+
+def digest(value: Any) -> str:
+    return hashlib.sha256(canonical_bytes(value)).hexdigest()
+
+
+def _pairs(items: list[tuple[str, Any]]) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for key, value in items:
+        if key in result:
+            raise ValueError("Duplicate public JSON field")
+        result[key] = value
+    return result
+
+
+def load_json(data: bytes | str) -> dict[str, Any]:
+    result = json.loads(data, object_pairs_hook=_pairs)
+    if not isinstance(result, dict):
+        raise ValueError("Public JSON must be an object")
+    return result
+
+
+def _integer(value: Any, name: str, *, minimum: int = 0) -> int:
+    if type(value) is not int or value < minimum:
+        raise ValueError(f"Invalid {name}")
+    return value
+
+
+def _stamp(value: Any) -> datetime:
+    if type(value) is not str:
+        raise ValueError("Missing UTC timestamp")
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None or parsed.utcoffset() != timedelta(0):
+        raise ValueError("Timestamp must use UTC")
+    return parsed.astimezone(UTC)
+
+
+def validate_guard(value: Mapping[str, Any]) -> dict[str, Any]:
+    if set(value) != {"wall_started_at", "wall_deadline_at", "wall_guard_ms"}:
+        raise ValueError("Immutable guard fields differ")
+    start, end = _stamp(value["wall_started_at"]), _stamp(value["wall_deadline_at"])
+    if end - start != timedelta(seconds=900) or type(value["wall_guard_ms"]) is not int:
+        raise ValueError("Expert requires its original 900 second guard")
+    if value["wall_guard_ms"] != 900000:
+        raise ValueError("Expert guard ceiling differs")
+    return dict(value)
+
+
+def _canonical_path(path: Path, *, directory: bool = False) -> Path:
+    if not path.is_absolute() or path != path.resolve(strict=True):
+        raise ValueError("Persisted paths must already be canonical")
+    info = path.lstat()
+    if path.is_symlink() or (
+        not stat.S_ISDIR(info.st_mode) if directory else not stat.S_ISREG(info.st_mode)
+    ):
+        raise ValueError("Path has wrong type or is a symlink")
+    if not directory and info.st_nlink != 1:
+        raise ValueError("Artifact cannot be a hard link")
+    return path
+
+
+def _identity(path: Path, *, directory: bool = False) -> dict[str, Any]:
+    _canonical_path(path, directory=directory)
+    info = path.stat()
+    result = {"path": str(path), "device": info.st_dev, "inode": info.st_ino}
+    if not directory:
+        result.update(size=info.st_size, sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+    return result
+
+
+def _contained(root: Path, relative: str) -> Path:
+    if type(relative) is not str or not relative or "\\" in relative:
+        raise ValueError("Invalid relative artifact path")
+    child = Path(relative)
+    if child.is_absolute() or any(part in {"..", "."} for part in child.parts):
+        raise ValueError("Artifact escapes its root")
+    target = root / child
+    if target.parent.resolve(strict=True) != target.parent or not target.is_relative_to(root):
+        raise ValueError("Artifact parent is aliased")
+    return _canonical_path(target)
+
+
+def atomic_new(path: Path, data: bytes) -> None:
+    """Publish a complete private file without replacing any original name."""
+    _canonical_path(path.parent, directory=True)
+    temporary = path.parent / f".pending-{uuid.uuid4()}"
+    descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    try:
+        with os.fdopen(descriptor, "wb") as stream:
+            stream.write(data)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.link(temporary, path, follow_symlinks=False)
+        temporary.unlink()
+        parent = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(parent)
+        finally:
+            os.close(parent)
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+
+
+def _new_directory(path: Path) -> None:
+    _canonical_path(path.parent, directory=True)
+    path.mkdir(mode=0o700)
+    _canonical_path(path, directory=True)
+
+
+def selector_environment(supplied: Mapping[str, str]) -> dict[str, str]:
+    """Explicit allowlist; no inheritance from this process or secret-derived hash."""
+    return {
+        key: value
+        for key, value in supplied.items()
+        if key in PUBLIC_ENV_NAMES and type(value) is str
+    }
+
+
+@dataclass(frozen=True)
+class SessionConfig:
+    case_id: str
+    stage: str
+    source_sha: str
+    source_cwd: Path
+    source_manifest: dict[str, str]
+    interpreter: Path
+    runtime_files: dict[str, str]
+    runtime_import_roots: tuple[Path, ...]
+    session_root: Path
+    public_environment: dict[str, str]
+    admission_root: Path
+    admission_run_id: str
+    delivery_root: Path
+    wall_guard: dict[str, Any] | None = None
+    baseline_identity_registry: dict[str, str] | None = None
+    protocol_version: str = PROTOCOL
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "protocol_version": self.protocol_version,
+            "case_id": self.case_id,
+            "stage": self.stage,
+            "source_sha": self.source_sha,
+            "source_cwd": str(self.source_cwd),
+            "source_manifest": dict(self.source_manifest),
+            "interpreter": str(self.interpreter),
+            "runtime_files": dict(self.runtime_files),
+            "runtime_import_roots": [str(path) for path in self.runtime_import_roots],
+            "session_root": str(self.session_root),
+            "delivery_root": str(self.delivery_root),
+            "public_environment": dict(self.public_environment),
+            "admission_root": str(self.admission_root),
+            "admission_run_id": self.admission_run_id,
+            "wall_guard": self.wall_guard,
+            "baseline_identity_registry": self.baseline_identity_registry,
+        }
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> SessionConfig:
+        fields = set(cls.__dataclass_fields__)
+        if set(value) != fields:
+            raise ValueError("Session configuration fields differ")
+        converted = dict(value)
+        for key in ("source_cwd", "interpreter", "session_root", "admission_root", "delivery_root"):
+            if type(converted[key]) is not str:
+                raise ValueError("Session path must be explicit")
+            converted[key] = Path(converted[key])
+        roots = converted["runtime_import_roots"]
+        if not isinstance(roots, list) or not roots or any(type(path) is not str for path in roots):
+            raise ValueError("Runtime import roots are required")
+        converted["runtime_import_roots"] = tuple(Path(path) for path in roots)
+        result = cls(**converted)
+        result.validate()
+        return result
+
+    def validate(self) -> None:
+        if self.protocol_version != PROTOCOL or self.stage not in {"expert", "baseline"}:
+            raise ValueError("Local session protocol/stage differs")
+        if type(self.case_id) is not str or not _SAFE_CASE.fullmatch(self.case_id):
+            raise ValueError("Unsafe case ID")
+        if type(self.source_sha) is not str or not _SOURCE_SHA.fullmatch(self.source_sha):
+            raise ValueError("Full frozen source SHA required")
+        if str(uuid.UUID(self.admission_run_id)) != self.admission_run_id:
+            raise ValueError("Admission run requires canonical UUID")
+        for path in (
+            self.source_cwd,
+            self.session_root,
+            self.admission_root,
+            *self.runtime_import_roots,
+        ):
+            _canonical_path(path, directory=True)
+        _canonical_path(self.delivery_root.parent, directory=True)
+        if (
+            not self.delivery_root.is_absolute()
+            or self.delivery_root.parent / self.delivery_root.name != self.delivery_root
+        ):
+            raise ValueError("Delivery root must be a canonical declared path")
+        if self.delivery_root.exists() or self.delivery_root.is_symlink():
+            _canonical_path(self.delivery_root, directory=True)
+        if self.stage == "expert" and not self.delivery_root.exists():
+            raise ValueError("Expert delivery case root must exist before setup")
+        if (
+            self.delivery_root.is_relative_to(self.source_cwd)
+            or self.delivery_root == self.session_root
+        ):
+            raise ValueError("Source delivery must lie outside clean source/private session")
+        if self.source_cwd == self.session_root or self.session_root.is_relative_to(
+            self.source_cwd
+        ):
+            raise ValueError("Private session must lie outside the clean source tree")
+        # Inspect only existence/type. No .env content or credential is read.
+        if (self.source_cwd / ".env").exists() or (self.source_cwd / ".env").is_symlink():
+            raise ValueError("Clean source cwd must not expose a dotenv file")
+        if selector_environment(self.public_environment) != self.public_environment:
+            raise ValueError("Public environment contains unapproved settings")
+        if not self.source_manifest or not self.runtime_files or not self.runtime_import_roots:
+            raise ValueError("Explicit source/dependency manifest required")
+        for relative, expected in self.source_manifest.items():
+            if any(
+                token in part.lower()
+                for part in Path(relative).parts
+                for token in _FORBIDDEN_SOURCE_PARTS
+            ):
+                raise ValueError("Nonpublic source-manifest input")
+            info = _identity(_contained(self.source_cwd, relative))
+            if (
+                type(expected) is not str
+                or not _SHA.fullmatch(expected)
+                or info["sha256"] != expected
+            ):
+                raise ValueError("Frozen source bytes differ")
+        for root in self.runtime_import_roots:
+            for path in (*root.glob("*.pth"), root / "sitecustomize.py", root / "usercustomize.py"):
+                if (path.exists() or path.is_symlink()) and str(path) not in self.runtime_files:
+                    raise ValueError("Unpinned interpreter startup/import injection file")
+        for name, expected in self.runtime_files.items():
+            path = Path(name)
+            info = _identity(path)
+            if (
+                type(expected) is not str
+                or not _SHA.fullmatch(expected)
+                or info["sha256"] != expected
+            ):
+                raise ValueError("Pinned runtime bytes differ")
+        if not self.interpreter.is_absolute() or not self.interpreter.exists():
+            raise ValueError("Exact interpreter invocation path required")
+        # venv Python may intentionally be a symlink. Preserve its invocation
+        # path/pyvenv semantics and separately bind the actual target bytes.
+        target = self.interpreter.resolve(strict=True)
+        if str(target) not in self.runtime_files:
+            raise ValueError("Interpreter target must be part of the runtime manifest")
+        if self.interpreter.parent != self.interpreter.parent.resolve(strict=True):
+            raise ValueError("Interpreter parent cannot be aliased")
+        if self.stage == "expert":
+            if self.baseline_identity_registry is not None:
+                raise ValueError("Expert source worker cannot access a private producer registry")
+            if self.wall_guard is None:
+                raise ValueError("Expert guard must exist before worker setup")
+            validate_guard(self.wall_guard)
+        else:
+            if self.wall_guard is not None:
+                raise ValueError("Baseline keeps its independent original 120s clock")
+            pointer = self.baseline_identity_registry
+            if (
+                not isinstance(pointer, dict)
+                or set(pointer) != {"path", "sha256"}
+                or type(pointer["path"]) is not str
+                or type(pointer["sha256"]) is not str
+                or not _SHA.fullmatch(pointer["sha256"])
+            ):
+                raise ValueError("Baseline requires a pinned private original producer input")
+            private_path = Path(pointer["path"])
+            if private_path.is_relative_to(self.source_cwd) or any(
+                private_path.is_relative_to(root) for root in self.runtime_import_roots
+            ):
+                raise ValueError("Private producer input cannot enter public source/import roots")
+            if _identity(private_path)["sha256"] != pointer["sha256"]:
+                raise ValueError("Original private producer input bytes differ")
+
+
+def source_environment(config: SessionConfig, private_key: str) -> dict[str, str]:
+    if (
+        type(private_key) is not str
+        or not private_key
+        or "\x00" in private_key
+        or len(private_key.encode()) > 16384
+    ):
+        raise ValueError("Private key input is invalid")
+    result = dict(config.public_environment)
+    result.update(
+        {
+            "UNIMATCH_DEMO_MODE": "false",
+            "UNIMATCH_SEARCH_PROVIDER": "exa",
+            "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+            "UNIMATCH_RESPECT_ROBOTS": "true",
+            "UNIMATCH_FETCH_DELAY_SECONDS": "1.5",
+            "UNIMATCH_FETCH_TIMEOUT_SECONDS": "20",
+            "UNIMATCH_FETCH_CONTACT": "https://github.com/wpalish/ashyq-apply",
+            "UNIMATCH_DATABASE_URL": f"sqlite:///{config.session_root / 'state.db'}",
+            "UNIMATCH_CACHE_DIR": str(config.session_root / "httpcache"),
+            "UNIMATCH_EXPORT_DIR": str(config.session_root / "exports"),
+            "UNIMATCH_DECISION_PROVIDER": "none",
+            KEY_NAME: private_key,
+        }
+    )
+    return result
+
+
+_DEFAULT_CONSTANTS = {
+    "document_rules_v2": ("app/adapters/documents/web_documents.py", "DOCUMENT_RULES_V2"),
+    "document_leads": ("app/adapters/documents/web_documents.py", "DOCUMENT_LEADS"),
+    "form_label_headings": ("app/adapters/document_ir.py", "FORM_LABEL_HEADINGS"),
+    "recover_search_candidates": (
+        "app/adapters/discovery/live_discovery.py",
+        "RECOVER_SEARCH_CANDIDATES",
+    ),
+    "search_funding_fallback": (
+        "app/adapters/scholarship/web_scholarships.py",
+        "SEARCH_FUNDING_FALLBACK",
+    ),
+    "target_award_search": ("app/adapters/scholarship/web_scholarships.py", "TARGET_AWARD_SEARCH"),
+    "document_seconds": ("evaluation/research/live.py", "DOCUMENT_SECONDS"),
+}
+
+
+def algorithm_defaults(config: SessionConfig) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for name, (relative, constant) in _DEFAULT_CONSTANTS.items():
+        if relative not in config.source_manifest:
+            raise ValueError("Algorithm defaults must be part of the frozen source manifest")
+        tree = ast.parse(_contained(config.source_cwd, relative).read_bytes())
+        matches = [
+            node.value
+            for node in tree.body
+            if isinstance(node, ast.Assign)
+            and any(
+                isinstance(target, ast.Name) and target.id == constant for target in node.targets
+            )
+        ]
+        if len(matches) != 1:
+            raise ValueError("Algorithm default has ambiguous/nonliteral provenance")
+        value = ast.literal_eval(matches[0])
+        if (name == "document_seconds" and (type(value) is not float or value != 0.0)) or (
+            name != "document_seconds" and type(value) is not bool
+        ):
+            raise ValueError("Algorithm default type/value differs")
+        result[name] = value
+    return result
+
+
+def runtime_proof(config: SessionConfig) -> dict[str, Any]:
+    config.validate()
+    invocation = config.interpreter.lstat()
+    return {
+        "baseline_identity_registry": _identity(Path(config.baseline_identity_registry["path"]))
+        if config.baseline_identity_registry is not None
+        else None,
+        "source_cwd": _identity(config.source_cwd, directory=True),
+        "workspace": _identity(config.session_root, directory=True),
+        "admission_root": _identity(config.admission_root, directory=True),
+        "delivery_root": {
+            "path": str(config.delivery_root),
+            "parent": _identity(config.delivery_root.parent, directory=True),
+        },
+        "source_files": {
+            relative: _identity(_contained(config.source_cwd, relative))
+            for relative in config.source_manifest
+        },
+        "runtime_files": {name: _identity(Path(name)) for name in config.runtime_files},
+        "interpreter": {
+            "invocation_path": str(config.interpreter),
+            "invocation_device": invocation.st_dev,
+            "invocation_inode": invocation.st_ino,
+            "symlink_target": os.readlink(config.interpreter)
+            if config.interpreter.is_symlink()
+            else None,
+            "resolved": _identity(config.interpreter.resolve(strict=True)),
+        },
+        "runtime_import_roots": [
+            _identity(path, directory=True) for path in config.runtime_import_roots
+        ],
+    }
+
+
+def _file_map(root: Path) -> dict[str, dict[str, Any]]:
+    result = {}
+    for path in sorted(root.rglob("*")):
+        if path.is_dir() and not path.is_symlink():
+            continue
+        result[str(path.relative_to(root))] = _identity(path)
+    return result
+
+
+def _verify_artifacts(root: Path, artifacts: Mapping[str, Any]) -> None:
+    if not isinstance(artifacts, Mapping):
+        raise ValueError("Missing immutable artifact map")
+    for relative, identity in artifacts.items():
+        path = _contained(root, relative)
+        if _identity(path) != identity:
+            raise ValueError("Original local artifact bytes or identity changed")
+
+
+def _counters(value: Any) -> dict[str, int]:
+    if not isinstance(value, Mapping) or set(value) != {
+        "fetcher_calls",
+        "search_queries",
+        "elapsed_ms",
+    }:
+        raise ValueError("Complete source counters required")
+    return {name: _integer(value[name], name) for name in value}
+
+
+def _resume(plan: Mapping[str, Any], prior: Mapping[str, Any] | None) -> None:
+    final = prior["final"] if prior else {"fetcher_calls": 0, "search_queries": 0, "elapsed_ms": 0}
+    for plan_key, counter in (
+        ("start_calls", "fetcher_calls"),
+        ("start_search_queries", "search_queries"),
+        ("start_ms", "elapsed_ms"),
+    ):
+        if type(plan.get(plan_key, 0)) is not int or plan.get(plan_key, 0) != final[counter]:
+            raise ValueError("Exact original source resume required")
+    expected = (
+        {key: value for key, value in prior.items() if key not in {"actions", "replay", "initial"}}
+        if prior
+        else None
+    )
+    if plan.get("resume_summary") != expected:
+        raise ValueError("Resume must retain the entire original summary projection")
+
+
+@dataclass(frozen=True)
+class LocalDelivery:
+    receipt: dict[str, Any]
+    receipt_path: Path
+    receipt_sha256: str
+    summary: dict[str, Any] | None
+    capture: dict[str, Any] | None
+    source_counters: dict[str, int] | None
+    raw_logs: dict[str, str]
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "receipt": self.receipt,
+            "receipt_path": str(self.receipt_path),
+            "receipt_sha256": self.receipt_sha256,
+            "summary": self.summary,
+            "capture": self.capture,
+            "source_counters": self.source_counters,
+            "raw_logs": dict(self.raw_logs),
+        }
+
+
+class PersistentWorker:
+    """Sequential engine; production factories remain outside this pure surface."""
+
+    def __init__(
+        self,
+        config: SessionConfig,
+        session_id: str,
+        *,
+        execute: Callable[..., Awaitable[dict[str, Any]]] | None,
+        get: Callable[..., Awaitable[Any]] | None,
+        search: Callable[..., Awaitable[Any]] | None,
+        admission: Any,
+        baseline_runner: Callable[[dict[str, Any], Path], Awaitable[dict[str, Any]]] | None = None,
+        clock: Callable[[], datetime] = utc_now,
+        monotonic: Callable[[], float] = time.monotonic,
+        origin_probe: Callable[[], dict[str, Any]] | None = None,
+    ) -> None:
+        config.validate()
+        self.origin_probe = origin_probe
+        self.config, self.session_id = config, session_id
+        self.execute_controller, self.get, self.search = execute, get, search
+        self.admission, self.baseline_runner = admission, baseline_runner
+        self.clock, self.monotonic = clock, monotonic
+        self.sequence = 0
+        self.previous_summary: dict[str, Any] | None = None
+        self.previous_receipt_sha256: str | None = None
+        self.poisoned = False
+        self.baseline_done = False
+        self.proof = runtime_proof(config)
+        self.logs = config.session_root / "controller-logs"
+        _new_directory(self.logs)
+
+    async def deliver(self, request: dict[str, Any], destination: Path) -> dict[str, Any]:
+        if self.poisoned:
+            raise ValueError("Interrupted session cannot resume")
+        if runtime_proof(self.config) != self.proof:
+            raise ValueError("Runtime identity changed during a session")
+        _canonical_path(destination, directory=True)
+        _validate_destination(destination, self.config)
+        if set(request) != {
+            "schema_version",
+            "transport_kind",
+            "session_id",
+            "local_run_id",
+            "sequence",
+            "case_id",
+            "stage",
+            "source_sha",
+            "session_config_sha256",
+            "wall_guard",
+            "prior_delivery_sha256",
+            "payload",
+        }:
+            raise ValueError("Local request fields differ")
+        if request != {
+            **request,
+            "schema_version": "1",
+            "transport_kind": TRANSPORT,
+            "session_id": self.session_id,
+            "case_id": self.config.case_id,
+            "stage": self.config.stage,
+            "source_sha": self.config.source_sha,
+            "session_config_sha256": digest(self.config.as_dict()),
+            "sequence": self.sequence + 1,
+            "wall_guard": self.config.wall_guard,
+            "prior_delivery_sha256": self.previous_receipt_sha256,
+        }:
+            raise ValueError("Request is foreign/stale or resets the guard")
+        if (
+            type(request["sequence"]) is not int
+            or str(uuid.UUID(request["local_run_id"])) != request["local_run_id"]
+        ):
+            raise ValueError("Invalid original local request identity")
+        if load_json((destination / "request.json").read_bytes()) != request:
+            raise ValueError("Request bytes differ from original input")
+        started = self.clock()
+        if self.config.wall_guard and started >= _stamp(self.config.wall_guard["wall_deadline_at"]):
+            raise TimeoutError("Original expert guard has ended")
+        artifacts = destination / "artifact"
+        _new_directory(artifacts)
+        output, errors = io.StringIO(), io.StringIO()
+        self.poisoned = True  # clear only after all originals are durably saved
+        try:
+            return await self._deliver_checked(
+                request, destination, started, artifacts, output, errors
+            )
+        finally:
+            # Even rejected/in-flight work retains its original diagnostic streams.
+            for name, content in (
+                ("source.stdout", output.getvalue()),
+                ("source.stderr", errors.getvalue()),
+            ):
+                if not (artifacts / name).exists():
+                    atomic_new(artifacts / name, content.encode())
+
+    async def _deliver_checked(
+        self,
+        request: dict[str, Any],
+        destination: Path,
+        started: datetime,
+        artifacts: Path,
+        output: io.StringIO,
+        errors: io.StringIO,
+    ) -> dict[str, Any]:
+        summary = capture = None
+        with contextlib.redirect_stdout(output), contextlib.redirect_stderr(errors):
+            if self.config.stage == "expert":
+                plan = request["payload"]
+                _validate_plan(plan, self.config, self.previous_summary)
+                if self.execute_controller is None or self.get is None or self.search is None:
+                    raise ValueError("Expert source factories are unavailable")
+                atomic_new(artifacts / "dispatch.json", canonical_bytes(plan))
+                summary = await self.execute_controller(
+                    plan,
+                    self.logs,
+                    get=self.get,
+                    search=self.search,
+                    provider_name="exa",
+                    source_admission=self.admission,
+                    now=self.clock,
+                    monotonic=self.monotonic,
+                )
+                atomic_new(artifacts / "summary.json", canonical_bytes(summary))
+                copied = artifacts / "logs"
+                _new_directory(copied)
+                for name, expected in summary["raw_logs"].items():
+                    data = _contained(self.logs, name).read_bytes()
+                    if hashlib.sha256(data).hexdigest() != expected:
+                        raise ValueError("Controller original raw bytes changed")
+                    atomic_new(copied / name, data)
+                counters = _expert_counters(
+                    plan, summary, copied, self.config, self.previous_summary
+                )
+            else:
+                if self.baseline_done or self.baseline_runner is None:
+                    raise ValueError("Baseline session permits one original stock capture")
+                _validate_baseline_request(request["payload"], self.config)
+                capture = await self.baseline_runner(request["payload"], artifacts)
+                _validate_capture(capture, self.config)
+                _validate_baseline_artifacts(capture, artifacts, self.config)
+                nested = artifacts / "capture"
+                _new_directory(nested)
+                nested = nested / "local"
+                _new_directory(nested)
+                atomic_new(nested / "capture.json", canonical_bytes(capture))
+                budget = capture["config"]["case_budgets"][self.config.case_id]
+                counters = _counters(
+                    {
+                        "fetcher_calls": budget["fetcher_calls"],
+                        "search_queries": budget["search_queries"],
+                        "elapsed_ms": budget["elapsed_ms"],
+                    }
+                )
+        if self.origin_probe is not None:
+            origins = self.origin_probe()
+            _verify_import_origins(origins, self.config)
+            atomic_new(artifacts / "import-origins.json", canonical_bytes(origins))
+        atomic_new(artifacts / "source.stdout", output.getvalue().encode())
+        atomic_new(artifacts / "source.stderr", errors.getvalue().encode())
+        if runtime_proof(self.config) != self.proof:
+            raise ValueError("Runtime changed during source execution")
+        finished = self.clock()
+        if summary is not None:
+            terminal_reason = summary["final"].get("stop_reason")
+        elif capture is not None:
+            terminal_reason = capture["config"]["case_budgets"][self.config.case_id].get(
+                "stop_reason"
+            )
+        else:
+            raise ValueError("No original source artifact was produced")
+        receipt = {
+            "schema_version": "1",
+            "protocol_version": PROTOCOL,
+            "transport_kind": TRANSPORT,
+            "session_id": self.session_id,
+            "local_run_id": request["local_run_id"],
+            "sequence": request["sequence"],
+            "case_id": self.config.case_id,
+            "stage": self.config.stage,
+            "source_sha": self.config.source_sha,
+            "session_config": self.config.as_dict(),
+            "session_config_sha256": digest(self.config.as_dict()),
+            "runtime_proof": self.proof,
+            "request_path": str(destination / "request.json"),
+            "request_sha256": hashlib.sha256(
+                (destination / "request.json").read_bytes()
+            ).hexdigest(),
+            "prior_delivery_sha256": self.previous_receipt_sha256,
+            "started_at": started.isoformat(),
+            "completed_at": finished.isoformat(),
+            "wall_guard": self.config.wall_guard,
+            "status": "verified",
+            "terminal_reason": terminal_reason,
+            "source_counters_known": True,
+            "source_counters": counters,
+            "artifacts": _file_map(artifacts),
+            "destination": _identity(destination, directory=True),
+        }
+        atomic_new(destination / "worker-receipt.json", canonical_bytes(receipt))
+        worker_sha = hashlib.sha256((destination / "worker-receipt.json").read_bytes()).hexdigest()
+        frame = {
+            "schema_version": "1",
+            "session_id": self.session_id,
+            "local_run_id": request["local_run_id"],
+            "sequence": request["sequence"],
+            "worker_receipt_sha256": worker_sha,
+        }
+        atomic_new(destination / "worker-response.jsonl", canonical_bytes(frame) + b"\n")
+        self.sequence += 1
+        self.previous_summary = summary
+        self.baseline_done = self.config.stage == "baseline"
+        self.poisoned = False
+        return frame
+
+    def acknowledge(self, local_receipt_sha256: str) -> None:
+        if not _SHA.fullmatch(local_receipt_sha256):
+            raise ValueError("Invalid delivery acknowledgement")
+        self.previous_receipt_sha256 = local_receipt_sha256
+
+
+def _validate_destination(destination: Path, config: SessionConfig, *, exists: bool = True) -> None:
+    if exists:
+        _canonical_path(destination, directory=True)
+    else:
+        _canonical_path(destination.parent, directory=True)
+    if config.stage == "baseline":
+        if destination != config.delivery_root:
+            raise ValueError("Baseline destination differs from its declared case root")
+    else:
+        match = re.fullmatch(r"controller-([0-9]+)", destination.name)
+        if destination.parent != config.delivery_root or match is None:
+            raise ValueError("Expert destination differs from its declared case root")
+        turn = int(match[1])
+        if turn < 1 or destination.name != f"controller-{turn:02d}":
+            raise ValueError("Controller turn path is zero or aliased")
+
+
+def _validate_plan(plan: Any, config: SessionConfig, prior: dict[str, Any] | None) -> None:
+    if not isinstance(plan, dict):
+        raise ValueError("Controller plan must be an object")
+    exact = {
+        "case_id": config.case_id,
+        "provider": "exa",
+        "log_prefix": config.case_id,
+        "strict_budget": True,
+        "max_calls": 60,
+        "max_search_queries": 6,
+        "max_ms": 900000,
+        "budget_origin": "independent_network_budget",
+        "budget_model": "network_actions_v1",
+        **(config.wall_guard or {}),
+    }
+    if any(
+        type(plan.get(key)) is not type(value) or plan[key] != value for key, value in exact.items()
+    ):
+        raise ValueError("Plan changes the frozen source policy")
+    if (
+        plan.get("exploration_mode", "same_policy") != "same_policy"
+        or plan.get("action_deadline_ms") is not None
+        or plan.get("replay", [])
+    ):
+        raise ValueError("Primary local source cannot explore outside policy or replay")
+    actions = plan.get("actions")
+    if not isinstance(actions, list) or len(actions) != 1 or not isinstance(actions[0], dict):
+        raise ValueError("Each local source delivery is one original selected action")
+    domains = plan.get("official_domains")
+    if (
+        not isinstance(domains, list)
+        or not domains
+        or any(type(item) is not str or not item for item in domains)
+    ):
+        raise ValueError("Official source domains are required")
+    _resume(plan, prior)
+
+
+def _expert_counters(
+    plan: dict[str, Any],
+    summary: dict[str, Any],
+    logs: Path,
+    config: SessionConfig,
+    prior: dict[str, Any] | None,
+) -> dict[str, int]:
+    from evaluation.research.expert.network_budget import parse_wall_guard
+    from evaluation.research.expert.network_report import SourceCounters, validate_source_run
+
+    prior_counts = (
+        prior["final"] if prior else {"fetcher_calls": 0, "search_queries": 0, "elapsed_ms": 0}
+    )
+    before = SourceCounters(
+        prior_counts["fetcher_calls"], prior_counts["search_queries"], prior_counts["elapsed_ms"]
+    )
+    action = summary["actions"][0]
+    name = action["raw_log_path"]
+    data = _contained(logs, name).read_bytes()
+    if config.wall_guard is None:
+        raise ValueError("Expert original guard is missing")
+    guard = parse_wall_guard(
+        wall_started_at=config.wall_guard["wall_started_at"],
+        wall_deadline_at=config.wall_guard["wall_deadline_at"],
+    )
+    return validate_source_run(
+        plan,
+        summary,
+        load_json(data),
+        case_id=config.case_id,
+        official_domains=plan["official_domains"],
+        wall_guard=guard,
+        raw_sha256=hashlib.sha256(data).hexdigest(),
+        provider="exa",
+        prior=before,
+        prior_summary=prior,
+    ).as_dict()
+
+
+def _validate_baseline_request(request: Any, config: SessionConfig) -> None:
+    expected = {
+        "case_id": config.case_id,
+        "provider": "exa",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_elapsed_ms": 120000,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "browser_enabled": False,
+    }
+    if (
+        not isinstance(request, dict)
+        or set(request) != set(expected)
+        or any(
+            type(request[key]) is not type(value) or request[key] != value
+            for key, value in expected.items()
+        )
+    ):
+        raise ValueError("Baseline request changes the original stock comparison policy")
+
+
+def _validate_capture(capture: dict[str, Any], config: SessionConfig) -> None:
+    from evaluation.research.schema import Capture
+
+    Capture.model_validate_json(canonical_bytes(capture))
+    if capture["pipeline_sha"] != config.source_sha or capture["mode"] != "live":
+        raise ValueError("Capture source/mode differs")
+    if [item["case_id"] for item in capture["observations"]] != [config.case_id]:
+        raise ValueError("Capture must contain this one original case")
+    captured = capture["config"]
+    expected = {
+        "search_provider": "exa",
+        "strict_expert_budget": True,
+        "seconds_per_case": 120,
+        "child_active_seconds": 120,
+        "max_fetcher_calls_per_case": 60,
+        "max_search_queries_per_case": 6,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "browser_enabled": False,
+        "cold_fetcher_reads": True,
+    }
+    if any(
+        type(captured.get(key)) is not type(value) or captured[key] != value
+        for key, value in expected.items()
+    ):
+        raise ValueError("Original baseline Capture policy differs")
+    if captured.get("algorithm_defaults") != algorithm_defaults(config):
+        raise ValueError("Original Capture runtime defaults differ")
+    budgets = captured.get("case_budgets")
+    if not isinstance(budgets, dict) or set(budgets) != {config.case_id}:
+        raise ValueError("Baseline original metering checkpoint is missing")
+    budget = budgets[config.case_id]
+    if (
+        budget.get("provider") != "exa"
+        or budget.get("process_error") is not None
+        or budget.get("active_checkpoint_available") is not True
+    ):
+        raise ValueError("Baseline process or original checkpoint is incomplete")
+    if budget.get("provider_failure") is not None or budget.get("stop_reason") in {
+        "http_401",
+        "http_402",
+        "http_403",
+        "http_429",
+    }:
+        raise ValueError("Provider failure cannot become a successful baseline")
+    for key, limit in (("fetcher_calls", 60), ("search_queries", 6), ("elapsed_ms", 120000)):
+        if _integer(budget.get(key), key) > limit:
+            raise ValueError("Original baseline exceeded its fixed budget")
+    for key, expected_value in (
+        ("finalization_reserve_ms", 1000),
+        ("source_work_deadline_ms", 119000),
+    ):
+        if type(budget.get(key)) is not int or budget[key] != expected_value:
+            raise ValueError("Baseline reserve provenance differs")
+    _baseline_admission_counters(budget, config)
+    if capture["observations"][0].get("error") == "CAPTURE_IN_PROGRESS":
+        raise ValueError("Partial observation cannot become a final Capture")
+
+
+def _baseline_admission_counters(budget: dict[str, Any], config: SessionConfig) -> dict[str, int]:
+    admission_module = importlib.import_module("evaluation.research.expert.source_admission")
+    actions = budget.get("source_admission_actions")
+    permits = budget.get("source_admission_receipts")
+    if not isinstance(actions, list) or not isinstance(permits, list):
+        raise ValueError("Original baseline execution records/permits are required")
+    if permits != [
+        action.get("source_admission") for action in actions if isinstance(action, dict)
+    ] or len(actions) != len(permits):
+        raise ValueError("Original baseline permit and action order differs")
+    counts = {"fetcher_calls": 0, "search_queries": 0}
+    seen: set[str] = set()
+    for action in actions:
+        if not isinstance(action, dict) or set(action) != {
+            "source_admission",
+            "tool",
+            "action_id",
+            "counter_before",
+            "counter_after",
+            "executed",
+        }:
+            raise ValueError("Original baseline execution fields differ")
+        if (
+            type(action["executed"]) is not bool
+            or action["tool"] not in {"fetcher", "search_provider"}
+            or type(action["action_id"]) is not str
+            or action["action_id"] in seen
+        ):
+            raise ValueError("Original baseline execution identity/flag differs")
+        seen.add(action["action_id"])
+        original = admission_module.validate_receipt(
+            action["source_admission"],
+            root=config.admission_root,
+            run_id=config.admission_run_id,
+            provider="exa",
+            kind="admission",
+        )
+        if (
+            original["case_id"] != config.case_id
+            or original["tool"] != action["tool"]
+            or original["action_id"] != action["action_id"]
+        ):
+            raise ValueError("Original baseline permit belongs to another source action")
+        before, after = action["counter_before"], action["counter_after"]
+        for value in (before, after):
+            if (
+                not isinstance(value, dict)
+                or set(value) != set(counts)
+                or any(type(value[key]) is not int or value[key] < 0 for key in counts)
+            ):
+                raise ValueError(
+                    "Baseline source counter records require strict nonnegative integers"
+                )
+        if before != counts:
+            raise ValueError("Baseline execution ledger resets/decreases its prefix")
+        key = "fetcher_calls" if action["tool"] == "fetcher" else "search_queries"
+        expected = {**counts, key: counts[key] + int(action["executed"])}
+        if after != expected:
+            raise ValueError("Admission-only source action cannot invent actual I/O")
+        counts = after
+    if any(
+        type(budget.get(key)) is not int or budget[key] != count for key, count in counts.items()
+    ):
+        raise ValueError("Baseline counters differ from original actual execution records")
+    return counts
+
+
+def _validate_baseline_artifacts(
+    capture: dict[str, Any], artifacts: Path, config: SessionConfig
+) -> None:
+    from evaluation.research.schema import Observation
+
+    original = Observation.model_validate_json(
+        _contained(artifacts, "observation.json").read_bytes()
+    ).model_dump(mode="json")
+    if capture["observations"] != [original]:
+        raise ValueError("Capture predictions differ from the original stock observation")
+    budget = load_json(_contained(artifacts, "observation.budget.json").read_bytes())
+    packaged = capture["config"]["case_budgets"][config.case_id]
+    extra = {"process_error", "active_checkpoint_available", "parent_process_elapsed_seconds"}
+    if {key: value for key, value in packaged.items() if key not in extra} != budget:
+        raise ValueError("Capture source counters differ from the original stock child checkpoint")
+    expected_command = baseline_command(config, artifacts / "observation.json")
+    command = load_json(_contained(artifacts, "child-command.json").read_bytes())
+    if command != {
+        "argv": expected_command,
+        "argv_sha256": digest(expected_command),
+        "stock_argv": [
+            "evaluation.research.live",
+            *baseline_stock_arguments(config, artifacts / "observation.json"),
+        ],
+    }:
+        raise ValueError(
+            "Baseline child argv/default options differ from the original stock invocation"
+        )
+    process = load_json(_contained(artifacts, "child-process.json").read_bytes())
+    startup = load_json(_contained(config.session_root, "session-start.json").read_bytes())
+    _integer(process.get("pid"), "stock child PID", minimum=1)
+    if process.get("pgid") != startup["pgid"] or process.get("pid") == startup["pid"]:
+        raise ValueError("Baseline child escaped its source-worker process group")
+    if (
+        process.get("argv_sha256") != digest(expected_command)
+        or type(process.get("returncode")) is not int
+        or process["returncode"] != 0
+        or process.get("reaped") is not True
+        or process.get("process_error") is not None
+    ):
+        raise ValueError("Original baseline child process did not complete cleanly")
+    elapsed = process.get("parent_process_elapsed_seconds")
+    if (
+        not isinstance(elapsed, int | float)
+        or isinstance(elapsed, bool)
+        or not math.isfinite(elapsed)
+        or not 0 <= elapsed <= 135
+    ):
+        raise ValueError("Original baseline child process clock exceeded its fixed timeout")
+    if packaged.get("parent_process_elapsed_seconds") != elapsed:
+        raise ValueError("Capture parent-process elapsed differs from original child receipt")
+    runtime = load_json(_contained(artifacts, "child-runtime.json").read_bytes())
+    environment = source_environment(config, "placeholder")
+    environment.pop(KEY_NAME)
+    expected_runtime = {
+        "schema_version": "1",
+        "pid": process["pid"],
+        "pgid": process["pgid"],
+        "source_sha": config.source_sha,
+        "session_config_sha256": digest(config.as_dict()),
+        "cwd": str(config.source_cwd),
+        "interpreter": str(config.interpreter),
+        "no_site": True,
+        "stock_argv": command["stock_argv"],
+        "public_environment": environment,
+        "public_environment_sha256": digest(environment),
+        "runtime_proof": runtime_proof(config),
+        "algorithm_defaults": algorithm_defaults(config),
+    }
+    if any(
+        type(runtime.get(key)) is not type(value) or runtime[key] != value
+        for key, value in expected_runtime.items()
+    ):
+        raise ValueError("Original stock child runtime/environment/input proof differs")
+    _verify_import_origins(runtime.get("import_origins"), config)
+    _verify_import_origins(
+        load_json(_contained(artifacts, "child-import-origins.json").read_bytes()), config
+    )
+    _contained(artifacts, "child.stdout")
+    _contained(artifacts, "child.stderr")
+
+
+def _publish_local_receipt(
+    destination: Path,
+    frame_bytes: bytes,
+    config: SessionConfig,
+    *,
+    stdout_range: dict[str, Any] | None = None,
+) -> LocalDelivery:
+    frame = load_json(frame_bytes)
+    if frame_bytes != (destination / "worker-response.jsonl").read_bytes():
+        raise ValueError("Actual worker response differs from its saved original")
+    worker_data = (destination / "worker-receipt.json").read_bytes()
+    if frame.get("worker_receipt_sha256") != hashlib.sha256(worker_data).hexdigest():
+        raise ValueError("Worker response does not bind original delivery")
+    worker = load_json(worker_data)
+    for field in ("session_id", "local_run_id", "sequence"):
+        if frame.get(field) != worker.get(field):
+            raise ValueError("Worker response identity differs")
+    start_path = config.session_root / "session-start.json"
+    receipt = {
+        **worker,
+        "worker_receipt_path": str(destination / "worker-receipt.json"),
+        "worker_receipt_sha256": hashlib.sha256(worker_data).hexdigest(),
+        "response_path": str(destination / "worker-response.jsonl"),
+        "response_sha256": hashlib.sha256(frame_bytes).hexdigest(),
+        "session_start_path": str(start_path),
+        "session_start_sha256": hashlib.sha256(start_path.read_bytes()).hexdigest(),
+        "process_stdout_range": stdout_range,
+    }
+    atomic_new(destination / "local-receipt.json", canonical_bytes(receipt))
+    return _delivery_from_receipt(destination, receipt)
+
+
+def _delivery_from_receipt(destination: Path, receipt: dict[str, Any]) -> LocalDelivery:
+    artifacts = destination / "artifact"
+    summary_path, capture_path = (
+        artifacts / "summary.json",
+        artifacts / "capture/local/capture.json",
+    )
+    summary = load_json(summary_path.read_bytes()) if summary_path.exists() else None
+    capture = load_json(capture_path.read_bytes()) if capture_path.exists() else None
+    path = destination / "local-receipt.json"
+    return LocalDelivery(
+        receipt,
+        path,
+        hashlib.sha256(path.read_bytes()).hexdigest(),
+        summary,
+        capture,
+        receipt["source_counters"],
+        dict(summary["raw_logs"]) if summary else {},
+    )
+
+
+def validate_local_delivery(
+    destination: Path,
+    *,
+    expected_case_id: str,
+    expected_stage: str,
+    expected_source_sha: str,
+    expected_wall_guard: dict[str, Any] | None = None,
+    prior_delivery: LocalDelivery | None = None,
+) -> LocalDelivery:
+    """Replay saved local bytes without a process, key, network or source execution."""
+    _canonical_path(destination, directory=True)
+    path = _contained(destination, "local-receipt.json")
+    receipt = load_json(path.read_bytes())
+    if (
+        receipt.get("transport_kind") != TRANSPORT
+        or receipt.get("protocol_version") != PROTOCOL
+        or receipt.get("schema_version") != "1"
+    ):
+        raise ValueError("Local receipt type/version differs")
+    if any(
+        receipt.get(key) != expected
+        for key, expected in (
+            ("case_id", expected_case_id),
+            ("stage", expected_stage),
+            ("source_sha", expected_source_sha),
+        )
+    ):
+        raise ValueError("Local receipt belongs to a different case/stage/source")
+    if any(key in receipt for key in ("run_id", "headSha", "head_sha", "conclusion")):
+        raise ValueError("Local receipt cannot impersonate GitHub provenance")
+    for key in ("session_id", "local_run_id"):
+        if str(uuid.UUID(receipt[key])) != receipt[key]:
+            raise ValueError("Local identity must be canonical UUID")
+    if receipt.get("status") != "verified" or receipt.get("source_counters_known") is not True:
+        raise ValueError("Unknown/incomplete source output is preseal ineligible")
+    config = SessionConfig.from_dict(receipt["session_config"])
+    if (
+        config.stage != expected_stage
+        or config.case_id != expected_case_id
+        or config.source_sha != expected_source_sha
+    ):
+        raise ValueError("Session config identity differs")
+    if digest(config.as_dict()) != receipt.get("session_config_sha256") or runtime_proof(
+        config
+    ) != receipt.get("runtime_proof"):
+        raise ValueError("Original source/runtime/environment identity changed")
+    _validate_destination(destination, config)
+    if receipt.get("destination") != _identity(destination, directory=True):
+        raise ValueError("Original delivery workspace changed")
+    if expected_wall_guard != config.wall_guard or receipt.get("wall_guard") != config.wall_guard:
+        raise ValueError("Original expert wall guard changed")
+    worker_path = _contained(destination, "worker-receipt.json")
+    worker_data = worker_path.read_bytes()
+    if (
+        receipt.get("worker_receipt_path") != str(worker_path)
+        or receipt.get("worker_receipt_sha256") != hashlib.sha256(worker_data).hexdigest()
+    ):
+        raise ValueError("Worker original receipt changed")
+    worker = load_json(worker_data)
+    extra = {
+        "worker_receipt_path",
+        "worker_receipt_sha256",
+        "response_path",
+        "response_sha256",
+        "session_start_path",
+        "session_start_sha256",
+        "process_stdout_range",
+    }
+    if {key: value for key, value in receipt.items() if key not in extra} != worker:
+        raise ValueError("Public delivery differs from original worker receipt")
+    response_path = _contained(destination, "worker-response.jsonl")
+    response_bytes = response_path.read_bytes()
+    if (
+        receipt.get("response_path") != str(response_path)
+        or receipt.get("response_sha256") != hashlib.sha256(response_bytes).hexdigest()
+    ):
+        raise ValueError("Original process response changed")
+    frame = load_json(response_bytes)
+    if frame != {
+        "schema_version": "1",
+        "session_id": receipt["session_id"],
+        "local_run_id": receipt["local_run_id"],
+        "sequence": receipt["sequence"],
+        "worker_receipt_sha256": receipt["worker_receipt_sha256"],
+    }:
+        raise ValueError("Original process response identity differs")
+    start_path = _contained(config.session_root, "session-start.json")
+    start_data = start_path.read_bytes()
+    if (
+        receipt.get("session_start_path") != str(start_path)
+        or receipt.get("session_start_sha256") != hashlib.sha256(start_data).hexdigest()
+    ):
+        raise ValueError("Original session startup proof differs")
+    startup = load_json(start_data)
+    stdout_range = receipt.get("process_stdout_range")
+    if not isinstance(stdout_range, dict):
+        raise ValueError("Original source process stdout range is required")
+    _verify_stream_range(config.session_root / "worker.stdout", stdout_range, response_bytes)
+    _validate_startup(startup, config, receipt["session_id"])
+    _verify_artifacts(destination / "artifact", receipt["artifacts"])
+    if (destination / "artifact/import-origins.json").exists():
+        _verify_import_origins(
+            load_json((destination / "artifact/import-origins.json").read_bytes()), config
+        )
+    if _file_map(destination / "artifact") != receipt["artifacts"]:
+        raise ValueError("Unbound source artifact added/removed")
+    request_path = _contained(destination, "request.json")
+    request_data = request_path.read_bytes()
+    if (
+        receipt.get("request_path") != str(request_path)
+        or receipt.get("request_sha256") != hashlib.sha256(request_data).hexdigest()
+    ):
+        raise ValueError("Original local request changed")
+    request = load_json(request_data)
+    expected_prior = prior_delivery.receipt_sha256 if prior_delivery else None
+    expected_sequence = prior_delivery.receipt["sequence"] + 1 if prior_delivery else 1
+    if (
+        type(receipt["sequence"]) is not int
+        or receipt["sequence"] != expected_sequence
+        or receipt.get("prior_delivery_sha256") != expected_prior
+    ):
+        raise ValueError("Local delivery reorders or resets the exact prior prefix")
+    if prior_delivery is not None:
+        prior_original = _delivery_from_receipt(
+            prior_delivery.receipt_path.parent, load_json(prior_delivery.receipt_path.read_bytes())
+        )
+        if prior_original != prior_delivery:
+            raise ValueError("Caller prior delivery differs from its original saved bytes")
+        if (
+            hashlib.sha256(prior_delivery.receipt_path.read_bytes()).hexdigest()
+            != prior_delivery.receipt_sha256
+        ):
+            raise ValueError("Prior original local delivery changed")
+        if (
+            prior_delivery.receipt["session_id"] != receipt["session_id"]
+            or prior_delivery.receipt["session_config"] != receipt["session_config"]
+        ):
+            raise ValueError("Cannot resume another source process/case/runtime")
+    expected_request = {
+        "schema_version": "1",
+        "transport_kind": TRANSPORT,
+        "session_id": receipt["session_id"],
+        "local_run_id": receipt["local_run_id"],
+        "sequence": receipt["sequence"],
+        "case_id": expected_case_id,
+        "stage": expected_stage,
+        "source_sha": expected_source_sha,
+        "session_config_sha256": receipt["session_config_sha256"],
+        "wall_guard": config.wall_guard,
+        "prior_delivery_sha256": expected_prior,
+        "payload": request.get("payload"),
+    }
+    if request != expected_request:
+        raise ValueError("Original request identity differs")
+    started, completed = _stamp(receipt["started_at"]), _stamp(receipt["completed_at"])
+    if not _stamp(startup["started_at"]) <= started <= completed:
+        raise ValueError("Original local process chronology differs")
+    if config.wall_guard and not _stamp(config.wall_guard["wall_started_at"]) <= started < _stamp(
+        config.wall_guard["wall_deadline_at"]
+    ):
+        raise ValueError("No new source work may be accepted after its original guard")
+    delivery = _delivery_from_receipt(destination, receipt)
+    if expected_stage == "expert":
+        if delivery.summary is None or delivery.capture is not None:
+            raise ValueError("Expert delivery lacks its original controller summary")
+        prior_summary = prior_delivery.summary if prior_delivery else None
+        _validate_plan(request["payload"], config, prior_summary)
+        if (
+            load_json(_contained(destination / "artifact", "dispatch.json").read_bytes())
+            != request["payload"]
+        ):
+            raise ValueError("Controller executed a different original plan")
+        recomputed = _expert_counters(
+            request["payload"],
+            delivery.summary,
+            destination / "artifact/logs",
+            config,
+            prior_summary,
+        )
+        for name, expected in delivery.summary["raw_logs"].items():
+            if (
+                hashlib.sha256(
+                    _contained(destination / "artifact/logs", name).read_bytes()
+                ).hexdigest()
+                != expected
+            ):
+                raise ValueError("Every original source raw log must remain immutable")
+    else:
+        if prior_delivery is not None or delivery.capture is None or delivery.summary is not None:
+            raise ValueError("Baseline delivery shape differs")
+        _validate_baseline_request(request["payload"], config)
+        _validate_capture(delivery.capture, config)
+        _validate_baseline_artifacts(delivery.capture, destination / "artifact", config)
+        budget = delivery.capture["config"]["case_budgets"][config.case_id]
+        recomputed = _counters(
+            {
+                "fetcher_calls": budget["fetcher_calls"],
+                "search_queries": budget["search_queries"],
+                "elapsed_ms": budget["elapsed_ms"],
+            }
+        )
+    if _counters(receipt["source_counters"]) != recomputed:
+        raise ValueError("Local source counters differ from original artifacts")
+    return delivery
+
+
+def _verify_stream_range(path: Path, proof: dict[str, Any], expected: bytes) -> None:
+    if set(proof) != {"offset", "length", "sha256"}:
+        raise ValueError("Original process stream range fields differ")
+    offset = _integer(proof["offset"], "stream offset")
+    length = _integer(proof["length"], "stream length")
+    _canonical_path(path)
+    with path.open("rb") as stream:
+        stream.seek(offset)
+        data = stream.read(length)
+    if data != expected or hashlib.sha256(data).hexdigest() != proof["sha256"]:
+        raise ValueError("Original process stream bytes/range differ")
+
+
+def validate_session_final(
+    session_root: Path,
+    *,
+    expected_session_id: str,
+    expected_source_sha: str,
+    expected_case_id: str,
+    expected_stage: str,
+) -> dict[str, Any]:
+    """Original bounded/reaped process evidence; unknown tails cannot seal."""
+    _canonical_path(session_root, directory=True)
+    result = load_json(_contained(session_root, "session-final.json").read_bytes())
+    if any(
+        result.get(key) != value
+        for key, value in {
+            "schema_version": "1",
+            "protocol_version": PROTOCOL,
+            "transport_kind": TRANSPORT,
+            "session_id": expected_session_id,
+            "source_sha": expected_source_sha,
+            "case_id": expected_case_id,
+            "stage": expected_stage,
+            "reaped": True,
+            "unknown_tail": False,
+        }.items()
+    ):
+        raise ValueError("Incomplete/foreign terminal source process cannot seal")
+    startup = load_json(_contained(session_root, "session-start.json").read_bytes())
+    if result.get("pid") != startup.get("pid") or result.get("pgid") != startup.get("pgid"):
+        raise ValueError("Terminal receipt belongs to a different source process")
+    if (
+        type(result.get("returncode")) is not int
+        or result["returncode"] != 0
+        or result.get("signals") != []
+    ):
+        raise ValueError("Failed/forced source process cannot claim clean finalization")
+    if (
+        not _stamp(startup["started_at"])
+        <= _stamp(result["started_at"])
+        <= _stamp(result["completed_at"])
+    ):
+        raise ValueError("Terminal source process chronology differs")
+    for name in ("stdout", "stderr", "stdin"):
+        if result.get(name) is None:
+            if name != "stdin":
+                raise ValueError("Missing original terminal source stream")
+        elif result[name] != _identity(_contained(session_root, f"worker.{name}")):
+            raise ValueError("Original terminal source stream changed")
+    return result
+
+
+def validate_unavailable_delivery(
+    destination: Path,
+    *,
+    expected_case_id: str,
+    expected_stage: str,
+    expected_source_sha: str,
+    expected_wall_guard: dict[str, Any] | None = None,
+    prior_delivery: LocalDelivery | None = None,
+) -> LocalDelivery:
+    """Bind an unknown tail for diagnostics; never invent counters or primary facts."""
+    _canonical_path(destination, directory=True)
+    name = (
+        "unavailable-receipt.json"
+        if (destination / "unavailable-receipt.json").exists()
+        else "local-receipt.json"
+    )
+    receipt_path = _contained(destination, name)
+    data = receipt_path.read_bytes()
+    receipt = load_json(data)
+    fields = {
+        "schema_version",
+        "protocol_version",
+        "transport_kind",
+        "session_id",
+        "local_run_id",
+        "sequence",
+        "case_id",
+        "stage",
+        "source_sha",
+        "session_config",
+        "session_config_sha256",
+        "runtime_proof",
+        "destination",
+        "session_start_path",
+        "session_start_sha256",
+        "started_at",
+        "completed_at",
+        "status",
+        "terminal_reason",
+        "source_counters_known",
+        "source_counters",
+        "request_path",
+        "request_sha256",
+        "prior_delivery_sha256",
+        "wall_guard",
+        "terminal_process",
+        "partial_artifacts",
+    }
+    if (
+        set(receipt) != fields
+        or any(
+            receipt.get(key) != value
+            for key, value in {
+                "schema_version": "1",
+                "protocol_version": PROTOCOL,
+                "transport_kind": TRANSPORT,
+                "case_id": expected_case_id,
+                "stage": expected_stage,
+                "source_sha": expected_source_sha,
+                "status": "unavailable",
+            }.items()
+        )
+        or receipt["source_counters_known"] is not False
+        or receipt["source_counters"] is not None
+    ):
+        raise ValueError("Unknown local receipt cannot claim verified identity/counters")
+    for key in ("session_id", "local_run_id"):
+        if str(uuid.UUID(receipt[key])) != receipt[key]:
+            raise ValueError("Unknown local identity must be canonical UUID")
+    config = SessionConfig.from_dict(receipt["session_config"])
+    if (config.case_id, config.stage, config.source_sha) != (
+        expected_case_id,
+        expected_stage,
+        expected_source_sha,
+    ) or receipt["session_config_sha256"] != digest(config.as_dict()):
+        raise ValueError("Unknown source config identity differs")
+    _validate_destination(destination, config)
+    if receipt["destination"] != _identity(destination, directory=True) or receipt[
+        "runtime_proof"
+    ] != runtime_proof(config):
+        raise ValueError("Unknown source workspace/runtime identity changed")
+    if expected_wall_guard != config.wall_guard or receipt["wall_guard"] != config.wall_guard:
+        raise ValueError("Unknown source immutable guard differs")
+    start_path = _contained(config.session_root, "session-start.json")
+    start_data = start_path.read_bytes()
+    startup = load_json(start_data)
+    if (
+        receipt["session_start_path"] != str(start_path)
+        or receipt["session_start_sha256"] != hashlib.sha256(start_data).hexdigest()
+    ):
+        raise ValueError("Unknown source original startup changed")
+    _validate_startup(startup, config, receipt["session_id"])
+    expected_prior = prior_delivery.receipt_sha256 if prior_delivery else None
+    expected_sequence = prior_delivery.receipt["sequence"] + 1 if prior_delivery else 1
+    if (
+        type(receipt["sequence"]) is not int
+        or receipt["sequence"] != expected_sequence
+        or receipt["prior_delivery_sha256"] != expected_prior
+    ):
+        raise ValueError("Unknown source cannot reset/reorder its verified prefix")
+    if prior_delivery is not None:
+        original = _delivery_from_receipt(
+            prior_delivery.receipt_path.parent, load_json(prior_delivery.receipt_path.read_bytes())
+        )
+        if (
+            original != prior_delivery
+            or prior_delivery.receipt["session_id"] != receipt["session_id"]
+            or prior_delivery.receipt["session_config"] != receipt["session_config"]
+        ):
+            raise ValueError("Unknown tail belongs to a foreign/changed verified prefix")
+    request_path = _contained(destination, "request.json")
+    request_data = request_path.read_bytes()
+    request = load_json(request_data)
+    if (
+        receipt["request_path"] != str(request_path)
+        or receipt["request_sha256"] != hashlib.sha256(request_data).hexdigest()
+    ):
+        raise ValueError("Unknown source original request changed")
+    if request != {
+        "schema_version": "1",
+        "transport_kind": TRANSPORT,
+        "session_id": receipt["session_id"],
+        "local_run_id": receipt["local_run_id"],
+        "sequence": expected_sequence,
+        "case_id": expected_case_id,
+        "stage": expected_stage,
+        "source_sha": expected_source_sha,
+        "session_config_sha256": receipt["session_config_sha256"],
+        "wall_guard": config.wall_guard,
+        "prior_delivery_sha256": expected_prior,
+        "payload": request.get("payload"),
+    }:
+        raise ValueError("Unknown source request identity differs")
+    if expected_stage == "expert":
+        _validate_plan(
+            request["payload"], config, prior_delivery.summary if prior_delivery else None
+        )
+    else:
+        if prior_delivery is not None:
+            raise ValueError("Baseline unknown tail cannot resume an expert prefix")
+        _validate_baseline_request(request["payload"], config)
+    terminal = load_json(_contained(config.session_root, "session-final.json").read_bytes())
+    if (
+        terminal != receipt["terminal_process"]
+        or any(
+            terminal.get(key) != value
+            for key, value in {
+                "schema_version": "1",
+                "protocol_version": PROTOCOL,
+                "transport_kind": TRANSPORT,
+                "session_id": receipt["session_id"],
+                "case_id": expected_case_id,
+                "stage": expected_stage,
+                "source_sha": expected_source_sha,
+                "pid": startup["pid"],
+                "pgid": startup["pgid"],
+                "last_verified_delivery_sha256": expected_prior,
+            }.items()
+        )
+        or terminal.get("reaped") is not True
+        or terminal.get("unknown_tail") is not True
+    ):
+        raise ValueError("Unknown source lacks its original reaped terminal process")
+    if type(terminal.get("returncode")) is not int or terminal.get("signals") not in (
+        [],
+        ["SIGTERM"],
+        ["SIGTERM", "SIGKILL"],
+    ):
+        raise ValueError("Unknown source process termination evidence differs")
+    for key in ("stdout", "stderr", "stdin"):
+        if terminal.get(key) != _identity(_contained(config.session_root, f"worker.{key}")):
+            raise ValueError("Unknown source original terminal streams changed")
+    started, completed = _stamp(receipt["started_at"]), _stamp(receipt["completed_at"])
+    if not _stamp(startup["started_at"]) <= started <= _stamp(
+        terminal["started_at"]
+    ) <= completed or completed != _stamp(terminal["completed_at"]):
+        raise ValueError("Unknown source terminal chronology differs")
+    if config.wall_guard and not _stamp(config.wall_guard["wall_started_at"]) <= started < _stamp(
+        config.wall_guard["wall_deadline_at"]
+    ):
+        raise ValueError("Unknown source request started outside its original guard")
+    if receipt["terminal_reason"] == "wall_guard_exhausted":
+        if config.wall_guard is None or _stamp(terminal["started_at"]) < _stamp(
+            config.wall_guard["wall_deadline_at"]
+        ):
+            raise ValueError("Unknown source cannot counterfeit own-guard exhaustion")
+    elif receipt["terminal_reason"] != "local_transport_integrity_failure":
+        raise ValueError("Unknown source terminal reason differs")
+    artifacts = destination / "artifact"
+    if artifacts.exists():
+        _verify_artifacts(artifacts, receipt["partial_artifacts"])
+        if _file_map(artifacts) != receipt["partial_artifacts"]:
+            raise ValueError("Unknown source partial artifact added/removed")
+    elif receipt["partial_artifacts"] != {}:
+        raise ValueError("Unknown source partial artifact disappeared")
+    return LocalDelivery(
+        receipt, receipt_path, hashlib.sha256(data).hexdigest(), None, None, None, {}
+    )
+
+
+def _validate_startup(startup: dict[str, Any], config: SessionConfig, session_id: str) -> None:
+    if (
+        startup.get("session_id") != session_id
+        or startup.get("session_config") != config.as_dict()
+        or startup.get("runtime_proof") != runtime_proof(config)
+    ):
+        raise ValueError("Session startup case/runtime binding differs")
+    if (
+        startup.get("session_config_sha256") != digest(config.as_dict())
+        or startup.get("transport_kind") != TRANSPORT
+    ):
+        raise ValueError("Session startup config digest differs")
+    _integer(startup.get("pid"), "worker PID", minimum=1)
+    if startup.get("pgid") != startup["pid"]:
+        raise ValueError("Worker must own its process group")
+    if startup.get("cwd") != str(config.source_cwd) or startup.get("interpreter") != str(
+        config.interpreter
+    ):
+        raise ValueError("Worker used an unapproved cwd/interpreter")
+    expected_public = source_environment(config, "placeholder")
+    expected_public.pop(KEY_NAME)
+    if startup.get("public_environment") != expected_public or startup.get(
+        "public_environment_sha256"
+    ) != digest(expected_public):
+        raise ValueError("Worker public environment differs")
+    if (
+        startup.get("source_key_delivery") != "worker_env_only"
+        or startup.get("source_key_in_public_environment") is not False
+    ):
+        raise ValueError("Source key isolation is not bound")
+    if startup.get("python_flags") != {
+        "no_site": True,
+        "ignore_environment": True,
+        "no_user_site": True,
+        "dont_write_bytecode": True,
+    }:
+        raise ValueError("Source interpreter startup flags differ")
+    _verify_import_origins(startup.get("import_origins"), config)
+    if startup.get("algorithm_defaults") != algorithm_defaults(config):
+        raise ValueError("Original algorithm runtime defaults differ")
+    argv = startup.get("argv")
+    if (
+        not isinstance(argv, list)
+        or len(argv) != 8
+        or argv[:5] != [str(config.interpreter), "-B", "-E", "-S", "-s"]
+        or argv[6:] != ["--worker", str(config.session_root / "session-bootstrap.json")]
+    ):
+        raise ValueError("Worker command shape differs")
+    script = Path(argv[5])
+    if startup.get("worker_script") != _identity(script) or startup.get("argv_sha256") != digest(
+        argv
+    ):
+        raise ValueError("Actual worker script/argv bytes changed")
+
+
+class LocalSession:
+    def __init__(
+        self,
+        config: SessionConfig,
+        private_key: str,
+        *,
+        process_factory: Callable[..., Any] = subprocess.Popen,
+        clock: Callable[[], datetime] = utc_now,
+        monotonic: Callable[[], float] = time.monotonic,
+        kill_group: Callable[[int, int], None] = os.killpg,
+    ) -> None:
+        config.validate()
+        self.config, self.clock, self.monotonic = config, clock, monotonic
+        self.kill_group = kill_group
+        self.session_id = str(uuid.uuid4())
+        self.sequence = 0
+        self.previous_delivery: LocalDelivery | None = None
+        self.closed = self.poisoned = False
+        self.script = Path(__file__).resolve(strict=True)
+        self.argv = [
+            str(config.interpreter),
+            "-B",
+            "-E",
+            "-S",
+            "-s",
+            str(self.script),
+            "--worker",
+            str(config.session_root / "session-bootstrap.json"),
+        ]
+        bootstrap = {
+            "schema_version": "1",
+            "session_id": self.session_id,
+            "session_config": config.as_dict(),
+            "worker_script": _identity(self.script),
+            "argv": self.argv,
+        }
+        atomic_new(config.session_root / "session-bootstrap.json", canonical_bytes(bootstrap))
+        self.stderr_path = config.session_root / "worker.stderr"
+        self.stderr = open(self.stderr_path, "xb", buffering=0)  # noqa: SIM115 - session-scoped, closed/reaped explicitly
+        os.chmod(self.stderr_path, 0o600)
+        environment = source_environment(config, private_key)
+        try:
+            self.process = process_factory(
+                self.argv,
+                cwd=str(config.source_cwd),
+                env=environment,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=self.stderr,
+                text=False,
+                start_new_session=True,
+                close_fds=True,
+                shell=False,
+            )
+        finally:
+            environment.pop(KEY_NAME, None)
+        self.frames: queue.Queue[bytes | BaseException] = queue.Queue()
+        self.stdout_path = config.session_root / "worker.stdout"
+        atomic_new(self.stdout_path, b"")
+        self.reader = threading.Thread(target=self._read_stdout, daemon=True)
+        self.reader.start()
+        try:
+            ready = self._receive(self._remaining_seconds(startup=True))
+            message = load_json(ready)
+            if message.get("kind") != "ready" or message.get("session_id") != self.session_id:
+                raise ValueError("Worker startup failed")
+            self.stdout_cursor = len(ready)
+            startup = load_json((config.session_root / "session-start.json").read_bytes())
+            _validate_startup(startup, config, self.session_id)
+            if startup["pid"] != self.process.pid:
+                raise ValueError("Worker startup PID differs from the original process")
+        except BaseException:
+            self.poisoned = True
+            self.close()
+            raise
+
+    def _read_stdout(self) -> None:
+        try:
+            if self.process.stdout is None:
+                raise ValueError("Missing original source process stdout")
+            with open(self.stdout_path, "ab", buffering=0) as saved:
+                while True:
+                    line = self.process.stdout.readline(MAX_FRAME_BYTES + 1)
+                    if not line:
+                        self.frames.put(EOFError("Source process ended without a complete reply"))
+                        return
+                    saved.write(line)
+                    if len(line) > MAX_FRAME_BYTES or not line.endswith(b"\n"):
+                        self.frames.put(ValueError("Worker reply is oversized or truncated"))
+                        return
+                    self.frames.put(line)
+        except BaseException as error:
+            self.frames.put(error)
+
+    def _remaining_seconds(self, *, startup: bool = False) -> float:
+        if self.config.wall_guard is None:
+            return 15.0 if startup else 135.0
+        seconds = (
+            _stamp(self.config.wall_guard["wall_deadline_at"]) - self.clock()
+        ).total_seconds()
+        if seconds <= 0:
+            raise TimeoutError("Original expert guard has ended")
+        return seconds
+
+    def _receive(self, timeout: float) -> bytes:
+        try:
+            frame = self.frames.get(timeout=timeout)
+        except queue.Empty as error:
+            raise TimeoutError("Original source process exceeded its guard") from error
+        if isinstance(frame, BaseException):
+            raise frame
+        return frame
+
+    def _send(self, value: dict[str, Any]) -> None:
+        if self.process.stdin is None:
+            raise ValueError("Source process stdin unavailable")
+        data = canonical_bytes(value) + b"\n"
+        self.process.stdin.write(data)
+        self.process.stdin.flush()
+        with open(self.config.session_root / "worker.stdin", "ab", buffering=0) as saved:
+            os.chmod(saved.name, 0o600)
+            saved.write(data)
+
+    def execute(
+        self,
+        plan: dict[str, Any],
+        destination: Path,
+        *,
+        wall_guard: dict[str, Any],
+        prior_delivery: LocalDelivery | None = None,
+    ) -> LocalDelivery:
+        if self.config.stage != "expert" or wall_guard != self.config.wall_guard:
+            raise ValueError("Expert session guard cannot reset")
+        if prior_delivery != self.previous_delivery:
+            raise ValueError("Caller must retain exact preceding original delivery")
+        _validate_plan(plan, self.config, prior_delivery.summary if prior_delivery else None)
+        return self._dispatch(plan, destination)
+
+    def baseline(self, capture_request: dict[str, Any], destination: Path) -> LocalDelivery:
+        if self.config.stage != "baseline" or self.sequence:
+            raise ValueError("Baseline permits one original stock child")
+        _validate_baseline_request(capture_request, self.config)
+        return self._dispatch(capture_request, destination)
+
+    def _dispatch(self, payload: dict[str, Any], destination: Path) -> LocalDelivery:
+        if self.closed or self.poisoned or self.process.poll() is not None:
+            raise ValueError("Dead/interrupted source session cannot dispatch again")
+        self._remaining_seconds()
+        request_started_at = self.clock()
+        _validate_destination(destination, self.config, exists=False)
+        _new_directory(destination)
+        request = {
+            "schema_version": "1",
+            "transport_kind": TRANSPORT,
+            "session_id": self.session_id,
+            "local_run_id": str(uuid.uuid4()),
+            "sequence": self.sequence + 1,
+            "case_id": self.config.case_id,
+            "stage": self.config.stage,
+            "source_sha": self.config.source_sha,
+            "session_config_sha256": digest(self.config.as_dict()),
+            "wall_guard": self.config.wall_guard,
+            "prior_delivery_sha256": self.previous_delivery.receipt_sha256
+            if self.previous_delivery
+            else None,
+            "payload": payload,
+        }
+        atomic_new(destination / "request.json", canonical_bytes(request))
+        self.poisoned = True
+        try:
+            self._send(
+                {
+                    "kind": "deliver",
+                    "destination": str(destination),
+                    "request_sha256": hashlib.sha256(
+                        (destination / "request.json").read_bytes()
+                    ).hexdigest(),
+                }
+            )
+            try:
+                frame = self._receive(self._remaining_seconds())
+            except TimeoutError:
+                # Audit-only harvest: no new dispatch, no deadline reset. The
+                # stock controller cancels against the original absolute guard.
+                frame = self._receive(45.0)
+            stream_range = {
+                "offset": self.stdout_cursor,
+                "length": len(frame),
+                "sha256": hashlib.sha256(frame).hexdigest(),
+            }
+            self.stdout_cursor += len(frame)
+            delivery = _publish_local_receipt(
+                destination, frame, self.config, stdout_range=stream_range
+            )
+            delivery = validate_local_delivery(
+                destination,
+                expected_case_id=self.config.case_id,
+                expected_stage=self.config.stage,
+                expected_source_sha=self.config.source_sha,
+                expected_wall_guard=self.config.wall_guard,
+                prior_delivery=self.previous_delivery,
+            )
+            self._send({"kind": "acknowledge", "receipt_sha256": delivery.receipt_sha256})
+            self.sequence += 1
+            self.previous_delivery = delivery
+            self.poisoned = False
+            return delivery
+        except BaseException as error:
+            reason = (
+                "wall_guard_exhausted"
+                if isinstance(error, TimeoutError)
+                and self.config.wall_guard is not None
+                and self.clock() >= _stamp(self.config.wall_guard["wall_deadline_at"])
+                else "local_transport_integrity_failure"
+            )
+            terminal = self.close()
+            startup_path = _contained(self.config.session_root, "session-start.json")
+            startup_data = startup_path.read_bytes()
+            unavailable = {
+                "schema_version": "1",
+                "protocol_version": PROTOCOL,
+                "transport_kind": TRANSPORT,
+                "session_id": self.session_id,
+                "local_run_id": request["local_run_id"],
+                "sequence": request["sequence"],
+                "case_id": self.config.case_id,
+                "stage": self.config.stage,
+                "source_sha": self.config.source_sha,
+                "session_config": self.config.as_dict(),
+                "session_config_sha256": digest(self.config.as_dict()),
+                "runtime_proof": load_json(startup_data)["runtime_proof"],
+                "destination": _identity(destination, directory=True),
+                "session_start_path": str(startup_path),
+                "session_start_sha256": hashlib.sha256(startup_data).hexdigest(),
+                "started_at": request_started_at.isoformat(),
+                "completed_at": terminal["completed_at"],
+                "status": "unavailable",
+                "terminal_reason": reason,
+                "source_counters_known": False,
+                "source_counters": None,
+                "request_path": str(destination / "request.json"),
+                "request_sha256": hashlib.sha256(
+                    (destination / "request.json").read_bytes()
+                ).hexdigest(),
+                "prior_delivery_sha256": request["prior_delivery_sha256"],
+                "wall_guard": self.config.wall_guard,
+                "terminal_process": terminal,
+                "partial_artifacts": _file_map(destination / "artifact")
+                if (destination / "artifact").exists()
+                else {},
+            }
+            receipt_path = destination / "local-receipt.json"
+            if receipt_path.exists():
+                # A successfully saved envelope followed by validation failure
+                # remains original; failure is a distinct non-overwriting receipt.
+                receipt_path = destination / "unavailable-receipt.json"
+            atomic_new(receipt_path, canonical_bytes(unavailable))
+            return LocalDelivery(
+                unavailable,
+                receipt_path,
+                hashlib.sha256(receipt_path.read_bytes()).hexdigest(),
+                None,
+                None,
+                None,
+                {},
+            )
+
+    def close(self) -> dict[str, Any]:
+        if self.closed:
+            return load_json((self.config.session_root / "session-final.json").read_bytes())
+        self.closed = True
+        started = self.clock()
+        sent_signals = []
+        if not self.poisoned and self.process.poll() is None:
+            with contextlib.suppress(BrokenPipeError, OSError, ValueError):
+                self._send({"kind": "close"})
+        try:
+            returncode = self.process.wait(timeout=CLOSE_SECONDS)
+        except subprocess.TimeoutExpired:
+            self.kill_group(self.process.pid, signal.SIGTERM)
+            sent_signals.append("SIGTERM")
+            try:
+                returncode = self.process.wait(timeout=CLOSE_SECONDS)
+            except subprocess.TimeoutExpired:
+                self.kill_group(self.process.pid, signal.SIGKILL)
+                sent_signals.append("SIGKILL")
+                returncode = self.process.wait(timeout=CLOSE_SECONDS)
+        self.reader.join(timeout=CLOSE_SECONDS)
+        self.stderr.close()
+        if self.reader.is_alive():
+            raise ValueError("Source process stream could not be reaped")
+        receipt = {
+            "schema_version": "1",
+            "protocol_version": PROTOCOL,
+            "transport_kind": TRANSPORT,
+            "session_id": self.session_id,
+            "case_id": self.config.case_id,
+            "stage": self.config.stage,
+            "source_sha": self.config.source_sha,
+            "pid": self.process.pid,
+            "pgid": self.process.pid,
+            "started_at": started.isoformat(),
+            "completed_at": self.clock().isoformat(),
+            "returncode": returncode,
+            "signals": sent_signals,
+            "reaped": True,
+            "unknown_tail": self.poisoned,
+            "last_verified_delivery_sha256": self.previous_delivery.receipt_sha256
+            if self.previous_delivery
+            else None,
+            "stdout": _identity(self.stdout_path),
+            "stderr": _identity(self.stderr_path),
+            "stdin": _identity(self.config.session_root / "worker.stdin")
+            if (self.config.session_root / "worker.stdin").exists()
+            else None,
+        }
+        atomic_new(self.config.session_root / "session-final.json", canonical_bytes(receipt))
+        return receipt
+
+
+def start_session(
+    config: SessionConfig,
+    *,
+    private_key: str,
+    process_factory: Callable[..., Any] = subprocess.Popen,
+    clock: Callable[[], datetime] = utc_now,
+    monotonic: Callable[[], float] = time.monotonic,
+    kill_group: Callable[[int, int], None] = os.killpg,
+) -> LocalSession:
+    return LocalSession(
+        config,
+        private_key,
+        process_factory=process_factory,
+        clock=clock,
+        monotonic=monotonic,
+        kill_group=kill_group,
+    )
+
+
+def _import_origins(config: SessionConfig) -> dict[str, Any]:
+    origins: dict[str, Any] = {}
+    for name, module in tuple(sys.modules.items()):
+        filename = getattr(module, "__file__", None)
+        if not filename:
+            continue
+        path = Path(filename).resolve(strict=True)
+        if path.is_relative_to(config.source_cwd):
+            relative = str(path.relative_to(config.source_cwd))
+            if relative not in config.source_manifest:
+                raise ValueError("Imported source module is not frozen")
+            origins[name] = _identity(path)
+        elif name.startswith(("app.", "evaluation.", "scripts.")):
+            raise ValueError("Source import came from an unapproved tree")
+        elif name != "__main__":
+            if str(path) not in config.runtime_files:
+                raise ValueError("Imported dependency/stdlib bytes are not pinned")
+            origins[name] = _identity(path)
+        if (
+            name not in {"__main__"}
+            and not path.is_relative_to(config.source_cwd)
+            and not any(path.is_relative_to(root) for root in config.runtime_import_roots)
+        ):
+            raise ValueError("Runtime import came from an unapproved root")
+        cached = getattr(module, "__cached__", None)
+        if cached and Path(cached).exists() and name != "__main__":
+            bytecode = Path(cached).resolve(strict=True)
+            expected = (
+                config.source_manifest.get(str(bytecode.relative_to(config.source_cwd)))
+                if bytecode.is_relative_to(config.source_cwd)
+                else config.runtime_files.get(str(bytecode))
+            )
+            if expected != _identity(bytecode)["sha256"]:
+                raise ValueError("Imported cached bytecode is not pinned")
+            origins[f"{name}:cached_bytecode"] = _identity(bytecode)
+    return origins
+
+
+def _verify_import_origins(origins: Any, config: SessionConfig) -> None:
+    if not isinstance(origins, dict):
+        raise ValueError("Original import origins are missing")
+    for name, identity in origins.items():
+        if type(name) is not str or not isinstance(identity, dict):
+            raise ValueError("Invalid original import origin")
+        path = Path(identity["path"])
+        if _identity(path) != identity:
+            raise ValueError("Original imported code bytes/identity changed")
+        if path.is_relative_to(config.source_cwd):
+            expected = config.source_manifest.get(str(path.relative_to(config.source_cwd)))
+        else:
+            expected = config.runtime_files.get(str(path))
+        if expected != identity["sha256"]:
+            raise ValueError("Original import came from an unpinned code file")
+
+
+def baseline_stock_arguments(config: SessionConfig, output: Path) -> list[str]:
+    return [
+        "--live",
+        "--child",
+        "--case",
+        config.case_id,
+        "--out",
+        str(output),
+        "--max-pages",
+        "60",
+        "--seconds-per-case",
+        "120",
+        "--strict-expert-budget",
+        "--finalization-reserve-ms",
+        "1000",
+        "--search-provider",
+        "exa",
+        "--source-admission-root",
+        str(config.admission_root),
+        "--source-admission-run-id",
+        config.admission_run_id,
+    ]
+
+
+def baseline_command(config: SessionConfig, output: Path) -> list[str]:
+    return [
+        str(config.interpreter),
+        "-B",
+        "-E",
+        "-S",
+        "-s",
+        str(Path(__file__).resolve(strict=True)),
+        "--baseline-child",
+        str(config.session_root / "session-bootstrap.json"),
+        "--",
+        *baseline_stock_arguments(config, output),
+    ]
+
+
+async def _stock_baseline(
+    config: SessionConfig, request: dict[str, Any], artifacts: Path
+) -> dict[str, Any]:
+    """Real path is never exercised by offline tests. No Git/corpus read by wrapper."""
+    from evaluation.research.schema import Capture, Observation
+
+    _validate_baseline_request(request, config)
+    output = artifacts / "observation.json"
+    argv = baseline_command(config, output)
+    atomic_new(
+        artifacts / "child-command.json",
+        canonical_bytes(
+            {
+                "argv": argv,
+                "argv_sha256": digest(argv),
+                "stock_argv": [
+                    "evaluation.research.live",
+                    *baseline_stock_arguments(config, output),
+                ],
+            }
+        ),
+    )
+    started = time.monotonic()
+    # Inheritance is confined to the already sanitized privately keyed source worker.
+    child = await asyncio.create_subprocess_exec(
+        *argv,
+        cwd=str(config.source_cwd),
+        env=dict(os.environ),
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE,
+        start_new_session=False,
+    )
+    try:
+        stdout, stderr = await asyncio.wait_for(child.communicate(), timeout=135)
+    except TimeoutError:
+        child.terminate()
+        try:
+            stdout, stderr = await asyncio.wait_for(child.communicate(), timeout=5)
+        except TimeoutError:
+            child.kill()
+            stdout, stderr = await asyncio.wait_for(child.communicate(), timeout=5)
+        atomic_new(artifacts / "child.stdout", stdout)
+        atomic_new(artifacts / "child.stderr", stderr)
+        atomic_new(
+            artifacts / "child-process.json",
+            canonical_bytes(
+                {
+                    "pid": child.pid,
+                    "pgid": os.getpgid(0),
+                    "argv_sha256": digest(argv),
+                    "returncode": child.returncode,
+                    "reaped": True,
+                    "process_error": "WALL_CLOCK",
+                    "parent_process_elapsed_seconds": time.monotonic() - started,
+                }
+            ),
+        )
+        raise TimeoutError("Baseline stock child exceeded its original process guard") from None
+    atomic_new(artifacts / "child.stdout", stdout)
+    atomic_new(artifacts / "child.stderr", stderr)
+    elapsed = time.monotonic() - started
+    process = {
+        "pid": child.pid,
+        "pgid": os.getpgid(0),
+        "argv_sha256": digest(argv),
+        "returncode": child.returncode,
+        "reaped": True,
+        "process_error": None if child.returncode == 0 else "PROCESS_EXIT",
+        "parent_process_elapsed_seconds": elapsed,
+    }
+    atomic_new(artifacts / "child-process.json", canonical_bytes(process))
+    if child.returncode != 0:
+        raise ValueError("Stock baseline child exited unsuccessfully")
+    observation = Observation.model_validate_json(output.read_bytes())
+    budget_path = output.with_suffix(".budget.json")
+    budget = load_json(budget_path.read_bytes())
+    recorded_budget = {
+        **budget,
+        "process_error": process["process_error"],
+        "active_checkpoint_available": True,
+        "parent_process_elapsed_seconds": elapsed,
+    }
+    capture = Capture(
+        pipeline_sha=config.source_sha,
+        captured_at=utc_now().isoformat(),
+        mode="live",
+        config={
+            "search_provider": "exa",
+            "seconds_per_case": 120,
+            "child_active_seconds": 120,
+            "strict_expert_budget": True,
+            "max_fetcher_calls_per_case": 60,
+            "max_search_queries_per_case": 6,
+            "finalization_reserve_ms": 1000,
+            "source_work_deadline_ms": 119000,
+            "browser_enabled": False,
+            "cold_fetcher_reads": True,
+            "algorithm_defaults": algorithm_defaults(config),
+            "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+            "case_budgets": {config.case_id: recorded_budget},
+            "batch_stop_reason": budget.get("stop_reason")
+            if budget.get("stop_reason") in {"http_402", "http_429"}
+            else None,
+            "batch_completed_case_ids": [config.case_id],
+            "batch_remaining_case_ids": [],
+            "active_time_basis": budget.get("active_time_basis"),
+            "parent_process_reserve_seconds": 15,
+            "parent_process_timeout_seconds": 135,
+            "scope": "current production pipeline; HTTP-only bounded cold run",
+            "search_before_navigation": False,
+            "recover_search_candidates": algorithm_defaults(config)["recover_search_candidates"],
+            "search_funding_fallback": algorithm_defaults(config)["search_funding_fallback"],
+            "target_award_search": algorithm_defaults(config)["target_award_search"],
+            "skip_refused_search_hosts": False,
+            "reject_archive_hosts": False,
+            "admission_lexicon": False,
+            "navigation_slot": False,
+        },
+        observations=[observation],
+    )
+    return capture.model_dump(mode="json")
+
+
+async def _worker_loop(bootstrap: dict[str, Any]) -> None:
+    config = SessionConfig.from_dict(bootstrap["session_config"])
+    expected_environment = prepare_imports(config)
+    from app.adapters.fetching import Fetcher
+    from app.adapters.search import get_search_provider
+    from app.config import get_settings
+    from evaluation.research.expert import controller
+
+    SourceAdmission = importlib.import_module(
+        "evaluation.research.expert.source_admission"
+    ).SourceAdmission
+
+    if "source_admission" not in inspect.signature(controller.execute).parameters:
+        raise ValueError("Reviewed source-admission hook is unavailable")
+    settings = get_settings()
+    if (
+        settings.search_provider != "exa"
+        or settings.enable_browser_tier
+        or not settings.respect_robots
+        or settings.fetch_delay_seconds != 1.5
+        or settings.fetch_timeout_seconds != 20
+    ):
+        raise ValueError("Stock source privacy/egress configuration differs")
+    provider = get_search_provider()
+    if provider.name != "exa":
+        raise ValueError("Configured provider identity differs")
+    admission = SourceAdmission(
+        config.admission_root, run_id=config.admission_run_id, provider="exa"
+    )
+    argv = bootstrap["argv"]
+    startup = {
+        "schema_version": "1",
+        "protocol_version": PROTOCOL,
+        "transport_kind": TRANSPORT,
+        "session_id": bootstrap["session_id"],
+        "session_config": config.as_dict(),
+        "session_config_sha256": digest(config.as_dict()),
+        "runtime_proof": runtime_proof(config),
+        "started_at": utc_now().isoformat(),
+        "pid": os.getpid(),
+        "pgid": os.getpgid(0),
+        "argv": argv,
+        "argv_sha256": digest(argv),
+        "cwd": str(Path.cwd()),
+        "interpreter": sys.executable,
+        "worker_script": _identity(Path(argv[5])),
+        "public_environment": expected_environment,
+        "public_environment_sha256": digest(expected_environment),
+        "source_key_delivery": "worker_env_only",
+        "source_key_in_public_environment": False,
+        "import_origins": _import_origins(config),
+        "algorithm_defaults": algorithm_defaults(config),
+        "python_version": sys.version,
+        "python_flags": {
+            "no_site": bool(sys.flags.no_site),
+            "ignore_environment": bool(sys.flags.ignore_environment),
+            "no_user_site": bool(sys.flags.no_user_site),
+            "dont_write_bytecode": bool(sys.flags.dont_write_bytecode),
+        },
+    }
+    atomic_new(config.session_root / "session-start.json", canonical_bytes(startup))
+    async with Fetcher(
+        config.session_root / "httpcache",
+        delay_seconds=settings.fetch_delay_seconds,
+        respect_robots=True,
+        timeout=settings.fetch_timeout_seconds,
+        contact=settings.fetch_contact,
+    ) as fetcher:
+
+        async def cold_get(url: str) -> Any:
+            return await fetcher.get(url, use_cache=False)
+
+        engine = PersistentWorker(
+            config,
+            bootstrap["session_id"],
+            execute=controller.execute,
+            get=cold_get,
+            search=provider.search,
+            admission=admission,
+            baseline_runner=lambda request, artifacts: _stock_baseline(config, request, artifacts),
+            origin_probe=lambda: _import_origins(config),
+        )
+        print(
+            json.dumps(
+                {"kind": "ready", "session_id": bootstrap["session_id"]}, separators=(",", ":")
+            ),
+            flush=True,
+        )
+        while True:
+            line = await asyncio.to_thread(sys.stdin.buffer.readline, MAX_FRAME_BYTES + 1)
+            if not line or len(line) > MAX_FRAME_BYTES or not line.endswith(b"\n"):
+                raise ValueError("Worker control input is incomplete")
+            command = load_json(line)
+            if command == {"kind": "close"}:
+                return
+            if set(command) == {"kind", "receipt_sha256"} and command["kind"] == "acknowledge":
+                engine.acknowledge(command["receipt_sha256"])
+                continue
+            if (
+                set(command) != {"kind", "destination", "request_sha256"}
+                or command["kind"] != "deliver"
+            ):
+                raise ValueError("Unsupported source-worker control request")
+            destination = Path(command["destination"])
+            request_path = _contained(destination, "request.json")
+            data = request_path.read_bytes()
+            if hashlib.sha256(data).hexdigest() != command["request_sha256"]:
+                raise ValueError("Source-worker control input changed")
+            frame = await engine.deliver(load_json(data), destination)
+            sys.stdout.buffer.write(canonical_bytes(frame) + b"\n")
+            sys.stdout.buffer.flush()
+
+
+def prepare_imports(config: SessionConfig) -> dict[str, str]:
+    """Called only inside the -S privately keyed worker/stock-child bootstrap."""
+    config.validate()
+    if Path.cwd() != config.source_cwd or Path(sys.executable) != config.interpreter:
+        raise ValueError("Source worker invocation differs")
+    if not sys.flags.no_site or not sys.flags.ignore_environment or not sys.flags.no_user_site:
+        raise ValueError("Source startup must disable ambient site/import hooks")
+    environment = dict(os.environ)
+    # Only the real private source descendant inspects its own injected input.
+    # No key, key digest, or arbitrary exception is exported.
+    if KEY_NAME not in environment:
+        raise ValueError("Private source input is unavailable")
+    environment.pop(KEY_NAME)
+    expected = source_environment(config, "placeholder")
+    expected.pop(KEY_NAME)
+    if environment != expected:
+        raise ValueError("Source worker environment differs")
+    sys.path[:] = [str(config.source_cwd), *(str(path) for path in config.runtime_import_roots)]
+    importlib.invalidate_caches()
+    return expected
+
+
+def _baseline_child(bootstrap: dict[str, Any], stock_arguments: list[str]) -> None:
+    config = SessionConfig.from_dict(bootstrap["session_config"])
+    if config.stage != "baseline" or "--out" not in stock_arguments:
+        raise ValueError("Stock baseline bootstrap identity differs")
+    output = Path(stock_arguments[stock_arguments.index("--out") + 1])
+    _validate_destination(output.parent.parent, config)
+    if stock_arguments != baseline_stock_arguments(config, output):
+        raise ValueError("Stock baseline argv changes the original policy/defaults")
+    environment = prepare_imports(config)
+    live = importlib.import_module("evaluation.research.live")
+    if config.baseline_identity_registry is None:
+        raise ValueError("Private original producer input is missing")
+    # Location plumbing only: original opaque producer bytes remain outside
+    # expert/public trees and are never serialized into selector material.
+    live.__dict__["REVIEWED_BINDINGS"] = Path(config.baseline_identity_registry["path"])
+    if "source_admission" not in inspect.signature(live.capture_one).parameters:
+        raise ValueError("Reviewed stock baseline source-admission hook is unavailable")
+    runtime = {
+        "schema_version": "1",
+        "pid": os.getpid(),
+        "pgid": os.getpgid(0),
+        "source_sha": config.source_sha,
+        "session_config_sha256": digest(config.as_dict()),
+        "cwd": str(Path.cwd()),
+        "interpreter": sys.executable,
+        "python_version": sys.version,
+        "no_site": bool(sys.flags.no_site),
+        "stock_argv": ["evaluation.research.live", *stock_arguments],
+        "public_environment": environment,
+        "public_environment_sha256": digest(environment),
+        "runtime_proof": runtime_proof(config),
+        "import_origins": _import_origins(config),
+        "algorithm_defaults": algorithm_defaults(config),
+    }
+    atomic_new(output.parent / "child-runtime.json", canonical_bytes(runtime))
+    sys.argv[:] = ["evaluation.research.live", *stock_arguments]
+    try:
+        live.main()  # unchanged stock strict --child path, no outer Git CLI
+    finally:
+        atomic_new(
+            output.parent / "child-import-origins.json", canonical_bytes(_import_origins(config))
+        )
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--worker", type=Path)
+    group.add_argument("--baseline-child", type=Path)
+    parser.add_argument("stock_arguments", nargs=argparse.REMAINDER)
+    args = parser.parse_args()
+    try:
+        path = args.worker or args.baseline_child
+        bootstrap = load_json(path.read_bytes())
+        if args.worker:
+            if args.stock_arguments:
+                raise ValueError("Worker argv has unexpected arguments")
+            asyncio.run(_worker_loop(bootstrap))
+        else:
+            if not args.stock_arguments or args.stock_arguments[0] != "--":
+                raise ValueError("Stock baseline argv separator is missing")
+            _baseline_child(bootstrap, args.stock_arguments[1:])
+    except BaseException:
+        sys.stderr.write("Local source worker refused unsafe or incomplete execution.\n")
+        raise SystemExit(2) from None
+
+
+if __name__ == "__main__":
+    main()

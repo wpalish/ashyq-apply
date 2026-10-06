@@ -1,0 +1,342 @@
+.................................F........FF..................F......... [ 67%]
+..............................F....                                      [100%]
+=================================== FAILURES ===================================
+___ test_actual_local_baseline_packages_fresh_capture_and_public_packet_only ___
+
+local_client = namespace(runtime={'__name__': '<run_path>', '__doc__': 'V14 local candidate network-budget blind pilot: validate expl...73e1d30775c1b0e4'}, 'selector_environment_sha256': 'f28996e9df79f46835991122d8732045f6960bef6d62c583c9139ef3fef992f2'})
+
+    def test_actual_local_baseline_packages_fresh_capture_and_public_packet_only(local_client):
+        client = local_client
+        client.runtime["legacy"]["COHORT"] = {"u": object()}
+        public = public_cases(client.runtime)
+        client.trial["public_cases"] = public
+        client.trial["public_cases_sha256"] = client.runtime["digest"]({"version": "expert500-v14-public-v1", "cases": public})
+        (client.root / "trial.json").write_text(json.dumps(client.trial))
+>       result = client.runtime["baseline"](Path("/unused"), "synthetic-frozen", client.root, "u")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:937: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:746: in baseline
+    delivery = workflow(
+/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py:668: in workflow
+    verified = _worker_module().validate_local_delivery(destination, expected_case_id=case_id, expected_stage=stage, expected_source_sha=trial["harness_sha"], expected_wall_guard={**wall_guard.as_dict(), "wall_guard_ms": WALL_GUARD_MS} if wall_guard else None, prior_delivery=prior_delivery)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+destination = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-560/test_actual_local_baseline_pac0/trial/baseline/u')
+expected_case_id = 'u', expected_stage = 'baseline'
+expected_source_sha = '1111111111111111111111111111111111111111'
+expected_wall_guard = None, prior_delivery = None
+
+    def validate_local_delivery(
+        destination: Path,
+        *,
+        expected_case_id: str,
+        expected_stage: str,
+        expected_source_sha: str,
+        expected_wall_guard: dict[str, Any] | None = None,
+        prior_delivery: LocalDelivery | None = None,
+    ) -> LocalDelivery:
+        """Replay saved local bytes without a process, key, network or source execution."""
+        _canonical_path(destination, directory=True)
+        path = _contained(destination, "local-receipt.json")
+        receipt = load_json(path.read_bytes())
+        if (
+            receipt.get("transport_kind") != TRANSPORT
+            or receipt.get("protocol_version") != PROTOCOL
+            or receipt.get("schema_version") != "1"
+        ):
+            raise ValueError("Local receipt type/version differs")
+        if any(
+            receipt.get(key) != expected
+            for key, expected in (
+                ("case_id", expected_case_id),
+                ("stage", expected_stage),
+                ("source_sha", expected_source_sha),
+            )
+        ):
+            raise ValueError("Local receipt belongs to a different case/stage/source")
+        if any(key in receipt for key in ("run_id", "headSha", "head_sha", "conclusion")):
+            raise ValueError("Local receipt cannot impersonate GitHub provenance")
+        for key in ("session_id", "local_run_id"):
+            if str(uuid.UUID(receipt[key])) != receipt[key]:
+                raise ValueError("Local identity must be canonical UUID")
+        if receipt.get("status") != "verified" or receipt.get("source_counters_known") is not True:
+>           raise ValueError("Unknown/incomplete source output is preseal ineligible")
+E           ValueError: Unknown/incomplete source output is preseal ineligible
+
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:1138: ValueError
+_____ test_report_validates_real_candidate_worker_and_controller_originals _____
+
+report = {'__name__': '<run_path>', '__doc__': 'V14 local candidate: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+config = SessionConfig(case_id='u', stage='expert', source_sha='1111111111111111111111111111111111111111', source_cwd=PosixPath...10-06T12:15:00+00:00', 'wall_guard_ms': 900000}, baseline_identity_registry=None, protocol_version='journal-v14-local')
+
+    def test_report_validates_real_candidate_worker_and_controller_originals(report, config):
+        engine, fetcher, _, first = originals(config)
+>       validated = checked(report, first, config)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:123: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:104: in checked
+    return report["verify_local_delivery"](
+/tmp/unimatch-expert500-journal-report-v14-local-candidate.py:673: in verify_local_delivery
+    validate_local_admissions(delivery)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+delivery = LocalDelivery(receipt={'artifacts': {'dispatch.json': {'device': 16777232, 'inode': 109237848, 'path': '/private/var/f...: 1, 'search_queries': 0}, raw_logs={'u-001.json': 'e4f38411f49ce3e6a78ab7a87b977b4e5d4cc80fe5f95692d0e7ef3c0669bd5c'})
+
+    def validate_local_admissions(delivery: Any) -> list[dict[str, Any]]:
+        """Replay actual execution flags independently of admission permission."""
+        receipt = delivery.receipt
+        config = receipt["session_config"]
+        root = Path(config["admission_root"])
+        if root.is_symlink() or not root.is_dir() or root != root.resolve(strict=True):
+            raise ValueError("Source admission root must retain its canonical identity")
+        identity = root / "identity.json"
+        if identity.is_symlink() or not identity.is_file():
+            raise ValueError("Original shared admission identity is required")
+        expected_identity = {"schema_version": "1", "contract": "source_admission_v1", "run_id": config["admission_run_id"], "provider": PINNED_PROVIDER}
+        if read(identity) != expected_identity:
+            raise ValueError("Original source admission identity differs from its frozen run/provider")
+        policy = {"contract": "source_admission_v1", "run_id": config["admission_run_id"], "provider": PINNED_PROVIDER, "root": str(root), "identity_path": "identity.json", "identity_sha256": file_hash(identity)}
+        permits: list[dict[str, Any]] = []
+    
+        def check(proof: Any, *, tool: str, action_id: str) -> dict[str, Any]:
+            if not isinstance(proof, dict):
+                raise ValueError("Every executed local source action needs an original admission")
+            original = _admission_module().validate_receipt(proof, root=root, run_id=config["admission_run_id"], provider=PINNED_PROVIDER, kind="admission")
+            if original["case_id"] != receipt["case_id"] or original["tool"] != tool or original["action_id"] != action_id:
+                raise ValueError("Source permit belongs to another original case/action/tool")
+            permits.append(proof)
+            return original
+    
+        if receipt["stage"] == "expert":
+            plan, summary, raw, _ = controller_record(delivery.receipt_path.parent)
+            if summary.get("source_admission") != policy or raw.get("tool_policy", {}).get("source_admission") != policy:
+                raise ValueError("Controller source admission policy differs from the actual run")
+            if summary.get("source_admission_stop") is not None or raw.get("source_admission_stop") is not None:
+                raise ValueError("A shared source STOP cannot become primary source evidence")
+            tool = raw["request"]["tool"]
+            proof = raw.get("source_admission")
+            if type(raw.get("executed")) is not bool:
+                raise ValueError("Original source execution flag must be a strict boolean")
+            if raw["executed"] or proof is not None:
+>               original = check(proof, tool=tool, action_id=f"expert.{plan['log_prefix']}.{summary['actions'][0]['step']:03d}")
+                                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               KeyError: 'step'
+
+/tmp/unimatch-expert500-journal-report-v14-local-candidate.py:619: KeyError
+_ test_report_replays_all_raw_prefix_and_keeps_model_time_outside_source_clock _
+
+report = {'__name__': '<run_path>', '__doc__': 'V14 local candidate: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+config = SessionConfig(case_id='u', stage='expert', source_sha='1111111111111111111111111111111111111111', source_cwd=PosixPath...10-06T12:15:00+00:00', 'wall_guard_ms': 900000}, baseline_identity_registry=None, protocol_version='journal-v14-local')
+
+    def test_report_replays_all_raw_prefix_and_keeps_model_time_outside_source_clock(report, config):
+        engine, _, _, first = originals(config)
+        engine.clock.__self__.advance(180)
+        second = helpers.deliver(engine, helpers.plan(config, first), prior=first, turn=2)
+>       final_source_ms = checked(report, second, config, first).source_counters["elapsed_ms"]
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:140: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:104: in checked
+    return report["verify_local_delivery"](
+/tmp/unimatch-expert500-journal-report-v14-local-candidate.py:673: in verify_local_delivery
+    validate_local_admissions(delivery)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+delivery = LocalDelivery(receipt={'artifacts': {'dispatch.json': {'device': 16777232, 'inode': 109237949, 'path': '/private/var/f...641a2f4477d2abb09bc1dd005195ebdd8a', 'u-002.json': '85e615c462cd27ae5f99331f24dcbd6a828f168ab5685e4d1f31c0edcf1d4c91'})
+
+    def validate_local_admissions(delivery: Any) -> list[dict[str, Any]]:
+        """Replay actual execution flags independently of admission permission."""
+        receipt = delivery.receipt
+        config = receipt["session_config"]
+        root = Path(config["admission_root"])
+        if root.is_symlink() or not root.is_dir() or root != root.resolve(strict=True):
+            raise ValueError("Source admission root must retain its canonical identity")
+        identity = root / "identity.json"
+        if identity.is_symlink() or not identity.is_file():
+            raise ValueError("Original shared admission identity is required")
+        expected_identity = {"schema_version": "1", "contract": "source_admission_v1", "run_id": config["admission_run_id"], "provider": PINNED_PROVIDER}
+        if read(identity) != expected_identity:
+            raise ValueError("Original source admission identity differs from its frozen run/provider")
+        policy = {"contract": "source_admission_v1", "run_id": config["admission_run_id"], "provider": PINNED_PROVIDER, "root": str(root), "identity_path": "identity.json", "identity_sha256": file_hash(identity)}
+        permits: list[dict[str, Any]] = []
+    
+        def check(proof: Any, *, tool: str, action_id: str) -> dict[str, Any]:
+            if not isinstance(proof, dict):
+                raise ValueError("Every executed local source action needs an original admission")
+            original = _admission_module().validate_receipt(proof, root=root, run_id=config["admission_run_id"], provider=PINNED_PROVIDER, kind="admission")
+            if original["case_id"] != receipt["case_id"] or original["tool"] != tool or original["action_id"] != action_id:
+                raise ValueError("Source permit belongs to another original case/action/tool")
+            permits.append(proof)
+            return original
+    
+        if receipt["stage"] == "expert":
+            plan, summary, raw, _ = controller_record(delivery.receipt_path.parent)
+            if summary.get("source_admission") != policy or raw.get("tool_policy", {}).get("source_admission") != policy:
+                raise ValueError("Controller source admission policy differs from the actual run")
+            if summary.get("source_admission_stop") is not None or raw.get("source_admission_stop") is not None:
+                raise ValueError("A shared source STOP cannot become primary source evidence")
+            tool = raw["request"]["tool"]
+            proof = raw.get("source_admission")
+            if type(raw.get("executed")) is not bool:
+                raise ValueError("Original source execution flag must be a strict boolean")
+            if raw["executed"] or proof is not None:
+>               original = check(proof, tool=tool, action_id=f"expert.{plan['log_prefix']}.{summary['actions'][0]['step']:03d}")
+                                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               KeyError: 'step'
+
+/tmp/unimatch-expert500-journal-report-v14-local-candidate.py:619: KeyError
+_____________ test_resumed_delivery_requires_exact_prior_original ______________
+
+report = {'__name__': '<run_path>', '__doc__': 'V14 local candidate: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+config = SessionConfig(case_id='u', stage='expert', source_sha='1111111111111111111111111111111111111111', source_cwd=PosixPath...10-06T12:15:00+00:00', 'wall_guard_ms': 900000}, baseline_identity_registry=None, protocol_version='journal-v14-local')
+
+    def test_resumed_delivery_requires_exact_prior_original(report, config):
+        engine, _, _, first = originals(config)
+        second = helpers.deliver(engine, helpers.plan(config, first), prior=first, turn=2)
+        with pytest.raises(ValueError):
+            checked(report, second, config)
+        other = replace(first, receipt_sha256="f" * 64)
+        with pytest.raises(ValueError):
+            checked(report, second, config, other)
+>       assert checked(report, second, config, first).receipt["sequence"] == 2
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:233: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:104: in checked
+    return report["verify_local_delivery"](
+/tmp/unimatch-expert500-journal-report-v14-local-candidate.py:673: in verify_local_delivery
+    validate_local_admissions(delivery)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+delivery = LocalDelivery(receipt={'artifacts': {'dispatch.json': {'device': 16777232, 'inode': 109239265, 'path': '/private/var/f...28d98596fa836af917ac4503f14b0a5dde', 'u-002.json': 'b87296f934011a413e0ee26a53a6b516ca18972bdc37dd021a0574180e75e568'})
+
+    def validate_local_admissions(delivery: Any) -> list[dict[str, Any]]:
+        """Replay actual execution flags independently of admission permission."""
+        receipt = delivery.receipt
+        config = receipt["session_config"]
+        root = Path(config["admission_root"])
+        if root.is_symlink() or not root.is_dir() or root != root.resolve(strict=True):
+            raise ValueError("Source admission root must retain its canonical identity")
+        identity = root / "identity.json"
+        if identity.is_symlink() or not identity.is_file():
+            raise ValueError("Original shared admission identity is required")
+        expected_identity = {"schema_version": "1", "contract": "source_admission_v1", "run_id": config["admission_run_id"], "provider": PINNED_PROVIDER}
+        if read(identity) != expected_identity:
+            raise ValueError("Original source admission identity differs from its frozen run/provider")
+        policy = {"contract": "source_admission_v1", "run_id": config["admission_run_id"], "provider": PINNED_PROVIDER, "root": str(root), "identity_path": "identity.json", "identity_sha256": file_hash(identity)}
+        permits: list[dict[str, Any]] = []
+    
+        def check(proof: Any, *, tool: str, action_id: str) -> dict[str, Any]:
+            if not isinstance(proof, dict):
+                raise ValueError("Every executed local source action needs an original admission")
+            original = _admission_module().validate_receipt(proof, root=root, run_id=config["admission_run_id"], provider=PINNED_PROVIDER, kind="admission")
+            if original["case_id"] != receipt["case_id"] or original["tool"] != tool or original["action_id"] != action_id:
+                raise ValueError("Source permit belongs to another original case/action/tool")
+            permits.append(proof)
+            return original
+    
+        if receipt["stage"] == "expert":
+            plan, summary, raw, _ = controller_record(delivery.receipt_path.parent)
+            if summary.get("source_admission") != policy or raw.get("tool_policy", {}).get("source_admission") != policy:
+                raise ValueError("Controller source admission policy differs from the actual run")
+            if summary.get("source_admission_stop") is not None or raw.get("source_admission_stop") is not None:
+                raise ValueError("A shared source STOP cannot become primary source evidence")
+            tool = raw["request"]["tool"]
+            proof = raw.get("source_admission")
+            if type(raw.get("executed")) is not bool:
+                raise ValueError("Original source execution flag must be a strict boolean")
+            if raw["executed"] or proof is not None:
+>               original = check(proof, tool=tool, action_id=f"expert.{plan['log_prefix']}.{summary['actions'][0]['step']:03d}")
+                                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               KeyError: 'step'
+
+/tmp/unimatch-expert500-journal-report-v14-local-candidate.py:619: KeyError
+_____ test_all_permits_are_sealed_and_unaccounted_admission_is_ineligible ______
+
+report = {'__name__': '<run_path>', '__doc__': 'V14 local candidate: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+config = SessionConfig(case_id='u', stage='expert', source_sha='1111111111111111111111111111111111111111', source_cwd=PosixPath...10-06T12:15:00+00:00', 'wall_guard_ms': 900000}, baseline_identity_registry=None, protocol_version='journal-v14-local')
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-560/test_all_permits_are_sealed_an0')
+
+    def test_all_permits_are_sealed_and_unaccounted_admission_is_ineligible(report, config, tmp_path):
+        fixed = replace(config, admission_root=tmp_path.resolve() / "source-admission")
+        fixed.admission_root.mkdir()
+        _, _, _, first = originals(fixed)
+>       records = report["source_admission_originals"](tmp_path, [first])
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:423: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-report-v14-local-candidate.py:716: in source_admission_originals
+    for proof in validate_local_admissions(delivery):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+delivery = LocalDelivery(receipt={'artifacts': {'dispatch.json': {'device': 16777232, 'inode': 109241355, 'path': '/private/var/f...: 1, 'search_queries': 0}, raw_logs={'u-001.json': '54fed68265ed903e54f48c6fed532501f137c9ff949715fdbe5799732bb1bbe5'})
+
+    def validate_local_admissions(delivery: Any) -> list[dict[str, Any]]:
+        """Replay actual execution flags independently of admission permission."""
+        receipt = delivery.receipt
+        config = receipt["session_config"]
+        root = Path(config["admission_root"])
+        if root.is_symlink() or not root.is_dir() or root != root.resolve(strict=True):
+            raise ValueError("Source admission root must retain its canonical identity")
+        identity = root / "identity.json"
+        if identity.is_symlink() or not identity.is_file():
+            raise ValueError("Original shared admission identity is required")
+        expected_identity = {"schema_version": "1", "contract": "source_admission_v1", "run_id": config["admission_run_id"], "provider": PINNED_PROVIDER}
+        if read(identity) != expected_identity:
+            raise ValueError("Original source admission identity differs from its frozen run/provider")
+        policy = {"contract": "source_admission_v1", "run_id": config["admission_run_id"], "provider": PINNED_PROVIDER, "root": str(root), "identity_path": "identity.json", "identity_sha256": file_hash(identity)}
+        permits: list[dict[str, Any]] = []
+    
+        def check(proof: Any, *, tool: str, action_id: str) -> dict[str, Any]:
+            if not isinstance(proof, dict):
+                raise ValueError("Every executed local source action needs an original admission")
+            original = _admission_module().validate_receipt(proof, root=root, run_id=config["admission_run_id"], provider=PINNED_PROVIDER, kind="admission")
+            if original["case_id"] != receipt["case_id"] or original["tool"] != tool or original["action_id"] != action_id:
+                raise ValueError("Source permit belongs to another original case/action/tool")
+            permits.append(proof)
+            return original
+    
+        if receipt["stage"] == "expert":
+            plan, summary, raw, _ = controller_record(delivery.receipt_path.parent)
+            if summary.get("source_admission") != policy or raw.get("tool_policy", {}).get("source_admission") != policy:
+                raise ValueError("Controller source admission policy differs from the actual run")
+            if summary.get("source_admission_stop") is not None or raw.get("source_admission_stop") is not None:
+                raise ValueError("A shared source STOP cannot become primary source evidence")
+            tool = raw["request"]["tool"]
+            proof = raw.get("source_admission")
+            if type(raw.get("executed")) is not bool:
+                raise ValueError("Original source execution flag must be a strict boolean")
+            if raw["executed"] or proof is not None:
+>               original = check(proof, tool=tool, action_id=f"expert.{plan['log_prefix']}.{summary['actions'][0]['step']:03d}")
+                                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               KeyError: 'step'
+
+/tmp/unimatch-expert500-journal-report-v14-local-candidate.py:619: KeyError
+=============================== warnings summary ===============================
+test_unimatch_expert500_journal_pilot_v14_local_candidate.py: 2816 warnings
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/bs4/builder/_lxml.py:124: DeprecationWarning: The 'strip_cdata' option of HTMLParser() has never done anything and will eventually be removed.
+    parser = parser(
+
+test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_actual_local_baseline_packages_fresh_capture_and_public_packet_only
+  /Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/json/encoder.py:414: RuntimeWarning: coroutine 'SourceAdmission.admit' was never awaited
+    def _iterencode(o, _current_indent_level):
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py::test_actual_local_baseline_packages_fresh_capture_and_public_packet_only
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py::test_report_validates_real_candidate_worker_and_controller_originals
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py::test_report_replays_all_raw_prefix_and_keeps_model_time_outside_source_clock
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py::test_resumed_delivery_requires_exact_prior_original
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py::test_all_permits_are_sealed_and_unaccounted_admission_is_ineligible
+5 failed, 102 passed, 2817 warnings in 5.50s

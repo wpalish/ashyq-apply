@@ -1,0 +1,23 @@
+................................................................F...     [100%]
+=================================== FAILURES ===================================
+_____ test_prior_summary_in_memory_changes_do_not_override_saved_original ______
+
+config = SessionConfig(case_id='u', stage='expert', source_sha='1111111111111111111111111111111111111111', source_cwd=PosixPath...0:00', 'wall_deadline_at': '2026-10-06T12:15:00+00:00', 'wall_guard_ms': 900000}, protocol_version='journal-v14-local')
+
+    def test_prior_summary_in_memory_changes_do_not_override_saved_original(config: Any) -> None:
+        engine, _fetcher, _provider = make_engine(config, FakeClock())
+        first = deliver(engine, plan(config))
+        second = deliver(engine, plan(config, first), prior=first, turn=2)
+        changed = replace(
+            first, summary={**first.summary, "final": {**first.summary["final"], "fetcher_calls": 0}}
+        )
+>       with pytest.raises(ValueError, match="original saved bytes"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'original saved bytes'
+E         Actual message: 'Exact original source resume required'
+
+/tmp/test_unimatch_expert500_local_worker_v1_candidate.py:1087: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../tmp/test_unimatch_expert500_local_worker_v1_candidate.py::test_prior_summary_in_memory_changes_do_not_override_saved_original
+1 failed, 67 passed in 1.28s
