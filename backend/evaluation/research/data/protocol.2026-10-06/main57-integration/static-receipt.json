@@ -1,0 +1,57 @@
+{
+  "started_at": "2026-10-06T15:37:02.943122+00:00",
+  "finished_at": "2026-10-06T15:37:30.788534+00:00",
+  "gate": "static",
+  "results": [
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "backend",
+      "returncode": 0,
+      "log": "/tmp/unimatch-expert500-main57-gates-20261006/static-00-original.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "backend",
+      "returncode": 0,
+      "log": "/tmp/unimatch-expert500-main57-gates-20261006/static-01-original.log",
+      "bytes": 28,
+      "sha256": "d6f70559dc79d0585640e29e3a2ee6d2bf87ab6d13092f189460d06c2bf68e93"
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "backend",
+      "returncode": 0,
+      "log": "/tmp/unimatch-expert500-main57-gates-20261006/static-02-original.log",
+      "bytes": 8584,
+      "sha256": "0baaf2ad309aa399d18b9e05a6d47d57ee45ba79952228d025e0fcfbbc8649a8"
+    }
+  ],
+  "credential_environment_override_empty": true,
+  "measured_pilot": false
+}

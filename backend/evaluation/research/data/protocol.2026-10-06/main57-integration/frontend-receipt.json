@@ -1,0 +1,69 @@
+{
+  "started_at": "2026-10-06T15:37:02.943122+00:00",
+  "finished_at": "2026-10-06T15:37:30.593249+00:00",
+  "gate": "frontend",
+  "results": [
+    {
+      "argv": [
+        "npm",
+        "ci"
+      ],
+      "cwd": "frontend",
+      "returncode": 0,
+      "log": "/tmp/unimatch-expert500-main57-gates-20261006/frontend-00-original.log",
+      "bytes": 1186,
+      "sha256": "2ec796b4bb28a1c92cb518795ed6b0b20ab3a406946c305acc4c554e90e9c3bf"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "frontend",
+      "returncode": 0,
+      "log": "/tmp/unimatch-expert500-main57-gates-20261006/frontend-01-original.log",
+      "bytes": 53,
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "frontend",
+      "returncode": 0,
+      "log": "/tmp/unimatch-expert500-main57-gates-20261006/frontend-02-original.log",
+      "bytes": 65,
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a"
+    },
+    {
+      "argv": [
+        "npm",
+        "test",
+        "--",
+        "--run"
+      ],
+      "cwd": "frontend",
+      "returncode": 0,
+      "log": "/tmp/unimatch-expert500-main57-gates-20261006/frontend-03-original.log",
+      "bytes": 16896,
+      "sha256": "96ec6ca37b8d1ca3f77da79b1f1b72ee4f668af8bfe3a5562b5c8b3234e3c2b0"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "frontend",
+      "returncode": 0,
+      "log": "/tmp/unimatch-expert500-main57-gates-20261006/frontend-04-original.log",
+      "bytes": 7315,
+      "sha256": "f0c5366ee913e698638e608b43ee429ccdcc8cac3e55afbeefe23bebe1da622f"
+    }
+  ],
+  "credential_environment_override_empty": true,
+  "measured_pilot": false
+}

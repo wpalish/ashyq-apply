@@ -181,6 +181,8 @@ class ClaimBuilder:
             "scope": scope,
         }
         self.claims: list[Claim] = []
+        #: TY-1: the year the applicant asked for, apart from the page's own.
+        self.requested_academic_year: str | None = None
         self.rejected: list[tuple[ClaimType, str, RejectReason]] = []
         # Verification context, deliberately outside meta: these feed the
         # verifier only, and a Claim's persisted fields must not change.
@@ -412,14 +414,17 @@ _APPLICATION_PERIOD = re.compile(
     rf"\s*(?:to|until|[–-])\s*({_A_DATE})",
     re.IGNORECASE,
 )
-#: Plan rule DL-2 (error analysis 2026-10-05), off until a paired run passes.
+#: Plan rule DL-2 (error analysis 2026-10-05). On by default since 2026-10-05
+#: (owner: "Да"): three paired runs on exa_mcp, zero stable losses; NTU's
+#: deadline is right with its qualification wherever the page is reached,
+#: and the first readers never find it.
 #: Three forms the readers above never match, each found on a cohort page:
 #: abbreviated months (Aalto "Application period: 7 Jan 2027 – 22 Jan 2027"),
 #: a date that comes before its label (UBC "January 15, 2027 (11:59 p.m. PST)
 #: Applications due"), and a window table whose catch-all row is the one an
 #: unlisted qualification falls under (NTU "All other international
 #: qualifications not listed below ... 15 Oct 2026 - 20 Jan 2027").
-DEADLINE_V2 = False
+DEADLINE_V2 = True
 _MONTH_ABBREVIATIONS = r"Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept|Sep|Oct|Nov|Dec"
 _ANY_MONTH = rf"(?:{_MONTH_NAMES}|(?:{_MONTH_ABBREVIATIONS})\.?)(?![a-z])"
 _A_DATE_V2 = (
@@ -1097,8 +1102,9 @@ _ACADEMIC_YEAR = re.compile(r"\b(20\d{2})\s*[-/–]\s*(?:20)?(\d{2})\b")
 #: Plan rule TY-1: a fee table row that prints its academic year ("non-EU/EEA
 #: 2027-2028 € 19800") records that year in the claim's scope. Without it the
 #: page-wide scope carries no year and a right fee for the right year is
-#: scored wrong-scope (Groningen, runs of 2026-10-05).
-TUITION_ROW_YEAR = False
+#: scored wrong-scope (Groningen, runs of 2026-10-05). On by default with AY-1
+#: since 2026-10-05 (owner: "да").
+TUITION_ROW_YEAR = True
 
 
 def _year_key(text: str) -> str | None:
@@ -1175,7 +1181,13 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
     for ctype, label in patterns:
         if ctype is ClaimType.TUITION:
             rows = _population_amounts(
-                text, label, cast("str | None", builder.meta.get("academic_year"))
+                text,
+                label,
+                cast(
+                    "str | None",
+                    (TUITION_ROW_YEAR and builder.requested_academic_year)
+                    or builder.meta.get("academic_year"),
+                ),
             )
             for population, amount, currency, start, end in rows:
                 _keep(

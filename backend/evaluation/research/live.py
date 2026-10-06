@@ -529,6 +529,38 @@ async def capture_one(
                         )
                     predictions.append(Prediction(key=key, value=value, evidence=evidence))
 
+    async def documents_stage() -> None:
+        nonlocal documents_phase
+        if not (DOCUMENT_SECONDS and runners):
+            return
+        # D7: the documents stage, after the decision stage is measured and on
+        # its own clock, so the decision metrics stay comparable with runs
+        # that never collected documents. Every row is approved, as an
+        # applicant approving the whole shortlist would.
+        documents_phase = True
+        began = time.monotonic()
+        runner = runners[-1]
+        for row in runner.session.query(ProgramResultRow).filter(
+            ProgramResultRow.run_id == runner.run.id
+        ):
+            row.user_decision = UserDecision.APPROVED.value
+        runner.session.flush()
+        try:
+            await asyncio.wait_for(runner.collect_documents(), DOCUMENT_SECONDS)
+            observation.telemetry.document_stop = "completed"
+        except TimeoutError:
+            observation.telemetry.document_stop = "document_seconds_exhausted"
+        except Exception as exc:  # recorded, never raised: the decision stage stands
+            observation.telemetry.document_stop = f"{type(exc).__name__}: {exc}"[:200]
+        runner.record_claims()
+        observation.telemetry.document_seconds = time.monotonic() - began
+        print(
+            f"documents stage {observation.telemetry.document_stop} in "
+            f"{observation.telemetry.document_seconds:.1f}s, "
+            f"{observation.telemetry.document_reads or 0} reads",
+            flush=True,
+        )
+
     with (
         patch.object(canary, "CanaryRunner", ObservedRunner),
         patch.object(fetching, "_pinned_request", counted_request),
@@ -558,6 +590,12 @@ async def capture_one(
                     else "wall_clock_budget_exhausted"
                 )
             final_checkpoint()
+            # D7: a decision stage that ran out of clock still filed rows; the
+            # documents stage has its own clock and reads them. Run 37351314325:
+            # Groningen's documents were measured in one repetition of two.
+            if DOCUMENT_SECONDS and runners:
+                await documents_stage()
+                output.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
             return
     rows = report["institutions"]
     observation.programme_urls = [HttpUrl(url) for r in rows for url in r["programs"]]
@@ -565,34 +603,7 @@ async def capture_one(
     observation.error = report["run_error"] or None
     if budget is None or not budget.finalization_reserve_ms:
         checkpoint()
-    if DOCUMENT_SECONDS and runners:
-        # D7: the documents stage, after the decision stage is measured and on
-        # its own clock, so the decision metrics stay comparable with runs
-        # that never collected documents. Every row is approved, as an
-        # applicant approving the whole shortlist would.
-        documents_phase = True
-        began = time.monotonic()
-        runner = runners[-1]
-        for row in runner.session.query(ProgramResultRow).filter(
-            ProgramResultRow.run_id == runner.run.id
-        ):
-            row.user_decision = UserDecision.APPROVED.value
-        runner.session.flush()
-        try:
-            await asyncio.wait_for(runner.collect_documents(), DOCUMENT_SECONDS)
-            observation.telemetry.document_stop = "completed"
-        except TimeoutError:
-            observation.telemetry.document_stop = "document_seconds_exhausted"
-        except Exception as exc:  # recorded, never raised: the decision stage stands
-            observation.telemetry.document_stop = f"{type(exc).__name__}: {exc}"[:200]
-        runner.record_claims()
-        observation.telemetry.document_seconds = time.monotonic() - began
-        print(
-            f"documents stage {observation.telemetry.document_stop} in "
-            f"{observation.telemetry.document_seconds:.1f}s, "
-            f"{observation.telemetry.document_reads or 0} reads",
-            flush=True,
-        )
+    await documents_stage()
     # Preserve raw output for mapping/adjudication; do not invent unsupported counters.
     output.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
     output.with_suffix(".raw.json").write_text(
@@ -682,6 +693,12 @@ def main() -> None:
         metavar="SECONDS",
         help="D7: after the decision stage, approve every row and run the documents stage "
         "on its own clock of SECONDS; the decision stage's budget is untouched",
+    )
+    parser.add_argument(
+        "--document-leads",
+        action="store_true",
+        help="plan rule DOC-3: the documents stage also reads the institution's own "
+        "application-documents page, at most two links from the programme page",
     )
     parser.add_argument(
         "--document-rules-v2",
@@ -809,6 +826,10 @@ def main() -> None:
         if args.with_documents:
             global DOCUMENT_SECONDS
             DOCUMENT_SECONDS = args.with_documents
+        if args.document_leads:
+            from app.adapters.documents import web_documents as leads_module
+
+            leads_module.DOCUMENT_LEADS = True
         if args.document_rules_v2:
             from app.adapters import document_ir
             from app.adapters.documents import web_documents
@@ -916,6 +937,7 @@ def main() -> None:
                         *(["--euro-grouping"] if args.euro_grouping else []),
                         *(["--tuition-row-year"] if args.tuition_row_year else []),
                         *(["--document-rules-v2"] if args.document_rules_v2 else []),
+                        *(["--document-leads"] if args.document_leads else []),
                         *(
                             ["--with-documents", str(args.with_documents)]
                             if args.with_documents

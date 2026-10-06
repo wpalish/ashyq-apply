@@ -35,12 +35,30 @@ def test_a_single_window_reads_its_end_as_the_deadline():
     assert deadlines("Application deadline: 15 October 2026 - 20 January 2027.") == ["2027-01-20"]
 
 
-def test_several_windows_by_qualification_claim_nothing():
-    text = (
-        "Dates / Deadlines. IB Diploma: Online application 15 October 2026 - 19 March 2027. "
-        "All other international qualifications: 15 October 2026 - 20 January 2027."
-    )
-    assert deadlines(text) == []
+SEVERAL_WINDOWS = (
+    "Dates / Deadlines. IB Diploma: Online application 15 October 2026 - 19 March 2027. "
+    "All other international qualifications: 15 October 2026 - 20 January 2027."
+)
+
+
+def test_several_windows_by_qualification_claim_nothing_before_dl2(monkeypatch):
+    from app.adapters import extraction
+
+    monkeypatch.setattr(extraction, "DEADLINE_V2", False)
+    assert deadlines(SEVERAL_WINDOWS) == []
+
+
+def test_several_windows_claim_only_the_catch_all_row_under_dl2():
+    """DL-2 (default since 2026-10-05): the catch-all row's date, scoped to that row."""
+    text = SEVERAL_WINDOWS
+    builder = _builder(text)
+
+    claims = [
+        c for c in extract_requirements(text, builder) if c.claim_type.value == "admission_deadline"
+    ]
+    assert [c.normalized_value for c in claims] == ["2027-01-20"]
+    assert claims[0].scope is not None
+    assert claims[0].scope.qualification == "All other international qualifications"
 
 
 def test_a_plain_deadline_is_unchanged():

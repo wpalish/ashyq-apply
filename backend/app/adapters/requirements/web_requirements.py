@@ -297,6 +297,9 @@ class WebRequirementsAdapter:
                 page_type=page.page_type.value,
                 allowed_domains=verification_domains(page_url, candidate.domain),
             )
+            # TY-1: the year the applicant asked for, kept apart from the year
+            # the page states first, so a fee table picks the applicant's row.
+            builder.requested_academic_year = self.academic_year
 
             if not page.accepts("requirements"):
                 # A catalogue listing confirms existence by the T29 contract

@@ -1,0 +1,106 @@
+{
+  "schema": "integration-gates-v1",
+  "parents": [
+    "fb46ff1",
+    "87ee25c"
+  ],
+  "actual_source_changed_during_gates": false,
+  "backend_passed": 4335,
+  "coverage_percent": 94.85,
+  "frontend_tests": 232,
+  "static_files": 382,
+  "alembic_head": "d8e412c6a901",
+  "network_pilot": false,
+  "records": [
+    {
+      "file": "backend-00-original.log",
+      "bytes": 16924,
+      "sha256": "afc349adb10fc9e19185cc1af0b8571031a1e7a10bcff3516c1d77956958c38a"
+    },
+    {
+      "file": "demo-migration-original.log",
+      "bytes": 2642,
+      "sha256": "808373af2029870e86053e68822b91376ef3a0151c9e2273b3ccdf3b172a102a"
+    },
+    {
+      "file": "demo-seed-original.log",
+      "bytes": 2569,
+      "sha256": "f4e000ce0364cf2dbba1fb83f72390c8ee160cafbcc20271581f97bf603c891f"
+    },
+    {
+      "file": "frontend-00-original.log",
+      "bytes": 1186,
+      "sha256": "2ec796b4bb28a1c92cb518795ed6b0b20ab3a406946c305acc4c554e90e9c3bf"
+    },
+    {
+      "file": "frontend-01-original.log",
+      "bytes": 53,
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02"
+    },
+    {
+      "file": "frontend-02-original.log",
+      "bytes": 65,
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a"
+    },
+    {
+      "file": "frontend-03-original.log",
+      "bytes": 16896,
+      "sha256": "96ec6ca37b8d1ca3f77da79b1f1b72ee4f668af8bfe3a5562b5c8b3234e3c2b0"
+    },
+    {
+      "file": "frontend-04-original.log",
+      "bytes": 7315,
+      "sha256": "f0c5366ee913e698638e608b43ee429ccdcc8cac3e55afbeefe23bebe1da622f"
+    },
+    {
+      "file": "static-00-original.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "file": "static-01-original.log",
+      "bytes": 28,
+      "sha256": "d6f70559dc79d0585640e29e3a2ee6d2bf87ab6d13092f189460d06c2bf68e93"
+    },
+    {
+      "file": "static-02-original.log",
+      "bytes": 8584,
+      "sha256": "0baaf2ad309aa399d18b9e05a6d47d57ee45ba79952228d025e0fcfbbc8649a8"
+    },
+    {
+      "file": "backend-receipt.json",
+      "bytes": 611,
+      "sha256": "7e6a033f98a207ae033ed7bbe1571588a4ba9196689e6b2bc036318ad1beafcb"
+    },
+    {
+      "file": "demo-readonly-receipt.json",
+      "bytes": 194,
+      "sha256": "dda6e8150509598501d48dd7fec63d14a255a063cd9b8f4add0203bf8ee478eb"
+    },
+    {
+      "file": "frontend-receipt.json",
+      "bytes": 1837,
+      "sha256": "926bad33b3674942e92fe9448c88652fd78f43d0bb3baed68a285e8f308b6e0c"
+    },
+    {
+      "file": "static-receipt.json",
+      "bytes": 1428,
+      "sha256": "369c975b4a499ade1f02c6aaa28ee0522c4cdf51b3fbc7ba17edc7698f6d790f"
+    },
+    {
+      "file": "unimatch-expert500-main57-gates-20261006.py",
+      "bytes": 2237,
+      "sha256": "cd913caa6f0e7a67b1743bf14221d6ee422fd72328f7fafd7c3f19ad0e9c8827"
+    },
+    {
+      "file": "unimatch-expert500-main57-demo-readonly.py",
+      "bytes": 1385,
+      "sha256": "16d4daea59452675c9a6c8626449ceef9ac89b882bb181a693e686d7bb2d81f9"
+    },
+    {
+      "file": "public-source-hashes.json",
+      "bytes": 56251,
+      "sha256": "ffa5a5fbef9b903f17f400ae83dd7bf8912c334ea53f935b1a6155d24e55483e"
+    }
+  ]
+}
