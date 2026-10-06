@@ -57,6 +57,9 @@ class SearchFailureReason(StrEnum):
     RESPONSE_TOO_LARGE = "response too large"
     UNSUPPORTED_PROTOCOL = "unsupported protocol"
     UNEXPECTED_STATUS = "unexpected HTTP status"
+    #: The keyless Exa MCP's own rate limit, flagged in its result ``_meta``.
+    #: It answered 200 with a text block, which read as a malformed response.
+    RATE_LIMITED = "rate limited"
 
 
 class SearchUnavailable(SearchError):

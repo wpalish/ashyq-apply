@@ -694,6 +694,12 @@ def main() -> None:
         "on its own clock of SECONDS; the decision stage's budget is untouched",
     )
     parser.add_argument(
+        "--search-rate-limit-retry",
+        action="store_true",
+        help="plan rule SR-1: one retry, after a short pause, when the keyless Exa MCP "
+        "reports its rate limit",
+    )
+    parser.add_argument(
         "--document-leads",
         action="store_true",
         help="plan rule DOC-3: the documents stage also reads the institution's own "
@@ -825,6 +831,10 @@ def main() -> None:
         if args.with_documents:
             global DOCUMENT_SECONDS
             DOCUMENT_SECONDS = args.with_documents
+        if args.search_rate_limit_retry:
+            from app.adapters.search import exa_mcp as exa_mcp_module
+
+            exa_mcp_module.RATE_LIMIT_RETRY = True
         if args.document_leads:
             from app.adapters.documents import web_documents as leads_module
 
@@ -937,6 +947,7 @@ def main() -> None:
                         *(["--tuition-row-year"] if args.tuition_row_year else []),
                         *(["--document-rules-v2"] if args.document_rules_v2 else []),
                         *(["--document-leads"] if args.document_leads else []),
+                        *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
                         *(
                             ["--with-documents", str(args.with_documents)]
                             if args.with_documents

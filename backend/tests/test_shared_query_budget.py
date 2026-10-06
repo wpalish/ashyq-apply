@@ -50,8 +50,8 @@ def fake(monkeypatch):
     return built
 
 
-def test_off_by_default():
-    assert intent.SHARED_QUERY_BUDGET is False
+def test_on_by_default():
+    assert intent.SHARED_QUERY_BUDGET is True
 
 
 async def test_topic_search_leaves_one_query_for_scholarships(shared, fake):

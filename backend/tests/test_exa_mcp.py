@@ -571,3 +571,64 @@ def test_configuration_and_factory_allow_keyless_mcp_in_production(monkeypatch):
     monkeypatch.setattr("app.config.get_settings", lambda: settings)
     assert isinstance(get_search_provider().inner, ExaMcpSearchProvider)
     get_settings.cache_clear()
+
+
+RATE_LIMITED = {
+    "_meta": {"ai.exa/rateLimited": True},
+    "content": [{"type": "text", "text": "You've hit Exa's free MCP rate limit."}],
+}
+
+
+class _FlakyServer(McpServer):
+    """Rate-limited on the first query, answering on every later one."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.queries = 0
+
+    def __call__(self, request: httpx.Request) -> httpx.Response:
+        payload = json.loads(request.content)
+        if payload["method"] == "tools/call":
+            self.queries += 1
+            if self.queries == 1:
+                self.calls.append(request)
+                return rpc_response(payload["id"], RATE_LIMITED)
+        return super().__call__(request)
+
+
+async def test_the_rate_limit_is_named_not_malformed(make_provider, monkeypatch):
+    monkeypatch.setattr(module, "RATE_LIMIT_RETRY", False)
+    server = McpServer(result=RATE_LIMITED)
+    with pytest.raises(SearchUnavailable) as caught:
+        await make_provider(server).search(query="public programme query")
+    assert caught.value.reason is SearchFailureReason.RATE_LIMITED
+    assert caught.value.http_status is None
+    assert server.methods.count("tools/call") == 1
+
+
+async def test_rate_limit_retry_can_be_switched_off(make_provider, monkeypatch):
+    assert module.RATE_LIMIT_RETRY is True
+    monkeypatch.setattr(module, "RATE_LIMIT_RETRY", False)
+    server = _FlakyServer()
+    with pytest.raises(SearchUnavailable):
+        await make_provider(server).search(query="public programme query")
+    assert server.queries == 1
+
+
+async def test_rate_limit_retry_answers_on_the_second_try(make_provider, monkeypatch):
+    monkeypatch.setattr(module, "RATE_LIMIT_RETRY", True)
+    monkeypatch.setattr(module, "RATE_LIMIT_BACKOFF_SECONDS", 0.0)
+    server = _FlakyServer()
+    response = await make_provider(server).search(query="public programme query")
+    assert server.queries == 2
+    assert [r.url for r in response.results] == [row["url"] for row in ROWS]
+
+
+async def test_rate_limit_retry_happens_once_only(make_provider, monkeypatch):
+    monkeypatch.setattr(module, "RATE_LIMIT_RETRY", True)
+    monkeypatch.setattr(module, "RATE_LIMIT_BACKOFF_SECONDS", 0.0)
+    server = McpServer(result=RATE_LIMITED)
+    with pytest.raises(SearchUnavailable) as caught:
+        await make_provider(server).search(query="public programme query")
+    assert caught.value.reason is SearchFailureReason.RATE_LIMITED
+    assert server.methods.count("tools/call") == 2
