@@ -28,6 +28,11 @@ from app.adapters.search.base import (
 EXA_MCP_URL = "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa"
 PROTOCOL_VERSION = "2025-03-26"
 DEFAULT_TIMEOUT_SECONDS = 15.0
+#: Plan rule SR-1: one retry after a short pause when the keyless Exa MCP
+#: reports its rate limit. The limit is brief; the next query in the same
+#: run usually succeeds. Off until a paired run measures it.
+RATE_LIMIT_RETRY = False
+RATE_LIMIT_BACKOFF_SECONDS = 2.0
 MAX_RESPONSE_BYTES = 1024 * 1024
 MAX_RESULTS_PER_QUERY = 25
 EMPTY_SEARCH_MESSAGE = (
@@ -78,6 +83,14 @@ def _rpc_message(body: bytes, request_id: int) -> dict[str, Any]:
 
 
 def _search_rows(result: dict[str, Any]) -> list[Any]:
+    meta = result.get("_meta")
+    if isinstance(meta, dict) and meta.get("ai.exa/rateLimited") is True:
+        # Runs of 2026-10-05: 22-28 of 40 case runs lost a query to this,
+        # reported as "malformed response"; NTU's admission page was found or
+        # not depending on it.
+        raise SearchUnavailable(
+            "Exa MCP rate limit reached", reason=SearchFailureReason.RATE_LIMITED
+        )
     if result.get("isError"):
         raise SearchUnavailable(
             "Exa MCP could not complete the search", reason=SearchFailureReason.TOOL_ERROR
@@ -201,6 +214,21 @@ class ExaMcpSearchProvider:
         query: str,
         domains: Sequence[str] = (),
         max_results: int = 10,
+    ) -> SearchResponse:
+        try:
+            return await self._search_once(query=query, domains=domains, max_results=max_results)
+        except SearchUnavailable as exc:
+            if not RATE_LIMIT_RETRY or exc.reason is not SearchFailureReason.RATE_LIMITED:
+                raise
+        await asyncio.sleep(RATE_LIMIT_BACKOFF_SECONDS)
+        return await self._search_once(query=query, domains=domains, max_results=max_results)
+
+    async def _search_once(
+        self,
+        *,
+        query: str,
+        domains: Sequence[str],
+        max_results: int,
     ) -> SearchResponse:
         if not query.strip():
             raise ValueError("A search needs a query")
