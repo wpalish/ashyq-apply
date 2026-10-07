@@ -1,0 +1,236 @@
+def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassification:
+    """Classify a fetched page. Never raises; unknown is a valid answer."""
+    full = _parse_markup(html) if html else None
+    soup = main_content(full) if full is not None else None
+    title = _title(full) if full is not None else ""
+    headings = _headings(soup) if soup else []
+    identity = _identity(soup, title)  # from the content region, not the menu
+    body = text or (_text(soup) if soup else "")
+    head = " ".join([title, *headings])
+    low_head = head.lower()
+    low_body = body.lower()
+    path = urlparse(url).path.lower()
+    host = urlparse(url).netloc.lower()
+    signals: list[str] = []
+
+    for pattern, page_type in _PATH_HINTS:
+        if pattern.search(host) or pattern.search(path):
+            return PageClassification(page_type, 0.85, [f"url matches {pattern.pattern}"], title)
+
+    # --- clearly not about studying here --------------------------------
+    if _IRRELEVANT.search(low_head):
+        return PageClassification(PageType.IRRELEVANT, 0.8, ["title is off-topic"], title)
+
+    # An audience qualification is not a degree the continuing course offers.
+    course_identity = f"{identity} {title} {path.replace('-', ' ')}"
+    if re.search(r"\bcourses?\s+(?:for\s+)?(?:teachers?|professionals?)\b", course_identity, re.I):
+        return PageClassification(
+            PageType.IRRELEVANT, 0.9, ["continuing course for a professional audience"], title
+        )
+    if re.search(
+        r"\btopic courses?\b|\bcourse (?:descriptions?|syllabus)\b", course_identity, re.I
+    ):
+        return PageClassification(
+            PageType.IRRELEVANT, 0.9, ["individual course content, not a degree programme"], title
+        )
+
+    # The page's own title and first heading only: a "News" block in the
+    # sidebar is not the page. Run 31: Vienna's admission-procedure page and
+    # HKU's admissions home were both rejected as news on a secondary h2.
+    if _NEWS.search(" ".join([title, *headings[:1]]).lower()):
+        return PageClassification(PageType.NEWS, 0.75, ["news markers in the title"], title)
+
+    # --- a research output --------------------------------------------------
+    # The URL alone only ranks (see _URL_ONLY_HINTS); with the page agreeing
+    # it rejects. Run 23: Aalto's programme claim was a paper titled
+    # "Arguments for and Approaches to Computing Education in Undergraduate
+    # Computer Science Programmes", whose field words read as a programme.
+    if classify_url(url) is PageType.IRRELEVANT:
+        research = {m.group(1).lower() for m in _RESEARCH_OUTPUT.finditer(low_body[:6000])}
+        if len(research) >= 2:
+            return PageClassification(
+                PageType.IRRELEVANT,
+                0.8,
+                [f"research-output url and content ({', '.join(sorted(research))})"],
+                title,
+            )
+
+    # --- mostly links and little prose ----------------------------------
+    if soup is not None and body and len(body) < 1500:
+        link_text = sum(len(a.get_text(strip=True)) for a in soup.find_all("a"))
+        if link_text / max(len(body), 1) > 0.75:
+            signals.append("page is mostly link text")
+            return PageClassification(PageType.NAVIGATION, 0.6, signals, title)
+
+    # --- cost pages --------------------------------------------------------
+    if _COSTS.search(identity) or _COSTS.search(title.lower()):
+        return PageClassification(
+            PageType.COSTS,
+            0.8,
+            ["cost vocabulary in the page heading"],
+            title,
+            academic_year=_academic_year(body),
+        )
+
+    # --- funding family ---------------------------------------------------
+    if _SCHOLARSHIP_WORD.search(f"{title} {identity}".lower()) or "scholarship" in path or "financial-aid" in path:
+        if _FAQ.search(low_head):
+            return PageClassification(PageType.SCHOLARSHIP_FAQ, 0.9, ["FAQ markers"], title)
+
+        award_links = _award_link_count(soup) if soup else 0
+        present = [name for name, pattern in _AWARD_SIGNALS if pattern.search(low_body)]
+        named = _award_name(identity)
+        plural_index = bool(
+            _PLURAL_FUNDING_HEADING.match(identity)
+            or re.search(
+                r"\b(overview of|list of|available) (scholarships|funding|grants)\b", low_body
+            )
+        )
+
+        # A listing heading, or several links out to named awards, or links out
+        # with no award identity of its own.
+        if plural_index or award_links >= 2 or (award_links >= 1 and named is None):
+            signals += [
+                f"{award_links} award links",
+                "listing heading" if plural_index else "",
+                "no award identity of its own" if named is None else "",
+            ]
+            return PageClassification(
+                PageType.SCHOLARSHIP_INDEX, 0.8, [s for s in signals if s], title
+            )
+        # A named award plus at least two substantive signals.
+        if named and len(present) >= 2:
+            return PageClassification(
+                PageType.SCHOLARSHIP_AWARD,
+                0.75 + 0.05 * min(len(present), 4),
+                [f"named award {named!r}", f"signals: {', '.join(present)}"],
+                title,
+                subject=named,
+                degree_level=_degree_level(f"{head} {body[:2500]}"),
+                academic_year=_academic_year(body),
+            )
+        return PageClassification(
+            PageType.UNKNOWN,
+            0.3,
+            [f"funding page with {len(present)} substantive signals and no clear award name"],
+            title,
+        )
+
+    if _DOCUMENTS.search(low_head):
+        return PageClassification(PageType.DOCUMENTS, 0.7, ["document checklist heading"], title)
+
+    # --- programme family --------------------------------------------------
+    program_links = _program_link_count(soup) if soup else 0
+    # A heading that is plural or catalogue-shaped settles it: that is the page
+    # saying what it is.
+    if _PLURAL_PROGRAM_HEADING.match(identity) or _CATALOG.search(low_head):
+        return PageClassification(
+            PageType.PROGRAM_CATALOG,
+            0.75,
+            [f"{program_links} programme links", "plural catalogue heading"],
+            title,
+        )
+
+    # A programme page is identified before the admissions rules run: a real
+    # programme page has an "entry requirements" section, and matching that
+    # first classified BSc Computer Science and Engineering as a general
+    # admissions page.
+    subject = _program_name(identity)
+    context_degree: str | None = None
+    if subject is None:
+        from_context = _program_name_from_context(identity, title, path, body[:4000])
+        if from_context:
+            subject, context_degree = from_context
+
+    # Links alone may only decide when the page has no programme identity of
+    # its own. Counting them first made "BSc Computing Science" a catalogue
+    # because it linked to five other programmes — every real programme page
+    # does — and the allow-list then refused every extractor. In live run
+    # 35754594232 that is exactly what happened to Groningen's certified
+    # source page, and to Delft's and Toronto's. The funding branch above
+    # already carries this rule: a page with links out and "no award identity
+    # of its own" is an index, and one that names its award is not.
+    if subject is None and program_links >= 5:
+        return PageClassification(
+            PageType.PROGRAM_CATALOG,
+            0.7,
+            [f"{program_links} programme links", "no programme identity of its own"],
+            title,
+        )
+    degree = context_degree or _degree_level(f"{identity} {body[:2500]}")
+    language_body = _text(soup) if soup is not None else body
+    language = (
+        _language(language_body) if _LANGUAGE_LABEL.search(language_body) else _prose_language(body)
+    )
+    language_evidence = _labelled_language_evidence(language_body, subject, language)
+    year = _academic_year(body)
+
+    if not subject:
+        if _CREDENTIAL.search(low_head) and _ADMISSIONS.search(low_head):
+            return PageClassification(
+                PageType.COUNTRY_CREDENTIAL_REQUIREMENTS,
+                0.75,
+                ["admissions page scoped to a diploma type"],
+                title,
+            )
+        if _ADMISSIONS.search(low_head):
+            return PageClassification(
+                PageType.GENERAL_ADMISSIONS,
+                0.8,
+                ["admissions phrasing without a single programme identity"],
+                title,
+            )
+
+    if subject and degree:
+        signals.append(f"single programme {subject!r} at {degree} level")
+        if language:
+            signals.append(f"language of instruction: {language}")
+        if year:
+            signals.append(f"academic year {year}")
+            return PageClassification(
+                PageType.INTAKE_SPECIFIC_PROGRAM,
+                0.85,
+                signals,
+                title,
+                subject=subject,
+                degree_level=degree,
+                language_of_instruction=language,
+                academic_year=year,
+                language_evidence=language_evidence,
+            )
+        return PageClassification(
+            PageType.PROGRAM_DETAIL,
+            0.75,
+            signals,
+            title,
+            subject=subject,
+            degree_level=degree,
+            language_of_instruction=language,
+            language_evidence=language_evidence,
+        )
+
+    if _CREDENTIAL.search(low_head) and _ADMISSIONS.search(low_head):
+        return PageClassification(
+            PageType.COUNTRY_CREDENTIAL_REQUIREMENTS,
+            0.7,
+            ["admissions page scoped to a diploma type"],
+            title,
+        )
+    if _ADMISSIONS.search(low_head):
+        return PageClassification(PageType.GENERAL_ADMISSIONS, 0.7, ["admissions phrasing"], title)
+    cost_mentions = len(_COSTS.findall(low_body))
+    if cost_mentions >= 2:
+        return PageClassification(
+            PageType.COSTS,
+            0.6,
+            [f"{cost_mentions} cost phrases in the body"],
+            title,
+            academic_year=_academic_year(body),
+        )
+
+    if _CREDENTIAL.search(low_body[:2000]):
+        return PageClassification(
+            PageType.COUNTRY_CREDENTIAL_REQUIREMENTS, 0.55, ["credential vocabulary"], title
+        )
+
+    return PageClassification(PageType.UNKNOWN, 0.2, ["no decisive signals"], title)

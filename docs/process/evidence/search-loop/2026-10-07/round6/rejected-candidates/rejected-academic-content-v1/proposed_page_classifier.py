@@ -1,0 +1,990 @@
+"""What kind of page is this?
+
+Every false positive found in the first live run had the same shape: an
+extractor ran on a page that could not possibly answer the question it was
+asking. A page titled "Check admission requirements | BSc Dutch diploma"
+cannot confirm that a computer science bachelor's programme exists; a page
+titled "Scholarships" is not a scholarship.
+
+Classification happens once per page, from the URL, the title, the headings and
+the body structure. Extractors declare which classes they accept and are not
+run otherwise. The classifier is deliberately conservative: when the signals do
+not add up it returns UNKNOWN, and UNKNOWN is accepted by nothing.
+"""
+
+from __future__ import annotations
+
+import re
+from bisect import bisect_left
+from dataclasses import dataclass, field
+from enum import StrEnum
+from urllib.parse import urlparse
+
+from bs4 import BeautifulSoup, Comment, NavigableString, Tag
+
+# Off until a paired owner-approved experiment measures the general rule.
+PROGRAMME_IDENTITY_BEFORE_FUNDING = False
+
+
+class PageType(StrEnum):
+    PROGRAM_DETAIL = "program_detail"
+    PROGRAM_CATALOG = "program_catalog"
+    INTAKE_SPECIFIC_PROGRAM = "intake_specific_program"
+    GENERAL_ADMISSIONS = "general_admissions"
+    COUNTRY_CREDENTIAL_REQUIREMENTS = "country_credential_requirements"
+    SCHOLARSHIP_INDEX = "scholarship_index"
+    SCHOLARSHIP_AWARD = "scholarship_award"
+    SCHOLARSHIP_FAQ = "scholarship_faq"
+    COSTS = "costs"
+    DOCUMENTS = "documents"
+    NEWS = "news"
+    NAVIGATION = "navigation"
+    IRRELEVANT = "irrelevant"
+    UNKNOWN = "unknown"
+
+
+#: Page classes each extractor is permitted to run on. Anything else is skipped
+#: and reported, never guessed at.
+ACCEPTS: dict[str, frozenset[PageType]] = {
+    "program_exists": frozenset({PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM}),
+    "requirements": frozenset(
+        {
+            PageType.PROGRAM_DETAIL,
+            PageType.INTAKE_SPECIFIC_PROGRAM,
+            PageType.GENERAL_ADMISSIONS,
+            PageType.COUNTRY_CREDENTIAL_REQUIREMENTS,
+        }
+    ),
+    "intake": frozenset({PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM}),
+    "costs": frozenset({PageType.COSTS, PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM}),
+    "scholarship_award": frozenset({PageType.SCHOLARSHIP_AWARD}),
+    # A fees page often lists the awards alongside the costs; following its
+    # links is safe because each target must classify as an award itself.
+    "scholarship_links": frozenset(
+        {
+            PageType.SCHOLARSHIP_INDEX,
+            PageType.SCHOLARSHIP_AWARD,
+            PageType.COSTS,
+        }
+    ),
+    "documents": frozenset(
+        {
+            PageType.DOCUMENTS,
+            PageType.PROGRAM_DETAIL,
+            PageType.INTAKE_SPECIFIC_PROGRAM,
+            PageType.GENERAL_ADMISSIONS,
+            PageType.SCHOLARSHIP_AWARD,
+        }
+    ),
+}
+
+
+@dataclass(frozen=True)
+class PageClassification:
+    page_type: PageType
+    confidence: float
+    signals: list[str] = field(default_factory=list)
+    title: str = ""
+    #: Present when the page identifies one programme or one award.
+    subject: str | None = None
+    degree_level: str | None = None
+    language_of_instruction: str | None = None
+    academic_year: str | None = None
+    #: Complete main-content title/label proof; None keeps the prose route.
+    language_evidence: str | None = None
+
+    def accepts(self, extractor: str) -> bool:
+        return self.page_type in ACCEPTS.get(extractor, frozenset())
+
+
+# --- signal vocabularies ---------------------------------------------------
+
+_DEGREE_WORDS: tuple[tuple[str, str], ...] = (
+    (r"\bph\.?d\b|\bdoctoral\b|\bdoctorate\b", "phd"),
+    (r"\bmaster'?s?\b|\bm\.?sc\b|\bm\.?a\b\.?|\bmphil\b|\bllm\b|\bmba\b", "master"),
+    (r"\bbachelor'?s?\b|\bb\.?sc\b|\bb\.?a\b\.?|\bbeng\b|\bllb\b|\bundergraduate\b", "bachelor"),
+    (r"\bfoundation year\b|\bpre-?bachelor\b", "foundation"),
+)
+_CATALOG = re.compile(
+    r"\b(programmes?|programs?|courses?|degrees?|studies)\b.*\b(overview|list|all|browse|find|search|a-?z)\b"
+    r"|\b(all|our|browse|find|search)\b.*\b(programmes?|programs?|courses?|degrees?)\b",
+    re.IGNORECASE,
+)
+#: A heading that is a plural category is a listing, never one programme or one
+#: award. "Bachelor's programmes" is a catalogue; "BSc Computer Science" is not.
+_PLURAL_PROGRAM_HEADING = re.compile(
+    r"^\s*((our|all|browse|find|search|list of|overview of)\s+)?"
+    r"((bachelor'?s?|master'?s?|undergraduate|postgraduate|graduate|phd|doctoral)\s+)?"
+    r"(programmes?|programs?|courses?|degrees?|studies)\s*$",
+    re.IGNORECASE,
+)
+_PLURAL_FUNDING_HEADING = re.compile(
+    r"^\s*((our|all|available|list of|overview of|other|external)\s+)?"
+    r"(scholarships|funding|financial aid|grants|bursaries|awards|fellowships|stipends"
+    r"|prizes and awards|practical matters)"
+    # A plural category followed by a scope phrase is still a listing:
+    # "Scholarships from other providers", "Grants for international students".
+    r"(\s+(and|&|from|for|at|by|in|of|to)\s+.{0,60})?\s*$",
+    re.IGNORECASE,
+)
+_ADMISSIONS = re.compile(
+    r"admission requirements|entry requirements|how to apply|application procedure"
+    # Vienna heads its admissions page "Admission procedure" (run 32).
+    r"|admissions? (?:procedure|process)"
+    r"|admission and application|apply for admission|entry criteria"
+    # A page headed "International admissions" or "Undergraduate admissions" is
+    # a general admissions page even though it never says "requirements".
+    r"|\b(?:international|undergraduate|graduate|postgraduate|general)\s+admissions?\b"
+    r"|\badmissions?\b\s*(?:-|–|\||$)|general entry information",
+    re.IGNORECASE,
+)
+#: The school-qualification names this repository recognises, as one
+#: alternation so there is exactly one such list. ``app.adapters.scope_reader``
+#: reads a page's stated qualification from the same vocabulary — a second
+#: list would drift from this one, and the two would disagree about what the
+#: page said.
+QUALIFICATION_NAMES = r"vwo|abitur|attestat|baccalaur|a-?levels?|matura|gaokao|cbse"
+
+_CREDENTIAL = re.compile(
+    r"\b(diploma|qualification|certificate)\b[^.]{0,60}\b(equivalen|recogni|accept|assess)"
+    rf"|\b({QUALIFICATION_NAMES})\b",
+    re.IGNORECASE,
+)
+_SCHOLARSHIP_WORD = re.compile(
+    r"scholarship|bursar|grant|fellowship|financial aid|stipend|funding|beurs|stipendium",
+    re.IGNORECASE,
+)
+_FAQ = re.compile(
+    # The plural matters: "\bf\.?a\.?q\.?\b" does not match "FAQs", because there is no
+    # word boundary between the q and the s. NTU's "FAQs on scholarships" therefore
+    # classified as an award page, became a scholarship named after the FAQ, and its
+    # own prose then produced a second claim saying that award did not exist.
+    r"\bf\.?a\.?q\.?s?\b|frequently asked questions?",
+    re.IGNORECASE,
+)
+_RESEARCH_OUTPUT = re.compile(
+    r"\b(abstract|doi|peer[- ]reviewed|research output|journal|proceedings|conference paper"
+    r"|published in|isbn|issn|citation)\b",
+    re.IGNORECASE,
+)
+_NEWS = re.compile(r"\b(news|press release|announcement|blog|article)\b", re.IGNORECASE)
+_IRRELEVANT = re.compile(
+    r"\b(vacanc|job openings?|careers? (?:at|portal|site)|recruitment|staff directory"
+    r"|alumni|donate|shop|library catalogue|contact us|privacy (?:policy|statement)"
+    r"|cookie|sitemap|nobel prize|erc grant|research (?:prize|award)s?)\b",
+    re.IGNORECASE,
+)
+#: Plurals matter: `\btuition fee\b` does not match "tuition fees", which is how
+#: a fees page ended up classified as general admissions.
+_COSTS = re.compile(
+    r"\b(tuition fees?|registration fees?|enrolment fees?|enrollment fees?"
+    r"|cost of attendance|costs? of study|fees? and (?:funding|costs?)"
+    r"|tuition and fees?|study costs?|living costs?|statement of fees?"
+    r"|fees? overview|what it costs)\b",
+    re.IGNORECASE,
+)
+_DOCUMENTS = re.compile(
+    r"\b(required documents|documents you need|document checklist|supporting documents"
+    r"|what to submit|upload(?:ing)? documents)\b",
+    re.IGNORECASE,
+)
+#: A page has to say something substantive about an award to be an award page.
+_AWARD_SIGNALS: tuple[tuple[str, re.Pattern[str]], ...] = (
+    (
+        "amount",
+        re.compile(
+            r"\b(amount|value|worth|covers?|waiver|per year|per month|% of tuition)\b", re.I
+        ),
+    ),
+    (
+        "coverage",
+        re.compile(
+            r"\b(covers?|coverage|includes?|tuition|housing|accommodation|stipend|living costs)\b",
+            re.I,
+        ),
+    ),
+    (
+        "eligibility",
+        re.compile(r"\b(eligib|who can apply|criteria|requirements|open to|restricted to)\b", re.I),
+    ),
+    (
+        "application",
+        re.compile(
+            r"\b(how to apply|apply for this|nominat|no separate application|separate application)\b",
+            re.I,
+        ),
+    ),
+    ("deadline", re.compile(r"\b(deadline|closing date|applications? close|apply by)\b", re.I)),
+    (
+        "duration",
+        re.compile(r"\b(renewable|duration|for the duration|years of study|one-?time)\b", re.I),
+    ),
+)
+_ACADEMIC_YEAR = re.compile(r"\b(20\d{2})\s*[/–—-]\s*(\d{2}|20\d{2})\b")
+_LANGUAGE = re.compile(
+    r"\b(?:taught|instruction|language of instruction)\b[^.]{0,40}?\b(english|dutch|german|french|finnish|polish)\b"
+    r"|\b(english|dutch|german|french|finnish|polish)[- ]taught\b",
+    re.IGNORECASE,
+)
+#: Programme fact tables often use just "Language / German" or
+#: "Language: Polish", rather than the prose phrase "taught in".
+_LANGUAGE_LABEL = re.compile(
+    r"^[ \t]*(?:teaching language|language(?: of instruction)?)"
+    r"[ \t]*:?[ \t]*(?:\n[ \t]*)*(english|dutch|german|french|finnish|polish)[ \t]*$",
+    re.I | re.M,
+)
+
+#: URL path fragments that are strong evidence on their own.
+_PATH_HINTS: tuple[tuple[re.Pattern[str], PageType], ...] = (
+    (re.compile(r"/(news|nieuws|actueel|press)/"), PageType.NEWS),
+    (re.compile(r"(careers?|vacanc|jobs?|werken-bij)\."), PageType.IRRELEVANT),
+    (re.compile(r"/(vacature|vacancies|jobs|careers)/"), PageType.IRRELEVANT),
+)
+
+
+#: Wrappers that hold the page's own content rather than the site's furniture.
+_MAIN_SELECTORS = ("main", "[role=main]", "#main-content", "#main", "#content", "article")
+#: Site chrome. Present on every page, so counting its links made an award page
+#: look like an index and an admissions page look like a catalogue.
+_CHROME_TAGS = ("nav", "header", "footer", "aside")
+_CHROME_HINT = re.compile(
+    r"nav|menu|breadcrumb|header|footer|sidebar|skip|cookie|banner|social|share|toolbar",
+    re.IGNORECASE,
+)
+
+
+def _parse_markup(markup: str) -> BeautifulSoup | None:
+    """Parse hostile/mislabeled input without violating ``classify_page``'s
+    never-raises contract.
+
+    Fetchers can legitimately return a PDF for a catalogue link. Its decoded
+    bytes are not HTML and malformed tag-like fragments can crash lxml's
+    BeautifulSoup builder. The stdlib parser is a conservative fallback; if
+    both reject the input the classifier proceeds with no DOM and returns an
+    honest UNKNOWN unless URL/text signals prove something else.
+    """
+    for parser in ("lxml", "html.parser"):
+        try:
+            return BeautifulSoup(markup, parser)
+        except Exception:
+            continue
+    return None
+
+
+#: Class/id tokens that cannot plausibly name a page's own content. Narrower
+#: than ``_CHROME_HINT`` on purpose: that one matches "banner" and "menu",
+#: which deleted a requirements container whose class was
+#: "requirements-banner" and a tab panel whose class was "tabs-nav-panel".
+#: For reading, a false deletion costs the fact itself.
+_NEVER_CONTENT_HINT = re.compile(
+    r"(?:^|[-_ ])(?:cookie|skip|social|share|breadcrumb|toolbar)(?:$|[-_ ])",
+    re.IGNORECASE,
+)
+
+
+def content_for_reading(soup: BeautifulSoup) -> BeautifulSoup:
+    """The page's content for **extraction**, not for classification.
+
+    ``main_content`` exists for ``classify_page``, which must not count the
+    site's menu as the page's own links. It therefore deletes ``form``,
+    ``aside`` and anything whose class or id looks like chrome — and a
+    requirement is very often inside exactly those. A live page with the IELTS
+    line in a ``<form>``, the deadline in an ``<aside class="key-facts">`` and
+    the GPA in a ``<div class="requirements-banner">`` reached the extractors
+    as the single sentence "The programme lasts three years."
+
+    So reading keeps what classification throws away: forms, asides, and any
+    container whose class merely *mentions* a chrome word. It still drops what
+    is never content, and still prefers a ``<main>`` region when the page
+    offers one.
+    """
+    working = _parse_markup(str(soup))
+    if working is None:
+        return soup
+    for tag in working(["script", "style", "noscript", "svg", "iframe"]):
+        tag.decompose()
+
+    for selector in _MAIN_SELECTORS:
+        found = working.select_one(selector)
+        if found is not None and len(found.get_text(strip=True)) > 200:
+            _drop_bulky_chrome(found)
+            return found
+
+    _drop_bulky_chrome(working)
+    for attribute in ("class", "id"):
+        for tag in working.find_all(attrs={attribute: _NEVER_CONTENT_HINT}):
+            tag.decompose()
+    return working
+
+
+def _drop_bulky_chrome(node) -> None:
+    """Remove nav/header/footer only when they are big enough to be the site's.
+
+    A short ``<nav>`` is often a within-page tab strip, and a deadline lives in
+    a sidebar often enough that deleting every aside costs real facts. The 800
+    character threshold is the one ``html_to_text`` already uses.
+    """
+    for tag in node(["nav", "header", "footer"]):
+        if len(tag.get_text(strip=True)) > 800:
+            tag.decompose()
+
+
+def main_content(soup: BeautifulSoup) -> BeautifulSoup:
+    """The page's own content, with the site's navigation removed.
+
+    Every page on a university site carries the same global menu. Reading the
+    first <h1> or counting links across the whole document therefore measured
+    the site, not the page: a single award page linked to six other awards from
+    its menu and was classified as an index.
+    """
+    working = _parse_markup(str(soup))
+    if working is None:
+        return soup
+    for tag in working(["script", "style", "noscript", "svg", "iframe", "form"]):
+        tag.decompose()
+
+    for selector in _MAIN_SELECTORS:
+        found = working.select_one(selector)
+        if found is not None and len(found.get_text(strip=True)) > 200:
+            for tag in found(_CHROME_TAGS):
+                tag.decompose()
+            return found
+
+    for tag in working(_CHROME_TAGS):
+        tag.decompose()
+    for tag in working.find_all(attrs={"class": _CHROME_HINT}):
+        tag.decompose()
+    for tag in working.find_all(attrs={"id": _CHROME_HINT}):
+        tag.decompose()
+    return working
+
+
+#: What a URL alone can say about a page. Weaker than reading the page, and
+#: that is the point: discovery has to rank candidates *before* fetching them,
+#: and a URL that announces a research output or a news item is worth ranking
+#: below one that announces a programme. Nothing here rejects a candidate —
+#: rejections need evidence, and these are hints.
+_URL_ONLY_HINTS: tuple[tuple[re.Pattern[str], PageType], ...] = (
+    *_PATH_HINTS,
+    # Research outputs. Aalto's top search result was a publication page and
+    # KAIST's an organisation profile; both outranked the actual programme.
+    (
+        re.compile(
+            r"/(publications?|research-?outputs?|organisations?|organizations?|persons?"
+            r"|profiles?|datasets?|projects?|patents?|theses|dissertations?)(/|$)",
+            re.IGNORECASE,
+        ),
+        PageType.IRRELEVANT,
+    ),
+    (re.compile(r"^(pure|research|scholar|repository)\.", re.IGNORECASE), PageType.IRRELEVANT),
+)
+
+# Deliberately **only negative**. A "/programmes/" segment was tried as a
+# positive hint and measurably hurt: it promotes catalogue index pages over
+# the specific programme page that was asked for, and cost Warsaw its place
+# entirely while pushing NTU down four. A URL can say reliably what a page is
+# *not*; what it *is* needs the page.
+
+
+def classify_url(url: str) -> PageType:
+    """What the URL alone suggests this page is. ``UNKNOWN`` when it says nothing.
+
+    Separate from :func:`classify_page`, which reads the page and is the
+    authority. This exists because ranking happens before fetching, and the
+    alternative — a second copy of these patterns inside the retrieval code —
+    would drift from this one.
+    """
+    parts = urlparse(url)
+    haystack = f"{parts.hostname or ''}{parts.path or ''}"
+    for pattern, page_type in _URL_ONLY_HINTS:
+        if pattern.search(haystack):
+            return page_type
+    return PageType.UNKNOWN
+
+
+def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassification:
+    """Classify a fetched page. Never raises; unknown is a valid answer."""
+    full = _parse_markup(html) if html else None
+    soup = main_content(full) if full is not None else None
+    title = _title(full) if full is not None else ""
+    headings = _headings(soup) if soup else []
+    identity = _identity(soup, title)  # from the content region, not the menu
+    body = text or (_text(soup) if soup else "")
+    head = " ".join([title, *headings])
+    low_head = head.lower()
+    low_body = body.lower()
+    path = urlparse(url).path.lower()
+    host = urlparse(url).netloc.lower()
+    signals: list[str] = []
+
+    for pattern, page_type in _PATH_HINTS:
+        if pattern.search(host) or pattern.search(path):
+            return PageClassification(page_type, 0.85, [f"url matches {pattern.pattern}"], title)
+
+    # --- clearly not about studying here --------------------------------
+    if _IRRELEVANT.search(low_head):
+        return PageClassification(PageType.IRRELEVANT, 0.8, ["title is off-topic"], title)
+
+    # An audience qualification is not a degree the continuing course offers.
+    course_identity = f"{identity} {title} {path.replace('-', ' ')}"
+    if re.search(r"\bcourses?\s+(?:for\s+)?(?:teachers?|professionals?)\b", course_identity, re.I):
+        return PageClassification(
+            PageType.IRRELEVANT, 0.9, ["continuing course for a professional audience"], title
+        )
+    if re.search(
+        r"\btopic courses?\b|\bcourse (?:descriptions?|syllabus)\b", course_identity, re.I
+    ):
+        return PageClassification(
+            PageType.IRRELEVANT, 0.9, ["individual course content, not a degree programme"], title
+        )
+
+    # The page's own title and first heading only: a "News" block in the
+    # sidebar is not the page. Run 31: Vienna's admission-procedure page and
+    # HKU's admissions home were both rejected as news on a secondary h2.
+    if _NEWS.search(" ".join([title, *headings[:1]]).lower()):
+        return PageClassification(PageType.NEWS, 0.75, ["news markers in the title"], title)
+
+    # --- a research output --------------------------------------------------
+    # The URL alone only ranks (see _URL_ONLY_HINTS); with the page agreeing
+    # it rejects. Run 23: Aalto's programme claim was a paper titled
+    # "Arguments for and Approaches to Computing Education in Undergraduate
+    # Computer Science Programmes", whose field words read as a programme.
+    if classify_url(url) is PageType.IRRELEVANT:
+        research = {m.group(1).lower() for m in _RESEARCH_OUTPUT.finditer(low_body[:6000])}
+        if len(research) >= 2:
+            return PageClassification(
+                PageType.IRRELEVANT,
+                0.8,
+                [f"research-output url and content ({', '.join(sorted(research))})"],
+                title,
+            )
+
+    # --- mostly links and little prose ----------------------------------
+    if soup is not None and body and len(body) < 1500:
+        link_text = sum(len(a.get_text(strip=True)) for a in soup.find_all("a"))
+        if link_text / max(len(body), 1) > 0.75:
+            signals.append("page is mostly link text")
+            return PageClassification(PageType.NAVIGATION, 0.6, signals, title)
+
+    # --- cost pages --------------------------------------------------------
+    if _COSTS.search(identity) or _COSTS.search(title.lower()):
+        return PageClassification(
+            PageType.COSTS,
+            0.8,
+            ["cost vocabulary in the page heading"],
+            title,
+            academic_year=_academic_year(body),
+        )
+
+    # --- funding family ---------------------------------------------------
+    funding_head = low_head
+    if PROGRAMME_IDENTITY_BEFORE_FUNDING and _programme_content_identity(
+        identity, title, path, body, soup
+    ):
+        # Programme identity and academic content protect a subsidiary funding
+        # section. Funding URLs and the page's own funding identity still win.
+        funding_head = f"{title} {identity}".lower()
+    if _SCHOLARSHIP_WORD.search(funding_head) or "scholarship" in path or "financial-aid" in path:
+        if _FAQ.search(low_head):
+            return PageClassification(PageType.SCHOLARSHIP_FAQ, 0.9, ["FAQ markers"], title)
+
+        award_links = _award_link_count(soup) if soup else 0
+        present = [name for name, pattern in _AWARD_SIGNALS if pattern.search(low_body)]
+        named = _award_name(identity)
+        plural_index = bool(
+            _PLURAL_FUNDING_HEADING.match(identity)
+            or re.search(
+                r"\b(overview of|list of|available) (scholarships|funding|grants)\b", low_body
+            )
+        )
+
+        # A listing heading, or several links out to named awards, or links out
+        # with no award identity of its own.
+        if plural_index or award_links >= 2 or (award_links >= 1 and named is None):
+            signals += [
+                f"{award_links} award links",
+                "listing heading" if plural_index else "",
+                "no award identity of its own" if named is None else "",
+            ]
+            return PageClassification(
+                PageType.SCHOLARSHIP_INDEX, 0.8, [s for s in signals if s], title
+            )
+        # A named award plus at least two substantive signals.
+        if named and len(present) >= 2:
+            return PageClassification(
+                PageType.SCHOLARSHIP_AWARD,
+                0.75 + 0.05 * min(len(present), 4),
+                [f"named award {named!r}", f"signals: {', '.join(present)}"],
+                title,
+                subject=named,
+                degree_level=_degree_level(f"{head} {body[:2500]}"),
+                academic_year=_academic_year(body),
+            )
+        return PageClassification(
+            PageType.UNKNOWN,
+            0.3,
+            [f"funding page with {len(present)} substantive signals and no clear award name"],
+            title,
+        )
+
+    if _DOCUMENTS.search(low_head):
+        return PageClassification(PageType.DOCUMENTS, 0.7, ["document checklist heading"], title)
+
+    # --- programme family --------------------------------------------------
+    program_links = _program_link_count(soup) if soup else 0
+    # A heading that is plural or catalogue-shaped settles it: that is the page
+    # saying what it is.
+    if _PLURAL_PROGRAM_HEADING.match(identity) or _CATALOG.search(low_head):
+        return PageClassification(
+            PageType.PROGRAM_CATALOG,
+            0.75,
+            [f"{program_links} programme links", "plural catalogue heading"],
+            title,
+        )
+
+    # A programme page is identified before the admissions rules run: a real
+    # programme page has an "entry requirements" section, and matching that
+    # first classified BSc Computer Science and Engineering as a general
+    # admissions page.
+    subject = _program_name(identity)
+    context_degree: str | None = None
+    if subject is None:
+        from_context = _program_name_from_context(identity, title, path, body[:4000])
+        if from_context:
+            subject, context_degree = from_context
+
+    # Links alone may only decide when the page has no programme identity of
+    # its own. Counting them first made "BSc Computing Science" a catalogue
+    # because it linked to five other programmes — every real programme page
+    # does — and the allow-list then refused every extractor. In live run
+    # 35754594232 that is exactly what happened to Groningen's certified
+    # source page, and to Delft's and Toronto's. The funding branch above
+    # already carries this rule: a page with links out and "no award identity
+    # of its own" is an index, and one that names its award is not.
+    if subject is None and program_links >= 5:
+        return PageClassification(
+            PageType.PROGRAM_CATALOG,
+            0.7,
+            [f"{program_links} programme links", "no programme identity of its own"],
+            title,
+        )
+    degree = context_degree or _degree_level(f"{identity} {body[:2500]}")
+    language_body = _text(soup) if soup is not None else body
+    language = (
+        _language(language_body) if _LANGUAGE_LABEL.search(language_body) else _prose_language(body)
+    )
+    language_evidence = _labelled_language_evidence(language_body, subject, language)
+    year = _academic_year(body)
+
+    if not subject:
+        if _CREDENTIAL.search(low_head) and _ADMISSIONS.search(low_head):
+            return PageClassification(
+                PageType.COUNTRY_CREDENTIAL_REQUIREMENTS,
+                0.75,
+                ["admissions page scoped to a diploma type"],
+                title,
+            )
+        if _ADMISSIONS.search(low_head):
+            return PageClassification(
+                PageType.GENERAL_ADMISSIONS,
+                0.8,
+                ["admissions phrasing without a single programme identity"],
+                title,
+            )
+
+    if subject and degree:
+        signals.append(f"single programme {subject!r} at {degree} level")
+        if language:
+            signals.append(f"language of instruction: {language}")
+        if year:
+            signals.append(f"academic year {year}")
+            return PageClassification(
+                PageType.INTAKE_SPECIFIC_PROGRAM,
+                0.85,
+                signals,
+                title,
+                subject=subject,
+                degree_level=degree,
+                language_of_instruction=language,
+                academic_year=year,
+                language_evidence=language_evidence,
+            )
+        return PageClassification(
+            PageType.PROGRAM_DETAIL,
+            0.75,
+            signals,
+            title,
+            subject=subject,
+            degree_level=degree,
+            language_of_instruction=language,
+            language_evidence=language_evidence,
+        )
+
+    if _CREDENTIAL.search(low_head) and _ADMISSIONS.search(low_head):
+        return PageClassification(
+            PageType.COUNTRY_CREDENTIAL_REQUIREMENTS,
+            0.7,
+            ["admissions page scoped to a diploma type"],
+            title,
+        )
+    if _ADMISSIONS.search(low_head):
+        return PageClassification(PageType.GENERAL_ADMISSIONS, 0.7, ["admissions phrasing"], title)
+    cost_mentions = len(_COSTS.findall(low_body))
+    if cost_mentions >= 2:
+        return PageClassification(
+            PageType.COSTS,
+            0.6,
+            [f"{cost_mentions} cost phrases in the body"],
+            title,
+            academic_year=_academic_year(body),
+        )
+
+    if _CREDENTIAL.search(low_body[:2000]):
+        return PageClassification(
+            PageType.COUNTRY_CREDENTIAL_REQUIREMENTS, 0.55, ["credential vocabulary"], title
+        )
+
+    return PageClassification(PageType.UNKNOWN, 0.2, ["no decisive signals"], title)
+
+
+_ACADEMIC_HEADING = re.compile(
+    r"curriculum|(?:course|programme|program|degree) structure|"
+    r"(?:course|programme|program) content|what you (?:will )?(?:learn|study)",
+    re.IGNORECASE,
+)
+_ACADEMIC_UNIT = re.compile(r"\b(courses?|modules?|subjects?|lectures?|projects?)\b", re.I)
+_YEAR_STAGE = re.compile(
+    r"\b(first|second|third|fourth|fifth|sixth|[1-6](?:st|nd|rd|th)?)[- ]year\b"
+    r"|\byear\s+([1-6])\b",
+    re.I,
+)
+_NO_DEGREE_OFFER = re.compile(
+    r"\b(?:this (?:support )?page|we)\b[^.]{0,100}\b(?:does?|do) not offer\b"
+    r"[^.]{0,40}\b(?:degree|programme|program)\b"
+    r"|\bno degree(?: programme| program)? (?:is )?offered\b",
+    re.I,
+)
+
+
+def _academic_section_text(heading: Tag, soup: BeautifulSoup) -> str:
+    """Read only this academic block, closing at an equal or higher heading."""
+    rank = int(heading.name[1])
+    parts: list[str] = []
+    for node in heading.next_elements:
+        parents = list(node.parents)
+        if not any(parent is soup for parent in parents):
+            break
+        if any(parent is heading for parent in parents):
+            continue
+        if (
+            isinstance(node, Tag)
+            and re.fullmatch(r"h[1-6]", node.name or "")
+            and int(node.name[1]) <= rank
+        ):
+            break
+        if any(parent.name in {"nav", "aside", "header", "footer"} for parent in parents):
+            continue
+        if isinstance(node, NavigableString) and not isinstance(node, Comment) and node.strip():
+            parts.append(str(node).strip())
+    return " ".join(parts)
+
+
+def _programme_content_identity(
+    identity: str, title: str, path: str, body: str, soup: BeautifulSoup | None
+) -> bool:
+    """Require a programme identity and academic structure in the same content block."""
+    primary = f"{title} {identity}"
+    if _SCHOLARSHIP_WORD.search(primary) or _award_name(identity):
+        return False
+    if _ADMISSIONS.search(identity) or re.search(r"\bsupport\b", identity, re.I):
+        return False
+    if _NO_DEGREE_OFFER.search(body) or soup is None:
+        return False
+    if re.search(
+        r"\bthis page\b[^.]{0,40}\b(?:lists?|provides?|offers?)\b"
+        r"[^.]{0,60}\b(?:scholarships?|funding|financial aid|bursaries)\b",
+        body[:2000],
+        re.I,
+    ):
+        return False
+    subject = _program_name(identity) or _program_name_from_context(
+        identity, title, path, body[:4000]
+    )
+    if not subject:
+        return False
+    for heading in soup.find_all(re.compile(r"^h[1-6]$")):
+        if not _ACADEMIC_HEADING.fullmatch(heading.get_text(" ", strip=True)):
+            continue
+        if any(parent.name in {"nav", "aside", "header", "footer"} for parent in heading.parents):
+            continue
+        block = _academic_section_text(heading, soup)
+        # A scholarship curriculum/eligibility section is not the degree's
+        # academic structure. Secondary funding outside this block is harmless.
+        if _SCHOLARSHIP_WORD.search(block) or not _ACADEMIC_UNIT.search(block):
+            continue
+        stages = set()
+        ordinals = {
+            "first": "1",
+            "second": "2",
+            "third": "3",
+            "fourth": "4",
+            "fifth": "5",
+            "sixth": "6",
+        }
+        for match in _YEAR_STAGE.finditer(block):
+            stage = match.group(1) or match.group(2)
+            stages.add(ordinals.get(stage.lower(), stage[0]))
+        if len(stages) >= 2 or re.search(
+            r"\b\d+(?:\.\d+)?\s*(?:ECTS|credits?|units?)\b", block, re.I
+        ):
+            return True
+    return False
+
+
+# --- helpers ---------------------------------------------------------------
+
+
+def _title(soup: BeautifulSoup) -> str:
+    if soup.title and soup.title.string:
+        return " ".join(soup.title.string.split())[:200]
+    h1 = soup.find("h1")
+    return " ".join(h1.get_text(" ", strip=True).split())[:200] if h1 else ""
+
+
+def _headings(soup: BeautifulSoup) -> list[str]:
+    return [" ".join(h.get_text(" ", strip=True).split()) for h in soup.find_all(["h1", "h2"])][:12]
+
+
+def _text(soup: BeautifulSoup) -> str:
+    # ``soup`` is already parsed and stripped by ``main_content``. Re-parsing
+    # its serialization with lxml reintroduced the exact malformed-attribute
+    # crash that the safe parser above recovered from.
+    text = soup.get_text("\n")
+    text = re.sub(r"[ \t ]+", " ", text)
+    return re.sub(r"\n{3,}", "\n\n", text).strip()
+
+
+def _degree_level(text: str) -> str | None:
+    """The degree the text names first.
+
+    First by position, not by the order of ``_DEGREE_WORDS``: that order made
+    any "master" anywhere in the body outrank the "BSc" in the heading, and
+    HKU's undergraduate page came out as a master's programme.
+    """
+    low = text.lower()
+    earliest: tuple[int, str] | None = None
+    for pattern, level in _DEGREE_WORDS:
+        match = re.search(pattern, low)
+        if match and (earliest is None or match.start() < earliest[0]):
+            earliest = (match.start(), level)
+    return earliest[1] if earliest else None
+
+
+def _language(text: str) -> str | None:
+    labelled = {m.group(1).lower() for m in _LANGUAGE_LABEL.finditer(text)}
+    if labelled:
+        return next(iter(labelled)) if len(labelled) == 1 else None
+    return _prose_language(text)
+
+
+def _prose_language(text: str) -> str | None:
+    m = _LANGUAGE.search(text)
+    if not m:
+        return None
+    return (m.group(1) or m.group(2) or "").lower() or None
+
+
+def _labelled_language_evidence(text: str, subject: str | None, language: str | None) -> str | None:
+    """Keep a contiguous programme title and explicit language field together.
+
+    Only the main content reaches this helper. A navigation label with the
+    same value must not become the shorter apparent proof. The claim reader
+    subsequently applies its excerpt cap without truncating this evidence.
+    """
+    labels = list(_LANGUAGE_LABEL.finditer(text))
+    if not labels or language is None:
+        return None
+    if not subject:
+        return ""
+    title_pattern = re.compile(r"\s+".join(re.escape(word) for word in subject.split()), re.I)
+    titles = list(title_pattern.finditer(text))
+    if not titles:
+        return ""
+    starts = [match.start() for match in titles]
+    best: tuple[int, int] | None = None
+    for label in labels:
+        if label.group(1).lower() != language:
+            continue
+        index = bisect_left(starts, label.start())
+        for nearby in (index - 1, index):
+            if 0 <= nearby < len(titles):
+                title = titles[nearby]
+                span = (min(title.start(), label.start()), max(title.end(), label.end()))
+                if best is None or span[1] - span[0] < best[1] - best[0]:
+                    best = span
+    return text[best[0] : best[1]].strip() if best else ""
+
+
+def _academic_year(text: str) -> str | None:
+    m = _ACADEMIC_YEAR.search(text)
+    if not m:
+        return None
+    end = m.group(2)
+    return f"{m.group(1)}/{end[-2:]}"
+
+
+def _identity(soup: BeautifulSoup | None, title: str) -> str:
+    """What the page says it is about: its h1, else the title before the site suffix."""
+    if soup is not None:
+        h1 = soup.find("h1")
+        if h1:
+            return " ".join(h1.get_text(" ", strip=True).split())
+    return title.split("|")[0].strip()
+
+
+#: Headings that contain a degree word and are still not a programme. Every
+#: entry is a title a live run actually read and claimed a programme from:
+#: Groningen's "Bachelor's Open Day" and Delft's "Preparing for a bachelor"
+#: became `programme.exists` claims, and the benchmark scored them as wrong
+#: -scope claims about Computing Science and Computer Science and Engineering.
+#: A degree word in a heading says the page is *about* degrees, not that the
+#: page *is* one.
+_NOT_A_PROGRAMME_HEADING = re.compile(
+    r"\b(open|information|info|orientation|taster|experience)\s+(day|days|evening|session|week)\b"
+    r"|\b(webinar|fair|expo|roadshow|campus\s+tour)\b"
+    r"|\b(preparing|prepare|getting\s+ready)\s+for\b"
+    r"|\bmeet\s+(us|the)\b",
+    re.IGNORECASE,
+)
+
+
+def _program_name(identity: str) -> str | None:
+    """The programme a page is about, if it is about exactly one."""
+    name = identity
+    if not name or len(name) > 120:
+        return None
+    if _PLURAL_PROGRAM_HEADING.match(name):
+        return None
+    if _NOT_A_PROGRAMME_HEADING.search(name):
+        return None
+    if not _degree_level(name):
+        return None
+    # A heading that is a question or an instruction is not a programme name.
+    if name.endswith("?") or re.match(r"^(check|how|what|apply|find|browse|search)\b", name, re.I):
+        return None
+    return name
+
+
+def _program_name_from_context(
+    identity: str, title: str, path: str, body: str = ""
+) -> tuple[str, str] | None:
+    """A bare subject heading ("Computing Science") that the page's own title
+    and address place at one degree level, and the degree they place it at.
+
+    Groningen's certified programme page carries its degree only in the title
+    and in ``/bachelors/``; the heading alone failed ``_program_name`` and the
+    page's links then made it a catalogue, which the allow-list refuses. All
+    must agree: a short single name, repeated in the title, with a degree word
+    in the title or the path — and no full degree title in the body naming a
+    different subject. HKU's "Computing and Data Science" is a school whose
+    page says "The Bachelor of Engineering in Computer Science covers …": its
+    heading is an area, and naming it a programme recorded a false one.
+    """
+    name = (identity or "").strip()
+    if not name or len(name) > 80 or len(name.split()) > 6:
+        return None
+    if _PLURAL_PROGRAM_HEADING.match(name) or _NOT_A_PROGRAMME_HEADING.search(name):
+        return None
+    if name.endswith("?") or re.match(r"^(check|how|what|apply|find|browse|search)\b", name, re.I):
+        return None
+    if name.casefold() not in (title or "").casefold():
+        return None
+    segments = " ".join(re.split(r"[/_-]+", path or ""))
+    degree = _degree_level(title or "") or _degree_level(segments)
+    if not degree:
+        return None
+    for match in _FULL_DEGREE_TITLE.finditer(body or ""):
+        if name.casefold() not in match.group(0).casefold():
+            return None
+    return name, degree
+
+
+#: "Bachelor of Engineering in Computer Science", "BSc in Data Science",
+#: "Master of Science in Computing": a degree named in full, with its subject.
+_FULL_DEGREE_TITLE = re.compile(
+    # The degree word in any case; the subject only in capitals, so "bachelor
+    # in the Netherlands" or "taught in English" never reads as a programme.
+    r"(?i:\b(?:bachelor|master|b\.?sc|m\.?sc|b\.?eng|m\.?eng)\b)"
+    r"(?:\s+of\s+[A-Z]\w*(?:\s+[A-Z]\w*)?)?(?:\s*\((?i:hons)\))?"
+    r"(?:\s+in\s+(?!English\b|Dutch\b|German\b|French\b)[A-Z][\w&]*(?:\s+(?:and\s+)?[A-Z][\w&]*){0,3}"
+    # "Bachelor of Engineering (Computer Science)", the other way a programme
+    # list writes the subject.
+    r"|(?<=[a-z])\s+\((?!(?i:hons)\))[A-Z][\w&]*(?:\s+(?:and\s+)?[A-Z][\w&]*){0,3}\))"
+)
+
+
+def _award_name(identity: str) -> str | None:
+    name = identity
+    if not name or len(name) > 160:
+        return None
+    if name.endswith("?") or _FAQ.search(name):
+        return None
+    # A plural category heading is an index, not an award.
+    if _PLURAL_FUNDING_HEADING.match(name) or re.fullmatch(
+        r"(admission services|menu.*|search.*)", name.strip(), re.IGNORECASE
+    ):
+        return None
+    if not _SCHOLARSHIP_WORD.search(name) and not re.search(
+        r"\b(award|prize|fund|fellowship)\b", name, re.I
+    ):
+        return None
+    return name
+
+
+def _award_link_count(soup: BeautifulSoup | None) -> int:
+    if soup is None:
+        return 0
+    # A breadcrumb/category link and a detail link often name the same award.
+    # Multiple links prove an index only when they name different awards.
+    return len(
+        {
+            re.sub(r"\s+", " ", a.get_text(" ", strip=True)).casefold()
+            for a in soup.find_all("a", href=True)
+            if _SCHOLARSHIP_WORD.search(a.get_text(" ", strip=True) or "")
+            and not _FAQ.search(a.get_text(" ", strip=True) or "")
+        }
+    )
+
+
+def _program_link_count(soup: BeautifulSoup | None) -> int:
+    if soup is None:
+        return 0
+    return sum(
+        1
+        for a in soup.find_all("a", href=True)
+        if re.search(
+            r"/(bsc|msc|ba|ma|bachelor|master|programme|program|course)s?/", a.get("href", ""), re.I
+        )
+    )
+
+
+def full_degree_titles(text: str) -> list[str]:
+    """Every degree a text names in full, with its subject, in order.
+
+    "The Bachelor of Engineering in Computer Science covers …" yields
+    "Bachelor of Engineering in Computer Science". Public for the one caller
+    that may use a listing page's named programmes as evidence of existence.
+    """
+    # "Bachelor of Engineering (Computer Science)" is returned in the "in"
+    # form, the one the programme ontology reads.
+    return [
+        re.sub(r"\s*\(([^()]+)\)$", r" in \1", m.group(0).strip())
+        if not m.group(0).strip().lower().endswith("(hons)")
+        else m.group(0).strip()
+        for m in _FULL_DEGREE_TITLE.finditer(text or "")
+    ]
+
+
+def degree_level_of(text: str) -> str | None:
+    """The degree a text names first; see ``_degree_level``."""
+    return _degree_level(text or "")

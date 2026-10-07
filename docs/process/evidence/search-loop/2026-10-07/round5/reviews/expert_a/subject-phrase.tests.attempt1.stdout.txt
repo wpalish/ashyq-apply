@@ -1,0 +1,20 @@
+........................................................................ [ 59%]
+...........................................F.....                        [100%]
+=================================== FAILURES ===================================
+____ test_existing_alias_with_long_degree_title_abstention_is_not_expanded _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10c698470>
+
+    def test_existing_alias_with_long_degree_title_abstention_is_not_expanded(monkeypatch):
+        label = "Computing Science Major - Bachelor of Computer and Information Sciences"
+        for enabled in (False, True):
+            monkeypatch.setattr(discovery, "SUBJECT_PHRASE_MATCH", enabled)
+>           assert not discovery.matches_field_text(label, CS)
+E           AssertionError: assert not True
+E            +  where True = <function matches_field_text at 0x10c5a5300>('Computing Science Major - Bachelor of Computer and Information Sciences', ['computer science'])
+E            +    where <function matches_field_text at 0x10c5a5300> = discovery.matches_field_text
+
+test_subject_phrase_guard.py:102: AssertionError
+=========================== short test summary info ============================
+FAILED test_subject_phrase_guard.py::test_existing_alias_with_long_degree_title_abstention_is_not_expanded
+1 failed, 120 passed in 0.07s

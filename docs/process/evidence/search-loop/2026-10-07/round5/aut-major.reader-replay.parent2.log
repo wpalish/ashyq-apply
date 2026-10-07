@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/../search-loop-round5/replay_aut_major.py", line 58, in <module>
+    asyncio.run(main())
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/../search-loop-round5/replay_aut_major.py", line 54, in main
+    existence_proofs=[dict(value=c.normalized_value,excerpt=c.source_excerpt) for c in claims]))
+                                                            ^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pydantic/main.py", line 1042, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Claim' object has no attribute 'source_excerpt'

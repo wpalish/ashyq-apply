@@ -1,0 +1,18 @@
+tests/test_subject_phrase_guard.py:7:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 5 |   """
+ 6 |
+ 7 | / import socket
+ 8 | |
+ 9 | | import pytest
+10 | | from app.adapters.discovery import live_discovery as discovery
+11 | | from app.adapters.page_classifier import PageClassification, PageType
+12 | | from app.adapters.search.ontology import load_ontology
+   | |______________________________________________________^ I001
+13 |
+14 |   CS = ["computer science"]
+   |
+   = help: Organize imports
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.

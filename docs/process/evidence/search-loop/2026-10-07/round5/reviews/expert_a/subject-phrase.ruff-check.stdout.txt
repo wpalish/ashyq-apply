@@ -1,0 +1,31 @@
+replay_aut_subject_phrase.py:75:44: E702 Multiple statements on one line (semicolon)
+   |
+73 |     evidence = []
+74 |     for item in MANIFEST["pages"]:
+75 |         body_path = Path(item["body_copy"]); meta_path = Path(item["metadata_copy"])
+   |                                            ^ E702
+76 |         assert sha(body_path) == sha(Path(item["body_original"])) == item["body_sha256"]
+77 |         assert sha(meta_path) == sha(Path(item["metadata_original"])) == item["metadata_sha256"]
+   |
+
+replay_aut_subject_phrase.py:78:38: E702 Multiple statements on one line (semicolon)
+   |
+76 |         assert sha(body_path) == sha(Path(item["body_original"])) == item["body_sha256"]
+77 |         assert sha(meta_path) == sha(Path(item["metadata_original"])) == item["metadata_sha256"]
+78 |         body = body_path.read_bytes(); meta = json.loads(meta_path.read_text())
+   |                                      ^ E702
+79 |         html = body.decode(meta.get("encoding", "utf-8"), errors="replace")
+80 |         calculated_hash = _content_hash(html)
+   |
+
+replay_aut_subject_phrase.py:125:31: E702 Multiple statements on one line (semicolon)
+    |
+123 |         is_cs = "/computer-science-major-" in url
+124 |         assert [by_phase[x]["exists_count"] for x in ("off1", "on1", "on2", "off2")] == ([1, 1, 1, 1] if is_cs else [1, 0, 0, 1])
+125 |         old = by_phase["off1"]; new = by_phase["on1"]
+    |                               ^ E702
+126 |         old_claims = [c for c in old["claims"] if c["claim_type"] != ClaimType.PROGRAM_EXISTS.value]
+127 |         new_claims = [c for c in new["claims"] if c["claim_type"] != ClaimType.PROGRAM_EXISTS.value]
+    |
+
+Found 3 errors.

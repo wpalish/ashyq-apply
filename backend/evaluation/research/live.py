@@ -663,6 +663,7 @@ def main() -> None:
     from app.adapters.discovery import live_discovery
     from app.adapters.scholarship import web_scholarships
     from app.adapters.search import KNOWN_SEARCH_PROVIDERS
+    from app.adapters.search import intent as search_intent
     from app.config import Settings, get_settings
 
     parser = argparse.ArgumentParser(description=__doc__)
@@ -701,6 +702,12 @@ def main() -> None:
         "--site-branding-identity",
         action="store_true",
         help="experiment SI-1: verify a hinted homepage using its exact site name or copyright owner",
+    )
+    parser.add_argument(
+        "--subject-phrase-match",
+        action=argparse.BooleanOptionalAction,
+        default=live_discovery.SUBJECT_PHRASE_MATCH,
+        help="experiment SPH-1: require an ordered subject phrase in the page identity",
     )
     parser.add_argument(
         "--skip-refused-hosts",
@@ -884,6 +891,7 @@ def main() -> None:
         parser.error("Strict expert budget requires configured exa or exa_mcp")
     print(f"search provider: {search_provider}", flush=True)
     if args.child:
+        live_discovery.SUBJECT_PHRASE_MATCH = args.subject_phrase_match
         if args.site_branding_identity:
             from app.catalogue import discovery as catalogue_discovery
 
@@ -1036,6 +1044,9 @@ def main() -> None:
                     "strict_expert_budget": True,
                     "search_provider": search_provider,
                     "site_branding_identity": args.site_branding_identity,
+                    "subject_phrase_match": args.subject_phrase_match,
+                    "shared_query_budget": args.shared_query_budget
+                    or search_intent.SHARED_QUERY_BUDGET,
                     "seconds_per_case": args.seconds_per_case,
                     "max_fetcher_calls_per_case": args.max_pages,
                     "max_search_queries_per_case": STRICT_MAX_SEARCH_QUERIES,
@@ -1118,6 +1129,9 @@ def main() -> None:
                             else []
                         ),
                         *(["--shared-query-budget"] if args.shared_query_budget else []),
+                        "--subject-phrase-match"
+                        if args.subject_phrase_match
+                        else "--no-subject-phrase-match",
                         *(["--applicant-academic-year"] if args.applicant_academic_year else []),
                         "--search-funding-fallback"
                         if args.search_funding_fallback
@@ -1217,6 +1231,9 @@ def main() -> None:
                 "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
                 "search_before_navigation": args.search_first,
                 "site_branding_identity": args.site_branding_identity,
+                "subject_phrase_match": args.subject_phrase_match,
+                "shared_query_budget": args.shared_query_budget
+                or search_intent.SHARED_QUERY_BUDGET,
                 "recover_search_candidates": args.recover_search_candidates,
                 "search_funding_fallback": args.search_funding_fallback,
                 "target_award_search": args.target_award_search,

@@ -1,6 +1,14 @@
 # Claude search relay — 7 October 2026
 
-## Current checkpoint 2026-10-07 19:59UTC
+## Latest reviewed checkpoint 2026-10-07 20:44UTC
+
+**[search-loop] current 2026-10-07 20:44UTC:** Round5 source d29bcf8 and metadata640c797 pushed in DraftPR65 (base PR64). Local3892/95.01%, frontend232/all quality/demo/onehead; SPH-1=False. Round6 four external candidates rejected and archived; no classifier source applied. Latest rev2 bd21146 fixes earlier false programme/scope controls but causes real depth1 Wits funding-link loss. A prepares bounded revision3 preserving subsidiary funding discovery; await independent semantic/caller review before source application. Two rev2 conservative missed gains stay explicit. B prepares durable60-Fetcher.get production guard with real SQL/fencing tests, not hard120/render/query durability. Global CI-refusal/liveSTOP sticky, no live/hosted retry/reset/purchase/gold/heldout/default change. Parent owns all code/Git; two experts external only.
+
+## Previous Round5 checkpoint 2026-10-07 20:24UTC
+
+SPH-1 opt-in source locally verified3892/95.01%,frontend232/all local gates/demo unchanged/onehead. Retained AUT production reader removes wrong Data major1/0/0/1 and preserves true CS1/1/1/1 with no invented intake/year. Source task/search-subject-phrase follows DraftPR64 query accounting c6a1bdc; source checkpoint/PR65 next. RuleFalse pending live pair/owner promotion; no live while stickySTOP. Wits alternatives have two independently proven false-positive blockers and are not applied. Continue stronger offline proof/review rather than promoting them. Production durable60/120 remains unresolved. No current cloud CI or launch claim. Newest section supersedes older planned steps below.
+
+## Previous checkpoint 2026-10-07 19:59UTC
 
 Round2 all four arms completed before the CI refusal, 20 terminal observations within unchanged6/60/120000; stable site identity Wits/Caltech, no stable programme/core-fact gain, SI-1 remainsFalse. See round2/PAIRED_REVIEW.md. Original stopped launcher and two bounded outcomes without full raw remain explicit. Round3 default-on BL-1 identity/programme accounting repair locally passes3743/95.01%, frontend232/quality/demo/onehead; source branch task/search-query-ledger checkpoint next. Independent68test review has no blockers. GitHub refused all8 jobs9330929 before steps for billing/spending-limit; d669 previous8/8 is historical source proof. Global live STOP work/development-STOP.json is sticky: no live/provider/model/hosted retry, payment, substitution or reset. New source checkpoints use wip [skip ci], not a CI pass. Next: preserve query checkpoint then off-by-default AUT phrase rule and Wits primary-purpose classifier rule, each review/gates/pair/owner promotion per DoD; live remains blocked. Production durable60/120 guard design exists only as an explicitly incomplete sketch. Goal and hourly heartbeat remain ACTIVE; no merge/deployment/launch claim. Newest paragraph supersedes the historical planned-pair statements below.
 

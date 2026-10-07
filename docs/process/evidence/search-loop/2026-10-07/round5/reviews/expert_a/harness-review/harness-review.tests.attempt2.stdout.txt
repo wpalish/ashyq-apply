@@ -1,0 +1,485 @@
+FFFFFFFFFFFFFFF...............                                           [100%]
+=================================== FAILURES ===================================
+_ test_real_batch_to_real_child_parser_applies_exact_subject_choice[subject_args0-False-False] _
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final2/test_real_batch_to_real_child_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x108b74a10>
+subject_args = [], initial = False, expected = False
+
+    @pytest.mark.parametrize("subject_args,initial,expected", [
+        ([], False, False),
+        (["--subject-phrase-match"], False, True),
+        (["--no-subject-phrase-match"], True, False),
+        (["--subject-phrase-match", "--no-subject-phrase-match"], True, False),
+        (["--no-subject-phrase-match", "--subject-phrase-match"], False, True),
+    ])
+    def test_real_batch_to_real_child_parser_applies_exact_subject_choice(tmp_path, monkeypatch, subject_args, initial, expected):
+>       capture, commands, seen = run_batch(tmp_path, monkeypatch, subject_args=subject_args, initial_subject=initial)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_independent_harness_choices.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_independent_harness_choices.py:67: in run_batch
+    live.main()
+source-snapshot/backend/evaluation/research/live.py:863: in main
+    if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x109e4f5e0>
+
+>   if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'types.SimpleNamespace' object has no attribute 'domain'
+
+source-snapshot/backend/evaluation/research/live.py:863: AttributeError
+_ test_real_batch_to_real_child_parser_applies_exact_subject_choice[subject_args1-False-True] _
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final2/test_real_batch_to_real_child_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109e4dcd0>
+subject_args = ['--subject-phrase-match'], initial = False, expected = True
+
+    @pytest.mark.parametrize("subject_args,initial,expected", [
+        ([], False, False),
+        (["--subject-phrase-match"], False, True),
+        (["--no-subject-phrase-match"], True, False),
+        (["--subject-phrase-match", "--no-subject-phrase-match"], True, False),
+        (["--no-subject-phrase-match", "--subject-phrase-match"], False, True),
+    ])
+    def test_real_batch_to_real_child_parser_applies_exact_subject_choice(tmp_path, monkeypatch, subject_args, initial, expected):
+>       capture, commands, seen = run_batch(tmp_path, monkeypatch, subject_args=subject_args, initial_subject=initial)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_independent_harness_choices.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_independent_harness_choices.py:67: in run_batch
+    live.main()
+source-snapshot/backend/evaluation/research/live.py:863: in main
+    if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x1091ca470>
+
+>   if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'types.SimpleNamespace' object has no attribute 'domain'
+
+source-snapshot/backend/evaluation/research/live.py:863: AttributeError
+_ test_real_batch_to_real_child_parser_applies_exact_subject_choice[subject_args2-True-False] _
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final2/test_real_batch_to_real_child_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109f79640>
+subject_args = ['--no-subject-phrase-match'], initial = True, expected = False
+
+    @pytest.mark.parametrize("subject_args,initial,expected", [
+        ([], False, False),
+        (["--subject-phrase-match"], False, True),
+        (["--no-subject-phrase-match"], True, False),
+        (["--subject-phrase-match", "--no-subject-phrase-match"], True, False),
+        (["--no-subject-phrase-match", "--subject-phrase-match"], False, True),
+    ])
+    def test_real_batch_to_real_child_parser_applies_exact_subject_choice(tmp_path, monkeypatch, subject_args, initial, expected):
+>       capture, commands, seen = run_batch(tmp_path, monkeypatch, subject_args=subject_args, initial_subject=initial)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_independent_harness_choices.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_independent_harness_choices.py:67: in run_batch
+    live.main()
+source-snapshot/backend/evaluation/research/live.py:863: in main
+    if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x109f7acb0>
+
+>   if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'types.SimpleNamespace' object has no attribute 'domain'
+
+source-snapshot/backend/evaluation/research/live.py:863: AttributeError
+_ test_real_batch_to_real_child_parser_applies_exact_subject_choice[subject_args3-True-False] _
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final2/test_real_batch_to_real_child_3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109f7a330>
+subject_args = ['--subject-phrase-match', '--no-subject-phrase-match']
+initial = True, expected = False
+
+    @pytest.mark.parametrize("subject_args,initial,expected", [
+        ([], False, False),
+        (["--subject-phrase-match"], False, True),
+        (["--no-subject-phrase-match"], True, False),
+        (["--subject-phrase-match", "--no-subject-phrase-match"], True, False),
+        (["--no-subject-phrase-match", "--subject-phrase-match"], False, True),
+    ])
+    def test_real_batch_to_real_child_parser_applies_exact_subject_choice(tmp_path, monkeypatch, subject_args, initial, expected):
+>       capture, commands, seen = run_batch(tmp_path, monkeypatch, subject_args=subject_args, initial_subject=initial)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_independent_harness_choices.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_independent_harness_choices.py:67: in run_batch
+    live.main()
+source-snapshot/backend/evaluation/research/live.py:863: in main
+    if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x109f5c490>
+
+>   if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'types.SimpleNamespace' object has no attribute 'domain'
+
+source-snapshot/backend/evaluation/research/live.py:863: AttributeError
+_ test_real_batch_to_real_child_parser_applies_exact_subject_choice[subject_args4-False-True] _
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final2/test_real_batch_to_real_child_4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109f7a6f0>
+subject_args = ['--no-subject-phrase-match', '--subject-phrase-match']
+initial = False, expected = True
+
+    @pytest.mark.parametrize("subject_args,initial,expected", [
+        ([], False, False),
+        (["--subject-phrase-match"], False, True),
+        (["--no-subject-phrase-match"], True, False),
+        (["--subject-phrase-match", "--no-subject-phrase-match"], True, False),
+        (["--no-subject-phrase-match", "--subject-phrase-match"], False, True),
+    ])
+    def test_real_batch_to_real_child_parser_applies_exact_subject_choice(tmp_path, monkeypatch, subject_args, initial, expected):
+>       capture, commands, seen = run_batch(tmp_path, monkeypatch, subject_args=subject_args, initial_subject=initial)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_independent_harness_choices.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_independent_harness_choices.py:67: in run_batch
+    live.main()
+source-snapshot/backend/evaluation/research/live.py:863: in main
+    if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x108eb84f0>
+
+>   if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'types.SimpleNamespace' object has no attribute 'domain'
+
+source-snapshot/backend/evaluation/research/live.py:863: AttributeError
+_ test_parent_config_matches_real_child_effective_shared_not_just_cli[True-False-True-False] _
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final2/test_parent_config_matches_rea0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109f7ad20>
+subject = False, source_shared = True, explicit_shared = False, expected = True
+
+    @pytest.mark.parametrize("subject", [False, True])
+    @pytest.mark.parametrize("source_shared,explicit_shared,expected", [
+        (True, False, True), (False, False, False), (False, True, True),
+    ])
+    def test_parent_config_matches_real_child_effective_shared_not_just_cli(tmp_path, monkeypatch, subject, source_shared, explicit_shared, expected):
+        option = "--subject-phrase-match" if subject else "--no-subject-phrase-match"
+>       capture, _, seen = run_batch(tmp_path, monkeypatch, subject_args=[option],
+                                    shared_default=source_shared, shared_explicit=explicit_shared)
+
+test_independent_harness_choices.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_independent_harness_choices.py:67: in run_batch
+    live.main()
+source-snapshot/backend/evaluation/research/live.py:863: in main
+    if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x109e4fd00>
+
+>   if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'types.SimpleNamespace' object has no attribute 'domain'
+
+source-snapshot/backend/evaluation/research/live.py:863: AttributeError
+_ test_parent_config_matches_real_child_effective_shared_not_just_cli[True-False-True-True] _
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final2/test_parent_config_matches_rea1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109f783e0>
+subject = True, source_shared = True, explicit_shared = False, expected = True
+
+    @pytest.mark.parametrize("subject", [False, True])
+    @pytest.mark.parametrize("source_shared,explicit_shared,expected", [
+        (True, False, True), (False, False, False), (False, True, True),
+    ])
+    def test_parent_config_matches_real_child_effective_shared_not_just_cli(tmp_path, monkeypatch, subject, source_shared, explicit_shared, expected):
+        option = "--subject-phrase-match" if subject else "--no-subject-phrase-match"
+>       capture, _, seen = run_batch(tmp_path, monkeypatch, subject_args=[option],
+                                    shared_default=source_shared, shared_explicit=explicit_shared)
+
+test_independent_harness_choices.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_independent_harness_choices.py:67: in run_batch
+    live.main()
+source-snapshot/backend/evaluation/research/live.py:863: in main
+    if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x109e1ddb0>
+
+>   if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'types.SimpleNamespace' object has no attribute 'domain'
+
+source-snapshot/backend/evaluation/research/live.py:863: AttributeError
+_ test_parent_config_matches_real_child_effective_shared_not_just_cli[False-False-False-False] _
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final2/test_parent_config_matches_rea2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109f7a360>
+subject = False, source_shared = False, explicit_shared = False
+expected = False
+
+    @pytest.mark.parametrize("subject", [False, True])
+    @pytest.mark.parametrize("source_shared,explicit_shared,expected", [
+        (True, False, True), (False, False, False), (False, True, True),
+    ])
+    def test_parent_config_matches_real_child_effective_shared_not_just_cli(tmp_path, monkeypatch, subject, source_shared, explicit_shared, expected):
+        option = "--subject-phrase-match" if subject else "--no-subject-phrase-match"
+>       capture, _, seen = run_batch(tmp_path, monkeypatch, subject_args=[option],
+                                    shared_default=source_shared, shared_explicit=explicit_shared)
+
+test_independent_harness_choices.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_independent_harness_choices.py:67: in run_batch
+    live.main()
+source-snapshot/backend/evaluation/research/live.py:863: in main
+    if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x109e1faf0>
+
+>   if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'types.SimpleNamespace' object has no attribute 'domain'
+
+source-snapshot/backend/evaluation/research/live.py:863: AttributeError
+_ test_parent_config_matches_real_child_effective_shared_not_just_cli[False-False-False-True] _
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final2/test_parent_config_matches_rea3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109f5eb70>
+subject = True, source_shared = False, explicit_shared = False, expected = False
+
+    @pytest.mark.parametrize("subject", [False, True])
+    @pytest.mark.parametrize("source_shared,explicit_shared,expected", [
+        (True, False, True), (False, False, False), (False, True, True),
+    ])
+    def test_parent_config_matches_real_child_effective_shared_not_just_cli(tmp_path, monkeypatch, subject, source_shared, explicit_shared, expected):
+        option = "--subject-phrase-match" if subject else "--no-subject-phrase-match"
+>       capture, _, seen = run_batch(tmp_path, monkeypatch, subject_args=[option],
+                                    shared_default=source_shared, shared_explicit=explicit_shared)
+
+test_independent_harness_choices.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_independent_harness_choices.py:67: in run_batch
+    live.main()
+source-snapshot/backend/evaluation/research/live.py:863: in main
+    if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x109f5fe80>
+
+>   if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'types.SimpleNamespace' object has no attribute 'domain'
+
+source-snapshot/backend/evaluation/research/live.py:863: AttributeError
+_ test_parent_config_matches_real_child_effective_shared_not_just_cli[False-True-True-False] _
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final2/test_parent_config_matches_rea4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109f5eb40>
+subject = False, source_shared = False, explicit_shared = True, expected = True
+
+    @pytest.mark.parametrize("subject", [False, True])
+    @pytest.mark.parametrize("source_shared,explicit_shared,expected", [
+        (True, False, True), (False, False, False), (False, True, True),
+    ])
+    def test_parent_config_matches_real_child_effective_shared_not_just_cli(tmp_path, monkeypatch, subject, source_shared, explicit_shared, expected):
+        option = "--subject-phrase-match" if subject else "--no-subject-phrase-match"
+>       capture, _, seen = run_batch(tmp_path, monkeypatch, subject_args=[option],
+                                    shared_default=source_shared, shared_explicit=explicit_shared)
+
+test_independent_harness_choices.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_independent_harness_choices.py:67: in run_batch
+    live.main()
+source-snapshot/backend/evaluation/research/live.py:863: in main
+    if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x109f595a0>
+
+>   if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'types.SimpleNamespace' object has no attribute 'domain'
+
+source-snapshot/backend/evaluation/research/live.py:863: AttributeError
+_ test_parent_config_matches_real_child_effective_shared_not_just_cli[False-True-True-True] _
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final2/test_parent_config_matches_rea5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109f5e4b0>
+subject = True, source_shared = False, explicit_shared = True, expected = True
+
+    @pytest.mark.parametrize("subject", [False, True])
+    @pytest.mark.parametrize("source_shared,explicit_shared,expected", [
+        (True, False, True), (False, False, False), (False, True, True),
+    ])
+    def test_parent_config_matches_real_child_effective_shared_not_just_cli(tmp_path, monkeypatch, subject, source_shared, explicit_shared, expected):
+        option = "--subject-phrase-match" if subject else "--no-subject-phrase-match"
+>       capture, _, seen = run_batch(tmp_path, monkeypatch, subject_args=[option],
+                                    shared_default=source_shared, shared_explicit=explicit_shared)
+
+test_independent_harness_choices.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_independent_harness_choices.py:67: in run_batch
+    live.main()
+source-snapshot/backend/evaluation/research/live.py:863: in main
+    if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x108b74ca0>
+
+>   if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'types.SimpleNamespace' object has no attribute 'domain'
+
+source-snapshot/backend/evaluation/research/live.py:863: AttributeError
+_ test_pre_start_refusal_records_requested_subject_and_effective_shared_without_dispatch[False] _
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final2/test_pre_start_refusal_records0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109f5ecf0>
+subject = False
+
+    @pytest.mark.parametrize("subject", [False, True])
+    def test_pre_start_refusal_records_requested_subject_and_effective_shared_without_dispatch(tmp_path, monkeypatch, subject):
+        option = "--subject-phrase-match" if subject else "--no-subject-phrase-match"
+>       capture, commands, seen = run_batch(tmp_path, monkeypatch, subject_args=[option],
+                                           initial_subject=not subject, stop_before=True)
+
+test_independent_harness_choices.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_independent_harness_choices.py:67: in run_batch
+    live.main()
+source-snapshot/backend/evaluation/research/live.py:863: in main
+    if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x109f79e10>
+
+>   if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'types.SimpleNamespace' object has no attribute 'domain'
+
+source-snapshot/backend/evaluation/research/live.py:863: AttributeError
+_ test_pre_start_refusal_records_requested_subject_and_effective_shared_without_dispatch[True] _
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final2/test_pre_start_refusal_records1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109f5e5a0>
+subject = True
+
+    @pytest.mark.parametrize("subject", [False, True])
+    def test_pre_start_refusal_records_requested_subject_and_effective_shared_without_dispatch(tmp_path, monkeypatch, subject):
+        option = "--subject-phrase-match" if subject else "--no-subject-phrase-match"
+>       capture, commands, seen = run_batch(tmp_path, monkeypatch, subject_args=[option],
+                                           initial_subject=not subject, stop_before=True)
+
+test_independent_harness_choices.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_independent_harness_choices.py:67: in run_batch
+    live.main()
+source-snapshot/backend/evaluation/research/live.py:863: in main
+    if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x109f5fdf0>
+
+>   if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'types.SimpleNamespace' object has no attribute 'domain'
+
+source-snapshot/backend/evaluation/research/live.py:863: AttributeError
+______ test_refusal_between_cases_keeps_mode_and_first_observation[False] ______
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final2/test_refusal_between_cases_kee0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109f79730>
+subject = False
+
+    @pytest.mark.parametrize("subject", [False, True])
+    def test_refusal_between_cases_keeps_mode_and_first_observation(tmp_path, monkeypatch, subject):
+        option = "--subject-phrase-match" if subject else "--no-subject-phrase-match"
+>       capture, commands, seen = run_batch(tmp_path, monkeypatch, subject_args=[option], stop_after_first=True)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_independent_harness_choices.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_independent_harness_choices.py:67: in run_batch
+    live.main()
+source-snapshot/backend/evaluation/research/live.py:863: in main
+    if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x109f781c0>
+
+>   if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'types.SimpleNamespace' object has no attribute 'domain'
+
+source-snapshot/backend/evaluation/research/live.py:863: AttributeError
+______ test_refusal_between_cases_keeps_mode_and_first_observation[True] _______
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final2/test_refusal_between_cases_kee1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109f7b530>
+subject = True
+
+    @pytest.mark.parametrize("subject", [False, True])
+    def test_refusal_between_cases_keeps_mode_and_first_observation(tmp_path, monkeypatch, subject):
+        option = "--subject-phrase-match" if subject else "--no-subject-phrase-match"
+>       capture, commands, seen = run_batch(tmp_path, monkeypatch, subject_args=[option], stop_after_first=True)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_independent_harness_choices.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_independent_harness_choices.py:67: in run_batch
+    live.main()
+source-snapshot/backend/evaluation/research/live.py:863: in main
+    if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x109f79b40>
+
+>   if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'types.SimpleNamespace' object has no attribute 'domain'
+
+source-snapshot/backend/evaluation/research/live.py:863: AttributeError
+=========================== short test summary info ============================
+FAILED test_independent_harness_choices.py::test_real_batch_to_real_child_parser_applies_exact_subject_choice[subject_args0-False-False]
+FAILED test_independent_harness_choices.py::test_real_batch_to_real_child_parser_applies_exact_subject_choice[subject_args1-False-True]
+FAILED test_independent_harness_choices.py::test_real_batch_to_real_child_parser_applies_exact_subject_choice[subject_args2-True-False]
+FAILED test_independent_harness_choices.py::test_real_batch_to_real_child_parser_applies_exact_subject_choice[subject_args3-True-False]
+FAILED test_independent_harness_choices.py::test_real_batch_to_real_child_parser_applies_exact_subject_choice[subject_args4-False-True]
+FAILED test_independent_harness_choices.py::test_parent_config_matches_real_child_effective_shared_not_just_cli[True-False-True-False]
+FAILED test_independent_harness_choices.py::test_parent_config_matches_real_child_effective_shared_not_just_cli[True-False-True-True]
+FAILED test_independent_harness_choices.py::test_parent_config_matches_real_child_effective_shared_not_just_cli[False-False-False-False]
+FAILED test_independent_harness_choices.py::test_parent_config_matches_real_child_effective_shared_not_just_cli[False-False-False-True]
+FAILED test_independent_harness_choices.py::test_parent_config_matches_real_child_effective_shared_not_just_cli[False-True-True-False]
+FAILED test_independent_harness_choices.py::test_parent_config_matches_real_child_effective_shared_not_just_cli[False-True-True-True]
+FAILED test_independent_harness_choices.py::test_pre_start_refusal_records_requested_subject_and_effective_shared_without_dispatch[False]
+FAILED test_independent_harness_choices.py::test_pre_start_refusal_records_requested_subject_and_effective_shared_without_dispatch[True]
+FAILED test_independent_harness_choices.py::test_refusal_between_cases_keeps_mode_and_first_observation[False]
+FAILED test_independent_harness_choices.py::test_refusal_between_cases_keeps_mode_and_first_observation[True]
+15 failed, 15 passed in 0.43s

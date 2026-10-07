@@ -1,0 +1,2238 @@
+{
+  "created_at_utc": "2026-10-07T20:22:17.746599+00:00",
+  "source_sha256": {
+    "backend/evaluation/research/live.py": "e89734bb6f550dad4ce3328f1073c6b9fa9a6437e6a73fc41337f1507b7f90d8",
+    "backend/evaluation/research/mapping.py": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+    "backend/evaluation/research/schema.py": "313a92ebeadcd534b8731b5a3254a2f00ffbd9d99a16795b79d1d7a2d41ce924",
+    "backend/app/adapters/discovery/live_discovery.py": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6",
+    "backend/app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "backend/tests/test_subject_phrase_capture.py": "d051c525527f397eb4889e6195d6f132015feb4439875211d20e2117ae773082"
+  },
+  "network_calls": 0,
+  "provider_calls": 0,
+  "model_calls": 0,
+  "real_subprocess_calls": 0,
+  "case_data_mocked": true,
+  "actual_batch_and_child_main_executed": true,
+  "capture_one_mocked": true,
+  "rows": [
+    {
+      "subject_arguments": [
+        "--no-subject-phrase-match"
+      ],
+      "initial_subject": false,
+      "shared_default": true,
+      "shared_explicit": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "child_effective": [
+        {
+          "subject_phrase_match": false,
+          "shared_query_budget": true
+        },
+        {
+          "subject_phrase_match": false,
+          "shared_query_budget": true
+        }
+      ],
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea0/capture/20261007T201933Z/offline-test-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea0/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea0/capture/20261007T201933Z/offline-test-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea0/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "captured_at": "20261007T201933Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "e89734bb6f550dad4ce3328f1073c6b9fa9a6437e6a73fc41337f1507b7f90d8",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-test-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0007833329727873206,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-test-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0007046670652925968,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-test-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-test-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "pipeline_sha_is_mock": true,
+      "network_calls": 0,
+      "capture_one_is_mock": true,
+      "real_subprocess_calls": 0
+    },
+    {
+      "subject_arguments": [
+        "--subject-phrase-match"
+      ],
+      "initial_subject": false,
+      "shared_default": true,
+      "shared_explicit": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "child_effective": [
+        {
+          "subject_phrase_match": true,
+          "shared_query_budget": true
+        },
+        {
+          "subject_phrase_match": true,
+          "shared_query_budget": true
+        }
+      ],
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea1/capture/20261007T201933Z/offline-test-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea1/synthetic-STOP.json",
+          "--subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea1/capture/20261007T201933Z/offline-test-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea1/synthetic-STOP.json",
+          "--subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "captured_at": "20261007T201933Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": true,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "e89734bb6f550dad4ce3328f1073c6b9fa9a6437e6a73fc41337f1507b7f90d8",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-test-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0008448339067399502,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-test-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0007962919771671295,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-test-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-test-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "pipeline_sha_is_mock": true,
+      "network_calls": 0,
+      "capture_one_is_mock": true,
+      "real_subprocess_calls": 0
+    },
+    {
+      "subject_arguments": [
+        "--no-subject-phrase-match"
+      ],
+      "initial_subject": false,
+      "shared_default": false,
+      "shared_explicit": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "child_effective": [
+        {
+          "subject_phrase_match": false,
+          "shared_query_budget": false
+        },
+        {
+          "subject_phrase_match": false,
+          "shared_query_budget": false
+        }
+      ],
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea2/capture/20261007T201933Z/offline-test-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea2/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea2/capture/20261007T201933Z/offline-test-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea2/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "captured_at": "20261007T201933Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "shared_query_budget": false,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "e89734bb6f550dad4ce3328f1073c6b9fa9a6437e6a73fc41337f1507b7f90d8",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-test-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0011555829551070929,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-test-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0007682499708607793,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-test-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-test-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "pipeline_sha_is_mock": true,
+      "network_calls": 0,
+      "capture_one_is_mock": true,
+      "real_subprocess_calls": 0
+    },
+    {
+      "subject_arguments": [
+        "--subject-phrase-match"
+      ],
+      "initial_subject": false,
+      "shared_default": false,
+      "shared_explicit": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "child_effective": [
+        {
+          "subject_phrase_match": true,
+          "shared_query_budget": false
+        },
+        {
+          "subject_phrase_match": true,
+          "shared_query_budget": false
+        }
+      ],
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea3/capture/20261007T201933Z/offline-test-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea3/synthetic-STOP.json",
+          "--subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea3/capture/20261007T201933Z/offline-test-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea3/synthetic-STOP.json",
+          "--subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "captured_at": "20261007T201933Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": true,
+          "shared_query_budget": false,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "e89734bb6f550dad4ce3328f1073c6b9fa9a6437e6a73fc41337f1507b7f90d8",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-test-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0008069999748840928,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-test-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0007201250409707427,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-test-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-test-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "pipeline_sha_is_mock": true,
+      "network_calls": 0,
+      "capture_one_is_mock": true,
+      "real_subprocess_calls": 0
+    },
+    {
+      "subject_arguments": [
+        "--no-subject-phrase-match"
+      ],
+      "initial_subject": false,
+      "shared_default": false,
+      "shared_explicit": true,
+      "stop_before": false,
+      "stop_after_first": false,
+      "child_effective": [
+        {
+          "subject_phrase_match": false,
+          "shared_query_budget": true
+        },
+        {
+          "subject_phrase_match": false,
+          "shared_query_budget": true
+        }
+      ],
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea4/capture/20261007T201933Z/offline-test-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea4/synthetic-STOP.json",
+          "--shared-query-budget",
+          "--no-subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea4/capture/20261007T201933Z/offline-test-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea4/synthetic-STOP.json",
+          "--shared-query-budget",
+          "--no-subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "captured_at": "20261007T201933Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "e89734bb6f550dad4ce3328f1073c6b9fa9a6437e6a73fc41337f1507b7f90d8",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-test-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0007716660620644689,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-test-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0007179579697549343,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-test-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-test-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "pipeline_sha_is_mock": true,
+      "network_calls": 0,
+      "capture_one_is_mock": true,
+      "real_subprocess_calls": 0
+    },
+    {
+      "subject_arguments": [
+        "--subject-phrase-match"
+      ],
+      "initial_subject": false,
+      "shared_default": false,
+      "shared_explicit": true,
+      "stop_before": false,
+      "stop_after_first": false,
+      "child_effective": [
+        {
+          "subject_phrase_match": true,
+          "shared_query_budget": true
+        },
+        {
+          "subject_phrase_match": true,
+          "shared_query_budget": true
+        }
+      ],
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea5/capture/20261007T201933Z/offline-test-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea5/synthetic-STOP.json",
+          "--shared-query-budget",
+          "--subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea5/capture/20261007T201933Z/offline-test-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea5/synthetic-STOP.json",
+          "--shared-query-budget",
+          "--subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "captured_at": "20261007T201933Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": true,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "e89734bb6f550dad4ce3328f1073c6b9fa9a6437e6a73fc41337f1507b7f90d8",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-test-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.000860041007399559,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-test-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0006995829753577709,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-test-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-test-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "pipeline_sha_is_mock": true,
+      "network_calls": 0,
+      "capture_one_is_mock": true,
+      "real_subprocess_calls": 0
+    },
+    {
+      "subject_arguments": [
+        "--no-subject-phrase-match"
+      ],
+      "initial_subject": true,
+      "shared_default": true,
+      "shared_explicit": false,
+      "stop_before": true,
+      "stop_after_first": false,
+      "child_effective": [],
+      "commands": [],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "captured_at": "20261007T201933Z",
+        "mode": "live",
+        "config": {
+          "strict_expert_budget": true,
+          "search_provider": "exa_mcp",
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "shared_query_budget": true,
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "max_search_queries_per_case": 6,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "selection": "catalogue_id",
+          "batch_stop_reason": "external_provider_failure",
+          "batch_attempted_case_ids": [],
+          "batch_remaining_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ]
+        },
+        "observations": []
+      },
+      "pipeline_sha_is_mock": true,
+      "network_calls": 0,
+      "capture_one_is_mock": true,
+      "real_subprocess_calls": 0
+    },
+    {
+      "subject_arguments": [
+        "--subject-phrase-match"
+      ],
+      "initial_subject": false,
+      "shared_default": true,
+      "shared_explicit": false,
+      "stop_before": true,
+      "stop_after_first": false,
+      "child_effective": [],
+      "commands": [],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "captured_at": "20261007T201933Z",
+        "mode": "live",
+        "config": {
+          "strict_expert_budget": true,
+          "search_provider": "exa_mcp",
+          "site_branding_identity": false,
+          "subject_phrase_match": true,
+          "shared_query_budget": true,
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "max_search_queries_per_case": 6,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "selection": "catalogue_id",
+          "batch_stop_reason": "external_provider_failure",
+          "batch_attempted_case_ids": [],
+          "batch_remaining_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ]
+        },
+        "observations": []
+      },
+      "pipeline_sha_is_mock": true,
+      "network_calls": 0,
+      "capture_one_is_mock": true,
+      "real_subprocess_calls": 0
+    },
+    {
+      "subject_arguments": [],
+      "initial_subject": false,
+      "shared_default": true,
+      "shared_explicit": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "child_effective": [
+        {
+          "subject_phrase_match": false,
+          "shared_query_budget": true
+        },
+        {
+          "subject_phrase_match": false,
+          "shared_query_budget": true
+        }
+      ],
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_0/capture/20261007T201933Z/offline-test-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_0/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_0/capture/20261007T201933Z/offline-test-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_0/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "captured_at": "20261007T201933Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "e89734bb6f550dad4ce3328f1073c6b9fa9a6437e6a73fc41337f1507b7f90d8",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-test-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0010400419123470783,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-test-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0007975409971550107,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-test-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-test-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "pipeline_sha_is_mock": true,
+      "network_calls": 0,
+      "capture_one_is_mock": true,
+      "real_subprocess_calls": 0
+    },
+    {
+      "subject_arguments": [
+        "--subject-phrase-match"
+      ],
+      "initial_subject": false,
+      "shared_default": true,
+      "shared_explicit": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "child_effective": [
+        {
+          "subject_phrase_match": true,
+          "shared_query_budget": true
+        },
+        {
+          "subject_phrase_match": true,
+          "shared_query_budget": true
+        }
+      ],
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_1/capture/20261007T201933Z/offline-test-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_1/synthetic-STOP.json",
+          "--subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_1/capture/20261007T201933Z/offline-test-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_1/synthetic-STOP.json",
+          "--subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "captured_at": "20261007T201933Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": true,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "e89734bb6f550dad4ce3328f1073c6b9fa9a6437e6a73fc41337f1507b7f90d8",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-test-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0008086659945547581,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-test-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0007334999972954392,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-test-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-test-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "pipeline_sha_is_mock": true,
+      "network_calls": 0,
+      "capture_one_is_mock": true,
+      "real_subprocess_calls": 0
+    },
+    {
+      "subject_arguments": [
+        "--no-subject-phrase-match"
+      ],
+      "initial_subject": true,
+      "shared_default": true,
+      "shared_explicit": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "child_effective": [
+        {
+          "subject_phrase_match": false,
+          "shared_query_budget": true
+        },
+        {
+          "subject_phrase_match": false,
+          "shared_query_budget": true
+        }
+      ],
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_2/capture/20261007T201933Z/offline-test-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_2/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_2/capture/20261007T201933Z/offline-test-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_2/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "captured_at": "20261007T201933Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "e89734bb6f550dad4ce3328f1073c6b9fa9a6437e6a73fc41337f1507b7f90d8",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-test-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0007902500219643116,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-test-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0007143749389797449,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-test-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-test-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "pipeline_sha_is_mock": true,
+      "network_calls": 0,
+      "capture_one_is_mock": true,
+      "real_subprocess_calls": 0
+    },
+    {
+      "subject_arguments": [
+        "--subject-phrase-match",
+        "--no-subject-phrase-match"
+      ],
+      "initial_subject": true,
+      "shared_default": true,
+      "shared_explicit": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "child_effective": [
+        {
+          "subject_phrase_match": false,
+          "shared_query_budget": true
+        },
+        {
+          "subject_phrase_match": false,
+          "shared_query_budget": true
+        }
+      ],
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_3/capture/20261007T201933Z/offline-test-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_3/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_3/capture/20261007T201933Z/offline-test-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_3/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "captured_at": "20261007T201933Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "e89734bb6f550dad4ce3328f1073c6b9fa9a6437e6a73fc41337f1507b7f90d8",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-test-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0007996660424396396,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-test-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0007061250507831573,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-test-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-test-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "pipeline_sha_is_mock": true,
+      "network_calls": 0,
+      "capture_one_is_mock": true,
+      "real_subprocess_calls": 0
+    },
+    {
+      "subject_arguments": [
+        "--no-subject-phrase-match",
+        "--subject-phrase-match"
+      ],
+      "initial_subject": false,
+      "shared_default": true,
+      "shared_explicit": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "child_effective": [
+        {
+          "subject_phrase_match": true,
+          "shared_query_budget": true
+        },
+        {
+          "subject_phrase_match": true,
+          "shared_query_budget": true
+        }
+      ],
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_4/capture/20261007T201933Z/offline-test-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_4/synthetic-STOP.json",
+          "--subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_4/capture/20261007T201933Z/offline-test-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_4/synthetic-STOP.json",
+          "--subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "captured_at": "20261007T201933Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": true,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "e89734bb6f550dad4ce3328f1073c6b9fa9a6437e6a73fc41337f1507b7f90d8",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-test-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0007821249309927225,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-test-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0007254580268636346,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-test-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-test-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "pipeline_sha_is_mock": true,
+      "network_calls": 0,
+      "capture_one_is_mock": true,
+      "real_subprocess_calls": 0
+    },
+    {
+      "subject_arguments": [
+        "--no-subject-phrase-match"
+      ],
+      "initial_subject": false,
+      "shared_default": true,
+      "shared_explicit": false,
+      "stop_before": false,
+      "stop_after_first": true,
+      "child_effective": [
+        {
+          "subject_phrase_match": false,
+          "shared_query_budget": true
+        }
+      ],
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_refusal_between_cases_kee0/capture/20261007T201933Z/offline-test-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_refusal_between_cases_kee0/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "captured_at": "20261007T201933Z",
+        "mode": "live",
+        "config": {
+          "strict_expert_budget": true,
+          "search_provider": "exa_mcp",
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "shared_query_budget": true,
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "max_search_queries_per_case": 6,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "selection": "catalogue_id",
+          "batch_stop_reason": "external_provider_failure",
+          "batch_attempted_case_ids": [
+            "offline-test-a"
+          ],
+          "batch_remaining_case_ids": [
+            "offline-test-b"
+          ]
+        },
+        "observations": [
+          {
+            "case_id": "offline-test-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "pipeline_sha_is_mock": true,
+      "network_calls": 0,
+      "capture_one_is_mock": true,
+      "real_subprocess_calls": 0
+    },
+    {
+      "subject_arguments": [
+        "--subject-phrase-match"
+      ],
+      "initial_subject": false,
+      "shared_default": true,
+      "shared_explicit": false,
+      "stop_before": false,
+      "stop_after_first": true,
+      "child_effective": [
+        {
+          "subject_phrase_match": true,
+          "shared_query_budget": true
+        }
+      ],
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-test-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_refusal_between_cases_kee1/capture/20261007T201933Z/offline-test-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_refusal_between_cases_kee1/synthetic-STOP.json",
+          "--subject-phrase-match",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "captured_at": "20261007T201933Z",
+        "mode": "live",
+        "config": {
+          "strict_expert_budget": true,
+          "search_provider": "exa_mcp",
+          "site_branding_identity": false,
+          "subject_phrase_match": true,
+          "shared_query_budget": true,
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "max_search_queries_per_case": 6,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-test-a",
+            "offline-test-b"
+          ],
+          "selection": "catalogue_id",
+          "batch_stop_reason": "external_provider_failure",
+          "batch_attempted_case_ids": [
+            "offline-test-a"
+          ],
+          "batch_remaining_case_ids": [
+            "offline-test-b"
+          ]
+        },
+        "observations": [
+          {
+            "case_id": "offline-test-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "pipeline_sha_is_mock": true,
+      "network_calls": 0,
+      "capture_one_is_mock": true,
+      "real_subprocess_calls": 0
+    }
+  ]
+}
