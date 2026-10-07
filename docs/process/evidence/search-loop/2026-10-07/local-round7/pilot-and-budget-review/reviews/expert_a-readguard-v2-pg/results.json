@@ -1,0 +1,205 @@
+{
+  "status": "NARROW_READ_GUARD_PG_CONTROLS_SUPPORTED_WITH_RETAINED_WORKER_RED",
+  "candidate_manifest_sha256": "236e9a53667c86c0b14a04807492804402604d05a5a32ba670fb97915f84c2a4",
+  "candidate_patch_sha256": "344c8200fce357ca4bc17cc3510031202390d10637780fb9f095b0d9d9759e38",
+  "candidate_runner_sha256": "a91a4f5259de94ba346190c30ec24fe845907b1a1053919b6830de6d27fc20c8",
+  "database": "actual isolated local PostgreSQL16.2 via Unix socket, no TCP",
+  "pytest": {
+    "primary": {
+      "passed": 17,
+      "failed": 1,
+      "seconds": 7.6,
+      "exit_code": 1,
+      "log": "pytest-actual-pg.stdout"
+    },
+    "routing_supplement": {
+      "passed": 10,
+      "failed": 0,
+      "seconds": 1.33,
+      "exit_code": 0,
+      "log": "pytest-routing-supplement.stdout"
+    },
+    "combined": {
+      "passed": 27,
+      "failed": 1
+    },
+    "red_retained": true,
+    "red_replayed_or_modified": false
+  },
+  "plan_controls": [
+    {
+      "id": "PG-00",
+      "status": "PASS",
+      "raw": [
+        "PG-00"
+      ]
+    },
+    {
+      "id": "PG-01",
+      "status": "PASS",
+      "raw": [
+        "PG-01"
+      ],
+      "sqlstate": "55P03",
+      "whole_guard_elapsed_ms": 3.72525
+    },
+    {
+      "id": "PG-02",
+      "status": "PASS",
+      "raw": [
+        "PG-02"
+      ],
+      "sqlstate": "55P03",
+      "whole_guard_elapsed_ms": 2.984791,
+      "acquired_job_rollback_release_verified": true
+    },
+    {
+      "id": "PG-03",
+      "status": "PASS",
+      "raw": [
+        "PG-03"
+      ],
+      "attempts": 80,
+      "original_get": 60,
+      "read_cap": 20,
+      "saved_count": 60,
+      "real_backend_pids": [
+        11529,
+        11530
+      ],
+      "coordination": "round-robin starts, no retry, observer sees committed1..60"
+    },
+    {
+      "id": "PG-04",
+      "status": "PASS",
+      "raw": [
+        "PG-04"
+      ],
+      "simultaneous_attempts": 80,
+      "simultaneous_outcomes": {
+        "admitted": 25,
+        "checkpoint_busy": 55
+      },
+      "near59_final_count": 60,
+      "no_exact60_claim_for_uncoordinated_attempts": true
+    },
+    {
+      "id": "PG-05",
+      "status": "PASS",
+      "raw": [
+        "PG-05-worker-one",
+        "PG-05-worker-two"
+      ],
+      "actual_reap_claim_token2": true,
+      "recorded_on_survives_source_false": true,
+      "expiry_alone_fence_claim": false
+    },
+    {
+      "id": "PG-06",
+      "status": "PASS",
+      "raw": [
+        "PG-06-user",
+        "PG-06-coroutine",
+        "PG-06-walker-renderer-False",
+        "PG-06-walker-renderer-True",
+        "PG-06-walker-cancel",
+        "PG-06-walker-fence"
+      ],
+      "actual_walker_and_renderer_control_paths": true
+    },
+    {
+      "id": "PG-07",
+      "status": "PASS_IN_STATED_NARROW_BOUNDARY",
+      "raw": [
+        "PG-07",
+        "PG-07-untracked-off-boundary"
+      ],
+      "dirty_off_first_namespace_serialized": true,
+      "60_preserved_61_refused": true,
+      "legacy_untracked_false_61_allowed": true,
+      "universal_preexisting_off_on_guarantee": false
+    },
+    {
+      "id": "PG-08",
+      "status": "PASS",
+      "raw": [
+        "PG-08-job-stage_verify",
+        "PG-08-run-stage_verify",
+        "PG-08-job-run_to_decision",
+        "PG-08-run-run_to_decision",
+        "PG-08-funding-job",
+        "PG-08-funding-run"
+      ],
+      "prior_claims_results_unchanged": true,
+      "original_io": 0,
+      "durable_busy_unknown_claim": false
+    },
+    {
+      "id": "PG-09",
+      "status": "RED_WORKER_BOUNDARY_SEPARATE_FROM_CAP",
+      "raw": [
+        "PG-09-run",
+        "PG-09-job",
+        "PG-09-discovery-catalogue",
+        "PG-09-discovery-curated"
+      ],
+      "run_only_blocker_worker_retry": "queued",
+      "job_still_locked_worker_failure_sqlstate": "57014",
+      "job_locked_worker_elapsed_seconds": 5.010681917,
+      "original_io": 0,
+      "prior_claims_results_unchanged": true,
+      "candidate_explicitly_excludes_guaranteed_worker_retry_write_under_lock": true,
+      "desired_broad_prepared_control_still_fails": true
+    },
+    {
+      "id": "PG-10",
+      "status": "PASS_WITH_LOCK_ORDER_LIMITATION",
+      "raw": [
+        "PG-10",
+        "PG-10-actual-source-recorder"
+      ],
+      "earlier_actual_source_recorder_flush": true,
+      "opposite_run_then_job_lock": true,
+      "rollback_release": true,
+      "deadlock_freedom_claim": false
+    },
+    {
+      "id": "PG-11",
+      "status": "PASS",
+      "raw": [
+        "PG-11"
+      ],
+      "corrupt_envelope_no_io_no_reset": true,
+      "precommit_failure_zero_io_visible_saved_count0": true,
+      "explicit_rollback_only": true
+    },
+    {
+      "id": "PG-12",
+      "status": "PASS",
+      "raw": [
+        "PG-12-lifecycle",
+        "PG-12-supplement-lifecycle"
+      ],
+      "servers_started": 2,
+      "own_pids": [
+        11504,
+        12042
+      ],
+      "pids_gone": true,
+      "sockets_absent": true
+    }
+  ],
+  "provider_model_http_external_db_calls": 0,
+  "repository_source_git_package_STOP_edits": 0,
+  "unsupported_claims": [
+    "universal OFF/ON cap/deployment",
+    "complete per-university6/60/120 DoD",
+    "hard time/render cap",
+    "crash process replay",
+    "documents/recheck scope",
+    "deadlock freedom",
+    "durable unknown while DB locked",
+    "unfenced live capture/default promotion",
+    "expiry alone before reap fences worker"
+  ]
+}

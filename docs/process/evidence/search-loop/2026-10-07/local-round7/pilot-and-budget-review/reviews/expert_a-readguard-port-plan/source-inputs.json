@@ -1,0 +1,691 @@
+{
+  "kind": "read_only_port_inputs",
+  "read_at_utc": "2026-10-07T22:44:53.404080+00:00",
+  "inputs": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/shadow_import.py": {
+      "sha256": "4a36dfee8ccf408909afd6137731e9766931a62cf767f29ba0dc2edf302b7161",
+      "bytes": 1551,
+      "top_level_functions": [
+        {
+          "name": "install",
+          "line": 35,
+          "end_line": 46
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/test_production_readguard.py": {
+      "sha256": "cc7d39feb4365b234a4ff4e53580155e4a54bf669f8266780aed495847346559",
+      "bytes": 46681,
+      "top_level_functions": [
+        {
+          "name": "offline",
+          "line": 53,
+          "end_line": 68
+        },
+        {
+          "name": "context",
+          "line": 72,
+          "end_line": 143
+        },
+        {
+          "name": "activate",
+          "line": 146,
+          "end_line": 151
+        },
+        {
+          "name": "candidate",
+          "line": 154,
+          "end_line": 172
+        },
+        {
+          "name": "counts",
+          "line": 175,
+          "end_line": 182
+        },
+        {
+          "name": "mock_original_get",
+          "line": 185,
+          "end_line": 205
+        },
+        {
+          "name": "test_60_actual_fetcher_get_then_no_original_61",
+          "line": 212,
+          "end_line": 224
+        },
+        {
+          "name": "test_conditional_cache_arguments_are_preserved",
+          "line": 228,
+          "end_line": 243
+        },
+        {
+          "name": "test_same_university_all_programmes_and_stages_share_counter",
+          "line": 247,
+          "end_line": 268
+        },
+        {
+          "name": "test_worker_retry_and_stale_attempt_same_worker_never_reset",
+          "line": 272,
+          "end_line": 304
+        },
+        {
+          "name": "test_save_refreshes_stale_json_without_erasing_pending_counters",
+          "line": 308,
+          "end_line": 336
+        },
+        {
+          "name": "test_scope_less_or_unfenced_get_has_no_original_call",
+          "line": 340,
+          "end_line": 351
+        },
+        {
+          "name": "test_cancel_is_not_budget_or_http_failure_and_does_not_reserve",
+          "line": 355,
+          "end_line": 367
+        },
+        {
+          "name": "test_foreign_asyncio_cancel_preserves_pre_io_reservation",
+          "line": 371,
+          "end_line": 387
+        },
+        {
+          "name": "test_checkpoint_failure_prevents_original_io",
+          "line": 391,
+          "end_line": 403
+        },
+        {
+          "name": "test_corrupt_envelope_no_reset_no_io",
+          "line": 418,
+          "end_line": 427
+        },
+        {
+          "name": "test_curated_identity_exact_normalization_and_qualifier_distinction",
+          "line": 430,
+          "end_line": 437
+        },
+        {
+          "name": "test_real_catalogue_discovery_61_is_local_unknown",
+          "line": 441,
+          "end_line": 470
+        },
+        {
+          "name": "test_legacy_flag_off_still_allows_61",
+          "line": 474,
+          "end_line": 487
+        },
+        {
+          "name": "program_claim",
+          "line": 490,
+          "end_line": 500
+        },
+        {
+          "name": "test_actual_disk_cache_hit_is_charged",
+          "line": 504,
+          "end_line": 525
+        },
+        {
+          "name": "test_fence_loss_between_precheck_and_job_lock_prevents_charge",
+          "line": 529,
+          "end_line": 544
+        },
+        {
+          "name": "test_existing_save_final_heartbeat_refusal_rolls_back_reserved_charge",
+          "line": 548,
+          "end_line": 559
+        },
+        {
+          "name": "test_failed_original_get_reservation_never_refunded",
+          "line": 563,
+          "end_line": 572
+        },
+        {
+          "name": "test_real_run_to_decision_shared_61_stops_funding_and_preserves_programme",
+          "line": 576,
+          "end_line": 657
+        },
+        {
+          "name": "test_actual_verify_later_cost_stop_keeps_completed_requirements",
+          "line": 664,
+          "end_line": 737
+        },
+        {
+          "name": "test_catalogue_walker_broad_catch_does_not_swallow_control_stop",
+          "line": 742,
+          "end_line": 757
+        },
+        {
+          "name": "test_sitemap_broad_catch_does_not_swallow_control_stop",
+          "line": 762,
+          "end_line": 776
+        },
+        {
+          "name": "test_curated_fallback_real_discovery_loop_has_stable_scope",
+          "line": 780,
+          "end_line": 809
+        },
+        {
+          "name": "test_documents_explicitly_do_not_claim_guard_contract_but_keep_ledger",
+          "line": 813,
+          "end_line": 824
+        },
+        {
+          "name": "test_fresh_row_statement_requests_for_update",
+          "line": 827,
+          "end_line": 843
+        },
+        {
+          "name": "test_missing_active_episode_is_corrupt_not_fresh_allowance",
+          "line": 847,
+          "end_line": 864
+        },
+        {
+          "name": "test_missing_retry_episode_never_resets_to_zero",
+          "line": 867,
+          "end_line": 892
+        },
+        {
+          "name": "test_untracked_new_job_on_started_run_is_unknown_preserving_old_history",
+          "line": 896,
+          "end_line": 934
+        },
+        {
+          "name": "test_guard_off_checkpoint_with_existing_envelope_preserves_latest",
+          "line": 938,
+          "end_line": 954
+        },
+        {
+          "name": "test_lock_order_job_then_run_and_both_nowait",
+          "line": 958,
+          "end_line": 976
+        },
+        {
+          "name": "test_postgres_lock_unavailable_refuses_read_without_dispatch",
+          "line": 980,
+          "end_line": 993
+        },
+        {
+          "name": "test_parallel_same_episode_reads_never_exceed_60",
+          "line": 997,
+          "end_line": 1011
+        },
+        {
+          "name": "test_demo_factory_never_claims_new_live_guard",
+          "line": 1014,
+          "end_line": 1017
+        },
+        {
+          "name": "test_recheck_explicitly_excluded_and_ledger_preserved",
+          "line": 1021,
+          "end_line": 1051
+        },
+        {
+          "name": "test_standalone_renderer_control_not_swallowed",
+          "line": 1056,
+          "end_line": 1066
+        },
+        {
+          "name": "test_bad_count_with_valid_episode_and_university_key_never_resets",
+          "line": 1070,
+          "end_line": 1086
+        },
+        {
+          "name": "test_unknown_saved_episode_cannot_create_new_allowance",
+          "line": 1096,
+          "end_line": 1112
+        },
+        {
+          "name": "test_same_job_two_stale_runners_share_fresh_row_counter",
+          "line": 1116,
+          "end_line": 1145
+        },
+        {
+          "name": "test_started_legacy_episode_without_ledger_fails_closed",
+          "line": 1148,
+          "end_line": 1157
+        },
+        {
+          "name": "test_real_direct_run_without_worker_job_is_unknown_before_get",
+          "line": 1161,
+          "end_line": 1177
+        },
+        {
+          "name": "test_nonresearch_fenced_job_has_no_decision_allowance",
+          "line": 1180,
+          "end_line": 1189
+        },
+        {
+          "name": "test_guard_off_stale_snapshot_that_predates_namespace_still_keeps_latest",
+          "line": 1192,
+          "end_line": 1211
+        },
+        {
+          "name": "test_guarded_cancellation_read_never_autoflushes_run_before_job_lock",
+          "line": 1215,
+          "end_line": 1245
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py": {
+      "sha256": "02324a8b0645bf5043cb48b908c0c62853ee6cf1e141e8f24387a07d11c72f8e",
+      "bytes": 24210,
+      "top_level_functions": [
+        {
+          "name": "snapshot",
+          "line": 27,
+          "end_line": 33
+        },
+        {
+          "name": "seed_prior",
+          "line": 36,
+          "end_line": 56
+        },
+        {
+          "name": "test_busy_actual_caller_propagates_typed_unknown_without_failed_or_claim_writes",
+          "line": 62,
+          "end_line": 117
+        },
+        {
+          "name": "test_dirty_off_first_replacement_serializes_on_creation_before_60_and_preserves_60",
+          "line": 122,
+          "end_line": 192
+        },
+        {
+          "name": "test_dirty_off_cancel_check_cannot_autoflush_away_first_namespace",
+          "line": 195,
+          "end_line": 222
+        },
+        {
+          "name": "test_actual_pending_settings_other_query_does_not_erase_concurrent_namespace",
+          "line": 226,
+          "end_line": 257
+        },
+        {
+          "name": "test_clean_default_off_checkpoint_does_not_reread_or_assign_json",
+          "line": 260,
+          "end_line": 270
+        },
+        {
+          "name": "test_clean_excluded_job_checkpoint_leaves_namespace_untouched",
+          "line": 274,
+          "end_line": 289
+        },
+        {
+          "name": "test_direct_nojob_dirty_save_takes_actual_run_write_lock_before_snapshot",
+          "line": 292,
+          "end_line": 312
+        },
+        {
+          "name": "test_same_genuine_job_reclaim_honors_enabled_ledger_after_source_default_off",
+          "line": 316,
+          "end_line": 353
+        },
+        {
+          "name": "previous_episode",
+          "line": 356,
+          "end_line": 378
+        },
+        {
+          "name": "test_previous_episode_cannot_prove_untracked_current_job_intent_or_fake_zero",
+          "line": 383,
+          "end_line": 446
+        },
+        {
+          "name": "test_malformed_current_on_ledger_is_not_bypassed_after_source_default_off",
+          "line": 450,
+          "end_line": 466
+        },
+        {
+          "name": "test_demo_pending_replacement_preserves_legacy_checkpoint_without_readguard_lock",
+          "line": 469,
+          "end_line": 482
+        },
+        {
+          "name": "test_dirty_excluded_job_replacement_serializes_and_preserves_research_namespace",
+          "line": 486,
+          "end_line": 514
+        },
+        {
+          "name": "test_direct_nojob_dirty_replacement_real_sqlite_busy_is_typed_and_writes_nothing",
+          "line": 517,
+          "end_line": 527
+        },
+        {
+          "name": "test_busy_actual_other_source_caller_stays_typed_and_preserves_prior_evidence",
+          "line": 532,
+          "end_line": 592
+        },
+        {
+          "name": "test_resume_intent_read_busy_is_typed_before_setup_or_source_io",
+          "line": 596,
+          "end_line": 612
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/test_sqlite_concurrent_checkpoint.py": {
+      "sha256": "4d3abc2053c97f2db7c154dd5f370617af642b6f7a5f924698d5fc1af903ca03",
+      "bytes": 5434,
+      "top_level_functions": [
+        {
+          "name": "test_two_sqlite_sessions_cannot_charge_two_gets_as_one",
+          "line": 29,
+          "end_line": 81
+        },
+        {
+          "name": "test_two_actual_sqlite_sessions_never_admit_more_than_60",
+          "line": 84,
+          "end_line": 130
+        },
+        {
+          "name": "test_actual_sqlite_write_lock_refusal_creates_no_get",
+          "line": 134,
+          "end_line": 155
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/ready-manifest.json": {
+      "sha256": "236e9a53667c86c0b14a04807492804402604d05a5a32ba670fb97915f84c2a4",
+      "bytes": 9663
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/ready-source-manifest.json": {
+      "sha256": "13ccdf181c70ae155dff194cd6df0aca51aebaf724c2f6a10987cea16d97d4d2",
+      "bytes": 3159
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/test_worker_busy.py": {
+      "sha256": "a846dafc62e90660b40149535cbb625c002932ea30a0a20240dc630bc442636a",
+      "bytes": 12126,
+      "top_level_functions": [
+        {
+          "name": "state",
+          "line": 38,
+          "end_line": 41
+        },
+        {
+          "name": "prepare",
+          "line": 44,
+          "end_line": 51
+        },
+        {
+          "name": "worker",
+          "line": 54,
+          "end_line": 71
+        },
+        {
+          "name": "execute_and_cleanup",
+          "line": 74,
+          "end_line": 90
+        },
+        {
+          "name": "serialized_execution",
+          "line": 93,
+          "end_line": 94
+        },
+        {
+          "name": "stage_dispatch",
+          "line": 97,
+          "end_line": 101
+        },
+        {
+          "name": "test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap",
+          "line": 105,
+          "end_line": 153
+        },
+        {
+          "name": "test_other_errors_still_real_ordinary_fenced_backoff",
+          "line": 157,
+          "end_line": 169
+        },
+        {
+          "name": "test_real_user_cancel_keeps_cancelled_path",
+          "line": 172,
+          "end_line": 181
+        },
+        {
+          "name": "test_real_attempt_takeover_preserves_worker_lease_lost_path",
+          "line": 184,
+          "end_line": 199
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/review_context.py": {
+      "sha256": "722c0627bcdd79451e3505c626f671aaabb5eb103a5af16270708e73b304a76f",
+      "bytes": 9823,
+      "top_level_functions": [
+        {
+          "name": "raw",
+          "line": 48,
+          "end_line": 50
+        },
+        {
+          "name": "error_chain",
+          "line": 53,
+          "end_line": 58
+        },
+        {
+          "name": "offline",
+          "line": 62,
+          "end_line": 76
+        },
+        {
+          "name": "ctx",
+          "line": 80,
+          "end_line": 127
+        },
+        {
+          "name": "candidate",
+          "line": 130,
+          "end_line": 131
+        },
+        {
+          "name": "activate",
+          "line": 134,
+          "end_line": 138
+        },
+        {
+          "name": "snapshot",
+          "line": 141,
+          "end_line": 143
+        },
+        {
+          "name": "counts",
+          "line": 146,
+          "end_line": 149
+        },
+        {
+          "name": "original_mock",
+          "line": 152,
+          "end_line": 163
+        },
+        {
+          "name": "new_runner",
+          "line": 166,
+          "end_line": 170
+        },
+        {
+          "name": "lock_row",
+          "line": 173,
+          "end_line": 176
+        },
+        {
+          "name": "claim_fact",
+          "line": 179,
+          "end_line": 180
+        },
+        {
+          "name": "seed_prior",
+          "line": 183,
+          "end_line": 190
+        },
+        {
+          "name": "prior",
+          "line": 193,
+          "end_line": 195
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/verify_import.py": {
+      "sha256": "55bb02a91961edcac523ed25b028c6f2816c0a3c12d2cdd853389e8196ac0173",
+      "bytes": 1253,
+      "top_level_functions": []
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/receipt.json": {
+      "sha256": "45826a5bb00717d0814a3e3ebedaf1a47a6ad663e109974970e66d2c2e3b5d41",
+      "bytes": 2584
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/worker-busy-proposal/worker.proposed.py": {
+      "sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+      "bytes": 21474,
+      "top_level_functions": [
+        {
+          "name": "wait_for_schema",
+          "line": 379,
+          "end_line": 400
+        },
+        {
+          "name": "reconcile_startup",
+          "line": 403,
+          "end_line": 476
+        },
+        {
+          "name": "main",
+          "line": 479,
+          "end_line": 503
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/conftest.py": {
+      "sha256": "218c446f7edc6ec18c82407f24ed3fc40e179777351202602796b6c6049820d6",
+      "bytes": 10851,
+      "top_level_functions": [
+        {
+          "name": "postgres_url",
+          "line": 38,
+          "end_line": 63
+        },
+        {
+          "name": "pg_engine",
+          "line": 67,
+          "end_line": 85
+        },
+        {
+          "name": "_swap_database",
+          "line": 88,
+          "end_line": 93
+        },
+        {
+          "name": "pg_session",
+          "line": 97,
+          "end_line": 104
+        },
+        {
+          "name": "_reset_rate_limiter",
+          "line": 108,
+          "end_line": 120
+        },
+        {
+          "name": "_reset_search_throttle",
+          "line": 124,
+          "end_line": 130
+        },
+        {
+          "name": "corpus_dir",
+          "line": 134,
+          "end_line": 139
+        },
+        {
+          "name": "settings",
+          "line": 143,
+          "end_line": 156
+        },
+        {
+          "name": "profile",
+          "line": 160,
+          "end_line": 183
+        },
+        {
+          "name": "make_claim",
+          "line": 186,
+          "end_line": 214
+        },
+        {
+          "name": "claim_factory",
+          "line": 218,
+          "end_line": 219
+        },
+        {
+          "name": "event_loop",
+          "line": 223,
+          "end_line": 226
+        },
+        {
+          "name": "configure_from_env",
+          "line": 234,
+          "end_line": 258
+        },
+        {
+          "name": "paid_client",
+          "line": 262,
+          "end_line": 294
+        },
+        {
+          "name": "case_id",
+          "line": 298,
+          "end_line": 302
+        },
+        {
+          "name": "sign_webhook",
+          "line": 305,
+          "end_line": 310
+        },
+        {
+          "name": "profile_row",
+          "line": 319,
+          "end_line": 334
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_worker.py": {
+      "sha256": "e00142fc10b4eaa856798fbd8ac6b2aebf4382cf5c483f5b4ba448f05ca17093",
+      "bytes": 50529,
+      "top_level_functions": [
+        {
+          "name": "bound_db",
+          "line": 27,
+          "end_line": 41
+        },
+        {
+          "name": "seed_run",
+          "line": 44,
+          "end_line": 61
+        },
+        {
+          "name": "pg_factory",
+          "line": 708,
+          "end_line": 716
+        },
+        {
+          "name": "_expire_lease_and_reap",
+          "line": 719,
+          "end_line": 734
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_jobs.py": {
+      "sha256": "af18287b414cd7d31a8501094e4a60805e784732d83464ca1cace44c57ef706b",
+      "bytes": 17245,
+      "top_level_functions": [
+        {
+          "name": "store",
+          "line": 23,
+          "end_line": 24
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/pytest.ini": {
+      "sha256": "ab26b2621fe697dfd488b060d5b7ac1576464cdcb6360bf3948b9a76134a6ba0",
+      "bytes": 150
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-canary-job-protocol-plan/receipt.json": {
+      "sha256": "07208229e5e8e07e7b6e6f4dd0dfec753de1aa32cc18e53c9bf5d1ee0442b818",
+      "bytes": 1095
+    }
+  }
+}

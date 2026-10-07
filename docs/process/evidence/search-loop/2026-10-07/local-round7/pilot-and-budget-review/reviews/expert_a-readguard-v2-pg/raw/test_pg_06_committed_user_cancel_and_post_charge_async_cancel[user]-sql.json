@@ -1,0 +1,2041 @@
+{
+  "schema": "rga_18115b12cf764bbfa033c2bc3829efa9",
+  "queries": [
+    {
+      "at_ns": 806734003221833,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'applicant_profiles', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734003723958,
+      "elapsed_ns": 502208,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734003770250,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'organizations', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734003877833,
+      "elapsed_ns": 107666,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734003904416,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'users', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734003980458,
+      "elapsed_ns": 76125,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004000958,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'organization_memberships', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734004066458,
+      "elapsed_ns": 65583,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004085958,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'password_reset_tokens', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734004148375,
+      "elapsed_ns": 62500,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004167500,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'auth_sessions', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734004249958,
+      "elapsed_ns": 82500,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004269166,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'orders', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734004315875,
+      "elapsed_ns": 46750,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004332208,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'payment_events', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734004384416,
+      "elapsed_ns": 52292,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004422166,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'entitlements', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734004490500,
+      "elapsed_ns": 68417,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004514750,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'jobs', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734004567916,
+      "elapsed_ns": 53208,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004589583,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'schema_version', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734004643250,
+      "elapsed_ns": 53750,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004663750,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'research_runs', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734004687458,
+      "elapsed_ns": 23750,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004707250,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'program_results', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734004732208,
+      "elapsed_ns": 25000,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004752041,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'claims', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734004774791,
+      "elapsed_ns": 22834,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004794500,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'conflicts', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734004816708,
+      "elapsed_ns": 22208,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004836083,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'audit_events', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734004857666,
+      "elapsed_ns": 21625,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004878041,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'social_profiles', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734004899625,
+      "elapsed_ns": 21667,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004918916,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'social_profile_universities', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734004941166,
+      "elapsed_ns": 22250,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004961458,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'posts', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734004982291,
+      "elapsed_ns": 20875,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734004999041,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'post_tags', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734005017958,
+      "elapsed_ns": 18959,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734005033875,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'post_replies', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734005052500,
+      "elapsed_ns": 18666,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734005067666,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'conversations', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734005085708,
+      "elapsed_ns": 18084,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734005100583,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'direct_messages', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734005118708,
+      "elapsed_ns": 18167,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734005133416,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'social_blocks', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734005151000,
+      "elapsed_ns": 17625,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734005165583,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'content_reports', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734005184041,
+      "elapsed_ns": 18500,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734005198583,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'social_avatars', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734005216166,
+      "elapsed_ns": 17625,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734005230333,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'source_pages', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734005247541,
+      "elapsed_ns": 17250,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734005261500,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'source_snapshots', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734005278666,
+      "elapsed_ns": 17208,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734005292666,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'subscriptions', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734005309666,
+      "elapsed_ns": 17042,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734005323458,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'universities', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734005340416,
+      "elapsed_ns": 17000,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734005355875,
+      "thread": 8419598720,
+      "sql": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR",
+      "params": "{'table_name': 'university_observations', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}"
+    },
+    {
+      "finished_ns": 806734005374791,
+      "elapsed_ns": 18958,
+      "sql_prefix": "SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_cata"
+    },
+    {
+      "at_ns": 806734005657875,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE organizations (\n\tname VARCHAR(120) NOT NULL, \n\tslug VARCHAR(80) NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id)\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734006521458,
+      "elapsed_ns": 863625,
+      "sql_prefix": "\nCREATE TABLE organizations (\n\tname VARCHAR(120) NOT NULL, \n\tslug VARCHAR(80) NOT NULL, \n\tid VARCHAR"
+    },
+    {
+      "at_ns": 806734006557125,
+      "thread": 8419598720,
+      "sql": "CREATE UNIQUE INDEX ix_organizations_slug ON organizations (slug)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734006726833,
+      "elapsed_ns": 169750,
+      "sql_prefix": "CREATE UNIQUE INDEX ix_organizations_slug ON organizations (slug)"
+    },
+    {
+      "at_ns": 806734006830583,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE users (\n\temail VARCHAR(320) NOT NULL, \n\tdisplay_name VARCHAR(120) NOT NULL, \n\tpassword_hash VARCHAR(300) NOT NULL, \n\tis_active BOOLEAN NOT NULL, \n\temail_verified BOOLEAN NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id)\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734007375666,
+      "elapsed_ns": 545125,
+      "sql_prefix": "\nCREATE TABLE users (\n\temail VARCHAR(320) NOT NULL, \n\tdisplay_name VARCHAR(120) NOT NULL, \n\tpassword"
+    },
+    {
+      "at_ns": 806734007398666,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_users_is_active ON users (is_active)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734007563375,
+      "elapsed_ns": 164750,
+      "sql_prefix": "CREATE INDEX ix_users_is_active ON users (is_active)"
+    },
+    {
+      "at_ns": 806734007582583,
+      "thread": 8419598720,
+      "sql": "CREATE UNIQUE INDEX ix_users_email ON users (email)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734007760666,
+      "elapsed_ns": 178125,
+      "sql_prefix": "CREATE UNIQUE INDEX ix_users_email ON users (email)"
+    },
+    {
+      "at_ns": 806734007958333,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE jobs (\n\tkind VARCHAR(40) NOT NULL, \n\tqueue VARCHAR(40) NOT NULL, \n\trun_id VARCHAR(32), \n\tidempotency_key VARCHAR(200), \n\tstatus VARCHAR(20) NOT NULL, \n\tpriority INTEGER NOT NULL, \n\tattempts INTEGER NOT NULL, \n\tmax_attempts INTEGER NOT NULL, \n\tavailable_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tlease_expires_at TIMESTAMP WITH TIME ZONE, \n\theartbeat_at TIMESTAMP WITH TIME ZONE, \n\tworker_id VARCHAR(80), \n\tcancel_requested BOOLEAN NOT NULL, \n\tpayload JSON NOT NULL, \n\tlast_error TEXT NOT NULL, \n\tstarted_at TIMESTAMP WITH TIME ZONE, \n\tfinished_at TIMESTAMP WITH TIME ZONE, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (idempotency_key)\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734008723375,
+      "elapsed_ns": 765083,
+      "sql_prefix": "\nCREATE TABLE jobs (\n\tkind VARCHAR(40) NOT NULL, \n\tqueue VARCHAR(40) NOT NULL, \n\trun_id VARCHAR(32),"
+    },
+    {
+      "at_ns": 806734008751458,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_jobs_lease ON jobs (status, lease_expires_at)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734008943833,
+      "elapsed_ns": 192417,
+      "sql_prefix": "CREATE INDEX ix_jobs_lease ON jobs (status, lease_expires_at)"
+    },
+    {
+      "at_ns": 806734008969041,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_jobs_claimable ON jobs (status, available_at, priority)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734009169541,
+      "elapsed_ns": 200542,
+      "sql_prefix": "CREATE INDEX ix_jobs_claimable ON jobs (status, available_at, priority)"
+    },
+    {
+      "at_ns": 806734009188583,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_jobs_run ON jobs (run_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734009353125,
+      "elapsed_ns": 164625,
+      "sql_prefix": "CREATE INDEX ix_jobs_run ON jobs (run_id)"
+    },
+    {
+      "at_ns": 806734009418000,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE schema_version (\n\tid INTEGER NOT NULL, \n\tversion INTEGER NOT NULL, \n\tnote VARCHAR(200) NOT NULL, \n\tPRIMARY KEY (id)\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734009710750,
+      "elapsed_ns": 292791,
+      "sql_prefix": "\nCREATE TABLE schema_version (\n\tid INTEGER NOT NULL, \n\tversion INTEGER NOT NULL, \n\tnote VARCHAR(200)"
+    },
+    {
+      "at_ns": 806734009820041,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE source_pages (\n\turl TEXT NOT NULL, \n\tregistrable_domain VARCHAR(255) NOT NULL, \n\tinstitution_key VARCHAR(120), \n\tetag TEXT, \n\tlast_modified_header TEXT, \n\tcontent_hash VARCHAR(64), \n\tlastmod_seen TIMESTAMP WITH TIME ZONE, \n\tfetched_at TIMESTAMP WITH TIME ZONE, \n\thttp_status INTEGER, \n\tpage_type VARCHAR(40) NOT NULL, \n\tactive_claims INTEGER NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id)\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734010407791,
+      "elapsed_ns": 587792,
+      "sql_prefix": "\nCREATE TABLE source_pages (\n\turl TEXT NOT NULL, \n\tregistrable_domain VARCHAR(255) NOT NULL, \n\tinsti"
+    },
+    {
+      "at_ns": 806734010427958,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_source_pages_domain ON source_pages (registrable_domain)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734010596458,
+      "elapsed_ns": 168583,
+      "sql_prefix": "CREATE INDEX ix_source_pages_domain ON source_pages (registrable_domain)"
+    },
+    {
+      "at_ns": 806734010617833,
+      "thread": 8419598720,
+      "sql": "CREATE UNIQUE INDEX uq_source_pages_url ON source_pages (url)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734010782750,
+      "elapsed_ns": 164958,
+      "sql_prefix": "CREATE UNIQUE INDEX uq_source_pages_url ON source_pages (url)"
+    },
+    {
+      "at_ns": 806734010803375,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_source_pages_retention ON source_pages (active_claims, fetched_at)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734010984958,
+      "elapsed_ns": 181666,
+      "sql_prefix": "CREATE INDEX ix_source_pages_retention ON source_pages (active_claims, fetched_at)"
+    },
+    {
+      "at_ns": 806734011002958,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_source_pages_institution ON source_pages (institution_key)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734011171708,
+      "elapsed_ns": 168792,
+      "sql_prefix": "CREATE INDEX ix_source_pages_institution ON source_pages (institution_key)"
+    },
+    {
+      "at_ns": 806734011277916,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE universities (\n\tidentity_key VARCHAR(400) NOT NULL, \n\tname VARCHAR(300) NOT NULL, \n\tcountry VARCHAR(100) NOT NULL, \n\tcity VARCHAR(200) NOT NULL, \n\taliases JSON NOT NULL, \n\tdomain VARCHAR(253), \n\tdomain_status VARCHAR(40) NOT NULL, \n\tregistry_entry JSON, \n\tseed_snapshot JSON, \n\tseed_version VARCHAR(80), \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (identity_key)\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734011912958,
+      "elapsed_ns": 635084,
+      "sql_prefix": "\nCREATE TABLE universities (\n\tidentity_key VARCHAR(400) NOT NULL, \n\tname VARCHAR(300) NOT NULL, \n\tco"
+    },
+    {
+      "at_ns": 806734011931958,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_universities_country ON universities (country)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734012081166,
+      "elapsed_ns": 149292,
+      "sql_prefix": "CREATE INDEX ix_universities_country ON universities (country)"
+    },
+    {
+      "at_ns": 806734012166333,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE applicant_profiles (\n\torganization_id VARCHAR(32) NOT NULL, \n\tdisplay_name VARCHAR(80) NOT NULL, \n\tpayload JSON NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(organization_id) REFERENCES organizations (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734012936166,
+      "elapsed_ns": 769917,
+      "sql_prefix": "\nCREATE TABLE applicant_profiles (\n\torganization_id VARCHAR(32) NOT NULL, \n\tdisplay_name VARCHAR(80)"
+    },
+    {
+      "at_ns": 806734012975875,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_applicant_profiles_organization_id ON applicant_profiles (organization_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734013171833,
+      "elapsed_ns": 196000,
+      "sql_prefix": "CREATE INDEX ix_applicant_profiles_organization_id ON applicant_profiles (organization_id)"
+    },
+    {
+      "at_ns": 806734013268416,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE organization_memberships (\n\tuser_id VARCHAR(32) NOT NULL, \n\torganization_id VARCHAR(32) NOT NULL, \n\trole VARCHAR(20) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (user_id, organization_id), \n\tUNIQUE (user_id, organization_id), \n\tFOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE, \n\tFOREIGN KEY(organization_id) REFERENCES organizations (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734013666000,
+      "elapsed_ns": 397667,
+      "sql_prefix": "\nCREATE TABLE organization_memberships (\n\tuser_id VARCHAR(32) NOT NULL, \n\torganization_id VARCHAR(32"
+    },
+    {
+      "at_ns": 806734013694375,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_organization_memberships_organization_id ON organization_memberships (organization_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734013899083,
+      "elapsed_ns": 204791,
+      "sql_prefix": "CREATE INDEX ix_organization_memberships_organization_id ON organization_memberships (organization_i"
+    },
+    {
+      "at_ns": 806734013987083,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE password_reset_tokens (\n\tuser_id VARCHAR(32) NOT NULL, \n\ttoken_hash VARCHAR(64) NOT NULL, \n\texpires_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tused_at TIMESTAMP WITH TIME ZONE, \n\trequested_ip VARCHAR(64) NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734014385583,
+      "elapsed_ns": 398542,
+      "sql_prefix": "\nCREATE TABLE password_reset_tokens (\n\tuser_id VARCHAR(32) NOT NULL, \n\ttoken_hash VARCHAR(64) NOT NU"
+    },
+    {
+      "at_ns": 806734014421833,
+      "thread": 8419598720,
+      "sql": "CREATE UNIQUE INDEX ix_password_reset_tokens_token_hash ON password_reset_tokens (token_hash)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734014606083,
+      "elapsed_ns": 184292,
+      "sql_prefix": "CREATE UNIQUE INDEX ix_password_reset_tokens_token_hash ON password_reset_tokens (token_hash)"
+    },
+    {
+      "at_ns": 806734014643375,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_password_reset_tokens_expires_at ON password_reset_tokens (expires_at)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734014836833,
+      "elapsed_ns": 193500,
+      "sql_prefix": "CREATE INDEX ix_password_reset_tokens_expires_at ON password_reset_tokens (expires_at)"
+    },
+    {
+      "at_ns": 806734014868750,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_reset_user_expires ON password_reset_tokens (user_id, expires_at)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734015128625,
+      "elapsed_ns": 259916,
+      "sql_prefix": "CREATE INDEX ix_reset_user_expires ON password_reset_tokens (user_id, expires_at)"
+    },
+    {
+      "at_ns": 806734015164541,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_password_reset_tokens_user_id ON password_reset_tokens (user_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734015383666,
+      "elapsed_ns": 219209,
+      "sql_prefix": "CREATE INDEX ix_password_reset_tokens_user_id ON password_reset_tokens (user_id)"
+    },
+    {
+      "at_ns": 806734015511583,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE auth_sessions (\n\tuser_id VARCHAR(32) NOT NULL, \n\torganization_id VARCHAR(32) NOT NULL, \n\ttoken_hash VARCHAR(64) NOT NULL, \n\texpires_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tlast_seen_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE, \n\tFOREIGN KEY(organization_id) REFERENCES organizations (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734015939291,
+      "elapsed_ns": 427750,
+      "sql_prefix": "\nCREATE TABLE auth_sessions (\n\tuser_id VARCHAR(32) NOT NULL, \n\torganization_id VARCHAR(32) NOT NULL,"
+    },
+    {
+      "at_ns": 806734015967708,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_auth_sessions_expires_at ON auth_sessions (expires_at)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734016194833,
+      "elapsed_ns": 227167,
+      "sql_prefix": "CREATE INDEX ix_auth_sessions_expires_at ON auth_sessions (expires_at)"
+    },
+    {
+      "at_ns": 806734016217916,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_auth_sessions_user_expires ON auth_sessions (user_id, expires_at)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734016415916,
+      "elapsed_ns": 198042,
+      "sql_prefix": "CREATE INDEX ix_auth_sessions_user_expires ON auth_sessions (user_id, expires_at)"
+    },
+    {
+      "at_ns": 806734016436041,
+      "thread": 8419598720,
+      "sql": "CREATE UNIQUE INDEX ix_auth_sessions_token_hash ON auth_sessions (token_hash)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734016614125,
+      "elapsed_ns": 178125,
+      "sql_prefix": "CREATE UNIQUE INDEX ix_auth_sessions_token_hash ON auth_sessions (token_hash)"
+    },
+    {
+      "at_ns": 806734016633333,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_auth_sessions_user_id ON auth_sessions (user_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734016827916,
+      "elapsed_ns": 194625,
+      "sql_prefix": "CREATE INDEX ix_auth_sessions_user_id ON auth_sessions (user_id)"
+    },
+    {
+      "at_ns": 806734016846625,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_auth_sessions_organization_id ON auth_sessions (organization_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734017021666,
+      "elapsed_ns": 175083,
+      "sql_prefix": "CREATE INDEX ix_auth_sessions_organization_id ON auth_sessions (organization_id)"
+    },
+    {
+      "at_ns": 806734017119916,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE entitlements (\n\torganization_id VARCHAR(32) NOT NULL, \n\tprofile_id VARCHAR(32), \n\tkind VARCHAR(30) NOT NULL, \n\tsource VARCHAR(20) NOT NULL, \n\torder_id VARCHAR(32), \n\tsubscription_id VARCHAR(32), \n\tgranted_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(organization_id) REFERENCES organizations (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734017503625,
+      "elapsed_ns": 383792,
+      "sql_prefix": "\nCREATE TABLE entitlements (\n\torganization_id VARCHAR(32) NOT NULL, \n\tprofile_id VARCHAR(32), \n\tkind"
+    },
+    {
+      "at_ns": 806734017523083,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_entitlements_organization_id ON entitlements (organization_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734017687833,
+      "elapsed_ns": 164792,
+      "sql_prefix": "CREATE INDEX ix_entitlements_organization_id ON entitlements (organization_id)"
+    },
+    {
+      "at_ns": 806734017735208,
+      "thread": 8419598720,
+      "sql": "CREATE UNIQUE INDEX uq_entitlements_case ON entitlements (organization_id, profile_id, kind) WHERE profile_id IS NOT NULL",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734017949541,
+      "elapsed_ns": 214417,
+      "sql_prefix": "CREATE UNIQUE INDEX uq_entitlements_case ON entitlements (organization_id, profile_id, kind) WHERE p"
+    },
+    {
+      "at_ns": 806734017970541,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_entitlements_subscription_id ON entitlements (subscription_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734018137125,
+      "elapsed_ns": 166667,
+      "sql_prefix": "CREATE INDEX ix_entitlements_subscription_id ON entitlements (subscription_id)"
+    },
+    {
+      "at_ns": 806734018154250,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_entitlements_profile_id ON entitlements (profile_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734018305000,
+      "elapsed_ns": 150833,
+      "sql_prefix": "CREATE INDEX ix_entitlements_profile_id ON entitlements (profile_id)"
+    },
+    {
+      "at_ns": 806734018411916,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE audit_events (\n\torganization_id VARCHAR(32) NOT NULL, \n\tactor VARCHAR(20) NOT NULL, \n\taction VARCHAR(60) NOT NULL, \n\tentity_type VARCHAR(40) NOT NULL, \n\tentity_id VARCHAR(32) NOT NULL, \n\tdetail JSON NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(organization_id) REFERENCES organizations (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734019052541,
+      "elapsed_ns": 640667,
+      "sql_prefix": "\nCREATE TABLE audit_events (\n\torganization_id VARCHAR(32) NOT NULL, \n\tactor VARCHAR(20) NOT NULL, \n\t"
+    },
+    {
+      "at_ns": 806734019080833,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_audit_events_organization_id ON audit_events (organization_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734019253625,
+      "elapsed_ns": 172833,
+      "sql_prefix": "CREATE INDEX ix_audit_events_organization_id ON audit_events (organization_id)"
+    },
+    {
+      "at_ns": 806734019276125,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_audit_entity ON audit_events (entity_type, entity_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734019454958,
+      "elapsed_ns": 178875,
+      "sql_prefix": "CREATE INDEX ix_audit_entity ON audit_events (entity_type, entity_id)"
+    },
+    {
+      "at_ns": 806734019474916,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_audit_organization_created ON audit_events (organization_id, created_at)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734019636500,
+      "elapsed_ns": 161625,
+      "sql_prefix": "CREATE INDEX ix_audit_organization_created ON audit_events (organization_id, created_at)"
+    },
+    {
+      "at_ns": 806734019653916,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_audit_events_action ON audit_events (action)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734019814166,
+      "elapsed_ns": 160334,
+      "sql_prefix": "CREATE INDEX ix_audit_events_action ON audit_events (action)"
+    },
+    {
+      "at_ns": 806734019930958,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE social_profiles (\n\tuser_id VARCHAR(32) NOT NULL, \n\tstatus VARCHAR(20), \n\ttarget_city VARCHAR(120) NOT NULL, \n\ttarget_city_key VARCHAR(120) NOT NULL, \n\ttarget_major VARCHAR(120) NOT NULL, \n\ttarget_major_key VARCHAR(120) NOT NULL, \n\tbio VARCHAR(280) NOT NULL, \n\tdm_policy VARCHAR(20) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (user_id), \n\tFOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734020553125,
+      "elapsed_ns": 622208,
+      "sql_prefix": "\nCREATE TABLE social_profiles (\n\tuser_id VARCHAR(32) NOT NULL, \n\tstatus VARCHAR(20), \n\ttarget_city V"
+    },
+    {
+      "at_ns": 806734020574458,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_social_profiles_target_major_key ON social_profiles (target_major_key)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734020734166,
+      "elapsed_ns": 159750,
+      "sql_prefix": "CREATE INDEX ix_social_profiles_target_major_key ON social_profiles (target_major_key)"
+    },
+    {
+      "at_ns": 806734020754250,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_social_profiles_target_city_key ON social_profiles (target_city_key)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734020933166,
+      "elapsed_ns": 178958,
+      "sql_prefix": "CREATE INDEX ix_social_profiles_target_city_key ON social_profiles (target_city_key)"
+    },
+    {
+      "at_ns": 806734020952375,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_social_profiles_status ON social_profiles (status)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734021134000,
+      "elapsed_ns": 181708,
+      "sql_prefix": "CREATE INDEX ix_social_profiles_status ON social_profiles (status)"
+    },
+    {
+      "at_ns": 806734021218833,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE posts (\n\tauthor_id VARCHAR(32) NOT NULL, \n\tbody TEXT NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tCONSTRAINT ck_posts_body_max_length CHECK (length(body) <= 500), \n\tCONSTRAINT ck_posts_body_not_blank CHECK (length(trim(body)) > 0), \n\tFOREIGN KEY(author_id) REFERENCES users (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734021841166,
+      "elapsed_ns": 622375,
+      "sql_prefix": "\nCREATE TABLE posts (\n\tauthor_id VARCHAR(32) NOT NULL, \n\tbody TEXT NOT NULL, \n\tid VARCHAR(32) NOT NU"
+    },
+    {
+      "at_ns": 806734021865375,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_posts_author_created ON posts (author_id, created_at)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734022059875,
+      "elapsed_ns": 194541,
+      "sql_prefix": "CREATE INDEX ix_posts_author_created ON posts (author_id, created_at)"
+    },
+    {
+      "at_ns": 806734022080208,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_posts_created_at_id ON posts (created_at, id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734022248583,
+      "elapsed_ns": 168458,
+      "sql_prefix": "CREATE INDEX ix_posts_created_at_id ON posts (created_at, id)"
+    },
+    {
+      "at_ns": 806734022266458,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_posts_author_id ON posts (author_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734022428333,
+      "elapsed_ns": 161958,
+      "sql_prefix": "CREATE INDEX ix_posts_author_id ON posts (author_id)"
+    },
+    {
+      "at_ns": 806734022526625,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE conversations (\n\tlower_id VARCHAR(32) NOT NULL, \n\thigher_id VARCHAR(32) NOT NULL, \n\tlast_message_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tlower_read_at TIMESTAMP WITH TIME ZONE, \n\thigher_read_at TIMESTAMP WITH TIME ZONE, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tCONSTRAINT uq_conversation_pair UNIQUE (lower_id, higher_id), \n\tCONSTRAINT ck_conversations_ordered_pair CHECK (lower_id < higher_id), \n\tFOREIGN KEY(lower_id) REFERENCES users (id) ON DELETE CASCADE, \n\tFOREIGN KEY(higher_id) REFERENCES users (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734023126625,
+      "elapsed_ns": 600083,
+      "sql_prefix": "\nCREATE TABLE conversations (\n\tlower_id VARCHAR(32) NOT NULL, \n\thigher_id VARCHAR(32) NOT NULL, \n\tla"
+    },
+    {
+      "at_ns": 806734023150750,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_conversations_lower_activity ON conversations (lower_id, last_message_at)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734023327416,
+      "elapsed_ns": 176708,
+      "sql_prefix": "CREATE INDEX ix_conversations_lower_activity ON conversations (lower_id, last_message_at)"
+    },
+    {
+      "at_ns": 806734023347750,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_conversations_higher_activity ON conversations (higher_id, last_message_at)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734023549875,
+      "elapsed_ns": 202166,
+      "sql_prefix": "CREATE INDEX ix_conversations_higher_activity ON conversations (higher_id, last_message_at)"
+    },
+    {
+      "at_ns": 806734023569958,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_conversations_higher_id ON conversations (higher_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734023753083,
+      "elapsed_ns": 183167,
+      "sql_prefix": "CREATE INDEX ix_conversations_higher_id ON conversations (higher_id)"
+    },
+    {
+      "at_ns": 806734023769666,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_conversations_lower_id ON conversations (lower_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734023918916,
+      "elapsed_ns": 149250,
+      "sql_prefix": "CREATE INDEX ix_conversations_lower_id ON conversations (lower_id)"
+    },
+    {
+      "at_ns": 806734023986625,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE social_blocks (\n\tid VARCHAR(32) NOT NULL, \n\tblocker_id VARCHAR(32) NOT NULL, \n\tblocked_id VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tCONSTRAINT uq_block_pair UNIQUE (blocker_id, blocked_id), \n\tCONSTRAINT ck_blocks_not_self CHECK (blocker_id <> blocked_id), \n\tFOREIGN KEY(blocker_id) REFERENCES users (id) ON DELETE CASCADE, \n\tFOREIGN KEY(blocked_id) REFERENCES users (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734024669583,
+      "elapsed_ns": 683041,
+      "sql_prefix": "\nCREATE TABLE social_blocks (\n\tid VARCHAR(32) NOT NULL, \n\tblocker_id VARCHAR(32) NOT NULL, \n\tblocked"
+    },
+    {
+      "at_ns": 806734024692291,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_social_blocks_blocked_id ON social_blocks (blocked_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734024887291,
+      "elapsed_ns": 195084,
+      "sql_prefix": "CREATE INDEX ix_social_blocks_blocked_id ON social_blocks (blocked_id)"
+    },
+    {
+      "at_ns": 806734024908041,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_social_blocks_blocker_id ON social_blocks (blocker_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734025073958,
+      "elapsed_ns": 165917,
+      "sql_prefix": "CREATE INDEX ix_social_blocks_blocker_id ON social_blocks (blocker_id)"
+    },
+    {
+      "at_ns": 806734025199208,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE content_reports (\n\treporter_id VARCHAR(32) NOT NULL, \n\tsubject_type VARCHAR(20) NOT NULL, \n\tsubject_id VARCHAR(32) NOT NULL, \n\tsubject_author_id VARCHAR(32), \n\treason VARCHAR(30) NOT NULL, \n\tnote VARCHAR(500) NOT NULL, \n\texcerpt VARCHAR(600) NOT NULL, \n\tstatus VARCHAR(20) NOT NULL, \n\tresolved_by VARCHAR(320), \n\tresolved_at TIMESTAMP WITH TIME ZONE, \n\tresolution_note VARCHAR(500) NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tCONSTRAINT uq_report_once_per_person UNIQUE (reporter_id, subject_type, subject_id), \n\tFOREIGN KEY(reporter_id) REFERENCES users (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734025952083,
+      "elapsed_ns": 752958,
+      "sql_prefix": "\nCREATE TABLE content_reports (\n\treporter_id VARCHAR(32) NOT NULL, \n\tsubject_type VARCHAR(20) NOT NU"
+    },
+    {
+      "at_ns": 806734025981041,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_content_reports_reason ON content_reports (reason)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734026166750,
+      "elapsed_ns": 185792,
+      "sql_prefix": "CREATE INDEX ix_content_reports_reason ON content_reports (reason)"
+    },
+    {
+      "at_ns": 806734026193375,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_reports_subject ON content_reports (subject_type, subject_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734026368208,
+      "elapsed_ns": 174875,
+      "sql_prefix": "CREATE INDEX ix_reports_subject ON content_reports (subject_type, subject_id)"
+    },
+    {
+      "at_ns": 806734026387250,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_reports_status_created ON content_reports (status, created_at)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734026555750,
+      "elapsed_ns": 168541,
+      "sql_prefix": "CREATE INDEX ix_reports_status_created ON content_reports (status, created_at)"
+    },
+    {
+      "at_ns": 806734026573166,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_content_reports_subject_author_id ON content_reports (subject_author_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734026728625,
+      "elapsed_ns": 155500,
+      "sql_prefix": "CREATE INDEX ix_content_reports_subject_author_id ON content_reports (subject_author_id)"
+    },
+    {
+      "at_ns": 806734026753625,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_content_reports_reporter_id ON content_reports (reporter_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734026920083,
+      "elapsed_ns": 166541,
+      "sql_prefix": "CREATE INDEX ix_content_reports_reporter_id ON content_reports (reporter_id)"
+    },
+    {
+      "at_ns": 806734026943041,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_content_reports_status ON content_reports (status)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734027087416,
+      "elapsed_ns": 144459,
+      "sql_prefix": "CREATE INDEX ix_content_reports_status ON content_reports (status)"
+    },
+    {
+      "at_ns": 806734027163083,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE social_avatars (\n\tuser_id VARCHAR(32) NOT NULL, \n\tcontent_type VARCHAR(30) NOT NULL, \n\tdata BYTEA NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (user_id), \n\tFOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734027780416,
+      "elapsed_ns": 617375,
+      "sql_prefix": "\nCREATE TABLE social_avatars (\n\tuser_id VARCHAR(32) NOT NULL, \n\tcontent_type VARCHAR(30) NOT NULL, \n"
+    },
+    {
+      "at_ns": 806734027906000,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE source_snapshots (\n\tpage_id VARCHAR(32) NOT NULL, \n\tcontent_hash VARCHAR(64) NOT NULL, \n\tetag TEXT, \n\tlast_modified_header TEXT, \n\thttp_status INTEGER, \n\tfirst_seen_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tlast_seen_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tCONSTRAINT fk_snapshots_source_page FOREIGN KEY(page_id) REFERENCES source_pages (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734028402833,
+      "elapsed_ns": 496875,
+      "sql_prefix": "\nCREATE TABLE source_snapshots (\n\tpage_id VARCHAR(32) NOT NULL, \n\tcontent_hash VARCHAR(64) NOT NULL,"
+    },
+    {
+      "at_ns": 806734028427708,
+      "thread": 8419598720,
+      "sql": "CREATE UNIQUE INDEX uq_snapshots_page_hash ON source_snapshots (page_id, content_hash)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734028603708,
+      "elapsed_ns": 176042,
+      "sql_prefix": "CREATE UNIQUE INDEX uq_snapshots_page_hash ON source_snapshots (page_id, content_hash)"
+    },
+    {
+      "at_ns": 806734028626125,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_snapshots_page_last_seen ON source_snapshots (page_id, last_seen_at)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734028804750,
+      "elapsed_ns": 178666,
+      "sql_prefix": "CREATE INDEX ix_snapshots_page_last_seen ON source_snapshots (page_id, last_seen_at)"
+    },
+    {
+      "at_ns": 806734028887250,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE subscriptions (\n\torganization_id VARCHAR(32) NOT NULL, \n\tcase_quota INTEGER, \n\tduration_days INTEGER NOT NULL, \n\tstarts_at TIMESTAMP WITH TIME ZONE, \n\tends_at TIMESTAMP WITH TIME ZONE, \n\tstatus VARCHAR(20) NOT NULL, \n\tinvoice_note VARCHAR(200) NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(organization_id) REFERENCES organizations (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734029218833,
+      "elapsed_ns": 331625,
+      "sql_prefix": "\nCREATE TABLE subscriptions (\n\torganization_id VARCHAR(32) NOT NULL, \n\tcase_quota INTEGER, \n\tduratio"
+    },
+    {
+      "at_ns": 806734029238000,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_subscriptions_organization_id ON subscriptions (organization_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734029381041,
+      "elapsed_ns": 143083,
+      "sql_prefix": "CREATE INDEX ix_subscriptions_organization_id ON subscriptions (organization_id)"
+    },
+    {
+      "at_ns": 806734029400291,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_subscriptions_org_status ON subscriptions (organization_id, status)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734029587208,
+      "elapsed_ns": 186959,
+      "sql_prefix": "CREATE INDEX ix_subscriptions_org_status ON subscriptions (organization_id, status)"
+    },
+    {
+      "at_ns": 806734029607875,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_subscriptions_status ON subscriptions (status)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734029775250,
+      "elapsed_ns": 167458,
+      "sql_prefix": "CREATE INDEX ix_subscriptions_status ON subscriptions (status)"
+    },
+    {
+      "at_ns": 806734029849125,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE university_observations (\n\tuniversity_id VARCHAR(32) NOT NULL, \n\tfingerprint VARCHAR(64) NOT NULL, \n\tseed_version VARCHAR(80) NOT NULL, \n\tpayload JSON NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (university_id, fingerprint), \n\tFOREIGN KEY(university_id) REFERENCES universities (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734030661416,
+      "elapsed_ns": 812333,
+      "sql_prefix": "\nCREATE TABLE university_observations (\n\tuniversity_id VARCHAR(32) NOT NULL, \n\tfingerprint VARCHAR(6"
+    },
+    {
+      "at_ns": 806734030683708,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_university_observations_university_id ON university_observations (university_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734030877833,
+      "elapsed_ns": 194208,
+      "sql_prefix": "CREATE INDEX ix_university_observations_university_id ON university_observations (university_id)"
+    },
+    {
+      "at_ns": 806734031021583,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE orders (\n\torganization_id VARCHAR(32) NOT NULL, \n\tprofile_id VARCHAR(32) NOT NULL, \n\tkind VARCHAR(30) NOT NULL, \n\tamount_kzt INTEGER NOT NULL, \n\tstatus VARCHAR(20) NOT NULL, \n\tprovider VARCHAR(20) NOT NULL, \n\tprovider_invoice_id VARCHAR(80), \n\texternal_order_id VARCHAR(80) NOT NULL, \n\tmethod VARCHAR(10) NOT NULL, \n\tphone_masked VARCHAR(20) NOT NULL, \n\tqr_payload TEXT NOT NULL, \n\tqr_expires_at TIMESTAMP WITH TIME ZONE, \n\tpaid_at TIMESTAMP WITH TIME ZONE, \n\tfailure_code VARCHAR(60) NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(organization_id) REFERENCES organizations (id) ON DELETE CASCADE, \n\tFOREIGN KEY(profile_id) REFERENCES applicant_profiles (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734031748541,
+      "elapsed_ns": 727000,
+      "sql_prefix": "\nCREATE TABLE orders (\n\torganization_id VARCHAR(32) NOT NULL, \n\tprofile_id VARCHAR(32) NOT NULL, \n\tk"
+    },
+    {
+      "at_ns": 806734031775083,
+      "thread": 8419598720,
+      "sql": "CREATE UNIQUE INDEX ix_orders_external_order_id ON orders (external_order_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734031999541,
+      "elapsed_ns": 224500,
+      "sql_prefix": "CREATE UNIQUE INDEX ix_orders_external_order_id ON orders (external_order_id)"
+    },
+    {
+      "at_ns": 806734032021083,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_orders_profile_id ON orders (profile_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734032199166,
+      "elapsed_ns": 178167,
+      "sql_prefix": "CREATE INDEX ix_orders_profile_id ON orders (profile_id)"
+    },
+    {
+      "at_ns": 806734032220500,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_orders_organization_id ON orders (organization_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734032375500,
+      "elapsed_ns": 155083,
+      "sql_prefix": "CREATE INDEX ix_orders_organization_id ON orders (organization_id)"
+    },
+    {
+      "at_ns": 806734032395875,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_orders_org_profile ON orders (organization_id, profile_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734032554958,
+      "elapsed_ns": 159125,
+      "sql_prefix": "CREATE INDEX ix_orders_org_profile ON orders (organization_id, profile_id)"
+    },
+    {
+      "at_ns": 806734032573083,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_orders_provider_invoice ON orders (provider_invoice_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734032728750,
+      "elapsed_ns": 155708,
+      "sql_prefix": "CREATE INDEX ix_orders_provider_invoice ON orders (provider_invoice_id)"
+    },
+    {
+      "at_ns": 806734032745666,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_orders_status ON orders (status)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734032897500,
+      "elapsed_ns": 151875,
+      "sql_prefix": "CREATE INDEX ix_orders_status ON orders (status)"
+    },
+    {
+      "at_ns": 806734033158666,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE research_runs (\n\tprofile_id VARCHAR(32) NOT NULL, \n\tstage VARCHAR(40) NOT NULL, \n\tclient_request_key VARCHAR(120), \n\tdemo_mode BOOLEAN NOT NULL, \n\tcandidate_limit INTEGER, \n\tverify_limit INTEGER, \n\tuniversity_ids JSON, \n\tcancelled BOOLEAN NOT NULL, \n\taccess_tier VARCHAR(10) NOT NULL, \n\tcandidates_found INTEGER NOT NULL, \n\tprograms_verified INTEGER NOT NULL, \n\tpages_checked INTEGER NOT NULL, \n\tpages_failed INTEGER NOT NULL, \n\tclaims_recorded INTEGER NOT NULL, \n\tstage_state JSON NOT NULL, \n\tfetch_tiers JSON NOT NULL, \n\terrors JSON NOT NULL, \n\tunknowns JSON NOT NULL, \n\tretry_urls JSON NOT NULL, \n\tsettings_snapshot JSON NOT NULL, \n\tstarted_at TIMESTAMP WITH TIME ZONE, \n\tfinished_at TIMESTAMP WITH TIME ZONE, \n\tworker_id VARCHAR(64), \n\theartbeat_at TIMESTAMP WITH TIME ZONE, \n\tnext_recheck_at TIMESTAMP WITH TIME ZONE, \n\trecovery_count INTEGER NOT NULL, \n\trecheck_generation INTEGER DEFAULT '0' NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(profile_id) REFERENCES applicant_profiles (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734033886291,
+      "elapsed_ns": 727709,
+      "sql_prefix": "\nCREATE TABLE research_runs (\n\tprofile_id VARCHAR(32) NOT NULL, \n\tstage VARCHAR(40) NOT NULL, \n\tclie"
+    },
+    {
+      "at_ns": 806734033914291,
+      "thread": 8419598720,
+      "sql": "CREATE UNIQUE INDEX uq_runs_client_request_key ON research_runs (profile_id, client_request_key)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734034123375,
+      "elapsed_ns": 209125,
+      "sql_prefix": "CREATE UNIQUE INDEX uq_runs_client_request_key ON research_runs (profile_id, client_request_key)"
+    },
+    {
+      "at_ns": 806734034143541,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_research_runs_profile_id ON research_runs (profile_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734034317250,
+      "elapsed_ns": 173792,
+      "sql_prefix": "CREATE INDEX ix_research_runs_profile_id ON research_runs (profile_id)"
+    },
+    {
+      "at_ns": 806734034336791,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_research_runs_access_tier ON research_runs (access_tier)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734034504458,
+      "elapsed_ns": 167709,
+      "sql_prefix": "CREATE INDEX ix_research_runs_access_tier ON research_runs (access_tier)"
+    },
+    {
+      "at_ns": 806734034523375,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_research_runs_worker_id ON research_runs (worker_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734034698125,
+      "elapsed_ns": 174791,
+      "sql_prefix": "CREATE INDEX ix_research_runs_worker_id ON research_runs (worker_id)"
+    },
+    {
+      "at_ns": 806734034717583,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_research_runs_stage ON research_runs (stage)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734034884125,
+      "elapsed_ns": 166583,
+      "sql_prefix": "CREATE INDEX ix_research_runs_stage ON research_runs (stage)"
+    },
+    {
+      "at_ns": 806734034959583,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE social_profile_universities (\n\tid VARCHAR(32) NOT NULL, \n\tprofile_id VARCHAR(32) NOT NULL, \n\tname VARCHAR(160) NOT NULL, \n\tname_key VARCHAR(160) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tCONSTRAINT uq_profile_university UNIQUE (profile_id, name_key), \n\tFOREIGN KEY(profile_id) REFERENCES social_profiles (user_id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734035480083,
+      "elapsed_ns": 520583,
+      "sql_prefix": "\nCREATE TABLE social_profile_universities (\n\tid VARCHAR(32) NOT NULL, \n\tprofile_id VARCHAR(32) NOT N"
+    },
+    {
+      "at_ns": 806734035509000,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_social_profile_universities_profile_id ON social_profile_universities (profile_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734035699250,
+      "elapsed_ns": 190291,
+      "sql_prefix": "CREATE INDEX ix_social_profile_universities_profile_id ON social_profile_universities (profile_id)"
+    },
+    {
+      "at_ns": 806734035723500,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_social_profile_universities_name_key ON social_profile_universities (name_key)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734035896333,
+      "elapsed_ns": 172875,
+      "sql_prefix": "CREATE INDEX ix_social_profile_universities_name_key ON social_profile_universities (name_key)"
+    },
+    {
+      "at_ns": 806734035964666,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE post_tags (\n\tid VARCHAR(32) NOT NULL, \n\tpost_id VARCHAR(32) NOT NULL, \n\tlabel VARCHAR(40) NOT NULL, \n\tkey VARCHAR(40) NOT NULL, \n\tPRIMARY KEY (id), \n\tCONSTRAINT uq_post_tag UNIQUE (post_id, key), \n\tFOREIGN KEY(post_id) REFERENCES posts (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734036439875,
+      "elapsed_ns": 475250,
+      "sql_prefix": "\nCREATE TABLE post_tags (\n\tid VARCHAR(32) NOT NULL, \n\tpost_id VARCHAR(32) NOT NULL, \n\tlabel VARCHAR("
+    },
+    {
+      "at_ns": 806734036465791,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_post_tags_post_id ON post_tags (post_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734036663958,
+      "elapsed_ns": 198209,
+      "sql_prefix": "CREATE INDEX ix_post_tags_post_id ON post_tags (post_id)"
+    },
+    {
+      "at_ns": 806734036686166,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_post_tags_key ON post_tags (key)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734036850666,
+      "elapsed_ns": 164542,
+      "sql_prefix": "CREATE INDEX ix_post_tags_key ON post_tags (key)"
+    },
+    {
+      "at_ns": 806734036936625,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE post_replies (\n\tpost_id VARCHAR(32) NOT NULL, \n\tauthor_id VARCHAR(32) NOT NULL, \n\tbody TEXT NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tCONSTRAINT ck_post_replies_body_max_length CHECK (length(body) <= 500), \n\tCONSTRAINT ck_post_replies_body_not_blank CHECK (length(trim(body)) > 0), \n\tFOREIGN KEY(post_id) REFERENCES posts (id) ON DELETE CASCADE, \n\tFOREIGN KEY(author_id) REFERENCES users (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734037669416,
+      "elapsed_ns": 732833,
+      "sql_prefix": "\nCREATE TABLE post_replies (\n\tpost_id VARCHAR(32) NOT NULL, \n\tauthor_id VARCHAR(32) NOT NULL, \n\tbody"
+    },
+    {
+      "at_ns": 806734037694666,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_post_replies_author_id ON post_replies (author_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734037856041,
+      "elapsed_ns": 161417,
+      "sql_prefix": "CREATE INDEX ix_post_replies_author_id ON post_replies (author_id)"
+    },
+    {
+      "at_ns": 806734037879041,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_post_replies_post_created ON post_replies (post_id, created_at)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734038062833,
+      "elapsed_ns": 183875,
+      "sql_prefix": "CREATE INDEX ix_post_replies_post_created ON post_replies (post_id, created_at)"
+    },
+    {
+      "at_ns": 806734038084000,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_post_replies_post_id ON post_replies (post_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734038242416,
+      "elapsed_ns": 158458,
+      "sql_prefix": "CREATE INDEX ix_post_replies_post_id ON post_replies (post_id)"
+    },
+    {
+      "at_ns": 806734038329208,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE direct_messages (\n\tconversation_id VARCHAR(32) NOT NULL, \n\tsender_id VARCHAR(32) NOT NULL, \n\tbody TEXT NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tCONSTRAINT ck_direct_messages_body_max_length CHECK (length(body) <= 2000), \n\tCONSTRAINT ck_direct_messages_body_not_blank CHECK (length(trim(body)) > 0), \n\tFOREIGN KEY(conversation_id) REFERENCES conversations (id) ON DELETE CASCADE, \n\tFOREIGN KEY(sender_id) REFERENCES users (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734038986916,
+      "elapsed_ns": 657792,
+      "sql_prefix": "\nCREATE TABLE direct_messages (\n\tconversation_id VARCHAR(32) NOT NULL, \n\tsender_id VARCHAR(32) NOT N"
+    },
+    {
+      "at_ns": 806734039012833,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_direct_messages_conversation_created ON direct_messages (conversation_id, created_at)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734039197500,
+      "elapsed_ns": 184708,
+      "sql_prefix": "CREATE INDEX ix_direct_messages_conversation_created ON direct_messages (conversation_id, created_at"
+    },
+    {
+      "at_ns": 806734039219125,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_direct_messages_conversation_id ON direct_messages (conversation_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734039382500,
+      "elapsed_ns": 163416,
+      "sql_prefix": "CREATE INDEX ix_direct_messages_conversation_id ON direct_messages (conversation_id)"
+    },
+    {
+      "at_ns": 806734039402875,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_direct_messages_sender_id ON direct_messages (sender_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734039563083,
+      "elapsed_ns": 160250,
+      "sql_prefix": "CREATE INDEX ix_direct_messages_sender_id ON direct_messages (sender_id)"
+    },
+    {
+      "at_ns": 806734039664833,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE payment_events (\n\tid VARCHAR(32) NOT NULL, \n\torder_id VARCHAR(32) NOT NULL, \n\tsource VARCHAR(20) NOT NULL, \n\tevent_type VARCHAR(60) NOT NULL, \n\tprovider_status VARCHAR(30) NOT NULL, \n\tsignature_valid BOOLEAN NOT NULL, \n\tdetail TEXT NOT NULL, \n\treceived_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(order_id) REFERENCES orders (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734040246333,
+      "elapsed_ns": 581583,
+      "sql_prefix": "\nCREATE TABLE payment_events (\n\tid VARCHAR(32) NOT NULL, \n\torder_id VARCHAR(32) NOT NULL, \n\tsource V"
+    },
+    {
+      "at_ns": 806734040276250,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_payment_events_order ON payment_events (order_id, received_at)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734040479708,
+      "elapsed_ns": 203500,
+      "sql_prefix": "CREATE INDEX ix_payment_events_order ON payment_events (order_id, received_at)"
+    },
+    {
+      "at_ns": 806734040503208,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_payment_events_order_id ON payment_events (order_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734040671458,
+      "elapsed_ns": 168292,
+      "sql_prefix": "CREATE INDEX ix_payment_events_order_id ON payment_events (order_id)"
+    },
+    {
+      "at_ns": 806734040824750,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE program_results (\n\trun_id VARCHAR(32) NOT NULL, \n\tdedupe_key VARCHAR(400) NOT NULL, \n\tuniversity VARCHAR(200) NOT NULL, \n\tuniversity_key VARCHAR(300) NOT NULL, \n\tcountry VARCHAR(100) NOT NULL, \n\tprogram VARCHAR(300) NOT NULL, \n\teligibility VARCHAR(40) NOT NULL, \n\tadmissions_fit VARCHAR(40) NOT NULL, \n\tfunding_fit VARCHAR(40) NOT NULL, \n\tfunding_classification VARCHAR(40) NOT NULL, \n\tscore_total FLOAT NOT NULL, \n\tbucket VARCHAR(40) NOT NULL, \n\tuser_decision VARCHAR(20) NOT NULL, \n\tuser_decision_reason TEXT NOT NULL, \n\tuser_notes TEXT NOT NULL, \n\tdecided_at TIMESTAMP WITH TIME ZONE, \n\tpayload JSON NOT NULL, \n\tchecklist JSON, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(run_id) REFERENCES research_runs (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734041448166,
+      "elapsed_ns": 623500,
+      "sql_prefix": "\nCREATE TABLE program_results (\n\trun_id VARCHAR(32) NOT NULL, \n\tdedupe_key VARCHAR(400) NOT NULL, \n\t"
+    },
+    {
+      "at_ns": 806734041469916,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_program_results_admissions_fit ON program_results (admissions_fit)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734041636625,
+      "elapsed_ns": 166750,
+      "sql_prefix": "CREATE INDEX ix_program_results_admissions_fit ON program_results (admissions_fit)"
+    },
+    {
+      "at_ns": 806734041656541,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_program_results_university_key ON program_results (university_key)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734041823833,
+      "elapsed_ns": 167334,
+      "sql_prefix": "CREATE INDEX ix_program_results_university_key ON program_results (university_key)"
+    },
+    {
+      "at_ns": 806734041843166,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_program_results_eligibility ON program_results (eligibility)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734041990541,
+      "elapsed_ns": 147417,
+      "sql_prefix": "CREATE INDEX ix_program_results_eligibility ON program_results (eligibility)"
+    },
+    {
+      "at_ns": 806734042007250,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_program_results_country ON program_results (country)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734042149000,
+      "elapsed_ns": 141791,
+      "sql_prefix": "CREATE INDEX ix_program_results_country ON program_results (country)"
+    },
+    {
+      "at_ns": 806734042166208,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_program_results_dedupe_key ON program_results (dedupe_key)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734042302958,
+      "elapsed_ns": 136792,
+      "sql_prefix": "CREATE INDEX ix_program_results_dedupe_key ON program_results (dedupe_key)"
+    },
+    {
+      "at_ns": 806734042322208,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_program_results_score_total ON program_results (score_total)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734042490708,
+      "elapsed_ns": 168542,
+      "sql_prefix": "CREATE INDEX ix_program_results_score_total ON program_results (score_total)"
+    },
+    {
+      "at_ns": 806734042508375,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_program_results_funding_fit ON program_results (funding_fit)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734042649375,
+      "elapsed_ns": 141041,
+      "sql_prefix": "CREATE INDEX ix_program_results_funding_fit ON program_results (funding_fit)"
+    },
+    {
+      "at_ns": 806734042666208,
+      "thread": 8419598720,
+      "sql": "CREATE UNIQUE INDEX ix_results_dedupe ON program_results (run_id, dedupe_key)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734042826625,
+      "elapsed_ns": 160500,
+      "sql_prefix": "CREATE UNIQUE INDEX ix_results_dedupe ON program_results (run_id, dedupe_key)"
+    },
+    {
+      "at_ns": 806734042843333,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_program_results_bucket ON program_results (bucket)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734042998083,
+      "elapsed_ns": 154792,
+      "sql_prefix": "CREATE INDEX ix_program_results_bucket ON program_results (bucket)"
+    },
+    {
+      "at_ns": 806734043014125,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_program_results_run_id ON program_results (run_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734043160250,
+      "elapsed_ns": 146208,
+      "sql_prefix": "CREATE INDEX ix_program_results_run_id ON program_results (run_id)"
+    },
+    {
+      "at_ns": 806734043174208,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_program_results_user_decision ON program_results (user_decision)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734043319625,
+      "elapsed_ns": 145458,
+      "sql_prefix": "CREATE INDEX ix_program_results_user_decision ON program_results (user_decision)"
+    },
+    {
+      "at_ns": 806734043335541,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_program_results_funding_classification ON program_results (funding_classification)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734043491041,
+      "elapsed_ns": 155542,
+      "sql_prefix": "CREATE INDEX ix_program_results_funding_classification ON program_results (funding_classification)"
+    },
+    {
+      "at_ns": 806734043507833,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_results_run_decision ON program_results (run_id, user_decision)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734043654916,
+      "elapsed_ns": 147167,
+      "sql_prefix": "CREATE INDEX ix_results_run_decision ON program_results (run_id, user_decision)"
+    },
+    {
+      "at_ns": 806734043771500,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE claims (\n\trun_id VARCHAR(32) NOT NULL, \n\tresult_id VARCHAR(32), \n\tsource_page_id VARCHAR(32), \n\tclaim_type VARCHAR(60) NOT NULL, \n\tstatus VARCHAR(40) NOT NULL, \n\tsuperseded_at TIMESTAMP WITH TIME ZONE, \n\tsuperseded_by_id VARCHAR(32), \n\tsource_url TEXT NOT NULL, \n\tsource_specificity VARCHAR(40) NOT NULL, \n\taccessed_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tpayload JSON NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(run_id) REFERENCES research_runs (id) ON DELETE CASCADE, \n\tCONSTRAINT fk_claims_source_page FOREIGN KEY(source_page_id) REFERENCES source_pages (id) ON DELETE SET NULL, \n\tCONSTRAINT fk_claims_superseded_by FOREIGN KEY(superseded_by_id) REFERENCES claims (id) ON DELETE SET NULL\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734044526000,
+      "elapsed_ns": 754541,
+      "sql_prefix": "\nCREATE TABLE claims (\n\trun_id VARCHAR(32) NOT NULL, \n\tresult_id VARCHAR(32), \n\tsource_page_id VARCH"
+    },
+    {
+      "at_ns": 806734044546375,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_claims_result_id ON claims (result_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734044745666,
+      "elapsed_ns": 199375,
+      "sql_prefix": "CREATE INDEX ix_claims_result_id ON claims (result_id)"
+    },
+    {
+      "at_ns": 806734044765625,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_claims_claim_type ON claims (claim_type)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734044924250,
+      "elapsed_ns": 158666,
+      "sql_prefix": "CREATE INDEX ix_claims_claim_type ON claims (claim_type)"
+    },
+    {
+      "at_ns": 806734044942500,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_claims_run_id ON claims (run_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734045110750,
+      "elapsed_ns": 168291,
+      "sql_prefix": "CREATE INDEX ix_claims_run_id ON claims (run_id)"
+    },
+    {
+      "at_ns": 806734045128000,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_claims_status ON claims (status)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734045301000,
+      "elapsed_ns": 173083,
+      "sql_prefix": "CREATE INDEX ix_claims_status ON claims (status)"
+    },
+    {
+      "at_ns": 806734045319208,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_claims_run_type ON claims (run_id, claim_type)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734045487375,
+      "elapsed_ns": 168208,
+      "sql_prefix": "CREATE INDEX ix_claims_run_type ON claims (run_id, claim_type)"
+    },
+    {
+      "at_ns": 806734045504958,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_claims_source_page_id ON claims (source_page_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734045661416,
+      "elapsed_ns": 156542,
+      "sql_prefix": "CREATE INDEX ix_claims_source_page_id ON claims (source_page_id)"
+    },
+    {
+      "at_ns": 806734045742958,
+      "thread": 8419598720,
+      "sql": "\nCREATE TABLE conflicts (\n\trun_id VARCHAR(32) NOT NULL, \n\tresult_id VARCHAR(32), \n\tclaim_type VARCHAR(60) NOT NULL, \n\tunresolved BOOLEAN NOT NULL, \n\tpayload JSON NOT NULL, \n\tid VARCHAR(32) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(run_id) REFERENCES research_runs (id) ON DELETE CASCADE\n)\n\n",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734046321333,
+      "elapsed_ns": 578417,
+      "sql_prefix": "\nCREATE TABLE conflicts (\n\trun_id VARCHAR(32) NOT NULL, \n\tresult_id VARCHAR(32), \n\tclaim_type VARCHA"
+    },
+    {
+      "at_ns": 806734046346666,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_conflicts_result_id ON conflicts (result_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734046553291,
+      "elapsed_ns": 206709,
+      "sql_prefix": "CREATE INDEX ix_conflicts_result_id ON conflicts (result_id)"
+    },
+    {
+      "at_ns": 806734046575958,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_conflicts_run_id ON conflicts (run_id)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734046752833,
+      "elapsed_ns": 176917,
+      "sql_prefix": "CREATE INDEX ix_conflicts_run_id ON conflicts (run_id)"
+    },
+    {
+      "at_ns": 806734046773000,
+      "thread": 8419598720,
+      "sql": "CREATE INDEX ix_conflicts_unresolved ON conflicts (unresolved)",
+      "params": "immutabledict({})"
+    },
+    {
+      "finished_ns": 806734046944541,
+      "elapsed_ns": 171583,
+      "sql_prefix": "CREATE INDEX ix_conflicts_unresolved ON conflicts (unresolved)"
+    },
+    {
+      "at_ns": 806734048252791,
+      "thread": 8419598720,
+      "sql": "INSERT INTO organizations (name, slug, id, created_at, updated_at) VALUES (%(name)s::VARCHAR, %(slug)s::VARCHAR, %(id)s::VARCHAR, %(created_at)s::TIMESTAMP WITH TIME ZONE, %(updated_at)s::TIMESTAMP WITH TIME ZONE)",
+      "params": "{'name': 'Independent PG synthetic', 'slug': 'pg-5676f2d981f74f22b5dd9a1262bfe3b9', 'id': '87c013ed997541a0a1b78569b03f1d5b', 'created_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 502976, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 502980, tzinfo=datetime.timezone.utc)}"
+    },
+    {
+      "finished_ns": 806734048753583,
+      "elapsed_ns": 500875,
+      "sql_prefix": "INSERT INTO organizations (name, slug, id, created_at, updated_at) VALUES (%(name)s::VARCHAR, %(slug"
+    },
+    {
+      "at_ns": 806734049921000,
+      "thread": 8419598720,
+      "sql": "INSERT INTO applicant_profiles (organization_id, display_name, payload, id, created_at, updated_at) VALUES (%(organization_id)s::VARCHAR, %(display_name)s::VARCHAR, %(payload)s::JSON, %(id)s::VARCHAR, %(created_at)s::TIMESTAMP WITH TIME ZONE, %(updated_at)s::TIMESTAMP WITH TIME ZONE)",
+      "params": "{'organization_id': '87c013ed997541a0a1b78569b03f1d5b', 'display_name': 'Applicant', 'payload': Json({'display_name': 'Applicant', 'cont ... (2576 chars)), 'id': '7ae46b8721cd4a7f8d28cfe4b824399b', 'created_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 504643, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 504644, tzinfo=datetime.timezone.utc)}"
+    },
+    {
+      "finished_ns": 806734050378208,
+      "elapsed_ns": 457291,
+      "sql_prefix": "INSERT INTO applicant_profiles (organization_id, display_name, payload, id, created_at, updated_at) "
+    },
+    {
+      "at_ns": 806734050805500,
+      "thread": 8419598720,
+      "sql": "INSERT INTO research_runs (profile_id, stage, client_request_key, demo_mode, candidate_limit, verify_limit, cancelled, access_tier, candidates_found, programs_verified, pages_checked, pages_failed, claims_recorded, stage_state, fetch_tiers, errors, unknowns, retry_urls, settings_snapshot, started_at, finished_at, worker_id, heartbeat_at, next_recheck_at, recovery_count, recheck_generation, id, created_at, updated_at) VALUES (%(profile_id)s::VARCHAR, %(stage)s::VARCHAR, %(client_request_key)s::VARCHAR, %(demo_mode)s, %(candidate_limit)s::INTEGER, %(verify_limit)s::INTEGER, %(cancelled)s, %(access_tier)s::VARCHAR, %(candidates_found)s::INTEGER, %(programs_verified)s::INTEGER, %(pages_checked)s::INTEGER, %(pages_failed)s::INTEGER, %(claims_recorded)s::INTEGER, %(stage_state)s::JSON, %(fetch_tiers)s::JSON, %(errors)s::JSON, %(unknowns)s::JSON, %(retry_urls)s::JSON, %(settings_snapshot)s::JSON, %(started_at)s::TIMESTAMP WITH TIME ZONE, %(finished_at)s::TIMESTAMP WITH TIME ZONE, %(worker_id)s::VARCHAR, %(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, %(next_recheck_at)s::TIMESTAMP WITH TIME ZONE, %(recovery_count)s::INTEGER, %(recheck_generation)s::INTEGER, %(id)s::VARCHAR, %(created_at)s::TIMESTAMP WITH TIME ZONE, %(updated_at)s::TIMESTAMP WITH TIME ZONE)",
+      "params": "{'profile_id': '7ae46b8721cd4a7f8d28cfe4b824399b', 'stage': 'queued', 'client_request_key': None, 'demo_mode': False, 'candidate_limit': 2, 'verify_limit': 2, 'cancelled': False, 'access_tier': 'full', 'candidates_found': 0, 'programs_verified': 0, 'pages_checked': 0, 'pages_failed': 0, 'claims_recorded': 0, 'stage_state': Json({'queued': {'status': 'pending', 's ... (1310 chars)), 'fetch_tiers': Json({}), 'errors': Json([]), 'unknowns': Json([]), 'retry_urls': Json([]), 'settings_snapshot': Json({}), 'started_at': None, 'finished_at': None, 'worker_id': None, 'heartbeat_at': None, 'next_recheck_at': None, 'recovery_count': 0, 'recheck_generation': 0, 'id': '70dc9803079f414b8d5eaae3d04a54fc', 'created_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 505520, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 505521, tzinfo=datetime.timezone.utc)}"
+    },
+    {
+      "finished_ns": 806734051331458,
+      "elapsed_ns": 526000,
+      "sql_prefix": "INSERT INTO research_runs (profile_id, stage, client_request_key, demo_mode, candidate_limit, verify"
+    },
+    {
+      "at_ns": 806734051610083,
+      "thread": 8419598720,
+      "sql": "INSERT INTO jobs (kind, queue, run_id, idempotency_key, status, priority, attempts, max_attempts, available_at, lease_expires_at, heartbeat_at, worker_id, cancel_requested, payload, last_error, started_at, finished_at, id, created_at, updated_at) VALUES (%(kind)s::VARCHAR, %(queue)s::VARCHAR, %(run_id)s::VARCHAR, %(idempotency_key)s::VARCHAR, %(status)s::VARCHAR, %(priority)s::INTEGER, %(attempts)s::INTEGER, %(max_attempts)s::INTEGER, %(available_at)s::TIMESTAMP WITH TIME ZONE, %(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, %(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, %(worker_id)s::VARCHAR, %(cancel_requested)s, %(payload)s::JSON, %(last_error)s::VARCHAR, %(started_at)s::TIMESTAMP WITH TIME ZONE, %(finished_at)s::TIMESTAMP WITH TIME ZONE, %(id)s::VARCHAR, %(created_at)s::TIMESTAMP WITH TIME ZONE, %(updated_at)s::TIMESTAMP WITH TIME ZONE)",
+      "params": "{'kind': 'research', 'queue': 'default', 'run_id': '70dc9803079f414b8d5eaae3d04a54fc', 'idempotency_key': None, 'status': 'running', 'priority': 0, 'attempts': 1, 'max_attempts': 3, 'available_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 506127, tzinfo=datetime.timezone.utc), 'lease_expires_at': datetime.datetime(2026, 10, 7, 22, 12, 57, 506127, tzinfo=datetime.timezone.utc), 'heartbeat_at': None, 'worker_id': 'worker-one', 'cancel_requested': False, 'payload': Json({}), 'last_error': '', 'started_at': None, 'finished_at': None, 'id': '77250978c1f34efe9a39eccb3dbdda4a', 'created_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 506333, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 506334, tzinfo=datetime.timezone.utc)}"
+    },
+    {
+      "finished_ns": 806734051978291,
+      "elapsed_ns": 368292,
+      "sql_prefix": "INSERT INTO jobs (kind, queue, run_id, idempotency_key, status, priority, attempts, max_attempts, av"
+    },
+    {
+      "at_ns": 806734052687375,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '70dc9803079f414b8d5eaae3d04a54fc'}"
+    },
+    {
+      "finished_ns": 806734052887625,
+      "elapsed_ns": 200333,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 806734053067625,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '77250978c1f34efe9a39eccb3dbdda4a'}"
+    },
+    {
+      "finished_ns": 806734053125625,
+      "elapsed_ns": 58041,
+      "sql_prefix": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 806734053369875,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT",
+      "params": "{'id_1': '77250978c1f34efe9a39eccb3dbdda4a', 'run_id_1': '70dc9803079f414b8d5eaae3d04a54fc', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}"
+    },
+    {
+      "finished_ns": 806734053458791,
+      "elapsed_ns": 88958,
+      "sql_prefix": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCH"
+    },
+    {
+      "at_ns": 806734053719208,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR FOR UPDATE NOWAIT",
+      "params": "{'id_1': '70dc9803079f414b8d5eaae3d04a54fc'}"
+    },
+    {
+      "finished_ns": 806734053787000,
+      "elapsed_ns": 67833,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 806734053921083,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '70dc9803079f414b8d5eaae3d04a54fc'}"
+    },
+    {
+      "finished_ns": 806734053981000,
+      "elapsed_ns": 60000,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 806734054344083,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage=%(stage)s::VARCHAR, settings_snapshot=%(settings_snapshot)s::JSON, started_at=%(started_at)s::TIMESTAMP WITH TIME ZONE, worker_id=%(worker_id)s::VARCHAR, heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE research_runs.id = %(research_runs_id)s::VARCHAR",
+      "params": "{'stage': 'candidate_discovery', 'settings_snapshot': Json({'university_research_budget_v1': { ... (230 chars)), 'started_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 507090, tzinfo=datetime.timezone.utc), 'worker_id': 'worker-one', 'heartbeat_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 508781, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 509077, tzinfo=datetime.timezone.utc), 'research_runs_id': '70dc9803079f414b8d5eaae3d04a54fc'}"
+    },
+    {
+      "finished_ns": 806734054501083,
+      "elapsed_ns": 157042,
+      "sql_prefix": "UPDATE research_runs SET stage=%(stage)s::VARCHAR, settings_snapshot=%(settings_snapshot)s::JSON, st"
+    },
+    {
+      "at_ns": 806734054797666,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE jobs.id = %(id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER RETURNING jobs.id",
+      "params": "{'lease_expires_at': datetime.datetime(2026, 10, 7, 22, 9, 57, 508798, tzinfo=datetime.timezone.utc), 'heartbeat_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 508798, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 509532, tzinfo=datetime.timezone.utc), 'id_1': '77250978c1f34efe9a39eccb3dbdda4a', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}"
+    },
+    {
+      "finished_ns": 806734054879250,
+      "elapsed_ns": 81625,
+      "sql_prefix": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(hear"
+    },
+    {
+      "at_ns": 806734055178791,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '70dc9803079f414b8d5eaae3d04a54fc'}"
+    },
+    {
+      "finished_ns": 806734055229041,
+      "elapsed_ns": 50292,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 806734055299541,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '77250978c1f34efe9a39eccb3dbdda4a'}"
+    },
+    {
+      "finished_ns": 806734055332291,
+      "elapsed_ns": 32792,
+      "sql_prefix": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 806734055444333,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT",
+      "params": "{'id_1': '77250978c1f34efe9a39eccb3dbdda4a', 'run_id_1': '70dc9803079f414b8d5eaae3d04a54fc', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}"
+    },
+    {
+      "finished_ns": 806734055493583,
+      "elapsed_ns": 49292,
+      "sql_prefix": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCH"
+    },
+    {
+      "at_ns": 806734055542416,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR FOR UPDATE NOWAIT",
+      "params": "{'id_1': '70dc9803079f414b8d5eaae3d04a54fc'}"
+    },
+    {
+      "finished_ns": 806734055576750,
+      "elapsed_ns": 34375,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 806734055633125,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '70dc9803079f414b8d5eaae3d04a54fc'}"
+    },
+    {
+      "finished_ns": 806734055664583,
+      "elapsed_ns": 31500,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 806734055946500,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET settings_snapshot=%(settings_snapshot)s::JSON, heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE research_runs.id = %(research_runs_id)s::VARCHAR",
+      "params": "{'settings_snapshot': Json({'university_research_budget_v1': { ... (230 chars)), 'heartbeat_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 510469, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 510681, tzinfo=datetime.timezone.utc), 'research_runs_id': '70dc9803079f414b8d5eaae3d04a54fc'}"
+    },
+    {
+      "finished_ns": 806734056020333,
+      "elapsed_ns": 73875,
+      "sql_prefix": "UPDATE research_runs SET settings_snapshot=%(settings_snapshot)s::JSON, heartbeat_at=%(heartbeat_at)"
+    },
+    {
+      "at_ns": 806734056138375,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE jobs.id = %(id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER RETURNING jobs.id",
+      "params": "{'lease_expires_at': datetime.datetime(2026, 10, 7, 22, 9, 57, 510482, tzinfo=datetime.timezone.utc), 'heartbeat_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 510482, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 510876, tzinfo=datetime.timezone.utc), 'id_1': '77250978c1f34efe9a39eccb3dbdda4a', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}"
+    },
+    {
+      "finished_ns": 806734056202375,
+      "elapsed_ns": 64083,
+      "sql_prefix": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(hear"
+    },
+    {
+      "at_ns": 806734056459791,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '70dc9803079f414b8d5eaae3d04a54fc'}"
+    },
+    {
+      "finished_ns": 806734056514333,
+      "elapsed_ns": 54584,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 806734057389458,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET status=CASE WHEN (jobs.status = %(status_1)s::VARCHAR) THEN %(param_1)s::VARCHAR ELSE jobs.status END, cancel_requested=%(cancel_requested)s, finished_at=CASE WHEN (jobs.status = %(status_2)s::VARCHAR) THEN %(param_2)s::TIMESTAMP WITH TIME ZONE ELSE jobs.finished_at END, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE jobs.id = %(id_1)s::VARCHAR AND (jobs.status NOT IN (%(status_3_1)s::VARCHAR, %(status_3_2)s::VARCHAR, %(status_3_3)s::VARCHAR)) RETURNING jobs.id",
+      "params": "{'status_1': 'queued', 'param_1': 'cancelled', 'cancel_requested': True, 'status_2': 'queued', 'param_2': datetime.datetime(2026, 10, 7, 22, 7, 57, 511572, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 22, 7, 57, 512100, tzinfo=datetime.timezone.utc), 'id_1': '77250978c1f34efe9a39eccb3dbdda4a', 'status_3_1': 'cancelled', 'status_3_2': 'dead', 'status_3_3': 'succeeded'}"
+    },
+    {
+      "finished_ns": 806734057575291,
+      "elapsed_ns": 185875,
+      "sql_prefix": "UPDATE jobs SET status=CASE WHEN (jobs.status = %(status_1)s::VARCHAR) THEN %(param_1)s::VARCHAR ELS"
+    },
+    {
+      "at_ns": 806734057816916,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '70dc9803079f414b8d5eaae3d04a54fc'}"
+    },
+    {
+      "finished_ns": 806734057864416,
+      "elapsed_ns": 47542,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 806734057923750,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '77250978c1f34efe9a39eccb3dbdda4a'}"
+    },
+    {
+      "finished_ns": 806734057955875,
+      "elapsed_ns": 32208,
+      "sql_prefix": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 806734059257208,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '70dc9803079f414b8d5eaae3d04a54fc'}"
+    },
+    {
+      "finished_ns": 806734059792125,
+      "elapsed_ns": 534958,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 806734060112583,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '70dc9803079f414b8d5eaae3d04a54fc'}"
+    },
+    {
+      "finished_ns": 806734060174833,
+      "elapsed_ns": 62292,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    }
+  ],
+  "sql_errors": []
+}

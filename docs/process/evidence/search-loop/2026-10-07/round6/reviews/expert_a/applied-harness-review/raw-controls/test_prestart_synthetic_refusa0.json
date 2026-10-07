@@ -1,0 +1,45 @@
+{
+  "arguments": [],
+  "initial_programme": false,
+  "subject": false,
+  "branding": false,
+  "stop_before": true,
+  "stop_after_first": false,
+  "budget_stop": null,
+  "commands": [],
+  "child_effective": [],
+  "capture": {
+    "schema_version": "1",
+    "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+    "captured_at": "20261007T210219Z",
+    "mode": "live",
+    "config": {
+      "strict_expert_budget": true,
+      "search_provider": "exa_mcp",
+      "site_branding_identity": false,
+      "subject_phrase_match": false,
+      "programme_identity_before_funding": false,
+      "shared_query_budget": true,
+      "seconds_per_case": 120,
+      "max_fetcher_calls_per_case": 60,
+      "max_search_queries_per_case": 6,
+      "browser_enabled": false,
+      "cohort": [
+        "offline-review-a",
+        "offline-review-b"
+      ],
+      "selection": "catalogue_id",
+      "batch_stop_reason": "external_provider_failure",
+      "batch_attempted_case_ids": [],
+      "batch_remaining_case_ids": [
+        "offline-review-a",
+        "offline-review-b"
+      ]
+    },
+    "observations": []
+  },
+  "settings_is_mock": true,
+  "pipeline_sha_is_mock": true,
+  "capture_one_is_mock": true,
+  "real_network_provider_model_git_subprocess_calls": 0
+}

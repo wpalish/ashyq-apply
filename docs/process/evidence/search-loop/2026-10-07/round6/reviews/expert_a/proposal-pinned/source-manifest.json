@@ -1,0 +1,47 @@
+{
+  "status": "EXTERNAL_REVIEW_CANDIDATE_FROZEN",
+  "flag": "PROGRAMME_IDENTITY_BEFORE_FUNDING",
+  "default": false,
+  "applied_to_repo": false,
+  "live_capture_run": false,
+  "default_promotion_allowed": false,
+  "frozen_source_sha256": "2f73f7c662ae0da1c31de6f23a9e068574c43f648a2472765a5398c2a093b158",
+  "proposed_source_sha256": "ed79828af03c2ec2664705b13d1e04328c29fa5e433465cb703035dacf8135e6",
+  "source_files_sha256": {
+    "work/ashyq-apply/backend/app/adapters/page_classifier.py": "2f73f7c662ae0da1c31de6f23a9e068574c43f648a2472765a5398c2a093b158",
+    "work/ashyq-apply/backend/app/adapters/requirements/web_requirements.py": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+    "work/ashyq-apply/backend/app/domain/claim_verifier.py": "7c33bada893a2e3c98fbd68e67d84ff9e8bf587a04c13088dfc904fc3219f249"
+  },
+  "artifacts_sha256": {
+    "proposed_page_classifier.py": "ed79828af03c2ec2664705b13d1e04328c29fa5e433465cb703035dacf8135e6",
+    "programme-identity-before-funding.patch": "d549e820b6090395dfd3fcba67ebf43e195c06953d8078a76c48a0805c0df526",
+    "test_programme_funding_scope.py": "a502f059d62710d1e6fdf741c7d8f52f5920be5cca9c739e57f07726e1b4f434",
+    "replay_classifier.py": "55a81a6953b4cb6524d9e4875252c047523793084cea320a850572633b8d5b2e",
+    "independent-replay.json": "d2ba60ff71c55d948925453c6dec4f9c644d4f52f4e719e136aad355c83d9719",
+    "pytest-proposal.log": "cd3959252d4bbeb72562ba9d5fe714269aaa74dcf00125136538d21c8e72ce08",
+    "pytest-red.log": "ccd7d20cb283163fa0404a5b7d5f07afa0d36e514218433d7115b3506fa4eb6f",
+    "pytest-existing.log": "fbdc38bb22ab9d4d108abbac2db93d82b0ba41432f10b852f0bcab0f5bdcf50b",
+    "ruff.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+  },
+  "sticky_stop_sha256": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+  "body_sha256": "88d1f716c82840fa66317ff1ceb42a152439a924d7625c0d2ef18a0f315f0a87",
+  "checks": {
+    "external_proposal": {
+      "passed": 94,
+      "failed": 0,
+      "time_seconds": 0.65
+    },
+    "frozen_red_baseline": {
+      "passed": 86,
+      "failed": 8,
+      "time_seconds": 0.51
+    },
+    "existing_classifier_targeted": {
+      "completed_exit_code": 0,
+      "dots_passed": 51
+    },
+    "ruff": "passed",
+    "independent_semantic_controls": 45
+  },
+  "historical_rejected_source_sha256": "795efb42206816b22f6eeb6e32cbc5a4b2222218792eca0b516a33ee8adc55f7"
+}

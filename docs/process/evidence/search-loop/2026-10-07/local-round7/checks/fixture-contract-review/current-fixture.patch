@@ -1,0 +1,39 @@
+--- a/backend/tests/test_search_layer_budget_fixes.py
++++ b/backend/tests/test_search_layer_budget_fixes.py
+@@ -19,6 +19,7 @@
+     LiveDiscoveryAdapter,
+     PageCategory,
+ )
++from app.adapters.fetching import FetchResult
+ from app.adapters.search import SearchProviderNotConfigured
+ from app.adapters.search.base import (
+     SearchProvider,
+@@ -28,7 +29,7 @@
+ )
+ from app.adapters.search.intent import DiscoveryIntent
+ from app.adapters.search.retrieval import discover_candidates
+-from app.domain.enums import DegreeLevel
++from app.domain.enums import DegreeLevel, FetchOutcome
+ from app.schemas.profile import ApplicantProfileIn
+ 
+ NAME = "University of Groningen"
+@@ -95,13 +96,12 @@
+     async def get(self, url):
+         self.read.append(url)
+ 
+-        class _Result:
+-            ok = True
+-            text = "<html><body>BSc Computer Science programme</body></html>"
+-            final_url = ""
+-            outcome = None
+-
+-        return _Result()
++        return FetchResult(
++            url=url,
++            outcome=FetchOutcome.OK,
++            text="<html><body>BSc Computer Science programme</body></html>",
++            content_type="text/html",
++        )
+ 
+ 
+ def adapter(provider: CountingProvider, fetcher: RecordingFetcher) -> LiveDiscoveryAdapter:

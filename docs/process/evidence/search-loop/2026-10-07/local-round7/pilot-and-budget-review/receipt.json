@@ -1,0 +1,1912 @@
+{
+  "created_at": "2026-10-07T22:49:39.128893+00:00",
+  "kind": "selected immutable original10 local baseline and offline budget review checkpoint",
+  "source_head": "7277c154bda838688268b7a07d4286ed8f4688ce",
+  "snapshot_sha256": "b18f63fe7bf47773ffd6f97ef0cea45967a4fa061dd616da0aafa5723389826b",
+  "source_application_head": "5472a8337e38aecf55addacf5e02fa057477cb51",
+  "source_matches_full_checked_executable_files": true,
+  "source_changed_during_capture": false,
+  "cases": [
+    {
+      "case": "groningen",
+      "reads": 33,
+      "queries": 6,
+      "active_ms": 117007,
+      "programme_urls_unscored": 0,
+      "predictions_unscored": 0,
+      "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+      "full_raw_available": false,
+      "provider_failure": null
+    },
+    {
+      "case": "delft",
+      "reads": 39,
+      "queries": 6,
+      "active_ms": 79084,
+      "programme_urls_unscored": 3,
+      "predictions_unscored": 18,
+      "error": null,
+      "full_raw_available": true,
+      "provider_failure": null
+    },
+    {
+      "case": "aalto",
+      "reads": 56,
+      "queries": 6,
+      "active_ms": 104239,
+      "programme_urls_unscored": 0,
+      "predictions_unscored": 0,
+      "error": null,
+      "full_raw_available": true,
+      "provider_failure": null
+    },
+    {
+      "case": "vienna",
+      "reads": 37,
+      "queries": 6,
+      "active_ms": 71850,
+      "programme_urls_unscored": 1,
+      "predictions_unscored": 2,
+      "error": null,
+      "full_raw_available": true,
+      "provider_failure": null
+    },
+    {
+      "case": "warsaw",
+      "reads": 35,
+      "queries": 6,
+      "active_ms": 117007,
+      "programme_urls_unscored": 0,
+      "predictions_unscored": 4,
+      "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+      "full_raw_available": false,
+      "provider_failure": null
+    },
+    {
+      "case": "ubc",
+      "reads": 40,
+      "queries": 6,
+      "active_ms": 117007,
+      "programme_urls_unscored": 0,
+      "predictions_unscored": 0,
+      "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+      "full_raw_available": false,
+      "provider_failure": null
+    },
+    {
+      "case": "toronto",
+      "reads": 60,
+      "queries": 6,
+      "active_ms": 94520,
+      "programme_urls_unscored": 3,
+      "predictions_unscored": 0,
+      "error": "RuntimeError: BENCHMARK_PAGE_BUDGET_EXHAUSTED",
+      "full_raw_available": true,
+      "provider_failure": null
+    },
+    {
+      "case": "hku",
+      "reads": 28,
+      "queries": 6,
+      "active_ms": 59837,
+      "programme_urls_unscored": 1,
+      "predictions_unscored": 0,
+      "error": null,
+      "full_raw_available": true,
+      "provider_failure": null
+    },
+    {
+      "case": "ntu",
+      "reads": 60,
+      "queries": 4,
+      "active_ms": 118641,
+      "programme_urls_unscored": 3,
+      "predictions_unscored": 99,
+      "error": null,
+      "full_raw_available": true,
+      "provider_failure": null
+    },
+    {
+      "case": "kaist",
+      "reads": 25,
+      "queries": 6,
+      "active_ms": 104248,
+      "programme_urls_unscored": 1,
+      "predictions_unscored": 2,
+      "error": null,
+      "full_raw_available": true,
+      "provider_failure": null
+    }
+  ],
+  "algorithm_case_count": 10,
+  "fetcher_calls": 413,
+  "search_queries": 58,
+  "provider_refusals": 0,
+  "quality_status": "UNSCORED",
+  "exact_programme_accuracy": "UNMEASURED",
+  "fact_precision_recall": "UNMEASURED",
+  "blind_expert_40_of_62": "NOT PERFORMED",
+  "all_old_trial_states_unchanged": true,
+  "readguard_v2_applied": false,
+  "worker_busy_fix_applied": false,
+  "readguard_peer_tests": 92,
+  "independent_pg_passed": 27,
+  "independent_pg_retained_failed": 1,
+  "worker_original_failed": 4,
+  "worker_proposal_passed": 12,
+  "new_genuine_job_protocol": "PLAN ONLY, 11 grouped offline controls not run",
+  "controller_v3_rejected_tests": 2,
+  "controller_v4_passed_tests": 61,
+  "configured_secret_matches": 0,
+  "selected_files": {
+    "baseline-original10-v2/execution/aalto/capture/20261007T222316Z/aalto.budget.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/aalto/capture/20261007T222316Z/aalto.budget.json",
+      "sha256": "eeae8840ca96f5963c4548c937e6ccc426f9f40a8d5be67f0cdece5267815e9e"
+    },
+    "baseline-original10-v2/execution/aalto/capture/20261007T222316Z/aalto.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/aalto/capture/20261007T222316Z/aalto.json",
+      "sha256": "1cf86343832dd141f079911045e6d41a4b5bf0e5f00c5df8403b3f11ffa3740f"
+    },
+    "baseline-original10-v2/execution/aalto/capture/20261007T222316Z/aalto.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/aalto/capture/20261007T222316Z/aalto.log",
+      "sha256": "5eca90dab9bb1d87d93c3d3da2465a6467e94860ac3c132b0ef8bf794c06650a"
+    },
+    "baseline-original10-v2/execution/aalto/capture/20261007T222316Z/aalto.raw.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/aalto/capture/20261007T222316Z/aalto.raw.json",
+      "sha256": "455dba6167a6b7faca4442ead8e2591d4bf3dca464721f853fa7093fbe1fe624"
+    },
+    "baseline-original10-v2/execution/aalto/capture/20261007T222316Z/capture.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/aalto/capture/20261007T222316Z/capture.json",
+      "sha256": "d2cf7e0dbea30873306f1ae1b558adef706f0c186290141dcf4e8fac7ef56889"
+    },
+    "baseline-original10-v2/execution/case-aalto.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/case-aalto.log",
+      "sha256": "cbfd725a613843231d68ade875d7277bddc308817a0855b22d285debfd266634"
+    },
+    "baseline-original10-v2/execution/case-delft.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/case-delft.log",
+      "sha256": "51e22a38b950412ed52d942337e612db370475555e8b528833cdf78ac1ab2822"
+    },
+    "baseline-original10-v2/execution/case-groningen.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/case-groningen.log",
+      "sha256": "5e8bb3582f8428000b1fc468ef8d50d8b2f0be8caf95389646347ee072c2e234"
+    },
+    "baseline-original10-v2/execution/case-toronto.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/case-toronto.log",
+      "sha256": "daf8c7ba3dfda4b9e28edf582df7812a4d0414f33996a639c39e00734dfd32ba"
+    },
+    "baseline-original10-v2/execution/case-ubc.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/case-ubc.log",
+      "sha256": "79f09802e34516502c91848612dd5efe0cddb1b91311267bdc6869f7fe529e5b"
+    },
+    "baseline-original10-v2/execution/case-vienna.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/case-vienna.log",
+      "sha256": "4087d3b7ab3a7881e5d2fec9134cdd547501406515c0027e73dff90c4d4cee25"
+    },
+    "baseline-original10-v2/execution/case-warsaw.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/case-warsaw.log",
+      "sha256": "845cec27006c27af68a6096e232d8df89a026d0a8c941e100ee6327ef7eb5bea"
+    },
+    "baseline-original10-v2/execution/delft/capture/20261007T222155Z/capture.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/delft/capture/20261007T222155Z/capture.json",
+      "sha256": "745748799ef015a51bdd212205500959dea0e7ceb996cd9c1d32fdd560c0d9c1"
+    },
+    "baseline-original10-v2/execution/delft/capture/20261007T222155Z/delft.budget.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/delft/capture/20261007T222155Z/delft.budget.json",
+      "sha256": "55afcd2417f67a24cf5514a5bcd352a56a96ae1ef2b4fa8e239bc42fa34b3670"
+    },
+    "baseline-original10-v2/execution/delft/capture/20261007T222155Z/delft.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/delft/capture/20261007T222155Z/delft.json",
+      "sha256": "6ae73753087daac6fcee081df73c84ef74bcbc0cc7c773b4a612835ab1b204cc"
+    },
+    "baseline-original10-v2/execution/delft/capture/20261007T222155Z/delft.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/delft/capture/20261007T222155Z/delft.log",
+      "sha256": "d77b29bccacf6b38e1a91688e62baadb942b811899188396762d21ff19e62e74"
+    },
+    "baseline-original10-v2/execution/delft/capture/20261007T222155Z/delft.raw.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/delft/capture/20261007T222155Z/delft.raw.json",
+      "sha256": "07b23f79b3fb0822abd4c02202c644e6af94f0b823033edb7f20b558072b057b"
+    },
+    "baseline-original10-v2/execution/groningen/capture/20261007T221957Z/capture.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/groningen/capture/20261007T221957Z/capture.json",
+      "sha256": "a1fa591273ddd49e02fb47304b4c7d69639c38487119691e840e7d257ab9199d"
+    },
+    "baseline-original10-v2/execution/groningen/capture/20261007T221957Z/groningen.budget.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/groningen/capture/20261007T221957Z/groningen.budget.json",
+      "sha256": "56a29d14ac0a8d3f66e6a9c4a9cb7de12360a4cf7bce51be287bc2c8a9bfebaf"
+    },
+    "baseline-original10-v2/execution/groningen/capture/20261007T221957Z/groningen.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/groningen/capture/20261007T221957Z/groningen.json",
+      "sha256": "cf2da49aa99c634b451a5385a5a80ce5d294a1e2e5a769894bc1238a5de54566"
+    },
+    "baseline-original10-v2/execution/groningen/capture/20261007T221957Z/groningen.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/groningen/capture/20261007T221957Z/groningen.log",
+      "sha256": "f234bf300a6d77c209d2e8ea7349a2ab21ee7b15641438d2096aee588770e346"
+    },
+    "baseline-original10-v2/execution/summary.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/summary.json",
+      "sha256": "b0f922d4a0e5485763723341b203b9521e7011fbf67a96e1fe2c8c6b89f443f4"
+    },
+    "baseline-original10-v2/execution/toronto/capture/20261007T223010Z/capture.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/toronto/capture/20261007T223010Z/capture.json",
+      "sha256": "ddef93b7d9ec840504e1800e34694c2f732ebd2b8ac40e3921ffe762aa4476a7"
+    },
+    "baseline-original10-v2/execution/toronto/capture/20261007T223010Z/toronto.budget.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/toronto/capture/20261007T223010Z/toronto.budget.json",
+      "sha256": "3cd2bf0a924fb12a7b5e1966cfa194c93a949bb9b5ddb78b7d2417f09927298b"
+    },
+    "baseline-original10-v2/execution/toronto/capture/20261007T223010Z/toronto.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/toronto/capture/20261007T223010Z/toronto.json",
+      "sha256": "cc831b3eb615b2070c854bf6a952fcbba6b37ddf2c22940f328b37b7394e3ead"
+    },
+    "baseline-original10-v2/execution/toronto/capture/20261007T223010Z/toronto.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/toronto/capture/20261007T223010Z/toronto.log",
+      "sha256": "21c0e68191aff94b9ae76946af3be3d17960ade81299e6dc77bfdd6ac13ccee5"
+    },
+    "baseline-original10-v2/execution/toronto/capture/20261007T223010Z/toronto.raw.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/toronto/capture/20261007T223010Z/toronto.raw.json",
+      "sha256": "a0ee80037b874a63e6d8da0861d77938d273388c9bdcd850530c5c53c8ba070a"
+    },
+    "baseline-original10-v2/execution/ubc/capture/20261007T222812Z/capture.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/ubc/capture/20261007T222812Z/capture.json",
+      "sha256": "81088f4c52ba920abeb5f43f1bbf7cd67f027f5997de403da2085af3f774c403"
+    },
+    "baseline-original10-v2/execution/ubc/capture/20261007T222812Z/ubc.budget.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/ubc/capture/20261007T222812Z/ubc.budget.json",
+      "sha256": "46595244b90e9a511fde229082a6a3ee1a3a427c1342bf8651f984c90b4f178f"
+    },
+    "baseline-original10-v2/execution/ubc/capture/20261007T222812Z/ubc.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/ubc/capture/20261007T222812Z/ubc.json",
+      "sha256": "19af67c63e01e9232fdf5c5df9b4efae8313beafd3506f51d9aec772d25c7b4b"
+    },
+    "baseline-original10-v2/execution/ubc/capture/20261007T222812Z/ubc.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/ubc/capture/20261007T222812Z/ubc.log",
+      "sha256": "99c936567f6cefe15d9777bc262f9281ccee04ba7cd5a6b8a0ea0e937ab02e9c"
+    },
+    "baseline-original10-v2/execution/vienna/capture/20261007T222501Z/capture.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/vienna/capture/20261007T222501Z/capture.json",
+      "sha256": "715e9f391f4c938085d105fc934f23470616c95b1c92ad9c0bdd2d7c6c39b989"
+    },
+    "baseline-original10-v2/execution/vienna/capture/20261007T222501Z/vienna.budget.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/vienna/capture/20261007T222501Z/vienna.budget.json",
+      "sha256": "847de1dca3e59d18035323529c9ee39179ee24d3dc5cb794b89361ff23f408c4"
+    },
+    "baseline-original10-v2/execution/vienna/capture/20261007T222501Z/vienna.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/vienna/capture/20261007T222501Z/vienna.json",
+      "sha256": "12bc0cba438e7a705609f36a1f58567eaa6689a2d6461941bbaa17b72729e74b"
+    },
+    "baseline-original10-v2/execution/vienna/capture/20261007T222501Z/vienna.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/vienna/capture/20261007T222501Z/vienna.log",
+      "sha256": "20ad7402c012f6c1f4fe0995f750ad7e13c13840d15a434e37ce55ad60bb612c"
+    },
+    "baseline-original10-v2/execution/vienna/capture/20261007T222501Z/vienna.raw.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/vienna/capture/20261007T222501Z/vienna.raw.json",
+      "sha256": "747a4a923cafd9bbcdaa26ad7e1b6e70cb064065ceb0d027d839089a104627a9"
+    },
+    "baseline-original10-v2/execution/warsaw/capture/20261007T222614Z/capture.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/warsaw/capture/20261007T222614Z/capture.json",
+      "sha256": "21cb39414e68261eb5e6e01cc790f4dfcda2016dd362239a76fde580de8fe855"
+    },
+    "baseline-original10-v2/execution/warsaw/capture/20261007T222614Z/warsaw.budget.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/warsaw/capture/20261007T222614Z/warsaw.budget.json",
+      "sha256": "bbe505ad3339f7a8553f681f85923a833a40c06c2d041c339228758f69a72676"
+    },
+    "baseline-original10-v2/execution/warsaw/capture/20261007T222614Z/warsaw.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/warsaw/capture/20261007T222614Z/warsaw.json",
+      "sha256": "80f4c97683979699b50fb5569fb66033fdb6b4296eeeeefe9ab282b4d47c41da"
+    },
+    "baseline-original10-v2/execution/warsaw/capture/20261007T222614Z/warsaw.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/execution/warsaw/capture/20261007T222614Z/warsaw.log",
+      "sha256": "99eabbe0e3bebbad364f9939785ea69c5ce4703c01d715468644ae35b09a15fe"
+    },
+    "baseline-original10-v2/plan.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/plan.json",
+      "sha256": "38243591f343321c2e27acf97adb7b5edd8d71931dec2a7d62d979d76252129e"
+    },
+    "baseline-original10-v2/protocol-stop.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10-v2/protocol-stop.json",
+      "sha256": "b1ec197f1d362ee602af6936ce1cf4b2e1b84c068e587b2f992bc9b67f5895c4"
+    },
+    "remaining3-v4/PLAN.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/PLAN.md",
+      "sha256": "bb895a00cc812dad8f86d9237aecd2820794e9103b108395eb99d829442925bc"
+    },
+    "remaining3-v4/execution/case-hku.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/case-hku.log",
+      "sha256": "774a256ce8ae01e9425616d38733af51dd61984829a115220cd8574029d87faa"
+    },
+    "remaining3-v4/execution/case-kaist.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/case-kaist.log",
+      "sha256": "f1ec3780edf2c288d4575ce0a33322e8906c4759d075e04c154ee5807851ac63"
+    },
+    "remaining3-v4/execution/case-ntu.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/case-ntu.log",
+      "sha256": "67906cd7036818845cfba51064910ccf86d780f5901ef8f404ce576ec9f759eb"
+    },
+    "remaining3-v4/execution/hku/capture/20261007T224434Z/capture.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/hku/capture/20261007T224434Z/capture.json",
+      "sha256": "e55430ec31b5146d6fb0c82652f0cb47e7696015dc3fb8b5f3149a7777d318ae"
+    },
+    "remaining3-v4/execution/hku/capture/20261007T224434Z/hku.budget.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/hku/capture/20261007T224434Z/hku.budget.json",
+      "sha256": "5ec8d6373d94002c7e41f78a3b5190853ba03f1869525a4bfdb4b7b1a878781d"
+    },
+    "remaining3-v4/execution/hku/capture/20261007T224434Z/hku.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/hku/capture/20261007T224434Z/hku.json",
+      "sha256": "82c7aa59bc8b5e78e090cc1b5b040e1b8dc8760a852e5c5e0994808f484bd947"
+    },
+    "remaining3-v4/execution/hku/capture/20261007T224434Z/hku.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/hku/capture/20261007T224434Z/hku.log",
+      "sha256": "b8d5c25caa7d9da2eb049146b069f2b1fde8d5faf00a343db4644f029af75f4f"
+    },
+    "remaining3-v4/execution/hku/capture/20261007T224434Z/hku.raw.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/hku/capture/20261007T224434Z/hku.raw.json",
+      "sha256": "832d7b7019d32f3eba51f668c43b0d9160a47727414a79d0b3967e4363674256"
+    },
+    "remaining3-v4/execution/kaist/capture/20261007T224735Z/capture.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/kaist/capture/20261007T224735Z/capture.json",
+      "sha256": "a3b81b2659e464a57da5923d1e618d014c1271cb5c50cae0f1f6adbd4bd645c6"
+    },
+    "remaining3-v4/execution/kaist/capture/20261007T224735Z/kaist.budget.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/kaist/capture/20261007T224735Z/kaist.budget.json",
+      "sha256": "3591def6b0c123ca409fc62caa45134d79367da1f2a0d07fc82deef4182b1c92"
+    },
+    "remaining3-v4/execution/kaist/capture/20261007T224735Z/kaist.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/kaist/capture/20261007T224735Z/kaist.json",
+      "sha256": "40a783dce9378ef927bc278f599175303001526144d21106d3798bcf6c88682a"
+    },
+    "remaining3-v4/execution/kaist/capture/20261007T224735Z/kaist.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/kaist/capture/20261007T224735Z/kaist.log",
+      "sha256": "df10971c3c4409890ad720886608b380040acca43c586a769d4c9a84584cb608"
+    },
+    "remaining3-v4/execution/kaist/capture/20261007T224735Z/kaist.raw.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/kaist/capture/20261007T224735Z/kaist.raw.json",
+      "sha256": "545640a6d952dd94278932132bdb3db46d4dd2e164c7399239aae23bab72fdac"
+    },
+    "remaining3-v4/execution/ntu/capture/20261007T224535Z/capture.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/ntu/capture/20261007T224535Z/capture.json",
+      "sha256": "4a609c6127b3fe672b95fda227ca19e6e374edc8024cc37a729e1993c97df08f"
+    },
+    "remaining3-v4/execution/ntu/capture/20261007T224535Z/ntu.budget.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/ntu/capture/20261007T224535Z/ntu.budget.json",
+      "sha256": "f1de39cc38eafdea0558e35dbdad3771e02b7edbac88dd32092afadbb8761c2c"
+    },
+    "remaining3-v4/execution/ntu/capture/20261007T224535Z/ntu.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/ntu/capture/20261007T224535Z/ntu.json",
+      "sha256": "4a4f62908bf49a415f1567b0e1343283499f08be09e9e3a1ec4ef69c91a40fa4"
+    },
+    "remaining3-v4/execution/ntu/capture/20261007T224535Z/ntu.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/ntu/capture/20261007T224535Z/ntu.log",
+      "sha256": "b8fd672a8901ab29b2af46cf60ddfd36cc410b804209cff6ba923904ffbd6160"
+    },
+    "remaining3-v4/execution/ntu/capture/20261007T224535Z/ntu.raw.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/ntu/capture/20261007T224535Z/ntu.raw.json",
+      "sha256": "12530f4523c0951690eefb0450916584a75ba55664e7666ae1acf07fa49cbc24"
+    },
+    "remaining3-v4/execution/summary.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/execution/summary.json",
+      "sha256": "c44bf9154a3ecc6b8440ffee0f0d157d3ba62100fef7d16203f6001dc8ff6b7b"
+    },
+    "remaining3-v4/plan.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/plan.json",
+      "sha256": "5e9c9c69d63ac70031c31417ea4c8f6efc9dd007ac6601147dffe439c343354a"
+    },
+    "remaining3-v4/prior-revalidation.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v4/prior-revalidation.json",
+      "sha256": "7ee6aaee1eedc792fd7265b8ac414312dee91c3f8cf20d2e7eda0e892e53bfd5"
+    },
+    "baseline-original10/plan.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/baseline-original10/plan.json",
+      "sha256": "0c667d36a9a27b4e6874d4fcb5a162be424810762c4584e322f783df3f058ea9"
+    },
+    "remaining3-v3/PLAN.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v3/PLAN.md",
+      "sha256": "e978d732baa5b7b822ca116615c4a9ac897224ce9b495b3905d78473218257fe"
+    },
+    "remaining3-v3/plan.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v3/plan.json",
+      "sha256": "07d47fe1996885cfa7bc156d11501a598540b9b7b0b08d10563a185a3645ae72"
+    },
+    "remaining3-v3/prior-revalidation.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v3/prior-revalidation.json",
+      "sha256": "acece8df76e278dcdea8d201b636e889f8488f932c794600ad040ab702f80ebf"
+    },
+    "controllers/local_pilot.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/local_pilot.py",
+      "sha256": "8497443b97a6a51db3d2225d716e7cbcc2f17dc2b7ab8772177cad757e8dcf90"
+    },
+    "controllers/local_pilot_v2.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/local_pilot_v2.py",
+      "sha256": "051c7d39c4cbea46e61e673341ca3230aec352de14ffc4ba41d0cf5b5f244ee4"
+    },
+    "controllers/local_pilot_v3.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/local_pilot_v3.py",
+      "sha256": "2cc2a53d1c6d1d1a0d5b33a65b1482f6a139dcf92ecf27e172092015b5b4edca"
+    },
+    "controllers/local_pilot_v4.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/local_pilot_v4.py",
+      "sha256": "cd1df2c396cb07ddb5842f4101b3aad8867a113e5d3a2ce2e929be80b30639c6"
+    },
+    "controllers/checkpoint_pilot.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/checkpoint_pilot.py",
+      "sha256": "3f57214995775730939a6f629bb940b4ee9e7c712dc4ba965dee63f5920b91ec"
+    },
+    "reviews/expert_b-local-pilot/final-review-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/final-review-manifest.json",
+      "sha256": "2c64956bcb38482d7f2ea2b0f60cb7e5e16fb52109a99919f93decd82974c769"
+    },
+    "reviews/expert_b-local-pilot/local_pilot.v1.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/local_pilot.v1.py",
+      "sha256": "8497443b97a6a51db3d2225d716e7cbcc2f17dc2b7ab8772177cad757e8dcf90"
+    },
+    "reviews/expert_b-local-pilot/local_pilot.v2-final.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/local_pilot.v2-final.py",
+      "sha256": "051c7d39c4cbea46e61e673341ca3230aec352de14ffc4ba41d0cf5b5f244ee4"
+    },
+    "reviews/expert_b-local-pilot/local_pilot.v2-observed.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/local_pilot.v2-observed.py",
+      "sha256": "119f598f31d9cdd16a9ac8e4ebbeb30587910dee2f0683f75f2e4d85446f3919"
+    },
+    "reviews/expert_b-local-pilot/pytest-v1-red.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-v1-red.log",
+      "sha256": "5f181f131055feb829195541b73f8d9e3d55c6365a76ed8ad8f390f50327d3cf"
+    },
+    "reviews/expert_b-local-pilot/pytest-v2-clock.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-v2-clock.log",
+      "sha256": "7b3c07848546c759b411eee976a806f030a7ca1be89d58bce2b2e7854e9701d3"
+    },
+    "reviews/expert_b-local-pilot/pytest-v2-final.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-v2-final.log",
+      "sha256": "8f475134935a1f99ed04d6f60d0ccbe78a8690df1357a3e5d3c8a5f1140c8e28"
+    },
+    "reviews/expert_b-local-pilot/pytest-v2-observed.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-v2-observed.log",
+      "sha256": "d3fc9b8ddd6d4330221fee583cba8fb48fb45dcfb5c3ad5e210b5d53c949b8ae"
+    },
+    "reviews/expert_b-local-pilot/review-v1.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/review-v1.ru.md",
+      "sha256": "cb6e3bfdc17be74c44a71471115d27dd844e560793f42c3b14cc2fec5de85dde"
+    },
+    "reviews/expert_b-local-pilot/review-v2-final.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/review-v2-final.ru.md",
+      "sha256": "b79a8dcacb0fa2e476140cc4c4bb1313f7c08125bada4d94a67b270baa2a85cc"
+    },
+    "reviews/expert_b-local-pilot/source-and-protocol-review.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/source-and-protocol-review.json",
+      "sha256": "c037d7a5e3f196e99ccd7eb3091dc6329475d9659030061fbdc7b2d34b6212e0"
+    },
+    "reviews/expert_b-local-pilot/test_validate_v1.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/test_validate_v1.py",
+      "sha256": "91b593e1ca331b8de204dc5ebb7786937fb19614510fa92a01b6f78512a2b0b4"
+    },
+    "reviews/expert_b-local-pilot/test_validate_v2.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/test_validate_v2.py",
+      "sha256": "4a754b10a7c3b0a9443c072e7f184e64359c07c0653790b4117c392ab5118204"
+    },
+    "reviews/expert_b-local-pilot/test_validate_v2.red119f.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/test_validate_v2.red119f.py",
+      "sha256": "4a754b10a7c3b0a9443c072e7f184e64359c07c0653790b4117c392ab5118204"
+    },
+    "reviews/expert_b-local-pilot/test_validate_v2_final.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/test_validate_v2_final.py",
+      "sha256": "e0ebf9b262be9e4f78b313cd983d862c36919ee73a4534fc1d1cb684cdf264cb"
+    },
+    "reviews/expert_b-local-pilot/v1-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/v1-manifest.json",
+      "sha256": "261bce633bb0ba16aaaa0fc5cfaedd534fea61f07d4b63ab6bf4f6c900c297c4"
+    },
+    "reviews/expert_b-local-pilot-v3/local_pilot.v1.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v3/local_pilot.v1.py",
+      "sha256": "8497443b97a6a51db3d2225d716e7cbcc2f17dc2b7ab8772177cad757e8dcf90"
+    },
+    "reviews/expert_b-local-pilot-v3/local_pilot.v3-reviewed.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v3/local_pilot.v3-reviewed.py",
+      "sha256": "2cc2a53d1c6d1d1a0d5b33a65b1482f6a139dcf92ecf27e172092015b5b4edca"
+    },
+    "reviews/expert_b-local-pilot-v3/pins-review.offline.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v3/pins-review.offline.json",
+      "sha256": "09bbd5fbe0a0c3350aaa7b18bf1af5d9fea334e3b7a7f91ad85bbad187801ee4"
+    },
+    "reviews/expert_b-local-pilot-v3/plan.reviewed.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v3/plan.reviewed.json",
+      "sha256": "07d47fe1996885cfa7bc156d11501a598540b9b7b0b08d10563a185a3645ae72"
+    },
+    "reviews/expert_b-local-pilot-v3/prior-revalidation.reviewed.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v3/prior-revalidation.reviewed.json",
+      "sha256": "acece8df76e278dcdea8d201b636e889f8488f932c794600ad040ab702f80ebf"
+    },
+    "reviews/expert_b-local-pilot-v3/pytest-red.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v3/pytest-red.log",
+      "sha256": "098a207b3d0f2324fe34cd39147705ab832898b656e85281e810cbb93a8af0d6"
+    },
+    "reviews/expert_b-local-pilot-v3/red-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v3/red-manifest.json",
+      "sha256": "7355109da8a21bde1ea6c5e80bbd3b4447b77a5991318b36ab039030d4cd1675"
+    },
+    "reviews/expert_b-local-pilot-v3/review-red.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v3/review-red.ru.md",
+      "sha256": "572dfa78fc77556058aebf7f310b8f8e0a09d984f013340dc482bcdfa905e14d"
+    },
+    "reviews/expert_b-local-pilot-v3/review_pins_offline.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v3/review_pins_offline.py",
+      "sha256": "b240d003b01d109d549016868cda9483e47508b8501394861cd1a3c7bb532b4f"
+    },
+    "reviews/expert_b-local-pilot-v3/test_validate_v1.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v3/test_validate_v1.py",
+      "sha256": "91b593e1ca331b8de204dc5ebb7786937fb19614510fa92a01b6f78512a2b0b4"
+    },
+    "reviews/expert_b-local-pilot-v3/test_validate_v3_legacy29.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v3/test_validate_v3_legacy29.py",
+      "sha256": "07bc6fb57209869f3b145401cce3c8f2b336ba3ed6eb944355153ec30d673fb1"
+    },
+    "reviews/expert_b-local-pilot-v3/test_validate_v3_pagecap.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v3/test_validate_v3_pagecap.py",
+      "sha256": "2e3adf23bc755d145ae9f684a9f5cdf1803b92d4ae3a68dd586c2fcff9313a6c"
+    },
+    "reviews/expert_b-local-pilot-v4/final-review-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v4/final-review-manifest.json",
+      "sha256": "1d7cf11adc5bfcb7ec82a1cfa2d052f925704679c9bfcab75389be8d68854e8d"
+    },
+    "reviews/expert_b-local-pilot-v4/local_pilot.v1.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v4/local_pilot.v1.py",
+      "sha256": "8497443b97a6a51db3d2225d716e7cbcc2f17dc2b7ab8772177cad757e8dcf90"
+    },
+    "reviews/expert_b-local-pilot-v4/local_pilot.v4-reviewed.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v4/local_pilot.v4-reviewed.py",
+      "sha256": "cd1df2c396cb07ddb5842f4101b3aad8867a113e5d3a2ce2e929be80b30639c6"
+    },
+    "reviews/expert_b-local-pilot-v4/pins-review.offline.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v4/pins-review.offline.json",
+      "sha256": "ffe6af9427cac488148bb40a087ad2a46b2480241ecb9a0b7547b9aad23541eb"
+    },
+    "reviews/expert_b-local-pilot-v4/plan.reviewed.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v4/plan.reviewed.json",
+      "sha256": "5e9c9c69d63ac70031c31417ea4c8f6efc9dd007ac6601147dffe439c343354a"
+    },
+    "reviews/expert_b-local-pilot-v4/prior-revalidation.reviewed.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v4/prior-revalidation.reviewed.json",
+      "sha256": "7ee6aaee1eedc792fd7265b8ac414312dee91c3f8cf20d2e7eda0e892e53bfd5"
+    },
+    "reviews/expert_b-local-pilot-v4/pytest-final.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v4/pytest-final.log",
+      "sha256": "7594fc19ca9752c876e4d8d93e5d33d3cbc6752c6f6bfb3fa21204847977ea23"
+    },
+    "reviews/expert_b-local-pilot-v4/review-final.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v4/review-final.ru.md",
+      "sha256": "1efa091d4d8a8f8f9b5c963245049baf5b81af45c811dbcfd808d3e75c17f1a7"
+    },
+    "reviews/expert_b-local-pilot-v4/review_pins_offline.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v4/review_pins_offline.py",
+      "sha256": "3191bdb3ff79d0dac08649798f4fd2c7c36d39157a1d6f9fdf6d57e6780ed472"
+    },
+    "reviews/expert_b-local-pilot-v4/test_validate_v1.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v4/test_validate_v1.py",
+      "sha256": "91b593e1ca331b8de204dc5ebb7786937fb19614510fa92a01b6f78512a2b0b4"
+    },
+    "reviews/expert_b-local-pilot-v4/test_validate_v4_legacy29.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v4/test_validate_v4_legacy29.py",
+      "sha256": "a7a7ee05a11bbb27b0ab6c431b653317ae796f0d28fe458ed924fc90c68b5131"
+    },
+    "reviews/expert_b-local-pilot-v4/test_validate_v4_pagecap.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v4/test_validate_v4_pagecap.py",
+      "sha256": "c157db90003b6321138f2d56f3698af028ace2e49d2ba65a37686fc61e7e92a0"
+    },
+    "reviews/expert_a-worker-busy/bundle-files.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/bundle-files.json",
+      "sha256": "3b8e4a56c70417e0d8503192cb87a2f55ac9d72827459c4366d2568123633aef"
+    },
+    "reviews/expert_a-worker-busy/comparison.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/comparison.json",
+      "sha256": "4da4bc34c421958f25adcf8c0a73996f169d84c13b09d4606c550176d71502a0"
+    },
+    "reviews/expert_a-worker-busy/imports-baseline.stderr": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/imports-baseline.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviews/expert_a-worker-busy/imports-baseline.stdout": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/imports-baseline.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviews/expert_a-worker-busy/imports-proposal.stderr": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/imports-proposal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviews/expert_a-worker-busy/imports-proposal.stdout": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/imports-proposal.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviews/expert_a-worker-busy/lifecycle.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/lifecycle.json",
+      "sha256": "5a24c972e85bf7d8508231168745851ed650756da853513c1220d22fe9d19bd2"
+    },
+    "reviews/expert_a-worker-busy/postflight.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/postflight.json",
+      "sha256": "40d69ef6376857fbb60a21f74009c9f2e575d641b19a781432941f510ed573a5"
+    },
+    "reviews/expert_a-worker-busy/preflight.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/preflight.json",
+      "sha256": "6c344177058d5df733907f7dc5dc2a1bc012cc6211c2be1dbbf6b28dcbe9965e"
+    },
+    "reviews/expert_a-worker-busy/pytest-baseline.stderr": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/pytest-baseline.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviews/expert_a-worker-busy/pytest-baseline.stdout": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/pytest-baseline.stdout",
+      "sha256": "a0a8aee355c4791c845d15f5b78b2b5657d2ad243263b1d57ea4cd55a81cf7f0"
+    },
+    "reviews/expert_a-worker-busy/pytest-proposal.stderr": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/pytest-proposal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviews/expert_a-worker-busy/pytest-proposal.stdout": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/pytest-proposal.stdout",
+      "sha256": "0f00097657c3ab3fdf30a269231dd1f1f0cccc6c193fba97362be46322d76860"
+    },
+    "reviews/expert_a-worker-busy/receipt.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/receipt.json",
+      "sha256": "45826a5bb00717d0814a3e3ebedaf1a47a6ad663e109974970e66d2c2e3b5d41"
+    },
+    "reviews/expert_a-worker-busy/review.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/review.ru.md",
+      "sha256": "46482add67b7d1b5633129cc46ae6048f5be34f1736fe5d91472127db8bc0d64"
+    },
+    "reviews/expert_a-worker-busy/review_context.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/review_context.py",
+      "sha256": "722c0627bcdd79451e3505c626f671aaabb5eb103a5af16270708e73b304a76f"
+    },
+    "reviews/expert_a-worker-busy/run_sql_controls.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/run_sql_controls.py",
+      "sha256": "7639085c4997cedb98b056e33f3e09b262ce4a50a9c06ed775783fe865c00b46"
+    },
+    "reviews/expert_a-worker-busy/test_worker_busy.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/test_worker_busy.py",
+      "sha256": "a846dafc62e90660b40149535cbb625c002932ea30a0a20240dc630bc442636a"
+    },
+    "reviews/expert_a-worker-busy/verify_import.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/verify_import.py",
+      "sha256": "55bb02a91961edcac523ed25b028c6f2816c0a3c12d2cdd853389e8196ac0173"
+    },
+    "reviews/expert_a-canary-job-protocol-plan/offline-control-matrix.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-canary-job-protocol-plan/offline-control-matrix.json",
+      "sha256": "d275fd0ef01c9a42395b0dbc13e5c00e15d21ae202854c3b2ef509eb3f006b16"
+    },
+    "reviews/expert_a-canary-job-protocol-plan/plan.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-canary-job-protocol-plan/plan.ru.md",
+      "sha256": "acde56ef4abaab2f9b1627c8fa34001e93ebf6139d0103aa436197ac665e28b2"
+    },
+    "reviews/expert_a-canary-job-protocol-plan/postflight.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-canary-job-protocol-plan/postflight.json",
+      "sha256": "3d536b5148570849720b08db90e13e53ab78adf612dca3065034ec389037ffa5"
+    },
+    "reviews/expert_a-canary-job-protocol-plan/receipt.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-canary-job-protocol-plan/receipt.json",
+      "sha256": "07208229e5e8e07e7b6e6f4dd0dfec753de1aa32cc18e53c9bf5d1ee0442b818"
+    },
+    "reviews/expert_a-canary-job-protocol-plan/source-inputs.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-canary-job-protocol-plan/source-inputs.json",
+      "sha256": "5a2c55c13b398f833c4561fe4db70bbd01b20dd4bd8e94f45cbeac2bd9fc3ff3"
+    },
+    "reviews/expert_a-readguard-port-plan/audit.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-readguard-port-plan/audit.ru.md",
+      "sha256": "00eab5fa1625301772309437a9c267ea6fe9a56ab51ec81784d55150e0e26f0a"
+    },
+    "reviews/expert_a-readguard-port-plan/port-map.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-readguard-port-plan/port-map.json",
+      "sha256": "bea2efaf229e918e03befd8b9c44b8d311c4fa3933e5178a1d9d2761536da9ca"
+    },
+    "reviews/expert_a-readguard-port-plan/postflight.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-readguard-port-plan/postflight.json",
+      "sha256": "ec23a656f97555063b09c7e0bdad9ee164d1319e56e3a3e29ccfdc41ed45f864"
+    },
+    "reviews/expert_a-readguard-port-plan/receipt.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-readguard-port-plan/receipt.json",
+      "sha256": "b5d7e419c4f06d6a7be7a71baebc3d36add2172f3c61ac3bf9b3d71c882757ce"
+    },
+    "reviews/expert_a-readguard-port-plan/source-inputs.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-readguard-port-plan/source-inputs.json",
+      "sha256": "3de01c48df9104e4e2d122a386b5c91c5ff75aaeca0004ecc1200692813c4631"
+    },
+    "worker-busy-proposal/PLAN.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/worker-busy-proposal/PLAN.md",
+      "sha256": "5cf44e183e7338e4ff9c9bfb572989b42ee982e90aa4e17de0f01b1d3b69d029"
+    },
+    "worker-busy-proposal/proposal.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/worker-busy-proposal/proposal.json",
+      "sha256": "0995829d4ce3292db827cb161008467ba3a96ee7aa423c6d3034bb60a7ea1a3b"
+    },
+    "worker-busy-proposal/worker.original.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/worker-busy-proposal/worker.original.py",
+      "sha256": "491f5ccdeadd3556ad4e5bf6bfc2b4578207ef2cce129eb2fcd57b4b4e0e6681"
+    },
+    "worker-busy-proposal/worker.patch": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/worker-busy-proposal/worker.patch",
+      "sha256": "ae8039b8c2a2aa3a1e0dfbd945857d61c9d6a3a6e97930ace27bd1581c6ea6a7"
+    },
+    "worker-busy-proposal/worker.proposed.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/worker-busy-proposal/worker.proposed.py",
+      "sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df"
+    },
+    "walker-stop-next/PLAN.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/walker-stop-next/PLAN.md",
+      "sha256": "50eceeaf6bffb34e7635b32c3e9be982f054dff14d4453fbb466c156902e9ec9"
+    },
+    "reviews/expert_b-baseline-funnel/caller-boundary.offline.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/caller-boundary.offline.json",
+      "sha256": "9e71f8c76f43052a9727fb9b829e184c46bb80205f235d0873fc78af1e2ef415"
+    },
+    "reviews/expert_b-baseline-funnel/funnel-diagnosis.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/funnel-diagnosis.json",
+      "sha256": "e1de939d557ca9edb1a0e40df60fb13df655ac1d2687d142c2049820d17c5983"
+    },
+    "reviews/expert_b-baseline-funnel/proposal.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/proposal.ru.md",
+      "sha256": "f0dcf3e3d15bd1fd22fb909f214d5cbacecf47108e0f7307006a242376488814"
+    },
+    "reviews/expert_b-baseline-funnel/ready-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/ready-manifest.json",
+      "sha256": "f8b8aa7913c16d6b849f74501ded9a37ba027a3db69841e2b0b62725d9892721"
+    },
+    "reviews/expert_b-baseline-funnel/replay-caller.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/replay-caller.log",
+      "sha256": "6d98f73dc7c92cce4862862cf415c0bed4114caacb94016702dd417ab56ed8cf"
+    },
+    "reviews/expert_b-baseline-funnel/replay-walker-final.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/replay-walker-final.log",
+      "sha256": "0b9122b87d990a58d5aac04137c224bc69684ac775911c14a0f4bca1d22ab784"
+    },
+    "reviews/expert_b-baseline-funnel/replay-walker.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/replay-walker.log",
+      "sha256": "67f5ee2d0ffcc22f1b6c4001aded1037f109d213788ab479fcf6458065599a51"
+    },
+    "reviews/expert_b-baseline-funnel/replay_caller_boundary.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/replay_caller_boundary.py",
+      "sha256": "2b98be29f8e3eaf2c6739b215410c6f8e4dd9caace47121fbea4c6878b928193"
+    },
+    "reviews/expert_b-baseline-funnel/replay_walker_stop.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/replay_walker_stop.py",
+      "sha256": "34a75af13cf38322f69071b2cba73e9f39d371fcd5d25d7881b0018d5a2bd307"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/02/0295370285e6347fae192f64eab2ef1d.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/02/0295370285e6347fae192f64eab2ef1d.body",
+      "sha256": "e0ec87f2699658590f074b32c10a4225ba29dfd98466e2c7122386bdc28d8d47"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/02/0295370285e6347fae192f64eab2ef1d.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/02/0295370285e6347fae192f64eab2ef1d.meta.json",
+      "sha256": "77d462decb842b0ce1190a9ab118ef6b8d711294dcd42b73456853da2e3b6d70"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/05/05182b514325679c2877ebd38895c8f7.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/05/05182b514325679c2877ebd38895c8f7.body",
+      "sha256": "2ce16a4fd35a13e120e0f7fefd9eda8cd3ff86a0008a37d75d72bd154d2f0458"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/05/05182b514325679c2877ebd38895c8f7.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/05/05182b514325679c2877ebd38895c8f7.meta.json",
+      "sha256": "d31213e6e9543d9dbd09c2cb223a35875133f6ffb116ef397778c4175c58638f"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/09/090ad2ef685f6ba3fa71a7e81d59e96f.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/09/090ad2ef685f6ba3fa71a7e81d59e96f.body",
+      "sha256": "8faf71a479b14a6e1d21694043ecc875aa2126b41eef38eb396e9beabe4173e4"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/09/090ad2ef685f6ba3fa71a7e81d59e96f.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/09/090ad2ef685f6ba3fa71a7e81d59e96f.meta.json",
+      "sha256": "5784cece0f7fd4c8617c5d5b5cfba5fc74145b393240ab7875a7ad87069eb08f"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/11/11a3e673ff9875b675a9c8619aab9fa0.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/11/11a3e673ff9875b675a9c8619aab9fa0.body",
+      "sha256": "66705b78071b7b7b7962c9593f17854000df47b706c596aa1bbf7b82cde8d8a1"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/11/11a3e673ff9875b675a9c8619aab9fa0.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/11/11a3e673ff9875b675a9c8619aab9fa0.meta.json",
+      "sha256": "2dbf899eea28b6f1258a8ed102875356fbda84cacd4810c97d2f8c53c6434d14"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/1d/1ddb3edd6243c71de231cc5b7bcdcc27.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/1d/1ddb3edd6243c71de231cc5b7bcdcc27.body",
+      "sha256": "85e474c923b3ca27e5f7ed82942524a5a5debfeea07792d73826bce9b520d919"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/1d/1ddb3edd6243c71de231cc5b7bcdcc27.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/1d/1ddb3edd6243c71de231cc5b7bcdcc27.meta.json",
+      "sha256": "399db1e553d0c5dae95965ab08791ac86c93d2417d15b6af92730df928b704e4"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/22/22b9b40eb45a6bdfef949ad38d838113.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/22/22b9b40eb45a6bdfef949ad38d838113.body",
+      "sha256": "217564aba14853f57baffb76fa88f811e89502b1ddba0ed2266ee7e546851f6d"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/22/22b9b40eb45a6bdfef949ad38d838113.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/22/22b9b40eb45a6bdfef949ad38d838113.meta.json",
+      "sha256": "9090f52d3a6d24363d2914c681811f5e3a2e461d067d92c6fa5475cf3198277e"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/3d/3de7cdbc41b1fe812370d3fa24589fa1.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/3d/3de7cdbc41b1fe812370d3fa24589fa1.body",
+      "sha256": "b8ae47cf476aa4b9a6fa866ea3f7bbaf10c90912a5d2cf1cec52a9a0e373646e"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/3d/3de7cdbc41b1fe812370d3fa24589fa1.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/3d/3de7cdbc41b1fe812370d3fa24589fa1.meta.json",
+      "sha256": "ac848e9f555c6052115b705fb09df06d7e0915d4635e600ed009d60c8ddb769e"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/48/48494c7e7ee269a88eafa97b693868fb.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/48/48494c7e7ee269a88eafa97b693868fb.body",
+      "sha256": "959d224e7b1da7ca41c4c87be30f387d69597a8b23a252eb4735713e81400cec"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/48/48494c7e7ee269a88eafa97b693868fb.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/48/48494c7e7ee269a88eafa97b693868fb.meta.json",
+      "sha256": "340054d829ce04799eba5396249498d118aa964a7b446804b60ba0e575426366"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/56/56150e0edfce2a6036621609624a60e9.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/56/56150e0edfce2a6036621609624a60e9.body",
+      "sha256": "da3c8533239f7af521ec34d21e1de7ead2d24233e28cfaf777ae2a4dd72fbfb9"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/56/56150e0edfce2a6036621609624a60e9.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/56/56150e0edfce2a6036621609624a60e9.meta.json",
+      "sha256": "ed346d845107f892865dba0127e88b3adebd55250609f4da62e9b9afcf100904"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/60/60a827843f8afcae2791a6c383329295.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/60/60a827843f8afcae2791a6c383329295.body",
+      "sha256": "a75fac96ed546504e9ae7ec182398566d6b16d749dab44eca3b234b9a7be7889"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/60/60a827843f8afcae2791a6c383329295.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/60/60a827843f8afcae2791a6c383329295.meta.json",
+      "sha256": "c81fcdedbe97a374212e1c1a26683babcb14a22158ba8aa1c3c1cc2bb8d56172"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/76/76bb9de33b9a2ae5369072e314127aa4.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/76/76bb9de33b9a2ae5369072e314127aa4.body",
+      "sha256": "2bc209cbac4ca032889101e05854fd85f579cb924a4969ff2fd4bce11e8ee08d"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/76/76bb9de33b9a2ae5369072e314127aa4.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/76/76bb9de33b9a2ae5369072e314127aa4.meta.json",
+      "sha256": "de5d89c864fe6298977e5cae8e632223cd957f2679a893217a9531f6d203ecd1"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/7e/7ee5d6494b2cecbbaefecba499da0e3c.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/7e/7ee5d6494b2cecbbaefecba499da0e3c.body",
+      "sha256": "8ea00ddc5b5ff5d1051d326fb16c9349eb7892fdde499441a23d24715d6f3ee9"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/7e/7ee5d6494b2cecbbaefecba499da0e3c.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/7e/7ee5d6494b2cecbbaefecba499da0e3c.meta.json",
+      "sha256": "774ad12ee008e9b021e4389c43d0d7a1fa2354b42c874e8a9e77dcba7d52c203"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/b5/b5e4206baf1f14d43c9a63887a18b492.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/b5/b5e4206baf1f14d43c9a63887a18b492.body",
+      "sha256": "c17a18e6df87e00ae1b219555219425760b17bbc807c09fe8d12bcd78182f4e9"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/b5/b5e4206baf1f14d43c9a63887a18b492.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/b5/b5e4206baf1f14d43c9a63887a18b492.meta.json",
+      "sha256": "65582c933e6cac7d2a5569d46502895a12bbee9c2eb84cac300681a92bfa7c85"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/ba/ba8e38809fc12ab177d645181acae5cd.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/ba/ba8e38809fc12ab177d645181acae5cd.body",
+      "sha256": "e9934610e4cb37c8b21dae69c470466f01bb0dbeeb89837e9416c665cefb9181"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/ba/ba8e38809fc12ab177d645181acae5cd.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/ba/ba8e38809fc12ab177d645181acae5cd.meta.json",
+      "sha256": "2f56674486799a7479173a3fa7dcbdd60d054057f0d6ec220989bc29bc4ed5a1"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/be/be7e38f7114628647f3eb0c482256447.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/be/be7e38f7114628647f3eb0c482256447.body",
+      "sha256": "24ec85c6e2c543f4896294673126dcbe7117a7d904a0f4a92b01c14bbd00829b"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/be/be7e38f7114628647f3eb0c482256447.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/be/be7e38f7114628647f3eb0c482256447.meta.json",
+      "sha256": "4053ab12f0cd61f678efeb06f0731552e9e566caaebf4d10e2f4a1faa2edb038"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/c4/c481d877f360112efd4e01a876a77912.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/c4/c481d877f360112efd4e01a876a77912.body",
+      "sha256": "7c6c8f2c143dfd47ea9270ebbd835da7d44da8ace0dac62f3ca4b7b63c044863"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/c4/c481d877f360112efd4e01a876a77912.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/c4/c481d877f360112efd4e01a876a77912.meta.json",
+      "sha256": "40a0725d3af24860d36b6e1b35747994a07e2b58cbcd787fe01b4e581acc6170"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/d7/d7540756b9e4521f77153efe80e2ad9b.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/d7/d7540756b9e4521f77153efe80e2ad9b.body",
+      "sha256": "350f1f46ca7ce66a85ea58efa820ee7d01760ba1c24a4da96be2a4af4c977547"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/d7/d7540756b9e4521f77153efe80e2ad9b.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/d7/d7540756b9e4521f77153efe80e2ad9b.meta.json",
+      "sha256": "cfc4519aea581c389b15e87226660772eab7436816e52fb069d995218e54dede"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/d7/d77b66f469e2ab839564413aefa3b3b4.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/d7/d77b66f469e2ab839564413aefa3b3b4.body",
+      "sha256": "ce25acbf6c27fbc3e8fd44c9039c3be58ee919fd73510a8876659c75d76d3a71"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache/d7/d77b66f469e2ab839564413aefa3b3b4.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache/d7/d77b66f469e2ab839564413aefa3b3b4.meta.json",
+      "sha256": "76ae8d5393463b0c5b04ff2ec5a4d7ef23bbbb9529c58fa13430b6d769b56ea5"
+    },
+    "reviews/expert_b-baseline-funnel/retained-cache-index.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache-index.json",
+      "sha256": "b08aaf37b9ac29875bb702376f552aadc16d6a5030347579212821695e3aca15"
+    },
+    "reviews/expert_b-baseline-funnel/retained-classifications.offline.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-classifications.offline.json",
+      "sha256": "65e30fbec03585cbb60477d9d370a11d3bdaf7e3e72dc447f3efd4ef9bf4c1f8"
+    },
+    "reviews/expert_b-baseline-funnel/retained-public-entry.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-public-entry.json",
+      "sha256": "d9e331ab1cf84cfd7d6ade8890ac83970f4d49df5b5acdca6cf8c417cab2578e"
+    },
+    "reviews/expert_b-baseline-funnel/terminal/capture.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/terminal/capture.json",
+      "sha256": "a1fa591273ddd49e02fb47304b4c7d69639c38487119691e840e7d257ab9199d"
+    },
+    "reviews/expert_b-baseline-funnel/terminal/groningen.budget.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/terminal/groningen.budget.json",
+      "sha256": "56a29d14ac0a8d3f66e6a9c4a9cb7de12360a4cf7bce51be287bc2c8a9bfebaf"
+    },
+    "reviews/expert_b-baseline-funnel/terminal/groningen.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/terminal/groningen.json",
+      "sha256": "cf2da49aa99c634b451a5385a5a80ce5d294a1e2e5a769894bc1238a5de54566"
+    },
+    "reviews/expert_b-baseline-funnel/terminal/groningen.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/terminal/groningen.log",
+      "sha256": "f234bf300a6d77c209d2e8ea7349a2ab21ee7b15641438d2096aee588770e346"
+    },
+    "reviews/expert_b-baseline-funnel/terminal-log-counters.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/terminal-log-counters.json",
+      "sha256": "07cf5153c3fa4f8a40aa7d6bcf3b80523246aac7166cdb93b78a8b82dbcae0f1"
+    },
+    "reviews/expert_b-baseline-funnel/walker-stop.offline.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/walker-stop.offline.json",
+      "sha256": "7697c140061f13d1a241b49a73a67600033b06aea71e3e0db8442a53675208f0"
+    },
+    "reviews/expert_b-readguard-v2/assemble_ready_snapshot.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/assemble_ready_snapshot.py",
+      "sha256": "0d8284c8b64ee64b5f46d85d67ae22b825de7522acf287d52564f4be8c68a787"
+    },
+    "reviews/expert_b-readguard-v2/independent-a-baseline.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/independent-a-baseline.log",
+      "sha256": "00bbf344100d157069c426b7b97c2700e76b996ceb8e5b8ac2e3d1cf46ad7397"
+    },
+    "reviews/expert_b-readguard-v2/mypy-final.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/mypy-final.log",
+      "sha256": "050c52a2b0c61e8b681ef5c485e0bc03340b8d55148e0acef27d744c8be42033"
+    },
+    "reviews/expert_b-readguard-v2/mypy.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/mypy.log",
+      "sha256": "050c52a2b0c61e8b681ef5c485e0bc03340b8d55148e0acef27d744c8be42033"
+    },
+    "reviews/expert_b-readguard-v2/predecessor-b603-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/predecessor-b603-manifest.json",
+      "sha256": "b603fe6a75660679e39b1b59545e21aae3aac79793ef2ae5d84c1ec6dc483a31"
+    },
+    "reviews/expert_b-readguard-v2/predecessor-preserved.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/predecessor-preserved.json",
+      "sha256": "79aeecc9be9578664aa37c327f4fcd33357de1451854e41be5cd73379faa444b"
+    },
+    "reviews/expert_b-readguard-v2/pytest-final89.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/pytest-final89.log",
+      "sha256": "87b2abfe1cc1bd742da773a75bfd716344c48a012f500edeff33320ac4411622"
+    },
+    "reviews/expert_b-readguard-v2/pytest-final92.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/pytest-final92.log",
+      "sha256": "f6b79a58e955f290a5668d71090621c7768a56e52f388f581cfe1c476c76de46"
+    },
+    "reviews/expert_b-readguard-v2/pytest-first.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/pytest-first.log",
+      "sha256": "4642c878d08a31369cd3f8c7cac36e9fb42e64392bab132323093e7bc45288b1"
+    },
+    "reviews/expert_b-readguard-v2/pytest-production-red.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/pytest-production-red.log",
+      "sha256": "5b6e957dc09280c487f21732433ef09515cb12dbf2b10c96fed9a1c9748b2795"
+    },
+    "reviews/expert_b-readguard-v2/pytest-second.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/pytest-second.log",
+      "sha256": "662f14b069533f537cd6bd73ba22cd9e402c7f56785b171aa8e902cb0a011197"
+    },
+    "reviews/expert_b-readguard-v2/pytest-third.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/pytest-third.log",
+      "sha256": "03ace0867b15f4e8317e146d2d0741bd46adb3d05516bbf54bab7c188775d0a9"
+    },
+    "reviews/expert_b-readguard-v2/pytest-v1-final-red.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/pytest-v1-final-red.log",
+      "sha256": "16f0e87e731701b0dbf8236dbe200b3e917e6252297705170e950c8893f72606"
+    },
+    "reviews/expert_b-readguard-v2/pytest-v1-red.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/pytest-v1-red.log",
+      "sha256": "655be273f8b21fc433fde11c1c4933aea09a1819af6b347b2d6a2c8ec38e4c44"
+    },
+    "reviews/expert_b-readguard-v2/readguard.patch": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/readguard.patch",
+      "sha256": "344c8200fce357ca4bc17cc3510031202390d10637780fb9f095b0d9d9759e38"
+    },
+    "reviews/expert_b-readguard-v2/ready-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/ready-manifest.json",
+      "sha256": "236e9a53667c86c0b14a04807492804402604d05a5a32ba670fb97915f84c2a4"
+    },
+    "reviews/expert_b-readguard-v2/ready-source-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/ready-source-manifest.json",
+      "sha256": "13ccdf181c70ae155dff194cd6df0aca51aebaf724c2f6a10987cea16d97d4d2"
+    },
+    "reviews/expert_b-readguard-v2/review.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/review.ru.md",
+      "sha256": "a398c9509d041e85c2b2043b6642ca1c5b6daf25585176a140d0969c62201b3c"
+    },
+    "reviews/expert_b-readguard-v2/ruff-final.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/ruff-final.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "reviews/expert_b-readguard-v2/ruff-first.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/ruff-first.log",
+      "sha256": "42ef618bac13179a54b38d82aa216ca2530ec3b232ee661bc30d03de909087f6"
+    },
+    "reviews/expert_b-readguard-v2/ruff-second.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/ruff-second.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "reviews/expert_b-readguard-v2/shadow_import.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/shadow_import.py",
+      "sha256": "4a36dfee8ccf408909afd6137731e9766931a62cf767f29ba0dc2edf302b7161"
+    },
+    "reviews/expert_b-readguard-v2/test_production_readguard.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/test_production_readguard.py",
+      "sha256": "cc7d39feb4365b234a4ff4e53580155e4a54bf669f8266780aed495847346559"
+    },
+    "reviews/expert_b-readguard-v2/test_revision_controls.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py",
+      "sha256": "02324a8b0645bf5043cb48b908c0c62853ee6cf1e141e8f24387a07d11c72f8e"
+    },
+    "reviews/expert_b-readguard-v2/test_sqlite_concurrent_checkpoint.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/test_sqlite_concurrent_checkpoint.py",
+      "sha256": "4d3abc2053c97f2db7c154dd5f370617af642b6f7a5f924698d5fc1af903ca03"
+    },
+    "reviews/expert_b-readguard-v2/v2-vs-b603.patch": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/v2-vs-b603.patch",
+      "sha256": "e8785213ecffd0ae6179fe5739d4a6d85d9ea15faae5e12324d3b02883033ef7"
+    },
+    "reviews/expert_b-readguard-v2/original/app/adapters/base.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/original/app/adapters/base.py",
+      "sha256": "68355f99ee62ea2eefac63a7b991b057b16c374a26a9b1b210a0a07cad1e9637"
+    },
+    "reviews/expert_b-readguard-v2/original/app/adapters/discovery/catalog_walker.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/original/app/adapters/discovery/catalog_walker.py",
+      "sha256": "218fbb73f8baa455449a9853ff0ad6769c0a9f6ebdb9d42cf551922bd66a01a7"
+    },
+    "reviews/expert_b-readguard-v2/original/app/adapters/discovery/live_discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/original/app/adapters/discovery/live_discovery.py",
+      "sha256": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6"
+    },
+    "reviews/expert_b-readguard-v2/original/app/catalogue/discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/original/app/catalogue/discovery.py",
+      "sha256": "717ea35eaddadc5b3db7a10c3b92280e6beb137f46b3bbffeadec46c08572b02"
+    },
+    "reviews/expert_b-readguard-v2/original/app/pipeline/runner.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/original/app/pipeline/runner.py",
+      "sha256": "686a6961964eb020056cba8b80f51c3cee622d2e6d62e63194b7d520e55fd71f"
+    },
+    "reviews/expert_b-readguard-v2/proposed/app/adapters/base.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/proposed/app/adapters/base.py",
+      "sha256": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46"
+    },
+    "reviews/expert_b-readguard-v2/proposed/app/adapters/discovery/catalog_walker.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/proposed/app/adapters/discovery/catalog_walker.py",
+      "sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64"
+    },
+    "reviews/expert_b-readguard-v2/proposed/app/adapters/discovery/live_discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/proposed/app/adapters/discovery/live_discovery.py",
+      "sha256": "ddecbae3a4754ea3a7eb814d851d87332ed3248e3188358e95337e5cc423adad"
+    },
+    "reviews/expert_b-readguard-v2/proposed/app/catalogue/discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/proposed/app/catalogue/discovery.py",
+      "sha256": "15c6c62398889c61183b407dc371a40d8a3f7b4f270b12c90d3c0c5d799bf7c7"
+    },
+    "reviews/expert_b-readguard-v2/proposed/app/pipeline/control.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/proposed/app/pipeline/control.py",
+      "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd"
+    },
+    "reviews/expert_b-readguard-v2/proposed/app/pipeline/read_budget.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/proposed/app/pipeline/read_budget.py",
+      "sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf"
+    },
+    "reviews/expert_b-readguard-v2/proposed/app/pipeline/runner.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/proposed/app/pipeline/runner.py",
+      "sha256": "a91a4f5259de94ba346190c30ec24fe845907b1a1053919b6830de6d27fc20c8"
+    },
+    "reviews/expert_a-readguard-v2-pg/bundle-files.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/bundle-files.json",
+      "sha256": "e87c343608ac83b0fb9b0e0855a9c53d6eb8e9ec75a9a04ed8665697f3343761"
+    },
+    "reviews/expert_a-readguard-v2-pg/postflight.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/postflight.json",
+      "sha256": "962f988ad0ed0c10ff4a35a7c74b85518f83fed26de31f503714b89fb25c47b6"
+    },
+    "reviews/expert_a-readguard-v2-pg/preflight.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/preflight.json",
+      "sha256": "c25008354503f4fbff8798f8199be35828d0aa7d3d470456d7596a14caaceabc"
+    },
+    "reviews/expert_a-readguard-v2-pg/pytest-actual-pg.stderr": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/pytest-actual-pg.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviews/expert_a-readguard-v2-pg/pytest-actual-pg.stdout": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/pytest-actual-pg.stdout",
+      "sha256": "074fe4ad591c3410f2501b4b9051a9fb0a544ffbd0afd87eaa827699222e965c"
+    },
+    "reviews/expert_a-readguard-v2-pg/pytest-routing-supplement.stderr": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/pytest-routing-supplement.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviews/expert_a-readguard-v2-pg/pytest-routing-supplement.stdout": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/pytest-routing-supplement.stdout",
+      "sha256": "bd53ab21ff93b781183babcbaec26181248ed7b9a9f3cc28aeaa4fc83151de0f"
+    },
+    "reviews/expert_a-readguard-v2-pg/receipt.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/receipt.json",
+      "sha256": "75d339a3a9bf16f9ca94fb1fb702ed0e329eff763d61489e714c4f7daf108a8d"
+    },
+    "reviews/expert_a-readguard-v2-pg/results.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/results.json",
+      "sha256": "6b2b2323d8cfb81cfb2a7df43a424051b33dbb4589351f645e6f5d6b58e68e00"
+    },
+    "reviews/expert_a-readguard-v2-pg/review.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/review.ru.md",
+      "sha256": "8b18649fb4a61473eaa0f6682e96d04bcc0a2d590b0341b7d372a0cd27336611"
+    },
+    "reviews/expert_a-readguard-v2-pg/run_pg.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/run_pg.py",
+      "sha256": "d3ef8cc3f5a6156234363000df42c067e26c417c1200a7e70c17b682a8febe4f"
+    },
+    "reviews/expert_a-readguard-v2-pg/run_pg_supplement.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/run_pg_supplement.py",
+      "sha256": "244944daddc9e0abac34fc8a61cb4d98661db7bfd91165176f007b9d23711943"
+    },
+    "reviews/expert_a-readguard-v2-pg/test_independent_pg.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/test_independent_pg.py",
+      "sha256": "09e0f5ead2cd9aa945c7394c17c9bb133c4485f22f7849024eccca4846a05ada"
+    },
+    "reviews/expert_a-readguard-v2-pg/test_pg_routing_supplement.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/test_pg_routing_supplement.py",
+      "sha256": "4e92be2cbb94879f2ccdbbd3939e84f7ba217f0071f0866f8a13bd3f9bf097da"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-09-discovery-curated.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-09-discovery-curated.json",
+      "sha256": "6bcba84b81638712352b03e8f17f7473504a7db2772b35d2e20c5afb83242110"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_06_committed_user_cancel_and_post_charge_async_cancel[coroutine]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_06_committed_user_cancel_and_post_charge_async_cancel[coroutine]-sql.json",
+      "sha256": "26cc3a5b80f9ebcb46594ce4de44ecef87b83f08d34e501b3aec160090a78974"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_08_busy_actual_caller_preserves_completed_facts[run_to_decision-job]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_08_busy_actual_caller_preserves_completed_facts[run_to_decision-job]-sql.json",
+      "sha256": "4f47d0cbd6816885da59c2db98e34209c1388ab07a9a55357dc31562defbf0a8"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-08-funding-job.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-08-funding-job.json",
+      "sha256": "67cb0be9f8db4dda0454fce623f056d15751486a55e9661e5b176035e5f19134"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-06-coroutine.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-06-coroutine.json",
+      "sha256": "95f556eca2e2bbf87c7eb7e0874c234e4366b8d216475fe1abf87f3f48d7e0bc"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-08-job-run_to_decision.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-08-job-run_to_decision.json",
+      "sha256": "b89586420767edf58d085d8dc8c4a4f57f44b1175742e038b2412fb7b1dbef20"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_08_busy_actual_caller_preserves_completed_facts[run_to_decision-run]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_08_busy_actual_caller_preserves_completed_facts[run_to_decision-run]-sql.json",
+      "sha256": "256470b3c35048142e5c8ac776b15ecf8a912aa08555aff3cd0c8ceadb134a07"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-05-worker-two.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-05-worker-two.json",
+      "sha256": "62355b995e68ef6342d615d85273ebbaf2969da3919986fc1f0b17e349de5a88"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-12-supplement-lifecycle.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-12-supplement-lifecycle.json",
+      "sha256": "1a78fdfba0fd33812d7d3682fe00733a0271dec41798b7e29cf6aa607040f29e"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-04.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-04.json",
+      "sha256": "589f20ca18e3ea7cf5d84c8ecc38c1489211a6d12b994325e77264665b1eaba2"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_10_prior_dirty_run_flush_then_job_nowait_releases_opposite_order-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_10_prior_dirty_run_flush_then_job_nowait_releases_opposite_order-sql.json",
+      "sha256": "8874f4c238e1c99b4f526dbec0330ed786c0ca03d3af73dec2c32ab5dd4e19c0"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_07_explicit_new_untracked_default_false_is_legacy_not_universal_cap-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_07_explicit_new_untracked_default_false_is_legacy_not_universal_cap-sql.json",
+      "sha256": "fd1324c99a8a71f7c7c7fbd0cd21c7ffbaa83659a1acd458df4b1b72859c87be"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_08_actual_funding_busy_retains_prior_claims[run]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_08_actual_funding_busy_retains_prior_claims[run]-sql.json",
+      "sha256": "fd9de798da95c29a59cceb317504bf28b8652a858a0c8a92d78f97d91427202c"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-09-discovery-catalogue.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-09-discovery-catalogue.json",
+      "sha256": "d4830e89c7193b4b1ebf3dd466198a5ff1bbb49b0dccc9467f315c10700f54bc"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_07_first_namespace_dirty_off_save_serializes_and_preserves_60-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_07_first_namespace_dirty_off_save_serializes_and_preserves_60-sql.json",
+      "sha256": "ed351769566a854ceb455b4b3055b937363e4e8f272b19b77f1bbbfa82216368"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-03.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-03.json",
+      "sha256": "87d47b992f7f9016b130ed8f9ecbd4a122a78f505adc6e3190087f258a88f443"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_08_busy_actual_caller_preserves_completed_facts[stage_verify-job]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_08_busy_actual_caller_preserves_completed_facts[stage_verify-job]-sql.json",
+      "sha256": "e229d4b901a1b5898444e4d75b60d2322f6c0afc1dbdffb87954c4a0d7a1e398"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_08_actual_funding_busy_retains_prior_claims[job]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_08_actual_funding_busy_retains_prior_claims[job]-sql.json",
+      "sha256": "ebacb3b77e59d17f3b405c5b32003b542d97fdae88361a9a202b7cf20ff840ed"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-06-walker-cancel.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-06-walker-cancel.json",
+      "sha256": "4c418dd01135512daf3e61950a4f77377923d4c89a2fbd95a3212a3b2895a9b9"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-02.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-02.json",
+      "sha256": "a14305f123fc832ae44acf8c2a3bd51e1937b1e61dc04023b83d8bbc6d913581"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_06_actual_walker_plain_and_renderer_broad_catch_propagates_db_busy[False]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_06_actual_walker_plain_and_renderer_broad_catch_propagates_db_busy[False]-sql.json",
+      "sha256": "be83d9a423d0571e9aa2f63f187366e49ee585dfbc1348a841eba83835da46e1"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-08-job-stage_verify.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-08-job-stage_verify.json",
+      "sha256": "64a8d13755c219e53b977659efe2705caa24fe5616eee40dc0005d6f9f86f79a"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_05_real_reap_claim_fresh_attempt_fence[worker-one]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_05_real_reap_claim_fresh_attempt_fence[worker-one]-sql.json",
+      "sha256": "84f5de811aed40fc3e048342d406e848e7cc773fb7d240d525e4f74450c8702e"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-08-funding-run.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-08-funding-run.json",
+      "sha256": "b0fa0e01f41180500187aef2e154006ef10efc259bd59b427b6e0c8a298abf14"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_03_exact_80_attempts_60_committed_admissions_two_pg_sessions-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_03_exact_80_attempts_60_committed_admissions_two_pg_sessions-sql.json",
+      "sha256": "e26e6675004fa26603e4b74c829e651442e42d6e902579f9fb06ec8dffa8d382"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_08_busy_actual_caller_preserves_completed_facts[stage_verify-run]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_08_busy_actual_caller_preserves_completed_facts[stage_verify-run]-sql.json",
+      "sha256": "e4ae221ddcc470116da2048ff7f18f17c17ae5e326d99148ebae6ecf9847972a"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_11_corrupt_envelope_and_commit_refusal_fail_closed-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_11_corrupt_envelope_and_commit_refusal_fail_closed-sql.json",
+      "sha256": "d5924759880e0cde853aeb186301a8d6e33ef90a7f444e20edf48c1ddf8a4615"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_10_actual_source_recorder_flush_can_hold_run_before_job_nowait-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_10_actual_source_recorder_flush_can_hold_run_before_job_nowait-sql.json",
+      "sha256": "c5223e143c7c154d45d3b67253a9bedb2f1c9d0391ae8d0c012d0d7d251c1d6c"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_01_02_actual_nowait_lock_order_and_rollback[run]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_01_02_actual_nowait_lock_order_and_rollback[run]-sql.json",
+      "sha256": "e7b1b3d045158655deaea740e00a408e19083b68467db634c27424c6a6789047"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-09-run.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-09-run.json",
+      "sha256": "68c0fe9d668eff196039be21f05cc56b3197f1b032d64400dddc61a8fe8ef543"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-06-user.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-06-user.json",
+      "sha256": "171e7d2ef21d7b7636bd0c8ed420bbb6bc6402002b1379a0c8fac0dff2ddd2e3"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_09_real_discovery_broad_catch_preserves_typed_busy[curated]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_09_real_discovery_broad_catch_preserves_typed_busy[curated]-sql.json",
+      "sha256": "5140e49a5ee53167c91455a1065f407a6a3e1b3620947923c7cb6c2e82ead2e9"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-01.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-01.json",
+      "sha256": "0cd28361c31d8360c771006154a16d5b14446b636d076890f6c33e42c1c42510"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-06-walker-renderer-True.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-06-walker-renderer-True.json",
+      "sha256": "1b2729911b9ef9c34a9942e26c9afbb542ed72af01bc3af674e257ef02f5e688"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_09_actual_worker_boundary_retry_vs_locked_job_limitation[job]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_09_actual_worker_boundary_retry_vs_locked_job_limitation[job]-sql.json",
+      "sha256": "2158b9ba434ee7d20c720ea0e8dffc5fff5e3b426d3d7ec981bc5487213e7835"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-06-walker-renderer-False.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-06-walker-renderer-False.json",
+      "sha256": "671e9fb5b2b7970e0705e7752229d663baea210d872f2b4416efa148fbde29ac"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-06-walker-fence.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-06-walker-fence.json",
+      "sha256": "7872ddabd9194fe8557c2a6f0a5d4dcee291f4c38ca63c5a58d0885ae9755d98"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-00.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-00.json",
+      "sha256": "0b3d44dc1007fd8ab5c796cf2008a536aae6b2ec66c9dc88f692c83a2698f0de"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_06_actual_walker_cancellation_and_lease_control_not_swallowed[fence]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_06_actual_walker_cancellation_and_lease_control_not_swallowed[fence]-sql.json",
+      "sha256": "d35cbfb52e0dd9751f191b6b799bd1530969274b7f9aaa79ad1896846c044e7a"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_09_actual_worker_boundary_retry_vs_locked_job_limitation[run]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_09_actual_worker_boundary_retry_vs_locked_job_limitation[run]-sql.json",
+      "sha256": "84a941784bef72a11fdb12f0ca4f2c54711384b3f47804bbba8811969c6855af"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-10-actual-source-recorder.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-10-actual-source-recorder.json",
+      "sha256": "526ac0d62881169d25d817569f6ac6da57cb12a6fde0908b9a8ffab1da438111"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_01_02_actual_nowait_lock_order_and_rollback[job]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_01_02_actual_nowait_lock_order_and_rollback[job]-sql.json",
+      "sha256": "b74a29ba9284c2fbfcae4135aeaea0550a2937c75ce33d91ba78ea055a419ef4"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-08-run-run_to_decision.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-08-run-run_to_decision.json",
+      "sha256": "3af84b1cfc7cae2fdc22879067647683a4d2c7d0c95f265b53efa8b7afbef9a9"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-09-job.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-09-job.json",
+      "sha256": "648ecbba3b3cc70d14f3fed3207c29bba9290c47a5848c3e5473ad2148aaf7ab"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_09_real_discovery_broad_catch_preserves_typed_busy[catalogue]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_09_real_discovery_broad_catch_preserves_typed_busy[catalogue]-sql.json",
+      "sha256": "26cdb97b24f2f9809f791c8458d855de397f7d7def888f37fcf04054f5571470"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-11.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-11.json",
+      "sha256": "ac539f43a6f2365ead8ab2e01b5ca74c92fdb7f807fc392dbe937f1e68b5aae8"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-07.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-07.json",
+      "sha256": "b273d1a859053189391182df2d91db78f81819daa3929875324bb2adbfc617d6"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-07-untracked-off-boundary.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-07-untracked-off-boundary.json",
+      "sha256": "dc577c65e7ed0fc6d9f8bb16078b45bc86163934787cbb87254b62891faf9048"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_06_actual_walker_cancellation_and_lease_control_not_swallowed[cancel]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_06_actual_walker_cancellation_and_lease_control_not_swallowed[cancel]-sql.json",
+      "sha256": "680a222e248f35f857197521cc70f0a88b0c5763da7d007cb9bcab36a90c93d3"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_04_simultaneous_nowait_and_cap_saturation_no_hidden_retry-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_04_simultaneous_nowait_and_cap_saturation_no_hidden_retry-sql.json",
+      "sha256": "f58323caf0c5364deaad9d32e1fb33f1e3c0c74057d1792108330dd31eeb1ef3"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-12-lifecycle.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-12-lifecycle.json",
+      "sha256": "4ac1d32a31fee88554d202536f75f2294b70d6b098a97ced30d7e057201892e1"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-05-worker-one.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-05-worker-one.json",
+      "sha256": "80f1149f4128d24df5b62b99d35469f7d37a8ca8dc2f381fc7336fdd250ec741"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-08-run-stage_verify.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-08-run-stage_verify.json",
+      "sha256": "b53909c3b0d3049a8f982b19f298cb58a1825a304d3db09a57369bacca0f72a9"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_06_actual_walker_plain_and_renderer_broad_catch_propagates_db_busy[True]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_06_actual_walker_plain_and_renderer_broad_catch_propagates_db_busy[True]-sql.json",
+      "sha256": "e97f5518f3429f6d6da35991e19694726a81308e388a529e7dd3302dff087e21"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_05_real_reap_claim_fresh_attempt_fence[worker-two]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_05_real_reap_claim_fresh_attempt_fence[worker-two]-sql.json",
+      "sha256": "9efcdffbaf252a32ad74d2143561a5f66f35c00e4555ceddf20f082c3574b3ac"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_00_real_isolated_runtime_and_independent_sessions-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_00_real_isolated_runtime_and_independent_sessions-sql.json",
+      "sha256": "9ed9bd0af8767f2b511255e5eefc80d342ef88d5d813c675f14ca799d685cc6a"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/test_pg_06_committed_user_cancel_and_post_charge_async_cancel[user]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/test_pg_06_committed_user_cancel_and_post_charge_async_cancel[user]-sql.json",
+      "sha256": "077e25eaca3e48b5a57ae65e48f9d8678054ca596b3e78a27532a2675a1ee539"
+    },
+    "reviews/expert_a-readguard-v2-pg/raw/PG-10.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/raw/PG-10.json",
+      "sha256": "b9ca32e7aff2c2aa5f3547e2931a4f03b96f26320154a07aba3c822a61e1e75d"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/independent-a-baseline.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/independent-a-baseline.log",
+      "sha256": "00bbf344100d157069c426b7b97c2700e76b996ceb8e5b8ac2e3d1cf46ad7397"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/ready-source-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/ready-source-manifest.json",
+      "sha256": "13ccdf181c70ae155dff194cd6df0aca51aebaf724c2f6a10987cea16d97d4d2"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/predecessor-b603-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/predecessor-b603-manifest.json",
+      "sha256": "b603fe6a75660679e39b1b59545e21aae3aac79793ef2ae5d84c1ec6dc483a31"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/v2-vs-b603.patch": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/v2-vs-b603.patch",
+      "sha256": "e8785213ecffd0ae6179fe5739d4a6d85d9ea15faae5e12324d3b02883033ef7"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/shadow_import.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/shadow_import.py",
+      "sha256": "4a36dfee8ccf408909afd6137731e9766931a62cf767f29ba0dc2edf302b7161"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/review.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/review.ru.md",
+      "sha256": "a398c9509d041e85c2b2043b6642ca1c5b6daf25585176a140d0969c62201b3c"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/test_production_readguard.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/test_production_readguard.py",
+      "sha256": "cc7d39feb4365b234a4ff4e53580155e4a54bf669f8266780aed495847346559"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/ready-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/ready-manifest.json",
+      "sha256": "236e9a53667c86c0b14a04807492804402604d05a5a32ba670fb97915f84c2a4"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/pytest-v1-final-red.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/pytest-v1-final-red.log",
+      "sha256": "16f0e87e731701b0dbf8236dbe200b3e917e6252297705170e950c8893f72606"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/predecessor-preserved.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/predecessor-preserved.json",
+      "sha256": "79aeecc9be9578664aa37c327f4fcd33357de1451854e41be5cd73379faa444b"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/readguard.patch": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/readguard.patch",
+      "sha256": "344c8200fce357ca4bc17cc3510031202390d10637780fb9f095b0d9d9759e38"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/pytest-final92.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/pytest-final92.log",
+      "sha256": "f6b79a58e955f290a5668d71090621c7768a56e52f388f581cfe1c476c76de46"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/ruff-final.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/ruff-final.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/test_revision_controls.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/test_revision_controls.py",
+      "sha256": "02324a8b0645bf5043cb48b908c0c62853ee6cf1e141e8f24387a07d11c72f8e"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/mypy-final.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/mypy-final.log",
+      "sha256": "050c52a2b0c61e8b681ef5c485e0bc03340b8d55148e0acef27d744c8be42033"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/pytest-production-red.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/pytest-production-red.log",
+      "sha256": "5b6e957dc09280c487f21732433ef09515cb12dbf2b10c96fed9a1c9748b2795"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/assemble_ready_snapshot.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/assemble_ready_snapshot.py",
+      "sha256": "0d8284c8b64ee64b5f46d85d67ae22b825de7522acf287d52564f4be8c68a787"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/test_sqlite_concurrent_checkpoint.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/test_sqlite_concurrent_checkpoint.py",
+      "sha256": "4d3abc2053c97f2db7c154dd5f370617af642b6f7a5f924698d5fc1af903ca03"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/independent-a-preserved/test_independent_sql_review.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/independent-a-preserved/test_independent_sql_review.py",
+      "sha256": "1a3653063eae481172b7fa869a0206fb6390d15a69d3d94773023a8b2c1c3292"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/independent-a-preserved/source-hashes.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/independent-a-preserved/source-hashes.json",
+      "sha256": "5a6f1618d08e9efd065492e79323685bd3fa1640aaa66718f9151d9b0c182585"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/original/app/pipeline/runner.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/original/app/pipeline/runner.py",
+      "sha256": "686a6961964eb020056cba8b80f51c3cee622d2e6d62e63194b7d520e55fd71f"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/original/app/adapters/base.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/original/app/adapters/base.py",
+      "sha256": "68355f99ee62ea2eefac63a7b991b057b16c374a26a9b1b210a0a07cad1e9637"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/original/app/catalogue/discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/original/app/catalogue/discovery.py",
+      "sha256": "717ea35eaddadc5b3db7a10c3b92280e6beb137f46b3bbffeadec46c08572b02"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/original/app/adapters/discovery/catalog_walker.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/original/app/adapters/discovery/catalog_walker.py",
+      "sha256": "218fbb73f8baa455449a9853ff0ad6769c0a9f6ebdb9d42cf551922bd66a01a7"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/original/app/adapters/discovery/live_discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/original/app/adapters/discovery/live_discovery.py",
+      "sha256": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/independent-a-preserved/raw-controls/busy-real-verification-caller.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/independent-a-preserved/raw-controls/busy-real-verification-caller.json",
+      "sha256": "487aaeb334b654f1caf2eba64b7bf46d70aa26d4e9b000ab8c75270fc9aa5ce6"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/independent-a-preserved/raw-controls/mixed-off-on-first-namespace-hole.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/independent-a-preserved/raw-controls/mixed-off-on-first-namespace-hole.json",
+      "sha256": "5a8074e6b05e5d805d17af358f5102bbd46722d9004f36236ee63d9a39620689"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/proposed/app/pipeline/runner.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/proposed/app/pipeline/runner.py",
+      "sha256": "a91a4f5259de94ba346190c30ec24fe845907b1a1053919b6830de6d27fc20c8"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/proposed/app/pipeline/control.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/proposed/app/pipeline/control.py",
+      "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/proposed/app/pipeline/read_budget.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/proposed/app/pipeline/read_budget.py",
+      "sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/proposed/app/adapters/base.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/proposed/app/adapters/base.py",
+      "sha256": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/proposed/app/catalogue/discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/proposed/app/catalogue/discovery.py",
+      "sha256": "15c6c62398889c61183b407dc371a40d8a3f7b4f270b12c90d3c0c5d799bf7c7"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/proposed/app/adapters/discovery/catalog_walker.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/proposed/app/adapters/discovery/catalog_walker.py",
+      "sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64"
+    },
+    "reviews/expert_a-readguard-v2-pg/candidate-pinned/proposed/app/adapters/discovery/live_discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/proposed/app/adapters/discovery/live_discovery.py",
+      "sha256": "ddecbae3a4754ea3a7eb814d851d87332ed3248e3188358e95337e5cc423adad"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/busy-postgresql-first.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/busy-postgresql-first.json",
+      "sha256": "26f9371bcfad68f247201d8a9991d08dda54c2cba2b1685be691bc862ed96416"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[postgresql-second]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[postgresql-second]-sql.json",
+      "sha256": "4a0d05ded7b79dd91f145c53b1d33c1cba7c5ff56a47b630764f17fea80175a7"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/busy-sqlite-first.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/busy-sqlite-first.json",
+      "sha256": "ec0d226ec7cdf852393acccbb7c77bb6463866e1bc280e6586ca9a9fb890798b"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[sqlite-first]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[sqlite-first]-sql.json",
+      "sha256": "465829d831a4c472f86d797108efa5b5fadc476aa395a7f8f01cbfdd7a2a761f"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/busy-postgresql-second.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/busy-postgresql-second.json",
+      "sha256": "f0733e0471332ff07ce2ee67872d712f8ca8cea4dc85005ee11fe9466760d5ef"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/test_other_errors_still_real_ordinary_fenced_backoff[sqlite-message_only]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/test_other_errors_still_real_ordinary_fenced_backoff[sqlite-message_only]-sql.json",
+      "sha256": "fc7047982db6626ef4403edd62dbd624374d76f426a82f17fc14cdf03f15c155"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[sqlite-second]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[sqlite-second]-sql.json",
+      "sha256": "1fcad7aa10af6f7d2dcda22551f4464319bfe32128f1fffce4b53ba5f4516561"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/ordinary-sqlite-message_only.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/ordinary-sqlite-message_only.json",
+      "sha256": "b81c9a235cfe2a9fa5b0f9092dd90c75f8328494cecf236e83d9519a8790b6d9"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/ordinary-postgresql-typed_other_reason.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/ordinary-postgresql-typed_other_reason.json",
+      "sha256": "0d362a4a15dbe52045f89942d992d76b1d7a4cbc71df830193ba9e77406e4b5a"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/cancel-sqlite.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/cancel-sqlite.json",
+      "sha256": "a9826ef2c0b823e98dccda2a0bfc895efcc0d76b67c715eec84df8f38e38e1c9"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/test_real_user_cancel_keeps_cancelled_path[postgresql]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/test_real_user_cancel_keeps_cancelled_path[postgresql]-sql.json",
+      "sha256": "f00a7da421801cc3295a6989c4a923adf09d3d44ac1cafb79fe9b0f644ae7974"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[postgresql-first]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[postgresql-first]-sql.json",
+      "sha256": "f28bfbf597ed8329d89ed670941a2a371c89729831b0c7ee398381318f1804bf"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/ordinary-sqlite-typed_other_reason.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/ordinary-sqlite-typed_other_reason.json",
+      "sha256": "d7cc6c043323ecb91bbb698fcc1f8d83759e658a770152055c567025e64c2500"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/test_other_errors_still_real_ordinary_fenced_backoff[postgresql-typed_other_reason]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/test_other_errors_still_real_ordinary_fenced_backoff[postgresql-typed_other_reason]-sql.json",
+      "sha256": "00140786430d3d6345bf070f39b397b8ee8a8a4b08c6dbce06b4a5c76d5ff0d9"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/ordinary-postgresql-message_only.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/ordinary-postgresql-message_only.json",
+      "sha256": "1ab7689934f791885faa1a7f497ee4407b4cf0e2320240d81ffb48d46097de94"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/lease-sqlite.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/lease-sqlite.json",
+      "sha256": "97744f00525600cd13cad6a26c797fb96c4a4b82132e907be9c5703e95d6c483"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/imports.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/imports.json",
+      "sha256": "9a2cb0f7de03305b5617042148fb600d7e3d5a515e6713e78d2231a618025a40"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/test_real_user_cancel_keeps_cancelled_path[sqlite]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/test_real_user_cancel_keeps_cancelled_path[sqlite]-sql.json",
+      "sha256": "03d086252ab6fb6340c0ae7c4fcc6f6590ec9890f65bc7dbf4dace0d16d9b19d"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/busy-sqlite-second.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/busy-sqlite-second.json",
+      "sha256": "9b3144ef5070f0421277d5b0e1d8b3230615fca6e9c500ed93db618ea5bfc2d5"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/test_real_attempt_takeover_preserves_worker_lease_lost_path[sqlite]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/test_real_attempt_takeover_preserves_worker_lease_lost_path[sqlite]-sql.json",
+      "sha256": "5921374a622521f28071146092c5119c74a7f0ea9bd122e41941940e76bf8af7"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/test_other_errors_still_real_ordinary_fenced_backoff[sqlite-typed_other_reason]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/test_other_errors_still_real_ordinary_fenced_backoff[sqlite-typed_other_reason]-sql.json",
+      "sha256": "b9cbe5cd27d1d462217e69659cd3d66a4e84e00c5ccb0d08720401025f403348"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/test_other_errors_still_real_ordinary_fenced_backoff[postgresql-message_only]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/test_other_errors_still_real_ordinary_fenced_backoff[postgresql-message_only]-sql.json",
+      "sha256": "c564b050babcfcdc32195fbc104a9ab71a8c6992be35a160a08ab72bde690c9b"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/test_real_attempt_takeover_preserves_worker_lease_lost_path[postgresql]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/test_real_attempt_takeover_preserves_worker_lease_lost_path[postgresql]-sql.json",
+      "sha256": "02b6d7271d5f7efca30d68dc6ba76f1ce71d241f8634cf37f087e9e3c49d9ca0"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/lease-postgresql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/lease-postgresql.json",
+      "sha256": "e3fc46d5b9c1da410cc4c3b6bfbfc312387b96e34dbca797a6f56203c61ac678"
+    },
+    "reviews/expert_a-worker-busy/raw/baseline/cancel-postgresql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/baseline/cancel-postgresql.json",
+      "sha256": "5e920bda299db84ae568c346261f76ad497c3f478c2a35a52f0050f92bcd7137"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/busy-postgresql-first.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/busy-postgresql-first.json",
+      "sha256": "52d41c652d8b4b36c1a223add81d685a1279192dec2acd75a19bd0e0200dae6a"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[postgresql-second]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[postgresql-second]-sql.json",
+      "sha256": "d2d05dbd7227625aa54e29c965f3c7a7fcb63678c406b387ff584220ab3e9f62"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/busy-sqlite-first.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/busy-sqlite-first.json",
+      "sha256": "d28b491fe3ff597405e5baaf4a7259214799cac39c2b9810c23485eeefd01d94"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[sqlite-first]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[sqlite-first]-sql.json",
+      "sha256": "8a4fb4aeede5a5242f0ccdd1ed1a3d7a070baf1e02a61c628a262d8b8f25e12e"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/recovery-postgresql-first.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/recovery-postgresql-first.json",
+      "sha256": "0561a3450a6367a8b94a9d7ecc75c8644cfa5a34d7ef089500243e237c4bffb9"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/busy-postgresql-second.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/busy-postgresql-second.json",
+      "sha256": "b4a645db8f9e8e5bb691977148ff2cdbfdae184b5d0a65f7d960bf76f3cd4de0"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/test_other_errors_still_real_ordinary_fenced_backoff[sqlite-message_only]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/test_other_errors_still_real_ordinary_fenced_backoff[sqlite-message_only]-sql.json",
+      "sha256": "90f8e55dedbd097d54545c6aa0d68ee99a1b81630c71fa31a2700918f7c18069"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[sqlite-second]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[sqlite-second]-sql.json",
+      "sha256": "d2f3d2f27651782f1bd2423b6299d9e553ff2a2dc1493aa994ea788a64727fa5"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/ordinary-sqlite-message_only.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/ordinary-sqlite-message_only.json",
+      "sha256": "1c2fa30d01bc732e1e2c87c4e42cb2f2c8e954f3ee38167571786d3e39cc6fbc"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/recovery-postgresql-second.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/recovery-postgresql-second.json",
+      "sha256": "8f63c9d6ad38643d3dfb4dc49ceaebbd6d4d4445819f105dfc6b745d8517089b"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/ordinary-postgresql-typed_other_reason.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/ordinary-postgresql-typed_other_reason.json",
+      "sha256": "c6c48fe47211d303d1030b5ae917b269fd98ae284cbd3d781e30ba6ee1f89fa6"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/cancel-sqlite.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/cancel-sqlite.json",
+      "sha256": "64f9af0b2c5232d80306875c4876722c5600ea562f23cfc05d15ea1cb31e2142"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/test_real_user_cancel_keeps_cancelled_path[postgresql]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/test_real_user_cancel_keeps_cancelled_path[postgresql]-sql.json",
+      "sha256": "29a34973a0100b83302a4b18d6f426ea1c31a9d32a4e7583fad290a6b185e663"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[postgresql-first]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[postgresql-first]-sql.json",
+      "sha256": "0c917444cff819d7e9873173ef7ce650082baef58555741d41cb015de840d2a8"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/recovery-sqlite-second.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/recovery-sqlite-second.json",
+      "sha256": "1d4cdee37267850f7fba64efc39161c2b91833a7a4cb6a16211d73a1fa2b193b"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/recovery-sqlite-first.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/recovery-sqlite-first.json",
+      "sha256": "dad6963ee25eb748543d0c1d06efa8a90281c8375d6aebb11df5eaf02b58b341"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/ordinary-sqlite-typed_other_reason.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/ordinary-sqlite-typed_other_reason.json",
+      "sha256": "75b5881267eb770177744c66cfdabe04a14da0fb30b2a8ee7a12f1cb80daa1b8"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/test_other_errors_still_real_ordinary_fenced_backoff[postgresql-typed_other_reason]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/test_other_errors_still_real_ordinary_fenced_backoff[postgresql-typed_other_reason]-sql.json",
+      "sha256": "d87d343f0c067b477b6b533f2c613995c03ec054d1ba1a97ea65fbd58efb9e6d"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/ordinary-postgresql-message_only.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/ordinary-postgresql-message_only.json",
+      "sha256": "5a8c2dfba5d29decc50e0336b1b62ea1b3a7a1de67991d88db4d87f9c6c10e73"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/lease-sqlite.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/lease-sqlite.json",
+      "sha256": "56305581fd964d0fca269ff2eba37b4d1d1425c10eae417a63c32fa01acc6115"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/imports.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/imports.json",
+      "sha256": "d47dd420892c0bd0f2d37b54bfd1fd8081c0ddfd0a4fe8d8da78cec21d8b459e"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/test_real_user_cancel_keeps_cancelled_path[sqlite]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/test_real_user_cancel_keeps_cancelled_path[sqlite]-sql.json",
+      "sha256": "bfe01bd1d2d2b37b7035f0d7232852c529178df0924bec92e068201d0f236165"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/busy-sqlite-second.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/busy-sqlite-second.json",
+      "sha256": "2f2af48fd262164476fe57b0415ad03ceff2a40c30cdf57bbef9d8555d8824d2"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/test_real_attempt_takeover_preserves_worker_lease_lost_path[sqlite]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/test_real_attempt_takeover_preserves_worker_lease_lost_path[sqlite]-sql.json",
+      "sha256": "b3bee023466fcd7dbc0396a84cf34ba7f489d6be1c35816a5e5bdac7b1511d93"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/test_other_errors_still_real_ordinary_fenced_backoff[sqlite-typed_other_reason]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/test_other_errors_still_real_ordinary_fenced_backoff[sqlite-typed_other_reason]-sql.json",
+      "sha256": "27a9c3b0a97690f599f4fc9a29713639630b8df556d91ec808152546d5317dbe"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/test_other_errors_still_real_ordinary_fenced_backoff[postgresql-message_only]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/test_other_errors_still_real_ordinary_fenced_backoff[postgresql-message_only]-sql.json",
+      "sha256": "9064612d0772f7f745d4d94409dd0aeb89d2d5592de9beacc133d4a430a19818"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/test_real_attempt_takeover_preserves_worker_lease_lost_path[postgresql]-sql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/test_real_attempt_takeover_preserves_worker_lease_lost_path[postgresql]-sql.json",
+      "sha256": "67c57c6fa8552954c6de86dd68d182397abfeaa6857e7c95306a30a3fa829e5f"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/lease-postgresql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/lease-postgresql.json",
+      "sha256": "57654937adff9eec04ff26e509cd6c236115fec93c1fe011c2b12f5adba6310b"
+    },
+    "reviews/expert_a-worker-busy/raw/proposal/cancel-postgresql.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/raw/proposal/cancel-postgresql.json",
+      "sha256": "d069d3fecbfc7bbb8a6f4281e4603721f1a2b6e3c4e26e66fd6b47ac3b78bb45"
+    },
+    "reviews/expert_a-worker-busy/worker-pinned/worker.original.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/worker-pinned/worker.original.py",
+      "sha256": "491f5ccdeadd3556ad4e5bf6bfc2b4578207ef2cce129eb2fcd57b4b4e0e6681"
+    },
+    "reviews/expert_a-worker-busy/worker-pinned/worker.proposed.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/worker-pinned/worker.proposed.py",
+      "sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df"
+    },
+    "reviews/expert_a-worker-busy/worker-pinned/worker.patch": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/worker-pinned/worker.patch",
+      "sha256": "ae8039b8c2a2aa3a1e0dfbd945857d61c9d6a3a6e97930ace27bd1581c6ea6a7"
+    },
+    "reviews/expert_a-worker-busy/worker-pinned/PLAN.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/worker-pinned/PLAN.md",
+      "sha256": "5cf44e183e7338e4ff9c9bfb572989b42ee982e90aa4e17de0f01b1d3b69d029"
+    },
+    "reviews/expert_a-worker-busy/worker-pinned/proposal.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/worker-pinned/proposal.json",
+      "sha256": "0995829d4ce3292db827cb161008467ba3a96ee7aa423c6d3034bb60a7ea1a3b"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/independent-a-baseline.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/independent-a-baseline.log",
+      "sha256": "00bbf344100d157069c426b7b97c2700e76b996ceb8e5b8ac2e3d1cf46ad7397"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/ready-source-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/ready-source-manifest.json",
+      "sha256": "13ccdf181c70ae155dff194cd6df0aca51aebaf724c2f6a10987cea16d97d4d2"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/predecessor-b603-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/predecessor-b603-manifest.json",
+      "sha256": "b603fe6a75660679e39b1b59545e21aae3aac79793ef2ae5d84c1ec6dc483a31"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/v2-vs-b603.patch": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/v2-vs-b603.patch",
+      "sha256": "e8785213ecffd0ae6179fe5739d4a6d85d9ea15faae5e12324d3b02883033ef7"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/shadow_import.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/shadow_import.py",
+      "sha256": "4a36dfee8ccf408909afd6137731e9766931a62cf767f29ba0dc2edf302b7161"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/review.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/review.ru.md",
+      "sha256": "a398c9509d041e85c2b2043b6642ca1c5b6daf25585176a140d0969c62201b3c"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/test_production_readguard.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/test_production_readguard.py",
+      "sha256": "cc7d39feb4365b234a4ff4e53580155e4a54bf669f8266780aed495847346559"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/ready-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/ready-manifest.json",
+      "sha256": "236e9a53667c86c0b14a04807492804402604d05a5a32ba670fb97915f84c2a4"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/pytest-v1-final-red.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/pytest-v1-final-red.log",
+      "sha256": "16f0e87e731701b0dbf8236dbe200b3e917e6252297705170e950c8893f72606"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/predecessor-preserved.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/predecessor-preserved.json",
+      "sha256": "79aeecc9be9578664aa37c327f4fcd33357de1451854e41be5cd73379faa444b"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/readguard.patch": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/readguard.patch",
+      "sha256": "344c8200fce357ca4bc17cc3510031202390d10637780fb9f095b0d9d9759e38"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/pytest-final92.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/pytest-final92.log",
+      "sha256": "f6b79a58e955f290a5668d71090621c7768a56e52f388f581cfe1c476c76de46"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/ruff-final.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/ruff-final.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/test_revision_controls.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/test_revision_controls.py",
+      "sha256": "02324a8b0645bf5043cb48b908c0c62853ee6cf1e141e8f24387a07d11c72f8e"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/mypy-final.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/mypy-final.log",
+      "sha256": "050c52a2b0c61e8b681ef5c485e0bc03340b8d55148e0acef27d744c8be42033"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/pytest-production-red.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/pytest-production-red.log",
+      "sha256": "5b6e957dc09280c487f21732433ef09515cb12dbf2b10c96fed9a1c9748b2795"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/assemble_ready_snapshot.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/assemble_ready_snapshot.py",
+      "sha256": "0d8284c8b64ee64b5f46d85d67ae22b825de7522acf287d52564f4be8c68a787"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/test_sqlite_concurrent_checkpoint.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/test_sqlite_concurrent_checkpoint.py",
+      "sha256": "4d3abc2053c97f2db7c154dd5f370617af642b6f7a5f924698d5fc1af903ca03"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/independent-a-preserved/test_independent_sql_review.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/independent-a-preserved/test_independent_sql_review.py",
+      "sha256": "1a3653063eae481172b7fa869a0206fb6390d15a69d3d94773023a8b2c1c3292"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/independent-a-preserved/source-hashes.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/independent-a-preserved/source-hashes.json",
+      "sha256": "5a6f1618d08e9efd065492e79323685bd3fa1640aaa66718f9151d9b0c182585"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/original/app/pipeline/runner.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/original/app/pipeline/runner.py",
+      "sha256": "686a6961964eb020056cba8b80f51c3cee622d2e6d62e63194b7d520e55fd71f"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/original/app/adapters/base.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/original/app/adapters/base.py",
+      "sha256": "68355f99ee62ea2eefac63a7b991b057b16c374a26a9b1b210a0a07cad1e9637"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/original/app/catalogue/discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/original/app/catalogue/discovery.py",
+      "sha256": "717ea35eaddadc5b3db7a10c3b92280e6beb137f46b3bbffeadec46c08572b02"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/original/app/adapters/discovery/catalog_walker.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/original/app/adapters/discovery/catalog_walker.py",
+      "sha256": "218fbb73f8baa455449a9853ff0ad6769c0a9f6ebdb9d42cf551922bd66a01a7"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/original/app/adapters/discovery/live_discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/original/app/adapters/discovery/live_discovery.py",
+      "sha256": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/independent-a-preserved/raw-controls/busy-real-verification-caller.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/independent-a-preserved/raw-controls/busy-real-verification-caller.json",
+      "sha256": "487aaeb334b654f1caf2eba64b7bf46d70aa26d4e9b000ab8c75270fc9aa5ce6"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/independent-a-preserved/raw-controls/mixed-off-on-first-namespace-hole.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/independent-a-preserved/raw-controls/mixed-off-on-first-namespace-hole.json",
+      "sha256": "5a8074e6b05e5d805d17af358f5102bbd46722d9004f36236ee63d9a39620689"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/proposed/app/pipeline/runner.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/proposed/app/pipeline/runner.py",
+      "sha256": "a91a4f5259de94ba346190c30ec24fe845907b1a1053919b6830de6d27fc20c8"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/proposed/app/pipeline/control.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/proposed/app/pipeline/control.py",
+      "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/proposed/app/pipeline/read_budget.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/proposed/app/pipeline/read_budget.py",
+      "sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/proposed/app/adapters/base.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/proposed/app/adapters/base.py",
+      "sha256": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/proposed/app/catalogue/discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/proposed/app/catalogue/discovery.py",
+      "sha256": "15c6c62398889c61183b407dc371a40d8a3f7b4f270b12c90d3c0c5d799bf7c7"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/proposed/app/adapters/discovery/catalog_walker.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/proposed/app/adapters/discovery/catalog_walker.py",
+      "sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64"
+    },
+    "reviews/expert_a-worker-busy/candidate-pinned/proposed/app/adapters/discovery/live_discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/proposed/app/adapters/discovery/live_discovery.py",
+      "sha256": "ddecbae3a4754ea3a7eb814d851d87332ed3248e3188358e95337e5cc423adad"
+    },
+    "package-preparation/live-plan.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T220539Z-live-6d0aa77b/live-plan.json",
+      "sha256": "6701c0b0734c237b75ad935d6175b490be84fa49537c6a152d2cd00db7262715"
+    },
+    "package-preparation/source-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T220539Z-live-6d0aa77b/source-manifest.json",
+      "sha256": "71b1d78b1e193c0a30b18248cb16c3557457d9e5a197164ce00285a9252433c5"
+    },
+    "package-preparation/summary.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T220539Z-live-6d0aa77b/summary.json",
+      "sha256": "f38c9d0c202606c927b31d8492110a408fb4ee6c62dcadac4db9f92e23ac0c0f"
+    }
+  },
+  "excluded": "All runtime DB/PGDATA/WAL/socket/credentials/private Git; full omitted dependencies remain hash-pinned in original external work folders."
+}

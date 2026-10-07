@@ -1,0 +1,3432 @@
+{
+  "created_utc": "2026-10-07T21:03:18.955904+00:00",
+  "source_sha256": {
+    "backend/evaluation/research/live.py": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+    "backend/evaluation/research/mapping.py": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+    "backend/evaluation/research/schema.py": "313a92ebeadcd534b8731b5a3254a2f00ffbd9d99a16795b79d1d7a2d41ce924",
+    "backend/app/adapters/page_classifier.py": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+    "backend/app/adapters/scholarship/web_scholarships.py": "7dec462ebad77859d7c6a50840924253fc1092734af0bebd98bfa07f3d6677a5",
+    "backend/app/adapters/discovery/live_discovery.py": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6",
+    "backend/app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "backend/tests/test_programme_purpose_capture.py": "172fcbed89a25dccfa8ddac542a5de9426c1740376d74ab8405dce59c703253d",
+    "backend/app/catalogue/discovery.py": "717ea35eaddadc5b3db7a10c3b92280e6beb137f46b3bbffeadec46c08572b02"
+  },
+  "source_unchanged": true,
+  "stop_sha256": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+  "stop_unchanged": true,
+  "real_network_provider_model_git_subprocess_calls": 0,
+  "own_pytest_controls": 31,
+  "recorded_cli_control_runs": 30,
+  "literal_source_default_control": {
+    "programme": false,
+    "subject": false,
+    "site_branding": false,
+    "method": "AST declarations in actual source bytes"
+  },
+  "records": [
+    {
+      "arguments": [
+        "--no-programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "subject": false,
+      "branding": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": "http_429",
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop0/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop0/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--no-programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": false,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": false,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "stop_reason": "http_429",
+              "parent_process_elapsed_seconds": 0.0008424579864367843,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": "http_429",
+          "batch_attempted_case_ids": [
+            "offline-review-a"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a"
+          ],
+          "batch_remaining_case_ids": [
+            "offline-review-b"
+          ]
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "subject": false,
+      "branding": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": "http_429",
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop1/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop1/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": true,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": true,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "stop_reason": "http_429",
+              "parent_process_elapsed_seconds": 0.0009213329758495092,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": "http_429",
+          "batch_attempted_case_ids": [
+            "offline-review-a"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a"
+          ],
+          "batch_remaining_case_ids": [
+            "offline-review-b"
+          ]
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--no-programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "subject": false,
+      "branding": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": "provider_failure",
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop2/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop2/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--no-programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": false,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": false,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "stop_reason": "provider_failure",
+              "provider_failure": {
+                "status": 401,
+                "reason": "synthetic refusal"
+              },
+              "parent_process_elapsed_seconds": 0.000987459090538323,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": "provider_failure",
+          "batch_attempted_case_ids": [
+            "offline-review-a"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a"
+          ],
+          "batch_remaining_case_ids": [
+            "offline-review-b"
+          ]
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "subject": false,
+      "branding": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": "provider_failure",
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop3/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop3/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": true,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": true,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "stop_reason": "provider_failure",
+              "provider_failure": {
+                "status": 401,
+                "reason": "synthetic refusal"
+              },
+              "parent_process_elapsed_seconds": 0.0008428340079262853,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": "provider_failure",
+          "batch_attempted_case_ids": [
+            "offline-review-a"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a"
+          ],
+          "batch_remaining_case_ids": [
+            "offline-review-b"
+          ]
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--no-programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "subject": false,
+      "branding": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": "missing",
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop4/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop4/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--no-programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": false,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": false,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "parent_process_elapsed_seconds": 0.0007718750275671482,
+              "process_error": null,
+              "active_checkpoint_available": false
+            }
+          },
+          "batch_stop_reason": "capture_unavailable",
+          "batch_attempted_case_ids": [
+            "offline-review-a"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a"
+          ],
+          "batch_remaining_case_ids": [
+            "offline-review-b"
+          ]
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "subject": false,
+      "branding": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": "missing",
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop5/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop5/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": true,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": true,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "parent_process_elapsed_seconds": 0.0009642080403864384,
+              "process_error": null,
+              "active_checkpoint_available": false
+            }
+          },
+          "batch_stop_reason": "capture_unavailable",
+          "batch_attempted_case_ids": [
+            "offline-review-a"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a"
+          ],
+          "batch_remaining_case_ids": [
+            "offline-review-b"
+          ]
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [],
+      "initial_programme": false,
+      "effective_programme": [
+        false
+      ],
+      "direct_child": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [],
+      "initial_programme": true,
+      "effective_programme": [
+        true
+      ],
+      "direct_child": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "effective_programme": [
+        true
+      ],
+      "direct_child": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--no-programme-identity-before-funding"
+      ],
+      "initial_programme": true,
+      "effective_programme": [
+        false
+      ],
+      "direct_child": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--programme-identity-before-funding",
+        "--no-programme-identity-before-funding"
+      ],
+      "initial_programme": true,
+      "effective_programme": [
+        false
+      ],
+      "direct_child": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--no-programme-identity-before-funding",
+        "--programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "effective_programme": [
+        true
+      ],
+      "direct_child": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--programme-identity-before-funding",
+        "--no-programme-identity-before-funding",
+        "--programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "effective_programme": [
+        true
+      ],
+      "direct_child": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--no-programme-identity-before-funding"
+      ],
+      "initial_programme": true,
+      "subject": false,
+      "branding": true,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": null,
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe0/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe0/synthetic-STOP.json",
+          "--site-branding-identity",
+          "--no-subject-phrase-match",
+          "--no-programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe0/capture/20261007T210219Z/offline-review-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe0/synthetic-STOP.json",
+          "--site-branding-identity",
+          "--no-subject-phrase-match",
+          "--no-programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": false,
+          "subject": false,
+          "branding": true,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        },
+        {
+          "case_id": "offline-review-b",
+          "programme": false,
+          "subject": false,
+          "branding": true,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": true,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": false,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0008537500398233533,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-review-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.00077887496445328,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-review-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "subject": false,
+      "branding": true,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": null,
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe1/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe1/synthetic-STOP.json",
+          "--site-branding-identity",
+          "--no-subject-phrase-match",
+          "--programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe1/capture/20261007T210219Z/offline-review-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe1/synthetic-STOP.json",
+          "--site-branding-identity",
+          "--no-subject-phrase-match",
+          "--programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": true,
+          "subject": false,
+          "branding": true,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        },
+        {
+          "case_id": "offline-review-b",
+          "programme": true,
+          "subject": false,
+          "branding": true,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": true,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": true,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0009057089919224381,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-review-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.000816958025097847,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-review-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--no-programme-identity-before-funding"
+      ],
+      "initial_programme": true,
+      "subject": true,
+      "branding": true,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": null,
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe2/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe2/synthetic-STOP.json",
+          "--site-branding-identity",
+          "--subject-phrase-match",
+          "--no-programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe2/capture/20261007T210219Z/offline-review-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe2/synthetic-STOP.json",
+          "--site-branding-identity",
+          "--subject-phrase-match",
+          "--no-programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": false,
+          "subject": true,
+          "branding": true,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        },
+        {
+          "case_id": "offline-review-b",
+          "programme": false,
+          "subject": true,
+          "branding": true,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": true,
+          "subject_phrase_match": true,
+          "programme_identity_before_funding": false,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.000867250026203692,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-review-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0008708341047167778,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-review-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "subject": true,
+      "branding": true,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": null,
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe3/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe3/synthetic-STOP.json",
+          "--site-branding-identity",
+          "--subject-phrase-match",
+          "--programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe3/capture/20261007T210219Z/offline-review-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe3/synthetic-STOP.json",
+          "--site-branding-identity",
+          "--subject-phrase-match",
+          "--programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": true,
+          "subject": true,
+          "branding": true,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        },
+        {
+          "case_id": "offline-review-b",
+          "programme": true,
+          "subject": true,
+          "branding": true,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": true,
+          "subject_phrase_match": true,
+          "programme_identity_before_funding": true,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.001116124913096428,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-review-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.000928416964598,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-review-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [],
+      "initial_programme": false,
+      "subject": false,
+      "branding": false,
+      "stop_before": true,
+      "stop_after_first": false,
+      "budget_stop": null,
+      "commands": [],
+      "child_effective": [],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "strict_expert_budget": true,
+          "search_provider": "exa_mcp",
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": false,
+          "shared_query_budget": true,
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "max_search_queries_per_case": 6,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "batch_stop_reason": "external_provider_failure",
+          "batch_attempted_case_ids": [],
+          "batch_remaining_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ]
+        },
+        "observations": []
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [],
+      "initial_programme": true,
+      "subject": false,
+      "branding": false,
+      "stop_before": true,
+      "stop_after_first": false,
+      "budget_stop": null,
+      "commands": [],
+      "child_effective": [],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "strict_expert_budget": true,
+          "search_provider": "exa_mcp",
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": true,
+          "shared_query_budget": true,
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "max_search_queries_per_case": 6,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "batch_stop_reason": "external_provider_failure",
+          "batch_attempted_case_ids": [],
+          "batch_remaining_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ]
+        },
+        "observations": []
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "subject": false,
+      "branding": false,
+      "stop_before": true,
+      "stop_after_first": false,
+      "budget_stop": null,
+      "commands": [],
+      "child_effective": [],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "strict_expert_budget": true,
+          "search_provider": "exa_mcp",
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": true,
+          "shared_query_budget": true,
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "max_search_queries_per_case": 6,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "batch_stop_reason": "external_provider_failure",
+          "batch_attempted_case_ids": [],
+          "batch_remaining_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ]
+        },
+        "observations": []
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--no-programme-identity-before-funding"
+      ],
+      "initial_programme": true,
+      "subject": false,
+      "branding": false,
+      "stop_before": true,
+      "stop_after_first": false,
+      "budget_stop": null,
+      "commands": [],
+      "child_effective": [],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "strict_expert_budget": true,
+          "search_provider": "exa_mcp",
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": false,
+          "shared_query_budget": true,
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "max_search_queries_per_case": 6,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "batch_stop_reason": "external_provider_failure",
+          "batch_attempted_case_ids": [],
+          "batch_remaining_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ]
+        },
+        "observations": []
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [],
+      "initial_programme": false,
+      "subject": false,
+      "branding": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": null,
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve0/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve0/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--no-programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve0/capture/20261007T210219Z/offline-review-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve0/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--no-programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": false,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        },
+        {
+          "case_id": "offline-review-b",
+          "programme": false,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": false,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0010857920860871673,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-review-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0009520420571789145,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-review-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [],
+      "initial_programme": true,
+      "subject": false,
+      "branding": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": null,
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve1/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve1/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve1/capture/20261007T210219Z/offline-review-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve1/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": true,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        },
+        {
+          "case_id": "offline-review-b",
+          "programme": true,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": true,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.000987500068731606,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-review-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0008035840000957251,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-review-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "subject": false,
+      "branding": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": null,
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve2/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve2/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve2/capture/20261007T210219Z/offline-review-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve2/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": true,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        },
+        {
+          "case_id": "offline-review-b",
+          "programme": true,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": true,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0008728749817237258,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-review-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0007961669471114874,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-review-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--no-programme-identity-before-funding"
+      ],
+      "initial_programme": true,
+      "subject": false,
+      "branding": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": null,
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve3/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve3/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--no-programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve3/capture/20261007T210219Z/offline-review-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve3/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--no-programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": false,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        },
+        {
+          "case_id": "offline-review-b",
+          "programme": false,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": false,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0009815000230446458,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-review-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0009392499923706055,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-review-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--programme-identity-before-funding",
+        "--no-programme-identity-before-funding"
+      ],
+      "initial_programme": true,
+      "subject": false,
+      "branding": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": null,
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve4/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve4/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--no-programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve4/capture/20261007T210219Z/offline-review-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve4/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--no-programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": false,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        },
+        {
+          "case_id": "offline-review-b",
+          "programme": false,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": false,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0010277919936925173,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-review-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0008625420741736889,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-review-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--no-programme-identity-before-funding",
+        "--programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "subject": false,
+      "branding": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": null,
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve5/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve5/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve5/capture/20261007T210219Z/offline-review-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve5/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": true,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        },
+        {
+          "case_id": "offline-review-b",
+          "programme": true,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": true,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0009677089983597398,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-review-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0009050420485436916,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-review-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--programme-identity-before-funding",
+        "--no-programme-identity-before-funding",
+        "--programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "subject": false,
+      "branding": false,
+      "stop_before": false,
+      "stop_after_first": false,
+      "budget_stop": null,
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve6/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve6/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ],
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-b",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve6/capture/20261007T210219Z/offline-review-b.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve6/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": true,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        },
+        {
+          "case_id": "offline-review-b",
+          "programme": true,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "search_provider": "exa_mcp",
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+          "search_before_navigation": false,
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": true,
+          "shared_query_budget": true,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+          "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+          "strict_expert_budget": true,
+          "max_search_queries_per_case": 6,
+          "cold_fetcher_reads": true,
+          "child_active_seconds": 120,
+          "finalization_reserve_ms": 0,
+          "source_work_deadline_ms": 120000,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+          "parent_process_reserve_seconds": 15,
+          "parent_process_timeout_seconds": 135,
+          "case_budgets": {
+            "offline-review-a": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0013557909987866879,
+              "process_error": null,
+              "active_checkpoint_available": true
+            },
+            "offline-review-b": {
+              "stop_reason": "completed",
+              "parent_process_elapsed_seconds": 0.0008986670291051269,
+              "process_error": null,
+              "active_checkpoint_available": true
+            }
+          },
+          "batch_stop_reason": null,
+          "batch_attempted_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_completed_case_ids": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "batch_remaining_case_ids": []
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          },
+          {
+            "case_id": "offline-review-b",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--no-programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "subject": false,
+      "branding": false,
+      "stop_before": false,
+      "stop_after_first": true,
+      "budget_stop": null,
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_sentinel_between_cases_re0/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_sentinel_between_cases_re0/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--no-programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": false,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "strict_expert_budget": true,
+          "search_provider": "exa_mcp",
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": false,
+          "shared_query_budget": true,
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "max_search_queries_per_case": 6,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "batch_stop_reason": "external_provider_failure",
+          "batch_attempted_case_ids": [
+            "offline-review-a"
+          ],
+          "batch_remaining_case_ids": [
+            "offline-review-b"
+          ]
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    },
+    {
+      "arguments": [
+        "--programme-identity-before-funding"
+      ],
+      "initial_programme": false,
+      "subject": false,
+      "branding": false,
+      "stop_before": false,
+      "stop_after_first": true,
+      "budget_stop": null,
+      "commands": [
+        [
+          "--live",
+          "--child",
+          "--catalogue-id",
+          "offline-review-a",
+          "--out",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_sentinel_between_cases_re1/capture/20261007T210219Z/offline-review-a.json",
+          "--max-pages",
+          "60",
+          "--seconds-per-case",
+          "120",
+          "--strict-expert-budget",
+          "--stop-file",
+          "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/applied-harness-review/pytest-temp-final/test_sentinel_between_cases_re1/synthetic-STOP.json",
+          "--no-subject-phrase-match",
+          "--programme-identity-before-funding",
+          "--search-funding-fallback",
+          "--recover-search-candidates",
+          "--target-award-search"
+        ]
+      ],
+      "child_effective": [
+        {
+          "case_id": "offline-review-a",
+          "programme": true,
+          "subject": false,
+          "branding": false,
+          "shared": true,
+          "max_pages": 60,
+          "seconds": 120,
+          "strict": true
+        }
+      ],
+      "capture": {
+        "schema_version": "1",
+        "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+        "captured_at": "20261007T210219Z",
+        "mode": "live",
+        "config": {
+          "strict_expert_budget": true,
+          "search_provider": "exa_mcp",
+          "site_branding_identity": false,
+          "subject_phrase_match": false,
+          "programme_identity_before_funding": true,
+          "shared_query_budget": true,
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "max_search_queries_per_case": 6,
+          "browser_enabled": false,
+          "cohort": [
+            "offline-review-a",
+            "offline-review-b"
+          ],
+          "selection": "catalogue_id",
+          "batch_stop_reason": "external_provider_failure",
+          "batch_attempted_case_ids": [
+            "offline-review-a"
+          ],
+          "batch_remaining_case_ids": [
+            "offline-review-b"
+          ]
+        },
+        "observations": [
+          {
+            "case_id": "offline-review-a",
+            "programme_urls": [],
+            "ranked_urls": null,
+            "predictions": [],
+            "telemetry": {
+              "http_fetches": null,
+              "browser_fetches": null,
+              "pdf_fetches": null,
+              "search_calls": null,
+              "model_input_tokens": null,
+              "jev_input_tokens": null,
+              "latency_seconds": null,
+              "cost_usd": null,
+              "human_review_required": null,
+              "document_reads": null,
+              "document_seconds": null,
+              "document_stop": null
+            },
+            "page_outcomes": [],
+            "error": null
+          }
+        ]
+      },
+      "settings_is_mock": true,
+      "pipeline_sha_is_mock": true,
+      "capture_one_is_mock": true,
+      "real_network_provider_model_git_subprocess_calls": 0
+    }
+  ]
+}

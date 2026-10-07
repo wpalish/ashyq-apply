@@ -1,0 +1,596 @@
+[
+  {
+    "url": "https://future.utoronto.ca/deadlines",
+    "force_unknown_to_general_admissions_DIAGNOSTIC_NOT_RULE": false,
+    "fetcher_calls": [
+      "https://future.utoronto.ca/deadlines"
+    ],
+    "outcomes": [
+      {
+        "url": "https://future.utoronto.ca/deadlines",
+        "category": "classifier-rejected",
+        "page_type": "unknown",
+        "detail": "classified as unknown; no requirement can be read from this kind of page. title='Dates & Deadlines | Future Students. University of Toronto' signals='no decisive signals' chars=6658 degrees=[]",
+        "readable_chars": 6658
+      }
+    ],
+    "claims": [],
+    "errors": [
+      "https://future.utoronto.ca/deadlines: classified as unknown; no requirement can be read from this kind of page."
+    ],
+    "followups_disabled_for_isolated_reader_boundary": true,
+    "source_text_and_all_extractors_unchanged": true
+  },
+  {
+    "url": "https://future.utoronto.ca/deadlines",
+    "force_unknown_to_general_admissions_DIAGNOSTIC_NOT_RULE": true,
+    "fetcher_calls": [
+      "https://future.utoronto.ca/deadlines"
+    ],
+    "outcomes": [
+      {
+        "url": "https://future.utoronto.ca/deadlines",
+        "category": "fetched-ok",
+        "page_type": "general_admissions",
+        "detail": "1 claims read from this page",
+        "readable_chars": 6658
+      }
+    ],
+    "claims": [
+      {
+        "claim_type": "credential_evaluation_required",
+        "normalized_value": true,
+        "original_text_excerpt": "nsideration Prospective undergraduate students who wish to be considered for admission in earlier rounds are encouraged to apply by November 7 and submit all required documents by December 1 . Our early consideration process works to expedite the review of these applications. Students who apply by November 7 and complete the necessary next st",
+        "source_url": "https://future.utoronto.ca/deadlines",
+        "page_title": "Dates & Deadlines | Future Students. University of Toronto",
+        "relevant_section": "",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": "Fall 2027",
+        "academic_year": "2027/28",
+        "accessed_at": "2026-10-07T22:31:36.347668Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.7,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ],
+    "errors": [
+      "https://future.utoronto.ca/deadlines: general_admissions pages cannot confirm that 'Computer Science' exists."
+    ],
+    "followups_disabled_for_isolated_reader_boundary": true,
+    "source_text_and_all_extractors_unchanged": true
+  },
+  {
+    "url": "https://future.utoronto.ca/english-language-requirements",
+    "force_unknown_to_general_admissions_DIAGNOSTIC_NOT_RULE": false,
+    "fetcher_calls": [
+      "https://future.utoronto.ca/english-language-requirements"
+    ],
+    "outcomes": [
+      {
+        "url": "https://future.utoronto.ca/english-language-requirements",
+        "category": "classifier-rejected",
+        "page_type": "unknown",
+        "detail": "classified as unknown; no requirement can be read from this kind of page. title='English Language Requirements | Future Students. University of Toronto' signals='no decisive signals' chars=12935 degrees=[]",
+        "readable_chars": 12935
+      }
+    ],
+    "claims": [],
+    "errors": [
+      "https://future.utoronto.ca/english-language-requirements: classified as unknown; no requirement can be read from this kind of page."
+    ],
+    "followups_disabled_for_isolated_reader_boundary": true,
+    "source_text_and_all_extractors_unchanged": true
+  },
+  {
+    "url": "https://future.utoronto.ca/english-language-requirements",
+    "force_unknown_to_general_admissions_DIAGNOSTIC_NOT_RULE": true,
+    "fetcher_calls": [
+      "https://future.utoronto.ca/english-language-requirements"
+    ],
+    "outcomes": [
+      {
+        "url": "https://future.utoronto.ca/english-language-requirements",
+        "category": "fetched-ok",
+        "page_type": "general_admissions",
+        "detail": "3 claims read from this page",
+        "readable_chars": 12935
+      }
+    ],
+    "claims": [
+      {
+        "claim_type": "ielts_min_overall",
+        "normalized_value": 6.5,
+        "original_text_excerpt": "line at ibo.org (select \"University of Toronto\" as the transcript recipient). Predicted results should be sent by your school. IELTS Academic (including IELTS Online) Requirements The minimum requirement is an overall band of 6.5, with no band below 6.0. Results from IELTS (Academic) for UKVI test sittings are accepted. For information, visit the IELTS website . Note: We do not accept",
+        "source_url": "https://future.utoronto.ca/english-language-requirements",
+        "page_title": "English Language Requirements | Future Students. University of Toronto",
+        "relevant_section": "English language requirements",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": "Fall 2027",
+        "academic_year": "2027/28",
+        "accessed_at": "2026-10-07T22:31:34.866067Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": null,
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": "IB"
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_min_subscore",
+        "normalized_value": 6.0,
+        "original_text_excerpt": "e Assessment (CAEL) including CAEL Online Requirements The minimum score required to meet our English facility requirement is an overall score of 70 and no part below 60. For information, visit the CAEL website . Submitting results Sign in to your CAEL Account and select University of Toronto as a recipient institution. Resul",
+        "source_url": "https://future.utoronto.ca/english-language-requirements",
+        "page_title": "English Language Requirements | Future Students. University of Toronto",
+        "relevant_section": "English language requirements",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": "Fall 2027",
+        "academic_year": "2027/28",
+        "accessed_at": "2026-10-07T22:31:34.866067Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": null,
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": "IB"
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_accepted_types",
+        "normalized_value": [
+          "academic"
+        ],
+        "original_text_excerpt": "IELTS Academic (including IELTS Online)    Requirements The minimum requirement is an overall band of 6.",
+        "source_url": "https://future.utoronto.ca/english-language-requirements",
+        "page_title": "English Language Requirements | Future Students. University of Toronto",
+        "relevant_section": "English language requirements",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": "Fall 2027",
+        "academic_year": "2027/28",
+        "accessed_at": "2026-10-07T22:31:34.866067Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": null,
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": "IB"
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ],
+    "errors": [
+      "https://future.utoronto.ca/english-language-requirements: general_admissions pages cannot confirm that 'Computer Science' exists."
+    ],
+    "followups_disabled_for_isolated_reader_boundary": true,
+    "source_text_and_all_extractors_unchanged": true
+  },
+  {
+    "url": "https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines",
+    "force_unknown_to_general_admissions_DIAGNOSTIC_NOT_RULE": false,
+    "fetcher_calls": [
+      "https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines"
+    ],
+    "outcomes": [
+      {
+        "url": "https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines",
+        "category": "classifier-rejected",
+        "page_type": "unknown",
+        "detail": "classified as unknown; no requirement can be read from this kind of page. title='Dates & Deadlines | Future Students' signals='no decisive signals' chars=4671 degrees=[]",
+        "readable_chars": 4671
+      }
+    ],
+    "claims": [],
+    "errors": [
+      "https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines: classified as unknown; no requirement can be read from this kind of page."
+    ],
+    "followups_disabled_for_isolated_reader_boundary": true,
+    "source_text_and_all_extractors_unchanged": true
+  },
+  {
+    "url": "https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines",
+    "force_unknown_to_general_admissions_DIAGNOSTIC_NOT_RULE": true,
+    "fetcher_calls": [
+      "https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines"
+    ],
+    "outcomes": [
+      {
+        "url": "https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines",
+        "category": "fetched-ok",
+        "page_type": "general_admissions",
+        "detail": "1 claims read from this page",
+        "readable_chars": 4671
+      }
+    ],
+    "claims": [
+      {
+        "claim_type": "admission_deadline",
+        "normalized_value": "2027-02-01",
+        "original_text_excerpt": "s Social Sciences Theatre & Drama Studies Visual Studies January 15, 2027 November 7: Recommended application date for early consideration. Other application deadlines Type Deadline Document Deadline February 1, 2027 Review your deadline on the Join U of T website Computer Science Supplementary Application February 1, 2027 Review your deadline on the Join U of T website The",
+        "source_url": "https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines",
+        "page_title": "Dates & Deadlines | Future Students",
+        "relevant_section": "",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": "Fall 2027",
+        "academic_year": "2027/28",
+        "accessed_at": "2026-10-07T22:31:34.463425Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": null,
+          "intake": null,
+          "academic_year": null,
+          "population": "international",
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": "timezone: not stated on page"
+      }
+    ],
+    "errors": [
+      "https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines: general_admissions pages cannot confirm that 'Computer Science' exists."
+    ],
+    "followups_disabled_for_isolated_reader_boundary": true,
+    "source_text_and_all_extractors_unchanged": true
+  },
+  {
+    "url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements",
+    "force_unknown_to_general_admissions_DIAGNOSTIC_NOT_RULE": false,
+    "fetcher_calls": [
+      "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements"
+    ],
+    "outcomes": [
+      {
+        "url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements",
+        "category": "classifier-rejected",
+        "page_type": "unknown",
+        "detail": "classified as unknown; no requirement can be read from this kind of page. title='English Language Requirements | Future Students' signals='no decisive signals' chars=10724 degrees=[]",
+        "readable_chars": 10724
+      }
+    ],
+    "claims": [],
+    "errors": [
+      "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements: classified as unknown; no requirement can be read from this kind of page."
+    ],
+    "followups_disabled_for_isolated_reader_boundary": true,
+    "source_text_and_all_extractors_unchanged": true
+  },
+  {
+    "url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements",
+    "force_unknown_to_general_admissions_DIAGNOSTIC_NOT_RULE": true,
+    "fetcher_calls": [
+      "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements"
+    ],
+    "outcomes": [
+      {
+        "url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements",
+        "category": "fetched-ok",
+        "page_type": "general_admissions",
+        "detail": "3 claims read from this page",
+        "readable_chars": 10724
+      }
+    ],
+    "claims": [
+      {
+        "claim_type": "ielts_min_overall",
+        "normalized_value": 6.5,
+        "original_text_excerpt": "rganization. You can make your request online at: www.ibo.org. Predicted results should be sent by your school. International English Language Testing System (IELTS) Academic Module Requirements: The minimum requirement is an overall band of 6.5, with no band below 6.0. Results from IELTS (Academic) for UKVI test sittings are accepted. For information visit www.ielts.org . Note: we do not accept the I",
+        "source_url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements",
+        "page_title": "English Language Requirements | Future Students",
+        "relevant_section": "English language requirements",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": "Fall 2027",
+        "academic_year": "2027/28",
+        "accessed_at": "2026-10-07T22:31:33.081175Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": null,
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": "IB"
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_min_subscore",
+        "normalized_value": 6.0,
+        "original_text_excerpt": "uage Assessment (CAEL), including CAEL Online Requirements: The minimum score required to meet our English facility requirement is an overall score of 70 and no part below 60. For information visit: www.cael.ca . Submitting Results: Sign in to your CAEL Account and select University of Toronto as a recipient institution. Results",
+        "source_url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements",
+        "page_title": "English Language Requirements | Future Students",
+        "relevant_section": "English language requirements",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": "Fall 2027",
+        "academic_year": "2027/28",
+        "accessed_at": "2026-10-07T22:31:33.081175Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": null,
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": "IB"
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_accepted_types",
+        "normalized_value": [
+          "academic"
+        ],
+        "original_text_excerpt": "International English Language Testing System (IELTS) Academic Module  Requirements:  The minimum requirement is an overall band of 6.",
+        "source_url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements",
+        "page_title": "English Language Requirements | Future Students",
+        "relevant_section": "English language requirements",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": "Fall 2027",
+        "academic_year": "2027/28",
+        "accessed_at": "2026-10-07T22:31:33.081175Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": null,
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": "IB"
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ],
+    "errors": [
+      "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements: general_admissions pages cannot confirm that 'Computer Science' exists."
+    ],
+    "followups_disabled_for_isolated_reader_boundary": true,
+    "source_text_and_all_extractors_unchanged": true
+  },
+  {
+    "url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+    "force_unknown_to_general_admissions_DIAGNOSTIC_NOT_RULE": false,
+    "fetcher_calls": [
+      "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science"
+    ],
+    "outcomes": [
+      {
+        "url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+        "category": "fetched-ok",
+        "page_type": "program_detail",
+        "detail": "1 claims read from this page",
+        "readable_chars": 6131
+      }
+    ],
+    "claims": [
+      {
+        "claim_type": "program_exists",
+        "normalized_value": {
+          "program": "Computer Science",
+          "degree": "bachelor",
+          "language": null,
+          "matched_because": "page subject 'Computer Science' covers every requested subject word"
+        },
+        "original_text_excerpt": "Breadcrumb Home Programs Undergraduate Programs Computer Science Computer Science Explore machine learning. Investigate how robots move and operate. Or, b uild a robot and experiment with AI. Studying computer science",
+        "source_url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+        "page_title": "Computer Science | Future Students",
+        "relevant_section": "Programme identity",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": "Fall 2027",
+        "academic_year": "2027/28",
+        "accessed_at": "2026-10-07T22:31:30.066738Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.9,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ],
+    "errors": [
+      "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science: no statement about the application window for Fall 2027; intake status is unknown, not open."
+    ],
+    "followups_disabled_for_isolated_reader_boundary": true,
+    "source_text_and_all_extractors_unchanged": true
+  },
+  {
+    "url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+    "force_unknown_to_general_admissions_DIAGNOSTIC_NOT_RULE": true,
+    "fetcher_calls": [
+      "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science"
+    ],
+    "outcomes": [
+      {
+        "url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+        "category": "fetched-ok",
+        "page_type": "program_detail",
+        "detail": "1 claims read from this page",
+        "readable_chars": 6131
+      }
+    ],
+    "claims": [
+      {
+        "claim_type": "program_exists",
+        "normalized_value": {
+          "program": "Computer Science",
+          "degree": "bachelor",
+          "language": null,
+          "matched_because": "page subject 'Computer Science' covers every requested subject word"
+        },
+        "original_text_excerpt": "Breadcrumb Home Programs Undergraduate Programs Computer Science Computer Science Explore machine learning. Investigate how robots move and operate. Or, b uild a robot and experiment with AI. Studying computer science",
+        "source_url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+        "page_title": "Computer Science | Future Students",
+        "relevant_section": "Programme identity",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": "Fall 2027",
+        "academic_year": "2027/28",
+        "accessed_at": "2026-10-07T22:31:30.066738Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.9,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ],
+    "errors": [
+      "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science: no statement about the application window for Fall 2027; intake status is unknown, not open."
+    ],
+    "followups_disabled_for_isolated_reader_boundary": true,
+    "source_text_and_all_extractors_unchanged": true
+  },
+  {
+    "url": "https://future.utoronto.ca/apply",
+    "force_unknown_to_general_admissions_DIAGNOSTIC_NOT_RULE": false,
+    "fetcher_calls": [
+      "https://future.utoronto.ca/apply"
+    ],
+    "outcomes": [
+      {
+        "url": "https://future.utoronto.ca/apply",
+        "category": "no-pattern-match",
+        "page_type": "general_admissions",
+        "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+        "readable_chars": 976
+      }
+    ],
+    "claims": [],
+    "errors": [
+      "https://future.utoronto.ca/applying: general_admissions pages cannot confirm that 'Computer Science' exists."
+    ],
+    "followups_disabled_for_isolated_reader_boundary": true,
+    "source_text_and_all_extractors_unchanged": true
+  },
+  {
+    "url": "https://future.utoronto.ca/apply",
+    "force_unknown_to_general_admissions_DIAGNOSTIC_NOT_RULE": true,
+    "fetcher_calls": [
+      "https://future.utoronto.ca/apply"
+    ],
+    "outcomes": [
+      {
+        "url": "https://future.utoronto.ca/apply",
+        "category": "no-pattern-match",
+        "page_type": "general_admissions",
+        "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+        "readable_chars": 976
+      }
+    ],
+    "claims": [],
+    "errors": [
+      "https://future.utoronto.ca/applying: general_admissions pages cannot confirm that 'Computer Science' exists."
+    ],
+    "followups_disabled_for_isolated_reader_boundary": true,
+    "source_text_and_all_extractors_unchanged": true
+  }
+]

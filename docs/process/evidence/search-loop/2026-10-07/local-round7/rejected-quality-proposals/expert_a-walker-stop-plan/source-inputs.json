@@ -1,0 +1,1035 @@
+{
+  "status": "READ_ONLY_INPUTS",
+  "at_utc": "2026-10-07T22:48:35.477697+00:00",
+  "inputs": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/walker-stop-next/PLAN.md": {
+      "sha256": "50eceeaf6bffb34e7635b32c3e9be982f054dff14d4453fbb466c156902e9ec9",
+      "bytes": 2401
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/ready-manifest.json": {
+      "sha256": "f8b8aa7913c16d6b849f74501ded9a37ba027a3db69841e2b0b62725d9892721",
+      "bytes": 4161
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/caller-boundary.offline.json": {
+      "sha256": "9e71f8c76f43052a9727fb9b829e184c46bb80205f235d0873fc78af1e2ef415",
+      "bytes": 137406
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/replay_caller_boundary.py": {
+      "sha256": "2b98be29f8e3eaf2c6739b215410c6f8e4dd9caace47121fbea4c6878b928193",
+      "bytes": 3697,
+      "functions": [
+        {
+          "name": "replay",
+          "line": 34,
+          "end": 63
+        },
+        {
+          "name": "_identify_site",
+          "line": 18,
+          "end": 19
+        },
+        {
+          "name": "_add_search_results",
+          "line": 21,
+          "end": 31
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/replay_walker_stop.py": {
+      "sha256": "34a75af13cf38322f69071b2cba73e9f39d371fcd5d25d7881b0018d5a2bd307",
+      "bytes": 7088,
+      "functions": [
+        {
+          "name": "denied",
+          "line": 19,
+          "end": 20
+        },
+        {
+          "name": "walk",
+          "line": 92,
+          "end": 99
+        },
+        {
+          "name": "direct",
+          "line": 102,
+          "end": 123
+        },
+        {
+          "name": "replay",
+          "line": 126,
+          "end": 150
+        },
+        {
+          "name": "__init__",
+          "line": 41,
+          "end": 48
+        },
+        {
+          "name": "get",
+          "line": 50,
+          "end": 65
+        },
+        {
+          "name": "__init__",
+          "line": 69,
+          "end": 70
+        },
+        {
+          "name": "__init__",
+          "line": 76,
+          "end": 78
+        },
+        {
+          "name": "_read_lead",
+          "line": 80,
+          "end": 83
+        },
+        {
+          "name": "walk_catalog",
+          "line": 85,
+          "end": 89
+        },
+        {
+          "name": "redirect",
+          "line": 107,
+          "end": 110
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/walker-stop.offline.json": {
+      "sha256": "7697c140061f13d1a241b49a73a67600033b06aea71e3e0db8442a53675208f0",
+      "bytes": 68975
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-cache-index.json": {
+      "sha256": "b08aaf37b9ac29875bb702376f552aadc16d6a5030347579212821695e3aca15",
+      "bytes": 17272
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-baseline-funnel/retained-public-entry.json": {
+      "sha256": "d9e331ab1cf84cfd7d6ade8890ac83970f4d49df5b5acdca6cf8c417cab2578e",
+      "bytes": 1181
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/discovery/catalog_walker.py": {
+      "sha256": "218fbb73f8baa455449a9853ff0ad6769c0a9f6ebdb9d42cf551922bd66a01a7",
+      "bytes": 32036,
+      "functions": [
+        {
+          "name": "_structural_score",
+          "line": 170,
+          "end": 180
+        },
+        {
+          "name": "extract_links",
+          "line": 183,
+          "end": 222
+        },
+        {
+          "name": "parse_catalog_json",
+          "line": 225,
+          "end": 269
+        },
+        {
+          "name": "score_link",
+          "line": 272,
+          "end": 309
+        },
+        {
+          "name": "_host",
+          "line": 312,
+          "end": 313
+        },
+        {
+          "name": "_parent_directory",
+          "line": 316,
+          "end": 334
+        },
+        {
+          "name": "_drop_outcome",
+          "line": 337,
+          "end": 344
+        },
+        {
+          "name": "_without_query",
+          "line": 347,
+          "end": 350
+        },
+        {
+          "name": "_names_a_list",
+          "line": 360,
+          "end": 362
+        },
+        {
+          "name": "_descent_lead",
+          "line": 365,
+          "end": 388
+        },
+        {
+          "name": "visit",
+          "line": 242,
+          "end": 265
+        },
+        {
+          "name": "__init__",
+          "line": 401,
+          "end": 405
+        },
+        {
+          "name": "_collect",
+          "line": 407,
+          "end": 408
+        },
+        {
+          "name": "render",
+          "line": 410,
+          "end": 421
+        },
+        {
+          "name": "__init__",
+          "line": 427,
+          "end": 440
+        },
+        {
+          "name": "walk",
+          "line": 442,
+          "end": 489
+        },
+        {
+          "name": "walk_catalog",
+          "line": 491,
+          "end": 568
+        },
+        {
+          "name": "_score",
+          "line": 570,
+          "end": 615
+        },
+        {
+          "name": "_names_subject",
+          "line": 617,
+          "end": 621
+        },
+        {
+          "name": "_read_lead",
+          "line": 623,
+          "end": 657
+        },
+        {
+          "name": "_read_catalogue",
+          "line": 659,
+          "end": 695
+        },
+        {
+          "name": "_record",
+          "line": 697,
+          "end": 726
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/discovery/live_discovery.py": {
+      "sha256": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6",
+      "bytes": 95295,
+      "functions": [
+        {
+          "name": "registrable_domain",
+          "line": 349,
+          "end": 361
+        },
+        {
+          "name": "same_institution",
+          "line": 364,
+          "end": 372
+        },
+        {
+          "name": "canonical_url",
+          "line": 386,
+          "end": 416
+        },
+        {
+          "name": "score_url",
+          "line": 437,
+          "end": 450
+        },
+        {
+          "name": "categorise_url",
+          "line": 453,
+          "end": 460
+        },
+        {
+          "name": "matches_field",
+          "line": 463,
+          "end": 481
+        },
+        {
+          "name": "_strong_aliases",
+          "line": 485,
+          "end": 490
+        },
+        {
+          "name": "with_strong_aliases",
+          "line": 493,
+          "end": 506
+        },
+        {
+          "name": "degree_level_named",
+          "line": 509,
+          "end": 515
+        },
+        {
+          "name": "_registry_hosts_by_domain",
+          "line": 528,
+          "end": 557
+        },
+        {
+          "name": "is_seed_host",
+          "line": 560,
+          "end": 570
+        },
+        {
+          "name": "is_excluded_path",
+          "line": 573,
+          "end": 580
+        },
+        {
+          "name": "looks_like_catalogue",
+          "line": 583,
+          "end": 588
+        },
+        {
+          "name": "matches_field_text",
+          "line": 596,
+          "end": 633
+        },
+        {
+          "name": "_distinct_fields",
+          "line": 636,
+          "end": 646
+        },
+        {
+          "name": "_public_requested_fields",
+          "line": 649,
+          "end": 671
+        },
+        {
+          "name": "_field_named_by_subject",
+          "line": 674,
+          "end": 683
+        },
+        {
+          "name": "matches_degree",
+          "line": 722,
+          "end": 727
+        },
+        {
+          "name": "names_other_degree_level",
+          "line": 730,
+          "end": 738
+        },
+        {
+          "name": "profile_rejects",
+          "line": 741,
+          "end": 759
+        },
+        {
+          "name": "_walker_trace",
+          "line": 786,
+          "end": 787
+        },
+        {
+          "name": "_remaining_search_query_budget",
+          "line": 873,
+          "end": 878
+        },
+        {
+          "name": "_remember_field_source",
+          "line": 881,
+          "end": 898
+        },
+        {
+          "name": "parse_sitemap_directives",
+          "line": 907,
+          "end": 909
+        },
+        {
+          "name": "decode_sitemap",
+          "line": 912,
+          "end": 924
+        },
+        {
+          "name": "parse_sitemap",
+          "line": 927,
+          "end": 946
+        },
+        {
+          "name": "_first",
+          "line": 2113,
+          "end": 2114
+        },
+        {
+          "name": "_program_name_from_url",
+          "line": 2117,
+          "end": 2128
+        },
+        {
+          "name": "_harvest_links",
+          "line": 2131,
+          "end": 2147
+        },
+        {
+          "name": "registry_campuses",
+          "line": 2150,
+          "end": 2165
+        },
+        {
+          "name": "reject",
+          "line": 840,
+          "end": 843
+        },
+        {
+          "name": "charge_search_query_attempt",
+          "line": 845,
+          "end": 847
+        },
+        {
+          "name": "as_dict",
+          "line": 849,
+          "end": 870
+        },
+        {
+          "name": "__init__",
+          "line": 952,
+          "end": 953
+        },
+        {
+          "name": "collect",
+          "line": 955,
+          "end": 1033
+        },
+        {
+          "name": "_declared_sitemaps",
+          "line": 1035,
+          "end": 1046
+        },
+        {
+          "name": "_origin",
+          "line": 1049,
+          "end": 1051
+        },
+        {
+          "name": "__init__",
+          "line": 1062,
+          "end": 1083
+        },
+        {
+          "name": "registry",
+          "line": 1085,
+          "end": 1088
+        },
+        {
+          "name": "_search_provider_or_none",
+          "line": 1090,
+          "end": 1116
+        },
+        {
+          "name": "discover",
+          "line": 1118,
+          "end": 1135
+        },
+        {
+          "name": "_discover_one",
+          "line": 1137,
+          "end": 1254
+        },
+        {
+          "name": "_confirm_programs",
+          "line": 1256,
+          "end": 1302
+        },
+        {
+          "name": "_confirm_added_programs",
+          "line": 1304,
+          "end": 1362
+        },
+        {
+          "name": "_walk_catalogs",
+          "line": 1364,
+          "end": 1449
+        },
+        {
+          "name": "_add_search_results",
+          "line": 1451,
+          "end": 1609
+        },
+        {
+          "name": "_add_multi_field_search_results",
+          "line": 1611,
+          "end": 1783
+        },
+        {
+          "name": "_recover_search_pages",
+          "line": 1785,
+          "end": 1923
+        },
+        {
+          "name": "_apply",
+          "line": 1925,
+          "end": 1993
+        },
+        {
+          "name": "_navigation_fallback",
+          "line": 1995,
+          "end": 2110
+        },
+        {
+          "name": "keep",
+          "line": 1176,
+          "end": 1196
+        },
+        {
+          "name": "read",
+          "line": 1534,
+          "end": 1540
+        },
+        {
+          "name": "read",
+          "line": 1674,
+          "end": 1678
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/page_classifier.py": {
+      "sha256": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+      "bytes": 43654,
+      "functions": [
+        {
+          "name": "_parse_markup",
+          "line": 258,
+          "end": 273
+        },
+        {
+          "name": "content_for_reading",
+          "line": 287,
+          "end": 319
+        },
+        {
+          "name": "_drop_bulky_chrome",
+          "line": 322,
+          "end": 331
+        },
+        {
+          "name": "main_content",
+          "line": 334,
+          "end": 361
+        },
+        {
+          "name": "classify_url",
+          "line": 391,
+          "end": 404
+        },
+        {
+          "name": "classify_page",
+          "line": 407,
+          "end": 665
+        },
+        {
+          "name": "_academic_chrome",
+          "line": 692,
+          "end": 699
+        },
+        {
+          "name": "_academic_heading_rank",
+          "line": 702,
+          "end": 708
+        },
+        {
+          "name": "_academic_section_text",
+          "line": 711,
+          "end": 738
+        },
+        {
+          "name": "_programme_content_identity",
+          "line": 741,
+          "end": 802
+        },
+        {
+          "name": "_title",
+          "line": 808,
+          "end": 812
+        },
+        {
+          "name": "_headings",
+          "line": 815,
+          "end": 816
+        },
+        {
+          "name": "_text",
+          "line": 819,
+          "end": 825
+        },
+        {
+          "name": "_degree_level",
+          "line": 828,
+          "end": 841
+        },
+        {
+          "name": "_language",
+          "line": 844,
+          "end": 848
+        },
+        {
+          "name": "_prose_language",
+          "line": 851,
+          "end": 855
+        },
+        {
+          "name": "_labelled_language_evidence",
+          "line": 858,
+          "end": 886
+        },
+        {
+          "name": "_academic_year",
+          "line": 889,
+          "end": 894
+        },
+        {
+          "name": "_identity",
+          "line": 897,
+          "end": 903
+        },
+        {
+          "name": "_program_name",
+          "line": 922,
+          "end": 936
+        },
+        {
+          "name": "_program_name_from_context",
+          "line": 939,
+          "end": 970
+        },
+        {
+          "name": "_award_name",
+          "line": 987,
+          "end": 1002
+        },
+        {
+          "name": "_award_link_count",
+          "line": 1005,
+          "end": 1017
+        },
+        {
+          "name": "_program_link_count",
+          "line": 1020,
+          "end": 1029
+        },
+        {
+          "name": "full_degree_titles",
+          "line": 1032,
+          "end": 1046
+        },
+        {
+          "name": "degree_level_of",
+          "line": 1049,
+          "end": 1051
+        },
+        {
+          "name": "accepts",
+          "line": 98,
+          "end": 99
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/requirements/web_requirements.py": {
+      "sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+      "bytes": 43883,
+      "functions": [
+        {
+          "name": "_language_links",
+          "line": 155,
+          "end": 169
+        },
+        {
+          "name": "_route_links",
+          "line": 197,
+          "end": 228
+        },
+        {
+          "name": "_named_after_its_url",
+          "line": 887,
+          "end": 899
+        },
+        {
+          "name": "_target_year",
+          "line": 902,
+          "end": 904
+        },
+        {
+          "name": "_listed_programme",
+          "line": 912,
+          "end": 931
+        },
+        {
+          "name": "_complete_language_excerpt",
+          "line": 934,
+          "end": 942
+        },
+        {
+          "name": "_first_sentence_containing",
+          "line": 945,
+          "end": 960
+        },
+        {
+          "name": "_fee",
+          "line": 963,
+          "end": 973
+        },
+        {
+          "name": "_line_containing",
+          "line": 976,
+          "end": 980
+        },
+        {
+          "name": "__init__",
+          "line": 234,
+          "end": 239
+        },
+        {
+          "name": "verify",
+          "line": 241,
+          "end": 561
+        },
+        {
+          "name": "_find_topic_pages",
+          "line": 563,
+          "end": 635
+        },
+        {
+          "name": "_claim_program_exists",
+          "line": 639,
+          "end": 732
+        },
+        {
+          "name": "_claim_listed_programme",
+          "line": 735,
+          "end": 760
+        },
+        {
+          "name": "_claim_intake_state",
+          "line": 762,
+          "end": 806
+        },
+        {
+          "name": "_claim_english_waiver",
+          "line": 808,
+          "end": 833
+        },
+        {
+          "name": "_claim_english_test_types",
+          "line": 835,
+          "end": 859
+        },
+        {
+          "name": "_claim_fees",
+          "line": 861,
+          "end": 875
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/fetching.py": {
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "bytes": 47727,
+      "functions": [
+        {
+          "name": "_resolve_checked",
+          "line": 77,
+          "end": 79
+        },
+        {
+          "name": "_pinned_request",
+          "line": 97,
+          "end": 117
+        },
+        {
+          "name": "same_source_site",
+          "line": 129,
+          "end": 142
+        },
+        {
+          "name": "find_pii",
+          "line": 429,
+          "end": 440
+        },
+        {
+          "name": "assert_no_pii",
+          "line": 443,
+          "end": 456
+        },
+        {
+          "name": "_content_hash",
+          "line": 462,
+          "end": 481
+        },
+        {
+          "name": "_refusal",
+          "line": 484,
+          "end": 496
+        },
+        {
+          "name": "ok",
+          "line": 169,
+          "end": 170
+        },
+        {
+          "name": "is_pdf",
+          "line": 173,
+          "end": 174
+        },
+        {
+          "name": "__init__",
+          "line": 180,
+          "end": 183
+        },
+        {
+          "name": "_paths",
+          "line": 185,
+          "end": 188
+        },
+        {
+          "name": "get",
+          "line": 190,
+          "end": 215
+        },
+        {
+          "name": "put",
+          "line": 217,
+          "end": 237
+        },
+        {
+          "name": "parse",
+          "line": 257,
+          "end": 304
+        },
+        {
+          "name": "__init__",
+          "line": 314,
+          "end": 326
+        },
+        {
+          "name": "allowed",
+          "line": 328,
+          "end": 358
+        },
+        {
+          "name": "crawl_delay",
+          "line": 360,
+          "end": 370
+        },
+        {
+          "name": "_load",
+          "line": 372,
+          "end": 409
+        },
+        {
+          "name": "__init__",
+          "line": 502,
+          "end": 543
+        },
+        {
+          "name": "attach_renderer",
+          "line": 545,
+          "end": 552
+        },
+        {
+          "name": "_send_to_any_address",
+          "line": 554,
+          "end": 584
+        },
+        {
+          "name": "_request_with_redirects",
+          "line": 586,
+          "end": 658
+        },
+        {
+          "name": "_request_one_hop",
+          "line": 660,
+          "end": 689
+        },
+        {
+          "name": "_redirect_policy",
+          "line": 691,
+          "end": 727
+        },
+        {
+          "name": "_read_response",
+          "line": 729,
+          "end": 814
+        },
+        {
+          "name": "_maybe_render",
+          "line": 816,
+          "end": 852
+        },
+        {
+          "name": "__aenter__",
+          "line": 854,
+          "end": 867
+        },
+        {
+          "name": "__aexit__",
+          "line": 869,
+          "end": 872
+        },
+        {
+          "name": "_semaphore",
+          "line": 874,
+          "end": 877
+        },
+        {
+          "name": "_space_requests",
+          "line": 879,
+          "end": 886
+        },
+        {
+          "name": "_fetch_fixture",
+          "line": 888,
+          "end": 930
+        },
+        {
+          "name": "get",
+          "line": 932,
+          "end": 951
+        },
+        {
+          "name": "_get",
+          "line": 953,
+          "end": 1107
+        },
+        {
+          "name": "close_group",
+          "line": 264,
+          "end": 268
+        },
+        {
+          "name": "exchange",
+          "line": 674,
+          "end": 685
+        }
+      ]
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/revision3/source-manifest.json": {
+      "sha256": "0126abbd6a0f6a064ca42db09ea0e64c7d3f5930150161be3fa3d1c9ff6547d4",
+      "bytes": 3514
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/review-start.manifest.json": {
+      "sha256": "4032e5a59ff14ee01662ed1888ed62fd1210b7bcbda830a7f1a90acddc632da0",
+      "bytes": 1452
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round6/reviews/expert_a/revision2-review/scope-controls.offline.json": {
+      "sha256": "8b8b65064f7a360ea83b2ee1e004bb3e9bf4b52f09b6e1ef6f1e59bfc08928a6",
+      "bytes": 25479
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/retained-pages/data-science.body": {
+      "sha256": "76efe3c790ce9aa3253487b3807afa994918022bfff4c2c0b2b4972e45264312",
+      "bytes": 79486
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/retained-pages/data-science.meta.json": {
+      "sha256": "16d03a9771712a612fa61b231df3dbc6b948fa68b00ca9a30e0135598953e192",
+      "bytes": 726
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/retained-pages/computer-science.body": {
+      "sha256": "1340f8a4853246291e727bfaa433ca0ba9ec31ca0fb79cb8f4b16914ffe88f0c",
+      "bytes": 71651
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/retained-pages/computer-science.meta.json": {
+      "sha256": "3dff64d5d03a766c27f6c33b91790ecbae91e02dfe61c76ce6a09cfc559d9c4d",
+      "bytes": 734
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/actual-section-scope-review.evidence.offline.json": {
+      "sha256": "3c26907fb2a72a26bfb15728d16fcf02228315e3be411e9bc96dd23837c1033a",
+      "bytes": 12426
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-STOP.json": {
+      "sha256": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+      "bytes": 877
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round2/pair-temp/on1/canary-o450usf2/cache/1a/1ad11c46fa894ecfacf4423150e42b74.body": {
+      "sha256": "88d1f716c82840fa66317ff1ceb42a152439a924d7625c0d2ef18a0f315f0a87",
+      "bytes": 29400
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round2/pair-temp/on1/canary-o450usf2/cache/1a/1ad11c46fa894ecfacf4423150e42b74.meta.json": {
+      "sha256": "d54f742c251cd9cd36c06ee4b89a74a7c1ca701b829b5ffa99d6cc5701096b8c",
+      "bytes": 515
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-dvmv__z3/cache/ac/ac2be79f83001f4735e0388266a8bd93.body": {
+      "sha256": "8b2f118cb5dcba242cdf0852918bb68dc4ee2b681378b4c87967a579054b6327",
+      "bytes": 153501
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-dvmv__z3/cache/ac/ac2be79f83001f4735e0388266a8bd93.meta.json": {
+      "sha256": "6ab7b26930872762fed81a96eac82efff9e12f482faad218404361a560c30a39",
+      "bytes": 415
+    }
+  },
+  "B_artifact_pins": {
+    "proposal.ru.md": {
+      "sha256": "f0dcf3e3d15bd1fd22fb909f214d5cbacecf47108e0f7307006a242376488814",
+      "verified": true
+    },
+    "funnel-diagnosis.json": {
+      "sha256": "e1de939d557ca9edb1a0e40df60fb13df655ac1d2687d142c2049820d17c5983",
+      "verified": true
+    },
+    "terminal-log-counters.json": {
+      "sha256": "07cf5153c3fa4f8a40aa7d6bcf3b80523246aac7166cdb93b78a8b82dbcae0f1",
+      "verified": true
+    },
+    "retained-cache-index.json": {
+      "sha256": "b08aaf37b9ac29875bb702376f552aadc16d6a5030347579212821695e3aca15",
+      "verified": true
+    },
+    "retained-classifications.offline.json": {
+      "sha256": "65e30fbec03585cbb60477d9d370a11d3bdaf7e3e72dc447f3efd4ef9bf4c1f8",
+      "verified": true
+    },
+    "retained-public-entry.json": {
+      "sha256": "d9e331ab1cf84cfd7d6ade8890ac83970f4d49df5b5acdca6cf8c417cab2578e",
+      "verified": true
+    },
+    "replay_walker_stop.py": {
+      "sha256": "34a75af13cf38322f69071b2cba73e9f39d371fcd5d25d7881b0018d5a2bd307",
+      "verified": true
+    },
+    "replay_caller_boundary.py": {
+      "sha256": "2b98be29f8e3eaf2c6739b215410c6f8e4dd9caace47121fbea4c6878b928193",
+      "verified": true
+    },
+    "walker-stop.offline.json": {
+      "sha256": "7697c140061f13d1a241b49a73a67600033b06aea71e3e0db8442a53675208f0",
+      "verified": true
+    },
+    "caller-boundary.offline.json": {
+      "sha256": "9e71f8c76f43052a9727fb9b829e184c46bb80205f235d0873fc78af1e2ef415",
+      "verified": true
+    },
+    "replay-walker-final.log": {
+      "sha256": "0b9122b87d990a58d5aac04137c224bc69684ac775911c14a0f4bca1d22ab784",
+      "verified": true
+    },
+    "replay-caller.log": {
+      "sha256": "6d98f73dc7c92cce4862862cf415c0bed4114caacb94016702dd417ab56ed8cf",
+      "verified": true
+    },
+    "terminal/capture.json": {
+      "sha256": "a1fa591273ddd49e02fb47304b4c7d69639c38487119691e840e7d257ab9199d",
+      "verified": true
+    },
+    "terminal/groningen.budget.json": {
+      "sha256": "56a29d14ac0a8d3f66e6a9c4a9cb7de12360a4cf7bce51be287bc2c8a9bfebaf",
+      "verified": true
+    },
+    "terminal/groningen.json": {
+      "sha256": "cf2da49aa99c634b451a5385a5a80ce5d294a1e2e5a769894bc1238a5de54566",
+      "verified": true
+    },
+    "terminal/groningen.log": {
+      "sha256": "f234bf300a6d77c209d2e8ea7349a2ab21ee7b15641438d2096aee588770e346",
+      "verified": true
+    }
+  }
+}

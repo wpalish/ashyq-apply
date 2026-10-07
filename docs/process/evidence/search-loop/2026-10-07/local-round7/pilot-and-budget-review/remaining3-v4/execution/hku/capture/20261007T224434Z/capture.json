@@ -1,0 +1,134 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "7277c154bda838688268b7a07d4286ed8f4688ce",
+  "captured_at": "20261007T224434Z",
+  "mode": "live",
+  "config": {
+    "search_provider": "exa_mcp",
+    "seconds_per_case": 120,
+    "max_fetcher_calls_per_case": 60,
+    "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+    "search_before_navigation": false,
+    "site_branding_identity": false,
+    "subject_phrase_match": false,
+    "programme_identity_before_funding": false,
+    "shared_query_budget": true,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "browser_enabled": false,
+    "cohort": [
+      "hku"
+    ],
+    "selection": "curated",
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+    "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+    "strict_expert_budget": true,
+    "max_search_queries_per_case": 6,
+    "cold_fetcher_reads": true,
+    "child_active_seconds": 120,
+    "finalization_reserve_ms": 3000,
+    "source_work_deadline_ms": 117000,
+    "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+    "parent_process_reserve_seconds": 15,
+    "parent_process_timeout_seconds": 135,
+    "case_budgets": {
+      "hku": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 3000,
+        "source_work_deadline_ms": 117000,
+        "fetcher_calls": 28,
+        "search_queries": 6,
+        "blocked_search_queries": 0,
+        "network_http_requests": 26,
+        "elapsed_ms": 59837,
+        "stop_reason": null,
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 60.17648025008384,
+        "process_error": null,
+        "active_checkpoint_available": true
+      }
+    },
+    "batch_stop_reason": null,
+    "batch_attempted_case_ids": [
+      "hku"
+    ],
+    "batch_completed_case_ids": [
+      "hku"
+    ],
+    "batch_remaining_case_ids": []
+  },
+  "observations": [
+    {
+      "case_id": "hku",
+      "programme_urls": [
+        "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta"
+      ],
+      "ranked_urls": [],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 28,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 59.83764862501994,
+        "cost_usd": null,
+        "human_review_required": null,
+        "document_reads": null,
+        "document_seconds": null,
+        "document_stop": null
+      },
+      "page_outcomes": [
+        {
+          "category": "classifier-rejected",
+          "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta",
+          "page_type": "unknown",
+          "detail": "classified as unknown; no requirement can be read from this kind of page. title='6200 Computing and Data Science (Delta+) - HKU School of Computing and Data Scie' signals='funding page with 0 substantive signals and no clear award name' chars=388 degrees=[]",
+          "characters": 388
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://admissions.hku.hk/",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://admissions.hku.hk/fees-and-scholarships/fees",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://admissions.hku.hk/fees-and-scholarships/scholarships",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta",
+          "page_type": "unknown",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        }
+      ],
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,1436 @@
+{
+  "kind": "read_only_source_protocol_inputs",
+  "read_at_utc": "2026-10-07T22:40:49.281240+00:00",
+  "files": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/scripts/canary_discovery.py": {
+      "sha256": "37f60bcfcafda9b33f87285141dedae8b66c65dd6b0518ed7457cfece404de70",
+      "bytes": 31958,
+      "anchors": {
+        "canary_profile": {
+          "line": 109,
+          "end_line": 137
+        },
+        "FetchAudit": {
+          "line": 140,
+          "end_line": 167
+        },
+        "FetchAudit.__init__": {
+          "line": 149,
+          "end_line": 151
+        },
+        "FetchAudit.install": {
+          "line": 153,
+          "end_line": 167
+        },
+        "FetchAudit.install.audited": {
+          "line": 156,
+          "end_line": 164
+        },
+        "CanaryRunner": {
+          "line": 170,
+          "end_line": 185
+        },
+        "CanaryRunner.__init__": {
+          "line": 173,
+          "end_line": 176
+        },
+        "CanaryRunner._make_fetcher": {
+          "line": 178,
+          "end_line": 179
+        },
+        "CanaryRunner._make_discovery_adapter": {
+          "line": 181,
+          "end_line": 185
+        },
+        "page_outcomes": {
+          "line": 200,
+          "end_line": 212
+        },
+        "false_positives": {
+          "line": 218,
+          "end_line": 324
+        },
+        "false_positives.flag": {
+          "line": 228,
+          "end_line": 229
+        },
+        "select_registry_entries": {
+          "line": 334,
+          "end_line": 349
+        },
+        "select_catalogue_entries": {
+          "line": 352,
+          "end_line": 372
+        },
+        "recall_metrics": {
+          "line": 375,
+          "end_line": 394
+        },
+        "run_canary": {
+          "line": 397,
+          "end_line": 622
+        },
+        "markdown_table": {
+          "line": 625,
+          "end_line": 641
+        },
+        "markdown_report": {
+          "line": 644,
+          "end_line": 660
+        },
+        "check_seeds": {
+          "line": 663,
+          "end_line": 689
+        },
+        "main": {
+          "line": 692,
+          "end_line": 770
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py": {
+      "sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+      "bytes": 58549,
+      "anchors": {
+        "_ExpertBudget": {
+          "line": 80,
+          "end_line": 218
+        },
+        "_ExpertBudget.source_work_deadline_ms": {
+          "line": 100,
+          "end_line": 101
+        },
+        "_ExpertBudget.active_time_basis": {
+          "line": 104,
+          "end_line": 111
+        },
+        "_ExpertBudget.remaining": {
+          "line": 113,
+          "end_line": 124
+        },
+        "_ExpertBudget.before_fetch": {
+          "line": 126,
+          "end_line": 132
+        },
+        "_ExpertBudget.before_search": {
+          "line": 134,
+          "end_line": 145
+        },
+        "_ExpertBudget._check_provider_stop": {
+          "line": 147,
+          "end_line": 157
+        },
+        "_ExpertBudget.failed_search": {
+          "line": 159,
+          "end_line": 199
+        },
+        "_ExpertBudget.snapshot": {
+          "line": 201,
+          "end_line": 218
+        },
+        "_jev_shadow": {
+          "line": 227,
+          "end_line": 264
+        },
+        "_jev_shadow.rank": {
+          "line": 257,
+          "end_line": 258
+        },
+        "capture_one": {
+          "line": 271,
+          "end_line": 659
+        },
+        "capture_one.budget_checkpoint": {
+          "line": 353,
+          "end_line": 358
+        },
+        "capture_one.checkpoint": {
+          "line": 360,
+          "end_line": 371
+        },
+        "capture_one.final_checkpoint": {
+          "line": 373,
+          "end_line": 378
+        },
+        "capture_one.counted_for": {
+          "line": 398,
+          "end_line": 402
+        },
+        "capture_one.counted_for.counted": {
+          "line": 399,
+          "end_line": 400
+        },
+        "capture_one.counted_search": {
+          "line": 404,
+          "end_line": 435
+        },
+        "capture_one.counted_request": {
+          "line": 439,
+          "end_line": 446
+        },
+        "capture_one.observed_confirm": {
+          "line": 448,
+          "end_line": 457
+        },
+        "capture_one.ObservedRunner": {
+          "line": 459,
+          "end_line": 570
+        },
+        "capture_one.ObservedRunner._make_fetcher": {
+          "line": 460,
+          "end_line": 517
+        },
+        "capture_one.ObservedRunner._make_fetcher.bounded": {
+          "line": 467,
+          "end_line": 514
+        },
+        "capture_one.ObservedRunner.run_to_decision": {
+          "line": 519,
+          "end_line": 538
+        },
+        "capture_one.ObservedRunner.record_claims": {
+          "line": 540,
+          "end_line": 570
+        },
+        "capture_one.documents_stage": {
+          "line": 572,
+          "end_line": 602
+        },
+        "main": {
+          "line": 662,
+          "end_line": 1278
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/mapping.py": {
+      "sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+      "bytes": 11675,
+      "anchors": {
+        "evidence_scope": {
+          "line": 44,
+          "end_line": 85
+        },
+        "normalize_claim": {
+          "line": 94,
+          "end_line": 119
+        },
+        "structured_key_matches": {
+          "line": 122,
+          "end_line": 130
+        },
+        "normalize_subject_claims": {
+          "line": 168,
+          "end_line": 270
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/jobs/store.py": {
+      "sha256": "fbf69acb386db032beb64bb9a59af9ee43f75730d0037124959714faec1264cc",
+      "bytes": 18143,
+      "anchors": {
+        "worker_identity": {
+          "line": 40,
+          "end_line": 42
+        },
+        "backoff_for": {
+          "line": 45,
+          "end_line": 47
+        },
+        "EnqueueResult": {
+          "line": 51,
+          "end_line": 54
+        },
+        "JobStore": {
+          "line": 57,
+          "end_line": 439
+        },
+        "JobStore.__init__": {
+          "line": 60,
+          "end_line": 73
+        },
+        "JobStore.owns": {
+          "line": 75,
+          "end_line": 85
+        },
+        "JobStore.enqueue": {
+          "line": 89,
+          "end_line": 142
+        },
+        "JobStore.claim": {
+          "line": 146,
+          "end_line": 198
+        },
+        "JobStore.heartbeat": {
+          "line": 200,
+          "end_line": 218
+        },
+        "JobStore.complete": {
+          "line": 220,
+          "end_line": 245
+        },
+        "JobStore.fail": {
+          "line": 247,
+          "end_line": 292
+        },
+        "JobStore.mark_cancelled": {
+          "line": 294,
+          "end_line": 317
+        },
+        "JobStore.cancel": {
+          "line": 319,
+          "end_line": 346
+        },
+        "JobStore.is_cancel_requested": {
+          "line": 348,
+          "end_line": 351
+        },
+        "JobStore.reap_expired": {
+          "line": 355,
+          "end_line": 423
+        },
+        "JobStore.get": {
+          "line": 427,
+          "end_line": 428
+        },
+        "JobStore.for_run": {
+          "line": 430,
+          "end_line": 435
+        },
+        "JobStore.counts": {
+          "line": 437,
+          "end_line": 439
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/jobs/worker.py": {
+      "sha256": "491f5ccdeadd3556ad4e5bf6bfc2b4578207ef2cce129eb2fcd57b4b4e0e6681",
+      "bytes": 20885,
+      "anchors": {
+        "Worker": {
+          "line": 36,
+          "end_line": 363
+        },
+        "Worker.__init__": {
+          "line": 37,
+          "end_line": 42
+        },
+        "Worker.request_stop": {
+          "line": 46,
+          "end_line": 50
+        },
+        "Worker.run_forever": {
+          "line": 52,
+          "end_line": 85
+        },
+        "Worker._run_and_release": {
+          "line": 87,
+          "end_line": 97
+        },
+        "Worker.reap": {
+          "line": 101,
+          "end_line": 104
+        },
+        "Worker.claim_one": {
+          "line": 106,
+          "end_line": 110
+        },
+        "Worker.execute": {
+          "line": 114,
+          "end_line": 159
+        },
+        "Worker._beat": {
+          "line": 161,
+          "end_line": 178
+        },
+        "Worker._schedule_recheck": {
+          "line": 180,
+          "end_line": 220
+        },
+        "Worker._complete_runless": {
+          "line": 222,
+          "end_line": 234
+        },
+        "Worker._dispatch": {
+          "line": 236,
+          "end_line": 363
+        },
+        "wait_for_schema": {
+          "line": 371,
+          "end_line": 392
+        },
+        "reconcile_startup": {
+          "line": 395,
+          "end_line": 468
+        },
+        "main": {
+          "line": 471,
+          "end_line": 495
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/db.py": {
+      "sha256": "e3fcdebae0e284e9a2ac7e1ef539c58054d4f12210d9683511b99dcb826bc319",
+      "bytes": 5783,
+      "anchors": {
+        "_sqlite_pragmas": {
+          "line": 45,
+          "end_line": 50
+        },
+        "SchemaOutOfDate": {
+          "line": 59,
+          "end_line": 60
+        },
+        "_alembic_config": {
+          "line": 63,
+          "end_line": 72
+        },
+        "head_revision": {
+          "line": 75,
+          "end_line": 78
+        },
+        "current_revision": {
+          "line": 81,
+          "end_line": 86
+        },
+        "migrate_to_head": {
+          "line": 89,
+          "end_line": 93
+        },
+        "assert_at_head": {
+          "line": 96,
+          "end_line": 115
+        },
+        "init_db": {
+          "line": 118,
+          "end_line": 143
+        },
+        "create_all_for_tests": {
+          "line": 146,
+          "end_line": 153
+        },
+        "session_scope": {
+          "line": 157,
+          "end_line": 166
+        },
+        "get_session": {
+          "line": 169,
+          "end_line": 175
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py": {
+      "sha256": "686a6961964eb020056cba8b80f51c3cee622d2e6d62e63194b7d520e55fd71f",
+      "bytes": 81463,
+      "anchors": {
+        "_page_outcome_line": {
+          "line": 91,
+          "end_line": 101
+        },
+        "RunCancelled": {
+          "line": 104,
+          "end_line": 105
+        },
+        "LeaseLost": {
+          "line": 108,
+          "end_line": 114
+        },
+        "ResearchRunner": {
+          "line": 117,
+          "end_line": 1446
+        },
+        "ResearchRunner.__init__": {
+          "line": 120,
+          "end_line": 154
+        },
+        "ResearchRunner._make_fetcher": {
+          "line": 158,
+          "end_line": 168
+        },
+        "ResearchRunner._make_browser": {
+          "line": 170,
+          "end_line": 175
+        },
+        "ResearchRunner._make_discovery_adapter": {
+          "line": 177,
+          "end_line": 189
+        },
+        "ResearchRunner._audit": {
+          "line": 191,
+          "end_line": 201
+        },
+        "ResearchRunner._save": {
+          "line": 203,
+          "end_line": 237
+        },
+        "ResearchRunner._check_cancelled": {
+          "line": 239,
+          "end_line": 263
+        },
+        "ResearchRunner._live_claim_moments": {
+          "line": 265,
+          "end_line": 290
+        },
+        "ResearchRunner.earliest_recheck": {
+          "line": 292,
+          "end_line": 300
+        },
+        "ResearchRunner._noop_recheck_moment": {
+          "line": 302,
+          "end_line": 314
+        },
+        "ResearchRunner._arm_recheck": {
+          "line": 316,
+          "end_line": 324
+        },
+        "ResearchRunner.recheck_stale": {
+          "line": 326,
+          "end_line": 357
+        },
+        "ResearchRunner.run_to_decision": {
+          "line": 361,
+          "end_line": 420
+        },
+        "ResearchRunner._maybe": {
+          "line": 422,
+          "end_line": 428
+        },
+        "ResearchRunner._academic_year": {
+          "line": 430,
+          "end_line": 439
+        },
+        "ResearchRunner._transition": {
+          "line": 441,
+          "end_line": 443
+        },
+        "ResearchRunner._stage_validate": {
+          "line": 447,
+          "end_line": 460
+        },
+        "ResearchRunner._stage_discover": {
+          "line": 464,
+          "end_line": 504
+        },
+        "ResearchRunner._stage_verify": {
+          "line": 508,
+          "end_line": 691
+        },
+        "ResearchRunner._stage_funding": {
+          "line": 695,
+          "end_line": 917
+        },
+        "ResearchRunner._stage_assess": {
+          "line": 921,
+          "end_line": 1083
+        },
+        "ResearchRunner.collect_documents": {
+          "line": 1087,
+          "end_line": 1194
+        },
+        "ResearchRunner._record_diagnostics": {
+          "line": 1196,
+          "end_line": 1205
+        },
+        "ResearchRunner._record_page_outcomes": {
+          "line": 1207,
+          "end_line": 1225
+        },
+        "ResearchRunner._add_unresolved": {
+          "line": 1227,
+          "end_line": 1246
+        },
+        "ResearchRunner._rows": {
+          "line": 1250,
+          "end_line": 1256
+        },
+        "ResearchRunner._persist_result": {
+          "line": 1258,
+          "end_line": 1305
+        },
+        "ResearchRunner._update_result": {
+          "line": 1307,
+          "end_line": 1328
+        },
+        "ResearchRunner._replace_evidence": {
+          "line": 1330,
+          "end_line": 1345
+        },
+        "ResearchRunner._merge_document_claims": {
+          "line": 1347,
+          "end_line": 1416
+        },
+        "ResearchRunner._store_claims": {
+          "line": 1418,
+          "end_line": 1434
+        },
+        "ResearchRunner._store_conflicts": {
+          "line": 1436,
+          "end_line": 1446
+        },
+        "_document_claim_key": {
+          "line": 1452,
+          "end_line": 1457
+        },
+        "_document_subject": {
+          "line": 1460,
+          "end_line": 1472
+        },
+        "_to_out": {
+          "line": 1475,
+          "end_line": 1481
+        },
+        "_from_out": {
+          "line": 1484,
+          "end_line": 1490
+        },
+        "_check": {
+          "line": 1493,
+          "end_line": 1503
+        },
+        "_scholarship_eligibility": {
+          "line": 1506,
+          "end_line": 1602
+        },
+        "_applicant_eligible": {
+          "line": 1605,
+          "end_line": 1618
+        },
+        "_explanation_component": {
+          "line": 1621,
+          "end_line": 1631
+        },
+        "applicant_academic_year": {
+          "line": 1647,
+          "end_line": 1654
+        },
+        "_completeness": {
+          "line": 1667,
+          "end_line": 1706
+        },
+        "_completeness.has_cost_projection": {
+          "line": 1676,
+          "end_line": 1697
+        },
+        "store_result": {
+          "line": 1734,
+          "end_line": 1746
+        },
+        "apply_fit_labels": {
+          "line": 1749,
+          "end_line": 1764
+        },
+        "_fit_label": {
+          "line": 1767,
+          "end_line": 1790
+        },
+        "_previous_cycle": {
+          "line": 1799,
+          "end_line": 1809
+        },
+        "_as_date": {
+          "line": 1812,
+          "end_line": 1814
+        },
+        "_claim_is_stale": {
+          "line": 1817,
+          "end_line": 1824
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/fetching.py": {
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "bytes": 47727,
+      "anchors": {
+        "_resolve_checked": {
+          "line": 77,
+          "end_line": 79
+        },
+        "_pinned_request": {
+          "line": 97,
+          "end_line": 117
+        },
+        "PIILeakError": {
+          "line": 120,
+          "end_line": 121
+        },
+        "same_source_site": {
+          "line": 129,
+          "end_line": 142
+        },
+        "FetchResult": {
+          "line": 146,
+          "end_line": 174
+        },
+        "FetchResult.ok": {
+          "line": 169,
+          "end_line": 170
+        },
+        "FetchResult.is_pdf": {
+          "line": 173,
+          "end_line": 174
+        },
+        "ResponseCache": {
+          "line": 177,
+          "end_line": 237
+        },
+        "ResponseCache.__init__": {
+          "line": 180,
+          "end_line": 183
+        },
+        "ResponseCache._paths": {
+          "line": 185,
+          "end_line": 188
+        },
+        "ResponseCache.get": {
+          "line": 190,
+          "end_line": 215
+        },
+        "ResponseCache.put": {
+          "line": 217,
+          "end_line": 237
+        },
+        "_FractionalCrawlDelayParser": {
+          "line": 240,
+          "end_line": 304
+        },
+        "_FractionalCrawlDelayParser.parse": {
+          "line": 257,
+          "end_line": 304
+        },
+        "_FractionalCrawlDelayParser.parse.close_group": {
+          "line": 264,
+          "end_line": 268
+        },
+        "_RobotsUnreachable": {
+          "line": 307,
+          "end_line": 308
+        },
+        "RobotsPolicy": {
+          "line": 311,
+          "end_line": 409
+        },
+        "RobotsPolicy.__init__": {
+          "line": 314,
+          "end_line": 326
+        },
+        "RobotsPolicy.allowed": {
+          "line": 328,
+          "end_line": 358
+        },
+        "RobotsPolicy.crawl_delay": {
+          "line": 360,
+          "end_line": 370
+        },
+        "RobotsPolicy._load": {
+          "line": 372,
+          "end_line": 409
+        },
+        "find_pii": {
+          "line": 429,
+          "end_line": 440
+        },
+        "assert_no_pii": {
+          "line": 443,
+          "end_line": 456
+        },
+        "_content_hash": {
+          "line": 462,
+          "end_line": 481
+        },
+        "_refusal": {
+          "line": 484,
+          "end_line": 496
+        },
+        "Fetcher": {
+          "line": 499,
+          "end_line": 1107
+        },
+        "Fetcher.__init__": {
+          "line": 502,
+          "end_line": 543
+        },
+        "Fetcher.attach_renderer": {
+          "line": 545,
+          "end_line": 552
+        },
+        "Fetcher._send_to_any_address": {
+          "line": 554,
+          "end_line": 584
+        },
+        "Fetcher._request_with_redirects": {
+          "line": 586,
+          "end_line": 658
+        },
+        "Fetcher._request_one_hop": {
+          "line": 660,
+          "end_line": 689
+        },
+        "Fetcher._request_one_hop.exchange": {
+          "line": 674,
+          "end_line": 685
+        },
+        "Fetcher._redirect_policy": {
+          "line": 691,
+          "end_line": 727
+        },
+        "Fetcher._read_response": {
+          "line": 729,
+          "end_line": 814
+        },
+        "Fetcher._maybe_render": {
+          "line": 816,
+          "end_line": 852
+        },
+        "Fetcher.__aenter__": {
+          "line": 854,
+          "end_line": 867
+        },
+        "Fetcher.__aexit__": {
+          "line": 869,
+          "end_line": 872
+        },
+        "Fetcher._semaphore": {
+          "line": 874,
+          "end_line": 877
+        },
+        "Fetcher._space_requests": {
+          "line": 879,
+          "end_line": 886
+        },
+        "Fetcher._fetch_fixture": {
+          "line": 888,
+          "end_line": 930
+        },
+        "Fetcher.get": {
+          "line": 932,
+          "end_line": 951
+        },
+        "Fetcher._get": {
+          "line": 953,
+          "end_line": 1107
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/config.py": {
+      "sha256": "ee8bf0ecbd105941733da95283836844e1bee97c56db7ce59677aed33ab56539",
+      "bytes": 19393,
+      "anchors": {
+        "Settings": {
+          "line": 19,
+          "end_line": 378
+        },
+        "Settings._installed_postgres_driver": {
+          "line": 24,
+          "end_line": 29
+        },
+        "Settings.is_production": {
+          "line": 193,
+          "end_line": 194
+        },
+        "Settings.is_postgres": {
+          "line": 197,
+          "end_line": 198
+        },
+        "Settings.cors_origin_list": {
+          "line": 201,
+          "end_line": 202
+        },
+        "Settings.moderator_email_list": {
+          "line": 205,
+          "end_line": 206
+        },
+        "Settings.ensure_dirs": {
+          "line": 208,
+          "end_line": 213
+        },
+        "Settings.validate_runtime": {
+          "line": 215,
+          "end_line": 279
+        },
+        "Settings._validate_search": {
+          "line": 281,
+          "end_line": 334
+        },
+        "Settings._validate_payments": {
+          "line": 336,
+          "end_line": 378
+        },
+        "get_settings": {
+          "line": 382,
+          "end_line": 385
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/models/jobs.py": {
+      "sha256": "438fff6a82ddadd99ab956e43054f3e606f039bfc1bddf0f654ccd9edf151789",
+      "bytes": 3559,
+      "anchors": {
+        "JobStatus": {
+          "line": 27,
+          "end_line": 35
+        },
+        "Job": {
+          "line": 42,
+          "end_line": 86
+        },
+        "Job.__repr__": {
+          "line": 85,
+          "end_line": 86
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/models/research.py": {
+      "sha256": "03bc5f07438456d08e412ac2c0ed615464253a1a1bb9ecf3e548ff72d7aeef12",
+      "bytes": 11415,
+      "anchors": {
+        "ResearchRun": {
+          "line": 27,
+          "end_line": 113
+        },
+        "ProgramResultRow": {
+          "line": 116,
+          "end_line": 151
+        },
+        "ClaimRow": {
+          "line": 154,
+          "end_line": 194
+        },
+        "ConflictRow": {
+          "line": 197,
+          "end_line": 206
+        },
+        "AuditEvent": {
+          "line": 209,
+          "end_line": 229
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/state.py": {
+      "sha256": "ccf94b89dc44f3cbf136e6e77bb627411dda36489d214e91ac3a599446086a79",
+      "bytes": 4786,
+      "anchors": {
+        "StageState": {
+          "line": 35,
+          "end_line": 60
+        },
+        "StageState.start": {
+          "line": 44,
+          "end_line": 49
+        },
+        "StageState.finish": {
+          "line": 51,
+          "end_line": 55
+        },
+        "StageState.fail": {
+          "line": 57,
+          "end_line": 60
+        },
+        "RunState": {
+          "line": 64,
+          "end_line": 94
+        },
+        "RunState.load": {
+          "line": 68,
+          "end_line": 74
+        },
+        "RunState.dump": {
+          "line": 76,
+          "end_line": 77
+        },
+        "RunState.__getitem__": {
+          "line": 79,
+          "end_line": 80
+        },
+        "RunState.progress": {
+          "line": 82,
+          "end_line": 94
+        },
+        "is_lease_expired": {
+          "line": 97,
+          "end_line": 123
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_development_capture.py": {
+      "sha256": "33f35e3aef3cc8d869448ec89c0df8db32bf76300752dbc2337a438f039901dd",
+      "bytes": 10609,
+      "anchors": {
+        "configuration": {
+          "line": 28,
+          "end_line": 35
+        },
+        "catalogue": {
+          "line": 39,
+          "end_line": 45
+        },
+        "test_explicit_seed_selection_preserves_order_and_exports_no_seed_facts": {
+          "line": 48,
+          "end_line": 58
+        },
+        "test_invalid_explicit_selection_never_falls_back_to_registry": {
+          "line": 62,
+          "end_line": 66
+        },
+        "test_seed_canary_uses_imported_identity_without_generating_claims": {
+          "line": 70,
+          "end_line": 85
+        },
+        "test_seed_canary_uses_imported_identity_without_generating_claims.run": {
+          "line": 75,
+          "end_line": 76
+        },
+        "test_any_provider_failure_blocks_search_and_fetch_and_retains_first_cause": {
+          "line": 89,
+          "end_line": 105
+        },
+        "test_shared_stop_blocks_another_ledger_without_reset_or_network": {
+          "line": 108,
+          "end_line": 117
+        },
+        "test_shared_stop_prevents_a_later_http_hop_in_an_inflight_read": {
+          "line": 121,
+          "end_line": 145
+        },
+        "test_shared_stop_prevents_a_later_http_hop_in_an_inflight_read.run": {
+          "line": 130,
+          "end_line": 136
+        },
+        "test_explicit_catalogue_batch_preserves_requested_ids_and_stops_on_402": {
+          "line": 149,
+          "end_line": 197
+        },
+        "test_explicit_catalogue_batch_preserves_requested_ids_and_stops_on_402.child": {
+          "line": 175,
+          "end_line": 187
+        },
+        "test_preexisting_shared_stop_dispatches_no_child": {
+          "line": 201,
+          "end_line": 234
+        },
+        "test_missing_budget_checkpoint_stops_as_unmeasured_without_inferring_provider_cause": {
+          "line": 237,
+          "end_line": 262
+        },
+        "test_missing_budget_checkpoint_stops_as_unmeasured_without_inferring_provider_cause.child": {
+          "line": 248,
+          "end_line": 254
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_expert_live_budget.py": {
+      "sha256": "eeb98dcecb84a8c6cc763d7e9f401adb6731552b7d8e685b90cbf7abea9a633f",
+      "bytes": 15197,
+      "anchors": {
+        "_public_strict_configuration": {
+          "line": 25,
+          "end_line": 32
+        },
+        "_report": {
+          "line": 35,
+          "end_line": 36
+        },
+        "_Fetcher": {
+          "line": 39,
+          "end_line": 46
+        },
+        "_Fetcher.__init__": {
+          "line": 40,
+          "end_line": 42
+        },
+        "_Fetcher.get": {
+          "line": 44,
+          "end_line": 46
+        },
+        "_output": {
+          "line": 49,
+          "end_line": 50
+        },
+        "test_strict_capture_skips_sealed_gold_shadow_but_keeps_app_confirmation": {
+          "line": 55,
+          "end_line": 83
+        },
+        "test_strict_capture_skips_sealed_gold_shadow_but_keeps_app_confirmation.run": {
+          "line": 70,
+          "end_line": 78
+        },
+        "test_strict_get_cap_is_shared_across_fetchers_and_cache_hits": {
+          "line": 87,
+          "end_line": 113
+        },
+        "test_strict_get_cap_is_shared_across_fetchers_and_cache_hits.run": {
+          "line": 95,
+          "end_line": 102
+        },
+        "test_legacy_cache_hits_keep_their_existing_free_page_accounting": {
+          "line": 117,
+          "end_line": 134
+        },
+        "test_legacy_cache_hits_keep_their_existing_free_page_accounting.run": {
+          "line": 124,
+          "end_line": 128
+        },
+        "test_search_budget_wraps_cached_provider_across_discovery_and_funding": {
+          "line": 139,
+          "end_line": 197
+        },
+        "test_search_budget_wraps_cached_provider_across_discovery_and_funding.search": {
+          "line": 154,
+          "end_line": 158
+        },
+        "test_search_budget_wraps_cached_provider_across_discovery_and_funding.run": {
+          "line": 164,
+          "end_line": 183
+        },
+        "test_strict_active_deadline_cancels_pipeline_and_keeps_budget_checkpoint": {
+          "line": 201,
+          "end_line": 224
+        },
+        "test_strict_active_deadline_cancels_pipeline_and_keeps_budget_checkpoint.run": {
+          "line": 207,
+          "end_line": 214
+        },
+        "test_strict_parent_forwards_budget_and_stops_cohort_after_recorded_429": {
+          "line": 228,
+          "end_line": 276
+        },
+        "test_strict_parent_forwards_budget_and_stops_cohort_after_recorded_429.child": {
+          "line": 241,
+          "end_line": 262
+        },
+        "test_strict_child_receives_full_active_budget_and_resets_cached_settings": {
+          "line": 279,
+          "end_line": 305
+        },
+        "test_strict_child_receives_full_active_budget_and_resets_cached_settings.capture": {
+          "line": 285,
+          "end_line": 286
+        },
+        "test_strict_cli_rejects_expanded_or_unconfigured_budget_before_child": {
+          "line": 316,
+          "end_line": 333
+        },
+        "test_strict_parent_hard_timeout_keeps_active_and_process_clocks_distinct": {
+          "line": 337,
+          "end_line": 367
+        },
+        "test_strict_parent_hard_timeout_keeps_active_and_process_clocks_distinct.child": {
+          "line": 349,
+          "end_line": 356
+        },
+        "test_strict_implicit_exa_configuration_requires_key_before_starting_children": {
+          "line": 370,
+          "end_line": 389
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_expert_baseline_finalization.py": {
+      "sha256": "ffd34bbe963a5fe1a611c85d013bd9ec8ae6b2d1e995a2ac8df6320f23902ec2",
+      "bytes": 13491,
+      "anchors": {
+        "_synthetic_configuration": {
+          "line": 22,
+          "end_line": 32
+        },
+        "_Clock": {
+          "line": 35,
+          "end_line": 40
+        },
+        "_Clock.__init__": {
+          "line": 36,
+          "end_line": 37
+        },
+        "_Clock.__call__": {
+          "line": 39,
+          "end_line": 40
+        },
+        "_report": {
+          "line": 43,
+          "end_line": 44
+        },
+        "_budget": {
+          "line": 47,
+          "end_line": 48
+        },
+        "test_reserve_uses_one_absolute_clock_without_clamping_the_full_budget": {
+          "line": 51,
+          "end_line": 70
+        },
+        "test_default_zero_reserve_preserves_the_full_existing_work_deadline": {
+          "line": 73,
+          "end_line": 84
+        },
+        "test_pipeline_setup_consumes_the_same_source_work_clock": {
+          "line": 88,
+          "end_line": 119
+        },
+        "test_pipeline_setup_consumes_the_same_source_work_clock.observation": {
+          "line": 95,
+          "end_line": 97
+        },
+        "test_pipeline_setup_consumes_the_same_source_work_clock.wait_for": {
+          "line": 101,
+          "end_line": 103
+        },
+        "test_pipeline_setup_consumes_the_same_source_work_clock.run": {
+          "line": 105,
+          "end_line": 107
+        },
+        "test_cancellation_cleanup_overrun_remains_recorded_without_a_fresh_allowance": {
+          "line": 123,
+          "end_line": 159
+        },
+        "test_cancellation_cleanup_overrun_remains_recorded_without_a_fresh_allowance.wait_for": {
+          "line": 132,
+          "end_line": 134
+        },
+        "test_cancellation_cleanup_overrun_remains_recorded_without_a_fresh_allowance.run": {
+          "line": 136,
+          "end_line": 142
+        },
+        "test_slow_pre_call_checkpoint_cannot_start_io_after_the_source_deadline": {
+          "line": 164,
+          "end_line": 215
+        },
+        "test_slow_pre_call_checkpoint_cannot_start_io_after_the_source_deadline.Fetcher": {
+          "line": 174,
+          "end_line": 180
+        },
+        "test_slow_pre_call_checkpoint_cannot_start_io_after_the_source_deadline.Fetcher.__init__": {
+          "line": 175,
+          "end_line": 176
+        },
+        "test_slow_pre_call_checkpoint_cannot_start_io_after_the_source_deadline.Fetcher.get": {
+          "line": 178,
+          "end_line": 180
+        },
+        "test_slow_pre_call_checkpoint_cannot_start_io_after_the_source_deadline.search": {
+          "line": 182,
+          "end_line": 184
+        },
+        "test_slow_pre_call_checkpoint_cannot_start_io_after_the_source_deadline.write": {
+          "line": 188,
+          "end_line": 192
+        },
+        "test_slow_pre_call_checkpoint_cannot_start_io_after_the_source_deadline.run": {
+          "line": 194,
+          "end_line": 202
+        },
+        "test_successful_output_and_first_final_checkpoint_cost_remain_in_the_clock": {
+          "line": 219,
+          "end_line": 255
+        },
+        "test_successful_output_and_first_final_checkpoint_cost_remain_in_the_clock.run": {
+          "line": 226,
+          "end_line": 230
+        },
+        "test_successful_output_and_first_final_checkpoint_cost_remain_in_the_clock.write": {
+          "line": 234,
+          "end_line": 243
+        },
+        "test_invalid_reserve_is_rejected_before_any_parent_side_effect": {
+          "line": 268,
+          "end_line": 281
+        },
+        "test_parent_forwards_reserve_and_advertises_the_unchanged_full_caps": {
+          "line": 284,
+          "end_line": 324
+        },
+        "test_parent_forwards_reserve_and_advertises_the_unchanged_full_caps.child": {
+          "line": 304,
+          "end_line": 312
+        },
+        "test_child_receives_the_reserve_with_the_full_case_clock": {
+          "line": 327,
+          "end_line": 358
+        },
+        "test_child_receives_the_reserve_with_the_full_case_clock.capture": {
+          "line": 332,
+          "end_line": 333
+        },
+        "test_capture_api_rejects_invalid_reserve_before_output": {
+          "line": 365,
+          "end_line": 378
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_benchmark_documents_stage.py": {
+      "sha256": "e46f5b6c0f21934b67105b94dc9ee42ad0ed133ec46ffc6ee50ac8f741f062e3",
+      "bytes": 6320,
+      "anchors": {
+        "_public_strict_configuration": {
+          "line": 22,
+          "end_line": 29
+        },
+        "_Fetcher": {
+          "line": 32,
+          "end_line": 39
+        },
+        "_Fetcher.__init__": {
+          "line": 33,
+          "end_line": 35
+        },
+        "_Fetcher.get": {
+          "line": 37,
+          "end_line": 39
+        },
+        "_Query": {
+          "line": 42,
+          "end_line": 50
+        },
+        "_Query.__init__": {
+          "line": 43,
+          "end_line": 44
+        },
+        "_Query.filter": {
+          "line": 46,
+          "end_line": 47
+        },
+        "_Query.__iter__": {
+          "line": 49,
+          "end_line": 50
+        },
+        "_Session": {
+          "line": 53,
+          "end_line": 62
+        },
+        "_Session.__init__": {
+          "line": 54,
+          "end_line": 56
+        },
+        "_Session.query": {
+          "line": 58,
+          "end_line": 59
+        },
+        "_Session.flush": {
+          "line": 61,
+          "end_line": 62
+        },
+        "_arrange": {
+          "line": 65,
+          "end_line": 89
+        },
+        "_arrange.decide": {
+          "line": 74,
+          "end_line": 75
+        },
+        "_arrange.run": {
+          "line": 80,
+          "end_line": 86
+        },
+        "test_documents_stage_reads_outside_the_decision_budget": {
+          "line": 93,
+          "end_line": 114
+        },
+        "test_documents_stage_reads_outside_the_decision_budget.documents": {
+          "line": 96,
+          "end_line": 98
+        },
+        "test_documents_stage_stops_on_its_own_clock": {
+          "line": 118,
+          "end_line": 131
+        },
+        "test_documents_stage_stops_on_its_own_clock.documents": {
+          "line": 121,
+          "end_line": 123
+        },
+        "test_no_documents_stage_by_default": {
+          "line": 135,
+          "end_line": 145
+        },
+        "test_no_documents_stage_by_default.documents": {
+          "line": 138,
+          "end_line": 139
+        },
+        "test_documents_stage_runs_after_the_decision_stage_runs_out_of_clock": {
+          "line": 149,
+          "end_line": 170
+        },
+        "test_documents_stage_runs_after_the_decision_stage_runs_out_of_clock.documents": {
+          "line": 152,
+          "end_line": 154
+        },
+        "test_documents_stage_runs_after_the_decision_stage_runs_out_of_clock.slow_decide": {
+          "line": 158,
+          "end_line": 160
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_subject_phrase_capture.py": {
+      "sha256": "d051c525527f397eb4889e6195d6f132015feb4439875211d20e2117ae773082",
+      "bytes": 3834,
+      "anchors": {
+        "configuration": {
+          "line": 19,
+          "end_line": 25
+        },
+        "test_capture_records_effective_rules_and_forwards_explicit_subject_choice": {
+          "line": 33,
+          "end_line": 81
+        },
+        "test_capture_records_effective_rules_and_forwards_explicit_subject_choice.child": {
+          "line": 63,
+          "end_line": 72
+        },
+        "test_child_applies_subject_choice_before_the_capture": {
+          "line": 85,
+          "end_line": 113
+        },
+        "test_child_applies_subject_choice_before_the_capture.capture": {
+          "line": 108,
+          "end_line": 109
+        }
+      }
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_programme_purpose_capture.py": {
+      "sha256": "172fcbed89a25dccfa8ddac542a5de9426c1740376d74ab8405dce59c703253d",
+      "bytes": 4002,
+      "anchors": {
+        "configuration": {
+          "line": 19,
+          "end_line": 25
+        },
+        "test_capture_records_effective_rules_and_forwards_explicit_programme_choice": {
+          "line": 33,
+          "end_line": 83
+        },
+        "test_capture_records_effective_rules_and_forwards_explicit_programme_choice.child": {
+          "line": 65,
+          "end_line": 74
+        },
+        "test_child_applies_programme_choice_before_the_capture": {
+          "line": 87,
+          "end_line": 117
+        },
+        "test_child_applies_programme_choice_before_the_capture.capture": {
+          "line": 112,
+          "end_line": 113
+        }
+      }
+    }
+  },
+  "external_dependencies": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/ready-manifest.json": {
+      "sha256": "236e9a53667c86c0b14a04807492804402604d05a5a32ba670fb97915f84c2a4",
+      "bytes": 9663
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/ready-source-manifest.json": {
+      "sha256": "13ccdf181c70ae155dff194cd6df0aca51aebaf724c2f6a10987cea16d97d4d2",
+      "bytes": 3159
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/worker-busy-proposal/worker.proposed.py": {
+      "sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+      "bytes": 21474
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/receipt.json": {
+      "sha256": "45826a5bb00717d0814a3e3ebedaf1a47a6ad663e109974970e66d2c2e3b5d41",
+      "bytes": 2584
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/receipt.json": {
+      "sha256": "75d339a3a9bf16f9ca94fb1fb702ed0e329eff763d61489e714c4f7daf108a8d",
+      "bytes": 2681
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-STOP.json": {
+      "sha256": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+      "bytes": 877
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "kind": "independent_actual_pg_sqlite_worker_checkpoint_busy_review",
+  "pinned_at_utc": "2026-10-07T22:26:40.533769+00:00",
+  "accepted_boundary": "typed UniversityReadStopped(checkpoint_busy) avoids failure writer; no broader DB guarantee",
+  "worker_original_sha256": "491f5ccdeadd3556ad4e5bf6bfc2b4578207ef2cce129eb2fcd57b4b4e0e6681",
+  "worker_proposed_sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+  "readguard_v2_manifest_sha256": "236e9a53667c86c0b14a04807492804402604d05a5a32ba670fb97915f84c2a4",
+  "original_pg09_receipt_sha256": "75d339a3a9bf16f9ca94fb1fb702ed0e329eff763d61489e714c4f7daf108a8d",
+  "original_pg09_104_files_unchanged": true,
+  "baseline": {
+    "failed": 4,
+    "passed": 8,
+    "warnings": 1,
+    "seconds": 3.97,
+    "exit_code": 1
+  },
+  "proposal": {
+    "failed": 0,
+    "passed": 12,
+    "warnings": 3,
+    "seconds": 2.35,
+    "exit_code": 0
+  },
+  "actual_pg_version": "16.2",
+  "actual_sqlite_controls": true,
+  "all_four_busy_paths_real_reap_claim_token2_same_episode_cap60": true,
+  "heartbeat_cancelled_and_semaphore_released": true,
+  "own_pid13451_and_socket_gone": true,
+  "source_flag_default": false,
+  "repository_source_git_package_STOP_edits": 0,
+  "live_provider_model_http_external_db_calls": 0,
+  "STOP_sha256": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+  "artifact_sha256": {
+    "review.ru.md": "46482add67b7d1b5633129cc46ae6048f5be34f1736fe5d91472127db8bc0d64",
+    "comparison.json": "4da4bc34c421958f25adcf8c0a73996f169d84c13b09d4606c550176d71502a0",
+    "preflight.json": "6c344177058d5df733907f7dc5dc2a1bc012cc6211c2be1dbbf6b28dcbe9965e",
+    "postflight.json": "40d69ef6376857fbb60a21f74009c9f2e575d641b19a781432941f510ed573a5",
+    "lifecycle.json": "5a24c972e85bf7d8508231168745851ed650756da853513c1220d22fe9d19bd2",
+    "test_worker_busy.py": "a846dafc62e90660b40149535cbb625c002932ea30a0a20240dc630bc442636a",
+    "review_context.py": "722c0627bcdd79451e3505c626f671aaabb5eb103a5af16270708e73b304a76f",
+    "run_sql_controls.py": "7639085c4997cedb98b056e33f3e09b262ce4a50a9c06ed775783fe865c00b46",
+    "verify_import.py": "55bb02a91961edcac523ed25b028c6f2816c0a3c12d2cdd853389e8196ac0173",
+    "pytest-baseline.stdout": "a0a8aee355c4791c845d15f5b78b2b5657d2ad243263b1d57ea4cd55a81cf7f0",
+    "pytest-proposal.stdout": "0f00097657c3ab3fdf30a269231dd1f1f0cccc6c193fba97362be46322d76860",
+    "bundle-files.json": "3b8e4a56c70417e0d8503192cb87a2f55ac9d72827459c4366d2568123633aef"
+  },
+  "bundle_file_count": 110,
+  "no_launch_or_default_promotion_claim": true
+}

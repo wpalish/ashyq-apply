@@ -1,0 +1,40 @@
+{
+  "application_source": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T205152Z-check-9fb82944/source",
+  "old_fixture_sha256": "45ee64c0e93538e5c13d61be654ab0480d4a441a3ba98e00003d9a93a9b4fcde",
+  "fixed_fixture_sha256": "266ba40860a132cd047797d23fcb2396c9e0f71de36eef79296772312b313ec2",
+  "current_fixture_sha256": "45ee64c0e93538e5c13d61be654ab0480d4a441a3ba98e00003d9a93a9b4fcde",
+  "current_compatible_patch_sha256": "44a5cc8277fd8047a6a02fcdb1ba9e2ea30251da8ba1c5c225eb95a8586a6a20",
+  "results": [
+    {
+      "label": "original",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-c",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T205152Z-check-9fb82944/source/backend/pytest.ini",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/fetchresult-fixture-review/test_original_search_layer_budget_fixes.py"
+      ],
+      "exit_code": 1,
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/fetchresult-fixture-review/original.log"
+    },
+    {
+      "label": "fixed",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-c",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T205152Z-check-9fb82944/source/backend/pytest.ini",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/fetchresult-fixture-review/test_fixed_search_layer_budget_fixes.py"
+      ],
+      "exit_code": 0,
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/fetchresult-fixture-review/fixed.log"
+    }
+  ],
+  "source_edits": false,
+  "network_provider_model_calls": 0,
+  "contract": "Real FetchResult OK HTML replaces incomplete duck result; search/query/slot assertions identical."
+}

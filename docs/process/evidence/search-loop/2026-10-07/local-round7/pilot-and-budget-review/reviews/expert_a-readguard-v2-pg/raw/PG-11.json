@@ -1,0 +1,21 @@
+{
+  "original_get": 0,
+  "counter_visible_while_uncommitted": {
+    "catalogue:u-one": 0
+  },
+  "durable_after_rollback": {
+    "university_research_budget_v1": {
+      "version": 1,
+      "read_limit": 60,
+      "active_episode": "decision:308e3afb23dd423495e6e414c6ffeaa7",
+      "episodes": {
+        "decision:308e3afb23dd423495e6e414c6ffeaa7": {
+          "read_counts": {
+            "catalogue:u-one": 0
+          }
+        }
+      }
+    }
+  },
+  "explicit_rollback": true
+}

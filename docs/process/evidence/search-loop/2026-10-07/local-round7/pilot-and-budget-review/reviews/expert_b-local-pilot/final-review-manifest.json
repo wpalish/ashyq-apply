@@ -1,0 +1,61 @@
+{
+  "kind": "independent_offline_LOCAL_baseline_controller_review",
+  "pinned_at": "2026-10-07T22:20:36.820880+00:00",
+  "reviewed_controller_sha256": "051c7d39c4cbea46e61e673341ca3230aec352de14ffc4ba41d0cf5b5f244ee4",
+  "current_root_controller_matches_pin": true,
+  "artifact_sha256": {
+    "local_pilot.v1.py": "8497443b97a6a51db3d2225d716e7cbcc2f17dc2b7ab8772177cad757e8dcf90",
+    "v1-manifest.json": "261bce633bb0ba16aaaa0fc5cfaedd534fea61f07d4b63ab6bf4f6c900c297c4",
+    "review-v1.ru.md": "cb6e3bfdc17be74c44a71471115d27dd844e560793f42c3b14cc2fec5de85dde",
+    "source-and-protocol-review.json": "c037d7a5e3f196e99ccd7eb3091dc6329475d9659030061fbdc7b2d34b6212e0",
+    "test_validate_v1.py": "91b593e1ca331b8de204dc5ebb7786937fb19614510fa92a01b6f78512a2b0b4",
+    "pytest-v1-red.log": "5f181f131055feb829195541b73f8d9e3d55c6365a76ed8ad8f390f50327d3cf",
+    "local_pilot.v2-observed.py": "119f598f31d9cdd16a9ac8e4ebbeb30587910dee2f0683f75f2e4d85446f3919",
+    "test_validate_v2.red119f.py": "4a754b10a7c3b0a9443c072e7f184e64359c07c0653790b4117c392ab5118204",
+    "pytest-v2-clock.log": "7b3c07848546c759b411eee976a806f030a7ca1be89d58bce2b2e7854e9701d3",
+    "local_pilot.v2-final.py": "051c7d39c4cbea46e61e673341ca3230aec352de14ffc4ba41d0cf5b5f244ee4",
+    "test_validate_v2_final.py": "e0ebf9b262be9e4f78b313cd983d862c36919ee73a4534fc1d1cb684cdf264cb",
+    "pytest-v2-final.log": "8f475134935a1f99ed04d6f60d0ccbe78a8690df1357a3e5d3c8a5f1140c8e28",
+    "review-v2-final.ru.md": "b79a8dcacb0fa2e476140cc4c4bb1313f7c08125bada4d94a67b270baa2a85cc"
+  },
+  "verification": {
+    "final_tests": {
+      "passed": 29,
+      "seconds": 0.08,
+      "log": "pytest-v2-final.log"
+    },
+    "v1_red": {
+      "failed": 23,
+      "passed": 8,
+      "seconds": 0.11
+    },
+    "v2_intermediate_red": {
+      "failed": 3,
+      "passed": 26,
+      "seconds": 0.11,
+      "source_sha256": "119f598f31d9cdd16a9ac8e4ebbeb30587910dee2f0683f75f2e4d85446f3919"
+    },
+    "AST_parse": "passed",
+    "prepared_files_verified": 3410,
+    "executable_source_matches_prepared_full_check": true,
+    "main_static_review": true,
+    "main_executed": false,
+    "plan_prepared_by_reviewer": false,
+    "live_attempted_cases": 0,
+    "network_calls": 0,
+    "DNS_calls": 0,
+    "provider_calls": 0,
+    "model_calls": 0,
+    "Git_actions": 0,
+    "source_writes": 0,
+    "STOP_writes": 0,
+    "heldout_or_gold_used": false
+  },
+  "remaining_material_findings": [],
+  "limits": [
+    "No live/subprocess main-loop execution.",
+    "Declared snapshot files verified; runtime dependency integrity/hostile mutation not proven.",
+    "Outer package Run.step.wait has no independent startup wall timeout.",
+    "No capture score or university facts conclusion; retained schema adaptation is synthetic."
+  ]
+}

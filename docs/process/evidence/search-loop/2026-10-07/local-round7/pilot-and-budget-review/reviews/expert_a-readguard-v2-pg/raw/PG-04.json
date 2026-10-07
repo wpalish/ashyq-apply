@@ -1,0 +1,36 @@
+{
+  "saturation_prior_gets": 59,
+  "racing_refusal": [
+    {
+      "type": "UniversityReadStopped",
+      "reason": "checkpoint_busy",
+      "sqlstate": null,
+      "message": "University read allowance refused: checkpoint_busy"
+    },
+    {
+      "type": "OperationalError",
+      "reason": null,
+      "sqlstate": "55P03",
+      "message": "(psycopg.errors.LockNotAvailable) could not obtain lock on row in relation \"jobs\"\n[SQL: SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT]\n[parameters: {'id_1': '97eec4e2db324c0b850a7a3818f8fc0c', 'run_id_1': 'eda57c2169a14582af07615bf9fbf0e0', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)"
+    },
+    {
+      "type": "LockNotAvailable",
+      "reason": null,
+      "sqlstate": "55P03",
+      "message": "could not obtain lock on row in relation \"jobs\""
+    }
+  ],
+  "saturation_count": 60,
+  "concurrent_attempts": 80,
+  "concurrent_outcomes": {
+    "admitted": 25,
+    "checkpoint_busy": 55
+  },
+  "concurrent_admitted_original": 25,
+  "durable": {
+    "catalogue:u-one": 60,
+    "catalogue:concurrent": 25
+  },
+  "errors": [],
+  "retry": false
+}

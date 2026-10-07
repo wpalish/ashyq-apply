@@ -1,0 +1,892 @@
+{
+  "network_calls": 0,
+  "provider_calls": 0,
+  "model_calls": 0,
+  "repo_edits": 0,
+  "proposal_source_sha256": "ed79828af03c2ec2664705b13d1e04328c29fa5e433465cb703035dacf8135e6",
+  "script_sha256": "71d69bd329c57b3a01f79a2c3e902df97b077e56d193b897e7194beace6e1411",
+  "wits_source_url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+  "wits_body_sha256": "88d1f716c82840fa66317ff1ceb42a152439a924d7625c0d2ef18a0f315f0a87",
+  "wits_metadata_sha256": "d54f742c251cd9cd36c06ee4b89a74a7c1ca701b829b5ffa99d6cc5701096b8c",
+  "wits_metadata_content_hash": "8b22d01f5430f83d9e4e9aa90e927ee586a78c5823bbb1d89ddbedbc4d5e2a0c",
+  "wits_original_title": "Computer Science - Wits University",
+  "wits_off_on_on_off": [
+    {
+      "enabled": false,
+      "classification": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Computer Science - Wits University",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "reader": {
+        "claims": [],
+        "exists_claims": [],
+        "exists_count": 0,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+        ],
+        "page_types": [
+          [
+            "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "scholarship_index"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "category": "classifier-rejected",
+            "page_type": "scholarship_index",
+            "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='Computer Science - Wits University' signals='2 award links; no award identity of its own' chars=6834 degrees=[]",
+            "readable_chars": 6834
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science"
+        ],
+        "intake_open_count": 0
+      }
+    },
+    {
+      "enabled": true,
+      "classification": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'Computer Science - Wits University' at bachelor level"
+        ],
+        "title": "Computer Science - Wits University",
+        "subject": "Computer Science - Wits University",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "reader": {
+        "claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "Computer Science - Wits University",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'Computer Science - Wits University' covers every requested subject word"
+            },
+            "original_text_excerpt": "Computer Science - Wits University",
+            "source_url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "page_title": "Computer Science - Wits University",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T19:22:46.996008Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "Computer Science - Wits University",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'Computer Science - Wits University' covers every requested subject word"
+            },
+            "original_text_excerpt": "Computer Science - Wits University",
+            "source_url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "page_title": "Computer Science - Wits University",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T19:22:46.996008Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_count": 1,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: no statement about the application window for fall2027; intake status is unknown, not open."
+        ],
+        "page_types": [
+          [
+            "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "program_detail"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "category": "fetched-ok",
+            "page_type": "program_detail",
+            "detail": "1 claims read from this page",
+            "readable_chars": 6834
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science"
+        ],
+        "intake_open_count": 0
+      }
+    },
+    {
+      "enabled": true,
+      "classification": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'Computer Science - Wits University' at bachelor level"
+        ],
+        "title": "Computer Science - Wits University",
+        "subject": "Computer Science - Wits University",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "reader": {
+        "claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "Computer Science - Wits University",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'Computer Science - Wits University' covers every requested subject word"
+            },
+            "original_text_excerpt": "Computer Science - Wits University",
+            "source_url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "page_title": "Computer Science - Wits University",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T19:22:46.996008Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "Computer Science - Wits University",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'Computer Science - Wits University' covers every requested subject word"
+            },
+            "original_text_excerpt": "Computer Science - Wits University",
+            "source_url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "page_title": "Computer Science - Wits University",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T19:22:46.996008Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_count": 1,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: no statement about the application window for fall2027; intake status is unknown, not open."
+        ],
+        "page_types": [
+          [
+            "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "program_detail"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "category": "fetched-ok",
+            "page_type": "program_detail",
+            "detail": "1 claims read from this page",
+            "readable_chars": 6834
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science"
+        ],
+        "intake_open_count": 0
+      }
+    },
+    {
+      "enabled": false,
+      "classification": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Computer Science - Wits University",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "reader": {
+        "claims": [],
+        "exists_claims": [],
+        "exists_count": 0,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+        ],
+        "page_types": [
+          [
+            "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "scholarship_index"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "category": "classifier-rejected",
+            "page_type": "scholarship_index",
+            "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='Computer Science - Wits University' signals='2 award links; no award identity of its own' chars=6834 degrees=[]",
+            "readable_chars": 6834
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science"
+        ],
+        "intake_open_count": 0
+      }
+    }
+  ],
+  "independent_funding_reader_negatives": [
+    {
+      "case": "funding_eligibility_with_academic_conditions",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This is a funding eligibility page for enrolled students.</p><h2>Curriculum</h2><p>Applicants must have completed first-year courses and second-year modules to qualify.</p><h2>Funding opportunities</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "ab06b52aee6286c5ef3461cd183c9d1eaeec7bb04263f527616f3c00c5fa2a5d",
+      "synthetic_source_url": "https://example.edu/support/computer-science",
+      "expected_programme_exists": false,
+      "off": {
+        "claims": [],
+        "exists_claims": [],
+        "exists_count": 0,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://example.edu/support/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+        ],
+        "page_types": [
+          [
+            "https://example.edu/support/computer-science",
+            "scholarship_index"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://example.edu/support/computer-science",
+            "category": "classifier-rejected",
+            "page_type": "scholarship_index",
+            "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='BSc Computer Science' signals='2 award links; no award identity of its own' chars=232 degrees=[]",
+            "readable_chars": 232
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://example.edu/support/computer-science"
+        ],
+        "intake_open_count": 0
+      },
+      "on": {
+        "claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "BSc Computer Science",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'BSc Computer Science' covers every requested subject word"
+            },
+            "original_text_excerpt": "BSc Computer Science This is a funding eligibility page for enrolled students. Curriculum Applicants must have completed first-year courses and second-year modules to qualify. Fund",
+            "source_url": "https://example.edu/support/computer-science",
+            "page_title": "BSc Computer Science",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "BSc Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T20:28:37Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "BSc Computer Science",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'BSc Computer Science' covers every requested subject word"
+            },
+            "original_text_excerpt": "BSc Computer Science This is a funding eligibility page for enrolled students. Curriculum Applicants must have completed first-year courses and second-year modules to qualify. Fund",
+            "source_url": "https://example.edu/support/computer-science",
+            "page_title": "BSc Computer Science",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "BSc Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T20:28:37Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_count": 1,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://example.edu/support/computer-science: no statement about the application window for fall2027; intake status is unknown, not open."
+        ],
+        "page_types": [
+          [
+            "https://example.edu/support/computer-science",
+            "program_detail"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://example.edu/support/computer-science",
+            "category": "fetched-ok",
+            "page_type": "program_detail",
+            "detail": "1 claims read from this page",
+            "readable_chars": 232
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://example.edu/support/computer-science"
+        ],
+        "intake_open_count": 0
+      }
+    },
+    {
+      "case": "explicit_sibling_section_scope",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><section id=\"curriculum\"><h2>Curriculum</h2><p>Ask the office for advice.</p></section><section aria-label=\"Award eligibility\"><p>Applicants must complete first-year courses and second-year modules before applying.</p></section><h2>Scholarships</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "e4c0442b0c32bd10a82ba908eb167f841b001fe8d42a8e8c6b6d34f174e1628c",
+      "synthetic_source_url": "https://example.edu/support/computer-science",
+      "expected_programme_exists": false,
+      "off": {
+        "claims": [],
+        "exists_claims": [],
+        "exists_count": 0,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://example.edu/support/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+        ],
+        "page_types": [
+          [
+            "https://example.edu/support/computer-science",
+            "scholarship_index"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://example.edu/support/computer-science",
+            "category": "classifier-rejected",
+            "page_type": "scholarship_index",
+            "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='BSc Computer Science' signals='2 award links; no award identity of its own' chars=212 degrees=[]",
+            "readable_chars": 212
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://example.edu/support/computer-science"
+        ],
+        "intake_open_count": 0
+      },
+      "on": {
+        "claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "BSc Computer Science",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'BSc Computer Science' covers every requested subject word"
+            },
+            "original_text_excerpt": "BSc Computer Science BSc Computer Science Curriculum Ask the office for advice. Applicants must complete first-year courses and second-year modules before applying. Scholarships Al",
+            "source_url": "https://example.edu/support/computer-science",
+            "page_title": "BSc Computer Science",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "BSc Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T20:28:37Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "BSc Computer Science",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'BSc Computer Science' covers every requested subject word"
+            },
+            "original_text_excerpt": "BSc Computer Science BSc Computer Science Curriculum Ask the office for advice. Applicants must complete first-year courses and second-year modules before applying. Scholarships Al",
+            "source_url": "https://example.edu/support/computer-science",
+            "page_title": "BSc Computer Science",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "BSc Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T20:28:37Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_count": 1,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://example.edu/support/computer-science: no statement about the application window for fall2027; intake status is unknown, not open."
+        ],
+        "page_types": [
+          [
+            "https://example.edu/support/computer-science",
+            "program_detail"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://example.edu/support/computer-science",
+            "category": "fetched-ok",
+            "page_type": "program_detail",
+            "detail": "1 claims read from this page",
+            "readable_chars": 212
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://example.edu/support/computer-science"
+        ],
+        "intake_open_count": 0
+      }
+    },
+    {
+      "case": "role_navigation_academic_copy",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><div role=\"navigation\"><h2>Curriculum</h2><p>First-year courses and second-year modules.</p></div><h2>Scholarships</h2><p>View our award opportunities for enrolled students.</p><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "9edc20f2c7fe3b3a984db848d099ffbadb867a800d787c8279b59fad88bfe065",
+      "synthetic_source_url": "https://example.edu/support/computer-science",
+      "expected_programme_exists": false,
+      "off": {
+        "claims": [],
+        "exists_claims": [],
+        "exists_count": 0,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://example.edu/support/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+        ],
+        "page_types": [
+          [
+            "https://example.edu/support/computer-science",
+            "scholarship_index"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://example.edu/support/computer-science",
+            "category": "classifier-rejected",
+            "page_type": "scholarship_index",
+            "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='BSc Computer Science' signals='2 award links; no award identity of its own' chars=196 degrees=[]",
+            "readable_chars": 196
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://example.edu/support/computer-science"
+        ],
+        "intake_open_count": 0
+      },
+      "on": {
+        "claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "BSc Computer Science",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'BSc Computer Science' covers every requested subject word"
+            },
+            "original_text_excerpt": "BSc Computer Science BSc Computer Science Curriculum First-year courses and second-year modules. Scholarships View our award opportunities for enrolled students. Alpha Scholarship",
+            "source_url": "https://example.edu/support/computer-science",
+            "page_title": "BSc Computer Science",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "BSc Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T20:28:37Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "BSc Computer Science",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'BSc Computer Science' covers every requested subject word"
+            },
+            "original_text_excerpt": "BSc Computer Science BSc Computer Science Curriculum First-year courses and second-year modules. Scholarships View our award opportunities for enrolled students. Alpha Scholarship",
+            "source_url": "https://example.edu/support/computer-science",
+            "page_title": "BSc Computer Science",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "BSc Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T20:28:37Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_count": 1,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://example.edu/support/computer-science: no statement about the application window for fall2027; intake status is unknown, not open."
+        ],
+        "page_types": [
+          [
+            "https://example.edu/support/computer-science",
+            "program_detail"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://example.edu/support/computer-science",
+            "category": "fetched-ok",
+            "page_type": "program_detail",
+            "detail": "1 claims read from this page",
+            "readable_chars": 196
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://example.edu/support/computer-science"
+        ],
+        "intake_open_count": 0
+      }
+    },
+    {
+      "case": "funding_eligibility_credits_without_progression",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This is a financial support eligibility page.</p><h2>Curriculum</h2><p>Applicants need courses worth 120 credits to qualify.</p><h2>Scholarships</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "74ca6eee00c1ca71657a87f47f7a1a66d20a80434a11143e0992dff971f7e830",
+      "synthetic_source_url": "https://example.edu/support/computer-science",
+      "expected_programme_exists": false,
+      "off": {
+        "claims": [],
+        "exists_claims": [],
+        "exists_count": 0,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://example.edu/support/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+        ],
+        "page_types": [
+          [
+            "https://example.edu/support/computer-science",
+            "scholarship_index"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://example.edu/support/computer-science",
+            "category": "classifier-rejected",
+            "page_type": "scholarship_index",
+            "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='BSc Computer Science' signals='2 award links; no award identity of its own' chars=200 degrees=[]",
+            "readable_chars": 200
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://example.edu/support/computer-science"
+        ],
+        "intake_open_count": 0
+      },
+      "on": {
+        "claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "BSc Computer Science",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'BSc Computer Science' covers every requested subject word"
+            },
+            "original_text_excerpt": "BSc Computer Science BSc Computer Science This is a financial support eligibility page. Curriculum Applicants need courses worth 120 credits to qualify. Scholarships Alpha Scholars",
+            "source_url": "https://example.edu/support/computer-science",
+            "page_title": "BSc Computer Science",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "BSc Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T20:28:37Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "BSc Computer Science",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'BSc Computer Science' covers every requested subject word"
+            },
+            "original_text_excerpt": "BSc Computer Science BSc Computer Science This is a financial support eligibility page. Curriculum Applicants need courses worth 120 credits to qualify. Scholarships Alpha Scholars",
+            "source_url": "https://example.edu/support/computer-science",
+            "page_title": "BSc Computer Science",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "BSc Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T20:28:37Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_count": 1,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://example.edu/support/computer-science: no statement about the application window for fall2027; intake status is unknown, not open."
+        ],
+        "page_types": [
+          [
+            "https://example.edu/support/computer-science",
+            "program_detail"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://example.edu/support/computer-science",
+            "category": "fetched-ok",
+            "page_type": "program_detail",
+            "detail": "1 claims read from this page",
+            "readable_chars": 200
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://example.edu/support/computer-science"
+        ],
+        "intake_open_count": 0
+      }
+    }
+  ],
+  "scope": "Actual WebRequirementsAdapter.verify with saved-byte get. Wits subject exists can be quoted; 2027 intake/campus/international route not confirmed. Synthetic fixtures do not claim university facts."
+}

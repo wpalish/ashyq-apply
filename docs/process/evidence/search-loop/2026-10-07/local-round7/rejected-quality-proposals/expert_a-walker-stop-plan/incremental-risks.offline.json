@@ -1,0 +1,1758 @@
+{
+  "status": "OFFLINE_DESIGN_SIMULATION_NOT_APPLIED_SOURCE",
+  "pins": {
+    "data-science": {
+      "body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/retained-pages/data-science.body",
+      "meta_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/retained-pages/data-science.meta.json",
+      "body_sha256": "76efe3c790ce9aa3253487b3807afa994918022bfff4c2c0b2b4972e45264312",
+      "meta_sha256": "16d03a9771712a612fa61b231df3dbc6b948fa68b00ca9a30e0135598953e192",
+      "content_hash_formula_matches": true
+    },
+    "computer-science": {
+      "body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/retained-pages/computer-science.body",
+      "meta_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/retained-pages/computer-science.meta.json",
+      "body_sha256": "1340f8a4853246291e727bfaa433ca0ba9ec31ca0fb79cb8f4b16914ffe88f0c",
+      "meta_sha256": "3dff64d5d03a766c27f6c33b91790ecbae91e02dfe61c76ce6a09cfc559d9c4d",
+      "content_hash_formula_matches": true
+    },
+    "wits": {
+      "body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round2/pair-temp/on1/canary-o450usf2/cache/1a/1ad11c46fa894ecfacf4423150e42b74.body",
+      "meta_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round2/pair-temp/on1/canary-o450usf2/cache/1a/1ad11c46fa894ecfacf4423150e42b74.meta.json",
+      "body_sha256": "88d1f716c82840fa66317ff1ceb42a152439a924d7625c0d2ef18a0f315f0a87",
+      "meta_sha256": "d54f742c251cd9cd36c06ee4b89a74a7c1ca701b829b5ffa99d6cc5701096b8c",
+      "content_hash_formula_matches": true
+    },
+    "nagoya": {
+      "body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-dvmv__z3/cache/ac/ac2be79f83001f4735e0388266a8bd93.body",
+      "meta_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-dvmv__z3/cache/ac/ac2be79f83001f4735e0388266a8bd93.meta.json",
+      "body_sha256": "8b2f118cb5dcba242cdf0852918bb68dc4ee2b681378b4c87967a579054b6327",
+      "meta_sha256": "6ab7b26930872762fed81a96eac82efff9e12f482faad218404361a560c30a39",
+      "content_hash_formula_matches": true
+    }
+  },
+  "classifications": {
+    "data-science": {
+      "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+      "page": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'Data Science Major - Bachelor of Computer and Information Sciences' at bachelor level"
+        ],
+        "title": "Data Science Major - Computer and Information Sciences - AUT",
+        "subject": "Data Science Major - Bachelor of Computer and Information Sciences",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "profile_rejection": null
+    },
+    "computer-science": {
+      "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+      "page": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'Computer Science Major - Bachelor of Computer and Information Sciences' at bachelor level"
+        ],
+        "title": "Computer Science - Computer and Information Sciences - AUT",
+        "subject": "Computer Science Major - Bachelor of Computer and Information Sciences",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "profile_rejection": null
+    }
+  },
+  "cases": [
+    {
+      "case": "AUT_saved_wrong_major_precedes_correct_major",
+      "evidence_type": "synthetic catalogue composition; real saved detail bodies where specified",
+      "subject_phrase_match": false,
+      "programme_identity_before_funding": false,
+      "fields": [
+        "computer science"
+      ],
+      "synthetic_catalogue_html": "<html><head><title>Bachelor programmes</title></head><body><main><h1>Bachelor programmes</h1><p>Choose a programme.</p><a href=\"https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences\">Data Science Major - Computer and Information Sciences - AUT</a><a href=\"https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences\">Computer Science - Computer and Information Sciences - AUT</a></main></body></html>",
+      "off_on_on_off": [
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://www.aut.ac.nz/bachelors/catalogue",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "walk": {
+            "catalogue_url": "https://www.aut.ac.nz/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Data Science Major - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Computer Science - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "confirmed_subjects": {
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences": "Data Science Major - Bachelor of Computer and Information Sciences",
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences": "Computer Science Major - Bachelor of Computer and Information Sciences"
+            },
+            "outcomes": [
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ],
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://www.aut.ac.nz/bachelors/catalogue",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "walk": {
+            "catalogue_url": "https://www.aut.ac.nz/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Data Science Major - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Computer Science - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "confirmed_subjects": {
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences": "Data Science Major - Bachelor of Computer and Information Sciences"
+            },
+            "outcomes": [
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://www.aut.ac.nz/bachelors/catalogue",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "walk": {
+            "catalogue_url": "https://www.aut.ac.nz/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Data Science Major - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Computer Science - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "confirmed_subjects": {
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences": "Data Science Major - Bachelor of Computer and Information Sciences"
+            },
+            "outcomes": [
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://www.aut.ac.nz/bachelors/catalogue",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "walk": {
+            "catalogue_url": "https://www.aut.ac.nz/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Data Science Major - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Computer Science - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "confirmed_subjects": {
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences": "Data Science Major - Bachelor of Computer and Information Sciences",
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences": "Computer Science Major - Bachelor of Computer and Information Sciences"
+            },
+            "outcomes": [
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ],
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "case": "AUT_precise_subject_experiment_opt_in",
+      "evidence_type": "synthetic catalogue composition; real saved detail bodies where specified",
+      "subject_phrase_match": true,
+      "programme_identity_before_funding": false,
+      "fields": [
+        "computer science"
+      ],
+      "synthetic_catalogue_html": "<html><head><title>Bachelor programmes</title></head><body><main><h1>Bachelor programmes</h1><p>Choose a programme.</p><a href=\"https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences\">Data Science Major - Computer and Information Sciences - AUT</a><a href=\"https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences\">Computer Science - Computer and Information Sciences - AUT</a></main></body></html>",
+      "off_on_on_off": [
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://www.aut.ac.nz/bachelors/catalogue",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "walk": {
+            "catalogue_url": "https://www.aut.ac.nz/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Computer Science - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Data Science Major - Computer and Information Sciences - AUT",
+                "score": 25,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "confirmed_subjects": {
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences": "Computer Science Major - Bachelor of Computer and Information Sciences"
+            },
+            "outcomes": [
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ],
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "reads_as_program_detail"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://www.aut.ac.nz/bachelors/catalogue",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "walk": {
+            "catalogue_url": "https://www.aut.ac.nz/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Computer Science - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Data Science Major - Computer and Information Sciences - AUT",
+                "score": 25,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "confirmed_subjects": {
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences": "Computer Science Major - Bachelor of Computer and Information Sciences"
+            },
+            "outcomes": [
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://www.aut.ac.nz/bachelors/catalogue",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "walk": {
+            "catalogue_url": "https://www.aut.ac.nz/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Computer Science - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Data Science Major - Computer and Information Sciences - AUT",
+                "score": 25,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "confirmed_subjects": {
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences": "Computer Science Major - Bachelor of Computer and Information Sciences"
+            },
+            "outcomes": [
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://www.aut.ac.nz/bachelors/catalogue",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "walk": {
+            "catalogue_url": "https://www.aut.ac.nz/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Computer Science - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Data Science Major - Computer and Information Sciences - AUT",
+                "score": 25,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "confirmed_subjects": {
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences": "Computer Science Major - Bachelor of Computer and Information Sciences"
+            },
+            "outcomes": [
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ],
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "reads_as_program_detail"
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "case": "synthetic_funding_copy_without_funding_heading",
+      "evidence_type": "synthetic catalogue composition; real saved detail bodies where specified",
+      "subject_phrase_match": false,
+      "programme_identity_before_funding": false,
+      "fields": [
+        "computer science"
+      ],
+      "synthetic_catalogue_html": "<html><head><title>Bachelor programmes</title></head><body><main><h1>Bachelor programmes</h1><p>Choose a programme.</p><a href=\"https://example.edu/bachelors/computer-science\">BSc Computer Science</a><a href=\"https://example.edu/bachelors/computer-science-current-programme\">BSc Computer Science</a></main></body></html>",
+      "off_on_on_off": [
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-current-programme"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-current-programme",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science",
+              "https://example.edu/bachelors/computer-science-current-programme"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science",
+              "https://example.edu/bachelors/computer-science-current-programme": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "program_detail"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-current-programme",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-current-programme",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "program_detail"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-current-programme",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "program_detail"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-current-programme"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-current-programme",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science",
+              "https://example.edu/bachelors/computer-science-current-programme"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science",
+              "https://example.edu/bachelors/computer-science-current-programme": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "program_detail"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-current-programme",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "case": "synthetic_older_population_campus_first",
+      "evidence_type": "synthetic catalogue composition; real saved detail bodies where specified",
+      "subject_phrase_match": true,
+      "programme_identity_before_funding": false,
+      "fields": [
+        "computer science"
+      ],
+      "synthetic_catalogue_html": "<html><head><title>Bachelor programmes</title></head><body><main><h1>Bachelor programmes</h1><p>Choose a programme.</p><a href=\"https://example.edu/bachelors/computer-science\">BSc Computer Science</a><a href=\"https://example.edu/bachelors/computer-science-international-2027\">BSc Computer Science</a></main></body></html>",
+      "off_on_on_off": [
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science",
+              "https://example.edu/bachelors/computer-science-international-2027"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science",
+              "https://example.edu/bachelors/computer-science-international-2027": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science",
+              "https://example.edu/bachelors/computer-science-international-2027"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science",
+              "https://example.edu/bachelors/computer-science-international-2027": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "case": "distinct_fields_4",
+      "evidence_type": "synthetic catalogue composition; real saved detail bodies where specified",
+      "subject_phrase_match": true,
+      "programme_identity_before_funding": false,
+      "fields": [
+        "computer science",
+        " Computer Science "
+      ],
+      "synthetic_catalogue_html": "<html><head><title>Bachelor programmes</title></head><body><main><h1>Bachelor programmes</h1><p>Choose a programme.</p><a href=\"https://example.edu/bachelors/computer-science\">BSc Computer Science</a><a href=\"https://example.edu/bachelors/computer-science-international-2027\">BSc Computer Science</a></main></body></html>",
+      "off_on_on_off": [
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 53,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 53,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science",
+              "https://example.edu/bachelors/computer-science-international-2027"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science",
+              "https://example.edu/bachelors/computer-science-international-2027": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 53,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 53,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 53,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 53,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 53,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 53,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science",
+              "https://example.edu/bachelors/computer-science-international-2027"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science",
+              "https://example.edu/bachelors/computer-science-international-2027": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        }
+      ],
+      "distinct_normalized_fields": [
+        "computer science"
+      ]
+    },
+    {
+      "case": "distinct_fields_5",
+      "evidence_type": "synthetic catalogue composition; real saved detail bodies where specified",
+      "subject_phrase_match": true,
+      "programme_identity_before_funding": false,
+      "fields": [
+        "computer science",
+        "Computing Science"
+      ],
+      "synthetic_catalogue_html": "<html><head><title>Bachelor programmes</title></head><body><main><h1>Bachelor programmes</h1><p>Choose a programme.</p><a href=\"https://example.edu/bachelors/computer-science\">BSc Computer Science</a><a href=\"https://example.edu/bachelors/computer-science-international-2027\">BSc Computer Science</a></main></body></html>",
+      "off_on_on_off": [
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 53,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 53,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science",
+              "https://example.edu/bachelors/computer-science-international-2027"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science",
+              "https://example.edu/bachelors/computer-science-international-2027": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 53,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 53,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science",
+              "https://example.edu/bachelors/computer-science-international-2027"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science",
+              "https://example.edu/bachelors/computer-science-international-2027": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 53,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 53,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science",
+              "https://example.edu/bachelors/computer-science-international-2027"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science",
+              "https://example.edu/bachelors/computer-science-international-2027": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 53,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 53,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science",
+              "https://example.edu/bachelors/computer-science-international-2027"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science",
+              "https://example.edu/bachelors/computer-science-international-2027": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        }
+      ],
+      "distinct_normalized_fields": [
+        "computer science",
+        "Computing Science"
+      ]
+    },
+    {
+      "case": "distinct_fields_6",
+      "evidence_type": "synthetic catalogue composition; real saved detail bodies where specified",
+      "subject_phrase_match": true,
+      "programme_identity_before_funding": false,
+      "fields": [
+        "computer science",
+        "mathematics"
+      ],
+      "synthetic_catalogue_html": "<html><head><title>Bachelor programmes</title></head><body><main><h1>Bachelor programmes</h1><p>Choose a programme.</p><a href=\"https://example.edu/bachelors/computer-science\">BSc Computer Science</a><a href=\"https://example.edu/bachelors/computer-science-international-2027\">BSc Computer Science</a></main></body></html>",
+      "off_on_on_off": [
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science",
+              "https://example.edu/bachelors/computer-science-international-2027"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science",
+              "https://example.edu/bachelors/computer-science-international-2027": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science",
+              "https://example.edu/bachelors/computer-science-international-2027"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science",
+              "https://example.edu/bachelors/computer-science-international-2027": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science",
+              "https://example.edu/bachelors/computer-science-international-2027"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science",
+              "https://example.edu/bachelors/computer-science-international-2027": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 37,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://example.edu/bachelors/computer-science",
+              "https://example.edu/bachelors/computer-science-international-2027"
+            ],
+            "confirmed_subjects": {
+              "https://example.edu/bachelors/computer-science": "BSc Computer Science",
+              "https://example.edu/bachelors/computer-science-international-2027": "BSc Computer Science"
+            },
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "intake_specific_program"
+              ]
+            ]
+          }
+        }
+      ],
+      "distinct_normalized_fields": [
+        "computer science",
+        "mathematics"
+      ]
+    },
+    {
+      "case": "distinct_fields_7",
+      "evidence_type": "synthetic catalogue composition; real saved detail bodies where specified",
+      "subject_phrase_match": true,
+      "programme_identity_before_funding": false,
+      "fields": [],
+      "synthetic_catalogue_html": "<html><head><title>Bachelor programmes</title></head><body><main><h1>Bachelor programmes</h1><p>Choose a programme.</p><a href=\"https://example.edu/bachelors/computer-science\">BSc Computer Science</a><a href=\"https://example.edu/bachelors/computer-science-international-2027\">BSc Computer Science</a></main></body></html>",
+      "off_on_on_off": [
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 13,
+                "source": "html"
+              }
+            ],
+            "confirmed": [],
+            "confirmed_subjects": {},
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "reads_as_intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "reads_as_intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 13,
+                "source": "html"
+              }
+            ],
+            "confirmed": [],
+            "confirmed_subjects": {},
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "reads_as_intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "reads_as_intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 13,
+                "source": "html"
+              }
+            ],
+            "confirmed": [],
+            "confirmed_subjects": {},
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "reads_as_intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "reads_as_intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 13,
+                "source": "html"
+              }
+            ],
+            "confirmed": [],
+            "confirmed_subjects": {},
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "reads_as_intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "reads_as_intake_specific_program"
+              ]
+            ]
+          }
+        }
+      ],
+      "distinct_normalized_fields": []
+    },
+    {
+      "case": "distinct_fields_8",
+      "evidence_type": "synthetic catalogue composition; real saved detail bodies where specified",
+      "subject_phrase_match": true,
+      "programme_identity_before_funding": false,
+      "fields": [
+        "  "
+      ],
+      "synthetic_catalogue_html": "<html><head><title>Bachelor programmes</title></head><body><main><h1>Bachelor programmes</h1><p>Choose a programme.</p><a href=\"https://example.edu/bachelors/computer-science\">BSc Computer Science</a><a href=\"https://example.edu/bachelors/computer-science-international-2027\">BSc Computer Science</a></main></body></html>",
+      "off_on_on_off": [
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 13,
+                "source": "html"
+              }
+            ],
+            "confirmed": [],
+            "confirmed_subjects": {},
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "reads_as_intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "reads_as_intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 13,
+                "source": "html"
+              }
+            ],
+            "confirmed": [],
+            "confirmed_subjects": {},
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "reads_as_intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "reads_as_intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 13,
+                "source": "html"
+              }
+            ],
+            "confirmed": [],
+            "confirmed_subjects": {},
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "reads_as_intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "reads_as_intake_specific_program"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://example.edu/bachelors/catalogue",
+            "https://example.edu/bachelors/computer-science",
+            "https://example.edu/bachelors/computer-science-international-2027"
+          ],
+          "walk": {
+            "catalogue_url": "https://example.edu/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "label": "BSc Computer Science",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://example.edu/bachelors/computer-science-international-2027",
+                "label": "BSc Computer Science",
+                "score": 13,
+                "source": "html"
+              }
+            ],
+            "confirmed": [],
+            "confirmed_subjects": {},
+            "outcomes": [
+              [
+                "https://example.edu/bachelors/computer-science",
+                "reads_as_intake_specific_program"
+              ],
+              [
+                "https://example.edu/bachelors/computer-science-international-2027",
+                "reads_as_intake_specific_program"
+              ]
+            ]
+          }
+        }
+      ],
+      "distinct_normalized_fields": []
+    }
+  ],
+  "purpose_controls": [
+    {
+      "case": "actual_Wits_PF1_defaultFalse",
+      "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+      "classification": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Computer Science - Wits University",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "stop": false,
+      "walk": {
+        "catalogue_url": "https://www.wits.ac.za/catalogue",
+        "candidates": [],
+        "confirmed": [],
+        "confirmed_subjects": {},
+        "outcomes": [
+          [
+            "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "reads_as_scholarship_index"
+          ]
+        ]
+      },
+      "reads": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science"
+      ]
+    },
+    {
+      "case": "actual_Nagoya_mixed_language_requirements",
+      "url": "https://en.nagoya-u.ac.jp/admissions/japan/language/",
+      "classification": {
+        "page_type": "general_admissions",
+        "confidence": 0.8,
+        "signals": [
+          "admissions phrasing without a single programme identity"
+        ],
+        "title": "Language requirements | Admissions | Nagoya University",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "stop": false,
+      "walk": {
+        "catalogue_url": "https://en.nagoya-u.ac.jp/catalogue",
+        "candidates": [],
+        "confirmed": [],
+        "confirmed_subjects": {},
+        "outcomes": [
+          [
+            "https://en.nagoya-u.ac.jp/admissions/japan/language/",
+            "reads_as_general_admissions"
+          ]
+        ]
+      },
+      "reads": [
+        "https://en.nagoya-u.ac.jp/admissions/japan/language/"
+      ]
+    },
+    {
+      "case": "synthetic_explicit_funding_heading",
+      "url": "https://example.edu/bachelors/computer-science",
+      "classification": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "stop": false,
+      "walk": {
+        "catalogue_url": "https://example.edu/catalogue",
+        "candidates": [],
+        "confirmed": [],
+        "confirmed_subjects": {},
+        "outcomes": [
+          [
+            "https://example.edu/bachelors/computer-science",
+            "reads_as_scholarship_index"
+          ]
+        ]
+      },
+      "reads": [
+        "https://example.edu/bachelors/computer-science"
+      ]
+    },
+    {
+      "case": "synthetic_offsite_redirect",
+      "url": "https://example.edu/bachelors/computer-science",
+      "classification": null,
+      "stop": false,
+      "walk": {
+        "catalogue_url": "https://example.edu/catalogue",
+        "candidates": [],
+        "confirmed": [],
+        "confirmed_subjects": {},
+        "outcomes": [
+          [
+            "https://example.edu/bachelors/computer-science",
+            "off_domain_redirect"
+          ]
+        ]
+      },
+      "reads": [
+        "https://example.edu/bachelors/computer-science"
+      ]
+    }
+  ],
+  "B_actual_caller_retained_summary": {
+    "ready_manifest_sha256": "f8b8aa7913c16d6b849f74501ded9a37ba027a3db69841e2b0b62725d9892721",
+    "caller_sha256": "9e71f8c76f43052a9727fb9b829e184c46bb80205f235d0873fc78af1e2ef415",
+    "selected_programme": [
+      "https://www.rug.nl/bachelors/computing-science"
+    ],
+    "reads_completed_before_search_count": 32,
+    "full_32_get_prefix_matches_live_log": true,
+    "provider_result_control": "search replaced by no-op; actual provider results unknown",
+    "actual_timeout_result": "does not return from discovery; DB0 program_results/claims"
+  },
+  "no_invented_official_catalogue_membership": true,
+  "source_scope_year_campus_population_not_proven": true,
+  "network_provider_model_calls": 0,
+  "source_git_STOP_edits": 0
+}

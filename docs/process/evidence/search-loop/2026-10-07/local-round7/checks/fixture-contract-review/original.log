@@ -1,0 +1,53 @@
+.F.......                                                                [100%]
+=================================== FAILURES ===================================
+_________________ test_search_still_runs_while_a_slot_is_free __________________
+
+    async def test_search_still_runs_while_a_slot_is_free():
+        provider = CountingProvider()
+        fetcher = RecordingFetcher()
+        trace = DiscoveryTrace(institution=NAME, domain=DOMAIN)
+        selected = selected_with(["https://www.rug.nl/bachelors/already"])
+    
+>       await adapter(provider, fetcher)._add_search_results(
+            {"name": NAME}, DOMAIN, selected, trace, profile()
+        )
+
+../../../../../../../2026-10-07/x20/work/local-round7/fetchresult-fixture-review/test_original_search_layer_budget_fixes.py:154: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+app/adapters/discovery/live_discovery.py:1684: in _add_search_results
+    await self._recover_search_pages(report.candidates, pages, trace, profile)
+app/adapters/discovery/live_discovery.py:1982: in _recover_search_pages
+    self._observe_read(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <app.adapters.discovery.live_discovery.LiveDiscoveryAdapter object at 0x1087ce750>
+trace = DiscoveryTrace(institution='University of Groningen', domain='www.rug.nl', sitemaps_declared=[], sitemaps_read=[], sit...=[], walker={'catalogs_walked': 0, 'candidates': [], 'programs_confirmed': 0, 'outcomes': []}, country='', funnel=None)
+url = 'https://www.rug.nl/bachelors/computer-science'
+result = <test_original_search_layer_budget_fixes.RecordingFetcher.get.<locals>._Result object at 0x10856f230>
+page = PageClassification(page_type=<PageType.UNKNOWN: 'unknown'>, confidence=0.2, signals=['no decisive signals'], title='', subject=None, degree_level=None, language_of_instruction=None, academic_year=None, language_evidence=None)
+stated_degree = None, listing_pass = False
+
+    def _observe_read(
+        self,
+        trace: DiscoveryTrace,
+        url: str,
+        result: FetchResult,
+        page: PageClassification | None = None,
+        *,
+        stated_degree: str | None = None,
+        listing_pass: bool = False,
+    ) -> None:
+        from app.adapters.extraction import pdf_to_text, readable_text
+    
+        authorized = result.ok and same_source_site(url, result.final_url or url)
+        text = (
+>           (pdf_to_text(result.content) if result.is_pdf else readable_text(result.text))
+                                            ^^^^^^^^^^^^^
+            if authorized
+            else ""
+        )
+E       AttributeError: '_Result' object has no attribute 'is_pdf'
+
+app/adapters/discovery/live_discovery.py:1115: AttributeError
+=========================== short test summary info ============================
+FAILED ::test_search_still_runs_while_a_slot_is_free - AttributeError: '_Resu...

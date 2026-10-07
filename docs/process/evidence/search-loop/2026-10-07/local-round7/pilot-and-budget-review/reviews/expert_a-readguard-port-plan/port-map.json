@@ -1,0 +1,55 @@
+{
+  "status": "PROPOSED_NOT_APPLIED_NOT_RUN",
+  "mapping": [
+    {
+      "destination": "backend/tests/readguard_support.py",
+      "origins": [
+        "B/test_production_readguard.py:context/activate/candidate/counts/mock_original_get",
+        "A/review_context.py:prior/seed_prior/snapshot/error_chain/local SQL instrumentation"
+      ],
+      "change": "Обычные app imports; helpers immutable synthetic fixtures. context initial Job creates real enqueue+claim where lifecycle asserted; low-level direct RUNNING unit fixture may remain explicitly unit-only. _env_file=None + temporary paths. No shadow/env/source selector; no always-on autouse global for default tests."
+    },
+    {
+      "destination": "backend/tests/test_production_readguard.py",
+      "origins": [
+        "B/test_production_readguard.py"
+      ],
+      "change": "Delete path insertion/shadow install/LEGACY switches; direct module imports and native source assertions. Keep meaningful60/61 real Fetcher.get + mocked _get, committed counters before IO, same university programmes/stages, real cancel and cache semantics, scope/noJob false controls."
+    },
+    {
+      "destination": "backend/tests/test_readguard_checkpoint.py",
+      "origins": [
+        "B/test_revision_controls.py"
+      ],
+      "change": "Import support normally; move fixture use via explicit imports/shared local conftest instead of pytest_plugins sibling-test hook. Preserve exact first-namespace dirty OFF/ON interleaving, typed busy actual readers, current genuineJob reclaim SourceFalse, previous/untracked episode and corrupt/unknown negative controls."
+    },
+    {
+      "destination": "backend/tests/test_readguard_sqlite_concurrency.py",
+      "origins": [
+        "B/test_sqlite_concurrent_checkpoint.py"
+      ],
+      "change": "Use real2sessions on disk; barrier only before real write txn. Keep 2 admitted gets -> durable2, native60 bound under contention and SQLite lock refusal. Do not rename simultaneous busy count as exact80/60."
+    },
+    {
+      "destination": "backend/tests/test_worker_readguard_busy.py",
+      "origins": [
+        "A/test_worker_busy.py + A/review_context.py"
+      ],
+      "change": "Delete WorkerShadow, MODE/baseline switch, candidate-pinned path and env URI target. Ordinary actual Worker imported from app.jobs.worker. Use local session_scope binding. Preserve Job/Run and SQLite locks with real stage_verify caller, full stored state comparison, zero IO and failure writer calls, real _beat cancellation, actual reaper/token2sameepisode59→60, text-only and typedother errors/cancel/stale fences."
+    },
+    {
+      "destination": "backend/tests/test_readguard_postgres.py",
+      "origins": [
+        "A execution-v2 primary/supplement controls + existing backend/tests/conftest.py:postgres_url/pg_engine"
+      ],
+      "change": "Ordinary actual modules; existing isolated migrated pg_engine. Capture2actual backendPIDs, real Job→Run55P03, two independent session round-robin80attempt60admission vs simultaneousNOWAIT refusals separately, actual caller retention/corruption/freshnamespace. No remote URI env. Use local connection timeout per lock control, record57014 separately from55P03."
+    },
+    {
+      "destination": "backend/tests/test_canary_fenced_job.py + test_readguard_capture_protocol.py",
+      "origins": [
+        "sealed genuineJob plan only"
+      ],
+      "change": "NOT IMPLEMENTED: separate future genuine lifecycle/flag/meter/reporting controls; SQL unit port success does not prove future canary integration."
+    }
+  ]
+}

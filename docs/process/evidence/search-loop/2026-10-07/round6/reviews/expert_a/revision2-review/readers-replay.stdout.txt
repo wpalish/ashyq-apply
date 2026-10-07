@@ -1,0 +1,63 @@
+{
+  "wits_exists": [
+    0,
+    1,
+    1,
+    0
+  ],
+  "funding_reads": [
+    {
+      "mode": "programme_fallback",
+      "enabled": false,
+      "reads": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ]
+    },
+    {
+      "mode": "programme_fallback",
+      "enabled": true,
+      "reads": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ]
+    },
+    {
+      "mode": "explicit_primary",
+      "enabled": false,
+      "reads": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ]
+    },
+    {
+      "mode": "explicit_primary",
+      "enabled": true,
+      "reads": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ]
+    },
+    {
+      "mode": "linked_depth_one",
+      "enabled": false,
+      "reads": [
+        "https://www.wits.ac.za/offline-review/funding-index",
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ]
+    },
+    {
+      "mode": "linked_depth_one",
+      "enabled": true,
+      "reads": [
+        "https://www.wits.ac.za/offline-review/funding-index",
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science"
+      ]
+    }
+  ],
+  "scholarship_links_allowlist": [
+    true,
+    false
+  ]
+}

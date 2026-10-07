@@ -1,0 +1,2335 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-07T22:23:16.810462+00:00",
+    "duration_seconds": 103.9,
+    "run_error": "",
+    "batch": [
+      "Aalto University"
+    ],
+    "institutions": [
+      {
+        "catalogue_id": null,
+        "institution": "Aalto University",
+        "country": "Finland",
+        "domain": "aalto.fi",
+        "access": "PARTIALLY_BLOCKED",
+        "robots_disallowed_requests": 3,
+        "pages_checked": 56,
+        "pages_failed": 3,
+        "failures": [
+          [
+            "https://www.aalto.fi/en/node/1008496",
+            "robots_disallowed: robots.txt disallows this path"
+          ],
+          [
+            "https://www.aalto.fi/en/node/835691",
+            "robots_disallowed: robots.txt disallows this path"
+          ],
+          [
+            "https://www.aalto.fi/en/node/30591",
+            "robots_disallowed: robots.txt disallows this path"
+          ]
+        ],
+        "outcomes": {
+          "ok": 53,
+          "robots_disallowed": 3
+        },
+        "discovered": {
+          "program_catalog": [
+            "https://www.aalto.fi/en/study-options",
+            "https://www.aalto.fi/en/department-of-computer-science/courses",
+            "https://www.aalto.fi/en/artistic-research/the-21st-century-art-science-lab-course"
+          ],
+          "admissions": [
+            "https://www.aalto.fi/en/admission-services",
+            "https://www.aalto.fi/en/international-students/how-to-apply-for-exchange-studies",
+            "https://www.aalto.fi/en/department-of-art/how-to-apply-to-vicca"
+          ],
+          "costs": [
+            "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+            "https://www.aalto.fi/en/international-students/tuition-fees-and-scholarships",
+            "https://www.aalto.fi/en/minors/costume-design-minor"
+          ],
+          "scholarships": [
+            "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+            "https://www.aalto.fi/en/school-of-engineering/funding",
+            "https://www.aalto.fi/en/grants-and-awards/atlas-diesel-fund"
+          ]
+        },
+        "discovery_trace": {
+          "institution": "Aalto University",
+          "domain": "www.aalto.fi",
+          "sitemaps_declared": [
+            "https://www.aalto.fi/sitemap.xml"
+          ],
+          "sitemaps_read": [
+            "https://www.aalto.fi/sitemap.xml",
+            "https://www.aalto.fi/sitemap.xml?page=1",
+            "https://www.aalto.fi/sitemap.xml?page=2",
+            "https://www.aalto.fi/sitemap.xml?page=3",
+            "https://www.aalto.fi/sitemap.xml?page=4",
+            "https://www.aalto.fi/sitemap.xml?page=5",
+            "https://www.aalto.fi/sitemap.xml?page=6",
+            "https://www.aalto.fi/sitemap.xml?page=7",
+            "https://www.aalto.fi/sitemap.xml?page=8",
+            "https://www.aalto.fi/sitemap.xml?page=9",
+            "https://www.aalto.fi/sitemap.xml?page=10",
+            "https://www.aalto.fi/sitemap.xml?page=11"
+          ],
+          "sitemap_urls_seen": 55000,
+          "sitemap_urls_kept": 184,
+          "manual_seeds": {
+            "program_catalog": "https://www.aalto.fi/en/study-options",
+            "admissions": "https://www.aalto.fi/en/admission-services",
+            "costs": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+            "scholarships": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees"
+          },
+          "selected": {
+            "program_catalog": [
+              "https://www.aalto.fi/en/study-options",
+              "https://www.aalto.fi/en/department-of-computer-science/courses",
+              "https://www.aalto.fi/en/artistic-research/the-21st-century-art-science-lab-course"
+            ],
+            "admissions": [
+              "https://www.aalto.fi/en/admission-services",
+              "https://www.aalto.fi/en/international-students/how-to-apply-for-exchange-studies",
+              "https://www.aalto.fi/en/department-of-art/how-to-apply-to-vicca"
+            ],
+            "costs": [
+              "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+              "https://www.aalto.fi/en/international-students/tuition-fees-and-scholarships",
+              "https://www.aalto.fi/en/minors/costume-design-minor"
+            ],
+            "scholarships": [
+              "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+              "https://www.aalto.fi/en/school-of-engineering/funding",
+              "https://www.aalto.fi/en/grants-and-awards/atlas-diesel-fund"
+            ]
+          },
+          "rejected_sample": [
+            [
+              "https://www.aalto.fi/en/doctoral-education/how-to-apply-for-doctoral-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/doctoral-education/doctoral-programmes",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/hse-support-foundation/supporting-research-teaching-and-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/campus/meng-wang",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/fi/kampus/meng-wang",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/department-of-industrial-engineering-and-management/masters-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/school-of-business/masters-programmes",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/fi/school-of-business/masters-programmes",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/department-of-computer-science/doctoral-track-combines-masters-and-doctoral-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/aalto-art-and-design-cases/media-intervention-in-the-city-ma-elective-course",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/department-of-media/doctoral-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/department-of-applied-physics/msc-thesis-project-on-artificial-frustrated-spin-systems",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/admission-services/apply-to-masters-programmes",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/creative-sustainability/how-to-apply-to-creative-sustainability-masters-programme",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/creative-sustainability/creative-sustainability-masters-programme",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/department-of-art/international-womens-day-2021-feminist-practices-and-practitioners-from-the-ma-vicca-programme",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/department-of-accounting-business-law/meng-guo",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/doctoral-education/support-for-challenges-during-your-doctoral-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/admission-services/requesting-rectification-to-the-2027-student-admissions-to-masters-programmes",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/department-of-art-and-media/doctoral-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/department-of-art-and-media/masters-programmes",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/language-and-communication-studies/communication-and-language-studies-for-a-masters-degree",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/programmes/continuing-studies-in-a-masters-programme-at-the-school-of-electrical-engineering",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/new-students/international-joint-masters-programmes",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/witlab/masters-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/creative-sustainability/creative-sustainability-masters-student-michael-buchta-shares-his-experience-in-the-programme",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/doctoral-education/supervision-of-doctoral-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/school-of-chemical-engineering/congratulations-you-have-just-been-admitted-to-aalto-university-joint-masters-programme",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/doctoral-education/research-ethics-for-doctoral-students-course",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/doctoral-education/funding-your-doctoral-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/university-pathway-finland/the-pathway-programme-helped-me-to-build-a-foundation-for-my-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/doctoral-education/finland-fellowship-provided-seven-months-of-funding-for-joaquin-during-his-phd-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/doctoral-education/transferring-to-study-according-to-30-ects-structure-doctoral-degree",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/doctoral-education/doctoral-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/doctoral-education/right-to-study-doctoral-degree",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/doctoral-education/licentiate-degree",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/department-of-computer-science/llm-seminar",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/school-of-business/head-of-doctoral-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/school-of-business/student-representative-of-the-doctoral-program",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aalto.fi/en/study-at-aalto/rolling-admissions-for-masters-studies",
+              "names a degree level other than bachelor"
+            ]
+          ],
+          "rejected_total": 59,
+          "errors": [
+            "search identity recovery: checked 8, confirmed 0",
+            "search identity recovery via exa_mcp; queries 6, failed 0, rejected {'duplicate': 19, 'wrong_degree_level': 9}",
+            "no programme page was found; only a catalogue, which cannot confirm a programme"
+          ],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "search_queries_attempted": 6,
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "walker": {
+            "catalogs_walked": 2,
+            "candidates": [
+              {
+                "url": "https://www.aalto.fi/en/department-of-computer-science",
+                "label": "Computer Science",
+                "score": 26,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admission-services/apply-to-bachelors-programmes-in-english",
+                "label": "Bachelor’s admissions (programmes in English)",
+                "score": 15,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admission-services/apply-to-bachelors-programmes-in-finnish-and-swedish",
+                "label": "Bachelor's admissions (programmes in Finnish and Swedish)",
+                "score": 15,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-science",
+                "label": "School of Science",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-chemistry-and-materials-science",
+                "label": "Chemistry and Materials Science",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-neuroscience-and-biomedical-engineering",
+                "label": "Neuroscience and Biomedical Engineering",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/people",
+                "label": "People and contact information",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/strategy",
+                "label": "Our strategy",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services",
+                "label": "All services",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/security",
+                "label": "Emergencies",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admissions",
+                "label": "How to apply",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/for-alumni",
+                "label": "For alumni",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/site-index",
+                "label": "Site index",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/it-services",
+                "label": "IT Services",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/research-art",
+                "label": "About our research and art",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/tenure-track",
+                "label": "Tenure track career system",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/study-options",
+                "label": "Skip to main content",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/student-guide",
+                "label": "Student Guide",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/for-personnel",
+                "label": "For personnel",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/collaboration",
+                "label": "Collaborate with us",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/for-the-media",
+                "label": "For the media",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/study-at-aalto",
+                "label": "Apply to Aalto",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/founder-school",
+                "label": "Founder School: from students to founders",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/sustainability",
+                "label": "Sustainability",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-handbook",
+                "label": "Aalto Handbook",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/cyber-security",
+                "label": "Cyber Security",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/language-centre",
+                "label": "Language Centre",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/learning-centre",
+                "label": "Library - Learning Centre",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/news-and-events",
+                "label": "Highlights",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university",
+                "label": "About Aalto University",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/lifewide-learning",
+                "label": "Lifewide Learning",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/teachers-handbook",
+                "label": "Teacher's Handbook",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-business",
+                "label": "School of Business",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/give-for-the-future",
+                "label": "Support us",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/ai-in-aalto",
+                "label": "AI in Aalto",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/hr-services",
+                "label": "HR services",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-engineering",
+                "label": "School of Engineering",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-film-elo",
+                "label": "Film, Television and Scenography",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/corporate-collaboration",
+                "label": "Corporate collaboration",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/travel-services",
+                "label": "Travel services",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-networking-platform",
+                "label": "Aalto networking platform",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-architecture",
+                "label": "Architecture",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/learning-services",
+                "label": "Learning services",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-art-and-media",
+                "label": "Art and Media",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/quicklinks-to-tools",
+                "label": "All tools (requires login)",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-applied-physics",
+                "label": "Applied Physics",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-chemical-engineering",
+                "label": "School of Chemical Engineering",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/services-for-research",
+                "label": "Research and innovation services",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-built-environment",
+                "label": "Built Environment",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-civil-engineering",
+                "label": "Civil Engineering",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-electrical-engineering",
+                "label": "School of Electrical Engineering",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-management-studies",
+                "label": "Management Studies",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/communications-services",
+                "label": "Communications services",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university-open-university",
+                "label": "Open University",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university/ethical-channel",
+                "label": "Ethical channel – Whistleblowing",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/occupational-health-care",
+                "label": "Occupational health",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/research-and-learning-infrastructures",
+                "label": "Research and learning infrastructures",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-arts-design-and-architecture",
+                "label": "School of Arts, Design and Architecture",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/aalto-space-mobile-application",
+                "label": "Aalto Space",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-bioproducts-and-biosystems",
+                "label": "Bioproducts and Biosystems",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-accounting-and-business-law",
+                "label": "Accounting & Business Law",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/safety-and-security-observations",
+                "label": "Safety and security observations",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/advancing-entrepreneurship-and-innovations",
+                "label": "Entrepreneurship and innovations",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university/aalto-university-magazine",
+                "label": "Aalto University Magazine",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-electronics-and-nanoengineering",
+                "label": "Electronics and Nanoengineering",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-mathematics-and-systems-analysis",
+                "label": "Mathematics and Systems Analysis",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-energy-and-mechanical-engineering",
+                "label": "Energy and Mechanical Engineering",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+                "label": "Scholarships and tuition fees",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-information-and-service-management",
+                "label": "Information and Service Management",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-electrical-engineering-and-automation",
+                "label": "Electrical Engineering and Automation",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-industrial-engineering-and-management",
+                "label": "Industrial Engineering and Management",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-chemical-and-metallurgical-engineering",
+                "label": "Chemical and Metallurgical Engineering",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university/code-of-conduct-values-into-practice",
+                "label": "Code of Conduct",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university/aalto-university-contact-information",
+                "label": "Contact information",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-information-and-communications-engineering",
+                "label": "Information and Communications Engineering",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admission-services/contact-information-for-aalto-university-admission-services",
+                "label": "Contact admission services",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/fi/koulutustarjonta",
+                "label": "FI Suomeksi",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/sv/utbildningsutbud",
+                "label": "SV Svenska",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-handbook/cookie-policy",
+                "label": "Cookie policy",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/study-at-aalto/chat-with-aalto-students",
+                "label": "Chat with students",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-handbook/privacy-notice-for-aaltofi",
+                "label": "Privacy notice",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/study-at-aalto/studying-at-the-aalto-campus",
+                "label": "Campus life",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/study-at-aalto/fairs-and-events-for-applicants",
+                "label": "Events for applicants",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/international-students/incoming-exchange-students",
+                "label": "Exchange students",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/collaboration/collaboration-with-cities-and-regions",
+                "label": "Collaboration with cities and regions",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/cyber-security/report-an-information-security-incident",
+                "label": "Cyber Security incident report",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-handbook/accessibility-statement-aalto-university",
+                "label": "Accessibility statement",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/campus/campus-maps-addresses-and-opening-hours-in-otaniemi",
+                "label": "Campus maps",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/collaboration/cooperation-with-higher-education-institutions-and-research-institutes",
+                "label": "Cooperation with HEI and research institutes",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-computer-science",
+                "label": "Computer Science",
+                "score": 26,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-computer-science/courses",
+                "label": "Skip to main content",
+                "score": 16,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admission-services/apply-to-bachelors-programmes-in-english",
+                "label": "Bachelor’s admissions (programmes in English)",
+                "score": 15,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admission-services/apply-to-bachelors-programmes-in-finnish-and-swedish",
+                "label": "Bachelor's admissions (programmes in Finnish and Swedish)",
+                "score": 15,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-science",
+                "label": "School of Science",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-chemistry-and-materials-science",
+                "label": "Chemistry and Materials Science",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-neuroscience-and-biomedical-engineering",
+                "label": "Neuroscience and Biomedical Engineering",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/people",
+                "label": "People and contact information",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/strategy",
+                "label": "Our strategy",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services",
+                "label": "All services",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/security",
+                "label": "Emergencies",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admissions",
+                "label": "How to apply",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/for-alumni",
+                "label": "For alumni",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/site-index",
+                "label": "Site index",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/it-services",
+                "label": "IT Services",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/research-art",
+                "label": "About our research and art",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/tenure-track",
+                "label": "Tenure track career system",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/student-guide",
+                "label": "Student Guide",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/for-personnel",
+                "label": "For personnel",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/study-options",
+                "label": "Find a study programme",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/collaboration",
+                "label": "Collaborate with us",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/for-the-media",
+                "label": "For the media",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/study-at-aalto",
+                "label": "Apply to Aalto",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/founder-school",
+                "label": "Founder School: from students to founders",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/sustainability",
+                "label": "Sustainability",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-handbook",
+                "label": "Aalto Handbook",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/cyber-security",
+                "label": "Cyber Security",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/language-centre",
+                "label": "Language Centre",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/learning-centre",
+                "label": "Library - Learning Centre",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/news-and-events",
+                "label": "Highlights",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university",
+                "label": "About Aalto University",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/lifewide-learning",
+                "label": "Lifewide Learning",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/teachers-handbook",
+                "label": "Teacher's Handbook",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-business",
+                "label": "School of Business",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/give-for-the-future",
+                "label": "Support us",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/ai-in-aalto",
+                "label": "AI in Aalto",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/hr-services",
+                "label": "HR services",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-engineering",
+                "label": "School of Engineering",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-film-elo",
+                "label": "Film, Television and Scenography",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/corporate-collaboration",
+                "label": "Corporate collaboration",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/travel-services",
+                "label": "Travel services",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-networking-platform",
+                "label": "Aalto networking platform",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-architecture",
+                "label": "Architecture",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/learning-services",
+                "label": "Learning services",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-art-and-media",
+                "label": "Art and Media",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://mycourses.aalto.fi/course/view.php?id=23103",
+                "label": "https://mycourses.aalto.fi/course/view.php?id=23103",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://mycourses.aalto.fi/course/view.php?id=23166",
+                "label": "MyCourse page",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://mycourses.aalto.fi/course/view.php?id=22070",
+                "label": "https://mycourses.aalto.fi/course/view.php?id=22070",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://mycourses.aalto.fi/course/view.php?id=21038",
+                "label": "https://mycourses.aalto.fi/course/view.php?id=21038",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://mycourses.aalto.fi/course/view.php?id=19103",
+                "label": "https://mycourses.aalto.fi/course/view.php?id=19103",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://mycourses.aalto.fi/course/view.php?id=19143",
+                "label": "https://mycourses.aalto.fi/course/view.php?id=19143",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://mycourses.aalto.fi/course/view.php?id=16984",
+                "label": "MyCourses page",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/quicklinks-to-tools",
+                "label": "All tools (requires login)",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-applied-physics",
+                "label": "Applied Physics",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-chemical-engineering",
+                "label": "School of Chemical Engineering",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/services-for-research",
+                "label": "Research and innovation services",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-built-environment",
+                "label": "Built Environment",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-civil-engineering",
+                "label": "Civil Engineering",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-electrical-engineering",
+                "label": "School of Electrical Engineering",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-management-studies",
+                "label": "Management Studies",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/communications-services",
+                "label": "Communications services",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university-open-university",
+                "label": "Open University",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university/ethical-channel",
+                "label": "Ethical channel – Whistleblowing",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/occupational-health-care",
+                "label": "Occupational health",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/research-and-learning-infrastructures",
+                "label": "Research and learning infrastructures",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-arts-design-and-architecture",
+                "label": "School of Arts, Design and Architecture",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/aalto-space-mobile-application",
+                "label": "Aalto Space",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-bioproducts-and-biosystems",
+                "label": "Bioproducts and Biosystems",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-accounting-and-business-law",
+                "label": "Accounting & Business Law",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/safety-and-security-observations",
+                "label": "Safety and security observations",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/advancing-entrepreneurship-and-innovations",
+                "label": "Entrepreneurship and innovations",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university/aalto-university-magazine",
+                "label": "Aalto University Magazine",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-electronics-and-nanoengineering",
+                "label": "Electronics and Nanoengineering",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-mathematics-and-systems-analysis",
+                "label": "Mathematics and Systems Analysis",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-energy-and-mechanical-engineering",
+                "label": "Energy and Mechanical Engineering",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+                "label": "Scholarships and tuition fees",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-information-and-service-management",
+                "label": "Information and Service Management",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-electrical-engineering-and-automation",
+                "label": "Electrical Engineering and Automation",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-industrial-engineering-and-management",
+                "label": "Industrial Engineering and Management",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-chemical-and-metallurgical-engineering",
+                "label": "Chemical and Metallurgical Engineering",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university/code-of-conduct-values-into-practice",
+                "label": "Code of Conduct",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university/aalto-university-contact-information",
+                "label": "Contact information",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-information-and-communications-engineering",
+                "label": "Information and Communications Engineering",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admission-services/contact-information-for-aalto-university-admission-services",
+                "label": "Contact admission services",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/node/60601",
+                "label": "More information",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-handbook/cookie-policy",
+                "label": "Cookie policy",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/study-at-aalto/chat-with-aalto-students",
+                "label": "Chat with students",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-handbook/privacy-notice-for-aaltofi",
+                "label": "Privacy notice",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/study-at-aalto/studying-at-the-aalto-campus",
+                "label": "Campus life",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/study-at-aalto/fairs-and-events-for-applicants",
+                "label": "Events for applicants",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/international-students/incoming-exchange-students",
+                "label": "Exchange students",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/collaboration/collaboration-with-cities-and-regions",
+                "label": "Collaboration with cities and regions",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/cyber-security/report-an-information-security-incident",
+                "label": "Cyber Security incident report",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-handbook/accessibility-statement-aalto-university",
+                "label": "Accessibility statement",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/campus/campus-maps-addresses-and-opening-hours-in-otaniemi",
+                "label": "Campus maps",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aalto.fi/en/collaboration/cooperation-with-higher-education-institutions-and-research-institutes",
+                "label": "Cooperation with HEI and research institutes",
+                "score": 0,
+                "source": "html"
+              }
+            ],
+            "programs_confirmed": 0,
+            "outcomes": [
+              {
+                "url": "https://mc.s50.exacttarget.com/",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://sanakirja-fi.aalto-libproxy.idm.oclc.org/",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.tiima.com/cognito/aalto",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://outlook.office.com/",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://wd3.myworkday.com/aalto/d/home.htmld",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.lounaat.info/otaniemi",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.facebook.com/sharer/sharer.php?u=https%3A//www.aalto.fi/en/study-options%3FdegreeType%3Dmasters%26field%3Dtech%26language%3Den",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://bsky.app/intent/compose?text=https%3A//www.aalto.fi/en/study-options%3FdegreeType%3Dmasters%26field%3Dtech%26language%3Den",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.linkedin.com/shareArticle?mini=true&url=https%3A//www.aalto.fi/en/study-options%3FdegreeType%3Dmasters%26field%3Dtech%26language%3Den",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.facebook.com/aaltouniversity",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.linkedin.com/school/aalto-university",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://bsky.app/profile/aalto.fi",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.instagram.com/aaltouniversity",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/user/aaltouniversity",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.snapchat.com/add/aaltouniversity",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://outlook.office.com/",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://sis-aalto.funidata.fi/",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.aalto.fi/en",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/a-sign-of-change",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/saml_login",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admission-services/apply-to-masters-programmes",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://www.aalto.fi/en/doctoral-education/how-to-apply-for-doctoral-studies",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://cloud.info.aalto.fi/subscribe-en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.aalto.fi/en/doctoral-education",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://research.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university/rankings",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-design",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-economics",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-finance",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-marketing",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/news",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/events",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://ourblogs.aalto.fi/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/podcasts",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/campus",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/careers-at-aalto",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://ai.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://abacus-accounting.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://abacus-planning.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://booking.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://halli.aalto.fi/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://neo.aalto.fi/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://phonebook.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://reportfinder.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://salesforce.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://survey.aalto.fi/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://sisu.aalto.fi/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://mycourses.aalto.fi/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://mystudies.aalto.fi/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://sisu.aalto.fi/student/search/main",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://shop.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://brand.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.aalto.fi/en/open-positions",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://mycourses.aalto.fi/?lang=fi",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/feedback-on-aaltofi",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/strategy",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://www.aalto.fi/en/security",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admissions",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://www.aalto.fi/en/for-alumni",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://www.aalto.fi/en/site-index",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://www.aalto.fi/en/it-services",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://www.aalto.fi/en/research-art",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://www.aalto.fi/en/tenure-track",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://www.aalto.fi/en/study-options",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://www.aalto.fi/en/student-guide",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://www.aalto.fi/en/for-personnel",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://www.aalto.fi/en/collaboration",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://www.aalto.fi/en/for-the-media",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/study-at-aalto",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/founder-school",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/sustainability",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-handbook",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/cyber-security",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/language-centre",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/learning-centre",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/news-and-events",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/lifewide-learning",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/teachers-handbook",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-business",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/give-for-the-future",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/ai-in-aalto",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/hr-services",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-engineering",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-film-elo",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/corporate-collaboration",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/travel-services",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-networking-platform",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-architecture",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/learning-services",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-art-and-media",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/quicklinks-to-tools",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-applied-physics",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-chemical-engineering",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/services-for-research",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-built-environment",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-civil-engineering",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-electrical-engineering",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-management-studies",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/communications-services",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university-open-university",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university/ethical-channel",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/occupational-health-care",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/research-and-learning-infrastructures",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-arts-design-and-architecture",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/aalto-space-mobile-application",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-bioproducts-and-biosystems",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-accounting-and-business-law",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/services/safety-and-security-observations",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/advancing-entrepreneurship-and-innovations",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university/aalto-university-magazine",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-electronics-and-nanoengineering",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-mathematics-and-systems-analysis",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-energy-and-mechanical-engineering",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-information-and-service-management",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-electrical-engineering-and-automation",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-industrial-engineering-and-management",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-chemical-and-metallurgical-engineering",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university/code-of-conduct-values-into-practice",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university/aalto-university-contact-information",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-information-and-communications-engineering",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admission-services/contact-information-for-aalto-university-admission-services",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/fi/koulutustarjonta",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/sv/utbildningsutbud",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-handbook/cookie-policy",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/study-at-aalto/chat-with-aalto-students",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-handbook/privacy-notice-for-aaltofi",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/study-at-aalto/studying-at-the-aalto-campus",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/study-at-aalto/fairs-and-events-for-applicants",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/international-students/incoming-exchange-students",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/collaboration/collaboration-with-cities-and-regions",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/cyber-security/report-an-information-security-incident",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-handbook/accessibility-statement-aalto-university",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/campus/campus-maps-addresses-and-opening-hours-in-otaniemi",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/collaboration/cooperation-with-higher-education-institutions-and-research-institutes",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-computer-science",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admission-services/apply-to-bachelors-programmes-in-english",
+                "outcome": "reads_as_scholarship_index"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admission-services/apply-to-bachelors-programmes-in-finnish-and-swedish",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://www.aalto.fi/en/school-of-science",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-chemistry-and-materials-science",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-neuroscience-and-biomedical-engineering",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://www.aalto.fi/en/people",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://mc.s50.exacttarget.com/",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://sanakirja-fi.aalto-libproxy.idm.oclc.org/",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.tiima.com/cognito/aalto",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://outlook.office.com/",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://wd3.myworkday.com/aalto/d/home.htmld",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.lounaat.info/otaniemi",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://en.wikipedia.org/wiki/DNA_nanotechnology",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://en.wikipedia.org/wiki/Approximate_Bayesian_computation",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.facebook.com/sharer/sharer.php?u=https%3A//www.aalto.fi/en/department-of-computer-science/courses",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://bsky.app/intent/compose?text=https%3A//www.aalto.fi/en/department-of-computer-science/courses",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.linkedin.com/shareArticle?mini=true&url=https%3A//www.aalto.fi/en/department-of-computer-science/courses",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.facebook.com/aaltouniversity",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.linkedin.com/school/aalto-university",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://bsky.app/profile/aalto.fi",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.instagram.com/aaltouniversity",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/user/aaltouniversity",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.snapchat.com/add/aaltouniversity",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://outlook.office.com/",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://sis-aalto.funidata.fi/",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.aalto.fi/en",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/a-sign-of-change",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/saml_login",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/admission-services/apply-to-masters-programmes",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://www.aalto.fi/en/doctoral-education/how-to-apply-for-doctoral-studies",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://cloud.info.aalto.fi/subscribe-en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.aalto.fi/en/doctoral-education",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://research.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.aalto.fi/en/aalto-university/rankings",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-design",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-economics",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-finance",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/department-of-marketing",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/news",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/events",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://ourblogs.aalto.fi/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/podcasts",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/campus",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.aalto.fi/en/careers-at-aalto",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://ai.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://abacus-accounting.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://abacus-planning.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://booking.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://halli.aalto.fi/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://neo.aalto.fi/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://phonebook.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://reportfinder.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://salesforce.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://survey.aalto.fi/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://sisu.aalto.fi/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://mycourses.aalto.fi/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://mystudies.aalto.fi/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://sisu.aalto.fi/student/search/main",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://shop.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://brand.aalto.fi/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://mycourses.aalto.fi/course/index.php?categoryid=35",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://mycourses.aalto.fi/course/view.php?id=23173",
+                "outcome": "short_label"
+              }
+            ]
+          }
+        },
+        "programs": [],
+        "program_page_found": false,
+        "scholarship_page_found": true,
+        "discovery_notes": "Sitemap-first discovery found: program_catalog, admissions, costs, scholarships. Not found: program_page, documents.",
+        "claims": 0,
+        "claims_verified": 0,
+        "completeness": 0.0,
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {
+          "classifier-rejected": 2,
+          "fetch-failed": 3,
+          "no-pattern-match": 1,
+          "fetched-ok": 3
+        },
+        "page_types": {
+          "irrelevant": 1,
+          "costs": 3,
+          "scholarship_index": 2
+        },
+        "page_diagnostics": [
+          {
+            "category": "classifier-rejected",
+            "url": "https://www.aalto.fi/en/admission-services",
+            "page_type": "irrelevant",
+            "characters": "3270",
+            "detail": "classified as irrelevant; no requirement can be read from this kind of page. title='Admission Services | Aalto University' signals='title is off-topic' chars=3270 degrees=[]"
+          },
+          {
+            "category": "classifier-rejected",
+            "url": "https://www.aalto.fi/en/international-students/tuition-fees-and-scholarships",
+            "page_type": "costs",
+            "characters": null,
+            "detail": "not an award page; no scholarship recorded (5 award links, 0 below it: /en/node/30591, /en/international-students/scholarships-study-right-started-on-or-before-1-august-2024, /en/international-students/scholarships-study-right-started-on-or-after-1-august-2025, /en/international-students/external-scholarships)"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aalto.fi/en/node/1008496",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt disallows this path"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aalto.fi/en/node/835691",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt disallows this path"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aalto.fi/en/node/30591",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt disallows this path"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+            "page_type": "costs",
+            "characters": "29568",
+            "detail": "page was read but no cost figures could be extracted"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+            "page_type": "costs",
+            "characters": null,
+            "detail": "read as a funding index; 2 award links, 2 queued within the award budget"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.aalto.fi/en/international-students/scholarships-study-right-started-on-or-after-1-august-2025",
+            "page_type": "scholarship_index",
+            "characters": null,
+            "detail": "read as a funding index; 5 award links, 5 queued within the award budget"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.aalto.fi/en/grants-and-awards",
+            "page_type": "scholarship_index",
+            "characters": null,
+            "detail": "read as a funding index; 0 award links, 0 queued within the award budget"
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 0,
+      "blocked": 1,
+      "program_pages_found": 0,
+      "scholarship_pages_found": 1,
+      "claims": 0,
+      "false_positives": 0,
+      "page_outcomes": {
+        "classifier-rejected": 2,
+        "fetch-failed": 3,
+        "no-pattern-match": 1,
+        "fetched-ok": 3
+      },
+      "page_types": {
+        "irrelevant": 1,
+        "costs": 3,
+        "scholarship_index": 2
+      },
+      "recall": {
+        "program": {
+          "numerator": 0,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 3,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 2,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 8,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 53,
+        "browser": 0,
+        "pdf": 0
+      }
+    }
+  },
+  "claims": []
+}

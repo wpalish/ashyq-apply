@@ -1,0 +1,122 @@
+{
+  "kind": "DEV retained official topic-page loss diagnostic; not blinded expert or scored result",
+  "source_head": "7277c154bda838688268b7a07d4286ed8f4688ce",
+  "case": "toronto",
+  "runtime": "/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/canary-30h03nn_",
+  "run": {
+    "id": "5e53a660f4cf4906a4f3c18309e014ef",
+    "started_at": "2026-10-07 22:30:11.271872",
+    "finished_at": "2026-10-07 22:31:45.491121",
+    "stage": "failed"
+  },
+  "original_cache_receipt_sha256": "5743e9c55aaaf398139bff953712f8138f3e3c6f330f89b0feed36769c72a77b",
+  "physical_budget": {
+    "fetcher_calls": 60,
+    "search_queries": 6,
+    "network_http_requests": 73,
+    "elapsed_ms": 94520,
+    "stop_reason": "page_budget_exhausted",
+    "provider_failure": null
+  },
+  "raw_run_error": "RuntimeError: BENCHMARK_PAGE_BUDGET_EXHAUSTED",
+  "actual_page_outcomes": {
+    "classifier-rejected": 4,
+    "fetched-ok": 1,
+    "no-pattern-match": 4
+  },
+  "actual_claims_terminal": 0,
+  "first_replayed_requirement_loss": {
+    "rootcause": "CLASSIFIER",
+    "url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements",
+    "get_number": 52,
+    "actual_outcome": "ok \u2192 unknown \u2192 classifier-rejected",
+    "root_function": "classify_page; _ADMISSIONS lacks own English language requirement/date deadline topic phrases",
+    "reader_function": "WebRequirementsAdapter.verify before requirement readers"
+  },
+  "latent_permission_diagnostic_losses": [
+    {
+      "rootcause": "EXTRACTOR",
+      "kind": "CAEL60 numeric prefix falsely treated as IELTS6.0",
+      "source": "extract_requirements; _IELTS_SUB globally takes first no-part match",
+      "pages": 2,
+      "match": "no part below 6",
+      "full_actual_text": "no part below 60",
+      "mechanism": "one-digit numeric capture without a trailing numeric boundary; no exam ownership; not division by10"
+    },
+    {
+      "rootcause": "SCOPE",
+      "kind": "IB sibling qualification copied into IELTS claims",
+      "source": "WebRequirementsAdapter.verify: builder scope=read_scope(whole page); ClaimBuilder.add inherits scope",
+      "observed_qualification": "IB",
+      "expected_claim_local_qualification": "unknown, no IB in own IELTS section"
+    },
+    {
+      "rootcause": "EXTRACTOR",
+      "kind": "document/supplementary date becomes admission_deadline",
+      "source": "_deadline_v2 on flattened prose loses table role/row ownership",
+      "emitted": "2027-02-01",
+      "relevant_published_row": "Admission Category includes Computer Science; Deadline January15,2027",
+      "published_heading": "Deadlines for fall2027 entry",
+      "scope_limit": "These are retained official page words, not independently accepted complete 2027 application advice"
+    },
+    {
+      "rootcause": "EXTRACTOR",
+      "kind": "ECE matches substring of December",
+      "source": "extract_requirements credential pattern909 without word boundaries",
+      "matched": "required documents by  Dece",
+      "emitted": "credential_evaluation_required=true"
+    }
+  ],
+  "permission_diagnostic": {
+    "status": "REJECTED_AS_PROPOSED_FIX",
+    "operation": "force UNKNOWN\u2192GENERAL_ADMISSIONS only to expose downstream reader behavior",
+    "route_and_language_followups": "disabled only for isolated one-page reader boundary control",
+    "full_end_to_end_pipeline": "not run",
+    "regression_controls": "6 expected red and6 control green;0 implementation edits"
+  },
+  "unknowns": [
+    "Full 2027 language/population/campus applicability on pages with no own date; metadata requested2027/28 does not supply observed scope year.",
+    "Quality effect or correction count; no gold/scorer/blinded expert benchmark read.",
+    "Complete official topic-purpose acceptance rule, safe after reader repairs.",
+    "End-to-end effects/read budget after classification changes."
+  ],
+  "source_sha256": {
+    "app/adapters/page_classifier.py": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+    "app/adapters/requirements/web_requirements.py": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+    "app/adapters/extraction.py": "27eef6814ce08ddf170220f739ffdd24de4f68e6a10403e908f3723ee0fd5fdf",
+    "app/adapters/scope_reader.py": "169136aadc489f886f362a4bd703b4968933939257af1dd2e7867a26c2ff0304",
+    "app/adapters/document_ir.py": "c8c3f15da74f8f891f4f79fd8bfd52e937b57898edfdc3ac1a59e7d44bce9f0f",
+    "app/adapters/structured_extraction.py": "d8a85ae1c2307c428d8e9220fb56d0ab9d69adfdf84a38e56958b30f6b862f47",
+    "app/adapters/requirements/section_scope.py": "8b2c8da32b7595f95aab817d97b90f7900aca93bab21060499a39ecfc83a2f79",
+    "app/domain/claim_verifier.py": "7c33bada893a2e3c98fbd68e67d84ff9e8bf587a04c13088dfc904fc3219f249",
+    "app/pipeline/runner.py": "686a6961964eb020056cba8b80f51c3cee622d2e6d62e63194b7d520e55fd71f",
+    "evaluation/research/live.py": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df"
+  },
+  "functions": {
+    "_ADMISSIONS": 132,
+    "classify_page": 407,
+    "WebRequirementsAdapter.verify": 241,
+    "builder_scope_read": 359,
+    "classifier_rejection_route": 377,
+    "extract_requirements": 718,
+    "_IELTS_SUB": 308,
+    "global_subscore_loop": 756,
+    "_deadline_v2": 686,
+    "credential_pattern": 909,
+    "ClaimBuilder.add": 193,
+    "read_scope": 368,
+    "build_document_ir": 221,
+    "extract_table_requirements": 58
+  },
+  "provider_STOP_exists_when_sealed": false,
+  "actions": {
+    "network": 0,
+    "provider": 0,
+    "model": 0,
+    "DNS": 0,
+    "source_edits": 0,
+    "Git": 0,
+    "STOP_edits": 0,
+    "new_agents": 0
+  }
+}

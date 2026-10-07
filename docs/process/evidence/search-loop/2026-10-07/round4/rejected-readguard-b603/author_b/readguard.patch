@@ -1,0 +1,773 @@
+--- a/backend/app/adapters/base.py
++++ b/backend/app/adapters/base.py
+@@ -43,6 +43,8 @@
+     #: Search-seam attempts charged to this institution, including local
+     #: wrapper refusals; this budget ledger does not prove HTTP dispatch.
+     search_queries_used: int = 0
++    #: Stable imported identity for internal university-wide source-work scope.
++    catalogue_id: str | None = None
+ 
+     @property
+     def verifiable(self) -> bool:
+--- a/backend/app/pipeline/runner.py
++++ b/backend/app/pipeline/runner.py
+@@ -11,12 +11,12 @@
+ import logging
+ import os
+ import socket
++from contextlib import contextmanager, nullcontext
++from copy import deepcopy
+ from datetime import UTC, date, datetime, timedelta
+-
+-from sqlalchemy import select
+-from sqlalchemy.orm import Session
+-
+-from app.adapters.base import Candidate, CandidateProgram, PageOutcome
++from functools import partial
++
++from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
+ from app.adapters.cost.web_costs import WebCostAdapter
+ from app.adapters.discovery.catalog_walker import CatalogRenderer
+ from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
+@@ -70,16 +70,22 @@
+     AuditEvent,
+     ClaimRow,
+     ConflictRow,
++    Job,
+     ProgramResultRow,
+     ResearchRun,
+     SourcePage,
+     new_id,
+ )
+ from app.models.base import ensure_utc
++from app.pipeline import read_budget
++from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+ from app.pipeline.state import IN_PROGRESS_STAGES, RunState
+ from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
+ from app.schemas.profile import ApplicantProfileIn
+ from app.schemas.result import CostBreakdown, ProgramResult, Tristate
++from sqlalchemy import select, update
++from sqlalchemy.exc import OperationalError
++from sqlalchemy.orm import Session
+ 
+ log = logging.getLogger("unimatch.pipeline")
+ 
+@@ -99,19 +105,6 @@
+     size = f", {outcome.readable_chars} chars" if outcome.readable_chars else ""
+     page_type = outcome.page_type or "unclassified"
+     return f"page {outcome.category}: {outcome.url} (page_type {page_type}{size}): {outcome.detail}"
+-
+-
+-class RunCancelled(RuntimeError):
+-    pass
+-
+-
+-class LeaseLost(RuntimeError):
+-    """This worker no longer owns the job it is executing.
+-
+-    Raised at a checkpoint rather than mid-write, so the abandoned attempt
+-    stops between units of work and leaves the database to the worker that
+-    took the job over.
+-    """
+ 
+ 
+ class ResearchRunner:
+@@ -152,11 +145,20 @@
+         self.verify_limit = min(run.verify_limit or settings.verify_limit, self.candidate_limit)
+         self.intake = f"{profile.context.intake_term} {profile.context.intake_year}"
+         self._candidates: list[Candidate] = []
++        self._read_guard_enabled = False
++        self._read_guard_out_of_scope = False
++        self._read_guard_writing = False
++        self._read_episode_fresh = False
++        self._read_job_kind: str | None = None
+ 
+     # --- infrastructure -------------------------------------------------
+ 
+     def _make_fetcher(self) -> Fetcher:
+-        return Fetcher(
++        factory = (
++            partial(read_budget.BudgetedFetcher, before_get=self._reserve_university_read)
++            if self._read_guard_enabled else Fetcher
++        )
++        return factory(
+             self.settings.cache_dir,
+             delay_seconds=self.settings.fetch_delay_seconds,
+             respect_robots=self.settings.respect_robots,
+@@ -186,6 +188,7 @@
+             university_ids=self.run.university_ids,
+             live_limit=self.verify_limit,
+             page_recorder=lambda **fields: SourcePage.record(self.session, **fields),
++            research_scope=self._university_read_scope if self._read_guard_enabled else None,
+         )
+ 
+     def _audit(self, action: str, entity_type: str, entity_id: str, **detail) -> None:
+@@ -212,6 +215,20 @@
+         means another attempt owns the job, so this one rolls its checkpoint
+         back and stops without having written anything.
+         """
++        if not self._read_guard_writing:
++            has_ledger = read_budget.LEDGER_KEY in (self.run.settings_snapshot or {})
++            if not self._read_guard_enabled and not has_ledger and not self.demo:
++                # A cold or stale ORM object can predate creation of the
++                # namespace. Source-toggle checkpoints must still preserve it.
++                with self.session.no_autoflush:
++                    saved = self.session.execute(select(ResearchRun.settings_snapshot).where(
++                        ResearchRun.id == self.run.id
++                    )).scalar_one()
++                has_ledger = isinstance(saved, dict) and read_budget.LEDGER_KEY in saved
++            if self._read_guard_enabled or has_ledger:
++                self.run.settings_snapshot = read_budget.copy_snapshot_with_ledger(
++                    self.run.settings_snapshot or {}, self._read_snapshot(lock=True)
++                )
+         self.run.stage_state = self.state.dump()
+         self.run.heartbeat_at = datetime.now(UTC)
+         # The lease follows the stage, not the order of assignments in the
+@@ -245,22 +262,25 @@
+         cancellation - the promise that this attempt may still write is kept
+         by the fence in _save.
+         """
+-        cancelled = self.session.execute(
+-            select(ResearchRun.cancelled).where(ResearchRun.id == self.run.id)
+-        ).scalar()
+-        if cancelled:
+-            raise RunCancelled("Run was cancelled by the user.")
+-        if self.job_id is not None:
+-            from app.jobs.store import JobStore
+-
+-            store = JobStore(self.session, worker_id=self.worker_id)
+-            if store.is_cancel_requested(self.job_id):
+-                raise RunCancelled("Job was cancelled by the user.")
+-            # A reaped lease means another worker is already redoing this job.
+-            # Continuing would double every read-modify-write counter on the
+-            # run and let this attempt report an outcome it no longer owns.
+-            if not store.owns(self.job_id):
+-                raise LeaseLost(f"job {self.job_id[:8]} is no longer held by {self.worker_id}")
++        guarded = self._read_guard_enabled or read_budget.LEDGER_KEY in (self.run.settings_snapshot or {})
++        # Dirty progress must not autoflush a Run row before the Job fence.
++        with self.session.no_autoflush if guarded else nullcontext():
++            cancelled = self.session.execute(
++                select(ResearchRun.cancelled).where(ResearchRun.id == self.run.id)
++            ).scalar()
++            if cancelled:
++                raise RunCancelled("Run was cancelled by the user.")
++            if self.job_id is not None:
++                from app.jobs.store import JobStore
++
++                store = JobStore(self.session, worker_id=self.worker_id)
++                if store.is_cancel_requested(self.job_id):
++                    raise RunCancelled("Job was cancelled by the user.")
++                # A reaped lease means another worker is already redoing this job.
++                # Continuing would double every read-modify-write counter on the
++                # run and let this attempt report an outcome it no longer owns.
++                if not store.owns(self.job_id):
++                    raise LeaseLost(f"job {self.job_id[:8]} is no longer held by {self.worker_id}")
+ 
+     def _live_claim_moments(self) -> list[datetime]:
+         """The expiry moment of every live claim in this run.
+@@ -353,13 +373,23 @@
+             self.state[stage].error = ""
+         self._audit("run_recheck_started", "run", self.run.id, stale_claims=len(stale_claims))
+         self._save()
+-        await self.run_to_decision()
++        prior = self._read_guard_out_of_scope
++        self._read_guard_out_of_scope = True
++        try:
++            await self.run_to_decision()
++        finally:
++            self._read_guard_out_of_scope = prior
+         return len(stale_claims)
+ 
+     # --- entry point ------------------------------------------------------
+ 
+     async def run_to_decision(self) -> None:
+         """Stages 1-5, ending at AWAITING_USER_DECISION."""
++        self._read_episode_fresh = self.run.started_at is None
++        self._read_guard_enabled = (
++            read_budget.UNIVERSITY_READ_BUDGET and not self.demo and not self._read_guard_out_of_scope
++        )
++        previous_snapshot = deepcopy(self.run.settings_snapshot or {})
+         self.run.started_at = self.run.started_at or datetime.now(UTC)
+         self.run.settings_snapshot = {
+             "demo_mode": self.demo,
+@@ -371,6 +401,10 @@
+             "respect_robots": self.settings.respect_robots,
+             "university_ids": self.run.university_ids or [],
+         }
++        if read_budget.LEDGER_KEY in previous_snapshot:
++            self.run.settings_snapshot[read_budget.LEDGER_KEY] = previous_snapshot[read_budget.LEDGER_KEY]
++        if self._read_guard_enabled:
++            self.run.settings_snapshot["university_read_budget_scope"] = "decision-job-episode"
+         fetcher = self._make_fetcher()
+         browser = self._make_browser(fetcher)
+         if browser.enabled:
+@@ -442,6 +476,165 @@
+         self.run.stage = stage.value
+         self.session.add(self.run)
+ 
++    def _lock_read_checkpoint_job(self) -> None:
++        if not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0:
++            return  # Reads still fail closed in _change_read_budget; no fake fence.
++        owned_job = (
++            Job.id == self.job_id,
++            Job.run_id == self.run.id,
++            Job.status == "running",
++            Job.worker_id == self.worker_id,
++            Job.attempts == self.lease_token,
++        )
++        statement = select(Job.kind).where(*owned_job).with_for_update(nowait=True)
++        with self.session.no_autoflush:
++            kind = self.session.execute(statement).scalar_one_or_none()
++            if kind is not None and self.session.get_bind().dialect.name == "sqlite":
++                # SQLite ignores FOR UPDATE. Acquire its write transaction
++                # before reading the counter, with the same attempt fence.
++                # This no-op UPDATE changes no lease/state values; _save still
++                # performs the actual heartbeat and commit before get.
++                fence = self.session.execute(update(Job).where(*owned_job).values(
++                    heartbeat_at=Job.heartbeat_at
++                ), execution_options={"synchronize_session": False})
++                if fence.rowcount != 1:
++                    kind = None
++        if kind is None:
++            self.session.rollback()
++            raise LeaseLost("Read checkpoint no longer holds its job attempt.")
++        self._read_job_kind = kind
++
++    def _read_snapshot(self, *, lock: bool) -> dict:
++        # Always acquire Job then Run, both NOWAIT: the existing cancel/recovery
++        # writers can use the opposite order. Never wait across that lock pair.
++        statement = select(ResearchRun.settings_snapshot).where(ResearchRun.id == self.run.id)
++        try:
++            if lock:
++                self._lock_read_checkpoint_job()
++                statement = statement.with_for_update(nowait=True)
++            with self.session.no_autoflush:
++                value = self.session.execute(statement).scalar_one()
++        except OperationalError as error:
++            self.session.rollback()
++            sqlite_code = getattr(error.orig, "sqlite_errorcode", 0)
++            if getattr(error.orig, "sqlstate", None) == "55P03" or (
++                isinstance(sqlite_code, int) and sqlite_code & 0xFF in {5, 6}
++            ):
++                raise UniversityReadStopped("checkpoint_busy") from error
++            raise
++        if not isinstance(value, dict):
++            raise UniversityReadStopped("invalid_snapshot")
++        return deepcopy(value)
++
++    @contextmanager
++    def _university_read_scope(self, candidate: Candidate):
++        if not self._read_guard_enabled:
++            yield
++            return
++        self._check_cancelled()
++        key = read_budget.university_key(candidate)
++        token = read_budget.ACTIVE_UNIVERSITY.set(key)
++        try:
++            self._change_read_budget(key, reserve=False)
++            yield
++        finally:
++            read_budget.ACTIVE_UNIVERSITY.reset(token)
++
++    def _reserve_university_read(self) -> None:
++        self._check_cancelled()
++        key = read_budget.ACTIVE_UNIVERSITY.get()
++        if key is None:
++            raise UniversityReadStopped("missing_university_scope")
++        self._change_read_budget(key, reserve=True)
++
++    def _change_read_budget(self, key: str, *, reserve: bool) -> None:
++        # No genuine fenced job means no admission. Canary/direct runner must
++        # acquire a real worker protocol before an owner can enable this flag.
++        if not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0:
++            raise UniversityReadStopped("unfenced_episode")
++        durable = self._read_snapshot(lock=True)
++        if self._read_job_kind != "research":
++            raise UniversityReadStopped("unsupported_job_episode")
++        if read_budget.LEDGER_KEY in durable:
++            ledger = read_budget.validate_ledger(durable[read_budget.LEDGER_KEY])
++        elif self._read_episode_fresh:
++            ledger = read_budget.new_ledger()
++        else:
++            raise UniversityReadStopped("legacy_episode_untracked")
++        episode_id = "decision:" + self.job_id
++        active = ledger["active_episode"]
++        if active is not None and active != episode_id:
++            # A new genuine job gets a named new allowance only when the
++            # recorded predecessor belongs to this run's research history.
++            with self.session.no_autoflush:
++                previous_job = self.session.execute(select(Job.id).where(
++                    Job.id == active.removeprefix("decision:"),
++                    Job.run_id == self.run.id,
++                    Job.kind == "research",
++                )).scalar_one_or_none()
++            if previous_job is None:
++                raise UniversityReadStopped("unknown_saved_episode")
++        episode = ledger["episodes"].get(episode_id)
++        if episode is None:
++            if not self._read_episode_fresh and self.lease_token != 1:
++                raise UniversityReadStopped("missing_retry_episode")
++            episode = {"read_counts": {}}
++            ledger["episodes"][episode_id] = episode
++        ledger["active_episode"] = episode_id
++        count = episode["read_counts"].get(key, 0)
++        if count >= read_budget.READ_LIMIT:
++            # A refused get has no FetchResult/status/pages-failed. Do not
++            # rewrite the counter or refund previously admitted invocations.
++            self._save()
++            raise UniversityReadStopped("read_cap")
++        episode["read_counts"][key] = count + (1 if reserve else 0)
++        replacement = read_budget.copy_snapshot_with_ledger(self.run.settings_snapshot or {}, durable)
++        replacement[read_budget.LEDGER_KEY] = ledger
++        self.run.settings_snapshot = replacement
++        self._read_guard_writing = True
++        try:
++            self._save()  # heartbeat fence and counter commit BEFORE original get
++        finally:
++            self._read_guard_writing = False
++
++    def _read_budget_unknown(self, candidate: Candidate, stopped: UniversityReadStopped, result=None) -> None:
++        message = (
++            f"Remaining research for {candidate.name} is unknown: "
++            f"university read allowance refused ({stopped.reason})."
++        )
++        if message not in (self.run.unknowns or []):
++            self.run.unknowns = [*(self.run.unknowns or []), message]
++        if result is not None and not any(q.topic == "research read allowance" for q in result.unresolved):
++            result.unresolved.append(UnresolvedQuestion(
++                topic="research read allowance",
++                question=f"Which remaining official facts can be established for {result.program}?",
++                why_it_matters=message,
++                university=candidate.name,
++                program=result.program,
++                blocking=False,
++            ))
++
++    def _persist_read_partial_result(self, result: ProgramResult, claims, conflicts) -> int:
++        key = dedupe.program_key(result.university, result.program, result.degree, result.intake, result.country)
++        existing = self.session.query(ProgramResultRow).filter(
++            ProgramResultRow.run_id == self.run.id, ProgramResultRow.dedupe_key == key
++        ).one_or_none()
++        if existing is None:
++            self._persist_result(result, claims, conflicts)
++            return len(claims)
++        # A incomplete reread must never replace previous established evidence.
++        # Completed new outputs are durably retained for reconciliation in the
++        # audit record, not silently mixed into the previous complete result.
++        previous = ProgramResult.model_validate(existing.payload)
++        for question in result.unresolved:
++            if not any(q.model_dump() == question.model_dump() for q in previous.unresolved):
++                previous.unresolved.append(question)
++        self._update_result(existing, previous)
++        if claims:
++            self._audit("partial_read_evidence_retained", "result", existing.id,
++                        claims=[c.model_dump(mode="json") for c in claims])
++        return 0
++
+     # --- stage 1: profile -------------------------------------------------
+ 
+     async def _stage_validate(self) -> None:
+@@ -573,7 +766,14 @@
+                     career_notes="",
+                 )
+ 
+-                ar = await req.verify(cand, prog, self.intake)
++                budget_stopped = False
++                ar = AdapterResult()
++                try:
++                    with self._university_read_scope(cand):
++                        ar = await req.verify(cand, prog, self.intake)
++                except UniversityReadStopped as stopped:
++                    budget_stopped = True
++                    self._read_budget_unknown(cand, stopped, result)
+                 errors.extend(ar.errors)
+                 retry.extend(ar.retry_urls)
+                 # Filed as they arrive, not only at the end of the stage. A
+@@ -586,7 +786,13 @@
+                 self.run.pages_checked += ar.pages_checked
+                 self.run.pages_failed += ar.pages_failed
+ 
+-                cb, cr = await cost.fetch(cand)
++                cb, cr = CostBreakdown(), AdapterResult()
++                try:
++                    with self._university_read_scope(cand):
++                        cb, cr = await cost.fetch(cand)
++                except UniversityReadStopped as stopped:
++                    budget_stopped = True
++                    self._read_budget_unknown(cand, stopped, result)
+                 errors.extend(cr.errors)
+                 retry.extend(cr.retry_urls)
+                 self._record_page_outcomes(cr.page_outcomes)
+@@ -595,16 +801,25 @@
+                 result.costs = cb
+ 
+                 if cand.country not in gov_cache:
+-                    gr = await gov.post_study_work(cand.country)
++                    gr = AdapterResult()
++                    government_stopped = False
++                    try:
++                        with self._university_read_scope(cand):
++                            gr = await gov.post_study_work(cand.country)
++                    except UniversityReadStopped as stopped:
++                        budget_stopped = True
++                        government_stopped = True
++                        self._read_budget_unknown(cand, stopped, result)
+                     errors.extend(gr.errors)
+                     self._record_page_outcomes(gr.page_outcomes)
+                     self.run.pages_checked += gr.pages_checked
+                     self.run.pages_failed += gr.pages_failed
+-                    gov_cache[cand.country] = (
+-                        str(gr.claims[0].normalized_value) if gr.claims else "",
+-                        list(gr.claims),
+-                    )
+-                government_value, government_claims = gov_cache[cand.country]
++                    if not government_stopped:
++                        gov_cache[cand.country] = (
++                            str(gr.claims[0].normalized_value) if gr.claims else "",
++                            list(gr.claims),
++                        )
++                government_value, government_claims = gov_cache.get(cand.country, ("", []))
+                 # Every row of that country gets the government page as its own
+                 # evidence, not just the first one to trigger the fetch.
+                 ar.claims.extend(government_claims)
+@@ -667,9 +882,13 @@
+                 result.claims = [_to_out(c, f"{result.id}-c{j}") for j, c in enumerate(all_claims)]
+                 result.source_urls = sorted({c.source_url for c in all_claims})
+                 result.last_verified = max((c.accessed_at for c in all_claims), default=None)
+-                self._persist_result(result, all_claims, conflicts)
++                if budget_stopped:
++                    recorded = self._persist_read_partial_result(result, all_claims, conflicts)
++                else:
++                    self._persist_result(result, all_claims, conflicts)
++                    recorded = len(all_claims)
+                 self.run.programs_verified = len(seen_keys)
+-                self.run.claims_recorded += len(all_claims)
++                self.run.claims_recorded += recorded
+                 # Programmes done and programmes expected, so the ratio on
+                 # screen counts the same thing on both sides. The total grows
+                 # as candidates reveal how many programmes they carry.
+@@ -736,12 +955,19 @@
+             prog = CandidateProgram(
+                 name=result.program, field="", degree=result.degree, url=result.program_url
+             )
+-            scholarships, ar = await adapter.find(
+-                cand,
+-                prog,
+-                self.profile,
+-                allow_search=any(c.claim_type is ClaimType.PROGRAM_EXISTS for c in result.claims),
+-            )
++            try:
++                with self._university_read_scope(cand):
++                    scholarships, ar = await adapter.find(
++                        cand,
++                        prog,
++                        self.profile,
++                        allow_search=any(c.claim_type is ClaimType.PROGRAM_EXISTS for c in result.claims),
++                    )
++            except UniversityReadStopped as stopped:
++                self._read_budget_unknown(cand, stopped, result)
++                self._update_result(row, result)
++                st.items_done = i + 1
++                continue
+             errors.extend(ar.errors)
+             self._record_page_outcomes(ar.page_outcomes)
+             self.run.pages_checked += ar.pages_checked
+@@ -1086,6 +1312,7 @@
+ 
+     async def collect_documents(self) -> int:
+         """Deep document collection for approved (and maybe) rows only."""
++        self._read_guard_enabled = False  # Post-approval documents have no budget contract here.
+         st = self.state[PipelineStage.DOCUMENT_COLLECTION]
+         rows = [
+             r
+--- a/backend/app/catalogue/discovery.py
++++ b/backend/app/catalogue/discovery.py
+@@ -5,10 +5,8 @@
+ import asyncio
+ import hashlib
+ import re
++from contextlib import nullcontext
+ from urllib.parse import urlsplit
+-
+-from bs4 import BeautifulSoup
+-from sqlalchemy.orm import Session
+ 
+ from app.adapters.base import Candidate
+ from app.adapters.discovery.live_discovery import DiscoveryTrace, LiveDiscoveryAdapter
+@@ -20,7 +18,10 @@
+ from app.domain.dedupe import normalize
+ from app.domain.site_identity import registrable_domain
+ from app.models import University, UniversityObservation
++from app.pipeline.control import UniversityReadStopped
+ from app.schemas.profile import ApplicantProfileIn
++from bs4 import BeautifulSoup
++from sqlalchemy.orm import Session
+ 
+ # SI-1: additional first-party homepage branding. Off until measured and approved.
+ SITE_BRANDING_IDENTITY = False
+@@ -98,6 +99,7 @@
+             trace = DiscoveryTrace(institution=uni.name, domain=uni.domain or "")
+             candidate = Candidate(
+                 name=uni.name,
++                catalogue_id=uni.id,
+                 country=uni.country,
+                 city=uni.city,
+                 discovery_source=f"local-catalogue:{uni.id}",
+@@ -105,8 +107,13 @@
+             )
+             if index < self.live_limit:
+                 try:
+-                    candidate, trace = await asyncio.wait_for(
+-                        self._enrich(uni, profile, candidate, trace), timeout=300
++                    with self.research_scope(candidate) if self.research_scope else nullcontext():
++                        candidate, trace = await asyncio.wait_for(
++                            self._enrich(uni, profile, candidate, trace), timeout=300
++                        )
++                except UniversityReadStopped as stopped:
++                    trace.search_limitations.append(
++                        f"Remaining research remains unknown: university read allowance unavailable ({stopped.reason})."
+                     )
+                 except TimeoutError:
+                     trace.errors.append(
+@@ -141,6 +148,7 @@
+         )
+         discovered.search_failures[:0] = trace.search_failures
+         discovered.search_limitations[:0] = trace.search_limitations
++        enriched.catalogue_id = uni.id
+         enriched.discovery_source = f"local-catalogue:{uni.id}; {enriched.discovery_source}"
+         return enriched, discovered
+ 
+--- a/backend/app/adapters/discovery/live_discovery.py
++++ b/backend/app/adapters/discovery/live_discovery.py
+@@ -33,6 +33,7 @@
+ import logging
+ import re
+ from collections.abc import Callable
++from contextlib import AbstractContextManager, nullcontext
+ from dataclasses import dataclass, field
+ from functools import lru_cache
+ from pathlib import Path
+@@ -52,6 +53,7 @@
+ from app.domain.enums import FetchOutcome
+ from app.domain.site_identity import hosts_share_site
+ from app.domain.site_identity import registrable_domain as site_domain
++from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+ from app.schemas.profile import ApplicantProfileIn
+ from app.schemas.result import RankingEntry
+ 
+@@ -1065,7 +1067,9 @@
+         registry_path: Path | None = None,
+         *,
+         page_recorder: PageRecorder | None = None,
++        research_scope: Callable[[Candidate], AbstractContextManager] | None = None,
+     ) -> None:
++        self.research_scope = research_scope
+         self.fetcher = fetcher
+         self.registry_path = registry_path or REGISTRY_PATH
+         self.sitemaps = SitemapReader(fetcher)
+@@ -1129,7 +1133,16 @@
+         self.walker_outcomes = []
+         out: list[Candidate] = []
+         for entry in entries:
+-            candidate, trace = await self._discover_one(entry, profile)
++            seed = Candidate(name=entry["name"], country=entry["country"], city=entry.get("city", ""))
++            try:
++                with self.research_scope(seed) if self.research_scope else nullcontext():
++                    candidate, trace = await self._discover_one(entry, profile)
++            except UniversityReadStopped as stopped:
++                candidate = seed
++                trace = DiscoveryTrace(institution=seed.name, domain="")
++                trace.search_limitations.append(
++                    f"Remaining research remains unknown: university read allowance unavailable ({stopped.reason})."
++                )
+             self.traces.append(trace)
+             out.append(candidate)
+         return out
+@@ -1197,6 +1210,8 @@
+ 
+         try:
+             await self.sitemaps.collect(entry["homepage"], domain, trace, keep)
++        except (UniversityReadStopped, RunCancelled, LeaseLost):
++            raise
+         except Exception as exc:  # a malformed sitemap must not end the run
+             trace.errors.append(f"sitemap discovery failed: {type(exc).__name__}: {exc}")
+ 
+@@ -1409,6 +1424,8 @@
+         )
+         try:
+             walks = await walker.walk(catalogues[:WALKER_MAX_CATALOGS])
++        except (UniversityReadStopped, RunCancelled, LeaseLost):
++            raise
+         except Exception as exc:  # a walker failure must not end discovery
+             trace.errors.append(f"catalog walker failed: {type(exc).__name__}: {exc}"[:300])
+             return
+--- a/backend/app/adapters/discovery/catalog_walker.py
++++ b/backend/app/adapters/discovery/catalog_walker.py
+@@ -56,6 +56,7 @@
+     PageType,
+     classify_page,
+ )
++from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+ 
+ log = logging.getLogger("unimatch.discovery.walker")
+ 
+@@ -452,6 +453,8 @@
+             top_n = WALKER_TOP_N if depth == 0 else WALKER_DESCENT_TOP_N
+             try:
+                 walk = await self.walk_catalog(catalogue_url, top_n=top_n)
++            except (UniversityReadStopped, RunCancelled, LeaseLost):
++                raise
+             except Exception as exc:  # one broken catalogue must not end discovery
+                 log.warning(
+                     "catalog walk of %s failed: %s: %s",
+@@ -673,6 +676,8 @@
+         if callable(render) and isinstance(payloads, list):
+             try:
+                 rendered = await render(catalogue_url)
++            except (UniversityReadStopped, RunCancelled, LeaseLost):
++                raise
+             except Exception as exc:  # a broken tier must not end the walk
+                 log.warning("catalogue render failed for %s: %s", catalogue_url[:120], exc)
+             else:
+@@ -722,5 +727,7 @@
+                 institution_key=None,
+                 fetched_at=result.fetched_at,
+             )
++        except (UniversityReadStopped, RunCancelled, LeaseLost):
++            raise
+         except Exception as exc:
+             log.warning("source_pages recording failed for %s: %s", record_url[:120], exc)
+--- /dev/null
++++ b/backend/app/pipeline/control.py
+@@ -0,0 +1,17 @@
++"""Pipeline control signals that source adapters must never relabel as website failures."""
++
++
++class RunCancelled(RuntimeError):
++    pass
++
++
++class LeaseLost(RuntimeError):
++    """The worker no longer owns the job; it must write nothing further."""
++
++
++class UniversityReadStopped(RuntimeError):
++    """Local read allowance refusal, not HTTP failure or evidence of absence."""
++
++    def __init__(self, reason: str) -> None:
++        self.reason = reason
++        super().__init__(f"University read allowance refused: {reason}")
+--- /dev/null
++++ b/backend/app/pipeline/read_budget.py
+@@ -0,0 +1,111 @@
++"""Bounded decision-episode Fetcher.get reservations; no clock or HTTP-count claim."""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import re
++import unicodedata
++from collections.abc import Callable
++from contextvars import ContextVar
++from copy import deepcopy
++from typing import Any
++
++from app.adapters.base import Candidate
++from app.adapters.fetching import Fetcher, FetchResult
++from app.pipeline.control import UniversityReadStopped
++
++UNIVERSITY_READ_BUDGET = False
++READ_LIMIT = 60
++LEDGER_KEY = "university_research_budget_v1"
++ACTIVE_UNIVERSITY: ContextVar[str | None] = ContextVar("research_read_university", default=None)
++
++
++def university_key(candidate: Candidate) -> str:
++    """An imported row's id wins; curated identity retains qualifiers and punctuation."""
++    if candidate.catalogue_id is not None:
++        if not isinstance(candidate.catalogue_id, str) or not re.fullmatch(
++            r"[A-Za-z0-9][A-Za-z0-9:._-]{0,127}", candidate.catalogue_id
++        ):
++            raise UniversityReadStopped("invalid_catalogue_identity")
++        return "catalogue:" + candidate.catalogue_id
++    values = []
++    for value in (candidate.name, candidate.country):
++        if not isinstance(value, str):
++            raise UniversityReadStopped("missing_curated_identity")
++        normalized = " ".join(unicodedata.normalize("NFKC", value).casefold().split())
++        if not normalized:
++            raise UniversityReadStopped("missing_curated_identity")
++        values.append(normalized)
++    digest = hashlib.sha256(json.dumps(values, ensure_ascii=False).encode()).hexdigest()
++    return "curated:" + digest
++
++
++def validate_ledger(value: Any) -> dict:
++    """Reject corrupt/incompatible known fields; preserve opaque future fields."""
++    if (
++        not isinstance(value, dict)
++        or type(value.get("version")) is not int
++        or value["version"] != 1
++    ):
++        raise UniversityReadStopped("invalid_ledger")
++    if type(value.get("read_limit")) is not int or value["read_limit"] != READ_LIMIT:
++        raise UniversityReadStopped("invalid_ledger")
++    episodes = value.get("episodes")
++    if not isinstance(episodes, dict):
++        raise UniversityReadStopped("invalid_ledger")
++    active = value.get("active_episode")
++    if not isinstance(active, str) or active not in episodes:
++        raise UniversityReadStopped("invalid_ledger")
++    for episode_id, episode in episodes.items():
++        if (
++            not isinstance(episode_id, str)
++            or not re.fullmatch(r"decision:[A-Za-z0-9][A-Za-z0-9:._-]{0,127}", episode_id)
++            or not isinstance(episode, dict)
++        ):
++            raise UniversityReadStopped("invalid_ledger")
++        counts = episode.get("read_counts")
++        if not isinstance(counts, dict):
++            raise UniversityReadStopped("invalid_ledger")
++        for key, count in counts.items():
++            valid_key = isinstance(key, str) and re.fullmatch(
++                r"catalogue:[A-Za-z0-9][A-Za-z0-9:._-]{0,127}|curated:[0-9a-f]{64}", key
++            )
++            if not valid_key or type(count) is not int or not 0 <= count <= READ_LIMIT:
++                raise UniversityReadStopped("invalid_ledger")
++    return deepcopy(value)
++
++
++def new_ledger() -> dict:
++    return {"version": 1, "read_limit": READ_LIMIT, "active_episode": None, "episodes": {}}
++
++
++def copy_snapshot_with_ledger(snapshot: dict, durable_snapshot: dict) -> dict:
++    """Whole JSON replacement, preserving the durable envelope without nested mutation."""
++    replacement = deepcopy(snapshot)
++    if LEDGER_KEY in durable_snapshot:
++        replacement[LEDGER_KEY] = deepcopy(durable_snapshot[LEDGER_KEY])
++    else:
++        replacement.pop(LEDGER_KEY, None)
++    return replacement
++
++
++class BudgetedFetcher(Fetcher):
++    """The original Fetcher.get is entered only after the caller's durable fence."""
++
++    def __init__(self, *args, before_get: Callable[[], None], **kwargs) -> None:
++        super().__init__(*args, **kwargs)
++        self.before_get = before_get
++
++    async def get(
++        self,
++        url: str,
++        *,
++        use_cache: bool = True,
++        etag: str | None = None,
++        if_modified_since: str | None = None,
++    ) -> FetchResult:
++        self.before_get()
++        return await super().get(
++            url, use_cache=use_cache, etag=etag, if_modified_since=if_modified_since
++        )

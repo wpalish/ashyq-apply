@@ -1,0 +1,22 @@
+...........................................F..                           [100%]
+=================================== FAILURES ===================================
+______ test_marked_programme_retains_same_host_and_domestic_url_controls _______
+
+    def test_marked_programme_retains_same_host_and_domestic_url_controls():
+        url,html,meta=retained_wits()
+        synthetic=page(ACADEMIC+'<h2>Funding</h2>'+LINKS+'<a href="https://unrelated.example/scholarship">Unrelated scholarship</a><a href="/awards/domestic-students-scholarship">Domestic students scholarship</a>')
+        result=asyncio.run(funding_route('linked_depth_one',True,url,html,meta,wits_html=synthetic))
+>       assert not any('unrelated.example' in x or 'domestic-students' in x for x in result['reads'])
+E       assert not True
+E        +  where True = any(<generator object test_marked_programme_retains_same_host_and_domestic_url_controls.<locals>.<genexpr> at 0x1088a02b0>)
+
+work/search-loop-round6/reviews/expert_a/revision3/test_funding_discovery.py:154: AssertionError
+=============================== warnings summary ===============================
+work/search-loop-round6/reviews/expert_a/revision3/test_funding_discovery.py: 299 warnings
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/bs4/builder/_lxml.py:124: DeprecationWarning: The 'strip_cdata' option of HTMLParser() has never done anything and will eventually be removed.
+    parser = parser(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED work/search-loop-round6/reviews/expert_a/revision3/test_funding_discovery.py::test_marked_programme_retains_same_host_and_domestic_url_controls
+1 failed, 45 passed, 299 warnings in 0.95s

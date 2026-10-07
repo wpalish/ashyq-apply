@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-M5H3MPT');</script>
+<!-- End Google Tag Manager -->
+  
+  
+  <!---->
+
+
+  <title>Computer Science - Wits University</title>
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="">
+  
+  <meta name="author" content="The University of the Witwatersrand, Johannesburg">
+  <meta name="generator" content="TERMINALFOUR">
+  <link rel="shortcut icon" href="/media/wits-university-style-assets/images/favicon.ico" />
+  <link rel="stylesheet" href="/media/wits-university-style-assets/css/style-local.css" />
+  <link rel="stylesheet" href="/media/wits-university-style-assets/css/slick.css" />
+    
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400italic,400,700,600" type="text/css">
+  <script src="/media/wits-university-style-assets/javascript/modernizr.js"></script>
+  
+  <link rel="stylesheet" href="/media/wits-university-style-assets/css/style-updates.css" />
+        <!-- Redesign css -->
+    <link rel="stylesheet" type="text/css" media="" href="/media/wits-university-style-assets/css/redesign.css" /> 
+  
+  <!-- Short Courses styles -->
+  <link rel="stylesheet" href="/media/wits-university/t4-dev---short-courses/style.css" />
+  <!-- 2023 Course Update -->
+  <link rel="stylesheet" type="text/css" media="" href="/media/wits-university-style-assets/css/2023-course-update.css" />
+</head>
+<body class="homepage ">
+  <div class="emergencynotice" aria-live="assertive"></div>
+  <!--** End .outer-wrap contains everything **-->
+  <div class="off-canvas-wrap" data-offcanvas>
+    <!--** Main body .inner-wrap wraps around all content **-->
+    <main class="inner-wrap">
+      <!--** Desktop header **-->
+      <header aria-hidden="true" class="page-head-desktop">
+        <section class="content-row">
+          <!--** Logo **-->
+          <div class="logo-desktop">
+              <a href="/" title="University of the Witwatersrand"><img src="/media/wits-university-style-assets/images/wits-logo.svg" alt="" class="" style="   " ></a>
+          </div>
+          <!--** End Logo **-->
+          <!--** Meta-nav and Search **-->
+          <div class="meta-nav-and-search ">
+            <!--** Meta-nav **-->
+            <div class="meta-nav">
+              <ul class="inline-list">
+              <li><a href="/about-wits/">About</a></li><li><a href="/people/">People/Staff</a></li><li><a href="/alumni/">Alumni</a></li><li><a href="/library/">Library</a></li><li><a href="/campus-life/">Visit Wits</a></li><li><a href="http://giving.wits.ac.za" target="_blank">Give</a></li><li><a href="https://www.wits.ac.za/applications/" target="_blank">Apply</a></li>
+              </ul>
+            </div>
+            <!--** End Meta-nav **-->
+            <!--** Desktop main nav **-->
+            <div class="navigation-search">
+              <a href="/">
+              <button class="homepage-link button" title="Link to homepage"
+                ><i class="fa fa-home"></i><span class="sr-only">Homepage</span>
+              </button>
+              </a>
+              <nav class="content-row main-nav">
+                <div class="content-block">
+                  <ul class="inline-list">
+                    <li><a href="/study-at-wits/">Study at Wits</a></li><li><a href="/students/">Students</a></li><li><a href="/faculties-and-schools/">Faculties and Schools</a></li><li><a href="/teaching-and-learning/">Teaching and Learning</a></li><li><a href="/research/">Research and Innovation</a></li><li><a href="/news/">News</a></li>
+                  </ul>    
+                </div>
+              </nav>
+              <button class="search-display button" title="Search bar revelar"
+                ><i class="fa fa-search"></i><span class="sr-only">Search</span>
+              </button>
+            </div>
+            
+            <!--** Search **-->
+            <div class="search search-hidden">
+              <form id="site-search" action="/search-results/">
+                                    <label class="site-search-label at-hidden" for="site-search-text-d">Search the site</label>
+                                    <div class="content-row search-row">
+                                        <div class="site-search-text content-block">
+                                            <input type="text" name="q" id="site-search-text-d" placeholder="Search">
+                                        </div>
+                                        <div class="search-now content-block">
+                                            <span class="postfix">
+                                                <button type="submit" class="search-now button" title="Search now">
+                                                    <i class="fa fa-search"></i>
+                                                    <span>Search</span>
+                                                </button>                                                    
+                                            </span>
+                                        </div>
+                                    </div>
+                                </form>
+            </div>
+            <!--** End search **-->
+          </div>
+          <!--** End Meta-nav and Search **-->
+        </section>          
+        
+      </header>
+      <!--** End desktop header **-->
+      <!--** Mobile Header **-->
+      <header class="mobile-header">
+        <!--** Mobile Top panel **-->
+        <nav class="tab-bar">
+            <section class="left-small">
+              <a class="left-off-canvas-toggle menu-icon" href="#off-canvas">
+                <span></span>
+                Menu
+              </a>
+            </section>
+            <section class="right-small">
+              <a class="search-toggle" href="#">Search <i class="fa fa-search"></i></a>
+            </section>
+        </nav>
+        <!--** Mobile Top panel **-->
+        <!--** Mob site search **-->
+        <section class="mobile-site-search content-row">
+          <div class="content-block">
+            <form id="site-search" action="/search-results/">
+                                    <label class="site-search-label at-hidden" for="site-search-text-d">Search the site</label>
+                                    <div class="content-row search-row">
+                                        <div class="site-search-text content-block">
+                                            <input type="text" name="q" id="site-search-text-d" placeholder="Search">
+                                        </div>
+                                        <div class="search-now content-block">
+                                            <span class="postfix">
+                                                <button type="submit" class="search-now button" title="Search now">
+                                                    <i class="fa fa-search"></i>
+                                                    <span>Search</span>
+                                                </button>                                                    
+                                            </span>
+                                        </div>
+                                    </div>
+                                </form>
+          </div>
+        </section>
+        <!--** End mob site search **-->           
+        <!--** Mobile logo **-->
+        <section class="logos logo-mobile">
+          <div class="wits-logo logo"><a href="/" title="University of the Witwatersrand"><img src="/media/wits-university-style-assets/images/Wits_Centenary_Logo_Large.svg" alt="The University of the Witwatersrand Logo" class="" style="   " ></a></div>
+        </section>
+        <!--** End logo mobile **-->
+
+        <!--** Off canvas menu **-->
+        <aside id="off-canvas" class="left-off-canvas-menu">
+          <p class="at-hidden"><a href="#start-content">Skip navigation and go to page content</a></p>
+          <nav>
+            <!-- Main nav -->
+            <ul class="off-canvas-list">
+              <li><label>Sections</label></li>
+              <li><a href="/study-at-wits/">Study at Wits</a></li><li><a href="/students/">Students</a></li><li><a href="/faculties-and-schools/">Faculties and Schools</a></li><li><a href="/teaching-and-learning/">Teaching and Learning</a></li><li><a href="/research/">Research and Innovation</a></li><li><a href="/news/">News</a></li>
+            </ul>
+            <!-- End main nav -->
+            <!-- Meta nav -->
+             <ul class="off-canvas-meta-nav">
+              <li><a href="/about-wits/">About</a></li><li><a href="/people/">People/Staff</a></li><li><a href="/alumni/">Alumni</a></li><li><a href="/library/">Library</a></li><li><a href="/campus-life/">Visit Wits</a></li><li><a href="http://giving.wits.ac.za" target="_blank">Give</a></li><li><a href="https://www.wits.ac.za/applications/" target="_blank">Apply</a></li>
+            </ul>
+            <!-- End Meta nav -->
+          </nav>
+        </aside>
+        <!--** End off canvas menu **-->
+      </header>
+      <!--** End Mobile header **-->
+      <!--** Ribbon message for users on IE<10 **-->
+      <div style="display: none;" class="content-row ie-ribbon"></div> 
+      <!--** Start content **-->
+      <div id="start-content" class="main ug-pg-courses">
+
+
+<div id="facultyBanner" class="faculty-colour wits-blue"></div>
+
+<div class="wrap">
+  <section id="main-text">
+      <header class="header-container">
+          <div class="header-wrapper">
+              <h1>Computer Science</h1>
+              <p>Study the many ways in which computers can be used in problem-solving.</p>
+          </div>
+      </header>
+      <nav class="in-this-section">
+          <p class="in-this-section-heading"><b>In This Section</b></p>
+          <ol class="ol-margin">
+              <li><a href="#anchor1" class="in-this-section-links">Overview</a></li>
+            
+              <li><a href="#anchor2" class="in-this-section-links">Career Opportunities</a></li>
+            
+<li><a href="#anchor3" class="in-this-section-links">Curriculum</a></li>
+            
+              <li><a href="#anchor4" class="in-this-section-links">Entry Requirements</a></li>
+              <li>
+                <a href="#anchor5" class="in-this-section-links">
+                
+                University Application Process
+                
+                
+                </a>
+              </li>
+              <li><a href="#anchor6" class="in-this-section-links">University Fees and Funding</a></li>
+          </ol>
+      </nav>
+    
+      <article>
+        
+          <h2 id="anchor1">Overview</h2>
+          <hr class="line">
+          <div class="page" title="Page 127">
+<div class="section">
+<div class="layoutArea">
+<div class="column">
+<p><em>Bachelor of Science in the field of Computer Science </em></p>
+</div>
+</div>
+</div>
+</div>
+<p class="p1"><strong>Majors:</strong> Computer Science and Computational Applications</p>
+<p class="p1">Computer Science is the discipline of solving problems via solutions that are implemented on computers. These problems can arise from a variety of areas, such as commerce, finance, mining, science, engineering, mathematics, music, and entertainment. To be a successful Computer Science student, you will need to be creative and have good critical thinking skills, analytical ability, and mathematical ability.</p>
+<p class="p1">The undergraduate Computer Science curriculum teaches you the fundamental mathematical and scientific principles behind Computer Science, as well as the practical skills required. You will be taught how to design and implement programs, and how to analyse them for correctness and efficiency. You will also take courses in computer networks, database systems, operating systems, artificial intelligence, formal languages, software design, and data structures.</p>
+
+          <h2 id="anchor2">Career Opportunities</h2>
+          <hr class="line">
+          <ul>
+<li data-olk-copy-source="MailCompose">Game Design</li>
+<li>Software Development</li>
+<li>Software and System Architects</li>
+<li>Teaching</li>
+<li>Research</li>
+<li>Database and System Administration</li>
+<li>App Development</li>
+<li>Data Scientist</li>
+<li>Machine Learning Engineer</li>
+<li>Robotics</li>
+<li>Artificial Intelligence</li>
+<li>Consulting</li>
+<li>Cyber Security</li>
+</ul>
+<div></div>
+
+          <h2 id="anchor3">Curriculum</h2>
+          <hr class="line">
+          <h5 class="p1"><strong>First-year</strong></h5>
+<p>Computer Science I:</p>
+<ul>
+<li class="p2">Basic Computer Organisation</li>
+<li class="p2">Discrete Computational Structures</li>
+<li class="p2">Introduction to Algorithms and Programming</li>
+<li class="p2">Introduction to Data Structures and Algorithms</li>
+</ul>
+<p class="p2"><strong>AND</strong></p>
+<p>Mathematics I (Major):</p>
+<ul>
+<li class="p2">Algebra I</li>
+<li class="p2">Calculus I</li>
+</ul>
+<p class="p2"><strong>AND</strong></p>
+<p>Computational and Applied Mathematics I</p>
+<ul>
+<li>Mathematical Methods and Modelling</li>
+<li>Mechanics</li>
+<li>Scientific Computing</li>
+</ul>
+<p class="p2"><strong>AND</strong></p>
+<p>Any other Level I course</p>
+<h5 class="p1"><strong>Second-year</strong></h5>
+<p>Computer Science II:</p>
+<ul>
+<li>Database Fundamentals</li>
+<li>Mobile Computing</li>
+<li>Computer Networks</li>
+<li>Analysis of Algorithms</li>
+</ul>
+<p>Mathematics II (major):</p>
+<ul>
+<li>Basic Analysis II</li>
+<li>Multivariable Calculus II</li>
+<li>Abstract Mathematics II</li>
+<li>Advanced Analysis II</li>
+<li>Linear Algebra II</li>
+<li>Introduction to Mathematical Statistics II</li>
+</ul>
+<p><strong>AND </strong></p>
+<p>Computational and Applied Mathematics ll:</p>
+<ul>
+<li class="p2">Mathematical Methods and Modelling</li>
+<li class="p2">Mechanics</li>
+<li class="p2">Scientific Computing</li>
+</ul>
+<h5>Third year</h5>
+<p>Computer Science III:</p>
+<ul>
+<li>Analysis of Advanced Algorithms</li>
+<li>Formal Languages and Automata</li>
+<li>Operating Systems and System Programming</li>
+<li>Software Design OR Software Engineering</li>
+</ul>
+<p>AND Computational Applications III:</p>
+<ul>
+<li>Computer Graphics and Visualisation</li>
+<li>Machine Learning</li>
+<li>Parallel Computing</li>
+<li>Software Design Project</li>
+</ul>
+
+          <h2 id="anchor4">Entry Requirements</h2>
+          <hr class="line">
+          
+          <p class="p1"><strong>APS 44+</strong></p>
+<p class="p1"><strong>English Home Language OR First Additional Language&nbsp;</strong>Level 5</p>
+<p class="p1"><strong>Mathematics&nbsp;</strong>Level 6</p>
+<h5 class="p1">Wait-listing</h5>
+<p class="p1">Applicants with 41-43 points may be wait-listed, subject to place availability.</p>
+<h4 class="p1">International Applicants</h4>
+<p>For specific international entry requirements,<span>&nbsp;</span><a href="https://www.wits.ac.za/undergraduate/entry-requirements/admission-requirements-nsc/">click here to view the full guidelines</a></p>
+<h4>National Benchmark Test</h4>
+<p>All applicants to the Faculty of Science are required to write the National Benchmark Test by 31 October 2026.</p>
+<p>There are two tests: The Academic and Quantitative Literacy Test and the Mathematics Test. Both tests must be written in one session. Your test results are used in addition to your Grade 12 results to identify students who may need additional support during the course of their studies.</p>
+<p>You can register for the NBT before you submit your application to Wits. DO NOT wait for an official notification from Wits to register for and write the tests, as you may miss the end of September deadline. For test dates, registration dates and available venues, please refer to the NBT website<span>&nbsp;</span><a href="http://www.nbt.ac.za/">www.nbt.ac.za</a></p>
+
+          <h2 id="anchor5">
+            
+            University Application Process
+            
+            
+          </h2>
+          <hr class="line">
+          
+          
+          <section id="application-proc" name="application-proc">
+    <ul>
+<li><span><strong><a href="/undergraduate/" target="_blank">The Student Enrolment Centre</a></strong> at Wits handles all student applications.</span></li>
+<li><span>Please <strong><a href="/undergraduate/apply-to-wits/" target="_blank">click here</a></strong> for an overview of the application process.&nbsp;</span></li>
+<li><span>Check the admission requirements for your degree. Check if&nbsp;any <strong><a href="/undergraduate/apply-to-wits/additional-requirements/">additional selection requirements</a></strong> apply.</span>&nbsp;</li>
+<li>Submit your application, required documentation and application fee before the closing date.</li>
+<li><span>Once you have applied, an Admissions Consultant will be assigned to your application.</span></li>
+<li><span><span>Applicants can monitor the progress of their application/s via the </span><strong><a href="https://self-service.wits.ac.za/">Self Service Portal</a></strong>.</span></li>
+<li><strong>Part-time students</strong> are not eligible for NSFAS funding, University Entrance Scholarships, or campus residence placement.</li>
+<li><span>If you are an <strong>international applicant</strong> and/or hold a foreign qualification, please <strong><a href="/internationalstudents/" target="_blank">click here</a></strong>.</span></li>
+</ul>
+<p class="p1"><em>Compliance with the minimum requirements does not guarantee a place at the University. The University has a specific number of places for first year undergraduates, approved by the Department of Higher Education and Training. Final selection is made subject to the availability of places, academic results and other entry requirements where applicable.</em></p>
+</section>
+          
+
+          <h2 id="anchor6">University Fees and Funding</h2>
+          <hr class="line">
+        
+          
+<p><strong><a href="/study-at-wits/student-fees/">Click here</a></strong> to see the current average tuition fees for the first year of study. The Fees website also provides information about the payment of fees&nbsp;and closing dates for fees payments. Once you have applied you will be able to access the fees estimator&nbsp;on the student self-service portal.&nbsp;</p>
+<p>The <span></span><strong><a href="/study-at-wits/financial-aid-and-scholarships-administration/">Financial Aid and Scholarships Office</a></strong> provides information on student funding and scholarships. University-funded Scholarships include Vice-Chancellor's Scholarships, University Entrance Scholarships, Equality Scholarships, Sports Scholarships and National Olympiad winner awards. For information about NSFAS funding, please visit the <strong><a href="http://www.nsfas.org.za/content/index.html" target="_blank" rel="noopener">NSFAS website</a>.&nbsp;<a href="http://www.zabursaries.co.za/" target="_blank" rel="noopener">External bursaries portal:</a></strong> <span>The Bursaries South Africa website provides a comprehensive list of bursaries in South Africa.</span></p>
+
+          
+          
+
+      </article>
+  </section>
+  
+  <aside id="sidebar">
+      <div id="cta">
+          <div class="apply">
+              <a href="https://www.wits.ac.za/applications" class="ug-pg-courses-apply">Apply Now &gt;</a>
+          </div>
+      </div>
+      <div id="facts">
+          <div class="fact">
+              <p class="lead">Programme Code</p>
+              <p>SBA13</p>
+          </div>
+          <div class="fact">
+              <p class="lead">Faculty</p>
+              <p><a href="/science/">Science</a></p>
+          </div>
+          <div class="fact">
+              <p class="lead">School</p>
+              <p><a href="/csam/">Computer Science and Applied Mathematics</a></p>
+          </div>
+          <div class="fact">
+              <p class="lead">Qualification</p>
+              <p>BSc</p>
+          </div>
+          <div class="fact">
+              <p class="lead">Duration</p>
+              <p>3 years</p>
+          </div>
+          <div class="fact">
+              <p class="lead">Study Mode</p>
+              <p>Full-time</p>
+          </div>
+      </div>
+      <div class="box-bg-blue">
+          <h3>Closing Date</h3>
+          
+          <section class="content-row">
+  <article class="textual-article content-block">
+  <span id="d.en.2411901"></span>
+  
+  
+  
+  <p><strong>Application Closing Date: </strong>30 September 2026 | <strong>Residence Applications:&nbsp;</strong>30 September 2026</p>
+</article>
+</section>
+          
+          
+      </div>
+      <div class="box-bg-blue">
+          <h3>
+            <!--
+            Course Coordinator
+            -->
+            Enquiries
+          </h3>
+          <p><b>Student Call Centre</b></p>
+          <p><a href="mailto:ask.wits@wits.ac.za">ask.wits@wits.ac.za</a></p>
+          <p><a href="tel:011 717 1888">011 717 1888</a></p>
+      </div>
+      
+    
+  </aside>
+</div>
+
+<script>
+    var str = 'Science';
+    var coursemetalocation = document.getElementById("facultyBanner");
+  	coursemetalocation.classList.add(str.replace(/[0-9`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi,'').replace(/\s/g, '').toLowerCase());
+</script>
+</div>
+<!--** Start footer **-->
+<div class="bg-wits-blue">
+    <footer class="content-row footer">
+        <div class="content-block">
+            <section class="footer-soc-media-follow contact address content-row">
+                <article class="content-block left">
+  <span class="footer-title">Contact Us</span>
+  <p><span><a href="/about-wits/contact-us/" target="_blank">General enquiries</a></span></p>
+<p>Tel: +27 (0)11 717 1000</p>
+<p><a href="/study-at-wits/">Admission enquiries</a></p>
+<p>Tel: +27 (0)11 717 1888</p>
+</article><article class="content-block left">
+  <span class="footer-title">Find Us</span>
+  <p>1 Jan Smuts Avenue,</p>
+<p>Braamfontein 2000,</p>
+<p>Johannesburg,</p>
+<p>South Africa</p>
+</article>
+                <article class="content-block left">
+          <span class="footer-title">Quicklinks</span>
+         <p><a href="/vacancies/" target="_blank">Vacancies</a></p><p><a href="/students/academic-matters/term-dates/">Term dates</a></p><p><a href="/about-wits/tenders/">Tenders</a></p><p><a href="https://witsshop.co.za/" target="_blank">Wits Shop</a></p>
+        </article>
+                <article class="content-block left">
+  <span class="footer-title">Connect with us</span>
+  <ul class="soc-media-icons">
+      <li><a href="http://www.facebook.com/witsuniversity/" target="_blank"><i class="fa fa-facebook-square"></i></a></li>
+      <li><a href="https://www.instagram.com/wits__university/" target="_blank"><i class="fa fa-instagram"></i></a></li>
+      <li><a href="http://twitter.com/witsuniversity" target="_blank"><i class="fa fa-twitter-square"></i></a></li>
+      
+      <li><a href="https://www.youtube.com/user/WitsWebmaster" target="_blank"><i class="fa fa-youtube-square"></i></a></li>
+      <li><a href="http://www.linkedin.com/company/university-of-the-witwatersrand" target="_blank"><i class="fa fa-linkedin-square"></i></a></li>
+      <li><a href="https://www.tiktok.com/@witsuniversity" target="_blank"><i class="fa fa-tiktok-square"></i></a></li>
+      
+     <li><a href="https://www.tiktok.com/@witsuniversity" target="_blank"><i class="fa fa-tiktok-square"></i></a></li>
+    </ul>
+  <p><a class="button" href="http://giving.wits.ac.za">Give to Wits</a></p>
+</article>
+            </section>
+            
+            <!-- Footer legal -->
+            <section class="content-row footer-legal ">
+                <article class="content-block">
+                    <section class="content-row">
+  <article class="textual-article content-block">
+  <span id="d.en.1699564"></span>
+  
+  
+  
+  <p>Copyright &copy; 2026 - University of the Witwatersrand, Johannesburg.</p>
+<p class="footer-links"><a href="/site-assets/small-footer/terms-and-conditions-of-use/">Terms and Conditions of Use</a> <a href="/popia/">POPIA</a> <a href="/paia/">PAIA</a> <a href="/site-assets/small-footer/ispa/">ISPA</a>&nbsp;<a href="/site-assets/small-footer/browser-support/">Browser Support</a></p>
+</article>
+</section>
+                </article>
+            </section>
+            <!-- End Footer legal -->
+        </div>
+    </footer>
+</div>
+<!-- End footer -->
+
+<section class="modal">
+    <div class="content-row">
+        <button class="close">Close</button>
+        <div class="modal-content"></div>
+    </div>
+</section>
+    </main>
+    <!--** End .inner-wrap - Main **-->
+  </div>
+  <!--** End .outer-wrap contains everything **-->
+  <script src="/media/wits-university-style-assets/javascript/jquery.min.js"></script>
+  <script src="/media/wits-university-style-assets/javascript/foundation.min.js"></script>
+  <script src="/media/wits-university-style-assets/javascript/slick.min.js"></script>
+  <script src="/media/wits-university-style-assets/javascript/t4-custom.js"></script>
+  <script src="/media/wits-university-style-assets/javascript/jquery.matchHeight-min.js"></script> <!-- matchHeight -->
+  <script src="/media/wits-university-style-assets/javascript/updates.js"></script> <!-- updates -->
+  <!--[if lt IE 9]>
+  <script src="/media/wits-university-style-assets/javascript/respond.js"></script>
+  <![endif]-->
+<!--<script> !function() { var t; if (t = window.webbot = window.webbot = window.webbot || [], !t.init) return t.invoked ? void (window.console && console.error && console.error("Snippet included twice.")) : ( t.load =function(e){ var o,n; o=document.createElement("script"); e.type="text/javscript"; o.async=!0; o.crossorigin="anonymous"; o.src="https://chatbot.themoonshot.co.za/web-bot/script/frame/"+e+"/webbot.js"; n=document.getElementsByTagName("script")[0]; n.parentNode.insertBefore(o,n); }); }(); webbot.load('6IlP1UOcR4d5jr2uyHCwXUn4mGOeq4V0nyE8Sb0V'); </script>
+<script>
+function bcwAddAvatar() {
+// Your code here
+var bcwElem = document.getElementById('wpic-launcher-open');
+bcwElem.style.width = '70px';
+bcwElem.style.height='70px';
+var bcwElem2 = document.getElementsByClassName('wpic-launcher-close');
+bcwElem2[0].style.top = '25px';
+bcwElem2[0].style.left='20px';
+//bcwElem[0].prepend(bcwImageElem);
+var bcwChildElem = document.getElementById('wpic-launcher-child');
+bcwChildElem.style.width = '220px';
+bcwChildElem.style.height = '78px';
+bcwChildElem.style.borderRadius = '15px';
+bcwChildElem.style.borderTopLeftRadius = '28px';
+bcwChildElem.style.borderBottomLeftRadius = '28px';
+var chatNowElem = document.createElement('div');
+chatNowElem.innerHTML = 'Chat with me';
+chatNowElem.style.textAlign= 'right';
+chatNowElem.style.marginRight= '20px';
+chatNowElem.style.marginTop= '25px';
+chatNowElem.style.fontSize= '18px';
+chatNowElem.style.color= 'white';
+chatNowElem.style.fontWeight= 'bolder';
+bcwChildElem.prepend(chatNowElem);
+}
+var checkBCWExist = setInterval(function() {
+if (document.querySelector('.bcw5611')) {
+clearInterval(checkBCWExist); // Stop the interval
+bcwAddAvatar(); // Execute your code
+}
+}, 100);
+</script>-->
+</body>
+</html>
+<script id="f5_cspm">(function(){var f5_cspm={f5_p:'NMFGEGOBMJMJGACGHEOEDGNJLDCMEAMGGCKPIJNOJPAKMAALLBKMIKGGOGONPEGEJFHBLODPAADCDIIPJEDAKGHPAALINHOIHMFNGDPLKJFHJFKPKHEEPINKDAIDEOLF',setCharAt:function(str,index,chr){if(index>str.length-1)return str;return str.substr(0,index)+chr+str.substr(index+1);},get_byte:function(str,i){var s=(i/16)|0;i=(i&15);s=s*32;return((str.charCodeAt(i+16+s)-65)<<4)|(str.charCodeAt(i+s)-65);},set_byte:function(str,i,b){var s=(i/16)|0;i=(i&15);s=s*32;str=f5_cspm.setCharAt(str,(i+16+s),String.fromCharCode((b>>4)+65));str=f5_cspm.setCharAt(str,(i+s),String.fromCharCode((b&15)+65));return str;},set_latency:function(str,latency){latency=latency&0xffff;str=f5_cspm.set_byte(str,40,(latency>>8));str=f5_cspm.set_byte(str,41,(latency&0xff));str=f5_cspm.set_byte(str,35,2);return str;},wait_perf_data:function(){try{var wp=window.performance.timing;if(wp.loadEventEnd>0){var res=wp.loadEventEnd-wp.navigationStart;if(res<60001){var cookie_val=f5_cspm.set_latency(f5_cspm.f5_p,res);window.document.cookie='f5avr0650131013aaaaaaaaaaaaaaaa_cspm_='+encodeURIComponent(cookie_val)+';path=/';}
+return;}}
+catch(err){return;}
+setTimeout(f5_cspm.wait_perf_data,100);return;},go:function(){var chunk=window.document.cookie.split(/\s*;\s*/);for(var i=0;i<chunk.length;++i){var pair=chunk[i].split(/\s*=\s*/);if(pair[0]=='f5_cspm'&&pair[1]=='1234')
+{var d=new Date();d.setTime(d.getTime()-1000);window.document.cookie='f5_cspm=;expires='+d.toUTCString()+';path=/;';setTimeout(f5_cspm.wait_perf_data,100);}}}}
+f5_cspm.go();}());</script>

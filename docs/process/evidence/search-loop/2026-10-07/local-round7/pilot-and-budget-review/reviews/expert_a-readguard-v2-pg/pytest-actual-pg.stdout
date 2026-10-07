@@ -1,0 +1,139 @@
+...............F..                                                       [100%]
+=================================== FAILURES ===================================
+____ test_pg_09_actual_worker_boundary_retry_vs_locked_job_limitation[job] _____
+
+ctx = namespace(engine=Engine(postgresql+psycopg://postgres:***@/postgres?host=%2FUsers%2Fwpalish%2FLibrary%2FCaches%2FTempo...HAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_3)s::INTEGER RETURNING jobs.status'}])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1091e6300>
+row = 'job'
+
+    @pytest.mark.parametrize('row',['run','job'])
+    def test_pg_09_actual_worker_boundary_retry_vs_locked_job_limitation(ctx,monkeypatch,row):
+        from app.jobs import worker as wm
+        from app.pipeline import runner as rm
+        f=activate(ctx)
+        with ctx.runner._university_read_scope(candidate()):pass
+        old=seed_prior(ctx);seen=original_mock(monkeypatch,ctx)
+        @contextmanager
+        def owned_scope():
+            s=ctx.factory()
+            try:yield s;s.commit()
+            except BaseException:s.rollback();raise
+            finally:s.close()
+        monkeypatch.setattr(wm,'session_scope',owned_scope)
+        worker=wm.Worker(ctx.settings,worker_id='worker-one')
+        async def no_background_heartbeat(*args,**kwargs):return None
+        monkeypatch.setattr(worker,'_beat',no_background_heartbeat)
+        real=rm.WebRequirementsAdapter
+        with ctx.factory() as blocker:
+            def requirements(*args,**kwargs):
+                value=real(*args,**kwargs);lock_row(ctx,blocker,row);return value
+            monkeypatch.setattr(rm,'WebRequirementsAdapter',requirements)
+            async def dispatch(s,store,job,*,lease_token):
+                r=new_runner(ctx,s,'worker-one',lease_token);r._candidates=[candidate()]
+                await r._stage_verify(r._make_fetcher())
+            monkeypatch.setattr(worker,'_dispatch',dispatch)
+            escaped=None;start=time.monotonic_ns()
+            try:asyncio.run(worker.execute(ctx.job_id))
+            except BaseException as exc:escaped=exc
+            elapsed=time.monotonic_ns()-start
+            assert seen==[]
+            blocker.rollback()
+        with ctx.factory() as s:
+            job=s.get(Job,ctx.job_id);run=s.get(ResearchRun,ctx.run_id)
+            durable={'job_status':job.status,'job_last_error':job.last_error,'run_stage':run.stage,'run_unknowns':run.unknowns,'worker_jobs_failed':worker.jobs_failed}
+        raw('PG-09-'+row,{'escaped':error_chain(escaped) if escaped else [],'caller_elapsed_ns':elapsed,'original_get':len(seen),'prior_before':old,'prior_after':prior(ctx),'durable':durable,'classification':'known-unresolved worker fail persistence when Job remains locked' if row=='job' else 'worker retry write possible when only Run remains locked'})
+        assert prior(ctx)==old and durable['run_stage']!=PipelineStage.FAILED.value
+        if row=='run':
+            assert escaped is None and durable['job_status']=='queued' and 'checkpoint_busy' in durable['job_last_error']
+        else:
+            assert isinstance(escaped,OperationalError) and escaped.orig.sqlstate=='57014'
+            assert durable['job_status']=='running'
+            # Preserve a real red for the broad prepared worker-control target.
+            # Candidate explicitly excludes guaranteed retry write under this lock.
+>           assert isinstance(escaped,UniversityReadStopped), 'PG-09 planned typed worker boundary fails: Worker.fail waits on still-locked Job and releases 57014; documented v2 limitation, not a READ admission bypass'
+E           AssertionError: PG-09 planned typed worker boundary fails: Worker.fail waits on still-locked Job and releases 57014; documented v2 limitation, not a READ admission bypass
+E           assert False
+E            +  where False = isinstance(OperationalError('(psycopg.errors.QueryCanceled) canceling statement due to statement timeout\nCONTEXT:  while updating tuple (0,4) in relation "jobs"'), UniversityReadStopped)
+
+test_independent_pg.py:466: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    unimatch.worker:worker.py:151 job 11042ded failed
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/psycopg/cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.LockNotAvailable: could not obtain lock on row in relation "jobs"
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/proposed/app/pipeline/runner.py", line 573, in _read_snapshot
+    self._lock_read_checkpoint_job()
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/proposed/app/pipeline/runner.py", line 551, in _lock_read_checkpoint_job
+    kind = self.session.execute(statement).scalar_one_or_none()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2362, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2247, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 305, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/psycopg/cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+sqlalchemy.exc.OperationalError: (psycopg.errors.LockNotAvailable) could not obtain lock on row in relation "jobs"
+[SQL: SELECT jobs.kind 
+FROM jobs 
+WHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT]
+[parameters: {'id_1': '11042ded5a3d4e279dadd237d7d2f5db', 'run_id_1': '6e26f892a2434344a725f5986f637d12', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/jobs/worker.py", line 135, in execute
+    await self._dispatch(session, store, job, lease_token=lease_token)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/test_independent_pg.py", line 446, in dispatch
+    await r._stage_verify(r._make_fetcher())
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/proposed/app/pipeline/runner.py", line 818, in _stage_verify
+    with self._university_read_scope(cand):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/proposed/app/pipeline/runner.py", line 609, in _university_read_scope
+    self._change_read_budget(key, reserve=False)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/proposed/app/pipeline/runner.py", line 626, in _change_read_budget
+    durable = self._read_snapshot(lock=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/candidate-pinned/proposed/app/pipeline/runner.py", line 594, in _read_snapshot
+    raise UniversityReadStopped("checkpoint_busy") from error
+app.pipeline.control.UniversityReadStopped: University read allowance refused: checkpoint_busy
+=========================== short test summary info ============================
+FAILED test_independent_pg.py::test_pg_09_actual_worker_boundary_retry_vs_locked_job_limitation[job]
+1 failed, 17 passed in 7.60s

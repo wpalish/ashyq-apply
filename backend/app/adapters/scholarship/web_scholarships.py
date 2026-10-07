@@ -32,7 +32,12 @@ from app.adapters.extraction import (
 )
 from app.adapters.fetching import Fetcher, FetchResult
 from app.adapters.html_parse import parse_html
-from app.adapters.page_classifier import PageType, classify_page, main_content
+from app.adapters.page_classifier import (
+    SUBSIDIARY_FUNDING_INDEX_SIGNAL,
+    PageType,
+    classify_page,
+    main_content,
+)
 from app.adapters.scholarship.conditional_benefits import read_conditional_policy
 from app.adapters.scope_reader import read_scope
 from app.domain.enums import (
@@ -324,10 +329,18 @@ class WebScholarshipAdapter:
                 # a list of awards whatever the classifier calls it. Run 60: NTU's
                 # /scholarships/freshmen holds the Nanyang Scholarship link and was
                 # rejected as "not an award page".
-                is_index = classification.page_type is PageType.SCHOLARSHIP_INDEX or (
-                    depth > 0
-                    and classification.page_type is not PageType.SCHOLARSHIP_AWARD
-                    and _lists_awards_below(page.text, url)
+                is_index = (
+                    classification.page_type is PageType.SCHOLARSHIP_INDEX
+                    or (
+                        classification.page_type
+                        in {PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM}
+                        and SUBSIDIARY_FUNDING_INDEX_SIGNAL in classification.signals
+                    )
+                    or (
+                        depth > 0
+                        and classification.page_type is not PageType.SCHOLARSHIP_AWARD
+                        and _lists_awards_below(page.text, url)
+                    )
                 )
                 if depth == 0 or (is_index and indexes_read < _MAX_INDEX_PAGES):
                     # An index is discovery, never award proof: nothing is

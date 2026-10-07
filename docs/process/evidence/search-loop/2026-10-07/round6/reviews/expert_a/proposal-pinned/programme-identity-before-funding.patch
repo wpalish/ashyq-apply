@@ -1,0 +1,131 @@
+--- a/backend/app/adapters/page_classifier.py
++++ b/backend/app/adapters/page_classifier.py
+@@ -20,7 +20,10 @@
+ from enum import StrEnum
+ from urllib.parse import urlparse
+ 
+-from bs4 import BeautifulSoup
++from bs4 import BeautifulSoup, Comment, NavigableString, Tag
++
++# Off until a paired owner-approved experiment measures the general rule.
++PROGRAMME_IDENTITY_BEFORE_FUNDING = False
+ 
+ 
+ class PageType(StrEnum):
+@@ -474,7 +477,14 @@
+         )
+ 
+     # --- funding family ---------------------------------------------------
+-    if _SCHOLARSHIP_WORD.search(low_head) or "scholarship" in path or "financial-aid" in path:
++    funding_head = low_head
++    if PROGRAMME_IDENTITY_BEFORE_FUNDING and _programme_content_identity(
++        identity, title, path, body, soup
++    ):
++        # Programme identity and academic content protect a subsidiary funding
++        # section. Funding URLs and the page's own funding identity still win.
++        funding_head = f"{title} {identity}".lower()
++    if _SCHOLARSHIP_WORD.search(funding_head) or "scholarship" in path or "financial-aid" in path:
+         if _FAQ.search(low_head):
+             return PageClassification(PageType.SCHOLARSHIP_FAQ, 0.9, ["FAQ markers"], title)
+ 
+@@ -637,6 +647,100 @@
+     return PageClassification(PageType.UNKNOWN, 0.2, ["no decisive signals"], title)
+ 
+ 
++_ACADEMIC_HEADING = re.compile(
++    r"curriculum|(?:course|programme|program|degree) structure|"
++    r"(?:course|programme|program) content|what you (?:will )?(?:learn|study)",
++    re.IGNORECASE,
++)
++_ACADEMIC_UNIT = re.compile(r"\b(courses?|modules?|subjects?|lectures?|projects?)\b", re.I)
++_YEAR_STAGE = re.compile(
++    r"\b(first|second|third|fourth|fifth|sixth|[1-6](?:st|nd|rd|th)?)[- ]year\b"
++    r"|\byear\s+([1-6])\b",
++    re.I,
++)
++_NO_DEGREE_OFFER = re.compile(
++    r"\b(?:this (?:support )?page|we)\b[^.]{0,100}\b(?:does?|do) not offer\b"
++    r"[^.]{0,40}\b(?:degree|programme|program)\b"
++    r"|\bno degree(?: programme| program)? (?:is )?offered\b",
++    re.I,
++)
++
++
++def _academic_section_text(heading: Tag, soup: BeautifulSoup) -> str:
++    """Read only this academic block, closing at an equal or higher heading."""
++    rank = int(heading.name[1])
++    parts: list[str] = []
++    for node in heading.next_elements:
++        parents = list(node.parents)
++        if not any(parent is soup for parent in parents):
++            break
++        if any(parent is heading for parent in parents):
++            continue
++        if (
++            isinstance(node, Tag)
++            and re.fullmatch(r"h[1-6]", node.name or "")
++            and int(node.name[1]) <= rank
++        ):
++            break
++        if any(parent.name in {"nav", "aside", "header", "footer"} for parent in parents):
++            continue
++        if isinstance(node, NavigableString) and not isinstance(node, Comment) and node.strip():
++            parts.append(str(node).strip())
++    return " ".join(parts)
++
++
++def _programme_content_identity(
++    identity: str, title: str, path: str, body: str, soup: BeautifulSoup | None
++) -> bool:
++    """Require a programme identity and academic structure in the same content block."""
++    primary = f"{title} {identity}"
++    if _SCHOLARSHIP_WORD.search(primary) or _award_name(identity):
++        return False
++    if _ADMISSIONS.search(identity) or re.search(r"\bsupport\b", identity, re.I):
++        return False
++    if _NO_DEGREE_OFFER.search(body) or soup is None:
++        return False
++    if re.search(
++        r"\bthis page\b[^.]{0,40}\b(?:lists?|provides?|offers?)\b"
++        r"[^.]{0,60}\b(?:scholarships?|funding|financial aid|bursaries)\b",
++        body[:2000],
++        re.I,
++    ):
++        return False
++    subject = _program_name(identity) or _program_name_from_context(
++        identity, title, path, body[:4000]
++    )
++    if not subject:
++        return False
++    for heading in soup.find_all(re.compile(r"^h[1-6]$")):
++        if not _ACADEMIC_HEADING.fullmatch(heading.get_text(" ", strip=True)):
++            continue
++        if any(parent.name in {"nav", "aside", "header", "footer"} for parent in heading.parents):
++            continue
++        block = _academic_section_text(heading, soup)
++        # A scholarship curriculum/eligibility section is not the degree's
++        # academic structure. Secondary funding outside this block is harmless.
++        if _SCHOLARSHIP_WORD.search(block) or not _ACADEMIC_UNIT.search(block):
++            continue
++        stages = set()
++        ordinals = {
++            "first": "1",
++            "second": "2",
++            "third": "3",
++            "fourth": "4",
++            "fifth": "5",
++            "sixth": "6",
++        }
++        for match in _YEAR_STAGE.finditer(block):
++            stage = match.group(1) or match.group(2)
++            stages.add(ordinals.get(stage.lower(), stage[0]))
++        if len(stages) >= 2 or re.search(
++            r"\b\d+(?:\.\d+)?\s*(?:ECTS|credits?|units?)\b", block, re.I
++        ):
++            return True
++    return False
++
++
+ # --- helpers ---------------------------------------------------------------
+ 
+ 
