@@ -1,0 +1,29 @@
+{
+  "source": "final working tree committed with this file",
+  "backend": {
+    "passed": 3635,
+    "warnings": 2,
+    "coverage_percent": 94.86,
+    "seconds": 449.26,
+    "dotenv": "dedicated symlink detached for offline gate; original unchanged, restored before live"
+  },
+  "focused": {
+    "passed": 54,
+    "new_development_regressions": 16
+  },
+  "ruff": "passed",
+  "format_files": 367,
+  "mypy_files": 366,
+  "frontend": {
+    "tests": 232,
+    "typecheck": "passed",
+    "lint": "passed",
+    "build": "passed",
+    "source_unchanged": true
+  },
+  "demo": "executes; Groningen first; current UI classification vocabulary differs from legacy brief table, no pipeline change",
+  "alembic_heads": [
+    "d8e412c6a901"
+  ],
+  "earlier_attempts": "original environment failure and deliberate interrupted runs preserved, not asserted green"
+}

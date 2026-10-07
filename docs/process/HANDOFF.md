@@ -142,6 +142,8 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**[search-development] source checkpoint (this commit; see git log):** opt-in imported identity selectors, shared sticky refusal stop including HTTP hops, planned/attempted/remaining cohort metadata and missing-budget stop without an inferred provider cause;16 new offline regressions. Expert385-file originals/79raw logs and100exact quote proofs retained, unreviewed. Prior WIP a95a164; full clean-env source gates now green.
+
 **[search-relay] green source checkpoint (commit this entry with the source; see git log):** precise scorecard budget checks, unknown counters, incomplete paired-case status and guarded stable gains;9 synthetic regressions; archived original RL-1/heldout artifacts and Aalto/NTU public probe. Takeover commit `96f0b14`.
 
 **Workflow-only search-layer selection — LANDED on `main` as `b672349` via PR #42 (2026-10-03):** `.github/workflows/benchmark-capture.yml` has a `search_provider` input (`auto` default, `exa`, `exa_mcp`, `none`). The provider was previously decided by a nested secrets expression in two jobs and re-derived by hand in the log line, so the printed mode could disagree with the process; one "Select the search layer" step per job now resolves it once, exports it through `$GITHUB_ENV` and names the deciding secret, and the log line, `out/config.txt`, the Provider step, the `--search-provider` argument and `capture.config` all read that one value. `exa` without `UNIMATCH_EXA_API_KEY` and any unknown value fail the job before the capture starts. `auto` keeps the historical Serper→Brave→Tavily→Exa→none precedence. Workflow only: no application, test, schema, migration, ranking, Fetcher or golden file is touched. **This session's own copy of the same edit (`62dac4c`, never pushed — the sandbox's GitHub App lacked the `workflows` scope) is superseded; discard it, do not re-apply it. Task 2 is therefore unblocked.**
@@ -1788,6 +1790,12 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[search-development] NEXT after this green commit:** pin actual committed HEAD and live/canary/mapping SHA256 in `x20/work/development-baseline-launch.json`, recheck shared STOP absence, execute the immutable `baseline-request.prepared.json` arguments once. Existing keyed exa, no model, explicit five DEV ids, strict60/6/120 with3000ms finalization reserve inside that cap, no experimental flags, TMPDIR dedicated for source retention. No source edits during the capture. Archive exact attempted/remaining ids, original child logs/checkpoints/source caches; compare only genuinely supported expert-scoped facts, no signed accuracy. Provider/model/auth/quota refusal closes all new network work; remaining cases stay unrun. Owner's G1 signature is still pending.
+
+**[search-development] frozen baseline source retention:** set only the baseline process TMPDIR to `x20/work/development-baseline-temp` so ordinary canary temporary Fetcher caches/source-page metadata remain available for offline loss review. This does not add source calls or alter cold-read bounds. Do not archive synthetic profile DB rows; preserve public source caches/metadata only after the run and secret scan.
+
+**[search-development] missing-telemetry reporting write-ahead:** parent now stops if a strict child omits its budget checkpoint. Its final console message must print the recorded batch reason, rather than claim a provider refusal for this unmeasured case. Add a mocked two-case regression proving only the first child starts, reason is `capture_unavailable` and no provider cause is inferred. Restart clean-env full gate after this final reporting correction; preserve the interrupted original.
 
 **[search-development] isolated offline gates:** full run on final source returned3633passed/1failure/94.86%; only `test_selecting_exa_without_a_key_refuses_to_start` saw the real key through the dedicated `.env` symlink. Temporarily unlink only that symlink (original file untouched), rerun full gate, then restore with `ln -s /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.env backend/.env` before the frozen live capture. Original failing/interrupted logs remain retained. No test assertion/source weakened.
 
@@ -3733,6 +3741,8 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**[search-development] final green source gate,2026-10-07:**3635backend tests/2warnings/94.86%/449.26s;54targetedpass; Ruff/format367/mypy366clean; frontend232/type/lint/buildclean. Dedicated dotenv symlink detached during offline gate, original untouched and restored before live. One Alembichead d8e412c6a901; app Git tree5c4f52b7e00b15544c2324fc5b84cfd99ec2d4c0 equals main. Logs/summary under `evidence/search-development/2026-10-07/gates/`. Earlier red/interrupted entries below are historical.
 
 **[search-development] WIP source:**53targetedpassed; Ruff/format367 and mypy366 green; frontend232/type/lint/build green; final full backend3633passed/1configurationfailure/2warnings/94.86% in436.43s because dedicated dotenv symlink supplies a real key to a keyless configuration test. A clean-env full rerun is pending; source has not been frozen/launched. Offline demo executes withGroningen first; one migrationhead d8e412c6a901.
 

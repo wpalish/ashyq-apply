@@ -1229,7 +1229,7 @@ def main() -> None:
         print(f"{case_id}: {observation.error or 'complete'}", flush=True)
         if batch_stop_reason:
             print(
-                "Capture stopped after provider failure; remaining cases were not attempted.",
+                f"Capture stopped ({batch_stop_reason}); remaining cases were not attempted.",
                 flush=True,
             )
             break

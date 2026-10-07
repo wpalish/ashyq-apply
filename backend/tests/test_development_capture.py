@@ -225,3 +225,31 @@ def test_preexisting_shared_stop_dispatches_no_child(
     completeness = scorecard.completeness(arm, arm.expected_cases)
     assert completeness["status"] == "incomplete"
     assert len(completeness["missing"]) == len(live.COHORT)
+
+
+def test_missing_budget_checkpoint_stops_as_unmeasured_without_inferring_provider_cause(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+):
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["live", "--live", "--out", str(tmp_path), "--strict-expert-budget"],
+    )
+    monkeypatch.setattr(subprocess, "check_output", lambda *a, **k: "a" * 40)
+    started = []
+
+    def child(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        case = command[command.index("--case") + 1]
+        started.append(case)
+        Path(command[command.index("--out") + 1]).write_text(
+            Observation(case_id=case).model_dump_json()
+        )
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(subprocess, "run", child)
+    live.main()
+    capture = Capture.model_validate_json(next(tmp_path.rglob("capture.json")).read_text())
+    assert started == [next(iter(live.COHORT))]
+    assert capture.config["batch_stop_reason"] == "capture_unavailable"
+    assert len(capture.config["batch_remaining_case_ids"]) == len(live.COHORT) - 1  # type: ignore[arg-type]
+    assert "Capture stopped (capture_unavailable)" in capsys.readouterr().out
