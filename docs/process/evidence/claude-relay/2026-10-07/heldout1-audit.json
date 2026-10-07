@@ -1,0 +1,726 @@
+{
+ "run_id": 37554279823,
+ "artifact": "expert-recovery-37554279823",
+ "requested_cases": [
+  "nu",
+  "metu",
+  "sabanci",
+  "charles",
+  "masaryk",
+  "tum",
+  "tartu",
+  "polimi",
+  "vilnius"
+ ],
+ "original_captures": [
+  {
+   "file": "charles-off/20261007T010445Z/capture.json",
+   "sha256": "c961ed65d600bf1769d1b543bfdf0bc1e885f2cc3174a7f33ecc31d68e2329b7",
+   "case": "charles",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://www.mff.cuni.cz/en/students/bachelor-of-computer-science"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 26,
+    "latency_seconds": 94.03998282499992,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "charles-off/20261007T013644Z/capture.json",
+   "sha256": "d33d6b0fefd66cf947da013bf1bcd09d26a99f1e67d44b8d47c588ebe24e050d",
+   "case": "charles",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 32,
+    "latency_seconds": 115.00666595699977,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "charles-on/20261007T010620Z/capture.json",
+   "sha256": "9036f4b4ee5cb6ced65702c65543e71717a6b3f4aadd49ab6e31967a30b3ea23",
+   "case": "charles",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 38,
+    "latency_seconds": 115.00733349899997,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "charles-on/20261007T013447Z/capture.json",
+   "sha256": "2147e0f401663b37389bba683647f8ebf3cbedfac13904f9b40d1adb086c7741",
+   "case": "charles",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 28,
+    "latency_seconds": 115.00454781600001,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "masaryk-off/20261007T010817Z/capture.json",
+   "sha256": "da03063243cba906646234b1b0444d81c6d2c4284a6a0261501c3d4b03ccc11f",
+   "case": "masaryk",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 24,
+    "latency_seconds": 120.00469674300007,
+    "over_budget": 1,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "masaryk-off/20261007T013247Z/capture.json",
+   "sha256": "ea953d2b447c319bbb38837540d0604c5ee7e0e0a0451fe9e8ab06b007ea7177",
+   "case": "masaryk",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 25,
+    "latency_seconds": 120.0064494469998,
+    "over_budget": 1,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "masaryk-on/20261007T011017Z/capture.json",
+   "sha256": "d6507e7db681b4619be4d42f6242a1fe5089729ef4097c73c04cfc86bb0185dc",
+   "case": "masaryk",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 23,
+    "latency_seconds": 120.00369605500009,
+    "over_budget": 1,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "masaryk-on/20261007T013046Z/capture.json",
+   "sha256": "bd082c7a363a9492914d398111a54a1e986650d5a90b2660c9bc54d4a38f835b",
+   "case": "masaryk",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 25,
+    "latency_seconds": 120.0035429149998,
+    "over_budget": 1,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "metu-off/20261007T005735Z/capture.json",
+   "sha256": "9a59c23c8d0305070e3528822ae87a8b7ba33a13ee61720d3a520953927d35e7",
+   "case": "metu",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 0,
+    "http_fetches": 15,
+    "latency_seconds": 115.00422956199998,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "metu-off/20261007T014358Z/capture.json",
+   "sha256": "7d253756f1dba52caab272d81ab475f4d3bad52d25c7a3d8f067200b2ad58000",
+   "case": "metu",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 0,
+    "http_fetches": 15,
+    "latency_seconds": 115.00537843700022,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "metu-on/20261007T005932Z/capture.json",
+   "sha256": "94ff9b235bf30ad4d086e18f56dd1133cb9f2a63be271f2c9c3460ec80f69911",
+   "case": "metu",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 0,
+    "http_fetches": 15,
+    "latency_seconds": 115.00420492,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "metu-on/20261007T014201Z/capture.json",
+   "sha256": "d6d9b94f466dd350b0e2cc93d18e16b26d36d78e047670837b6f42a899b2dd08",
+   "case": "metu",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 0,
+    "http_fetches": 15,
+    "latency_seconds": 115.00433732700003,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "nu-off/20261007T005342Z/capture.json",
+   "sha256": "809f833c700fc7c116f28f662b3432152b53351c876fcc321b582a4026053509",
+   "case": "nu",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 1,
+    "http_fetches": 41,
+    "latency_seconds": 115.018259852,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "nu-on/20261007T005539Z/capture.json",
+   "sha256": "586f898efba9db9b938c532cb1ec77ba8ba1a535edc774960a4d2da19f099035",
+   "case": "nu",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 4,
+    "http_fetches": 38,
+    "latency_seconds": 115.00827541900003,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "nu-on/20261007T014554Z/capture.json",
+   "sha256": "4edf8b6fdfb2dbf8e4be2cd75012140f79241ce90da21fb5590ee58bd06bd825",
+   "case": "nu",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 0,
+    "http_fetches": 39,
+    "latency_seconds": 115.0044495520001,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "polimi-off/20261007T011758Z/capture.json",
+   "sha256": "54f293f3fe25ec6d12cb4ae5ef29bf8690a6f612542d86c43f600d52d803aff7",
+   "case": "polimi",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 31,
+    "latency_seconds": 66.817307712,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "polimi-off/20261007T012438Z/capture.json",
+   "sha256": "6fb7ea7ba3997fad09f625d012b0671915028e8fe1e266d428c54ab1e73e82cc",
+   "case": "polimi",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 31,
+    "latency_seconds": 52.63161147799997,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "polimi-on/20261007T011906Z/capture.json",
+   "sha256": "df2b115ebb0c6e41f205f4c0f0ea24832a50cfb7a504a2d59479788906711cdf",
+   "case": "polimi",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 31,
+    "latency_seconds": 50.542366664000156,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "polimi-on/20261007T012343Z/capture.json",
+   "sha256": "eb5a30286412c23e43ded5577d14ea77bb4dcbbfb23feaee612b6f8549d1ab39",
+   "case": "polimi",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 31,
+    "latency_seconds": 52.78882372499993,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "sabanci-off/20261007T010128Z/capture.json",
+   "sha256": "bdfd208048f52a4c902972f80c79b25e04624bfb2393316ba82837d83189b6fe",
+   "case": "sabanci",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [
+    "gpa",
+    "deadline"
+   ],
+   "programme_urls": [
+    "https://ects.sabanciuniv.edu/en/undergraduate/computer-science-and-engineering"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 40,
+    "latency_seconds": 82.14122367899995,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "sabanci-off/20261007T014032Z/capture.json",
+   "sha256": "34b24d05fd3c7289c3a146928791f2aa504967e839eb5d2cc1d4d772715ed5bb",
+   "case": "sabanci",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [
+    "deadline"
+   ],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 43,
+    "latency_seconds": 87.72142440800008,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "sabanci-on/20261007T010252Z/capture.json",
+   "sha256": "42bead5201cde5f58eb1150f424db1e5a440af0115925e5392c713a2db18a265",
+   "case": "sabanci",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [
+    "deadline"
+   ],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 43,
+    "latency_seconds": 111.64914037000005,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "sabanci-on/20261007T013840Z/capture.json",
+   "sha256": "efe401368de088ab1447ca60060688c67c17afa1a77d7a7e80d742b946abac78",
+   "case": "sabanci",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [
+    "deadline"
+   ],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 43,
+    "latency_seconds": 109.97903766400032,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "tartu-off/20261007T011500Z/capture.json",
+   "sha256": "ab6819c6769718558389c43fc43f7298eeed6aae7b9d2f6951134fc85e2e7605",
+   "case": "tartu",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://ut.ee/en/curriculum/cybersecurity"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 40,
+    "latency_seconds": 110.83848317900015,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "tartu-off/20261007T012648Z/capture.json",
+   "sha256": "5141aa39d0c383e308ab9e3642030aed97238c45169b93d62cd27af7ebb3b54b",
+   "case": "tartu",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://ut.ee/en/curriculum/cybersecurity"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 40,
+    "latency_seconds": 72.38185193800018,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "tartu-on/20261007T011652Z/capture.json",
+   "sha256": "e2ede9c834654ba0a264af9082102d27fdbec58c1d61c03702622c6db92d3851",
+   "case": "tartu",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://ut.ee/en/curriculum/cybersecurity"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 40,
+    "latency_seconds": 63.71048886099993,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "tartu-on/20261007T012532Z/capture.json",
+   "sha256": "a685f88fbab5fa3aa5585045e607a631fd003234f09dc64c1754cf94b258c545",
+   "case": "tartu",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://ut.ee/en/curriculum/cybersecurity"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 40,
+    "latency_seconds": 74.64255194499992,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "tum-off/20261007T011218Z/capture.json",
+   "sha256": "e19b0056e34d6cbbbeb41ebbe3752b6bbdb5cfe4f44bfc81b9e1f8954b803da4",
+   "case": "tum",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://www.tum.de/en/studies/degree-programs/detail/informatics-bachelor-of-science-bsc"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 40,
+    "latency_seconds": 89.2169282530001,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "tum-off/20261007T012926Z/capture.json",
+   "sha256": "dac482866ac60a623566b73c35c6ccd160679d3243f13aad295fbda219bee2b3",
+   "case": "tum",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://www.tum.de/en/studies/degree-programs/detail/informatics-bachelor-of-science-bsc"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 40,
+    "latency_seconds": 78.82210453900007,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "tum-on/20261007T011349Z/capture.json",
+   "sha256": "e5b2b0efd9a76f3461933113d60b7cb90db60bd5dbbce03a4ae657308b71d788",
+   "case": "tum",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://www.tum.de/en/studies/degree-programs/detail/informatics-bachelor-of-science-bsc"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 40,
+    "latency_seconds": 70.15206340499981,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "tum-on/20261007T012802Z/capture.json",
+   "sha256": "f781952e2c7373b486258b76a583fbb87064e7221f222763c6f8ace7d831f593",
+   "case": "tum",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://www.tum.de/en/studies/degree-programs/detail/informatics-bachelor-of-science-bsc"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 40,
+    "latency_seconds": 82.38533838600006,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "vilnius-off/20261007T011958Z/capture.json",
+   "sha256": "69ea26e42ee2765637accc8decf9ce606b84b88b6146a41cc86b9ee44e689039",
+   "case": "vilnius",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 33,
+    "latency_seconds": 66.83422493900002,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "vilnius-off/20261007T012254Z/capture.json",
+   "sha256": "7d2da695e890782c2899c2b1236c23b4e7d02aa0a077d2dd5092819771dcee5f",
+   "case": "vilnius",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 33,
+    "latency_seconds": 47.4760344230001,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "vilnius-on/20261007T012106Z/capture.json",
+   "sha256": "2cb0ac2e199a200645941e4d7062e30c80fe8b617fb892bde6469ca67883ba20",
+   "case": "vilnius",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 33,
+    "latency_seconds": 55.854357242000106,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "vilnius-on/20261007T012204Z/capture.json",
+   "sha256": "e10ef9499dc019a6d9e7513798ecb3901d6fa6435865969460ae87e480dd371e",
+   "case": "vilnius",
+   "pipeline_sha": "75224e599fd11a926c4cd132d099ab5eb2208022",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 33,
+    "latency_seconds": 49.33870505899995,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  }
+ ],
+ "arms": {
+  "off": {
+   "completeness": {
+    "status": "incomplete",
+    "expected_cases": [
+     "charles",
+     "masaryk",
+     "metu",
+     "nu",
+     "polimi",
+     "sabanci",
+     "tartu",
+     "tum",
+     "vilnius"
+    ],
+    "expected_repetitions": 2,
+    "missing": [
+     {
+      "case": "nu",
+      "repetition": 2
+     }
+    ],
+    "unfinished": []
+   },
+   "repetitions": [
+    {
+     "core_numerator": 2,
+     "core_denominator_observed": 54,
+     "core_denominator_planned": 54
+    },
+    {
+     "core_numerator": 1,
+     "core_denominator_observed": 48,
+     "core_denominator_planned": 54
+    }
+   ]
+  },
+  "on": {
+   "completeness": {
+    "status": "complete",
+    "expected_cases": [
+     "charles",
+     "masaryk",
+     "metu",
+     "nu",
+     "polimi",
+     "sabanci",
+     "tartu",
+     "tum",
+     "vilnius"
+    ],
+    "expected_repetitions": 2,
+    "missing": [],
+    "unfinished": []
+   },
+   "repetitions": [
+    {
+     "core_numerator": 1,
+     "core_denominator_observed": 54,
+     "core_denominator_planned": 54
+    },
+    {
+     "core_numerator": 1,
+     "core_denominator_observed": 54,
+     "core_denominator_planned": 54
+    }
+   ]
+  }
+ },
+ "error_counts": {
+  "complete": 21,
+  "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED": 14
+ },
+ "observed_core": {
+  "numerator": 5,
+  "denominator": 210
+ },
+ "planned_core_denominator": 216,
+ "over_budget": [
+  {
+   "file": "masaryk-off/20261007T010817Z/capture.json",
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 24,
+    "latency_seconds": 120.00469674300007,
+    "over_budget": 1,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "masaryk-off/20261007T013247Z/capture.json",
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 25,
+    "latency_seconds": 120.0064494469998,
+    "over_budget": 1,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "masaryk-on/20261007T011017Z/capture.json",
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 23,
+    "latency_seconds": 120.00369605500009,
+    "over_budget": 1,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "masaryk-on/20261007T013046Z/capture.json",
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 25,
+    "latency_seconds": 120.0035429149998,
+    "over_budget": 1,
+    "missing_telemetry": []
+   }
+  }
+ ]
+}

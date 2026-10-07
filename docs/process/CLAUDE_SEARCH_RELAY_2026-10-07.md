@@ -1,0 +1,83 @@
+# Claude search relay — 7 October 2026
+
+## Start here
+
+Status: ready for review, baton released. Draft PR: https://github.com/wpalish/ashyq-apply/pull/61. Branch: `task/search-claude-relay`. Base: `1b2a554129f5744eb297848472f1c8fe8c7fde26` (main, PR #60 merged).
+Local checkout: `/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply`.
+This journal is committed/pushed so Claude can resume without this chat. Newest entries take precedence over older HANDOFF paragraphs.
+
+## Authorization and session reviewed
+
+Owner: “проанализируй сессию и продолжи его работу ... записывай в какой то файл”. Read-only native Claude session reviewed through computer use, no prompt sent and no model request made. Session ID `session_0142YLhoNdiGxNVtxJBDaNfX`, name “Привет”, branch `claude/greeting-16wj2z`.
+Latest response: PR #60 merged; RL-1 in main; four open decisions: development-cohort extension, G-1 gold signature, free Exa capacity, Aalto/NTU Fly recheck. Earlier owner delegation is reported in the PR as “делай по своим рекомендациям”. The new continuation authorizes ordinary engineering decisions; it does not sign gold or authorize purchases.
+
+## Confirmed starting state
+
+- PR #59 and #60 are merged. Current main is `1b2a554`.
+- Default rules: DF-1 and RL-1 on; TS-2/SR-2/SP-1 off after no measured gain. Check constants for exact implementation.
+- Original fresh measurements are in `backend/evaluation/research/runs/2026-10-06/`; reviewed9 has 73 known labels.
+- Control two-pass: reported 20/73 labels, 10/60 core. RL-1: reported 12/60 core, precision 1.0; this describes saved runs, not current general reliability.
+- Heldout run 37554279823 timed out at 55 minutes. Claude reported 5/216 core, 7/9 programme misses and failed target 6. Completeness/denominator must be audited before treating this as a completed evaluation.
+- `docs/process/HANDOFF.md` was stale: it still described draft8 and pending DL-2/BL-1. Updated active branch-specific entries; preserved history.
+- Other local `task/expert-500-phase1` checkout has uncommitted funnel work. It was inspected only and not modified. No duplication of that work planned.
+- Takeover script: clean tree, zero ahead/behind main, 19 migrations with sole head `d8e412c6a901`. Complete script output retained locally in `work/handoff-initial.log` (large historical HANDOFF included).
+
+## Write-ahead plan
+
+1. Archive current Fly status and repeat unchanged production Fetcher probe only for Aalto and NTU. No settings, secrets or deployment changes.
+2. Download original heldout and RL-1 artifacts; audit completed/partial captures, core counts and budgets offline.
+3. Fix a reproduced measuring-stick defect first if present. Do not tune rules on the nine heldout cases or touch the separate expert500 HELDOUT150.
+4. Continue with a general discovery improvement on a disjoint development cohort, retaining 6/60/120 limits, truthful unknowns and existing Fetcher protections.
+5. Run required source gates, push each green step, prepare a reviewable PR; owner merges.
+
+## Decisions still pending
+
+G-1/G-2 gold corrections are not applied. Paid Exa is not authorized. A free query cache requires inspection of the existing cache/budget/privacy semantics before proposing a change. Source availability must remain distinct from programme discovery or claim accuracy.
+
+## Resume checkpoint
+
+Next action: execute step 1, inspect the saved heldout artifact and add actual results below. No source edits made at takeover.
+
+## Step 1 / step 2 findings (before source edits)
+
+- Owner supplied fresh NTU DNS evidence on the same Fly machine: `socket.getaddrinfo` returned `104.16.4.14`; `nslookup` is unavailable. This does not itself prove a page read.
+- Repeated production probe completed: NTU pages readable; Aalto robots unreachable. Raw output under `evidence/claude-relay/2026-10-07/`. Full details to be added after parsing.
+- Downloaded original artifacts for heldout 37554279823 and RL-1 37545452839 into local work. Heldout has 35 capture files (36 planned); NU-off has only one repetition. All 18 on files exist, so the original nine-case on-arm measurement can still be examined separately.
+- Reproduced measuring-stick defects by reading code and original telemetry: `cost()` rounds seconds before checking the cap (Masaryk 120.003–120.006 s becomes 120.0); null counters are treated as zero; `load_run()` silently merges an incomplete second repetition and `stable_changes()` can declare a gain from missing cases.
+- Write-ahead: repair those scorecard behaviours with independent synthetic tests; preserve original artifacts, scorer decisions, corpus, production flags and heldout facts. Keep ordinary completed budget exhaustion as a measured outcome, distinguish it from an unfinished capture or an absent repetition.
+
+## Step 3 write-ahead: disjoint development cohort
+
+Choose five deterministic existing catalogue seed identities from the frozen DEV split, sorted by stable id and taking a distinct country each time: Dalian University of Technology, Nagoya University, University of Witwatersrand, AUT, Caltech. None is in the ten-case cohort, the nine curated heldout cases, or the expert500 HELDOUT150. This is an identity-only working set, not signed gold.
+
+The live harness currently accepts only the curated 19, so extend its opt-in case selectors and canary diagnostics to select an existing imported seed identity. Do not add these to the production curated registry or import seed costs/admission hints as claims. Preserve the default ten-case run. Run the five-case baseline in strict mode before any rule tuning.
+
+## Green checkpoint: scorecard repair and access audit
+
+- Source tests: 15 scorecard tests pass (9 new). Ruff check/format and mypy 336 source files pass. Full backend: **3619 passed, 2 warnings, 94.86% coverage, 520.35 s**. Frontend: typecheck/lint/build pass, **232 tests** pass. No app/pipeline/ranking/schema/Fetcher or production defaults changed.
+- RL-1 replay still has the same two stable gains and zero losses. All evidence and precise heldout audit are under `docs/process/evidence/claude-relay/2026-10-07/README.md`.
+- G-1 now has a concrete unsigned proposal (6.0 overall / each component) and owner was asked asynchronously; no gold change is applied.
+- Five-case development manifest prepared; no baseline yet. Before launching it, add opt-in catalogue identity selection and explicit global stop on any provider failure; current paired shell workflow alone is not safe for that requirement.
+
+## Committed checkpoint / exact next step
+
+Takeover: `96f0b14`. Green scorecard source + evidence: `0bc152226cb1aacf89e293a4dba82507e324abf6`. Current code is reviewable; original search algorithm defaults are unchanged.
+
+The next source task is opt-in development-case support and a controlled five-case baseline. Implementation has **not started**. The manifest gives identity ids and source hashes. Required files: `backend/evaluation/research/live.py`, `backend/scripts/canary_discovery.py`, offline selector/controller tests. `live.py --case` currently permits only the curated 19 and canary selects only their registry entries. Use existing imported catalogue ids for the five seed identities, without declaring their hints verified or adding seed estimates to claims. Add explicit global batch stop on provider/auth/quota refusal before new live work; the paired shell workflow currently continues to the next command after a provider refusal. Preserve defaults and 6/60/120 budgets, obtain a baseline before any discovery rule, retain raw logs and actual attempted/remaining ids. Do not tune on the nine heldout cases or expert500 HELDOUT150.
+
+After source PR review/merge, resume with:
+
+```bash
+git fetch origin --prune
+git show origin/task/search-claude-relay:docs/process/CLAUDE_SEARCH_RELAY_2026-10-07.md
+```
+
+If using a different checkout, do not reset local changes. The private expert500 branch's dirty funnel work is a separate workstream. No fresh model, expert, provider search, or new university benchmark was launched in this relay step. No main merge or deployment was performed.
+
+## Released checkpoint / PR #61
+
+The bounded relay step is complete and pushed: measuring-stick repair, raw evidence audit, production access recheck and next development plan. The holder is now nobody. Review the Draft PR before merging; the owner merges. This is not a claim that the whole search product is finished.
+
+A final additional CI-scope check (`app tests evaluation`) passed Ruff check, Ruff format (365 files) and mypy (365 source files). Local full backend3619 /94.86% and frontend232 remain the source gate results. At the time this journal was written, cloud release-gates on the PR were still running; read the PR check rollup for the eventual exact-head result. Future agents must not infer success from this pending entry.
+
+To resume, fetch this branch and read this journal plus HANDOFF's newest branch-specific entries. First review/merge PR #61, then implement the opt-in catalogue seed-case harness and global provider-failure stop described above. The five-case baseline is still PREPARED_NOT_RUN. The G-1 signature question is pending; reviewed9 and historical scoring are unchanged.
