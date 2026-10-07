@@ -1,0 +1,53 @@
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py:8:22: F401 [*] `datetime.UTC` imported but unused
+  |
+6 | import asyncio
+7 | from copy import deepcopy
+8 | from datetime import UTC, datetime
+  |                      ^^^ F401
+9 | from types import SimpleNamespace
+  |
+  = help: Remove unused import
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py:8:27: F401 [*] `datetime.datetime` imported but unused
+  |
+6 | import asyncio
+7 | from copy import deepcopy
+8 | from datetime import UTC, datetime
+  |                           ^^^^^^^^ F401
+9 | from types import SimpleNamespace
+  |
+  = help: Remove unused import
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py:16:31: F401 [*] `app.adapters.base.AdapterResult` imported but unused
+   |
+14 | pytest_plugins = ("test_production_readguard",)
+15 |
+16 | from app.adapters.base import AdapterResult
+   |                               ^^^^^^^^^^^^^ F401
+17 | from app.adapters.fetching import Fetcher
+18 | from app.domain.enums import DegreeLevel, PipelineStage
+   |
+   = help: Remove unused import: `app.adapters.base.AdapterResult`
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py:17:35: F401 [*] `app.adapters.fetching.Fetcher` imported but unused
+   |
+16 | from app.adapters.base import AdapterResult
+17 | from app.adapters.fetching import Fetcher
+   |                                   ^^^^^^^ F401
+18 | from app.domain.enums import DegreeLevel, PipelineStage
+19 | from app.models import AuditEvent, ClaimRow, Job, ProgramResultRow, ResearchRun
+   |
+   = help: Remove unused import: `app.adapters.fetching.Fetcher`
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py:23:32: F401 [*] `app.schemas.result.CostBreakdown` imported but unused
+   |
+21 | from app.pipeline.control import UniversityReadStopped
+22 | from app.pipeline.runner import ResearchRunner, _to_out
+23 | from app.schemas.result import CostBreakdown, ProgramResult
+   |                                ^^^^^^^^^^^^^ F401
+24 | from sqlalchemy import event, inspect, select, update
+   |
+   = help: Remove unused import: `app.schemas.result.CostBreakdown`
+
+Found 5 errors.
+[*] 5 fixable with the `--fix` option.

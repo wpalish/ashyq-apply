@@ -1,0 +1,102 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+__ test_real_run_to_decision_shared_61_stops_funding_and_preserves_programme ___
+
+context = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert...-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/testtmp-production-red/test_real_run_to_decision_shar0'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109d2cd40>
+
+    @pytest.mark.asyncio
+    async def test_real_run_to_decision_shared_61_stops_funding_and_preserves_programme(
+        context, monkeypatch
+    ):
+        from app.pipeline import runner as runner_module
+    
+        seen = mock_original_get(monkeypatch, context)
+        uni = SimpleNamespace(
+            id="u-one",
+            name="Test University",
+            country="Example",
+            city="City",
+            domain="example.edu",
+            registry_entry={
+                "name": "Test University",
+                "country": "Example",
+                "city": "City",
+                "homepage": "https://example.edu/",
+            },
+        )
+        monkeypatch.setattr(catalogue, "retrieve", lambda *a, **k: [uni])
+    
+        async def discovered(adapter, entry, profile, **kwargs):
+            for i in range(11):
+                await adapter.fetcher.get(f"https://example.edu/discovery/{i}")
+            return candidate(), DiscoveryTrace("Test University", "example.edu")
+    
+        async def requirements(adapter, cand, prog, intake):
+            for i in range(25):
+                await adapter.fetcher.get(f"https://example.edu/requirements/{i}")
+            return AdapterResult(claims=[program_claim()], pages_checked=25)
+    
+        async def cost(adapter, cand):
+            return CostBreakdown(), AdapterResult()
+    
+        async def government(adapter, country):
+            return AdapterResult()
+    
+        async def scholarships(adapter, cand, prog, profile, **kwargs):
+            for i in range(25):
+                await adapter.fetcher.get(f"https://example.edu/funding/{i}")
+            return [], AdapterResult()
+    
+        monkeypatch.setattr(catalogue.CatalogueDiscoveryAdapter, "_discover_one", discovered)
+        monkeypatch.setattr(runner_module.WebRequirementsAdapter, "verify", requirements)
+        monkeypatch.setattr(runner_module.WebCostAdapter, "fetch", cost)
+        monkeypatch.setattr(runner_module.WebGovernmentAdapter, "post_study_work", government)
+        monkeypatch.setattr(runner_module.WebScholarshipAdapter, "find", scholarships)
+        await context.runner.run_to_decision()
+>       assert len(seen) == 60 and counts(context) == {"catalogue:u-one": 60}
+E       AssertionError: assert (61 == 60)
+E        +  where 61 = len([{'url': 'https://example.edu/discovery/0', 'kwargs': {'use_cache': True, 'etag': None, 'if_modified_since': None}, 'd.../example.edu/discovery/5', 'kwargs': {'use_cache': True, 'etag': None, 'if_modified_since': None}, 'durable': {}}, ...])
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_production_readguard.py:624: AssertionError
+______________ test_real_catalogue_discovery_61_is_local_unknown _______________
+
+context = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert...-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/testtmp-production-red/test_real_catalogue_discovery_0'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10c46baa0>
+
+    @pytest.mark.asyncio
+    async def test_real_catalogue_discovery_61_is_local_unknown(context, monkeypatch):
+        fetcher = activate(context)
+        seen = mock_original_get(monkeypatch, context)
+        uni = SimpleNamespace(
+            id="u-one",
+            name="Test University",
+            country="Example",
+            city="City",
+            domain="example.edu",
+            registry_entry={
+                "name": "Test University",
+                "country": "Example",
+                "city": "City",
+                "homepage": "https://example.edu/",
+            },
+        )
+        monkeypatch.setattr(catalogue, "retrieve", lambda *a, **k: [uni])
+    
+        async def deep(adapter, entry, profile, **kwargs):
+            for i in range(61):
+                await adapter.fetcher.get(f"https://example.edu/discovery/{i}")
+            return candidate(), DiscoveryTrace("Test University", "example.edu")
+    
+        monkeypatch.setattr(catalogue.CatalogueDiscoveryAdapter, "_discover_one", deep)
+        adapter = context.runner._make_discovery_adapter(fetcher)
+        out = await adapter.discover(context.profile, 1)
+>       assert len(seen) == 60 and len(out) == 1
+E       AssertionError: assert (61 == 60)
+E        +  where 61 = len([{'url': 'https://example.edu/discovery/0', 'kwargs': {'use_cache': True, 'etag': None, 'if_modified_since': None}, 'd.../example.edu/discovery/5', 'kwargs': {'use_cache': True, 'etag': None, 'if_modified_since': None}, 'durable': {}}, ...])
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_production_readguard.py:467: AssertionError
+=========================== short test summary info ============================
+FAILED work/search-loop-round4/reviews/expert_b-readguard-v2/test_production_readguard.py::test_real_run_to_decision_shared_61_stops_funding_and_preserves_programme
+FAILED work/search-loop-round4/reviews/expert_b-readguard-v2/test_production_readguard.py::test_real_catalogue_discovery_61_is_local_unknown
+2 failed in 0.67s

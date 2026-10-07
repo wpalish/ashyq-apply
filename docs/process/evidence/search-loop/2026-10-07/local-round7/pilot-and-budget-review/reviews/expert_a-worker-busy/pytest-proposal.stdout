@@ -1,0 +1,13 @@
+............                                                             [100%]
+=============================== warnings summary ===============================
+../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:885
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:885: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; review_context
+    self.import_plugin(import_spec)
+
+test_worker_busy.py::test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[sqlite-first]
+test_worker_busy.py::test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[sqlite-second]
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: DeprecationWarning: The default datetime adapter is deprecated as of Python 3.12; see the sqlite3 documentation for suggested replacement recipes
+    cursor.execute(statement, parameters)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+12 passed, 3 warnings in 2.35s

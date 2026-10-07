@@ -1,0 +1,44 @@
+{
+  "worker_mode": "proposal",
+  "worker_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/worker-pinned/worker.proposed.py",
+  "worker_sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+  "exact_proposed_modules": [
+    {
+      "module": "app.adapters.base",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/proposed/app/adapters/base.py",
+      "sha256": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46"
+    },
+    {
+      "module": "app.pipeline.runner",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/proposed/app/pipeline/runner.py",
+      "sha256": "a91a4f5259de94ba346190c30ec24fe845907b1a1053919b6830de6d27fc20c8"
+    },
+    {
+      "module": "app.catalogue.discovery",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/proposed/app/catalogue/discovery.py",
+      "sha256": "15c6c62398889c61183b407dc371a40d8a3f7b4f270b12c90d3c0c5d799bf7c7"
+    },
+    {
+      "module": "app.adapters.discovery.live_discovery",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/proposed/app/adapters/discovery/live_discovery.py",
+      "sha256": "ddecbae3a4754ea3a7eb814d851d87332ed3248e3188358e95337e5cc423adad"
+    },
+    {
+      "module": "app.adapters.discovery.catalog_walker",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/proposed/app/adapters/discovery/catalog_walker.py",
+      "sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64"
+    },
+    {
+      "module": "app.pipeline.control",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/proposed/app/pipeline/control.py",
+      "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd"
+    },
+    {
+      "module": "app.pipeline.read_budget",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/candidate-pinned/proposed/app/pipeline/read_budget.py",
+      "sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf"
+    }
+  ],
+  "read_guard_default": false,
+  "control_class_identity_matches": true
+}

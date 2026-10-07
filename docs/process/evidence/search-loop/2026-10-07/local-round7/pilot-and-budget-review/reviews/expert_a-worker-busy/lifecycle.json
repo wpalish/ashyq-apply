@@ -1,0 +1,48 @@
+{
+  "started_at_utc": "2026-10-07T22:22:34.897846+00:00",
+  "pgdata": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/runtime/cluster-01/pgdata",
+  "source_worker_original_sha256": "491f5ccdeadd3556ad4e5bf6bfc2b4578207ef2cce129eb2fcd57b4b4e0e6681",
+  "proposed_worker_sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+  "STOP_before": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+  "suites": [
+    {
+      "mode": "baseline",
+      "exit_code": 1,
+      "wall_seconds": 4.398811666062102,
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/runtime/pytest-baseline",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/test_worker_busy.py"
+      ]
+    },
+    {
+      "mode": "proposal",
+      "exit_code": 0,
+      "wall_seconds": 2.6836428749375045,
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/runtime/pytest-proposal",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/test_worker_busy.py"
+      ]
+    }
+  ],
+  "server_pid": 13451,
+  "own_socket": "/Users/wpalish/Library/Caches/TemporaryItems/python_PostgresServer/0b8c83be73/.s.PGSQL.5432",
+  "listen_addresses": "empty Unix-socket-only",
+  "own_pid_gone": true,
+  "own_socket_absent": true,
+  "STOP_after": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+  "finished_at_utc": "2026-10-07T22:22:42.739861+00:00"
+}

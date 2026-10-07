@@ -1,0 +1,333 @@
+--- b603/app/pipeline/runner.py
++++ v2/app/pipeline/runner.py
+@@ -83,6 +83,7 @@
+ from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
+ from app.schemas.profile import ApplicantProfileIn
+ from app.schemas.result import CostBreakdown, ProgramResult, Tristate
++from sqlalchemy import inspect as sa_inspect
+ from sqlalchemy import select, update
+ from sqlalchemy.exc import OperationalError
+ from sqlalchemy.orm import Session
+@@ -148,8 +149,9 @@
+         self._read_guard_enabled = False
+         self._read_guard_out_of_scope = False
+         self._read_guard_writing = False
+-        self._read_episode_fresh = False
+         self._read_job_kind: str | None = None
++        self._pending_settings_snapshot: dict | None = None
++        self._checkpoint_started_at: datetime | None = None
+ 
+     # --- infrastructure -------------------------------------------------
+ 
+@@ -216,19 +218,18 @@
+         back and stops without having written anything.
+         """
+         if not self._read_guard_writing:
+-            has_ledger = read_budget.LEDGER_KEY in (self.run.settings_snapshot or {})
+-            if not self._read_guard_enabled and not has_ledger and not self.demo:
+-                # A cold or stale ORM object can predate creation of the
+-                # namespace. Source-toggle checkpoints must still preserve it.
+-                with self.session.no_autoflush:
+-                    saved = self.session.execute(select(ResearchRun.settings_snapshot).where(
+-                        ResearchRun.id == self.run.id
+-                    )).scalar_one()
+-                has_ledger = isinstance(saved, dict) and read_budget.LEDGER_KEY in saved
+-            if self._read_guard_enabled or has_ledger:
+-                self.run.settings_snapshot = read_budget.copy_snapshot_with_ledger(
+-                    self.run.settings_snapshot or {}, self._read_snapshot(lock=True)
+-                )
++            pending = self._pending_settings_snapshot
++            changed = sa_inspect(self.run).attrs.settings_snapshot.history.has_changes()
++            if not self.demo and (self._read_guard_enabled or pending is not None or changed):
++                durable = self._read_snapshot(lock=True)
++                if self._read_guard_enabled and self.job_id and type(self.lease_token) is int and self.lease_token > 0:
++                    durable[read_budget.LEDGER_KEY] = self._read_ledger_for_checkpoint(durable)
++                replacement = pending if pending is not None else (self.run.settings_snapshot or {})
++                self.run.settings_snapshot = read_budget.copy_snapshot_with_ledger(replacement, durable)
++            elif pending is not None:
++                self.run.settings_snapshot = deepcopy(pending)
++            # A clean loaded JSON needs no assignment: ordinary ORM UPDATEs
++            # then cannot erase a namespace another checkpoint just created.
+         self.run.stage_state = self.state.dump()
+         self.run.heartbeat_at = datetime.now(UTC)
+         # The lease follows the stage, not the order of assignments in the
+@@ -252,6 +253,7 @@
+                 self.session.rollback()
+                 raise LeaseLost(f"job {self.job_id[:8]} is no longer held by {self.worker_id}")
+         self.session.commit()
++        self._pending_settings_snapshot = None
+ 
+     def _check_cancelled(self) -> None:
+         """Observed between units of work so cancellation lands cleanly.
+@@ -262,25 +264,31 @@
+         cancellation - the promise that this attempt may still write is kept
+         by the fence in _save.
+         """
+-        guarded = self._read_guard_enabled or read_budget.LEDGER_KEY in (self.run.settings_snapshot or {})
+-        # Dirty progress must not autoflush a Run row before the Job fence.
+-        with self.session.no_autoflush if guarded else nullcontext():
+-            cancelled = self.session.execute(
+-                select(ResearchRun.cancelled).where(ResearchRun.id == self.run.id)
+-            ).scalar()
+-            if cancelled:
+-                raise RunCancelled("Run was cancelled by the user.")
+-            if self.job_id is not None:
+-                from app.jobs.store import JobStore
+-
+-                store = JobStore(self.session, worker_id=self.worker_id)
+-                if store.is_cancel_requested(self.job_id):
+-                    raise RunCancelled("Job was cancelled by the user.")
+-                # A reaped lease means another worker is already redoing this job.
+-                # Continuing would double every read-modify-write counter on the
+-                # run and let this attempt report an outcome it no longer owns.
+-                if not store.owns(self.job_id):
+-                    raise LeaseLost(f"job {self.job_id[:8]} is no longer held by {self.worker_id}")
++        try:
++            guarded = not self.demo
++            # Dirty progress must not autoflush a Run row before the Job fence.
++            with self.session.no_autoflush if guarded else nullcontext():
++                cancelled = self.session.execute(
++                    select(ResearchRun.cancelled).where(ResearchRun.id == self.run.id)
++                ).scalar()
++                if cancelled:
++                    raise RunCancelled("Run was cancelled by the user.")
++                if self.job_id is not None:
++                    from app.jobs.store import JobStore
++
++                    store = JobStore(self.session, worker_id=self.worker_id)
++                    if store.is_cancel_requested(self.job_id):
++                        raise RunCancelled("Job was cancelled by the user.")
++                    # A reaped lease means another worker is already redoing this job.
++                    # Continuing would double every read-modify-write counter on the
++                    # run and let this attempt report an outcome it no longer owns.
++                    if not store.owns(self.job_id):
++                        raise LeaseLost(f"job {self.job_id[:8]} is no longer held by {self.worker_id}")
++        except OperationalError as error:
++            if not self.demo and self._checkpoint_is_busy(error):
++                self.session.rollback()
++                raise UniversityReadStopped("checkpoint_busy") from error
++            raise
+ 
+     def _live_claim_moments(self) -> list[datetime]:
+         """The expiry moment of every live claim in this run.
+@@ -385,13 +393,12 @@
+ 
+     async def run_to_decision(self) -> None:
+         """Stages 1-5, ending at AWAITING_USER_DECISION."""
+-        self._read_episode_fresh = self.run.started_at is None
+         self._read_guard_enabled = (
+-            read_budget.UNIVERSITY_READ_BUDGET and not self.demo and not self._read_guard_out_of_scope
++            not self.demo and not self._read_guard_out_of_scope and self._effective_read_guard()
+         )
+         previous_snapshot = deepcopy(self.run.settings_snapshot or {})
+         self.run.started_at = self.run.started_at or datetime.now(UTC)
+-        self.run.settings_snapshot = {
++        self._pending_settings_snapshot = {
+             "demo_mode": self.demo,
+             "candidate_limit": self.candidate_limit,
+             "verify_limit": self.verify_limit,
+@@ -402,9 +409,9 @@
+             "university_ids": self.run.university_ids or [],
+         }
+         if read_budget.LEDGER_KEY in previous_snapshot:
+-            self.run.settings_snapshot[read_budget.LEDGER_KEY] = previous_snapshot[read_budget.LEDGER_KEY]
++            self._pending_settings_snapshot[read_budget.LEDGER_KEY] = previous_snapshot[read_budget.LEDGER_KEY]
+         if self._read_guard_enabled:
+-            self.run.settings_snapshot["university_read_budget_scope"] = "decision-job-episode"
++            self._pending_settings_snapshot["university_read_budget_scope"] = "decision-job-episode"
+         fetcher = self._make_fetcher()
+         browser = self._make_browser(fetcher)
+         if browser.enabled:
+@@ -429,6 +436,12 @@
+             self.run.finished_at = datetime.now(UTC)
+             self._arm_recheck(self.earliest_recheck())
+             self._save()
++        except UniversityReadStopped:
++            # Busy/invalid checkpoint metadata is a typed unknown, not a Run
++            # FAILED write under the same lock. Existing Worker.fail/backoff
++            # handles the retry; no durable unknown is promised here.
++            self.session.rollback()
++            raise
+         except LeaseLost:
+             # Losing the lease is control flow, not a failure of the run. The
+             # attempt that lost it has already rolled itself back in _save and
+@@ -476,6 +489,53 @@
+         self.run.stage = stage.value
+         self.session.add(self.run)
+ 
++    def _effective_read_guard(self) -> bool:
++        if read_budget.UNIVERSITY_READ_BUDGET:
++            return True
++        if not self.job_id:
++            return False
++        snapshot = self._read_snapshot(lock=False)
++        if isinstance(snapshot, dict) and read_budget.LEDGER_KEY in snapshot:
++            ledger = read_budget.validate_ledger(snapshot[read_budget.LEDGER_KEY])
++            # A recorded ON episode is intent, even after a source default
++            # changes. Previous episodes do not establish current job intent.
++            return "decision:" + self.job_id in ledger["episodes"]
++        return False
++
++    def _read_ledger_for_checkpoint(self, durable: dict) -> dict:
++        if not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0:
++            raise UniversityReadStopped("unfenced_episode")
++        if self._read_job_kind != "research":
++            raise UniversityReadStopped("unsupported_job_episode")
++        ledger = read_budget.validate_ledger(durable[read_budget.LEDGER_KEY]) if read_budget.LEDGER_KEY in durable else read_budget.new_ledger()
++        episode_id = "decision:" + self.job_id
++        active = ledger["active_episode"]
++        if active is not None and active != episode_id:
++            with self.session.no_autoflush:
++                previous_job = self.session.execute(select(Job.id).where(
++                    Job.id == active.removeprefix("decision:"),
++                    Job.run_id == self.run.id, Job.kind == "research",
++                )).scalar_one_or_none()
++            if previous_job is None:
++                raise UniversityReadStopped("unknown_saved_episode")
++        if episode_id not in ledger["episodes"]:
++            if self.lease_token != 1:
++                raise UniversityReadStopped("missing_retry_episode")
++            # Only durable never-started run state proves that initialization
++            # precedes source work. Do not turn legacy reads into a fake zero.
++            if self._checkpoint_started_at is not None:
++                raise UniversityReadStopped("legacy_episode_untracked")
++            ledger["episodes"][episode_id] = {"read_counts": {}}
++        ledger["active_episode"] = episode_id
++        return ledger
++
++    @staticmethod
++    def _checkpoint_is_busy(error: OperationalError) -> bool:
++        sqlite_code = getattr(error.orig, "sqlite_errorcode", 0)
++        return getattr(error.orig, "sqlstate", None) == "55P03" or (
++            isinstance(sqlite_code, int) and sqlite_code & 0xFF in {5, 6}
++        )
++
+     def _lock_read_checkpoint_job(self) -> None:
+         if not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0:
+             return  # Reads still fail closed in _change_read_budget; no fake fence.
+@@ -511,15 +571,26 @@
+         try:
+             if lock:
+                 self._lock_read_checkpoint_job()
++                if self.session.get_bind().dialect.name == "sqlite" and (
++                    not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0
++                ):
++                    # A direct legacy writer has no Job fence. Serialize its
++                    # JSON replacement on the real Run write transaction.
++                    with self.session.no_autoflush:
++                        self.session.execute(update(ResearchRun).where(
++                            ResearchRun.id == self.run.id
++                        ).values(heartbeat_at=ResearchRun.heartbeat_at),
++                        execution_options={"synchronize_session": False})
+                 statement = statement.with_for_update(nowait=True)
+             with self.session.no_autoflush:
+                 value = self.session.execute(statement).scalar_one()
++                if lock and self._read_guard_enabled:
++                    self._checkpoint_started_at = self.session.execute(select(ResearchRun.started_at).where(
++                        ResearchRun.id == self.run.id
++                    )).scalar_one()
+         except OperationalError as error:
+             self.session.rollback()
+-            sqlite_code = getattr(error.orig, "sqlite_errorcode", 0)
+-            if getattr(error.orig, "sqlstate", None) == "55P03" or (
+-                isinstance(sqlite_code, int) and sqlite_code & 0xFF in {5, 6}
+-            ):
++            if self._checkpoint_is_busy(error):
+                 raise UniversityReadStopped("checkpoint_busy") from error
+             raise
+         if not isinstance(value, dict):
+@@ -553,34 +624,9 @@
+         if not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0:
+             raise UniversityReadStopped("unfenced_episode")
+         durable = self._read_snapshot(lock=True)
+-        if self._read_job_kind != "research":
+-            raise UniversityReadStopped("unsupported_job_episode")
+-        if read_budget.LEDGER_KEY in durable:
+-            ledger = read_budget.validate_ledger(durable[read_budget.LEDGER_KEY])
+-        elif self._read_episode_fresh:
+-            ledger = read_budget.new_ledger()
+-        else:
+-            raise UniversityReadStopped("legacy_episode_untracked")
++        ledger = self._read_ledger_for_checkpoint(durable)
+         episode_id = "decision:" + self.job_id
+-        active = ledger["active_episode"]
+-        if active is not None and active != episode_id:
+-            # A new genuine job gets a named new allowance only when the
+-            # recorded predecessor belongs to this run's research history.
+-            with self.session.no_autoflush:
+-                previous_job = self.session.execute(select(Job.id).where(
+-                    Job.id == active.removeprefix("decision:"),
+-                    Job.run_id == self.run.id,
+-                    Job.kind == "research",
+-                )).scalar_one_or_none()
+-            if previous_job is None:
+-                raise UniversityReadStopped("unknown_saved_episode")
+-        episode = ledger["episodes"].get(episode_id)
+-        if episode is None:
+-            if not self._read_episode_fresh and self.lease_token != 1:
+-                raise UniversityReadStopped("missing_retry_episode")
+-            episode = {"read_counts": {}}
+-            ledger["episodes"][episode_id] = episode
+-        ledger["active_episode"] = episode_id
++        episode = ledger["episodes"][episode_id]
+         count = episode["read_counts"].get(key, 0)
+         if count >= read_budget.READ_LIMIT:
+             # A refused get has no FetchResult/status/pages-failed. Do not
+@@ -772,6 +818,8 @@
+                     with self._university_read_scope(cand):
+                         ar = await req.verify(cand, prog, self.intake)
+                 except UniversityReadStopped as stopped:
++                    if stopped.reason == "checkpoint_busy":
++                        raise
+                     budget_stopped = True
+                     self._read_budget_unknown(cand, stopped, result)
+                 errors.extend(ar.errors)
+@@ -791,6 +839,8 @@
+                     with self._university_read_scope(cand):
+                         cb, cr = await cost.fetch(cand)
+                 except UniversityReadStopped as stopped:
++                    if stopped.reason == "checkpoint_busy":
++                        raise
+                     budget_stopped = True
+                     self._read_budget_unknown(cand, stopped, result)
+                 errors.extend(cr.errors)
+@@ -807,6 +857,8 @@
+                         with self._university_read_scope(cand):
+                             gr = await gov.post_study_work(cand.country)
+                     except UniversityReadStopped as stopped:
++                        if stopped.reason == "checkpoint_busy":
++                            raise
+                         budget_stopped = True
+                         government_stopped = True
+                         self._read_budget_unknown(cand, stopped, result)
+@@ -964,6 +1016,8 @@
+                         allow_search=any(c.claim_type is ClaimType.PROGRAM_EXISTS for c in result.claims),
+                     )
+             except UniversityReadStopped as stopped:
++                if stopped.reason == "checkpoint_busy":
++                    raise
+                 self._read_budget_unknown(cand, stopped, result)
+                 self._update_result(row, result)
+                 st.items_done = i + 1
+--- b603/app/catalogue/discovery.py
++++ v2/app/catalogue/discovery.py
+@@ -112,6 +112,8 @@
+                             self._enrich(uni, profile, candidate, trace), timeout=300
+                         )
+                 except UniversityReadStopped as stopped:
++                    if stopped.reason == "checkpoint_busy":
++                        raise
+                     trace.search_limitations.append(
+                         f"Remaining research remains unknown: university read allowance unavailable ({stopped.reason})."
+                     )
+--- b603/app/adapters/discovery/live_discovery.py
++++ v2/app/adapters/discovery/live_discovery.py
+@@ -1138,6 +1138,8 @@
+                 with self.research_scope(seed) if self.research_scope else nullcontext():
+                     candidate, trace = await self._discover_one(entry, profile)
+             except UniversityReadStopped as stopped:
++                if stopped.reason == "checkpoint_busy":
++                    raise
+                 candidate = seed
+                 trace = DiscoveryTrace(institution=seed.name, domain="")
+                 trace.search_limitations.append(

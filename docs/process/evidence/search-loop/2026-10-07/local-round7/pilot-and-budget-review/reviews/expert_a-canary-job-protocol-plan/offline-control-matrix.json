@@ -1,0 +1,71 @@
+{
+  "status": "PROPOSED_NOT_IMPLEMENTED_NOT_EXECUTED",
+  "controls": [
+    {
+      "id": "C01",
+      "area": "Legacy module off / no fenced flag",
+      "control": "Обычный run_canary вызов, kwargs и raw report не меняются; ни enqueue, ни Job IO; old canary tests remain unchanged.",
+      "assertion_boundary": "module default remains False; metadata can gain explicit False fields without relabeling old captures."
+    },
+    {
+      "id": "C02",
+      "area": "Flag resolution and child forwarding",
+      "control": "Omission -> module False; hostile True + explicit --no-university-read-budget overrides; alternating options last wins; both child flags always explicit.",
+      "assertion_boundary": "ordinary and preSTOP Capture.config same resolved bool; invalid guard-on/unfenced stops before Settings/provider/DB."
+    },
+    {
+      "id": "C03",
+      "area": "Selector / scope validation",
+      "control": "Fenced standalone resolves exactly one catalogue/registry identity; unknown/duplicate/multiple/no-selector, check-seeds and documents combination fail before source IO.",
+      "assertion_boundary": "Parent catalogue batch permitted only as one child + isolated SQLite per case; capture_one API duplicates essential validation."
+    },
+    {
+      "id": "C04",
+      "area": "Genuine initial claim",
+      "control": "Use actual enqueue then claim in independent local sessions, committed synthetic org/profile/run. Inspect QUEUED -> RUNNING, returned Job.id, token1, worker_identity host:pid.",
+      "assertion_boundary": "No manually inserted running Job, no faked lease; canary runner receives exact owned row arguments."
+    },
+    {
+      "id": "C05",
+      "area": "Real Worker happy path",
+      "control": "Observed CanaryRunner built by actual Worker._dispatch; real _beat obtains one heartbeat on a deliberately waiting mock stage; real completion and job_completed audit; recheck stays dormant.",
+      "assertion_boundary": "Gather using fresh session after execution; final Job/run/ledger/claims must be actual SQL, not detached ORM."
+    },
+    {
+      "id": "C06",
+      "area": "Error / cancellation / stale claim",
+      "control": "Ordinary exception preserves real fail+backoff; real cancel calls mark_cancelled; reap -> claimtoken2 fences old token1 and preserves current episode.",
+      "assertion_boundary": "No provider retry or auto reaper in capture; queued/deferred outcome remains error/partial."
+    },
+    {
+      "id": "C07",
+      "area": "Typed checkpoint_busy and cleanup",
+      "control": "With applied reviewed Worker fix, hold actual SQLite write lock in caller: no failure-writer SQL/no IO; heartbeat done and sessions/engine closed; later unlock+expiry real reap recovers.",
+      "assertion_boundary": "Running/deferred is honest; do not promise durable unknown or terminal Job under DB lock; original PG09 red unchanged."
+    },
+    {
+      "id": "C08",
+      "area": "Independent outer meter vs native ledger",
+      "control": "Actual Fetcher.get + mocked _get: 60 reservations visible before IO, 61 denied; cached, gov cross-domain and error outcomes still count; busy/stale after outer precharge produce documented unequal counters.",
+      "assertion_boundary": "Do not use strict wrapper as native guard proof; guard-off 61 native admission control runs without strict60 wrapper. Internal robots/HTTP exchanges not native additional get calls."
+    },
+    {
+      "id": "C09",
+      "area": "Atomic checkpoint and deadline",
+      "control": "Cancel actual waiting mock IO after reservation: no refund; local accessible ownership permits explicit deadline-cancel status; inaccessible DB -> cleanup_unknown. Hard kill reports last checkpoint freshness only.",
+      "assertion_boundary": "Active clock starts before setup, no reset after claim; parent timeout does not prove hard DB/global120 cap."
+    },
+    {
+      "id": "C10",
+      "area": "Provider STOP and four-arm parity",
+      "control": "Mock refusal produces first global provider STOP through existing wrapper; next case is not spawned/enqueued; prestop envelope has no actual Job proof. All four arms fenced=True and new SQLite with off/on/on/off guard.",
+      "assertion_boundary": "Exact provider failure preserved; no retry/substitute; old20 captures remain unfenced historical controls."
+    },
+    {
+      "id": "C11",
+      "area": "Observation must not mask original control",
+      "control": "Fenced ObservedRunner original typed busy/LeaseLost/cancel plus fresh reporting query failure; preserve original type/reason and last valid claims checkpoint.",
+      "assertion_boundary": "No SQL from finally on stale/contended worker session; no secondary writer or fabricated unknown; legacy unfenced behavior unchanged."
+    }
+  ]
+}

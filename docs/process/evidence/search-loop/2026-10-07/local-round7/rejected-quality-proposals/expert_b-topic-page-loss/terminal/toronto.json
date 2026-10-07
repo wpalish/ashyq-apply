@@ -1,0 +1,92 @@
+{
+  "case_id": "toronto",
+  "programme_urls": [
+    "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+    "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/programs/computer-science",
+    "https://utm.calendar.utoronto.ca/Bachelor-of-Computer-Science"
+  ],
+  "ranked_urls": [
+    "https://future.utoronto.ca/data-computer-science"
+  ],
+  "predictions": [],
+  "telemetry": {
+    "http_fetches": 60,
+    "browser_fetches": 0,
+    "pdf_fetches": 1,
+    "search_calls": 6,
+    "model_input_tokens": 0,
+    "jev_input_tokens": 0,
+    "latency_seconds": 94.52036191604566,
+    "cost_usd": null,
+    "human_review_required": null,
+    "document_reads": null,
+    "document_seconds": null,
+    "document_stop": null
+  },
+  "page_outcomes": [
+    {
+      "category": "classifier-rejected",
+      "url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements",
+      "page_type": "unknown",
+      "detail": "classified as unknown; no requirement can be read from this kind of page. title='English Language Requirements | Future Students' signals='no decisive signals' chars=10724 degrees=[]",
+      "characters": 10724
+    },
+    {
+      "category": "classifier-rejected",
+      "url": "https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines",
+      "page_type": "unknown",
+      "detail": "classified as unknown; no requirement can be read from this kind of page. title='Dates & Deadlines | Future Students' signals='no decisive signals' chars=4671 degrees=[]",
+      "characters": 4671
+    },
+    {
+      "category": "classifier-rejected",
+      "url": "https://future.utoronto.ca/english-language-requirements",
+      "page_type": "unknown",
+      "detail": "classified as unknown; no requirement can be read from this kind of page. title='English Language Requirements | Future Students. University of Toronto' signals='no decisive signals' chars=12935 degrees=[]",
+      "characters": 12935
+    },
+    {
+      "category": "classifier-rejected",
+      "url": "https://future.utoronto.ca/deadlines",
+      "page_type": "unknown",
+      "detail": "classified as unknown; no requirement can be read from this kind of page. title='Dates & Deadlines | Future Students. University of Toronto' signals='no decisive signals' chars=6658 degrees=[]",
+      "characters": 6658
+    },
+    {
+      "category": "fetched-ok",
+      "url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+      "page_type": "program_detail",
+      "detail": "1 claims read from this page",
+      "characters": 6131
+    },
+    {
+      "category": "no-pattern-match",
+      "url": "https://future.utoronto.ca/apply",
+      "page_type": "general_admissions",
+      "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+      "characters": 976
+    },
+    {
+      "category": "no-pattern-match",
+      "url": "https://future.utoronto.ca/requirements-international-high-schools",
+      "page_type": "general_admissions",
+      "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+      "characters": 8396
+    },
+    {
+      "category": "no-pattern-match",
+      "url": "https://future.utoronto.ca/high-school-requirements-country",
+      "page_type": "country_credential_requirements",
+      "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+      "characters": 3736
+    },
+    {
+      "category": "no-pattern-match",
+      "url": "https://future.utoronto.ca/finances/fees",
+      "page_type": "scholarship_faq",
+      "detail": "page was read but no cost figures could be extracted",
+      "characters": 4989
+    }
+  ],
+  "error": "RuntimeError: BENCHMARK_PAGE_BUDGET_EXHAUSTED"
+}

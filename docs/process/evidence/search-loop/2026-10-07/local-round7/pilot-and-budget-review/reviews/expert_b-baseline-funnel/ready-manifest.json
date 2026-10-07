@@ -1,0 +1,76 @@
+{
+  "kind": "independent_savedbytes_DEV_baseline_funnel",
+  "pinned_at": "2026-10-07T22:38:31.159293+00:00",
+  "source_head": "7277c154bda838688268b7a07d4286ed8f4688ce",
+  "case": "groningen",
+  "quality_status": "UNSCORED_NO_GOLD_SCORER_BLIND_EXPERT_ACCEPTANCE",
+  "artifact_sha256": {
+    "proposal.ru.md": "f0dcf3e3d15bd1fd22fb909f214d5cbacecf47108e0f7307006a242376488814",
+    "funnel-diagnosis.json": "e1de939d557ca9edb1a0e40df60fb13df655ac1d2687d142c2049820d17c5983",
+    "terminal-log-counters.json": "07cf5153c3fa4f8a40aa7d6bcf3b80523246aac7166cdb93b78a8b82dbcae0f1",
+    "retained-cache-index.json": "b08aaf37b9ac29875bb702376f552aadc16d6a5030347579212821695e3aca15",
+    "retained-classifications.offline.json": "65e30fbec03585cbb60477d9d370a11d3bdaf7e3e72dc447f3efd4ef9bf4c1f8",
+    "retained-public-entry.json": "d9e331ab1cf84cfd7d6ade8890ac83970f4d49df5b5acdca6cf8c417cab2578e",
+    "replay_walker_stop.py": "34a75af13cf38322f69071b2cba73e9f39d371fcd5d25d7881b0018d5a2bd307",
+    "replay_caller_boundary.py": "2b98be29f8e3eaf2c6739b215410c6f8e4dd9caace47121fbea4c6878b928193",
+    "walker-stop.offline.json": "7697c140061f13d1a241b49a73a67600033b06aea71e3e0db8442a53675208f0",
+    "caller-boundary.offline.json": "9e71f8c76f43052a9727fb9b829e184c46bb80205f235d0873fc78af1e2ef415",
+    "replay-walker-final.log": "0b9122b87d990a58d5aac04137c224bc69684ac775911c14a0f4bca1d22ab784",
+    "replay-caller.log": "6d98f73dc7c92cce4862862cf415c0bed4114caacb94016702dd417ab56ed8cf",
+    "terminal/capture.json": "a1fa591273ddd49e02fb47304b4c7d69639c38487119691e840e7d257ab9199d",
+    "terminal/groningen.budget.json": "56a29d14ac0a8d3f66e6a9c4a9cb7de12360a4cf7bce51be287bc2c8a9bfebaf",
+    "terminal/groningen.json": "cf2da49aa99c634b451a5385a5a80ce5d294a1e2e5a769894bc1238a5de54566",
+    "terminal/groningen.log": "f234bf300a6d77c209d2e8ea7349a2ab21ee7b15641438d2096aee588770e346"
+  },
+  "retained_cache": {
+    "pairs": 18,
+    "index_sha256": "b08aaf37b9ac29875bb702376f552aadc16d6a5030347579212821695e3aca15",
+    "all_byte_hashes_verified": true
+  },
+  "source_sha256": {
+    "app/adapters/discovery/catalog_walker.py": "218fbb73f8baa455449a9853ff0ad6769c0a9f6ebdb9d42cf551922bd66a01a7",
+    "app/adapters/discovery/live_discovery.py": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6",
+    "app/catalogue/discovery.py": "717ea35eaddadc5b3db7a10c3b92280e6beb137f46b3bbffeadec46c08572b02",
+    "app/adapters/page_classifier.py": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+    "app/adapters/fetching.py": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+    "evaluation/research/live.py": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+    "scripts/canary_discovery.py": "37f60bcfcafda9b33f87285141dedae8b66c65dd6b0518ed7457cfece404de70"
+  },
+  "verification": {
+    "actual32_get_prefix_matches_live_log": true,
+    "identity_probe_called": false,
+    "confirmed_before_search": 1,
+    "shadow_flag_off_matches_frozen_whole_result": true,
+    "walker_gets_off": 6,
+    "walker_gets_on": 2,
+    "negative_controls": 7,
+    "network_calls": 0,
+    "DNS_calls": 0,
+    "provider_calls": 0,
+    "model_calls": 0,
+    "source_edits": 0,
+    "Git_actions": 0,
+    "STOP_edits": 0,
+    "main_baseline_invocations": 0
+  },
+  "unknowns": [
+    "Global discovered and canonical unique URL counts; missing full raw.",
+    "Actual provider responses, returned candidates and query texts.",
+    "Full fall2027 scope and requirements/tuition/deadlines.",
+    "End-to-end success of the proposed early inner lead stop.",
+    "All possible campus/population/intake scope negatives."
+  ],
+  "primary_confirmed_loss": "BUDGET",
+  "first_logged_access_loss": "ACCESS_sitemap_too_large",
+  "proposal_default": false,
+  "functions": {
+    "CatalogueDiscoveryAdapter._enrich": 122,
+    "LiveDiscoveryAdapter._discover_one": 1137,
+    "LiveDiscoveryAdapter._walk_catalogs": 1364,
+    "LiveDiscoveryAdapter._add_search_results": 1451,
+    "CatalogWalker.walk": 442,
+    "CatalogWalker.walk_catalog": 491,
+    "CatalogWalker._read_lead": 623,
+    "CatalogWalker.walk_catalog lead loop": 566
+  }
+}

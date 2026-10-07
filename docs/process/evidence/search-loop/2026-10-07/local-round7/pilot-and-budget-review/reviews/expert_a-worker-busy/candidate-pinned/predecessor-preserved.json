@@ -1,0 +1,27 @@
+{
+  "old_manifest_sha256": "b603fe6a75660679e39b1b59545e21aae3aac79793ef2ae5d84c1ec6dc483a31",
+  "verified_old_artifacts_and_sources": {
+    "readguard.patch": true,
+    "ready-source-manifest.json": true,
+    "review.ru.md": true,
+    "test_production_readguard.py": true,
+    "test_sqlite_concurrent_checkpoint.py": true,
+    "shadow_import.py": true,
+    "assemble_ready_snapshot.py": true,
+    "pytest-final70.log": true,
+    "pytest-legacy-pinned.log": true,
+    "pytest-sqlite-red.log": true,
+    "pytest-sqlite-green.log": true,
+    "ruff-final-pinned.log": true,
+    "mypy-final-pinned.log": true,
+    "rejected-no-sqlite-write-lock/manifest.json": true,
+    "app/adapters/base.py": true,
+    "app/pipeline/runner.py": true,
+    "app/catalogue/discovery.py": true,
+    "app/adapters/discovery/live_discovery.py": true,
+    "app/adapters/discovery/catalog_walker.py": true,
+    "app/pipeline/control.py": true,
+    "app/pipeline/read_budget.py": true
+  },
+  "old_global_stop_is_historical_parent_owned": true
+}

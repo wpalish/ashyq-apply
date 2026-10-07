@@ -1,0 +1,1086 @@
+FFF.FFF                                                                  [100%]
+=================================== FAILURES ===================================
+_ test_busy_actual_caller_propagates_typed_unknown_without_failed_or_claim_writes[BEGIN IMMEDIATE-actual_stage_verify] _
+
+self = <sqlalchemy.engine.base.Connection object at 0x10a232540>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x109e607a0>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10a16e000>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x10a232210>
+parameters = [('["Remaining research for Test University is unknown: university read allowance refused (checkpoint_busy)."]', '2026-10-07 21:50:25.667517', 'fddf25af45f4403091905c7c4080b7d1')]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Any]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        if self._has_events or self.engine._has_events:
+            for fn in self.dispatch.before_cursor_execute:
+                str_statement, effective_parameters = fn(
+                    self,
+                    cursor,
+                    str_statement,
+                    effective_parameters,
+                    context,
+                    context.executemany,
+                )
+    
+        if self._echo:
+            self._log_info(str_statement)
+    
+            stats = context._get_cache_stats()
+    
+            if not self.engine.hide_parameters:
+                self._log_info(
+                    "[%s] %r",
+                    stats,
+                    sql_util._repr_params(
+                        effective_parameters,
+                        batches=10,
+                        ismulti=context.executemany,
+                    ),
+                )
+            else:
+                self._log_info(
+                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
+                    stats,
+                )
+    
+        evt_handled: bool = False
+        try:
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1967: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x109e607a0>
+cursor = <sqlite3.Cursor object at 0x10a1eef40>
+statement = 'UPDATE research_runs SET unknowns=?, updated_at=? WHERE research_runs.id = ?'
+parameters = ('["Remaining research for Test University is unknown: university read allowance refused (checkpoint_busy)."]', '2026-10-07 21:50:25.667517', 'fddf25af45f4403091905c7c4080b7d1')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10a16e000>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.OperationalError: database is locked
+
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+context = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert...10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/testtmp-v1-final-red/test_busy_actual_caller_propag0'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10789bf20>
+entry = 'actual_stage_verify', blocker_mode = 'BEGIN IMMEDIATE'
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("entry", ["actual_stage_verify", "actual_run_to_decision"])
+    @pytest.mark.parametrize("blocker_mode", ["BEGIN IMMEDIATE", "BEGIN EXCLUSIVE"])
+    async def test_busy_actual_caller_propagates_typed_unknown_without_failed_or_claim_writes(
+        context, monkeypatch, entry, blocker_mode
+    ):
+        from app.pipeline import runner as runner_module
+    
+        fetcher = controls.activate(context)
+        candidate = controls.candidate()
+        with context.runner._university_read_scope(candidate):
+            pass
+        prior_claim, prior_result = seed_prior(context, candidate)
+        context.runner._candidates = [candidate]
+        before = snapshot(context)
+        seen = controls.mock_original_get(monkeypatch, context)
+    
+        def zero_timeout(dbapi_connection, *args):
+            dbapi_connection.execute("PRAGMA busy_timeout=0")
+    
+        event.listen(context.engine, "checkout", zero_timeout)
+        real_requirements = runner_module.WebRequirementsAdapter
+        with context.engine.connect() as blocker:
+    
+            def requirements(*args, **kwargs):
+                instance = real_requirements(*args, **kwargs)
+                blocker.exec_driver_sql(blocker_mode)
+                return instance
+    
+            monkeypatch.setattr(runner_module, "WebRequirementsAdapter", requirements)
+            if entry == "actual_run_to_decision":
+                context.runner.state[PipelineStage.PROFILE_VALIDATION].status = "done"
+    
+                async def discovered(fetcher):
+                    context.runner._candidates = [candidate]
+    
+                monkeypatch.setattr(context.runner, "_stage_discover", discovered)
+            try:
+                with pytest.raises(UniversityReadStopped, match="checkpoint_busy"):
+                    if entry == "actual_stage_verify":
+>                       await context.runner._stage_verify(fetcher)
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py:99: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/pipeline/runner.py:886: in _stage_verify
+    recorded = self._persist_read_partial_result(result, all_claims, conflicts)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/pipeline/runner.py:621: in _persist_read_partial_result
+    ).one_or_none()
+      ^^^^^^^^^^^^^
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/query.py:2754: in one_or_none
+    return self._iter().one_or_none()  # type: ignore
+           ^^^^^^^^^^^^
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/query.py:2827: in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:2362: in execute
+    return self._execute_internal(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:2226: in _execute_internal
+    ) = compile_state_cls.orm_pre_session_exec(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/context.py:561: in orm_pre_session_exec
+    session._autoflush()
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:3061: in _autoflush
+    raise e.with_traceback(sys.exc_info()[2])
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:3050: in _autoflush
+    self.flush()
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:4352: in flush
+    self._flush(objects)
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:4487: in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:4448: in _flush
+    flush_context.execute()
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py:466: in execute
+    rec.execute(self)
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py:85: in save_obj
+    _emit_update_statements(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py:912: in _emit_update_statements
+    c = connection.execute(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1418: in execute
+    return meth(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py:515: in _execute_on_connection
+    return connection._execute_clauseelement(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1640: in _execute_clauseelement
+    ret = self._execute_context(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
+    return self._exec_single_context(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:2355: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x109e607a0>
+cursor = <sqlite3.Cursor object at 0x10a1eef40>
+statement = 'UPDATE research_runs SET unknowns=?, updated_at=? WHERE research_runs.id = ?'
+parameters = ('["Remaining research for Test University is unknown: university read allowance refused (checkpoint_busy)."]', '2026-10-07 21:50:25.667517', 'fddf25af45f4403091905c7c4080b7d1')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10a16e000>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.OperationalError: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+E       (sqlite3.OperationalError) database is locked
+E       [SQL: UPDATE research_runs SET unknowns=?, updated_at=? WHERE research_runs.id = ?]
+E       [parameters: ('["Remaining research for Test University is unknown: university read allowance refused (checkpoint_busy)."]', '2026-10-07 21:50:25.667517', 'fddf25af45f4403091905c7c4080b7d1')]
+E       (Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: OperationalError
+_ test_busy_actual_caller_propagates_typed_unknown_without_failed_or_claim_writes[BEGIN IMMEDIATE-actual_run_to_decision] _
+
+self = <sqlalchemy.engine.base.Connection object at 0x10a2f1400>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x109f26990>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10a2f2090>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x10a2f2480>
+parameters = [('["Remaining research for Test University is unknown: university read allowance refused (checkpoint_busy)."]', '2026-10-07 21:50:25.961587', 'b81b1edd510b4610a1aa4729a392170e')]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Any]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        if self._has_events or self.engine._has_events:
+            for fn in self.dispatch.before_cursor_execute:
+                str_statement, effective_parameters = fn(
+                    self,
+                    cursor,
+                    str_statement,
+                    effective_parameters,
+                    context,
+                    context.executemany,
+                )
+    
+        if self._echo:
+            self._log_info(str_statement)
+    
+            stats = context._get_cache_stats()
+    
+            if not self.engine.hide_parameters:
+                self._log_info(
+                    "[%s] %r",
+                    stats,
+                    sql_util._repr_params(
+                        effective_parameters,
+                        batches=10,
+                        ismulti=context.executemany,
+                    ),
+                )
+            else:
+                self._log_info(
+                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
+                    stats,
+                )
+    
+        evt_handled: bool = False
+        try:
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1967: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x109f26990>
+cursor = <sqlite3.Cursor object at 0x10b43e0c0>
+statement = 'UPDATE research_runs SET unknowns=?, updated_at=? WHERE research_runs.id = ?'
+parameters = ('["Remaining research for Test University is unknown: university read allowance refused (checkpoint_busy)."]', '2026-10-07 21:50:25.961587', 'b81b1edd510b4610a1aa4729a392170e')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10a2f2090>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.OperationalError: database is locked
+
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+self = <app.pipeline.runner.ResearchRunner object at 0x109f20dd0>
+
+    async def run_to_decision(self) -> None:
+        """Stages 1-5, ending at AWAITING_USER_DECISION."""
+        self._read_episode_fresh = self.run.started_at is None
+        self._read_guard_enabled = (
+            read_budget.UNIVERSITY_READ_BUDGET and not self.demo and not self._read_guard_out_of_scope
+        )
+        previous_snapshot = deepcopy(self.run.settings_snapshot or {})
+        self.run.started_at = self.run.started_at or datetime.now(UTC)
+        self.run.settings_snapshot = {
+            "demo_mode": self.demo,
+            "candidate_limit": self.candidate_limit,
+            "verify_limit": self.verify_limit,
+            "candidate_limit_source": "run" if self.run.candidate_limit else "server default",
+            "academic_year": self._academic_year(),
+            "target_currency": self.settings.target_currency,
+            "respect_robots": self.settings.respect_robots,
+            "university_ids": self.run.university_ids or [],
+        }
+        if read_budget.LEDGER_KEY in previous_snapshot:
+            self.run.settings_snapshot[read_budget.LEDGER_KEY] = previous_snapshot[read_budget.LEDGER_KEY]
+        if self._read_guard_enabled:
+            self.run.settings_snapshot["university_read_budget_scope"] = "decision-job-episode"
+        fetcher = self._make_fetcher()
+        browser = self._make_browser(fetcher)
+        if browser.enabled:
+            fetcher.attach_renderer(browser)
+        try:
+            async with fetcher:
+                # Stages already marked done are not repeated. A retry after a
+                # crash resumes from the boundary rather than redoing work and
+                # colliding with the rows the first attempt already wrote.
+                await self._maybe(PipelineStage.PROFILE_VALIDATION, self._stage_validate)
+                # Discovery is cheap and its output is held in memory, so it is
+                # re-run whenever candidates are needed downstream.
+                await self._stage_discover(fetcher)
+>               await self._maybe(PipelineStage.PROGRAM_VERIFICATION, self._stage_verify, fetcher)
+
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/pipeline/runner.py:421: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/pipeline/runner.py:462: in _maybe
+    await step(*args)
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/pipeline/runner.py:886: in _stage_verify
+    recorded = self._persist_read_partial_result(result, all_claims, conflicts)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/pipeline/runner.py:621: in _persist_read_partial_result
+    ).one_or_none()
+      ^^^^^^^^^^^^^
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/query.py:2754: in one_or_none
+    return self._iter().one_or_none()  # type: ignore
+           ^^^^^^^^^^^^
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/query.py:2827: in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:2362: in execute
+    return self._execute_internal(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:2226: in _execute_internal
+    ) = compile_state_cls.orm_pre_session_exec(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/context.py:561: in orm_pre_session_exec
+    session._autoflush()
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:3061: in _autoflush
+    raise e.with_traceback(sys.exc_info()[2])
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:3050: in _autoflush
+    self.flush()
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:4352: in flush
+    self._flush(objects)
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:4487: in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:4448: in _flush
+    flush_context.execute()
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py:466: in execute
+    rec.execute(self)
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py:85: in save_obj
+    _emit_update_statements(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py:912: in _emit_update_statements
+    c = connection.execute(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1418: in execute
+    return meth(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py:515: in _execute_on_connection
+    return connection._execute_clauseelement(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1640: in _execute_clauseelement
+    ret = self._execute_context(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
+    return self._exec_single_context(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:2355: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x109f26990>
+cursor = <sqlite3.Cursor object at 0x10b43e0c0>
+statement = 'UPDATE research_runs SET unknowns=?, updated_at=? WHERE research_runs.id = ?'
+parameters = ('["Remaining research for Test University is unknown: university read allowance refused (checkpoint_busy)."]', '2026-10-07 21:50:25.961587', 'b81b1edd510b4610a1aa4729a392170e')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10a2f2090>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.OperationalError: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+E       (sqlite3.OperationalError) database is locked
+E       [SQL: UPDATE research_runs SET unknowns=?, updated_at=? WHERE research_runs.id = ?]
+E       [parameters: ('["Remaining research for Test University is unknown: university read allowance refused (checkpoint_busy)."]', '2026-10-07 21:50:25.961587', 'b81b1edd510b4610a1aa4729a392170e')]
+E       (Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: OperationalError
+
+During handling of the above exception, another exception occurred:
+
+context = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert...10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/testtmp-v1-final-red/test_busy_actual_caller_propag1'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109f27470>
+entry = 'actual_run_to_decision', blocker_mode = 'BEGIN IMMEDIATE'
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("entry", ["actual_stage_verify", "actual_run_to_decision"])
+    @pytest.mark.parametrize("blocker_mode", ["BEGIN IMMEDIATE", "BEGIN EXCLUSIVE"])
+    async def test_busy_actual_caller_propagates_typed_unknown_without_failed_or_claim_writes(
+        context, monkeypatch, entry, blocker_mode
+    ):
+        from app.pipeline import runner as runner_module
+    
+        fetcher = controls.activate(context)
+        candidate = controls.candidate()
+        with context.runner._university_read_scope(candidate):
+            pass
+        prior_claim, prior_result = seed_prior(context, candidate)
+        context.runner._candidates = [candidate]
+        before = snapshot(context)
+        seen = controls.mock_original_get(monkeypatch, context)
+    
+        def zero_timeout(dbapi_connection, *args):
+            dbapi_connection.execute("PRAGMA busy_timeout=0")
+    
+        event.listen(context.engine, "checkout", zero_timeout)
+        real_requirements = runner_module.WebRequirementsAdapter
+        with context.engine.connect() as blocker:
+    
+            def requirements(*args, **kwargs):
+                instance = real_requirements(*args, **kwargs)
+                blocker.exec_driver_sql(blocker_mode)
+                return instance
+    
+            monkeypatch.setattr(runner_module, "WebRequirementsAdapter", requirements)
+            if entry == "actual_run_to_decision":
+                context.runner.state[PipelineStage.PROFILE_VALIDATION].status = "done"
+    
+                async def discovered(fetcher):
+                    context.runner._candidates = [candidate]
+    
+                monkeypatch.setattr(context.runner, "_stage_discover", discovered)
+            try:
+                with pytest.raises(UniversityReadStopped, match="checkpoint_busy"):
+                    if entry == "actual_stage_verify":
+                        await context.runner._stage_verify(fetcher)
+                    else:
+>                       await context.runner.run_to_decision()
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/pipeline/runner.py:446: in run_to_decision
+    log.exception("run %s failed", self.run.id)
+                                   ^^^^^^^^^^^
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/attributes.py:566: in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/attributes.py:1086: in get
+    value = self._fire_loader_callables(state, key, passive)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/attributes.py:1116: in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/state.py:803: in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/loading.py:1670: in load_scalar_attributes
+    result = load_on_ident(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/loading.py:509: in load_on_ident
+    return load_on_pk_identity(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/loading.py:694: in load_on_pk_identity
+    session.execute(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:2362: in execute
+    return self._execute_internal(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:2237: in _execute_internal
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:2106: in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<string>:2: in _connection_for_bind
+    ???
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/state_changes.py:103: in _go
+    self._raise_for_prerequisite_state(fn.__name__, current_state)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.orm.session.SessionTransaction object at 0x10b67c350>
+operation_name = '_connection_for_bind'
+state = <SessionTransactionState.DEACTIVE: 4>
+
+    def _raise_for_prerequisite_state(
+        self, operation_name: str, state: _StateChangeState
+    ) -> NoReturn:
+        if state is SessionTransactionState.DEACTIVE:
+            if self._rollback_exception:
+>               raise sa_exc.PendingRollbackError(
+                    "This Session's transaction has been rolled back "
+                    "due to a previous exception during flush."
+                    " To begin a new transaction with this Session, "
+                    "first issue Session.rollback()."
+                    f" Original exception was: {self._rollback_exception}",
+                    code="7s2a",
+                )
+E               sqlalchemy.exc.PendingRollbackError: This Session's transaction has been rolled back due to a previous exception during flush. To begin a new transaction with this Session, first issue Session.rollback(). Original exception was: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+E               (sqlite3.OperationalError) database is locked
+E               [SQL: UPDATE research_runs SET unknowns=?, updated_at=? WHERE research_runs.id = ?]
+E               [parameters: ('["Remaining research for Test University is unknown: university read allowance refused (checkpoint_busy)."]', '2026-10-07 21:50:25.961587', 'b81b1edd510b4610a1aa4729a392170e')]
+E               (Background on this error at: https://sqlalche.me/e/20/e3q8) (Background on this error at: https://sqlalche.me/e/20/7s2a)
+
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:973: PendingRollbackError
+_ test_busy_actual_caller_propagates_typed_unknown_without_failed_or_claim_writes[BEGIN EXCLUSIVE-actual_stage_verify] _
+
+self = <sqlalchemy.engine.base.Connection object at 0x10a9109e0>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x10a4995b0>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10a910e60>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x10a9b2990>
+parameters = [('e7989e3f3a8d407fb8d92a3b631d874c',)]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Any]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        if self._has_events or self.engine._has_events:
+            for fn in self.dispatch.before_cursor_execute:
+                str_statement, effective_parameters = fn(
+                    self,
+                    cursor,
+                    str_statement,
+                    effective_parameters,
+                    context,
+                    context.executemany,
+                )
+    
+        if self._echo:
+            self._log_info(str_statement)
+    
+            stats = context._get_cache_stats()
+    
+            if not self.engine.hide_parameters:
+                self._log_info(
+                    "[%s] %r",
+                    stats,
+                    sql_util._repr_params(
+                        effective_parameters,
+                        batches=10,
+                        ismulti=context.executemany,
+                    ),
+                )
+            else:
+                self._log_info(
+                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
+                    stats,
+                )
+    
+        evt_handled: bool = False
+        try:
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1967: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x10a4995b0>
+cursor = <sqlite3.Cursor object at 0x10a413e40>
+statement = 'SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?'
+parameters = ('e7989e3f3a8d407fb8d92a3b631d874c',)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10a910e60>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.OperationalError: database is locked
+
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+context = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert...10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/testtmp-v1-final-red/test_busy_actual_caller_propag2'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a49c2c0>
+entry = 'actual_stage_verify', blocker_mode = 'BEGIN EXCLUSIVE'
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("entry", ["actual_stage_verify", "actual_run_to_decision"])
+    @pytest.mark.parametrize("blocker_mode", ["BEGIN IMMEDIATE", "BEGIN EXCLUSIVE"])
+    async def test_busy_actual_caller_propagates_typed_unknown_without_failed_or_claim_writes(
+        context, monkeypatch, entry, blocker_mode
+    ):
+        from app.pipeline import runner as runner_module
+    
+        fetcher = controls.activate(context)
+        candidate = controls.candidate()
+        with context.runner._university_read_scope(candidate):
+            pass
+        prior_claim, prior_result = seed_prior(context, candidate)
+        context.runner._candidates = [candidate]
+        before = snapshot(context)
+        seen = controls.mock_original_get(monkeypatch, context)
+    
+        def zero_timeout(dbapi_connection, *args):
+            dbapi_connection.execute("PRAGMA busy_timeout=0")
+    
+        event.listen(context.engine, "checkout", zero_timeout)
+        real_requirements = runner_module.WebRequirementsAdapter
+        with context.engine.connect() as blocker:
+    
+            def requirements(*args, **kwargs):
+                instance = real_requirements(*args, **kwargs)
+                blocker.exec_driver_sql(blocker_mode)
+                return instance
+    
+            monkeypatch.setattr(runner_module, "WebRequirementsAdapter", requirements)
+            if entry == "actual_run_to_decision":
+                context.runner.state[PipelineStage.PROFILE_VALIDATION].status = "done"
+    
+                async def discovered(fetcher):
+                    context.runner._candidates = [candidate]
+    
+                monkeypatch.setattr(context.runner, "_stage_discover", discovered)
+            try:
+                with pytest.raises(UniversityReadStopped, match="checkpoint_busy"):
+                    if entry == "actual_stage_verify":
+>                       await context.runner._stage_verify(fetcher)
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py:99: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/pipeline/runner.py:726: in _stage_verify
+    self._check_cancelled()
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/pipeline/runner.py:268: in _check_cancelled
+    cancelled = self.session.execute(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:2362: in execute
+    return self._execute_internal(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:2247: in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/context.py:305: in orm_execute_statement
+    result = conn.execute(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1418: in execute
+    return meth(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py:515: in _execute_on_connection
+    return connection._execute_clauseelement(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1640: in _execute_clauseelement
+    ret = self._execute_context(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
+    return self._exec_single_context(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:2355: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x10a4995b0>
+cursor = <sqlite3.Cursor object at 0x10a413e40>
+statement = 'SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?'
+parameters = ('e7989e3f3a8d407fb8d92a3b631d874c',)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10a910e60>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database is locked
+E       [SQL: SELECT research_runs.cancelled 
+E       FROM research_runs 
+E       WHERE research_runs.id = ?]
+E       [parameters: ('e7989e3f3a8d407fb8d92a3b631d874c',)]
+E       (Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: OperationalError
+_ test_dirty_off_first_replacement_serializes_on_creation_before_60_and_preserves_60 _
+
+context = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert...10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/testtmp-v1-final-red/test_dirty_off_first_replaceme0'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109f20920>
+
+    def test_dirty_off_first_replacement_serializes_on_creation_before_60_and_preserves_60(
+        context, monkeypatch
+    ):
+        fetcher = controls.activate(context)
+        candidate = controls.candidate()
+        seen = controls.mock_original_get(monkeypatch, context)
+        context.session.connection().exec_driver_sql("PRAGMA busy_timeout=0")
+        with context.factory() as off_session:
+            stale = off_session.get(ResearchRun, context.run.id)
+            off = ResearchRunner(
+                off_session,
+                stale,
+                context.profile,
+                context.settings,
+                job_id=context.job.id,
+                worker_id="worker-one",
+                lease_token=1,
+            )
+            off._read_guard_enabled = False
+            stale.settings_snapshot = {"off_writer": "predates first namespace"}
+            actual = off_session.execute
+            intercepted = []
+    
+            def execute(statement, *args, **kwargs):
+                result = actual(statement, *args, **kwargs)
+                if (
+                    not intercepted
+                    and getattr(statement, "is_select", False)
+                    and any(
+                        getattr(description.get("expr"), "key", None) == "settings_snapshot"
+                        for description in getattr(statement, "column_descriptions", [])
+                    )
+                ):
+                    old = result.scalar_one()
+                    intercepted.append(old)
+    
+                    async def on_work():
+                        with context.runner._university_read_scope(candidate):
+                            for i in range(60):
+                                await fetcher.get("https://example.edu/on/" + str(i))
+    
+                    # The first snapshot is now protected by the real write lock.
+                    # The exact A schedule cannot create its namespace inside it.
+                    with pytest.raises(UniversityReadStopped, match="checkpoint_busy"):
+                        asyncio.run(on_work())
+                    return SimpleNamespace(scalar_one=lambda: old)
+                return result
+    
+            monkeypatch.setattr(off_session, "execute", execute)
+>           off._save()
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py:171: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/pipeline/runner.py:224: in _save
+    saved = self.session.execute(select(ResearchRun.settings_snapshot).where(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+statement = <sqlalchemy.sql.selectable.Select object at 0x10b85dfd0>, args = ()
+kwargs = {}
+
+    def execute(statement, *args, **kwargs):
+        result = actual(statement, *args, **kwargs)
+        if (
+            not intercepted
+            and getattr(statement, "is_select", False)
+            and any(
+                getattr(description.get("expr"), "key", None) == "settings_snapshot"
+                for description in getattr(statement, "column_descriptions", [])
+            )
+        ):
+            old = result.scalar_one()
+            intercepted.append(old)
+    
+            async def on_work():
+                with context.runner._university_read_scope(candidate):
+                    for i in range(60):
+                        await fetcher.get("https://example.edu/on/" + str(i))
+    
+            # The first snapshot is now protected by the real write lock.
+            # The exact A schedule cannot create its namespace inside it.
+>           with pytest.raises(UniversityReadStopped, match="checkpoint_busy"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE UniversityReadStopped
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py:165: Failed
+______ test_dirty_off_cancel_check_cannot_autoflush_away_first_namespace _______
+
+context = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert...10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/testtmp-v1-final-red/test_dirty_off_cancel_check_ca0'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b842240>
+
+    def test_dirty_off_cancel_check_cannot_autoflush_away_first_namespace(context, monkeypatch):
+        fetcher = controls.activate(context)
+        candidate = controls.candidate()
+        controls.mock_original_get(monkeypatch, context)
+        with context.factory() as off_session:
+            stale = off_session.get(ResearchRun, context.run.id)
+            off = ResearchRunner(
+                off_session,
+                stale,
+                context.profile,
+                context.settings,
+                job_id=context.job.id,
+                worker_id="worker-one",
+                lease_token=1,
+            )
+            stale.settings_snapshot = {"off_writer": "dirty before namespace"}
+    
+            async def on_work():
+                with context.runner._university_read_scope(candidate):
+                    for i in range(60):
+                        await fetcher.get("https://example.edu/on/" + str(i))
+    
+            asyncio.run(on_work())
+            off._check_cancelled()
+            assert read_budget.LEDGER_KEY in snapshot(context)
+            assert controls.counts(context)["catalogue:u-one"] == 60
+            off._save()
+>           assert controls.counts(context)["catalogue:u-one"] == 60
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ctx = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert...10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/testtmp-v1-final-red/test_dirty_off_cancel_check_ca0'))
+
+    def counts(ctx):
+        with ctx.factory() as observer:
+            snapshot = observer.execute(
+                select(ResearchRun.settings_snapshot).where(ResearchRun.id == ctx.run.id)
+            ).scalar_one()
+            return deepcopy(
+>               snapshot[read_budget.LEDGER_KEY]["episodes"]["decision:" + ctx.job.id]["read_counts"]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            )
+E           KeyError: 'university_research_budget_v1'
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_production_readguard.py:181: KeyError
+_ test_same_genuine_job_reclaim_honors_enabled_ledger_after_source_default_off _
+
+context = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert...10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/testtmp-v1-final-red/test_same_genuine_job_reclaim_0'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a7b1040>
+
+    @pytest.mark.asyncio
+    async def test_same_genuine_job_reclaim_honors_enabled_ledger_after_source_default_off(
+        context, monkeypatch
+    ):
+        fetcher = controls.activate(context)
+        candidate = controls.candidate()
+        seen = controls.mock_original_get(monkeypatch, context)
+        with context.runner._university_read_scope(candidate):
+            for i in range(60):
+                await fetcher.get("https://example.edu/prior/" + str(i))
+        before = snapshot(context)
+        monkeypatch.setattr(read_budget, "UNIVERSITY_READ_BUDGET", False)
+        with context.factory() as updater:
+            updater.execute(update(Job).where(Job.id == context.job.id).values(attempts=2))
+            updater.commit()
+        with context.factory() as new_session:
+            retry = ResearchRunner(
+                new_session,
+                new_session.get(ResearchRun, context.run.id),
+                context.profile,
+                context.settings,
+                job_id=context.job.id,
+                worker_id="worker-one",
+                lease_token=2,
+            )
+    
+            async def discovery(current_fetcher):
+                assert isinstance(current_fetcher, read_budget.BudgetedFetcher)
+                with retry._university_read_scope(candidate):
+                    await current_fetcher.get("https://example.edu/reclaimed/61")
+    
+            retry.state[PipelineStage.PROFILE_VALIDATION].status = "done"
+            monkeypatch.setattr(retry, "_stage_discover", discovery)
+            with pytest.raises(UniversityReadStopped, match="read_cap"):
+>               await retry.run_to_decision()
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py:349: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/pipeline/runner.py:420: in run_to_decision
+    await self._stage_discover(fetcher)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+current_fetcher = <app.adapters.fetching.Fetcher object at 0x10a720800>
+
+    async def discovery(current_fetcher):
+>       assert isinstance(current_fetcher, read_budget.BudgetedFetcher)
+E       AssertionError: assert False
+E        +  where False = isinstance(<app.adapters.fetching.Fetcher object at 0x10a720800>, <class 'app.pipeline.read_budget.BudgetedFetcher'>)
+E        +    where <class 'app.pipeline.read_budget.BudgetedFetcher'> = read_budget.BudgetedFetcher
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py:342: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    unimatch.pipeline:runner.py:446 run 88b2a3c4dbc34dacb36a1d436ab8c754 failed
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard/proposed/app/pipeline/runner.py", line 420, in run_to_decision
+    await self._stage_discover(fetcher)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py", line 342, in discovery
+    assert isinstance(current_fetcher, read_budget.BudgetedFetcher)
+AssertionError: assert False
+ +  where False = isinstance(<app.adapters.fetching.Fetcher object at 0x10a720800>, <class 'app.pipeline.read_budget.BudgetedFetcher'>)
+ +    where <class 'app.pipeline.read_budget.BudgetedFetcher'> = read_budget.BudgetedFetcher
+=========================== short test summary info ============================
+FAILED work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py::test_busy_actual_caller_propagates_typed_unknown_without_failed_or_claim_writes[BEGIN IMMEDIATE-actual_stage_verify]
+FAILED work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py::test_busy_actual_caller_propagates_typed_unknown_without_failed_or_claim_writes[BEGIN IMMEDIATE-actual_run_to_decision]
+FAILED work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py::test_busy_actual_caller_propagates_typed_unknown_without_failed_or_claim_writes[BEGIN EXCLUSIVE-actual_stage_verify]
+FAILED work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py::test_dirty_off_first_replacement_serializes_on_creation_before_60_and_preserves_60
+FAILED work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py::test_dirty_off_cancel_check_cannot_autoflush_away_first_namespace
+FAILED work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py::test_same_genuine_job_reclaim_honors_enabled_ledger_after_source_default_off
+6 failed, 1 passed in 1.93s

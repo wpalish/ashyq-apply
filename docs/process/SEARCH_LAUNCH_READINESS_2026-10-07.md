@@ -18,12 +18,18 @@
 auth6; dependency audits0. Контейнеры не проверены (Docker отсутствует),
 hosted CI не запускался, production E2E не выполнен.
 Исторический CI STOP сохранён без изменения; он не является новым отказом провайдера.
-Свежий локальный baseline10 ещё не запущен: следующий шаг — отдельный pinned
-план с120s/60/6,117s source work +3s finalization, общим provider-STOP.
+Свежий локальный baseline10 завершён как сбор данных:413 Fetcher calls/58queries,
+0отказов провайдера, все10в пределах60/6/120s. Результат UNSCORED;
+6вузов вернули programme URLs, их правильность не оценена. Три bounded-timeout
+case не имеют полного canary raw; физические checkpoints/наблюдения/logs сохранены.
+Исходный7case v2 queue остаётся CLOSED; v4 исполнил только оставшиеся3.
+Принятая полнота/точность, независимый40/62пилот и запуск этим не доказаны.
 Новый отказ провайдера/модели/auth/quota останавливает все живые действия.
 
-Внешний readguard v2 прошёл92контрола, но не применён; независимая проверка
-на реальном PostgreSQL выполняется. Далее общий production deadline,
+Внешний readguard v2 прошёл92контрола и реальный PostgreSQL27pass/1red.
+Отдельная Workerbusy proposal исправляет preserved failure и прошла12controls;
+исходные4red сохранены. Обе source proposals не применены; следующий шаг —
+перенос на actual modules + полные локальные gates. Затем общий production deadline,
 замороженные DEV off/on/on/off и причины каждого пропуска. Публикация,
 default promotion, подпись gold и heldout admission не выполнены.
 

@@ -1,0 +1,85 @@
+{
+  "global_funnel": {
+    "discovered_urls": "unknown_full_raw_missing",
+    "canonical_unique_discovery_urls": "unknown_full_raw_missing",
+    "logged_requested_unique_urls": 20,
+    "fetcher_get_admissions": 33,
+    "returned_gets": 32,
+    "ok_get_returns": 30,
+    "too_large": 1,
+    "robots_disallowed": 1,
+    "cancelled_unreturned_gets": 1,
+    "provider_seam_queries": 6,
+    "provider_results_or_candidates": "unknown_no_full_raw_or_provider_response",
+    "original_ranked_observation_urls": 0,
+    "original_observation_programme_urls": 0,
+    "original_observation_predictions": 0,
+    "persisted_program_results": 0,
+    "persisted_claims": 0
+  },
+  "local_retained_catalogue_replay": {
+    "scanned_anchors": 219,
+    "canonical_unique_same_institution_links": 159,
+    "off_domain_anchor_drops": 6,
+    "scored_leads": 85,
+    "selected_lead_reads": 5,
+    "programmes_confirmed": 1,
+    "programme": "https://www.rug.nl/bachelors/computing-science",
+    "classification": "intake_specific_program",
+    "degree": "bachelor",
+    "subject": "Computing Science",
+    "language": "english",
+    "detected_academic_year": "2026/27",
+    "requested_intake": "fall2027",
+    "full_2027_scope_proved": false
+  },
+  "db": {
+    "path": "/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/canary-h0wi86r1/canary.db",
+    "row_counts": {
+      "program_results": 0,
+      "claims": 0,
+      "source_pages": 0,
+      "audit_events": 1
+    },
+    "run_state": {
+      "stage": "candidate_discovery",
+      "started_at": "2026-10-07 22:19:58.453434",
+      "finished_at": null
+    }
+  },
+  "losses": [
+    {
+      "earliest_logged_access_loss": "get3_sitemap_shard_too_large",
+      "category": "ACCESS",
+      "programme_absence_proven": false
+    },
+    {
+      "primary_confirmed_loss": "confirmed_programme_not_consumed_before_following_leads_and_programme_search_hit_source_deadline",
+      "category": "BUDGET",
+      "first_programme_predicate_accepted": true,
+      "identity_rejected": false,
+      "field_rejected": false,
+      "further_lower_lead_reads": 4,
+      "lower_lead_logged_duration_sum_seconds": 20.5,
+      "following_provider_seam_queries": 6
+    },
+    {
+      "unknown_scope": "detected2026_27_notproof_of_target2027_requirements_prices_deadlines",
+      "category": "SCOPE",
+      "full_target_facts": "unknown_not_evaluated"
+    }
+  ],
+  "retained_source_functions_sha256": {
+    "app/adapters/discovery/catalog_walker.py": "218fbb73f8baa455449a9853ff0ad6769c0a9f6ebdb9d42cf551922bd66a01a7",
+    "app/adapters/discovery/live_discovery.py": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6",
+    "app/catalogue/discovery.py": "717ea35eaddadc5b3db7a10c3b92280e6beb137f46b3bbffeadec46c08572b02",
+    "app/adapters/page_classifier.py": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+    "app/adapters/fetching.py": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+    "evaluation/research/live.py": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+    "scripts/canary_discovery.py": "37f60bcfcafda9b33f87285141dedae8b66c65dd6b0518ed7457cfece404de70"
+  },
+  "provider_STOP_present_at_offline_review": false,
+  "network_calls_by_reviewer": 0,
+  "source_writes_by_reviewer": 0,
+  "quality_status": "UNSCORED_DEV_DEBUGGING_NO_SCORER"
+}

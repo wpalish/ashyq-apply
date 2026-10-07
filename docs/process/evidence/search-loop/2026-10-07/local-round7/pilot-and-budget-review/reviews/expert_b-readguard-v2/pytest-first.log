@@ -1,0 +1,174 @@
+.............................F............F...................F.......   [100%]
+=================================== FAILURES ===================================
+_ test_actual_verify_later_cost_stop_keeps_completed_requirements[existing_evidence_preserved] _
+
+context = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert...x/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/testtmp-first/test_actual_verify_later_cost_1'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ae78350>
+existing = True
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize(
+        "existing", [False, True], ids=["new_partial_row", "existing_evidence_preserved"]
+    )
+    async def test_actual_verify_later_cost_stop_keeps_completed_requirements(
+        context, monkeypatch, existing
+    ):
+        from app.pipeline import runner as runner_module
+    
+        f = activate(context)
+        seen = mock_original_get(monkeypatch, context)
+        cand = candidate()
+        context.runner._candidates = [cand]
+        original = None
+        if existing:
+            result = ProgramResult(
+                id="synthetic-result",
+                run_id=context.run.id,
+                university=cand.name,
+                university_id="test-key",
+                country=cand.country,
+                city=cand.city,
+                program="BSc Computer Science",
+                program_url=cand.programs[0].url,
+                degree=DegreeLevel.BACHELOR,
+                intake="fall 2027",
+            )
+            claim = program_claim("Old official degree identity")
+            from app.pipeline.runner import _to_out
+    
+            result.claims = [_to_out(claim, "old-claim")]
+            context.runner._persist_result(result, [claim], [])
+>           context.runner._save()
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_production_readguard.py:692: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+work/search-loop-round4/reviews/expert_b-readguard-v2/proposed/app/pipeline/runner.py:227: in _save
+    durable[read_budget.LEDGER_KEY] = self._read_ledger_for_checkpoint(durable)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <app.pipeline.runner.ResearchRunner object at 0x10aa73770>, durable = {}
+
+    def _read_ledger_for_checkpoint(self, durable: dict) -> dict:
+        if not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0:
+            raise UniversityReadStopped("unfenced_episode")
+        if self._read_job_kind != "research":
+            raise UniversityReadStopped("unsupported_job_episode")
+        ledger = read_budget.validate_ledger(durable[read_budget.LEDGER_KEY]) if read_budget.LEDGER_KEY in durable else read_budget.new_ledger()
+        episode_id = "decision:" + self.job_id
+        active = ledger["active_episode"]
+        if active is not None and active != episode_id:
+            with self.session.no_autoflush:
+                previous_job = self.session.execute(select(Job.id).where(
+                    Job.id == active.removeprefix("decision:"),
+                    Job.run_id == self.run.id, Job.kind == "research",
+                )).scalar_one_or_none()
+            if previous_job is None:
+                raise UniversityReadStopped("unknown_saved_episode")
+        if episode_id not in ledger["episodes"]:
+            if self.lease_token != 1:
+                raise UniversityReadStopped("missing_retry_episode")
+            # Only durable never-started run state proves that initialization
+            # precedes source work. Do not turn legacy reads into a fake zero.
+            if self._checkpoint_started_at is not None:
+>               raise UniversityReadStopped("legacy_episode_untracked")
+E               app.pipeline.control.UniversityReadStopped: University read allowance refused: legacy_episode_untracked
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/proposed/app/pipeline/runner.py:526: UniversityReadStopped
+_______ test_new_real_job_is_explicit_new_episode_preserving_old_history _______
+
+context = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert...x/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/testtmp-first/test_new_real_job_is_explicit_0'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x11022c320>
+
+    @pytest.mark.asyncio
+    async def test_new_real_job_is_explicit_new_episode_preserving_old_history(context, monkeypatch):
+        f = activate(context)
+        seen = mock_original_get(monkeypatch, context)
+        with context.runner._university_read_scope(candidate()):
+            await f.get("https://example.edu/old")
+        old_job_id = context.job.id
+        fresh = Job(
+            kind="research",
+            run_id=context.run.id,
+            status="running",
+            attempts=1,
+            worker_id="worker-one",
+            available_at=datetime.now(UTC),
+        )
+        context.session.add(fresh)
+        context.session.commit()
+        newer = ResearchRunner(
+            context.session,
+            context.run,
+            context.profile,
+            context.settings,
+            job_id=fresh.id,
+            worker_id="worker-one",
+            lease_token=1,
+        )
+        newer._read_guard_enabled = True
+        newer._read_episode_fresh = False
+>       with newer._university_read_scope(candidate()):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_production_readguard.py:921: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+work/search-loop-round4/reviews/expert_b-readguard-v2/proposed/app/pipeline/runner.py:604: in _university_read_scope
+    self._change_read_budget(key, reserve=False)
+work/search-loop-round4/reviews/expert_b-readguard-v2/proposed/app/pipeline/runner.py:622: in _change_read_budget
+    ledger = self._read_ledger_for_checkpoint(durable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <app.pipeline.runner.ResearchRunner object at 0x10abfa960>
+durable = {'university_research_budget_v1': {'version': 1, 'read_limit': 60, 'active_episode': 'decision:59b0c927bfbd4f848f3d15846aa3c0aa', 'episodes': {'decision:59b0c927bfbd4f848f3d15846aa3c0aa': {'read_counts': {'catalogue:u-one': 1}}}}}
+
+    def _read_ledger_for_checkpoint(self, durable: dict) -> dict:
+        if not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0:
+            raise UniversityReadStopped("unfenced_episode")
+        if self._read_job_kind != "research":
+            raise UniversityReadStopped("unsupported_job_episode")
+        ledger = read_budget.validate_ledger(durable[read_budget.LEDGER_KEY]) if read_budget.LEDGER_KEY in durable else read_budget.new_ledger()
+        episode_id = "decision:" + self.job_id
+        active = ledger["active_episode"]
+        if active is not None and active != episode_id:
+            with self.session.no_autoflush:
+                previous_job = self.session.execute(select(Job.id).where(
+                    Job.id == active.removeprefix("decision:"),
+                    Job.run_id == self.run.id, Job.kind == "research",
+                )).scalar_one_or_none()
+            if previous_job is None:
+                raise UniversityReadStopped("unknown_saved_episode")
+        if episode_id not in ledger["episodes"]:
+            if self.lease_token != 1:
+                raise UniversityReadStopped("missing_retry_episode")
+            # Only durable never-started run state proves that initialization
+            # precedes source work. Do not turn legacy reads into a fake zero.
+            if self._checkpoint_started_at is not None:
+>               raise UniversityReadStopped("legacy_episode_untracked")
+E               app.pipeline.control.UniversityReadStopped: University read allowance refused: legacy_episode_untracked
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/proposed/app/pipeline/runner.py:526: UniversityReadStopped
+___________ test_started_legacy_episode_without_ledger_fails_closed ____________
+
+context = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert...x/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/testtmp-first/test_started_legacy_episode_wi0'))
+
+    def test_started_legacy_episode_without_ledger_fails_closed(context):
+        activate(context)
+        context.runner._read_episode_fresh = False
+        with (
+>           pytest.raises(UniversityReadStopped, match="legacy_episode_untracked"),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            context.runner._university_read_scope(candidate()),
+        ):
+E       Failed: DID NOT RAISE UniversityReadStopped
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_production_readguard.py:1145: Failed
+=========================== short test summary info ============================
+FAILED work/search-loop-round4/reviews/expert_b-readguard-v2/test_production_readguard.py::test_actual_verify_later_cost_stop_keeps_completed_requirements[existing_evidence_preserved]
+FAILED work/search-loop-round4/reviews/expert_b-readguard-v2/test_production_readguard.py::test_new_real_job_is_explicit_new_episode_preserving_old_history
+FAILED work/search-loop-round4/reviews/expert_b-readguard-v2/test_production_readguard.py::test_started_legacy_episode_without_ledger_fails_closed
+3 failed, 67 passed in 6.00s
