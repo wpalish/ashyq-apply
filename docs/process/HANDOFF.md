@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current search-loop holder: gpt-6-astra, 2026-10-07 18:18UTC, [search-loop], taking over b0b1a9ccacd59d8cf1fe34b0a5b6d65cd7b8e594.** Owner explicitly requests autonomous engineering rounds until search is launch-ready. The active goal and hourly thread heartbeat continue this work; they do not certify quality. New bounded branch `task/search-loop-discovery` may start from predecessor `task/search-development-baseline@b0b1a9c` without awaiting main merge. Parent alone owns source/Git/HANDOFF. Two existing experts may perform disjoint offline first-loss reviews. PR #61/#62 remain Draft; both exact-head eight-check rollups were independently verified SUCCESS before takeover. No purchase, gold signature, provider refusal reset, or owner merge impersonation.
+
 **Current development continuation holder: nobody; `[search-development]` ready-for-review in Draft PR #62, 2026-10-07 UTC.** Branch `task/search-development-baseline` from predecessor `task/search-claude-relay@e3d77d40e5888923edfe8e080f912025e76adf4c`; final executable source `0d3ad8ce3c5b8e5cbeb503136f17be7ffd84d408`. Latest source gates are green; exact final metadata-head cloud checks must be read in PR #62 before merge. Owner says continue and explicitly authorizes two collaboration expert subagents for the new universities. PR #61 remains a separate reviewable measuring-stick checkpoint; no merge/purchase/gold signature inferred. Parent owns source/git/HANDOFF and baseline. Experts own separate evidence-only folders; ordinary subagents are not OS-blinded.
 
 **Current search relay holder: nobody; `[search-relay]` ready-for-review in Draft PR #61, 2026-10-07 UTC. Branch `task/search-claude-relay`, executable source `0bc152226cb1aacf89e293a4dba82507e324abf6`, base `origin/main@1b2a554129f5744eb297848472f1c8fe8c7fde26`.** Owner asks to analyse Claude session `session_0142YLhoNdiGxNVtxJBDaNfX` and continue while keeping a persistent handoff. This newest branch-specific record supersedes the stale 2026-10-05 search-plan paragraph below. Dedicated checkout; other branch dirty work preserved. Read `docs/process/CLAUDE_SEARCH_RELAY_2026-10-07.md` first.
@@ -59,6 +61,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[search-loop] in progress:** retain the owner-approved Definition of Done targets and iterate on confirmed DEV losses. Round 2 begins with offline Dalian/Wits/Caltech discovery traces and retained official sources. Do not infer that Dalian's news announcement is an exact programme page. Journal: `docs/process/SEARCH_LOOP_LEDGER_2026-10-07.md`. Goal remains active until accepted quality, access honesty, budget/heldout targets and the current published logged-in path are verified.
 
 **[search-development] ready-for-review (Draft PR #62):** opt-in imported catalogue selection for the prepared five DEV ids; global provider/auth/quota refusal stop for the controlled batch; offline regressions, frozen bounded baseline, two independent collaborative expert researches, original evidence and observed miss-cause review. Current bounded delivery additionally repairs the first source-proven population-transfer error before recall tuning. Broader programme/fact completeness remains unfinished; this checkpoint does not declare the search finished.
 
@@ -1794,6 +1798,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[search-loop] write-ahead, 18:18UTC:** explicitly branch `task/search-loop-discovery` from predecessor b0b1a9c. First inspect existing raw institution discovery/reader diagnostics, source-cache metadata and independent expert findings offline. Experts A/B write only separate `work/search-loop-round2/reviews` evidence; parent records stage/cause/source hashes. No algorithm edit or new network until one applicable lost lead or premature-stop cause is reproduced. Candidate source files are `app/adapters/discovery/live_discovery.py`, `catalog_walker.py`, `app/adapters/search/retrieval.py`; declare the exact function/regression in this section after diagnosis and before editing. Preserve all existing defaults, gold and heldout segregation; a recall experiment follows the existing flag/paired-run protocol. After the bounded round, save results and initiate the next executable round automatically rather than asking whether to continue. Required gates and first-refusal global stop remain unchanged.
 
 **[search-development] NEXT — review then first confirmed DEV loss:**
 1. Fetch origin and read the current journal plus Draft #61 and #62. Review #61 measuring-stick repair first; #62 depends on it. Owner merges. Check exact-head CI live before any merge; no merge authorization inferred.
@@ -4884,6 +4890,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+- 2026-10-07 18:18UTC | Codex | [search-loop] | owner autonomous launch goal → take baton from b0b1a9c; hourly thread heartbeat unimatch ACTIVE; round2 offline first-loss diagnosis before source changes.
 
 - 2026-10-04 00:45 UTC: gpt-6-astra takes [expert-500] from b672349; prior PR44 completed offline only; Phase0 then live ten-case pilot.
 
