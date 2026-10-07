@@ -1,0 +1,28 @@
+{
+  "created_at": "2026-10-07T23:01:48.655520+00:00",
+  "branch": "task/search-production-read-budget",
+  "takeover_head": "f4bcd3db70c3ac3d9933d5b134bfec2ab895383b",
+  "readguard_pin": "236e9a53667c86c0b14a04807492804402604d05a5a32ba670fb97915f84c2a4",
+  "worker_proposal_pin": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+  "original": {
+    "app/adapters/base.py": "68355f99ee62ea2eefac63a7b991b057b16c374a26a9b1b210a0a07cad1e9637",
+    "app/pipeline/runner.py": "686a6961964eb020056cba8b80f51c3cee622d2e6d62e63194b7d520e55fd71f",
+    "app/catalogue/discovery.py": "717ea35eaddadc5b3db7a10c3b92280e6beb137f46b3bbffeadec46c08572b02",
+    "app/adapters/discovery/live_discovery.py": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6",
+    "app/adapters/discovery/catalog_walker.py": "218fbb73f8baa455449a9853ff0ad6769c0a9f6ebdb9d42cf551922bd66a01a7",
+    "app/jobs/worker.py": "491f5ccdeadd3556ad4e5bf6bfc2b4578207ef2cce129eb2fcd57b4b4e0e6681"
+  },
+  "applied": {
+    "app/adapters/base.py": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46",
+    "app/pipeline/runner.py": "a91a4f5259de94ba346190c30ec24fe845907b1a1053919b6830de6d27fc20c8",
+    "app/catalogue/discovery.py": "15c6c62398889c61183b407dc371a40d8a3f7b4f270b12c90d3c0c5d799bf7c7",
+    "app/adapters/discovery/live_discovery.py": "ddecbae3a4754ea3a7eb814d851d87332ed3248e3188358e95337e5cc423adad",
+    "app/adapters/discovery/catalog_walker.py": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+    "app/pipeline/control.py": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd",
+    "app/pipeline/read_budget.py": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf",
+    "app/jobs/worker.py": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df"
+  },
+  "default": false,
+  "live_calls": 0,
+  "formatting_changes": false
+}

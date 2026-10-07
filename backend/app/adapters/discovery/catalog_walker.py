@@ -56,6 +56,7 @@ from app.adapters.page_classifier import (
     PageType,
     classify_page,
 )
+from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
 
 log = logging.getLogger("unimatch.discovery.walker")
 
@@ -452,6 +453,8 @@ class CatalogWalker:
             top_n = WALKER_TOP_N if depth == 0 else WALKER_DESCENT_TOP_N
             try:
                 walk = await self.walk_catalog(catalogue_url, top_n=top_n)
+            except (UniversityReadStopped, RunCancelled, LeaseLost):
+                raise
             except Exception as exc:  # one broken catalogue must not end discovery
                 log.warning(
                     "catalog walk of %s failed: %s: %s",
@@ -673,6 +676,8 @@ class CatalogWalker:
         if callable(render) and isinstance(payloads, list):
             try:
                 rendered = await render(catalogue_url)
+            except (UniversityReadStopped, RunCancelled, LeaseLost):
+                raise
             except Exception as exc:  # a broken tier must not end the walk
                 log.warning("catalogue render failed for %s: %s", catalogue_url[:120], exc)
             else:
@@ -722,5 +727,7 @@ class CatalogWalker:
                 institution_key=None,
                 fetched_at=result.fetched_at,
             )
+        except (UniversityReadStopped, RunCancelled, LeaseLost):
+            raise
         except Exception as exc:
             log.warning("source_pages recording failed for %s: %s", record_url[:120], exc)

@@ -1,0 +1,25 @@
+{
+  "queries": [
+    {
+      "at_ns": 810535646460666,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET pages_checked=?, worker_id=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "(7, 'worker-one', '2026-10-07 23:11:19.142174', '2026-10-07 23:11:19.142430', '193f158b78384bc0a28dafcdf572a2e2')"
+    },
+    {
+      "elapsed_ns": 92542,
+      "sql_prefix": "UPDATE research_runs SET pages_checked=?, worker_id=?, heartbeat_at=?, updated_at=? WHERE research_r"
+    },
+    {
+      "at_ns": 810535646812416,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET lease_expires_at=?, heartbeat_at=?, updated_at=? WHERE jobs.id = ? AND jobs.status = ? AND jobs.worker_id = ? AND jobs.attempts = ? RETURNING id",
+      "params": "('2026-10-07 23:13:19.142192', '2026-10-07 23:11:19.142192', '2026-10-07 23:11:19.142784', '1bbb0209a69f41b680ecc255c64a2578', 'running', 'worker-one', 1)"
+    },
+    {
+      "elapsed_ns": 31750,
+      "sql_prefix": "UPDATE jobs SET lease_expires_at=?, heartbeat_at=?, updated_at=? WHERE jobs.id = ? AND jobs.status ="
+    }
+  ],
+  "sql_errors": []
+}

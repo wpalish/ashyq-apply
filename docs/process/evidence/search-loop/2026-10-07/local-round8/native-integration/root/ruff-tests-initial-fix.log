@@ -1,0 +1,2353 @@
+tests/readguard_support.py:68:15: E702 Multiple statements on one line (semicolon)
+   |
+66 |     settings = Settings(_env_file=None, database_url=str(engine.url), demo_mode=False, enable_browser_tier=False, cache_dir=root/"cach…
+67 |     org = Organization(name="Synthetic readguard test", slug="synthetic-readguard")
+68 |     s.add(org);s.flush()
+   |               ^ E702
+69 |     row = ApplicantProfileRow(organization_id=org.id, payload=profile.model_dump(mode="json"))
+70 |     s.add(row);s.flush()
+   |
+
+tests/readguard_support.py:70:15: E702 Multiple statements on one line (semicolon)
+   |
+68 |     s.add(org);s.flush()
+69 |     row = ApplicantProfileRow(organization_id=org.id, payload=profile.model_dump(mode="json"))
+70 |     s.add(row);s.flush()
+   |               ^ E702
+71 |     run = ResearchRun(profile_id=row.id, demo_mode=False, stage="queued", stage_state=RunState.load(None).dump(), candidate_limit=2, v…
+72 |     s.add(run);s.flush()
+   |
+
+tests/readguard_support.py:72:15: E702 Multiple statements on one line (semicolon)
+   |
+70 |     s.add(row);s.flush()
+71 |     run = ResearchRun(profile_id=row.id, demo_mode=False, stage="queued", stage_state=RunState.load(None).dump(), candidate_limit=2, v…
+72 |     s.add(run);s.flush()
+   |               ^ E702
+73 |     run_id = run.id
+74 |     enqueue = JobStore(s).enqueue("research", run_id=run_id, idempotency_key="test-research:"+run_id)
+   |
+
+tests/readguard_support.py:83:15: E702 Multiple statements on one line (semicolon)
+   |
+81 |     job=s.get(Job,enqueue.job_id)
+82 |     runner=ResearchRunner(s,run,profile,settings,job_id=job.id,worker_id="worker-one",lease_token=1)
+83 |     queries=[];sql_errors=[]
+   |               ^ E702
+84 |     def before(conn,cursor,statement,params,sqlctx,executemany):
+85 |         sqlctx._readguard_test_started=time.monotonic_ns()
+   |
+
+tests/readguard_support.py:91:56: E702 Multiple statements on one line (semicolon)
+   |
+89 |     def error(excctx):
+90 |         sql_errors.append({"sqlstate":getattr(excctx.original_exception,"sqlstate",None),"sqlite_errorcode":getattr(excctx.original_ex…
+91 |     event.listen(engine,"before_cursor_execute",before);event.listen(engine,"after_cursor_execute",after);event.listen(engine,"handle_…
+   |                                                        ^ E702
+92 |     evidence=root/"readguard-evidence";evidence.mkdir(exist_ok=True)
+93 |     def record(name,value):
+   |
+
+tests/readguard_support.py:91:106: E702 Multiple statements on one line (semicolon)
+   |
+89 |     def error(excctx):
+90 |         sql_errors.append({"sqlstate":getattr(excctx.original_exception,"sqlstate",None),"sqlite_errorcode":getattr(excctx.original_ex…
+91 |     event.listen(engine,"before_cursor_execute",before);event.listen(engine,"after_cursor_execute",after);event.listen(engine,"handle_…
+   |                                                                                                          ^ E702
+92 |     evidence=root/"readguard-evidence";evidence.mkdir(exist_ok=True)
+93 |     def record(name,value):
+   |
+
+tests/readguard_support.py:92:39: E702 Multiple statements on one line (semicolon)
+   |
+90 |         sql_errors.append({"sqlstate":getattr(excctx.original_exception,"sqlstate",None),"sqlite_errorcode":getattr(excctx.original_ex…
+91 |     event.listen(engine,"before_cursor_execute",before);event.listen(engine,"after_cursor_execute",after);event.listen(engine,"handle_…
+92 |     evidence=root/"readguard-evidence";evidence.mkdir(exist_ok=True)
+   |                                       ^ E702
+93 |     def record(name,value):
+94 |         (evidence/(name+".json")).write_text(json.dumps(value,ensure_ascii=False,indent=2,default=str)+"\n")
+   |
+
+tests/readguard_support.py:99:21: E702 Multiple statements on one line (semicolon)
+    |
+ 97 |         yield ctx
+ 98 |     finally:
+ 99 |         s.rollback();s.close()
+    |                     ^ E702
+100 |         record("sql",{"queries":queries,"sql_errors":sql_errors})
+101 |         event.remove(engine,"before_cursor_execute",before);event.remove(engine,"after_cursor_execute",after);event.remove(engine,"ha…
+    |
+
+tests/readguard_support.py:101:60: E702 Multiple statements on one line (semicolon)
+    |
+ 99 |         s.rollback();s.close()
+100 |         record("sql",{"queries":queries,"sql_errors":sql_errors})
+101 |         event.remove(engine,"before_cursor_execute",before);event.remove(engine,"after_cursor_execute",after);event.remove(engine,"ha…
+    |                                                            ^ E702
+102 |
+103 | @pytest.fixture
+    |
+
+tests/readguard_support.py:101:110: E702 Multiple statements on one line (semicolon)
+    |
+ 99 |         s.rollback();s.close()
+100 |         record("sql",{"queries":queries,"sql_errors":sql_errors})
+101 |         event.remove(engine,"before_cursor_execute",before);event.remove(engine,"after_cursor_execute",after);event.remove(engine,"ha…
+    |                                                                                                              ^ E702
+102 |
+103 | @pytest.fixture
+    |
+
+tests/readguard_support.py:108:50: E701 Multiple statements on one line (colon)
+    |
+106 |     engine=create_engine("sqlite:///"+str(tmp_path/"state.db"))
+107 |     try:
+108 |         with make_context(engine,tmp_path) as ctx:yield ctx
+    |                                                  ^ E701
+109 |     finally:engine.dispose()
+    |
+
+tests/readguard_support.py:109:12: E701 Multiple statements on one line (colon)
+    |
+107 |     try:
+108 |         with make_context(engine,tmp_path) as ctx:yield ctx
+109 |     finally:engine.dispose()
+    |            ^ E701
+110 |
+111 | def activate(ctx):
+    |
+
+tests/test_production_readguard.py:38:58: F811 Redefinition of unused `context` from line 30
+   |
+36 |     "outcome", ["ok", "cached", "http_error", "robots_disallowed", "refused_privacy"]
+37 | )
+38 | async def test_60_actual_fetcher_get_then_no_original_61(context, monkeypatch, outcome):
+   |                                                          ^^^^^^^ F811
+39 |     fetcher = activate(context)
+40 |     cand = candidate()
+   |
+   = help: Remove definition: `context`
+
+tests/test_production_readguard.py:54:58: F811 Redefinition of unused `context` from line 30
+   |
+53 | @pytest.mark.asyncio
+54 | async def test_conditional_cache_arguments_are_preserved(context, monkeypatch):
+   |                                                          ^^^^^^^ F811
+55 |     fetcher = activate(context)
+56 |     seen = mock_original_get(monkeypatch, context, outcome="cached")
+   |
+   = help: Remove definition: `context`
+
+tests/test_production_readguard.py:73:72: F811 Redefinition of unused `context` from line 30
+   |
+72 | @pytest.mark.asyncio
+73 | async def test_same_university_all_programmes_and_stages_share_counter(context, monkeypatch):
+   |                                                                        ^^^^^^^ F811
+74 |     fetcher = activate(context)
+75 |     seen = mock_original_get(monkeypatch, context)
+   |
+   = help: Remove definition: `context`
+
+tests/test_production_readguard.py:98:71: F811 Redefinition of unused `context` from line 30
+    |
+ 97 | @pytest.mark.asyncio
+ 98 | async def test_worker_retry_and_stale_attempt_same_worker_never_reset(context, monkeypatch):
+    |                                                                       ^^^^^^^ F811
+ 99 |     fetcher = activate(context)
+100 |     seen = mock_original_get(monkeypatch, context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:134:75: F811 Redefinition of unused `context` from line 30
+    |
+133 | @pytest.mark.asyncio
+134 | async def test_save_refreshes_stale_json_without_erasing_pending_counters(context, monkeypatch):
+    |                                                                           ^^^^^^^ F811
+135 |     fetcher = activate(context)
+136 |     seen = mock_original_get(monkeypatch, context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:166:64: F811 Redefinition of unused `context` from line 30
+    |
+165 | @pytest.mark.asyncio
+166 | async def test_scope_less_or_unfenced_get_has_no_original_call(context, monkeypatch):
+    |                                                                ^^^^^^^ F811
+167 |     fetcher = activate(context)
+168 |     seen = mock_original_get(monkeypatch, context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:181:74: F811 Redefinition of unused `context` from line 30
+    |
+180 | @pytest.mark.asyncio
+181 | async def test_cancel_is_not_budget_or_http_failure_and_does_not_reserve(context, monkeypatch):
+    |                                                                          ^^^^^^^ F811
+182 |     fetcher = activate(context)
+183 |     seen = mock_original_get(monkeypatch, context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:197:68: F811 Redefinition of unused `context` from line 30
+    |
+196 | @pytest.mark.asyncio
+197 | async def test_foreign_asyncio_cancel_preserves_pre_io_reservation(context, monkeypatch):
+    |                                                                    ^^^^^^^ F811
+198 |     fetcher = activate(context)
+199 |     started = asyncio.Event()
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:217:56: F811 Redefinition of unused `context` from line 30
+    |
+216 | @pytest.mark.asyncio
+217 | async def test_checkpoint_failure_prevents_original_io(context, monkeypatch):
+    |                                                        ^^^^^^^ F811
+218 |     fetcher = activate(context)
+219 |     seen = mock_original_get(monkeypatch, context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:244:42: F811 Redefinition of unused `context` from line 30
+    |
+242 |     ],
+243 | )
+244 | def test_corrupt_envelope_no_reset_no_io(context, invalid):
+    |                                          ^^^^^^^ F811
+245 |     activate(context)
+246 |     context.run.settings_snapshot = {read_budget.LEDGER_KEY: invalid}
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:267:61: F811 Redefinition of unused `context` from line 30
+    |
+266 | @pytest.mark.asyncio
+267 | async def test_real_catalogue_discovery_61_is_local_unknown(context, monkeypatch):
+    |                                                             ^^^^^^^ F811
+268 |     fetcher = activate(context)
+269 |     seen = mock_original_get(monkeypatch, context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:300:48: F811 Redefinition of unused `context` from line 30
+    |
+299 | @pytest.mark.asyncio
+300 | async def test_legacy_flag_off_still_allows_61(context, monkeypatch):
+    |                                                ^^^^^^^ F811
+301 |     monkeypatch.setattr(read_budget, "UNIVERSITY_READ_BUDGET", False)
+302 |     f = context.runner._make_fetcher()
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:319:49: F811 Redefinition of unused `context` from line 30
+    |
+318 | @pytest.mark.asyncio
+319 | async def test_actual_disk_cache_hit_is_charged(context):
+    |                                                 ^^^^^^^ F811
+320 |     from app.domain.enums import FetchOutcome
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:344:73: F811 Redefinition of unused `context` from line 30
+    |
+343 | @pytest.mark.asyncio
+344 | async def test_fence_loss_between_precheck_and_job_lock_prevents_charge(context, monkeypatch):
+    |                                                                         ^^^^^^^ F811
+345 |     f = activate(context)
+346 |     seen = mock_original_get(monkeypatch, context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:364:5: F811 Redefinition of unused `context` from line 30
+    |
+362 | @pytest.mark.asyncio
+363 | async def test_existing_save_final_heartbeat_refusal_rolls_back_reserved_charge(
+364 |     context, monkeypatch
+    |     ^^^^^^^ F811
+365 | ):
+366 |     from app.jobs.store import JobStore
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:378:63: F811 Redefinition of unused `context` from line 30
+    |
+377 | @pytest.mark.asyncio
+378 | async def test_failed_original_get_reservation_never_refunded(context, monkeypatch):
+    |                                                               ^^^^^^^ F811
+379 |     f = activate(context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:392:5: F811 Redefinition of unused `context` from line 30
+    |
+390 | @pytest.mark.asyncio
+391 | async def test_real_run_to_decision_shared_61_stops_funding_and_preserves_programme(
+392 |     context, monkeypatch
+    |     ^^^^^^^ F811
+393 | ):
+394 |     from app.pipeline import runner as runner_module
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:480:5: F811 Redefinition of unused `context` from line 30
+    |
+478 | )
+479 | async def test_actual_verify_later_cost_stop_keeps_completed_requirements(
+480 |     context, monkeypatch, existing
+    |     ^^^^^^^ F811
+481 | ):
+482 |     from app.pipeline import runner as runner_module
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:558:5: F811 Redefinition of unused `context` from line 30
+    |
+556 | @pytest.mark.parametrize("signal", [RunCancelled, LeaseLost, UniversityReadStopped])
+557 | async def test_catalogue_walker_broad_catch_does_not_swallow_control_stop(
+558 |     context, monkeypatch, signal
+    |     ^^^^^^^ F811
+559 | ):
+560 |     walker = CatalogWalker(
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:577:66: F811 Redefinition of unused `context` from line 30
+    |
+575 | @pytest.mark.asyncio
+576 | @pytest.mark.parametrize("signal", [RunCancelled, LeaseLost, UniversityReadStopped])
+577 | async def test_sitemap_broad_catch_does_not_swallow_control_stop(context, monkeypatch, signal):
+    |                                                                  ^^^^^^^ F811
+578 |     adapter = LiveDiscoveryAdapter(context.runner._make_fetcher())
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:595:70: F811 Redefinition of unused `context` from line 30
+    |
+594 | @pytest.mark.asyncio
+595 | async def test_curated_fallback_real_discovery_loop_has_stable_scope(context, monkeypatch):
+    |                                                                      ^^^^^^^ F811
+596 |     f = activate(context)
+597 |     seen = mock_original_get(monkeypatch, context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:629:5: F811 Redefinition of unused `context` from line 30
+    |
+627 | @pytest.mark.asyncio
+628 | async def test_documents_explicitly_do_not_claim_guard_contract_but_keep_ledger(
+629 |     context, monkeypatch
+    |     ^^^^^^^ F811
+630 | ):
+631 |     f = activate(context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:642:50: F811 Redefinition of unused `context` from line 30
+    |
+642 | def test_fresh_row_statement_requests_for_update(context, monkeypatch):
+    |                                                  ^^^^^^^ F811
+643 |     activate(context)
+644 |     statements = []
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:662:64: F811 Redefinition of unused `context` from line 30
+    |
+661 | @pytest.mark.parametrize("missing", ["active_episode", "current_episode"])
+662 | def test_missing_active_episode_is_corrupt_not_fresh_allowance(context, missing):
+    |                                                                ^^^^^^^ F811
+663 |     activate(context)
+664 |     ledger = read_budget.new_ledger()
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:682:53: F811 Redefinition of unused `context` from line 30
+    |
+682 | def test_missing_retry_episode_never_resets_to_zero(context):
+    |                                                     ^^^^^^^ F811
+683 |     activate(context)
+684 |     previous = Job(
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:712:5: F811 Redefinition of unused `context` from line 30
+    |
+710 | @pytest.mark.asyncio
+711 | async def test_untracked_new_job_on_started_run_is_unknown_preserving_old_history(
+712 |     context, monkeypatch
+    |     ^^^^^^^ F811
+713 | ):
+714 |     f = activate(context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:753:77: F811 Redefinition of unused `context` from line 30
+    |
+752 | @pytest.mark.asyncio
+753 | async def test_guard_off_checkpoint_with_existing_envelope_preserves_latest(context, monkeypatch):
+    |                                                                             ^^^^^^^ F811
+754 |     f = activate(context)
+755 |     mock_original_get(monkeypatch, context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:773:56: F811 Redefinition of unused `context` from line 30
+    |
+772 | @pytest.mark.asyncio
+773 | async def test_lock_order_job_then_run_and_both_nowait(context, monkeypatch):
+    |                                                        ^^^^^^^ F811
+774 |     f = activate(context)
+775 |     mock_original_get(monkeypatch, context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:795:72: F811 Redefinition of unused `context` from line 30
+    |
+794 | @pytest.mark.asyncio
+795 | async def test_postgres_lock_unavailable_refuses_read_without_dispatch(context, monkeypatch):
+    |                                                                        ^^^^^^^ F811
+796 |     from sqlalchemy.exc import OperationalError
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:812:60: F811 Redefinition of unused `context` from line 30
+    |
+811 | @pytest.mark.asyncio
+812 | async def test_parallel_same_episode_reads_never_exceed_60(context, monkeypatch):
+    |                                                            ^^^^^^^ F811
+813 |     f = activate(context)
+814 |     seen = mock_original_get(monkeypatch, context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:829:51: F811 Redefinition of unused `context` from line 30
+    |
+829 | def test_demo_factory_never_claims_new_live_guard(context):
+    |                                                   ^^^^^^^ F811
+830 |     context.run.demo_mode = True
+831 |     runner = ResearchRunner(context.session, context.run, context.profile, context.settings)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:836:65: F811 Redefinition of unused `context` from line 30
+    |
+835 | @pytest.mark.asyncio
+836 | async def test_recheck_explicitly_excluded_and_ledger_preserved(context, monkeypatch):
+    |                                                                 ^^^^^^^ F811
+837 |     f = activate(context)
+838 |     mock_original_get(monkeypatch, context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:871:58: F811 Redefinition of unused `context` from line 30
+    |
+869 | @pytest.mark.asyncio
+870 | @pytest.mark.parametrize("signal", [RunCancelled, LeaseLost, UniversityReadStopped])
+871 | async def test_standalone_renderer_control_not_swallowed(context, signal):
+    |                                                          ^^^^^^^ F811
+872 |     async def render(url):
+873 |         raise signal("offline renderer control")
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:885:71: F811 Redefinition of unused `context` from line 30
+    |
+884 | @pytest.mark.parametrize("invalid_count", [-1, 61, True, False, "1", 1.5, None])
+885 | def test_bad_count_with_valid_episode_and_university_key_never_resets(context, invalid_count):
+    |                                                                       ^^^^^^^ F811
+886 |     activate(context)
+887 |     episode_id = "decision:" + context.job.id
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:911:60: F811 Redefinition of unused `context` from line 30
+    |
+909 |     ],
+910 | )
+911 | def test_unknown_saved_episode_cannot_create_new_allowance(context, episode_id, reason):
+    |                                                            ^^^^^^^ F811
+912 |     activate(context)
+913 |     context.runner._read_episode_fresh = False
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:931:67: F811 Redefinition of unused `context` from line 30
+    |
+930 | @pytest.mark.asyncio
+931 | async def test_same_job_two_stale_runners_share_fresh_row_counter(context, monkeypatch):
+    |                                                                   ^^^^^^^ F811
+932 |     first = activate(context)
+933 |     seen = mock_original_get(monkeypatch, context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:963:61: F811 Redefinition of unused `context` from line 30
+    |
+963 | def test_started_legacy_episode_without_ledger_fails_closed(context):
+    |                                                             ^^^^^^^ F811
+964 |     activate(context)
+965 |     context.runner._read_episode_fresh = False
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:976:73: F811 Redefinition of unused `context` from line 30
+    |
+975 | @pytest.mark.asyncio
+976 | async def test_real_direct_run_without_worker_job_is_unknown_before_get(context, monkeypatch):
+    |                                                                         ^^^^^^^ F811
+977 |     seen = mock_original_get(monkeypatch, context)
+978 |     uni = SimpleNamespace(
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:995:59: F811 Redefinition of unused `context` from line 30
+    |
+995 | def test_nonresearch_fenced_job_has_no_decision_allowance(context):
+    |                                                           ^^^^^^^ F811
+996 |     activate(context)
+997 |     context.job.kind = "documents"
+    |
+    = help: Remove definition: `context`
+
+tests/test_production_readguard.py:1007:78: F811 Redefinition of unused `context` from line 30
+     |
+1007 | def test_guard_off_stale_snapshot_that_predates_namespace_still_keeps_latest(context):
+     |                                                                              ^^^^^^^ F811
+1008 |     stale = deepcopy(context.run.settings_snapshot)
+1009 |     assert read_budget.LEDGER_KEY not in stale
+     |
+     = help: Remove definition: `context`
+
+tests/test_production_readguard.py:1031:5: F811 Redefinition of unused `context` from line 30
+     |
+1029 | @pytest.mark.asyncio
+1030 | async def test_guarded_cancellation_read_never_autoflushes_run_before_job_lock(
+1031 |     context, monkeypatch
+     |     ^^^^^^^ F811
+1032 | ):
+1033 |     f = activate(context)
+     |
+     = help: Remove definition: `context`
+
+tests/test_production_readguard.py:1099:65: F811 Redefinition of unused `context` from line 30
+     |
+1099 | def test_context_initial_claim_uses_real_enqueued_job_token_one(context):
+     |                                                                 ^^^^^^^ F811
+1100 |     with context.factory() as observer:
+1101 |         persisted = observer.get(Job, context.job_id)
+     |
+     = help: Remove definition: `context`
+
+tests/test_readguard_postgres.py:44:37: E701 Multiple statements on one line (colon)
+   |
+42 |     def timeout(connection,record):connection.execute("SET statement_timeout=1500")
+43 |     event.listen(pg_engine,"connect",timeout)
+44 |     with pg_engine.connect() as conn:conn.exec_driver_sql("SET statement_timeout=1500");conn.commit()
+   |                                     ^ E701
+45 |     with c.make_context(pg_engine,tmp_path) as value:yield value
+   |
+
+tests/test_readguard_postgres.py:44:88: E702 Multiple statements on one line (semicolon)
+   |
+42 |     def timeout(connection,record):connection.execute("SET statement_timeout=1500")
+43 |     event.listen(pg_engine,"connect",timeout)
+44 |     with pg_engine.connect() as conn:conn.exec_driver_sql("SET statement_timeout=1500");conn.commit()
+   |                                                                                        ^ E702
+45 |     with c.make_context(pg_engine,tmp_path) as value:yield value
+   |
+
+tests/test_readguard_postgres.py:45:53: E701 Multiple statements on one line (colon)
+   |
+43 |     event.listen(pg_engine,"connect",timeout)
+44 |     with pg_engine.connect() as conn:conn.exec_driver_sql("SET statement_timeout=1500");conn.commit()
+45 |     with c.make_context(pg_engine,tmp_path) as value:yield value
+   |                                                     ^ E701
+46 |
+47 | def test_pg_00_real_isolated_runtime_and_independent_sessions(ctx):
+   |
+
+tests/test_readguard_postgres.py:63:9: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+   |
+61 |           lock_row(ctx, blocker, row)
+62 |           start = time.monotonic_ns()
+63 | /         with pytest.raises(UniversityReadStopped) as info:
+64 | |             with ctx.runner._university_read_scope(candidate()):
+   | |________________________________________________________________^ SIM117
+65 |                   asyncio.run(fetcher.get('https://example.edu/denied'))
+66 |           end = time.monotonic_ns()
+   |
+   = help: Combine `with` statements
+
+tests/test_readguard_postgres.py:82:5: F841 Local variable `f` is assigned to but never used
+   |
+81 | def test_pg_03_exact_80_attempts_60_committed_admissions_two_pg_sessions(ctx, monkeypatch):
+82 |     f = activate(ctx)
+   |     ^ F841
+83 |     seen = original_mock(monkeypatch, ctx)
+84 |     with ctx.runner._university_read_scope(candidate()):
+   |
+   = help: Remove assignment to unused variable `f`
+
+tests/test_readguard_postgres.py:94:85: E702 Multiple statements on one line (semicolon)
+   |
+92 |         try:
+93 |             with ctx.factory() as s:
+94 |                 pids.append(s.execute(text('SELECT pg_backend_pid()')).scalar_one()); s.commit()
+   |                                                                                     ^ E702
+95 |                 r = new_runner(ctx, s); fetcher = r._make_fetcher()
+96 |                 for i in range(40):
+   |
+
+tests/test_readguard_postgres.py:95:39: E702 Multiple statements on one line (semicolon)
+   |
+93 |             with ctx.factory() as s:
+94 |                 pids.append(s.execute(text('SELECT pg_backend_pid()')).scalar_one()); s.commit()
+95 |                 r = new_runner(ctx, s); fetcher = r._make_fetcher()
+   |                                       ^ E702
+96 |                 for i in range(40):
+97 |                     ordinal = 2*i + index
+   |
+
+tests/test_readguard_postgres.py:99:66: B023 Function definition does not bind loop variable `ordinal`
+    |
+ 97 |                     ordinal = 2*i + index
+ 98 |                     with cv:
+ 99 |                         ok = cv.wait_for(lambda: turn['next'] == ordinal, timeout=10)
+    |                                                                  ^^^^^^^ B023
+100 |                         assert ok, ('round_robin_timeout', ordinal)
+101 |                         try:
+    |
+
+tests/test_readguard_postgres.py:108:46: E702 Multiple statements on one line (semicolon)
+    |
+106 |                             outcomes.append({'ordinal': ordinal, 'status': exc.reason})
+107 |                         finally:
+108 |                             turn['next'] += 1; cv.notify_all()
+    |                                              ^ E702
+109 |         except BaseException as exc:
+110 |             errors.append(error_chain(exc))
+    |
+
+tests/test_readguard_postgres.py:112:16: E701 Multiple statements on one line (colon)
+    |
+110 |             errors.append(error_chain(exc))
+111 |     ts = [threading.Thread(target=thread_work, args=(i,)) for i in range(2)]
+112 |     for t in ts: t.start()
+    |                ^ E701
+113 |     for t in ts: t.join(15); assert not t.is_alive()
+114 |     ctx.record('PG-03', {'attempts':len(outcomes),'original_get':len(seen),'outcomes':outcomes,'seen':seen,'durable':counts(ctx),'bac…
+    |
+
+tests/test_readguard_postgres.py:113:16: E701 Multiple statements on one line (colon)
+    |
+111 |     ts = [threading.Thread(target=thread_work, args=(i,)) for i in range(2)]
+112 |     for t in ts: t.start()
+113 |     for t in ts: t.join(15); assert not t.is_alive()
+    |                ^ E701
+114 |     ctx.record('PG-03', {'attempts':len(outcomes),'original_get':len(seen),'outcomes':outcomes,'seen':seen,'durable':counts(ctx),'bac…
+115 |     assert not errors and len(set(pids)) == 2
+    |
+
+tests/test_readguard_postgres.py:113:28: E702 Multiple statements on one line (semicolon)
+    |
+111 |     ts = [threading.Thread(target=thread_work, args=(i,)) for i in range(2)]
+112 |     for t in ts: t.start()
+113 |     for t in ts: t.join(15); assert not t.is_alive()
+    |                            ^ E702
+114 |     ctx.record('PG-03', {'attempts':len(outcomes),'original_get':len(seen),'outcomes':outcomes,'seen':seen,'durable':counts(ctx),'bac…
+115 |     assert not errors and len(set(pids)) == 2
+    |
+
+tests/test_readguard_postgres.py:122:22: E702 Multiple statements on one line (semicolon)
+    |
+121 | def test_pg_04_simultaneous_nowait_and_cap_saturation_no_hidden_retry(ctx, monkeypatch):
+122 |     f = activate(ctx); seen = original_mock(monkeypatch, ctx)
+    |                      ^ E702
+123 |     with ctx.runner._university_read_scope(candidate()):
+124 |         for i in range(59): asyncio.run(f.get(f'https://example.edu/prior/{i}'))
+    |
+
+tests/test_readguard_postgres.py:124:27: E701 Multiple statements on one line (colon)
+    |
+122 |     f = activate(ctx); seen = original_mock(monkeypatch, ctx)
+123 |     with ctx.runner._university_read_scope(candidate()):
+124 |         for i in range(59): asyncio.run(f.get(f'https://example.edu/prior/{i}'))
+    |                           ^ E701
+125 |     holding = threading.Event(); release = threading.Event(); first_errors = []
+126 |     def first():
+    |
+
+tests/test_readguard_postgres.py:125:32: E702 Multiple statements on one line (semicolon)
+    |
+123 |     with ctx.runner._university_read_scope(candidate()):
+124 |         for i in range(59): asyncio.run(f.get(f'https://example.edu/prior/{i}'))
+125 |     holding = threading.Event(); release = threading.Event(); first_errors = []
+    |                                ^ E702
+126 |     def first():
+127 |         try:
+    |
+
+tests/test_readguard_postgres.py:125:61: E702 Multiple statements on one line (semicolon)
+    |
+123 |     with ctx.runner._university_read_scope(candidate()):
+124 |         for i in range(59): asyncio.run(f.get(f'https://example.edu/prior/{i}'))
+125 |     holding = threading.Event(); release = threading.Event(); first_errors = []
+    |                                                             ^ E702
+126 |     def first():
+127 |         try:
+    |
+
+tests/test_readguard_postgres.py:129:38: E702 Multiple statements on one line (semicolon)
+    |
+127 |         try:
+128 |             with ctx.factory() as s:
+129 |                 r = new_runner(ctx,s); fetcher=r._make_fetcher(); original=r._lock_read_checkpoint_job
+    |                                      ^ E702
+130 |                 def hold():
+131 |                     original(); holding.set(); assert release.wait(5)
+    |
+
+tests/test_readguard_postgres.py:129:65: E702 Multiple statements on one line (semicolon)
+    |
+127 |         try:
+128 |             with ctx.factory() as s:
+129 |                 r = new_runner(ctx,s); fetcher=r._make_fetcher(); original=r._lock_read_checkpoint_job
+    |                                                                 ^ E702
+130 |                 def hold():
+131 |                     original(); holding.set(); assert release.wait(5)
+    |
+
+tests/test_readguard_postgres.py:131:31: E702 Multiple statements on one line (semicolon)
+    |
+129 |                 r = new_runner(ctx,s); fetcher=r._make_fetcher(); original=r._lock_read_checkpoint_job
+130 |                 def hold():
+131 |                     original(); holding.set(); assert release.wait(5)
+    |                               ^ E702
+132 |                 r._lock_read_checkpoint_job=hold
+133 |                 with r._university_read_scope(candidate()): asyncio.run(fetcher.get('https://example.edu/last'))
+    |
+
+tests/test_readguard_postgres.py:131:46: E702 Multiple statements on one line (semicolon)
+    |
+129 |                 r = new_runner(ctx,s); fetcher=r._make_fetcher(); original=r._lock_read_checkpoint_job
+130 |                 def hold():
+131 |                     original(); holding.set(); assert release.wait(5)
+    |                                              ^ E702
+132 |                 r._lock_read_checkpoint_job=hold
+133 |                 with r._university_read_scope(candidate()): asyncio.run(fetcher.get('https://example.edu/last'))
+    |
+
+tests/test_readguard_postgres.py:133:59: E701 Multiple statements on one line (colon)
+    |
+131 |                     original(); holding.set(); assert release.wait(5)
+132 |                 r._lock_read_checkpoint_job=hold
+133 |                 with r._university_read_scope(candidate()): asyncio.run(fetcher.get('https://example.edu/last'))
+    |                                                           ^ E701
+134 |         except BaseException as exc: first_errors.append(error_chain(exc))
+135 |     thread = threading.Thread(target=first); thread.start(); assert holding.wait(5)
+    |
+
+tests/test_readguard_postgres.py:134:36: E701 Multiple statements on one line (colon)
+    |
+132 |                 r._lock_read_checkpoint_job=hold
+133 |                 with r._university_read_scope(candidate()): asyncio.run(fetcher.get('https://example.edu/last'))
+134 |         except BaseException as exc: first_errors.append(error_chain(exc))
+    |                                    ^ E701
+135 |     thread = threading.Thread(target=first); thread.start(); assert holding.wait(5)
+136 |     with ctx.factory() as s:
+    |
+
+tests/test_readguard_postgres.py:135:44: E702 Multiple statements on one line (semicolon)
+    |
+133 |                 with r._university_read_scope(candidate()): asyncio.run(fetcher.get('https://example.edu/last'))
+134 |         except BaseException as exc: first_errors.append(error_chain(exc))
+135 |     thread = threading.Thread(target=first); thread.start(); assert holding.wait(5)
+    |                                            ^ E702
+136 |     with ctx.factory() as s:
+137 |         r=new_runner(ctx,s); ff=r._make_fetcher()
+    |
+
+tests/test_readguard_postgres.py:135:60: E702 Multiple statements on one line (semicolon)
+    |
+133 |                 with r._university_read_scope(candidate()): asyncio.run(fetcher.get('https://example.edu/last'))
+134 |         except BaseException as exc: first_errors.append(error_chain(exc))
+135 |     thread = threading.Thread(target=first); thread.start(); assert holding.wait(5)
+    |                                                            ^ E702
+136 |     with ctx.factory() as s:
+137 |         r=new_runner(ctx,s); ff=r._make_fetcher()
+    |
+
+tests/test_readguard_postgres.py:137:28: E702 Multiple statements on one line (semicolon)
+    |
+135 |     thread = threading.Thread(target=first); thread.start(); assert holding.wait(5)
+136 |     with ctx.factory() as s:
+137 |         r=new_runner(ctx,s); ff=r._make_fetcher()
+    |                            ^ E702
+138 |         with pytest.raises(UniversityReadStopped) as info:
+139 |             with r._university_read_scope(candidate()): asyncio.run(ff.get('https://example.edu/racing-denied'))
+    |
+
+tests/test_readguard_postgres.py:138:9: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+136 |       with ctx.factory() as s:
+137 |           r=new_runner(ctx,s); ff=r._make_fetcher()
+138 | /         with pytest.raises(UniversityReadStopped) as info:
+139 | |             with r._university_read_scope(candidate()): asyncio.run(ff.get('https://example.edu/racing-denied'))
+    | |_______________________________________________________^ SIM117
+140 |           assert info.value.reason=='checkpoint_busy' and info.value.__cause__.orig.sqlstate=='55P03'
+141 |       release.set(); thread.join(5); assert not thread.is_alive() and not first_errors
+    |
+    = help: Combine `with` statements
+
+tests/test_readguard_postgres.py:139:55: E701 Multiple statements on one line (colon)
+    |
+137 |         r=new_runner(ctx,s); ff=r._make_fetcher()
+138 |         with pytest.raises(UniversityReadStopped) as info:
+139 |             with r._university_read_scope(candidate()): asyncio.run(ff.get('https://example.edu/racing-denied'))
+    |                                                       ^ E701
+140 |         assert info.value.reason=='checkpoint_busy' and info.value.__cause__.orig.sqlstate=='55P03'
+141 |     release.set(); thread.join(5); assert not thread.is_alive() and not first_errors
+    |
+
+tests/test_readguard_postgres.py:141:18: E702 Multiple statements on one line (semicolon)
+    |
+139 |             with r._university_read_scope(candidate()): asyncio.run(ff.get('https://example.edu/racing-denied'))
+140 |         assert info.value.reason=='checkpoint_busy' and info.value.__cause__.orig.sqlstate=='55P03'
+141 |     release.set(); thread.join(5); assert not thread.is_alive() and not first_errors
+    |                  ^ E702
+142 |     with pytest.raises(UniversityReadStopped, match='read_cap'):
+143 |         with ctx.runner._university_read_scope(candidate()): asyncio.run(f.get('https://example.edu/61'))
+    |
+
+tests/test_readguard_postgres.py:141:34: E702 Multiple statements on one line (semicolon)
+    |
+139 |             with r._university_read_scope(candidate()): asyncio.run(ff.get('https://example.edu/racing-denied'))
+140 |         assert info.value.reason=='checkpoint_busy' and info.value.__cause__.orig.sqlstate=='55P03'
+141 |     release.set(); thread.join(5); assert not thread.is_alive() and not first_errors
+    |                                  ^ E702
+142 |     with pytest.raises(UniversityReadStopped, match='read_cap'):
+143 |         with ctx.runner._university_read_scope(candidate()): asyncio.run(f.get('https://example.edu/61'))
+    |
+
+tests/test_readguard_postgres.py:142:5: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+140 |           assert info.value.reason=='checkpoint_busy' and info.value.__cause__.orig.sqlstate=='55P03'
+141 |       release.set(); thread.join(5); assert not thread.is_alive() and not first_errors
+142 | /     with pytest.raises(UniversityReadStopped, match='read_cap'):
+143 | |         with ctx.runner._university_read_scope(candidate()): asyncio.run(f.get('https://example.edu/61'))
+    | |____________________________________________________________^ SIM117
+144 |       statuses=[]; errors=[]; ready=threading.Barrier(2)
+145 |       def race(index):
+    |
+    = help: Combine `with` statements
+
+tests/test_readguard_postgres.py:143:60: E701 Multiple statements on one line (colon)
+    |
+141 |     release.set(); thread.join(5); assert not thread.is_alive() and not first_errors
+142 |     with pytest.raises(UniversityReadStopped, match='read_cap'):
+143 |         with ctx.runner._university_read_scope(candidate()): asyncio.run(f.get('https://example.edu/61'))
+    |                                                            ^ E701
+144 |     statuses=[]; errors=[]; ready=threading.Barrier(2)
+145 |     def race(index):
+    |
+
+tests/test_readguard_postgres.py:144:16: E702 Multiple statements on one line (semicolon)
+    |
+142 |     with pytest.raises(UniversityReadStopped, match='read_cap'):
+143 |         with ctx.runner._university_read_scope(candidate()): asyncio.run(f.get('https://example.edu/61'))
+144 |     statuses=[]; errors=[]; ready=threading.Barrier(2)
+    |                ^ E702
+145 |     def race(index):
+146 |         try:
+    |
+
+tests/test_readguard_postgres.py:144:27: E702 Multiple statements on one line (semicolon)
+    |
+142 |     with pytest.raises(UniversityReadStopped, match='read_cap'):
+143 |         with ctx.runner._university_read_scope(candidate()): asyncio.run(f.get('https://example.edu/61'))
+144 |     statuses=[]; errors=[]; ready=threading.Barrier(2)
+    |                           ^ E702
+145 |     def race(index):
+146 |         try:
+    |
+
+tests/test_readguard_postgres.py:148:36: E702 Multiple statements on one line (semicolon)
+    |
+146 |         try:
+147 |             with ctx.factory() as s:
+148 |                 r=new_runner(ctx,s); ff=r._make_fetcher(); ready.wait(5)
+    |                                    ^ E702
+149 |                 for i in range(40):
+150 |                     try:
+    |
+
+tests/test_readguard_postgres.py:148:58: E702 Multiple statements on one line (semicolon)
+    |
+146 |         try:
+147 |             with ctx.factory() as s:
+148 |                 r=new_runner(ctx,s); ff=r._make_fetcher(); ready.wait(5)
+    |                                                          ^ E702
+149 |                 for i in range(40):
+150 |                     try:
+    |
+
+tests/test_readguard_postgres.py:151:79: E701 Multiple statements on one line (colon)
+    |
+149 | …     for i in range(40):
+150 | …         try:
+151 | …             with r._university_read_scope(candidate('concurrent')): asyncio.run(ff.get(f'https://example.edu/race-{index}/{i}'))
+    |                                                                     ^ E701
+152 | …             statuses.append('admitted')
+153 | …         except UniversityReadStopped as exc: statuses.append(exc.reason)
+    |
+
+tests/test_readguard_postgres.py:153:56: E701 Multiple statements on one line (colon)
+    |
+151 |                         with r._university_read_scope(candidate('concurrent')): asyncio.run(ff.get(f'https://example.edu/race-{index}…
+152 |                         statuses.append('admitted')
+153 |                     except UniversityReadStopped as exc: statuses.append(exc.reason)
+    |                                                        ^ E701
+154 |         except BaseException as exc: errors.append(error_chain(exc))
+155 |     ts=[threading.Thread(target=race,args=(i,)) for i in range(2)]
+    |
+
+tests/test_readguard_postgres.py:154:36: E701 Multiple statements on one line (colon)
+    |
+152 |                         statuses.append('admitted')
+153 |                     except UniversityReadStopped as exc: statuses.append(exc.reason)
+154 |         except BaseException as exc: errors.append(error_chain(exc))
+    |                                    ^ E701
+155 |     ts=[threading.Thread(target=race,args=(i,)) for i in range(2)]
+156 |     for t in ts:t.start()
+    |
+
+tests/test_readguard_postgres.py:156:16: E701 Multiple statements on one line (colon)
+    |
+154 |         except BaseException as exc: errors.append(error_chain(exc))
+155 |     ts=[threading.Thread(target=race,args=(i,)) for i in range(2)]
+156 |     for t in ts:t.start()
+    |                ^ E701
+157 |     for t in ts:t.join(15);assert not t.is_alive()
+158 |     ctx.record('PG-04', {'saturation_prior_gets':59,'racing_refusal':error_chain(info.value),'saturation_count':counts(ctx).get('cata…
+    |
+
+tests/test_readguard_postgres.py:157:16: E701 Multiple statements on one line (colon)
+    |
+155 |     ts=[threading.Thread(target=race,args=(i,)) for i in range(2)]
+156 |     for t in ts:t.start()
+157 |     for t in ts:t.join(15);assert not t.is_alive()
+    |                ^ E701
+158 |     ctx.record('PG-04', {'saturation_prior_gets':59,'racing_refusal':error_chain(info.value),'saturation_count':counts(ctx).get('cata…
+159 |     assert not errors and len(statuses)==80
+    |
+
+tests/test_readguard_postgres.py:157:27: E702 Multiple statements on one line (semicolon)
+    |
+155 |     ts=[threading.Thread(target=race,args=(i,)) for i in range(2)]
+156 |     for t in ts:t.start()
+157 |     for t in ts:t.join(15);assert not t.is_alive()
+    |                           ^ E702
+158 |     ctx.record('PG-04', {'saturation_prior_gets':59,'racing_refusal':error_chain(info.value),'saturation_count':counts(ctx).get('cata…
+159 |     assert not errors and len(statuses)==80
+    |
+
+tests/test_readguard_postgres.py:166:20: E702 Multiple statements on one line (semicolon)
+    |
+164 | @pytest.mark.parametrize('new_worker',['worker-two','worker-one'])
+165 | def test_pg_05_real_reap_claim_fresh_attempt_fence(ctx,monkeypatch,new_worker):
+166 |     f=activate(ctx);seen=original_mock(monkeypatch,ctx)
+    |                    ^ E702
+167 |     with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/before-reap'))
+168 |     now=datetime.now(UTC)
+    |
+
+tests/test_readguard_postgres.py:167:56: E701 Multiple statements on one line (colon)
+    |
+165 | def test_pg_05_real_reap_claim_fresh_attempt_fence(ctx,monkeypatch,new_worker):
+166 |     f=activate(ctx);seen=original_mock(monkeypatch,ctx)
+167 |     with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/before-reap'))
+    |                                                        ^ E701
+168 |     now=datetime.now(UTC)
+169 |     with ctx.factory() as other:
+    |
+
+tests/test_readguard_postgres.py:170:111: E702 Multiple statements on one line (semicolon)
+    |
+168 |     now=datetime.now(UTC)
+169 |     with ctx.factory() as other:
+170 |         other.execute(update(Job).where(Job.id==ctx.job_id).values(lease_expires_at=now-timedelta(seconds=1)));other.commit()
+    |                                                                                                               ^ E702
+171 |         store=JobStore(other,worker_id=new_worker)
+172 |         assert store.reap_expired(now=now)==[ctx.job_id]
+    |
+
+tests/test_readguard_postgres.py:173:107: E702 Multiple statements on one line (semicolon)
+    |
+171 |         store=JobStore(other,worker_id=new_worker)
+172 |         assert store.reap_expired(now=now)==[ctx.job_id]
+173 |         other.execute(update(Job).where(Job.id==ctx.job_id).values(available_at=now-timedelta(seconds=1)));other.commit()
+    |                                                                                                           ^ E702
+174 |         claimed=store.claim(worker_id=new_worker); assert claimed.id==ctx.job_id and claimed.attempts==2;other.commit()
+175 |     with pytest.raises(LeaseLost):
+    |
+
+tests/test_readguard_postgres.py:174:50: E702 Multiple statements on one line (semicolon)
+    |
+172 |         assert store.reap_expired(now=now)==[ctx.job_id]
+173 |         other.execute(update(Job).where(Job.id==ctx.job_id).values(available_at=now-timedelta(seconds=1)));other.commit()
+174 |         claimed=store.claim(worker_id=new_worker); assert claimed.id==ctx.job_id and claimed.attempts==2;other.commit()
+    |                                                  ^ E702
+175 |     with pytest.raises(LeaseLost):
+176 |         with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/stale'))
+    |
+
+tests/test_readguard_postgres.py:174:105: E702 Multiple statements on one line (semicolon)
+    |
+172 |         assert store.reap_expired(now=now)==[ctx.job_id]
+173 |         other.execute(update(Job).where(Job.id==ctx.job_id).values(available_at=now-timedelta(seconds=1)));other.commit()
+174 |         claimed=store.claim(worker_id=new_worker); assert claimed.id==ctx.job_id and claimed.attempts==2;other.commit()
+    |                                                                                                         ^ E702
+175 |     with pytest.raises(LeaseLost):
+176 |         with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/stale'))
+    |
+
+tests/test_readguard_postgres.py:175:5: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+173 |           other.execute(update(Job).where(Job.id==ctx.job_id).values(available_at=now-timedelta(seconds=1)));other.commit()
+174 |           claimed=store.claim(worker_id=new_worker); assert claimed.id==ctx.job_id and claimed.attempts==2;other.commit()
+175 | /     with pytest.raises(LeaseLost):
+176 | |         with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/stale'))
+    | |____________________________________________________________^ SIM117
+177 |       assert len(seen)==1 and counts(ctx)['catalogue:u-one']==1
+178 |       with ctx.factory() as current:
+    |
+    = help: Combine `with` statements
+
+tests/test_readguard_postgres.py:176:60: E701 Multiple statements on one line (colon)
+    |
+174 |         claimed=store.claim(worker_id=new_worker); assert claimed.id==ctx.job_id and claimed.attempts==2;other.commit()
+175 |     with pytest.raises(LeaseLost):
+176 |         with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/stale'))
+    |                                                            ^ E701
+177 |     assert len(seen)==1 and counts(ctx)['catalogue:u-one']==1
+178 |     with ctx.factory() as current:
+    |
+
+tests/test_readguard_postgres.py:182:51: E701 Multiple statements on one line (colon)
+    |
+180 |         monkeypatch.setattr(read_budget,'UNIVERSITY_READ_BUDGET',False)
+181 |         assert r._effective_read_guard() is True
+182 |         with r._university_read_scope(candidate()):asyncio.run(r._make_fetcher().get('https://example.edu/reclaimed'))
+    |                                                   ^ E701
+183 |     ctx.record('PG-05-'+new_worker,{'original_get':len(seen),'durable':counts(ctx),'new_worker':new_worker,'new_attempt':2,'stale_den…
+184 |     assert len(seen)==2 and counts(ctx)['catalogue:u-one']==2
+    |
+
+tests/test_readguard_postgres.py:188:20: E702 Multiple statements on one line (semicolon)
+    |
+186 | @pytest.mark.parametrize('kind',['user','coroutine'])
+187 | def test_pg_06_committed_user_cancel_and_post_charge_async_cancel(ctx,monkeypatch,kind):
+188 |     f=activate(ctx);seen=original_mock(monkeypatch,ctx)
+    |                    ^ E702
+189 |     with ctx.runner._university_read_scope(candidate()):
+190 |         if kind=='user':
+    |
+
+tests/test_readguard_postgres.py:193:59: E702 Multiple statements on one line (semicolon)
+    |
+191 |             asyncio.run(f.get('https://example.edu/before-cancel'))
+192 |             with ctx.factory() as cancel:
+193 |                 assert JobStore(cancel).cancel(ctx.job_id);cancel.commit()
+    |                                                           ^ E702
+194 |             with pytest.raises(RunCancelled):asyncio.run(f.get('https://example.edu/after-cancel'))
+195 |             assert len(seen)==1
+    |
+
+tests/test_readguard_postgres.py:194:45: E701 Multiple statements on one line (colon)
+    |
+192 |             with ctx.factory() as cancel:
+193 |                 assert JobStore(cancel).cancel(ctx.job_id);cancel.commit()
+194 |             with pytest.raises(RunCancelled):asyncio.run(f.get('https://example.edu/after-cancel'))
+    |                                             ^ E701
+195 |             assert len(seen)==1
+196 |         else:
+    |
+
+tests/test_readguard_postgres.py:201:55: E701 Multiple statements on one line (colon)
+    |
+199 |                 raise asyncio.CancelledError('independent cancellation after committed charge')
+200 |             monkeypatch.setattr(Fetcher,'_get',entered)
+201 |             with pytest.raises(asyncio.CancelledError):asyncio.run(f.get('https://example.edu/coroutine-cancel'))
+    |                                                       ^ E701
+202 |     ctx.record('PG-06-'+kind,{'durable':counts(ctx),'original_mock_completed':len(seen),'post_charge_no_refund':kind=='coroutine','pa…
+203 |     assert counts(ctx)['catalogue:u-one']==1 and ctx.run.pages_failed==0
+    |
+
+tests/test_readguard_postgres.py:206:20: E702 Multiple statements on one line (semicolon)
+    |
+205 | def test_pg_07_first_namespace_dirty_off_save_serializes_and_preserves_60(ctx,monkeypatch):
+206 |     f=activate(ctx);seen=original_mock(monkeypatch,ctx);interleaved=[]
+    |                    ^ E702
+207 |     with ctx.factory() as off_s:
+208 |         off_run=off_s.get(ResearchRun,ctx.run_id)
+    |
+
+tests/test_readguard_postgres.py:206:56: E702 Multiple statements on one line (semicolon)
+    |
+205 | def test_pg_07_first_namespace_dirty_off_save_serializes_and_preserves_60(ctx,monkeypatch):
+206 |     f=activate(ctx);seen=original_mock(monkeypatch,ctx);interleaved=[]
+    |                                                        ^ E702
+207 |     with ctx.factory() as off_s:
+208 |         off_run=off_s.get(ResearchRun,ctx.run_id)
+    |
+
+tests/test_readguard_postgres.py:216:17: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+214 |   …     if not interleaved and getattr(statement,'is_select',False) and any(getattr(d.get('expr'),'key',None)=='settings_snapshot' for …
+215 |   …         value=result.scalar_one()
+216 | / …         with pytest.raises(UniversityReadStopped) as info:
+217 | | …             with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/interleaved'))
+    | |__________________________________________________________________^ SIM117
+218 |   …         interleaved.append(error_chain(info.value));assert info.value.reason=='checkpoint_busy'
+219 |   …         return SimpleNamespace(scalar_one=lambda:value)
+    |
+    = help: Combine `with` statements
+
+tests/test_readguard_postgres.py:217:72: E701 Multiple statements on one line (colon)
+    |
+215 |                 value=result.scalar_one()
+216 |                 with pytest.raises(UniversityReadStopped) as info:
+217 |                     with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/interleaved'))
+    |                                                                        ^ E701
+218 |                 interleaved.append(error_chain(info.value));assert info.value.reason=='checkpoint_busy'
+219 |                 return SimpleNamespace(scalar_one=lambda:value)
+    |
+
+tests/test_readguard_postgres.py:218:60: E702 Multiple statements on one line (semicolon)
+    |
+216 |                 with pytest.raises(UniversityReadStopped) as info:
+217 |                     with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/interleaved'))
+218 |                 interleaved.append(error_chain(info.value));assert info.value.reason=='checkpoint_busy'
+    |                                                            ^ E702
+219 |                 return SimpleNamespace(scalar_one=lambda:value)
+220 |             return result
+    |
+
+tests/test_readguard_postgres.py:222:20: E702 Multiple statements on one line (semicolon)
+    |
+220 |             return result
+221 |         monkeypatch.setattr(off_s,'execute',intercept)
+222 |         off._save();monkeypatch.setattr(off_s,'execute',actual)
+    |                    ^ E702
+223 |         assert seen==[]
+224 |         f=activate(ctx)
+    |
+
+tests/test_readguard_postgres.py:226:31: E701 Multiple statements on one line (colon)
+    |
+224 |         f=activate(ctx)
+225 |         with ctx.runner._university_read_scope(candidate()):
+226 |             for i in range(60):asyncio.run(f.get(f'https://example.edu/allowed/{i}'))
+    |                               ^ E701
+227 |         saved_ledger=deepcopy(snapshot(ctx)[read_budget.LEDGER_KEY])
+228 |         off_run.settings_snapshot={'off_writer':'second stale replacement'};off._save()
+    |
+
+tests/test_readguard_postgres.py:228:76: E702 Multiple statements on one line (semicolon)
+    |
+226 |             for i in range(60):asyncio.run(f.get(f'https://example.edu/allowed/{i}'))
+227 |         saved_ledger=deepcopy(snapshot(ctx)[read_budget.LEDGER_KEY])
+228 |         off_run.settings_snapshot={'off_writer':'second stale replacement'};off._save()
+    |                                                                            ^ E702
+229 |         assert snapshot(ctx)[read_budget.LEDGER_KEY]==saved_ledger
+230 |         with pytest.raises(UniversityReadStopped,match='read_cap'):
+    |
+
+tests/test_readguard_postgres.py:230:9: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+228 |           off_run.settings_snapshot={'off_writer':'second stale replacement'};off._save()
+229 |           assert snapshot(ctx)[read_budget.LEDGER_KEY]==saved_ledger
+230 | /         with pytest.raises(UniversityReadStopped,match='read_cap'):
+231 | |             with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/61'))
+    | |________________________________________________________________^ SIM117
+232 |       ctx.record('PG-07',{'first_on_refused':interleaved,'original_get':len(seen),'durable':snapshot(ctx),'fresh_namespace_not_erased':…
+233 |       assert len(seen)==60 and counts(ctx)['catalogue:u-one']==60
+    |
+    = help: Combine `with` statements
+
+tests/test_readguard_postgres.py:231:64: E701 Multiple statements on one line (colon)
+    |
+229 |         assert snapshot(ctx)[read_budget.LEDGER_KEY]==saved_ledger
+230 |         with pytest.raises(UniversityReadStopped,match='read_cap'):
+231 |             with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/61'))
+    |                                                                ^ E701
+232 |     ctx.record('PG-07',{'first_on_refused':interleaved,'original_get':len(seen),'durable':snapshot(ctx),'fresh_namespace_not_erased':…
+233 |     assert len(seen)==60 and counts(ctx)['catalogue:u-one']==60
+    |
+
+tests/test_readguard_postgres.py:240:56: E701 Multiple statements on one line (colon)
+    |
+238 |     from app.pipeline import runner as rm
+239 |     f=activate(ctx)
+240 |     with ctx.runner._university_read_scope(candidate()):pass
+    |                                                        ^ E701
+241 |     old=seed_prior(ctx);before=snapshot(ctx);seen=original_mock(monkeypatch,ctx)
+242 |     ctx.runner._candidates=[candidate()]
+    |
+
+tests/test_readguard_postgres.py:241:24: E702 Multiple statements on one line (semicolon)
+    |
+239 |     f=activate(ctx)
+240 |     with ctx.runner._university_read_scope(candidate()):pass
+241 |     old=seed_prior(ctx);before=snapshot(ctx);seen=original_mock(monkeypatch,ctx)
+    |                        ^ E702
+242 |     ctx.runner._candidates=[candidate()]
+243 |     real=rm.WebRequirementsAdapter
+    |
+
+tests/test_readguard_postgres.py:241:45: E702 Multiple statements on one line (semicolon)
+    |
+239 |     f=activate(ctx)
+240 |     with ctx.runner._university_read_scope(candidate()):pass
+241 |     old=seed_prior(ctx);before=snapshot(ctx);seen=original_mock(monkeypatch,ctx)
+    |                                             ^ E702
+242 |     ctx.runner._candidates=[candidate()]
+243 |     real=rm.WebRequirementsAdapter
+    |
+
+tests/test_readguard_postgres.py:246:39: E702 Multiple statements on one line (semicolon)
+    |
+244 |     with ctx.factory() as blocker:
+245 |         def requirements(*args,**kwargs):
+246 |             value=real(*args,**kwargs);lock_row(ctx,blocker,row);return value
+    |                                       ^ E702
+247 |         monkeypatch.setattr(rm,'WebRequirementsAdapter',requirements)
+248 |         if entry=='run_to_decision':
+    |
+
+tests/test_readguard_postgres.py:246:65: E702 Multiple statements on one line (semicolon)
+    |
+244 |     with ctx.factory() as blocker:
+245 |         def requirements(*args,**kwargs):
+246 |             value=real(*args,**kwargs);lock_row(ctx,blocker,row);return value
+    |                                                                 ^ E702
+247 |         monkeypatch.setattr(rm,'WebRequirementsAdapter',requirements)
+248 |         if entry=='run_to_decision':
+    |
+
+tests/test_readguard_postgres.py:269:20: E702 Multiple statements on one line (semicolon)
+    |
+268 | def test_pg_10_prior_dirty_run_flush_then_job_nowait_releases_opposite_order(ctx,monkeypatch):
+269 |     f=activate(ctx);seen=original_mock(monkeypatch,ctx)
+    |                    ^ E702
+270 |     with ctx.runner._university_read_scope(candidate()):pass
+271 |     original=snapshot(ctx)
+    |
+
+tests/test_readguard_postgres.py:270:56: E701 Multiple statements on one line (colon)
+    |
+268 | def test_pg_10_prior_dirty_run_flush_then_job_nowait_releases_opposite_order(ctx,monkeypatch):
+269 |     f=activate(ctx);seen=original_mock(monkeypatch,ctx)
+270 |     with ctx.runner._university_read_scope(candidate()):pass
+    |                                                        ^ E701
+271 |     original=snapshot(ctx)
+272 |     ctx.run.pages_checked=17
+    |
+
+tests/test_readguard_postgres.py:276:9: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+274 |       with ctx.factory() as blocker:
+275 |           lock_row(ctx,blocker,'job')
+276 | /         with pytest.raises(UniversityReadStopped) as info:
+277 | |             with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/opposite'))
+    | |________________________________________________________________^ SIM117
+278 |           assert info.value.reason=='checkpoint_busy' and info.value.__cause__.orig.sqlstate=='55P03'
+279 |           with ctx.factory() as observer:
+    |
+    = help: Combine `with` statements
+
+tests/test_readguard_postgres.py:277:64: E701 Multiple statements on one line (colon)
+    |
+275 |         lock_row(ctx,blocker,'job')
+276 |         with pytest.raises(UniversityReadStopped) as info:
+277 |             with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/opposite'))
+    |                                                                ^ E701
+278 |         assert info.value.reason=='checkpoint_busy' and info.value.__cause__.orig.sqlstate=='55P03'
+279 |         with ctx.factory() as observer:
+    |
+
+tests/test_readguard_postgres.py:282:35: E701 Multiple statements on one line (colon)
+    |
+280 |             observer.execute(select(ResearchRun.id).where(ResearchRun.id==ctx.run_id).with_for_update(nowait=True))
+281 |         blocker.rollback()
+282 |     with ctx.factory() as observer: persisted_pages=observer.get(ResearchRun,ctx.run_id).pages_checked
+    |                                   ^ E701
+283 |     ctx.record('PG-10',{'exception':error_chain(info.value),'original_get':len(seen),'durable_ledger':snapshot(ctx),'pages_checked_af…
+284 |     assert not seen and persisted_pages==0 and snapshot(ctx)==original
+    |
+
+tests/test_readguard_postgres.py:287:20: E702 Multiple statements on one line (semicolon)
+    |
+286 | def test_pg_11_corrupt_envelope_and_commit_refusal_fail_closed(ctx,monkeypatch):
+287 |     f=activate(ctx);seen=original_mock(monkeypatch,ctx)
+    |                    ^ E702
+288 |     with ctx.runner._university_read_scope(candidate()):pass
+289 |     valid=snapshot(ctx)
+    |
+
+tests/test_readguard_postgres.py:288:56: E701 Multiple statements on one line (colon)
+    |
+286 | def test_pg_11_corrupt_envelope_and_commit_refusal_fail_closed(ctx,monkeypatch):
+287 |     f=activate(ctx);seen=original_mock(monkeypatch,ctx)
+288 |     with ctx.runner._university_read_scope(candidate()):pass
+    |                                                        ^ E701
+289 |     valid=snapshot(ctx)
+290 |     with ctx.factory() as other:
+    |
+
+tests/test_readguard_postgres.py:291:46: E702 Multiple statements on one line (semicolon)
+    |
+289 |     valid=snapshot(ctx)
+290 |     with ctx.factory() as other:
+291 |         run=other.get(ResearchRun,ctx.run_id);run.settings_snapshot={read_budget.LEDGER_KEY:{'version':True}};other.commit()
+    |                                              ^ E702
+292 |     with pytest.raises(UniversityReadStopped,match='invalid_ledger'):
+293 |         with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/corrupt'))
+    |
+
+tests/test_readguard_postgres.py:291:110: E702 Multiple statements on one line (semicolon)
+    |
+289 |     valid=snapshot(ctx)
+290 |     with ctx.factory() as other:
+291 |         run=other.get(ResearchRun,ctx.run_id);run.settings_snapshot={read_budget.LEDGER_KEY:{'version':True}};other.commit()
+    |                                                                                                              ^ E702
+292 |     with pytest.raises(UniversityReadStopped,match='invalid_ledger'):
+293 |         with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/corrupt'))
+    |
+
+tests/test_readguard_postgres.py:292:5: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+290 |       with ctx.factory() as other:
+291 |           run=other.get(ResearchRun,ctx.run_id);run.settings_snapshot={read_budget.LEDGER_KEY:{'version':True}};other.commit()
+292 | /     with pytest.raises(UniversityReadStopped,match='invalid_ledger'):
+293 | |         with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/corrupt'))
+    | |____________________________________________________________^ SIM117
+294 |       ctx.session.rollback();assert not seen
+295 |       assert snapshot(ctx)=={read_budget.LEDGER_KEY:{'version':True}}
+    |
+    = help: Combine `with` statements
+
+tests/test_readguard_postgres.py:293:60: E701 Multiple statements on one line (colon)
+    |
+291 |         run=other.get(ResearchRun,ctx.run_id);run.settings_snapshot={read_budget.LEDGER_KEY:{'version':True}};other.commit()
+292 |     with pytest.raises(UniversityReadStopped,match='invalid_ledger'):
+293 |         with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/corrupt'))
+    |                                                            ^ E701
+294 |     ctx.session.rollback();assert not seen
+295 |     assert snapshot(ctx)=={read_budget.LEDGER_KEY:{'version':True}}
+    |
+
+tests/test_readguard_postgres.py:294:27: E702 Multiple statements on one line (semicolon)
+    |
+292 |     with pytest.raises(UniversityReadStopped,match='invalid_ledger'):
+293 |         with ctx.runner._university_read_scope(candidate()):asyncio.run(f.get('https://example.edu/corrupt'))
+294 |     ctx.session.rollback();assert not seen
+    |                           ^ E702
+295 |     assert snapshot(ctx)=={read_budget.LEDGER_KEY:{'version':True}}
+296 |     with ctx.factory() as other:
+    |
+
+tests/test_readguard_postgres.py:297:46: E702 Multiple statements on one line (semicolon)
+    |
+295 |     assert snapshot(ctx)=={read_budget.LEDGER_KEY:{'version':True}}
+296 |     with ctx.factory() as other:
+297 |         run=other.get(ResearchRun,ctx.run_id);run.settings_snapshot=deepcopy(valid);other.commit()
+    |                                              ^ E702
+298 |     with ctx.runner._university_read_scope(candidate()):
+299 |         def refuse():raise RuntimeError('independent injected pre-commit refusal')
+    |
+
+tests/test_readguard_postgres.py:297:84: E702 Multiple statements on one line (semicolon)
+    |
+295 |     assert snapshot(ctx)=={read_budget.LEDGER_KEY:{'version':True}}
+296 |     with ctx.factory() as other:
+297 |         run=other.get(ResearchRun,ctx.run_id);run.settings_snapshot=deepcopy(valid);other.commit()
+    |                                                                                    ^ E702
+298 |     with ctx.runner._university_read_scope(candidate()):
+299 |         def refuse():raise RuntimeError('independent injected pre-commit refusal')
+    |
+
+tests/test_readguard_postgres.py:301:68: E701 Multiple statements on one line (colon)
+    |
+299 |         def refuse():raise RuntimeError('independent injected pre-commit refusal')
+300 |         monkeypatch.setattr(ctx.session,'commit',refuse)
+301 |         with pytest.raises(RuntimeError,match='pre-commit refusal'):asyncio.run(f.get('https://example.edu/not-committed'))
+    |                                                                    ^ E701
+302 |         visible=counts(ctx)
+303 |         ctx.session.rollback()
+    |
+
+tests/test_readguard_postgres.py:309:22: E702 Multiple statements on one line (semicolon)
+    |
+307 | @pytest.mark.parametrize('renderer',[False,True])
+308 | def test_pg_06_actual_walker_plain_and_renderer_broad_catch_propagates_db_busy(ctx,monkeypatch,renderer):
+309 |     f=c.activate(ctx);seen=c.original_mock(monkeypatch,ctx)
+    |                      ^ E702
+310 |     if renderer:
+311 |         async def render(url):return await f.get(url)
+    |
+
+tests/test_readguard_postgres.py:314:5: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+312 |           f._renderer=SimpleNamespace(render=render,catalog_payloads=[])
+313 |       walker=CatalogWalker(fetcher=f,domain='example.edu',degree='bachelor',fields=['computer science'])
+314 | /     with ctx.runner._university_read_scope(c.candidate()):
+315 | |         with ctx.factory() as blocker:
+    | |______________________________________^ SIM117
+316 |               c.lock_row(ctx,blocker,'run')
+317 |               with pytest.raises(UniversityReadStopped) as info:asyncio.run(walker.walk(['https://example.edu/catalogue']))
+    |
+    = help: Combine `with` statements
+
+tests/test_readguard_postgres.py:317:62: E701 Multiple statements on one line (colon)
+    |
+315 |         with ctx.factory() as blocker:
+316 |             c.lock_row(ctx,blocker,'run')
+317 |             with pytest.raises(UniversityReadStopped) as info:asyncio.run(walker.walk(['https://example.edu/catalogue']))
+    |                                                              ^ E701
+318 |             assert info.value.reason=='checkpoint_busy' and info.value.__cause__.orig.sqlstate=='55P03'
+319 |             blocker.rollback()
+    |
+
+tests/test_readguard_postgres.py:325:22: E702 Multiple statements on one line (semicolon)
+    |
+323 | @pytest.mark.parametrize('signal',['cancel','fence'])
+324 | def test_pg_06_actual_walker_cancellation_and_lease_control_not_swallowed(ctx,monkeypatch,signal):
+325 |     f=c.activate(ctx);seen=c.original_mock(monkeypatch,ctx)
+    |                      ^ E702
+326 |     walker=CatalogWalker(fetcher=f,domain='example.edu',degree='bachelor',fields=['computer science'])
+327 |     with ctx.runner._university_read_scope(c.candidate()):
+    |
+
+tests/test_readguard_postgres.py:330:82: E702 Multiple statements on one line (semicolon)
+    |
+328 |         with ctx.factory() as other:
+329 |             fields={'cancel_requested':True} if signal=='cancel' else {'attempts':2}
+330 |             other.execute(update(Job).where(Job.id==ctx.job_id).values(**fields));other.commit()
+    |                                                                                  ^ E702
+331 |         expected=RunCancelled if signal=='cancel' else LeaseLost
+332 |         with pytest.raises(expected) as info:asyncio.run(walker.walk(['https://example.edu/catalogue']))
+    |
+
+tests/test_readguard_postgres.py:332:45: E701 Multiple statements on one line (colon)
+    |
+330 |             other.execute(update(Job).where(Job.id==ctx.job_id).values(**fields));other.commit()
+331 |         expected=RunCancelled if signal=='cancel' else LeaseLost
+332 |         with pytest.raises(expected) as info:asyncio.run(walker.walk(['https://example.edu/catalogue']))
+    |                                             ^ E701
+333 |     ctx.record('PG-06-walker-'+signal,{'exception':c.error_chain(info.value),'original_get':len(seen),'durable':c.counts(ctx),'actual…
+334 |     assert seen==[] and c.counts(ctx)=={'catalogue:u-one':0}
+    |
+
+tests/test_readguard_postgres.py:340:58: E701 Multiple statements on one line (colon)
+    |
+338 |     from app.pipeline import runner as rm
+339 |     f=c.activate(ctx)
+340 |     with ctx.runner._university_read_scope(c.candidate()):pass
+    |                                                          ^ E701
+341 |     old=c.seed_prior(ctx);seen=c.original_mock(monkeypatch,ctx);before=c.snapshot(ctx)
+342 |     ctx.runner._candidates=[c.candidate()]
+    |
+
+tests/test_readguard_postgres.py:341:26: E702 Multiple statements on one line (semicolon)
+    |
+339 |     f=c.activate(ctx)
+340 |     with ctx.runner._university_read_scope(c.candidate()):pass
+341 |     old=c.seed_prior(ctx);seen=c.original_mock(monkeypatch,ctx);before=c.snapshot(ctx)
+    |                          ^ E702
+342 |     ctx.runner._candidates=[c.candidate()]
+343 |     real=rm.WebScholarshipAdapter
+    |
+
+tests/test_readguard_postgres.py:341:64: E702 Multiple statements on one line (semicolon)
+    |
+339 |     f=c.activate(ctx)
+340 |     with ctx.runner._university_read_scope(c.candidate()):pass
+341 |     old=c.seed_prior(ctx);seen=c.original_mock(monkeypatch,ctx);before=c.snapshot(ctx)
+    |                                                                ^ E702
+342 |     ctx.runner._candidates=[c.candidate()]
+343 |     real=rm.WebScholarshipAdapter
+    |
+
+tests/test_readguard_postgres.py:346:39: E702 Multiple statements on one line (semicolon)
+    |
+344 |     with ctx.factory() as blocker:
+345 |         def scholarship(*args,**kwargs):
+346 |             value=real(*args,**kwargs);c.lock_row(ctx,blocker,row);return value
+    |                                       ^ E702
+347 |         monkeypatch.setattr(rm,'WebScholarshipAdapter',scholarship)
+348 |         with pytest.raises(UniversityReadStopped) as info:asyncio.run(ctx.runner._stage_funding(f))
+    |
+
+tests/test_readguard_postgres.py:346:67: E702 Multiple statements on one line (semicolon)
+    |
+344 |     with ctx.factory() as blocker:
+345 |         def scholarship(*args,**kwargs):
+346 |             value=real(*args,**kwargs);c.lock_row(ctx,blocker,row);return value
+    |                                                                   ^ E702
+347 |         monkeypatch.setattr(rm,'WebScholarshipAdapter',scholarship)
+348 |         with pytest.raises(UniversityReadStopped) as info:asyncio.run(ctx.runner._stage_funding(f))
+    |
+
+tests/test_readguard_postgres.py:348:58: E701 Multiple statements on one line (colon)
+    |
+346 |             value=real(*args,**kwargs);c.lock_row(ctx,blocker,row);return value
+347 |         monkeypatch.setattr(rm,'WebScholarshipAdapter',scholarship)
+348 |         with pytest.raises(UniversityReadStopped) as info:asyncio.run(ctx.runner._stage_funding(f))
+    |                                                          ^ E701
+349 |         assert info.value.reason=='checkpoint_busy' and info.value.__cause__.orig.sqlstate=='55P03'
+350 |         assert not ctx.session.in_transaction();blocker.rollback()
+    |
+
+tests/test_readguard_postgres.py:350:48: E702 Multiple statements on one line (semicolon)
+    |
+348 |         with pytest.raises(UniversityReadStopped) as info:asyncio.run(ctx.runner._stage_funding(f))
+349 |         assert info.value.reason=='checkpoint_busy' and info.value.__cause__.orig.sqlstate=='55P03'
+350 |         assert not ctx.session.in_transaction();blocker.rollback()
+    |                                                ^ E702
+351 |     after=c.prior(ctx)
+352 |     ctx.record('PG-08-funding-'+row,{'exception':c.error_chain(info.value),'original_get':len(seen),'prior_before':old,'prior_after':…
+    |
+
+tests/test_readguard_postgres.py:357:22: E702 Multiple statements on one line (semicolon)
+    |
+355 | @pytest.mark.parametrize('route',['catalogue','curated'])
+356 | def test_pg_09_real_discovery_broad_catch_preserves_typed_busy(ctx,monkeypatch,route):
+357 |     f=c.activate(ctx);seen=c.original_mock(monkeypatch,ctx)
+    |                      ^ E702
+358 |     with ctx.runner._university_read_scope(c.candidate()):pass
+359 |     entry={'name':'Independent Test University','country':'Example','city':'City','homepage':'https://example.edu/'}
+    |
+
+tests/test_readguard_postgres.py:358:58: E701 Multiple statements on one line (colon)
+    |
+356 | def test_pg_09_real_discovery_broad_catch_preserves_typed_busy(ctx,monkeypatch,route):
+357 |     f=c.activate(ctx);seen=c.original_mock(monkeypatch,ctx)
+358 |     with ctx.runner._university_read_scope(c.candidate()):pass
+    |                                                          ^ E701
+359 |     entry={'name':'Independent Test University','country':'Example','city':'City','homepage':'https://example.edu/'}
+360 |     if route=='catalogue':
+    |
+
+tests/test_readguard_postgres.py:370:58: E701 Multiple statements on one line (colon)
+    |
+368 |     with ctx.factory() as blocker:
+369 |         c.lock_row(ctx,blocker,'job')
+370 |         with pytest.raises(UniversityReadStopped) as info:asyncio.run(adapter.discover(ctx.profile,1))
+    |                                                          ^ E701
+371 |         assert info.value.reason=='checkpoint_busy' and info.value.__cause__.orig.sqlstate=='55P03'
+372 |         blocker.rollback()
+    |
+
+tests/test_readguard_postgres.py:377:22: E702 Multiple statements on one line (semicolon)
+    |
+376 | def test_pg_10_actual_source_recorder_flush_can_hold_run_before_job_nowait(ctx,monkeypatch):
+377 |     f=c.activate(ctx);seen=c.original_mock(monkeypatch,ctx)
+    |                      ^ E702
+378 |     with ctx.runner._university_read_scope(c.candidate()):pass
+379 |     before=c.snapshot(ctx);old=c.seed_prior(ctx)
+    |
+
+tests/test_readguard_postgres.py:378:58: E701 Multiple statements on one line (colon)
+    |
+376 | def test_pg_10_actual_source_recorder_flush_can_hold_run_before_job_nowait(ctx,monkeypatch):
+377 |     f=c.activate(ctx);seen=c.original_mock(monkeypatch,ctx)
+378 |     with ctx.runner._university_read_scope(c.candidate()):pass
+    |                                                          ^ E701
+379 |     before=c.snapshot(ctx);old=c.seed_prior(ctx)
+380 |     ctx.run.pages_checked=23
+    |
+
+tests/test_readguard_postgres.py:379:27: E702 Multiple statements on one line (semicolon)
+    |
+377 |     f=c.activate(ctx);seen=c.original_mock(monkeypatch,ctx)
+378 |     with ctx.runner._university_read_scope(c.candidate()):pass
+379 |     before=c.snapshot(ctx);old=c.seed_prior(ctx)
+    |                           ^ E702
+380 |     ctx.run.pages_checked=23
+381 |     adapter=ctx.runner._make_discovery_adapter(f)
+    |
+
+tests/test_readguard_postgres.py:386:9: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+384 |       with ctx.factory() as blocker:
+385 |           c.lock_row(ctx,blocker,'job')
+386 | /         with pytest.raises(UniversityReadStopped) as info:
+387 | |             with ctx.runner._university_read_scope(c.candidate()):asyncio.run(f.get('https://example.edu/next'))
+    | |__________________________________________________________________^ SIM117
+388 |           assert info.value.reason=='checkpoint_busy' and info.value.__cause__.orig.sqlstate=='55P03'
+389 |           with ctx.factory() as third:third.execute(select(ResearchRun.id).where(ResearchRun.id==ctx.run_id).with_for_update(nowait=Tru…
+    |
+    = help: Combine `with` statements
+
+tests/test_readguard_postgres.py:387:66: E701 Multiple statements on one line (colon)
+    |
+385 | …     c.lock_row(ctx,blocker,'job')
+386 | …     with pytest.raises(UniversityReadStopped) as info:
+387 | …         with ctx.runner._university_read_scope(c.candidate()):asyncio.run(f.get('https://example.edu/next'))
+    |                                                                ^ E701
+388 | …     assert info.value.reason=='checkpoint_busy' and info.value.__cause__.orig.sqlstate=='55P03'
+389 | …     with ctx.factory() as third:third.execute(select(ResearchRun.id).where(ResearchRun.id==ctx.run_id).with_for_update(nowait=True))
+    |
+
+tests/test_readguard_postgres.py:389:36: E701 Multiple statements on one line (colon)
+    |
+387 |             with ctx.runner._university_read_scope(c.candidate()):asyncio.run(f.get('https://example.edu/next'))
+388 |         assert info.value.reason=='checkpoint_busy' and info.value.__cause__.orig.sqlstate=='55P03'
+389 |         with ctx.factory() as third:third.execute(select(ResearchRun.id).where(ResearchRun.id==ctx.run_id).with_for_update(nowait=Tru…
+    |                                    ^ E701
+390 |         blocker.rollback()
+391 |     with ctx.factory() as observer:
+    |
+
+tests/test_readguard_postgres.py:392:56: E702 Multiple statements on one line (semicolon)
+    |
+390 |         blocker.rollback()
+391 |     with ctx.factory() as observer:
+392 |         source_count=observer.query(SourcePage).count();pages=observer.get(ResearchRun,ctx.run_id).pages_checked
+    |                                                        ^ E702
+393 |     source_path=__import__('pathlib').Path(__import__('app.models.source_page',fromlist=['SourcePage']).__file__)
+394 |     ctx.record('PG-10-actual-source-recorder',{'source_sha256':hashlib.sha256(source_path.read_bytes()).hexdigest(),'exception':c.err…
+    |
+
+tests/test_readguard_postgres.py:401:33: E702 Multiple statements on one line (semicolon)
+    |
+399 |     assert ctx.runner._effective_read_guard() is False
+400 |     seen=c.original_mock(monkeypatch,ctx)
+401 |     f=ctx.runner._make_fetcher();assert type(f) is Fetcher
+    |                                 ^ E702
+402 |     for i in range(61):asyncio.run(f.get(f'https://example.edu/legacy-off/{i}'))
+403 |     ctx.record('PG-07-untracked-off-boundary',{'original_get':len(seen),'durable_snapshot':c.snapshot(ctx),'classification':'explicit…
+    |
+
+tests/test_readguard_postgres.py:402:23: E701 Multiple statements on one line (colon)
+    |
+400 |     seen=c.original_mock(monkeypatch,ctx)
+401 |     f=ctx.runner._make_fetcher();assert type(f) is Fetcher
+402 |     for i in range(61):asyncio.run(f.get(f'https://example.edu/legacy-off/{i}'))
+    |                       ^ E701
+403 |     ctx.record('PG-07-untracked-off-boundary',{'original_get':len(seen),'durable_snapshot':c.snapshot(ctx),'classification':'explicit…
+404 |     assert len(seen)==61 and read_budget.LEDGER_KEY not in c.snapshot(ctx)
+    |
+
+tests/test_readguard_revision_controls.py:62:5: F811 Redefinition of unused `context` from line 22
+   |
+60 | @pytest.mark.parametrize("blocker_mode", ["BEGIN IMMEDIATE", "BEGIN EXCLUSIVE"])
+61 | async def test_busy_actual_caller_propagates_typed_unknown_without_failed_or_claim_writes(
+62 |     context, monkeypatch, entry, blocker_mode
+   |     ^^^^^^^ F811
+63 | ):
+64 |     from app.pipeline import runner as runner_module
+   |
+   = help: Remove definition: `context`
+
+tests/test_readguard_revision_controls.py:122:5: F811 Redefinition of unused `context` from line 22
+    |
+121 | def test_dirty_off_first_replacement_serializes_on_creation_before_60_and_preserves_60(
+122 |     context, monkeypatch
+    |     ^^^^^^^ F811
+123 | ):
+124 |     fetcher = controls.activate(context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_readguard_revision_controls.py:194:71: F811 Redefinition of unused `context` from line 22
+    |
+194 | def test_dirty_off_cancel_check_cannot_autoflush_away_first_namespace(context, monkeypatch):
+    |                                                                       ^^^^^^^ F811
+195 |     fetcher = controls.activate(context)
+196 |     candidate = controls.candidate()
+    |
+    = help: Remove definition: `context`
+
+tests/test_readguard_revision_controls.py:226:5: F811 Redefinition of unused `context` from line 22
+    |
+224 | @pytest.mark.asyncio
+225 | async def test_actual_pending_settings_other_query_does_not_erase_concurrent_namespace(
+226 |     context, monkeypatch
+    |     ^^^^^^^ F811
+227 | ):
+228 |     monkeypatch.setattr(read_budget, "UNIVERSITY_READ_BUDGET", False)
+    |
+    = help: Remove definition: `context`
+
+tests/test_readguard_revision_controls.py:259:70: F811 Redefinition of unused `context` from line 22
+    |
+259 | def test_clean_default_off_checkpoint_does_not_reread_or_assign_json(context, monkeypatch):
+    |                                                                      ^^^^^^^ F811
+260 |     monkeypatch.setattr(read_budget, "UNIVERSITY_READ_BUDGET", False)
+261 |     context.run.pages_checked = 7
+    |
+    = help: Remove definition: `context`
+
+tests/test_readguard_revision_controls.py:273:67: F811 Redefinition of unused `context` from line 22
+    |
+272 | @pytest.mark.parametrize("kind", ["documents", "recheck"])
+273 | def test_clean_excluded_job_checkpoint_leaves_namespace_untouched(context, monkeypatch, kind):
+    |                                                                   ^^^^^^^ F811
+274 |     controls.activate(context)
+275 |     with context.runner._university_read_scope(controls.candidate()):
+    |
+    = help: Remove definition: `context`
+
+tests/test_readguard_revision_controls.py:291:78: F811 Redefinition of unused `context` from line 22
+    |
+291 | def test_direct_nojob_dirty_save_takes_actual_run_write_lock_before_snapshot(context, monkeypatch):
+    |                                                                              ^^^^^^^ F811
+292 |     direct = ResearchRunner(context.session, context.run, context.profile, context.settings)
+293 |     context.run.settings_snapshot = {"direct": "replacement"}
+    |
+    = help: Remove definition: `context`
+
+tests/test_readguard_revision_controls.py:316:5: F811 Redefinition of unused `context` from line 22
+    |
+314 | @pytest.mark.asyncio
+315 | async def test_same_genuine_job_reclaim_honors_enabled_ledger_after_source_default_off(
+316 |     context, monkeypatch
+    |     ^^^^^^^ F811
+317 | ):
+318 |     fetcher = controls.activate(context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_readguard_revision_controls.py:394:5: F811 Redefinition of unused `context` from line 22
+    |
+392 | @pytest.mark.parametrize("explicit_enable", [False, True])
+393 | async def test_previous_episode_cannot_prove_untracked_current_job_intent_or_fake_zero(
+394 |     context, monkeypatch, explicit_enable
+    |     ^^^^^^^ F811
+395 | ):
+396 |     from app.pipeline import runner as runner_module
+    |
+    = help: Remove definition: `context`
+
+tests/test_readguard_revision_controls.py:461:5: F811 Redefinition of unused `context` from line 22
+    |
+459 | @pytest.mark.asyncio
+460 | async def test_malformed_current_on_ledger_is_not_bypassed_after_source_default_off(
+461 |     context, monkeypatch
+    |     ^^^^^^^ F811
+462 | ):
+463 |     controls.activate(context)
+    |
+    = help: Remove definition: `context`
+
+tests/test_readguard_revision_controls.py:480:5: F811 Redefinition of unused `context` from line 22
+    |
+479 | def test_demo_pending_replacement_preserves_legacy_checkpoint_without_readguard_lock(
+480 |     context, monkeypatch
+    |     ^^^^^^^ F811
+481 | ):
+482 |     context.run.demo_mode = True
+    |
+    = help: Remove definition: `context`
+
+tests/test_readguard_revision_controls.py:496:85: F811 Redefinition of unused `context` from line 22
+    |
+495 | @pytest.mark.parametrize("kind", ["documents", "recheck"])
+496 | def test_dirty_excluded_job_replacement_serializes_and_preserves_research_namespace(context, kind):
+    |                                                                                     ^^^^^^^ F811
+497 |     controls.activate(context)
+498 |     with context.runner._university_read_scope(controls.candidate()):
+    |
+    = help: Remove definition: `context`
+
+tests/test_readguard_revision_controls.py:527:86: F811 Redefinition of unused `context` from line 22
+    |
+527 | def test_direct_nojob_dirty_replacement_real_sqlite_busy_is_typed_and_writes_nothing(context):
+    |                                                                                      ^^^^^^^ F811
+528 |     before = snapshot(context)
+529 |     direct = ResearchRunner(context.session, context.run, context.profile, context.settings)
+    |
+    = help: Remove definition: `context`
+
+tests/test_readguard_revision_controls.py:543:5: F811 Redefinition of unused `context` from line 22
+    |
+541 | @pytest.mark.parametrize("stage", ["discovery", "funding"])
+542 | async def test_busy_actual_other_source_caller_stays_typed_and_preserves_prior_evidence(
+543 |     context, monkeypatch, stage
+    |     ^^^^^^^ F811
+544 | ):
+545 |     from app.pipeline import runner as runner_module
+    |
+    = help: Remove definition: `context`
+
+tests/test_readguard_revision_controls.py:606:75: F811 Redefinition of unused `context` from line 22
+    |
+605 | @pytest.mark.asyncio
+606 | async def test_resume_intent_read_busy_is_typed_before_setup_or_source_io(context, monkeypatch):
+    |                                                                           ^^^^^^^ F811
+607 |     controls.activate(context)
+608 |     with context.runner._university_read_scope(controls.candidate()):
+    |
+    = help: Remove definition: `context`
+
+tests/test_readguard_sqlite_concurrency.py:23:1: E402 Module level import not at top of file
+   |
+21 | counts = controls.counts
+22 |
+23 | from app.adapters.fetching import Fetcher, FetchResult
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+24 | from app.domain.enums import FetchOutcome
+25 | from app.models import ResearchRun
+   |
+
+tests/test_readguard_sqlite_concurrency.py:24:1: E402 Module level import not at top of file
+   |
+23 | from app.adapters.fetching import Fetcher, FetchResult
+24 | from app.domain.enums import FetchOutcome
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+25 | from app.models import ResearchRun
+26 | from app.pipeline.control import UniversityReadStopped
+   |
+
+tests/test_readguard_sqlite_concurrency.py:25:1: E402 Module level import not at top of file
+   |
+23 | from app.adapters.fetching import Fetcher, FetchResult
+24 | from app.domain.enums import FetchOutcome
+25 | from app.models import ResearchRun
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+26 | from app.pipeline.control import UniversityReadStopped
+27 | from app.pipeline.runner import ResearchRunner
+   |
+
+tests/test_readguard_sqlite_concurrency.py:26:1: E402 Module level import not at top of file
+   |
+24 | from app.domain.enums import FetchOutcome
+25 | from app.models import ResearchRun
+26 | from app.pipeline.control import UniversityReadStopped
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+27 | from app.pipeline.runner import ResearchRunner
+   |
+
+tests/test_readguard_sqlite_concurrency.py:27:1: E402 Module level import not at top of file
+   |
+25 | from app.models import ResearchRun
+26 | from app.pipeline.control import UniversityReadStopped
+27 | from app.pipeline.runner import ResearchRunner
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+   |
+
+tests/test_readguard_sqlite_concurrency.py:30:60: F811 Redefinition of unused `context` from line 16
+   |
+30 | def test_two_sqlite_sessions_cannot_charge_two_gets_as_one(context, monkeypatch):
+   |                                                            ^^^^^^^ F811
+31 |     activate(context)
+32 |     with context.runner._university_read_scope(candidate()):
+   |
+   = help: Remove definition: `context`
+
+tests/test_readguard_sqlite_concurrency.py:85:62: F811 Redefinition of unused `context` from line 16
+   |
+85 | def test_two_actual_sqlite_sessions_never_admit_more_than_60(context, monkeypatch):
+   |                                                              ^^^^^^^ F811
+86 |     activate(context)
+87 |     with context.runner._university_read_scope(candidate()):
+   |
+   = help: Remove definition: `context`
+
+tests/test_readguard_sqlite_concurrency.py:135:64: F811 Redefinition of unused `context` from line 16
+    |
+134 | @pytest.mark.asyncio
+135 | async def test_actual_sqlite_write_lock_refusal_creates_no_get(context, monkeypatch):
+    |                                                                ^^^^^^^ F811
+136 |     fetcher = activate(context)
+137 |     with context.runner._university_read_scope(candidate()):
+    |
+    = help: Remove definition: `context`
+
+tests/test_worker_checkpoint_busy.py:33:38: E701 Multiple statements on one line (colon)
+   |
+31 |             connection.execute("SET statement_timeout=1500")
+32 |         event.listen(engine,"connect",timeout)
+33 |         with engine.connect() as conn:conn.exec_driver_sql("SET statement_timeout=1500");conn.commit()
+   |                                      ^ E701
+34 |     try:
+35 |         with c.make_context(engine,tmp_path) as value:yield value
+   |
+
+tests/test_worker_checkpoint_busy.py:33:89: E702 Multiple statements on one line (semicolon)
+   |
+31 |             connection.execute("SET statement_timeout=1500")
+32 |         event.listen(engine,"connect",timeout)
+33 |         with engine.connect() as conn:conn.exec_driver_sql("SET statement_timeout=1500");conn.commit()
+   |                                                                                         ^ E702
+34 |     try:
+35 |         with c.make_context(engine,tmp_path) as value:yield value
+   |
+
+tests/test_worker_checkpoint_busy.py:35:54: E701 Multiple statements on one line (colon)
+   |
+33 |         with engine.connect() as conn:conn.exec_driver_sql("SET statement_timeout=1500");conn.commit()
+34 |     try:
+35 |         with c.make_context(engine,tmp_path) as value:yield value
+   |                                                      ^ E701
+36 |     finally:
+37 |         if request.param=="sqlite":engine.dispose()
+   |
+
+tests/test_worker_checkpoint_busy.py:37:35: E701 Multiple statements on one line (colon)
+   |
+35 |         with c.make_context(engine,tmp_path) as value:yield value
+36 |     finally:
+37 |         if request.param=="sqlite":engine.dispose()
+   |                                   ^ E701
+38 |
+39 | def state(cxt):
+   |
+
+tests/test_worker_checkpoint_busy.py:41:34: E702 Multiple statements on one line (semicolon)
+   |
+39 | def state(cxt):
+40 |     with cxt.factory() as s:
+41 |         job=s.get(Job,cxt.job_id);run=s.get(ResearchRun,cxt.run_id)
+   |                                  ^ E702
+42 |         return {'job':{col.key:deepcopy(getattr(job,col.key)) for col in Job.__table__.columns},'run':{col.key:deepcopy(getattr(run,co…
+   |
+
+tests/test_worker_checkpoint_busy.py:46:22: E702 Multiple statements on one line (semicolon)
+   |
+45 | def prepare(cxt,monkeypatch):
+46 |     f=c.activate(cxt);seen=c.original_mock(monkeypatch,cxt)
+   |                      ^ E702
+47 |     with cxt.runner._university_read_scope(c.candidate()):
+48 |         for i in range(59):asyncio.run(f.get(f'https://example.edu/previous/{i}'))
+   |
+
+tests/test_worker_checkpoint_busy.py:48:27: E701 Multiple statements on one line (colon)
+   |
+46 |     f=c.activate(cxt);seen=c.original_mock(monkeypatch,cxt)
+47 |     with cxt.runner._university_read_scope(c.candidate()):
+48 |         for i in range(59):asyncio.run(f.get(f'https://example.edu/previous/{i}'))
+   |                           ^ E701
+49 |     assert c.counts(cxt)=={'catalogue:u-one':59}
+50 |     old=c.seed_prior(cxt)
+   |
+
+tests/test_worker_checkpoint_busy.py:59:12: E701 Multiple statements on one line (colon)
+   |
+57 |     def scoped():
+58 |         s=cxt.factory()
+59 |         try:yield s;s.commit()
+   |            ^ E701
+60 |         except BaseException:s.rollback();raise
+61 |         finally:s.close()
+   |
+
+tests/test_worker_checkpoint_busy.py:59:20: E702 Multiple statements on one line (semicolon)
+   |
+57 |     def scoped():
+58 |         s=cxt.factory()
+59 |         try:yield s;s.commit()
+   |                    ^ E702
+60 |         except BaseException:s.rollback();raise
+61 |         finally:s.close()
+   |
+
+tests/test_worker_checkpoint_busy.py:60:29: E701 Multiple statements on one line (colon)
+   |
+58 |         s=cxt.factory()
+59 |         try:yield s;s.commit()
+60 |         except BaseException:s.rollback();raise
+   |                             ^ E701
+61 |         finally:s.close()
+62 |     monkeypatch.setattr(wm,'session_scope',scoped)
+   |
+
+tests/test_worker_checkpoint_busy.py:60:42: E702 Multiple statements on one line (semicolon)
+   |
+58 |         s=cxt.factory()
+59 |         try:yield s;s.commit()
+60 |         except BaseException:s.rollback();raise
+   |                                          ^ E702
+61 |         finally:s.close()
+62 |     monkeypatch.setattr(wm,'session_scope',scoped)
+   |
+
+tests/test_worker_checkpoint_busy.py:61:16: E701 Multiple statements on one line (colon)
+   |
+59 |         try:yield s;s.commit()
+60 |         except BaseException:s.rollback();raise
+61 |         finally:s.close()
+   |                ^ E701
+62 |     monkeypatch.setattr(wm,'session_scope',scoped)
+63 |     w=wm.Worker(cxt.settings,worker_id='worker-one')
+   |
+
+tests/test_worker_checkpoint_busy.py:64:13: E702 Multiple statements on one line (semicolon)
+   |
+62 |     monkeypatch.setattr(wm,'session_scope',scoped)
+63 |     w=wm.Worker(cxt.settings,worker_id='worker-one')
+64 |     fails=[];mark=[];actual_fail=JobStore.fail;actual_cancel=JobStore.mark_cancelled
+   |             ^ E702
+65 |     def fail(store,*args,**kwargs):
+66 |         fails.append({'args':args,'kwargs':kwargs})
+   |
+
+tests/test_worker_checkpoint_busy.py:64:21: E702 Multiple statements on one line (semicolon)
+   |
+62 |     monkeypatch.setattr(wm,'session_scope',scoped)
+63 |     w=wm.Worker(cxt.settings,worker_id='worker-one')
+64 |     fails=[];mark=[];actual_fail=JobStore.fail;actual_cancel=JobStore.mark_cancelled
+   |                     ^ E702
+65 |     def fail(store,*args,**kwargs):
+66 |         fails.append({'args':args,'kwargs':kwargs})
+   |
+
+tests/test_worker_checkpoint_busy.py:64:47: E702 Multiple statements on one line (semicolon)
+   |
+62 |     monkeypatch.setattr(wm,'session_scope',scoped)
+63 |     w=wm.Worker(cxt.settings,worker_id='worker-one')
+64 |     fails=[];mark=[];actual_fail=JobStore.fail;actual_cancel=JobStore.mark_cancelled
+   |                                               ^ E702
+65 |     def fail(store,*args,**kwargs):
+66 |         fails.append({'args':args,'kwargs':kwargs})
+   |
+
+tests/test_worker_checkpoint_busy.py:71:46: E702 Multiple statements on one line (semicolon)
+   |
+69 |         mark.append({'args':args,'kwargs':kwargs})
+70 |         return actual_cancel(store,*args,**kwargs)
+71 |     monkeypatch.setattr(JobStore,'fail',fail);monkeypatch.setattr(JobStore,'mark_cancelled',cancel)
+   |                                              ^ E702
+72 |     return w,fails,mark
+   |
+
+tests/test_worker_checkpoint_busy.py:77:36: E702 Multiple statements on one line (semicolon)
+   |
+75 | async def execute_and_cleanup(w,job_id):
+76 |     tasks=[]
+77 |     loop=asyncio.get_running_loop();real=loop.create_task
+   |                                    ^ E702
+78 |     def create(coro,*args,**kwargs):
+79 |         task=real(coro,*args,**kwargs);tasks.append(task);return task
+   |
+
+tests/test_worker_checkpoint_busy.py:79:39: E702 Multiple statements on one line (semicolon)
+   |
+77 |     loop=asyncio.get_running_loop();real=loop.create_task
+78 |     def create(coro,*args,**kwargs):
+79 |         task=real(coro,*args,**kwargs);tasks.append(task);return task
+   |                                       ^ E702
+80 |     # Only this running loop is instrumented; heartbeat itself is the real Worker._beat.
+81 |     loop.create_task=create
+   |
+
+tests/test_worker_checkpoint_busy.py:79:58: E702 Multiple statements on one line (semicolon)
+   |
+77 |     loop=asyncio.get_running_loop();real=loop.create_task
+78 |     def create(coro,*args,**kwargs):
+79 |         task=real(coro,*args,**kwargs);tasks.append(task);return task
+   |                                                          ^ E702
+80 |     # Only this running loop is instrumented; heartbeat itself is the real Worker._beat.
+81 |     loop.create_task=create
+   |
+
+tests/test_worker_checkpoint_busy.py:83:17: E702 Multiple statements on one line (semicolon)
+   |
+81 |     loop.create_task=create
+82 |     sem=asyncio.Semaphore(0)
+83 |     escaped=None;started=time.monotonic_ns()
+   |                 ^ E702
+84 |     try:
+85 |         try:await w._run_and_release(job_id,sem)
+   |
+
+tests/test_worker_checkpoint_busy.py:85:12: E701 Multiple statements on one line (colon)
+   |
+83 |     escaped=None;started=time.monotonic_ns()
+84 |     try:
+85 |         try:await w._run_and_release(job_id,sem)
+   |            ^ E701
+86 |         except BaseException as exc:escaped=exc
+87 |         await asyncio.sleep(0)
+   |
+
+tests/test_worker_checkpoint_busy.py:86:36: E701 Multiple statements on one line (colon)
+   |
+84 |     try:
+85 |         try:await w._run_and_release(job_id,sem)
+86 |         except BaseException as exc:escaped=exc
+   |                                    ^ E701
+87 |         await asyncio.sleep(0)
+88 |         await asyncio.gather(*tasks,return_exceptions=True)
+   |
+
+tests/test_worker_checkpoint_busy.py:91:12: E701 Multiple statements on one line (colon)
+   |
+89 |         elapsed=time.monotonic_ns()-started
+90 |         return {'escaped':escaped,'elapsed_ns':elapsed,'semaphore_released':sem._value==1,'heartbeat_tasks':len(tasks),'heartbeat_canc…
+91 |     finally:loop.create_task=real
+   |            ^ E701
+   |
+
+tests/test_worker_checkpoint_busy.py:100:55: E702 Multiple statements on one line (semicolon)
+    |
+ 98 | def stage_dispatch(cxt):
+ 99 |     async def dispatch(s,store,job,*,lease_token):
+100 |         r=c.new_runner(cxt,s,'worker-one',lease_token);r._candidates=[c.candidate()]
+    |                                                       ^ E702
+101 |         await r._stage_verify(r._make_fetcher())
+102 |     return dispatch
+    |
+
+tests/test_worker_checkpoint_busy.py:110:35: E702 Multiple statements on one line (semicolon)
+    |
+108 |     w,fails,marks=worker(ctx,monkeypatch)
+109 |     monkeypatch.setattr(w,'_dispatch',stage_dispatch(ctx))
+110 |     real=rm.WebRequirementsAdapter;at_lock=[]
+    |                                   ^ E702
+111 |     with ctx.factory() as blocker:
+112 |         def requirements(*args,**kwargs):
+    |
+
+tests/test_worker_checkpoint_busy.py:135:114: E702 Multiple statements on one line (semicolon)
+    |
+133 |     now=datetime.now(UTC)
+134 |     with ctx.factory() as recovery:
+135 |         recovery.execute(update(Job).where(Job.id==ctx.job_id).values(lease_expires_at=now-timedelta(seconds=1)));recovery.commit()
+    |                                                                                                                  ^ E702
+136 |         store=JobStore(recovery,worker_id='worker-one')
+137 |         reaped=store.reap_expired(now=now);assert reaped==[ctx.job_id];recovery.commit()
+    |
+
+tests/test_worker_checkpoint_busy.py:137:43: E702 Multiple statements on one line (semicolon)
+    |
+135 |         recovery.execute(update(Job).where(Job.id==ctx.job_id).values(lease_expires_at=now-timedelta(seconds=1)));recovery.commit()
+136 |         store=JobStore(recovery,worker_id='worker-one')
+137 |         reaped=store.reap_expired(now=now);assert reaped==[ctx.job_id];recovery.commit()
+    |                                           ^ E702
+138 |         recovery.execute(update(Job).where(Job.id==ctx.job_id).values(available_at=now-timedelta(seconds=1)));recovery.commit()
+139 |         claimed=store.claim(worker_id='worker-one');assert claimed.id==ctx.job_id and claimed.attempts==2;recovery.commit()
+    |
+
+tests/test_worker_checkpoint_busy.py:137:71: E702 Multiple statements on one line (semicolon)
+    |
+135 |         recovery.execute(update(Job).where(Job.id==ctx.job_id).values(lease_expires_at=now-timedelta(seconds=1)));recovery.commit()
+136 |         store=JobStore(recovery,worker_id='worker-one')
+137 |         reaped=store.reap_expired(now=now);assert reaped==[ctx.job_id];recovery.commit()
+    |                                                                       ^ E702
+138 |         recovery.execute(update(Job).where(Job.id==ctx.job_id).values(available_at=now-timedelta(seconds=1)));recovery.commit()
+139 |         claimed=store.claim(worker_id='worker-one');assert claimed.id==ctx.job_id and claimed.attempts==2;recovery.commit()
+    |
+
+tests/test_worker_checkpoint_busy.py:138:110: E702 Multiple statements on one line (semicolon)
+    |
+136 |         store=JobStore(recovery,worker_id='worker-one')
+137 |         reaped=store.reap_expired(now=now);assert reaped==[ctx.job_id];recovery.commit()
+138 |         recovery.execute(update(Job).where(Job.id==ctx.job_id).values(available_at=now-timedelta(seconds=1)));recovery.commit()
+    |                                                                                                              ^ E702
+139 |         claimed=store.claim(worker_id='worker-one');assert claimed.id==ctx.job_id and claimed.attempts==2;recovery.commit()
+140 |     with pytest.raises(LeaseLost):
+    |
+
+tests/test_worker_checkpoint_busy.py:139:52: E702 Multiple statements on one line (semicolon)
+    |
+137 |         reaped=store.reap_expired(now=now);assert reaped==[ctx.job_id];recovery.commit()
+138 |         recovery.execute(update(Job).where(Job.id==ctx.job_id).values(available_at=now-timedelta(seconds=1)));recovery.commit()
+139 |         claimed=store.claim(worker_id='worker-one');assert claimed.id==ctx.job_id and claimed.attempts==2;recovery.commit()
+    |                                                    ^ E702
+140 |     with pytest.raises(LeaseLost):
+141 |         with ctx.runner._university_read_scope(c.candidate()):asyncio.run(ctx.runner._make_fetcher().get('https://example.edu/old-tok…
+    |
+
+tests/test_worker_checkpoint_busy.py:139:106: E702 Multiple statements on one line (semicolon)
+    |
+137 |         reaped=store.reap_expired(now=now);assert reaped==[ctx.job_id];recovery.commit()
+138 |         recovery.execute(update(Job).where(Job.id==ctx.job_id).values(available_at=now-timedelta(seconds=1)));recovery.commit()
+139 |         claimed=store.claim(worker_id='worker-one');assert claimed.id==ctx.job_id and claimed.attempts==2;recovery.commit()
+    |                                                                                                          ^ E702
+140 |     with pytest.raises(LeaseLost):
+141 |         with ctx.runner._university_read_scope(c.candidate()):asyncio.run(ctx.runner._make_fetcher().get('https://example.edu/old-tok…
+    |
+
+tests/test_worker_checkpoint_busy.py:140:5: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+138 |           recovery.execute(update(Job).where(Job.id==ctx.job_id).values(available_at=now-timedelta(seconds=1)));recovery.commit()
+139 |           claimed=store.claim(worker_id='worker-one');assert claimed.id==ctx.job_id and claimed.attempts==2;recovery.commit()
+140 | /     with pytest.raises(LeaseLost):
+141 | |         with ctx.runner._university_read_scope(c.candidate()):asyncio.run(ctx.runner._make_fetcher().get('https://example.edu/old-tok…
+    | |______________________________________________________________^ SIM117
+142 |       assert seen==[] and c.counts(ctx)=={'catalogue:u-one':59}
+143 |       monkeypatch.setattr(read_budget,'UNIVERSITY_READ_BUDGET',False)
+    |
+    = help: Combine `with` statements
+
+tests/test_worker_checkpoint_busy.py:141:62: E701 Multiple statements on one line (colon)
+    |
+139 |         claimed=store.claim(worker_id='worker-one');assert claimed.id==ctx.job_id and claimed.attempts==2;recovery.commit()
+140 |     with pytest.raises(LeaseLost):
+141 |         with ctx.runner._university_read_scope(c.candidate()):asyncio.run(ctx.runner._make_fetcher().get('https://example.edu/old-tok…
+    |                                                              ^ E701
+142 |     assert seen==[] and c.counts(ctx)=={'catalogue:u-one':59}
+143 |     monkeypatch.setattr(read_budget,'UNIVERSITY_READ_BUDGET',False)
+    |
+
+tests/test_worker_checkpoint_busy.py:150:71: E701 Multiple statements on one line (colon)
+    |
+148 |         with r._university_read_scope(c.candidate()):
+149 |             asyncio.run(f.get('https://example.edu/resume/60'))
+150 |             with pytest.raises(UniversityReadStopped,match='read_cap'):asyncio.run(f.get('https://example.edu/resume/61'))
+    |                                                                       ^ E701
+151 |     ctx.record('recovery-'+ctx.backend+'-'+lock_kind,{'same_job_id':ctx.job_id,'actual_reap':reaped,'actual_claim_token':2,'same_work…
+152 |     assert len(seen)==1 and seen[0]['durable']=={'catalogue:u-one':60} and c.counts(ctx)=={'catalogue:u-one':60}
+    |
+
+tests/test_worker_checkpoint_busy.py:159:38: E702 Multiple statements on one line (semicolon)
+    |
+157 | @pytest.mark.parametrize('kind',['message_only','typed_other_reason'])
+158 | def test_other_errors_still_real_ordinary_fenced_backoff(ctx,monkeypatch,kind):
+159 |     seen,old=prepare(ctx,monkeypatch);w,fails,marks=worker(ctx,monkeypatch);before=state(ctx)
+    |                                      ^ E702
+160 |     async def dispatch(*args,**kwargs):
+161 |         if kind=='message_only':raise RuntimeError('checkpoint_busy is only text, not typed control')
+    |
+
+tests/test_worker_checkpoint_busy.py:159:76: E702 Multiple statements on one line (semicolon)
+    |
+157 | @pytest.mark.parametrize('kind',['message_only','typed_other_reason'])
+158 | def test_other_errors_still_real_ordinary_fenced_backoff(ctx,monkeypatch,kind):
+159 |     seen,old=prepare(ctx,monkeypatch);w,fails,marks=worker(ctx,monkeypatch);before=state(ctx)
+    |                                                                            ^ E702
+160 |     async def dispatch(*args,**kwargs):
+161 |         if kind=='message_only':raise RuntimeError('checkpoint_busy is only text, not typed control')
+    |
+
+tests/test_worker_checkpoint_busy.py:161:32: E701 Multiple statements on one line (colon)
+    |
+159 |     seen,old=prepare(ctx,monkeypatch);w,fails,marks=worker(ctx,monkeypatch);before=state(ctx)
+160 |     async def dispatch(*args,**kwargs):
+161 |         if kind=='message_only':raise RuntimeError('checkpoint_busy is only text, not typed control')
+    |                                ^ E701
+162 |         raise UniversityReadStopped('read_cap')
+163 |     monkeypatch.setattr(w,'_dispatch',dispatch)
+    |
+
+tests/test_worker_checkpoint_busy.py:164:58: E702 Multiple statements on one line (semicolon)
+    |
+162 |         raise UniversityReadStopped('read_cap')
+163 |     monkeypatch.setattr(w,'_dispatch',dispatch)
+164 |     result=asyncio.run(execute_and_cleanup(w,ctx.job_id));after=state(ctx)
+    |                                                          ^ E702
+165 |     ctx.record('ordinary-'+ctx.backend+'-'+kind,{'execution':serialized_execution(result),'failure_writer_calls':fails,'before':befor…
+166 |     assert result['escaped'] is None and result['semaphore_released'] and all(result['heartbeat_cancelled'])
+    |
+
+tests/test_worker_checkpoint_busy.py:174:38: E702 Multiple statements on one line (semicolon)
+    |
+173 | def test_real_user_cancel_keeps_cancelled_path(ctx,monkeypatch):
+174 |     seen,old=prepare(ctx,monkeypatch);w,fails,marks=worker(ctx,monkeypatch);before=state(ctx)
+    |                                      ^ E702
+175 |     with ctx.factory() as other:assert JobStore(other).cancel(ctx.job_id);other.commit()
+176 |     monkeypatch.setattr(w,'_dispatch',stage_dispatch(ctx))
+    |
+
+tests/test_worker_checkpoint_busy.py:174:76: E702 Multiple statements on one line (semicolon)
+    |
+173 | def test_real_user_cancel_keeps_cancelled_path(ctx,monkeypatch):
+174 |     seen,old=prepare(ctx,monkeypatch);w,fails,marks=worker(ctx,monkeypatch);before=state(ctx)
+    |                                                                            ^ E702
+175 |     with ctx.factory() as other:assert JobStore(other).cancel(ctx.job_id);other.commit()
+176 |     monkeypatch.setattr(w,'_dispatch',stage_dispatch(ctx))
+    |
+
+tests/test_worker_checkpoint_busy.py:175:32: E701 Multiple statements on one line (colon)
+    |
+173 | def test_real_user_cancel_keeps_cancelled_path(ctx,monkeypatch):
+174 |     seen,old=prepare(ctx,monkeypatch);w,fails,marks=worker(ctx,monkeypatch);before=state(ctx)
+175 |     with ctx.factory() as other:assert JobStore(other).cancel(ctx.job_id);other.commit()
+    |                                ^ E701
+176 |     monkeypatch.setattr(w,'_dispatch',stage_dispatch(ctx))
+177 |     result=asyncio.run(execute_and_cleanup(w,ctx.job_id));after=state(ctx)
+    |
+
+tests/test_worker_checkpoint_busy.py:175:74: E702 Multiple statements on one line (semicolon)
+    |
+173 | def test_real_user_cancel_keeps_cancelled_path(ctx,monkeypatch):
+174 |     seen,old=prepare(ctx,monkeypatch);w,fails,marks=worker(ctx,monkeypatch);before=state(ctx)
+175 |     with ctx.factory() as other:assert JobStore(other).cancel(ctx.job_id);other.commit()
+    |                                                                          ^ E702
+176 |     monkeypatch.setattr(w,'_dispatch',stage_dispatch(ctx))
+177 |     result=asyncio.run(execute_and_cleanup(w,ctx.job_id));after=state(ctx)
+    |
+
+tests/test_worker_checkpoint_busy.py:177:58: E702 Multiple statements on one line (semicolon)
+    |
+175 |     with ctx.factory() as other:assert JobStore(other).cancel(ctx.job_id);other.commit()
+176 |     monkeypatch.setattr(w,'_dispatch',stage_dispatch(ctx))
+177 |     result=asyncio.run(execute_and_cleanup(w,ctx.job_id));after=state(ctx)
+    |                                                          ^ E702
+178 |     ctx.record('cancel-'+ctx.backend,{'execution':serialized_execution(result),'failure_writer_calls':fails,'cancel_writer_calls':mar…
+179 |     assert result['escaped'] is None and result['semaphore_released'] and all(result['heartbeat_cancelled'])
+    |
+
+tests/test_worker_checkpoint_busy.py:186:38: E702 Multiple statements on one line (semicolon)
+    |
+185 | def test_real_attempt_takeover_preserves_worker_lease_lost_path(ctx,monkeypatch):
+186 |     seen,old=prepare(ctx,monkeypatch);w,fails,marks=worker(ctx,monkeypatch);before=state(ctx)
+    |                                      ^ E702
+187 |     async def dispatch(s,store,job,*,lease_token):
+188 |         assert lease_token==1
+    |
+
+tests/test_worker_checkpoint_busy.py:186:76: E702 Multiple statements on one line (semicolon)
+    |
+185 | def test_real_attempt_takeover_preserves_worker_lease_lost_path(ctx,monkeypatch):
+186 |     seen,old=prepare(ctx,monkeypatch);w,fails,marks=worker(ctx,monkeypatch);before=state(ctx)
+    |                                                                            ^ E702
+187 |     async def dispatch(s,store,job,*,lease_token):
+188 |         assert lease_token==1
+    |
+
+tests/test_worker_checkpoint_busy.py:191:113: E702 Multiple statements on one line (semicolon)
+    |
+189 |         with ctx.factory() as new:
+190 |             now=datetime.now(UTC)
+191 |             new.execute(update(Job).where(Job.id==ctx.job_id).values(lease_expires_at=now-timedelta(seconds=1)));new.commit()
+    |                                                                                                                 ^ E702
+192 |             store=JobStore(new,worker_id="worker-one")
+193 |             assert store.reap_expired(now=now)==[ctx.job_id]
+    |
+
+tests/test_worker_checkpoint_busy.py:194:109: E702 Multiple statements on one line (semicolon)
+    |
+192 |             store=JobStore(new,worker_id="worker-one")
+193 |             assert store.reap_expired(now=now)==[ctx.job_id]
+194 |             new.execute(update(Job).where(Job.id==ctx.job_id).values(available_at=now-timedelta(seconds=1)));new.commit()
+    |                                                                                                             ^ E702
+195 |             reclaimed=store.claim(worker_id="worker-one")
+196 |             assert reclaimed.id==ctx.job_id and reclaimed.attempts==2
+    |
+
+tests/test_worker_checkpoint_busy.py:198:55: E702 Multiple statements on one line (semicolon)
+    |
+196 |             assert reclaimed.id==ctx.job_id and reclaimed.attempts==2
+197 |             new.commit()
+198 |         r=c.new_runner(ctx,s,'worker-one',lease_token);r._candidates=[c.candidate()]
+    |                                                       ^ E702
+199 |         await r._stage_verify(r._make_fetcher())
+200 |     monkeypatch.setattr(w,'_dispatch',dispatch)
+    |
+
+tests/test_worker_checkpoint_busy.py:201:58: E702 Multiple statements on one line (semicolon)
+    |
+199 |         await r._stage_verify(r._make_fetcher())
+200 |     monkeypatch.setattr(w,'_dispatch',dispatch)
+201 |     result=asyncio.run(execute_and_cleanup(w,ctx.job_id));after=state(ctx)
+    |                                                          ^ E702
+202 |     ctx.record('lease-'+ctx.backend,{'execution':serialized_execution(result),'failure_writer_calls':fails,'cancel_writer_calls':mark…
+203 |     assert result['escaped'] is None and result['semaphore_released'] and all(result['heartbeat_cancelled'])
+    |
+
+Found 273 errors (38 fixed, 235 remaining).
+No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).

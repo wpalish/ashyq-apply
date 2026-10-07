@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import re
+from contextlib import nullcontext
 from urllib.parse import urlsplit
 
 from bs4 import BeautifulSoup
@@ -20,6 +21,7 @@ from app.catalogue.retrieval import retrieve
 from app.domain.dedupe import normalize
 from app.domain.site_identity import registrable_domain
 from app.models import University, UniversityObservation
+from app.pipeline.control import UniversityReadStopped
 from app.schemas.profile import ApplicantProfileIn
 
 # SI-1: additional first-party homepage branding. Off until measured and approved.
@@ -98,6 +100,7 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
             trace = DiscoveryTrace(institution=uni.name, domain=uni.domain or "")
             candidate = Candidate(
                 name=uni.name,
+                catalogue_id=uni.id,
                 country=uni.country,
                 city=uni.city,
                 discovery_source=f"local-catalogue:{uni.id}",
@@ -105,8 +108,15 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
             )
             if index < self.live_limit:
                 try:
-                    candidate, trace = await asyncio.wait_for(
-                        self._enrich(uni, profile, candidate, trace), timeout=300
+                    with self.research_scope(candidate) if self.research_scope else nullcontext():
+                        candidate, trace = await asyncio.wait_for(
+                            self._enrich(uni, profile, candidate, trace), timeout=300
+                        )
+                except UniversityReadStopped as stopped:
+                    if stopped.reason == "checkpoint_busy":
+                        raise
+                    trace.search_limitations.append(
+                        f"Remaining research remains unknown: university read allowance unavailable ({stopped.reason})."
                     )
                 except TimeoutError:
                     trace.errors.append(
@@ -141,6 +151,7 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
         )
         discovered.search_failures[:0] = trace.search_failures
         discovered.search_limitations[:0] = trace.search_limitations
+        enriched.catalogue_id = uni.id
         enriched.discovery_source = f"local-catalogue:{uni.id}; {enriched.discovery_source}"
         return enriched, discovered
 

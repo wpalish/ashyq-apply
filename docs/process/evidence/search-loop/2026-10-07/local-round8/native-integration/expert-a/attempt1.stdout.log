@@ -1,0 +1,145 @@
+........................................................................ [ 53%]
+.........F....................................................           [100%]
+=================================== FAILURES ===================================
+_ test_previous_episode_cannot_prove_untracked_current_job_intent_or_fake_zero[False] _
+
+context = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-a...? AND jobs.status ='}], sql_errors=[], backend='sqlite', record=<function make_context.<locals>.record at 0x1109736a0>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b558440>
+explicit_enable = False
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("explicit_enable", [False, True])
+    async def test_previous_episode_cannot_prove_untracked_current_job_intent_or_fake_zero(
+        context, monkeypatch, explicit_enable
+    ):
+        from app.pipeline import runner as runner_module
+    
+        old_episode = previous_episode(context)
+        monkeypatch.setattr(read_budget, "UNIVERSITY_READ_BUDGET", explicit_enable)
+        seen = []
+    
+        async def original(fetcher, url, **kwargs):
+            from app.adapters.fetching import FetchResult
+            from app.domain.enums import FetchOutcome
+    
+            seen.append(url)
+            return FetchResult(url=url, outcome=FetchOutcome.OK)
+    
+        monkeypatch.setattr(Fetcher, "_get", original)
+        uni = SimpleNamespace(
+            id="u-one",
+            name="Test University",
+            country="Example",
+            city="City",
+            domain="example.edu",
+            registry_entry={
+                "name": "Test University",
+                "country": "Example",
+                "city": "City",
+                "homepage": "https://example.edu/",
+            },
+        )
+        monkeypatch.setattr(controls.catalogue, "retrieve", lambda *args, **kwargs: [uni])
+    
+        async def discovered(adapter, entry, profile, **kwargs):
+            for i in range(61):
+                await adapter.fetcher.get("https://example.edu/legacy/" + str(i))
+            return controls.candidate(), controls.DiscoveryTrace("Test University", "example.edu")
+    
+        async def requirements(*args, **kwargs):
+            return AdapterResult()
+    
+        async def cost(*args, **kwargs):
+            return CostBreakdown(), AdapterResult()
+    
+        async def government(*args, **kwargs):
+            return AdapterResult()
+    
+        async def funding(*args, **kwargs):
+            return [], AdapterResult()
+    
+        monkeypatch.setattr(controls.catalogue.CatalogueDiscoveryAdapter, "_discover_one", discovered)
+        monkeypatch.setattr(runner_module.WebRequirementsAdapter, "verify", requirements)
+        monkeypatch.setattr(runner_module.WebCostAdapter, "fetch", cost)
+        monkeypatch.setattr(runner_module.WebGovernmentAdapter, "post_study_work", government)
+        monkeypatch.setattr(runner_module.WebScholarshipAdapter, "find", funding)
+        if explicit_enable:
+            with pytest.raises(UniversityReadStopped, match="legacy_episode_untracked"):
+                await context.runner.run_to_decision()
+            assert seen == []
+        else:
+>           await context.runner.run_to_decision()
+
+tests/test_readguard_revision_controls.py:466: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+app/pipeline/runner.py:440: in run_to_decision
+    await self._stage_discover(fetcher)
+app/pipeline/runner.py:750: in _stage_discover
+    self._candidates = await adapter.discover(self.profile, self.candidate_limit)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/catalogue/discovery.py:112: in discover
+    candidate, trace = await asyncio.wait_for(
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/tasks.py:520: in wait_for
+    return await fut
+           ^^^^^^^^^
+app/catalogue/discovery.py:149: in _enrich
+    enriched, discovered = await self._discover_one(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+adapter = <app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x11089e0f0>
+entry = {'name': 'Test University', 'country': 'Example', 'city': 'City', 'homepage': 'https://example.edu/'}
+profile = ApplicantProfileIn(display_name='Applicant', context=ApplicationContext(level=<DegreeLevel.BACHELOR: 'bachelor'>, inte...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+kwargs = {'search_queries_used': 0}
+
+    async def discovered(adapter, entry, profile, **kwargs):
+        for i in range(61):
+            await adapter.fetcher.get("https://example.edu/legacy/" + str(i))
+>       return controls.candidate(), controls.DiscoveryTrace("Test University", "example.edu")
+                                     ^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tests.readguard_support' has no attribute 'DiscoveryTrace'
+
+tests/test_readguard_revision_controls.py:442: AttributeError
+----------------------------- Captured stderr call -----------------------------
+2026-10-08 04:11:19,467 ERROR   [-] unimatch.pipeline: run 125ab03967ba44a4a2c503ed25ed47f7 failed
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py", line 440, in run_to_decision
+    await self._stage_discover(fetcher)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py", line 750, in _stage_discover
+    self._candidates = await adapter.discover(self.profile, self.candidate_limit)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/catalogue/discovery.py", line 112, in discover
+    candidate, trace = await asyncio.wait_for(
+                       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/catalogue/discovery.py", line 149, in _enrich
+    enriched, discovered = await self._discover_one(
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_readguard_revision_controls.py", line 442, in discovered
+    return controls.candidate(), controls.DiscoveryTrace("Test University", "example.edu")
+                                 ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'tests.readguard_support' has no attribute 'DiscoveryTrace'
+------------------------------ Captured log call -------------------------------
+ERROR    unimatch.pipeline:runner.py:472 run 125ab03967ba44a4a2c503ed25ed47f7 failed
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py", line 440, in run_to_decision
+    await self._stage_discover(fetcher)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py", line 750, in _stage_discover
+    self._candidates = await adapter.discover(self.profile, self.candidate_limit)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/catalogue/discovery.py", line 112, in discover
+    candidate, trace = await asyncio.wait_for(
+                       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/catalogue/discovery.py", line 149, in _enrich
+    enriched, discovered = await self._discover_one(
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_readguard_revision_controls.py", line 442, in discovered
+    return controls.candidate(), controls.DiscoveryTrace("Test University", "example.edu")
+                                 ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'tests.readguard_support' has no attribute 'DiscoveryTrace'
+=========================== short test summary info ============================
+FAILED tests/test_readguard_revision_controls.py::test_previous_episode_cannot_prove_untracked_current_job_intent_or_fake_zero[False]

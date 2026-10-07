@@ -1,0 +1,755 @@
+{
+  "queries": [
+    {
+      "at_ns": 810593789049375,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.id = ?",
+      "params": "('2026-10-07 23:12:17.284834', '25b59b6a005144a2bd358cfc69875e22')"
+    },
+    {
+      "elapsed_ns": 87166,
+      "sql_prefix": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.i"
+    },
+    {
+      "at_ns": 810593789241166,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 8209,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593789368958,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 6583,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593789602583,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage=?, stage_state=?, settings_snapshot=?, started_at=?, worker_id=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('profile_validation', '{\"queued\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"profile_validation\": {\"status\": \"running\", \"started_at\": \"2026-10-07T23:12:17.284529+00:00\", \"finished_at\": null, \"error\": \"\", \"detail\": \"Checking the profile for gaps that would weaken the result\", \"items_done\": 0, \"items_total\": 0}, \"candidate_discovery\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"program_verification\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"funding_discovery\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"assessment\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"awaiting_user_decision\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"document_collection\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"completed\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}}', '{\"demo_mode\": false, \"candidate_limit\": 2, \"verify_limit\": 2, \"candidate_l"
+    },
+    {
+      "elapsed_ns": 30917,
+      "sql_prefix": "UPDATE research_runs SET stage=?, stage_state=?, settings_snapshot=?, started_at=?, worker_id=?, hea"
+    },
+    {
+      "at_ns": 810593790000000,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.id = ?",
+      "params": "('2026-10-07 23:12:17.285788', '25b59b6a005144a2bd358cfc69875e22')"
+    },
+    {
+      "elapsed_ns": 85333,
+      "sql_prefix": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.i"
+    },
+    {
+      "at_ns": 810593790126875,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 3833,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593790192125,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2916,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593790450458,
+      "thread": 8419598720,
+      "sql": "INSERT INTO audit_events (organization_id, actor, action, entity_type, entity_id, detail, id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "params": "('07861ed95f3b47e5af2fc420d06af600', 'system', 'profile_validated', 'run', '25b59b6a005144a2bd358cfc69875e22', '{\"gaps\": 7}', '2e2e8aacbf0c40ccb5edcf2e4cfbdc29', '2026-10-07 23:12:17.286228', '2026-10-07 23:12:17.286229')"
+    },
+    {
+      "elapsed_ns": 47000,
+      "sql_prefix": "INSERT INTO audit_events (organization_id, actor, action, entity_type, entity_id, detail, id, create"
+    },
+    {
+      "at_ns": 810593790618541,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('{\"queued\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"profile_validation\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.284529+00:00\", \"finished_at\": \"2026-10-07T23:12:17.285661+00:00\", \"error\": \"\", \"detail\": \"7 gaps found: 0 blocking, 2 high-impact. Research can run; results affected by the gaps above will be marked.\", \"items_done\": 0, \"items_total\": 0}, \"candidate_discovery\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"program_verification\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"funding_discovery\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"assessment\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"awaiting_user_decision\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"document_collection\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"completed\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}}', '2026-10-07 23:12:1"
+    },
+    {
+      "elapsed_ns": 12625,
+      "sql_prefix": "UPDATE research_runs SET stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593790968916,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 19125,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593791104583,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.id = ?",
+      "params": "('2026-10-07 23:12:17.286894', '25b59b6a005144a2bd358cfc69875e22')"
+    },
+    {
+      "elapsed_ns": 63333,
+      "sql_prefix": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.i"
+    },
+    {
+      "at_ns": 810593791198916,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2667,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593791315125,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 3000,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593791523208,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage=?, stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('candidate_discovery', '{\"queued\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"profile_validation\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.284529+00:00\", \"finished_at\": \"2026-10-07T23:12:17.285661+00:00\", \"error\": \"\", \"detail\": \"7 gaps found: 0 blocking, 2 high-impact. Research can run; results affected by the gaps above will be marked.\", \"items_done\": 0, \"items_total\": 0}, \"candidate_discovery\": {\"status\": \"running\", \"started_at\": \"2026-10-07T23:12:17.286808+00:00\", \"finished_at\": null, \"error\": \"\", \"detail\": \"Searching catalogues and rankings for candidate universities\", \"items_done\": 0, \"items_total\": 0}, \"program_verification\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"funding_discovery\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"assessment\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"awaiting_user_decision\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"document_collection\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"completed\": {\"status\": \"pending\", \"started_at\""
+    },
+    {
+      "elapsed_ns": 22250,
+      "sql_prefix": "UPDATE research_runs SET stage=?, stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id"
+    },
+    {
+      "at_ns": 810593791865458,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 14083,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593792036250,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.id = ?",
+      "params": "('2026-10-07 23:12:17.287825', '25b59b6a005144a2bd358cfc69875e22')"
+    },
+    {
+      "elapsed_ns": 66500,
+      "sql_prefix": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.i"
+    },
+    {
+      "at_ns": 810593792132583,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2667,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593792184083,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2583,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593792328750,
+      "thread": 8419598720,
+      "sql": "INSERT INTO audit_events (organization_id, actor, action, entity_type, entity_id, detail, id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "params": "('07861ed95f3b47e5af2fc420d06af600', 'system', 'candidates_discovered', 'run', '25b59b6a005144a2bd358cfc69875e22', '{\"count\": 1, \"adapter\": \"local-catalogue-with-live-enrichment\"}', '2b2fa2296edd4c7d92ae90ac82ad56e1', '2026-10-07 23:12:17.288114', '2026-10-07 23:12:17.288114')"
+    },
+    {
+      "elapsed_ns": 42375,
+      "sql_prefix": "INSERT INTO audit_events (organization_id, actor, action, entity_type, entity_id, detail, id, create"
+    },
+    {
+      "at_ns": 810593792494000,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET candidates_found=?, stage_state=?, unknowns=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "(1, '{\"queued\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"profile_validation\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.284529+00:00\", \"finished_at\": \"2026-10-07T23:12:17.285661+00:00\", \"error\": \"\", \"detail\": \"7 gaps found: 0 blocking, 2 high-impact. Research can run; results affected by the gaps above will be marked.\", \"items_done\": 0, \"items_total\": 0}, \"candidate_discovery\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.286808+00:00\", \"finished_at\": \"2026-10-07T23:12:17.287742+00:00\", \"error\": \"\", \"detail\": \"1 candidates from local-catalogue-with-live-enrichment; 0 have an official page to verify.\", \"items_done\": 1, \"items_total\": 1}, \"program_verification\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"funding_discovery\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"assessment\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"awaiting_user_decision\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"document_collection\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"completed"
+    },
+    {
+      "elapsed_ns": 14583,
+      "sql_prefix": "UPDATE research_runs SET candidates_found=?, stage_state=?, unknowns=?, heartbeat_at=?, updated_at=?"
+    },
+    {
+      "at_ns": 810593792821000,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 14041,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593792961875,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.id = ?",
+      "params": "('2026-10-07 23:12:17.288750', '25b59b6a005144a2bd358cfc69875e22')"
+    },
+    {
+      "elapsed_ns": 66708,
+      "sql_prefix": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.i"
+    },
+    {
+      "at_ns": 810593793064208,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2917,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593793121708,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2583,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593793272666,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage=?, stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('program_verification', '{\"queued\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"profile_validation\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.284529+00:00\", \"finished_at\": \"2026-10-07T23:12:17.285661+00:00\", \"error\": \"\", \"detail\": \"7 gaps found: 0 blocking, 2 high-impact. Research can run; results affected by the gaps above will be marked.\", \"items_done\": 0, \"items_total\": 0}, \"candidate_discovery\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.286808+00:00\", \"finished_at\": \"2026-10-07T23:12:17.287742+00:00\", \"error\": \"\", \"detail\": \"1 candidates from local-catalogue-with-live-enrichment; 0 have an official page to verify.\", \"items_done\": 1, \"items_total\": 1}, \"program_verification\": {\"status\": \"running\", \"started_at\": \"2026-10-07T23:12:17.288655+00:00\", \"finished_at\": null, \"error\": \"\", \"detail\": \"Reading official programme pages\", \"items_done\": 0, \"items_total\": 1}, \"funding_discovery\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"assessment\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"awaiting_user_decision\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"document_collection\": {\"status\": \"pending\", \"started_at\": null, \"finished_a"
+    },
+    {
+      "elapsed_ns": 16584,
+      "sql_prefix": "UPDATE research_runs SET stage=?, stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id"
+    },
+    {
+      "at_ns": 810593793630708,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 21583,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593793761833,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 14375,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593793849291,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 9750,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593793917541,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 9875,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593794175125,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET unknowns=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('[\"Remaining research remains unknown: university read allowance unavailable (unfenced_episode).\", \"Remaining research for Test University is unknown: university read allowance refused (unfenced_episode).\"]', '2026-10-07 23:12:17.289957', '25b59b6a005144a2bd358cfc69875e22')"
+    },
+    {
+      "elapsed_ns": 105958,
+      "sql_prefix": "UPDATE research_runs SET unknowns=?, updated_at=? WHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593794646916,
+      "thread": 8419598720,
+      "sql": "SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_results_dedupe_key, program_results.university AS program_results_university, program_results.university_key AS program_results_university_key, program_results.country AS program_results_country, program_results.program AS program_results_program, program_results.eligibility AS program_results_eligibility, program_results.admissions_fit AS program_results_admissions_fit, program_results.funding_fit AS program_results_funding_fit, program_results.funding_classification AS program_results_funding_classification, program_results.score_total AS program_results_score_total, program_results.bucket AS program_results_bucket, program_results.user_decision AS program_results_user_decision, program_results.user_decision_reason AS program_results_user_decision_reason, program_results.user_notes AS program_results_user_notes, program_results.decided_at AS program_results_decided_at, program_results.payload AS program_results_payload, program_results.checklist AS program_results_checklist, program_results.id AS program_results_id, program_results.created_at AS program_results_created_at, program_results.updated_at AS program_results_updated_at \nFROM program_results \nWHERE program_results.run_id = ? AND program_results.dedupe_key = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22', 'example::test|computer-science-bachelor|bachelor|fall 2027')"
+    },
+    {
+      "elapsed_ns": 21750,
+      "sql_prefix": "SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_resul"
+    },
+    {
+      "at_ns": 810593794881916,
+      "thread": 8419598720,
+      "sql": "SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_results_dedupe_key, program_results.university AS program_results_university, program_results.university_key AS program_results_university_key, program_results.country AS program_results_country, program_results.program AS program_results_program, program_results.eligibility AS program_results_eligibility, program_results.admissions_fit AS program_results_admissions_fit, program_results.funding_fit AS program_results_funding_fit, program_results.funding_classification AS program_results_funding_classification, program_results.score_total AS program_results_score_total, program_results.bucket AS program_results_bucket, program_results.user_decision AS program_results_user_decision, program_results.user_decision_reason AS program_results_user_decision_reason, program_results.user_notes AS program_results_user_notes, program_results.decided_at AS program_results_decided_at, program_results.payload AS program_results_payload, program_results.checklist AS program_results_checklist, program_results.id AS program_results_id, program_results.created_at AS program_results_created_at, program_results.updated_at AS program_results_updated_at \nFROM program_results \nWHERE program_results.run_id = ? AND program_results.dedupe_key = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22', 'example::test|computer-science-bachelor|bachelor|fall 2027')"
+    },
+    {
+      "elapsed_ns": 4584,
+      "sql_prefix": "SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_resul"
+    },
+    {
+      "at_ns": 810593795160375,
+      "thread": 8419598720,
+      "sql": "INSERT INTO program_results (run_id, dedupe_key, university, university_key, country, program, eligibility, admissions_fit, funding_fit, funding_classification, score_total, bucket, user_decision, user_decision_reason, user_notes, decided_at, payload, id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "params": "('25b59b6a005144a2bd358cfc69875e22', 'example::test|computer-science-bachelor|bachelor|fall 2027', 'Test University', 'example::test', 'Example', 'computer science (bachelor)', 'NEEDS_OFFICIAL_CLARIFICATION', 'INSUFFICIENT_DATA', 'UNKNOWN', 'UNKNOWN', 0.0, '', 'undecided', '', '', None, '{\"id\": \"db229cf775e24851b81e99cbb31d3ed0\", \"run_id\": \"25b59b6a005144a2bd358cfc69875e22\", \"university\": \"Test University\", \"university_id\": \"example::test\", \"country\": \"Example\", \"city\": \"City\", \"program\": \"computer science (bachelor)\", \"program_url\": null, \"degree\": \"bachelor\", \"intake\": \"fall 2027\", \"rankings\": [], \"eligibility\": \"NEEDS_OFFICIAL_CLARIFICATION\", \"admissions_fit\": \"INSUFFICIENT_DATA\", \"funding_fit\": \"UNKNOWN\", \"best_funding_classification\": \"UNKNOWN\", \"requirement_checks\": [], \"missing_prerequisites\": [], \"hard_filter_failures\": [], \"scholarships\": [], \"costs\": {\"items\": {}, \"total\": null, \"academic_year\": null, \"source_urls\": [], \"is_range\": false}, \"funding_gap\": null, \"preference_score\": null, \"ranking\": null, \"catalog_attributes\": {}, \"catalog_attributes_source\": \"registry\", \"admission_deadline\": null, \"admission_deadline_timezone\": null, \"admission_deadline_raw\": null, \"deadline_passed\": false, \"previous_cycle_deadline\": null, \"climate_fit\": \"unknown\", \"city_fit\": \"unknown\", \"workload_fit\": \"unknown\", \"size_fit\": \"unknown\", \"campus_fit\": \"unknown\", \"career_notes\": \"\", \"post_study_work\": \"\", \"work_during_study\": \"\", \"conflicts\": [], \"unresolved\": [{\"topic\": \"research read "
+    },
+    {
+      "elapsed_ns": 138208,
+      "sql_prefix": "INSERT INTO program_results (run_id, dedupe_key, university, university_key, country, program, eligi"
+    },
+    {
+      "at_ns": 810593795429375,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.id = ?",
+      "params": "('2026-10-07 23:12:17.291218', '25b59b6a005144a2bd358cfc69875e22')"
+    },
+    {
+      "elapsed_ns": 6208,
+      "sql_prefix": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.i"
+    },
+    {
+      "at_ns": 810593795470125,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2750,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593795527916,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2500,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593795757250,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET programs_verified=?, stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "(1, '{\"queued\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"profile_validation\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.284529+00:00\", \"finished_at\": \"2026-10-07T23:12:17.285661+00:00\", \"error\": \"\", \"detail\": \"7 gaps found: 0 blocking, 2 high-impact. Research can run; results affected by the gaps above will be marked.\", \"items_done\": 0, \"items_total\": 0}, \"candidate_discovery\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.286808+00:00\", \"finished_at\": \"2026-10-07T23:12:17.287742+00:00\", \"error\": \"\", \"detail\": \"1 candidates from local-catalogue-with-live-enrichment; 0 have an official page to verify.\", \"items_done\": 1, \"items_total\": 1}, \"program_verification\": {\"status\": \"running\", \"started_at\": \"2026-10-07T23:12:17.288655+00:00\", \"finished_at\": null, \"error\": \"\", \"detail\": \"Reading official programme pages\", \"items_done\": 1, \"items_total\": 1}, \"funding_discovery\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"assessment\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"awaiting_user_decision\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"document_collection\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\""
+    },
+    {
+      "elapsed_ns": 15000,
+      "sql_prefix": "UPDATE research_runs SET programs_verified=?, stage_state=?, heartbeat_at=?, updated_at=? WHERE rese"
+    },
+    {
+      "at_ns": 810593796218250,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.id = ?",
+      "params": "('2026-10-07 23:12:17.292005', '25b59b6a005144a2bd358cfc69875e22')"
+    },
+    {
+      "elapsed_ns": 86458,
+      "sql_prefix": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.i"
+    },
+    {
+      "at_ns": 810593796343833,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 3500,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593796408458,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2708,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593796572833,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('{\"queued\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"profile_validation\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.284529+00:00\", \"finished_at\": \"2026-10-07T23:12:17.285661+00:00\", \"error\": \"\", \"detail\": \"7 gaps found: 0 blocking, 2 high-impact. Research can run; results affected by the gaps above will be marked.\", \"items_done\": 0, \"items_total\": 0}, \"candidate_discovery\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.286808+00:00\", \"finished_at\": \"2026-10-07T23:12:17.287742+00:00\", \"error\": \"\", \"detail\": \"1 candidates from local-catalogue-with-live-enrichment; 0 have an official page to verify.\", \"items_done\": 1, \"items_total\": 1}, \"program_verification\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.288655+00:00\", \"finished_at\": \"2026-10-07T23:12:17.291895+00:00\", \"error\": \"\", \"detail\": \"1 programmes checked across 0 pages (0 unreadable).\", \"items_done\": 1, \"items_total\": 1}, \"funding_discovery\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"assessment\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"awaiting_user_decision\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"document_collection\": {\"status\": \"pending\", \"started_"
+    },
+    {
+      "elapsed_ns": 9000,
+      "sql_prefix": "UPDATE research_runs SET stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593796858375,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 14666,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593797120541,
+      "thread": 8419598720,
+      "sql": "SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_results_dedupe_key, program_results.university AS program_results_university, program_results.university_key AS program_results_university_key, program_results.country AS program_results_country, program_results.program AS program_results_program, program_results.eligibility AS program_results_eligibility, program_results.admissions_fit AS program_results_admissions_fit, program_results.funding_fit AS program_results_funding_fit, program_results.funding_classification AS program_results_funding_classification, program_results.score_total AS program_results_score_total, program_results.bucket AS program_results_bucket, program_results.user_decision AS program_results_user_decision, program_results.user_decision_reason AS program_results_user_decision_reason, program_results.user_notes AS program_results_user_notes, program_results.decided_at AS program_results_decided_at, program_results.payload AS program_results_payload, program_results.checklist AS program_results_checklist, program_results.id AS program_results_id, program_results.created_at AS program_results_created_at, program_results.updated_at AS program_results_updated_at \nFROM program_results \nWHERE program_results.run_id = ? ORDER BY program_results.id",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 35792,
+      "sql_prefix": "SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_resul"
+    },
+    {
+      "at_ns": 810593797329500,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.id = ?",
+      "params": "('2026-10-07 23:12:17.293118', '25b59b6a005144a2bd358cfc69875e22')"
+    },
+    {
+      "elapsed_ns": 72416,
+      "sql_prefix": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.i"
+    },
+    {
+      "at_ns": 810593797435875,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2750,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593797489750,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2708,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593797639041,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage=?, stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('funding_discovery', '{\"queued\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"profile_validation\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.284529+00:00\", \"finished_at\": \"2026-10-07T23:12:17.285661+00:00\", \"error\": \"\", \"detail\": \"7 gaps found: 0 blocking, 2 high-impact. Research can run; results affected by the gaps above will be marked.\", \"items_done\": 0, \"items_total\": 0}, \"candidate_discovery\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.286808+00:00\", \"finished_at\": \"2026-10-07T23:12:17.287742+00:00\", \"error\": \"\", \"detail\": \"1 candidates from local-catalogue-with-live-enrichment; 0 have an official page to verify.\", \"items_done\": 1, \"items_total\": 1}, \"program_verification\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.288655+00:00\", \"finished_at\": \"2026-10-07T23:12:17.291895+00:00\", \"error\": \"\", \"detail\": \"1 programmes checked across 0 pages (0 unreadable).\", \"items_done\": 1, \"items_total\": 1}, \"funding_discovery\": {\"status\": \"running\", \"started_at\": \"2026-10-07T23:12:17.293024+00:00\", \"finished_at\": null, \"error\": \"\", \"detail\": \"Reading official scholarship pages\", \"items_done\": 0, \"items_total\": 1}, \"assessment\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"awaiting_user_decision\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"item"
+    },
+    {
+      "elapsed_ns": 17292,
+      "sql_prefix": "UPDATE research_runs SET stage=?, stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id"
+    },
+    {
+      "at_ns": 810593797956208,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 8958,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593798043375,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 12541,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593798183750,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.id = ?",
+      "params": "('2026-10-07 23:12:17.293973', '25b59b6a005144a2bd358cfc69875e22')"
+    },
+    {
+      "elapsed_ns": 60208,
+      "sql_prefix": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.i"
+    },
+    {
+      "at_ns": 810593798275083,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2542,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593798328583,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2500,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593798568916,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('{\"queued\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"profile_validation\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.284529+00:00\", \"finished_at\": \"2026-10-07T23:12:17.285661+00:00\", \"error\": \"\", \"detail\": \"7 gaps found: 0 blocking, 2 high-impact. Research can run; results affected by the gaps above will be marked.\", \"items_done\": 0, \"items_total\": 0}, \"candidate_discovery\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.286808+00:00\", \"finished_at\": \"2026-10-07T23:12:17.287742+00:00\", \"error\": \"\", \"detail\": \"1 candidates from local-catalogue-with-live-enrichment; 0 have an official page to verify.\", \"items_done\": 1, \"items_total\": 1}, \"program_verification\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.288655+00:00\", \"finished_at\": \"2026-10-07T23:12:17.291895+00:00\", \"error\": \"\", \"detail\": \"1 programmes checked across 0 pages (0 unreadable).\", \"items_done\": 1, \"items_total\": 1}, \"funding_discovery\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.293024+00:00\", \"finished_at\": \"2026-10-07T23:12:17.293902+00:00\", \"error\": \"\", \"detail\": \"Funding checked for 1 programmes.\", \"items_done\": 1, \"items_total\": 1}, \"assessment\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"awaiting_user_decision\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", "
+    },
+    {
+      "elapsed_ns": 8042,
+      "sql_prefix": "UPDATE research_runs SET stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593798880250,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 15000,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593798971708,
+      "thread": 8419598720,
+      "sql": "SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_results_dedupe_key, program_results.university AS program_results_university, program_results.university_key AS program_results_university_key, program_results.country AS program_results_country, program_results.program AS program_results_program, program_results.eligibility AS program_results_eligibility, program_results.admissions_fit AS program_results_admissions_fit, program_results.funding_fit AS program_results_funding_fit, program_results.funding_classification AS program_results_funding_classification, program_results.score_total AS program_results_score_total, program_results.bucket AS program_results_bucket, program_results.user_decision AS program_results_user_decision, program_results.user_decision_reason AS program_results_user_decision_reason, program_results.user_notes AS program_results_user_notes, program_results.decided_at AS program_results_decided_at, program_results.payload AS program_results_payload, program_results.checklist AS program_results_checklist, program_results.id AS program_results_id, program_results.created_at AS program_results_created_at, program_results.updated_at AS program_results_updated_at \nFROM program_results \nWHERE program_results.run_id = ? ORDER BY program_results.id",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 15458,
+      "sql_prefix": "SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_resul"
+    },
+    {
+      "at_ns": 810593799118083,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.id = ?",
+      "params": "('2026-10-07 23:12:17.294907', '25b59b6a005144a2bd358cfc69875e22')"
+    },
+    {
+      "elapsed_ns": 73667,
+      "sql_prefix": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.i"
+    },
+    {
+      "at_ns": 810593799223333,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2625,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593799277583,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2500,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593799417083,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage=?, stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('assessment', '{\"queued\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"profile_validation\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.284529+00:00\", \"finished_at\": \"2026-10-07T23:12:17.285661+00:00\", \"error\": \"\", \"detail\": \"7 gaps found: 0 blocking, 2 high-impact. Research can run; results affected by the gaps above will be marked.\", \"items_done\": 0, \"items_total\": 0}, \"candidate_discovery\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.286808+00:00\", \"finished_at\": \"2026-10-07T23:12:17.287742+00:00\", \"error\": \"\", \"detail\": \"1 candidates from local-catalogue-with-live-enrichment; 0 have an official page to verify.\", \"items_done\": 1, \"items_total\": 1}, \"program_verification\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.288655+00:00\", \"finished_at\": \"2026-10-07T23:12:17.291895+00:00\", \"error\": \"\", \"detail\": \"1 programmes checked across 0 pages (0 unreadable).\", \"items_done\": 1, \"items_total\": 1}, \"funding_discovery\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.293024+00:00\", \"finished_at\": \"2026-10-07T23:12:17.293902+00:00\", \"error\": \"\", \"detail\": \"Funding checked for 1 programmes.\", \"items_done\": 1, \"items_total\": 1}, \"assessment\": {\"status\": \"running\", \"started_at\": \"2026-10-07T23:12:17.294825+00:00\", \"finished_at\": null, \"error\": \"\", \"detail\": \"Comparing the profile against verified requirements\", \"items_done\": 0, \"items_total\": 1}, \"awaiting_user_decisi"
+    },
+    {
+      "elapsed_ns": 21083,
+      "sql_prefix": "UPDATE research_runs SET stage=?, stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id"
+    },
+    {
+      "at_ns": 810593800024000,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.id = ?",
+      "params": "('2026-10-07 23:12:17.295813', '25b59b6a005144a2bd358cfc69875e22')"
+    },
+    {
+      "elapsed_ns": 103750,
+      "sql_prefix": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.i"
+    },
+    {
+      "at_ns": 810593800159791,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2625,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593800213166,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2500,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593800388541,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('{\"queued\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"profile_validation\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.284529+00:00\", \"finished_at\": \"2026-10-07T23:12:17.285661+00:00\", \"error\": \"\", \"detail\": \"7 gaps found: 0 blocking, 2 high-impact. Research can run; results affected by the gaps above will be marked.\", \"items_done\": 0, \"items_total\": 0}, \"candidate_discovery\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.286808+00:00\", \"finished_at\": \"2026-10-07T23:12:17.287742+00:00\", \"error\": \"\", \"detail\": \"1 candidates from local-catalogue-with-live-enrichment; 0 have an official page to verify.\", \"items_done\": 1, \"items_total\": 1}, \"program_verification\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.288655+00:00\", \"finished_at\": \"2026-10-07T23:12:17.291895+00:00\", \"error\": \"\", \"detail\": \"1 programmes checked across 0 pages (0 unreadable).\", \"items_done\": 1, \"items_total\": 1}, \"funding_discovery\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.293024+00:00\", \"finished_at\": \"2026-10-07T23:12:17.293902+00:00\", \"error\": \"\", \"detail\": \"Funding checked for 1 programmes.\", \"items_done\": 1, \"items_total\": 1}, \"assessment\": {\"status\": \"running\", \"started_at\": \"2026-10-07T23:12:17.294825+00:00\", \"finished_at\": null, \"error\": \"\", \"detail\": \"Comparing the profile against verified requirements\", \"items_done\": 1, \"items_total\": 1}, \"awaiting_user_decision\": {\"status\""
+    },
+    {
+      "elapsed_ns": 7375,
+      "sql_prefix": "UPDATE research_runs SET stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593800550875,
+      "thread": 8419598720,
+      "sql": "UPDATE program_results SET bucket=?, payload=?, updated_at=? WHERE program_results.id = ?",
+      "params": "('NEEDS_CLARIFICATION', '{\"id\": \"db229cf775e24851b81e99cbb31d3ed0\", \"run_id\": \"25b59b6a005144a2bd358cfc69875e22\", \"university\": \"Test University\", \"university_id\": \"example::test\", \"country\": \"Example\", \"city\": \"City\", \"program\": \"computer science (bachelor)\", \"program_url\": null, \"degree\": \"bachelor\", \"intake\": \"fall 2027\", \"rankings\": [], \"eligibility\": \"NEEDS_OFFICIAL_CLARIFICATION\", \"admissions_fit\": \"INSUFFICIENT_DATA\", \"funding_fit\": \"UNKNOWN\", \"best_funding_classification\": \"UNKNOWN\", \"requirement_checks\": [], \"missing_prerequisites\": [], \"hard_filter_failures\": [], \"scholarships\": [], \"costs\": {\"items\": {}, \"total\": null, \"academic_year\": null, \"source_urls\": [], \"is_range\": false}, \"funding_gap\": {\"computable\": false, \"gap\": null, \"gap_low\": null, \"gap_high\": null, \"total_cost\": null, \"confirmed_aid\": null, \"stackable_aid\": null, \"reason\": \"No official cost of attendance was found for this programme and intake.\", \"year_mismatch\": false, \"currency_mismatch\": false, \"category_mismatch\": false, \"cost_basis\": null, \"missing_categories\": [], \"warnings\": [\"Cost pages could not be verified; the gap cannot be estimated.\", \"No scholarship information was found on official sources for this programme.\"]}, \"preference_score\": {\"total\": 0.5625, \"max_possible\": 8.45, \"components\": [{\"name\": \"Academic fit\", \"raw\": 0.0, \"weight\": 1.0, \"weighted\": 0.0, \"explanation\": \"Requirements could not be verified officially.\", \"data_present\": false}, {\"name\": \"Funding fit\", \"raw\": 0.0, \"weight\""
+    },
+    {
+      "elapsed_ns": 52875,
+      "sql_prefix": "UPDATE program_results SET bucket=?, payload=?, updated_at=? WHERE program_results.id = ?"
+    },
+    {
+      "at_ns": 810593801019708,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.id = ?",
+      "params": "('2026-10-07 23:12:17.296808', '25b59b6a005144a2bd358cfc69875e22')"
+    },
+    {
+      "elapsed_ns": 66292,
+      "sql_prefix": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.i"
+    },
+    {
+      "at_ns": 810593801117000,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2625,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593801170958,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2458,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593801310583,
+      "thread": 8419598720,
+      "sql": "INSERT INTO audit_events (organization_id, actor, action, entity_type, entity_id, detail, id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "params": "('07861ed95f3b47e5af2fc420d06af600', 'system', 'assessment_complete', 'run', '25b59b6a005144a2bd358cfc69875e22', '{\"results\": 1}', '7e5c3431ba49438388d122ddc5b34cca', '2026-10-07 23:12:17.297096', '2026-10-07 23:12:17.297096')"
+    },
+    {
+      "elapsed_ns": 45958,
+      "sql_prefix": "INSERT INTO audit_events (organization_id, actor, action, entity_type, entity_id, detail, id, create"
+    },
+    {
+      "at_ns": 810593801407125,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('{\"queued\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"profile_validation\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.284529+00:00\", \"finished_at\": \"2026-10-07T23:12:17.285661+00:00\", \"error\": \"\", \"detail\": \"7 gaps found: 0 blocking, 2 high-impact. Research can run; results affected by the gaps above will be marked.\", \"items_done\": 0, \"items_total\": 0}, \"candidate_discovery\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.286808+00:00\", \"finished_at\": \"2026-10-07T23:12:17.287742+00:00\", \"error\": \"\", \"detail\": \"1 candidates from local-catalogue-with-live-enrichment; 0 have an official page to verify.\", \"items_done\": 1, \"items_total\": 1}, \"program_verification\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.288655+00:00\", \"finished_at\": \"2026-10-07T23:12:17.291895+00:00\", \"error\": \"\", \"detail\": \"1 programmes checked across 0 pages (0 unreadable).\", \"items_done\": 1, \"items_total\": 1}, \"funding_discovery\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.293024+00:00\", \"finished_at\": \"2026-10-07T23:12:17.293902+00:00\", \"error\": \"\", \"detail\": \"Funding checked for 1 programmes.\", \"items_done\": 1, \"items_total\": 1}, \"assessment\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.294825+00:00\", \"finished_at\": \"2026-10-07T23:12:17.296708+00:00\", \"error\": \"\", \"detail\": \"1 programmes assessed on eligibility, admissions fit and funding fit.\", \"items_done\": 1, \"items_to"
+    },
+    {
+      "elapsed_ns": 7500,
+      "sql_prefix": "UPDATE research_runs SET stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593802152083,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage=?, fetch_tiers=?, finished_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('awaiting_user_decision', '{\"fixture\": 0, \"http\": 0, \"browser\": 0, \"pdf\": 0}', '2026-10-07 23:12:17.297726', '2026-10-07 23:12:17.297933', '25b59b6a005144a2bd358cfc69875e22')"
+    },
+    {
+      "elapsed_ns": 81292,
+      "sql_prefix": "UPDATE research_runs SET stage=?, fetch_tiers=?, finished_at=?, updated_at=? WHERE research_runs.id "
+    },
+    {
+      "at_ns": 810593802435333,
+      "thread": 8419598720,
+      "sql": "SELECT claims.claim_type AS claims_claim_type, claims.accessed_at AS claims_accessed_at \nFROM claims \nWHERE claims.run_id = ? AND claims.status != ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22', 'SUPERSEDED')"
+    },
+    {
+      "elapsed_ns": 12167,
+      "sql_prefix": "SELECT claims.claim_type AS claims_claim_type, claims.accessed_at AS claims_accessed_at \nFROM claims"
+    },
+    {
+      "at_ns": 810593802559000,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.id = ?",
+      "params": "('2026-10-07 23:12:17.298348', '25b59b6a005144a2bd358cfc69875e22')"
+    },
+    {
+      "elapsed_ns": 5166,
+      "sql_prefix": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.i"
+    },
+    {
+      "at_ns": 810593802594958,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2583,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593802647000,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('25b59b6a005144a2bd358cfc69875e22',)"
+    },
+    {
+      "elapsed_ns": 2541,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810593802889250,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage_state=?, worker_id=?, heartbeat_at=?, next_recheck_at=?, recheck_generation=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('{\"queued\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"profile_validation\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.284529+00:00\", \"finished_at\": \"2026-10-07T23:12:17.285661+00:00\", \"error\": \"\", \"detail\": \"7 gaps found: 0 blocking, 2 high-impact. Research can run; results affected by the gaps above will be marked.\", \"items_done\": 0, \"items_total\": 0}, \"candidate_discovery\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.286808+00:00\", \"finished_at\": \"2026-10-07T23:12:17.287742+00:00\", \"error\": \"\", \"detail\": \"1 candidates from local-catalogue-with-live-enrichment; 0 have an official page to verify.\", \"items_done\": 1, \"items_total\": 1}, \"program_verification\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.288655+00:00\", \"finished_at\": \"2026-10-07T23:12:17.291895+00:00\", \"error\": \"\", \"detail\": \"1 programmes checked across 0 pages (0 unreadable).\", \"items_done\": 1, \"items_total\": 1}, \"funding_discovery\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.293024+00:00\", \"finished_at\": \"2026-10-07T23:12:17.293902+00:00\", \"error\": \"\", \"detail\": \"Funding checked for 1 programmes.\", \"items_done\": 1, \"items_total\": 1}, \"assessment\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:12:17.294825+00:00\", \"finished_at\": \"2026-10-07T23:12:17.296708+00:00\", \"error\": \"\", \"detail\": \"1 programmes assessed on eligibility, admissions fit and funding fit.\", \"items_done\": 1, \"items_to"
+    },
+    {
+      "elapsed_ns": 26166,
+      "sql_prefix": "UPDATE research_runs SET stage_state=?, worker_id=?, heartbeat_at=?, next_recheck_at=?, recheck_gene"
+    }
+  ],
+  "sql_errors": []
+}

@@ -1,0 +1,15 @@
+{
+  "queries": [
+    {
+      "at_ns": 810593996143208,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind AS jobs_kind, jobs.queue AS jobs_queue, jobs.run_id AS jobs_run_id, jobs.idempotency_key AS jobs_idempotency_key, jobs.status AS jobs_status, jobs.priority AS jobs_priority, jobs.attempts AS jobs_attempts, jobs.max_attempts AS jobs_max_attempts, jobs.available_at AS jobs_available_at, jobs.lease_expires_at AS jobs_lease_expires_at, jobs.heartbeat_at AS jobs_heartbeat_at, jobs.worker_id AS jobs_worker_id, jobs.cancel_requested AS jobs_cancel_requested, jobs.payload AS jobs_payload, jobs.last_error AS jobs_last_error, jobs.started_at AS jobs_started_at, jobs.finished_at AS jobs_finished_at, jobs.id AS jobs_id, jobs.created_at AS jobs_created_at, jobs.updated_at AS jobs_updated_at \nFROM jobs \nWHERE jobs.id = ?",
+      "params": "('e77e858748444c5caa9e225b86da6d85',)"
+    },
+    {
+      "elapsed_ns": 260667,
+      "sql_prefix": "SELECT jobs.kind AS jobs_kind, jobs.queue AS jobs_queue, jobs.run_id AS jobs_run_id, jobs.idempotenc"
+    }
+  ],
+  "sql_errors": []
+}

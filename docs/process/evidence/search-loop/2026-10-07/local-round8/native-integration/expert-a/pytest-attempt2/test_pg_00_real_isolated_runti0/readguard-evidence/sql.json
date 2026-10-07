@@ -1,0 +1,25 @@
+{
+  "queries": [
+    {
+      "at_ns": 810599278753750,
+      "thread": 8419598720,
+      "sql": "SELECT pg_backend_pid(), current_schema(), current_setting('server_version'), current_setting('listen_addresses')",
+      "params": "{}"
+    },
+    {
+      "elapsed_ns": 115375,
+      "sql_prefix": "SELECT pg_backend_pid(), current_schema(), current_setting('server_version'), current_setting('liste"
+    },
+    {
+      "at_ns": 810599279901833,
+      "thread": 8419598720,
+      "sql": "SELECT pg_backend_pid()",
+      "params": "{}"
+    },
+    {
+      "elapsed_ns": 84958,
+      "sql_prefix": "SELECT pg_backend_pid()"
+    }
+  ],
+  "sql_errors": []
+}

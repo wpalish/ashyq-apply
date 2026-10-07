@@ -1,0 +1,99 @@
+{
+  "kind": "writeahead_actual_module_test_port",
+  "at_utc": "2026-10-07T23:00:26.531068+00:00",
+  "status": "WAIT_PARENT_BRANCH_HANDOFF_READY_BEFORE_REPO_WRITES; WAIT_APPLICATION_READY_BEFORE_TEST_RUNS",
+  "owned_test_paths": [
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/readguard_support.py",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_production_readguard.py",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_readguard_revision_controls.py",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_readguard_sqlite_concurrency.py",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_worker_checkpoint_busy.py",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_readguard_postgres.py"
+  ],
+  "forbidden_edits": "app/evaluation/conftest/HANDOFF/Git/existingtests/STOP/package",
+  "origins": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/ready-manifest.json": {
+      "sha256": "236e9a53667c86c0b14a04807492804402604d05a5a32ba670fb97915f84c2a4",
+      "bytes": 9663
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/ready-source-manifest.json": {
+      "sha256": "13ccdf181c70ae155dff194cd6df0aca51aebaf724c2f6a10987cea16d97d4d2",
+      "bytes": 3159
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/shadow_import.py": {
+      "sha256": "4a36dfee8ccf408909afd6137731e9766931a62cf767f29ba0dc2edf302b7161",
+      "bytes": 1551
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/test_production_readguard.py": {
+      "sha256": "cc7d39feb4365b234a4ff4e53580155e4a54bf669f8266780aed495847346559",
+      "bytes": 46681
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py": {
+      "sha256": "02324a8b0645bf5043cb48b908c0c62853ee6cf1e141e8f24387a07d11c72f8e",
+      "bytes": 24210
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/test_sqlite_concurrent_checkpoint.py": {
+      "sha256": "4d3abc2053c97f2db7c154dd5f370617af642b6f7a5f924698d5fc1af903ca03",
+      "bytes": 5434
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/receipt.json": {
+      "sha256": "45826a5bb00717d0814a3e3ebedaf1a47a6ad663e109974970e66d2c2e3b5d41",
+      "bytes": 2584
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/review_context.py": {
+      "sha256": "722c0627bcdd79451e3505c626f671aaabb5eb103a5af16270708e73b304a76f",
+      "bytes": 9823
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/test_worker_busy.py": {
+      "sha256": "a846dafc62e90660b40149535cbb625c002932ea30a0a20240dc630bc442636a",
+      "bytes": 12126
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-worker-busy/verify_import.py": {
+      "sha256": "55bb02a91961edcac523ed25b028c6f2816c0a3c12d2cdd853389e8196ac0173",
+      "bytes": 1253
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/receipt.json": {
+      "sha256": "75d339a3a9bf16f9ca94fb1fb702ed0e329eff763d61489e714c4f7daf108a8d",
+      "bytes": 2681
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/test_independent_pg.py": {
+      "sha256": "09e0f5ead2cd9aa945c7394c17c9bb133c4485f22f7849024eccca4846a05ada",
+      "bytes": 29324
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/test_pg_routing_supplement.py": {
+      "sha256": "4e92be2cbb94879f2ccdbbd3939e84f7ba217f0071f0866f8a13bd3f9bf097da",
+      "bytes": 7988
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-readguard-port-plan/receipt.json": {
+      "sha256": "b5d7e419c4f06d6a7be7a71baebc3d36add2172f3c61ac3bf9b3d71c882757ce",
+      "bytes": 967
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-readguard-port-plan/port-map.json": {
+      "sha256": "bea2efaf229e918e03befd8b9c44b8d311c4fa3933e5178a1d9d2761536da9ca",
+      "bytes": 3564
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/conftest.py": {
+      "sha256": "218c446f7edc6ec18c82407f24ed3fc40e179777351202602796b6c6049820d6",
+      "bytes": 10851
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-STOP.json": {
+      "sha256": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+      "bytes": 877
+    }
+  },
+  "goals": [
+    "ordinary app imports only; no shadow/meta/legacy env/fallback",
+    "real JobStore enqueue and claim fixture; exact token1/token2 reaper",
+    "sourceFalse recordedcurrentON fullentry",
+    "fresh SQL before get; native60/cache/government/failures shared key",
+    "real SQLite and local existing pg_engine PostgreSQL distinct proof",
+    "typed Worker busy real caller retention/zeroIO/failure writer absence",
+    "import path and control class identity manifest",
+    "preserve old27pass1red and4baseline reds originals"
+  ],
+  "test_execution_authorized_only_after_parent_READY": true,
+  "source_default_False_unchanged": true,
+  "source_implementation_owner": "root",
+  "test_owner": "expert_a",
+  "provider_model_network_remote_db_calls_allowed": 0
+}

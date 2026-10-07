@@ -1,0 +1,276 @@
+{
+  "exception": [
+    {
+      "type": "UniversityReadStopped",
+      "reason": "checkpoint_busy",
+      "sqlstate": null,
+      "sqlite_errorcode": null,
+      "message": "University read allowance refused: checkpoint_busy"
+    },
+    {
+      "type": "OperationalError",
+      "reason": null,
+      "sqlstate": "55P03",
+      "sqlite_errorcode": null,
+      "message": "(psycopg.errors.LockNotAvailable) could not obtain lock on row in relation \"jobs\"\n[SQL: SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT]\n[parameters: {'id_1': '70648fb7a8f7488095b0141657aadb62', 'run_id_1': 'af2a14d73ef64961985f5d4f5882084a', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)"
+    },
+    {
+      "type": "LockNotAvailable",
+      "reason": null,
+      "sqlstate": "55P03",
+      "sqlite_errorcode": null,
+      "message": "could not obtain lock on row in relation \"jobs\""
+    }
+  ],
+  "original_get": 0,
+  "prior_before": {
+    "claims": [
+      {
+        "notes": "",
+        "intake": null,
+        "status": "VERIFIED_CURRENT",
+        "program": "BSc Computer Science",
+        "claim_type": "program_exists",
+        "confidence": 0.5,
+        "page_title": "",
+        "source_url": "https://example.edu/degree",
+        "accessed_at": "2026-10-07T23:12:27.799644Z",
+        "subject_key": null,
+        "academic_year": null,
+        "official_domain": true,
+        "normalized_value": {
+          "degree": "bachelor",
+          "program": "BSc Computer Science",
+          "language": null
+        },
+        "relevant_section": "",
+        "extraction_method": "html_rule",
+        "source_specificity": "unknown",
+        "original_text_excerpt": "Previous completed official evidence"
+      }
+    ],
+    "results": [
+      {
+        "id": "88c1cf8269ee4412b0072256430f309b",
+        "city": "City",
+        "costs": {
+          "items": {},
+          "total": null,
+          "is_range": false,
+          "source_urls": [],
+          "academic_year": null
+        },
+        "claims": [
+          {
+            "id": "pg-prior-claim",
+            "notes": "",
+            "intake": null,
+            "status": "VERIFIED_CURRENT",
+            "program": "BSc Computer Science",
+            "age_days": 0,
+            "is_stale": false,
+            "claim_type": "program_exists",
+            "confidence": 0.5,
+            "page_title": "",
+            "source_url": "https://example.edu/degree",
+            "accessed_at": "2026-10-07T23:12:27.799644Z",
+            "subject_key": null,
+            "academic_year": null,
+            "official_domain": true,
+            "normalized_value": {
+              "degree": "bachelor",
+              "program": "BSc Computer Science",
+              "language": null
+            },
+            "relevant_section": "",
+            "extraction_method": "html_rule",
+            "source_specificity": "unknown",
+            "original_text_excerpt": "Previous completed official evidence"
+          }
+        ],
+        "degree": "bachelor",
+        "intake": "fall 2027",
+        "run_id": "af2a14d73ef64961985f5d4f5882084a",
+        "country": "Example",
+        "program": "BSc Computer Science",
+        "ranking": null,
+        "city_fit": "unknown",
+        "rankings": [],
+        "size_fit": "unknown",
+        "checklist": null,
+        "conflicts": [],
+        "campus_fit": "unknown",
+        "decided_at": null,
+        "university": "Test University",
+        "unresolved": [],
+        "user_notes": "",
+        "climate_fit": "unknown",
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "funding_gap": null,
+        "program_url": "https://example.edu/degree",
+        "source_urls": [],
+        "career_notes": "",
+        "scholarships": [],
+        "workload_fit": "unknown",
+        "last_verified": null,
+        "university_id": "prior-key",
+        "user_decision": "undecided",
+        "admissions_fit": "INSUFFICIENT_DATA",
+        "deadline_passed": false,
+        "post_study_work": "",
+        "preference_score": null,
+        "work_during_study": "",
+        "admission_deadline": null,
+        "catalog_attributes": {},
+        "requirement_checks": [],
+        "hard_filter_failures": [],
+        "user_decision_reason": "",
+        "missing_prerequisites": [],
+        "admission_deadline_raw": null,
+        "previous_cycle_deadline": null,
+        "catalog_attributes_source": "",
+        "verification_completeness": 0.0,
+        "admission_deadline_timezone": null,
+        "best_funding_classification": "UNKNOWN"
+      }
+    ]
+  },
+  "prior_after": {
+    "claims": [
+      {
+        "notes": "",
+        "intake": null,
+        "status": "VERIFIED_CURRENT",
+        "program": "BSc Computer Science",
+        "claim_type": "program_exists",
+        "confidence": 0.5,
+        "page_title": "",
+        "source_url": "https://example.edu/degree",
+        "accessed_at": "2026-10-07T23:12:27.799644Z",
+        "subject_key": null,
+        "academic_year": null,
+        "official_domain": true,
+        "normalized_value": {
+          "degree": "bachelor",
+          "program": "BSc Computer Science",
+          "language": null
+        },
+        "relevant_section": "",
+        "extraction_method": "html_rule",
+        "source_specificity": "unknown",
+        "original_text_excerpt": "Previous completed official evidence"
+      }
+    ],
+    "results": [
+      {
+        "id": "88c1cf8269ee4412b0072256430f309b",
+        "city": "City",
+        "costs": {
+          "items": {},
+          "total": null,
+          "is_range": false,
+          "source_urls": [],
+          "academic_year": null
+        },
+        "claims": [
+          {
+            "id": "pg-prior-claim",
+            "notes": "",
+            "intake": null,
+            "status": "VERIFIED_CURRENT",
+            "program": "BSc Computer Science",
+            "age_days": 0,
+            "is_stale": false,
+            "claim_type": "program_exists",
+            "confidence": 0.5,
+            "page_title": "",
+            "source_url": "https://example.edu/degree",
+            "accessed_at": "2026-10-07T23:12:27.799644Z",
+            "subject_key": null,
+            "academic_year": null,
+            "official_domain": true,
+            "normalized_value": {
+              "degree": "bachelor",
+              "program": "BSc Computer Science",
+              "language": null
+            },
+            "relevant_section": "",
+            "extraction_method": "html_rule",
+            "source_specificity": "unknown",
+            "original_text_excerpt": "Previous completed official evidence"
+          }
+        ],
+        "degree": "bachelor",
+        "intake": "fall 2027",
+        "run_id": "af2a14d73ef64961985f5d4f5882084a",
+        "country": "Example",
+        "program": "BSc Computer Science",
+        "ranking": null,
+        "city_fit": "unknown",
+        "rankings": [],
+        "size_fit": "unknown",
+        "checklist": null,
+        "conflicts": [],
+        "campus_fit": "unknown",
+        "decided_at": null,
+        "university": "Test University",
+        "unresolved": [],
+        "user_notes": "",
+        "climate_fit": "unknown",
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "funding_gap": null,
+        "program_url": "https://example.edu/degree",
+        "source_urls": [],
+        "career_notes": "",
+        "scholarships": [],
+        "workload_fit": "unknown",
+        "last_verified": null,
+        "university_id": "prior-key",
+        "user_decision": "undecided",
+        "admissions_fit": "INSUFFICIENT_DATA",
+        "deadline_passed": false,
+        "post_study_work": "",
+        "preference_score": null,
+        "work_during_study": "",
+        "admission_deadline": null,
+        "catalog_attributes": {},
+        "requirement_checks": [],
+        "hard_filter_failures": [],
+        "user_decision_reason": "",
+        "missing_prerequisites": [],
+        "admission_deadline_raw": null,
+        "previous_cycle_deadline": null,
+        "catalog_attributes_source": "",
+        "verification_completeness": 0.0,
+        "admission_deadline_timezone": null,
+        "best_funding_classification": "UNKNOWN"
+      }
+    ]
+  },
+  "ledger_before": {
+    "version": 1,
+    "episodes": {
+      "decision:70648fb7a8f7488095b0141657aadb62": {
+        "read_counts": {
+          "catalogue:u-one": 0
+        }
+      }
+    },
+    "read_limit": 60,
+    "active_episode": "decision:70648fb7a8f7488095b0141657aadb62"
+  },
+  "ledger_after": {
+    "version": 1,
+    "episodes": {
+      "decision:70648fb7a8f7488095b0141657aadb62": {
+        "read_counts": {
+          "catalogue:u-one": 0
+        }
+      }
+    },
+    "read_limit": 60,
+    "active_episode": "decision:70648fb7a8f7488095b0141657aadb62"
+  }
+}
