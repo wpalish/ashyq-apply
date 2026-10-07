@@ -1,0 +1,776 @@
+{
+  "at": "2026-10-07T18:37:11.322304+00:00",
+  "mode": "Independent actual _probe_site synthetic offline replay, memory session only",
+  "source_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/catalogue/discovery.py",
+  "source_sha256": "64496ed3627bb80179b898209a147b8e4238cecc2cbeeb609c1ba54a5f158182",
+  "default_flag_false": true,
+  "source_unchanged": true,
+  "cases": [
+    {
+      "case": "exact_og",
+      "name": "Example University",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><meta property=\"og:site_name\" content=\"Example University\">",
+      "hint": "https://example.edu/",
+      "final": "",
+      "expected_enabled_acceptance": true,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": true,
+        "entry": {
+          "name": "Example University",
+          "country": "Synthetic",
+          "city": "Johannesburg",
+          "homepage": "https://example.edu/"
+        },
+        "proofs": [
+          {
+            "kind": "site_identity",
+            "source_url": "https://example.edu/",
+            "accessed_at": "2026-10-07T00:00:00+00:00",
+            "excerpt": "Example University",
+            "name": "Example University",
+            "domain": "example.edu",
+            "verification_status": "site_identity_checked",
+            "identity_basis": "homepage_og_site_name"
+          }
+        ],
+        "domain_status": "site_identity_checked",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "article_og",
+      "name": "University of Witwatersrand",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><meta property=\"og:site_name\" content=\"University of the Witwatersrand\">",
+      "hint": "https://example.edu/",
+      "final": "",
+      "expected_enabled_acceptance": true,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": true,
+        "entry": {
+          "name": "University of Witwatersrand",
+          "country": "Synthetic",
+          "city": "Johannesburg",
+          "homepage": "https://example.edu/"
+        },
+        "proofs": [
+          {
+            "kind": "site_identity",
+            "source_url": "https://example.edu/",
+            "accessed_at": "2026-10-07T00:00:00+00:00",
+            "excerpt": "University of the Witwatersrand",
+            "name": "University of Witwatersrand",
+            "domain": "example.edu",
+            "verification_status": "site_identity_checked",
+            "identity_basis": "homepage_og_site_name"
+          }
+        ],
+        "domain_status": "site_identity_checked",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "exact_owner",
+      "name": "Example University",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><footer><p>Copyright © 2026 Example University</p></footer>",
+      "hint": "https://example.edu/",
+      "final": "",
+      "expected_enabled_acceptance": true,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": true,
+        "entry": {
+          "name": "Example University",
+          "country": "Synthetic",
+          "city": "Johannesburg",
+          "homepage": "https://example.edu/"
+        },
+        "proofs": [
+          {
+            "kind": "site_identity",
+            "source_url": "https://example.edu/",
+            "accessed_at": "2026-10-07T00:00:00+00:00",
+            "excerpt": "Copyright © 2026 Example University",
+            "name": "Example University",
+            "domain": "example.edu",
+            "verification_status": "site_identity_checked",
+            "identity_basis": "homepage_copyright_owner"
+          }
+        ],
+        "domain_status": "site_identity_checked",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "city_owner",
+      "name": "Example University",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><footer><p>Copyright © 2026 Example University, Johannesburg.</p></footer>",
+      "hint": "https://example.edu/",
+      "final": "",
+      "expected_enabled_acceptance": true,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": true,
+        "entry": {
+          "name": "Example University",
+          "country": "Synthetic",
+          "city": "Johannesburg",
+          "homepage": "https://example.edu/"
+        },
+        "proofs": [
+          {
+            "kind": "site_identity",
+            "source_url": "https://example.edu/",
+            "accessed_at": "2026-10-07T00:00:00+00:00",
+            "excerpt": "Copyright © 2026 Example University, Johannesburg.",
+            "name": "Example University",
+            "domain": "example.edu",
+            "verification_status": "site_identity_checked",
+            "identity_basis": "homepage_copyright_owner"
+          }
+        ],
+        "domain_status": "site_identity_checked",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "body_mention",
+      "name": "Example University",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><main>We partner with Example University.</main>",
+      "hint": "https://example.edu/",
+      "final": "",
+      "expected_enabled_acceptance": false,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "footer_mention",
+      "name": "Example University",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><footer><p>We partner with Example University.</p></footer>",
+      "hint": "https://example.edu/",
+      "final": "",
+      "expected_enabled_acceptance": false,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "owner_elsewhere_in_body",
+      "name": "Example University",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><main><p>Copyright 2026 Example University</p></main>",
+      "hint": "https://example.edu/",
+      "final": "",
+      "expected_enabled_acceptance": false,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "longer_owner",
+      "name": "Example University",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><footer><p>Copyright 2026 Example University Foundation</p></footer>",
+      "hint": "https://example.edu/",
+      "final": "",
+      "expected_enabled_acceptance": false,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "longer_og",
+      "name": "Example University",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><meta property=\"og:site_name\" content=\"Example University Foundation\">",
+      "hint": "https://example.edu/",
+      "final": "",
+      "expected_enabled_acceptance": false,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "different_owner_prefix",
+      "name": "Example University",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><footer><p>Copyright 2026 Directory Ltd; Example University partner</p></footer>",
+      "hint": "https://example.edu/",
+      "final": "",
+      "expected_enabled_acceptance": false,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "different_og_prefix",
+      "name": "Example University",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><meta property=\"og:site_name\" content=\"News about Example University\">",
+      "hint": "https://example.edu/",
+      "final": "",
+      "expected_enabled_acceptance": false,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "comma_longer_legal_owner",
+      "name": "Example University",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><footer><p>Copyright 2026 Example University, Inc.</p></footer>",
+      "hint": "https://example.edu/",
+      "final": "",
+      "expected_enabled_acceptance": false,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "qualified_entity_og",
+      "name": "Example University (Foundation)",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><meta property=\"og:site_name\" content=\"Example University\">",
+      "hint": "https://example.edu/",
+      "final": "",
+      "expected_enabled_acceptance": false,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": true,
+        "entry": {
+          "name": "Example University (Foundation)",
+          "country": "Synthetic",
+          "city": "Johannesburg",
+          "homepage": "https://example.edu/"
+        },
+        "proofs": [
+          {
+            "kind": "site_identity",
+            "source_url": "https://example.edu/",
+            "accessed_at": "2026-10-07T00:00:00+00:00",
+            "excerpt": "Example University",
+            "name": "Example University (Foundation)",
+            "domain": "example.edu",
+            "verification_status": "site_identity_checked",
+            "identity_basis": "homepage_og_site_name"
+          }
+        ],
+        "domain_status": "site_identity_checked",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": false
+    },
+    {
+      "case": "qualified_entity_owner",
+      "name": "Example University (Foundation)",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><footer><p>Copyright 2026 Example University</p></footer>",
+      "hint": "https://example.edu/",
+      "final": "",
+      "expected_enabled_acceptance": false,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": true,
+        "entry": {
+          "name": "Example University (Foundation)",
+          "country": "Synthetic",
+          "city": "Johannesburg",
+          "homepage": "https://example.edu/"
+        },
+        "proofs": [
+          {
+            "kind": "site_identity",
+            "source_url": "https://example.edu/",
+            "accessed_at": "2026-10-07T00:00:00+00:00",
+            "excerpt": "Copyright 2026 Example University",
+            "name": "Example University (Foundation)",
+            "domain": "example.edu",
+            "verification_status": "site_identity_checked",
+            "identity_basis": "homepage_copyright_owner"
+          }
+        ],
+        "domain_status": "site_identity_checked",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": false
+    },
+    {
+      "case": "unrelated_host",
+      "name": "Example University",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><meta property=\"og:site_name\" content=\"Example University\">",
+      "hint": "https://directory.edu/",
+      "final": "",
+      "expected_enabled_acceptance": false,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://directory.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://directory.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "suffix_trick_host",
+      "name": "Example University",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><meta property=\"og:site_name\" content=\"Example University\">",
+      "hint": "https://example.edu.directory.edu/",
+      "final": "",
+      "expected_enabled_acceptance": false,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu.directory.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu.directory.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "off_site_redirect",
+      "name": "Example University",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><meta property=\"og:site_name\" content=\"Example University\">",
+      "hint": "https://example.edu/",
+      "final": "https://directory.edu/",
+      "expected_enabled_acceptance": false,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "same_site_subdomain",
+      "name": "Example University",
+      "html": "<title>Home</title><h1>Welcome to our website</h1><meta property=\"og:site_name\" content=\"Example University\">",
+      "hint": "https://www.example.edu/",
+      "final": "https://home.example.edu/",
+      "expected_enabled_acceptance": true,
+      "feature_off": {
+        "accepted": false,
+        "entry": null,
+        "proofs": [],
+        "domain_status": "seed",
+        "synthetic_reads": [
+          "https://www.example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": true,
+        "entry": {
+          "name": "Example University",
+          "country": "Synthetic",
+          "city": "Johannesburg",
+          "homepage": "https://home.example.edu/"
+        },
+        "proofs": [
+          {
+            "kind": "site_identity",
+            "source_url": "https://home.example.edu/",
+            "accessed_at": "2026-10-07T00:00:00+00:00",
+            "excerpt": "Example University",
+            "name": "Example University",
+            "domain": "example.edu",
+            "verification_status": "site_identity_checked",
+            "identity_basis": "homepage_og_site_name"
+          }
+        ],
+        "domain_status": "site_identity_checked",
+        "synthetic_reads": [
+          "https://www.example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    },
+    {
+      "case": "legacy_full_title",
+      "name": "Example University",
+      "html": "<title>Example University</title><h1>Example University</h1>",
+      "hint": "https://example.edu/",
+      "final": "",
+      "expected_enabled_acceptance": true,
+      "feature_off": {
+        "accepted": true,
+        "entry": {
+          "name": "Example University",
+          "country": "Synthetic",
+          "city": "Johannesburg",
+          "homepage": "https://example.edu/"
+        },
+        "proofs": [
+          {
+            "kind": "site_identity",
+            "source_url": "https://example.edu/",
+            "accessed_at": "2026-10-07T00:00:00+00:00",
+            "excerpt": "Example University Example University",
+            "name": "Example University",
+            "domain": "example.edu",
+            "verification_status": "site_identity_checked"
+          }
+        ],
+        "domain_status": "site_identity_checked",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "feature_on": {
+        "accepted": true,
+        "entry": {
+          "name": "Example University",
+          "country": "Synthetic",
+          "city": "Johannesburg",
+          "homepage": "https://example.edu/"
+        },
+        "proofs": [
+          {
+            "kind": "site_identity",
+            "source_url": "https://example.edu/",
+            "accessed_at": "2026-10-07T00:00:00+00:00",
+            "excerpt": "Example University Example University",
+            "name": "Example University",
+            "domain": "example.edu",
+            "verification_status": "site_identity_checked"
+          }
+        ],
+        "domain_status": "site_identity_checked",
+        "synthetic_reads": [
+          "https://example.edu/"
+        ],
+        "network_calls": 0,
+        "provider_calls": 0
+      },
+      "pass": true
+    }
+  ],
+  "failed_cases": [
+    "qualified_entity_og",
+    "qualified_entity_owner"
+  ],
+  "network_calls": 0,
+  "provider_calls": 0,
+  "legacy_proof_identical_off_on": true,
+  "parent_retained_replay_review": {
+    "json_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round2/site-identity-replay.offline.json",
+    "json_byte_sha256": "17f1f9d4aad88b5c193053a0fce8a3e83d2451ccfcd9ef79806abb832787ca5e",
+    "script_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round2/replay_site_identity.py",
+    "script_byte_sha256": "bed5bff6c9bef523cc87763abe85f52087edacdb9bd2f03a65beaea0e84e8aa0",
+    "replay_source_hashes": {
+      "backend/app/catalogue/discovery.py": "64496ed3627bb80179b898209a147b8e4238cecc2cbeeb609c1ba54a5f158182",
+      "backend/evaluation/research/live.py": "d0a0ee0c7f572f4cfbb906b74bd051f0b3476aaea2381215e83cc67b2245119f"
+    },
+    "checks": [
+      {
+        "case_id": "0386940c5cef525b3c8e7966868f5ed6",
+        "body_sha_matches": true,
+        "metadata_hash_matches_production": true,
+        "excerpt_matches_DOM_or_metadata": true,
+        "old_off_none_on_success": true
+      },
+      {
+        "case_id": "05e4d59f87261553f15d14b0cdb470d2",
+        "body_sha_matches": true,
+        "metadata_hash_matches_production": true,
+        "excerpt_matches_DOM_or_metadata": true,
+        "old_off_none_on_success": true
+      }
+    ],
+    "method": "Read parent executable and recorded outcomes; verified retained cache body hashes, production normalized hashes, exact DOM/metadata excerpts. Did not execute parent Git-based replay.",
+    "limits": "Only website identity; no programme/intake fact is created. Exact proof suffix-city is asserted against uni.city/country by current source."
+  }
+}

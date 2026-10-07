@@ -1,0 +1,679 @@
+{
+  "status": "FOUR_ARMS_COMPLETED",
+  "rows": [
+    {
+      "university": "Dalian",
+      "university_id": "01d3bb22815c61aa8454283116cbd4fa",
+      "arms": [
+        {
+          "arm": "off1",
+          "flag": false,
+          "pipeline_sha": "d669fd24e6286c8a3087e8b296963546f0f00f72",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 26,
+          "search_queries": 6,
+          "elapsed_ms": 48085,
+          "blocked_search_queries": 1,
+          "stop_reason": "search_budget_exhausted",
+          "programme_urls": [
+            "http://en.dlut.edu.cn/info/1103/2308.htm"
+          ],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://en.dlut.edu.cn/",
+              "accessed_at": "2026-10-07T18:53:04.025935+00:00",
+              "excerpt": "DALIAN UNIVERSITY OF TECHNOLOGY",
+              "name": "Dalian University of Technology",
+              "domain": "dlut.edu.cn",
+              "verification_status": "site_identity_checked"
+            }
+          ]
+        },
+        {
+          "arm": "on1",
+          "flag": true,
+          "pipeline_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 26,
+          "search_queries": 6,
+          "elapsed_ms": 52190,
+          "blocked_search_queries": 1,
+          "stop_reason": "search_budget_exhausted",
+          "programme_urls": [
+            "http://en.dlut.edu.cn/info/1103/2308.htm"
+          ],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://en.dlut.edu.cn/",
+              "accessed_at": "2026-10-07T19:19:45.104817+00:00",
+              "excerpt": "DALIAN UNIVERSITY OF TECHNOLOGY",
+              "name": "Dalian University of Technology",
+              "domain": "dlut.edu.cn",
+              "verification_status": "site_identity_checked"
+            }
+          ]
+        },
+        {
+          "arm": "on2",
+          "flag": true,
+          "pipeline_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 26,
+          "search_queries": 6,
+          "elapsed_ms": 40073,
+          "blocked_search_queries": 1,
+          "stop_reason": "search_budget_exhausted",
+          "programme_urls": [
+            "http://en.dlut.edu.cn/info/1103/2308.htm"
+          ],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://en.dlut.edu.cn/",
+              "accessed_at": "2026-10-07T19:26:44.627738+00:00",
+              "excerpt": "DALIAN UNIVERSITY OF TECHNOLOGY",
+              "name": "Dalian University of Technology",
+              "domain": "dlut.edu.cn",
+              "verification_status": "site_identity_checked"
+            }
+          ]
+        },
+        {
+          "arm": "off2",
+          "flag": false,
+          "pipeline_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 26,
+          "search_queries": 6,
+          "elapsed_ms": 35317,
+          "blocked_search_queries": 1,
+          "stop_reason": "search_budget_exhausted",
+          "programme_urls": [
+            "http://en.dlut.edu.cn/info/1103/2308.htm"
+          ],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://en.dlut.edu.cn/",
+              "accessed_at": "2026-10-07T19:32:39.883985+00:00",
+              "excerpt": "DALIAN UNIVERSITY OF TECHNOLOGY",
+              "name": "Dalian University of Technology",
+              "domain": "dlut.edu.cn",
+              "verification_status": "site_identity_checked"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "university": "Nagoya",
+      "university_id": "01ea8dd78746c15f2655b59fd4f5deab",
+      "arms": [
+        {
+          "arm": "off1",
+          "flag": false,
+          "pipeline_sha": "d669fd24e6286c8a3087e8b296963546f0f00f72",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 39,
+          "search_queries": 6,
+          "elapsed_ms": 102839,
+          "blocked_search_queries": 1,
+          "stop_reason": "search_budget_exhausted",
+          "programme_urls": [],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://en.nagoya-u.ac.jp/",
+              "accessed_at": "2026-10-07T18:53:52.652409+00:00",
+              "excerpt": "Nagoya University Where courageous minds shape tomorrow Where courageous minds shape tomorrow",
+              "name": "Nagoya University",
+              "domain": "nagoya-u.ac.jp",
+              "verification_status": "site_identity_checked"
+            }
+          ]
+        },
+        {
+          "arm": "on1",
+          "flag": true,
+          "pipeline_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 39,
+          "search_queries": 6,
+          "elapsed_ms": 99885,
+          "blocked_search_queries": 1,
+          "stop_reason": "search_budget_exhausted",
+          "programme_urls": [],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://en.nagoya-u.ac.jp/",
+              "accessed_at": "2026-10-07T19:20:37.505753+00:00",
+              "excerpt": "Nagoya University Where courageous minds shape tomorrow Where courageous minds shape tomorrow",
+              "name": "Nagoya University",
+              "domain": "nagoya-u.ac.jp",
+              "verification_status": "site_identity_checked"
+            }
+          ]
+        },
+        {
+          "arm": "on2",
+          "flag": true,
+          "pipeline_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 39,
+          "search_queries": 6,
+          "elapsed_ms": 90806,
+          "blocked_search_queries": 1,
+          "stop_reason": "search_budget_exhausted",
+          "programme_urls": [],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://en.nagoya-u.ac.jp/",
+              "accessed_at": "2026-10-07T19:27:25.865343+00:00",
+              "excerpt": "Nagoya University Where courageous minds shape tomorrow Where courageous minds shape tomorrow",
+              "name": "Nagoya University",
+              "domain": "nagoya-u.ac.jp",
+              "verification_status": "site_identity_checked"
+            }
+          ]
+        },
+        {
+          "arm": "off2",
+          "flag": false,
+          "pipeline_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 39,
+          "search_queries": 6,
+          "elapsed_ms": 87427,
+          "blocked_search_queries": 1,
+          "stop_reason": "search_budget_exhausted",
+          "programme_urls": [],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://en.nagoya-u.ac.jp/",
+              "accessed_at": "2026-10-07T19:33:16.115118+00:00",
+              "excerpt": "Nagoya University Where courageous minds shape tomorrow Where courageous minds shape tomorrow",
+              "name": "Nagoya University",
+              "domain": "nagoya-u.ac.jp",
+              "verification_status": "site_identity_checked"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "university": "Wits",
+      "university_id": "0386940c5cef525b3c8e7966868f5ed6",
+      "arms": [
+        {
+          "arm": "off1",
+          "flag": false,
+          "pipeline_sha": "d669fd24e6286c8a3087e8b296963546f0f00f72",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 4,
+          "search_queries": 1,
+          "elapsed_ms": 13854,
+          "blocked_search_queries": 0,
+          "stop_reason": null,
+          "programme_urls": [],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": []
+        },
+        {
+          "arm": "on1",
+          "flag": true,
+          "pipeline_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 20,
+          "search_queries": 6,
+          "elapsed_ms": 69083,
+          "blocked_search_queries": 0,
+          "stop_reason": null,
+          "programme_urls": [],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://www.wits.ac.za",
+              "accessed_at": "2026-10-07T19:22:14.462985+00:00",
+              "excerpt": "Copyright © 2026 - University of the Witwatersrand, Johannesburg.",
+              "name": "University of Witwatersrand",
+              "domain": "wits.ac.za",
+              "verification_status": "site_identity_checked",
+              "identity_basis": "homepage_copyright_owner"
+            }
+          ]
+        },
+        {
+          "arm": "on2",
+          "flag": true,
+          "pipeline_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 20,
+          "search_queries": 6,
+          "elapsed_ms": 55755,
+          "blocked_search_queries": 0,
+          "stop_reason": null,
+          "programme_urls": [],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://www.wits.ac.za",
+              "accessed_at": "2026-10-07T19:28:55.773341+00:00",
+              "excerpt": "Copyright © 2026 - University of the Witwatersrand, Johannesburg.",
+              "name": "University of Witwatersrand",
+              "domain": "wits.ac.za",
+              "verification_status": "site_identity_checked",
+              "identity_basis": "homepage_copyright_owner"
+            }
+          ]
+        },
+        {
+          "arm": "off2",
+          "flag": false,
+          "pipeline_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 3,
+          "search_queries": 1,
+          "elapsed_ms": 9574,
+          "blocked_search_queries": 0,
+          "stop_reason": null,
+          "programme_urls": [],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": []
+        }
+      ]
+    },
+    {
+      "university": "AUT",
+      "university_id": "0480c3b293c219debd4325fe107ac27b",
+      "arms": [
+        {
+          "arm": "off1",
+          "flag": false,
+          "pipeline_sha": "d669fd24e6286c8a3087e8b296963546f0f00f72",
+          "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+          "raw_canary_available": false,
+          "fetcher_calls": 41,
+          "search_queries": 0,
+          "elapsed_ms": 117007,
+          "blocked_search_queries": 0,
+          "stop_reason": "source_work_deadline_exhausted",
+          "programme_urls": [],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": []
+        },
+        {
+          "arm": "on1",
+          "flag": true,
+          "pipeline_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 33,
+          "search_queries": 6,
+          "elapsed_ms": 80970,
+          "blocked_search_queries": 0,
+          "stop_reason": null,
+          "programme_urls": [
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "predictions": [
+            {
+              "key": "programme.exists",
+              "value": true,
+              "evidence": {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "excerpt": "Data Science Major - Bachelor of Computer and Information Sciences Study data science and develop the skills for a career as data analyst, data scientist or data engineer; careers that are in high demand all over the world.",
+                "scope": {
+                  "university": "Auckland University of Technology",
+                  "programme": "Data Science Major - Bachelor of Computer and Information Sciences",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": null,
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-07",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "programme.exists",
+              "value": true,
+              "evidence": {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "excerpt": "Computer Science Major - Bachelor of Computer and Information Sciences Study computer science and gain the skills to develop sophisticated software solutions, solve complex problems and use the power of computing technologies i",
+                "scope": {
+                  "university": "Auckland University of Technology",
+                  "programme": "Computer Science Major - Bachelor of Computer and Information Sciences",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": null,
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-07",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            }
+          ],
+          "quote_checks": [
+            {
+              "key": "programme.exists",
+              "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+              "retained_candidates": [
+                {
+                  "body_sha256": "76efe3c790ce9aa3253487b3807afa994918022bfff4c2c0b2b4972e45264312",
+                  "http_status": 200,
+                  "verbatim": true
+                }
+              ],
+              "verified_verbatim": true
+            },
+            {
+              "key": "programme.exists",
+              "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+              "retained_candidates": [
+                {
+                  "body_sha256": "1340f8a4853246291e727bfaa433ca0ba9ec31ca0fb79cb8f4b16914ffe88f0c",
+                  "http_status": 200,
+                  "verbatim": true
+                }
+              ],
+              "verified_verbatim": true
+            }
+          ],
+          "site_identity_proofs": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://www.aut.ac.nz/",
+              "accessed_at": "2026-10-07T19:23:23.601424+00:00",
+              "excerpt": "AUT – Knowledge that works – Auckland, New Zealand WELCOME TO AUCKLAND UNIVERSITY OF TECHNOLOGY",
+              "name": "Auckland University of Technology",
+              "domain": "aut.ac.nz",
+              "verification_status": "site_identity_checked"
+            }
+          ]
+        },
+        {
+          "arm": "on2",
+          "flag": true,
+          "pipeline_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 35,
+          "search_queries": 6,
+          "elapsed_ms": 56901,
+          "blocked_search_queries": 0,
+          "stop_reason": null,
+          "programme_urls": [
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://www.aut.ac.nz/",
+              "accessed_at": "2026-10-07T19:29:52.618863+00:00",
+              "excerpt": "AUT – Knowledge that works – Auckland, New Zealand WELCOME TO AUCKLAND UNIVERSITY OF TECHNOLOGY",
+              "name": "Auckland University of Technology",
+              "domain": "aut.ac.nz",
+              "verification_status": "site_identity_checked"
+            }
+          ]
+        },
+        {
+          "arm": "off2",
+          "flag": false,
+          "pipeline_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 25,
+          "search_queries": 6,
+          "elapsed_ms": 46011,
+          "blocked_search_queries": 1,
+          "stop_reason": "search_budget_exhausted",
+          "programme_urls": [
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "predictions": [
+            {
+              "key": "programme.exists",
+              "value": true,
+              "evidence": {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "excerpt": "Computer Science Major - Bachelor of Computer and Information Sciences Study computer science and gain the skills to develop sophisticated software solutions, solve complex problems and use the power of computing technologies i",
+                "scope": {
+                  "university": "Auckland University of Technology",
+                  "programme": "Computer Science Major - Bachelor of Computer and Information Sciences",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": null,
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-07",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "programme.exists",
+              "value": true,
+              "evidence": {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "excerpt": "Data Science Major - Bachelor of Computer and Information Sciences Study data science and develop the skills for a career as data analyst, data scientist or data engineer; careers that are in high demand all over the world.",
+                "scope": {
+                  "university": "Auckland University of Technology",
+                  "programme": "Data Science Major - Bachelor of Computer and Information Sciences",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": null,
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-07",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            }
+          ],
+          "quote_checks": [
+            {
+              "key": "programme.exists",
+              "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+              "retained_candidates": [
+                {
+                  "body_sha256": "667208d6db90aa2ab233f496b24739346d0aa57f8ca792b7749f4d7b2a0830d8",
+                  "http_status": 200,
+                  "verbatim": true
+                }
+              ],
+              "verified_verbatim": true
+            },
+            {
+              "key": "programme.exists",
+              "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+              "retained_candidates": [
+                {
+                  "body_sha256": "fa5d3ea84b508cc116822e83b5e39eb3521122b0aba990b32131a8da35dc492e",
+                  "http_status": 200,
+                  "verbatim": true
+                }
+              ],
+              "verified_verbatim": true
+            }
+          ],
+          "site_identity_proofs": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://www.aut.ac.nz/",
+              "accessed_at": "2026-10-07T19:34:56.541478+00:00",
+              "excerpt": "AUT – Knowledge that works – Auckland, New Zealand WELCOME TO AUCKLAND UNIVERSITY OF TECHNOLOGY",
+              "name": "Auckland University of Technology",
+              "domain": "aut.ac.nz",
+              "verification_status": "site_identity_checked"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "university": "Caltech",
+      "university_id": "05e4d59f87261553f15d14b0cdb470d2",
+      "arms": [
+        {
+          "arm": "off1",
+          "flag": false,
+          "pipeline_sha": "d669fd24e6286c8a3087e8b296963546f0f00f72",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 3,
+          "search_queries": 1,
+          "elapsed_ms": 12169,
+          "blocked_search_queries": 0,
+          "stop_reason": null,
+          "programme_urls": [],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": []
+        },
+        {
+          "arm": "on1",
+          "flag": true,
+          "pipeline_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+          "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+          "raw_canary_available": false,
+          "fetcher_calls": 21,
+          "search_queries": 6,
+          "elapsed_ms": 117007,
+          "blocked_search_queries": 0,
+          "stop_reason": "source_work_deadline_exhausted",
+          "programme_urls": [],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://www.caltech.edu/",
+              "accessed_at": "2026-10-07T19:24:43.608100+00:00",
+              "excerpt": "California Institute of Technology",
+              "name": "California Institute of Technology",
+              "domain": "caltech.edu",
+              "verification_status": "site_identity_checked",
+              "identity_basis": "homepage_og_site_name"
+            }
+          ]
+        },
+        {
+          "arm": "on2",
+          "flag": true,
+          "pipeline_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 21,
+          "search_queries": 6,
+          "elapsed_ms": 108268,
+          "blocked_search_queries": 0,
+          "stop_reason": null,
+          "programme_urls": [
+            "https://www.cms.caltech.edu/academics/ugrad/ugrad_cs"
+          ],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://www.caltech.edu/",
+              "accessed_at": "2026-10-07T19:30:46.453337+00:00",
+              "excerpt": "California Institute of Technology",
+              "name": "California Institute of Technology",
+              "domain": "caltech.edu",
+              "verification_status": "site_identity_checked",
+              "identity_basis": "homepage_og_site_name"
+            }
+          ]
+        },
+        {
+          "arm": "off2",
+          "flag": false,
+          "pipeline_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+          "error": null,
+          "raw_canary_available": true,
+          "fetcher_calls": 4,
+          "search_queries": 1,
+          "elapsed_ms": 14312,
+          "blocked_search_queries": 0,
+          "stop_reason": null,
+          "programme_urls": [],
+          "predictions": [],
+          "quote_checks": [],
+          "site_identity_proofs": []
+        }
+      ]
+    }
+  ],
+  "quality_score": null,
+  "semantic_review": "pending",
+  "caution": "Site identity is not programme existence; no causal credit for changing access; bounded exhaustion remains limited; no signed gold score or default promotion."
+}

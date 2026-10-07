@@ -1,0 +1,30 @@
+"""Distinguish a measured, bounded terminal timeout from unavailable capture."""
+from pathlib import Path
+
+def validate_capture(capture, expected_ids, flag, pipeline_sha, raw_root: Path):
+    errors=[];cfg=capture.get('config',{})
+    if capture.get('pipeline_sha')!=pipeline_sha: errors.append('wrong_pipeline_sha')
+    if cfg.get('site_branding_identity') is not flag: errors.append('wrong_experiment_state')
+    required={'strict_expert_budget':True,'seconds_per_case':120,'max_fetcher_calls_per_case':60,
+        'max_search_queries_per_case':6,'finalization_reserve_ms':3000,'source_work_deadline_ms':117000,
+        'search_provider':'exa','browser_enabled':False}
+    for key,value in required.items():
+        if cfg.get(key)!=value or type(cfg.get(key)) is not type(value): errors.append('wrong_config_'+key)
+    if cfg.get('cohort')!=expected_ids: errors.append('wrong_cohort')
+    observations=capture.get('observations',[])
+    if [o.get('case_id') for o in observations]!=expected_ids: errors.append('missing_or_reordered_observation')
+    if cfg.get('batch_stop_reason'): errors.append('stopped_batch')
+    for observation in observations:
+        uid=observation['case_id'];budget=cfg.get('case_budgets',{}).get(uid,{})
+        for key,maximum in [('fetcher_calls',60),('search_queries',6),('elapsed_ms',120000)]:
+            value=budget.get(key)
+            if type(value) is not int or not 0<=value<=maximum: errors.append(uid+':invalid_'+key)
+        if budget.get('active_checkpoint_available') is not True: errors.append(uid+':missing_final_checkpoint')
+        if budget.get('provider_failure') is not None: errors.append(uid+':provider_failure')
+        if budget.get('process_error') is not None: errors.append(uid+':process_failure')
+        error=observation.get('error')
+        bounded_timeout=(error=='BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED'
+            and budget.get('stop_reason')=='source_work_deadline_exhausted')
+        if error is not None and not bounded_timeout: errors.append(uid+':unavailable_or_unknown_error')
+        if error is None and not (raw_root/(uid+'.raw.json')).is_file(): errors.append(uid+':missing_completed_raw')
+    return errors

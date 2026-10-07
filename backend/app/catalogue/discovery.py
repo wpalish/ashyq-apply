@@ -22,6 +22,47 @@ from app.domain.site_identity import registrable_domain
 from app.models import University, UniversityObservation
 from app.schemas.profile import ApplicantProfileIn
 
+# SI-1: additional first-party homepage branding. Off until measured and approved.
+SITE_BRANDING_IDENTITY = False
+
+
+def _branding_name(value: str) -> str:
+    """Keep ordered name words; only the optional article is insignificant."""
+    return " ".join(word for word in normalize(value).split() if word != "the")
+
+
+def _site_branding(
+    soup: BeautifulSoup, names: list[str], localities: tuple[str, ...] = ()
+) -> tuple[str, str] | None:
+    """Read site names and explicit copyright owners, never incidental mentions."""
+    full_names = [name for n in names if len(n) >= 8 and (name := _branding_name(n))]
+    known_localities = {normalize(place) for place in localities if place}
+    for meta in soup.select('meta[property="og:site_name"]'):
+        value = str(meta.get("content") or "").strip()
+        if value and _branding_name(value) in full_names:
+            return value, "homepage_og_site_name"
+    for node in soup.select("footer p, footer small"):
+        value = node.get_text(" ", strip=True)
+        if len(value) > 300:
+            continue
+        owner = re.match(
+            r"^\s*(?:copyright\s*(?:©|\(c\))?|©)\s*"
+            r"(?:\d{4}(?:\s*[-–]\s*\d{4})?\s*[-–—|,:.]?\s*)?(.*)$",
+            value,
+            re.IGNORECASE,
+        )
+        if owner is None:
+            continue
+        # A comma may introduce a known city/country, never an arbitrary legal
+        # entity suffix ("Example University, Foundation" is another owner).
+        owner_parts = re.split(r"[,|;]", owner.group(1))
+        if any(normalize(part) not in known_localities for part in owner_parts[1:]):
+            continue
+        owner_name = _branding_name(owner_parts[0])
+        if owner_name and owner_name in full_names:
+            return value, "homepage_copyright_owner"
+    return None
+
 
 class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
     name = "local-catalogue-with-live-enrichment"
@@ -163,18 +204,37 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
             and re.search(rf"\b{re.escape(n)}\b", identity_text)
             for n in names
         ) and any(word in identity_text.split() for word in ("university", "college", "institute"))
+        excerpt = f"{title} {headings}".strip()
+        identity_basis = None
         if not long_match and not acronym_match:
-            return None
+            # Additional branding can corroborate an existing domain hint. It
+            # cannot authorize an unrelated host returned by a search provider.
+            branding = (
+                _site_branding(
+                    soup,
+                    [normalize(n) for n in [uni.name, *(uni.aliases or [])]],
+                    (uni.city or "", uni.country or ""),
+                )
+                if SITE_BRANDING_IDENTITY
+                and uni.domain
+                and registrable_domain(parts.hostname) == uni.domain
+                else None
+            )
+            if branding is None:
+                return None
+            excerpt, identity_basis = branding
         domain = registrable_domain(urlsplit(final).hostname or "")
         proof = {
             "kind": "site_identity",
             "source_url": final,
             "accessed_at": page.fetched_at.isoformat(),
-            "excerpt": f"{title} {headings}".strip(),
+            "excerpt": excerpt,
             "name": uni.name,
             "domain": domain,
             "verification_status": "site_identity_checked",
         }
+        if identity_basis is not None:
+            proof["identity_basis"] = identity_basis
         digest = hashlib.sha256(str(proof).encode()).hexdigest()
         observation_id = stable_id(f"{uni.id}/{digest}")
         if self.session.get(UniversityObservation, observation_id) is None:

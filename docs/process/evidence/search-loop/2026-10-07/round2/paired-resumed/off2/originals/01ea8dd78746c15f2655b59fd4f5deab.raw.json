@@ -1,0 +1,1237 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-07T19:33:10.679047+00:00",
+    "duration_seconds": 87.3,
+    "run_error": "",
+    "batch": [
+      "Nagoya University"
+    ],
+    "institutions": [
+      {
+        "catalogue_id": "01ea8dd78746c15f2655b59fd4f5deab",
+        "institution": "Nagoya University",
+        "country": "Japan",
+        "domain": "nagoya-u.ac.jp",
+        "access": "REACHED",
+        "robots_disallowed_requests": 0,
+        "pages_checked": 39,
+        "pages_failed": 2,
+        "failures": [
+          [
+            "https://nagoya-u.ac.jp/",
+            "blocked: Refusing 'nagoya-u.ac.jp': it does not resolve ([Errno 8] nodename nor servname provided, or not known)."
+          ],
+          [
+            "https://en.nagoya-u.ac.jp/wp-sitemap-posts-researchers-2.xml",
+            "http_error: HTTP 404"
+          ]
+        ],
+        "outcomes": {
+          "blocked": 1,
+          "ok": 37,
+          "http_error": 1
+        },
+        "discovered": {
+          "program_catalog": [
+            "https://en.nagoya-u.ac.jp/admissions/undergraduate"
+          ],
+          "admissions": [
+            "https://en.nagoya-u.ac.jp/admissions",
+            "https://en.nagoya-u.ac.jp/admissions/faq",
+            "https://en.nagoya-u.ac.jp/admissions/japan"
+          ]
+        },
+        "discovery_trace": {
+          "institution": "Nagoya University",
+          "domain": "en.nagoya-u.ac.jp",
+          "sitemaps_declared": [
+            "https://en.nagoya-u.ac.jp/wp-sitemap.xml"
+          ],
+          "sitemaps_read": [
+            "https://en.nagoya-u.ac.jp/wp-sitemap.xml",
+            "https://en.nagoya-u.ac.jp/wp-sitemap-posts-page-1.xml",
+            "https://en.nagoya-u.ac.jp/wp-sitemap-posts-articles-1.xml",
+            "https://en.nagoya-u.ac.jp/wp-sitemap-posts-events-1.xml",
+            "https://en.nagoya-u.ac.jp/wp-sitemap-posts-collection-1.xml",
+            "https://en.nagoya-u.ac.jp/wp-sitemap-posts-researchers-1.xml",
+            "https://en.nagoya-u.ac.jp/wp-sitemap-posts-jobs-1.xml",
+            "https://en.nagoya-u.ac.jp/wp-sitemap-taxonomies-article_tag-1.xml",
+            "https://en.nagoya-u.ac.jp/wp-sitemap-taxonomies-articles_category-1.xml",
+            "https://en.nagoya-u.ac.jp/wp-sitemap-taxonomies-articles_type-1.xml",
+            "https://en.nagoya-u.ac.jp/wp-sitemap-taxonomies-faculties-1.xml"
+          ],
+          "sitemap_urls_seen": 5604,
+          "sitemap_urls_kept": 26,
+          "manual_seeds": {},
+          "selected": {
+            "program_catalog": [
+              "https://en.nagoya-u.ac.jp/admissions/undergraduate"
+            ],
+            "admissions": [
+              "https://en.nagoya-u.ac.jp/admissions",
+              "https://en.nagoya-u.ac.jp/admissions/faq",
+              "https://en.nagoya-u.ac.jp/admissions/japan"
+            ]
+          },
+          "rejected_sample": [
+            [
+              "https://en.nagoya-u.ac.jp/admissions/graduate/masters-programs",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://en.nagoya-u.ac.jp/admissions/graduate/doctoral-programs",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://en.nagoya-u.ac.jp/admissions/undergraduate/april",
+              "page subject 'April admission' does not match requested fields ['computer science']"
+            ],
+            [
+              "https://en.nagoya-u.ac.jp/admissions/undergraduate/october",
+              "page subject 'October admission' does not match requested fields ['computer science']"
+            ],
+            [
+              "https://is.nagoya-u.ac.jp/edu/curri_en.html",
+              "reads as navigation, not a programme page"
+            ],
+            [
+              "https://www.is.nagoya-u.ac.jp/intro/dept_en.html",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "http://www.cm.is.nagoya-u.ac.jp/index.html.en",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://is.nagoya-u.ac.jp/intro/dept_en.html",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://en.nagoya-u.ac.jp/academics/schools/informatics",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://nupace.iee.nagoya-u.ac.jp/apply/doc/deptlist.pdf",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://www.i.nagoya-u.ac.jp/en/si/concept",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://www.i.nagoya-u.ac.jp/en/si/cs",
+              "reads as unknown, not a programme page"
+            ]
+          ],
+          "rejected_total": 12,
+          "errors": [
+            "https://en.nagoya-u.ac.jp/wp-sitemap-posts-researchers-2.xml: http_error — HTTP 404",
+            "search identity recovery: checked 8, confirmed 0",
+            "search identity recovery via exa; queries 6, failed 1, rejected {'not_a_programme_page': 2, 'duplicate': 11}",
+            "no programme page was found; only a catalogue, which cannot confirm a programme"
+          ],
+          "search_failures": [
+            "Search service unavailable (exa)."
+          ],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "walker": {
+            "catalogs_walked": 2,
+            "candidates": [
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/undergraduate",
+                "label": "Skip to content",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/undergraduate/april",
+                "label": "April admission",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/undergraduate/october",
+                "label": "October admission",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/life",
+                "label": "Life on campus",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/nagoya",
+                "label": "Life in Nagoya",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/figures",
+                "label": "Nagoya University in figures",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/japan",
+                "label": "Coming to Japan",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics/online",
+                "label": "Online education",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/support",
+                "label": "Research support",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/leadership",
+                "label": "Leadership",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/principles",
+                "label": "Principles",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/site-policy",
+                "label": "Site policy",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/facilities",
+                "label": "Open facilities",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/commitments",
+                "label": "Commitments",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/regulations",
+                "label": "Regulations",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/corporate",
+                "label": "Corporate relations",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/consortia",
+                "label": "Internal consortia",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/exchange",
+                "label": "Exchange programs",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/activities",
+                "label": "Research activities",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/institutes",
+                "label": "Research institutes",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/international",
+                "label": "International affairs",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/privacy_policy",
+                "label": "Our Site Policy",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/privacy-policy",
+                "label": "Privacy policy",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/financial",
+                "label": "Financial information",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics/curriculum",
+                "label": "Education and curriculum information",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/communications",
+                "label": "Communications",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/organizations",
+                "label": "Educational and research organizations",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/extracurricular",
+                "label": "Extracurricular activities",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/student-support",
+                "label": "Student support",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/web-accessibility",
+                "label": "Web accessibility",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/joint-facilities",
+                "label": "Joint-use educational and research facilities",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/researcher-support",
+                "label": "Researcher support",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/research-students",
+                "label": "Research students",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/distinguished-faculty",
+                "label": "Distinguished faculty",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/undergraduate",
+                "label": "Undergraduate programs",
+                "score": 15,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/undergraduate/april",
+                "label": "Skip to content",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/life",
+                "label": "Life on campus",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/nagoya",
+                "label": "Life in Nagoya",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/figures",
+                "label": "Nagoya University in figures",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/japan",
+                "label": "Coming to Japan",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics/online",
+                "label": "Online education",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/support",
+                "label": "Research support",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/leadership",
+                "label": "Leadership",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/principles",
+                "label": "Principles",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/site-policy",
+                "label": "Site policy",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/facilities",
+                "label": "Open facilities",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/commitments",
+                "label": "Commitments",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/regulations",
+                "label": "Regulations",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/corporate",
+                "label": "Corporate relations",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/consortia",
+                "label": "Internal consortia",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/exchange",
+                "label": "Exchange programs",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/activities",
+                "label": "Research activities",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/institutes",
+                "label": "Research institutes",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/international",
+                "label": "International affairs",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/privacy_policy",
+                "label": "Our Site Policy",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/privacy-policy",
+                "label": "Privacy policy",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/financial",
+                "label": "Financial information",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics/curriculum",
+                "label": "Education and curriculum information",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/communications",
+                "label": "Communications",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/organizations",
+                "label": "Educational and research organizations",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/extracurricular",
+                "label": "Extracurricular activities",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/student-support",
+                "label": "Student support",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/web-accessibility",
+                "label": "Web accessibility",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/joint-facilities",
+                "label": "Joint-use educational and research facilities",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/researcher-support",
+                "label": "Researcher support",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/research-students",
+                "label": "Research students",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/distinguished-faculty",
+                "label": "Distinguished faculty",
+                "score": 2,
+                "source": "html"
+              }
+            ],
+            "programs_confirmed": 0,
+            "outcomes": [
+              {
+                "url": "https://www.instagram.com/nagoya.university",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.facebook.com/nagoya.university.en",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://x.com/NagoyaUniv",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/user/NagoyaUniversityPR",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://jp.linkedin.com/school/nagoyauniversity",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://bsky.app/profile/en.nagoya-u.ac.jp",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.instagram.com/nagoya.university",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.facebook.com/nagoya.university.en",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://x.com/NagoyaUniv",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/user/NagoyaUniversityPR",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://jp.linkedin.com/school/nagoyauniversity",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://bsky.app/profile/en.nagoya-u.ac.jp",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics/calendar/academic-calendar",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/maps",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/news/jobs",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/contact",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://sed.adm.nagoya-u.ac.jp/en/index.html",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://portal.nagoya-u.ac.jp/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/donate",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/news",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/news/articles",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/news/events",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/news/collection",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/news/researchers",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/graduate",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/faq",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics/calendar",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics/schools",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics/graduate",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/awards",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/alumni",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/history",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/thers",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.nagoya-u.ac.jp/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cn.nagoya-u.ac.jp/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/sitemap",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/undergraduate/october",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/life",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/nagoya",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/figures",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/japan",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics/online",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/support",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/leadership",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/principles",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/site-policy",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/facilities",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/commitments",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/regulations",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/corporate",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/consortia",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/activities",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/institutes",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/international",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/privacy_policy",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/privacy-policy",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/financial",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics/curriculum",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/communications",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/organizations",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/extracurricular",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/student-support",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/web-accessibility",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/joint-facilities",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/researcher-support",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/research-students",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/distinguished-faculty",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/undergraduate",
+                "outcome": "reads_as_program_catalog"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/undergraduate/april",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/exchange",
+                "outcome": "reads_as_general_admissions"
+              },
+              {
+                "url": "https://www.instagram.com/nagoya.university",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.facebook.com/nagoya.university.en",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://x.com/NagoyaUniv",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/user/NagoyaUniversityPR",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://jp.linkedin.com/school/nagoyauniversity",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://bsky.app/profile/en.nagoya-u.ac.jp",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.instagram.com/nagoya.university",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.facebook.com/nagoya.university.en",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://x.com/NagoyaUniv",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/user/NagoyaUniversityPR",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://jp.linkedin.com/school/nagoyauniversity",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://bsky.app/profile/en.nagoya-u.ac.jp",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics/calendar/academic-calendar",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/maps",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/news/jobs",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/contact",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://sed.adm.nagoya-u.ac.jp/en/index.html",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://portal.nagoya-u.ac.jp/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/donate",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/news",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/news/articles",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/news/events",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/news/collection",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/news/researchers",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/graduate",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/faq",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics/calendar",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics/schools",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics/graduate",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/awards",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/alumni",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/history",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/thers",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.nagoya-u.ac.jp/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cn.nagoya-u.ac.jp/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.nagoya-u.ac.jp/admissions/exam/us-exam/cat2",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.nagoya-u.ac.jp/admissions/exam/us-exam/cat",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/sitemap",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/nagoya",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/figures",
+                "outcome": "walker_no_subject"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/japan",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics/online",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/support",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/leadership",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/principles",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/site-policy",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/facilities",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/commitments",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/regulations",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/corporate",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/consortia",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/exchange",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/activities",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/institutes",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/international",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/privacy_policy",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/privacy-policy",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/financial",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/academics/curriculum",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/about/communications",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/organizations",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/extracurricular",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/student-support",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/site/web-accessibility",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/joint-facilities",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/researcher-support",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/research-students",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/research/distinguished-faculty",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/undergraduate",
+                "outcome": "reads_as_program_catalog"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/admissions/undergraduate/april",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://en.nagoya-u.ac.jp/campus/life",
+                "outcome": "reads_as_unknown"
+              }
+            ]
+          }
+        },
+        "programs": [],
+        "program_page_found": false,
+        "scholarship_page_found": false,
+        "discovery_notes": "Sitemap-first discovery found: program_catalog, admissions. Not found: program_page, costs, scholarships, documents.",
+        "claims": 0,
+        "claims_verified": 0,
+        "completeness": 0.0,
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {
+          "no-pattern-match": 2
+        },
+        "page_types": {
+          "general_admissions": 2
+        },
+        "page_diagnostics": [
+          {
+            "category": "no-pattern-match",
+            "url": "https://en.nagoya-u.ac.jp/admissions",
+            "page_type": "general_admissions",
+            "characters": "1746",
+            "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://en.nagoya-u.ac.jp/admissions/japan/language/",
+            "page_type": "general_admissions",
+            "characters": "2484",
+            "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed"
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 1,
+      "blocked": 0,
+      "program_pages_found": 0,
+      "scholarship_pages_found": 0,
+      "claims": 0,
+      "false_positives": 0,
+      "page_outcomes": {
+        "no-pattern-match": 2
+      },
+      "page_types": {
+        "general_admissions": 2
+      },
+      "recall": {
+        "program": {
+          "numerator": 0,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 1,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 2,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 4,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 36,
+        "browser": 0,
+        "pdf": 1
+      }
+    }
+  },
+  "claims": []
+}

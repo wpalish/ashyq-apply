@@ -382,3 +382,160 @@ async def test_acronym_identity_needs_matching_host_and_university_heading(catal
     assert (await adapter._probe_site(uni, "https://ucl.ac.uk/"))[
         "homepage"
     ] == "https://ucl.ac.uk/"
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "query,content,excerpt,basis",
+    [
+        (
+            "California Institute of Technology",
+            "<title>Home - www.caltech.edu</title><h1>Caltech Homepage</h1>"
+            '<meta property="og:site_name" content="California Institute of Technology">',
+            "California Institute of Technology",
+            "homepage_og_site_name",
+        ),
+        (
+            "University of Witwatersrand",
+            "<title>Home - Wits University</title><h1>Straight From the Gram</h1>"
+            "<footer><p>Copyright © 2026 - University of the Witwatersrand, Johannesburg.</p></footer>",
+            "Copyright © 2026 - University of the Witwatersrand, Johannesburg.",
+            "homepage_copyright_owner",
+        ),
+    ],
+)
+async def test_site_branding_can_corroborate_a_hinted_identity_only_when_enabled(
+    catalogue_session, monkeypatch, query, content, excerpt, basis
+):
+    uni = retrieve(catalogue_session, query=query)[0]
+    assert uni.registry_entry is None
+    url = f"https://{uni.domain}/"
+    fetcher = SimpleNamespace(
+        get=AsyncMock(
+            return_value=FetchResult(
+                url=url, outcome=FetchOutcome.OK, content=content.encode("utf-8")
+            )
+        )
+    )
+    adapter = CatalogueDiscoveryAdapter(
+        fetcher, session=catalogue_session, university_ids=[uni.id], live_limit=1
+    )
+    assert await adapter._probe_site(uni, url) is None
+    monkeypatch.setattr("app.catalogue.discovery.SITE_BRANDING_IDENTITY", True)
+    assert (await adapter._probe_site(uni, url))["homepage"] == url
+    proof = (
+        catalogue_session.scalars(
+            select(UniversityObservation).where(
+                UniversityObservation.university_id == uni.id,
+                UniversityObservation.seed_version == "live-site-identity",
+            )
+        )
+        .one()
+        .payload
+    )
+    assert proof["excerpt"] == excerpt and proof["identity_basis"] == basis
+    assert await adapter._probe_site(uni, url) is not None
+    assert (
+        len(
+            catalogue_session.scalars(
+                select(UniversityObservation).where(
+                    UniversityObservation.university_id == uni.id,
+                    UniversityObservation.seed_version == "live-site-identity",
+                )
+            ).all()
+        )
+        == 1
+    )
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "hint,final",
+    [
+        ("https://directory.edu/", ""),
+        ("https://mit.edu/", "https://directory.edu/"),
+    ],
+)
+async def test_extra_branding_cannot_authorize_an_unrelated_host(
+    catalogue_session, monkeypatch, hint, final
+):
+    uni = retrieve(catalogue_session, query="Massachusetts Institute")[0]
+    fetcher = SimpleNamespace(
+        get=AsyncMock(
+            return_value=FetchResult(
+                url=hint,
+                final_url=final,
+                outcome=FetchOutcome.OK,
+                content=b'<meta property="og:site_name" content="Massachusetts Institute of Technology">',
+            )
+        )
+    )
+    adapter = CatalogueDiscoveryAdapter(
+        fetcher, session=catalogue_session, university_ids=[uni.id], live_limit=1
+    )
+    monkeypatch.setattr("app.catalogue.discovery.SITE_BRANDING_IDENTITY", True)
+    assert await adapter._probe_site(uni, hint) is None
+    assert uni.domain_status == "seed"
+
+
+@pytest.mark.parametrize(
+    "html",
+    [
+        "<main>Example University</main>",
+        "<footer><p>We partner with Example University</p></footer>",
+        "<footer><p>Copyright 2026 Directory Ltd; Example University partner</p></footer>",
+        "<footer><p>Copyright 2026 Example University Foundation</p></footer>",
+        "<footer><p>Copyright 2026 Example University, Foundation</p></footer>",
+        "<footer><p>Copyright 2026 Example University, Inc.</p></footer>",
+        "<footer><p>Copyright 2026 Example University, Johannesburg, Foundation</p></footer>",
+        "<footer><p>Copyright 2026 Example Universityshire</p></footer>",
+        "<p>Copyright 2026 Example University</p>",
+        '<meta property="og:site_name" content="News about Example University">',
+        '<meta property="og:site_name" content="Example College">',
+        '<meta property="og:site_name" content="EU">',
+    ],
+)
+def test_site_branding_rejects_mentions_and_different_entities(html):
+    from bs4 import BeautifulSoup
+
+    from app.catalogue.discovery import _site_branding
+
+    assert (
+        _site_branding(
+            BeautifulSoup(html, "html.parser"),
+            ["example university"],
+            ("Johannesburg", "South Africa"),
+        )
+        is None
+    )
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "branding",
+    [
+        '<meta property="og:site_name" content="Example University">',
+        "<footer><p>Copyright 2026 Example University</p></footer>",
+    ],
+)
+async def test_branding_preserves_a_recorded_parenthetical_identity_qualifier(
+    catalogue_session, monkeypatch, branding
+):
+    uni = retrieve(catalogue_session, query="Massachusetts Institute")[0]
+    uni.name = "Example University (Foundation)"
+    uni.aliases = []
+    url = f"https://{uni.domain}/"
+    fetcher = SimpleNamespace(
+        get=AsyncMock(
+            return_value=FetchResult(
+                url=url,
+                outcome=FetchOutcome.OK,
+                content=("<title>Home</title><h1>Welcome</h1>" + branding).encode(),
+            )
+        )
+    )
+    adapter = CatalogueDiscoveryAdapter(
+        fetcher, session=catalogue_session, university_ids=[uni.id], live_limit=1
+    )
+    monkeypatch.setattr("app.catalogue.discovery.SITE_BRANDING_IDENTITY", True)
+    assert await adapter._probe_site(uni, url) is None

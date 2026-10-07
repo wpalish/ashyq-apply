@@ -1,0 +1,110 @@
+"""Continue only the three unstarted arms; preserve the closed first attempt."""
+import hashlib
+import json
+import os
+import subprocess
+from datetime import datetime, timezone
+from pathlib import Path
+
+from pair_validation import validate_capture
+
+WORK = Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work')
+REPO = WORK / 'ashyq-apply'
+ROOT = WORK / 'search-loop-round2'
+OLD = ROOT / 'paired-launch.frozen.json'
+MANIFEST = ROOT / 'paired-resume.frozen.json'
+STOP = WORK / 'development-STOP.json'
+
+def git(*args):
+    return subprocess.check_output(['git', *args], cwd=REPO, text=True).strip()
+
+def now():
+    return datetime.now(timezone.utc).isoformat()
+
+assert not MANIFEST.exists(), 'Never duplicate this resumed observation'
+assert not STOP.exists(), 'Never reset or bypass provider refusal'
+assert not git('status', '--porcelain'), 'Commit the controller repair and evidence first'
+assert (REPO / 'backend/.env').is_symlink()
+old_bytes = OLD.read_bytes()
+old = json.loads(old_bytes)
+assert old['status'] == 'STOPPED_PROTOCOL_OR_BUDGET_FAILURE'
+assert old['source_unchanged'] and not old['shared_stop_present']
+assert old['remaining_arms'] == ['on1', 'on2', 'off2']
+assert [a['arm'] for a in old['completed_arms']] == ['off1']
+gates = json.loads((ROOT / 'gates/backend-gates.json').read_text())
+assert gates['source_unchanged'] and gates['dotenv_restored']
+assert all(c['exit_code'] == 0 for c in gates['commands']) and len(gates['commands']) == 6
+hashes = gates['source_sha256']
+assert hashes == old['source_sha256']
+assert all(hashlib.sha256((REPO / p).read_bytes()).hexdigest() == h for p, h in hashes.items())
+source_pin = git('rev-parse', 'HEAD')
+assert git('rev-parse', 'HEAD:backend/app') == old['app_tree']
+assert not git('diff', old['source_pin'], source_pin, '--', 'backend/app', 'backend/evaluation', 'backend/tests', 'frontend', 'backend/requirements.txt', 'backend/requirements-dev.txt')
+expected = [c['university_id'] for c in old['cohort']]
+first = dict(old['completed_arms'][0])
+assert first['exit_code'] == 0
+capture_path = Path(first['capture_path'])
+capture = json.loads(capture_path.read_text())
+assert not validate_capture(capture, expected, False, old['source_pin'], capture_path.parent)
+first.update(pipeline_sha=old['source_pin'], reused_original=True, controller_v2_valid=True)
+record = dict(old, source_pin=source_pin, started_at=now(), status='RUNNING',
+    prior_closed_manifest=str(OLD), prior_closed_manifest_sha256=hashlib.sha256(old_bytes).hexdigest(),
+    prior_status=old['status'], executable_source_pin=old['source_pin'],
+    completed_arms=[first], current_arm=None, remaining_arms=list(old['remaining_arms']),
+    controller_version=2, source_unchanged=None,
+    comparison_note='off1 was retained from the closed first attempt; subsequent Git heads differ only in documentation/evidence; application, evaluation, tests and frontend bytes are identical.')
+record.pop('finished_at', None)
+
+def persist():
+    temporary = MANIFEST.with_suffix('.tmp')
+    temporary.write_text(json.dumps(record, ensure_ascii=False, indent=2) + '\n')
+    temporary.replace(MANIFEST)
+
+persist()
+for arm in old['arms'][1:]:
+    if STOP.exists():
+        record.update(status='STOPPED_PROVIDER_REFUSAL', finished_at=now())
+        break
+    assert git('rev-parse', 'HEAD') == source_pin
+    assert all(hashlib.sha256((REPO / p).read_bytes()).hexdigest() == h for p, h in hashes.items())
+    assert OLD.read_bytes() == old_bytes
+    assert arm['arm'] == record['remaining_arms'][0]
+    out_path = ROOT / 'pair' / arm['arm']
+    temp = Path(arm['environment_overrides']['TMPDIR'])
+    assert not out_path.exists() and not temp.exists(), 'Never reuse an attempted arm or cache'
+    temp.mkdir(parents=True)
+    record['current_arm'] = arm['arm']
+    persist()
+    env = dict(os.environ, **arm['environment_overrides'])
+    with (ROOT / (arm['arm'] + '-parent.log')).open('x') as log:
+        result = subprocess.run(arm['arguments'], cwd=REPO / 'backend', env=env, stdout=log, stderr=subprocess.STDOUT)
+    matches = list(out_path.glob('*/capture.json'))
+    outcome = dict(arm=arm['arm'], site_branding_identity=arm['site_branding_identity'],
+        pipeline_sha=source_pin, reused_original=False, exit_code=result.returncode,
+        finished_at=now(), capture_path=str(matches[0]) if len(matches) == 1 else None)
+    record['completed_arms'].append(outcome)
+    record['remaining_arms'].remove(arm['arm'])
+    persist()
+    if STOP.exists():
+        record.update(status='STOPPED_PROVIDER_REFUSAL', finished_at=now())
+        break
+    if result.returncode or len(matches) != 1:
+        record.update(status='STOPPED_CAPTURE_UNAVAILABLE', finished_at=now())
+        break
+    capture = json.loads(matches[0].read_text())
+    errors = validate_capture(capture, expected, arm['site_branding_identity'], source_pin, matches[0].parent)
+    outcome.update(controller_v2_valid=not errors, validation_errors=errors)
+    persist()
+    if errors:
+        record.update(status='STOPPED_PROTOCOL_OR_BUDGET_FAILURE', finished_at=now())
+        break
+else:
+    record.update(status='FOUR_ARMS_COMPLETED', finished_at=now())
+record['source_unchanged'] = git('rev-parse', 'HEAD') == source_pin and all(
+    hashlib.sha256((REPO / p).read_bytes()).hexdigest() == h for p, h in hashes.items())
+record['shared_stop_present'] = STOP.exists()
+record['current_arm'] = None
+persist()
+assert OLD.read_bytes() == old_bytes
+print(json.dumps({k: record[k] for k in ['status', 'source_pin', 'remaining_arms', 'source_unchanged', 'shared_stop_present']}))
+assert record['source_unchanged']

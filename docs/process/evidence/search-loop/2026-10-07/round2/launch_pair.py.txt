@@ -1,0 +1,66 @@
+"""One frozen four-arm DEV observation; sticky refusal aborts the whole queue."""
+import hashlib
+import json
+import os
+import subprocess
+from datetime import datetime, timezone
+from pathlib import Path
+
+WORK=Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work')
+REPO=WORK/'ashyq-apply'
+ROOT=WORK/'search-loop-round2'
+REQUEST=REPO/'docs/process/evidence/search-loop/2026-10-07/round2/paired-request.prepared.json'
+MANIFEST=ROOT/'paired-launch.frozen.json'
+STOP=WORK/'development-STOP.json'
+def git(*args): return subprocess.check_output(['git',*args],cwd=REPO,text=True).strip()
+def now(): return datetime.now(timezone.utc).isoformat()
+assert not MANIFEST.exists(), 'Never duplicate this frozen observation'
+assert not STOP.exists(), 'Never reset or bypass a prior provider refusal'
+assert not git('status','--porcelain'), 'Commit green source and prepared plan first'
+assert (REPO/'backend/.env').is_symlink(), 'Offline gate must restore dedicated configuration'
+gates=json.loads((ROOT/'gates/backend-gates.json').read_text())
+assert gates['source_unchanged'] and gates['dotenv_restored']
+assert len(gates['commands'])==6 and all(x['exit_code']==0 for x in gates['commands'])
+assert all(hashlib.sha256((REPO/p).read_bytes()).hexdigest()==h for p,h in gates['source_sha256'].items())
+request=json.loads(REQUEST.read_text())
+record=dict(request,source_pin=git('rev-parse','HEAD'),started_at=now(),status='RUNNING',
+    app_tree=git('rev-parse','HEAD:backend/app'),source_sha256=gates['source_sha256'],
+    completed_arms=[],current_arm=None,remaining_arms=[a['arm'] for a in request['arms']])
+def persist(): MANIFEST.write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n')
+persist()
+for arm in request['arms']:
+    if STOP.exists():
+        record.update(status='STOPPED_PROVIDER_REFUSAL',finished_at=now());persist();break
+    assert git('rev-parse','HEAD')==record['source_pin']
+    assert all(hashlib.sha256((REPO/p).read_bytes()).hexdigest()==h for p,h in record['source_sha256'].items())
+    tmp=Path(arm['environment_overrides']['TMPDIR']);tmp.mkdir(parents=True,exist_ok=True)
+    record['current_arm']=arm['arm'];persist()
+    env=dict(os.environ,**arm['environment_overrides'])
+    with (ROOT/(arm['arm']+'-parent.log')).open('w') as log:
+        result=subprocess.run(arm['arguments'],cwd=REPO/'backend',env=env,stdout=log,stderr=subprocess.STDOUT)
+    matches=list((ROOT/'pair'/arm['arm']).glob('*/capture.json'))
+    outcome=dict(arm=arm['arm'],site_branding_identity=arm['site_branding_identity'],exit_code=result.returncode,
+        finished_at=now(),capture_path=str(matches[0]) if len(matches)==1 else None)
+    record['completed_arms'].append(outcome);record['remaining_arms'].remove(arm['arm']);persist()
+    if STOP.exists():
+        record.update(status='STOPPED_PROVIDER_REFUSAL',finished_at=now());persist();break
+    if result.returncode or len(matches)!=1:
+        record.update(status='STOPPED_CAPTURE_UNAVAILABLE',finished_at=now());persist();break
+    capture=json.loads(matches[0].read_text())
+    cfg=capture['config'];expected=[c['university_id'] for c in request['cohort']]
+    valid=(capture['pipeline_sha']==record['source_pin'] and cfg.get('site_branding_identity') is arm['site_branding_identity']
+        and cfg['cohort']==expected and [o['case_id'] for o in capture['observations']]==expected
+        and not cfg.get('batch_stop_reason') and all(o['error'] is None for o in capture['observations'])
+        and all(b['fetcher_calls']<=60 and b['search_queries']<=6 and b['elapsed_ms']<=120000
+            and b.get('provider_failure') is None and b.get('active_checkpoint_available')
+            for b in cfg['case_budgets'].values()))
+    outcome['complete_inside_caps']=valid;persist()
+    if not valid:
+        record.update(status='STOPPED_PROTOCOL_OR_BUDGET_FAILURE',finished_at=now());persist();break
+else:
+    record.update(status='FOUR_ARMS_COMPLETED',finished_at=now())
+record['source_unchanged']=git('rev-parse','HEAD')==record['source_pin'] and all(
+    hashlib.sha256((REPO/p).read_bytes()).hexdigest()==h for p,h in record['source_sha256'].items())
+record['shared_stop_present']=STOP.exists();record['current_arm']=None;persist()
+print(json.dumps({k:record[k] for k in ['status','source_pin','remaining_arms','source_unchanged','shared_stop_present']}))
+assert record['source_unchanged']

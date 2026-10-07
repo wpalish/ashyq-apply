@@ -1,0 +1,529 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-07T19:23:19.563765+00:00",
+    "duration_seconds": 80.8,
+    "run_error": "",
+    "batch": [
+      "Auckland University of Technology"
+    ],
+    "institutions": [
+      {
+        "catalogue_id": "0480c3b293c219debd4325fe107ac27b",
+        "institution": "Auckland University of Technology",
+        "country": "New Zealand",
+        "domain": "aut.ac.nz",
+        "access": "REACHED",
+        "robots_disallowed_requests": 0,
+        "pages_checked": 33,
+        "pages_failed": 8,
+        "failures": [
+          [
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-engineering-technology",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.aut.ac.nz/study/study-options/science/courses",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/networks-and-cybersecurity-major-bachelor-of-computer-and-information-sciences",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.aut.ac.nz/study/fees-and-scholarships",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+            "http_error: HTTP 403"
+          ]
+        ],
+        "outcomes": {
+          "ok": 25,
+          "http_error": 8
+        },
+        "discovered": {
+          "program_catalog": [
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses",
+            "https://www.aut.ac.nz/study/study-options/science/courses",
+            "https://www.aut.ac.nz/study/study-options/health-sciences/courses"
+          ],
+          "program_page": [
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "admissions": [
+            "https://www.aut.ac.nz/study/entry-requirements/international-student-entry-requirements",
+            "https://www.aut.ac.nz/student-life/opportunities-and-careers/international-student-exchange/apply-for-student-exchange",
+            "https://www.aut.ac.nz/study/entry-requirements"
+          ],
+          "costs": [
+            "https://www.aut.ac.nz/study/fees-and-scholarships",
+            "https://www.aut.ac.nz/study/fees-and-scholarships/fee-refunds",
+            "https://www.aut.ac.nz/study/fees-and-scholarships/paying-your-fees"
+          ],
+          "scholarships": [
+            "https://www.aut.ac.nz/student-life/support-services/scholarship-student-support"
+          ]
+        },
+        "discovery_trace": {
+          "institution": "Auckland University of Technology",
+          "domain": "www.aut.ac.nz",
+          "sitemaps_declared": [
+            "https://www.aut.ac.nz/sitemap-aut"
+          ],
+          "sitemaps_read": [
+            "https://www.aut.ac.nz/sitemap-aut"
+          ],
+          "sitemap_urls_seen": 1535,
+          "sitemap_urls_kept": 228,
+          "manual_seeds": {},
+          "selected": {
+            "program_catalog": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses",
+              "https://www.aut.ac.nz/study/study-options/science/courses",
+              "https://www.aut.ac.nz/study/study-options/health-sciences/courses"
+            ],
+            "program_page": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "admissions": [
+              "https://www.aut.ac.nz/study/entry-requirements/international-student-entry-requirements",
+              "https://www.aut.ac.nz/student-life/opportunities-and-careers/international-student-exchange/apply-for-student-exchange",
+              "https://www.aut.ac.nz/study/entry-requirements"
+            ],
+            "costs": [
+              "https://www.aut.ac.nz/study/fees-and-scholarships",
+              "https://www.aut.ac.nz/study/fees-and-scholarships/fee-refunds",
+              "https://www.aut.ac.nz/study/fees-and-scholarships/paying-your-fees"
+            ],
+            "scholarships": [
+              "https://www.aut.ac.nz/student-life/support-services/scholarship-student-support"
+            ]
+          },
+          "rejected_sample": [
+            [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/become-an-industry-partner/master-of-analytics-projects-information-for-industry-partners",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/become-an-industry-partner/master-of-analytics-projects-information-for-industry-partners/submit-a-master-of-analytics-student-project-online-form",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/become-an-industry-partner/master-of-it-project-management-industry-partner-information",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/entry-requirements/english-language-requirements/english-language-requirements-for-doctoral-programmes",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/entry-requirements/english-language-requirements/english-language-requirements-for-masters-degrees",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/courses/graduate-certificate-in-arts",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/courses/graduate-certificate-in-science",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/courses/graduate-diploma-in-arts",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/courses/graduate-diploma-in-science",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/courses/postgraduate-certificate-in-arts",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/courses/postgraduate-certificate-in-science",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/courses/postgraduate-diploma-in-arts",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/courses/postgraduate-diploma-in-science",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/courses/master-of-arts",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/courses/master-of-arts/maori-development",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/courses/master-of-arts/psychology-specialisation-master-of-arts",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/courses/master-of-science",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/courses/master-of-philosophy",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/business/courses/graduate-diploma-in-business",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/business/courses/graduate-certificate-in-business",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/law/courses/postgraduate-certificate-in-law",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/law/courses/master-of-laws",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/business/courses/postgraduate-certificate-in-business-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/business/courses/postgraduate-diploma-in-applied-finance",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/business/courses/postgraduate-diploma-in-global-business",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/business/courses/postgraduate-diploma-in-marketing",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/business/courses/postgraduate-certificate-in-professional-accounting",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/business/courses/postgraduate-diploma-in-professional-accounting",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/sport-and-recreation/courses/graduate-diploma-in-sport-and-exercise",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/sport-and-recreation/courses/graduate-certificate-in-sport-and-exercise",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/social-sciences-and-public-policy/courses/master-of-human-rights",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/hospitality-tourism-and-events/courses/graduate-diploma-in-international-hospitality-management",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/hospitality-tourism-and-events/courses/graduate-certificate-in-international-hospitality-management",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/hospitality-tourism-and-events/courses/postgraduate-diploma-in-international-hospitality-management",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/hospitality-tourism-and-events/courses/postgraduate-diploma-in-gastronomy",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/hospitality-tourism-and-events/courses/postgraduate-certificate-in-international-tourism-management",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/hospitality-tourism-and-events/courses/postgraduate-certificate-in-international-hospitality-management",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/hospitality-tourism-and-events/courses/postgraduate-certificate-in-gastronomy",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/hospitality-tourism-and-events/courses/master-of-international-tourism-management",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/hospitality-tourism-and-events/courses/master-of-gastronomy",
+              "names a degree level other than bachelor"
+            ]
+          ],
+          "rejected_total": 147,
+          "errors": [
+            "search identity recovery: checked 8, confirmed 0",
+            "search identity recovery via exa; queries 6, failed 0, rejected {'duplicate': 28, 'wrong_degree_level': 2}"
+          ],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "walker": {
+            "catalogs_walked": 2,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses",
+                "outcome": "http_error"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses",
+                "outcome": "js_no_program_list"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/science/courses",
+                "outcome": "http_error"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/science/courses",
+                "outcome": "js_no_program_list"
+              }
+            ]
+          }
+        },
+        "programs": [
+          "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+          "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+        ],
+        "program_page_found": true,
+        "scholarship_page_found": true,
+        "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+        "claims": 1,
+        "claims_verified": 1,
+        "completeness": 0.0,
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {
+          "classifier-rejected": 2,
+          "fetch-failed": 3,
+          "fetched-ok": 4,
+          "no-pattern-match": 1
+        },
+        "page_types": {
+          "irrelevant": 3,
+          "program_detail": 2,
+          "unknown": 2
+        },
+        "page_diagnostics": [
+          {
+            "category": "classifier-rejected",
+            "url": "https://www.aut.ac.nz/study/entry-requirements/international-student-entry-requirements",
+            "page_type": "irrelevant",
+            "characters": "13385",
+            "detail": "classified as irrelevant; no requirement can be read from this kind of page. title='International Students - Entry Requirements - AUT' signals='title is off-topic' chars=13385 degrees=[]"
+          },
+          {
+            "category": "classifier-rejected",
+            "url": "https://www.aut.ac.nz/study/entry-requirements/international-student-entry-requirements",
+            "page_type": "irrelevant",
+            "characters": "13385",
+            "detail": "classified as irrelevant; no requirement can be read from this kind of page. title='International Students - Entry Requirements - AUT' signals='title is off-topic' chars=13385 degrees=[]"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/study/fees-and-scholarships",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+            "page_type": "program_detail",
+            "characters": "6971",
+            "detail": "1 claims read from this page"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.aut.ac.nz/study/fees-and-scholarships",
+            "page_type": "irrelevant",
+            "characters": "796",
+            "detail": "page was read but no cost figures could be extracted"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+            "page_type": "program_detail",
+            "characters": "5684",
+            "detail": "1 claims read from this page"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.aut.ac.nz/student-life/support-services/scholarship-student-support",
+            "page_type": "unknown",
+            "characters": null,
+            "detail": "read as a funding index; 0 award links, 0 queued within the award budget"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.aut.ac.nz/student-life/support-services/scholarship-student-support",
+            "page_type": "unknown",
+            "characters": null,
+            "detail": "read as a funding index; 0 award links, 0 queued within the award budget"
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 1,
+      "blocked": 0,
+      "program_pages_found": 1,
+      "scholarship_pages_found": 1,
+      "claims": 1,
+      "false_positives": 0,
+      "page_outcomes": {
+        "classifier-rejected": 2,
+        "fetch-failed": 3,
+        "fetched-ok": 4,
+        "no-pattern-match": 1
+      },
+      "page_types": {
+        "irrelevant": 3,
+        "program_detail": 2,
+        "unknown": 2
+      },
+      "recall": {
+        "program": {
+          "numerator": 1,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 3,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 2,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 0,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 24,
+        "browser": 0,
+        "pdf": 1
+      }
+    }
+  },
+  "claims": [
+    {
+      "claim_type": "program_exists",
+      "normalized_value": {
+        "program": "Data Science Major - Bachelor of Computer and Information Sciences",
+        "degree": "bachelor",
+        "language": null,
+        "matched_because": "page subject 'Data Science Major - Bachelor of Computer and Information Sciences' covers every requested subject word"
+      },
+      "original_text_excerpt": "Data Science Major - Bachelor of Computer and Information Sciences Study data science and develop the skills for a career as data analyst, data scientist or data engineer; careers that are in high demand all over the world.",
+      "source_url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+      "page_title": "Data Science Major - Computer and Information Sciences - AUT",
+      "relevant_section": "Programme identity",
+      "official_domain": true,
+      "program": "Data Science Major Bachelor Of Computer And Information Sciences",
+      "subject_key": null,
+      "intake": "fall 2027",
+      "academic_year": "2027/28",
+      "accessed_at": "2026-10-07T19:24:24.233771Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "program_intake",
+      "confidence": 0.9,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": ""
+    },
+    {
+      "claim_type": "program_exists",
+      "normalized_value": {
+        "program": "Computer Science Major - Bachelor of Computer and Information Sciences",
+        "degree": "bachelor",
+        "language": null,
+        "matched_because": "page subject 'Computer Science Major - Bachelor of Computer and Information Sciences' covers every requested subject word"
+      },
+      "original_text_excerpt": "Computer Science Major - Bachelor of Computer and Information Sciences Study computer science and gain the skills to develop sophisticated software solutions, solve complex problems and use the power of computing technologies i",
+      "source_url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+      "page_title": "Computer Science - Computer and Information Sciences - AUT",
+      "relevant_section": "Programme identity",
+      "official_domain": true,
+      "program": "Computer Science Major Bachelor Of Computer And Information Sciences",
+      "subject_key": null,
+      "intake": "fall 2027",
+      "academic_year": "2027/28",
+      "accessed_at": "2026-10-07T19:24:29.681964Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "program_intake",
+      "confidence": 0.9,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": ""
+    }
+  ]
+}

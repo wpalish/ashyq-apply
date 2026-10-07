@@ -1,0 +1,502 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+  "captured_at": "20261007T191935Z",
+  "mode": "live",
+  "config": {
+    "search_provider": "exa",
+    "seconds_per_case": 120,
+    "max_fetcher_calls_per_case": 60,
+    "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+    "search_before_navigation": false,
+    "site_branding_identity": true,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "browser_enabled": false,
+    "cohort": [
+      "01d3bb22815c61aa8454283116cbd4fa",
+      "01ea8dd78746c15f2655b59fd4f5deab",
+      "0386940c5cef525b3c8e7966868f5ed6",
+      "0480c3b293c219debd4325fe107ac27b",
+      "05e4d59f87261553f15d14b0cdb470d2"
+    ],
+    "selection": "catalogue_id",
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "harness_sha256": "d537aaef6527572dd6dda929e3ac235861e28a5e3ef5cd829ef11f3c71b73399",
+    "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+    "strict_expert_budget": true,
+    "max_search_queries_per_case": 6,
+    "cold_fetcher_reads": true,
+    "child_active_seconds": 120,
+    "finalization_reserve_ms": 3000,
+    "source_work_deadline_ms": 117000,
+    "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+    "parent_process_reserve_seconds": 15,
+    "parent_process_timeout_seconds": 135,
+    "case_budgets": {
+      "01d3bb22815c61aa8454283116cbd4fa": {
+        "strict_expert_budget": true,
+        "provider": "exa",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 3000,
+        "source_work_deadline_ms": 117000,
+        "fetcher_calls": 26,
+        "search_queries": 6,
+        "blocked_search_queries": 1,
+        "network_http_requests": 26,
+        "elapsed_ms": 52190,
+        "stop_reason": "search_budget_exhausted",
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 52.65878525003791,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "01ea8dd78746c15f2655b59fd4f5deab": {
+        "strict_expert_budget": true,
+        "provider": "exa",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 3000,
+        "source_work_deadline_ms": 117000,
+        "fetcher_calls": 39,
+        "search_queries": 6,
+        "blocked_search_queries": 1,
+        "network_http_requests": 60,
+        "elapsed_ms": 99885,
+        "stop_reason": "search_budget_exhausted",
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 100.50978724996094,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "0386940c5cef525b3c8e7966868f5ed6": {
+        "strict_expert_budget": true,
+        "provider": "exa",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 3000,
+        "source_work_deadline_ms": 117000,
+        "fetcher_calls": 20,
+        "search_queries": 6,
+        "blocked_search_queries": 0,
+        "network_http_requests": 35,
+        "elapsed_ms": 69083,
+        "stop_reason": null,
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 69.72288866597228,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "0480c3b293c219debd4325fe107ac27b": {
+        "strict_expert_budget": true,
+        "provider": "exa",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 3000,
+        "source_work_deadline_ms": 117000,
+        "fetcher_calls": 33,
+        "search_queries": 6,
+        "blocked_search_queries": 0,
+        "network_http_requests": 41,
+        "elapsed_ms": 80970,
+        "stop_reason": null,
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 81.64394804101903,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "05e4d59f87261553f15d14b0cdb470d2": {
+        "strict_expert_budget": true,
+        "provider": "exa",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 3000,
+        "source_work_deadline_ms": 117000,
+        "fetcher_calls": 21,
+        "search_queries": 6,
+        "blocked_search_queries": 0,
+        "network_http_requests": 30,
+        "elapsed_ms": 117007,
+        "stop_reason": "source_work_deadline_exhausted",
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 117.69179737498052,
+        "process_error": null,
+        "active_checkpoint_available": true
+      }
+    },
+    "batch_stop_reason": null,
+    "batch_attempted_case_ids": [
+      "01d3bb22815c61aa8454283116cbd4fa",
+      "01ea8dd78746c15f2655b59fd4f5deab",
+      "0386940c5cef525b3c8e7966868f5ed6",
+      "0480c3b293c219debd4325fe107ac27b",
+      "05e4d59f87261553f15d14b0cdb470d2"
+    ],
+    "batch_completed_case_ids": [
+      "01d3bb22815c61aa8454283116cbd4fa",
+      "01ea8dd78746c15f2655b59fd4f5deab",
+      "0386940c5cef525b3c8e7966868f5ed6",
+      "0480c3b293c219debd4325fe107ac27b",
+      "05e4d59f87261553f15d14b0cdb470d2"
+    ],
+    "batch_remaining_case_ids": []
+  },
+  "observations": [
+    {
+      "case_id": "01d3bb22815c61aa8454283116cbd4fa",
+      "programme_urls": [
+        "http://en.dlut.edu.cn/info/1103/2308.htm"
+      ],
+      "ranked_urls": [],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 26,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 52.18966870789882,
+        "cost_usd": null,
+        "human_review_required": null,
+        "document_reads": null,
+        "document_seconds": null,
+        "document_stop": null
+      },
+      "page_outcomes": [
+        {
+          "category": "fetch-failed",
+          "url": "http://en.dlut.edu.cn/info/1103/2308.htm",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ReadError); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "classifier-rejected",
+          "url": "https://en.dlut.edu.cn/Admission_Studies.htm",
+          "page_type": "unknown",
+          "detail": "classified as unknown; no requirement can be read from this kind of page. title='Admission Studies-DALIAN UNIVERSITY OF TECHNOLOGY' signals='no decisive signals' chars=2044 degrees=[]",
+          "characters": 2044
+        },
+        {
+          "category": "fetch-failed",
+          "url": "http://en.dlut.edu.cn/info/1103/2308.htm",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ReadError); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        }
+      ],
+      "error": null
+    },
+    {
+      "case_id": "01ea8dd78746c15f2655b59fd4f5deab",
+      "programme_urls": [],
+      "ranked_urls": [
+        "https://en.nagoya-u.ac.jp/admissions/undergraduate/april",
+        "https://en.nagoya-u.ac.jp/admissions/undergraduate/october"
+      ],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 39,
+        "browser_fetches": 0,
+        "pdf_fetches": 1,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 99.8852838750463,
+        "cost_usd": null,
+        "human_review_required": null,
+        "document_reads": null,
+        "document_seconds": null,
+        "document_stop": null
+      },
+      "page_outcomes": [
+        {
+          "category": "no-pattern-match",
+          "url": "https://en.nagoya-u.ac.jp/admissions",
+          "page_type": "general_admissions",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 1746
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://en.nagoya-u.ac.jp/admissions/japan/language/",
+          "page_type": "general_admissions",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 2484
+        }
+      ],
+      "error": null
+    },
+    {
+      "case_id": "0386940c5cef525b3c8e7966868f5ed6",
+      "programme_urls": [],
+      "ranked_urls": [],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 20,
+        "browser_fetches": 0,
+        "pdf_fetches": 1,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 69.08351241692435,
+        "cost_usd": null,
+        "human_review_required": null,
+        "document_reads": null,
+        "document_seconds": null,
+        "document_stop": null
+      },
+      "page_outcomes": [
+        {
+          "category": "unreadable",
+          "url": "https://www.wits.ac.za/applications",
+          "page_type": "unclassified",
+          "detail": "page fetched but no readable text could be extracted",
+          "characters": null
+        }
+      ],
+      "error": null
+    },
+    {
+      "case_id": "0480c3b293c219debd4325fe107ac27b",
+      "programme_urls": [
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+      ],
+      "ranked_urls": [
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-engineering-technology",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-engineering-technology/bachelor-of-engineering-technology-info-for-students-who-started-before-2024",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/networks-and-cybersecurity-major-bachelor-of-computer-and-information-sciences",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/digital-services-major-bachelor-of-computer-and-information-sciences",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+        "https://www.aut.ac.nz/courses/bachelor-of-business-and-bachelor-of-computer-and-information-sciences-conjoint",
+        "https://www.aut.ac.nz/courses/bachelor-of-arts-and-bachelor-of-computer-and-information-sciences-conjoint",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/diploma-in-engineering",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/diploma-in-computer-and-information-sciences",
+        "https://www.aut.ac.nz/study/study-options/sport-and-recreation/courses/bachelor-of-sport-exercise-and-health/sport-and-exercise-science-major-bachelor-of-sport,-exercise-and-health",
+        "https://www.aut.ac.nz/study/study-options/science/courses/bachelor-of-medical-laboratory-science",
+        "https://www.aut.ac.nz/study/study-options/health-sciences/courses/bachelor-of-health-science/perioperative-practice-major-bachelor-of-health-science",
+        "https://www.aut.ac.nz/study/study-options/health-sciences/courses/bachelor-of-health-science-physiotherapy-honours/accredited-by-the-physiotherapy-board-of-aotearoa-new-zealand",
+        "https://www.aut.ac.nz/study/study-options/health-sciences/courses/bachelor-of-health-science-physiotherapy-honours",
+        "https://www.aut.ac.nz/study/study-options/health-sciences/courses/bachelor-of-health-science-in-podiatry",
+        "https://www.aut.ac.nz/study/study-options/health-sciences/courses/bachelor-of-health-science-in-physiotherapy",
+        "https://www.aut.ac.nz/study/study-options/health-sciences/courses/bachelor-of-health-science-in-oral-health",
+        "https://www.aut.ac.nz/study/study-options/health-sciences/courses/bachelor-of-health-science-in-occupational-therapy",
+        "https://www.aut.ac.nz/study/study-options/health-sciences/courses/bachelor-of-health-science-in-nursing",
+        "https://www.aut.ac.nz/study/study-options/health-sciences/courses/bachelor-of-health-science-in-midwifery",
+        "https://www.aut.ac.nz/study/study-options/health-sciences/courses/bachelor-of-health-science-honours",
+        "https://www.aut.ac.nz/study/study-options/health-sciences/courses/bachelor-of-health-science",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/students-and-alumni",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/research",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/international-partnerships",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/facilities",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/become-an-industry-partner",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/academic-staff/mechanical-engineering-department",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/academic-staff/mathematical-sciences-department",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/academic-staff/electrical-and-electronic-engineering-department",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/academic-staff/computer-and-information-sciences-department",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/academic-staff/academic-staff-data-science-and-artificial-intelligence-department",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/academic-staff",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences",
+        "https://www.aut.ac.nz/courses/bachelor-of-science/mathematical-modelling-and-computation-major",
+        "https://www.aut.ac.nz/courses/bachelor-of-science/marine-science-major",
+        "https://www.aut.ac.nz/courses/bachelor-of-science/food-science-major",
+        "https://www.aut.ac.nz/courses/bachelor-of-science/environmental-science-major"
+      ],
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+            "excerpt": "Data Science Major - Bachelor of Computer and Information Sciences Study data science and develop the skills for a career as data analyst, data scientist or data engineer; careers that are in high demand all over the world.",
+            "scope": {
+              "university": "Auckland University of Technology",
+              "programme": "Data Science Major - Bachelor of Computer and Information Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-07",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+            "excerpt": "Computer Science Major - Bachelor of Computer and Information Sciences Study computer science and gain the skills to develop sophisticated software solutions, solve complex problems and use the power of computing technologies i",
+            "scope": {
+              "university": "Auckland University of Technology",
+              "programme": "Computer Science Major - Bachelor of Computer and Information Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-07",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 33,
+        "browser_fetches": 0,
+        "pdf_fetches": 1,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 80.96967812499497,
+        "cost_usd": null,
+        "human_review_required": null,
+        "document_reads": null,
+        "document_seconds": null,
+        "document_stop": null
+      },
+      "page_outcomes": [
+        {
+          "category": "classifier-rejected",
+          "url": "https://www.aut.ac.nz/study/entry-requirements/international-student-entry-requirements",
+          "page_type": "irrelevant",
+          "detail": "classified as irrelevant; no requirement can be read from this kind of page. title='International Students - Entry Requirements - AUT' signals='title is off-topic' chars=13385 degrees=[]",
+          "characters": 13385
+        },
+        {
+          "category": "classifier-rejected",
+          "url": "https://www.aut.ac.nz/study/entry-requirements/international-student-entry-requirements",
+          "page_type": "irrelevant",
+          "detail": "classified as irrelevant; no requirement can be read from this kind of page. title='International Students - Entry Requirements - AUT' signals='title is off-topic' chars=13385 degrees=[]",
+          "characters": 13385
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.aut.ac.nz/study/fees-and-scholarships",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 403",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 403",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 403",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+          "page_type": "program_detail",
+          "detail": "1 claims read from this page",
+          "characters": 6971
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.aut.ac.nz/study/fees-and-scholarships",
+          "page_type": "irrelevant",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 796
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+          "page_type": "program_detail",
+          "detail": "1 claims read from this page",
+          "characters": 5684
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.aut.ac.nz/student-life/support-services/scholarship-student-support",
+          "page_type": "unknown",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.aut.ac.nz/student-life/support-services/scholarship-student-support",
+          "page_type": "unknown",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        }
+      ],
+      "error": null
+    },
+    {
+      "case_id": "05e4d59f87261553f15d14b0cdb470d2",
+      "programme_urls": [],
+      "ranked_urls": [],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 21,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 117.00658141705208,
+        "cost_usd": null,
+        "human_review_required": null,
+        "document_reads": null,
+        "document_seconds": null,
+        "document_stop": null
+      },
+      "page_outcomes": [
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.cms.caltech.edu/academics/ugrad/ugrad_cs",
+          "page_type": "program_detail",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 3779
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.caltech.edu/admissions-aid",
+          "page_type": "general_admissions",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 3165
+        }
+      ],
+      "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+    }
+  ]
+}
