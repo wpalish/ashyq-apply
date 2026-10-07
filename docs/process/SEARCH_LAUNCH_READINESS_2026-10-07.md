@@ -8,13 +8,13 @@
 | Правильная область действия | Ошибки программы/группы/года ≤3% | Устранение отдельных Nagoya/AUT ошибок проверено локально; общий свежий показатель неизвестен. |
 | Страницы программ | Найдены на каждом доступном сайте; недоступность передаётся честно | SI-1 помог идентичности Wits/Caltech, но не дал стабильного полного результата. Новый Wits reader работает на сохранённых байтах; полный маршрут и2027 intake этим не доказаны. |
 | Полнота основных условий | ≥80% опубликованных и доступных известных core labels | Не достигнута принятым новым измерением; неизвестное не засчитывается как выполненное. |
-| Общий бюджет на вуз | ≤6 запросов/60 чтений/120секунд | Общий identity/programme счётчик исправлен. Durable read guard применён в отдельной ветке с defaultFalse; native SQLite/PG и полные новые gates ещё выполняются. Общая120секундная защита production, renderer и durable query/resume ещё не подтверждены. |
+| Общий бюджет на вуз | ≤6 запросов/60 чтений/120секунд | Общий identity/programme счётчик исправлен. Durable read guard применён с defaultFalse: native134 PASS/33realPG, полные новые gates13/13 PASS. Общая120секундная защита production, renderer и durable query/resume ещё не подтверждены. |
 | Перенос на heldout | Разрыв полноты ≤15 процентных пунктов | Новая принятая проверка текущей версии отсутствует. Heldout не используется для настройки правил. |
 
 Дополнительные условия выпуска: успешные обязательные проверки конкретного коммита, reviewed/default решения, публикация и свежий путь вошедшего пользователя — профиль → исследование → цитаты → сохранение → повторная загрузка → выход. Текущие Draft PR ещё не слиты и не опубликованы.
 
-Владелец разрешил новый локальный маршрут. Doctor/core/full прошли на HEAD2a11d5b4:
-4077 backend tests SQLite и PostgreSQL, frontend232, demo E2E79/1skip,
+Владелец разрешил новый локальный маршрут. Новая версия3b3a2fb8 прошла full13/13:
+4211 уникальных backend cases на SQLite и те же4211 на PostgreSQL, покрытие95.15%, frontend232, demo E2E79/1skip,
 auth6; dependency audits0. Контейнеры не проверены (Docker отсутствует),
 hosted CI не запускался, production E2E не выполнен.
 Исторический CI STOP сохранён без изменения; он не является новым отказом провайдера.
@@ -28,7 +28,7 @@ case не имеют полного canary raw; физические checkpoints
 
 Внешний readguard v2 прошёл92контрола и реальный PostgreSQL27pass/1red.
 Отдельная Workerbusy proposal исправляет preserved failure и прошла12controls;
-исходные4red сохранены. Обе source proposals применены в task/search-production-read-budget после проверки pinned originals; app Ruff/format/mypy154 PASS. Следующий шаг — native SQLite/PG controls + полные локальные gates новой версии. Затем общий production deadline,
+исходные4red сохранены. Обе source proposals применены в task/search-production-read-budget после проверки pinned originals. Native134 PASS/0skip, включая33 realPG; full13/13 PASS на точной версии3b3a2fb8, snapshotcb60da4d. Следующий шаг — reviewed genuine-Job capture protocol перед измерением guard ON. Затем общий production deadline,
 замороженные DEV off/on/on/off и причины каждого пропуска. Публикация,
 default promotion, подпись gold и heldout admission не выполнены.
 

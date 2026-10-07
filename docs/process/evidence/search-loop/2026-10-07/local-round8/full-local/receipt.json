@@ -1,0 +1,207 @@
+{
+  "at_utc": "2026-10-07T23:35:26.205829+00:00",
+  "source_head": "3b3a2fb8f914b61d83d734c6f416b9d402414f94",
+  "source_tree_sha256": "cb60da4dfdfd6a8e4c2975aa600a4cf713265f73d17804788c748d3b36bad8d2",
+  "started_at": "2026-10-07T23:15:17.970846+00:00",
+  "finished_at": "2026-10-07T23:30:15.644158+00:00",
+  "full_gates_passed": 13,
+  "full_gates_failed": 0,
+  "backend": {
+    "backend-sqlite": 4211,
+    "backend-postgresql": 4211
+  },
+  "unique_backend_cases": 4211,
+  "backend_case_executions_in_two_full_modes": 8422,
+  "coverage_percent_sqlite": 95.15,
+  "frontend_tests": 232,
+  "demo_e2e_passed": 79,
+  "demo_e2e_skipped": 1,
+  "auth_e2e_passed": 6,
+  "dependency_vulnerabilities": 0,
+  "mypy_files": 381,
+  "native_focused_passed": 134,
+  "native_real_pg_cases": 33,
+  "source_code_paths_unchanged_during_full": 997,
+  "demo_output_sha256": "b4ec42a8e8fcea33bbc2c20958813cc7240c0bae72f37d3031b603a9d0fc0f37",
+  "one_alembic_head": "d8e412c6a901",
+  "source_default": false,
+  "hosted_ci": "NOT PERFORMED",
+  "containers": "NOT PERFORMED: Docker unavailable",
+  "production_e2e": "NOT PERFORMED",
+  "new_quality_precision_recall": "UNMEASURED",
+  "source_calls_to_universities_or_models": 0,
+  "configured_secret_matches": 0,
+  "selected_files": {
+    "package/summary.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/summary.json",
+      "sha256": "4cc21989aa11928eabe316ab71f6aee3cb397d882ae37d96482493bcce2c68a0",
+      "bytes": 837800
+    },
+    "package/source-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/source-manifest.json",
+      "sha256": "8d0ceea04f6294ee719100b772433e8a24ec5c589f1fb1f892ac400ef453332b",
+      "bytes": 820805
+    },
+    "package/backend-sqlite.xml": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/backend-sqlite.xml",
+      "sha256": "f7c92a60f246ae3e302a94f06d4e5328cd6531f0517df133aabcdf35d2545497",
+      "bytes": 631877
+    },
+    "package/backend-postgresql.xml": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/backend-postgresql.xml",
+      "sha256": "488dcfcc20bd64c4a5645480e96b230aa8ddbc54b043baa7e6ebcdc855879a09",
+      "bytes": 631876
+    },
+    "package/ruff.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    "package/ruff-format.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/ruff-format.log",
+      "sha256": "47becdc7bcfd38c7c036ee66cb757f0aa4e68da6ad6e174ff6513d36cf87332b",
+      "bytes": 28
+    },
+    "package/mypy.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/mypy.log",
+      "sha256": "733a9764e731d8b96013f30bb1f4a4b836c0d71675adbfc5c9a19f912b3ab179",
+      "bytes": 8737
+    },
+    "package/backend-sqlite.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/backend-sqlite.log",
+      "sha256": "241808b74fa7167eb4c387e0160083cf1427d0576a217bd7f8489d42077e8bc0",
+      "bytes": 17057
+    },
+    "package/frontend-typecheck.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/frontend-typecheck.log",
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02",
+      "bytes": 53
+    },
+    "package/frontend-lint.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/frontend-lint.log",
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a",
+      "bytes": 65
+    },
+    "package/frontend-tests.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/frontend-tests.log",
+      "sha256": "3c058d3126f50b3887b2571e5b1c76a0b43df6b6f0ddc25a188985c20442da0d",
+      "bytes": 20136
+    },
+    "package/frontend-build.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/frontend-build.log",
+      "sha256": "f25ab914205c548872dfba180db0b30b0a14ad91fb3f1a1d15792cd5541c6961",
+      "bytes": 7315
+    },
+    "package/backend-postgresql.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/backend-postgresql.log",
+      "sha256": "d73836284227f891e40c9762314990fea5d242de70ac5c6a705992c6622c3f54",
+      "bytes": 5846
+    },
+    "package/e2e.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/e2e.log",
+      "sha256": "db00e4847c402d7942ca0f3983d82f3598ed92cf674920f2689c4a9b9735eb2b",
+      "bytes": 172225
+    },
+    "package/e2e-auth.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/e2e-auth.log",
+      "sha256": "e054a55a7e751175347cee2a18887ecbfe5e8adae149d93c7a2e91fc83246410",
+      "bytes": 16684
+    },
+    "package/pip-audit.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/pip-audit.log",
+      "sha256": "15950a68a7ed99c59779717acefdceb3f69cfd31bde67d2c954f2a3cea4d7955",
+      "bytes": 31
+    },
+    "package/npm-audit.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/npm-audit.log",
+      "sha256": "6d8c5c8f3d7684adb070417bd608d01ae90aa3dc26a65af03ffda4955f38d9a3",
+      "bytes": 24
+    },
+    "demo/migration.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-demo/migration.log",
+      "sha256": "808373af2029870e86053e68822b91376ef3a0151c9e2273b3ccdf3b172a102a",
+      "bytes": 2642
+    },
+    "demo/demo.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-demo/demo.log",
+      "sha256": "b9d9ddd206b57e48dbde821a2c56696a594214d68946d0ce54b7ced337a1e277",
+      "bytes": 2569
+    },
+    "demo/alembic-heads.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-demo/alembic-heads.log",
+      "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b",
+      "bytes": 20
+    },
+    "demo/receipt.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-demo/receipt.json",
+      "sha256": "9e8ebb9e1c60806cb601864d5ef1e01039ba15af18b2beb912e451711e07b3a2",
+      "bytes": 1889
+    },
+    "native-final/receipt.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/receipt.json",
+      "sha256": "70eb1d12de74f907fd233a8557d7c1ebf2271581cf687b35b4f396c126d77b29",
+      "bytes": 8665
+    },
+    "native-final/final-pin.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/final-pin.json",
+      "sha256": "3099b6c64a82c8a8b47c8d9238f9a0344891283d542f1e347f587d65ea4456a0",
+      "bytes": 704
+    },
+    "native-final/review.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/review.ru.md",
+      "sha256": "315cafae096851d462a4667204fb6cfa60b6a439ba50e38b39692aa15b8ec756",
+      "bytes": 6102
+    },
+    "native-final/cleanup.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/cleanup.json",
+      "sha256": "12e93beb5d3729e8f117d356fa8c01ee12a56fe5f64fd6a9c40ca7504326fc4c",
+      "bytes": 283
+    },
+    "native-final/sealed-evidence-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/sealed-evidence-manifest.json",
+      "sha256": "b81a2644b456cdc5416ff088dc7d2c6ce979649f80046494f5a24c1044253696",
+      "bytes": 80868
+    },
+    "root/full-local-console.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/full-local-console.log",
+      "sha256": "ae924e775f200a54276e285b11551183067cd91caf666ccba05b040adf91cec4",
+      "bytes": 2608
+    },
+    "root/full-freeze-proof.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/full-freeze-proof.json",
+      "sha256": "1c010018e7a878a754ab98db0bb0c2a1a775402d8e227029ac3d75bd5a22b66b",
+      "bytes": 547
+    },
+    "root/source-checkpoint-commit.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/source-checkpoint-commit.log",
+      "sha256": "db47b23f19cbe39052e9f587c7194ebd7fd5cf9e2a25258e812e795e828e615e",
+      "bytes": 73340
+    },
+    "root/source-checkpoint-push.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/source-checkpoint-push.log",
+      "sha256": "370d1947cb35a0761e1633431cff616c7dffe3ee275ef3e5d0baf4e040991389",
+      "bytes": 247
+    },
+    "parallel-ielts-reject-before-apply/PLAN.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-ielts-review/PLAN.json",
+      "sha256": "c59335cb94968f9f06315524d9b3719616335b54758386e39245eeddd8932d2b",
+      "bytes": 609
+    },
+    "parallel-ielts-reject-before-apply/original-controls.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-ielts-review/original-controls.json",
+      "sha256": "2344f4892431ae927b26f7b464da2197aeb1a7517fa19b15a0e61b239cdeb17b",
+      "bytes": 18870
+    },
+    "parallel-ielts-reject-before-apply/original-controls.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-ielts-review/original-controls.log",
+      "sha256": "9f1785e290762389f9ebbde4d2e75859c792b4340a2fc9ee2858cb0d0b4713fa",
+      "bytes": 632
+    },
+    "parallel-ielts-reject-before-apply/receipt.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-ielts-review/receipt.json",
+      "sha256": "f0d4c09c17c4147e225873cf07287072a48fc51ceeef8d61ba11d41a19f0608e",
+      "bytes": 746
+    }
+  },
+  "exclusions": "No runtime DB/PGDATA/cache/socket/env/privateGit/browser storage or auth trace archives. Parallel IELTS four-red evidence is not a budget acceptance result; prototype rejected before application."
+}

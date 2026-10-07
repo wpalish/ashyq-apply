@@ -1,0 +1,45 @@
+{
+  "at_utc": "2026-10-07T23:25:52.136834+00:00",
+  "source_head": "3b3a2fb8f914b61d83d734c6f416b9d402414f94",
+  "commands": [
+    {
+      "name": "migration",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/source/backend/.venv/bin/alembic",
+        "upgrade",
+        "head"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/source/backend",
+      "exit_code": 0
+    },
+    {
+      "name": "demo",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/source/backend/.venv/bin/python",
+        "seed_demo.py"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/source/backend",
+      "exit_code": 0
+    },
+    {
+      "name": "alembic-heads",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/source/backend/.venv/bin/alembic",
+        "heads"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T231517Z-check-039fc4a1/source/backend",
+      "exit_code": 0
+    }
+  ],
+  "demo_identical_to_predecessor": true,
+  "stable_output_sha256": "b4ec42a8e8fcea33bbc2c20958813cc7240c0bae72f37d3031b603a9d0fc0f37",
+  "one_alembic_head": true,
+  "alembic_heads": [
+    "d8e412c6a901 (head)"
+  ],
+  "actual_groningen_first": true,
+  "ubc_old_brief_vocabulary": "Unchanged predecessor caveat; not claim of full oldbrief match",
+  "database_archived": false,
+  "dotenv_mutations": 0,
+  "network_source_model_provider_calls": 0
+}

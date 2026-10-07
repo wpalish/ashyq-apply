@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current holder: gpt-6-astra, 2026-10-07 23:35 UTC, task/search-production-read-budget.** Source `3b3a2fb8f914b61d83d734c6f416b9d402414f94` is pushed and exact-source full LOCAL passed 13/13. Source/test bytes stayed frozen. Archive full results, update the relay, then create the dependent Draft against task/search-programme-purpose. Two experts continue external genuine-Job capture and IELTS ownership proposals; neither has changed the repository. Goal ACTIVE; no quality/default/launch claim.
+
 **Current holder: gpt-6-astra,2026-10-07 23:00UTC, task/search-production-read-budget from clean7c0f8938.** Prior goal turn classified PROGRESS:10freshlocalcases+517selectedfiles+sealednegative proposals+pushedmetadata. Source integration now active; parent ownsapp/Git/HANDOFF, A owns explicitly listed new actual-module tests, B externalIELTSproposal only. SourceFalse until measured; no blind score/default/production/purchase.
 
 **Current search-loop holder: gpt-6-astra,2026-10-07 22:50UTC.** Freshoriginal10 terminal capture checkpoint complete/UNSCORED; source5472 unchanged/Draft66. Archive and push metadata, next reviewed actual-module durable60readguard + typedWorkerbusy integration; WS-1 unscopedstop rejected. GoalACTIVE.
@@ -67,6 +69,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[search-production-read-budget] source verified; dependent Draft creation next.** Native integration passed 134/0 skip, including 33 real PostgreSQL cases. Exact-source full LOCAL passed 13/13: 4211 unique backend cases in each of two DB modes, coverage 95.15%, frontend 232, demo E2E 79 pass/1 skip, auth 6, audits 0. Guard remains False. Final logs and receipts: local-round8/full-local. No hosted/container/production check or live quality rate inferred.
 
 **[search-production-read-budget] in progress.** Integrate reviewed durable60 v2 and narrow typedWorker checkpoint_busy fix on ordinary repository modules; verify meaningful same-job/cross-session/cancellation paths on SQLite and realPG; preserve defaultFalse/unknown legacy episode. No production hard120/query/renderer/docs guarantee. Predecessor task/search-programme-purpose unmerged exception explicitly permitted below.
 
@@ -160,6 +164,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**2026-10-07 23:35 UTC [search-production-read-budget], source `3b3a2fb8f914b61d83d734c6f416b9d402414f94`:** eight application modules and six ordinary-import test/helper files applied and pushed. Full LOCAL `20261007T231517Z-check-039fc4a1`, snapshot `cb60da4dfdfd6a8e4c2975aa600a4cf713265f73d17804788c748d3b36bad8d2`, passed 13/13 in 14m57.673s. The same 4211 unique backend cases passed in SQLite-primary and PostgreSQL-primary suites (8422 executions, not distinct cases), coverage 95.15%; frontend 232; demo 79 pass/1 skip; auth 6; dependency audits 0. Native focused 134/0 skip, 33 real PG. Isolated migration/demo: 20 rows and counts byte-identical to predecessor, Groningen first, one head d8e412c6a901; old UBC vocabulary caveat unchanged. All 997 captured code paths unchanged. Original failure evidence remains intact. New full logs/receipts are archived with this metadata checkpoint, excluding runtime databases, secrets and browser storage. Module False; fresh precision/recall, hard production 120s and release remain unproved.
 
 **[search-loop] Round6 source `5472a8337e38aecf55addacf5e02fa057477cb51`, Draft PR #66:** programme identity opt-in PF-1 plus preserved discovery-only funding marker. Saved Wits requirements0/1/1/0 and identical funding visits in direct/depth1 routes; no2027/fullpipeline/default promotion. Local4077/95.06%, frontend232/all gates, unchanged demo/onehead;227focused,49external,31independent capture controls. Exact classifier7c74866/caller import-only7dec462e/evaluation3d14e350; full source/body/raw/rejected versions in round6. Latest source-head PR metadata verifies correct5472basebranch and emptychecks (notpass). No merge/deploy/live/purchase/gold/heldout changes.
 
@@ -1823,6 +1829,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**2026-10-07 23:35 UTC, exact source continuation:** full-local receipt validates source3b3a2fb8 and all 13 gates. Commit/push selected full proof and metadata with Agent trailer/[skip ci], then open and attach a dependent Draft against task/search-programme-purpose (#66), recording its actual number and marking this bounded budget task ready-for-review. After that checkpoint, explicitly branch `task/search-fenced-capture` from the latest clean `task/search-production-read-budget` (unmerged-predecessor exception authorized here). Parent owns app/Git/HANDOFF; A's genuine-Job capture sources/tests remain external until final pin and independent review. Initial proposed paths are backend/scripts/canary_discovery.py, backend/evaluation/research/live.py, tests/test_canary_fenced_job.py and tests/test_readguard_capture_protocol.py. Record exact write-ahead/pins before applying. Use genuine enqueue/claim/unmodified Worker dispatch, isolated local DB, default-off explicit BooleanOptionalAction flags, fresh post-worker report and original exception propagation; no fabricated RUNNING fence, no live retry/reaper, no docs-stage capture under a finished research Job. Strict outer 60 can stop before native 61: equal totals do not prove a native-cap quality gain. B's IELTS v1 is rejected on four independent semantic failures; v2 stays external pending PDF/table/OFF and provenance review. No fresh ON live capture before genuine protocol controls/gates.
 
 **[search-production-read-budget] native source checkpoint 2026-10-07 23:14UTC:** eight app modules + six native test/helper files stable. Focused134 PASS/0skip, including33 realPG cases; full Worker unmocked dispatch on SQLite/PG proves61attempts→60original reads/native60, actual Job succeeded, retained programme/read_capunknown, heartbeat cancelled/done. Original133pass/1port-helper-reference red preserved and repaired. Archive native-integration402selectedfiles29.1MB, receiptcbdfd673571aea81bfb95960c75bc7b091e408a3aaff8320eeed3a84ca6f7bb4, configuredsecrets0. Commit this source as wip/fullgatespending, push[skipci], then freeze app/tests/evaluation and run `/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/local.sh --repo /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply check --suite full`. Exact snapshotSHA/command/alllogs retained; no hostedworkflow/container/production/live/default/gold changes. A external-only canary follow-up may proceed after sealed receipt; B externalIELTS proposal ongoing. No further app/test edits during fullrun.
 
@@ -3815,6 +3823,8 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**Latest exact-source full LOCAL, 2026-10-07 23:30 UTC:** source3b3a2fb8, snapshotcb60da4d; 13/13 PASS in 14m57.673s. Ruff/format/mypy381 PASS; SQLite4211/2 warnings/95.15%, PostgreSQL4211/2 warnings; frontend232/type/lint/build; demo E2E79/1 skip; auth6; pip/npm audits0. Native focused134/0 skip,33 realPG. Isolated demo20 rows/counts identical, Groningenfirst, one migrationhead d8e412c6a901. Evidence local-round8/full-local/receipt.json. All997 captured code paths unchanged. Hosted CI NOT PERFORMED; Docker absent, containers NOT PERFORMED; production E2E NOT PERFORMED. No new live quality measurement. Earlier pending records below are historical snapshots.
 
 **2026-10-07 23:14UTC [search-production-read-budget]:** native focused134 PASS/0fail/0skip,20.272s;69production+22revision+3SQLiteconcurrency+14Worker+26PG. 33actualPG cases,65actual55P03/no57014. Both full Worker lifecycle success controls verifycap/retention/cleanup. First133PASS/1port stale-helper failure preserved, directappimport repair. App Ruff/format/mypy154 and fullstatic381 PASS before final one-test-import repair; final fullLOCAL newsource pending. ModuleFalse/no live.
 
