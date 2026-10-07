@@ -21,6 +21,14 @@ the artifact is the record and re-scores the same way.
 | eu1 | EU-1 euro grouping | 0 | 0 | off (no page reaches it) |
 | sr1 | SR-1 rate-limit retry | 0 (rate-limit failures 8 → 4) | 0 | on |
 | df1, df1b | DF-1 year-column fee tables | Delft tuition (df1b, after the cost-adapter year fix) | 0 | on |
+| rl1 | RL-1 route and deadline links (run 37545452839) | Delft IELTS, UBC deadline | 0 | on (owner delegation) |
+| — | LG-1 lone language label (Vienna) | not run | — | dropped: the verbatim check needs title and label in one excerpt |
+| control-twopass | none: all defaults, two-pass order (run 37540385440) | baseline 20/73 known, 10/60 core, precision 1.0 | — | new baseline |
+
+The two-pass control shows KAIST at 0/11 for an access reason only the
+runner has: `admission.kaist.ac.kr` answers neither robots.txt nor pages
+from GitHub (ConnectTimeout), while the production probe from Fly reads it
+(`access_probe_fly.md`).
 
 The earlier runs (doc2, doc3, doc3b, df1) exposed bugs that were fixed before
 the decision; they are kept because the fix is justified by them.
