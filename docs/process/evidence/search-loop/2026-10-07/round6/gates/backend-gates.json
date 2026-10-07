@@ -1,0 +1,76 @@
+{
+  "started_at": "2026-10-07T20:59:26.181189+00:00",
+  "source_sha256": {
+    "backend/app/adapters/page_classifier.py": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+    "backend/app/adapters/scholarship/web_scholarships.py": "7dec462ebad77859d7c6a50840924253fc1092734af0bebd98bfa07f3d6677a5",
+    "backend/evaluation/research/live.py": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+    "backend/tests/test_programme_funding_scope.py": "ae5fea3b4e0c29df87280aca6a7686c7113e3744305157d90445c98855685017",
+    "backend/tests/test_programme_purpose_capture.py": "172fcbed89a25dccfa8ddac542a5de9426c1740376d74ab8405dce59c703253d",
+    "backend/tests/fixtures/programme_funding/scope-controls.json": "9a98facaae18d585e7915ce6b2dd80aca2fcf48d4a1ee940b2e4da77adaca1f6",
+    "backend/tests/fixtures/programme_funding/wits-programme.html": "88d1f716c82840fa66317ff1ceb42a152439a924d7625c0d2ef18a0f315f0a87",
+    "backend/tests/fixtures/programme_funding/wits-programme.meta.json": "d54f742c251cd9cd36c06ee4b89a74a7c1ca701b829b5ffa99d6cc5701096b8c"
+  },
+  "commands": [
+    {
+      "name": "ruff",
+      "arguments": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "format",
+      "arguments": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "mypy",
+      "arguments": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "backend-pytest",
+      "arguments": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "--cov=app",
+        "--cov-fail-under=92"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "alembic-heads",
+      "arguments": [
+        ".venv/bin/alembic",
+        "heads"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "finished_at": "2026-10-07T21:08:40.725116+00:00",
+  "dotenv_restored": true,
+  "source_unchanged": true
+}

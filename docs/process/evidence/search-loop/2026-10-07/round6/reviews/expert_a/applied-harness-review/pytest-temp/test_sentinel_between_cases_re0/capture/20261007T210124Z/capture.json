@@ -1,0 +1,54 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+  "captured_at": "20261007T210124Z",
+  "mode": "live",
+  "config": {
+    "strict_expert_budget": true,
+    "search_provider": "exa_mcp",
+    "site_branding_identity": false,
+    "subject_phrase_match": false,
+    "programme_identity_before_funding": false,
+    "shared_query_budget": true,
+    "seconds_per_case": 120,
+    "max_fetcher_calls_per_case": 60,
+    "max_search_queries_per_case": 6,
+    "browser_enabled": false,
+    "cohort": [
+      "offline-review-a",
+      "offline-review-b"
+    ],
+    "selection": "catalogue_id",
+    "batch_stop_reason": "external_provider_failure",
+    "batch_attempted_case_ids": [
+      "offline-review-a"
+    ],
+    "batch_remaining_case_ids": [
+      "offline-review-b"
+    ]
+  },
+  "observations": [
+    {
+      "case_id": "offline-review-a",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null,
+        "document_reads": null,
+        "document_seconds": null,
+        "document_stop": null
+      },
+      "page_outcomes": [],
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "created_utc": "2026-10-07T20:55:25.255186+00:00",
+  "revision": 3,
+  "status": "EXTERNAL_CANDIDATE_FROZEN_FOR_PARENT_REVIEW",
+  "default_flag": false,
+  "source_base_sha256": {
+    "app/adapters/page_classifier.py": "2f73f7c662ae0da1c31de6f23a9e068574c43f648a2472765a5398c2a093b158",
+    "app/adapters/requirements/web_requirements.py": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+    "app/adapters/scholarship/web_scholarships.py": "d1ce759b48ae5100676b9b8e80709b910f76ba9addd2f42f3eed711e45eb870e",
+    "app/domain/claim_verifier.py": "7c33bada893a2e3c98fbd68e67d84ff9e8bf587a04c13088dfc904fc3219f249"
+  },
+  "source_after_sha256": {
+    "app/adapters/page_classifier.py": "2f73f7c662ae0da1c31de6f23a9e068574c43f648a2472765a5398c2a093b158",
+    "app/adapters/requirements/web_requirements.py": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+    "app/adapters/scholarship/web_scholarships.py": "d1ce759b48ae5100676b9b8e80709b910f76ba9addd2f42f3eed711e45eb870e",
+    "app/domain/claim_verifier.py": "7c33bada893a2e3c98fbd68e67d84ff9e8bf587a04c13088dfc904fc3219f249"
+  },
+  "repo_sources_unchanged": true,
+  "stop_sha256": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+  "stop_unchanged": true,
+  "external_sources_sha256": {
+    "proposed_page_classifier.py": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+    "proposed_web_scholarships.py": "b7330166872b63052c58acf8d4a1c3b8748f2239090684bf8f5f236d6043fea9"
+  },
+  "artifacts_sha256": {
+    "proposed_page_classifier.py": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+    "proposed_web_scholarships.py": "b7330166872b63052c58acf8d4a1c3b8748f2239090684bf8f5f236d6043fea9",
+    "programme-identity-funding-links.patch": "d388913faaec50c5e98d03798645f16a608fddca7da16ce2fe9cbd40022a77ce",
+    "test_funding_discovery.py": "1e12ebe87dfb10f9d16e88ec2b4e56f3185d1536a0e8d0211b806027d8e8c726",
+    "conftest.py": "914b936285bf9fb7e73dbe79e4a5f41b67510f6a9810337159be3addeb95ac63",
+    "replay_all.py": "9e6222aa6b9e66e4548e166a75bea5cb770e89d2ea1eecac51dd1add91122130",
+    "all-replay.offline.json": "476d9a5cd183d51edc7a795fd2f402802c3b9dd6257a823c7d9b1952c9383962",
+    "pytest-proposal.final.stdout.txt": "6d25419368ee19e46520247627dca6ff719f966d5476ad85aa1cfd1af1cc48f9",
+    "pytest-frozen.final.stdout.txt": "ae6b1facfe3614b57fe3866ea1f9f6f426f707a9ba7eab8b2edc8194338abbc0"
+  },
+  "checks": {
+    "own_pytest": {
+      "passed": 49,
+      "failed": 0
+    },
+    "frozen_control": {
+      "passed": 44,
+      "failed": 5
+    },
+    "classifier_executions": 79,
+    "distinct_url_html_fixtures": 70,
+    "original_b_cases_replayed": 61,
+    "original_b_expected_safely_narrowed": [
+      "programme_secondary_faq"
+    ],
+    "funding_saved_wits_routes_equal_all_four_phases": true,
+    "requirements_program_exists": [
+      0,
+      1,
+      1,
+      0
+    ],
+    "ruff_source_check": "passed",
+    "ruff_source_format": "passed",
+    "full_source_gates": "not run by expert"
+  },
+  "network_calls": 0,
+  "provider_calls": 0,
+  "model_calls": 0,
+  "git_calls": 0,
+  "repo_edits": 0,
+  "wits_body_sha256": "88d1f716c82840fa66317ff1ceb42a152439a924d7625c0d2ef18a0f315f0a87",
+  "wits_metadata_sha256": "d54f742c251cd9cd36c06ee4b89a74a7c1ca701b829b5ffa99d6cc5701096b8c",
+  "scope_2027_intake": "unknown",
+  "full_pipeline_gain": "not measured; SI-1 conditional",
+  "report_sha256": "e31303e26a792015e795612e2219808f4ad41619e58314958dae216f3bdb5fe3"
+}

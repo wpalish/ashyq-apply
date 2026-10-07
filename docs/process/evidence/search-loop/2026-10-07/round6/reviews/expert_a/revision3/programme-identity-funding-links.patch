@@ -1,0 +1,310 @@
+--- a/backend/app/adapters/page_classifier.py
++++ b/backend/app/adapters/page_classifier.py
+@@ -20,7 +20,12 @@
+ from enum import StrEnum
+ from urllib.parse import urlparse
+ 
+-from bs4 import BeautifulSoup
++from bs4 import BeautifulSoup, Comment, NavigableString, Tag
++
++# Off until a paired owner-approved experiment measures the general rule.
++PROGRAMME_IDENTITY_BEFORE_FUNDING = False
++#: Discovery-only proof: the unchanged funding branch would have returned an index.
++SUBSIDIARY_FUNDING_INDEX_SIGNAL = "subsidiary funding index on a programme page"
+ 
+ 
+ class PageType(StrEnum):
+@@ -474,6 +479,7 @@
+         )
+ 
+     # --- funding family ---------------------------------------------------
++    subsidiary_funding_index: PageClassification | None = None
+     if _SCHOLARSHIP_WORD.search(low_head) or "scholarship" in path or "financial-aid" in path:
+         if _FAQ.search(low_head):
+             return PageClassification(PageType.SCHOLARSHIP_FAQ, 0.9, ["FAQ markers"], title)
+@@ -491,16 +497,28 @@
+         # A listing heading, or several links out to named awards, or links out
+         # with no award identity of its own.
+         if plural_index or award_links >= 2 or (award_links >= 1 and named is None):
+-            signals += [
++            index_signals = [
++                *signals,
+                 f"{award_links} award links",
+                 "listing heading" if plural_index else "",
+                 "no award identity of its own" if named is None else "",
+             ]
+-            return PageClassification(
+-                PageType.SCHOLARSHIP_INDEX, 0.8, [s for s in signals if s], title
++            funding_index = PageClassification(
++                PageType.SCHOLARSHIP_INDEX, 0.8, [s for s in index_signals if s], title
+             )
++            if (
++                PROGRAMME_IDENTITY_BEFORE_FUNDING
++                and "scholarship" not in path
++                and "financial-aid" not in path
++                and _programme_content_identity(identity, title, path, body, soup)
++            ):
++                # Delay only the exact legacy index result. FAQ, award, and UNKNOWN
++                # funding pages keep their result, as do funding URLs/own identities.
++                subsidiary_funding_index = funding_index
++            else:
++                return funding_index
+         # A named award plus at least two substantive signals.
+-        if named and len(present) >= 2:
++        if subsidiary_funding_index is None and named and len(present) >= 2:
+             return PageClassification(
+                 PageType.SCHOLARSHIP_AWARD,
+                 0.75 + 0.05 * min(len(present), 4),
+@@ -510,21 +528,26 @@
+                 degree_level=_degree_level(f"{head} {body[:2500]}"),
+                 academic_year=_academic_year(body),
+             )
+-        return PageClassification(
+-            PageType.UNKNOWN,
+-            0.3,
+-            [f"funding page with {len(present)} substantive signals and no clear award name"],
+-            title,
+-        )
++        if subsidiary_funding_index is None:
++            return PageClassification(
++                PageType.UNKNOWN,
++                0.3,
++                [f"funding page with {len(present)} substantive signals and no clear award name"],
++                title,
++            )
+ 
+     if _DOCUMENTS.search(low_head):
+-        return PageClassification(PageType.DOCUMENTS, 0.7, ["document checklist heading"], title)
++        return subsidiary_funding_index or PageClassification(
++            PageType.DOCUMENTS, 0.7, ["document checklist heading"], title
++        )
+ 
+     # --- programme family --------------------------------------------------
+     program_links = _program_link_count(soup) if soup else 0
+     # A heading that is plural or catalogue-shaped settles it: that is the page
+     # saying what it is.
+     if _PLURAL_PROGRAM_HEADING.match(identity) or _CATALOG.search(low_head):
++        if subsidiary_funding_index is not None:
++            return subsidiary_funding_index
+         return PageClassification(
+             PageType.PROGRAM_CATALOG,
+             0.75,
+@@ -565,6 +588,9 @@
+     )
+     language_evidence = _labelled_language_evidence(language_body, subject, language)
+     year = _academic_year(body)
++
++    if not (subject and degree) and subsidiary_funding_index is not None:
++        return subsidiary_funding_index
+ 
+     if not subject:
+         if _CREDENTIAL.search(low_head) and _ADMISSIONS.search(low_head):
+@@ -583,6 +609,8 @@
+             )
+ 
+     if subject and degree:
++        if subsidiary_funding_index is not None:
++            signals.append(SUBSIDIARY_FUNDING_INDEX_SIGNAL)
+         signals.append(f"single programme {subject!r} at {degree} level")
+         if language:
+             signals.append(f"language of instruction: {language}")
+@@ -637,6 +665,143 @@
+     return PageClassification(PageType.UNKNOWN, 0.2, ["no decisive signals"], title)
+ 
+ 
++_ACADEMIC_HEADING = re.compile(
++    r"curriculum|(?:course|programme|program|degree) structure|"
++    r"(?:course|programme|program) content|what you (?:will )?(?:learn|study)",
++    re.IGNORECASE,
++)
++_ACADEMIC_UNIT = re.compile(r"\b(courses?|modules?|subjects?|lectures?|projects?)\b", re.I)
++_YEAR_STAGE = re.compile(
++    r"\b(first|second|third|fourth|fifth|sixth|[1-6](?:st|nd|rd|th)?)[- ]year\b"
++    r"|\byear\s+([1-6])\b",
++    re.I,
++)
++_NO_DEGREE_OFFER = re.compile(
++    r"\b(?:this (?:support )?page|we)\b[^.]{0,100}\b(?:does?|do) not offer\s+"
++    r"(?:(?:a|an|any|the|this)\s+)?"
++    r"(?:(?:bachelor'?s?|master'?s?|undergraduate|postgraduate|academic)\s+)?"
++    r"(?:degree(?: programme| program)?|programme|program)\b"
++    r"|\bno degree(?: programme| program)? (?:is )?offered\b",
++    re.I,
++)
++_ACADEMIC_ELIGIBILITY = re.compile(
++    r"\b(?:applicants?|eligibility|eligible|qualify|renewal|renewing)\b", re.I
++)
++
++
++def _academic_chrome(node: Tag) -> bool:
++    return (
++        node.name in {"nav", "aside", "header", "footer"}
++        or str(node.get("role", "")).lower()
++        in {"navigation", "banner", "complementary", "contentinfo"}
++        or str(node.get("aria-hidden", "")).lower() == "true"
++        or node.has_attr("hidden")
++    )
++
++
++def _academic_heading_rank(node: Tag) -> int | None:
++    if re.fullmatch(r"h[1-6]", node.name or ""):
++        return int(node.name[1])
++    if str(node.get("role", "")).lower() == "heading":
++        level = str(node.get("aria-level", ""))
++        return int(level) if level in {"1", "2", "3", "4", "5", "6"} else None
++    return None
++
++
++def _academic_section_text(heading: Tag, soup: BeautifulSoup) -> str:
++    """Close at the containing semantic section/region and equal or higher heading."""
++    rank = _academic_heading_rank(heading)
++    root = soup
++    for parent in heading.parents:
++        if parent is soup:
++            break
++        if parent.name in {"section", "article"} or str(parent.get("role", "")).lower() == "region":
++            root = parent
++            break
++    parts: list[str] = []
++    for node in heading.next_elements:
++        parents = list(node.parents)
++        if not any(parent is root for parent in parents):
++            break
++        if any(parent is heading for parent in parents):
++            continue
++        if (isinstance(node, Tag) and _academic_chrome(node)) or any(
++            _academic_chrome(parent) for parent in parents
++        ):
++            continue
++        if isinstance(node, Tag):
++            next_rank = _academic_heading_rank(node)
++            if next_rank is not None and rank is not None and next_rank <= rank:
++                break
++        if isinstance(node, NavigableString) and not isinstance(node, Comment) and node.strip():
++            parts.append(str(node).strip())
++    return " ".join(parts)
++
++
++def _programme_content_identity(
++    identity: str, title: str, path: str, body: str, soup: BeautifulSoup | None
++) -> bool:
++    """Require a programme identity and academic structure in the same content block."""
++    primary = f"{title} {identity}"
++    if _SCHOLARSHIP_WORD.search(primary) or _award_name(identity):
++        return False
++    if _ADMISSIONS.search(identity) or re.search(r"\bsupport\b", identity, re.I):
++        return False
++    if _NO_DEGREE_OFFER.search(body) or soup is None:
++        return False
++    if re.search(
++        r"\bthis page\b[^.]{0,40}\b(?:lists?|provides?|offers?)\b"
++        r"[^.]{0,60}\b(?:scholarships?|funding|financial aid|bursaries)\b",
++        body[:2000],
++        re.I,
++    ):
++        return False
++    if re.search(
++        r"\bthis (?:page is|is)\s+(?:(?:a|an|the)\s+)?"
++        r"(?:funding|scholarship|financial (?:aid|support)|bursary)"
++        r"(?:\s+\w+){0,4}\s+page\b",
++        body[:2000],
++        re.I,
++    ):
++        return False
++    subject = _program_name(identity) or _program_name_from_context(
++        identity, title, path, body[:4000]
++    )
++    if not subject:
++        return False
++    for heading in soup.find_all(re.compile(r"^h[1-6]$")):
++        if not _ACADEMIC_HEADING.fullmatch(heading.get_text(" ", strip=True)):
++            continue
++        if _academic_chrome(heading) or any(_academic_chrome(parent) for parent in heading.parents):
++            continue
++        block = _academic_section_text(heading, soup)
++        # A scholarship curriculum/eligibility section is not the degree's
++        # academic structure. Secondary funding outside this block is harmless.
++        if (
++            _SCHOLARSHIP_WORD.search(block)
++            or _ACADEMIC_ELIGIBILITY.search(block)
++            or not _ACADEMIC_UNIT.search(block)
++        ):
++            continue
++        stages = set()
++        ordinals = {
++            "first": "1",
++            "second": "2",
++            "third": "3",
++            "fourth": "4",
++            "fifth": "5",
++            "sixth": "6",
++        }
++        for match in _YEAR_STAGE.finditer(block):
++            stage = match.group(1) or match.group(2)
++            stages.add(ordinals.get(stage.lower(), stage[0]))
++        if len(stages) >= 2 or re.search(
++            r"\b\d+(?:\.\d+)?\s*(?:ECTS|credits?|units?)\b", block, re.I
++        ):
++            return True
++    return False
++
++
+ # --- helpers ---------------------------------------------------------------
+ 
+ 
+--- a/backend/app/adapters/scholarship/web_scholarships.py
++++ b/backend/app/adapters/scholarship/web_scholarships.py
+@@ -12,8 +12,6 @@
+ from dataclasses import replace
+ from datetime import UTC, datetime
+ from urllib.parse import urljoin, urlparse, urlsplit, urlunsplit
+-
+-from bs4 import BeautifulSoup
+ 
+ from app.adapters.applicability import (
+     assess_degree_applicability,
+@@ -32,7 +30,12 @@
+ )
+ from app.adapters.fetching import Fetcher, FetchResult
+ from app.adapters.html_parse import parse_html
+-from app.adapters.page_classifier import PageType, classify_page, main_content
++from app.adapters.page_classifier import (
++    SUBSIDIARY_FUNDING_INDEX_SIGNAL,
++    PageType,
++    classify_page,
++    main_content,
++)
+ from app.adapters.scholarship.conditional_benefits import read_conditional_policy
+ from app.adapters.scope_reader import read_scope
+ from app.domain.enums import (
+@@ -46,6 +49,7 @@
+ from app.schemas.claim import MAX_EXCERPT_CHARS
+ from app.schemas.money import Money
+ from app.schemas.result import Coverage, CoverageBreakdown, Scholarship
++from bs4 import BeautifulSoup
+ 
+ #: One official-award query after an empty walk for a confirmed programme.
+ SEARCH_FUNDING_FALLBACK = True
+@@ -324,10 +328,18 @@
+                 # a list of awards whatever the classifier calls it. Run 60: NTU's
+                 # /scholarships/freshmen holds the Nanyang Scholarship link and was
+                 # rejected as "not an award page".
+-                is_index = classification.page_type is PageType.SCHOLARSHIP_INDEX or (
+-                    depth > 0
+-                    and classification.page_type is not PageType.SCHOLARSHIP_AWARD
+-                    and _lists_awards_below(page.text, url)
++                is_index = (
++                    classification.page_type is PageType.SCHOLARSHIP_INDEX
++                    or (
++                        classification.page_type
++                        in {PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM}
++                        and SUBSIDIARY_FUNDING_INDEX_SIGNAL in classification.signals
++                    )
++                    or (
++                        depth > 0
++                        and classification.page_type is not PageType.SCHOLARSHIP_AWARD
++                        and _lists_awards_below(page.text, url)
++                    )
+                 )
+                 if depth == 0 or (is_index and indexes_read < _MAX_INDEX_PAGES):
+                     # An index is discovery, never award proof: nothing is

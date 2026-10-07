@@ -1,0 +1,663 @@
+{
+  "proposal_sha256": "bd21146bff824c059defa47ce2a1e5e3490d34822a2485c3b4dfb16116ae5303",
+  "network_calls": 0,
+  "provider_calls": 0,
+  "model_calls": 0,
+  "repo_edits": 0,
+  "controls": [
+    {
+      "case": "funding_eligibility_with_academic_conditions",
+      "expected": "scholarship_index",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This is a funding eligibility page for enrolled students.</p><h2>Curriculum</h2><p>Applicants must have completed first-year courses and second-year modules to qualify.</p><h2>Funding opportunities</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "ab06b52aee6286c5ef3461cd183c9d1eaeec7bb04263f527616f3c00c5fa2a5d",
+      "url": "https://example.edu/support/computer-science",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on_matches_expected": true,
+      "academic_blocks": [
+        {
+          "heading": "Curriculum",
+          "block": "Applicants must have completed first-year courses and second-year modules to qualify."
+        }
+      ],
+      "eligibility_matches": [
+        [
+          "Applicants",
+          "qualify"
+        ]
+      ],
+      "no_degree_match": null
+    },
+    {
+      "case": "explicit_sibling_section_scope",
+      "expected": "scholarship_index",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><section id=\"curriculum\"><h2>Curriculum</h2><p>Ask the office for advice.</p></section><section aria-label=\"Award eligibility\"><p>Applicants must complete first-year courses and second-year modules before applying.</p></section><h2>Scholarships</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "e4c0442b0c32bd10a82ba908eb167f841b001fe8d42a8e8c6b6d34f174e1628c",
+      "url": "https://example.edu/support/computer-science",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on_matches_expected": true,
+      "academic_blocks": [
+        {
+          "heading": "Curriculum",
+          "block": "Ask the office for advice."
+        }
+      ],
+      "eligibility_matches": [
+        []
+      ],
+      "no_degree_match": null
+    },
+    {
+      "case": "role_navigation_academic_copy",
+      "expected": "scholarship_index",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><div role=\"navigation\"><h2>Curriculum</h2><p>First-year courses and second-year modules.</p></div><h2>Scholarships</h2><p>View our award opportunities for enrolled students.</p><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "9edc20f2c7fe3b3a984db848d099ffbadb867a800d787c8279b59fad88bfe065",
+      "url": "https://example.edu/support/computer-science",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on_matches_expected": true,
+      "academic_blocks": [
+        {
+          "heading": "Curriculum",
+          "block": ""
+        }
+      ],
+      "eligibility_matches": [
+        []
+      ],
+      "no_degree_match": null
+    },
+    {
+      "case": "funding_eligibility_credits_without_progression",
+      "expected": "scholarship_index",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This is a financial support eligibility page.</p><h2>Curriculum</h2><p>Applicants need courses worth 120 credits to qualify.</p><h2>Scholarships</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "74ca6eee00c1ca71657a87f47f7a1a66d20a80434a11143e0992dff971f7e830",
+      "url": "https://example.edu/support/computer-science",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on_matches_expected": true,
+      "academic_blocks": [
+        {
+          "heading": "Curriculum",
+          "block": "Applicants need courses worth 120 credits to qualify."
+        }
+      ],
+      "eligibility_matches": [
+        [
+          "Applicants",
+          "qualify"
+        ]
+      ],
+      "no_degree_match": null
+    },
+    {
+      "case": "programme_negates_bursaries_not_degree",
+      "expected": "program_detail",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>Funding</h2><p>We do not offer bursaries for this degree.</p><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "bd3b4f7379eaec57b5980e512bd3af1dfeb88feab81dbeef512f98b25c71968c",
+      "url": "https://example.edu/support/computer-science",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on_matches_expected": true,
+      "academic_blocks": [
+        {
+          "heading": "Curriculum",
+          "block": "Students take first-year courses in programming and second-year modules in algorithms, followed by a project."
+        }
+      ],
+      "eligibility_matches": [
+        []
+      ],
+      "no_degree_match": null
+    },
+    {
+      "case": "programme_negates_funding_not_degree",
+      "expected": "program_detail",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>Funding</h2><p>We do not offer financial assistance for this programme.</p><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "aa327e1bf2cdc4a77527c853c8a787e1a6b43cbe84c84ba84af7128d1bf64559",
+      "url": "https://example.edu/support/computer-science",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on_matches_expected": true,
+      "academic_blocks": [
+        {
+          "heading": "Curriculum",
+          "block": "Students take first-year courses in programming and second-year modules in algorithms, followed by a project."
+        }
+      ],
+      "eligibility_matches": [
+        []
+      ],
+      "no_degree_match": null
+    },
+    {
+      "case": "comment_academic_only",
+      "expected": "scholarship_index",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><!-- First-year courses and second-year modules. --><p>Ask the office.</p><h2>Scholarships</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "a5af379693f35e6987c029c2686d6a3f7fd6200a94a9528e65e0224285ce1eef",
+      "url": "https://example.edu/support/computer-science",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on_matches_expected": true,
+      "academic_blocks": [
+        {
+          "heading": "Curriculum",
+          "block": "Ask the office."
+        }
+      ],
+      "eligibility_matches": [
+        []
+      ],
+      "no_degree_match": null
+    },
+    {
+      "case": "next_equal_heading_is_closed",
+      "expected": "scholarship_index",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Ask the office.</p><h2>Eligibility</h2><p>First-year courses and second-year modules.</p><h2>Scholarships</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "32aee20f7ddf05b5ca715295417b36c8c12d5af3801fe850f72194cd3ef9f273",
+      "url": "https://example.edu/support/computer-science",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on_matches_expected": true,
+      "academic_blocks": [
+        {
+          "heading": "Curriculum",
+          "block": "Ask the office."
+        }
+      ],
+      "eligibility_matches": [
+        []
+      ],
+      "no_degree_match": null
+    },
+    {
+      "case": "real_academic_same_block_positive",
+      "expected": "program_detail",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>Funding</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "bf961ca5b0741cb8fefca339c9ef8004ef427f23dd078edb10c3a5d15aa24ef6",
+      "url": "https://example.edu/support/computer-science",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on_matches_expected": true,
+      "academic_blocks": [
+        {
+          "heading": "Curriculum",
+          "block": "Students take first-year courses in programming and second-year modules in algorithms, followed by a project."
+        }
+      ],
+      "eligibility_matches": [
+        []
+      ],
+      "no_degree_match": null
+    },
+    {
+      "case": "genuine_curriculum_optional_module_eligibility",
+      "expected": "program_detail",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms. Students are eligible to choose optional third-year modules after completing prerequisites.</p><h2>Funding</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "35e52e5321b42c4bea1515e6b2756f6cb4bc675bb279a2518d244d566aa6cfd1",
+      "url": "https://example.edu/support/computer-science",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on_matches_expected": false,
+      "academic_blocks": [
+        {
+          "heading": "Curriculum",
+          "block": "Students take first-year courses in programming and second-year modules in algorithms. Students are eligible to choose optional third-year modules after completing prerequisites."
+        }
+      ],
+      "eligibility_matches": [
+        [
+          "eligible"
+        ]
+      ],
+      "no_degree_match": null
+    },
+    {
+      "case": "genuine_curriculum_qualifies_for_honours",
+      "expected": "program_detail",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms. This degree qualifies graduates for entry to honours study.</p><h2>Funding</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "97658d3e7b71f70f4048260b7c9f3c9d5ffb1c40bb3c31dc5eea9f391e31d5c3",
+      "url": "https://example.edu/support/computer-science",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on_matches_expected": true,
+      "academic_blocks": [
+        {
+          "heading": "Curriculum",
+          "block": "Students take first-year courses in programming and second-year modules in algorithms. This degree qualifies graduates for entry to honours study."
+        }
+      ],
+      "eligibility_matches": [
+        []
+      ],
+      "no_degree_match": null
+    },
+    {
+      "case": "genuine_bachelor_negates_different_master_degree",
+      "expected": "program_detail",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>Further study</h2><p>We do not offer a master's degree in this subject.</p><h2>Funding</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "04cace1252023ded6617f5b6f718207d08ffdd61f9d4fb9ea1ea43ba480f0b3c",
+      "url": "https://example.edu/support/computer-science",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on_matches_expected": false,
+      "academic_blocks": [
+        {
+          "heading": "Curriculum",
+          "block": "Students take first-year courses in programming and second-year modules in algorithms, followed by a project."
+        }
+      ],
+      "eligibility_matches": [
+        []
+      ],
+      "no_degree_match": "We do not offer a master's degree"
+    },
+    {
+      "case": "genuine_bachelor_negates_this_bachelor_degree",
+      "expected": "scholarship_index",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><p>We do not offer this undergraduate degree.</p><h2>Funding</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "793870f20266104da416cafdf2c69ad425b3adf5aaf9da739cc078b57db42e66",
+      "url": "https://example.edu/support/computer-science",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on_matches_expected": true,
+      "academic_blocks": [
+        {
+          "heading": "Curriculum",
+          "block": "Students take first-year courses in programming and second-year modules in algorithms, followed by a project. We do not offer this undergraduate degree."
+        }
+      ],
+      "eligibility_matches": [
+        []
+      ],
+      "no_degree_match": "We do not offer this undergraduate degree"
+    },
+    {
+      "case": "funding_eligibility_no_formula_page_purpose",
+      "expected": "scholarship_index",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>Financial support eligibility for current students is described below.</p><h2>Curriculum</h2><p>Applicants must complete first-year courses and second-year modules before receiving assistance.</p><h2>Funding</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "685b4517c22eac5dc906dd803040aa0d06c58911cafd6aa7a8e480914da3d71e",
+      "url": "https://example.edu/support/computer-science",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on_matches_expected": true,
+      "academic_blocks": [
+        {
+          "heading": "Curriculum",
+          "block": "Applicants must complete first-year courses and second-year modules before receiving assistance."
+        }
+      ],
+      "eligibility_matches": [
+        [
+          "Applicants"
+        ]
+      ],
+      "no_degree_match": null
+    }
+  ],
+  "failed": [
+    "genuine_curriculum_optional_module_eligibility",
+    "genuine_bachelor_negates_different_master_degree"
+  ]
+}

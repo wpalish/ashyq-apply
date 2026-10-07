@@ -1,0 +1,80 @@
+{
+  "controls": 14,
+  "original_nine_failed": [],
+  "new_failed": [
+    "genuine_curriculum_optional_module_eligibility",
+    "genuine_bachelor_negates_different_master_degree"
+  ],
+  "classifications": [
+    {
+      "case": "funding_eligibility_with_academic_conditions",
+      "expected": "scholarship_index",
+      "actual": "scholarship_index"
+    },
+    {
+      "case": "explicit_sibling_section_scope",
+      "expected": "scholarship_index",
+      "actual": "scholarship_index"
+    },
+    {
+      "case": "role_navigation_academic_copy",
+      "expected": "scholarship_index",
+      "actual": "scholarship_index"
+    },
+    {
+      "case": "funding_eligibility_credits_without_progression",
+      "expected": "scholarship_index",
+      "actual": "scholarship_index"
+    },
+    {
+      "case": "programme_negates_bursaries_not_degree",
+      "expected": "program_detail",
+      "actual": "program_detail"
+    },
+    {
+      "case": "programme_negates_funding_not_degree",
+      "expected": "program_detail",
+      "actual": "program_detail"
+    },
+    {
+      "case": "comment_academic_only",
+      "expected": "scholarship_index",
+      "actual": "scholarship_index"
+    },
+    {
+      "case": "next_equal_heading_is_closed",
+      "expected": "scholarship_index",
+      "actual": "scholarship_index"
+    },
+    {
+      "case": "real_academic_same_block_positive",
+      "expected": "program_detail",
+      "actual": "program_detail"
+    },
+    {
+      "case": "genuine_curriculum_optional_module_eligibility",
+      "expected": "program_detail",
+      "actual": "scholarship_index"
+    },
+    {
+      "case": "genuine_curriculum_qualifies_for_honours",
+      "expected": "program_detail",
+      "actual": "program_detail"
+    },
+    {
+      "case": "genuine_bachelor_negates_different_master_degree",
+      "expected": "program_detail",
+      "actual": "scholarship_index"
+    },
+    {
+      "case": "genuine_bachelor_negates_this_bachelor_degree",
+      "expected": "scholarship_index",
+      "actual": "scholarship_index"
+    },
+    {
+      "case": "funding_eligibility_no_formula_page_purpose",
+      "expected": "scholarship_index",
+      "actual": "scholarship_index"
+    }
+  ]
+}

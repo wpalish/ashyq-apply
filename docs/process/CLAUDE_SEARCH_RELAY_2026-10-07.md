@@ -1,5 +1,9 @@
 # Claude search relay — 7 October 2026
 
+## Latest Round6 checkpoint 2026-10-07 21:12UTC
+
+PF-1 off-default source locally verified4077/95.06%,frontend232/all gates/unchangeddemo20/onehead;227focused,49external,31independent capture controls. Real Wits reader programme0/1/1/0, funding traversal retained on direct/depth1 routes; intake/yearUnknown, SI-1False prevents standalone fullpipeline gain.79executions/70unique off snapshots and manual semantic fixtures; FAQ/UNKNOWN/doc/catalog/support unchanged. Four rejected candidates and all originals retained in round6. Sourcecheckpoint/DraftPR66 next, no live/default/hostedCI/launch claim. Next durable60get guard only after B final pin/A/root SQL/fence review: SQLite predecessor2gets/count1 rejected, corrected69control bundle still pending.120s hardwall/renderer/querydurability remains unresolved. StickySTOP unchanged; no resets, payments, substitutions, gold/heldout changes. Newest section supersedes old planned steps below.
+
 ## Latest reviewed checkpoint 2026-10-07 20:44UTC
 
 **[search-loop] current 2026-10-07 20:44UTC:** Round5 source d29bcf8 and metadata640c797 pushed in DraftPR65 (base PR64). Local3892/95.01%, frontend232/all quality/demo/onehead; SPH-1=False. Round6 four external candidates rejected and archived; no classifier source applied. Latest rev2 bd21146 fixes earlier false programme/scope controls but causes real depth1 Wits funding-link loss. A prepares bounded revision3 preserving subsidiary funding discovery; await independent semantic/caller review before source application. Two rev2 conservative missed gains stay explicit. B prepares durable60-Fetcher.get production guard with real SQL/fencing tests, not hard120/render/query durability. Global CI-refusal/liveSTOP sticky, no live/hosted retry/reset/purchase/gold/heldout/default change. Parent owns all code/Git; two experts external only.

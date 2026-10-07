@@ -660,6 +660,7 @@ async def capture_one(
 
 
 def main() -> None:
+    from app.adapters import page_classifier
     from app.adapters.discovery import live_discovery
     from app.adapters.scholarship import web_scholarships
     from app.adapters.search import KNOWN_SEARCH_PROVIDERS
@@ -702,6 +703,12 @@ def main() -> None:
         "--site-branding-identity",
         action="store_true",
         help="experiment SI-1: verify a hinted homepage using its exact site name or copyright owner",
+    )
+    parser.add_argument(
+        "--programme-identity-before-funding",
+        action=argparse.BooleanOptionalAction,
+        default=page_classifier.PROGRAMME_IDENTITY_BEFORE_FUNDING,
+        help="experiment: confirm academic programme identity while preserving subsidiary funding discovery",
     )
     parser.add_argument(
         "--subject-phrase-match",
@@ -892,6 +899,7 @@ def main() -> None:
     print(f"search provider: {search_provider}", flush=True)
     if args.child:
         live_discovery.SUBJECT_PHRASE_MATCH = args.subject_phrase_match
+        page_classifier.PROGRAMME_IDENTITY_BEFORE_FUNDING = args.programme_identity_before_funding
         if args.site_branding_identity:
             from app.catalogue import discovery as catalogue_discovery
 
@@ -1045,6 +1053,7 @@ def main() -> None:
                     "search_provider": search_provider,
                     "site_branding_identity": args.site_branding_identity,
                     "subject_phrase_match": args.subject_phrase_match,
+                    "programme_identity_before_funding": args.programme_identity_before_funding,
                     "shared_query_budget": args.shared_query_budget
                     or search_intent.SHARED_QUERY_BUDGET,
                     "seconds_per_case": args.seconds_per_case,
@@ -1132,6 +1141,9 @@ def main() -> None:
                         "--subject-phrase-match"
                         if args.subject_phrase_match
                         else "--no-subject-phrase-match",
+                        "--programme-identity-before-funding"
+                        if args.programme_identity_before_funding
+                        else "--no-programme-identity-before-funding",
                         *(["--applicant-academic-year"] if args.applicant_academic_year else []),
                         "--search-funding-fallback"
                         if args.search_funding_fallback
@@ -1232,6 +1244,7 @@ def main() -> None:
                 "search_before_navigation": args.search_first,
                 "site_branding_identity": args.site_branding_identity,
                 "subject_phrase_match": args.subject_phrase_match,
+                "programme_identity_before_funding": args.programme_identity_before_funding,
                 "shared_query_budget": args.shared_query_budget
                 or search_intent.SHARED_QUERY_BUDGET,
                 "recover_search_candidates": args.recover_search_candidates,

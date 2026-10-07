@@ -1,0 +1,44 @@
+{
+  "created_utc": "2026-10-07T20:44:23.936563+00:00",
+  "decision": "REJECTED_CALLER_DISCOVERY_REGRESSION",
+  "proposal_sha256": "bd21146bff824c059defa47ce2a1e5e3490d34822a2485c3b4dfb16116ae5303",
+  "previous_nine_controls_fixed": true,
+  "tests": {
+    "passed": 33,
+    "failed": 3,
+    "blocker_failures": 1,
+    "conservative_false_negative_controls": 2
+  },
+  "original_source_unchanged": true,
+  "source_after_sha256": {
+    "app/adapters/page_classifier.py": "2f73f7c662ae0da1c31de6f23a9e068574c43f648a2472765a5398c2a093b158",
+    "app/adapters/requirements/web_requirements.py": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+    "app/adapters/scholarship/web_scholarships.py": "d1ce759b48ae5100676b9b8e80709b910f76ba9addd2f42f3eed711e45eb870e",
+    "app/domain/claim_verifier.py": "7c33bada893a2e3c98fbd68e67d84ff9e8bf587a04c13088dfc904fc3219f249"
+  },
+  "stop_unchanged": true,
+  "stop_sha256": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+  "network_provider_model_repo_git_edits": 0,
+  "artifacts_sha256": {
+    "actual-readers.offline.json": "e51d1207e88672e5b42dcca07ba3c8153908425929f2972027551570863ecf20",
+    "all-tests.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "all-tests.stdout.txt": "c9f0cc63a3473f022b1260a1a5126a122b903cc57c03d175eed11b08f93cf9cf",
+    "proposal-pinned/programme-identity-before-funding.patch": "df94273e9a2ebd3d920a954993011f9c82830f4b0833703f5cdf78a2360d31ad",
+    "proposal-pinned/proposed_page_classifier.py": "bd21146bff824c059defa47ce2a1e5e3490d34822a2485c3b4dfb16116ae5303",
+    "proposal-pinned/source-manifest.json": "74c8b45a42481e284f84537f6d49cee409f96e1dfe2cc95c0de5f9af2750d81f",
+    "proposal-pinned/test_programme_funding_scope.py": "a502f059d62710d1e6fdf741c7d8f52f5920be5cca9c739e57f07726e1b4f434",
+    "readers-replay.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "readers-replay.stdout.txt": "a5e2594e695871c6050bb371c8ecafb5832a0f653904325bd4109b4f40c87ada",
+    "replay_readers.py": "3094ec66b2c8194fa334605c5ef54d98b9c361704fe54d9d6ef97be6a5fe4f23",
+    "replay_scope.py": "ea5db523bd5c7914cbff2ea99c8b468caddc5a07bfbe5cac2a2cbc432baf0fb9",
+    "review-start.manifest.json": "9626535d04162cee83e991a25728ee8243bfcd20a78edd8c34a4e2a395ee13ba",
+    "review.ru.md": "e01223b9ef9525194f1bc8e5c2f069c9b5e1ef828c5a0d392aca7f3648be3e91",
+    "scope-controls.offline.json": "8b8b65064f7a360ea83b2ee1e004bb3e9bf4b52f09b6e1ef6f1e59bfc08928a6",
+    "scope-replay.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "scope-replay.stdout.txt": "7c35c9a51db00199d809258ba6ec5e0004e9a88caf44a9c141c28d468f8156b5",
+    "scope-tests.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "scope-tests.stdout.txt": "7771ba4e8ac89ccf61f3a01cddb73e66c1f89d22b97dcb4ec94aa8e232fc2386",
+    "test_readers.py": "2c68507ec3c0fdc6f047ce8a7b22031e008b3137ca08a0c6a8257af76a31f5dd",
+    "test_scope.py": "2176523e41c868ab3f111f3a732f6d3105c551799ddd475147aeb1b874c3f485"
+  }
+}
