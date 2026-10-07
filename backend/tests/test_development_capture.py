@@ -145,8 +145,9 @@ async def test_shared_stop_prevents_a_later_http_hop_in_an_inflight_read(
     assert Observation.model_validate_json(output.read_text()).error == "BENCHMARK_PROVIDER_FAILURE"
 
 
+@pytest.mark.parametrize("site_branding", [False, True])
 def test_explicit_catalogue_batch_preserves_requested_ids_and_stops_on_402(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, site_branding: bool
 ):
     from evaluation.research.expert import catalogue as catalogue_module
 
@@ -165,6 +166,7 @@ def test_explicit_catalogue_batch_preserves_requested_ids_and_stops_on_402(
             "--out",
             str(tmp_path),
             "--strict-expert-budget",
+            *(["--site-branding-identity"] if site_branding else []),
         ],
     )
     monkeypatch.setattr(subprocess, "check_output", lambda *a, **k: "a" * 40)
@@ -172,6 +174,7 @@ def test_explicit_catalogue_batch_preserves_requested_ids_and_stops_on_402(
 
     def child(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
         assert "--case" not in command
+        assert ("--site-branding-identity" in command) is site_branding
         case = command[command.index("--catalogue-id") + 1]
         started.append(case)
         output = Path(command[command.index("--out") + 1])
@@ -188,13 +191,15 @@ def test_explicit_catalogue_batch_preserves_requested_ids_and_stops_on_402(
     capture = Capture.model_validate_json(next(tmp_path.rglob("capture.json")).read_text())
     assert started == [DALIAN]
     assert capture.config["cohort"] == [DALIAN, NAGOYA]
+    assert capture.config["site_branding_identity"] is site_branding
     assert capture.config["batch_attempted_case_ids"] == [DALIAN]
     assert capture.config["batch_remaining_case_ids"] == [NAGOYA]
     assert capture.config["batch_stop_reason"] == "provider_failure"
 
 
+@pytest.mark.parametrize("site_branding", [False, True])
 def test_preexisting_shared_stop_dispatches_no_child(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, site_branding: bool
 ):
     stop = tmp_path / "STOP.json"
     stop.write_text("{}")
@@ -209,6 +214,7 @@ def test_preexisting_shared_stop_dispatches_no_child(
             "--strict-expert-budget",
             "--stop-file",
             str(stop),
+            *(["--site-branding-identity"] if site_branding else []),
         ],
     )
     monkeypatch.setattr(subprocess, "check_output", lambda *a, **k: "a" * 40)
@@ -218,6 +224,7 @@ def test_preexisting_shared_stop_dispatches_no_child(
         next((tmp_path / "run").rglob("capture.json")).read_text()
     )
     assert capture.observations == []
+    assert capture.config["site_branding_identity"] is site_branding
     assert capture.config["batch_attempted_case_ids"] == []
     assert capture.config["batch_remaining_case_ids"] == list(live.COHORT)
     assert capture.config["batch_stop_reason"] == "external_provider_failure"

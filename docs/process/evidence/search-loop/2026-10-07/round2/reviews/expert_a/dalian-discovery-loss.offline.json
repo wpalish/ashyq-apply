@@ -1,0 +1,426 @@
+{
+  "mode": "offline candidate-confirm regression; no provider or Fetcher use",
+  "at": "2026-10-07T18:29:57.431172+00:00",
+  "case_id": "01d3bb22815c61aa8454283116cbd4fa",
+  "base_revision_requested_by_parent": "b0b1a9c",
+  "source_artifacts": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/page_classifier.py": {
+      "byte_sha256": "2f73f7c662ae0da1c31de6f23a9e068574c43f648a2472765a5398c2a093b158",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round2/reviews/expert_a/source-snapshot.page_classifier.py.txt"
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/discovery/live_discovery.py": {
+      "byte_sha256": "b1d7e8f34a3cb59a3a93a1606aee191256e32f5d08e4ba71bc08d75a03521c4f",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round2/reviews/expert_a/source-snapshot.live_discovery.py.txt"
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/identity.py": {
+      "byte_sha256": "e5313122ac37f8ab46b7e2b9bbdc154d0f537e2c1f67d714afb53b5be7582054",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round2/reviews/expert_a/source-snapshot.identity.py.txt"
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/ontology.py": {
+      "byte_sha256": "d63e4c6320c5154d60b5c6009615ae63ef5c95b4ed337eb7e9d0ec70ea895f35",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round2/reviews/expert_a/source-snapshot.ontology.py.txt"
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/ontology.json": {
+      "byte_sha256": "2cb1026c2c3fdcccfd66c828102a0bfdde58533e9961125677ed85ef83f3d373",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round2/reviews/expert_a/source-snapshot.ontology.json.txt"
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/requirements/web_requirements.py": {
+      "byte_sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round2/reviews/expert_a/source-snapshot.web_requirements.py.txt"
+    }
+  },
+  "originals": [
+    {
+      "name": "baseline",
+      "body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-e9ioklso/cache/1c/1c604897f3d098cef1ba5cef3e1b9584.body",
+      "body_byte_sha256": "1d9877beb05fcc2e63de5f94358b59f466d5b50c372f3f7c8ae4629b51717ec7",
+      "meta_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-e9ioklso/cache/1c/1c604897f3d098cef1ba5cef3e1b9584.meta.json",
+      "meta_byte_sha256": "c0ff5d98868a0116d0430984b7d7413108c253c2b219244eeb3aa97cf55b829e",
+      "fetched_at": "2026-10-07T16:48:25.104527+00:00",
+      "metadata_content_hash": "cd7b0b7ffd8aae13b2bb42d43e1cea62c3c7018ca75ab3fe0b2f5e2e9489408c",
+      "computed_content_hash": "cd7b0b7ffd8aae13b2bb42d43e1cea62c3c7018ca75ab3fe0b2f5e2e9489408c",
+      "hash_formula_matches": true,
+      "official_main_heading_tag": "h2",
+      "official_main_heading": "Introduction to Undergraduate Training Programs in Computer Science and Technology",
+      "heading_survives_classifier_main_content": false,
+      "classifier_main_content_text": "Undergraduate Education-计算机科学与技术学院",
+      "chrome_hint_matching_ancestors_of_official_heading": [
+        {
+          "tag": "div",
+          "attrs": {
+            "class": [
+              "sidebar-page-container"
+            ]
+          }
+        }
+      ],
+      "main_h1_present": false,
+      "classifier_identity": "Undergraduate Education-计算机科学与技术学院",
+      "classification": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'Undergraduate Education-计算机科学与技术学院' at bachelor level"
+        ],
+        "title": "Undergraduate Education-计算机科学与技术学院",
+        "subject": "Undergraduate Education-计算机科学与技术学院",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "profile_rejection": "page subject 'Undergraduate Education-计算机科学与技术学院' does not match requested fields ['computer science']",
+      "actual_candidate_confirm_replay": {
+        "retained_body_reads": [
+          "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm"
+        ],
+        "selected": [],
+        "rejected": [
+          [
+            "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm",
+            "page subject 'Undergraduate Education-计算机科学与技术学院' does not match requested fields ['computer science']"
+          ]
+        ],
+        "errors": [
+          "search identity recovery: checked 1, confirmed 0"
+        ],
+        "provider_queries": 0,
+        "network_calls": 0
+      },
+      "run_artifacts": {
+        "raw.json": {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline/20261007T164735Z/01d3bb22815c61aa8454283116cbd4fa.raw.json",
+          "byte_sha256": "b744aac13fed0c8a9bb4fdc732c026020dc1fa82cfcfafd6fdd029201dfd9558"
+        },
+        "json": {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline/20261007T164735Z/01d3bb22815c61aa8454283116cbd4fa.json",
+          "byte_sha256": "8d7aab6c893816894ed8176268eb7801fad7f98b24155bb9ac3c836e704ad844"
+        },
+        "log": {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline/20261007T164735Z/01d3bb22815c61aa8454283116cbd4fa.log",
+          "byte_sha256": "4dfae629520fd590ad5831b2f387e8da1e7da14012f9b611ae590b31b0cc88b7"
+        },
+        "budget.json": {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline/20261007T164735Z/01d3bb22815c61aa8454283116cbd4fa.budget.json",
+          "byte_sha256": "d7c766b287bb4e904b495023fe5d71a5387a268d8993ccac81e47c2a3278f471"
+        }
+      },
+      "captured_rejection": [
+        [
+          "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm",
+          "page subject 'Undergraduate Education-计算机科学与技术学院' does not match requested fields ['computer science']"
+        ]
+      ],
+      "captured_selected": {
+        "program_page": [
+          "http://en.dlut.edu.cn/info/1103/2308.htm"
+        ],
+        "admissions": [
+          "https://en.dlut.edu.cn/Admission_Studies.htm",
+          "https://sie.dlut.edu.cn/English/Admissions/Non_degree_Programs/Non_Degree_Programs1.htm",
+          "http://sie.dlut.edu.cn/English/Admissions/Degree_Programs/Bachelor_Programs1.htm"
+        ]
+      }
+    },
+    {
+      "name": "fixed_repeat",
+      "body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat-temp/canary-pya0cox3/cache/1c/1c604897f3d098cef1ba5cef3e1b9584.body",
+      "body_byte_sha256": "1d9877beb05fcc2e63de5f94358b59f466d5b50c372f3f7c8ae4629b51717ec7",
+      "meta_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat-temp/canary-pya0cox3/cache/1c/1c604897f3d098cef1ba5cef3e1b9584.meta.json",
+      "meta_byte_sha256": "a21fb11495613065fa572aeb1d88f90d3cef3a94e911869902b73c7bcd16a25d",
+      "fetched_at": "2026-10-07T17:30:38.796042+00:00",
+      "metadata_content_hash": "cd7b0b7ffd8aae13b2bb42d43e1cea62c3c7018ca75ab3fe0b2f5e2e9489408c",
+      "computed_content_hash": "cd7b0b7ffd8aae13b2bb42d43e1cea62c3c7018ca75ab3fe0b2f5e2e9489408c",
+      "hash_formula_matches": true,
+      "official_main_heading_tag": "h2",
+      "official_main_heading": "Introduction to Undergraduate Training Programs in Computer Science and Technology",
+      "heading_survives_classifier_main_content": false,
+      "classifier_main_content_text": "Undergraduate Education-计算机科学与技术学院",
+      "chrome_hint_matching_ancestors_of_official_heading": [
+        {
+          "tag": "div",
+          "attrs": {
+            "class": [
+              "sidebar-page-container"
+            ]
+          }
+        }
+      ],
+      "main_h1_present": false,
+      "classifier_identity": "Undergraduate Education-计算机科学与技术学院",
+      "classification": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'Undergraduate Education-计算机科学与技术学院' at bachelor level"
+        ],
+        "title": "Undergraduate Education-计算机科学与技术学院",
+        "subject": "Undergraduate Education-计算机科学与技术学院",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "profile_rejection": "page subject 'Undergraduate Education-计算机科学与技术学院' does not match requested fields ['computer science']",
+      "actual_candidate_confirm_replay": {
+        "retained_body_reads": [
+          "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm"
+        ],
+        "selected": [],
+        "rejected": [
+          [
+            "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm",
+            "page subject 'Undergraduate Education-计算机科学与技术学院' does not match requested fields ['computer science']"
+          ]
+        ],
+        "errors": [
+          "search identity recovery: checked 1, confirmed 0"
+        ],
+        "provider_queries": 0,
+        "network_calls": 0
+      },
+      "run_artifacts": {
+        "raw.json": {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat/20261007T172952Z/01d3bb22815c61aa8454283116cbd4fa.raw.json",
+          "byte_sha256": "ca22d572051c5fe1e276f3cbf6645f09f1bd8b49b859e2dcdb5e615237e2786d"
+        },
+        "json": {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat/20261007T172952Z/01d3bb22815c61aa8454283116cbd4fa.json",
+          "byte_sha256": "a0018fdb00010db7ac1bd8674dac4154927c0f514f59a0b158c1e8e3b27b33dc"
+        },
+        "log": {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat/20261007T172952Z/01d3bb22815c61aa8454283116cbd4fa.log",
+          "byte_sha256": "daf9726003c6707a6eb0193454e7d083ca3aee76fcd66e3bd5d0e4b6dd5572b5"
+        },
+        "budget.json": {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat/20261007T172952Z/01d3bb22815c61aa8454283116cbd4fa.budget.json",
+          "byte_sha256": "2f471c9cc5fc0442621de045de4f91207b1835ebafc8d940b1bea0ac97c2ec25"
+        }
+      },
+      "captured_rejection": [
+        [
+          "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm",
+          "page subject 'Undergraduate Education-计算机科学与技术学院' does not match requested fields ['computer science']"
+        ]
+      ],
+      "captured_selected": {
+        "program_page": [
+          "http://en.dlut.edu.cn/info/1103/2308.htm"
+        ],
+        "admissions": [
+          "https://en.dlut.edu.cn/Admission_Studies.htm",
+          "https://sie.dlut.edu.cn/English/Admissions/Non_degree_Programs/Non_Degree_Programs1.htm",
+          "http://sie.dlut.edu.cn/English/Admissions/Degree_Programs/Bachelor_Programs1.htm"
+        ]
+      }
+    },
+    {
+      "name": "prior_expert",
+      "body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/dalian/cache/1c/1c604897f3d098cef1ba5cef3e1b9584.body",
+      "body_byte_sha256": "1d9877beb05fcc2e63de5f94358b59f466d5b50c372f3f7c8ae4629b51717ec7",
+      "meta_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/dalian/cache/1c/1c604897f3d098cef1ba5cef3e1b9584.meta.json",
+      "meta_byte_sha256": "b07d97903f0716e61b2954fed356cdef0f0263aefa62f094c472599ff60164a6",
+      "fetched_at": "2026-10-07T16:13:09.979390+00:00",
+      "metadata_content_hash": "cd7b0b7ffd8aae13b2bb42d43e1cea62c3c7018ca75ab3fe0b2f5e2e9489408c",
+      "computed_content_hash": "cd7b0b7ffd8aae13b2bb42d43e1cea62c3c7018ca75ab3fe0b2f5e2e9489408c",
+      "hash_formula_matches": true,
+      "official_main_heading_tag": "h2",
+      "official_main_heading": "Introduction to Undergraduate Training Programs in Computer Science and Technology",
+      "heading_survives_classifier_main_content": false,
+      "classifier_main_content_text": "Undergraduate Education-计算机科学与技术学院",
+      "chrome_hint_matching_ancestors_of_official_heading": [
+        {
+          "tag": "div",
+          "attrs": {
+            "class": [
+              "sidebar-page-container"
+            ]
+          }
+        }
+      ],
+      "main_h1_present": false,
+      "classifier_identity": "Undergraduate Education-计算机科学与技术学院",
+      "classification": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'Undergraduate Education-计算机科学与技术学院' at bachelor level"
+        ],
+        "title": "Undergraduate Education-计算机科学与技术学院",
+        "subject": "Undergraduate Education-计算机科学与技术学院",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "profile_rejection": "page subject 'Undergraduate Education-计算机科学与技术学院' does not match requested fields ['computer science']",
+      "actual_candidate_confirm_replay": {
+        "retained_body_reads": [
+          "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm"
+        ],
+        "selected": [],
+        "rejected": [
+          [
+            "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm",
+            "page subject 'Undergraduate Education-计算机科学与技术学院' does not match requested fields ['computer science']"
+          ]
+        ],
+        "errors": [
+          "search identity recovery: checked 1, confirmed 0"
+        ],
+        "provider_queries": 0,
+        "network_calls": 0
+      }
+    }
+  ],
+  "all_three_body_bytes_identical": true,
+  "in_memory_controls": {
+    "wrapper_only": {
+      "kind": "In-memory structural control; original official bytes unchanged",
+      "remove_only_sidebar_word_from_layout_wrapper": true,
+      "promote_only_actual_main_h2_to_h1": false,
+      "official_heading_survives_main_content": true,
+      "classification": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'Undergraduate Education-计算机科学与技术学院' at bachelor level"
+        ],
+        "title": "Undergraduate Education-计算机科学与技术学院",
+        "subject": "Undergraduate Education-计算机科学与技术学院",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "profile_rejection": "page subject 'Undergraduate Education-计算机科学与技术学院' does not match requested fields ['computer science']",
+      "candidate_confirm_replay": {
+        "retained_body_reads": [
+          "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm"
+        ],
+        "selected": [],
+        "rejected": [
+          [
+            "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm",
+            "page subject 'Undergraduate Education-计算机科学与技术学院' does not match requested fields ['computer science']"
+          ]
+        ],
+        "errors": [
+          "search identity recovery: checked 1, confirmed 0"
+        ],
+        "provider_queries": 0,
+        "network_calls": 0
+      }
+    },
+    "heading_only": {
+      "kind": "In-memory structural control; original official bytes unchanged",
+      "remove_only_sidebar_word_from_layout_wrapper": false,
+      "promote_only_actual_main_h2_to_h1": true,
+      "official_heading_survives_main_content": false,
+      "classification": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'Undergraduate Education-计算机科学与技术学院' at bachelor level"
+        ],
+        "title": "Undergraduate Education-计算机科学与技术学院",
+        "subject": "Undergraduate Education-计算机科学与技术学院",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "profile_rejection": "page subject 'Undergraduate Education-计算机科学与技术学院' does not match requested fields ['computer science']",
+      "candidate_confirm_replay": {
+        "retained_body_reads": [
+          "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm"
+        ],
+        "selected": [],
+        "rejected": [
+          [
+            "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm",
+            "page subject 'Undergraduate Education-计算机科学与技术学院' does not match requested fields ['computer science']"
+          ]
+        ],
+        "errors": [
+          "search identity recovery: checked 1, confirmed 0"
+        ],
+        "provider_queries": 0,
+        "network_calls": 0
+      }
+    },
+    "wrapper_and_heading": {
+      "kind": "In-memory structural control; original official bytes unchanged",
+      "remove_only_sidebar_word_from_layout_wrapper": true,
+      "promote_only_actual_main_h2_to_h1": true,
+      "official_heading_survives_main_content": true,
+      "classification": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'Introduction to Undergraduate Training Programs in Computer Science and Technology' at bachelor level"
+        ],
+        "title": "Undergraduate Education-计算机科学与技术学院",
+        "subject": "Introduction to Undergraduate Training Programs in Computer Science and Technology",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "profile_rejection": null,
+      "candidate_confirm_replay": {
+        "retained_body_reads": [
+          "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm"
+        ],
+        "selected": [
+          "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm"
+        ],
+        "rejected": [],
+        "errors": [
+          "search identity recovery: checked 1, confirmed 1"
+        ],
+        "provider_queries": 0,
+        "network_calls": 0
+      }
+    }
+  },
+  "identity_using_explicit_main_heading": {
+    "exists": "yes",
+    "university": "yes",
+    "degree_level": "unknown",
+    "field": "yes",
+    "active": "unknown",
+    "intake": "unknown",
+    "reasons": [
+      [
+        "exists",
+        "the page presents itself as a programme"
+      ],
+      [
+        "university",
+        "served from dlut.edu.cn"
+      ],
+      [
+        "degree_level",
+        "no degree level is named"
+      ],
+      [
+        "field",
+        "names 'computer science'"
+      ],
+      [
+        "active",
+        "the page does not state whether it is running"
+      ],
+      [
+        "intake",
+        "the page does not mention 2027"
+      ]
+    ]
+  },
+  "originals_unchanged_after_replay": true,
+  "network_calls": 0,
+  "provider_calls": 0,
+  "confirmed_loss": "Earliest: main_content removes the content-bearing ancestor class sidebar-page-container via substring chrome regex, leaving only generic document title. Later independent loss: _identity ignores actual degree-and-field h2 when no h1 and chooses generic document title; profile gate rejects the generic subject. Same bytes/rejection in baseline and repeat.",
+  "limits": "Programme-description lead only. No proof of exact international Bachelor award, campus, teaching language, active admission or 2027 intake. Controls isolate two losses; preserving the wrapper alone does not make the current confirm stage select the page. Not a production patch design or 2027 claim."
+}

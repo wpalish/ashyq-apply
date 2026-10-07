@@ -1,0 +1,84 @@
+{
+  "started_at": "2026-10-07T18:42:03.724680+00:00",
+  "source_sha256": {
+    "backend/app/catalogue/discovery.py": "b2f057bc90831ea465c35561e710ad4cded038e88c45a629f34c2bccf226daab",
+    "backend/evaluation/research/live.py": "d537aaef6527572dd6dda929e3ac235861e28a5e3ef5cd829ef11f3c71b73399",
+    "backend/tests/test_university_catalogue.py": "a76ac0ee460487c6fe896b9e1671077499e5305e86d8b6da3c222ec4dc869640",
+    "backend/tests/test_development_capture.py": "33f35e3aef3cc8d869448ec89c0df8db32bf76300752dbc2337a438f039901dd"
+  },
+  "commands": [
+    {
+      "name": "ruff",
+      "arguments": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "format",
+      "arguments": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "mypy",
+      "arguments": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "focused",
+      "arguments": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/test_university_catalogue.py",
+        "tests/test_development_capture.py",
+        "-q"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "backend-pytest",
+      "arguments": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "--cov=app",
+        "--cov-fail-under=92"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "alembic-heads",
+      "arguments": [
+        ".venv/bin/alembic",
+        "heads"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "finished_at": "2026-10-07T18:49:14.980346+00:00",
+  "dotenv_restored": true,
+  "source_unchanged": true
+}

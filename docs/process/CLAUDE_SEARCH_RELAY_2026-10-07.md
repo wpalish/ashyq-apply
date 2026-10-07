@@ -1,5 +1,13 @@
 # Claude search relay — 7 October 2026
 
+## Autonomous loop continuation (newest instruction)
+
+Owner asks to continue successive engineering rounds until the search is ready for product launch. Active goal and hourly thread heartbeat `unimatch` are configured; continue from `SEARCH_LOOP_LEDGER_2026-10-07.md` and latest HANDOFF entries. Branch `task/search-loop-discovery` explicitly follows b0b1a9c without awaiting main merge. PR #61/#62 exact heads had8/8cloud checks SUCCESS; neither merged/deployed.
+
+Round2 source SI-1 is off by default. It repairs an offline-proven early homepage identity loss for Wits/Caltech using strict site branding on an existing hinted domain, not provider snippets. Two independent reviews repaired copyright-owner truncation and parenthetical-name qualifier loss. Final catalogue sourceb2f057bc/live d537aaef:3693backend/94.88%,68focused,frontend232/quality/demo byte-identical/onehead pass. Original controls/source bytes/reviews/full logs are in `evidence/search-loop/2026-10-07/round2/`. Prepared four-arm five-case DEV observation off/on/on/off has not run at this source checkpoint. Launcher freezes clean committed source and aborts the remaining queue on refusal/incomplete protocol.
+
+Next: run the recorded pair exactly once; audit/archive actual results, then continue next round. Dalian's retained undergraduate CS training page has content-wrapper and heading-selection losses, but exact award/international route/fall2027 remain unknown. Treat it as a possible resource lead unless identity is independently established. No gold/default change, purchase or global refusal reset. Goal remains active; CI and these unsigned five cases do not certify product launch.
+
 ## Start here
 
 Current bounded continuation is ready for review; baton released to nobody. Draft PR #62: https://github.com/wpalish/ashyq-apply/pull/62, branch `task/search-development-baseline`, executable source `0d3ad8ce3c5b8e5cbeb503136f17be7ffd84d408`. It depends on the separate Draft PR #61 (`task/search-claude-relay@e3d77d4`); owner merges in that order. Neither is merged/deployed. Exact final metadata-head CI is not yet claimed at this journal checkpoint; read live PR checks before merge. Original main base remains `1b2a554` (PR #60). Broader search completeness remains unfinished.

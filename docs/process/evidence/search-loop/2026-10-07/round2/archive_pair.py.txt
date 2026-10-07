@@ -1,0 +1,88 @@
+"""Archive every attempted arm, including an incomplete/refused run, without gold scoring."""
+import hashlib
+import json
+import shutil
+import sqlite3
+import tarfile
+from pathlib import Path
+
+from dotenv import dotenv_values
+from app.adapters.extraction import readable_text
+from app.domain.claim_verifier import is_verbatim_excerpt
+
+WORK=Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work')
+REPO=WORK/'ashyq-apply'
+ROOT=WORK/'search-loop-round2'
+OUT=REPO/'docs/process/evidence/search-loop/2026-10-07/round2/paired'
+OUT.mkdir(parents=True,exist_ok=True)
+launch=json.loads((ROOT/'paired-launch.frozen.json').read_text())
+assert launch['source_unchanged']
+secret_values=[value.encode() for name,value in dotenv_values(REPO/'backend/.env').items()
+    if value and len(value)>=12 and any(token in name.upper() for token in ('KEY','TOKEN','SECRET','PASSWORD'))]
+def safe(data):
+    assert not any(value in data for value in secret_values), 'Secret-value scan failed; preserve locally'
+def dump(path,data): path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
+summaries=[]
+for result in launch['completed_arms']:
+    arm=result['arm'];target=OUT/arm;target.mkdir(exist_ok=True)
+    parent=ROOT/(arm+'-parent.log');safe(parent.read_bytes());shutil.copy2(parent,target/'parent.log')
+    if not result['capture_path']:
+        summaries.append(dict(result,quality_score=None));continue
+    run=Path(result['capture_path']).parent
+    for p in run.rglob('*'):
+        if p.is_file(): safe(p.read_bytes())
+    shutil.copytree(run,target/'originals',dirs_exist_ok=True)
+    temps=ROOT/'pair-temp'/arm
+    files=sorted(p for p in temps.glob('*/cache/**/*') if p.is_file())
+    index=[];sources=[]
+    for p in files:
+        assert not p.is_symlink();data=p.read_bytes();safe(data)
+        index.append(dict(path=str(p.relative_to(temps)),bytes=len(data),sha256=hashlib.sha256(data).hexdigest()))
+        if p.name.endswith('.meta.json'):
+            meta=json.loads(data);body=p.with_name(p.name.replace('.meta.json','.body'))
+            if body.exists(): sources.append((meta,body))
+    archive=target/'source-cache.tgz'
+    with tarfile.open(archive,'w:gz') as tar:
+        for p in files: tar.add(p,arcname=str(p.relative_to(temps)),recursive=False)
+    with tarfile.open(archive,'r:gz') as tar:
+        for item in index:
+            stream=tar.extractfile(item['path']);assert stream is not None
+            assert hashlib.sha256(stream.read()).hexdigest()==item['sha256']
+    dump(target/'source-cache-index.json',index)
+    metadata=[];identities=[]
+    for database in sorted(temps.glob('*/canary.db')):
+        with sqlite3.connect('file:'+str(database)+'?mode=ro',uri=True) as db:
+            db.row_factory=sqlite3.Row
+            for row in db.execute('SELECT url,registrable_domain,institution_key,content_hash,http_status,page_type,fetched_at FROM source_pages'):
+                metadata.append(dict(temp_directory=database.parent.name,**dict(row)))
+            for row in db.execute("SELECT university_id,payload FROM university_observations WHERE seed_version='live-site-identity'"):
+                identities.append(dict(temp_directory=database.parent.name,university_id=row['university_id'],proof=json.loads(row['payload'])))
+    dump(target/'public-source-metadata.json',metadata);dump(target/'site-identity-proofs.json',identities)
+    capture=json.loads((run/'capture.json').read_text());assert capture['pipeline_sha']==launch['source_pin']
+    assert capture['config']['site_branding_identity'] is result['site_branding_identity']
+    cases=[]
+    for observation in capture['observations']:
+        uid=observation['case_id'];raw=json.loads((run/(uid+'.raw.json')).read_text())
+        institution=(raw.get('canary') or {}).get('institutions') or []
+        quote_checks=[]
+        for prediction in observation['predictions']:
+            evidence=prediction.get('evidence') or {};url=evidence.get('url');excerpt=evidence.get('excerpt','')
+            matches=[(m,b) for m,b in sources if url in (m.get('url'),m.get('final_url'))]
+            checks=[]
+            for meta,body in matches:
+                text=body.read_bytes().decode(meta.get('encoding') or 'utf-8',errors='replace')
+                checks.append(dict(body_sha256=hashlib.sha256(body.read_bytes()).hexdigest(),
+                    http_status=meta.get('status_code'),verbatim=is_verbatim_excerpt(excerpt,readable_text(text))))
+            quote_checks.append(dict(key=prediction['key'],url=url,retained_candidates=checks,
+                verified_verbatim=any(c['verbatim'] for c in checks)))
+        cases.append(dict(case_id=uid,error=observation['error'],predictions=observation['predictions'],
+            candidate_programme_urls=observation['programme_urls'],budget=capture['config']['case_budgets'].get(uid),
+            institution_trace=institution,quote_checks=quote_checks))
+    summaries.append(dict(result,cases=cases,source_cache_files=len(index),archive_sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),
+        quality_score=None,secret_value_scan='passed',public_only=True))
+dump(OUT/'launch.frozen.json',launch)
+summary=dict(status=launch['status'],source_pin=launch['source_pin'],arms=summaries,
+    remaining_arms=launch['remaining_arms'],shared_stop_present=launch['shared_stop_present'],
+    quality_score=None,limits='DEV stage evidence and exact quotes only; unsigned labels; changing access is not causal attribution')
+dump(OUT/'summary.unreviewed.json',summary)
+print(json.dumps(dict(status=summary['status'],attempted_arms=len(summaries),remaining_arms=summary['remaining_arms'])))

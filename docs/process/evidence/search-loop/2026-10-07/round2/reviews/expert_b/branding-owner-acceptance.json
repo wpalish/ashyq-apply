@@ -1,0 +1,172 @@
+{
+  "source_sha_before": "b2f057bc90831ea465c35561e710ad4cded038e88c45a629f34c2bccf226daab",
+  "source_sha_after": "b2f057bc90831ea465c35561e710ad4cded038e88c45a629f34c2bccf226daab",
+  "source_stable": true,
+  "network_calls": 0,
+  "case_count": 20,
+  "all_passed": true,
+  "cases": [
+    {
+      "case": "copyright_exact",
+      "expected_identity": true,
+      "observed_identity": [
+        "Copyright © 2026 Example University",
+        "homepage_copyright_owner"
+      ]
+    },
+    {
+      "case": "copyright_article_city",
+      "expected_identity": true,
+      "observed_identity": [
+        "Copyright © 2026 The Example University, Johannesburg.",
+        "homepage_copyright_owner"
+      ]
+    },
+    {
+      "case": "copyright_city_country",
+      "expected_identity": true,
+      "observed_identity": [
+        "Copyright © 2026 Example University, Johannesburg, South Africa.",
+        "homepage_copyright_owner"
+      ]
+    },
+    {
+      "case": "og_exact",
+      "expected_identity": true,
+      "observed_identity": [
+        "Example University",
+        "homepage_og_site_name"
+      ]
+    },
+    {
+      "case": "og_article",
+      "expected_identity": true,
+      "observed_identity": [
+        "The Example University",
+        "homepage_og_site_name"
+      ]
+    },
+    {
+      "case": "comma_foundation",
+      "expected_identity": false,
+      "observed_identity": null
+    },
+    {
+      "case": "comma_inc",
+      "expected_identity": false,
+      "observed_identity": null
+    },
+    {
+      "case": "semicolon_foundation",
+      "expected_identity": false,
+      "observed_identity": null
+    },
+    {
+      "case": "city_then_foundation",
+      "expected_identity": false,
+      "observed_identity": null
+    },
+    {
+      "case": "foreign_owner_mention",
+      "expected_identity": false,
+      "observed_identity": null
+    },
+    {
+      "case": "body_mention",
+      "expected_identity": false,
+      "observed_identity": null
+    },
+    {
+      "case": "nonfooter_copyright",
+      "expected_identity": false,
+      "observed_identity": null
+    },
+    {
+      "case": "og_news_mention",
+      "expected_identity": false,
+      "observed_identity": null
+    },
+    {
+      "case": "og_reordered",
+      "expected_identity": false,
+      "observed_identity": null
+    },
+    {
+      "case": "og_token_suffix",
+      "expected_identity": false,
+      "observed_identity": null
+    }
+  ],
+  "actual_probe_controls": [
+    {
+      "case": "raw_qualifier_0",
+      "result": null,
+      "proofs_memory_only": [],
+      "fetch_calls": 1
+    },
+    {
+      "case": "raw_qualifier_1",
+      "result": null,
+      "proofs_memory_only": [],
+      "fetch_calls": 1
+    },
+    {
+      "case": "unrelated_host",
+      "result": null,
+      "proofs_memory_only": [],
+      "fetch_calls": 1
+    },
+    {
+      "case": "cross_site_redirect",
+      "result": null,
+      "proofs_memory_only": [],
+      "fetch_calls": 1
+    },
+    {
+      "case": "existing_default_proof_shape",
+      "proofs_equal": true,
+      "off": {
+        "case": "default_proof_off",
+        "result": {
+          "name": "Example University",
+          "country": "South Africa",
+          "city": "Johannesburg",
+          "homepage": "https://example.edu/"
+        },
+        "proofs_memory_only": [
+          {
+            "kind": "site_identity",
+            "source_url": "https://example.edu/",
+            "accessed_at": "2026-10-07T00:00:00+00:00",
+            "excerpt": "Example University",
+            "name": "Example University",
+            "domain": "example.edu",
+            "verification_status": "site_identity_checked"
+          }
+        ],
+        "fetch_calls": 1
+      },
+      "on": {
+        "case": "default_proof_on",
+        "result": {
+          "name": "Example University",
+          "country": "South Africa",
+          "city": "Johannesburg",
+          "homepage": "https://example.edu/"
+        },
+        "proofs_memory_only": [
+          {
+            "kind": "site_identity",
+            "source_url": "https://example.edu/",
+            "accessed_at": "2026-10-07T00:00:00+00:00",
+            "excerpt": "Example University",
+            "name": "Example University",
+            "domain": "example.edu",
+            "verification_status": "site_identity_checked"
+          }
+        ],
+        "fetch_calls": 1
+      }
+    }
+  ]
+}

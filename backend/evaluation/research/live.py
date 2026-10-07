@@ -698,6 +698,11 @@ def main() -> None:
         help="experiment: search before the navigation fallback (default off)",
     )
     parser.add_argument(
+        "--site-branding-identity",
+        action="store_true",
+        help="experiment SI-1: verify a hinted homepage using its exact site name or copyright owner",
+    )
+    parser.add_argument(
         "--skip-refused-hosts",
         action="store_true",
         help="experiment ER-04: search candidates on hosts that refused this run take no slot",
@@ -879,6 +884,10 @@ def main() -> None:
         parser.error("Strict expert budget requires configured exa or exa_mcp")
     print(f"search provider: {search_provider}", flush=True)
     if args.child:
+        if args.site_branding_identity:
+            from app.catalogue import discovery as catalogue_discovery
+
+            catalogue_discovery.SITE_BRANDING_IDENTITY = True
         web_scholarships.SEARCH_FUNDING_FALLBACK = args.search_funding_fallback
         web_scholarships.TARGET_AWARD_SEARCH = args.target_award_search
         live_discovery.RECOVER_SEARCH_CANDIDATES = args.recover_search_candidates
@@ -1026,6 +1035,7 @@ def main() -> None:
                 config={
                     "strict_expert_budget": True,
                     "search_provider": search_provider,
+                    "site_branding_identity": args.site_branding_identity,
                     "seconds_per_case": args.seconds_per_case,
                     "max_fetcher_calls_per_case": args.max_pages,
                     "max_search_queries_per_case": STRICT_MAX_SEARCH_QUERIES,
@@ -1083,6 +1093,7 @@ def main() -> None:
                         ),
                         *(["--search-provider", search_provider] if args.search_provider else []),
                         *(["--search-first"] if args.search_first else []),
+                        *(["--site-branding-identity"] if args.site_branding_identity else []),
                         *(["--skip-refused-hosts"] if args.skip_refused_hosts else []),
                         *(["--reject-archive-hosts"] if args.reject_archive_hosts else []),
                         *(["--admission-lexicon"] if args.admission_lexicon else []),
@@ -1205,6 +1216,7 @@ def main() -> None:
                 "max_fetcher_calls_per_case": args.max_pages,
                 "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
                 "search_before_navigation": args.search_first,
+                "site_branding_identity": args.site_branding_identity,
                 "recover_search_candidates": args.recover_search_candidates,
                 "search_funding_fallback": args.search_funding_fallback,
                 "target_award_search": args.target_award_search,
