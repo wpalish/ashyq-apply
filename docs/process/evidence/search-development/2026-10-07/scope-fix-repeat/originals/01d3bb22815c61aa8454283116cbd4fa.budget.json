@@ -1,0 +1,17 @@
+{
+  "strict_expert_budget": true,
+  "provider": "exa",
+  "max_fetcher_calls": 60,
+  "max_search_queries": 6,
+  "max_active_seconds": 120,
+  "finalization_reserve_ms": 3000,
+  "source_work_deadline_ms": 117000,
+  "fetcher_calls": 26,
+  "search_queries": 6,
+  "blocked_search_queries": 1,
+  "network_http_requests": 26,
+  "elapsed_ms": 52026,
+  "stop_reason": "search_budget_exhausted",
+  "provider_failure": null,
+  "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only"
+}

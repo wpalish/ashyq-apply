@@ -2,7 +2,7 @@
 
 ## Start here
 
-Current continuation: `[search-development]` on `task/search-development-baseline`, parent holds baton until source gates and same5-case observation finish. This branch starts from the separate ready-for-review Draft PR #61 (`task/search-claude-relay@e3d77d4`), not from a merged predecessor. Main base remains `1b2a554129f5744eb297848472f1c8fe8c7fde26` (PR #60). PR #61 is open/draft with8 exact-head successful checks; owner merges. Read the newest development entries below for work after that relay checkpoint.
+Current bounded continuation is ready for review; baton released to nobody. Draft PR #62: https://github.com/wpalish/ashyq-apply/pull/62, branch `task/search-development-baseline`, executable source `0d3ad8ce3c5b8e5cbeb503136f17be7ffd84d408`. It depends on the separate Draft PR #61 (`task/search-claude-relay@e3d77d4`); owner merges in that order. Neither is merged/deployed. Exact final metadata-head CI is not yet claimed at this journal checkpoint; read live PR checks before merge. Original main base remains `1b2a554` (PR #60). Broader search completeness remains unfinished.
 Local checkout: `/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply`.
 This journal is committed/pushed so Claude can resume without this chat. Newest entries take precedence over older HANDOFF paragraphs.
 
@@ -129,3 +129,13 @@ Independent expert reviews found and repaired sidebar/table heading leakage, non
 ## Scope-fix source gates completed
 
 Final source:3673passed,2warnings,94.88%,431.37s;66focused;Ruff/format369,mypy368;frontend232/typecheck/lint/build pass. Current-source demo20rows match pre-fix baseline byte-for-byte, Groningenfirst; one migrationhead d8e412c6a901. Both final hash-pinned independent reviews have no material findings in their stated coverage. All source/gates/reviews preserved under scope-fix/. HTML explicit-heading repair has no demonstrated PDF/non-heading audience coverage. Next frozen same5-case observation is prepared; no extra experiments or gold edits.
+
+## Final same-cohort observation and next baton
+
+Fixed executable source0d3ad8ce3c5b8e5cbeb503136f17be7ffd84d408, capture20261007T172952Z. All5terminal outputs;118Fetcher/20Exaqueries/279528active checkpointms, every case inside60/6/120000; provider failure/shared STOP none; source hashes and HEAD unchanged during the run. Original caps/profile/provider/5ids/harness/mapping unchanged. No model calls or purchases.
+
+Nagoya: before5.5, after no IELTS claim; official language-page bytes identical (SHA8b2f118c...). Together with fixed-byte adapter replay this supports the population-scope correction. It does not discover a full-degree minimum or confirm exact CSfall2027. AUT: the later algorithm read HTTP200 and yielded one official, verbatim CS-major Bachelor-of-Computer-and-Information-Sciences existence claim. Intake/year remain unknown. Earlier expert8/8read403 remains original evidence; access change is not assigned to this filter. Other3cases still have no emitted predictions. No signed quality/precision/completeness score calculated.
+
+Raw originals/checkpoints/logs, frozen launch, public-source metadata and all130cache files are under `scope-fix-repeat/`, tar/index hashes independently verified. No profile database rows archived; known secret-value scan passed across originals and uncompressed cache members. Both expert assignments2+3 attempted fully, raw findings remain unsigned/non-OS-blinded.
+
+Draft #62 is open, attached and targets predecessor branch #61. Local source gates3673/94.88%, frontend232,66focused,quality/demo/onehead green. Latest metadata-head cloud checks were pending at documentation freeze; inspect PR before merge. Baton released. Next: review these two drafts and investigate the first Dalian discovery/identity loss offline on retained bytes/trace before another source change. Keep robots/privacy,6/60/120, heldout segregation and global provider-refusal stop. G1 signature is still an owner input; do not modify reviewed9 or fabricate a new G30/CS requirement.
