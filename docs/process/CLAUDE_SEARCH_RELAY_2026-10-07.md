@@ -58,3 +58,18 @@ The live harness currently accepts only the curated 19, so extend its opt-in cas
 - RL-1 replay still has the same two stable gains and zero losses. All evidence and precise heldout audit are under `docs/process/evidence/claude-relay/2026-10-07/README.md`.
 - G-1 now has a concrete unsigned proposal (6.0 overall / each component) and owner was asked asynchronously; no gold change is applied.
 - Five-case development manifest prepared; no baseline yet. Before launching it, add opt-in catalogue identity selection and explicit global stop on any provider failure; current paired shell workflow alone is not safe for that requirement.
+
+## Committed checkpoint / exact next step
+
+Takeover: `96f0b14`. Green scorecard source + evidence: `0bc152226cb1aacf89e293a4dba82507e324abf6`. Current code is reviewable; original search algorithm defaults are unchanged.
+
+The next source task is opt-in development-case support and a controlled five-case baseline. Implementation has **not started**. The manifest gives identity ids and source hashes. Required files: `backend/evaluation/research/live.py`, `backend/scripts/canary_discovery.py`, offline selector/controller tests. `live.py --case` currently permits only the curated 19 and canary selects only their registry entries. Use existing imported catalogue ids for the five seed identities, without declaring their hints verified or adding seed estimates to claims. Add explicit global batch stop on provider/auth/quota refusal before new live work; the paired shell workflow currently continues to the next command after a provider refusal. Preserve defaults and 6/60/120 budgets, obtain a baseline before any discovery rule, retain raw logs and actual attempted/remaining ids. Do not tune on the nine heldout cases or expert500 HELDOUT150.
+
+After source PR review/merge, resume with:
+
+```bash
+git fetch origin --prune
+git show origin/task/search-claude-relay:docs/process/CLAUDE_SEARCH_RELAY_2026-10-07.md
+```
+
+If using a different checkout, do not reset local changes. The private expert500 branch's dirty funnel work is a separate workstream. No fresh model, expert, provider search, or new university benchmark was launched in this relay step. No main merge or deployment was performed.

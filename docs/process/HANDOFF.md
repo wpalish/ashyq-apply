@@ -1785,6 +1785,8 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**[search-relay] next after review:** implement opt-in catalogue seed-case selection in `evaluation/research/live.py` and `scripts/canary_discovery.py` using prepared Dalian/Nagoya/Witwatersrand/AUT/Caltech ids. First add a global provider/auth/quota refusal stop for the new batch; then run a frozen strict 6/60/120 baseline, retaining started/remaining ids and raw originals. No rule tuning before that baseline. Current scope ends at the green scorecard source `0bc1522`; the development harness is **not implemented or run**.
+
 **[search-relay] development-cohort write-ahead:** add five opt-in identity-only development cases, deterministically chosen from the frozen expert500 DEV list (first stable ids with public domain hints, one per country). Extend only evaluation `live.py` and canary selector to choose existing seed catalogue identities without treating seed estimates as facts; default ten-case cohort and curated registry unchanged. New cases: Dalian, Nagoya, Witwatersrand, AUT, Caltech. Tests are offline. Freeze a baseline before changing discovery rules; strict 6/60/120 mode, stop on first provider refusal, no heldout tuning.
 
 **[search-relay] scorecard repair write-ahead:** `evaluation/research/scorecard.py`: compare unrounded telemetry to the original 6/60/120 limits; mark missing telemetry as unknown; expose missing/unfinished paired repetitions and suppress stable gain/loss decisions for those cases. Tests in `tests/test_scorecard.py` reproduce hidden 120.004-second overruns, missing counters, missing repetition and CAPTURE_IN_PROGRESS. Original captures and gold unchanged. Re-score RL-1/heldout artifacts offline, archive precise counts, then required full gates.
@@ -4484,6 +4486,8 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+**[search-relay] 2026-10-07, evaluation only:** scorecard adds `measurement_status`, per-arm `completeness`, `changes.unassessed_cases`, per-row `missing_telemetry`, target `capture_complete`, tri-state `targets.met`, optional CLI `--expected-cases`. Cost retains exact latency and zero instead of treating missing as zero. Product schemas/API/flags unchanged.
 
 - [expert-500] V4 evaluation only: `expert/representation.py` public exact-university/hash bound schemas and six-field minimal closure; literal `scholarship_exists` name or exact `subject/value` AWARD_KEYS/coverage wrapper with selected-context proof. Parent request/event hash binds processed-through source count; empty submit cannot process a new source. Existing private mapper reused only after seal with exact pinned bytes. `live.capture_one`/CLI opt-in `finalization_reserve_ms=1000` closes work119000ms on original120000ms clock; default0. No existing app/journal/citation/gold/registry contract changes.
 

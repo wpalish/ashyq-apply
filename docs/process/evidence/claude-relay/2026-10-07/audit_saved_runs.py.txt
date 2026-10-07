@@ -1,0 +1,25 @@
+from pathlib import Path
+from collections import Counter
+import hashlib,json
+from evaluation.research.schema import Capture
+from evaluation.research.scorecard import load_run, completeness, core_coverage, cost
+root=Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work')
+out=root/'ashyq-apply/docs/process/evidence/claude-relay/2026-10-07'
+for name,run_id,expected in [
+ ('heldout1',37554279823,'nu metu sabanci charles masaryk tum tartu polimi vilnius'.split()),
+ ('rl1',37545452839,'groningen delft aalto vienna warsaw ubc toronto hku ntu kaist'.split())]:
+ path=root/f'{name}-original'/f'expert-recovery-{run_id}'
+ arms=load_run(path,expected_cases=set(expected))
+ result={'run_id':run_id,'artifact':path.name,'requested_cases':expected,'original_captures':[],'arms':{},'error_counts':{}}
+ errors=Counter(); num=den=0; over=[]
+ for p in sorted(path.glob('*/*/capture.json')):
+  c=Capture.model_validate_json(p.read_text()); o=c.observations[0]; core=core_coverage(c)[o.case_id]; b=cost(c)[o.case_id]
+  num+=len(core); den+=6;errors[o.error or 'complete']+=1
+  row={'file':str(p.relative_to(path)),'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'case':o.case_id,'pipeline_sha':c.pipeline_sha,'error':o.error,'core_answers':core,'programme_urls':[str(u) for u in o.programme_urls],'cost':b}
+  result['original_captures'].append(row)
+  if b['over_budget']:over.append({'file':row['file'],'cost':b})
+ for n,a in arms.items():
+  result['arms'][n]={'completeness':completeness(a,set(expected)),'repetitions':[{'core_numerator':sum(map(len,core_coverage(c).values())),'core_denominator_observed':len(c.observations)*6,'core_denominator_planned':len(expected)*6} for c in a.repetitions]}
+ result.update({'error_counts':dict(errors),'observed_core':{'numerator':num,'denominator':den},'planned_core_denominator':len(expected)*4*6,'over_budget':over})
+ (out/f'{name}-audit.json').write_text(json.dumps(result,ensure_ascii=False,indent=1)+'\n')
+ print(name,len(result['original_captures']),result['observed_core'],'errors',dict(errors),'over_budget',len(over),'arms',result['arms'])
