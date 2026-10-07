@@ -1,0 +1,36 @@
+from pathlib import Path
+from datetime import UTC,datetime
+import hashlib,json,runpy,re,subprocess
+repo=Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply')
+old=json.loads(Path('/tmp/unimatch-expert500-v12-local-gates.json').read_text())
+raw={
+'backend_tests':'/tmp/unimatch-expert500-v13-actual-full-pytest-original.log',
+'backend_ruff':'/tmp/unimatch-expert500-v13-actual-ruff-original.log',
+'backend_format':'/tmp/unimatch-expert500-v13-actual-format-original.log',
+'backend_mypy':'/tmp/unimatch-expert500-v13-actual-mypy-original.log',
+'evaluation_quality':'/tmp/unimatch-expert500-v13-actual-mypy-original.log',
+'combined_parent_mocks':'/tmp/unimatch-expert500-v13-final-all-runtime-mocks-original.log',
+'actual_ten_case_launcher_preflight':'/tmp/unimatch-expert500-v13-final-all-runtime-mocks-original.log',
+'demo_order':'/tmp/unimatch-expert500-v13-actual-demo-original.log',
+'alembic_single_head':'/tmp/unimatch-expert500-v13-actual-alembic-original.log',
+'exa_provider_pin':'/tmp/unimatch-expert500-v13-actual-public-pins.json',
+'actual_ten_case_os_isolation':'/tmp/unimatch-expert500-v13-isolation-preflight-original.log',
+'fresh_neutral_default_effort_runtime':'/tmp/unimatch-expert500-v13-neutral-result.json',
+'ordinary_cli_usage_available_before_neutral':'/tmp/unimatch-expert500-v13-before-neutral-availability-redacted.json',
+'fresh_neutral_archive_replay':'/tmp/unimatch-expert500-v13-neutral-provenance-replay-original.log',
+'current_helper_quality':'/tmp/unimatch-expert500-v13-final-helper-quality-original.log',
+'year_context_scope_regressions':'/tmp/unimatch-expert500-v13-year-context-v2-actual-green-v2-original.log',
+'saved_source_ir_compatibility':'/tmp/unimatch-expert500-v13-saved-source-compatibility-original.log',
+'dependency_cache_configuration':'/tmp/unimatch-expert500-v13-workflow-cache-check-v3-original.log',
+'existing_workflow_shell_tests':'/tmp/unimatch-expert500-v13-workflow-existing-tests-original.log'}
+for name in ('frontend_tests','frontend_typecheck','frontend_build','frontend_lint'):
+    entry=old['raw_logs'][name];p=Path(entry['path']);assert hashlib.sha256(p.read_bytes()).hexdigest()==entry['sha256'];raw[name]=entry['path']
+assert subprocess.check_output(['git','rev-parse','HEAD:frontend'],cwd=repo,text=True).strip()==old['frontend_tree']=='4aaba144e9642060a4915a22527ef016ee8cc83d'
+assert not subprocess.check_output(['git','diff','--','frontend'],cwd=repo)
+for p in raw.values():assert Path(p).is_file() and not Path(p).is_symlink()
+assert '4328 passed' in Path(raw['backend_tests']).read_text() and '94.90%' in Path(raw['backend_tests']).read_text()
+assert '650 passed' in Path(raw['combined_parent_mocks']).read_text()
+f=runpy.run_path('/tmp/unimatch-expert500-freeze-v13.py')
+value={'schema_version':'1','protocol_version':'journal-v13','recorded_at':datetime.now(UTC).isoformat(),'all_passed':True,'actual_ten_case_launcher_preflight':True,'backend_tests':4328,'backend_coverage_percent':94.90,'frontend_tests':232,'current_runtime_tests_total':650,'current_runtime_note':'One actual four-file invocation650; prior coherent three-suite480 separately preserved; immutable legacy excluded from current scope.','static_source_files':381,'parent_quality_files':11,'frozen_helpers':12,'source_calls_in_local_gates':0,'neutral_model_calls':3,'neutral_university_requests':0,'integrated_main':'ff7988e9225c1db3a5bf124a0e82ffaa273637e9','gates':{k:True for k in raw},'raw_logs':{k:{'path':p,'sha256':hashlib.sha256(Path(p).read_bytes()).hexdigest()} for k,p in raw.items()},'frontend_tree':old['frontend_tree'],'migration_tree':old['migration_tree'],'frontend_proof_note':'Exact unchanged tree retains original V10 unit232/type/lint/build logs. Source-specific future CI required; no current sourceCI pass claim.','demo_proof_note':'Fresh once isolated synthetic demo20 migrated to d8e412c6a901; Groningen first and UBC ranking.bucket OUT_OF_BUDGET asserted.','neutral_provenance_manifest_sha256':f['NEUTRAL_MANIFEST_SHA256'],'workflow_sha256':'81e37ba2ca56f968bf04052c12421b4b399b7139ddf2f1eaebc55f708af364f9','warm_cache_speedup_measured':False,'legacy_quality_note':'Established external helper rule scope with B023 ignored retained; strict repo app/tests/evaluation381 gates unchanged; reconstructed inherited-config102 diagnostic preserved.'}
+f['validate_local_gates'](value)
+p=Path('/tmp/unimatch-expert500-v13-local-gates.json');p.open('x').write(json.dumps(value,indent=2)+'\n');print(json.dumps({'local_gates_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'gates':len(raw),'backend_tests':4328,'runtime_tests':650}))

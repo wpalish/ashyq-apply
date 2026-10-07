@@ -1,0 +1,98 @@
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:8:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 6 |   """
+ 7 |
+ 8 | / from __future__ import annotations
+ 9 | |
+10 | | import copy
+11 | | import hashlib
+12 | | import importlib.util
+13 | | import json
+14 | | import pathlib
+15 | | import runpy
+16 | | import shutil
+17 | | import subprocess
+18 | | import sys
+19 | | from collections.abc import Iterator
+20 | | from dataclasses import dataclass, field, replace
+21 | | from pathlib import Path
+22 | | from typing import Any
+23 | |
+24 | | import pytest
+25 | | from evaluation.research import live
+26 | | from evaluation.research.expert import workspace_policy
+27 | | from evaluation.research.expert.blind_cli import selector_answer
+28 | | from evaluation.research.expert.journal import AcceptedJournal
+29 | | from evaluation.research.expert.network_budget import (
+30 | |     BUDGET_MODEL,
+31 | |     NETWORK_COMPARISON_MODE,
+32 | |     WALL_GUARD_MS,
+33 | |     expert_budget,
+34 | | )
+35 | | from evaluation.research.expert.network_turn_policy import (
+36 | |     NetworkBudgetIsolation,
+37 | |     command_proof,
+38 | |     journal_schema_for_turn,
+39 | |     parse_turn_decision,
+40 | |     policy_limits,
+41 | | )
+42 | | from evaluation.research.expert.workspace_policy import (
+43 | |     allocate_workspaces,
+44 | |     selector_paths,
+45 | |     validate_selector_paths,
+46 | |     validate_workspaces,
+47 | | )
+48 | | from evaluation.research.live import COHORT
+   | |___________________________________________^ I001
+49 |
+50 |   REPO = Path(
+   |
+   = help: Organize imports
+
+/tmp/test_unimatch_expert500_workflow_v11.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Mock transport/clock checks of the actual V11 workflow function only."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | import ast
+ 6 | | import asyncio
+ 7 | | import hashlib
+ 8 | | import json
+ 9 | | import math
+10 | | import threading
+11 | | from dataclasses import dataclass, field
+12 | | from datetime import UTC, datetime, timedelta
+13 | | from pathlib import Path
+14 | | from types import SimpleNamespace
+15 | | from typing import Any
+16 | |
+17 | | import pytest
+18 | | from app.adapters.fetching import FetchResult
+19 | | from app.adapters.search.base import SearchUnavailable
+20 | | from app.domain.enums import FetchOutcome
+21 | | from evaluation.research.expert.controller import execute
+22 | | from evaluation.research.expert.network_budget import (
+23 | |     BUDGET_MODEL,
+24 | |     NETWORK_COMPARISON_MODE,
+25 | |     WALL_GUARD_MS,
+26 | |     WallGuard,
+27 | | )
+   | |_^ I001
+28 |
+29 |   PILOT = Path("/tmp/unimatch-expert500-journal-pilot-v11.py")
+   |
+   = help: Organize imports
+
+/tmp/unimatch-expert500-freeze-v11.py:527:101: E501 Line too long (134 > 100)
+    |
+525 |         "baseline_finalization_reserve_ms": 1000,
+526 |         "baseline_source_work_deadline_ms": 119000,
+527 |         "expert_time_basis": "Controller actions only; model and transport never enter source counters; absolute900s case hang guard",
+    |                                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E501
+528 |         "cli_version": "0.159.2",
+529 |         "cli_source": "Existing ChatGPT.app bundled Codex CLI",
+    |
+
+Found 3 errors.
+[*] 2 fixable with the `--fix` option.

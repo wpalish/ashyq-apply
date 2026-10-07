@@ -1,0 +1,87 @@
+{
+  "schema_version": "1",
+  "protocol_version": "journal-v7",
+  "recorded_at": "2026-10-04T17:15:09.808656+00:00",
+  "all_passed": true,
+  "backend_tests": 4071,
+  "backend_coverage_percent": 94.9,
+  "frontend_tests": 232,
+  "actual_ten_case_launcher_preflight": true,
+  "actual_parent_mock_tests": 271,
+  "gates": {
+    "backend_tests": true,
+    "backend_ruff": true,
+    "backend_format": true,
+    "backend_mypy": true,
+    "frontend_tests": true,
+    "frontend_typecheck": true,
+    "frontend_lint": true,
+    "frontend_build": true,
+    "evaluation_quality": true,
+    "combined_parent_mocks": true,
+    "actual_ten_case_launcher_preflight": true,
+    "demo_order": true,
+    "alembic_single_head": true,
+    "actual_parent_quality": true
+  },
+  "raw_logs": {
+    "backend_tests": {
+      "path": "/tmp/unimatch-expert500-v7-backend-gates.txt",
+      "sha256": "dc828c0b641965a2a839533465ab33a3dcd9540bd59a07171618b314211453f9"
+    },
+    "backend_ruff": {
+      "path": "/tmp/unimatch-expert500-v7-backend-ruff.txt",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "backend_format": {
+      "path": "/tmp/unimatch-expert500-v7-backend-format.txt",
+      "sha256": "29a3e590a71b03e55a1019bc41d33545c7f7fbc5470bcf8cbc89ad5a63c249a9"
+    },
+    "backend_mypy": {
+      "path": "/tmp/unimatch-expert500-v7-backend-mypy.txt",
+      "sha256": "e3aa0c618e1fe85e760560803d9f8331125167ba9298a5143c19f1e5dd2eb703"
+    },
+    "frontend_tests": {
+      "path": "/tmp/unimatch-expert500-v7-frontend-gates.txt",
+      "sha256": "1eb2a62535734cd281886fec3e97ba6393b6d6ac89fea06491a6126e3fb455b3"
+    },
+    "frontend_typecheck": {
+      "path": "/tmp/unimatch-expert500-v7-frontend-gates.txt",
+      "sha256": "1eb2a62535734cd281886fec3e97ba6393b6d6ac89fea06491a6126e3fb455b3"
+    },
+    "frontend_lint": {
+      "path": "/tmp/unimatch-expert500-v7-frontend-gates.txt",
+      "sha256": "1eb2a62535734cd281886fec3e97ba6393b6d6ac89fea06491a6126e3fb455b3"
+    },
+    "frontend_build": {
+      "path": "/tmp/unimatch-expert500-v7-frontend-gates.txt",
+      "sha256": "1eb2a62535734cd281886fec3e97ba6393b6d6ac89fea06491a6126e3fb455b3"
+    },
+    "evaluation_quality": {
+      "path": "/tmp/unimatch-expert500-v7-backend-mypy.txt",
+      "sha256": "e3aa0c618e1fe85e760560803d9f8331125167ba9298a5143c19f1e5dd2eb703"
+    },
+    "combined_parent_mocks": {
+      "path": "/tmp/unimatch-expert500-v7-final-mock-gates.txt",
+      "sha256": "c831d2e5285985067a2e86f5cfea7376082cddd53e85fe0cc49e02534c74990e"
+    },
+    "actual_ten_case_launcher_preflight": {
+      "path": "/tmp/unimatch-expert500-v7-final-mock-gates.txt",
+      "sha256": "c831d2e5285985067a2e86f5cfea7376082cddd53e85fe0cc49e02534c74990e"
+    },
+    "demo_order": {
+      "path": "/tmp/unimatch-expert500-v7-demo-gate.txt",
+      "sha256": "6290b92c165d949baba19ed0975355d396c9f742bd470edc9f9c3e0e97a31993"
+    },
+    "alembic_single_head": {
+      "path": "/tmp/unimatch-expert500-v7-alembic-gate.txt",
+      "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b"
+    },
+    "actual_parent_quality": {
+      "path": "/tmp/unimatch-expert500-v7-parent-quality.txt",
+      "sha256": "8228fcc5ce46d42d01caf3cd941f4e9c5f2bcc372bb5b147a2f0572d2dd675a8"
+    }
+  },
+  "models_or_sources_in_tests": 0,
+  "real_neutral_probe": "separately bound original three completed phases"
+}

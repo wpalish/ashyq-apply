@@ -8,10 +8,12 @@ import subprocess
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
 
+import app.config
 from app.adapters.fetching import FetchResult
 from app.adapters.search.base import SearchResponse, SearchUnavailable
 from app.config import get_settings
@@ -135,11 +137,11 @@ async def test_legacy_cache_hits_keep_their_existing_free_page_accounting(
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("rate_limited", [False, True])
+@pytest.mark.parametrize("failure_status", [None, 402, 429])
 async def test_search_budget_wraps_cached_provider_across_discovery_and_funding(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
-    rate_limited: bool,
+    failure_status: int | None,
 ) -> None:
     import app.adapters.search
     from app.adapters.base import AdapterResult, Candidate, CandidateProgram
@@ -153,8 +155,8 @@ async def test_search_budget_wraps_cached_provider_across_discovery_and_funding(
 
     async def search(self: Any, *, query: str, **kwargs: Any) -> SearchResponse:
         queries.append(query)
-        if rate_limited:
-            raise SearchUnavailable("Bearer vendor-secret-key response", http_status=429)
+        if failure_status is not None:
+            raise SearchUnavailable("Bearer vendor-secret-key response", http_status=failure_status)
         return SearchResponse(query=query, provider="exa_mcp", retrieved_at=datetime.now(UTC))
 
     monkeypatch.setattr(ExaMcpSearchProvider, "search", search)
@@ -184,51 +186,135 @@ async def test_search_budget_wraps_cached_provider_across_discovery_and_funding(
 
     monkeypatch.setattr(canary, "run_canary", run)
     await live.capture_one("groningen", _output(tmp_path), 60, 120, strict_expert_budget=True)
-    assert len(queries) == (1 if rate_limited else 6)
+    assert len(queries) == (1 if failure_status is not None else 6)
     assert ExaMcpSearchProvider.search is original
     observation = Observation.model_validate_json(_output(tmp_path).read_text())
     assert observation.telemetry.search_calls == len(queries)
     budget_text = _output(tmp_path).with_suffix(".budget.json").read_text()
     budget = json.loads(budget_text)
     assert budget["blocked_search_queries"] >= 1
-    assert budget["stop_reason"] == ("http_429" if rate_limited else "search_budget_exhausted")
+    assert budget["stop_reason"] == (
+        f"http_{failure_status}" if failure_status is not None else "search_budget_exhausted"
+    )
     assert "vendor-secret-key" not in budget_text + _output(tmp_path).read_text()
-    if rate_limited:
-        assert budget["provider_failure"]["http_status"] == 429
+    if failure_status is not None:
+        assert budget["provider_failure"]["http_status"] == failure_status
+
+
+@pytest.fixture
+def synthetic_capture_inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    # The stock capture expects a binding file, but no real registry is part of this test.
+    registry = tmp_path / "synthetic-empty-identities.json"
+    registry.write_text(json.dumps({"version": "synthetic", "bindings": []}))
+    monkeypatch.setattr(live, "REVIEWED_BINDINGS", registry)
+    monkeypatch.setattr(live, "DOCUMENT_SECONDS", 0.0)
+    monkeypatch.setattr(
+        app.config,
+        "get_settings",
+        lambda: SimpleNamespace(
+            search_provider="exa_mcp", enable_browser_tier=False, respect_robots=True
+        ),
+    )
+    return tmp_path / "synthetic-observation.json"
 
 
 @pytest.mark.asyncio
 async def test_strict_active_deadline_cancels_pipeline_and_keeps_budget_checkpoint(
-    tmp_path: Path,
+    synthetic_capture_inputs: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    now = [0.0]
+    entered = asyncio.Event()
     cancelled = False
+    pending: asyncio.Future[None] = asyncio.get_running_loop().create_future()
+    timeouts: list[float] = []
+    original_wait_for = asyncio.wait_for
 
     async def run(*args: Any) -> dict[str, Any]:
         nonlocal cancelled
+        entered.set()
         try:
-            await asyncio.sleep(10)
+            await pending
         except asyncio.CancelledError:
             cancelled = True
+            # Cancellation cleanup still belongs to the original case clock.
+            now[0] = 0.25
             raise
-        raise AssertionError("must time out")
+        raise AssertionError("The pending canary must time out")
 
+    async def expire_pending(awaitable: Any, timeout: float) -> Any:
+        timeouts.append(timeout)
+        task = asyncio.create_task(awaitable)
+        # One scheduler turn starts the controlled pending operation, without a real timer race.
+        await asyncio.sleep(0)
+        assert entered.is_set() and not task.done()
+        now[0] = 0.15
+        return await original_wait_for(task, timeout=0)
+
+    # Isolate the evaluator clock/timeout seam, never asyncio's process-wide loop clock.
+    monkeypatch.setattr(live, "time", SimpleNamespace(monotonic=lambda: now[0]))
+    monkeypatch.setattr(live, "asyncio", SimpleNamespace(wait_for=expire_pending))
     monkeypatch.setattr(canary, "run_canary", run)
-    await live.capture_one("groningen", _output(tmp_path), 60, 0.15, strict_expert_budget=True)
-    assert cancelled
-    observation = Observation.model_validate_json(_output(tmp_path).read_text())
+    await live.capture_one(
+        "groningen", synthetic_capture_inputs, 60, 0.15, strict_expert_budget=True
+    )
+
+    assert entered.is_set() and cancelled and pending.cancelled()
+    assert timeouts == [0.15]
+    observation = Observation.model_validate_json(synthetic_capture_inputs.read_text())
     assert observation.error == "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
-    budget = json.loads(_output(tmp_path).with_suffix(".budget.json").read_text())
+    budget = json.loads(synthetic_capture_inputs.with_suffix(".budget.json").read_text())
     assert budget["max_active_seconds"] == 0.15
+    assert budget["source_work_deadline_ms"] == 150
+    assert (
+        budget["elapsed_ms"] == 250
+    )  # Real controlled cleanup overrun is retained, never clamped.
     assert budget["fetcher_calls"] == budget["search_queries"] == 0
+    assert budget["stop_reason"] == "wall_clock_budget_exhausted"
     assert "canary setup" in budget["active_time_basis"]
 
 
-@pytest.mark.parametrize("first_429", [False, True])
-def test_strict_parent_forwards_budget_and_stops_cohort_after_recorded_429(
+@pytest.mark.asyncio
+async def test_strict_setup_expiry_does_not_start_pipeline_but_keeps_original_clock(
+    synthetic_capture_inputs: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    ticks = iter([0.0])
+    called = False
+
+    def clock() -> float:
+        return next(ticks, 0.25)
+
+    async def run(*args: Any) -> dict[str, Any]:
+        nonlocal called
+        called = True
+        raise AssertionError("A case that expired in setup must never start its pipeline")
+
+    async def forbidden_wait_for(*args: Any, **kwargs: Any) -> Any:
+        raise AssertionError("No task deadline or fresh allowance exists after setup expiry")
+
+    monkeypatch.setattr(live, "time", SimpleNamespace(monotonic=clock))
+    monkeypatch.setattr(live, "asyncio", SimpleNamespace(wait_for=forbidden_wait_for))
+    monkeypatch.setattr(canary, "run_canary", run)
+    await live.capture_one(
+        "groningen", synthetic_capture_inputs, 60, 0.15, strict_expert_budget=True
+    )
+
+    assert not called
+    observation = Observation.model_validate_json(synthetic_capture_inputs.read_text())
+    assert observation.error == "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+    budget = json.loads(synthetic_capture_inputs.with_suffix(".budget.json").read_text())
+    assert budget["max_active_seconds"] == 0.15 and budget["elapsed_ms"] == 250
+    assert budget["source_work_deadline_ms"] == 150
+    assert budget["fetcher_calls"] == budget["search_queries"] == 0
+    assert budget["stop_reason"] == "wall_clock_budget_exhausted"
+
+
+@pytest.mark.parametrize("failure_status", [None, 402, 429])
+def test_strict_parent_forwards_budget_and_stops_cohort_after_recorded_account_refusal(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
-    first_429: bool,
+    failure_status: int | None,
 ) -> None:
     monkeypatch.setattr(
         sys, "argv", ["live", "--live", "--out", str(tmp_path), "--strict-expert-budget"]
@@ -252,8 +338,10 @@ def test_strict_parent_forwards_budget_and_stops_cohort_after_recorded_429(
         output.with_suffix(".budget.json").write_text(
             json.dumps(
                 {
-                    "stop_reason": "http_429" if first_429 else None,
-                    "provider_failure": {"http_status": 429} if first_429 else None,
+                    "stop_reason": f"http_{failure_status}" if failure_status is not None else None,
+                    "provider_failure": (
+                        {"http_status": failure_status} if failure_status is not None else None
+                    ),
                     "fetcher_calls": 3,
                     "search_queries": 1,
                 }
@@ -264,16 +352,18 @@ def test_strict_parent_forwards_budget_and_stops_cohort_after_recorded_429(
     monkeypatch.setattr(subprocess, "run", child)
     live.main()
     capture = Capture.model_validate_json(next(tmp_path.rglob("capture.json")).read_text())
-    assert len(started) == (1 if first_429 else len(live.COHORT))
+    assert len(started) == (1 if failure_status is not None else len(live.COHORT))
     assert capture.config["strict_expert_budget"] is True
     assert capture.config["max_search_queries_per_case"] == 6
     assert capture.config["child_active_seconds"] == 120
     assert capture.config["parent_process_timeout_seconds"] == 135
     assert capture.config["cold_fetcher_reads"] is True
     assert capture.config["batch_remaining_case_ids"] == (
-        list(live.COHORT)[1:] if first_429 else []
+        list(live.COHORT)[1:] if failure_status is not None else []
     )
-    assert capture.config["batch_stop_reason"] == ("http_429" if first_429 else None)
+    assert capture.config["batch_stop_reason"] == (
+        f"http_{failure_status}" if failure_status is not None else None
+    )
 
 
 def test_strict_child_receives_full_active_budget_and_resets_cached_settings(

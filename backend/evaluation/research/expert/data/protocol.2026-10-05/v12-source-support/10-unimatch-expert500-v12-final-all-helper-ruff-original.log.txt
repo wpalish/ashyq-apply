@@ -1,0 +1,122 @@
+/tmp/unimatch-expert500-pilot-v1-frozen.py:6:8: F401 [*] `hashlib` imported but unused
+  |
+4 | import argparse
+5 | import concurrent.futures
+6 | import hashlib
+  |        ^^^^^^^ F401
+7 | import json
+8 | import math
+  |
+  = help: Remove unused import: `hashlib`
+
+/tmp/unimatch-expert500-pilot-v1-frozen.py:9:8: F401 [*] `os` imported but unused
+   |
+ 7 | import json
+ 8 | import math
+ 9 | import os
+   |        ^^ F401
+10 | import subprocess
+11 | import tempfile
+   |
+   = help: Remove unused import: `os`
+
+/tmp/unimatch-expert500-pilot-v1-frozen.py:209:48: E702 Multiple statements on one line (semicolon)
+    |
+207 |     roots += [path for name, path in workspaces.items() if name != case_id]
+208 |     isolation = Isolation.local(workspace, roots)
+209 |     allowed = workspace / "public-sentinel.txt"; allowed.write_text("PUBLIC_PACKET_SENTINEL")
+    |                                                ^ E702
+210 |     sealed = root / "sealed-sentinel.txt"
+211 |     save(case_root / "isolation.json", isolation.prove_access(allowed, sealed))
+    |
+
+/tmp/unimatch-expert500-pilot-v1-frozen.py:212:48: E702 Multiple statements on one line (semicolon)
+    |
+210 |     sealed = root / "sealed-sentinel.txt"
+211 |     save(case_root / "isolation.json", isolation.prove_access(allowed, sealed))
+212 |     schema = workspace / "decision.schema.json"; save(schema, decision_schema())
+    |                                                ^ E702
+213 |     history: list[dict[str, Any]] = []
+214 |     actions: list[dict[str, Any]] = []
+    |
+
+/tmp/unimatch-expert500-pilot-v1-frozen.py:385:29: E702 Multiple statements on one line (semicolon)
+    |
+383 |     parser.add_argument('--ref',required=True)
+384 |     parser.add_argument('--stage',choices=['baseline','experts'],required=True)
+385 |     args=parser.parse_args();args.root.mkdir(parents=True,exist_ok=True)
+    |                             ^ E702
+386 |     (args.root/'sealed-sentinel.txt').write_text('SEALED_HARMLESS_SENTINEL')
+387 |     # Prepare all separate workspaces before a selector starts, so each is
+    |
+
+/tmp/unimatch-expert500-pilot-v1-frozen.py:396:29: E701 Multiple statements on one line (colon)
+    |
+394 |         iterator=iter(COHORT)
+395 |         def submit_next() -> None:
+396 |             if STOP.is_set():return
+    |                             ^ E701
+397 |             case=next(iterator,None)
+398 |             if case is None:return
+    |
+
+/tmp/unimatch-expert500-pilot-v1-frozen.py:398:28: E701 Multiple statements on one line (colon)
+    |
+396 |             if STOP.is_set():return
+397 |             case=next(iterator,None)
+398 |             if case is None:return
+    |                            ^ E701
+399 |             function=baseline if args.stage=='baseline' else expert
+400 |             params=(args.repo,args.ref,args.root,case)
+    |
+
+/tmp/unimatch-expert500-pilot-v1-frozen.py:403:26: E701 Multiple statements on one line (colon)
+    |
+401 |             future=pool.submit(function,*params,*(() if args.stage=='baseline' else (workspaces,)))
+402 |             pending[future]=case
+403 |         for _ in range(3):submit_next()
+    |                          ^ E701
+404 |         while pending:
+405 |             done,_=concurrent.futures.wait(pending,return_when=concurrent.futures.FIRST_COMPLETED)
+    |
+
+/tmp/unimatch-expert500-pilot-v1-frozen.py:408:20: E701 Multiple statements on one line (colon)
+    |
+406 |             for future in done:
+407 |                 case=pending.pop(future)
+408 |                 try:results.append(future.result())
+    |                    ^ E701
+409 |                 except Exception as exc:
+410 |                     result={'case_id':case,'status':'failed','error':type(exc).__name__+': '+str(exc)}
+    |
+
+/tmp/unimatch-expert500-pilot-v1-frozen.py:411:43: E702 Multiple statements on one line (semicolon)
+    |
+409 |                 except Exception as exc:
+410 |                     result={'case_id':case,'status':'failed','error':type(exc).__name__+': '+str(exc)}
+411 |                     results.append(result);save(args.root/args.stage/case/'orchestration-error.json',result)
+    |                                           ^ E702
+412 |                     emit(**result)
+413 |                     # Failed orchestration is not an excuse for fresh provider
+    |
+
+/tmp/unimatch-expert500-pilot-v1-frozen.py:417:30: E701 Multiple statements on one line (colon)
+    |
+415 |                     STOP.set()
+416 |             if not STOP.is_set():
+417 |                 for _ in done:submit_next()
+    |                              ^ E701
+418 |             save(args.root/f'{args.stage}-results.json',{'results':results,'stopped':STOP.is_set(),
+419 |                 'remaining_case_ids':[case for case in COHORT if case not in {r['case_id'] for r in results}]})
+    |
+
+/tmp/unimatch-expert500-pilot-v1-frozen.py:423:24: E701 Multiple statements on one line (colon)
+    |
+423 | if __name__=='__main__':main()
+    |                        ^ E701
+    |
+
+Found 12 errors.
+[*] 2 fixable with the `--fix` option.
+{"argv": ["/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/python", "-m", "ruff", "check", "--config", "ruff.toml", "--select", "E,F,I,UP,B,RUF021", "--ignore", "E501,B008,B023", "/tmp/test_unimatch_expert500_actual_cohort_v12.py", "/tmp/test_unimatch_expert500_journal_pilot_v12.py", "/tmp/test_unimatch_expert500_journal_report_v12.py", "/tmp/test_unimatch_expert500_workflow_v12.py", "/tmp/unimatch-expert500-export-v12.py", "/tmp/unimatch-expert500-freeze-v12.py", "/tmp/unimatch-expert500-isolation-preflight-v12.py", "/tmp/unimatch-expert500-journal-pilot-v12.py", "/tmp/unimatch-expert500-journal-report-v12.py", "/tmp/unimatch-expert500-launch-v12.py", "/tmp/unimatch-expert500-neutral-v12.py", "/tmp/unimatch-expert500-pilot-v1-frozen.py"], "helper_hashes_before": {"/tmp/test_unimatch_expert500_actual_cohort_v12.py": "0405d9e7d151ed86d488c20a3254e20f0364e41b8a566a8989456d09f6712686", "/tmp/test_unimatch_expert500_journal_pilot_v12.py": "fcbca530b952625d4e8fbe752fbf45692ee7c380f3f6c26fd83c9ad9e8a483a9", "/tmp/test_unimatch_expert500_journal_report_v12.py": "22399055992901771107e48abb0c4e3ed987525fc9396797d0ecfbce75519d7d", "/tmp/test_unimatch_expert500_workflow_v12.py": "c048d038f32c0a5d9479916377a0d5edf453b0c77c0b33a1c08c88a13e254e31", "/tmp/unimatch-expert500-export-v12.py": "224c00558dd4fe7d5e6331414c40f2c40a692a77c9ea8407bc0890843c430f09", "/tmp/unimatch-expert500-freeze-v12.py": "63e1e6706c9a2ebd71916a848dc694f8cfdb069b11ea6c07879c02116114c239", "/tmp/unimatch-expert500-isolation-preflight-v12.py": "858a7ab2a6275e95f940bf2578b47691673d0458ee5b4bec38ca506f3aaa8322", "/tmp/unimatch-expert500-journal-pilot-v12.py": "1922e117436afdc001bef7cbf867e8b91db4062fd0b98cfce044c3b980a74b72", "/tmp/unimatch-expert500-journal-report-v12.py": "5a36256591fe4b76186a36448c4c6a3d0a8eeab989b427eb4031ebf00405a4fb", "/tmp/unimatch-expert500-launch-v12.py": "365c2129bbca97c2eb1ba9a6791ae04c3e5bf85d60d5635db250f80d158f6327", "/tmp/unimatch-expert500-neutral-v12.py": "b691f3b3373ae76ddfc1eac6535c49841f6ce6a86b33953890757f6df0241455", "/tmp/unimatch-expert500-pilot-v1-frozen.py": "9eaa88effd037d17937bd96b16d341c711f02ac2825c74d0d6a1f5f95bb2c5a7"}}
+{"exit_code": 1, "helper_hashes_after": {"/tmp/test_unimatch_expert500_actual_cohort_v12.py": "0405d9e7d151ed86d488c20a3254e20f0364e41b8a566a8989456d09f6712686", "/tmp/test_unimatch_expert500_journal_pilot_v12.py": "fcbca530b952625d4e8fbe752fbf45692ee7c380f3f6c26fd83c9ad9e8a483a9", "/tmp/test_unimatch_expert500_journal_report_v12.py": "22399055992901771107e48abb0c4e3ed987525fc9396797d0ecfbce75519d7d", "/tmp/test_unimatch_expert500_workflow_v12.py": "c048d038f32c0a5d9479916377a0d5edf453b0c77c0b33a1c08c88a13e254e31", "/tmp/unimatch-expert500-export-v12.py": "224c00558dd4fe7d5e6331414c40f2c40a692a77c9ea8407bc0890843c430f09", "/tmp/unimatch-expert500-freeze-v12.py": "63e1e6706c9a2ebd71916a848dc694f8cfdb069b11ea6c07879c02116114c239", "/tmp/unimatch-expert500-isolation-preflight-v12.py": "858a7ab2a6275e95f940bf2578b47691673d0458ee5b4bec38ca506f3aaa8322", "/tmp/unimatch-expert500-journal-pilot-v12.py": "1922e117436afdc001bef7cbf867e8b91db4062fd0b98cfce044c3b980a74b72", "/tmp/unimatch-expert500-journal-report-v12.py": "5a36256591fe4b76186a36448c4c6a3d0a8eeab989b427eb4031ebf00405a4fb", "/tmp/unimatch-expert500-launch-v12.py": "365c2129bbca97c2eb1ba9a6791ae04c3e5bf85d60d5635db250f80d158f6327", "/tmp/unimatch-expert500-neutral-v12.py": "b691f3b3373ae76ddfc1eac6535c49841f6ce6a86b33953890757f6df0241455", "/tmp/unimatch-expert500-pilot-v1-frozen.py": "9eaa88effd037d17937bd96b16d341c711f02ac2825c74d0d6a1f5f95bb2c5a7"}, "unchanged": true}

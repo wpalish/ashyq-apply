@@ -1,0 +1,70 @@
+import argparse
+import hashlib
+import json
+import subprocess
+from datetime import UTC, datetime
+from pathlib import Path
+
+from evaluation.research.expert.workspace_policy import allocate_workspaces
+from evaluation.research.live import COHORT
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--harness-sha", required=True)
+parser.add_argument("--frozen-ref", required=True)
+args = parser.parse_args()
+repo = Path(
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply"
+)
+root = repo / "artifacts/expert-500/phase1-v6b-2026-10-04"
+if root.exists():
+    raise RuntimeError("Fresh trial directory already exists; do not reset/retry")
+manifest_path = (
+    repo / "backend/evaluation/research/expert/data/protocol.2026-10-04/v6b/manifest.json"
+)
+manifest = json.loads(manifest_path.read_text())
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
+if head != args.harness_sha:
+    raise RuntimeError("Unexpected frozen source")
+if (
+    subprocess.check_output(["git", "rev-parse", args.frozen_ref], cwd=repo, text=True).strip()
+    != head
+):
+    raise RuntimeError("Frozen ref does not identify selected source")
+for actual, expected in manifest["scripts"].items():
+    if sha(Path(actual)) != expected:
+        raise RuntimeError("Actual frozen parent changed")
+for entry in manifest["files"]:
+    if "/" in entry["path"] and sha(repo / entry["path"]) != entry["sha256"]:
+        raise RuntimeError("Frozen module changed")
+if sha(Path(manifest["binding_registry"]["path"])) != manifest["binding_registry"]["sha256"]:
+    raise RuntimeError("Private registry drift")
+root.mkdir(parents=True)
+assignments, receipts = allocate_workspaces(tuple(COHORT))
+for name, value in (
+    ("workspace-locations.json", assignments),
+    ("workspace-receipts.json", receipts),
+):
+    (root / name).write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+trial = {
+    **manifest,
+    "prepared_at": datetime.now(UTC).isoformat(),
+    "harness_sha": head,
+    "frozen_ref": args.frozen_ref,
+    "workspace_assignments_sha256": sha(root / "workspace-locations.json"),
+    "workspace_receipts_sha256": sha(root / "workspace-receipts.json"),
+    "expert_protocol": {"files": manifest["files"], "manifest_file_sha256": sha(manifest_path)},
+}
+encoded = (json.dumps(trial, ensure_ascii=False, indent=2) + "\n").encode()
+(root / "trial.json").write_bytes(encoded)
+(root / "trial-at-baseline-start.json").write_bytes(encoded)
+print(
+    json.dumps(
+        {"root": str(root), "harness_sha": head, "trial_file_sha256": sha(root / "trial.json")}
+    )
+)

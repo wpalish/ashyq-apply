@@ -1,0 +1,31 @@
+"""Preserve original sourceCI/baseline metadata while experts are active."""
+import hashlib
+import json
+import shutil
+from datetime import UTC,datetime
+from pathlib import Path
+
+REPO=Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply')
+BASE=REPO/'backend/evaluation/research/expert/data/protocol.2026-10-05'
+ROOT=REPO/'artifacts/expert-500/phase1-v12-2026-10-05'
+CI=Path('/tmp/unimatch-expert500-v12-source-ci')
+DEST=BASE/'v12-live-milestone'
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+assert not DEST.exists() and not (BASE/'v12-source-ci').exists()
+assert sha(CI/'manifest.json')=='d855cf0869d27890aaf0478950a7ec3593829508ca8ed17ae4991f4bff55ad60'
+for record in json.loads((CI/'manifest.json').read_text())['records']:assert sha(CI/record['snapshot'])==record['sha256']
+shutil.copytree(CI,BASE/'v12-source-ci')
+for p in CI.rglob('*'):
+ if p.is_file():assert sha(p)==sha(BASE/'v12-source-ci'/p.relative_to(CI))
+paths=[ROOT/'baseline-results.json',ROOT/'baseline-stage-start.json',ROOT/'experts-stage-start.json',ROOT/'trial.json',Path('/tmp/unimatch-expert500-v12-launch-original.log'),Path('/tmp/unimatch-expert500-v12-baseline-stage-original.log'),Path('/tmp/unimatch-expert500-v12-before-experts-redacted-observation.json'),Path('/tmp/unimatch-expert500-v12-ten-baseline-admission-original.json'),Path('/tmp/unimatch-expert500-v12-record-source-ci-original.log'),Path('/tmp/unimatch-expert500-v12-record-source-ci-py312-original.log'),Path(__file__)]
+assert not (ROOT/'submission-seal.json').exists() and not (ROOT/'comparison.json').exists()
+DEST.mkdir()
+records=[]
+for p in paths:
+ assert p.is_file() and not p.is_symlink();data=p.read_bytes();name=p.name+'.txt'
+ with (DEST/name).open('xb') as out:out.write(data)
+ records.append({'original_path':str(p),'snapshot':name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()})
+manifest={'schema_version':'1','recorded_at':datetime.now(UTC).isoformat(),'status':'ten_baselines_complete_expert_stage_live_unsealed_unscored','selected_source_sha':'92dfdb6d4f1a4595865ea756f46b176ce0f6d891','frozen_ref':'expert500-phase1-v12-2026-10-05-92dfdb6','trial_sha256':sha(ROOT/'trial.json'),'baseline_results_sha256':sha(ROOT/'baseline-results.json'),'selected_source_ci_manifest_sha256':sha(CI/'manifest.json'),'baseline_cases_complete':10,'baseline_fetcher_calls':353,'baseline_search_queries':58,'provider_failures':0,'expert_stage_started_once':True,'reviewed_label_reads':0,'seal_created':False,'record_count':len(records),'records':records,'heldout150_untouched':True,'signed_reviewed8_unselected':True,'v11_closed_unscored_unchanged':True}
+with (DEST/'manifest.json').open('x') as out:out.write(json.dumps(manifest,indent=2)+'\n')
+for record in records:assert sha(DEST/record['snapshot'])==record['sha256']
+print(json.dumps({'target':str(DEST),'records':len(records),'manifest_sha256':sha(DEST/'manifest.json')}))

@@ -1,0 +1,81 @@
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Independent offline tests of the actual V14 local network parent; all sources are synthetic."""
+ 2 |
+ 3 | / import ast
+ 4 | | import asyncio
+ 5 | | import copy
+ 6 | | import hashlib
+ 7 | | import importlib.util
+ 8 | | import itertools
+ 9 | | import json
+10 | | import math
+11 | | import os
+12 | | import runpy
+13 | | import shutil
+14 | | import signal
+15 | | import subprocess
+16 | | import sys
+17 | | import uuid
+18 | | import threading
+19 | | from dataclasses import dataclass, field
+20 | | from datetime import UTC, datetime, timedelta
+21 | | from pathlib import Path
+22 | | from types import SimpleNamespace
+23 | | from typing import Any
+24 | |
+25 | | import pytest
+26 | |
+27 | | from app.adapters.fetching import FetchResult
+28 | | from app.domain.enums import FetchOutcome
+29 | | from evaluation.research.expert.controller import execute
+30 | | from evaluation.research.expert.network_budget import NETWORK_COMPARISON_MODE, expert_budget
+31 | | from evaluation.research.expert.network_turn_policy import (
+32 | |     NetworkBudgetIsolation as Isolation,
+33 | | )
+34 | | from evaluation.research.expert.network_turn_policy import (
+35 | |     NetworkSelectorTurn,
+36 | |     turn_window,
+37 | | )
+38 | | from evaluation.research.expert.workspace_policy import allocate_workspaces
+   | |___________________________________________________________________________^ I001
+39 |
+40 |   PILOT = Path("/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py")
+   |
+   = help: Organize imports
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:3:8: F401 [*] `ast` imported but unused
+  |
+1 | """Independent offline tests of the actual V14 local network parent; all sources are synthetic."""
+2 |
+3 | import ast
+  |        ^^^ F401
+4 | import asyncio
+5 | import copy
+  |
+  = help: Remove unused import: `ast`
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:10:8: F401 [*] `math` imported but unused
+   |
+ 8 | import itertools
+ 9 | import json
+10 | import math
+   |        ^^^^ F401
+11 | import os
+12 | import runpy
+   |
+   = help: Remove unused import: `math`
+
+/tmp/test_unimatch_expert500_journal_pilot_v14_local_candidate.py:23:20: F401 [*] `typing.Any` imported but unused
+   |
+21 | from pathlib import Path
+22 | from types import SimpleNamespace
+23 | from typing import Any
+   |                    ^^^ F401
+24 |
+25 | import pytest
+   |
+   = help: Remove unused import: `typing.Any`
+
+Found 4 errors.
+[*] 4 fixable with the `--fix` option.

@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "journal_sha256": "f0c9e5ed721e2da345c0d6c8af73b23fc09753a30e398b7b3728e459d366b9b3",
+  "facts": [
+    {
+      "claim_key": "programme.exists",
+      "id": "f0",
+      "location": {
+        "block_id": null,
+        "kind": "text",
+        "page": null,
+        "section_path": []
+      },
+      "question": "Q0",
+      "quotation": "The\n Bachelor of Computing (Hons) in Computer Science \nat NTU’s \nCollege of Computing and Data Science (CCDS)\n is a \n4-year direct honours degree",
+      "scope": {
+        "academic_year": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "programme": "Bachelor of Computing (Hons) in Computer Science",
+        "qualification": null,
+        "university": "Nanyang Technological University"
+      },
+      "source_step": 2,
+      "value_json": "true"
+    },
+    {
+      "claim_key": "country_credential.kazakhstan_high_school_certificate.direct_admission",
+      "id": "f1",
+      "location": {
+        "block_id": "b179",
+        "kind": "document_ir",
+        "page": null,
+        "section_path": [
+          "All Other International Qualifications",
+          "Criteria"
+        ]
+      },
+      "question": "Q2",
+      "quotation": "No, required additional qualification (see below)",
+      "scope": {
+        "academic_year": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "programme": null,
+        "qualification": "High School Certificate (Kazakhstan)",
+        "university": "Nanyang Technological University"
+      },
+      "source_step": 3,
+      "value_json": "\"No, required additional qualification (see below)\""
+    }
+  ],
+  "question_findings": [
+    {
+      "fact_ids": [
+        "f0"
+      ],
+      "observation": "The official programme page describes the four-year direct honours degree.",
+      "question": "Q0",
+      "scope": {
+        "academic_year": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "programme": "Bachelor of Computing (Hons) in Computer Science",
+        "qualification": null,
+        "university": "Nanyang Technological University"
+      },
+      "status": "found",
+      "supporting_steps": []
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "kind": "submit",
+  "observation": "Submit the complete journal; all proposed evidence remains unreviewed.",
+  "action": null,
+  "facts": [
+    {
+      "id": "f1",
+      "question": "Q0",
+      "claim_key": "programme.exists",
+      "value_json": "true",
+      "source_step": 2,
+      "quotation": "Delve into the world of technology and innovation: in the bachelor's programme in Computer Science, you will solve complex problems and develop software that actively shapes the digital future.",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b30",
+        "section_path": [
+          "Computer Science (bachelor's programme)"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      }
+    },
+    {
+      "id": "f2",
+      "question": "Q1",
+      "claim_key": "programme.language",
+      "value_json": "\"German (admission requirement)\"",
+      "source_step": 2,
+      "quotation": "German (admission requirement)",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b49",
+        "section_path": [
+          "Computer Science (bachelor's programme)",
+          "The degree programme in a nutshell"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      }
+    },
+    {
+      "id": "f3",
+      "question": "OTHER",
+      "claim_key": "deadline",
+      "value_json": "\"2 March to 4 May 2026\"",
+      "source_step": 2,
+      "quotation": "2 March to 4 May 2026",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b57",
+        "section_path": [
+          "Computer Science (bachelor's programme)",
+          "The entrance exam procedure"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "2026",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      }
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "fact_ids": [
+        "f1"
+      ],
+      "scope": {
+        "university": "University of Vienna",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The official programme description explicitly identifies a bachelor's programme in Computer Science.",
+      "supporting_steps": []
+    }
+  ]
+}

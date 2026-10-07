@@ -1,0 +1,135 @@
+{
+  "schema_version": "1",
+  "case_id": "warsaw",
+  "packet_sha256": "eb0b4e98d98ace97675ebbf22fbbe0b0f251f6b0315c934a5173ed3d9874130c",
+  "baseline_pipeline_sha": "24865069715f82a22d83ade810b367c0d5442c67",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T10:23:52.578083+00:00",
+  "ended_at": "2026-10-04T10:27:31.841897+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T10:24:34.640807+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:uw.edu.pl computer science first cycle admissions University Warsaw",
+        "domains": [
+          "uw.edu.pl"
+        ],
+        "max_results": 5
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "warsaw-001.json",
+      "raw_log_sha256": "52858128601d9777465e387922c787062da9057fe6eb797a963ad54784e8ee57",
+      "elapsed_ms": 1470,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 10065,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "Locate official bachelor Computer Science programme and admissions sources.",
+      "observed_from_step": null,
+      "action": "search_provider: site:uw.edu.pl computer science first cycle admissions University Warsaw",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T10:25:40.061684+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "warsaw-002.json",
+      "raw_log_sha256": "cedf01302ff89061206350c8e26b580e3b56fc2dd42b84c83969a717bf8f2054",
+      "elapsed_ms": 2460,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 22456,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Open the official catalogue entry to verify the exact bachelor programme.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+      "stage": "page_understanding",
+      "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+      "final_url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

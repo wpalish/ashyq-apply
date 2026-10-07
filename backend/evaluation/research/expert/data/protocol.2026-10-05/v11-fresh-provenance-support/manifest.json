@@ -1,0 +1,146 @@
+{
+  "schema_version": "1",
+  "protocol_version": "journal-v11",
+  "kind": "final_current_main53_fresh_provenance_gates",
+  "recorded_at": "2026-10-05T11:19:38.796967+00:00",
+  "status": "final_offline_gates_passed",
+  "source_protocol_manifest_sha256": "47c801ee5457404380767225a80339a74deec3f27290fb06320b2bbbe6f8cf8e",
+  "current_runtime_tests_total": 621,
+  "current_runtime_partitions": {
+    "parent_workflow_pure": 178,
+    "report": 305,
+    "actual_cohort": 138
+  },
+  "initial_fixture_negative": {
+    "passed": 98,
+    "failed": 1,
+    "setup_errors": 39,
+    "production_helpers_unchanged": true
+  },
+  "source_requests": 0,
+  "model_requests": 0,
+  "record_count": 20,
+  "total_original_bytes": 338824,
+  "records": [
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-main53-parent-workflow-pure-final-original.log",
+      "path": "unimatch-expert500-v11-main53-parent-workflow-pure-final-original.log",
+      "sha256": "4f53e60324c03c7c7e1e95e67b202398c88eae7a72422e8eafe326ce1623d5dd",
+      "bytes": 260
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-main53-report-final-original.log",
+      "path": "unimatch-expert500-v11-main53-report-final-original.log",
+      "sha256": "c948c0ea55b5d6cbb538af16f76df1ed94d752fe0f96f017a35e269571c03ccd",
+      "bytes": 952
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-pr53-cohort-v2-original.log",
+      "path": "unimatch-expert500-v11-pr53-cohort-v2-original.log",
+      "sha256": "c9a3be6ba8d137f40564b0beb33accc1c34e09be242338ad022bb2931d985365",
+      "bytes": 8868
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-pr53-owned-quality-v2-original.log",
+      "path": "unimatch-expert500-v11-pr53-owned-quality-v2-original.log",
+      "sha256": "d4a4f3fd53d7d32fac45057d158765443b40127a499e69d79d1aee88f9e8c010",
+      "bytes": 3162
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-final-all-helper-ruff-v2-original.log",
+      "path": "unimatch-expert500-v11-final-all-helper-ruff-v2-original.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-final-all-helper-format-v2-original.log",
+      "path": "unimatch-expert500-v11-final-all-helper-format-v2-original.log",
+      "sha256": "75b7030be9d7de96bf4e76e79b1f03f14af8899d169fd8d79564d59167d1ab80",
+      "bytes": 27
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-final-all-helper-mypy-v2-original.log",
+      "path": "unimatch-expert500-v11-final-all-helper-mypy-v2-original.log",
+      "sha256": "170c42d28455fb5991d410299b32cdc2caabea55fc22c5bd8eadcdc02d7aef53",
+      "bytes": 770
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-pr53-cohort-final-original.log",
+      "path": "unimatch-expert500-v11-pr53-cohort-final-original.log",
+      "sha256": "fdf3970a7843cd61ac2b719f1c93140f27258b360e599dc36c4e48b9a513994c",
+      "bytes": 221967
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-pr53-owned-quality-original.log",
+      "path": "unimatch-expert500-v11-pr53-owned-quality-original.log",
+      "sha256": "a6e789a58f959810dc2b8b565ddd7ec21f8b724fcbf8d7d878d154af99d8a2ed",
+      "bytes": 2591
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-pr53-owned-quality-final-original.log",
+      "path": "unimatch-expert500-v11-pr53-owned-quality-final-original.log",
+      "sha256": "ccdad06975faf7f45023b604de5e66dda7d9be582e8d3f258e3acf8488040518",
+      "bytes": 3162
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-pr53-neutral-negatives-final-original.log",
+      "path": "unimatch-expert500-v11-pr53-neutral-negatives-final-original.log",
+      "sha256": "d3892d2fe1f1982f7a6687070c0db1d94e3dc0fb9c7d7ab3788a03b19c3ee9bb",
+      "bytes": 21174
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-pr53-neutral-negatives-v2-original.log",
+      "path": "unimatch-expert500-v11-pr53-neutral-negatives-v2-original.log",
+      "sha256": "02fc4c83ecb4479d05f6c9a39fdb67ef7619b40aa72a0a0ca6281ba3cd47597e",
+      "bytes": 505
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-main53-all-helper-ruff-final.log",
+      "path": "unimatch-expert500-v11-main53-all-helper-ruff-final.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-main53-all-helper-format-final.log",
+      "path": "unimatch-expert500-v11-main53-all-helper-format-final.log",
+      "sha256": "75b7030be9d7de96bf4e76e79b1f03f14af8899d169fd8d79564d59167d1ab80",
+      "bytes": 27
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-main53-all-helper-mypy-final.log",
+      "path": "unimatch-expert500-v11-main53-all-helper-mypy-final.log",
+      "sha256": "d14d6c8908dbad9d942f96ee35590334d20f2771f8634b459c0e5ccc868ec00b",
+      "bytes": 770
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-local-gates.json",
+      "path": "unimatch-expert500-v11-local-gates.json",
+      "sha256": "cf3abcc6cad84b3a70b88cee03c1272257cf95ea650d32b44ad9346a81b226b0",
+      "bytes": 7179
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-final-freeze-original.log",
+      "path": "unimatch-expert500-v11-final-freeze-original.log",
+      "sha256": "5b1d5874b7626bc58cfd22696c95c439ddb6dbdf999ef0ce05971ddf2ef38011",
+      "bytes": 239
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-final-os-isolation.log",
+      "path": "unimatch-expert500-v11-final-os-isolation.log",
+      "sha256": "6301059d4f80c98eec9125b6ef66879dacf731f325c74bbfe22a511e52a5ee4d",
+      "bytes": 257
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v11-before-neutral-availability.log",
+      "path": "unimatch-expert500-v11-before-neutral-availability.log",
+      "sha256": "93e6234267fbca03458d35e4ba82bb344eb9a2e7cd588e6f80ffac916dad5594",
+      "bytes": 256
+    },
+    {
+      "original_path": "/tmp/test_unimatch_expert500_actual_cohort_v11-fixture-negative-20261005T105940430079Z-2941f3555bc5.py.txt",
+      "path": "test_unimatch_expert500_actual_cohort_v11-fixture-negative-20261005T105940430079Z-2941f3555bc5.py.txt",
+      "sha256": "2941f3555bc51bef9318889d2496462d818230754dfc5a61a8577261ca08f411",
+      "bytes": 66620
+    }
+  ]
+}

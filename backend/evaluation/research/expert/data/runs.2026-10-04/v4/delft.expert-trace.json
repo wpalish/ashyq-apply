@@ -1,0 +1,135 @@
+{
+  "schema_version": "1",
+  "case_id": "delft",
+  "packet_sha256": "e6de7638431a0598e6c1dc529e65b878bb47ac4f544edf17949511d50407cccd",
+  "baseline_pipeline_sha": "24865069715f82a22d83ade810b367c0d5442c67",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T10:20:24.210527+00:00",
+  "ended_at": "2026-10-04T10:23:52.499307+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T10:21:40.544938+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:tudelft.nl bachelor Computer Science Engineering admission international diploma",
+        "domains": [
+          "tudelft.nl"
+        ],
+        "max_results": 5
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "delft-001.json",
+      "raw_log_sha256": "8bed26545169039d2fc2b173af8d7279d2beb79fdabebcdcca5edf20d7686be8",
+      "elapsed_ms": 1754,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 10959,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "Find official bachelor Computer Science programme and admissions routes.",
+      "observed_from_step": null,
+      "action": "search_provider: site:tudelft.nl bachelor Computer Science Engineering admission international diploma",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T10:22:30.450127+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "delft-002.json",
+      "raw_log_sha256": "465ac63acd509381b1e8d3743062689b36f2e91493472cada8237f387e080506",
+      "elapsed_ms": 629,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 21402,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Open the official programme application page to verify programme identity and the published 2027 deadline.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment",
+      "stage": "page_understanding",
+      "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment",
+      "final_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

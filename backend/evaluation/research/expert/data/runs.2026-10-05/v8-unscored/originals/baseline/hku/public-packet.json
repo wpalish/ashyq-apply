@@ -1,0 +1,70 @@
+{
+  "schema_version": "1",
+  "dataset_version": "2026-09-23.reviewed",
+  "dataset_sha256": "d45d26fa10a1bd60271c63225c1ff453109d8cb6781782867c0d782ee63bedd0",
+  "capture_sha256": "643baa3f16131abb014efddc8acf8bdb114cc25ed7a2c0a6a38c1614e2470ed0",
+  "baseline_pipeline_sha": "1ec0433f7daf559156d4f9bb21bda4811de16a29",
+  "baseline_captured_at": "20261004T220741Z",
+  "baseline_budget": {
+    "max_fetcher_calls": 60,
+    "max_elapsed_ms": 120000,
+    "browser_enabled": false,
+    "max_search_queries": 6
+  },
+  "cases": [
+    {
+      "case_id": "hku",
+      "university": "University of Hong Kong",
+      "domain": "hku.hk",
+      "request": {
+        "university": "University of Hong Kong",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "baseline": {
+        "ranked_urls": [],
+        "programme_urls": [
+          "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+          "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta"
+        ],
+        "prediction_count": 1,
+        "error": null,
+        "telemetry": {
+          "http_fetches": 33,
+          "pdf_fetches": 0,
+          "browser_fetches": 0,
+          "latency_seconds": 67.16344304
+        }
+      }
+    }
+  ],
+  "public_profile": {
+    "level": "bachelor",
+    "intended_fields": [
+      "computer science"
+    ],
+    "intake_term": "fall",
+    "intake_year": 2027,
+    "citizenship": "Kazakhstan",
+    "country_of_residence": "Kazakhstan",
+    "education_country": "Kazakhstan",
+    "education_system": "KZ national secondary"
+  },
+  "comparison_mode": "independent_network_budget",
+  "expert_budget": {
+    "max_fetcher_calls": 60,
+    "max_elapsed_ms": 900000,
+    "max_search_queries": 6,
+    "browser_enabled": false,
+    "model_thinking_included": false,
+    "budget_model": "network_actions_v1",
+    "wall_guard_ms": 900000,
+    "max_elapsed_ms_purpose": "hang_guard_only",
+    "elapsed_time_basis": "controller_actions_only"
+  }
+}

@@ -1,0 +1,320 @@
+
+> unimatch-frontend@0.1.0 typecheck
+> tsc --noEmit
+
+
+> unimatch-frontend@0.1.0 lint
+> eslint src e2e --ext .ts,.tsx
+
+
+> unimatch-frontend@0.1.0 test
+> vitest run --run
+
+
+ RUN  v3.2.7 /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/frontend
+
+stderr | src/components/PaymentModal.test.tsx > PaymentModal > opens an order and polls until it is paid
+Warning: An update to PaymentModal inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PaymentModal (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/frontend/src/components/PaymentModal.tsx:9:25)
+
+stderr | src/components/PaymentModal.test.tsx > PaymentModal > opens an order and polls until it is paid
+Warning: An update to PaymentModal inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PaymentModal (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/frontend/src/components/PaymentModal.tsx:9:25)
+
+stderr | src/AuthGate.test.tsx > public routes > shows a public landing before authentication
+Warning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/frontend/src/AuthGate.tsx:7:21)
+
+stderr | src/AuthGate.test.tsx > public routes > makes the legal draft available before authentication
+Warning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/frontend/src/AuthGate.tsx:7:21)
+
+ ✓ src/components/PaymentModal.test.tsx (6 tests) 205ms
+ ✓ src/AuthGate.test.tsx (8 tests) 181ms
+ ✓ src/screens/ProgressScreen.test.tsx (18 tests) 223ms
+ ✓ src/lib/store.test.tsx (25 tests) 231ms
+ ✓ src/screens/PreferencesScreen.test.tsx (8 tests) 290ms
+ ✓ src/screens/ProfileScreen.test.tsx (7 tests) 406ms
+ ✓ src/screens/ShortlistScreen.test.tsx (15 tests) 571ms
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the price when there is no subscription
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/frontend/src/lib/store.tsx:154:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/frontend/src/lib/store.tsx:154:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the price when there is no subscription
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/frontend/src/lib/store.tsx:154:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the subscription first when cases remain
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/frontend/src/lib/store.tsx:154:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/frontend/src/lib/store.tsx:154:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the subscription first when cases remain
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/frontend/src/lib/store.tsx:154:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > falls back to the price when the quota is exhausted
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/frontend/src/lib/store.tsx:154:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/frontend/src/lib/store.tsx:154:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > falls back to the price when the quota is exhausted
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/frontend/src/lib/store.tsx:154:26)
+
+ ✓ src/components/PaywallNotice.test.tsx (4 tests) 103ms
+ ✓ src/components/AccountMenu.test.tsx (5 tests) 156ms
+ ✓ src/components/CommaSeparatedInput.test.tsx (3 tests) 174ms
+ ✓ src/lib/polling.test.tsx (5 tests) 149ms
+ ✓ src/components/social.test.tsx (18 tests) 244ms
+ ✓ src/lib/drafts.test.tsx (16 tests) 188ms
+ ✓ src/screens/BillingScreen.test.tsx (3 tests) 234ms
+ ✓ src/components/UniversityCatalogue.test.tsx (5 tests) 1771ms
+   ✓ shows local candidates with unknown admission fit and no fabricated programme  460ms
+   ✓ keeps candidates visible and allows retry after a catalogue request failure  638ms
+ ✓ src/lib/hydrationErrors.test.tsx (2 tests) 84ms
+ ✓ src/components/moderation.test.tsx (4 tests) 208ms
+ ✓ src/screens/PreferencesScreen.runtime.test.tsx (1 test) 147ms
+ ✓ src/components/primitives.test.tsx (13 tests) 151ms
+ ✓ src/components/ResultDetail.scope.test.tsx (5 tests) 190ms
+ ✓ src/screens/LegalScreen.test.tsx (9 tests) 166ms
+ ✓ src/screens/SourcesScreen.test.tsx (1 test) 57ms
+ ✓ src/components/ErrorBoundary.test.tsx (3 tests) 103ms
+ ✓ src/api/client.billing.test.ts (6 tests) 5ms
+ ✓ src/lib/format.test.ts (22 tests) 16ms
+ ✓ src/lib/i18n.test.ts (8 tests) 4ms
+ ✓ src/screens/ProfileLists.runtime.test.tsx (1 test) 2757ms
+   ✓ keeps typed separators and submits each complete list without inventing entries  2756ms
+ ✓ src/lib/immutable.test.ts (11 tests) 2ms
+
+ Test Files  28 passed (28)
+      Tests  232 passed (232)
+   Start at  02:01:42
+   Duration  3.78s (transform 1.03s, setup 1.64s, collect 3.94s, tests 9.02s, environment 12.13s, prepare 1.66s)
+
+
+> unimatch-frontend@0.1.0 build
+> tsc -b && vite build
+
+vite v6.4.3 building for production...
+transforming...
+✓ 4619 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                   0.57 kB │ gzip:   0.36 kB
+dist/assets/jetbrains-mono-greek-400-normal-C190GLew.woff2        4.23 kB
+dist/assets/jetbrains-mono-greek-500-normal-JpySY46c.woff2        4.28 kB
+dist/assets/inter-vietnamese-400-normal-DMkecbls.woff2            4.97 kB
+dist/assets/inter-vietnamese-600-normal-Cc8MFFhd.woff2            5.10 kB
+dist/assets/inter-vietnamese-700-normal-DlLaEgI2.woff2            5.10 kB
+dist/assets/inter-vietnamese-500-normal-DOriooB6.woff2            5.11 kB
+dist/assets/inter-greek-ext-400-normal-DGGRlc-M.woff2             5.26 kB
+dist/assets/jetbrains-mono-cyrillic-400-normal-BEIGL1Tu.woff2     5.33 kB
+dist/assets/jetbrains-mono-cyrillic-500-normal-DmUKJPL_.woff2     5.36 kB
+dist/assets/jetbrains-mono-vietnamese-400-normal-CqNFfHCs.woff    5.37 kB
+dist/assets/inter-greek-ext-500-normal-C4iEst2y.woff2             5.43 kB
+dist/assets/inter-greek-ext-600-normal-DRtmH8MT.woff2             5.43 kB
+dist/assets/inter-greek-ext-700-normal-qfdV9bQt.woff2             5.44 kB
+dist/assets/jetbrains-mono-vietnamese-500-normal-DNRqzVM1.woff    5.48 kB
+dist/assets/jetbrains-mono-greek-400-normal-B9oWc5Lo.woff         5.66 kB
+dist/assets/jetbrains-mono-greek-500-normal-D7SFKleX.woff         5.72 kB
+dist/assets/fraunces-vietnamese-400-normal-CvGt0Ybw.woff2         6.21 kB
+dist/assets/fraunces-vietnamese-600-normal-BjlAJixd.woff2         6.28 kB
+dist/assets/fraunces-vietnamese-700-normal-DH94m5DZ.woff2         6.35 kB
+dist/assets/inter-vietnamese-400-normal-Bbgyi5SW.woff             6.50 kB
+dist/assets/inter-vietnamese-500-normal-mJboJaSs.woff             6.60 kB
+dist/assets/inter-vietnamese-700-normal-BZaoP0fm.woff             6.63 kB
+dist/assets/inter-vietnamese-600-normal-BuLX-rYi.woff             6.64 kB
+dist/assets/jetbrains-mono-cyrillic-400-normal-ugxPyKxw.woff      6.98 kB
+dist/assets/jetbrains-mono-cyrillic-500-normal-DJqRU3vO.woff      7.02 kB
+dist/assets/inter-greek-ext-400-normal-KugGGMne.woff              7.06 kB
+dist/assets/inter-greek-ext-500-normal-2j5mBUwD.woff              7.19 kB
+dist/assets/inter-greek-ext-600-normal-B8X0CLgF.woff              7.21 kB
+dist/assets/inter-greek-ext-700-normal-BoQ6DsYi.woff              7.22 kB
+dist/assets/jetbrains-mono-latin-ext-400-normal-Bc8Ftmh3.woff2    7.34 kB
+dist/assets/jetbrains-mono-latin-ext-500-normal-Cut-4mMH.woff2    7.53 kB
+dist/assets/inter-cyrillic-400-normal-obahsSVq.woff2              7.71 kB
+dist/assets/inter-greek-400-normal-B4URO6DV.woff2                 7.78 kB
+dist/assets/inter-cyrillic-500-normal-BasfLYem.woff2              7.90 kB
+dist/assets/inter-cyrillic-700-normal-CjBOestx.woff2              7.90 kB
+dist/assets/inter-greek-500-normal-BIZE56-Y.woff2                 7.92 kB
+dist/assets/inter-greek-700-normal-C3JjAnD8.woff2                 7.92 kB
+dist/assets/fraunces-vietnamese-600-normal-DlAl5EAR.woff          7.93 kB
+dist/assets/inter-greek-600-normal-plRanbMR.woff2                 7.94 kB
+dist/assets/inter-cyrillic-600-normal-CWCymEST.woff2              7.97 kB
+dist/assets/fraunces-vietnamese-400-normal-B65MOf9T.woff          7.98 kB
+dist/assets/fraunces-vietnamese-700-normal-DxawQjq2.woff          8.00 kB
+dist/assets/inter-cyrillic-400-normal-HOLc17fK.woff               9.78 kB
+dist/assets/inter-cyrillic-700-normal-DrXBdSj3.woff               9.91 kB
+dist/assets/inter-greek-400-normal-q2sYcFCs.woff                  9.92 kB
+dist/assets/inter-cyrillic-600-normal-4D_pXhcN.woff               9.94 kB
+dist/assets/inter-cyrillic-500-normal-CxZf_p3X.woff               9.94 kB
+dist/assets/inter-greek-500-normal-Xzm54t5V.woff                  9.98 kB
+dist/assets/inter-greek-700-normal-BUv2fZ6O.woff                  9.98 kB
+dist/assets/inter-greek-600-normal-BZpKdvQh.woff                 10.03 kB
+dist/assets/jetbrains-mono-latin-ext-400-normal-fXTG6kC5.woff    10.13 kB
+dist/assets/inter-cyrillic-ext-400-normal-BQZuk6qB.woff2         10.23 kB
+dist/assets/jetbrains-mono-latin-ext-500-normal-ckzbgY84.woff    10.34 kB
+dist/assets/inter-cyrillic-ext-500-normal-B0yAr1jD.woff2         10.43 kB
+dist/assets/inter-cyrillic-ext-600-normal-Dfes3d0z.woff2         10.48 kB
+dist/assets/inter-cyrillic-ext-700-normal-BjwYoWNd.woff2         10.50 kB
+dist/assets/inter-cyrillic-ext-400-normal-DQukG94-.woff          13.34 kB
+dist/assets/inter-cyrillic-ext-700-normal-LO58E6JB.woff          13.41 kB
+dist/assets/inter-cyrillic-ext-500-normal-BmqWE9Dz.woff          13.45 kB
+dist/assets/inter-cyrillic-ext-600-normal-Bcila6Z-.woff          13.46 kB
+dist/assets/fraunces-latin-ext-400-normal-D8gbi3Gu.woff2         17.29 kB
+dist/assets/fraunces-latin-ext-600-normal-BtzmzP0X.woff2         17.34 kB
+dist/assets/fraunces-latin-ext-700-normal-CanUGppC.woff2         17.66 kB
+dist/assets/fraunces-latin-400-normal-6IfK1voy.woff2             17.97 kB
+dist/assets/fraunces-latin-600-normal-BFCDtZfi.woff2             18.10 kB
+dist/assets/fraunces-latin-700-normal-CEOla-zY.woff2             18.21 kB
+dist/assets/jetbrains-mono-latin-400-normal-V6pRDFza.woff2       21.17 kB
+dist/assets/jetbrains-mono-latin-500-normal-BWZEU5yA.woff2       21.83 kB
+dist/assets/fraunces-latin-ext-600-normal-B0Dy4lqi.woff          22.36 kB
+dist/assets/fraunces-latin-ext-400-normal-UihxqfOe.woff          22.37 kB
+dist/assets/fraunces-latin-400-normal-NUPT2cO8.woff              22.48 kB
+dist/assets/fraunces-latin-600-normal-DL5QCzvS.woff              22.51 kB
+dist/assets/fraunces-latin-700-normal-DTjk5d1Q.woff              22.52 kB
+dist/assets/fraunces-latin-ext-700-normal-DuBstVeD.woff          22.61 kB
+dist/assets/inter-latin-400-normal-C38fXH4l.woff2                23.66 kB
+dist/assets/inter-latin-500-normal-Cerq10X2.woff2                24.27 kB
+dist/assets/inter-latin-700-normal-Yt3aPRUw.woff2                24.36 kB
+dist/assets/inter-latin-600-normal-LgqL8muc.woff2                24.45 kB
+dist/assets/jetbrains-mono-latin-400-normal-6-qcROiO.woff        27.50 kB
+dist/assets/jetbrains-mono-latin-500-normal-CJOVTJB7.woff        28.21 kB
+dist/assets/inter-latin-400-normal-CyCys3Eg.woff                 30.70 kB
+dist/assets/inter-latin-600-normal-CiBQ2DWP.woff                 31.26 kB
+dist/assets/inter-latin-500-normal-BL9OpVg8.woff                 31.28 kB
+dist/assets/inter-latin-700-normal-BLAVimhd.woff                 31.32 kB
+dist/assets/inter-latin-ext-400-normal-C1nco2VV.woff2            35.00 kB
+dist/assets/inter-latin-ext-500-normal-CV4jyFjo.woff2            36.02 kB
+dist/assets/inter-latin-ext-700-normal-Ca8adRJv.woff2            36.24 kB
+dist/assets/inter-latin-ext-600-normal-D2bJ5OIk.woff2            36.26 kB
+dist/assets/inter-latin-ext-400-normal-77YHD8bZ.woff             47.56 kB
+dist/assets/inter-latin-ext-500-normal-BxGbmqWO.woff             48.49 kB
+dist/assets/inter-latin-ext-700-normal-TidjK2hL.woff             48.63 kB
+dist/assets/inter-latin-ext-600-normal-CIVaiw4L.woff             48.67 kB
+dist/assets/index-Bm-ZLC2j.css                                   96.70 kB │ gzip:  27.44 kB
+dist/assets/index-DPHnCRl8.js                                   441.50 kB │ gzip: 128.73 kB │ map: 1,136.34 kB
+✓ built in 1.48s

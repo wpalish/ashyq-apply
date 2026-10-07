@@ -120,23 +120,26 @@ def test_six_search_queries_include_failed_attempts_and_refuse_seventh(tmp_path:
     assert "vendor body" not in json.dumps(_record(tmp_path, summary["actions"][1]))
 
 
-def test_provider_429_is_sanitized_stops_calls_and_survives_resume(tmp_path: Path) -> None:
+@pytest.mark.parametrize("status", [402, 429])
+def test_provider_account_refusal_is_sanitized_stops_calls_and_survives_resume(
+    tmp_path: Path, status: int
+) -> None:
     calls = 0
 
     async def search(**kwargs: Any) -> _Answer:
         nonlocal calls
         calls += 1
-        raise SearchUnavailable("Bearer sk-secret vendor URL ?api_key=hidden", http_status=429)
+        raise SearchUnavailable("Bearer sk-secret vendor URL ?api_key=hidden", http_status=status)
 
     action = {"tool": "search_provider", "query": "programme"}
     first = _execute(tmp_path, _plan(actions=[action, action]), search=search)
     assert calls == 1
     assert first["actions"][0]["outcome_status"] == "failure"
     record = _record(tmp_path, first["actions"][0])
-    assert record["response"]["http_status"] == record["response"]["status_code"] == 429
+    assert record["response"]["http_status"] == record["response"]["status_code"] == status
     assert "sk-secret" not in json.dumps(record) and "api_key" not in json.dumps(record)
-    assert first["actions"][1]["outcome"] == "stopped_after_http_429"
-    assert first["final"]["stop_reason"] == "http_429"
+    assert first["actions"][1]["outcome"] == f"stopped_after_http_{status}"
+    assert first["final"]["stop_reason"] == f"http_{status}"
     resumed = _execute(
         tmp_path,
         _plan(
@@ -149,9 +152,9 @@ def test_provider_429_is_sanitized_stops_calls_and_survives_resume(tmp_path: Pat
     )
     assert calls == 1
     assert resumed["actions"][0]["raw_log_path"] == "guard-003.json"
-    assert resumed["actions"][0]["outcome"] == "stopped_after_http_429"
+    assert resumed["actions"][0]["outcome"] == f"stopped_after_http_{status}"
     assert resumed["final"]["search_queries"] == 1
-    assert resumed["final"]["stop_reason"] == "http_429"
+    assert resumed["final"]["stop_reason"] == f"http_{status}"
 
 
 def test_replay_and_incremental_actions_share_fetch_search_and_time_budget(tmp_path: Path) -> None:

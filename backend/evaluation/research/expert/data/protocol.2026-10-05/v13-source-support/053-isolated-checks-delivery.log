@@ -1,0 +1,22 @@
+PASS closed_section: supported=False
+PASS nested_div_positive: supported=True
+PASS hidden_label: supported=False
+PASS nav_label: supported=False
+PASS hidden_year: supported=False
+PASS hidden_year_header: supported=False
+PASS non_year_explicit: supported=False
+PASS unresolved_explicit: supported=False
+PASS explicit_year_positive: supported=True
+PASS row_header_positive: supported=True
+PASS implicit_row_header_positive: supported=True
+PASS control_year: supported=False
+PASS control_year_header: supported=False
+13 candidate-only year-helper checks passed; no repository runtime imported.
+................................................                         [100%]
+=============================== warnings summary ===============================
+test_document_ir.py: 49 warnings
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/bs4/builder/_lxml.py:124: DeprecationWarning: The 'strip_cdata' option of HTMLParser() has never done anything and will eventually be removed.
+    parser = parser(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+48 passed, 1 deselected, 49 warnings in 0.05s

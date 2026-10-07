@@ -1,0 +1,30 @@
+"""Record exact current helper static commands; no model or source calls."""
+import hashlib
+import json
+import runpy
+import subprocess
+from pathlib import Path
+
+repo = Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply')
+frozen = runpy.run_path('/tmp/unimatch-expert500-freeze-v12.py')['protocol_scripts']()
+legacy = Path('/tmp/unimatch-expert500-pilot-v1-frozen.py')
+assert hashlib.sha256(legacy.read_bytes()).hexdigest() == '9eaa88effd037d17937bd96b16d341c711f02ac2825c74d0d6a1f5f95bb2c5a7'
+paths = [p for p in frozen if p != legacy]
+assert len(paths) == 11
+before = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+py = str(repo / 'backend/.venv/bin/python')
+commands = {
+    'ruff': [py, '-m', 'ruff', 'check', '--config', 'ruff.toml', '--select', 'E,F,I,UP,B,RUF021', '--ignore', 'E501,B008,B023'],
+    'format': [py, '-m', 'ruff', 'format', '--check', '--config', 'ruff.toml'],
+    'mypy': [py, '-m', 'mypy', '--config-file', 'mypy.ini', '--follow-imports=skip'],
+}
+for kind, command in commands.items():
+    command += [str(p) for p in paths]
+    target = Path(f'/tmp/unimatch-expert500-v12-final-all-helper-{kind}-v2-original.log')
+    with target.open('xb') as out:
+        out.write((json.dumps({'argv': command, 'helper_hashes_before': before})+'\n').encode())
+        result = subprocess.run(command, cwd=repo/'backend', stdout=out, stderr=subprocess.STDOUT)
+        after = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+        out.write((json.dumps({'exit_code': result.returncode, 'helper_hashes_after': after, 'unchanged': before == after})+'\n').encode())
+    assert result.returncode == 0 and before == after, kind
+    print(json.dumps({'kind': kind, 'files': len(paths), 'passed': True, 'log': str(target)}), flush=True)

@@ -1,0 +1,13 @@
+/tmp/test_unimatch_expert500_freeze_launch_v14_local_r2_candidate.py:915:12: SIM300 [*] Yoda condition detected
+    |
+913 |         "TMPDIR": "/tmp",
+914 |     }
+915 |     assert module.SELECTOR_ENVIRONMENT == expected
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ SIM300
+916 |     module.validate_neutral_environment(
+917 |         {
+    |
+    = help: Rewrite as `expected == module.SELECTOR_ENVIRONMENT`
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.

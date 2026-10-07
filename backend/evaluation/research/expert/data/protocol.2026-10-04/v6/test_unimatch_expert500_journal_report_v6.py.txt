@@ -1,0 +1,2227 @@
+"""Independent V6 replay/sealing tests; no reviewed data or live I/O is used."""
+
+import base64
+import copy
+import hashlib
+import importlib.util
+import json
+import runpy
+import shutil
+import sys
+from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+from test_unimatch_expert500_journal_pilot_v6 import (
+    HEAD,
+    PILOT,
+    REPORT,
+    URL,
+    bootstrap,
+    checkpoint,
+    commit,
+    completed_events,
+    decision,
+    fact,
+    minimal_commit,
+)
+
+from evaluation.research.expert.research_timing import policy_limits as research_policy_limits
+from evaluation.research.expert.turn_policy import AstraLowEffortIsolation
+from evaluation.research.expert.workspace_policy import allocate_workspaces, selector_paths
+from evaluation.research.schema import Capture, Observation
+
+pytest_plugins = ["test_unimatch_expert500_journal_pilot_v6"]
+
+MODULES = (
+    "evaluation.research.expert.journal",
+    "evaluation.research.expert.citations",
+    "evaluation.research.expert.compact",
+    "evaluation.research.expert.controller",
+    "evaluation.research.expert.models",
+    "evaluation.research.expert.selector",
+    "evaluation.research.expert.blind_cli",
+    "evaluation.research.expert.packet",
+    "evaluation.research.expert.representation",
+    "evaluation.research.expert.turn_policy",
+    "evaluation.research.expert.location_feedback",
+    "evaluation.research.expert.workspace_policy",
+    "evaluation.research.expert.question_contract",
+    "evaluation.research.expert.research_timing",
+    "evaluation.research.identities",
+    "evaluation.research.live",
+    "evaluation.research.mapping",
+    "evaluation.research.metrics",
+    "evaluation.research.schema",
+)
+
+
+@pytest.fixture
+def report(tmp_path, monkeypatch):
+    module = runpy.run_path(str(REPORT))
+    runtime = module["main"].__globals__
+    runtime["COHORT"] = ("u",)
+    from evaluation.research import live
+
+    binding = tmp_path / "synthetic-binding-registry.json"
+    binding.write_text(json.dumps({"version": "synthetic-v4", "bindings": []}))
+    monkeypatch.setattr(live, "REVIEWED_BINDINGS", binding)
+    runtime["synthetic_binding_path"] = binding
+    return runtime
+
+
+def write(path, value):
+    path.write_text(json.dumps(value))
+
+
+def close_after_source(pilot, source_count=1):
+    """Reach the genuine charged cutoff; preserve the controller summary/raw bytes."""
+    clock = SimpleNamespace(value=0.0)
+    pilot.runtime["time"] = SimpleNamespace(monotonic=lambda: clock.value)
+    captured = {"elapsed_ms": 0, "done": False}
+    original = pilot.runtime["expert_view"]
+
+    def observed(summary, plan):
+        captured["elapsed_ms"] = summary["final"]["elapsed_ms"]
+
+    def view(record, **kwargs):
+        if len(pilot.plans) == source_count and not captured["done"]:
+            clock.value += max(0, 49000 - captured["elapsed_ms"]) / 1000
+            captured["done"] = True
+        return original(record, **kwargs)
+
+    pilot.summary_hook = observed
+    pilot.runtime["expert_view"] = view
+
+
+def prepare_reporting(
+    pilot,
+    report,
+    *,
+    failed=False,
+    rejected=False,
+    minimal=False,
+    next_source=False,
+    stored_view=False,
+    declined=False,
+    failed_kind="selector_timeout",
+):
+    if minimal:
+        close_after_source(pilot, 2 if next_source else 1)
+    bootstrap(pilot)
+    if stored_view:
+        checkpoint(
+            pilot,
+            kind="action",
+            action={
+                "tool": "view",
+                "url": None,
+                "query": None,
+                "domains": [],
+                "max_results": None,
+                "source_step": 1,
+                "page": None,
+                "offset": 0,
+                "section_offset": 0,
+                "link_offset": 0,
+            },
+        )
+    else:
+        checkpoint(
+            pilot,
+            kind="action" if next_source or declined else "record",
+            elapsed=38000 if declined else 12000,
+        )
+    if rejected:
+        pilot.queue(
+            lambda prompt: decision(
+                prompt,
+                "record",
+                facts=[fact(id="bad", question="OTHER", quotation="Absent synthetic quotation")],
+            )
+        )
+    if failed:
+        pilot.queue(error=failed_kind, elapsed=22013)
+    else:
+        commit(pilot, acknowledge_source=2 if next_source else None)
+    result = pilot.run()
+    assert result["validated"]
+    write(pilot.root / "experts-results.json", {"stopped": False, "results": [result]})
+    baseline_dir = pilot.root / "baseline/u"
+    budget = {
+        "fetcher_calls": 0,
+        "search_queries": 0,
+        "elapsed_ms": 1,
+        "stop_reason": None,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "max_active_seconds": 120,
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "process_error": None,
+        "active_checkpoint_available": True,
+    }
+    capture = Capture(
+        pipeline_sha=HEAD,
+        captured_at="2026-10-04T00:00:00+00:00",
+        mode="live",  # Schema-compatible mocked bytes; no live calls are made.
+        config={
+            "synthetic_fixture": True,
+            "finalization_reserve_ms": 1000,
+            "source_work_deadline_ms": 119000,
+            "seconds_per_case": 120,
+            "child_active_seconds": 120,
+            "strict_expert_budget": True,
+            "search_provider": "exa_mcp",
+            "case_budgets": {"u": dict(budget)},
+        },
+        observations=[Observation(case_id="u")],
+    )
+    capture_path = baseline_dir / "capture.json"
+    write(capture_path, capture.model_dump(mode="json"))
+    baseline = json.loads((baseline_dir / "result.json").read_text())
+    baseline.update(
+        capture=str(capture_path),
+        run_id=777,
+        budget=budget,
+    )
+    write(baseline_dir / "result.json", baseline)
+    scripts = {
+        str(path): report["file_hash"](path)
+        for path in (
+            PILOT,
+            REPORT,
+            Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+            Path("/tmp/unimatch-expert500-launch-v6.py"),
+        )
+    }
+    modules = {
+        name: report["file_hash"](Path(importlib.util.find_spec(name).origin)) for name in MODULES
+    }
+    write(
+        pilot.root / "trial.json",
+        {
+            "protocol_version": "journal-v6",
+            "turn_policy": report["policy_limits"](),
+            "research_timing": research_policy_limits(),
+            "effective_source_action_deadline_ms": 49000,
+            "requested_reasoning_effort": "low",
+            "workspace_assignments_sha256": report["file_hash"](
+                pilot.root / "workspace-locations.json"
+            ),
+            "workspace_receipts_sha256": report["file_hash"](
+                pilot.root / "workspace-receipts.json"
+            ),
+            "baseline_finalization_reserve_ms": 1000,
+            "binding_registry": {
+                "path": str(report["synthetic_binding_path"].resolve()),
+                "sha256": report["file_hash"](report["synthetic_binding_path"]),
+            },
+            "harness_sha": HEAD,
+            "scripts": scripts,
+            "modules": modules,
+        },
+    )
+    (pilot.root / "trial-at-baseline-start.json").write_bytes(
+        (pilot.root / "trial.json").read_bytes()
+    )
+    return result
+
+
+def replay(pilot, report):
+    return report["verify_journal_replay"](
+        pilot.folder,
+        pilot.read("trace.json"),
+        pilot.packet,
+        pilot.controller_dirs[-1] / "artifact/logs",
+        pilot.runtime["validate_all_fact_citations"],
+    )
+
+
+def run_without_labels(pilot, report, monkeypatch):
+    """Exercise the real report main while its scorer sees no labels at all."""
+    dataset = pilot.root / "no-labels-sentinel.txt"
+    dataset.write_text("SYNTHETIC_NO_REVIEWED_LABELS")
+    reads = []
+
+    class NoLabels:
+        @classmethod
+        def model_validate_json(cls, value):
+            if isinstance(value, bytes):
+                value = value.decode()
+            assert value == "SYNTHETIC_NO_REVIEWED_LABELS"
+            assert (pilot.root / "submission-seal.json").is_file()
+            reads.append(value)
+            return None
+
+    def no_label_score(dataset, capture):
+        assert dataset is None
+        return {
+            "metrics": {
+                "claim_recall": {"numerator": 0, "denominator": 0, "value": None},
+                "claim_precision": {"numerator": 0, "denominator": 0, "value": None},
+            },
+            "cases": [{"case_id": observation.case_id} for observation in capture.observations],
+        }
+
+    report.update(Dataset=NoLabels, score=no_label_score)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "journal-report",
+            "--root",
+            str(pilot.root),
+            "--dataset",
+            str(dataset),
+            "--orchestrator",
+            str(PILOT),
+        ],
+    )
+    return reads
+
+
+def persist_result(pilot, result):
+    write(pilot.folder / "result.json", result)
+    write(pilot.root / "experts-results.json", {"stopped": False, "results": [result]})
+
+
+def rewrite_outcomes(pilot, outcomes):
+    """Change both copies to exercise semantic replay beyond shallow equality."""
+    write(pilot.folder / "navigation-outcomes.json", outcomes)
+    result = pilot.read("result.json")
+    result["navigation_outcomes"] = outcomes
+    persist_result(pilot, result)
+
+
+def refreeze_synthetic_workspace_hashes(pilot, report):
+    """Synthetic only: reach canonical/identity guards after matching manifest bytes."""
+    path = pilot.root / "trial.json"
+    trial = json.loads(path.read_text())
+    trial.update(
+        workspace_assignments_sha256=report["file_hash"](pilot.root / "workspace-locations.json"),
+        workspace_receipts_sha256=report["file_hash"](pilot.root / "workspace-receipts.json"),
+    )
+    write(path, trial)
+    (pilot.root / "trial-at-baseline-start.json").write_bytes(path.read_bytes())
+
+
+def assert_prelabel_rejection(pilot, report, monkeypatch):
+    reads = run_without_labels(pilot, report, monkeypatch)
+    with pytest.raises((ValueError, FileNotFoundError)):
+        report["main"]()
+    assert reads == [] and not (pilot.root / "submission-seal.json").exists()
+
+
+def test_actual_report_replays_all_accepted_hash_bound_checkpoints(pilot, report):
+    result = prepare_reporting(pilot, report)
+    verified = replay(pilot, report)
+    assert verified["events"] == 3 and verified["explicit_commit"] is True
+    assert verified["final_journal_sha256"] == result["journal_sha256"]
+
+
+@pytest.mark.parametrize("failed_kind", ["selector_timeout", "selector_process_unavailable"])
+def test_failed_later_selector_retains_a_replayable_earlier_checkpoint(pilot, report, failed_kind):
+    result = prepare_reporting(pilot, report, failed=True, failed_kind=failed_kind)
+    verified = replay(pilot, report)
+    assert verified["events"] == 2 and verified["explicit_commit"] is False
+    assert result["found"] == ["Q1"] and result["status"] == "incomplete"
+
+
+def test_terminal_selector_failure_cannot_be_followed_by_an_accepted_commit(
+    pilot, report, monkeypatch
+):
+    result = prepare_reporting(pilot, report, rejected=True)
+    meta = pilot.read("selector-03.meta.json")
+    meta.update(error_kind="selector_timeout", returncode=None)
+    result.update(
+        status="incomplete",
+        error="selector_timeout",
+        turn_errors=[
+            {
+                "turn": 3,
+                "kind": "selector_timeout",
+                "elapsed_ms": meta["elapsed_ms"],
+            }
+        ],
+    )
+    write(pilot.folder / "selector-03.meta.json", meta)
+    write(pilot.folder / "result.json", result)
+    write(pilot.root / "experts-results.json", {"stopped": False, "results": [result]})
+    reads = run_without_labels(pilot, report, monkeypatch)
+    with pytest.raises(ValueError, match="continue after a terminal process failure"):
+        report["main"]()
+    assert reads == [] and not (pilot.root / "submission-seal.json").exists()
+
+
+@pytest.mark.parametrize(
+    "change", ["missing", "foreign", "duplicate", "missing_private_root", "current_denied"]
+)
+def test_proved_isolation_is_bound_to_required_original_workspace_and_private_roots(
+    pilot, report, monkeypatch, change
+):
+    prepare_reporting(pilot, report)
+    mapping = pilot.root / "workspace-locations.json"
+    if change == "missing":
+        mapping.unlink()
+    elif change == "foreign":
+        write(mapping, {"u": str(pilot.root / "foreign-workspace")})
+    elif change == "duplicate":
+        write(mapping, {"u": str(pilot.workspace), "other": str(pilot.workspace)})
+    else:
+        isolation = pilot.read("isolation.json")
+        if change == "missing_private_root":
+            isolation["sealed_roots"].remove("/Users/wpalish/Documents/Codex")
+        else:
+            isolation["sealed_roots"].append(str(pilot.workspace))
+        isolation["profile"] = report["Isolation"](
+            workspace=Path(isolation["workspace"]),
+            sealed_roots=tuple(Path(path) for path in isolation["sealed_roots"]),
+            sandbox_executable=isolation["sandbox_executable"],
+            codex_executable=isolation["codex_executable"],
+        ).profile()
+        write(pilot.folder / "isolation.json", isolation)
+    reads = run_without_labels(pilot, report, monkeypatch)
+    with pytest.raises(ValueError):
+        report["main"]()
+    assert reads == [] and not (pilot.root / "submission-seal.json").exists()
+
+
+@pytest.mark.parametrize("state", ["timeout", "rejected_delta"])
+def test_cleared_unaccepted_attempt_cannot_make_retained_facts_eligible(
+    pilot, report, monkeypatch, state
+):
+    result = prepare_reporting(
+        pilot, report, failed=state == "timeout", rejected=state == "rejected_delta"
+    )
+    assert result["turn_errors"]
+    result.update(
+        status="submitted",
+        error=None,
+        turn_errors=[],
+        completion_kind="explicit_commit" if result["explicit_commit"] else "budget_checkpoint",
+    )
+    write(pilot.folder / "result.json", result)
+    write(pilot.root / "experts-results.json", {"stopped": False, "results": [result]})
+    reads = run_without_labels(pilot, report, monkeypatch)
+    try:
+        report["main"]()
+    except ValueError:
+        assert reads == [] and not (pilot.root / "submission-seal.json").exists()
+    else:
+        comparison = json.loads((pilot.root / "comparison.json").read_text())
+        assert comparison["protocol_eligible"] is False
+
+
+@pytest.mark.parametrize("state", ["timeout", "rejected_delta"])
+def test_unaccepted_attempt_cannot_expand_schema_limits_and_recompute_its_own_hashes(
+    pilot, report, monkeypatch, state
+):
+    prepare_reporting(pilot, report, failed=state == "timeout", rejected=state == "rejected_delta")
+    request = pilot.read("selector-03.request.json")
+    request["schema"]["properties"]["facts"]["maxItems"] = 16
+    request["schema"]["properties"]["question_findings"]["maxItems"] = 7
+    request["schema_sha256"] = report["digest"](request["schema"])
+    meta = pilot.read("selector-03.meta.json")
+    meta["schema_sha256"] = request["schema_sha256"]
+    write(pilot.folder / "selector-03.request.json", request)
+    write(pilot.folder / "selector-03.meta.json", meta)
+    reads = run_without_labels(pilot, report, monkeypatch)
+    with pytest.raises(ValueError, match="four-fact schema"):
+        report["main"]()
+    assert reads == [] and not (pilot.root / "submission-seal.json").exists()
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "phase",
+        "policy",
+        "source_count",
+        "processed_count",
+        "prior_hash",
+        "prompt_receipt",
+        "policy_clock",
+        "start_clock",
+        "timeout_ms",
+        "timeout_seconds",
+        "effort",
+        "schema_digest",
+        "command_digest",
+        "event_phase",
+        "event_effort",
+        "event_schema",
+        "event_command",
+    ],
+)
+def test_turn_policy_metadata_is_verified_before_any_seal_or_label_read(
+    pilot, report, monkeypatch, change
+):
+    prepare_reporting(pilot, report)
+    request = pilot.read("selector-02.request.json")
+    meta = pilot.read("selector-02.meta.json")
+    events = pilot.read("journal-events.json")
+    event = events[1]
+    if change == "phase":
+        request["selector_phase"] = "bootstrap"
+    elif change == "policy":
+        request["turn_policy"]["max_new_facts"] = 5
+    elif change == "source_count":
+        request["source_action_count"] = 0
+    elif change == "processed_count":
+        request["processed_through_action_count"] = 1
+    elif change == "prior_hash":
+        request["prompt"]["accepted_journal"]["sha256"] = "f" * 64
+    elif change == "prompt_receipt":
+        request["prompt"]["processed_through_action_count"] = 1
+    elif change == "policy_clock":
+        request["selector_policy_active_ms"] += 1
+    elif change == "start_clock":
+        meta["selector_start_active_ms"] += 1
+    elif change == "timeout_ms":
+        meta["selector_timeout_ms"] += 1
+    elif change == "timeout_seconds":
+        meta["selector_timeout_seconds"] += 0.001
+    elif change == "effort":
+        meta["reasoning_effort"] = "medium"
+    elif change == "schema_digest":
+        request["schema_sha256"] = meta["schema_sha256"] = "f" * 64
+    elif change == "command_digest":
+        meta["selector_command_sha256"] = "f" * 64
+    elif change == "event_phase":
+        event["selector_phase"] = "bootstrap"
+    elif change == "event_effort":
+        event["reasoning_effort"] = "medium"
+    elif change == "event_schema":
+        event["selector_schema_sha256"] = "f" * 64
+    else:
+        event["selector_command_sha256"] = "f" * 64
+    event["selector_request_sha256"] = report["digest"](request)
+    write(pilot.folder / "selector-02.request.json", request)
+    write(pilot.folder / "selector-02.meta.json", meta)
+    write(pilot.folder / "journal-events.json", events)
+    reads = run_without_labels(pilot, report, monkeypatch)
+    with pytest.raises(ValueError):
+        report["main"]()
+    assert reads == [] and not (pilot.root / "submission-seal.json").exists()
+
+
+@pytest.mark.parametrize(
+    "change", ["profile", "schema_path", "output_path", "workspace", "codex", "sandbox"]
+)
+def test_command_authority_cannot_be_replaced_by_recomputing_all_proof_hashes(
+    pilot, report, monkeypatch, change
+):
+    prepare_reporting(pilot, report)
+    request = pilot.read("selector-02.request.json")
+    argv = request["selector_command"]
+    if change == "profile":
+        argv[2] = "(version 1) (allow default)"
+    elif change == "codex":
+        argv[3] = "/tmp/foreign-codex"
+    elif change == "sandbox":
+        argv[0] = "/tmp/foreign-sandbox"
+    else:
+        key, value = {
+            "schema_path": ("--output-schema", str(pilot.workspace / "legacy.schema.json")),
+            "output_path": ("--output-last-message", str(pilot.workspace / "answer-01.json")),
+            "workspace": ("-C", str(pilot.root / "foreign-workspace")),
+        }[change]
+        argv[argv.index(key) + 1] = value
+    request["command_proof"] = report["command_proof"](argv)
+    sha = request["command_proof"]["argv_sha256"]
+    meta = pilot.read("selector-02.meta.json")
+    meta["selector_command_sha256"] = sha
+    events = pilot.read("journal-events.json")
+    events[1].update(selector_request_sha256=report["digest"](request), selector_command_sha256=sha)
+    write(pilot.folder / "selector-02.request.json", request)
+    write(pilot.folder / "selector-02.meta.json", meta)
+    write(pilot.folder / "journal-events.json", events)
+    reads = run_without_labels(pilot, report, monkeypatch)
+    with pytest.raises(ValueError, match="proved isolation/schema/turn output"):
+        report["main"]()
+    assert reads == [] and not (pilot.root / "submission-seal.json").exists()
+
+
+@pytest.mark.parametrize(
+    "change",
+    ["effort", "missing_effort", "facts", "findings", "closure_reserve", "technical_reserve"],
+)
+def test_trial_turn_policy_and_low_effort_are_required_even_with_matching_initial_bytes(
+    pilot, report, monkeypatch, change
+):
+    prepare_reporting(pilot, report)
+    trial = json.loads((pilot.root / "trial.json").read_text())
+    if change == "effort":
+        trial["requested_reasoning_effort"] = "medium"
+    elif change == "missing_effort":
+        trial.pop("requested_reasoning_effort")
+    else:
+        key, value = {
+            "facts": ("max_new_facts", 16),
+            "findings": ("max_new_findings", 7),
+            "closure_reserve": ("minimal_commit_reserve_ms", 0),
+            "technical_reserve": ("mechanical_validation_reserve_ms", 0),
+        }[change]
+        trial["turn_policy"][key] = value
+    write(pilot.root / "trial.json", trial)
+    (pilot.root / "trial-at-baseline-start.json").write_bytes(
+        (pilot.root / "trial.json").read_bytes()
+    )
+    reads = run_without_labels(pilot, report, monkeypatch)
+    with pytest.raises(ValueError):
+        report["main"]()
+    assert reads == [] and not (pilot.root / "submission-seal.json").exists()
+
+
+@pytest.mark.parametrize(
+    "change",
+    ["tool", "failed", "unfinished", "second_completion", "different_answer", "duplicate_json"],
+)
+def test_original_selector_provenance_is_required_for_checkpoint_replay(pilot, report, change):
+    prepare_reporting(pilot, report)
+    path = pilot.folder / "selector-02.events.jsonl"
+    raw = (pilot.folder / "selector-02.answer.json").read_text()
+    rows = [json.loads(line) for line in completed_events(raw).splitlines()]
+    if change == "tool":
+        rows.insert(
+            2,
+            {
+                "type": "item.completed",
+                "item": {"id": "tool", "type": "command_execution", "command": "cat sealed"},
+            },
+        )
+    elif change == "failed":
+        rows[-1] = {"type": "turn.failed", "error": {"message": "Synthetic failure"}}
+    elif change == "unfinished":
+        rows.pop()
+    elif change == "second_completion":
+        rows.append(copy.deepcopy(rows[-1]))
+    elif change == "different_answer":
+        changed = json.loads(raw)
+        changed["observation"] = "A different completed decision."
+        rows[2]["item"]["text"] = json.dumps(changed)
+    else:
+        duplicate = raw.replace('"kind": "record"', '"kind": "record", "kind": "submit"', 1)
+        assert duplicate != raw
+        (pilot.folder / "selector-02.answer.json").write_text(duplicate)
+        rows[2]["item"]["text"] = duplicate
+    path.write_text("\n".join(json.dumps(row) for row in rows) + "\n")
+    with pytest.raises(ValueError):
+        replay(pilot, report)
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "returncode",
+        "boolean_returncode",
+        "error",
+        "elapsed",
+        "boolean_elapsed",
+        "duplicate_meter_turn",
+    ],
+)
+def test_selector_metadata_is_bound_to_exact_completed_turn_meter(pilot, report, change):
+    prepare_reporting(pilot, report)
+    path = pilot.folder / "selector-02.meta.json"
+    meta = json.loads(path.read_text())
+    if change == "returncode":
+        meta["returncode"] = 1
+    elif change == "boolean_returncode":
+        meta["returncode"] = False
+    elif change == "error":
+        meta["error_kind"] = "selector_timeout"
+    elif change == "elapsed":
+        meta["elapsed_ms"] += 1
+    elif change == "boolean_elapsed":
+        meta["elapsed_ms"] = True
+    else:
+        result = pilot.read("result.json")
+        selector = next(entry for entry in result["meter"] if entry.get("turn") == 2)
+        duplicate = copy.deepcopy(selector)
+        duplicate["elapsed_ms"] = 0
+        result["meter"].append(duplicate)
+        write(pilot.folder / "result.json", result)
+    write(path, meta)
+    with pytest.raises(ValueError):
+        replay(pilot, report)
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "prior_hash",
+        "accepted_hash",
+        "proof_hash",
+        "source_count",
+        "boolean_count",
+        "event_after_trace",
+        "duplicate_turn",
+        "decision",
+        "snapshot",
+        "final_snapshot",
+        "compact",
+        "final_hash",
+        "commit_flag",
+        "accepted_count",
+        "clock_prefix",
+    ],
+)
+def test_checkpoint_or_final_state_tampering_fails_replay(pilot, report, change):
+    prepare_reporting(pilot, report)
+    events = pilot.read("journal-events.json")
+    result = pilot.read("result.json")
+    if change == "prior_hash":
+        events[1]["prior_journal_sha256"] = "b" * 64
+    elif change == "accepted_hash":
+        events[1]["accepted_journal_sha256"] = "b" * 64
+    elif change == "proof_hash":
+        events[1]["citation_proof_sha256"] = "b" * 64
+    elif change == "source_count":
+        events[1]["source_action_count"] = 0
+    elif change == "boolean_count":
+        events[1]["source_action_count"] = True
+    elif change == "event_after_trace":
+        events[1]["at"] = "2099-01-01T00:00:00+00:00"
+    elif change == "duplicate_turn":
+        events[1]["turn"] = events[0]["turn"]
+    elif change == "decision":
+        value = pilot.read("selector-02.decision.json")
+        value["facts"][0]["value_json"] = "7.0"
+        write(pilot.folder / "selector-02.decision.json", value)
+    elif change in {"snapshot", "final_snapshot"}:
+        path = "checkpoint-02.json" if change == "snapshot" else "accepted-journal.json"
+        value = pilot.read(path)
+        value["facts"][0]["value_json"] = "7.0"
+        write(pilot.folder / path, value)
+    elif change == "compact":
+        value = pilot.read("compact-submission.json")
+        value["facts"][0]["value_json"] = "7.0"
+        write(pilot.folder / "compact-submission.json", value)
+    elif change == "final_hash":
+        result["journal_sha256"] = "b" * 64
+    elif change == "commit_flag":
+        result["explicit_commit"] = False
+    elif change == "accepted_count":
+        result["accepted_turns"] = 99
+    else:
+        result["meter"][0]["active_ms"] += 1
+    write(pilot.folder / "journal-events.json", events)
+    write(pilot.folder / "result.json", result)
+    with pytest.raises(ValueError):
+        replay(pilot, report)
+
+
+def test_committed_journal_has_no_later_accepted_events(pilot, report):
+    prepare_reporting(pilot, report)
+    events = pilot.read("journal-events.json")
+    extra = {**events[-1], "turn": 4}
+    events.append(extra)
+    write(pilot.folder / "journal-events.json", events)
+    with pytest.raises(ValueError, match="chronology"):
+        replay(pilot, report)
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "missing_exact",
+        "empty",
+        "negative",
+        "float",
+        "bool",
+        "prefix",
+        "boolean_active",
+        "float_active",
+        "final",
+    ],
+)
+def test_full_cumulative_meter_rejects_non_exact_ledgers(report, change):
+    result = {
+        "exact_metering": True,
+        "active_ms": 3,
+        "meter": [{"elapsed_ms": 1, "active_ms": 1}, {"elapsed_ms": 2, "active_ms": 3}],
+    }
+    assert report["exact_metering"](result)
+    if change == "missing_exact":
+        result.pop("exact_metering")
+    elif change == "empty":
+        result["meter"] = []
+    elif change == "negative":
+        result["meter"][0]["elapsed_ms"] = -1
+    elif change == "float":
+        result["meter"][0]["elapsed_ms"] = 1.0
+    elif change == "bool":
+        result["meter"][0]["elapsed_ms"] = True
+    elif change == "prefix":
+        result["meter"][0]["active_ms"] = 2
+    elif change == "boolean_active":
+        result["meter"][0]["active_ms"] = True
+    elif change == "float_active":
+        result["meter"][0]["active_ms"] = 1.0
+    else:
+        result["active_ms"] = 4
+    assert not report["exact_metering"](result)
+
+
+@pytest.mark.parametrize("change", ["aggregate", "duplicate", "missing", "stopped"])
+def test_cohort_gate_requires_exact_unique_final_per_case_results(pilot, report, change):
+    result = prepare_reporting(pilot, report)
+    final = {"stopped": False, "results": [copy.deepcopy(result)]}
+    assert report["verified_cohort"](pilot.root, final, ("u",)) == [result]
+    if change == "aggregate":
+        final["results"][0]["active_ms"] += 1
+    elif change == "duplicate":
+        final["results"].append(copy.deepcopy(result))
+    elif change == "missing":
+        final["results"] = []
+    else:
+        final["stopped"] = True
+    with pytest.raises(ValueError):
+        report["verified_cohort"](pilot.root, final, ("u",))
+
+
+def test_seal_includes_all_actual_journal_selector_proof_and_audit_bytes(pilot, report):
+    prepare_reporting(pilot, report)
+    hashes = report["protocol_hashes"](pilot.folder)
+    names = {entry["path"] for entry in hashes}
+    for turn in range(1, 4):
+        assert {
+            f"selector-{turn:02d}.{suffix}"
+            for suffix in (
+                "request.json",
+                "decision.json",
+                "answer.json",
+                "meta.json",
+                "events.jsonl",
+                "stderr.txt",
+            )
+        } <= names
+        assert f"checkpoint-{turn:02d}.json" in names
+    assert {
+        "accepted-journal.json",
+        "journal-events.json",
+        "compact-citation-proof.json",
+        "isolation.json",
+    } <= names
+    path = pilot.folder / "selector-02.stderr.txt"
+    path.write_text("Synthetic diagnostic changed after completion.")
+    assert report["protocol_hashes"](pilot.folder) != hashes
+
+
+def test_seal_is_immutable_except_for_ignored_new_sealed_at(report, tmp_path):
+    path = tmp_path / "seal.json"
+    before = {"sealed_at": "old", "count": 1, "submissions": [{"sha": "a"}]}
+    report["immutable_seal"](path, before)
+    old_bytes = path.read_bytes()
+    assert report["immutable_seal"](path, {**before, "sealed_at": "new"}) == before
+    with pytest.raises(ValueError):
+        report["immutable_seal"](path, {**before, "submissions": [{"sha": "b"}]})
+    assert path.read_bytes() == old_bytes
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "script",
+        "module",
+        "baseline_sha",
+        "packet_sha",
+        "controller_sha",
+        "controller_conclusion",
+        "source_run_id",
+        "isolation",
+    ],
+)
+def test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof(pilot, report, change):
+    prepare_reporting(pilot, report)
+    frozen = report["validate_frozen_provenance"](pilot.root, PILOT)
+    assert frozen["harness_sha"] == HEAD and frozen["modules"]
+    if change in {"script", "module"}:
+        trial = json.loads((pilot.root / "trial.json").read_text())
+        mapping = trial["scripts" if change == "script" else "modules"]
+        mapping[next(iter(mapping))] = "0" * 64
+        write(pilot.root / "trial.json", trial)
+    elif change == "baseline_sha":
+        path = pilot.root / "baseline/u/result.json"
+        value = json.loads(path.read_text())
+        value["head_sha"] = "b" * 40
+        write(path, value)
+    elif change == "packet_sha":
+        path = pilot.root / "baseline/u/public-packet.json"
+        value = json.loads(path.read_text())
+        value["baseline_pipeline_sha"] = "b" * 40
+        write(path, value)
+    elif change in {"controller_sha", "controller_conclusion"}:
+        path = pilot.controller_dirs[-1] / "run.json"
+        value = json.loads(path.read_text())
+        value["headSha" if change == "controller_sha" else "conclusion"] = "wrong"
+        write(path, value)
+    elif change == "source_run_id":
+        result = pilot.read("result.json")
+        next(entry for entry in result["meter"] if entry["stage"] == "controlled_source_action")[
+            "run_id"
+        ] = 888
+        write(pilot.folder / "result.json", result)
+    else:
+        value = pilot.read("isolation.json")
+        value["sealed_read_denied"] = False
+        write(pilot.folder / "isolation.json", value)
+    with pytest.raises(ValueError):
+        report["validate_frozen_provenance"](pilot.root, PILOT)
+
+
+@pytest.mark.parametrize("state", ["clean_commit", "later_timeout", "rejected_then_commit"])
+def test_real_report_seals_before_label_interface_and_keeps_failure_ineligible(
+    pilot, report, monkeypatch, state
+):
+    prepare_reporting(
+        pilot, report, failed=state == "later_timeout", rejected=state == "rejected_then_commit"
+    )
+    reads = run_without_labels(pilot, report, monkeypatch)
+    report["main"]()
+    comparison = json.loads((pilot.root / "comparison.json").read_text())
+    assert reads == ["SYNTHETIC_NO_REVIEWED_LABELS"]
+    assert comparison["protocol_eligible"] is (state == "clean_commit")
+    assert comparison["protocol_gate"] is False
+    seal = json.loads((pilot.root / "submission-seal.json").read_text())
+    assert seal["all_accepted_journal_deltas_replayed"] and seal["count"] == 1
+    assert seal["submissions"][0]["journal_replay"]["events"] >= 2
+    assert seal["cohort_results_sha256"] == report["file_hash"](pilot.root / "experts-results.json")
+
+
+def test_failed_replay_never_crosses_the_label_read_boundary(pilot, report, monkeypatch):
+    prepare_reporting(pilot, report)
+    path = pilot.folder / "selector-02.events.jsonl"
+    path.write_text('{"type":"turn.failed"}\n')
+    reads = run_without_labels(pilot, report, monkeypatch)
+    with pytest.raises(ValueError):
+        report["main"]()
+    assert reads == [] and not (pilot.root / "submission-seal.json").exists()
+
+
+def test_post_seal_artifact_change_is_rejected_before_any_label_read(pilot, report, monkeypatch):
+    prepare_reporting(pilot, report)
+    reads = run_without_labels(pilot, report, monkeypatch)
+    report["main"]()
+    original = (pilot.root / "submission-seal.json").read_bytes()
+    (pilot.folder / "selector-02.stderr.txt").write_text("Changed audit envelope.")
+    reads.clear()
+    with pytest.raises(ValueError, match="Previous seal"):
+        report["main"]()
+    assert reads == [] and (pilot.root / "submission-seal.json").read_bytes() == original
+
+
+def test_source_clock_is_bound_to_its_independent_controller_summary(pilot, report):
+    prepare_reporting(pilot, report)
+    result = pilot.read("result.json")
+    source_index = next(
+        i for i, entry in enumerate(result["meter"]) if entry["stage"] == "controlled_source_action"
+    )
+    result["meter"][source_index]["elapsed_ms"] += 1000
+    for entry in result["meter"][source_index:]:
+        entry["active_ms"] += 1000
+    result["active_ms"] += 1000
+    assert report["exact_metering"](result)  # A consistent sum alone does not prove timing.
+    write(pilot.folder / "result.json", result)
+    with pytest.raises(ValueError):
+        report["validate_frozen_provenance"](pilot.root, PILOT)
+
+
+@pytest.mark.parametrize("change", ["missing_map", "missing_journal", "missing_citations"])
+def test_frozen_manifest_cannot_omit_protocol_modules(pilot, report, change):
+    prepare_reporting(pilot, report)
+    path = pilot.root / "trial.json"
+    trial = json.loads(path.read_text())
+    if change == "missing_map":
+        trial.pop("modules")
+    elif change == "missing_journal":
+        trial["modules"].pop("evaluation.research.expert.journal")
+    else:
+        trial["modules"].pop("evaluation.research.expert.citations")
+    write(path, trial)
+    with pytest.raises(ValueError):
+        report["validate_frozen_provenance"](pilot.root, PILOT)
+
+
+def test_frozen_manifest_cannot_omit_the_executed_legacy_helper(pilot, report):
+    prepare_reporting(pilot, report)
+    path = pilot.root / "trial.json"
+    trial = json.loads(path.read_text())
+    helper = "/tmp/unimatch-expert500-pilot-v1-frozen.py"
+    assert trial["scripts"][helper] == report["file_hash"](Path(helper))
+    trial["scripts"].pop(helper)
+    write(path, trial)
+    with pytest.raises(ValueError):
+        report["validate_frozen_provenance"](pilot.root, PILOT)
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "mode",
+        "provider",
+        "strict",
+        "pipeline",
+        "identity",
+        "duplicate_case",
+        "budget",
+        "missing_budget",
+    ],
+)
+def test_malformed_baseline_capture_fails_before_sealing_or_label_read(
+    pilot, report, monkeypatch, change
+):
+    prepare_reporting(pilot, report)
+    path = pilot.root / "baseline/u/capture.json"
+    capture = json.loads(path.read_text())
+    if change == "mode":
+        capture["mode"] = "synthetic"
+    elif change == "provider":
+        capture["config"]["search_provider"] = "other_mock_provider"
+    elif change == "strict":
+        capture["config"]["strict_expert_budget"] = False
+    elif change == "pipeline":
+        capture["pipeline_sha"] = "b" * 40
+    elif change == "identity":
+        capture["observations"][0]["case_id"] = "another_synthetic_case"
+    elif change == "duplicate_case":
+        capture["observations"].append(copy.deepcopy(capture["observations"][0]))
+    elif change == "budget":
+        capture["config"]["case_budgets"]["u"]["elapsed_ms"] += 1
+    else:
+        capture["config"].pop("case_budgets")
+    write(path, capture)
+    reads = run_without_labels(pilot, report, monkeypatch)
+    with pytest.raises(ValueError, match="Baseline capture"):
+        report["main"]()
+    assert reads == [] and not (pilot.root / "submission-seal.json").exists()
+
+
+def update_baseline(pilot, *, budget_changes=None, config_changes=None, observation_error=None):
+    folder = pilot.root / "baseline/u"
+    result_path, capture_path = folder / "result.json", folder / "capture.json"
+    baseline = json.loads(result_path.read_text())
+    capture = json.loads(capture_path.read_text())
+    for key, value in (budget_changes or {}).items():
+        if value is None:
+            baseline["budget"].pop(key, None)
+        else:
+            baseline["budget"][key] = value
+    for key, value in (config_changes or {}).items():
+        if value is None:
+            capture["config"].pop(key, None)
+        else:
+            capture["config"][key] = value
+    capture["config"]["case_budgets"]["u"] = copy.deepcopy(baseline["budget"])
+    if observation_error is not None:
+        capture["observations"][0]["error"] = observation_error
+    write(result_path, baseline)
+    write(capture_path, capture)
+    return baseline["budget"], Capture.model_validate(capture)
+
+
+def test_minimal_commit_replays_with_exact_request_receipt_and_unchanged_evidence(pilot, report):
+    result = prepare_reporting(pilot, report, minimal=True)
+    verified = replay(pilot, report)
+    assert verified["events"] == 3 and verified["explicit_commit"] is True
+    assert verified["final_journal_sha256"] == result["journal_sha256"]
+    assert pilot.read("selector-03.request.json")["selector_mode"] == "minimal_commit"
+    assert pilot.read("checkpoint-03.json") == pilot.read("checkpoint-02.json")
+    names = {entry["path"] for entry in report["protocol_hashes"](pilot.folder)}
+    assert {f"selector-{turn:02d}.request.json" for turn in (1, 2, 3)} <= names
+
+
+@pytest.mark.parametrize("target", ["prompt", "schema", "mode"])
+def test_minimal_envelope_cannot_be_changed_even_with_recomputed_request_hash(
+    pilot, report, target
+):
+    prepare_reporting(pilot, report, minimal=True)
+    events = pilot.read("journal-events.json")
+    request = pilot.read("selector-03.request.json")
+    if target == "prompt":
+        request["prompt"]["source_views"] = [{"step": 1, "text": "Synthetic hint"}]
+    elif target == "schema":
+        request["schema"]["properties"]["facts"]["maxItems"] = 1
+    else:
+        request["selector_mode"] = "research"
+        events[-1]["selector_mode"] = "research"
+    events[-1]["selector_request_sha256"] = report["digest"](request)
+    write(pilot.folder / "selector-03.request.json", request)
+    write(pilot.folder / "journal-events.json", events)
+    with pytest.raises(ValueError):
+        replay(pilot, report)
+
+
+def test_hash_only_envelope_cannot_relabel_a_pending_source_as_processed(pilot, report):
+    prepare_reporting(pilot, report, next_source=True)
+    events = pilot.read("journal-events.json")
+    request = pilot.read("selector-03.request.json")
+    assert request["processed_through_action_count"] == 1 and request["source_action_count"] == 2
+    sha = events[-1]["prior_journal_sha256"]
+    request.update(
+        selector_mode="minimal_commit",
+        selector_phase="minimal_commit",
+        prompt=report["closing_prompt"](journal_sha256=sha),
+        schema=report["closing_schema"](journal_sha256=sha),
+    )
+    request["schema_sha256"] = report["digest"](request["schema"])
+    meta = pilot.read("selector-03.meta.json")
+    window = report["turn_window"](
+        phase="minimal_commit", active_ms=meta["selector_start_active_ms"]
+    )
+    meta.update(
+        selector_phase="minimal_commit",
+        selector_timeout_ms=window.timeout_ms,
+        selector_timeout_seconds=window.timeout_seconds,
+        schema_sha256=request["schema_sha256"],
+    )
+    answer = minimal_commit(request["prompt"])
+    raw = json.dumps(answer)
+    write(pilot.folder / "selector-03.request.json", request)
+    write(pilot.folder / "selector-03.decision.json", answer)
+    (pilot.folder / "selector-03.answer.json").write_text(raw)
+    (pilot.folder / "selector-03.events.jsonl").write_text(completed_events(raw))
+    events[-1].update(
+        selector_mode="minimal_commit",
+        selector_phase="minimal_commit",
+        selector_schema_sha256=request["schema_sha256"],
+        selector_request_sha256=report["digest"](request),
+        decision_sha256=report["digest"](answer),
+    )
+    write(pilot.folder / "selector-03.meta.json", meta)
+    write(pilot.folder / "journal-events.json", events)
+    with pytest.raises(ValueError, match="unprocessed source|pending source"):
+        replay(pilot, report)
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "prior_receipt",
+        "boolean_receipt",
+        "event_receipt",
+        "schema_university",
+        "missing_view",
+    ],
+)
+def test_source_processing_receipts_need_semantic_consistency_beyond_hashes(pilot, report, change):
+    prepare_reporting(pilot, report)
+    events = pilot.read("journal-events.json")
+    request = pilot.read("selector-02.request.json")
+    if change == "prior_receipt":
+        request["processed_through_action_count"] = 1
+    elif change == "boolean_receipt":
+        request["processed_through_action_count"] = False
+    elif change == "event_receipt":
+        events[1]["processed_through_action_count"] = True
+    elif change == "schema_university":
+        request["schema"]["$defs"]["CompactScope"]["properties"]["university"]["enum"] = [
+            None,
+            "Foreign University",
+        ]
+    else:
+        request["prompt"]["current_source_views"] = []
+    events[1]["selector_request_sha256"] = report["digest"](request)
+    write(pilot.folder / "selector-02.request.json", request)
+    write(pilot.folder / "journal-events.json", events)
+    with pytest.raises(ValueError):
+        replay(pilot, report)
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("processed_through_action_count", True),
+        ("processed_through_action_count", 0),
+        ("all_recorded_sources_processed", False),
+    ],
+)
+def test_final_source_receipt_is_bound_to_replayed_actions(pilot, report, field, value):
+    prepare_reporting(pilot, report)
+    result = pilot.read("result.json")
+    result[field] = value
+    write(pilot.folder / "result.json", result)
+    with pytest.raises(ValueError, match="source processing receipt"):
+        replay(pilot, report)
+
+
+def test_baseline_reserve_uses_original_full_clock_and_exact_public_caps(pilot, report):
+    prepare_reporting(pilot, report)
+    budget, capture = update_baseline(pilot)
+    report["validate_baseline_reserve"](capture, budget)
+    assert capture.config["finalization_reserve_ms"] == budget["finalization_reserve_ms"] == 1000
+    assert capture.config["source_work_deadline_ms"] == budget["source_work_deadline_ms"] == 119000
+    assert capture.config["seconds_per_case"] == capture.config["child_active_seconds"] == 120
+    assert (
+        budget["max_active_seconds"],
+        budget["max_fetcher_calls"],
+        budget["max_search_queries"],
+    ) == (120, 60, 6)
+    assert report["baseline_within_budget"](budget)
+
+
+@pytest.mark.parametrize("change", ["missing", "changed_bytes"])
+def test_initial_trial_manifest_cannot_be_removed_or_rewritten_before_sealing(
+    pilot, report, monkeypatch, change
+):
+    prepare_reporting(pilot, report)
+    initial = pilot.root / "trial-at-baseline-start.json"
+    assert initial.read_bytes() == (pilot.root / "trial.json").read_bytes()
+    if change == "missing":
+        initial.unlink()
+    else:
+        initial.write_bytes(initial.read_bytes() + b"\n")
+    reads = run_without_labels(pilot, report, monkeypatch)
+    with pytest.raises(ValueError):
+        report["main"]()
+    assert reads == [] and not (pilot.root / "submission-seal.json").exists()
+
+
+@pytest.mark.parametrize(
+    "target,key,value",
+    [
+        ("config", "finalization_reserve_ms", None),
+        ("config", "finalization_reserve_ms", False),
+        ("config", "finalization_reserve_ms", 999),
+        ("config", "source_work_deadline_ms", None),
+        ("config", "source_work_deadline_ms", True),
+        ("config", "source_work_deadline_ms", 120000),
+        ("config", "seconds_per_case", 119),
+        ("config", "child_active_seconds", False),
+        ("budget", "finalization_reserve_ms", None),
+        ("budget", "finalization_reserve_ms", True),
+        ("budget", "source_work_deadline_ms", False),
+        ("budget", "source_work_deadline_ms", 119001),
+        ("budget", "max_active_seconds", 121),
+        ("budget", "max_fetcher_calls", 61),
+        ("budget", "max_search_queries", True),
+    ],
+)
+def test_bad_reserve_provenance_fails_before_any_seal_or_label_read(
+    pilot, report, monkeypatch, target, key, value
+):
+    prepare_reporting(pilot, report)
+    changes = {f"{target}_changes": {key: value}}
+    update_baseline(pilot, **changes)
+    reads = run_without_labels(pilot, report, monkeypatch)
+    with pytest.raises(ValueError, match="Baseline"):
+        report["main"]()
+    assert reads == [] and not (pilot.root / "submission-seal.json").exists()
+
+
+def test_original_clock_overrun_is_preserved_and_ineligible_despite_exact_reserve(
+    pilot, report, monkeypatch
+):
+    prepare_reporting(pilot, report)
+    budget, capture = update_baseline(
+        pilot,
+        budget_changes={"elapsed_ms": 120005, "stop_reason": "source_work_deadline_exhausted"},
+    )
+    report["validate_baseline_reserve"](capture, budget)
+    assert not report["baseline_within_budget"](budget)
+    run_without_labels(pilot, report, monkeypatch)
+    report["main"]()
+    comparison = json.loads((pilot.root / "comparison.json").read_text())
+    assert comparison["protocol_eligible"] is False
+    assert comparison["cases"][0]["baseline_budget"]["elapsed_ms"] == 120005
+
+
+@pytest.mark.parametrize("process_error", ["WALL_CLOCK", "PROCESS_EXIT_1"])
+def test_stale_partial_child_checkpoint_cannot_pass_the_baseline_clock_gate(
+    pilot, report, monkeypatch, process_error
+):
+    prepare_reporting(pilot, report)
+    budget, _capture = update_baseline(
+        pilot,
+        budget_changes={
+            "elapsed_ms": 115000,
+            "process_error": process_error,
+        },
+        observation_error="CAPTURE_IN_PROGRESS",
+    )
+    assert not report["baseline_within_budget"](budget)
+    run_without_labels(pilot, report, monkeypatch)
+    report["main"]()
+    comparison = json.loads((pilot.root / "comparison.json").read_text())
+    assert comparison["protocol_eligible"] is False
+    assert comparison["cases"][0]["baseline_budget"]["elapsed_ms"] == 115000
+
+
+@pytest.mark.parametrize("checkpoint_available", [None, False])
+def test_missing_final_child_checkpoint_cannot_pass_budget_eligibility(
+    pilot, report, monkeypatch, checkpoint_available
+):
+    prepare_reporting(pilot, report)
+    budget, _capture = update_baseline(
+        pilot,
+        budget_changes={
+            "active_checkpoint_available": checkpoint_available,
+        },
+    )
+    assert not report["baseline_within_budget"](budget)
+    run_without_labels(pilot, report, monkeypatch)
+    report["main"]()
+    assert json.loads((pilot.root / "comparison.json").read_text())["protocol_eligible"] is False
+
+
+def test_in_progress_observation_stays_ineligible_even_with_clean_process_fields(
+    pilot, report, monkeypatch
+):
+    prepare_reporting(pilot, report)
+    budget, _capture = update_baseline(pilot, observation_error="CAPTURE_IN_PROGRESS")
+    assert report["baseline_within_budget"](budget)
+    run_without_labels(pilot, report, monkeypatch)
+    report["main"]()
+    assert json.loads((pilot.root / "comparison.json").read_text())["protocol_eligible"] is False
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "representation",
+        "identities",
+        "binding_missing",
+        "binding_hash",
+        "binding_path",
+        "trial_reserve",
+    ],
+)
+def test_v4_manifest_pins_all_representation_and_identity_inputs(pilot, report, change):
+    prepare_reporting(pilot, report)
+    path = pilot.root / "trial.json"
+    trial = json.loads(path.read_text())
+    if change in {"representation", "identities"}:
+        trial["modules"].pop(
+            f"evaluation.research.{('expert.' if change == 'representation' else '')}{change}"
+        )
+    elif change == "binding_missing":
+        trial.pop("binding_registry")
+    elif change == "binding_hash":
+        trial["binding_registry"]["sha256"] = "f" * 64
+    elif change == "binding_path":
+        trial["binding_registry"]["path"] = str(pilot.root / "different-synthetic-registry.json")
+    else:
+        trial["baseline_finalization_reserve_ms"] = False
+    write(path, trial)
+    with pytest.raises(ValueError):
+        report["validate_frozen_provenance"](pilot.root, PILOT)
+
+
+def test_original_model_action_is_bound_to_the_actual_controller_dispatch(pilot, report):
+    pilot.plan_hook = lambda plan: plan["actions"][0].update(url="https://u.edu/different-source")
+    prepare_reporting(pilot, report)
+    assert pilot.read("selector-01.decision.json")["action"]["url"] == URL
+    assert pilot.plans[0]["actions"][0]["url"] == "https://u.edu/different-source"
+    with pytest.raises(ValueError):
+        replay(pilot, report)
+
+
+@pytest.mark.parametrize("change", ["outer_bytes", "payload_hash", "source_quote"])
+def test_raw_source_tampering_is_rejected_before_any_seal_or_label_read(
+    pilot, report, monkeypatch, change
+):
+    prepare_reporting(pilot, report, minimal=True)
+    trace = pilot.read("trace.json")
+    latest = pilot.controller_dirs[-1] / "artifact"
+    relative = trace["actions"][0]["raw_log_path"]
+    path = latest / "logs" / relative
+    if change == "outer_bytes":
+        path.write_bytes(path.read_bytes() + b"\n")
+    else:
+        record = json.loads(path.read_text())
+        if change == "payload_hash":
+            record["response"]["content_sha256"] = "0" * 64
+        else:
+            body = b"<p>International bachelor applicants need IELTS Academic overall 7.0.</p>"
+            record["response"]["content_b64"] = base64.b64encode(body).decode()
+            record["response"]["content_sha256"] = hashlib.sha256(body).hexdigest()
+        write(path, record)
+        new_hash = report["file_hash"](path)
+        trace["actions"][0]["raw_log_sha256"] = new_hash
+        result = pilot.read("result.json")
+        result["trace_sha256"] = report["digest"](trace)
+        summary = json.loads((latest / "summary.json").read_text())
+        summary["actions"][0]["raw_log_sha256"] = new_hash
+        summary["raw_logs"][relative] = new_hash
+        write(latest / "summary.json", summary)
+        write(pilot.folder / "trace.json", trace)
+        write(pilot.folder / "result.json", result)
+        write(pilot.root / "experts-results.json", {"stopped": False, "results": [result]})
+    reads = run_without_labels(pilot, report, monkeypatch)
+    with pytest.raises(ValueError):
+        report["main"]()
+    assert reads == [] and not (pilot.root / "submission-seal.json").exists()
+
+
+def test_identity_content_and_label_interface_are_loaded_only_after_the_immutable_seal(
+    pilot, report, monkeypatch
+):
+    prepare_reporting(pilot, report)
+    reads = run_without_labels(pilot, report, monkeypatch)
+    original_identities, original_dataset = report["IdentityMap"], report["Dataset"]
+    order = []
+    original_read_bytes = Path.read_bytes
+    post_seal_binding_reads = []
+
+    def observed_read_bytes(path):
+        if (
+            path == report["synthetic_binding_path"]
+            and (pilot.root / "submission-seal.json").is_file()
+        ):
+            post_seal_binding_reads.append(path)
+        return original_read_bytes(path)
+
+    monkeypatch.setattr(Path, "read_bytes", observed_read_bytes)
+
+    class SealedIdentities:
+        @classmethod
+        def model_validate_json(cls, value):
+            assert (pilot.root / "submission-seal.json").is_file()
+            order.append("identities")
+            return original_identities.model_validate_json(value)
+
+    class SealedLabels:
+        @classmethod
+        def model_validate_json(cls, value):
+            assert order == ["identities"]
+            order.append("labels")
+            return original_dataset.model_validate_json(value)
+
+    report.update(IdentityMap=SealedIdentities, Dataset=SealedLabels)
+    report["main"]()
+    assert order == ["identities", "labels"] and reads == ["SYNTHETIC_NO_REVIEWED_LABELS"]
+    assert post_seal_binding_reads == [report["synthetic_binding_path"]]
+
+
+def test_identity_registry_drift_between_precheck_and_postseal_read_is_rejected(
+    pilot, report, monkeypatch
+):
+    prepare_reporting(pilot, report)
+    reads = run_without_labels(pilot, report, monkeypatch)
+    original_seal = report["immutable_seal"]
+
+    def drift_after_seal(path, seal):
+        accepted = original_seal(path, seal)
+        report["synthetic_binding_path"].write_text(
+            json.dumps({"version": "synthetic-replaced-after-seal", "bindings": []})
+        )
+        return accepted
+
+    report["immutable_seal"] = drift_after_seal
+    with pytest.raises(ValueError):
+        report["main"]()
+    assert reads == [] and (pilot.root / "submission-seal.json").is_file()
+
+
+def test_dataset_hash_uses_the_exact_once_read_bytes_passed_to_the_label_interface(
+    pilot, report, monkeypatch
+):
+    prepare_reporting(pilot, report)
+    reads = run_without_labels(pilot, report, monkeypatch)
+    path = pilot.root / "no-labels-sentinel.txt"
+    original_read_bytes = Path.read_bytes
+    loaded = []
+
+    def changed_after_read(candidate):
+        value = original_read_bytes(candidate)
+        if candidate == path:
+            assert (pilot.root / "submission-seal.json").is_file()
+            loaded.append(value)
+            candidate.write_bytes(b"SYNTHETIC_CHANGED_AFTER_SINGLE_LABEL_READ")
+        return value
+
+    monkeypatch.setattr(Path, "read_bytes", changed_after_read)
+    report["main"]()
+    assert loaded == [b"SYNTHETIC_NO_REVIEWED_LABELS"] and reads == ["SYNTHETIC_NO_REVIEWED_LABELS"]
+    comparison = json.loads((pilot.root / "comparison.json").read_text())
+    assert comparison["dataset_file_sha256"] == hashlib.sha256(loaded[0]).hexdigest()
+
+
+@pytest.mark.parametrize(
+    "key,published,expected",
+    [
+        (
+            "scholarship_exists",
+            "Example Merit Scholarship",
+            [("scholarships.synthetic.exists", True)],
+        ),
+        (
+            "scholarship_coverage",
+            {"tuition": "yes", "housing": "no"},
+            [
+                ("scholarships.synthetic.coverage.housing", "no"),
+                ("scholarships.synthetic.coverage.tuition", "yes"),
+            ],
+        ),
+        (
+            "scholarship_coverage",
+            {"tuition": {"covers": "fees", "conditions": ["annual review"]}},
+            [
+                (
+                    "unmapped.scholarship_coverage",
+                    {"tuition": {"covers": "fees", "conditions": ["annual review"]}},
+                ),
+            ],
+        ),
+        (
+            "scholarship_international_eligible",
+            False,
+            [("scholarships.synthetic.applicability.international", False)],
+        ),
+    ],
+)
+def test_award_projection_is_exact_and_preserves_conditioned_typed_values(
+    report, key, published, expected
+):
+    from evaluation.research.identities import IdentityMap
+
+    subject = "Example Merit Scholarship"
+    identities = IdentityMap.model_validate(
+        {
+            "version": "synthetic-v4",
+            "bindings": [
+                {
+                    "kind": "award",
+                    "source_url": URL,
+                    "subject": subject,
+                    "key": "scholarships.synthetic",
+                    "notes": "Public synthetic identity; no reviewed facts.",
+                }
+            ],
+        }
+    )
+    value = published if key == "scholarship_exists" else {"subject": subject, "value": published}
+    item = {"claim_key": key, "value": value, "source_url": URL, "scope": {"university": "U"}}
+    before = copy.deepcopy(item)
+    projected = report["projected"](item, identities)
+    assert projected == expected and all(len(pair) == 2 for pair in projected)
+    assert item == before
+    for different in (
+        {**item, "source_url": "https://u.edu/unmapped"},
+        {
+            **item,
+            "value": "Other Scholarship"
+            if key == "scholarship_exists"
+            else {"subject": "Other Scholarship", "value": published},
+        },
+    ):
+        fallback = "Other Scholarship" if different["value"] == "Other Scholarship" else published
+        assert report["projected"](different, identities) == [(f"unmapped.{key}", fallback)]
+
+
+def test_v6_canonical_assignments_and_identity_receipts_are_frozen_before_replay(
+    pilot, report, monkeypatch
+):
+    prepare_reporting(pilot, report, stored_view=True)
+    assignments = json.loads((pilot.root / "workspace-locations.json").read_text())
+    receipts = json.loads((pilot.root / "workspace-receipts.json").read_text())
+    trial = json.loads((pilot.root / "trial.json").read_text())
+    assert assignments == {"u": str(pilot.workspace)}
+    assert str(pilot.workspace.resolve(strict=True)) == assignments["u"]
+    stat = pilot.workspace.stat()
+    assert receipts == {
+        "u": {"path": assignments["u"], "device": stat.st_dev, "inode": stat.st_ino}
+    }
+    assert trial["workspace_assignments_sha256"] == report["file_hash"](
+        pilot.root / "workspace-locations.json"
+    )
+    assert trial["workspace_receipts_sha256"] == report["file_hash"](
+        pilot.root / "workspace-receipts.json"
+    )
+    assert trial["research_timing"] == research_policy_limits()
+    assert replay(pilot, report)["explicit_commit"]
+    reads = run_without_labels(pilot, report, monkeypatch)
+    report["main"]()
+    assert reads == ["SYNTHETIC_NO_REVIEWED_LABELS"]
+    hashes = {item["path"] for item in report["protocol_hashes"](pilot.folder)}
+    assert "navigation-outcomes.json" in hashes
+
+
+@pytest.mark.parametrize("name", ["workspace-locations.json", "workspace-receipts.json"])
+@pytest.mark.parametrize("change", ["missing", "bytes", "manifest_missing", "manifest_hash"])
+def test_both_workspace_documents_and_frozen_hashes_are_required_before_labels(
+    pilot, report, monkeypatch, name, change
+):
+    prepare_reporting(pilot, report)
+    path = pilot.root / name
+    if change == "missing":
+        path.unlink()
+    elif change == "bytes":
+        path.write_bytes(path.read_bytes() + b"\n")
+    else:
+        trial_path = pilot.root / "trial.json"
+        trial = json.loads(trial_path.read_text())
+        key = (
+            "workspace_assignments_sha256"
+            if name == "workspace-locations.json"
+            else "workspace_receipts_sha256"
+        )
+        if change == "manifest_missing":
+            trial.pop(key)
+        else:
+            trial[key] = "0" * 64
+        write(trial_path, trial)
+        (pilot.root / "trial-at-baseline-start.json").write_bytes(trial_path.read_bytes())
+    assert_prelabel_rejection(pilot, report, monkeypatch)
+
+
+@pytest.mark.parametrize("mapping", ["locations", "receipts", "both"])
+def test_saved_workspace_alias_is_rejected_even_after_its_own_hashes_are_recomputed(
+    pilot, report, monkeypatch, mapping
+):
+    prepare_reporting(pilot, report)
+    alias = pilot.workspace.parent / "workspace-alias"
+    alias.symlink_to(pilot.workspace, target_is_directory=True)
+    assert alias.resolve(strict=True) == pilot.workspace
+    locations = pilot.root / "workspace-locations.json"
+    receipts_path = pilot.root / "workspace-receipts.json"
+    if mapping in {"locations", "both"}:
+        write(locations, {"u": str(alias)})
+    if mapping in {"receipts", "both"}:
+        receipts = json.loads(receipts_path.read_text())
+        receipts["u"]["path"] = str(alias)
+        write(receipts_path, receipts)
+    refreeze_synthetic_workspace_hashes(pilot, report)
+    assert_prelabel_rejection(pilot, report, monkeypatch)
+
+
+@pytest.mark.parametrize(
+    "change", ["inode", "device", "boolean_inode", "unknown_field", "foreign_case", "missing_case"]
+)
+def test_workspace_receipts_cannot_be_fabricated_inside_self_consistent_manifests(
+    pilot, report, monkeypatch, change
+):
+    prepare_reporting(pilot, report)
+    path = pilot.root / "workspace-receipts.json"
+    receipts = json.loads(path.read_text())
+    if change in {"inode", "device"}:
+        receipts["u"][change] += 1
+    elif change == "boolean_inode":
+        receipts["u"]["inode"] = True
+    elif change == "unknown_field":
+        receipts["u"]["accepted"] = True
+    elif change == "foreign_case":
+        receipts["foreign"] = receipts.pop("u")
+    else:
+        receipts.pop("u")
+    write(path, receipts)
+    refreeze_synthetic_workspace_hashes(pilot, report)
+    assert_prelabel_rejection(pilot, report, monkeypatch)
+
+
+@pytest.mark.parametrize("change", ["missing", "replaced", "symlink"])
+def test_replaced_or_redirected_workspace_identity_is_rejected_before_seal(
+    pilot, report, monkeypatch, change
+):
+    prepare_reporting(pilot, report)
+    original = pilot.workspace.with_name(pilot.workspace.name + "-original")
+    pilot.workspace.rename(original)
+    if change == "replaced":
+        pilot.workspace.mkdir()
+        for source in original.iterdir():
+            if source.is_file():
+                shutil.copy2(source, pilot.workspace / source.name)
+    elif change == "symlink":
+        pilot.workspace.symlink_to(original, target_is_directory=True)
+    assert_prelabel_rejection(pilot, report, monkeypatch)
+
+
+@pytest.mark.parametrize("target", ["schema", "output"])
+@pytest.mark.parametrize("change", ["symlink", "directory", "hardlink"])
+def test_selector_schema_and_output_must_remain_exact_regular_workspace_files(
+    pilot, report, monkeypatch, target, change
+):
+    prepare_reporting(pilot, report)
+    path = pilot.workspace / ("decision.schema.json" if target == "schema" else "answer-02.json")
+    assert path.is_file()
+    held = path.with_name(path.name + ".held")
+    if change == "hardlink":
+        held.hardlink_to(path)
+    else:
+        path.rename(held)
+        if change == "symlink":
+            path.symlink_to(held)
+        else:
+            path.mkdir()
+    assert_prelabel_rejection(pilot, report, monkeypatch)
+
+
+@pytest.mark.parametrize(
+    "field",
+    [
+        "source_dispatch_cutoff_ms",
+        "source_deadline_ms",
+        "final_data_start_deadline_ms",
+        "full_final_data_ms",
+        "minimal_commit_reserve_ms",
+        "mechanical_validation_reserve_ms",
+    ],
+)
+def test_research_partition_cannot_change_with_matching_initial_manifest_bytes(
+    pilot, report, monkeypatch, field
+):
+    prepare_reporting(pilot, report)
+    path = pilot.root / "trial.json"
+    trial = json.loads(path.read_text())
+    trial["research_timing"][field] += 1
+    write(path, trial)
+    (pilot.root / "trial-at-baseline-start.json").write_bytes(path.read_bytes())
+    assert_prelabel_rejection(pilot, report, monkeypatch)
+
+
+@pytest.mark.parametrize("route", ["declined", "stored_view"])
+def test_measured_navigation_outcomes_replay_without_an_extra_source_call(pilot, report, route):
+    result = prepare_reporting(pilot, report, **{route: True})
+    assert len(pilot.calls) == len(pilot.controller_dirs) == 1
+    assert len(result["navigation_outcomes"]) == 1
+    outcome = result["navigation_outcomes"][0]
+    assert outcome["status"] == route and outcome["turn"] == 2
+    assert outcome["source_action_count"] == outcome["processed_through_action_count"] == 1
+    assert (
+        outcome["accepted_journal_sha256"]
+        == pilot.read("journal-events.json")[1]["accepted_journal_sha256"]
+    )
+    if route == "declined":
+        assert outcome["active_ms"] >= 49000 and outcome["cutoff_ms"] == 49000
+        assert result["all_recorded_sources_processed"]
+    else:
+        entry = result["meter"][outcome["view_meter_index"]]
+        assert entry["stage"] == "stored_source_view" and entry["turn"] == 2
+    assert replay(pilot, report)["explicit_commit"]
+
+
+@pytest.mark.parametrize("route", ["declined", "stored_view"])
+@pytest.mark.parametrize(
+    "change",
+    [
+        "missing_document",
+        "missing_outcome",
+        "duplicate",
+        "decision_hash",
+        "journal_hash",
+        "future_turn",
+        "nonaction_turn",
+        "action",
+        "source_count",
+        "processed_count",
+        "boolean_source_count",
+        "boolean_processed_count",
+        "clock",
+        "status",
+    ],
+)
+def test_navigation_outcomes_cannot_be_replaced_by_self_consistent_terminal_metadata(
+    pilot, report, monkeypatch, route, change
+):
+    prepare_reporting(pilot, report, **{route: True})
+    outcomes = pilot.read("navigation-outcomes.json")
+    outcome = outcomes[0]
+    if change == "missing_document":
+        (pilot.folder / "navigation-outcomes.json").unlink()
+    else:
+        if change == "missing_outcome":
+            outcomes.clear()
+        elif change == "duplicate":
+            outcomes.append(copy.deepcopy(outcome))
+        elif change == "decision_hash":
+            outcome["decision_sha256"] = "0" * 64
+        elif change == "journal_hash":
+            outcome["accepted_journal_sha256"] = "0" * 64
+        elif change == "future_turn":
+            outcome["turn"] = 9
+        elif change == "nonaction_turn":
+            outcome["turn"] = 3
+        elif change == "action":
+            outcome["action"] = {"tool": "fetcher_get", "url": "https://u.edu/foreign"}
+        elif change == "source_count":
+            outcome["source_action_count"] = 2
+        elif change == "processed_count":
+            outcome["processed_through_action_count"] = 0
+        elif change == "boolean_source_count":
+            outcome["source_action_count"] = True
+        elif change == "boolean_processed_count":
+            outcome["processed_through_action_count"] = True
+        elif change == "clock":
+            outcome["active_ms"] += 1
+        else:
+            outcome["status"] = "not_executed"
+        rewrite_outcomes(pilot, outcomes)
+    assert_prelabel_rejection(pilot, report, monkeypatch)
+
+
+@pytest.mark.parametrize(
+    "change", ["early_clock", "cutoff", "reason", "meter", "policy", "bool_meter"]
+)
+def test_declined_proposal_requires_the_original_measured_49000ms_cutoff(
+    pilot, report, monkeypatch, change
+):
+    prepare_reporting(pilot, report, declined=True)
+    outcomes = pilot.read("navigation-outcomes.json")
+    item = outcomes[0]
+    if change == "early_clock":
+        item["active_ms"] = 48999
+        item["policy"]["active_ms"] = 48999
+    elif change == "cutoff":
+        item["cutoff_ms"] = 95000
+    elif change == "reason":
+        item["reason"] = "source_closed"
+    elif change == "policy":
+        item["policy"]["source_dispatch_cutoff_ms"] = 95000
+    else:
+        item["policy_meter_index"] = True if change == "bool_meter" else 0
+    rewrite_outcomes(pilot, outcomes)
+    assert_prelabel_rejection(pilot, report, monkeypatch)
+
+
+@pytest.mark.parametrize(
+    "change", ["hash", "wrong_view", "wrong_meter", "future_meter", "boolean_meter"]
+)
+def test_saved_view_receipt_is_recomputed_from_exact_stored_raw_source_and_coordinates(
+    pilot, report, monkeypatch, change
+):
+    prepare_reporting(pilot, report, stored_view=True)
+    outcomes = pilot.read("navigation-outcomes.json")
+    item = outcomes[0]
+    if change == "hash":
+        item["view_sha256"] = "0" * 64
+    elif change == "wrong_view":
+        trace = pilot.read("trace.json")
+        record = json.loads(
+            (
+                pilot.controller_dirs[-1] / "artifact/logs" / trace["actions"][0]["raw_log_path"]
+            ).read_text()
+        )
+        view = pilot.runtime["expert_view"](record, chars=11000, links=45, sections=60, offset=1)
+        item["view_sha256"] = report["digest"](view)
+    else:
+        item["view_meter_index"] = (
+            True
+            if change == "boolean_meter"
+            else 0
+            if change == "wrong_meter"
+            else len(pilot.read("result.json")["meter"])
+        )
+    rewrite_outcomes(pilot, outcomes)
+    assert_prelabel_rejection(pilot, report, monkeypatch)
+
+
+def test_navigation_outcome_bytes_cannot_change_after_a_successful_seal(pilot, report, monkeypatch):
+    prepare_reporting(pilot, report, stored_view=True)
+    reads = run_without_labels(pilot, report, monkeypatch)
+    report["main"]()
+    assert reads == ["SYNTHETIC_NO_REVIEWED_LABELS"]
+    reads.clear()
+    path = pilot.folder / "navigation-outcomes.json"
+    path.write_bytes(path.read_bytes() + b"\n")
+    with pytest.raises(ValueError, match="seal"):
+        report["main"]()
+    assert reads == []
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="Actual macOS Seatbelt path preflight")
+def test_current_macos_no_source_canonical_workspace_and_actual_os_command_replay(tmp_path, report):
+    """Run only harmless cat isolation probes; never launch Codex or fetch a source."""
+    sandbox = shutil.which("sandbox-exec")
+    assert sandbox and Path(report["FROZEN_CLI"]).is_file()
+    canonical_root = tmp_path.resolve(strict=True)
+    alias = canonical_root / "trusted-creation-alias"
+    alias.symlink_to(canonical_root, target_is_directory=True)
+    assignments, receipts = allocate_workspaces(("u",), temp_root=alias)
+    workspace = Path(assignments["u"])
+    assert str(workspace.resolve(strict=True)) == assignments["u"]
+    root = canonical_root / "preflight"
+    folder = root / "experts/u"
+    folder.mkdir(parents=True)
+    baseline = root / "baseline/u"
+    baseline.mkdir(parents=True)
+    write(root / "workspace-locations.json", assignments)
+    write(root / "workspace-receipts.json", receipts)
+    private = canonical_root / "harmless-sealed-sentinels"
+    private.mkdir()
+    allowed = workspace / "public.txt"
+    sealed = private / "sealed.txt"
+    allowed.write_text("PUBLIC_SENTINEL_ONLY")
+    sealed.write_text("SEALED_SENTINEL_ONLY")
+    roots = (
+        Path("/Users/wpalish/Documents/Codex"),
+        Path("/Users/wpalish/.codex/memories"),
+        Path("/Users/wpalish/.codex/sessions"),
+        Path("/Users/wpalish/.codex/attachments"),
+        Path("/Users/wpalish/Downloads"),
+        Path("/tmp/codex-remote-attachments"),
+        private,
+    )
+    isolation = AstraLowEffortIsolation(
+        workspace, tuple(path.resolve() for path in roots), sandbox, report["FROZEN_CLI"]
+    )
+    proof = isolation.prove_access(allowed, sealed)
+    assert all(
+        proof[key] is True for key in ("allowed_read", "sealed_read_denied", "sealed_stdout_empty")
+    )
+    write(
+        folder / "isolation.json",
+        {
+            **proof,
+            "workspace": str(workspace),
+            "profile": isolation.profile(),
+            "sandbox_executable": sandbox,
+            "codex_executable": report["FROZEN_CLI"],
+        },
+    )
+    write(folder / "journal-events.json", [])
+    write(folder / "navigation-outcomes.json", [])
+    packet = {
+        "public_profile": {"education_system": "KZ national secondary"},
+        "cases": [
+            {
+                "case_id": "u",
+                "university": "U",
+                "request": {
+                    "university": "U",
+                    "degree": "bachelor",
+                    "field": "computer science",
+                    "intake": "fall 2027",
+                },
+            }
+        ],
+    }
+    write(baseline / "public-packet.json", packet)
+    empty = report["AcceptedJournal"].initial()
+    schema = report["journal_schema_for_turn"](
+        journal_sha256=empty.sha256, canonical_university="U", phase="bootstrap"
+    )
+    schema_path, output = selector_paths(
+        assignments, receipts, case_id="u", turn=1, fresh_output=True
+    )
+    write(schema_path, schema)
+    argv = isolation.command(schema_path, output=output, model="gpt-6-astra")
+    command = report["command_proof"](argv)
+    state = report["research_state"](active_ms=0, recorded_source_count=0, processed_source_count=0)
+    request = {
+        "source_action_count": 0,
+        "processed_through_action_count": 0,
+        "selector_mode": "research",
+        "selector_phase": "bootstrap",
+        "turn_policy": report["policy_limits"](),
+        "research_timing": research_policy_limits(),
+        "research_state": state.as_dict(),
+        "schema": schema,
+        "schema_sha256": report["digest"](schema),
+        "selector_command": argv,
+        "command_proof": command,
+        "selector_policy_active_ms": 1,
+        "prompt": {
+            "task": report["EFFECTIVE_JOURNAL_INSTRUCTIONS"],
+            "public_question_contract": report["question_contract"](packet),
+            "accepted_journal": {"sha256": empty.sha256, **empty.snapshot()},
+            "processed_through_action_count": 0,
+        },
+    }
+    window = report["turn_window"](phase="bootstrap", active_ms=2)
+    write(folder / "selector-01.request.json", request)
+    write(
+        folder / "selector-01.meta.json",
+        {
+            "selector_start_active_ms": 2,
+            "selector_phase": "bootstrap",
+            "selector_timeout_ms": window.timeout_ms,
+            "selector_timeout_seconds": window.timeout_seconds,
+            "reasoning_effort": "low",
+            "schema_sha256": request["schema_sha256"],
+            "selector_command_sha256": command["argv_sha256"],
+            "elapsed_ms": 30001,
+            "returncode": None,
+            "error_kind": "selector_timeout",
+        },
+    )
+    result = {
+        "case_id": "u",
+        "requested_model": "gpt-6-astra",
+        "requested_reasoning_effort": "low",
+        "turn_policy": report["policy_limits"](),
+        "research_timing": research_policy_limits(),
+        "codex_cli": report["FROZEN_CLI"],
+        "navigation_outcomes": [],
+        "status": "incomplete",
+        "error": "selector_timeout",
+        "turn_errors": [{"turn": 1, "kind": "selector_timeout", "elapsed_ms": 30001}],
+        "meter": [
+            {"stage": "research_state_policy", "turn": 1, "elapsed_ms": 1, "active_ms": 1},
+            {"stage": "selector_request_write", "turn": 1, "elapsed_ms": 1, "active_ms": 2},
+            {"stage": "checkpoint_selector", "turn": 1, "elapsed_ms": 30001, "active_ms": 30003},
+        ],
+    }
+    report["verify_turn_policy_evidence"](folder, result)
+    assert "fetcher_get" not in str(request) and not output.exists()
+    # Partial normalization reproduces V5: alias argv is rejected even if its
+    # proof/hash are recomputed, despite referring to the same real directory.
+    logical_workspace = alias / workspace.name
+    assert logical_workspace.resolve(strict=True) == workspace
+    request["selector_command"][argv.index("-C") + 1] = str(logical_workspace)
+    request["command_proof"] = report["command_proof"](request["selector_command"])
+    write(folder / "selector-01.request.json", request)
+    with pytest.raises(ValueError, match="isolation/schema/turn output"):
+        report["verify_turn_policy_evidence"](folder, result)
+
+
+def test_stored_view_cannot_start_at_cutoff_after_a_pre_cutoff_policy_charge(pilot, report):
+    result = prepare_reporting(pilot, report, stored_view=True)
+    assert replay(pilot, report)["explicit_commit"]
+    outcomes = pilot.read("navigation-outcomes.json")
+    view = outcomes[0]
+    entries = result["meter"]
+    policy = next(
+        entry
+        for entry in entries
+        if entry["stage"] == "navigation_proposal_policy" and entry.get("turn") == 2
+    )
+    policy.update(elapsed_ms=1, active_ms=49000)
+    measured = entries[view["view_meter_index"]]
+    measured.update(elapsed_ms=0, active_ms=49000)
+    view["active_ms"] = 49000
+    # Admission began48999, but its charge and the actual view start reached49000.
+    # Isolate the actual navigation gate from unrelated final ledger checks.
+    result["navigation_outcomes"] = outcomes
+    write(pilot.folder / "navigation-outcomes.json", outcomes)
+    with pytest.raises(ValueError):
+        report["verify_navigation_outcomes"](
+            pilot.folder,
+            pilot.read("trace.json"),
+            pilot.controller_dirs[-1] / "artifact/logs",
+            pilot.read("journal-events.json"),
+            result,
+        )
+
+
+@pytest.mark.parametrize("after", ["next_state", "closing_selector"])
+def test_future_decline_cannot_close_an_earlier_research_state_or_minimal_turn(
+    pilot, report, after
+):
+    result = prepare_reporting(pilot, report, declined=True)
+    assert replay(pilot, report)["explicit_commit"]
+    entries = result["meter"]
+    outcomes = pilot.read("navigation-outcomes.json")
+    outcome = outcomes[0]
+    policy_index = outcome["policy_meter_index"]
+    delayed = entries[policy_index : policy_index + 3]
+    assert [entry["stage"] for entry in delayed] == [
+        "navigation_proposal_policy",
+        "navigation_decline_record_construction",
+        "navigation_outcome_write",
+    ]
+    del entries[policy_index : policy_index + 3]
+    following = next(
+        i
+        for i, entry in enumerate(entries)
+        if entry["stage"]
+        == ("research_state_policy" if after == "next_state" else "closing_selector")
+        and entry.get("turn") == 3
+    )
+    insert_at = following + 1
+    entries[insert_at:insert_at] = delayed
+    outcome["policy_meter_index"] = insert_at
+    # The early20s minimal turn appears closed only if replay trusts a future
+    # decline's turn label without its construction/write chronology.
+    state_meter = next(
+        entry
+        for entry in entries
+        if entry["stage"] == "research_state_policy" and entry.get("turn") == 3
+    )
+    state_meter.update(elapsed_ms=0, active_ms=20000)
+    selector_index = next(
+        i
+        for i, entry in enumerate(entries)
+        if entry["stage"] == "closing_selector" and entry.get("turn") == 3
+    )
+    written = [
+        entry for entry in entries[:selector_index] if entry["stage"] == "selector_request_write"
+    ][-1]
+    written.update(elapsed_ms=0, active_ms=20000)
+    entries[selector_index]["active_ms"] = 20000 + entries[selector_index]["elapsed_ms"]
+    request = pilot.read("selector-03.request.json")
+    request["research_state"] = report["research_state"](
+        active_ms=20000,
+        recorded_source_count=1,
+        processed_source_count=1,
+        source_closed=True,
+    ).as_dict()
+    request["selector_policy_active_ms"] = 20000
+    meta = pilot.read("selector-03.meta.json")
+    meta["selector_start_active_ms"] = 20000
+    window = report["turn_window"](phase="minimal_commit", active_ms=20000)
+    meta.update(
+        selector_timeout_ms=window.timeout_ms, selector_timeout_seconds=window.timeout_seconds
+    )
+    events = pilot.read("journal-events.json")
+    events[-1]["selector_request_sha256"] = report["digest"](request)
+    write(pilot.folder / "selector-03.request.json", request)
+    write(pilot.folder / "selector-03.meta.json", meta)
+    write(pilot.folder / "journal-events.json", events)
+    write(pilot.folder / "navigation-outcomes.json", outcomes)
+    result["navigation_outcomes"] = outcomes
+    with pytest.raises(ValueError) as rejected:
+        report["verify_turn_policy_evidence"](pilot.folder, result)
+        report["verify_navigation_outcomes"](
+            pilot.folder,
+            pilot.read("trace.json"),
+            pilot.controller_dirs[-1] / "artifact/logs",
+            events,
+            result,
+        )
+    assert any(
+        word in str(rejected.value).lower()
+        for word in ("chronology", "cutoff", "navigation", "decline", "research routing")
+    ), str(rejected.value)
+
+
+@pytest.mark.parametrize(
+    "stop_reason", ["arbitrary_stop", "budget_exhausted", "action_deadline_exhausted"]
+)
+def test_summary_stop_reason_cannot_counterfeit_earlier_closure_against_raw_none(
+    pilot, report, monkeypatch, stop_reason
+):
+    prepare_reporting(pilot, report, minimal=True)
+    directory = pilot.controller_dirs[-1] / "artifact"
+    summary_path = directory / "summary.json"
+    summary = json.loads(summary_path.read_text())
+    log = directory / "logs" / summary["actions"][-1]["raw_log_path"]
+    raw = json.loads(log.read_text())
+    assert raw["stop_reason"] is None
+    summary["final"]["stop_reason"] = stop_reason
+    write(summary_path, summary)
+    assert_prelabel_rejection(pilot, report, monkeypatch)
+
+
+@pytest.mark.parametrize("change", ["missing", "hash"])
+def test_actual_v6_launch_script_must_be_frozen_before_any_seal_or_label_read(
+    pilot, report, monkeypatch, change
+):
+    prepare_reporting(pilot, report)
+    path = pilot.root / "trial.json"
+    trial = json.loads(path.read_text())
+    key = "/tmp/unimatch-expert500-launch-v6.py"
+    if change == "missing":
+        trial["scripts"].pop(key)
+    else:
+        trial["scripts"][key] = "0" * 64
+    write(path, trial)
+    (pilot.root / "trial-at-baseline-start.json").write_bytes(path.read_bytes())
+    assert_prelabel_rejection(pilot, report, monkeypatch)
+
+
+@pytest.mark.parametrize("value", [None, True, 49000.0, 95000, 49001])
+def test_effective_source_dispatch_deadline_is_strictly_frozen_inside_original_caps(
+    pilot, report, monkeypatch, value
+):
+    prepare_reporting(pilot, report)
+    path = pilot.root / "trial.json"
+    trial = json.loads(path.read_text())
+    if value is None:
+        trial.pop("effective_source_action_deadline_ms")
+    else:
+        trial["effective_source_action_deadline_ms"] = value
+    write(path, trial)
+    (pilot.root / "trial-at-baseline-start.json").write_bytes(path.read_bytes())
+    assert_prelabel_rejection(pilot, report, monkeypatch)
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "raw_deadline_95000",
+        "all_deadlines_95000",
+        "deadline_float",
+        "provider_exa",
+        "foreign_phase",
+        "foreign_case",
+        "foreign_prefix",
+        "foreign_origin",
+        "strict_budget_integer",
+        "max_calls_61",
+        "max_ms_120001",
+        "max_queries_7",
+        "max_queries_float",
+        "raw_policy_digest_mismatch",
+    ],
+)
+def test_original_raw_controller_policy_is_bound_to_dispatch_despite_rehashed_metadata(
+    pilot, report, monkeypatch, change
+):
+    prepare_reporting(pilot, report)
+    directory = pilot.controller_dirs[-1]
+    assert report["verified_controller_stop"](directory) is None
+    summary_path = directory / "artifact/summary.json"
+    summary = json.loads(summary_path.read_text())
+    dispatch_path = directory / "dispatch.json"
+    dispatch = json.loads(dispatch_path.read_text())
+    plan = json.loads(dispatch["inputs"]["plan"])
+    relative = summary["actions"][0]["raw_log_path"]
+    raw_path = directory / "artifact/logs" / relative
+    raw = json.loads(raw_path.read_text())
+    original_response = copy.deepcopy(raw["response"])
+    if change in {"raw_deadline_95000", "all_deadlines_95000", "deadline_float"}:
+        raw["tool_policy"]["action_deadline_ms"] = 49000.0 if change == "deadline_float" else 95000
+        if change == "all_deadlines_95000":
+            summary["action_deadline_ms"] = plan["action_deadline_ms"] = 95000
+    elif change == "provider_exa":
+        raw["provider"] = summary["provider"] = "exa"
+        dispatch["inputs"]["search_provider"] = "exa"
+    elif change == "foreign_phase":
+        raw["phase"] = "foreign"
+    elif change == "foreign_case":
+        raw["case_id"] = summary["case_id"] = "foreign"
+    elif change == "foreign_prefix":
+        raw["log_prefix"] = summary["log_prefix"] = "foreign"
+    elif change == "foreign_origin":
+        raw["budget_origin"] = summary["budget_origin"] = "resume_baseline"
+        raw["tool_policy"]["budget_origin"] = "resume_baseline"
+    elif change == "strict_budget_integer":
+        raw["tool_policy"]["strict_budget"] = 1
+    elif change == "raw_policy_digest_mismatch":
+        raw["tool_policy"]["blocked_hosts"].append("synthetic-extra-blocked.edu")
+    else:
+        key, budget_key, value = {
+            "max_calls_61": ("max_fetcher_calls", "max_calls", 61),
+            "max_ms_120001": ("max_elapsed_ms", "max_ms", 120001),
+            "max_queries_7": ("max_search_queries", "max_search_queries", 7),
+            "max_queries_float": ("max_search_queries", "max_search_queries", 6.0),
+        }[change]
+        raw["tool_policy"][key] = raw["budgets"][budget_key] = value
+    if change not in {"raw_deadline_95000", "raw_policy_digest_mismatch"}:
+        summary["tool_policy"] = copy.deepcopy(raw["tool_policy"])
+    dispatch["inputs"]["plan"] = json.dumps(plan)
+    write(dispatch_path, dispatch)
+    write(raw_path, raw)
+    outer_sha = report["file_hash"](raw_path)
+    summary["actions"][0]["raw_log_sha256"] = outer_sha
+    summary["raw_logs"][relative] = outer_sha
+    write(summary_path, summary)
+    trace = pilot.read("trace.json")
+    trace["actions"][0]["raw_log_sha256"] = outer_sha
+    write(pilot.folder / "trace.json", trace)
+    result = pilot.read("result.json")
+    result["trace_sha256"] = report["digest"](trace)
+    persist_result(pilot, result)
+    # Keep source proof/event hashes consistent to reach the independent raw
+    # policy guard; fact content, response bytes and immutable journal stay exact.
+    proof = pilot.read("compact-citation-proof.json")
+    for item in proof:
+        item["raw_log_sha256"] = outer_sha
+    write(pilot.folder / "compact-citation-proof.json", proof)
+    events = pilot.read("journal-events.json")
+    for event in events:
+        if event["source_action_count"]:
+            event["citation_proof_sha256"] = report["digest"](proof)
+    write(pilot.folder / "journal-events.json", events)
+    assert raw["response"] == original_response
+    assert (
+        summary["actions"][0]["raw_log_sha256"]
+        == summary["raw_logs"][relative]
+        == trace["actions"][0]["raw_log_sha256"]
+        == outer_sha
+    )
+    with pytest.raises(ValueError, match="Original raw source identity|Original raw source policy"):
+        report["verified_controller_stop"](directory)
+    assert_prelabel_rejection(pilot, report, monkeypatch)

@@ -1,0 +1,44 @@
+{
+  "schema_version": "1",
+  "recorded_at": "2026-10-05T12:40:35.235875+00:00",
+  "source_harness_sha": "d9d23b9e172369884ef348ee38fe9b5c1cb674bf",
+  "status": "pre-main54-source-branch-ci-success-only",
+  "successful_jobs": 4,
+  "run_ids": [
+    37308941607
+  ],
+  "no_pull_request_event_reason": "GitHub reports conflicting after main PR54 advanced; do not synthesize an absent event",
+  "source_guard_manifest_sha256": "d488862c0744b415bd0160d4c9135c0acd5c4761c253c61a3c350eb340208100",
+  "record_count": 5,
+  "total_original_bytes": 1081226,
+  "records": [
+    {
+      "snapshot": "run-37308941607.json",
+      "sha256": "53b71f4d0f5215db878ea844627ec6007b46aa53e0e1d0775aac7f5c624de7d3",
+      "bytes": 10495
+    },
+    {
+      "snapshot": "run-37308941607.log",
+      "sha256": "296ca50017a7e6b85aca928ce4fde7e07783b678962ab44bf5abce216f760d92",
+      "bytes": 1010274
+    },
+    {
+      "snapshot": "unimatch-expert500-http402-ci-push-watch-original.log",
+      "sha256": "91e063ce1e1c349aecc5d7667e2fbe9bbc76174c7db9a68a0b9dadd24f34e58f",
+      "bytes": 59965
+    },
+    {
+      "snapshot": "unimatch-expert500-http402-source-ci-initial.json",
+      "sha256": "e7fe36d2836842784c41c0d779eabfd9f88ebf62f51bc7b607576fd7ba79db77",
+      "bytes": 246
+    },
+    {
+      "snapshot": "unimatch-expert500-http402-source-ci-events-original.json",
+      "sha256": "e7fe36d2836842784c41c0d779eabfd9f88ebf62f51bc7b607576fd7ba79db77",
+      "bytes": 246
+    }
+  ],
+  "university_requests": 0,
+  "model_requests": 0,
+  "new_trial": false
+}

@@ -1,0 +1,21 @@
+READ-ONLY ORIGINAL EXPORTER REGRESSION; SYNTHETIC SEALED RECEIPTS ONLY
+original_source=/tmp/unimatch-expert500-export-v11.py sha256=b3af28b09d92b241d7f22643cbb6cebb2f124bbcb96408615fc09766be631c05
+command=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/python -c <inline actual-loop reproduction>
+import runpy
+from pathlib import Path
+from tempfile import TemporaryDirectory
+module = runpy.run_path('/tmp/test_unimatch_expert500_journal_pilot_v12.py')
+with TemporaryDirectory(prefix='expert500-v12-original-export-repro-') as name:
+    folder, records = module['_v12_sealed_report_protocol'](Path(name))
+    print('Canonical original report receipt:', next(record['path'] for record in records if '/' in record['path']), flush=True)
+    module['_export_protocol_validation'](Path('/tmp/unimatch-expert500-export-v11.py'))(folder, {'protocol_artifacts': records})
+    print('Original confined proof loop accepted the report contract')
+
+Canonical original report receipt: controller-01/transport-audit.json
+Traceback (most recent call last):
+  File "<string>", line 8, in <module>
+  File "/tmp/unimatch-expert500-export-v11.py", line 148, in validate_saved_proofs
+    raise ValueError("Sealed journal/selector evidence changed")
+ValueError: Sealed journal/selector evidence changed
+
+exit_code=1

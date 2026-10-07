@@ -1,0 +1,68 @@
+{
+  "new_functions": 16,
+  "new_cases": 48,
+  "files": [
+    {
+      "repository_path": "backend/app/adapters/document_ir.py",
+      "base_sha256": "7d4dd829467ab55a25b9e07ccb9a4e7ffb8614be98a3bd1abcd2ebec056e7c44",
+      "candidate_sha256": "199e48ba8b2396cda444049cbe9ca728386247b116facb713ab24320d5b6a4b2",
+      "candidate_size_bytes": 23564,
+      "original_copy": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/original/backend/app/adapters/document_ir.py",
+      "candidate_copy": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/candidate/backend/app/adapters/document_ir.py",
+      "changed": true
+    },
+    {
+      "repository_path": "backend/evaluation/research/expert/models.py",
+      "base_sha256": "00e3523e5c8e39298cc31ca561e6cd3329962fb3bc9e517ced334d0a071dcf50",
+      "candidate_sha256": "032d2a9ddaae87f71bc2653fc0bee7069accea19d0e0ed8042560fc9d1490ca8",
+      "candidate_size_bytes": 55305,
+      "original_copy": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/original/backend/evaluation/research/expert/models.py",
+      "candidate_copy": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/candidate/backend/evaluation/research/expert/models.py",
+      "changed": true
+    },
+    {
+      "repository_path": "backend/evaluation/research/expert/citations.py",
+      "base_sha256": "75adaa1534c4680982922d5f2c646353840da6dd814e3e8bb97df8d3c812a3f7",
+      "candidate_sha256": "75adaa1534c4680982922d5f2c646353840da6dd814e3e8bb97df8d3c812a3f7",
+      "candidate_size_bytes": 13146,
+      "original_copy": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/original/backend/evaluation/research/expert/citations.py",
+      "candidate_copy": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/candidate/backend/evaluation/research/expert/citations.py",
+      "changed": false
+    },
+    {
+      "repository_path": "backend/tests/test_document_ir.py",
+      "base_sha256": "d14e7c7c25057f8d97eea34a6993b99f9c9a57add6937778b83289d25676132b",
+      "candidate_sha256": "82ecbf62755462e2c771c2a8c8d9d3aa7db1683e8a28aa2711f6561e8b198647",
+      "candidate_size_bytes": 15541,
+      "original_copy": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/original/backend/tests/test_document_ir.py",
+      "candidate_copy": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/candidate/backend/tests/test_document_ir.py",
+      "changed": true
+    },
+    {
+      "repository_path": "backend/tests/test_expert_citations.py",
+      "base_sha256": "3c24df3955342363786613a62676b43411aa9c969a13c341c91df8bf8bc24eaa",
+      "candidate_sha256": "371f14c2ddcdce4712e0e44d3742bdf10d834eda5879358a18c5bf795d053fb1",
+      "candidate_size_bytes": 45195,
+      "original_copy": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/original/backend/tests/test_expert_citations.py",
+      "candidate_copy": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/candidate/backend/tests/test_expert_citations.py",
+      "changed": true
+    }
+  ],
+  "patches": {
+    "candidate.patch": {
+      "path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/candidate.patch",
+      "sha256": "d2b591e675919cd33a6e0bd76b7ddde84ecc5c8accebca82b3b674359eab2820",
+      "size_bytes": 31492
+    },
+    "source.patch": {
+      "path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/source.patch",
+      "sha256": "2a2b2f4de46a8996e5c6ff8d742a9ab85db2a28f21550dda0e0aec10ac530852",
+      "size_bytes": 16755
+    },
+    "regression-draft.patch": {
+      "path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/regression-draft.patch",
+      "sha256": "88b1f2f496dfbe4c618bc0a727c103c520a7b8f7ba392a60cd121b3d8f16035c",
+      "size_bytes": 14737
+    }
+  }
+}

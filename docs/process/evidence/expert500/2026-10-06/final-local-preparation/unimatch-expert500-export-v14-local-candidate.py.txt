@@ -1,0 +1,776 @@
+"""Copy original post-seal V14 local receipts, including unsuccessful controller tails.
+
+This helper performs no scoring, source/model calls or Git operations. Complete
+controller directories retain their original raw bytes; diagnostic observations
+remain separate and unverified. Reviewed dataset/registry content is not copied.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import re
+import runpy
+from pathlib import Path
+from typing import Any
+
+from evaluation.research.expert.network_budget import (
+    BUDGET_MODEL,
+    NETWORK_COMPARISON_MODE,
+    WALL_GUARD_MS,
+    expert_budget,
+    validate_expert_budget,
+)
+from evaluation.research.expert.network_turn_policy import policy_limits
+from evaluation.research.expert.packet import digest
+from evaluation.research.expert.workspace_policy import validate_workspaces
+from evaluation.research.live import COHORT
+
+PINNED_PROVIDER = "exa"
+TRANSPORT_KIND = "local_process_v1"
+REPORT_PATH = Path("/tmp/unimatch-expert500-journal-report-v14-local-candidate.py")
+_REPORT: dict[str, Any] | None = None
+COHORT_CASE_IDS = frozenset(
+    {"groningen", "delft", "aalto", "vienna", "warsaw", "ubc", "toronto", "hku", "ntu", "kaist"}
+)
+
+
+def read(path: Path) -> Any:
+    sha(path)
+    return json.loads(path.read_text())
+
+
+def sha(path: Path) -> str:
+    if path.is_symlink() or not path.is_file():
+        raise ValueError("Original export evidence must be a regular non-symlink file")
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def protocol_artifact_path(folder: Path, name: str) -> Path:
+    """Resolve a flat proof or a canonical local controller subtree, without aliases."""
+    if type(name) is not str or not name or "\\" in name:
+        raise ValueError("Sealed protocol artifact path must remain confined")
+    relative = Path(name)
+    if relative.is_absolute() or ".." in relative.parts or str(relative) != name:
+        raise ValueError("Sealed protocol artifact path must remain confined")
+    if relative.name != name:
+        match = re.fullmatch(r"controller-([0-9]+)/(.+)", name)
+        if (
+            match is None
+            or int(match[1]) < 1
+            or relative.parts[0] != f"controller-{int(match[1]):02d}"
+        ):
+            raise ValueError("Sealed nested proof must be its original local controller")
+        parent = folder / relative.parts[0]
+        if parent.is_symlink() or not parent.is_dir():
+            raise ValueError("Sealed controller receipt directory must be original")
+    path = folder / relative
+    return original_path(folder, path)
+
+
+def original_path(root: Path, path: Path) -> Path:
+    """A file must retain each original directory identity inside its declared root."""
+    root = root.resolve(strict=True)
+    if not path.is_absolute() or not path.is_relative_to(root):
+        raise ValueError("Original local evidence escaped its declared folder")
+    if path != path.resolve(strict=True):
+        raise ValueError("Original local evidence cannot follow an aliased directory")
+    for parent in (path, *path.parents):
+        if parent == root:
+            break
+        if parent.is_symlink():
+            raise ValueError("Original local evidence cannot follow a symlink")
+    sha(path)
+    return path
+
+
+def report_module() -> dict[str, Any]:
+    global _REPORT
+    if _REPORT is None:
+        _REPORT = runpy.run_path(str(REPORT_PATH))["main"].__globals__
+    return _REPORT
+
+
+def sealed_absolute_records(root: Path, records: Any, *, prefix: str) -> dict[str, str]:
+    if not isinstance(records, list) or not records:
+        raise ValueError("The seal must retain every original local stream/admission")
+    result: dict[str, str] = {}
+    for record in records:
+        if not isinstance(record, dict) or set(record) != {"path", "sha256"}:
+            raise ValueError("Sealed local artifact metadata must be an exact path/hash pair")
+        source = original_path(root / prefix, Path(record["path"]))
+        if str(source) in result or sha(source) != record["sha256"]:
+            raise ValueError("Sealed local artifacts are duplicated or changed")
+        result[str(source)] = record["sha256"]
+    return result
+
+
+def validate_local_originals(root: Path, seal: dict[str, Any], trial: dict[str, Any]) -> list[Any]:
+    """Replay local originals, including spent tails; never invent a GH identity."""
+    replay = report_module()
+    deliveries: list[Any] = []
+    sessions: list[dict[str, str]] = []
+    local_ids: set[str] = set()
+    for case_id in COHORT:
+        baseline = root / "baseline" / case_id
+        baseline_result = read(baseline / "result.json")
+        delivery = replay["verify_local_delivery"](
+            baseline,
+            expected_case_id=case_id,
+            expected_stage="baseline",
+            expected_source_sha=trial["harness_sha"],
+        )
+        replay["validate_local_runtime_binding"](delivery, trial, root, case_id, "baseline", None)
+        replay["verify_local_session_terminal"](
+            delivery, baseline_result.get("source_session_terminal")
+        )
+        if (
+            baseline_result.get("local_receipt_sha256") != delivery.receipt_sha256
+            or baseline_result.get("local_run_id") != delivery.receipt["local_run_id"]
+        ):
+            raise ValueError("Baseline result differs from its original local transport receipt")
+        deliveries.append(delivery)
+        sessions.extend(replay["local_session_originals"](delivery))
+        folder = root / "experts" / case_id
+        result = read(folder / "result.json")
+        if (
+            result.get("source_counters_complete") is not True
+            or result.get("transport_kind") != TRANSPORT_KIND
+        ):
+            raise ValueError(
+                "Unknown or foreign local source tails cannot be exported as sealed evidence"
+            )
+        guard = {**replay["wall_guard_for"](result).as_dict(), "wall_guard_ms": WALL_GUARD_MS}
+        previous = None
+        for directory in controller_directories(folder):
+            previous = replay["verify_local_delivery"](
+                directory,
+                expected_case_id=case_id,
+                expected_stage="expert",
+                expected_source_sha=trial["harness_sha"],
+                expected_wall_guard=guard,
+                prior_delivery=previous,
+            )
+            replay["validate_local_runtime_binding"](
+                previous, trial, root, case_id, "expert", guard
+            )
+            deliveries.append(previous)
+        if previous is None or previous.source_counters["elapsed_ms"] != result.get("source_ms"):
+            raise ValueError(
+                "The exported expert clock needs its complete original local source tail"
+            )
+        replay["verify_local_session_terminal"](previous, result.get("source_session_terminal"))
+        sessions.extend(replay["local_session_originals"](previous))
+    for delivery in deliveries:
+        local_id = delivery.receipt["local_run_id"]
+        if local_id in local_ids:
+            raise ValueError("Original local source run identity occurs more than once")
+        local_ids.add(local_id)
+    expected_sessions = sealed_absolute_records(
+        root, seal.get("local_source_session_artifacts"), prefix="source-workers"
+    )
+    if {entry["path"]: entry["sha256"] for entry in sessions} != expected_sessions or len(
+        sessions
+    ) != len(expected_sessions):
+        raise ValueError("The seal omitted or changed original local process/control streams")
+    admissions = replay["source_admission_originals"](root, deliveries)
+    expected_admissions = sealed_absolute_records(
+        root, seal.get("source_admission_artifacts"), prefix="source-admission"
+    )
+    if {entry["path"]: entry["sha256"] for entry in admissions} != expected_admissions or len(
+        admissions
+    ) != len(expected_admissions):
+        raise ValueError("The seal omitted or changed original shared source admissions")
+    return deliveries
+
+
+def validate_export_contract(
+    root: Path, protocol: Path
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """Check existing sealed receipts; never manufacture a completion or score."""
+    if any(
+        (root / name).exists() or (root / name).is_symlink()
+        for name in (
+            "model-batch-stop.json",
+            "transport-batch-stop.json",
+            "source-admission/stop.json",
+        )
+    ):
+        raise ValueError("Export cannot admit a trial with an original batch stop")
+    if any(
+        (root / "baseline" / case_id / "baseline-provider-stop.json").exists()
+        or (root / "baseline" / case_id / "baseline-provider-stop.json").is_symlink()
+        for case_id in COHORT
+    ):
+        raise ValueError("Export cannot admit an original baseline provider stop")
+    seal, comparison, trial = (
+        read(root / name) for name in ("submission-seal.json", "comparison.json", "trial.json")
+    )
+    if (
+        type(COHORT) is not dict
+        or set(COHORT) != COHORT_CASE_IDS
+        or not all(isinstance(value, dict) for value in (seal, comparison, trial))
+        or type(seal.get("count")) is not int
+        or seal["count"] != 10
+        or any(
+            seal.get(key) is not True
+            for key in (
+                "all_traces_validated_with_raw_logs",
+                "all_compact_fact_locations_validated",
+                "all_accepted_journal_deltas_replayed",
+            )
+        )
+        or comparison.get("seal_sha256") != digest(seal)
+        or trial.get("protocol_version") != "journal-v14-local"
+        or trial.get("transport_kind") != TRANSPORT_KIND
+        or seal.get("transport_kind") != TRANSPORT_KIND
+        or type(trial.get("unchanged_reviewed_fact_count")) is not int
+        or trial["unchanged_reviewed_fact_count"] != 62
+        or type(trial.get("acceptance_threshold_recovered_facts")) is not int
+        or trial["acceptance_threshold_recovered_facts"] != 40
+        or any(
+            trial.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        )
+        or any(
+            comparison.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        )
+        or trial.get("comparison_mode") != NETWORK_COMPARISON_MODE
+        or trial.get("budget_model") != BUDGET_MODEL
+        or trial.get("network_budget") != expert_budget()
+        or trial.get("turn_policy") != policy_limits()
+        or trial.get("requested_model") != "gpt-6-astra"
+        or "requested_reasoning_effort" not in trial
+        or trial["requested_reasoning_effort"] is not None
+        or trial.get("reasoning_effort_source") != "cli_default"
+        or type(trial.get("wall_guard_ms")) is not int
+        or trial["wall_guard_ms"] != WALL_GUARD_MS
+        or comparison.get("comparison_mode") != NETWORK_COMPARISON_MODE
+        or comparison.get("budget_model") != BUDGET_MODEL
+        or comparison.get("expert_budget") != expert_budget()
+        or comparison.get("outside_policy_included") is not False
+        or comparison.get("outside_policy_facts") != []
+        or any(
+            type(comparison.get(key)) is not bool for key in ("protocol_eligible", "protocol_gate")
+        )
+    ):
+        raise ValueError(
+            "Export requires the original ten-case sealed V14 local network comparison"
+        )
+    submissions = seal.get("submissions")
+    if not isinstance(submissions, list) or len(submissions) != 10:
+        raise ValueError("Export requires ten distinct original submissions")
+    ids = [entry.get("case_id") for entry in submissions if isinstance(entry, dict)]
+    if len(ids) != 10 or len(set(ids)) != 10 or set(ids) != set(COHORT):
+        raise ValueError("Sealed cohort differs from the original ten public cases")
+    if sha(root / "trial.json") != sha(root / "trial-at-baseline-start.json") or sha(
+        root / "trial.json"
+    ) != seal.get("trial_file_sha256"):
+        raise ValueError("Pre-baseline trial bytes changed")
+    if sha(root / "experts-results.json") != seal.get("cohort_results_sha256"):
+        raise ValueError("Sealed cohort result bytes changed")
+    for name, field in (
+        ("workspace-locations.json", "workspace_assignments_sha256"),
+        ("workspace-receipts.json", "workspace_receipts_sha256"),
+    ):
+        if sha(root / name) != trial.get(field):
+            raise ValueError("Original independently allocated workspace bytes changed")
+    validate_workspaces(
+        read(root / "workspace-locations.json"),
+        read(root / "workspace-receipts.json"),
+        case_ids=tuple(COHORT),
+    )
+    if sha(protocol / "manifest.json") != trial["expert_protocol"]["manifest_file_sha256"]:
+        raise ValueError("Original frozen protocol manifest changed")
+    manifest = read(protocol / "manifest.json")
+    if (
+        manifest.get("files") != trial["expert_protocol"].get("files")
+        or manifest.get("protocol_version") != "journal-v14-local"
+        or manifest.get("transport_kind") != TRANSPORT_KIND
+    ):
+        raise ValueError("Original frozen local file inventory differs from the trial")
+    if sha(REPORT_PATH) != seal.get("scorer_file_sha256") or trial.get("scripts", {}).get(
+        str(REPORT_PATH)
+    ) != sha(REPORT_PATH):
+        raise ValueError("The sealed local replay helper changed")
+    for artifact in seal.get("baseline_artifacts", []):
+        source = original_path(root / "baseline", Path(artifact["path"]))
+        if sha(source) != artifact["sha256"]:
+            raise ValueError("Original sealed baseline artifact changed or escaped its folder")
+    for entry in submissions:
+        case_id = entry["case_id"]
+        folder, baseline = root / "experts" / case_id, root / "baseline" / case_id
+        for name, expected in (
+            ("trace.json", entry["trace_file_sha256"]),
+            ("result.json", entry["result_sha256"]),
+        ):
+            if sha(folder / name) != expected:
+                raise ValueError("Sealed accepted-prefix trace/result changed")
+        if (
+            sha(baseline / "result.json") != entry["baseline_result_sha256"]
+            or digest(read(baseline / "public-packet.json")) != entry["packet_sha256"]
+        ):
+            raise ValueError("Original baseline receipt/packet changed")
+        packet = read(baseline / "public-packet.json")
+        validate_expert_budget(packet)
+        if len(packet["cases"]) != 1 or packet["cases"][0]["case_id"] != case_id:
+            raise ValueError("Exported public packet belongs to another case")
+        for artifact in entry["protocol_artifacts"]:
+            name = artifact["path"]
+            if sha(protocol_artifact_path(folder, name)) != artifact["sha256"]:
+                raise ValueError("Sealed journal/selector evidence changed")
+        if entry["protocol_artifacts"] != report_module()["protocol_hashes"](folder):
+            raise ValueError("Every original local delivery and protocol file must remain sealed")
+        if (
+            entry.get("compact_submission_sha256") is not None
+            and sha(folder / "compact-submission.json") != entry["compact_submission_sha256"]
+        ):
+            raise ValueError("Sealed compact submission changed")
+        result, trace = read(folder / "result.json"), read(folder / "trace.json")
+        if (
+            result.get("provider") != PINNED_PROVIDER
+            or read(baseline / "result.json").get("provider") != PINNED_PROVIDER
+        ):
+            raise ValueError("Original algorithm/expert results lack the pinned Exa provider")
+        recorded = read(folder / "recorded-actions.json")
+        if (
+            not isinstance(recorded, list)
+            or type(result.get("actions")) is not int
+            or result["actions"] != len(recorded)
+            or trace["actions"] != recorded[: len(trace["actions"])]
+            or sha(folder / "recorded-actions.json") != result.get("recorded_actions_sha256")
+            or entry["raw_logs"]
+            != [
+                {"path": action["raw_log_path"], "sha256": action["raw_log_sha256"]}
+                for action in trace["actions"]
+            ]
+        ):
+            raise ValueError("Original accepted trace prefix or recorded source tail changed")
+        for action in recorded:
+            name = action["raw_log_path"]
+            if type(name) is not str or Path(name).name != name:
+                raise ValueError("Original source log name must remain local")
+            originals = list(folder.glob("controller-*/artifact/logs/" + name))
+            if not originals or any(sha(path) != action["raw_log_sha256"] for path in originals):
+                raise ValueError("Original accepted-prefix/tail raw source bytes changed")
+    validate_local_originals(root, seal, trial)
+    return seal, comparison, trial
+
+
+def local_receipt(delivery: Any) -> dict[str, Any]:
+    """An index preserves an original local identity; it adds no GH success fields."""
+    record = delivery.receipt
+    if any(key in record for key in ("run_id", "headSha", "head_sha", "conclusion", "run_tag")):
+        raise ValueError("A local process cannot impersonate a GH workflow")
+    return {
+        "case_id": record["case_id"],
+        "stage": record["stage"],
+        "transport_kind": TRANSPORT_KIND,
+        "original_path": str(delivery.receipt_path),
+        "original_sha256": delivery.receipt_sha256,
+        "original_record": record,
+        "local_run_id": record["local_run_id"],
+        "session_id": record["session_id"],
+        "source_sha": record["source_sha"],
+        "status": record["status"],
+        "terminal_reason": record.get("terminal_reason"),
+        "source_counters_known": record["source_counters_known"],
+        "source_counters": record["source_counters"],
+    }
+
+
+def neutral_originals(
+    protocol_manifest: dict[str, Any], trial: dict[str, Any]
+) -> list[dict[str, Any]]:
+    """Keep archived neutral raw originals, without depending on ephemeral model paths."""
+    pointer = protocol_manifest.get("neutral_originals")
+    if (
+        not isinstance(pointer, dict)
+        or set(pointer) != {"path", "sha256"}
+        or trial.get("neutral_originals") != pointer
+    ):
+        raise ValueError("The frozen fresh-neutral archive pointer is required")
+    manifest_path = Path(pointer["path"])
+    if (
+        not manifest_path.is_absolute()
+        or manifest_path != manifest_path.resolve(strict=True)
+        or sha(manifest_path) != pointer["sha256"]
+    ):
+        raise ValueError("Original fresh-neutral archive manifest changed")
+    archive = read(manifest_path)
+    records = archive.get("records")
+    if not isinstance(records, list) or not records:
+        raise ValueError("Original fresh-neutral raw records are required")
+    result = [{"path": str(manifest_path), "name": "manifest.json", "sha256": pointer["sha256"]}]
+    names: set[str] = set()
+    for record in records:
+        if not isinstance(record, dict) or not {
+            "path",
+            "sha256",
+            "bytes",
+            "original_path",
+        }.issubset(record):
+            raise ValueError("Original neutral record lacks its path/hash/size")
+        name = record["path"]
+        if (
+            type(name) is not str
+            or not name
+            or "\\" in name
+            or Path(name).is_absolute()
+            or str(Path(name)) != name
+            or any(part in {"", ".", ".."} for part in name.split("/"))
+            or name in names
+            or name == "manifest.json"
+        ):
+            raise ValueError("Original neutral record path is duplicated or escapes its archive")
+        names.add(name)
+        if record["original_path"] == trial.get("baseline_identity_registry", {}).get("path"):
+            raise ValueError("Private producer input cannot become neutral evidence")
+        source = original_path(manifest_path.parent, manifest_path.parent / name)
+        if (
+            sha(source) != record["sha256"]
+            or type(record["bytes"]) is not int
+            or record["bytes"] != source.stat().st_size
+        ):
+            raise ValueError("Original archived neutral bytes changed")
+        result.append({"path": str(source), "name": name, "sha256": record["sha256"]})
+    return result
+
+
+def controller_directories(expert: Path) -> list[Path]:
+    """Preserve canonical actual turn numbers, including turns above99."""
+    paths = list(expert.glob("controller-*"))
+    for path in paths:
+        match = re.fullmatch(r"controller-([0-9]+)", path.name)
+        if (
+            match is None
+            or int(match[1]) < 1
+            or path.name != f"controller-{int(match[1]):02d}"
+            or path.is_symlink()
+            or not path.is_dir()
+        ):
+            raise ValueError("Original controller directory has a noncanonical turn number")
+    return sorted(paths, key=lambda path: int(path.name.removeprefix("controller-")))
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--destination", type=Path, required=True)
+    parser.add_argument("--protocol", type=Path, required=True)
+    args = parser.parse_args()
+    root, dest, protocol = (
+        args.root.resolve(strict=True),
+        args.destination,
+        args.protocol.resolve(strict=True),
+    )
+    if dest.exists() or dest.is_symlink():
+        raise ValueError("Export destination already exists; never overwrite original evidence")
+    if dest.resolve().is_relative_to(root.resolve()) or root.resolve().is_relative_to(
+        dest.resolve()
+    ):
+        raise ValueError("Export and original trial must remain separate directories")
+    seal, comparison, trial = validate_export_contract(root, protocol)
+    frozen_protocol = read(protocol / "manifest.json")
+    if sha(protocol / "manifest.json") != trial["expert_protocol"]["manifest_file_sha256"]:
+        raise ValueError("Original frozen manifest changed before export")
+    deliveries = validate_local_originals(root, seal, trial)
+    neutral_records = neutral_originals(frozen_protocol, trial)
+    dest.mkdir(mode=0o700, parents=True)
+    copies: list[dict[str, Any]] = []
+
+    def copy(source: Path, name: str, *, sealed: bool, expected_sha: str | None = None) -> None:
+        relative = Path(name)
+        if (
+            not name
+            or "\\" in name
+            or relative.is_absolute()
+            or str(relative) != name
+            or any(part in {"", ".", ".."} for part in name.split("/"))
+        ):
+            raise ValueError("Export names must be relative paths")
+        registry = trial.get("baseline_identity_registry", {})
+        if (
+            source.resolve()
+            == Path(registry.get("path", "/nonexistent-private-registry")).resolve()
+        ):
+            raise ValueError("Private producer/identity registry content must never be exported")
+        original_sha = sha(source)
+        if expected_sha is not None and original_sha != expected_sha:
+            raise ValueError("Original evidence no longer matches its sealed SHA256")
+        target = dest / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with target.open("xb") as output:
+            output.write(source.read_bytes())
+        if sha(target) != original_sha or sha(source) != original_sha:
+            raise ValueError("Original evidence changed while being copied")
+        copies.append(
+            {
+                "path": name,
+                "original_path": str(source),
+                "sha256": original_sha,
+                "bytes": target.stat().st_size,
+                "bound_by_submission_seal": sealed,
+            }
+        )
+
+    for name in (
+        "submission-seal.json",
+        "trial.json",
+        "trial-at-baseline-start.json",
+        "workspace-locations.json",
+        "workspace-receipts.json",
+        "launch-start.json",
+        "baseline-stage-start.json",
+        "experts-stage-start.json",
+        "baseline-results.json",
+        "experts-results.json",
+        "baseline-capture.json",
+        "expert-capture.json",
+        "expert-value-projections.json",
+        "baseline-score.json",
+        "expert-score.json",
+        "comparison.json",
+    ):
+        copy(
+            root / name,
+            name,
+            sealed=name
+            not in {
+                "baseline-capture.json",
+                "expert-capture.json",
+                "expert-value-projections.json",
+                "baseline-score.json",
+                "expert-score.json",
+                "comparison.json",
+                "baseline-results.json",
+                "launch-start.json",
+                "baseline-stage-start.json",
+                "experts-stage-start.json",
+            },
+            expected_sha={
+                "trial.json": seal["trial_file_sha256"],
+                "trial-at-baseline-start.json": seal["trial_file_sha256"],
+                "experts-results.json": seal["cohort_results_sha256"],
+            }.get(name),
+        )
+    runs = [local_receipt(delivery) for delivery in deliveries]
+    accepted_prefixes = []
+    for entry in seal["submissions"]:
+        case = entry["case_id"]
+        expert, baseline = root / "experts" / case, root / "baseline" / case
+        trace, result = read(expert / "trace.json"), read(expert / "result.json")
+        for name in ("trace", "result"):
+            copy(
+                expert / (name + ".json"),
+                case + ".expert-" + name + ".json",
+                sealed=True,
+                expected_sha=entry["trace_file_sha256" if name == "trace" else "result_sha256"],
+            )
+        copy(baseline / "public-packet.json", case + ".packet.json", sealed=True)
+        copy(
+            baseline / "result.json",
+            case + ".baseline-result.json",
+            sealed=True,
+            expected_sha=entry["baseline_result_sha256"],
+        )
+        seen = set()
+        for artifact in entry["protocol_artifacts"]:
+            name = artifact["path"]
+            copy(
+                protocol_artifact_path(expert, name),
+                case + "." + name,
+                sealed=True,
+                expected_sha=artifact["sha256"],
+            )
+            seen.add(name)
+        if (
+            "compact-submission.json" not in seen
+            and entry.get("compact_submission_sha256") is not None
+        ):
+            copy(
+                expert / "compact-submission.json",
+                case + ".compact-submission.json",
+                sealed=True,
+                expected_sha=entry["compact_submission_sha256"],
+            )
+        accepted_prefixes.append(
+            {
+                "case_id": case,
+                "accepted_trace_actions": len(trace["actions"]),
+                "recorded_source_actions": result["actions"],
+                "raw_logs": entry["raw_logs"],
+                "primary_trace_sha256": entry["trace_file_sha256"],
+            }
+        )
+        baseline_hashes = {
+            item["path"]: item["sha256"] for item in seal.get("baseline_artifacts", [])
+        }
+        for source in sorted(baseline.rglob("*")):
+            if source.is_symlink():
+                raise ValueError("Original baseline tree cannot contain symlink evidence")
+            relative = source.relative_to(baseline)
+            if source.is_file() and str(relative) not in {"public-packet.json", "result.json"}:
+                copy(
+                    source,
+                    f"baseline-receipts/{case}/{relative}",
+                    sealed=str(source) in baseline_hashes,
+                    expected_sha=baseline_hashes.get(str(source)),
+                )
+        for directory in controller_directories(expert):
+            protocol_hashes = {item["path"]: item["sha256"] for item in entry["protocol_artifacts"]}
+            for source in sorted(directory.rglob("*")):
+                if source.is_symlink():
+                    raise ValueError("Original controller tree cannot contain symlink evidence")
+                if source.is_file():
+                    copy(
+                        source,
+                        f"controllers/{case}/{directory.name}/{source.relative_to(directory)}",
+                        sealed=True,
+                        expected_sha=protocol_hashes[source.relative_to(expert).as_posix()],
+                    )
+    for field in ("local_source_session_artifacts", "source_admission_artifacts"):
+        for artifact in seal[field]:
+            source = original_path(root, Path(artifact["path"]))
+            copy(
+                source,
+                source.relative_to(root).as_posix(),
+                sealed=True,
+                expected_sha=artifact["sha256"],
+            )
+    outside = []
+    for name in (
+        "expert-only-miss-diagnoses.json",
+        "miss-cause-observations.json",
+        "outside-policy-observations.json",
+    ):
+        source = root / name
+        if source.is_file():
+            copy(source, name, sealed=False)
+            if name.startswith("outside-policy"):
+                outside.append(
+                    {
+                        "path": name,
+                        "sha256": sha(source),
+                        "status": "unverified_observation",
+                        "citation_validated": False,
+                        "excluded_from_gate": True,
+                    }
+                )
+    if (root / "outside-policy").is_dir():
+        for source in sorted((root / "outside-policy").rglob("*")):
+            if source.is_symlink():
+                raise ValueError("Outside observations cannot follow symlink aliases")
+            if source.is_file():
+                name = str(source.relative_to(root))
+                copy(source, name, sealed=False)
+                outside.append(
+                    {
+                        "path": name,
+                        "sha256": sha(source),
+                        "status": "unverified_observation",
+                        "citation_validated": False,
+                        "excluded_from_gate": True,
+                    }
+                )
+    frozen_names: set[str] = set()
+    for entry in trial["expert_protocol"]["files"]:
+        name = entry["path"]
+        relative = Path(name)
+        if (
+            type(name) is not str
+            or relative.is_absolute()
+            or str(relative) != name
+            or "\\" in name
+            or any(part in {"", ".", ".."} for part in name.split("/"))
+            or name in frozen_names
+        ):
+            raise ValueError("Original frozen protocol paths must be unique and confined")
+        frozen_names.add(name)
+        if name.startswith("backend/"):
+            public_name = name.removeprefix("backend/")
+            runtime = trial["local_runtime"]
+            if runtime["source_manifest"].get(public_name) != entry["sha256"]:
+                raise ValueError("Exported protocol source is not frozen public source")
+            source = original_path(
+                Path(runtime["source_cwd"]), Path(runtime["source_cwd"]) / public_name
+            )
+        else:
+            source = original_path(protocol, protocol / relative)
+        copy(source, "protocol/" + name, sealed=True, expected_sha=entry["sha256"])
+    copy(
+        protocol / "manifest.json",
+        "protocol/manifest.json",
+        sealed=True,
+        expected_sha=trial["expert_protocol"]["manifest_file_sha256"],
+    )
+    for record in neutral_records:
+        copy(
+            Path(record["path"]),
+            "protocol/neutral-originals/" + record["name"],
+            sealed=True,
+            expected_sha=record["sha256"],
+        )
+    index_path = dest / "local-process-runs.json"
+    index_path.write_text(json.dumps(runs, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
+    copies.append(
+        {
+            "path": index_path.name,
+            "sha256": sha(index_path),
+            "bytes": index_path.stat().st_size,
+            "generated_index_only": True,
+        }
+    )
+    manifest = {
+        "stage": "Phase1 V14 local candidate",
+        "count": 10,
+        "search_provider": PINNED_PROVIDER,
+        "algorithm_provider": PINNED_PROVIDER,
+        "expert_provider": PINNED_PROVIDER,
+        "source_harness_sha": trial["harness_sha"],
+        "protocol_version": "journal-v14-local",
+        "transport_kind": TRANSPORT_KIND,
+        "comparison_mode": NETWORK_COMPARISON_MODE,
+        "budget_model": BUDGET_MODEL,
+        "expert_budget": expert_budget(),
+        "protocol_eligible": comparison["protocol_eligible"],
+        "protocol_gate": comparison["protocol_gate"],
+        "accepted_journal_deltas_replayed": seal["all_accepted_journal_deltas_replayed"],
+        "accepted_trace_prefixes": accepted_prefixes,
+        "controller_tails_preserved": True,
+        "source_bodies_exported": True,
+        "reviewed_labels_exported": False,
+        "local_terminal_status_preserved_without_success_inference": True,
+        "original_local_control_streams_exported": True,
+        "original_shared_source_admissions_exported": True,
+        "private_identity_registry_exported": False,
+        "fresh_neutral_original_bytes_exported": True,
+        "unchanged_reviewed_fact_count": 62,
+        "acceptance_threshold_recovered_facts": 40,
+        "outside_policy_facts": [],
+        "outside_policy_observations": outside,
+        "outside_policy_fact_collection_status": "no_separately_validated_facts",
+        "baseline_local_runs": sum(item["stage"] == "baseline" for item in runs),
+        "expert_local_runs": sum(item["stage"] == "expert" for item in runs),
+        "unidentified_local_receipts": 0,
+        "all_files": copies,
+    }
+    (dest / "manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
+    )
+    print(
+        json.dumps(
+            {
+                "files": len(copies) + 1,
+                "bytes": sum(item["bytes"] for item in copies),
+                "local_receipts": len(runs),
+                "destination": str(dest),
+            }
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

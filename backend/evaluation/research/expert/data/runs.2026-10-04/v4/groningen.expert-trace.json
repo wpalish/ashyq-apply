@@ -1,0 +1,107 @@
+{
+  "schema_version": "1",
+  "case_id": "groningen",
+  "packet_sha256": "290134364b3ed271bed2207b90f00d11774449c8e8af26ba0d2974c64d893874",
+  "baseline_pipeline_sha": "24865069715f82a22d83ade810b367c0d5442c67",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T10:20:24.208488+00:00",
+  "ended_at": "2026-10-04T10:21:45.926906+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T10:21:09.755369+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.rug.nl/bachelors/computing-science/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "groningen-001.json",
+      "raw_log_sha256": "e0b3741edd45493b8f4499501fde42658c2ac634b37fe45ec915d437f817af73",
+      "elapsed_ms": 1600,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 10884,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Open the official Computer Science bachelor programme route.",
+      "observed_from_step": null,
+      "action": "fetcher: https://www.rug.nl/bachelors/computing-science/",
+      "stage": "page_understanding",
+      "url": "https://www.rug.nl/bachelors/computing-science/",
+      "final_url": "https://www.rug.nl/bachelors/computing-science/"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

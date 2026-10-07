@@ -1,0 +1,47 @@
+# Frozen V12 protocol feasibility audit
+
+Bounded read-only audit of completed Aalto, Groningen and Delft requests. Source `92dfdb6`, metadata `00cb167` were supplied by the parent; frozen public module bytes were checked against the V12 manifest. This audit made zero source/model/network/Git calls and changed only these audit outputs. It contains no admissions facts, source routes, answers or scores.
+
+## Public contract
+
+All 63 request envelopes retain the same public profile: Kazakhstan citizenship/residence/education, KZ national secondary, bachelor, computer science, fall 2027. Request programme/population/qualification/academic_year are null. The derived contract consistently uses international and KZ national secondary fallbacks and the first fee year 2027. All requests retain 4 new fact/2 new finding limits and gpt-6-astra with CLI default effort; the actual service default effort is not asserted.
+
+There is no named programme target or public choice rule for multiple matching programme/language/campus options. Q0 requires source-literal programme and bachelor degree; field equality applies only when nonnull. A null field is not proof of CS applicability. Generic TASK mentions NIS/non-EU and an academic year “containing” fall 2027, while the typed target is KZ national secondary/international and the gate tests the first published year 2027. Future wording should state those exact rules without filling source scope from a target.
+
+Bootstrap uses the ordinary action/record/submit4/2 schema. Before any recorded source, the candidate gate accepts only the empty action bootstrap marker. An action-only initial schema would make that existing restriction explicit. Full journal, trace, raw hash and citation gates remain required.
+
+## Observed timing and network accounting
+
+| Completed case | Reads / queries | Selector requests | Workflow dispatches | CLI process s | Workflow envelope s | Nested source s | Non-source envelope s | Case wall s |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| aalto | 8 / 4 | 13 | 12 | 164.134 | 731.793 | 89.744 | 642.049 | 897.506 |
+| groningen | 6 / 0 | 32 | 6 | 531.737 | 343.192 | 11.611 | 331.581 | 901.088 |
+| delft | 9 / 2 | 18 | 11 | 272.879 | 613.040 | 13.504 | 599.536 | 901.217 |
+
+Source time is already inside the workflow envelope and is not added twice. CLI elapsed is process time, not an isolated thinking measurement. Available receipts do not separate queue, runner setup, polling and artifact download. Wall readings above900 s may include return/audit/finalization; this audit does not infer late source I/O or accepted evidence from them.
+
+The frozen parent uses `plan.actions=[item]`: one fresh workflow for each network action. Mean workflow envelopes were55.73–60.98 s; subtracting nested source leaves53.50–55.26 s per action. Full60 reads plus6 queries require **13.636 s per entire serial cycle**, with less time available after preparation, views, validation and closure. At the observed mean workflow envelope alone,66 actions would require3678–4025 s. The60/6 counts are ceilings; this schedule cannot use the full ceiling within900 s if those costs persist. Model thinking remains excluded from network counts/source clock and included in the absolute wall guard.
+
+Actual selector stdin sizes ranged from24,118 to118,308 UTF-8 bytes across these requests. The saved envelope is larger because it also records schema/proof metadata; its byte size is not the model stdin size. No content-dependent source findings were used for this measurement.
+
+## Existing batch support and exact caveat
+
+Core controller accepts sequential `plan.actions` lists and writes per-item raw hashes, ordering and counters, checking caps and the wall before I/O. Journal schema and parent still allow one next action. This is **not a drop-in safe batching contract**: controller.py:708 only refuses another search_provider after 402/429; a later fetcher in a mixed list is not covered by that condition. Current V12 reads its one-action tail and latches shared STOP before another workflow. A future batch must stop before EVERY later item, retain sequential source requests, and admit no unverified/postdeadline evidence.
+
+Adaptive discovery stays sequential: a new search result must be seen in saved returned source before a later content-dependent fetch. A general query plus a previously known independent candidate is different from such dependent discovery. Existing `history[-2:]`, per-turn4/2 bounds and whole-prefix processed markers also need explicit handling so batches do not hide or falsely acknowledge unprocessed sources.
+
+## Narrow prospective options
+
+1. Amortize workflow transport while keeping one controlled proposal at a time and validating each original raw tail before the next adaptive proposal.
+2. Alternatively introduce a small, declared sequential batch for already-known independent candidates, with shared refusal STOP before each item and complete per-item replay/proof.
+3. Generate public question prose from the exact target rules, add a source-only programme ambiguity rule, and make bootstrap navigation-only when no source exists.
+
+Each option requires a prospective version/write-ahead and synthetic replay/isolation/STOP tests. Preserve Exa,60 reads/6 queries, immutable900 s, normal default reasoning, current-case blinding, literal scope/nulls, typed values, all exact quote/coordinate proof and local validators. No current V12 helper, selector, stage, workspace, clock or proof changes are proposed.
+
+## Original references
+
+Frozen parent: `/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/data/protocol.2026-10-05/v12/unimatch-expert500-journal-pilot-v12.py.txt` SHA256 `1922e117436afdc001bef7cbf867e8b91db4062fd0b98cfce044c3b980a74b72`.
+
+Frozen manifest: `/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/data/protocol.2026-10-05/v12/manifest.json` SHA256 `382a7dcb1e2bc31f3883d95e9081551877b2eb2d54bc9639de734535e9b2b8b1`.
+
+The companion JSON records every inspected original path/SHA256/byte count and allowed field pointer, safe per-turn counters/timing, public source line anchors and unchanged-input checks. Controller.py:646–653/708–748/786–805/943–988; models.py:591–627; parent:1211–1253/1391–1499/1613–1667/1760–1832. All 9 inspected public core modules match their frozen manifest hashes.

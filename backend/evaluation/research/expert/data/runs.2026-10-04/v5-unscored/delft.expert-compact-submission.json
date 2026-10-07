@@ -1,0 +1,108 @@
+{
+  "kind": "submit",
+  "observation": "Submit the complete journal; all proposed evidence remains unreviewed.",
+  "action": null,
+  "facts": [
+    {
+      "id": "f1",
+      "question": "Q0",
+      "claim_key": "programme.exists",
+      "value_json": "true",
+      "source_step": 2,
+      "quotation": "Do you want to apply for the Bachelor of Computer Science & Engineering? Then there are several steps you need to take:",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b43",
+        "section_path": [
+          "From application to enrollment"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": "Computer Science & Engineering",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      }
+    },
+    {
+      "id": "f2",
+      "question": "Q3",
+      "claim_key": "deadline",
+      "value_json": "\"January 15 2027\"",
+      "source_step": 2,
+      "quotation": "January 15 2027",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b48",
+        "section_path": [
+          "From application to enrollment",
+          "Application deadline"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      }
+    },
+    {
+      "id": "f3",
+      "question": "Q2",
+      "claim_key": "country_credential.international_diploma.requirement",
+      "value_json": "\"You may be admitted with an international diploma if it is equivalent to a Dutch VWO diploma with the correct subjects. TU Delft will determine this after registration.\"",
+      "source_step": 3,
+      "quotation": "You may be admitted with an international diploma if it is equivalent to a Dutch VWO diploma with the correct subjects. TU Delft will determine this after registration.",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b53",
+        "section_path": [
+          "Admission requirements",
+          "Do you have a different diploma?"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": "international diploma applicants",
+        "qualification": "international diploma",
+        "academic_year": null
+      }
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "fact_ids": [
+        "f1"
+      ],
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": "Computer Science & Engineering",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Official application text explicitly identifies the bachelor programme.",
+      "supporting_steps": []
+    }
+  ]
+}

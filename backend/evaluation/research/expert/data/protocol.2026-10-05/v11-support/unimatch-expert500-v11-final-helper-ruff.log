@@ -1,0 +1,9 @@
+/tmp/test_unimatch_expert500_journal_report_v11.py:1473:26: B008 Do not perform function call `SourceCounters` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+     |
+1473 | def pure_source(*, prior=SourceCounters(), tool="fetcher"):
+     |                          ^^^^^^^^^^^^^^^^ B008
+1474 |     started = datetime(2026, 10, 4, tzinfo=UTC)
+1475 |     guard = WallGuard(started, started + timedelta(milliseconds=WALL_GUARD_MS))
+     |
+
+Found 1 error.

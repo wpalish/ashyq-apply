@@ -1,0 +1,1360 @@
+"""Independent offline tests of the actual V14 local network parent; all sources are synthetic."""
+
+import asyncio
+import copy
+import hashlib
+import importlib.util
+import itertools
+import json
+import os
+import runpy
+import shutil
+import signal
+import subprocess
+import sys
+import threading
+import uuid
+from dataclasses import dataclass, field
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+
+from app.adapters.fetching import FetchResult
+from app.domain.enums import FetchOutcome
+from evaluation.research.expert.controller import execute
+from evaluation.research.expert.network_budget import NETWORK_COMPARISON_MODE, expert_budget
+from evaluation.research.expert.network_turn_policy import (
+    NetworkBudgetIsolation as Isolation,
+)
+from evaluation.research.expert.network_turn_policy import (
+    NetworkSelectorTurn,
+    turn_window,
+)
+from evaluation.research.expert.workspace_policy import allocate_workspaces
+
+PILOT = Path("/tmp/unimatch-expert500-journal-pilot-v14-local-r2-candidate.py")
+REPORT = Path("/tmp/unimatch-expert500-journal-report-v14-local-r2-candidate.py")
+ORIGINAL_TRANSPORT_TEST = Path("/tmp/test_unimatch_expert500_workflow_v14_local_r2_candidate.py")
+HEAD = "a" * 40
+URL = "https://u.edu/admissions"
+QUOTE = "International bachelor applicants need IELTS Academic overall 6.5."
+SCOPE = {
+    "university": "U",
+    "programme": None,
+    "degree": "bachelor",
+    "field": None,
+    "intake": None,
+    "population": "international",
+    "qualification": None,
+    "academic_year": None,
+}
+
+
+def source_action(tool="fetcher", **changes):
+    value = {
+        "tool": tool,
+        "url": URL if tool == "fetcher" else None,
+        "query": "site:u.edu official admissions" if tool == "search_provider" else None,
+        "domains": ["u.edu"] if tool == "search_provider" else [],
+        "max_results": 4 if tool == "search_provider" else None,
+        "source_step": 1 if tool == "view" else None,
+        "page": None,
+        "offset": None,
+        "section_offset": None,
+        "link_offset": None,
+    }
+    return {**value, **changes}
+
+
+def fact(**changes):
+    value = {
+        "id": "english",
+        "question": "Q1",
+        "claim_key": "ielts.overall",
+        "value_json": "6.5",
+        "source_step": 1,
+        "quotation": QUOTE,
+        "location": {"kind": "text", "block_id": None, "section_path": [], "page": None},
+        "scope": dict(SCOPE),
+    }
+    return {**value, **changes}
+
+
+def finding(**changes):
+    value = {
+        "question": "Q1",
+        "status": "found",
+        "fact_ids": ["english"],
+        "scope": dict(SCOPE),
+        "observation": "The recorded synthetic page states this minimum.",
+        "supporting_steps": [],
+    }
+    return {**value, **changes}
+
+
+def decision(prompt, kind="action", facts=None, findings=None, action=None, **changes):
+    if "accepted_journal" not in prompt:
+        assert kind == "submit" and action is None and not facts and not findings
+        return minimal_commit(prompt, **changes)
+    value = {
+        "kind": kind,
+        "observation": "Inspect the current recorded official source.",
+        "journal_sha256": prompt["accepted_journal"]["sha256"],
+        "action": source_action() if kind == "action" and action is None else action,
+        "facts": facts or [],
+        "question_findings": findings or [],
+    }
+    return {**value, **changes}
+
+
+def minimal_commit(prompt, **changes):
+    from evaluation.research.expert.representation import CLOSING_OBSERVATION
+
+    current_hash = (
+        prompt["accepted_journal"]["sha256"]
+        if "accepted_journal" in prompt
+        else prompt["journal_sha256"]
+    )
+    return {
+        "kind": "submit",
+        "observation": CLOSING_OBSERVATION,
+        "journal_sha256": current_hash,
+        "action": None,
+        "facts": [],
+        "question_findings": [],
+        **changes,
+    }
+
+
+def completed_events(answer):
+    return (
+        "\n".join(
+            json.dumps(item)
+            for item in [
+                {"type": "thread.started", "thread_id": "synthetic"},
+                {"type": "turn.started"},
+                {
+                    "type": "item.completed",
+                    "item": {"id": "answer", "type": "agent_message", "text": answer},
+                },
+                {"type": "turn.completed", "usage": {"input_tokens": 1, "output_tokens": 1}},
+            ]
+        )
+        + "\n"
+    )
+
+
+@dataclass
+class Harness:
+    runtime: dict
+    repo: Path
+    root: Path
+    workspace: Path
+    packet: dict
+    pending: list = field(default_factory=list)
+    calls: list = field(default_factory=list)
+    queries: list = field(default_factory=list)
+    prompts: list = field(default_factory=list)
+    commands: list = field(default_factory=list)
+    plans: list = field(default_factory=list)
+    controller_dirs: list = field(default_factory=list)
+    summary_hook: object = None
+    workflow_error: Exception | None = None
+    source_body: bytes | None = None
+    source_content_type: str = "text/html"
+    plan_hook: object = None
+    search_error_status: int = 429
+
+    @property
+    def folder(self):
+        return self.root / "experts/u"
+
+    def queue(
+        self,
+        callback=None,
+        *,
+        elapsed=12000,
+        preparation=0,
+        error=None,
+        raw=None,
+        failed_stream=None,
+    ):
+        self.pending.append(
+            {
+                "callback": callback,
+                "elapsed": elapsed,
+                "preparation": preparation,
+                "error": error,
+                "raw": raw,
+                "failed_stream": failed_stream,
+            }
+        )
+
+    def read(self, name):
+        return json.loads((self.folder / name).read_text())
+
+    def run(self):
+        return self.runtime["expert"](
+            self.repo, "synthetic-frozen", self.root, "u", {"u": self.workspace}
+        )
+
+
+@pytest.fixture
+def pilot(tmp_path, monkeypatch):
+    module = runpy.run_path(str(PILOT))
+    runtime = module["expert"].__globals__
+    original_workflow = runtime["workflow"]
+    runtime["STOP"].clear()
+    FakeDatetime.current = datetime.now(UTC)
+    runtime["datetime"] = FakeDatetime
+    # Allocation alone may canonicalize the trusted temporary root; persisted
+    # assignments and real filesystem receipts must already agree before expert.
+    tmp_path = tmp_path.resolve(strict=True)
+    repo, root = tmp_path / "repo", tmp_path / "results"
+    assignments, receipts = allocate_workspaces(("u",), temp_root=tmp_path)
+    workspace = Path(assignments["u"])
+    context = repo / "backend/evaluation/research/expert/ALGORITHM_CONTEXT.md"
+    context.parent.mkdir(parents=True)
+    context.write_text("Public generic algorithm instructions; no previous case outcomes.")
+    (root / "baseline/u").mkdir(parents=True)
+    (root / "workspace-locations.json").write_text(json.dumps(assignments))
+    (root / "workspace-receipts.json").write_text(json.dumps(receipts))
+    packet = {
+        "schema_version": "1",
+        "baseline_pipeline_sha": HEAD,
+        "baseline_budget": {
+            "max_fetcher_calls": 60,
+            "max_elapsed_ms": 120000,
+            "max_search_queries": 6,
+            "browser_enabled": False,
+        },
+        "comparison_mode": NETWORK_COMPARISON_MODE,
+        "expert_budget": expert_budget(),
+        "public_profile": {"education_system": "KZ national secondary"},
+        "cases": [
+            {
+                "case_id": "u",
+                "university": "U",
+                "domain": "u.edu",
+                "request": {
+                    **{key: None for key in SCOPE},
+                    "university": "U",
+                    "degree": "bachelor",
+                    "field": "computer science",
+                    "intake": "fall 2027",
+                },
+                "baseline": {
+                    "ranked_urls": ["BASELINE_OUTPUT_MUST_NOT_ENTER_SELECTOR"],
+                    "prediction_count": 99,
+                    "error": "PRIVATE_BASELINE_SENTINEL",
+                },
+            }
+        ],
+    }
+    packet_path = root / "baseline/u/public-packet.json"
+    packet_path.write_text(json.dumps(packet))
+    (root / "baseline/u/result.json").write_text(
+        json.dumps(
+            {"case_id": "u", "provider": "exa", "packet": str(packet_path), "source_sha": HEAD}
+        )
+    )
+    monkeypatch.setattr(
+        Isolation,
+        "local",
+        classmethod(
+            lambda cls, path, roots: cls(
+                path.resolve(), tuple(p.resolve() for p in roots), "/mock/sandbox", "/mock/codex"
+            )
+        ),
+    )
+    monkeypatch.setattr(
+        Isolation,
+        "prove_access",
+        lambda self, *args: {
+            "allowed_read": True,
+            "sealed_read_denied": True,
+            "sealed_stdout_empty": True,
+            "sealed_roots": [str(path) for path in self.sealed_roots],
+            "mock_only": True,
+        },
+    )
+    environment = {
+        "HOME": str(tmp_path),
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/usr/bin:/bin:/usr/sbin:/sbin",
+        "TMPDIR": str(tmp_path),
+    }
+    registry = root / "synthetic-producer-registry.json"
+    registry.write_text('{"version":"synthetic","bindings":[]}')
+    (root / "trial.json").write_text(
+        json.dumps(
+            {
+                "selector_environment": environment,
+                "selector_environment_sha256": runtime["digest"](environment),
+                "local_runtime": {"source_cwd": str(repo)},
+                "admission_run_id": str(uuid.uuid4()),
+                "baseline_identity_registry": {
+                    "path": str(registry),
+                    "sha256": hashlib.sha256(registry.read_bytes()).hexdigest(),
+                },
+                "baseline_identity_registry_source_sha": runtime["BASELINE_REGISTRY_SOURCE_SHA"],
+            }
+        )
+    )
+    runtime["LOCAL_ADMISSION_PATH"] = Path(
+        "/tmp/unimatch-expert500-source-admission-candidate-ea0b0fdd91/source_admission.py"
+    )
+    harness = Harness(runtime, repo, root, workspace, packet)
+    runtime["_synthetic_original_local_workflow"] = original_workflow
+
+    async def get(url):
+        FakeDatetime.current += timedelta(milliseconds=10)
+        harness.calls.append(url)
+        return FetchResult(
+            url=url,
+            final_url=url,
+            outcome=FetchOutcome.OK,
+            status_code=200,
+            content_type=harness.source_content_type,
+            content=harness.source_body
+            or f"<main><h1>Admissions</h1><p>{QUOTE}</p></main>".encode(),
+        )
+
+    class ProviderLimit(RuntimeError):
+        http_status = 429
+
+    async def search(**kwargs):
+        FakeDatetime.current += timedelta(milliseconds=10)
+        harness.queries.append(kwargs)
+        failure = ProviderLimit("Synthetic provider limit")
+        failure.http_status = harness.search_error_status
+        raise failure
+
+    def workflow(repo, ref, case_id, inputs, destination, **kwargs):
+        if harness.workflow_error:
+            raise harness.workflow_error
+        plan = json.loads(inputs["plan"])
+        if harness.plan_hook:
+            harness.plan_hook(plan)
+            inputs = {**inputs, "plan": json.dumps(plan)}
+        harness.plans.append(plan)
+        artifact = destination / "artifact"
+        logs = artifact / "logs"
+        logs.mkdir(parents=True)
+        (destination / "dispatch.json").write_text(json.dumps({"inputs": inputs}))
+        if harness.controller_dirs:
+            for old in (harness.controller_dirs[-1] / "artifact/logs").glob("*.json"):
+                shutil.copy2(old, logs / old.name)
+        source_ticks = itertools.count()
+        summary = asyncio.run(
+            execute(
+                plan,
+                logs,
+                get=get,
+                search=search,
+                provider_name="exa",
+                now=lambda: FakeDatetime.now(UTC),
+                monotonic=lambda: next(source_ticks) / 1_000_000,
+            )
+        )
+        if harness.summary_hook:
+            harness.summary_hook(summary, plan)
+        (artifact / "summary.json").write_text(json.dumps(summary))
+        local_id = str(uuid.uuid4())
+        receipt = {
+            "transport_kind": "local_process_v1",
+            "local_run_id": local_id,
+            "source_sha": HEAD,
+            "case_id": case_id,
+            "stage": "expert",
+            "source_counters_known": True,
+            "source_counters": {
+                key: summary["final"][key]
+                for key in ("fetcher_calls", "search_queries", "elapsed_ms")
+            },
+        }
+        receipt_path = destination / "local-receipt.json"
+        receipt_path.write_text(json.dumps(receipt))
+        (destination / "request.json").write_text(json.dumps({"stage": "expert", "payload": plan}))
+        harness.controller_dirs.append(destination)
+        return SimpleNamespace(
+            receipt=receipt,
+            receipt_path=receipt_path,
+            receipt_sha256=hashlib.sha256(receipt_path.read_bytes()).hexdigest(),
+            source_counters=receipt["source_counters"],
+            summary=summary,
+            capture=None,
+        )
+
+    def select(isolation, schema, output, prompt, *, environment, **kwargs):
+        assert environment == json.loads((root / "trial.json").read_text())["selector_environment"]
+        assert "UNIMATCH_EXA_API_KEY" not in environment
+        assert "HTTP_PROXY" not in environment
+        harness.prompts.append((copy.deepcopy(prompt), dict(kwargs)))
+        harness.commands.append(isolation.command(schema, output=output, model=kwargs.get("model")))
+        assert harness.pending, "Unexpected selector call after closure"
+        item = harness.pending.pop(0)
+        FakeDatetime.current += timedelta(milliseconds=item["preparation"])
+        began = FakeDatetime.now(UTC)
+        window = turn_window(phase=kwargs["phase"], wall_guard=kwargs["wall_guard"], now=began)
+        FakeDatetime.current += timedelta(milliseconds=item["elapsed"])
+        finished = FakeDatetime.now(UTC)
+        if item["error"]:
+            return NetworkSelectorTurn(
+                None,
+                item["preparation"] + item["elapsed"],
+                item["failed_stream"]
+                if item["failed_stream"] is not None
+                else "unfinished partial output",
+                "",
+                None,
+                item["error"],
+                window,
+                began.isoformat(),
+                finished.isoformat(),
+            )
+        answer = item["callback"](prompt) if item["callback"] else decision(prompt)
+        raw = item["raw"] if item["raw"] is not None else json.dumps(answer)
+        output.write_text(raw)
+        return NetworkSelectorTurn(
+            answer,
+            item["preparation"] + item["elapsed"],
+            completed_events(raw),
+            "",
+            0,
+            None,
+            window,
+            began.isoformat(),
+            finished.isoformat(),
+        )
+
+    runtime.update(workflow=workflow, select=select, emit=lambda **kwargs: None)
+    return harness
+
+
+def bootstrap(pilot):
+    pilot.queue()
+
+
+def checkpoint(pilot, *, kind="record", elapsed=12000, **changes):
+    pilot.queue(
+        lambda prompt: decision(prompt, kind, facts=[fact()], findings=[finding()], **changes),
+        elapsed=elapsed,
+    )
+
+
+def commit(pilot, *, elapsed=500, acknowledge_source=None):
+    pilot.queue(
+        lambda prompt: decision(
+            prompt,
+            "submit",
+            facts=[
+                fact(id="english_second_source", question="OTHER", source_step=acknowledge_source)
+            ]
+            if acknowledge_source is not None
+            else [],
+        ),
+        elapsed=elapsed,
+    )
+
+
+def assert_exact_clock(result):
+    cumulative = 0
+    for entry in result["meter"]:
+        assert type(entry["elapsed_ms"]) is int and entry["elapsed_ms"] >= 0
+        cumulative += entry["elapsed_ms"]
+        assert entry["active_ms"] == cumulative
+    assert result["active_ms"] == cumulative
+
+
+class FakeDatetime(datetime):
+    current = datetime.now(UTC)
+
+    @classmethod
+    def now(cls, tz=None):
+        return cls.current.astimezone(tz or UTC)
+
+
+def test_network_parent_accepts_model_thinking_above_old120seconds_without_source_debit(pilot):
+    pilot.queue(elapsed=180_000)
+    checkpoint(pilot, elapsed=160_000)
+    commit(pilot)
+    result = pilot.run()
+    assert result["validated"] and result["status"] == "submitted", json.dumps(result)
+    assert result["found"] == ["Q1"] and result["accepted_turns"] == 3
+    assert pilot.plans[0]["start_ms"] == 0
+    assert result["source_ms"] < 1000
+    assert result["active_ms"] > 340_000
+    assert result["wall_elapsed_ms"] >= 340_500
+    assert result["requested_reasoning_effort"] is None
+    assert result["reasoning_effort_source"] == "cli_default"
+    assert all("model_reasoning_effort" not in " ".join(argv) for argv in pilot.commands)
+    assert pilot.read("trace.json")["proposals"][0]["value"] == 6.5
+    assert_exact_clock(result)
+
+
+def test_resumed_source_ledger_preserves_only_measured_controller_ms(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot, kind="action", elapsed=200_000)
+    commit(pilot, acknowledge_source=2)
+    result = pilot.run()
+    assert result["validated"] and result["status"] == "submitted", json.dumps(result)
+    first, second = pilot.plans
+    first_summary = json.loads((pilot.controller_dirs[0] / "artifact/summary.json").read_text())
+    assert first["start_ms"] == 0
+    assert second["start_ms"] == first_summary["final"]["elapsed_ms"]
+    assert second["start_calls"] == 1 and second["start_search_queries"] == 0
+    assert first["wall_started_at"] == second["wall_started_at"]
+    assert first["wall_deadline_at"] == second["wall_deadline_at"]
+    assert result["source_ms"] < 1000 and result["active_ms"] > 200_000
+    assert len(pilot.calls) == 2
+
+
+def test_wall_guard_timeout_keeps_only_already_accepted_complete_checkpoint(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot)
+    pilot.queue(elapsed=880_000, error="selector_timeout")
+    result = pilot.run()
+    assert result["validated"] and result["status"] == "incomplete", result
+    assert result["found"] == ["Q1"] and result["accepted_turns"] == 2
+    assert len(pilot.read("accepted-journal.json")["facts"]) == 1
+    assert len(pilot.calls) == 1
+    trace = pilot.read("trace.json")
+    assert datetime.fromisoformat(trace["ended_at"]) < datetime.fromisoformat(
+        trace["wall_deadline_at"]
+    )
+    assert result["wall_elapsed_ms"] > 900_000
+    assert not pilot.runtime["STOP"].is_set()
+
+
+def quota_stream():
+    from evaluation.research.expert.blind_cli import DISABLED_CODE_MODE_DIAGNOSTIC
+
+    message = "You've hit your usage limit. Try again at the account's stated reset time."
+    return (
+        "\n".join(
+            json.dumps(event)
+            for event in (
+                {"type": "thread.started", "thread_id": "synthetic"},
+                {
+                    "type": "item.completed",
+                    "item": {"type": "error", "message": DISABLED_CODE_MODE_DIAGNOSTIC},
+                },
+                {"type": "turn.started"},
+                {"type": "error", "message": message},
+                {"type": "turn.failed", "error": {"message": message}},
+            )
+        )
+        + "\n"
+    )
+
+
+def test_no_completed_model_answer_after_guard_is_accepted_or_dispatched(pilot):
+    pilot.queue(elapsed=900_001)
+    result = pilot.run()
+    assert result["status"] == "incomplete" and not result["validated"]
+    assert not pilot.calls and not pilot.plans
+    assert not (pilot.folder / "journal-events.json").exists()
+
+
+def test_original_source_and_query_caps_and_baseline_unchanged(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot)
+    commit(pilot)
+    result = pilot.run()
+    assert result["validated"], result
+    assert pilot.packet["baseline_budget"]["max_elapsed_ms"] == 120_000
+    assert result["provider"] == "exa" and result["protocol_version"] == "journal-v14-local"
+    for plan in pilot.plans:
+        assert plan["provider"] == "exa"
+        assert (plan["max_calls"], plan["max_search_queries"]) == (60, 6)
+        assert plan["max_ms"] == 900_000
+        assert "action_deadline_ms" not in plan
+        assert "exploration_mode" not in plan
+
+
+@pytest.mark.parametrize("bad", ["quote", "location", "stale_hash", "duplicate_fact"])
+def test_network_mode_does_not_weaken_atomic_source_citation_guards(pilot, bad):
+    bootstrap(pilot)
+    checkpoint(pilot)
+
+    def malformed(prompt):
+        extra = fact(id="extra", question="OTHER")
+        if bad == "quote":
+            extra["quotation"] = "Never published in the synthetic source."
+        elif bad == "location":
+            extra["location"] = {
+                "kind": "document_ir",
+                "block_id": "missing",
+                "section_path": [],
+                "page": None,
+            }
+        elif bad == "duplicate_fact":
+            extra = fact()
+        answer = decision(prompt, "record", facts=[extra])
+        if bad == "stale_hash":
+            answer["journal_sha256"] = "f" * 64
+        return answer
+
+    pilot.queue(malformed)
+    commit(pilot)
+    result = pilot.run()
+    assert result["validated"], result
+    assert [f["id"] for f in pilot.read("accepted-journal.json")["facts"]] == ["english"]
+    assert [e["turn"] for e in pilot.read("journal-events.json")] == [1, 2, 4]
+
+
+def test_provider429_still_stops_entire_batch_without_retry(pilot):
+    pilot.queue(lambda prompt: decision(prompt, action=source_action("search_provider")))
+    result = pilot.run()
+    assert result["error"] == "provider_http_429"
+    assert pilot.runtime["STOP"].is_set()
+    assert len(pilot.queries) == 1 and len(pilot.plans) == 1
+    assert not pilot.calls
+
+
+def test_selector_receipts_bind_exact_full_remaining_guard_and_no_short_phase_caps(pilot):
+    pilot.queue(elapsed=180_000)
+    checkpoint(pilot, elapsed=60_000)
+    commit(pilot)
+    result = pilot.run()
+    assert result["validated"], result
+    first = pilot.read("selector-01.meta.json")
+    second = pilot.read("selector-02.meta.json")
+    assert first["selector_timeout_ms"] == 900_000
+    assert second["selector_timeout_ms"] == 719_990
+    assert first["reasoning_effort"] is None
+    assert first["selector_window"]["wall_guard"]["wall_started_at"] == result["wall_started_at"]
+    assert second["wall_deadline_at"] == first["wall_deadline_at"]
+
+
+def test_blind_public_packet_does_not_expose_baseline_or_previous_run_answers(pilot):
+    bootstrap(pilot)
+    checkpoint(pilot)
+    commit(pilot)
+    result = pilot.run()
+    assert result["validated"], result
+    encoded = json.dumps([prompt for prompt, _ in pilot.prompts])
+    assert "BASELINE_OUTPUT_MUST_NOT_ENTER_SELECTOR" not in encoded
+    assert "PRIVATE_BASELINE_SENTINEL" not in encoded
+    assert "network_actions_v1" in encoded
+
+
+def test_selector_preparation_is_not_counted_twice_against_prespawn_window(pilot):
+    pilot.queue(preparation=860_000, elapsed=20_000)
+    checkpoint(pilot, elapsed=500)
+    commit(pilot, elapsed=500)
+    result = pilot.run()
+    assert result["validated"] and result["status"] == "submitted", result
+    meta = pilot.read("selector-01.meta.json")
+    assert meta["elapsed_ms"] == 880_000
+    assert meta["selector_timeout_ms"] == 40_000
+    assert result["wall_elapsed_ms"] < 900_000
+    assert len(pilot.calls) == 1
+
+
+@pytest.mark.parametrize("status", [401, 402, 403, 429])
+def test_v14_local_candidate_actual_provider_refusal_stops_before_another_selector_or_case(
+    pilot, status
+):
+    pilot.search_error_status = status
+    pilot.queue(lambda prompt: decision(prompt, action=source_action("search_provider")))
+    result = pilot.run()
+    assert result["error"] == f"provider_http_{status}" and pilot.runtime["STOP"].is_set()
+    assert result["provider_failure"]["provider"] == "exa"
+    assert result["provider_failure"]["http_status"] == status
+    assert len(pilot.prompts) == len(pilot.queries) == len(pilot.plans) == 1
+    assert not pilot.calls and result["found"] == []
+    assert pilot.read("checkpoint-01.json")["facts"] == []
+    summary = json.loads((pilot.controller_dirs[0] / "artifact/summary.json").read_text())
+    assert summary["final"]["stop_reason"] == (f"http_{status}" if status in {402, 429} else None)
+
+
+def test_v14_local_candidate_provider_error_cannot_become_a_source_fact(pilot):
+    pilot.search_error_status = 503
+    pilot.queue(lambda prompt: decision(prompt, action=source_action("search_provider")))
+    checkpoint(pilot)
+    pilot.queue(elapsed=900_000, error="selector_timeout")
+    result = pilot.run()
+    assert result["found"] == [] and result["status"] == "incomplete"
+    assert pilot.read("checkpoint-01.json")["facts"] == []
+    assert len(pilot.queries) == 1 and not pilot.calls
+    assert (pilot.folder / "validation-02.json").exists()
+
+
+def test_outer_guard_starts_before_university_setup_and_is_never_reset(pilot, monkeypatch):
+    original = Isolation.prove_access
+
+    def slow_setup(self, *args):
+        FakeDatetime.current += timedelta(milliseconds=900_001)
+        return original(self, *args)
+
+    monkeypatch.setattr(Isolation, "prove_access", slow_setup)
+    result = pilot.run()
+    assert result["status"] == "incomplete" and not result["validated"]
+    assert result["error"] == "wall_guard_exhausted"
+    assert result["wall_elapsed_ms"] >= 900_001
+    assert not pilot.calls and not pilot.plans and not pilot.prompts
+
+
+def test_expert_can_use_more_than_twenty_source_actions_before_network_or_wall_limits(pilot):
+    pilot.queue(
+        lambda prompt: decision(prompt, action=source_action(url="https://u.edu/admissions/1")),
+        elapsed=500,
+    )
+    for source_step in range(1, 23):
+
+        def observe_then_read(prompt, step=source_step):
+            return decision(
+                prompt,
+                "action",
+                facts=[fact(id=f"english_{step}", question="OTHER", source_step=step)],
+                action=source_action(url=f"https://u.edu/admissions/{step + 1}"),
+            )
+
+        pilot.queue(observe_then_read, elapsed=500)
+    commit(pilot, elapsed=500, acknowledge_source=23)
+    result = pilot.run()
+    assert result["validated"] and result["status"] == "submitted", result
+    assert len(pilot.calls) == 23
+    assert result["accepted_turns"] == 24
+    assert result["completion_kind"] != "turn_limit_checkpoint"
+    assert result["wall_elapsed_ms"] < 900_000
+
+
+def test_private_pipe_installs_real_worker_factory_without_global_secret(tmp_path, monkeypatch):
+    runtime = runpy.run_path(str(PILOT))["install_worker_factory_from_fd"].__globals__
+    captured = []
+    monkeypatch.setitem(
+        runtime,
+        "_worker_module",
+        lambda: SimpleNamespace(
+            start_session=lambda config, **kwargs: captured.append((config, kwargs)) or "SESSION"
+        ),
+    )
+    before_names = set(os.environ)
+    descriptor, writer = os.pipe()
+    os.write(writer, b"DUMMY_SOURCE_SECRET_NOT_A_CREDENTIAL")
+    os.close(writer)
+    runtime["install_worker_factory_from_fd"](descriptor)
+    with pytest.raises(OSError):
+        os.fstat(descriptor)
+    assert runtime["_LOCAL_FACTORY"]("PUBLIC_CONFIG") == "SESSION"
+    assert captured == [("PUBLIC_CONFIG", {"private_key": "DUMMY_SOURCE_SECRET_NOT_A_CREDENTIAL"})]
+    assert set(os.environ) == before_names
+
+
+@pytest.mark.parametrize("descriptor", [True, 0, 1, 2, -1])
+def test_private_key_input_refuses_standard_or_invalid_descriptors(descriptor):
+    runtime = runpy.run_path(str(PILOT))["install_worker_factory_from_fd"].__globals__
+    with pytest.raises(ValueError, match="private pipe"):
+        runtime["install_worker_factory_from_fd"](descriptor)
+
+
+@pytest.mark.parametrize("name", ["EXA_API_KEY", "UNIMATCH_EXA_API_KEY"])
+def test_parent_refuses_source_key_in_model_environment_without_reading_value(name):
+    runtime = runpy.run_path(str(PILOT))
+    with pytest.raises(ValueError, match="selector environment"):
+        runtime["assert_secret_free_model_environment"]({name})
+
+
+def test_source_session_initialization_does_not_serialize_other_cases(tmp_path, monkeypatch):
+    runtime = runpy.run_path(str(PILOT))["_session_for"].__globals__
+    barrier = threading.Barrier(2)
+    started = []
+
+    def config(root, case_id, stage, guard):
+        return SimpleNamespace(
+            session_root=tmp_path / "sessions" / case_id,
+            admission_root=tmp_path / "admission",
+            case_id=case_id,
+        )
+
+    def factory(config):
+        started.append(config.case_id)
+        barrier.wait(timeout=2)
+        return SimpleNamespace(close=lambda: {})
+
+    monkeypatch.setitem(runtime, "_session_config", config)
+    monkeypatch.setitem(runtime, "_LOCAL_FACTORY", factory)
+    import concurrent.futures
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+        futures = [
+            pool.submit(runtime["_session_for"], tmp_path, case, "expert", None)
+            for case in ("one", "two")
+        ]
+        assert all(future.result(timeout=3) is not None for future in futures)
+    assert sorted(started) == ["one", "two"]
+    runtime["close_source_session"](tmp_path, "one", "expert")
+    with pytest.raises(ValueError, match="cannot restart"):
+        runtime["_session_for"](tmp_path, "one", "expert", None)
+
+
+def test_atomic_model_marker_is_not_visible_while_temporary_bytes_are_unflushed(
+    tmp_path, monkeypatch
+):
+    runtime = runpy.run_path(str(PILOT))["record_model_stop"].__globals__
+    paused, release = threading.Event(), threading.Event()
+    actual_fsync = os.fsync
+    seen = []
+    gate = SimpleNamespace(publish_model_failure=lambda **kwargs: seen.append(kwargs))
+    monkeypatch.setitem(runtime, "_shared_admission", lambda root: gate)
+
+    def delayed_fsync(fd):
+        if not paused.is_set():
+            paused.set()
+            assert release.wait(3)
+        actual_fsync(fd)
+
+    monkeypatch.setattr(os, "fsync", delayed_fsync)
+    outcome = []
+    thread = threading.Thread(
+        target=lambda: outcome.append(
+            runtime["record_model_stop"](
+                tmp_path, "first", 1, {"kind": "model_usage_limit"}, datetime.now(UTC).isoformat()
+            )
+        )
+    )
+    thread.start()
+    assert paused.wait(2)
+    assert not (tmp_path / "model-batch-stop.json").exists()
+    release.set()
+    thread.join(3)
+    assert not thread.is_alive() and len(outcome) == 1
+    first = json.loads((tmp_path / "model-batch-stop.json").read_text())
+    assert first["case_id"] == "first" and seen[0]["case_id"] == "first"
+    assert not list(tmp_path.glob("*.pending"))
+
+
+def test_second_model_failure_preserves_first_origin_but_returns_own_receipt(tmp_path, monkeypatch):
+    runtime = runpy.run_path(str(PILOT))["record_model_stop"].__globals__
+    seen = []
+    monkeypatch.setitem(
+        runtime,
+        "_shared_admission",
+        lambda root: SimpleNamespace(publish_model_failure=lambda **kwargs: seen.append(kwargs)),
+    )
+    first = runtime["record_model_stop"](
+        tmp_path, "first", 2, {"kind": "model_usage_limit"}, datetime.now(UTC).isoformat()
+    )
+    original_bytes = (tmp_path / "model-batch-stop.json").read_bytes()
+    second = runtime["record_model_stop"](
+        tmp_path, "second", 4, {"kind": "model_transport_failure"}, datetime.now(UTC).isoformat()
+    )
+    assert (tmp_path / "model-batch-stop.json").read_bytes() == original_bytes
+    assert first["case_id"] == "first" and second["case_id"] == "second"
+    assert [item["case_id"] for item in seen] == ["first", "first"]
+    assert [item["action_id"] for item in seen] == ["selector-02", "selector-02"]
+
+
+def test_public_case_export_rejects_labels_and_scope_fill_before_packet_creation():
+    runtime = runpy.run_path(str(PILOT))["_public_case_dataset"].__globals__
+    public = []
+    for case_id in runtime["legacy"]["COHORT"]:
+        name = "Synthetic " + case_id
+        request = dict.fromkeys(runtime["REQUEST_FIELDS"])
+        request.update(
+            university=name, degree="bachelor", field="computer science", intake="fall 2027"
+        )
+        public.append(
+            {"id": case_id, "university": name, "domain": case_id + ".example", "request": request}
+        )
+    dataset = {"version": "expert500-v14-public-v1", "cases": public}
+    trial = {"public_cases": public, "public_cases_sha256": runtime["digest"](dataset)}
+    assert runtime["_public_case_dataset"](trial) == dataset
+    public[0]["labels"] = []
+    with pytest.raises(ValueError, match="public identity/request"):
+        runtime["_public_case_dataset"](trial)
+    public[0].pop("labels")
+    public[0]["request"]["population"] = "international"
+    with pytest.raises(ValueError, match="frozen pilot request"):
+        runtime["_public_case_dataset"](trial)
+
+
+@pytest.fixture(autouse=True)
+def no_actual_processes(monkeypatch):
+    def forbidden(*_args, **_kwargs):
+        raise AssertionError("Source and model processes must be synthetic")
+
+    monkeypatch.setattr(subprocess, "run", forbidden)
+    monkeypatch.setattr(subprocess, "Popen", forbidden)
+    monkeypatch.setattr(asyncio, "create_subprocess_exec", forbidden)
+
+
+def worker_fixtures():
+    path = Path("/tmp/test_unimatch_expert500_local_worker_v1_candidate.py")
+    spec = importlib.util.spec_from_file_location("_v14_parent_synthetic_worker_helpers", path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def public_cases(runtime):
+    result = []
+    for case_id in runtime["legacy"]["COHORT"]:
+        request = dict.fromkeys(runtime["REQUEST_FIELDS"])
+        request.update(
+            university="Synthetic " + case_id,
+            degree="bachelor",
+            field="computer science",
+            intake="fall 2027",
+        )
+        result.append(
+            {
+                "id": case_id,
+                "university": request["university"],
+                "domain": "example.edu",
+                "request": request,
+            }
+        )
+    return result
+
+
+@pytest.fixture
+def local_client(tmp_path, monkeypatch):
+    helpers = worker_fixtures()
+    config = helpers.config.__wrapped__(tmp_path)
+    worker = helpers.worker
+    runtime = runpy.run_path(str(PILOT))["workflow"].__globals__
+    runtime["STOP"].clear()
+    monkeypatch.setitem(runtime, "_LOCAL_WORKER_MODULE", worker)
+    monkeypatch.setitem(runtime, "_LOCAL_ADMISSION_MODULE", helpers.admission_module)
+    monkeypatch.setitem(runtime, "LOCAL_ADMISSION_PATH", Path(helpers.admission_module.__file__))
+    root = tmp_path.resolve() / "trial"
+    root.mkdir()
+    (root / "experts/u").mkdir(parents=True)
+    (root / "baseline").mkdir()
+    registry = root / "synthetic-producer-registry.json"
+    registry.write_text('{"version":"synthetic","bindings":[]}')
+    clock = helpers.FakeClock()
+
+    class LocalDatetime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return clock.now().astimezone(tz or UTC)
+
+    monkeypatch.setitem(runtime, "datetime", LocalDatetime)
+    opaque_registry = {"path": str(registry), "sha256": worker._identity(registry)["sha256"]}
+    public = public_cases(runtime)
+    trial = {
+        "protocol_version": "journal-v14-local",
+        "transport_kind": "local_process_v1",
+        "frozen_ref": "synthetic-frozen",
+        "harness_sha": config.source_sha,
+        "search_provider": "exa",
+        "algorithm_provider": "exa",
+        "expert_provider": "exa",
+        "admission_run_id": config.admission_run_id,
+        "local_runtime": {
+            key: config.as_dict()[key]
+            for key in (
+                "source_cwd",
+                "source_manifest",
+                "interpreter",
+                "runtime_files",
+                "runtime_import_roots",
+                "public_environment",
+            )
+        },
+        "algorithm_defaults": worker.algorithm_defaults(config),
+        "selector_environment": {
+            "HOME": str(tmp_path),
+            "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/usr/bin:/bin:/usr/sbin:/sbin",
+            "TMPDIR": str(tmp_path),
+        },
+        "baseline_identity_registry": opaque_registry,
+        "baseline_identity_registry_source_sha": runtime["BASELINE_REGISTRY_SOURCE_SHA"],
+        "binding_registry": opaque_registry,
+        "public_cases": public,
+        "public_cases_sha256": runtime["digest"](
+            {"version": "expert500-v14-public-v1", "cases": public}
+        ),
+        "scripts": {
+            str(path): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in (PILOT, runtime["WORKER_PATH"], runtime["LOCAL_ADMISSION_PATH"])
+        },
+    }
+    trial["selector_environment_sha256"] = runtime["digest"](trial["selector_environment"])
+    (root / "trial.json").write_text(json.dumps(trial))
+    processes = []
+    kills = []
+
+    def make_session(actual_config):
+        def factory(argv, **kwargs):
+            process = helpers.FakeProcess(config=actual_config, clock=clock)
+            if actual_config.stage == "baseline":
+
+                async def baseline_runner(_request, artifact):
+                    original_capture = helpers.capture
+
+                    def capture(config):
+                        captured = original_capture(config)
+                        budget = captured["config"]["case_budgets"][config.case_id]
+                        gate = helpers.admission_module.SourceAdmission(
+                            config.admission_root, run_id=config.admission_run_id, provider="exa"
+                        )
+                        budget.update(source_admission=gate.policy(), source_admission_stop=None)
+                        return captured
+
+                    helpers.capture = capture
+                    try:
+                        return await asyncio.to_thread(
+                            helpers.synthetic_baseline_artifacts, actual_config, artifact
+                        )
+                    finally:
+                        helpers.capture = original_capture
+
+                process.engine.baseline_runner = baseline_runner
+            processes.append((process, argv, {**kwargs, "env": dict(kwargs["env"])}))
+            return process
+
+        def kill(pid, sig):
+            process = processes[-1][0]
+            assert pid == process.pid
+            kills.append(sig)
+            if sig == signal.SIGKILL:
+                process.returncode = -sig
+                process.stdout.lines.put(b"")
+
+        return worker.start_session(
+            actual_config,
+            private_key="DUMMY_NOT_A_REAL_KEY",
+            process_factory=factory,
+            clock=clock.now,
+            monotonic=clock.monotonic,
+            kill_group=kill,
+        )
+
+    monkeypatch.setitem(runtime, "_LOCAL_FACTORY", make_session)
+    return SimpleNamespace(
+        runtime=runtime,
+        root=root,
+        worker=worker,
+        helpers=helpers,
+        config=config,
+        clock=clock,
+        processes=processes,
+        kills=kills,
+        trial=trial,
+    )
+
+
+def test_actual_local_transport_keeps_one_worker_and_exact_resumed_source_prefix(local_client):
+    client = local_client
+    guard = client.runtime["WallGuard"](
+        client.clock.start, client.clock.start + timedelta(seconds=900)
+    )
+    original = client.runtime["_session_config"](client.root, "u", "expert", guard)
+    assert original.baseline_identity_registry is None
+    first = client.runtime["workflow"](
+        Path("/unused"),
+        "synthetic-frozen",
+        "u",
+        {
+            "mode": "expert_actions",
+            "search_provider": "exa",
+            "plan": json.dumps(client.helpers.plan(original)),
+        },
+        client.root / "experts/u/controller-01",
+        wall_guard=guard,
+        trial_root=client.root,
+    )
+    client.clock.advance(180)
+    second = client.runtime["workflow"](
+        Path("/unused"),
+        "synthetic-frozen",
+        "u",
+        {
+            "mode": "expert_actions",
+            "search_provider": "exa",
+            "plan": json.dumps(client.helpers.plan(original, first)),
+        },
+        client.root / "experts/u/controller-02",
+        wall_guard=guard,
+        trial_root=client.root,
+        prior_delivery=first,
+    )
+    assert len(client.processes) == 1
+    assert first.receipt["session_id"] == second.receipt["session_id"]
+    assert first.receipt["local_run_id"] != second.receipt["local_run_id"]
+    assert second.source_counters["fetcher_calls"] == 2
+    assert 20 <= second.source_counters["elapsed_ms"] <= 21
+    assert len(second.summary["raw_logs"]) == 2
+    terminal = client.runtime["close_source_session"](client.root, "u", "expert")
+    assert terminal["last_verified_delivery_sha256"] == second.receipt_sha256
+    assert terminal["unknown_tail"] is False
+    with pytest.raises(ValueError, match="cannot restart"):
+        client.runtime["_session_for"](client.root, "u", "expert", guard)
+    assert client.processes[0][2]["env"][client.worker.KEY_NAME] == "DUMMY_NOT_A_REAL_KEY"
+    for path in (client.root / "source-workers").rglob("*.json"):
+        assert b"DUMMY_NOT_A_REAL_KEY" not in path.read_bytes()
+
+
+def test_actual_local_baseline_packages_fresh_capture_and_public_packet_only(local_client):
+    client = local_client
+    client.runtime["legacy"]["COHORT"] = {"u": object()}
+    public = public_cases(client.runtime)
+    client.trial["public_cases"] = public
+    client.trial["public_cases_sha256"] = client.runtime["digest"](
+        {"version": "expert500-v14-public-v1", "cases": public}
+    )
+    (client.root / "trial.json").write_text(json.dumps(client.trial))
+    result = client.runtime["baseline"](Path("/unused"), "synthetic-frozen", client.root, "u")
+    packet = json.loads(Path(result["packet"]).read_bytes())
+    assert packet["cases"][0]["request"]["programme"] is None
+    assert packet["cases"][0]["request"]["population"] is None
+    assert packet["cases"][0]["request"]["intake"] == "fall 2027"
+    assert result["transport_kind"] == "local_process_v1"
+    assert result["budget"]["finalization_reserve_ms"] == 1000
+    assert result["budget"]["source_work_deadline_ms"] == 119000
+    assert result["source_session_terminal"]["unknown_tail"] is False
+    assert len(client.processes) == 1
+    assert not {"run_id", "head_sha", "headSha", "conclusion"}.intersection(result)
+    config = client.processes[0][0].config
+    assert config.baseline_identity_registry == client.trial["baseline_identity_registry"]
+    assert not Path(client.trial["baseline_identity_registry"]["path"]).is_relative_to(
+        config.source_cwd
+    )
+
+
+@pytest.mark.parametrize("status", [401, 402, 403, 429])
+def test_real_local_workflow_preserves_durable_first_provider_cause(local_client, status):
+    client = local_client
+    guard = client.runtime["WallGuard"](
+        client.clock.start, client.clock.start + timedelta(seconds=900)
+    )
+    config = client.runtime["_session_config"](client.root, "u", "expert", guard)
+    session = client.runtime["_session_for"](client.root, "u", "expert", guard)
+    provider = session.process.engine.search.__self__
+    provider.status = status
+    delivery = client.runtime["workflow"](
+        Path("/unused"),
+        "synthetic-frozen",
+        "u",
+        {
+            "mode": "expert_actions",
+            "search_provider": "exa",
+            "plan": json.dumps(client.helpers.plan(config, tool="search_provider")),
+        },
+        client.root / "experts/u/controller-01",
+        wall_guard=guard,
+        trial_root=client.root,
+    )
+    assert delivery.source_counters["search_queries"] == 1
+    stopped = json.loads((client.root / "source-admission/stop.json").read_bytes())
+    assert stopped["stop_kind"] == "provider_failure"
+    assert stopped["http_status"] == status and stopped["case_id"] == "u"
+    assert client.runtime["STOP"].is_set()
+    assert (client.root / "transport-batch-stop.json").is_file()
+    with pytest.raises(RuntimeError, match="Batch stopped"):
+        client.runtime["workflow"](
+            Path("/unused"),
+            "synthetic-frozen",
+            "u",
+            {"mode": "expert_actions", "search_provider": "exa", "plan": "{}"},
+            client.root / "experts/u/controller-02",
+            wall_guard=guard,
+            trial_root=client.root,
+            prior_delivery=delivery,
+        )
+    assert provider.calls == 1
+    assert not (client.root / "experts/u/controller-02").exists()
+
+
+def test_worker_startup_integrity_failure_is_durable_before_batch_flag(local_client, monkeypatch):
+    client = local_client
+    guard = client.runtime["WallGuard"](
+        client.clock.start, client.clock.start + timedelta(seconds=900)
+    )
+    config = client.runtime["_session_config"](client.root, "u", "expert", guard)
+
+    def failed(_config):
+        raise ValueError("Synthetic source startup failure")
+
+    monkeypatch.setitem(client.runtime, "_LOCAL_FACTORY", failed)
+    with pytest.raises(ValueError, match="Synthetic"):
+        client.runtime["workflow"](
+            Path("/unused"),
+            "synthetic-frozen",
+            "u",
+            {
+                "mode": "expert_actions",
+                "search_provider": "exa",
+                "plan": json.dumps(client.helpers.plan(config)),
+            },
+            client.root / "experts/u/controller-01",
+            wall_guard=guard,
+            trial_root=client.root,
+        )
+    assert client.runtime["STOP"].is_set()
+    stopped = json.loads((client.root / "source-admission/stop.json").read_bytes())
+    assert stopped["stop_kind"] == "integrity_failure"
+    assert stopped["terminal_reason"] == "worker_receipt_invalid"
+    assert (client.root / "transport-batch-stop.json").exists()
+    assert not client.processes
+
+
+@pytest.mark.parametrize("forged", [False, True])
+def test_actual_unavailable_guard_receipt_keeps_unknown_counters_and_checks_original_binding(
+    local_client, monkeypatch, forged
+):
+    client = local_client
+    guard = client.runtime["WallGuard"](
+        client.clock.start, client.clock.start + timedelta(seconds=900)
+    )
+    config = client.runtime["_session_config"](client.root, "u", "expert", guard)
+    session = client.runtime["_session_for"](client.root, "u", "expert", guard)
+    session.process.hang = True
+
+    def timeout(_remaining):
+        raise TimeoutError("Synthetic worker reached its original case guard")
+
+    monkeypatch.setattr(session, "_receive", timeout)
+    if forged:
+        execute = session.execute
+
+        def altered(*args, **kwargs):
+            from dataclasses import replace
+
+            delivery = execute(*args, **kwargs)
+            return replace(delivery, receipt={**delivery.receipt, "case_id": "peer"})
+
+        monkeypatch.setattr(session, "execute", altered)
+    request = {
+        "mode": "expert_actions",
+        "search_provider": "exa",
+        "plan": json.dumps(client.helpers.plan(config)),
+    }
+    destination = client.root / "experts/u/controller-01"
+    if forged:
+        with pytest.raises(ValueError, match="saved originals"):
+            client.runtime["workflow"](
+                Path("/unused"),
+                "synthetic-frozen",
+                "u",
+                request,
+                destination,
+                wall_guard=guard,
+                trial_root=client.root,
+            )
+        assert client.runtime["STOP"].is_set()
+        assert (client.root / "source-admission/stop.json").exists()
+    else:
+        with pytest.raises(client.runtime["CaseGuardEnded"]) as error:
+            client.runtime["workflow"](
+                Path("/unused"),
+                "synthetic-frozen",
+                "u",
+                request,
+                destination,
+                wall_guard=guard,
+                trial_root=client.root,
+            )
+        assert error.value.receipt["source_counters_known"] is False
+        assert error.value.receipt["source_counters"] is None
+        assert (
+            error.value.receipt["terminal_process"]["completed_at"]
+            == client.clock.now().isoformat()
+        )
+        assert not client.runtime["STOP"].is_set()
+        assert not (client.root / "source-admission/stop.json").exists()
+        assert not (client.root / "transport-batch-stop.json").exists()
+    assert client.kills == [signal.SIGTERM, signal.SIGKILL]
+    with pytest.raises(ValueError, match="Unknown"):
+        client.worker.validate_local_delivery(
+            destination,
+            expected_case_id="u",
+            expected_stage="expert",
+            expected_source_sha=config.source_sha,
+            expected_wall_guard=config.wall_guard,
+        )
+
+
+def test_stage_claim_creates_only_container_before_actual_ten_stub_callbacks(tmp_path, monkeypatch):
+    runtime = runpy.run_path(str(PILOT))["main"].__globals__
+    runtime["STOP"].clear()
+    root = tmp_path.resolve() / "trial"
+    root.mkdir()
+    cases = tuple(runtime["legacy"]["COHORT"])
+    assert cases == (
+        "groningen",
+        "delft",
+        "aalto",
+        "vienna",
+        "warsaw",
+        "ubc",
+        "toronto",
+        "hku",
+        "ntu",
+        "kaist",
+    )
+    assignments, receipts = allocate_workspaces(cases, temp_root=tmp_path.resolve())
+    for name, value in (
+        ("workspace-locations.json", assignments),
+        ("workspace-receipts.json", receipts),
+    ):
+        (root / name).write_text(json.dumps(value))
+    public = public_cases(runtime)
+    model_environment = {
+        "HOME": str(tmp_path),
+        "PATH": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/usr/bin:/bin:/usr/sbin:/sbin",
+        "TMPDIR": str(tmp_path),
+    }
+    trial = {
+        "protocol_version": "journal-v14-local",
+        "transport_kind": "local_process_v1",
+        "frozen_ref": "synthetic-frozen",
+        "search_provider": "exa",
+        "algorithm_provider": "exa",
+        "expert_provider": "exa",
+        "public_cases": public,
+        "public_cases_sha256": runtime["digest"](
+            {"version": "expert500-v14-public-v1", "cases": public}
+        ),
+        "selector_environment": model_environment,
+        "selector_environment_sha256": runtime["digest"](model_environment),
+        "workspace_assignments_sha256": hashlib.sha256(
+            (root / "workspace-locations.json").read_bytes()
+        ).hexdigest(),
+        "workspace_receipts_sha256": hashlib.sha256(
+            (root / "workspace-receipts.json").read_bytes()
+        ).hexdigest(),
+    }
+    (root / "trial.json").write_text(json.dumps(trial))
+    monkeypatch.setitem(runtime, "_LOCAL_FACTORY", object())
+    seen = []
+
+    def baseline_callback(_repo, _ref, actual_root, case):
+        assert (actual_root / "baseline-stage-start.json").exists()
+        assert (actual_root / "baseline").is_dir()
+        assert not (actual_root / "baseline" / case).exists()
+        seen.append(case)
+        return {"case_id": case, "provider": "exa", "provider_failure": None}
+
+    monkeypatch.setitem(runtime, "baseline", baseline_callback)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            str(PILOT),
+            "--repo",
+            str(tmp_path),
+            "--root",
+            str(root),
+            "--ref",
+            "synthetic-frozen",
+            "--stage",
+            "baseline",
+        ],
+    )
+    runtime["main"]()
+    assert set(seen) == set(cases) and len(seen) == 10
+    original = (root / "baseline-stage-start.json").read_bytes()
+    with pytest.raises(ValueError, match="reset or retry"):
+        runtime["main"]()
+    assert (root / "baseline-stage-start.json").read_bytes() == original
+    assert len(seen) == 10

@@ -1,0 +1,137 @@
+{
+  "source_change": "tests-only deterministic controlled task cancellation + setup expiry",
+  "full_backend_tests": 4404,
+  "coverage_percent": 94.85,
+  "full_seconds": 427.14,
+  "prior_static_negatives_preserved": true,
+  "two_premature_full_runs_intentionally_interrupted": true,
+  "provider_model_university_calls": 0,
+  "records": [
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-gates-20261006/backend-00-original.log",
+      "file": "unimatch-expert500-v14-deadline-gates-20261006/backend-00-original.log",
+      "size": 176,
+      "sha256": "e52f645be1f87c2e8dd7d3bbf4c359eb24642bab28318b6562ba599fc00df85e"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-gates-20261006/backend-receipt.json",
+      "file": "unimatch-expert500-v14-deadline-gates-20261006/backend-receipt.json",
+      "size": 617,
+      "sha256": "4e0cbb3a25aa1f87cd54b8f31f7d80b31552efa08525e5dbf953a2863bfd0a39"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-gates-20261006/focused-00-original.log",
+      "file": "unimatch-expert500-v14-deadline-gates-20261006/focused-00-original.log",
+      "size": 320,
+      "sha256": "c5f22b76c28f03bff9b231dd2790aff8f171f6ce2d73628df1e8b48e34e36f28"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-gates-20261006/focused-receipt.json",
+      "file": "unimatch-expert500-v14-deadline-gates-20261006/focused-receipt.json",
+      "size": 819,
+      "sha256": "7c6b3a5daa68f806756b87f3705327305166f7ecf17f7ffc391235c7a105cb09"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-gates-20261006/static-00-original.log",
+      "file": "unimatch-expert500-v14-deadline-gates-20261006/static-00-original.log",
+      "size": 1077,
+      "sha256": "5895c84d7dabf944296c411750c7ba1e31458c1d745147800fd6c182775c055f"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-gates-20261006/static-receipt.json",
+      "file": "unimatch-expert500-v14-deadline-gates-20261006/static-receipt.json",
+      "size": 631,
+      "sha256": "3166c6c8b38c5e978dcb0d7c8576f30eb6810c0d0308eb5870cf0a65d0ffeaac"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-final-gates-20261006/backend-00-original.log",
+      "file": "unimatch-expert500-v14-deadline-final-gates-20261006/backend-00-original.log",
+      "size": 171,
+      "sha256": "db74d3c219647f06828e6f7db1aefdad216c65aad2384370b8ba74f7679c326d"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-final-gates-20261006/backend-receipt.json",
+      "file": "unimatch-expert500-v14-deadline-final-gates-20261006/backend-receipt.json",
+      "size": 623,
+      "sha256": "b6f8f9c05af4673747e3801ccd897eabd6dfedfc2763c70d3f189e7cc17f67ca"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-final-gates-20261006/static-00-original.log",
+      "file": "unimatch-expert500-v14-deadline-final-gates-20261006/static-00-original.log",
+      "size": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-final-gates-20261006/static-01-original.log",
+      "file": "unimatch-expert500-v14-deadline-final-gates-20261006/static-01-original.log",
+      "size": 106,
+      "sha256": "0ee9f761fb5887f6c895d3892c6998bf5b5e20a10bfebf6b3a721e108e2fa7f8"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-final-gates-20261006/static-receipt.json",
+      "file": "unimatch-expert500-v14-deadline-final-gates-20261006/static-receipt.json",
+      "size": 1068,
+      "sha256": "4f791dc4d76f9c5d346b3c92857daa34caa46902c9c5fb0a67d432e66520df37"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-final2-gates-20261006/backend-00-original.log",
+      "file": "unimatch-expert500-v14-deadline-final2-gates-20261006/backend-00-original.log",
+      "size": 17004,
+      "sha256": "c5fb6f834edb585a294d39b54e2e04baca82267822f7f14d836cceccba3eb7e6"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-final2-gates-20261006/backend-receipt.json",
+      "file": "unimatch-expert500-v14-deadline-final2-gates-20261006/backend-receipt.json",
+      "size": 624,
+      "sha256": "f08b9108bad2348bba087380f69f526a12ab0e7c7a5fb25bd9a8224130736259"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-final2-gates-20261006/isolated.db",
+      "file": "unimatch-expert500-v14-deadline-final2-gates-20261006/isolated.db",
+      "size": 4096,
+      "sha256": "0ab48b25cba617ed3a4acca0161813b314c095ef63544bb4af60769eb1012977"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-final2-gates-20261006/static-00-original.log",
+      "file": "unimatch-expert500-v14-deadline-final2-gates-20261006/static-00-original.log",
+      "size": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-final2-gates-20261006/static-01-original.log",
+      "file": "unimatch-expert500-v14-deadline-final2-gates-20261006/static-01-original.log",
+      "size": 28,
+      "sha256": "681d35b1cf232b2a72d72fb3f824d62f4e49bddf5e5bc167dc34481caf918c40"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-final2-gates-20261006/static-02-original.log",
+      "file": "unimatch-expert500-v14-deadline-final2-gates-20261006/static-02-original.log",
+      "size": 8584,
+      "sha256": "891b47c4a799936bb78d79231ab42288e4d74da7e7116de48ba852ef09136936"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-deadline-final2-gates-20261006/static-receipt.json",
+      "file": "unimatch-expert500-v14-deadline-final2-gates-20261006/static-receipt.json",
+      "size": 1467,
+      "sha256": "ac4f46e822da839db74e2c06fff9f5d3d803a9c4f7af7a4638d981e97d61e4ac"
+    },
+    {
+      "source": "/tmp/test_expert_live_budget_deadline_deterministic_candidate.py",
+      "file": "test_expert_live_budget_deadline_deterministic_candidate.py.txt",
+      "size": 5014,
+      "sha256": "2767b4a29cea72c18e1e4832f4b696ae252cdb2b9d6376c5a58829c46e4a00af"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-baseline-deadline-candidate-ea0b0fdd91/deterministic-fixture-candidate.patch",
+      "file": "deterministic-fixture-candidate.patch",
+      "size": 5778,
+      "sha256": "a802d580465dd282c4049f49c585dacd467cb05382474befd72d9e1122cdd793"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-baseline-deadline-candidate-ea0b0fdd91/DELIVERY.json",
+      "file": "DELIVERY.json",
+      "size": 4867,
+      "sha256": "0f03eee50c3aeeafe9770cc93f65683c55c11d42bae58d54e41bc76eb519c8a8"
+    }
+  ]
+}

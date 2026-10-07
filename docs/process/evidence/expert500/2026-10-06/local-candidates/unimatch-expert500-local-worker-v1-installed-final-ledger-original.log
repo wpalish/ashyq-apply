@@ -1,0 +1,230 @@
+.....................................................................F.. [ 80%]
+....F...F.........                                                       [100%]
+=================================== FAILURES ===================================
+___ test_baseline_persisted_permit_without_execution_never_adds_a_page_read ____
+
+config = SessionConfig(case_id='u', stage='expert', source_sha='1111111111111111111111111111111111111111', source_cwd=PosixPath...10-06T12:15:00+00:00', 'wall_guard_ms': 900000}, baseline_identity_registry=None, protocol_version='journal-v14-local')
+
+    def test_baseline_persisted_permit_without_execution_never_adds_a_page_read(config: Any) -> None:
+        baseline, original = baseline_with_permit_only_tail(config)
+        budget = original["config"]["case_budgets"]["u"]
+        assert len(budget["source_admission_receipts"]) == 4
+        assert worker._baseline_admission_counters(budget, baseline) == {
+            "fetcher_calls": 2,
+            "search_queries": 1,
+        }
+>       assert worker._validate_capture(original, baseline) == {
+            "fetcher_calls": 2,
+            "search_queries": 1,
+            "elapsed_ms": 400,
+        }
+E       AssertionError: assert None == {'fetcher_calls': 2, 'search_queries': 1, 'elapsed_ms': 400}
+E        +  where None = <function _validate_capture at 0x10bdb0cc0>({'schema_version': '1', 'pipeline_sha': '1111111111111111111111111111111111111111', 'captured_at': '2026-10-06T12:00:00+00:00', 'mode': 'live', ...}, SessionConfig(case_id='u', stage='baseline', source_sha='1111111111111111111111111111111111111111', source_cwd=PosixPa...', 'sha256': '528dfd9fe40cc9ad9024dad60f39cff42874ed6a6963eac9130f44afd799c54b'}, protocol_version='journal-v14-local'))
+E        +    where <function _validate_capture at 0x10bdb0cc0> = worker._validate_capture
+
+/tmp/test_unimatch_expert500_local_worker_v1_candidate.py:1270: AssertionError
+_ test_baseline_original_execution_ledger_rejects_ambiguous_permits[changed_case] _
+
+config = SessionConfig(case_id='u', stage='expert', source_sha='1111111111111111111111111111111111111111', source_cwd=PosixPath...10-06T12:15:00+00:00', 'wall_guard_ms': 900000}, baseline_identity_registry=None, protocol_version='journal-v14-local')
+mutation = 'changed_case'
+
+    @pytest.mark.parametrize(
+        "mutation",
+        [
+            "false_delta",
+            "true_without_delta",
+            "bool_executed",
+            "bool_counter",
+            "prefix_reset",
+            "changed_tool",
+            "changed_case",
+            "duplicate_action",
+            "missing_action",
+            "missing_permit",
+            "permit_hash",
+            "claimed_permit_count",
+        ],
+    )
+    def test_baseline_original_execution_ledger_rejects_ambiguous_permits(
+        config: Any, mutation: str
+    ) -> None:
+        baseline, original = baseline_with_permit_only_tail(config)
+        budget = original["config"]["case_budgets"]["u"]
+        tail = budget["source_admission_actions"][-1]
+        if mutation == "false_delta":
+            tail["counter_after"]["fetcher_calls"] += 1
+        elif mutation == "true_without_delta":
+            tail["executed"] = True
+        elif mutation == "bool_executed":
+            tail["executed"] = 0
+        elif mutation == "bool_counter":
+            tail["counter_after"]["search_queries"] = True
+        elif mutation == "prefix_reset":
+            tail["counter_before"]["fetcher_calls"] = 0
+        elif mutation == "changed_tool":
+            tail["tool"] = "search_provider"
+        elif mutation == "changed_case":
+            tail["source_admission"]["case_id"] = "foreign-case"
+        elif mutation == "duplicate_action":
+            tail["action_id"] = budget["source_admission_actions"][0]["action_id"]
+        elif mutation == "missing_action":
+            budget["source_admission_actions"].pop()
+        elif mutation == "missing_permit":
+            budget["source_admission_receipts"].pop()
+        elif mutation == "permit_hash":
+            tail["source_admission"]["receipt_sha256"] = "0" * 64
+        elif mutation == "claimed_permit_count":
+            budget["fetcher_calls"] = 3
+        with pytest.raises(ValueError):
+>           worker._validate_capture(original, baseline)
+
+/tmp/test_unimatch_expert500_local_worker_v1_candidate.py:1325: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:898: in _validate_capture
+    _baseline_admission_counters(budget, config)
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:933: in _baseline_admission_counters
+    original = admission_module.validate_receipt(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+proof = {'schema_version': '1', 'contract': 'source_admission_v1', 'run_id': '40d5f2c8-1964-473e-99cf-d105d567ad62', 'provider': 'exa', ...}
+root = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-554/test_baseline_original_executi6/admission')
+run_id = '40d5f2c8-1964-473e-99cf-d105d567ad62', provider = 'exa'
+kind = 'admission'
+
+    def validate_receipt(
+        proof: Mapping[str, Any],
+        *,
+        root: Path,
+        run_id: str,
+        provider: str,
+        kind: Literal["admission", "stop"],
+    ) -> dict[str, Any]:
+        """Validate independently stored bytes/hash/path/schema; no source or model I/O."""
+        root = root.resolve()
+        relative, digest = proof.get("receipt_path"), proof.get("receipt_sha256")
+        if (
+            not isinstance(relative, str)
+            or not isinstance(digest, str)
+            or not _HEX.fullmatch(digest)
+            or (relative != "stop.json" if kind == "stop" else not _ADMISSION_PATH.fullmatch(relative))
+        ):
+            raise SourceAdmissionIntegrityError()
+        path = root / relative
+        if (
+            path.parent.is_symlink()
+            or path.resolve().parent != (root / Path(relative).parent).resolve()
+        ):
+            raise SourceAdmissionIntegrityError()
+        data = _read(path)
+        if hashlib.sha256(data).hexdigest() != digest:
+            raise SourceAdmissionIntegrityError("source_hash_mismatch")
+        value = _decode(data)
+        _record(value, run_id=run_id, provider=provider, kind=kind)
+        if dict(proof) != {**value, "receipt_path": relative, "receipt_sha256": digest}:
+>           raise SourceAdmissionIntegrityError()
+E           evaluation.research.expert.source_admission.SourceAdmissionIntegrityError: source_record_invalid
+
+evaluation/research/expert/source_admission.py:293: SourceAdmissionIntegrityError
+_ test_baseline_original_execution_ledger_rejects_ambiguous_permits[permit_hash] _
+
+config = SessionConfig(case_id='u', stage='expert', source_sha='1111111111111111111111111111111111111111', source_cwd=PosixPath...10-06T12:15:00+00:00', 'wall_guard_ms': 900000}, baseline_identity_registry=None, protocol_version='journal-v14-local')
+mutation = 'permit_hash'
+
+    @pytest.mark.parametrize(
+        "mutation",
+        [
+            "false_delta",
+            "true_without_delta",
+            "bool_executed",
+            "bool_counter",
+            "prefix_reset",
+            "changed_tool",
+            "changed_case",
+            "duplicate_action",
+            "missing_action",
+            "missing_permit",
+            "permit_hash",
+            "claimed_permit_count",
+        ],
+    )
+    def test_baseline_original_execution_ledger_rejects_ambiguous_permits(
+        config: Any, mutation: str
+    ) -> None:
+        baseline, original = baseline_with_permit_only_tail(config)
+        budget = original["config"]["case_budgets"]["u"]
+        tail = budget["source_admission_actions"][-1]
+        if mutation == "false_delta":
+            tail["counter_after"]["fetcher_calls"] += 1
+        elif mutation == "true_without_delta":
+            tail["executed"] = True
+        elif mutation == "bool_executed":
+            tail["executed"] = 0
+        elif mutation == "bool_counter":
+            tail["counter_after"]["search_queries"] = True
+        elif mutation == "prefix_reset":
+            tail["counter_before"]["fetcher_calls"] = 0
+        elif mutation == "changed_tool":
+            tail["tool"] = "search_provider"
+        elif mutation == "changed_case":
+            tail["source_admission"]["case_id"] = "foreign-case"
+        elif mutation == "duplicate_action":
+            tail["action_id"] = budget["source_admission_actions"][0]["action_id"]
+        elif mutation == "missing_action":
+            budget["source_admission_actions"].pop()
+        elif mutation == "missing_permit":
+            budget["source_admission_receipts"].pop()
+        elif mutation == "permit_hash":
+            tail["source_admission"]["receipt_sha256"] = "0" * 64
+        elif mutation == "claimed_permit_count":
+            budget["fetcher_calls"] = 3
+        with pytest.raises(ValueError):
+>           worker._validate_capture(original, baseline)
+
+/tmp/test_unimatch_expert500_local_worker_v1_candidate.py:1325: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:898: in _validate_capture
+    _baseline_admission_counters(budget, config)
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:933: in _baseline_admission_counters
+    original = admission_module.validate_receipt(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+proof = {'schema_version': '1', 'contract': 'source_admission_v1', 'run_id': '9e923a17-f989-49f1-9ffc-f469ef0ef2a5', 'provider': 'exa', ...}
+root = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-554/test_baseline_original_executi10/admission')
+run_id = '9e923a17-f989-49f1-9ffc-f469ef0ef2a5', provider = 'exa'
+kind = 'admission'
+
+    def validate_receipt(
+        proof: Mapping[str, Any],
+        *,
+        root: Path,
+        run_id: str,
+        provider: str,
+        kind: Literal["admission", "stop"],
+    ) -> dict[str, Any]:
+        """Validate independently stored bytes/hash/path/schema; no source or model I/O."""
+        root = root.resolve()
+        relative, digest = proof.get("receipt_path"), proof.get("receipt_sha256")
+        if (
+            not isinstance(relative, str)
+            or not isinstance(digest, str)
+            or not _HEX.fullmatch(digest)
+            or (relative != "stop.json" if kind == "stop" else not _ADMISSION_PATH.fullmatch(relative))
+        ):
+            raise SourceAdmissionIntegrityError()
+        path = root / relative
+        if (
+            path.parent.is_symlink()
+            or path.resolve().parent != (root / Path(relative).parent).resolve()
+        ):
+            raise SourceAdmissionIntegrityError()
+        data = _read(path)
+        if hashlib.sha256(data).hexdigest() != digest:
+>           raise SourceAdmissionIntegrityError("source_hash_mismatch")
+E           evaluation.research.expert.source_admission.SourceAdmissionIntegrityError: source_hash_mismatch
+
+evaluation/research/expert/source_admission.py:289: SourceAdmissionIntegrityError
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_local_worker_v1_candidate.py::test_baseline_persisted_permit_without_execution_never_adds_a_page_read
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_local_worker_v1_candidate.py::test_baseline_original_execution_ledger_rejects_ambiguous_permits[changed_case]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_local_worker_v1_candidate.py::test_baseline_original_execution_ledger_rejects_ambiguous_permits[permit_hash]
+3 failed, 87 passed in 1.73s

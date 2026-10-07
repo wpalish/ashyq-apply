@@ -1,0 +1,1155 @@
+"""Actual ten-case V10 adapter preflight; no source/model/label/Git I/O.
+
+The real public COHORT remains a dict. Only the launcher's literal repository
+Path is redirected. Its script/module digests use the actual current sources;
+the private binding pointer alone is a harmless synthetic test fixture.
+"""
+
+from __future__ import annotations
+
+import copy
+import hashlib
+import importlib.util
+import json
+import pathlib
+import runpy
+import shutil
+import subprocess
+import sys
+from collections.abc import Iterator
+from dataclasses import dataclass, field, replace
+from pathlib import Path
+from typing import Any
+
+import pytest
+from evaluation.research import live
+from evaluation.research.expert import workspace_policy
+from evaluation.research.expert.blind_cli import selector_answer
+from evaluation.research.expert.journal import AcceptedJournal
+from evaluation.research.expert.network_budget import (
+    BUDGET_MODEL,
+    NETWORK_COMPARISON_MODE,
+    WALL_GUARD_MS,
+    expert_budget,
+)
+from evaluation.research.expert.network_turn_policy import (
+    NetworkBudgetIsolation,
+    command_proof,
+    journal_schema_for_turn,
+    parse_turn_decision,
+    policy_limits,
+)
+from evaluation.research.expert.workspace_policy import (
+    allocate_workspaces,
+    selector_paths,
+    validate_selector_paths,
+    validate_workspaces,
+)
+from evaluation.research.live import COHORT
+
+REPO = Path(
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply"
+)
+LAUNCHER = Path("/tmp/unimatch-expert500-launch-v10.py")
+PILOT = Path("/tmp/unimatch-expert500-journal-pilot-v10.py")
+REPORT = Path("/tmp/unimatch-expert500-journal-report-v10.py")
+LEGACY = Path("/tmp/unimatch-expert500-pilot-v1-frozen.py")
+FREEZER = Path("/tmp/unimatch-expert500-freeze-v10.py")
+EXPORTER = Path("/tmp/unimatch-expert500-export-v10.py")
+OS_HELPER = Path("/tmp/unimatch-expert500-isolation-preflight-v10.py")
+EXPECTED_CASE_IDS = {
+    "groningen",
+    "delft",
+    "aalto",
+    "vienna",
+    "warsaw",
+    "ubc",
+    "toronto",
+    "hku",
+    "ntu",
+    "kaist",
+}
+HEAD = "b" * 40
+ANNOTATED_TAG_OBJECT = "c" * 40
+REF = "synthetic-v10-frozen"
+MANIFEST_REL = Path("backend/evaluation/research/expert/data/protocol.2026-10-05/v10/manifest.json")
+ARTIFACT_REL = Path("artifacts/expert-500/phase1-v10-2026-10-05")
+
+
+def sha(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def write(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+
+
+def read(path: Path) -> Any:
+    return json.loads(path.read_text())
+
+
+def forbidden(*args: Any, **kwargs: Any) -> Any:
+    raise AssertionError("This actual-cohort preflight must not execute a source/model/Git process")
+
+
+@pytest.fixture(scope="module")
+def actual_os_preflight(tmp_path_factory):
+    """Only real harmless cat processes; no baseline/model/provider process."""
+    helper = runpy.run_path(str(OS_HELPER))
+    artifacts = tmp_path_factory.mktemp("actual-v10-os-isolation").resolve(strict=True)
+    result = helper["run_preflight"](artifacts)
+    path = artifacts / "result.json"
+    helper["save"](path, result)
+    helper["validate_result"](helper["read"](path))
+    return {"result": result, "path": path, "helper": helper}
+
+
+@dataclass
+class ActualTrial:
+    repo: Path
+    root: Path
+    report: dict[str, Any]
+    parent: dict[str, Any]
+    manifest: dict[str, Any]
+    launcher: dict[str, Any] = field(default_factory=dict)
+    assignments: dict[str, str] = field(default_factory=dict)
+    receipts: dict[str, dict[str, Any]] = field(default_factory=dict)
+    allocated: list[Path] = field(default_factory=list)
+    allocation_arguments: list[Any] = field(default_factory=list)
+    git_arguments: list[list[str]] = field(default_factory=list)
+    redirected_paths: list[str] = field(default_factory=list)
+
+    def replace_contract(self) -> None:
+        """Rehash a synthetic contract so semantic guards, not hash drift, reject it."""
+        write(self.root / "workspace-locations.json", self.assignments)
+        write(self.root / "workspace-receipts.json", self.receipts)
+        trial = read(self.root / "trial.json")
+        trial["workspace_assignments_sha256"] = sha(self.root / "workspace-locations.json")
+        trial["workspace_receipts_sha256"] = sha(self.root / "workspace-receipts.json")
+        write(self.root / "trial.json", trial)
+        (self.root / "trial-at-baseline-start.json").write_bytes(
+            (self.root / "trial.json").read_bytes()
+        )
+
+
+@pytest.fixture
+def actual_trial(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, actual_os_preflight
+) -> Iterator[ActualTrial]:
+    assert type(COHORT) is dict and set(COHORT) == EXPECTED_CASE_IDS
+    assert live.COHORT is COHORT
+    repo = tmp_path.resolve(strict=True) / "fixture-repo"
+    repo.mkdir()
+    report = runpy.run_path(str(REPORT))["main"].__globals__
+    parent = runpy.run_path(str(PILOT))["main"].__globals__
+    assert report["COHORT"] is COHORT and parent["legacy"]["COHORT"] is COHORT
+    parent["STOP"].clear()
+    report["read"] = read
+    parent.update(emit=lambda **kwargs: None, workflow=forbidden, select=forbidden)
+    binding = repo / "synthetic-binding-pointer.json"
+    write(binding, {"version": "synthetic-only", "bindings": []})
+    monkeypatch.setattr(live, "REVIEWED_BINDINGS", binding)
+    scripts = {str(path): sha(path) for path in runpy.run_path(str(FREEZER))["protocol_scripts"]()}
+    modules, files = {}, []
+    for name in sorted(report["PROTOCOL_MODULES"]):
+        spec = importlib.util.find_spec(name)
+        assert spec is not None and spec.origin is not None
+        source = Path(spec.origin)
+        relative = source.relative_to(REPO)
+        destination = repo / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, destination)
+        modules[name] = sha(source)
+        files.append({"path": str(relative), "sha256": sha(source), "module": name})
+    manifest = {
+        "protocol_version": "journal-v10",
+        "cohort_case_ids": list(COHORT),
+        "search_provider": "exa",
+        "algorithm_provider": "exa",
+        "expert_provider": "exa",
+        "scripts": scripts,
+        "modules": modules,
+        "files": files,
+        "binding_registry": {"path": str(binding), "sha256": sha(binding)},
+        "baseline_finalization_reserve_ms": 1000,
+        "baseline_budget": {
+            "max_fetcher_calls": 60,
+            "max_search_queries": 6,
+            "max_elapsed_ms": 120000,
+            "browser_enabled": False,
+        },
+        "requested_model": "gpt-6-astra",
+        "requested_reasoning_effort": None,
+        "reasoning_effort_source": "cli_default",
+        "network_budget": expert_budget(),
+        "comparison_mode": NETWORK_COMPARISON_MODE,
+        "budget_model": BUDGET_MODEL,
+        "wall_guard_ms": WALL_GUARD_MS,
+        "turn_policy": policy_limits(),
+        "neutral_probe": {
+            **runpy.run_path(str(FREEZER))["validate_neutral_reuse"](),
+            "successful": True,
+            "completed_tool_free": True,
+            "source_requests": 0,
+            "university_requests": 0,
+            "tool_requests": 0,
+        },
+        "os_isolation_preflight": {
+            "successful": True,
+            "cases_passed": 10,
+            "original_result_path": str(actual_os_preflight["path"]),
+            "original_result_sha256": sha(actual_os_preflight["path"]),
+            "helper_sha256": sha(OS_HELPER),
+            "parent_sha256": sha(PILOT),
+        },
+    }
+    write(repo / MANIFEST_REL, manifest)
+    fixture = ActualTrial(repo, repo / ARTIFACT_REL, report, parent, manifest)
+    real_allocate = workspace_policy.allocate_workspaces
+
+    def observed_allocate(case_ids: Any, **kwargs: Any) -> Any:
+        fixture.allocation_arguments.append(case_ids)
+        assignments, receipts = real_allocate(case_ids, **kwargs)
+        fixture.allocated.extend(Path(value) for value in assignments.values())
+        return assignments, receipts
+
+    def test_source(command: list[str], *, cwd: Path, text: bool) -> str:
+        assert cwd == repo and text is True
+        assert command in (
+            ["git", "rev-parse", "HEAD"],
+            ["git", "rev-parse", REF],
+            ["git", "rev-parse", REF + "^{commit}"],
+        )
+        fixture.git_arguments.append(command)
+        return (ANNOTATED_TAG_OBJECT if command[-1] == REF else HEAD) + "\n"
+
+    monkeypatch.setattr(workspace_policy, "allocate_workspaces", observed_allocate)
+    monkeypatch.setattr(subprocess, "check_output", test_source)
+    monkeypatch.setattr(subprocess, "run", forbidden)
+    monkeypatch.setattr(subprocess, "Popen", forbidden)
+
+    def redirected_path(*args: Any, **kwargs: Any) -> Path:
+        if len(args) == 1 and str(args[0]) == str(REPO):
+            fixture.redirected_paths.append(str(args[0]))
+            return repo
+        return Path(*args, **kwargs)
+
+    try:
+        with monkeypatch.context() as launch_context:
+            launch_context.setattr(pathlib, "Path", redirected_path)
+            launch_context.setattr(
+                sys, "argv", [str(LAUNCHER), "--harness-sha", HEAD, "--frozen-ref", REF]
+            )
+            launched = runpy.run_path(str(LAUNCHER))
+        assert launched["COHORT"] is COHORT
+        fixture.launcher = launched
+        fixture.assignments = read(fixture.root / "workspace-locations.json")
+        fixture.receipts = read(fixture.root / "workspace-receipts.json")
+        yield fixture
+    finally:
+        parent["STOP"].clear()
+        for workspace in fixture.allocated:
+            if workspace.is_symlink():
+                workspace.unlink()
+            elif workspace.exists():
+                shutil.rmtree(workspace)
+
+
+def mutate_contract(fixture: ActualTrial, mutation: str) -> None:
+    first, last = next(iter(COHORT)), next(reversed(COHORT))
+    if mutation == "missing_case":
+        fixture.assignments.pop(last)
+        fixture.receipts.pop(last)
+    elif mutation == "extra_case":
+        fixture.assignments["unexpected"] = fixture.assignments[first]
+        fixture.receipts["unexpected"] = dict(fixture.receipts[first])
+    elif mutation == "duplicate_workspace":
+        fixture.assignments[last] = fixture.assignments[first]
+        fixture.receipts[last] = dict(fixture.receipts[first])
+    elif mutation in {"dot_segment", "symlink_ancestor", "trailing_slash"}:
+        original = Path(fixture.assignments[first])
+        if mutation == "dot_segment":
+            alias = str(original.parent) + "/./" + original.name
+        elif mutation == "trailing_slash":
+            alias = str(original) + "/"
+        else:
+            parent_alias = fixture.repo / "workspace-parent-alias"
+            parent_alias.symlink_to(original.parent, target_is_directory=True)
+            alias = str(parent_alias / original.name)
+        assert Path(alias).samefile(original)
+        fixture.assignments[first] = alias
+        fixture.receipts[first]["path"] = alias
+    elif mutation in {"bool_device", "bool_inode", "wrong_inode"}:
+        field = "device" if mutation == "bool_device" else "inode"
+        fixture.receipts[first][field] = (
+            fixture.receipts[first][field] + 1 if mutation == "wrong_inode" else True
+        )
+    else:
+        raise AssertionError("Unknown synthetic mutation")
+    fixture.replace_contract()
+
+
+def run_baseline(
+    fixture: ActualTrial, monkeypatch: pytest.MonkeyPatch
+) -> tuple[list[Any], list[Any]]:
+    calls: list[Any] = []
+    verified: list[Any] = []
+    original_validate = fixture.parent["validate_workspaces"]
+
+    def observed_validate(assignments: Any, receipts: Any, *, case_ids: Any) -> Any:
+        paths = original_validate(assignments, receipts, case_ids=case_ids)
+        verified.append((case_ids, paths))
+        return paths
+
+    def no_source_baseline(repo: Path, ref: str, root: Path, case_id: str) -> dict[str, Any]:
+        assert repo == fixture.repo and ref == REF and root == fixture.root
+        assert len(verified) == 1 and verified[0][0] == tuple(COHORT)
+        assert verified[0][1][case_id] == Path(fixture.assignments[case_id])
+        calls.append((case_id, verified[0][1][case_id]))
+        return {
+            "case_id": case_id,
+            "status": "synthetic_no_source",
+            "source_requests": 0,
+            "provider": "exa",
+        }
+
+    fixture.parent.update(validate_workspaces=observed_validate, baseline=no_source_baseline)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            str(PILOT),
+            "--repo",
+            str(fixture.repo),
+            "--root",
+            str(fixture.root),
+            "--ref",
+            REF,
+            "--stage",
+            "baseline",
+        ],
+    )
+    fixture.parent["main"]()
+    return calls, verified
+
+
+def test_actual_dict_cohort_exposes_original_sequence_error_before_any_allocation(monkeypatch):
+    assert type(COHORT) is dict and len(COHORT) == 10
+    monkeypatch.setattr(workspace_policy.tempfile, "mkdtemp", forbidden)
+    with pytest.raises(ValueError, match="Case IDs must be a nonempty sequence"):
+        allocate_workspaces(COHORT)
+    with pytest.raises(ValueError, match="Case IDs must be a nonempty sequence"):
+        validate_workspaces({}, {}, case_ids=COHORT)
+
+
+def test_actual_launcher_freezes_all_ten_original_canonical_workspace_receipts(actual_trial):
+    fixture = actual_trial
+    assert fixture.redirected_paths == [str(REPO)]
+    assert fixture.allocation_arguments == [tuple(COHORT)]
+    assert fixture.git_arguments == [
+        ["git", "rev-parse", "HEAD"],
+        ["git", "rev-parse", REF + "^{commit}"],
+    ]
+    assert tuple(fixture.assignments) == tuple(fixture.receipts) == tuple(COHORT)
+    verified = validate_workspaces(fixture.assignments, fixture.receipts, case_ids=tuple(COHORT))
+    assert (
+        len(verified) == 10
+        and len({(r["device"], r["inode"]) for r in fixture.receipts.values()}) == 10
+    )
+    for case_id, path in verified.items():
+        observed = path.stat()
+        assert path.resolve(strict=True) == path
+        assert fixture.receipts[case_id] == {
+            "path": str(path),
+            "device": observed.st_dev,
+            "inode": observed.st_ino,
+        }
+    trial = read(fixture.root / "trial.json")
+    assert len(trial["scripts"]) == 12 and len(trial["modules"]) == 21
+    assert (fixture.root / "trial.json").read_bytes() == (
+        fixture.root / "trial-at-baseline-start.json"
+    ).read_bytes()
+    assert trial["workspace_assignments_sha256"] == sha(fixture.root / "workspace-locations.json")
+    assert trial["workspace_receipts_sha256"] == sha(fixture.root / "workspace-receipts.json")
+    assert trial["harness_sha"] == HEAD and trial["frozen_ref"] == REF
+    assert trial["expert_protocol"]["manifest_file_sha256"] == sha(fixture.repo / MANIFEST_REL)
+    assert (
+        trial["scripts"] == fixture.manifest["scripts"]
+        and trial["modules"] == fixture.manifest["modules"]
+    )
+    assert trial["requested_reasoning_effort"] is None
+    assert trial["reasoning_effort_source"] == "cli_default"
+    assert trial["network_budget"] == expert_budget()
+    assert {trial[key] for key in ("search_provider", "algorithm_provider", "expert_provider")} == {
+        "exa"
+    }
+    assert set(trial["cohort_case_ids"]) == EXPECTED_CASE_IDS
+    assert trial["neutral_probe"]["reused_from_protocol"] == "journal-v7"
+    assert trial["comparison_mode"] == NETWORK_COMPARISON_MODE
+    assert trial["budget_model"] == BUDGET_MODEL and trial["wall_guard_ms"] == 900000
+    assert "research_timing" not in trial
+    assert "effective_source_action_deadline_ms" not in trial
+    assert not (fixture.root / "baseline-results.json").exists()
+
+
+def test_actual_annotated_tag_preflight_compares_peeled_commit_to_head(actual_trial):
+    fixture = actual_trial
+    assert ANNOTATED_TAG_OBJECT != HEAD
+    assert fixture.git_arguments[-1] == ["git", "rev-parse", REF + "^{commit}"]
+    assert ["git", "rev-parse", REF] not in fixture.git_arguments
+    trial = read(fixture.root / "trial.json")
+    assert trial["harness_sha"] == HEAD and trial["frozen_ref"] == REF
+    assert fixture.allocation_arguments == [tuple(COHORT)]
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="Actual macOS Isolation argv preflight")
+def test_actual_all_ten_workspace_schema_output_argv_and_completed_replay(actual_trial):
+    fixture = actual_trial
+    empty = AcceptedJournal.initial().sha256
+    paths = validate_workspaces(fixture.assignments, fixture.receipts, case_ids=tuple(COHORT))
+    for case_id, workspace in paths.items():
+        roots = [
+            REPO,
+            fixture.repo,
+            Path("/Users/wpalish/.codex/memories"),
+            Path("/Users/wpalish/.codex/sessions"),
+            Path("/Users/wpalish/.codex/attachments"),
+            Path("/Users/wpalish/Downloads"),
+            Path("/tmp/codex-remote-attachments"),
+            *[path for other, path in paths.items() if other != case_id],
+            *Path("/tmp").glob("unimatch-expert500*"),
+            *Path("/tmp").glob("test_unimatch_expert500*"),
+        ]
+        isolation = replace(
+            NetworkBudgetIsolation.local(workspace, roots),
+            codex_executable=fixture.report["FROZEN_CLI"],
+        )
+        schema, output = selector_paths(
+            fixture.assignments, fixture.receipts, case_id=case_id, turn=1, fresh_output=True
+        )
+        write(
+            schema,
+            journal_schema_for_turn(
+                journal_sha256=empty, canonical_university="Synthetic University", phase="bootstrap"
+            ),
+        )
+        validate_selector_paths(
+            fixture.assignments,
+            fixture.receipts,
+            case_id=case_id,
+            turn=1,
+            workspace=workspace,
+            schema=schema,
+            output=output,
+            fresh_output=True,
+        )
+        argv = isolation.command(schema, output=output, model="gpt-6-astra")
+        proof = command_proof(argv)
+        assert proof["command"] == argv and proof["model_reasoning_effort"] is None
+        assert proof["reasoning_override"] is None
+        assert proof["reasoning_effort_source"] == "cli_default"
+        assert "model_reasoning_effort" not in " ".join(argv)
+        assert argv[argv.index("-C") + 1] == str(workspace)
+        assert argv[argv.index("--output-schema") + 1] == str(workspace / "decision.schema.json")
+        assert argv[argv.index("--output-last-message") + 1] == str(workspace / "answer-01.json")
+        assert argv[3] == fixture.report["FROZEN_CLI"]
+        assert all(
+            str(path) in isolation.profile() for other, path in paths.items() if other != case_id
+        )
+        answer = {
+            "kind": "action",
+            "observation": "Synthetic serialization only; never dispatched.",
+            "journal_sha256": empty,
+            "facts": [],
+            "question_findings": [],
+            "action": {
+                "tool": "fetcher",
+                "url": "https://example.org/neutral",
+                "query": None,
+                "domains": [],
+                "max_results": None,
+                "source_step": None,
+                "page": None,
+                "offset": None,
+                "section_offset": None,
+                "link_offset": None,
+            },
+        }
+        write(output, answer)
+        raw = output.read_text()
+        events = "\n".join(
+            json.dumps(item)
+            for item in [
+                {"type": "thread.started", "thread_id": "synthetic-no-model"},
+                {"type": "turn.started"},
+                {
+                    "type": "item.completed",
+                    "item": {"id": "answer", "type": "agent_message", "text": raw},
+                },
+                {"type": "turn.completed", "usage": {"input_tokens": 1, "output_tokens": 1}},
+            ]
+        )
+        assert selector_answer(events, raw) == answer
+        assert (
+            parse_turn_decision(
+                raw,
+                journal_sha256=empty,
+                canonical_university="Synthetic University",
+                phase="bootstrap",
+            ).model_dump(mode="json")
+            == answer
+        )
+        validate_selector_paths(
+            fixture.assignments,
+            fixture.receipts,
+            case_id=case_id,
+            turn=1,
+            workspace=workspace,
+            schema=schema,
+            output=output,
+        )
+    assert fixture.allocation_arguments == [tuple(COHORT)]
+    assert not (fixture.root / "experts-results.json").exists()
+
+
+def test_actual_report_accepts_original_ten_workspace_contract_before_missing_baseline(
+    actual_trial,
+):
+    fixture = actual_trial
+    assert fixture.report["COHORT"] is COHORT
+    first = next(iter(COHORT))
+    with pytest.raises(FileNotFoundError) as failure:
+        fixture.report["validate_frozen_provenance"](fixture.root, PILOT)
+    assert str(fixture.root / "baseline" / first / "result.json") in str(failure.value)
+    assert not (fixture.root / "comparison.json").exists()
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "missing_case",
+        "extra_case",
+        "duplicate_workspace",
+        "dot_segment",
+        "symlink_ancestor",
+        "trailing_slash",
+        "bool_device",
+        "bool_inode",
+        "wrong_inode",
+    ],
+)
+def test_actual_report_rejects_self_consistent_ten_case_workspace_tampering(actual_trial, mutation):
+    fixture = actual_trial
+    mutate_contract(fixture, mutation)
+    assert (fixture.root / "trial.json").read_bytes() == (
+        fixture.root / "trial-at-baseline-start.json"
+    ).read_bytes()
+    with pytest.raises(ValueError):
+        fixture.report["validate_frozen_provenance"](fixture.root, PILOT)
+    assert not (fixture.root / "baseline-results.json").exists()
+
+
+def test_actual_parent_baseline_main_visits_exact_actual_ten_cases_without_source(
+    actual_trial, monkeypatch
+):
+    fixture = actual_trial
+    start_bytes = (fixture.root / "trial-at-baseline-start.json").read_bytes()
+    calls, verified = run_baseline(fixture, monkeypatch)
+    assert len(calls) == len({case for case, _ in calls}) == 10
+    assert {case for case, _ in calls} == set(COHORT)
+    assert verified[0][0] == tuple(COHORT)
+    assert verified[0][1] == {case: Path(path) for case, path in fixture.assignments.items()}
+    final = read(fixture.root / "baseline-results.json")
+    assert final["stopped"] is False and final["remaining_case_ids"] == []
+    assert len(final["results"]) == 10 and all(
+        item["source_requests"] == 0 and item["provider"] == "exa" for item in final["results"]
+    )
+    assert (fixture.root / "trial.json").read_bytes() == start_bytes
+    assert fixture.allocation_arguments == [tuple(COHORT)]
+
+
+@pytest.mark.parametrize(
+    "mutation", ["missing_case", "duplicate_workspace", "symlink_ancestor", "bool_inode"]
+)
+def test_actual_parent_baseline_main_rejects_contract_before_any_callback(
+    actual_trial, monkeypatch, mutation
+):
+    fixture = actual_trial
+    mutate_contract(fixture, mutation)
+    with pytest.raises(ValueError):
+        run_baseline(fixture, monkeypatch)
+    assert not (fixture.root / "baseline-results.json").exists()
+    assert not (fixture.root / "sealed-sentinel.txt").exists()
+
+
+def stage(fixture: ActualTrial, monkeypatch: pytest.MonkeyPatch, name: str) -> None:
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            str(PILOT),
+            "--repo",
+            str(fixture.repo),
+            "--root",
+            str(fixture.root),
+            "--ref",
+            REF,
+            "--stage",
+            name,
+        ],
+    )
+    fixture.parent["main"]()
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("requested_reasoning_effort", "low"),
+        ("reasoning_effort_source", "forced"),
+        ("comparison_mode", "independent_full_budget"),
+        ("budget_model", "legacy"),
+        ("wall_guard_ms", 120000),
+        ("wall_guard_ms", True),
+        ("network_budget", {**expert_budget(), "max_fetcher_calls": 61}),
+        ("network_budget", {**expert_budget(), "max_search_queries": 7}),
+        ("network_budget", {**expert_budget(), "model_thinking_included": True}),
+        ("network_budget", {**expert_budget(), "max_elapsed_ms": 120000}),
+    ],
+)
+def test_actual_report_rejects_self_consistent_legacy_or_relaxed_network_policy(
+    actual_trial, field, value
+):
+    fixture = actual_trial
+    trial = read(fixture.root / "trial.json")
+    trial[field] = value
+    write(fixture.root / "trial.json", trial)
+    (fixture.root / "trial-at-baseline-start.json").write_bytes(
+        (fixture.root / "trial.json").read_bytes()
+    )
+    with pytest.raises(ValueError, match="network policy"):
+        fixture.report["validate_frozen_provenance"](fixture.root, PILOT)
+    assert not (fixture.root / "baseline-results.json").exists()
+
+
+def test_actual_launcher_existing_trial_stops_before_allocation_or_git(actual_trial, monkeypatch):
+    fixture = actual_trial
+    original_trial = (fixture.root / "trial.json").read_bytes()
+    previous_allocations = list(fixture.allocation_arguments)
+    previous_git = list(fixture.git_arguments)
+
+    def redirected_path(*args: Any, **kwargs: Any) -> Path:
+        return (
+            fixture.repo if len(args) == 1 and str(args[0]) == str(REPO) else Path(*args, **kwargs)
+        )
+
+    with monkeypatch.context() as context:
+        context.setattr(pathlib, "Path", redirected_path)
+        context.setattr(sys, "argv", [str(LAUNCHER), "--harness-sha", HEAD, "--frozen-ref", REF])
+        with pytest.raises(RuntimeError, match="do not reset/retry"):
+            runpy.run_path(str(LAUNCHER))
+    assert fixture.allocation_arguments == previous_allocations
+    assert fixture.git_arguments == previous_git
+    assert (fixture.root / "trial.json").read_bytes() == original_trial
+
+
+def test_actual_completed_baseline_cannot_be_reset_or_retried(actual_trial, monkeypatch):
+    fixture = actual_trial
+    calls, _ = run_baseline(fixture, monkeypatch)
+    original = (fixture.root / "baseline-results.json").read_bytes()
+    with pytest.raises(ValueError, match="reset or retry"):
+        stage(fixture, monkeypatch, "baseline")
+    assert len(calls) == 10 and fixture.allocation_arguments == [tuple(COHORT)]
+    assert (fixture.root / "baseline-results.json").read_bytes() == original
+
+
+@pytest.mark.parametrize("failure", ["exception", "http_429"])
+def test_actual_baseline_batch_failure_is_sticky_and_cannot_start_any_expert(
+    actual_trial, monkeypatch, failure
+):
+    fixture = actual_trial
+    calls: list[str] = []
+    expert_calls: list[str] = []
+    trial_bytes = (fixture.root / "trial.json").read_bytes()
+
+    if failure == "exception":
+
+        def failed_baseline(repo: Path, ref: str, root: Path, case_id: str) -> dict[str, Any]:
+            assert repo == fixture.repo and ref == REF and root == fixture.root
+            calls.append(case_id)
+            raise RuntimeError("Synthetic baseline failure; no source dispatched")
+
+        fixture.parent["baseline"] = failed_baseline
+    else:
+        # Exercise the actual baseline adapter's recorded429 -> STOP transition.
+        def completed429(
+            repo: Path, ref: str, case_id: str, inputs: dict[str, Any], destination: Path
+        ):
+            assert repo == fixture.repo and ref == REF and inputs["mode"] == "expert_baseline"
+            assert inputs["search_provider"] == "exa"
+            calls.append(case_id)
+            budget = {
+                "stop_reason": "http_429",
+                "elapsed_ms": 10,
+                "fetcher_calls": 1,
+                "search_queries": 1,
+            }
+            write(
+                destination / "artifact/capture/mock/capture.json",
+                {
+                    "pipeline_sha": HEAD,
+                    "config": {
+                        "search_provider": "exa",
+                        "strict_expert_budget": True,
+                        "case_budgets": {case_id: budget},
+                    },
+                },
+            )
+            write(
+                destination / "artifact/packet.json",
+                {
+                    "schema_version": "1",
+                    "baseline_pipeline_sha": HEAD,
+                    "baseline_budget": {
+                        "max_fetcher_calls": 60,
+                        "max_elapsed_ms": 120000,
+                        "browser_enabled": False,
+                    },
+                    "cases": [],
+                },
+            )
+            return 1, HEAD
+
+        fixture.parent["workflow"] = completed429
+
+    def forbidden_expert(repo, ref, root, case_id, workspaces):
+        expert_calls.append(case_id)
+        raise AssertionError("Stopped baseline reached an expert callback")
+
+    fixture.parent["expert"] = forbidden_expert
+    stage(fixture, monkeypatch, "baseline")
+    assert 1 <= len(calls) <= 3 and len(calls) == len(set(calls))
+    final = read(fixture.root / "baseline-results.json")
+    assert final["stopped"] is True and final["remaining_case_ids"]
+    assert fixture.parent["STOP"].is_set()
+    if failure == "http_429":
+        assert all(item["budget"]["stop_reason"] == "http_429" for item in final["results"])
+        assert all(item["provider"] == "exa" for item in final["results"])
+        for case_id in calls:
+            packet = read(fixture.root / "baseline" / case_id / "public-packet.json")
+            assert packet["comparison_mode"] == NETWORK_COMPARISON_MODE
+            assert packet["expert_budget"] == expert_budget()
+            assert packet["baseline_budget"]["max_elapsed_ms"] == 120000
+    # A fresh process event cannot erase the saved provider/failed-stage receipt.
+    fixture.parent["STOP"].clear()
+    with pytest.raises(ValueError, match="stopped/incomplete baseline"):
+        stage(fixture, monkeypatch, "experts")
+    with pytest.raises(ValueError, match="reset or retry"):
+        stage(fixture, monkeypatch, "baseline")
+    assert expert_calls == [] and not (fixture.root / "experts-results.json").exists()
+    assert fixture.allocation_arguments == [tuple(COHORT)]
+    assert (fixture.root / "trial.json").read_bytes() == trial_bytes
+
+
+@pytest.mark.parametrize("stopped,remaining", [(True, []), (False, [next(iter(COHORT))])])
+def test_actual_expert_stage_rejects_provider_stop_or_incomplete_baseline_before_callback(
+    actual_trial, monkeypatch, stopped, remaining
+):
+    fixture = actual_trial
+    write(
+        fixture.root / "baseline-results.json",
+        {"results": [], "stopped": stopped, "remaining_case_ids": remaining},
+    )
+    fixture.parent["expert"] = forbidden
+    with pytest.raises(ValueError, match="stopped/incomplete baseline"):
+        stage(fixture, monkeypatch, "experts")
+    assert not (fixture.root / "sealed-sentinel.txt").exists()
+    assert not (fixture.root / "experts-results.json").exists()
+
+
+@pytest.mark.parametrize(
+    "provider_field", ["search_provider", "algorithm_provider", "expert_provider"]
+)
+@pytest.mark.parametrize("provider", [None, "exa_mcp", "auto", "EXA"])
+def test_v10_actual_parent_and_report_reject_missing_or_foreign_provider_before_io(
+    actual_trial, monkeypatch, provider_field, provider
+):
+    fixture = actual_trial
+    trial = read(fixture.root / "trial.json")
+    if provider is None:
+        trial.pop(provider_field)
+    else:
+        trial[provider_field] = provider
+    write(fixture.root / "trial.json", trial)
+    (fixture.root / "trial-at-baseline-start.json").write_bytes(
+        (fixture.root / "trial.json").read_bytes()
+    )
+    fixture.parent.update(baseline=forbidden, expert=forbidden)
+    with pytest.raises(ValueError, match="frozen V10 trial"):
+        stage(fixture, monkeypatch, "baseline")
+    with pytest.raises(ValueError, match="same Exa provider"):
+        fixture.report["validate_frozen_provenance"](fixture.root, PILOT)
+    assert not (fixture.root / "baseline-results.json").exists()
+    assert not (fixture.root / "sealed-sentinel.txt").exists()
+
+
+@pytest.mark.parametrize(
+    "provider_field", ["search_provider", "algorithm_provider", "expert_provider"]
+)
+@pytest.mark.parametrize("provider", [None, "exa_mcp"])
+def test_v10_actual_fresh_launcher_rejects_provider_before_git_or_allocation(
+    actual_trial, monkeypatch, provider_field, provider
+):
+    fixture = actual_trial
+    manifest = copy.deepcopy(fixture.manifest)
+    if provider is None:
+        manifest.pop(provider_field)
+    else:
+        manifest[provider_field] = provider
+    write(fixture.repo / MANIFEST_REL, manifest)
+    assert fixture.root.is_relative_to(fixture.repo)
+    shutil.rmtree(fixture.root)
+    previous_git, previous_allocations = (
+        list(fixture.git_arguments),
+        list(fixture.allocation_arguments),
+    )
+
+    def redirected_path(*args: Any, **kwargs: Any) -> Path:
+        return (
+            fixture.repo if len(args) == 1 and str(args[0]) == str(REPO) else Path(*args, **kwargs)
+        )
+
+    with monkeypatch.context() as context:
+        context.setattr(pathlib, "Path", redirected_path)
+        context.setattr(sys, "argv", [str(LAUNCHER), "--harness-sha", HEAD, "--frozen-ref", REF])
+        with pytest.raises(ValueError, match="exact Exa providers"):
+            runpy.run_path(str(LAUNCHER))
+    assert (
+        fixture.git_arguments == previous_git
+        and fixture.allocation_arguments == previous_allocations
+    )
+    assert not fixture.root.exists()
+
+
+@pytest.mark.parametrize(
+    "mutation", ["wrong_case", "duplicate_case", "missing_effort", "legacy_version"]
+)
+def test_v10_launcher_rejects_public_case_or_effort_drift(actual_trial, mutation):
+    manifest = copy.deepcopy(actual_trial.manifest)
+    if mutation == "wrong_case":
+        manifest["cohort_case_ids"][0] = "different_university"
+    elif mutation == "duplicate_case":
+        manifest["cohort_case_ids"][0] = manifest["cohort_case_ids"][1]
+    elif mutation == "missing_effort":
+        manifest.pop("requested_reasoning_effort")
+    else:
+        manifest["protocol_version"] = "journal-v7"
+    with pytest.raises(ValueError, match="public cases"):
+        actual_trial.launcher["validate_manifest"](manifest)
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    ["changed_report_as_runtime", "runtime_hash", "script_hash", "result_hash", "model_call_claim"],
+)
+def test_v10_launcher_rejects_rewritten_neutral_reference(actual_trial, mutation):
+    manifest = copy.deepcopy(actual_trial.manifest)
+    proof = manifest["neutral_probe"]
+    if mutation == "changed_report_as_runtime":
+        proof["unchanged_runtime_modules"].pop("evaluation.research.expert.blind_cli")
+        proof["unchanged_runtime_modules"]["evaluation.research.expert.network_report"] = manifest[
+            "modules"
+        ]["evaluation.research.expert.network_report"]
+    elif mutation == "runtime_hash":
+        proof["unchanged_runtime_modules"]["evaluation.research.expert.blind_cli"] = "0" * 64
+        manifest["modules"]["evaluation.research.expert.blind_cli"] = "0" * 64
+    elif mutation == "script_hash":
+        proof["original_script_sha256"] = "0" * 64
+    elif mutation == "result_hash":
+        proof["original_result_sha256"] = "0" * 64
+    else:
+        proof["source_requests"] = 1
+    with pytest.raises(ValueError, match="neutral|Neutral"):
+        actual_trial.launcher["validate_manifest"](manifest)
+
+
+@pytest.mark.parametrize("required_gate", ["exa_provider_pin", "actual_ten_case_os_isolation"])
+def test_v10_freeze_requires_provider_gate_raw_log_and_no_fixed_test_count(tmp_path, required_gate):
+    freeze = runpy.run_path(str(FREEZER))
+    required = freeze["REQUIRED_GATES"]
+    assert len(required) == 15 and {"exa_provider_pin", "actual_ten_case_os_isolation"} <= required
+    log = tmp_path / "synthetic-provider-gate.log"
+    log.write_text("INVENTED OFFLINE GATE FIXTURE; no source/model/Git requests\n")
+    local: dict[str, Any] = {
+        "schema_version": "1",
+        "protocol_version": "journal-v10",
+        "all_passed": True,
+        "actual_ten_case_launcher_preflight": True,
+        "backend_tests": 1,
+        "frontend_tests": 999999,
+        "backend_coverage_percent": 92,
+        "gates": dict.fromkeys(required, True),
+        "raw_logs": {name: {"path": str(log), "sha256": sha(log)} for name in required},
+    }
+    freeze["validate_local_gates"](local)
+    missing = copy.deepcopy(local)
+    missing["gates"].pop(required_gate)
+    missing["raw_logs"].pop(required_gate)
+    with pytest.raises(ValueError):
+        freeze["validate_local_gates"](missing)
+    changed = copy.deepcopy(local)
+    changed["raw_logs"][required_gate]["sha256"] = "0" * 64
+    with pytest.raises(ValueError):
+        freeze["validate_local_gates"](changed)
+
+
+def test_v10_exact_helper_inventory_and_neutral_runtime_reuse_are_read_only():
+    freeze = runpy.run_path(str(FREEZER))
+    originals = {
+        path: sha(path) for path in (LEGACY, Path("/tmp/unimatch-expert500-neutral-v7.py"))
+    }
+    names = {path.name for path in freeze["protocol_scripts"]()}
+    assert len(names) == 12
+    assert "unimatch-expert500-isolation-preflight-v10.py" in names
+    assert "unimatch-expert500-neutral-v7.py" in names
+    assert "unimatch-expert500-neutral-v10.py" not in names
+    assert "test_unimatch_expert500_workflow_v10.py" in names
+    assert not any("build-" in name or "demo" in name for name in names)
+    reference = freeze["validate_neutral_reuse"]()
+    assert reference["reused_from_protocol"] == "journal-v7"
+    assert len(reference["unchanged_runtime_modules"]) == 14
+    assert "evaluation.research.expert.network_report" not in reference["unchanged_runtime_modules"]
+    assert {path: sha(path) for path in originals} == originals
+
+
+def test_v10_original_ten_os_proofs_replay_without_any_new_process(
+    actual_os_preflight, monkeypatch
+):
+    result, helper = actual_os_preflight["result"], actual_os_preflight["helper"]
+    monkeypatch.setattr(subprocess, "run", forbidden)
+    monkeypatch.setattr(subprocess, "Popen", forbidden)
+    helper["validate_result"](result)
+    assert result["allocation_count"] == 1
+    assert result["cases_passed"] == 10 and result["cat_processes"] == 240
+    assert {case["case_id"] for case in result["original_loop_rejected"]} == EXPECTED_CASE_IDS
+    assert all(case["own_workspace_sealed"] is True for case in result["original_loop_rejected"])
+    for case in result["results"]:
+        assert len(case["checks"]) == 12
+        assert [check["kind"] for check in case["checks"]][-3:] == [
+            "repository",
+            "previous_trial",
+            "current_trial",
+        ]
+    assert all(
+        result[key] == 0
+        for key in (
+            "model_requests",
+            "source_requests",
+            "network_requests",
+            "university_requests",
+            "tool_requests",
+            "git_requests",
+        )
+    )
+
+
+@pytest.mark.parametrize(
+    "mutation", ["bool_allocation", "bool_count", "missing_peer", "model_call"]
+)
+def test_v10_os_proof_rejects_false_counts_or_incomplete_actual_coverage(
+    actual_os_preflight, monkeypatch, mutation
+):
+    result = copy.deepcopy(actual_os_preflight["result"])
+    if mutation == "bool_allocation":
+        result["allocation_count"] = True
+    elif mutation == "bool_count":
+        result["cases_passed"] = True
+    elif mutation == "missing_peer":
+        result["results"][0]["checks"].pop(0)
+    else:
+        result["model_requests"] = 1
+    monkeypatch.setattr(subprocess, "run", forbidden)
+    with pytest.raises(ValueError):
+        actual_os_preflight["helper"]["validate_result"](result)
+
+
+@pytest.mark.parametrize("mutation", ["wrong_target", "wrong_stream", "wrong_argv", "bool_elapsed"])
+def test_v10_os_proof_rejects_rehashed_receipt_with_wrong_target_or_process(
+    actual_os_preflight, monkeypatch, mutation
+):
+    result = copy.deepcopy(actual_os_preflight["result"])
+    case = result["results"][0]
+    check = case["checks"][-3]
+    assert check["kind"] == "repository"
+    path = Path(check["path"])
+    original = path.read_bytes()
+    receipt = read(path)
+    if mutation == "wrong_target":
+        # A real denied peer proof cannot impersonate the repository category.
+        peer = read(Path(case["checks"][0]["path"]))
+        receipt["denied_sentinel"] = peer["denied_sentinel"]
+        receipt["denied_sentinel_sha256"] = peer["denied_sentinel_sha256"]
+        receipt["raw_processes"][1]["command"][-1] = peer["denied_sentinel"]
+    elif mutation == "wrong_stream":
+        peer = read(Path(case["checks"][0]["path"]))
+        receipt["raw_processes"][0]["stdout_path"] = peer["raw_processes"][0]["stdout_path"]
+        receipt["raw_processes"][0]["stdout_sha256"] = peer["raw_processes"][0]["stdout_sha256"]
+    elif mutation == "wrong_argv":
+        receipt["raw_processes"][0]["command"][3] = "/bin/echo"
+    else:
+        receipt["raw_processes"][0]["elapsed_ns"] = True
+    monkeypatch.setattr(subprocess, "run", forbidden)
+    try:
+        write(path, receipt)
+        check["sha256"] = sha(path)
+        with pytest.raises(ValueError):
+            actual_os_preflight["helper"]["validate_result"](result)
+    finally:
+        path.write_bytes(original)
+
+
+@pytest.mark.parametrize("mutation", ["missing_proof", "bool_count", "result_hash"])
+def test_v10_launcher_requires_real_os_proof_before_any_new_git_or_allocation(
+    actual_trial, monkeypatch, mutation
+):
+    value = copy.deepcopy(actual_trial.manifest)
+    if mutation == "missing_proof":
+        value.pop("os_isolation_preflight")
+    elif mutation == "bool_count":
+        value["os_isolation_preflight"]["cases_passed"] = True
+    else:
+        value["os_isolation_preflight"]["original_result_sha256"] = "0" * 64
+    monkeypatch.setattr(subprocess, "check_output", forbidden)
+    monkeypatch.setattr(workspace_policy, "allocate_workspaces", forbidden)
+    with pytest.raises(ValueError, match="actual-builder OS proof"):
+        actual_trial.launcher["validate_manifest"](value)
+
+
+def test_v10_actual_all_ten_baseline_adapter_passes_exa_workflow_input(actual_trial, monkeypatch):
+    fixture = actual_trial
+    calls: list[str] = []
+
+    def completed_without_source(repo, ref, case_id, inputs, destination):
+        assert repo == fixture.repo and ref == REF
+        assert inputs == {
+            "mode": "expert_baseline",
+            "search_provider": "exa",
+            "extra_args": "--strict-expert-budget --finalization-reserve-ms 1000",
+        }
+        calls.append(case_id)
+        write(
+            destination / "artifact/capture/mock/capture.json",
+            {
+                "pipeline_sha": HEAD,
+                "mode": "live",
+                "observations": [],
+                "config": {
+                    "search_provider": "exa",
+                    "strict_expert_budget": True,
+                    "case_budgets": {
+                        case_id: {
+                            "provider": "exa",
+                            "max_calls": 60,
+                            "max_ms": 120000,
+                            "max_search_queries": 6,
+                            "elapsed_ms": 10,
+                            "fetcher_calls": 1,
+                            "search_queries": 1,
+                            "stop_reason": None,
+                        }
+                    },
+                },
+            },
+        )
+        write(
+            destination / "artifact/packet.json",
+            {
+                "schema_version": "1",
+                "baseline_pipeline_sha": HEAD,
+                "baseline_budget": {
+                    "max_fetcher_calls": 60,
+                    "max_elapsed_ms": 120000,
+                    "browser_enabled": False,
+                },
+                "cases": [{"case_id": case_id}],
+            },
+        )
+        return tuple(COHORT).index(case_id) + 1, HEAD
+
+    fixture.parent["workflow"] = completed_without_source
+    stage(fixture, monkeypatch, "baseline")
+    results = read(fixture.root / "baseline-results.json")
+    assert set(calls) == EXPECTED_CASE_IDS and len(calls) == 10
+    assert results["stopped"] is False and results["remaining_case_ids"] == []
+    assert {result["provider"] for result in results["results"]} == {"exa"}
+    for case_id in COHORT:
+        packet = read(fixture.root / "baseline" / case_id / "public-packet.json")
+        assert packet["baseline_budget"] == fixture.manifest["baseline_budget"]
+        assert packet["expert_budget"] == expert_budget()
+
+
+@pytest.mark.parametrize("conclusion", ["cancelled", "failure", None])
+def test_v10_export_preserves_unsuccessful_workflow_without_success_inference(tmp_path, conclusion):
+    exporter = runpy.run_path(str(EXPORTER))
+    path = tmp_path / "run.json"
+    original = {"run_id": 99, "headSha": HEAD, "status": "completed", "conclusion": conclusion}
+    write(path, original)
+    receipt = exporter["workflow_receipt"](
+        path,
+        case_id="synthetic",
+        kind="expert_controller",
+        round_name="controller-101",
+        harness_sha=HEAD,
+    )
+    assert receipt["conclusion"] == conclusion and receipt["original_record"] == original
+    assert receipt["original_sha256"] == sha(path)
+
+
+@pytest.mark.parametrize(
+    "provider_field", ["search_provider", "algorithm_provider", "expert_provider"]
+)
+@pytest.mark.parametrize("provider", [None, "exa_mcp"])
+def test_v10_export_rejects_provider_before_workspace_or_source_artifact_read(
+    tmp_path, provider_field, provider
+):
+    exporter = runpy.run_path(str(EXPORTER))
+    seal = {
+        "count": 10,
+        "all_traces_validated_with_raw_logs": True,
+        "all_compact_fact_locations_validated": True,
+        "all_accepted_journal_deltas_replayed": True,
+    }
+    trial = {
+        "protocol_version": "journal-v10",
+        "search_provider": "exa",
+        "algorithm_provider": "exa",
+        "expert_provider": "exa",
+        "comparison_mode": NETWORK_COMPARISON_MODE,
+        "budget_model": BUDGET_MODEL,
+        "network_budget": expert_budget(),
+        "turn_policy": policy_limits(),
+        "requested_model": "gpt-6-astra",
+        "requested_reasoning_effort": None,
+        "reasoning_effort_source": "cli_default",
+        "wall_guard_ms": WALL_GUARD_MS,
+    }
+    comparison = {
+        "seal_sha256": exporter["digest"](seal),
+        "comparison_mode": NETWORK_COMPARISON_MODE,
+        "budget_model": BUDGET_MODEL,
+        "expert_budget": expert_budget(),
+        "search_provider": "exa",
+        "outside_policy_included": False,
+        "outside_policy_facts": [],
+        "protocol_eligible": False,
+        "protocol_gate": False,
+    }
+    if provider is None:
+        trial.pop(provider_field)
+    else:
+        trial[provider_field] = provider
+    for name, value in (("trial", trial), ("submission-seal", seal), ("comparison", comparison)):
+        write(tmp_path / (name + ".json"), value)
+    with pytest.raises(ValueError, match="sealed V10 network comparison"):
+        exporter["validate_export_contract"](tmp_path, tmp_path / "absent-protocol")
+    assert not (tmp_path / "workspace-locations.json").exists()

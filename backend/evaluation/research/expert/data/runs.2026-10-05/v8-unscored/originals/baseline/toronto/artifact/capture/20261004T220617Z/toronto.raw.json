@@ -1,0 +1,264 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-04T22:06:18.889475+00:00",
+    "duration_seconds": 33.4,
+    "run_error": "",
+    "batch": [
+      "University of Toronto"
+    ],
+    "institutions": [
+      {
+        "institution": "University of Toronto",
+        "country": "Canada",
+        "domain": "utoronto.ca",
+        "access": "REACHED",
+        "robots_disallowed_requests": 0,
+        "pages_checked": 24,
+        "pages_failed": 17,
+        "failures": [
+          [
+            "https://www.utoronto.ca/robots.txt",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.utoronto.ca/sitemap.xml",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.utoronto.ca/sitemap_index.xml",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.utoronto.ca/sitemap-index.xml",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.utoronto.ca/sitemap/sitemap.xml",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://future.utoronto.ca/undergraduate-programs",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.utoronto.ca/",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://future.utoronto.ca/undergraduate-programs",
+            "http_error: HTTP 403"
+          ]
+        ],
+        "outcomes": {
+          "http_error": 17,
+          "ok": 7
+        },
+        "discovered": {
+          "program_catalog": [
+            "https://future.utoronto.ca/undergraduate-programs"
+          ],
+          "program_page": [
+            "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/programs/computer-science",
+            "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science"
+          ],
+          "admissions": [
+            "https://future.utoronto.ca/apply"
+          ],
+          "costs": [
+            "https://future.utoronto.ca/finances/fees"
+          ],
+          "scholarships": [
+            "https://future.utoronto.ca/finances/scholarships"
+          ]
+        },
+        "discovery_trace": {
+          "institution": "University of Toronto",
+          "domain": "www.utoronto.ca",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {
+            "program_catalog": "https://future.utoronto.ca/undergraduate-programs/",
+            "admissions": "https://future.utoronto.ca/apply/",
+            "costs": "https://future.utoronto.ca/finances/fees/",
+            "scholarships": "https://future.utoronto.ca/finances/scholarships/"
+          },
+          "selected": {
+            "program_catalog": [
+              "https://future.utoronto.ca/undergraduate-programs"
+            ],
+            "program_page": [
+              "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/programs/computer-science",
+              "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science"
+            ],
+            "admissions": [
+              "https://future.utoronto.ca/apply"
+            ],
+            "costs": [
+              "https://future.utoronto.ca/finances/fees"
+            ],
+            "scholarships": [
+              "https://future.utoronto.ca/finances/scholarships"
+            ]
+          },
+          "rejected_sample": [
+            [
+              "https://future.utoronto.ca/data-computer-science",
+              "search lead unresolved (http_error)"
+            ],
+            [
+              "https://utm.calendar.utoronto.ca/section/Computer-Science",
+              "search lead unresolved (http_error)"
+            ],
+            [
+              "https://future.utoronto.ca/program/computer-science",
+              "search lead unresolved (http_error)"
+            ],
+            [
+              "https://www.utoronto.ca/academics/undergraduate-programs",
+              "search lead unresolved (http_error)"
+            ],
+            [
+              "https://www.utm.utoronto.ca/future-students/programs/computer-science",
+              "reads as program_catalog, not a programme page"
+            ],
+            [
+              "https://www.utm.utoronto.ca/future-students/admissions/supplementary-application",
+              "reads as unknown, not a programme page"
+            ]
+          ],
+          "rejected_total": 6,
+          "errors": [
+            "robots.txt unavailable: http_error",
+            "https://www.utoronto.ca/sitemap.xml: http_error — HTTP 403",
+            "https://www.utoronto.ca/sitemap_index.xml: http_error — HTTP 403",
+            "https://www.utoronto.ca/sitemap-index.xml: http_error — HTTP 403",
+            "https://www.utoronto.ca/sitemap/sitemap.xml: http_error — HTTP 403",
+            "navigation fallback: https://future.utoronto.ca/undergraduate-programs unreachable (http_error)",
+            "navigation fallback: https://www.utoronto.ca/ unreachable (http_error)",
+            "search identity recovery: checked 8, confirmed 2",
+            "search identity recovery via exa; queries 6, failed 0, rejected {'duplicate': 24}"
+          ],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": true,
+          "kept_by_link_text": [],
+          "walker": {
+            "catalogs_walked": 1,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": [
+              {
+                "url": "https://future.utoronto.ca/undergraduate-programs",
+                "outcome": "http_error"
+              },
+              {
+                "url": "https://future.utoronto.ca/undergraduate-programs",
+                "outcome": "js_no_program_list"
+              }
+            ]
+          }
+        },
+        "programs": [
+          "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/programs/computer-science",
+          "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science"
+        ],
+        "program_page_found": true,
+        "scholarship_page_found": true,
+        "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+        "claims": 0,
+        "claims_verified": 0,
+        "completeness": 0.0,
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {
+          "fetch-failed": 3,
+          "fetched-ok": 2
+        },
+        "page_types": {
+          "intake_specific_program": 2
+        },
+        "page_diagnostics": [
+          {
+            "category": "fetch-failed",
+            "url": "https://future.utoronto.ca/apply",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://future.utoronto.ca/finances/fees",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://future.utoronto.ca/finances/scholarships",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/programs/computer-science",
+            "page_type": "intake_specific_program",
+            "characters": "6513",
+            "detail": "2 claims read from this page"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/programs/computer-science",
+            "page_type": "intake_specific_program",
+            "characters": null,
+            "detail": "read as a funding index; 0 award links, 0 queued within the award budget"
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 1,
+      "blocked": 0,
+      "program_pages_found": 1,
+      "scholarship_pages_found": 1,
+      "claims": 0,
+      "false_positives": 0,
+      "page_outcomes": {
+        "fetch-failed": 3,
+        "fetched-ok": 2
+      },
+      "page_types": {
+        "intake_specific_program": 2
+      },
+      "recall": {
+        "program": {
+          "numerator": 1,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 3,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 1,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 0,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 7,
+        "browser": 0,
+        "pdf": 0
+      }
+    }
+  },
+  "claims": []
+}

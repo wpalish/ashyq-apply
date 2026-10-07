@@ -1,0 +1,56 @@
+{
+  "kind": "submit",
+  "observation": "Submit the complete journal; all proposed evidence remains unreviewed.",
+  "action": null,
+  "facts": [
+    {
+      "id": "f1",
+      "question": "Q0",
+      "claim_key": "programme.exists",
+      "value_json": "true",
+      "source_step": 3,
+      "quotation": "Bachelor of Science",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b105",
+        "section_path": [
+          "Computer Science (BSc)",
+          "Program information",
+          "Program overview"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "University of British Columbia",
+        "programme": "Computer Science (BSc)",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      }
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "fact_ids": [
+        "f1"
+      ],
+      "scope": {
+        "university": "University of British Columbia",
+        "programme": "Computer Science (BSc)",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The programme overview identifies the Vancouver Computer Science (BSc) degree as Bachelor of Science.",
+      "supporting_steps": []
+    }
+  ]
+}

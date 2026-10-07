@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/tmp/unimatch-expert500-isolation-preflight-v14-local-candidate.py", line 501, in <module>
+    main()
+  File "/tmp/unimatch-expert500-isolation-preflight-v14-local-candidate.py", line 483, in main
+    result = run_preflight(artifacts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/unimatch-expert500-isolation-preflight-v14-local-candidate.py", line 151, in run_preflight
+    NetworkBudgetIsolation.local(workspace, old_roots)
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/network_turn_policy.py", line 194, in local
+    return cast(NetworkBudgetIsolation, super().local(workspace, sealed_roots))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/blind_cli.py", line 83, in local
+    raise RuntimeError("Blind selector requires sandbox-exec and an existing Codex login")
+RuntimeError: Blind selector requires sandbox-exec and an existing Codex login

@@ -1,0 +1,83 @@
+"""Prospective gate/support archive. Never reads reviewed labels or keys."""
+import hashlib
+import json
+import subprocess
+from datetime import UTC, datetime
+from pathlib import Path
+
+REPO = Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply')
+TARGET = REPO/'backend/evaluation/research/expert/data/protocol.2026-10-05/v12-source-support'
+GATES = Path('/tmp/unimatch-expert500-v12-local-gates.json')
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+def git(*args): return subprocess.check_output(['git',*args],cwd=REPO,text=True).strip()
+assert not TARGET.exists() and not GATES.exists()
+cohort = Path('/tmp/unimatch-expert500-v12-final-cohort-v2-original.log')
+assert '170 passed' in cohort.read_text() and 'all_sources_and_originals_unchanged=true' in cohort.read_text()
+assert '4209 passed' in Path('/tmp/unimatch-expert500-v12-source-pytest-original.log').read_text()
+assert '155 passed' in Path('/tmp/unimatch-expert500-v12-parent-workflow-mocks-final-green.log').read_text()
+assert '314 passed' in Path('/tmp/unimatch-expert500-v12-report-focused-final.log').read_text()
+frontend = json.loads(Path('/tmp/unimatch-expert500-v11-local-gates.json').read_text())
+assert git('rev-parse','HEAD:frontend') == frontend['frontend_tree'] == '4aaba144e9642060a4915a22527ef016ee8cc83d'
+assert git('rev-parse','HEAD:backend/migrations') == frontend['migration_tree']
+assert git('rev-parse','HEAD:.github/workflows') == frontend['workflow_tree']
+paths = {
+ 'backend_tests': '/tmp/unimatch-expert500-v12-source-pytest-original.log',
+ 'backend_ruff': '/tmp/unimatch-expert500-v12-source-all-ruff-original.log',
+ 'backend_format': '/tmp/unimatch-expert500-v12-source-all-format-original.log',
+ 'backend_mypy': '/tmp/unimatch-expert500-v12-source-all-mypy-original.log',
+ 'evaluation_quality': '/tmp/unimatch-expert500-v12-source-all-mypy-original.log',
+ 'combined_parent_mocks': '/tmp/unimatch-expert500-v12-parent-workflow-mocks-final-green.log',
+ 'actual_ten_case_launcher_preflight': str(cohort),
+ 'demo_order': '/tmp/unimatch-expert500-main55-demo-verification-corrected-original.log',
+ 'alembic_single_head': '/tmp/unimatch-expert500-main55-alembic-original.log',
+ 'exa_provider_pin': str(cohort),
+ 'actual_ten_case_os_isolation': '/tmp/unimatch-expert500-v12-isolation-preflight-original.log',
+ 'fresh_neutral_default_effort_runtime': '/tmp/unimatch-expert500-v12-neutral-original.log',
+ 'ordinary_cli_usage_available_before_neutral': '/tmp/unimatch-expert500-v12-before-neutral-redacted-observation.json',
+ 'current_report_final': '/tmp/unimatch-expert500-v12-report-focused-final.log',
+ 'current_actual_ten_cohort_final': str(cohort),
+ 'current_all_helper_ruff': '/tmp/unimatch-expert500-v12-final-all-helper-ruff-v2-original.log',
+ 'current_all_helper_format': '/tmp/unimatch-expert500-v12-final-all-helper-format-v2-original.log',
+ 'current_all_helper_mypy': '/tmp/unimatch-expert500-v12-final-all-helper-mypy-v2-original.log',
+ 'durable_provider_http402_receipt_regressions': '/tmp/unimatch-expert500-v12-network-report402-final-green.log',
+ 'fresh_neutral_archive_replay': '/tmp/unimatch-expert500-v12-corrected-neutral-replay-original.log',
+}
+for kind in ['tests','typecheck','build','lint']:
+ key = 'frontend_'+kind
+ evidence = frontend['raw_logs'][key]
+ assert sha(Path(evidence['path'])) == evidence['sha256']
+ paths[key] = evidence['path']
+for kind in ['ruff','format','mypy']:
+ v=Path(paths['current_all_helper_'+kind]).read_text()
+ assert '"exit_code": 0' in v and '"unchanged": true' in v
+local = {
+ 'schema_version': '1','protocol_version':'journal-v12','recorded_at':datetime.now(UTC).isoformat(),
+ 'all_passed': True,'actual_ten_case_launcher_preflight':True,
+ 'backend_tests':4209,'backend_coverage_percent':94.92,'frontend_tests':232,
+ 'current_runtime_tests_total':639,'current_runtime_partitions':{'parent_workflow':155,'report':314,'actual_ten_cohort':170},
+ 'static_source_files':380,'parent_quality_files':11,'frozen_helpers':12,
+ 'source_calls_in_local_gates':0,'neutral_model_calls':3,'neutral_university_requests':0,
+ 'separate_owner_exa_availability_diagnostic_queries':1,'integrated_main':git('rev-parse','origin/main'),
+ 'gates':{name:True for name in paths},'raw_logs':{name:{'path':path,'sha256':sha(Path(path))} for name,path in paths.items()},
+ 'frontend_tree':frontend['frontend_tree'],'migration_tree':frontend['migration_tree'],'workflow_tree':frontend['workflow_tree'],
+ 'frontend_proof_note':'Unchanged exact tree retains original V10 unit232/type/lint/build; main55 exact-source cloud8/8 independently passed. New-source cloud pending.',
+ 'demo_proof_note':'Same unchanged app/migration trees as migrated main55 synthetic once demo20; corrected sameDB ranking.bucket read-only check retained. No reseed.',
+ 'runtime_note':'Three independently executed original partitions155+314+170, not a single combined run. Predecessor178 additional48 argv unavailable; not asserted comparable.',
+ 'legacy_note':'Immutable v1 helper9eaa88ef byte-pinned. Initial root12scope lint red preserved; current11 prospective-helper static scope matches predecessor11.',
+ 'neutral_provenance_manifest_sha256':'ad3ea6a3ee9f2744d20c2e5a08df977abf473060923fb83db82b0c014bf41cb3',
+}
+with GATES.open('x') as out:out.write(json.dumps(local,ensure_ascii=False,indent=2)+'\n')
+receipts={str(p):p for p in Path('/tmp').glob('unimatch-expert500-v12-*.log')}
+for p in [GATES,Path(__file__),Path('/tmp/unimatch-expert500-v12-final-helper-static.py'),Path('/tmp/unimatch-expert500-v12-final-helper-static-initial-12scope.py.txt'),Path('/tmp/test_unimatch_expert500_actual_cohort_v12-pre-sticky-assertion-repair-406ed74b.py.txt'),Path('/tmp/network_report_v12_402_pre_repair.py.txt'),Path('/tmp/unimatch-expert500-v12-network-report402-final.patch'),REPO/'backend/evaluation/research/expert/network_report.py',REPO/'backend/tests/test_expert_network_report_402.py']:
+ assert p.is_file();receipts[str(p)]=p
+TARGET.mkdir()
+records=[]
+for index,(original,p) in enumerate(sorted(receipts.items()),1):
+ assert not p.is_symlink()
+ data=p.read_bytes();name=f'{index:02d}-{p.name}.txt'
+ with (TARGET/name).open('xb') as out:out.write(data)
+ records.append({'original_path':original,'snapshot':name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()})
+manifest={'schema_version':'1','recorded_at':datetime.now(UTC).isoformat(),'status':'prospective_v12_source_gates_passed_no_freeze_or_trial_yet','source_predecessor_sha':git('rev-parse','HEAD'),'record_count':len(records),'records':records,'backend_tests':4209,'backend_coverage_percent':94.92,'runtime_partitions':local['current_runtime_partitions'],'original_failures_preserved':True,'v11_closed_unscored_unchanged':True,'reviewed62_unchanged':True,'signed_reviewed8_unselected':True,'heldout150_untouched':True,'separate_neutral_provider_diagnostic_queries':1,'neutral_model_requests':3,'university_requests':0}
+with (TARGET/'manifest.json').open('x') as out:out.write(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+for r in records:assert sha(TARGET/r['snapshot'])==r['sha256']
+print(json.dumps({'target':str(TARGET),'records':len(records),'manifest_sha256':sha(TARGET/'manifest.json'),'local_gates_sha256':sha(GATES)}))

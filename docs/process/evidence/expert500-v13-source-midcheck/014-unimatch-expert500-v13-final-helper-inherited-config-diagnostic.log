@@ -1,0 +1,1015 @@
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1201:40: B023 Function definition does not bind loop variable `processed_through`
+     |
+1199 |             lambda: research_state(
+1200 |                 recorded_source_count=len(actions),
+1201 |                 processed_source_count=processed_through,
+     |                                        ^^^^^^^^^^^^^^^^^ B023
+1202 |                 source_closed=closing_only,
+1203 |             ),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1202:31: B023 Function definition does not bind loop variable `closing_only`
+     |
+1200 |                 recorded_source_count=len(actions),
+1201 |                 processed_source_count=processed_through,
+1202 |                 source_closed=closing_only,
+     |                               ^^^^^^^^^^^^ B023
+1203 |             ),
+1204 |         )
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1211:16: B023 Function definition does not bind loop variable `minimal_commit`
+     |
+1210 |         def build_prompt() -> dict[str, Any]:
+1211 |             if minimal_commit:
+     |                ^^^^^^^^^^^^^^ B023
+1212 |                 return closing_prompt(journal_sha256=journal.sha256)
+1213 |             return {
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1212:54: B023 Function definition does not bind loop variable `journal`
+     |
+1210 |         def build_prompt() -> dict[str, Any]:
+1211 |             if minimal_commit:
+1212 |                 return closing_prompt(journal_sha256=journal.sha256)
+     |                                                      ^^^^^^^ B023
+1213 |             return {
+1214 |                 "task": TASK + "\n" + EFFECTIVE_JOURNAL_INSTRUCTIONS,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1225:51: B023 Function definition does not bind loop variable `journal`
+     |
+1223 |                 "public_structured_keys": STRUCTURED_KEYS,
+1224 |                 "public_award_dimensions": AWARD_KEYS,
+1225 |                 "accepted_journal": ledger_prompt(journal),
+     |                                                   ^^^^^^^ B023
+1226 |                 "recorded_actions": [
+1227 |                     {
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1236:40: B023 Function definition does not bind loop variable `feedback`
+     |
+1234 |                 ],
+1235 |                 "current_source_views": history[-2:],
+1236 |                 "validation_feedback": feedback,
+     |                                        ^^^^^^^^ B023
+1237 |                 "processed_through_action_count": processed_through,
+1238 |                 "required_now": (
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1237:51: B023 Function definition does not bind loop variable `processed_through`
+     |
+1235 |                 "current_source_views": history[-2:],
+1236 |                 "validation_feedback": feedback,
+1237 |                 "processed_through_action_count": processed_through,
+     |                                                   ^^^^^^^^^^^^^^^^^ B023
+1238 |                 "required_now": (
+1239 |                     "Inspect the latest recorded source views and explicitly submit "
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1242:24: B023 Function definition does not bind loop variable `closing_only`
+     |
+1240 |                     "newly supported facts or an explicit unresolved/inaccessible question finding. "
+1241 |                     "An empty hash-only submit cannot acknowledge a new source; no next action."
+1242 |                     if closing_only
+     |                        ^^^^^^^^^^^^ B023
+1243 |                     else "submit newly observed facts with one next action, or commit"
+1244 |                 ),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1246:39: B023 Function definition does not bind loop variable `summary`
+     |
+1244 |                 ),
+1245 |                 "wall_guard_remaining_ms": wall_guard.remaining_ms(now=datetime.now(UTC)),
+1246 |                 "network_reads_used": summary["final"]["fetcher_calls"] if summary else 0,
+     |                                       ^^^^^^^ B023
+1247 |                 "network_queries_used": summary["final"]["search_queries"] if summary else 0,
+1248 |                 "model_thinking_included_in_network_budget": False,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1246:76: B023 Function definition does not bind loop variable `summary`
+     |
+1244 |                 ),
+1245 |                 "wall_guard_remaining_ms": wall_guard.remaining_ms(now=datetime.now(UTC)),
+1246 |                 "network_reads_used": summary["final"]["fetcher_calls"] if summary else 0,
+     |                                                                            ^^^^^^^ B023
+1247 |                 "network_queries_used": summary["final"]["search_queries"] if summary else 0,
+1248 |                 "model_thinking_included_in_network_budget": False,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1247:41: B023 Function definition does not bind loop variable `summary`
+     |
+1245 |                 "wall_guard_remaining_ms": wall_guard.remaining_ms(now=datetime.now(UTC)),
+1246 |                 "network_reads_used": summary["final"]["fetcher_calls"] if summary else 0,
+1247 |                 "network_queries_used": summary["final"]["search_queries"] if summary else 0,
+     |                                         ^^^^^^^ B023
+1248 |                 "model_thinking_included_in_network_budget": False,
+1249 |                 "read_limit": 60,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1247:79: B023 Function definition does not bind loop variable `summary`
+     |
+1245 |                 "wall_guard_remaining_ms": wall_guard.remaining_ms(now=datetime.now(UTC)),
+1246 |                 "network_reads_used": summary["final"]["fetcher_calls"] if summary else 0,
+1247 |                 "network_queries_used": summary["final"]["search_queries"] if summary else 0,
+     |                                                                               ^^^^^^^ B023
+1248 |                 "model_thinking_included_in_network_budget": False,
+1249 |                 "read_limit": 60,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1257:32: B023 Function definition does not bind loop variable `journal`
+     |
+1255 |             "bound_schema_construction",
+1256 |             lambda: journal_schema_for_turn(
+1257 |                 journal_sha256=journal.sha256,
+     |                                ^^^^^^^ B023
+1258 |                 canonical_university=case["university"],
+1259 |                 phase=selector_phase,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1259:23: B023 Function definition does not bind loop variable `selector_phase`
+     |
+1257 |                 journal_sha256=journal.sha256,
+1258 |                 canonical_university=case["university"],
+1259 |                 phase=selector_phase,
+     |                       ^^^^^^^^^^^^^^ B023
+1260 |             ),
+1261 |         )
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1267:62: B023 Function definition does not bind loop variable `turn`
+     |
+1265 |             "selector_workspace_paths",
+1266 |             lambda: selector_paths(
+1267 |                 assignments, receipts, case_id=case_id, turn=turn, fresh_output=True
+     |                                                              ^^^^ B023
+1268 |             ),
+1269 |         )
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1270:51: B023 Function definition does not bind loop variable `schema`
+     |
+1268 |             ),
+1269 |         )
+1270 |         charge("bound_schema_write", lambda: save(schema, bound_schema))
+     |                                                   ^^^^^^ B023
+1271 |         selector_command = charge(
+1272 |             "selector_command_construction",
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1270:59: B023 Function definition does not bind loop variable `bound_schema`
+     |
+1268 |             ),
+1269 |         )
+1270 |         charge("bound_schema_write", lambda: save(schema, bound_schema))
+     |                                                           ^^^^^^^^^^^^ B023
+1271 |         selector_command = charge(
+1272 |             "selector_command_construction",
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1273:39: B023 Function definition does not bind loop variable `schema`
+     |
+1271 |         selector_command = charge(
+1272 |             "selector_command_construction",
+1273 |             lambda: isolation.command(schema, output=output, model=MODEL),
+     |                                       ^^^^^^ B023
+1274 |         )
+1275 |         command_metadata = charge("selector_command_proof", lambda: command_proof(selector_command))
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1273:54: B023 Function definition does not bind loop variable `output`
+     |
+1271 |         selector_command = charge(
+1272 |             "selector_command_construction",
+1273 |             lambda: isolation.command(schema, output=output, model=MODEL),
+     |                                                      ^^^^^^ B023
+1274 |         )
+1275 |         command_metadata = charge("selector_command_proof", lambda: command_proof(selector_command))
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1275:83: B023 Function definition does not bind loop variable `selector_command`
+     |
+1273 |             lambda: isolation.command(schema, output=output, model=MODEL),
+1274 |         )
+1275 |         command_metadata = charge("selector_command_proof", lambda: command_proof(selector_command))
+     |                                                                                   ^^^^^^^^^^^^^^^^ B023
+1276 |         request_record = {
+1277 |             "selector_phase": selector_phase,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1294:50: B023 Function definition does not bind loop variable `turn`
+     |
+1292 |         charge(
+1293 |             "selector_request_write",
+1294 |             lambda: save(case_root / f"selector-{turn:02d}.request.json", request_record),
+     |                                                  ^^^^ B023
+1295 |         )
+1296 |         selector_start_active_ms = active_ms
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1294:75: B023 Function definition does not bind loop variable `request_record`
+     |
+1292 |         charge(
+1293 |             "selector_request_write",
+1294 |             lambda: save(case_root / f"selector-{turn:02d}.request.json", request_record),
+     |                                                                           ^^^^^^^^^^^^^^ B023
+1295 |         )
+1296 |         selector_start_active_ms = active_ms
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1360:26: B023 Function definition does not bind loop variable `turn`
+     |
+1358 |                     receipts,
+1359 |                     case_id=case_id,
+1360 |                     turn=turn,
+     |                          ^^^^ B023
+1361 |                     workspace=workspace,
+1362 |                     schema=schema,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1362:28: B023 Function definition does not bind loop variable `schema`
+     |
+1360 |                     turn=turn,
+1361 |                     workspace=workspace,
+1362 |                     schema=schema,
+     |                            ^^^^^^ B023
+1363 |                     output=output,
+1364 |                 ),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1363:28: B023 Function definition does not bind loop variable `output`
+     |
+1361 |                     workspace=workspace,
+1362 |                     schema=schema,
+1363 |                     output=output,
+     |                            ^^^^^^ B023
+1364 |                 ),
+1365 |             )
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1390:21: B023 Function definition does not bind loop variable `raw_answer`
+     |
+1388 |                 "journal_parse",
+1389 |                 lambda: parse_turn_decision(
+1390 |                     raw_answer,
+     |                     ^^^^^^^^^^ B023
+1391 |                     journal_sha256=journal.sha256,
+1392 |                     canonical_university=case["university"],
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1391:36: B023 Function definition does not bind loop variable `journal`
+     |
+1389 |                 lambda: parse_turn_decision(
+1390 |                     raw_answer,
+1391 |                     journal_sha256=journal.sha256,
+     |                                    ^^^^^^^ B023
+1392 |                     canonical_university=case["university"],
+1393 |                     phase=selector_phase,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1393:27: B023 Function definition does not bind loop variable `selector_phase`
+     |
+1391 |                     journal_sha256=journal.sha256,
+1392 |                     canonical_university=case["university"],
+1393 |                     phase=selector_phase,
+     |                           ^^^^^^^^^^^^^^ B023
+1394 |                 ),
+1395 |             )
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1411:25: B023 Function definition does not bind loop variable `journal`
+     |
+1409 |             candidate = charge(
+1410 |                 "journal_candidate",
+1411 |                 lambda: journal.candidate(
+     |                         ^^^^^^^ B023
+1412 |                     chosen, actions, ended_at=datetime.now(UTC), case_id=case_id
+1413 |                 ),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1412:21: B023 Function definition does not bind loop variable `chosen`
+     |
+1410 |                 "journal_candidate",
+1411 |                 lambda: journal.candidate(
+1412 |                     chosen, actions, ended_at=datetime.now(UTC), case_id=case_id
+     |                     ^^^^^^ B023
+1413 |                 ),
+1414 |             )
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1419:21: B023 Function definition does not bind loop variable `submission`
+     |
+1417 |                 "checkpoint_expansion",
+1418 |                 lambda: expand_submission(
+1419 |                     submission, actions, ended_at=datetime.now(UTC), case_id=case_id
+     |                     ^^^^^^^^^^ B023
+1420 |                 ),
+1421 |             )
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1432:25: B023 Function definition does not bind loop variable `expanded`
+     |
+1430 |                         started,
+1431 |                         actions,
+1432 |                         expanded["proposals"],
+     |                         ^^^^^^^^ B023
+1433 |                         expanded["question_findings"],
+1434 |                         wall_guard=wall_guard,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1433:25: B023 Function definition does not bind loop variable `expanded`
+     |
+1431 |                         actions,
+1432 |                         expanded["proposals"],
+1433 |                         expanded["question_findings"],
+     |                         ^^^^^^^^ B023
+1434 |                         wall_guard=wall_guard,
+1435 |                     ),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1439:44: B023 Function definition does not bind loop variable `tentative`
+     |
+1437 |                 charge(
+1438 |                     "checkpoint_raw_log_validation",
+1439 |                     lambda: validate_trace(tentative, packet, logs_dir=log_dir),
+     |                                            ^^^^^^^^^ B023
+1440 |                 )
+1441 |                 proof = charge(
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1439:72: B023 Function definition does not bind loop variable `log_dir`
+     |
+1437 |                 charge(
+1438 |                     "checkpoint_raw_log_validation",
+1439 |                     lambda: validate_trace(tentative, packet, logs_dir=log_dir),
+     |                                                                        ^^^^^^^ B023
+1440 |                 )
+1441 |                 proof = charge(
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1444:25: B023 Function definition does not bind loop variable `submission`
+     |
+1442 |                     "checkpoint_all_fact_citations",
+1443 |                     lambda: validate_all_fact_citations(
+1444 |                         submission, actions, logs_dir=checkpoint_log_dir, packet=packet
+     |                         ^^^^^^^^^^ B023
+1445 |                     ),
+1446 |                 )
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1444:55: B023 Function definition does not bind loop variable `checkpoint_log_dir`
+     |
+1442 |                     "checkpoint_all_fact_citations",
+1443 |                     lambda: validate_all_fact_citations(
+1444 |                         submission, actions, logs_dir=checkpoint_log_dir, packet=packet
+     |                                                       ^^^^^^^^^^^^^^^^^^ B023
+1445 |                     ),
+1446 |                 )
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1457:29: B023 Function definition does not bind loop variable `turn`
+     |
+1455 |                 "checkpoint_event_hashing",
+1456 |                 lambda: {
+1457 |                     "turn": turn,
+     |                             ^^^^ B023
+1458 |                     "at": datetime.now(UTC).isoformat(),
+1459 |                     "decision_sha256": digest(chosen.model_dump(mode="json")),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1459:47: B023 Function definition does not bind loop variable `chosen`
+     |
+1457 |                     "turn": turn,
+1458 |                     "at": datetime.now(UTC).isoformat(),
+1459 |                     "decision_sha256": digest(chosen.model_dump(mode="json")),
+     |                                               ^^^^^^ B023
+1460 |                     "prior_journal_sha256": journal.sha256,
+1461 |                     "accepted_journal_sha256": candidate.sha256,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1460:45: B023 Function definition does not bind loop variable `journal`
+     |
+1458 |                     "at": datetime.now(UTC).isoformat(),
+1459 |                     "decision_sha256": digest(chosen.model_dump(mode="json")),
+1460 |                     "prior_journal_sha256": journal.sha256,
+     |                                             ^^^^^^^ B023
+1461 |                     "accepted_journal_sha256": candidate.sha256,
+1462 |                     "source_action_count": len(actions),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1461:48: B023 Function definition does not bind loop variable `candidate`
+     |
+1459 |                     "decision_sha256": digest(chosen.model_dump(mode="json")),
+1460 |                     "prior_journal_sha256": journal.sha256,
+1461 |                     "accepted_journal_sha256": candidate.sha256,
+     |                                                ^^^^^^^^^ B023
+1462 |                     "source_action_count": len(actions),
+1463 |                     "citation_proof_sha256": digest(proof),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1463:53: B023 Function definition does not bind loop variable `proof`
+     |
+1461 |                     "accepted_journal_sha256": candidate.sha256,
+1462 |                     "source_action_count": len(actions),
+1463 |                     "citation_proof_sha256": digest(proof),
+     |                                                     ^^^^^ B023
+1464 |                     "selector_mode": selector_mode,
+1465 |                     "selector_phase": selector_phase,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1464:38: B023 Function definition does not bind loop variable `selector_mode`
+     |
+1462 |                     "source_action_count": len(actions),
+1463 |                     "citation_proof_sha256": digest(proof),
+1464 |                     "selector_mode": selector_mode,
+     |                                      ^^^^^^^^^^^^^ B023
+1465 |                     "selector_phase": selector_phase,
+1466 |                     "reasoning_effort": None,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1465:39: B023 Function definition does not bind loop variable `selector_phase`
+     |
+1463 |                     "citation_proof_sha256": digest(proof),
+1464 |                     "selector_mode": selector_mode,
+1465 |                     "selector_phase": selector_phase,
+     |                                       ^^^^^^^^^^^^^^ B023
+1466 |                     "reasoning_effort": None,
+1467 |                     "reasoning_effort_source": "cli_default",
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1468:54: B023 Function definition does not bind loop variable `bound_schema`
+     |
+1466 |                     "reasoning_effort": None,
+1467 |                     "reasoning_effort_source": "cli_default",
+1468 |                     "selector_schema_sha256": digest(bound_schema),
+     |                                                      ^^^^^^^^^^^^ B023
+1469 |                     "selector_command_sha256": command_metadata["argv_sha256"],
+1470 |                     "selector_request_sha256": digest(request_record),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1469:48: B023 Function definition does not bind loop variable `command_metadata`
+     |
+1467 |                     "reasoning_effort_source": "cli_default",
+1468 |                     "selector_schema_sha256": digest(bound_schema),
+1469 |                     "selector_command_sha256": command_metadata["argv_sha256"],
+     |                                                ^^^^^^^^^^^^^^^^ B023
+1470 |                     "selector_request_sha256": digest(request_record),
+1471 |                     "processed_through_action_count": len(actions),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1470:55: B023 Function definition does not bind loop variable `request_record`
+     |
+1468 |                     "selector_schema_sha256": digest(bound_schema),
+1469 |                     "selector_command_sha256": command_metadata["argv_sha256"],
+1470 |                     "selector_request_sha256": digest(request_record),
+     |                                                       ^^^^^^^^^^^^^^ B023
+1471 |                     "processed_through_action_count": len(actions),
+1472 |                 },
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1481:56: B023 Function definition does not bind loop variable `turn`
+     |
+1479 |             charge(
+1480 |                 "checkpoint_snapshot_write",
+1481 |                 lambda: save(case_root / f"checkpoint-{turn:02d}.json", candidate.snapshot()),
+     |                                                        ^^^^ B023
+1482 |             )
+1483 |             if wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0:
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1481:73: B023 Function definition does not bind loop variable `candidate`
+     |
+1479 |             charge(
+1480 |                 "checkpoint_snapshot_write",
+1481 |                 lambda: save(case_root / f"checkpoint-{turn:02d}.json", candidate.snapshot()),
+     |                                                                         ^^^^^^^^^ B023
+1482 |             )
+1483 |             if wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0:
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1488:74: B023 Function definition does not bind loop variable `candidate_events`
+     |
+1486 |             charge(
+1487 |                 "checkpoint_commit_marker_write",
+1488 |                 lambda: commit_events(case_root / "journal-events.json", candidate_events),
+     |                                                                          ^^^^^^^^^^^^^^^^ B023
+1489 |             )
+1490 |             meter[-1]["turn"] = turn
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1495:78: B023 Function definition does not bind loop variable `events`
+     |
+1493 |                 charge(
+1494 |                     "checkpoint_failed_commit_restore",
+1495 |                     lambda: commit_events(case_root / "journal-events.json", events),
+     |                                                                              ^^^^^^ B023
+1496 |                 )
+1497 |                 result["error"] = "active_budget_exhausted_during_checkpoint_commit_write"
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1522:82: B023 Function definition does not bind loop variable `closing_only`
+     |
+1520 |                 disposition = charge(
+1521 |                     "navigation_proposal_policy",
+1522 |                     lambda: source_proposal(wall_guard=wall_guard, source_closed=closing_only),
+     |                                                                                  ^^^^^^^^^^^^ B023
+1523 |                 )
+1524 |                 meter[-1]["turn"] = turn
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1524:37: B023 Function definition does not bind loop variable `turn`
+     |
+1522 |                     lambda: source_proposal(wall_guard=wall_guard, source_closed=closing_only),
+1523 |                 )
+1524 |                 meter[-1]["turn"] = turn
+     |                                     ^^^^ B023
+1525 |                 meter[-1]["policy"] = disposition.as_dict()
+1526 |                 return disposition
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1533:33: B023 Function definition does not bind loop variable `turn`
+     |
+1531 |                     lambda: {
+1532 |                         "status": "declined",
+1533 |                         "turn": turn,
+     |                                 ^^^^ B023
+1534 |                         "decision_sha256": digest(chosen.model_dump(mode="json")),
+1535 |                         "accepted_journal_sha256": journal.sha256,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1534:51: B023 Function definition does not bind loop variable `chosen`
+     |
+1532 |                         "status": "declined",
+1533 |                         "turn": turn,
+1534 |                         "decision_sha256": digest(chosen.model_dump(mode="json")),
+     |                                                   ^^^^^^ B023
+1535 |                         "accepted_journal_sha256": journal.sha256,
+1536 |                         "source_action_count": len(actions),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1535:52: B023 Function definition does not bind loop variable `journal`
+     |
+1533 |                         "turn": turn,
+1534 |                         "decision_sha256": digest(chosen.model_dump(mode="json")),
+1535 |                         "accepted_journal_sha256": journal.sha256,
+     |                                                    ^^^^^^^ B023
+1536 |                         "source_action_count": len(actions),
+1537 |                         "processed_through_action_count": events[-1]["source_action_count"],
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1537:59: B023 Function definition does not bind loop variable `events`
+     |
+1535 |                         "accepted_journal_sha256": journal.sha256,
+1536 |                         "source_action_count": len(actions),
+1537 |                         "processed_through_action_count": events[-1]["source_action_count"],
+     |                                                           ^^^^^^ B023
+1538 |                         "policy_meter_index": len(meter) - 1,
+1539 |                         "active_ms": active_ms,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1539:38: B023 Function definition does not bind loop variable `active_ms`
+     |
+1537 |                         "processed_through_action_count": events[-1]["source_action_count"],
+1538 |                         "policy_meter_index": len(meter) - 1,
+1539 |                         "active_ms": active_ms,
+     |                                      ^^^^^^^^^ B023
+1540 |                         **wall_guard.as_dict(),
+1541 |                         "policy": disposition.as_dict(),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1544:35: B023 Function definition does not bind loop variable `item`
+     |
+1542 |                         "reason": disposition.reason,
+1543 |                         "cutoff_ms": WALL_GUARD_MS,
+1544 |                         "action": item,
+     |                                   ^^^^ B023
+1545 |                     },
+1546 |                 )
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1548:37: B023 Function definition does not bind loop variable `turn`
+     |
+1546 |                 )
+1547 |                 navigation_outcomes.append(outcome)
+1548 |                 meter[-1]["turn"] = turn
+     |                                     ^^^^ B023
+1549 |                 charge(
+1550 |                     "navigation_outcome_write",
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1553:37: B023 Function definition does not bind loop variable `turn`
+     |
+1551 |                     lambda: save(case_root / "navigation-outcomes.json", navigation_outcomes),
+1552 |                 )
+1553 |                 meter[-1]["turn"] = turn
+     |                                     ^^^^ B023
+1554 |
+1555 |             disposition = proposal_disposition()
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1566:42: B023 Function definition does not bind loop variable `log_dir`
+     |
+1565 |                 def view_saved() -> dict[str, Any]:
+1566 |                     record = json.loads((log_dir / actions[step - 1]["raw_log_path"]).read_text())
+     |                                          ^^^^^^^ B023
+1567 |                     return expert_view(
+1568 |                         record,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1566:60: B023 Function definition does not bind loop variable `step`
+     |
+1565 |                 def view_saved() -> dict[str, Any]:
+1566 |                     record = json.loads((log_dir / actions[step - 1]["raw_log_path"]).read_text())
+     |                                                            ^^^^ B023
+1567 |                     return expert_view(
+1568 |                         record,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1572:30: B023 Function definition does not bind loop variable `item`
+     |
+1570 |                         links=45,
+1571 |                         sections=60,
+1572 |                         page=item.get("page"),
+     |                              ^^^^ B023
+1573 |                         offset=item.get("offset", 0),
+1574 |                         section_offset=item.get("section_offset", 0),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1573:32: B023 Function definition does not bind loop variable `item`
+     |
+1571 |                         sections=60,
+1572 |                         page=item.get("page"),
+1573 |                         offset=item.get("offset", 0),
+     |                                ^^^^ B023
+1574 |                         section_offset=item.get("section_offset", 0),
+1575 |                         link_offset=item.get("link_offset", 0),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1574:40: B023 Function definition does not bind loop variable `item`
+     |
+1572 |                         page=item.get("page"),
+1573 |                         offset=item.get("offset", 0),
+1574 |                         section_offset=item.get("section_offset", 0),
+     |                                        ^^^^ B023
+1575 |                         link_offset=item.get("link_offset", 0),
+1576 |                     )
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1575:37: B023 Function definition does not bind loop variable `item`
+     |
+1573 |                         offset=item.get("offset", 0),
+1574 |                         section_offset=item.get("section_offset", 0),
+1575 |                         link_offset=item.get("link_offset", 0),
+     |                                     ^^^^ B023
+1576 |                     )
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1588:40: B023 Function definition does not bind loop variable `disposition`
+     |
+1586 |                     lambda: {
+1587 |                         "status": "stored_view",
+1588 |                         "observed_at": disposition.observed_at,
+     |                                        ^^^^^^^^^^^ B023
+1589 |                         "view_started_at": view_started_at,
+1590 |                         "view_finished_at": view_finished_at,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1589:44: B023 Function definition does not bind loop variable `view_started_at`
+     |
+1587 |                         "status": "stored_view",
+1588 |                         "observed_at": disposition.observed_at,
+1589 |                         "view_started_at": view_started_at,
+     |                                            ^^^^^^^^^^^^^^^ B023
+1590 |                         "view_finished_at": view_finished_at,
+1591 |                         **wall_guard.as_dict(),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1590:45: B023 Function definition does not bind loop variable `view_finished_at`
+     |
+1588 |                         "observed_at": disposition.observed_at,
+1589 |                         "view_started_at": view_started_at,
+1590 |                         "view_finished_at": view_finished_at,
+     |                                             ^^^^^^^^^^^^^^^^ B023
+1591 |                         **wall_guard.as_dict(),
+1592 |                         "turn": turn,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1592:33: B023 Function definition does not bind loop variable `turn`
+     |
+1590 |                         "view_finished_at": view_finished_at,
+1591 |                         **wall_guard.as_dict(),
+1592 |                         "turn": turn,
+     |                                 ^^^^ B023
+1593 |                         "decision_sha256": digest(chosen.model_dump(mode="json")),
+1594 |                         "accepted_journal_sha256": journal.sha256,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1593:51: B023 Function definition does not bind loop variable `chosen`
+     |
+1591 |                         **wall_guard.as_dict(),
+1592 |                         "turn": turn,
+1593 |                         "decision_sha256": digest(chosen.model_dump(mode="json")),
+     |                                                   ^^^^^^ B023
+1594 |                         "accepted_journal_sha256": journal.sha256,
+1595 |                         "source_action_count": len(actions),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1594:52: B023 Function definition does not bind loop variable `journal`
+     |
+1592 |                         "turn": turn,
+1593 |                         "decision_sha256": digest(chosen.model_dump(mode="json")),
+1594 |                         "accepted_journal_sha256": journal.sha256,
+     |                                                    ^^^^^^^ B023
+1595 |                         "source_action_count": len(actions),
+1596 |                         "processed_through_action_count": events[-1]["source_action_count"],
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1596:59: B023 Function definition does not bind loop variable `events`
+     |
+1594 |                         "accepted_journal_sha256": journal.sha256,
+1595 |                         "source_action_count": len(actions),
+1596 |                         "processed_through_action_count": events[-1]["source_action_count"],
+     |                                                           ^^^^^^ B023
+1597 |                         "active_ms": view_basis_ms,
+1598 |                         "view_meter_index": view_meter_index,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1597:38: B023 Function definition does not bind loop variable `view_basis_ms`
+     |
+1595 |                         "source_action_count": len(actions),
+1596 |                         "processed_through_action_count": events[-1]["source_action_count"],
+1597 |                         "active_ms": view_basis_ms,
+     |                                      ^^^^^^^^^^^^^ B023
+1598 |                         "view_meter_index": view_meter_index,
+1599 |                         "view_sha256": digest(view),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1598:45: B023 Function definition does not bind loop variable `view_meter_index`
+     |
+1596 |                         "processed_through_action_count": events[-1]["source_action_count"],
+1597 |                         "active_ms": view_basis_ms,
+1598 |                         "view_meter_index": view_meter_index,
+     |                                             ^^^^^^^^^^^^^^^^ B023
+1599 |                         "view_sha256": digest(view),
+1600 |                         "action": item,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1599:47: B023 Function definition does not bind loop variable `view`
+     |
+1597 |                         "active_ms": view_basis_ms,
+1598 |                         "view_meter_index": view_meter_index,
+1599 |                         "view_sha256": digest(view),
+     |                                               ^^^^ B023
+1600 |                         "action": item,
+1601 |                     },
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1600:35: B023 Function definition does not bind loop variable `item`
+     |
+1598 |                         "view_meter_index": view_meter_index,
+1599 |                         "view_sha256": digest(view),
+1600 |                         "action": item,
+     |                                   ^^^^ B023
+1601 |                     },
+1602 |                 )
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1626:33: B023 Function definition does not bind loop variable `item`
+     |
+1624 |                     "budget_model": BUDGET_MODEL,
+1625 |                     **wall_guard.as_dict(),
+1626 |                     "actions": [item],
+     |                                 ^^^^ B023
+1627 |                 }
+1628 |                 if summary:
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1628:20: B023 Function definition does not bind loop variable `summary`
+     |
+1626 |                     "actions": [item],
+1627 |                 }
+1628 |                 if summary:
+     |                    ^^^^^^^ B023
+1629 |                     plan["start_calls"] = summary["final"]["fetcher_calls"]
+1630 |                     plan["start_search_queries"] = summary["final"]["search_queries"]
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1629:43: B023 Function definition does not bind loop variable `summary`
+     |
+1627 |                 }
+1628 |                 if summary:
+1629 |                     plan["start_calls"] = summary["final"]["fetcher_calls"]
+     |                                           ^^^^^^^ B023
+1630 |                     plan["start_search_queries"] = summary["final"]["search_queries"]
+1631 |                     plan["resume_summary"] = {
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1630:52: B023 Function definition does not bind loop variable `summary`
+     |
+1628 |                 if summary:
+1629 |                     plan["start_calls"] = summary["final"]["fetcher_calls"]
+1630 |                     plan["start_search_queries"] = summary["final"]["search_queries"]
+     |                                                    ^^^^^^^ B023
+1631 |                     plan["resume_summary"] = {
+1632 |                         key: value
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1633:43: B023 Function definition does not bind loop variable `summary`
+     |
+1631 |                     plan["resume_summary"] = {
+1632 |                         key: value
+1633 |                         for key, value in summary.items()
+     |                                           ^^^^^^^ B023
+1634 |                         if key not in {"actions", "replay", "initial"}
+1635 |                     }
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1661:29: B023 Function definition does not bind loop variable `inputs`
+     |
+1659 | …                     ref,
+1660 | …                     case_id,
+1661 | …                     inputs,
+     |                       ^^^^^^ B023
+1662 | …                     round_root,
+1663 | …                     wall_guard=wall_guard,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1662:29: B023 Function definition does not bind loop variable `round_root`
+     |
+1660 | …                     case_id,
+1661 | …                     inputs,
+1662 | …                     round_root,
+     |                       ^^^^^^^^^^ B023
+1663 | …                     wall_guard=wall_guard,
+1664 | …                     trial_root=root,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1765:24: B023 Function definition does not bind loop variable `summary`
+     |
+1764 |             def record_outputs() -> None:
+1765 |                 assert summary is not None and log_dir is not None
+     |                        ^^^^^^^ B023
+1766 |                 for entry in summary["actions"]:
+1767 |                     step = len(actions) + 1
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1765:48: B023 Function definition does not bind loop variable `log_dir`
+     |
+1764 |             def record_outputs() -> None:
+1765 |                 assert summary is not None and log_dir is not None
+     |                                                ^^^^^^^ B023
+1766 |                 for entry in summary["actions"]:
+1767 |                     step = len(actions) + 1
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1766:30: B023 Function definition does not bind loop variable `summary`
+     |
+1764 |             def record_outputs() -> None:
+1765 |                 assert summary is not None and log_dir is not None
+1766 |                 for entry in summary["actions"]:
+     |                              ^^^^^^^ B023
+1767 |                     step = len(actions) + 1
+1768 |                     record = json.loads((log_dir / entry["raw_log_path"]).read_text())
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1768:42: B023 Function definition does not bind loop variable `log_dir`
+     |
+1766 |                 for entry in summary["actions"]:
+1767 |                     step = len(actions) + 1
+1768 |                     record = json.loads((log_dir / entry["raw_log_path"]).read_text())
+     |                                          ^^^^^^^ B023
+1769 |                     if record.get("executed") is True and entry["tool"] == "search_provider":
+1770 |                         response = record.get("response", {})
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1778:29: B023 Function definition does not bind loop variable `provider_failures`
+     |
+1776 |                         }
+1777 |                         for status in sorted(statuses):
+1778 |                             provider_failures.append(
+     |                             ^^^^^^^^^^^^^^^^^ B023
+1779 |                                 {
+1780 |                                     "provider": "exa",
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1805:41: B023 Function definition does not bind loop variable `chosen`
+     |
+1803 |                     action.update(
+1804 |                         step=step,
+1805 |                         observed_before=chosen.observation,
+     |                                         ^^^^^^ B023
+1806 |                         observed_from_step=previous_step if step > 1 else None,
+1807 |                         action=f"{item['tool']}: {item.get('url') or item.get('query')}",
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1806:44: B023 Function definition does not bind loop variable `previous_step`
+     |
+1804 |                         step=step,
+1805 |                         observed_before=chosen.observation,
+1806 |                         observed_from_step=previous_step if step > 1 else None,
+     |                                            ^^^^^^^^^^^^^ B023
+1807 |                         action=f"{item['tool']}: {item.get('url') or item.get('query')}",
+1808 |                         stage="candidate_generation"
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1807:35: B023 Function definition does not bind loop variable `item`
+     |
+1805 |                         observed_before=chosen.observation,
+1806 |                         observed_from_step=previous_step if step > 1 else None,
+1807 |                         action=f"{item['tool']}: {item.get('url') or item.get('query')}",
+     |                                   ^^^^ B023
+1808 |                         stage="candidate_generation"
+1809 |                         if entry["tool"] == "search_provider"
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1807:51: B023 Function definition does not bind loop variable `item`
+     |
+1805 |                         observed_before=chosen.observation,
+1806 |                         observed_from_step=previous_step if step > 1 else None,
+1807 |                         action=f"{item['tool']}: {item.get('url') or item.get('query')}",
+     |                                                   ^^^^ B023
+1808 |                         stage="candidate_generation"
+1809 |                         if entry["tool"] == "search_provider"
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1807:70: B023 Function definition does not bind loop variable `item`
+     |
+1805 |                         observed_before=chosen.observation,
+1806 |                         observed_from_step=previous_step if step > 1 else None,
+1807 |                         action=f"{item['tool']}: {item.get('url') or item.get('query')}",
+     |                                                                      ^^^^ B023
+1808 |                         stage="candidate_generation"
+1809 |                         if entry["tool"] == "search_provider"
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1850:29: B023 Function definition does not bind loop variable `chosen`
+     |
+1848 |                         "question_scope_diagnostics",
+1849 |                         lambda: question_scope_diagnostics(
+1850 |                             chosen, packet, retained_facts=journal.facts
+     |                             ^^^^^^ B023
+1851 |                         )
+1852 |                         if chosen is not None
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1850:60: B023 Function definition does not bind loop variable `journal`
+     |
+1848 |                         "question_scope_diagnostics",
+1849 |                         lambda: question_scope_diagnostics(
+1850 |                             chosen, packet, retained_facts=journal.facts
+     |                                                            ^^^^^^^ B023
+1851 |                         )
+1852 |                         if chosen is not None
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1852:28: B023 Function definition does not bind loop variable `chosen`
+     |
+1850 |                             chosen, packet, retained_facts=journal.facts
+1851 |                         )
+1852 |                         if chosen is not None
+     |                            ^^^^^^ B023
+1853 |                         else [],
+1854 |                     ),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1857:51: B023 Function definition does not bind loop variable `chosen`
+     |
+1855 |                     (
+1856 |                         "source_location_diagnostics",
+1857 |                         lambda: location_feedback(chosen, history[-2:])
+     |                                                   ^^^^^^ B023
+1858 |                         if chosen is not None
+1859 |                         else None,
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1858:28: B023 Function definition does not bind loop variable `chosen`
+     |
+1856 |                         "source_location_diagnostics",
+1857 |                         lambda: location_feedback(chosen, history[-2:])
+1858 |                         if chosen is not None
+     |                            ^^^^^^ B023
+1859 |                         else None,
+1860 |                     ),
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1875:56: B023 Function definition does not bind loop variable `turn`
+     |
+1873 |             charge(
+1874 |                 "rejection_feedback_write",
+1875 |                 lambda: save(case_root / f"validation-{turn:02d}.json", {"feedback": feedback}),
+     |                                                        ^^^^ B023
+1876 |             )
+1877 |             emit(
+     |
+
+/tmp/unimatch-expert500-journal-pilot-v13-coherent.py:1875:86: B023 Function definition does not bind loop variable `feedback`
+     |
+1873 |             charge(
+1874 |                 "rejection_feedback_write",
+1875 |                 lambda: save(case_root / f"validation-{turn:02d}.json", {"feedback": feedback}),
+     |                                                                                      ^^^^^^^^ B023
+1876 |             )
+1877 |             emit(
+     |
+
+Found 102 errors.

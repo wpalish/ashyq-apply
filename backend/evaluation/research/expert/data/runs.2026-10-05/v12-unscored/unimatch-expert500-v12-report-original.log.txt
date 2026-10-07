@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/tmp/unimatch-expert500-journal-report-v12.py", line 2239, in <module>
+    main()
+  File "/tmp/unimatch-expert500-journal-report-v12.py", line 1946, in main
+    journal_replay = verify_journal_replay(folder, trace, packet, log_dir, citation_guard)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/unimatch-expert500-journal-report-v12.py", line 1488, in verify_journal_replay
+    verify_turn_policy_evidence(folder, result)
+  File "/tmp/unimatch-expert500-journal-report-v12.py", line 1182, in verify_turn_policy_evidence
+    raise ValueError("Descriptive wall ledger differs from recorded case timestamps")
+ValueError: Descriptive wall ledger differs from recorded case timestamps

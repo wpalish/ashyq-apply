@@ -1,0 +1,414 @@
+"""Prospective once-only local V14 launcher; import is side-effect free.
+
+Preparation validates original fresh proofs before allocation. Only an explicit
+stage invocation forwards an existing private FIFO descriptor to the NEW parent.
+The launcher never reads the descriptor or an ambient credential/environment.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib.util
+import json
+import os
+import stat
+import subprocess
+import sys
+import uuid
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
+from evaluation.research.expert.network_budget import (
+    BUDGET_MODEL,
+    NETWORK_COMPARISON_MODE,
+    WALL_GUARD_MS,
+    expert_budget,
+    validate_expert_budget,
+)
+from evaluation.research.expert.network_turn_policy import policy_limits
+from evaluation.research.expert.packet import digest
+from evaluation.research.expert.workspace_policy import allocate_workspaces, validate_workspaces
+
+FREEZE_PATH = Path("/tmp/unimatch-expert500-freeze-v14-local-candidate.py")
+PARENT_PATH = Path("/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py")
+PROTOCOL = "journal-v14-local"
+TRANSPORT_KIND = "local_process_v1"
+
+
+def freezer() -> Any:
+    name = "_expert500_v14_freeze_contract"
+    spec = importlib.util.spec_from_file_location(name, FREEZE_PATH)
+    if spec is None or spec.loader is None:
+        raise ValueError("Exact prospective freezer is unavailable")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def sha(path: Path) -> str:
+    if path.is_symlink() or not path.is_file():
+        raise ValueError("Original bytes must remain a regular non-symlink file")
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def read(path: Path) -> dict[str, Any]:
+    def unique(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("Duplicate original trial field")
+            result[key] = value
+        return result
+
+    value = json.loads(path.read_text(), object_pairs_hook=unique)
+    if not isinstance(value, dict):
+        raise ValueError("Original receipt must be an object")
+    return value
+
+
+def validate_manifest(value: dict[str, Any], manifest_path: Path, *, repo: Path) -> None:
+    freeze = freezer()
+    if (
+        value.get("schema_version") != "1"
+        or value.get("protocol_version") != PROTOCOL
+        or value.get("transport_kind") != TRANSPORT_KIND
+        or value.get("live_v14_started") is not False
+        or any(
+            value.get(key) != "exa"
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        )
+    ):
+        raise ValueError("Exact unused V14 local Exa freeze required")
+    if value.get("cohort_case_ids") != list(freeze.COHORT):
+        raise ValueError("Original ordered ten-case cohort required")
+    expected = {
+        "requested_model": "gpt-6-astra",
+        "requested_reasoning_effort": None,
+        "reasoning_effort_source": "cli_default",
+        "comparison_mode": NETWORK_COMPARISON_MODE,
+        "budget_model": BUDGET_MODEL,
+        "wall_guard_ms": WALL_GUARD_MS,
+        "turn_policy": policy_limits(),
+        "network_budget": expert_budget(),
+        "baseline_finalization_reserve_ms": 1000,
+        "baseline_source_work_deadline_ms": 119000,
+        "unchanged_reviewed_fact_count": 62,
+        "acceptance_threshold_recovered_facts": 40,
+        "max_parallel_experts": 3,
+    }
+    if any(
+        key not in value or type(value[key]) is not type(item) or value[key] != item
+        for key, item in expected.items()
+    ):
+        raise ValueError("Default effort/60/6/900/baseline120/119/62/40 policy differs")
+    if digest(value["network_budget"]) != digest(expert_budget()):
+        raise ValueError("Expert action caps require exact integer types")
+    validate_expert_budget(
+        {
+            "comparison_mode": value["comparison_mode"],
+            "expert_budget": value["network_budget"],
+            "baseline_budget": value.get("baseline_budget"),
+        }
+    )
+    if value["baseline_budget"] != {
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_elapsed_ms": 120000,
+        "browser_enabled": False,
+    }:
+        raise ValueError("No additional baseline stage or budget is permitted")
+    selected = freeze.validate_configuration(value, repo)
+    if any(value.get(key) != item for key, item in selected.items()):
+        raise ValueError("Recorded runtime/public inputs differ from actual freeze")
+    freeze.validate_baseline_capture_config(value.get("baseline_capture_config"))
+    freeze.clean_head(repo, value["harness_sha"], ref=value["frozen_ref"])
+    freeze.clean_head(Path(value["local_runtime"]["source_cwd"]), value["harness_sha"])
+    if (
+        freeze.validate_ci(
+            {key: value["ci_source_proof"][key] for key in ("path", "sha256")}, value["harness_sha"]
+        )
+        != value["ci_source_proof"]
+    ):
+        raise ValueError("Original successful source CI metadata differs")
+    for field, source in (
+        ("source_manifest_sha256", value["local_runtime"]["source_manifest"]),
+        ("runtime_files_sha256", value["local_runtime"]["runtime_files"]),
+        ("runtime_import_roots_sha256", value["local_runtime"]["runtime_import_roots"]),
+        ("public_environment_sha256", value["local_runtime"]["public_environment"]),
+        ("selector_environment_sha256", value["selector_environment"]),
+    ):
+        if value.get(field) != digest(source):
+            raise ValueError("Runtime/public environment digest differs")
+    scripts = value.get("scripts")
+    required = {str(path) for path in freeze.protocol_scripts()} | {
+        str(freeze.REPO / "backend/evaluation/research/expert/source_admission.py")
+    }
+    if not isinstance(scripts, dict) or set(scripts) != required:
+        raise ValueError("All exact local helpers/tests/admission must be frozen")
+    if any(sha(Path(path)) != expected for path, expected in scripts.items()):
+        raise ValueError("Actual helper/core bytes changed")
+    modules = value.get("modules")
+    if not isinstance(modules, dict) or set(modules) != freeze.CORE_MODULES:
+        raise ValueError("Exact22module proof required")
+    for name, expected_hash in modules.items():
+        spec = importlib.util.find_spec(name)
+        if spec is None or spec.origin is None or sha(Path(spec.origin)) != expected_hash:
+            raise ValueError("Actual protocol module bytes changed")
+    for entry in value.get("files", []):
+        relative = entry.get("path")
+        if (
+            type(relative) is not str
+            or Path(relative).is_absolute()
+            or "\\" in relative
+            or any(part in {"", ".", ".."} for part in relative.split("/"))
+        ):
+            raise ValueError("Frozen copy escapes its root")
+        source = (
+            repo / relative if relative.startswith("backend/") else manifest_path.parent / relative
+        )
+        if source != source.resolve(strict=True) or sha(source) != entry.get("sha256"):
+            raise ValueError("Frozen byte copy differs")
+    freeze.configure_proofs(value)
+    if freeze.validate_neutral_current() != value.get("neutral_probe"):
+        raise ValueError("Fresh neutral full replay differs")
+    os_pointer = {key: value["os_isolation_preflight"][key] for key in ("path", "sha256")}
+    path, proof = freeze.evidence(os_pointer)
+    if (
+        path != freeze.OS_PREFLIGHT.resolve(strict=True)
+        or proof.get("protocol_version") != PROTOCOL
+        or value["os_isolation_preflight"].get("cat_processes") != 240
+        or proof.get("parent_sha256") != sha(PARENT_PATH)
+    ):
+        raise ValueError("Fresh ten-case actual-parent OS proof differs")
+    freeze.runpy.run_path(str(freeze.OS_HELPER))["validate_result"](proof)
+    _, local = freeze.evidence(value["local_gates"])
+    freeze.validate_local_gates(local)
+    if value.get("cli_path") != freeze.FROZEN_CLI or value.get("cli_sha256") != sha(
+        Path(value["cli_path"])
+    ):
+        raise ValueError("Actual bundled CLI bytes differ")
+
+
+def new_json(path: Path, value: Any) -> None:
+    with path.open("x") as stream:
+        json.dump(value, stream, ensure_ascii=False, indent=2, allow_nan=False)
+        stream.write("\n")
+        stream.flush()
+        os.fsync(stream.fileno())
+
+
+def prepare_trial(
+    manifest_path: Path, *, repo: Path, root: Path, temp_root: Path
+) -> dict[str, Any]:
+    if root.exists() or root.is_symlink():
+        raise ValueError("Fresh trial root already exists; never reset/retry it")
+    if not root.is_absolute() or root.parent != root.parent.resolve(strict=True):
+        raise ValueError("Trial parent must already be canonical")
+    manifest = read(manifest_path)
+    original_hash = sha(manifest_path)
+    validate_manifest(manifest, manifest_path, repo=repo)
+    if sha(manifest_path) != original_hash:
+        raise ValueError("Original freeze changed during validation")
+    # Durable once-only directory claim precedes every workspace mutation.
+    root.mkdir(mode=0o700)
+    new_json(
+        root / "launch-start.json",
+        {
+            "schema_version": "1",
+            "protocol_version": PROTOCOL,
+            "manifest_sha256": original_hash,
+            "started_at": datetime.now(UTC).isoformat(),
+            "root": str(root),
+        },
+    )
+    assignments, receipts = allocate_workspaces(
+        tuple(manifest["cohort_case_ids"]), temp_root=temp_root
+    )
+    for name, value in (
+        ("workspace-locations.json", assignments),
+        ("workspace-receipts.json", receipts),
+    ):
+        new_json(root / name, value)
+    trial = {
+        **manifest,
+        "prepared_at": datetime.now(UTC).isoformat(),
+        "admission_run_id": str(uuid.uuid4()),
+        "workspace_assignments_sha256": sha(root / "workspace-locations.json"),
+        "workspace_receipts_sha256": sha(root / "workspace-receipts.json"),
+        "expert_protocol": {"files": manifest["files"], "manifest_file_sha256": original_hash},
+        "freeze_manifest": {"path": str(manifest_path), "sha256": original_hash},
+    }
+    new_json(root / "trial.json", trial)
+    with (root / "trial-at-baseline-start.json").open("xb") as stream:
+        stream.write((root / "trial.json").read_bytes())
+        stream.flush()
+        os.fsync(stream.fileno())
+    return trial
+
+
+def parent_command(
+    trial: dict[str, Any], *, repo: Path, root: Path, stage: str, source_key_fd: int
+) -> list[str]:
+    runtime = trial["local_runtime"]
+    import_roots = [runtime["source_cwd"], *runtime["runtime_import_roots"]]
+    bootstrap = (
+        "import sys,runpy;sys.path[:]="
+        + repr(import_roots)
+        + ";sys.argv="
+        + repr(
+            [
+                str(PARENT_PATH),
+                "--repo",
+                str(repo),
+                "--root",
+                str(root),
+                "--ref",
+                trial["frozen_ref"],
+                "--stage",
+                stage,
+                "--source-key-fd",
+                str(source_key_fd),
+            ]
+        )
+        + ";runpy.run_path("
+        + repr(str(PARENT_PATH))
+        + ",run_name='__main__')"
+    )
+    return [runtime["interpreter"], "-B", "-E", "-S", "-s", "-c", bootstrap]
+
+
+def launch_stage(*, repo: Path, root: Path, stage: str, source_key_fd: int) -> int:
+    if stage not in {"baseline", "experts"}:
+        raise ValueError("Only baseline or experts may be launched")
+    if (
+        type(source_key_fd) is not int
+        or source_key_fd <= 2
+        or not stat.S_ISFIFO(os.fstat(source_key_fd).st_mode)
+    ):
+        raise ValueError("An existing private FIFO descriptor is required")
+    trial = read(root / "trial.json")
+    freeze = trial.get("freeze_manifest")
+    if (
+        not isinstance(freeze, dict)
+        or set(freeze) != {"path", "sha256"}
+        or sha(Path(freeze["path"])) != freeze["sha256"]
+    ):
+        raise ValueError("Exact original freeze reference required")
+    validate_manifest(read(Path(freeze["path"])), Path(freeze["path"]), repo=repo)
+    original = read(Path(freeze["path"]))
+    if any(trial.get(key) != value for key, value in original.items()):
+        raise ValueError("Original trial differs from frozen metadata")
+    if sha(root / "trial.json") != sha(root / "trial-at-baseline-start.json"):
+        raise ValueError("Trial changed after allocation")
+    for name, field in (
+        ("workspace-locations.json", "workspace_assignments_sha256"),
+        ("workspace-receipts.json", "workspace_receipts_sha256"),
+    ):
+        if sha(root / name) != trial[field]:
+            raise ValueError("Original workspace contract changed")
+    validate_workspaces(
+        read(root / "workspace-locations.json"),
+        read(root / "workspace-receipts.json"),
+        case_ids=tuple(trial["cohort_case_ids"]),
+    )
+    if any(
+        (root / path).exists() or (root / path).is_symlink()
+        for path in (
+            "model-batch-stop.json",
+            "transport-batch-stop.json",
+            "source-admission/stop.json",
+            f"{stage}-stage-start.json",
+            f"launch-{stage}-stage-start.json",
+            stage,
+        )
+    ):
+        raise ValueError("Stopped or previously claimed stage cannot restart")
+    if stage == "experts":
+        result = read(root / "baseline-results.json")
+        records = result.get("results", [])
+        if (
+            result.get("stopped") is not False
+            or result.get("remaining_case_ids") != []
+            or len(records) != 10
+            or {r.get("case_id") for r in records} != set(trial["cohort_case_ids"])
+            or any(
+                r.get("provider") != "exa"
+                or r.get("error") is not None
+                or r.get("provider_failure") is not None
+                or r.get("budget", {}).get("provider_failure") is not None
+                for r in records
+            )
+        ):
+            raise ValueError("Only the complete fresh provider-clean baseline may start experts")
+    argv = parent_command(trial, repo=repo, root=root, stage=stage, source_key_fd=source_key_fd)
+    environment = dict(trial["selector_environment"])
+    receipt = {
+        "schema_version": "1",
+        "protocol_version": PROTOCOL,
+        "transport_kind": TRANSPORT_KIND,
+        "stage": stage,
+        "started_at": datetime.now(UTC).isoformat(),
+        "trial_sha256": sha(root / "trial.json"),
+        "source_sha": trial["harness_sha"],
+        "parent_sha256": sha(PARENT_PATH),
+        "argv": argv,
+        "argv_sha256": digest(argv),
+        "public_environment": environment,
+        "public_environment_sha256": digest(environment),
+        "private_fifo_passed_only_to_parent": True,
+    }
+    new_json(root / f"launch-{stage}-stage-start.json", receipt)
+    # Never inherit ambient settings/key; never read or serialize the FIFO bytes.
+    try:
+        completed = subprocess.run(
+            argv,
+            cwd=trial["local_runtime"]["source_cwd"],
+            env=environment,
+            pass_fds=(source_key_fd,),
+            check=False,
+        )
+    finally:
+        os.close(source_key_fd)
+    new_json(
+        root / f"launch-{stage}-stage-finished.json",
+        {
+            "schema_version": "1",
+            "protocol_version": PROTOCOL,
+            "stage": stage,
+            "finished_at": datetime.now(UTC).isoformat(),
+            "start_receipt_sha256": sha(root / f"launch-{stage}-stage-start.json"),
+            "returncode": completed.returncode,
+        },
+    )
+    return completed.returncode
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--repo", type=Path, required=True)
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--manifest", type=Path)
+    parser.add_argument("--temp-root", type=Path)
+    parser.add_argument("--stage", choices=["baseline", "experts"])
+    parser.add_argument("--source-key-fd", type=int)
+    args = parser.parse_args()
+    if args.stage is None:
+        if args.manifest is None or args.temp_root is None or args.source_key_fd is not None:
+            parser.error("Preparation requires manifest/temp-root; no source credential descriptor")
+        prepare_trial(args.manifest, repo=args.repo, root=args.root, temp_root=args.temp_root)
+        print(json.dumps({"root": str(args.root), "trial_sha256": sha(args.root / "trial.json")}))
+    else:
+        if args.source_key_fd is None or args.manifest is not None or args.temp_root is not None:
+            parser.error("Stage launch requires only its original trial and private FIFO")
+        raise SystemExit(
+            launch_stage(
+                repo=args.repo, root=args.root, stage=args.stage, source_key_fd=args.source_key_fd
+            )
+        )
+
+
+if __name__ == "__main__":
+    main()

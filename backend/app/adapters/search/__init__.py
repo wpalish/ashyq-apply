@@ -35,7 +35,7 @@ __all__ = [
     "reset_search_throttle",
 ]
 
-#: How long a provider that answered HTTP 429 is left alone, in seconds. The
+#: How long a provider that answered HTTP 402/429 is left alone, in seconds. The
 #: refusal is about the account's window, not one query: every later request
 #: in that window would be refused too and only spends the quota further.
 THROTTLE_COOLDOWN_SECONDS = 300.0
@@ -44,20 +44,22 @@ THROTTLE_COOLDOWN_SECONDS = 300.0
 #: catalogue identity check each build their own adapter, and a run used to
 #: send more than a hundred requests into a refused endpoint (V6b, 2026-10-04).
 _THROTTLED_UNTIL: dict[str, float] = {}
+_THROTTLED_STATUS: dict[str, int] = {}
 
 
 def reset_search_throttle() -> None:
-    """Forget every recorded 429. Tests and a deliberate operator retry only."""
+    """Forget recorded account refusals. Tests and a deliberate operator retry only."""
     _THROTTLED_UNTIL.clear()
+    _THROTTLED_STATUS.clear()
 
 
 class _ThrottleLatch:
-    """A provider that stops asking once its endpoint has said HTTP 429.
+    """A provider that stops asking once its endpoint has said HTTP 402/429.
 
     No retry and no backoff loop: after one refusal every caller in this
     process gets the same refusal locally, without a request, until the
     cool-down passes. The caller sees an ordinary :class:`SearchUnavailable`
-    with ``http_status=429``, so every existing quota-stop path still applies.
+    carrying the original HTTP status, so diagnostics retain the first cause.
     """
 
     def __init__(self, inner: SearchProvider) -> None:
@@ -76,15 +78,18 @@ class _ThrottleLatch:
         self, *, query: str, domains: Sequence[str] = (), max_results: int = 10
     ) -> SearchResponse:
         if time.monotonic() < _THROTTLED_UNTIL.get(self.name, 0.0):
+            status = _THROTTLED_STATUS.get(self.name, 429)
             raise SearchUnavailable(
-                f"{self.name} refused an earlier request with HTTP 429; this request was not sent",
-                http_status=429,
+                f"{self.name} refused an earlier request with HTTP {status}; "
+                "this request was not sent",
+                http_status=status,
             )
         try:
             return await self._inner.search(query=query, domains=domains, max_results=max_results)
         except SearchUnavailable as exc:
-            if exc.http_status == 429:
+            if exc.http_status in {402, 429}:
                 _THROTTLED_UNTIL[self.name] = time.monotonic() + THROTTLE_COOLDOWN_SECONDS
+                _THROTTLED_STATUS[self.name] = exc.http_status
             raise
 
 

@@ -1,0 +1,70 @@
+from pathlib import Path
+from datetime import UTC,datetime
+import hashlib,json,re
+repo=Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply')
+folder=repo/'backend/evaluation/research/expert/data/protocol.2026-10-05/v13-source-support'
+assert not folder.exists()
+logs=[
+'/tmp/unimatch-expert500-v13-year-context-v2-actual-red-original.log',
+'/tmp/unimatch-expert500-v13-year-context-v2-actual-green-original.log',
+'/tmp/unimatch-expert500-v13-year-context-v2-actual-green-v2-original.log',
+'/tmp/unimatch-expert500-v13-saved-source-compatibility.py',
+'/tmp/unimatch-expert500-v13-saved-source-compatibility.json',
+'/tmp/unimatch-expert500-v13-saved-source-compatibility-original.log',
+'/tmp/unimatch-expert500-v13-actual-ruff-original.log',
+'/tmp/unimatch-expert500-v13-actual-format-original.log',
+'/tmp/unimatch-expert500-v13-actual-mypy-original.log',
+'/tmp/unimatch-expert500-v13-actual-full-pytest-original.log',
+'/tmp/unimatch-expert500-v13-actual-demo-original.log',
+'/tmp/unimatch-expert500-demo-gate-v13.py',
+'/tmp/unimatch-expert500-v13-actual-alembic-original.log',
+'/tmp/unimatch-expert500-v13-actual-public-pins.json',
+'/tmp/unimatch-expert500-v13-workflow-pre-cache.yml',
+'/tmp/unimatch-expert500-v12-baseline-job-timing-original.json',
+'/tmp/unimatch-expert500-v12-expert-job-timing-original.json',
+'/tmp/unimatch-expert500-v13-workflow-cache-check.py',
+'/tmp/unimatch-expert500-v13-workflow-cache-check-v2.py',
+'/tmp/unimatch-expert500-v13-workflow-cache-check-v3.py',
+'/tmp/unimatch-expert500-v13-workflow-cache-check-original.log',
+'/tmp/unimatch-expert500-v13-workflow-cache-check-v2-original.log',
+'/tmp/unimatch-expert500-v13-workflow-cache-check-v3-original.log',
+'/tmp/unimatch-expert500-v13-workflow-cache-check.json',
+'/tmp/unimatch-expert500-v13-workflow-cache-check-final.json',
+'/tmp/unimatch-expert500-v13-workflow-existing-tests-original.log',
+'/tmp/unimatch-expert500-v13-local-dependency-check-original.log',
+'/tmp/unimatch-expert500-v13-coherent-clone-original.log',
+'/tmp/unimatch-expert500-v13-coherent-quality-original.log',
+'/tmp/unimatch-expert500-v13-coherent-three-suite-mocks-original.log',
+'/tmp/unimatch-expert500-v13-final-all-runtime-mocks-original.log',
+'/tmp/unimatch-expert500-v13-final-helper-inherited-config-diagnostic.log',
+'/tmp/unimatch-expert500-v13-final-helper-quality-original.log',
+'/tmp/unimatch-expert500-v13-final-pin-format-original.log',
+'/tmp/unimatch-expert500-v13-isolation-preflight-original.log',
+'/tmp/unimatch-expert500-v13-neutral-provenance-recorder-original.log',
+'/tmp/unimatch-expert500-local-execution-feasibility-audit.md',
+'/tmp/unimatch-expert500-local-execution-feasibility-audit-corrected.md',
+'/tmp/unimatch-expert500-local-execution-feasibility-audit-corrected.json',
+'/tmp/unimatch-expert500-v13-completion-clock-quality-final-original.log',
+'/tmp/unimatch-expert500-v13-completion-clock-green-final-original.log',
+'/tmp/test_unimatch_expert500_completion_clock_v13.py',
+'/tmp/unimatch-expert500-v13-before-neutral-availability-original.log',
+'/tmp/unimatch-expert500-v13-before-neutral-availability.py',
+str(Path(__file__))]
+sources=[Path(p) for p in logs]
+base=Path('/tmp/unimatch-expert500-v13-year-context-v2-candidate')
+for p in sorted(base.rglob('*')):
+    if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc':sources.append(p)
+sources+=sorted(Path('/tmp/unimatch-expert500-v13-unbound-proof-drafts').glob('*.txt'))
+for p in ['.github/workflows/benchmark-capture.yml','backend/app/adapters/document_ir.py','backend/evaluation/research/expert/models.py','backend/evaluation/research/expert/citations.py','backend/evaluation/research/expert/controller.py','backend/tests/test_document_ir.py','backend/tests/test_expert_citations.py','backend/tests/test_expert_controller_mixed_provider_stop.py']:sources.append(repo/p)
+assert len(sources)==len(set(sources))
+full=Path('/tmp/unimatch-expert500-v13-actual-full-pytest-original.log').read_text();runtime=Path('/tmp/unimatch-expert500-v13-final-all-runtime-mocks-original.log').read_text()
+assert '4328 passed, 2 warnings' in full and 'Total coverage: 94.90%' in full
+assert re.search(r'650 passed',runtime) and '\nFAILED ' not in runtime
+assert 'current_helper_quality_files=11' in Path('/tmp/unimatch-expert500-v13-final-helper-quality-original.log').read_text()
+folder.mkdir();records=[]
+for i,p in enumerate(sources):
+    assert p.is_file() and not p.is_symlink();data=p.read_bytes();sha=hashlib.sha256(data).hexdigest();name=f'{i:03d}-{p.name}'+('.txt' if p.suffix=='.py' else '')
+    q=folder/name;q.open('xb').write(data);assert hashlib.sha256(q.read_bytes()).hexdigest()==sha and p.read_bytes()==data
+    records.append({'original_path':str(p),'path':name,'sha256':sha,'bytes':len(data)})
+v={'schema_version':'1','kind':'prospective_v13_source_support_originals','recorded_at':datetime.now(UTC).isoformat(),'backend_tests':4328,'coverage_percent':94.90,'runtime_mocks':650,'neutral_execution':'separate fresh22record archive','live_source_requests':0,'reviewed_labels_read':0,'primary_score':None,'records':records}
+p=folder/'manifest.json';p.open('x').write(json.dumps(v,indent=2)+'\n');print(json.dumps({'records':len(records),'manifest_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'backend_tests':4328,'runtime_mocks':650}))

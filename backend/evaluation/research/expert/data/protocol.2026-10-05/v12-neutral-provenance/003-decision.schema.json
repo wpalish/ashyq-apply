@@ -1,0 +1,51 @@
+{
+  "title": "JournalHashOnlySubmit",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "type": "string",
+      "enum": [
+        "submit"
+      ]
+    },
+    "observation": {
+      "type": "string",
+      "enum": [
+        "Commit the accepted journal by hash."
+      ]
+    },
+    "journal_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "enum": [
+        "947cdbcb8f1acc7d84fc085036c6c29d34424069a7fd244d10ecfbd256007cdc"
+      ]
+    },
+    "action": {
+      "type": "null"
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "null"
+      },
+      "maxItems": 0
+    },
+    "question_findings": {
+      "type": "array",
+      "items": {
+        "type": "null"
+      },
+      "maxItems": 0
+    }
+  },
+  "required": [
+    "kind",
+    "observation",
+    "journal_sha256",
+    "action",
+    "facts",
+    "question_findings"
+  ]
+}

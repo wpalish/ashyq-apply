@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/tmp/unimatch-expert500-journal-report-v10.py", line 2047, in <module>
+    main()
+  File "/tmp/unimatch-expert500-journal-report-v10.py", line 1703, in main
+    sealed_results = verified_cohort(root, final, COHORT)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/unimatch-expert500-journal-report-v10.py", line 209, in verified_cohort
+    raise ValueError("All experts must be uniquely finalized before unsealing")
+ValueError: All experts must be uniquely finalized before unsealing

@@ -1,0 +1,153 @@
+{
+  "schema_version": "1",
+  "protocol_version": "journal-v11",
+  "recorded_at": "2026-10-05T11:09:16.156066+00:00",
+  "all_passed": true,
+  "actual_ten_case_launcher_preflight": true,
+  "backend_tests": 4100,
+  "backend_coverage_percent": 94.87,
+  "frontend_tests": 232,
+  "current_runtime_tests_total": 621,
+  "current_runtime_partitions": {
+    "parent_workflow_pure": 178,
+    "report": 305,
+    "actual_ten_cohort": 138
+  },
+  "predecessor_runtime_tests": 570,
+  "static_source_files": 371,
+  "parent_quality_files": 11,
+  "source_calls": 0,
+  "new_neutral_model_calls": 3,
+  "integrated_main": "4eccbec680f5cacf5e4e77661748d0d993d85b0e",
+  "gates": {
+    "backend_tests": true,
+    "backend_ruff": true,
+    "backend_format": true,
+    "backend_mypy": true,
+    "evaluation_quality": true,
+    "combined_parent_mocks": true,
+    "actual_ten_case_launcher_preflight": true,
+    "demo_order": true,
+    "alembic_single_head": true,
+    "exa_provider_pin": true,
+    "actual_ten_case_os_isolation": true,
+    "fresh_neutral_default_effort_runtime": true,
+    "ordinary_cli_usage_available_before_neutral": true,
+    "current_report_final": true,
+    "current_actual_ten_cohort_final": true,
+    "current_all_helper_ruff": true,
+    "current_all_helper_format": true,
+    "current_all_helper_mypy": true,
+    "fresh_neutral_negative_regressions": true,
+    "durable_model_provider_integrity_cause_regressions": true,
+    "frontend_tests": true,
+    "frontend_typecheck": true,
+    "frontend_build": true,
+    "frontend_lint": true
+  },
+  "raw_logs": {
+    "backend_tests": {
+      "path": "/tmp/unimatch-expert500-v11-main53-backend-tests.log",
+      "sha256": "4352c6bdd5dcb999d6df052af2f44aee01bec7b8b5d7e5e0287e973e1c394ffe"
+    },
+    "backend_ruff": {
+      "path": "/tmp/unimatch-expert500-v11-main53-backend-ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "backend_format": {
+      "path": "/tmp/unimatch-expert500-v11-main53-backend-format.log",
+      "sha256": "64a4fa60ca2bda7893c1e4b8ea53a24a76e4ea49ffc3d32207015731000ca7cc"
+    },
+    "backend_mypy": {
+      "path": "/tmp/unimatch-expert500-v11-main53-backend-mypy.log",
+      "sha256": "62438cc7aa5c6e61cfa54ea208828033e41694c5c8eacc816ead469259840785"
+    },
+    "evaluation_quality": {
+      "path": "/tmp/unimatch-expert500-v11-main53-backend-mypy.log",
+      "sha256": "62438cc7aa5c6e61cfa54ea208828033e41694c5c8eacc816ead469259840785"
+    },
+    "combined_parent_mocks": {
+      "path": "/tmp/unimatch-expert500-v11-main53-parent-workflow-pure-final-original.log",
+      "sha256": "4f53e60324c03c7c7e1e95e67b202398c88eae7a72422e8eafe326ce1623d5dd"
+    },
+    "actual_ten_case_launcher_preflight": {
+      "path": "/tmp/unimatch-expert500-v11-pr53-cohort-v2-original.log",
+      "sha256": "c9a3be6ba8d137f40564b0beb33accc1c34e09be242338ad022bb2931d985365"
+    },
+    "demo_order": {
+      "path": "/tmp/unimatch-expert500-v11-main53-demo-verification-corrected.log",
+      "sha256": "42d7d5768de172fd4f677c8ac5a8d40aa0bc2255e393384e9e85bf53c731daa5"
+    },
+    "alembic_single_head": {
+      "path": "/tmp/unimatch-expert500-v11-main53-alembic.log",
+      "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b"
+    },
+    "exa_provider_pin": {
+      "path": "/tmp/unimatch-expert500-v11-pr53-cohort-v2-original.log",
+      "sha256": "c9a3be6ba8d137f40564b0beb33accc1c34e09be242338ad022bb2931d985365"
+    },
+    "actual_ten_case_os_isolation": {
+      "path": "/tmp/unimatch-expert500-v11-final-os-isolation.log",
+      "sha256": "6301059d4f80c98eec9125b6ef66879dacf731f325c74bbfe22a511e52a5ee4d"
+    },
+    "fresh_neutral_default_effort_runtime": {
+      "path": "/tmp/unimatch-expert500-v11-neutral-original.log",
+      "sha256": "9e52d9dcb17c0082f1be2b9de544d6890c8e3c5692e356f5b2710f2cdb9cc5ce"
+    },
+    "ordinary_cli_usage_available_before_neutral": {
+      "path": "/tmp/unimatch-expert500-v11-before-neutral-availability.log",
+      "sha256": "93e6234267fbca03458d35e4ba82bb344eb9a2e7cd588e6f80ffac916dad5594"
+    },
+    "current_report_final": {
+      "path": "/tmp/unimatch-expert500-v11-main53-report-final-original.log",
+      "sha256": "c948c0ea55b5d6cbb538af16f76df1ed94d752fe0f96f017a35e269571c03ccd"
+    },
+    "current_actual_ten_cohort_final": {
+      "path": "/tmp/unimatch-expert500-v11-pr53-cohort-v2-original.log",
+      "sha256": "c9a3be6ba8d137f40564b0beb33accc1c34e09be242338ad022bb2931d985365"
+    },
+    "current_all_helper_ruff": {
+      "path": "/tmp/unimatch-expert500-v11-final-all-helper-ruff-v2-original.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "current_all_helper_format": {
+      "path": "/tmp/unimatch-expert500-v11-final-all-helper-format-v2-original.log",
+      "sha256": "75b7030be9d7de96bf4e76e79b1f03f14af8899d169fd8d79564d59167d1ab80"
+    },
+    "current_all_helper_mypy": {
+      "path": "/tmp/unimatch-expert500-v11-final-all-helper-mypy-v2-original.log",
+      "sha256": "170c42d28455fb5991d410299b32cdc2caabea55fc22c5bd8eadcdc02d7aef53"
+    },
+    "fresh_neutral_negative_regressions": {
+      "path": "/tmp/unimatch-expert500-v11-pr53-neutral-negatives-v2-original.log",
+      "sha256": "02fc4c83ecb4479d05f6c9a39fdb67ef7619b40aa72a0a0ca6281ba3cd47597e"
+    },
+    "durable_model_provider_integrity_cause_regressions": {
+      "path": "/tmp/unimatch-expert500-v11-main53-parent-workflow-pure-final-original.log",
+      "sha256": "4f53e60324c03c7c7e1e95e67b202398c88eae7a72422e8eafe326ce1623d5dd"
+    },
+    "frontend_tests": {
+      "path": "/tmp/unimatch-expert500-v10-final-frontend-tests.log",
+      "sha256": "164bd9647960e3f9fc0475c950f65ad28db21b798639bf6f9dcc1b0abd81b7f9"
+    },
+    "frontend_typecheck": {
+      "path": "/tmp/unimatch-expert500-v10-final-frontend-typecheck.log",
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02"
+    },
+    "frontend_build": {
+      "path": "/tmp/unimatch-expert500-v10-final-frontend-build.log",
+      "sha256": "abb05af0f45b389c00ec408539c06863962ccafb5fea54130392f57035f6bc44"
+    },
+    "frontend_lint": {
+      "path": "/tmp/unimatch-expert500-v10-final-frontend-lint.log",
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a"
+    }
+  },
+  "frontend_tree": "4aaba144e9642060a4915a22527ef016ee8cc83d",
+  "migration_tree": "96469ee9697939efcd3c52b681838e1899989998",
+  "workflow_tree": "fc6cd24a90676173947f23fe262210a801ff9efc",
+  "current_neutral_manifest_sha256": "487c1630699ef3e4b931da92c7cd7a58614222b73f6639086700a78c97b82add",
+  "predecessor_support_manifest_sha256": "7b2d16d2127d55608955623c9d86cb07fbd4e55145f58e7a7b4a9cdc7b849d63",
+  "runtime_note": "Current621 is three source-bound original partitions178+305+138, not one combined invocation. Previous570 belongs to pre-main53 neutral reuse and is preserved separately. Final current helper bytes include the two fixture-only corrections and source inventory checks before/after138.",
+  "frontend_proof_note": "The same unchanged frontend tree retains original V10 unit232/type/lint/build receipts; current exact-source cloud jobs remain pending."
+}

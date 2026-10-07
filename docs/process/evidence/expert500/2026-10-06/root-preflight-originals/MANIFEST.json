@@ -1,0 +1,68 @@
+{
+  "status": "preparation_only_not_trial",
+  "combined_initial": "21 failed, 299 passed; empty source-key name presence rejected",
+  "combined_clean": "320 passed; synthetic only",
+  "neutral_os": "CLI PATH lookup failed before model/source dispatch; no successful OS proof",
+  "records": [
+    {
+      "source": "/tmp/unimatch-expert500-v14-root-combined-gates-20261006/combined-original.log",
+      "file": "combined-initial-original.log",
+      "size": 42497,
+      "sha256": "744febbe2bd80725c5ba89a362cabb059c1dead3215bf94c4f276043cba6335a"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-root-combined-gates-20261006/receipt.json",
+      "file": "combined-initial-receipt.json",
+      "size": 3757,
+      "sha256": "d5b37f90a991570ece20cfec1aeb63dd9459e08432f0a762afbf8fc8f01a0b49"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-root-clean-combined-gates-20261006/combined-original.log",
+      "file": "combined-clean-original.log",
+      "size": 907,
+      "sha256": "8bd879241ddbb6507e27405abbbbbbc5e1dab5013aa4331ee5dc1cc29af6d157"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-root-clean-combined-gates-20261006/receipt.json",
+      "file": "combined-clean-receipt.json",
+      "size": 4449,
+      "sha256": "238398251878af4f05d5f7361fd64f858c1228ea5c5496eeb83dd23560cdfa6f"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-local-neutral-result.json",
+      "file": "neutral-failed-result.json",
+      "size": 8398,
+      "sha256": "4b7d0e9de535f4c0f56c4b938dd31eb72a43fc2ac47afd247d2703519dcd63f5"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-local-neutral-invocation-original.log",
+      "file": "neutral-failed-invocation-original.log",
+      "size": 217,
+      "sha256": "30f382aea89063b94594f6970904fb2adb84936e742d37a64d1e22e5f78ddeba"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-v14-local-os-invocation-original.log",
+      "file": "os-failed-invocation-original.log",
+      "size": 1151,
+      "sha256": "6693ab9442eda7c1e5a1dca567b38d31dd40f61acc0bb1b324c316b572389e99"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-edb7367-ci37499415787-failed-original.log",
+      "file": "ci37499415787-failed-original.log",
+      "size": 19542,
+      "sha256": "a20b59944fbecfde80916e65d23b3eb06ff5b30d23c7e17f7f2675d5e665727e"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-neutral-v14-local-candidate.py",
+      "file": "neutral-failed-helper.py.txt",
+      "size": 25956,
+      "sha256": "7c9e414d355f88f09798db2646699191dbb59de3330e3c93dd6d8fe454ca4e4c"
+    },
+    {
+      "source": "/tmp/unimatch-expert500-isolation-preflight-v14-local-candidate.py",
+      "file": "os-failed-helper.py.txt",
+      "size": 22897,
+      "sha256": "5be7c6c88d3069f1e2268d75e2b3bdab395274fff2eb429669dd822e505ecd2d"
+    }
+  ]
+}

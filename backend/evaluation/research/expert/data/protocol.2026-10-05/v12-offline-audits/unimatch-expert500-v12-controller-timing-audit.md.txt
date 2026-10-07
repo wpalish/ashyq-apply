@@ -1,0 +1,73 @@
+# V12 completed-three controller timing audit
+
+Independent diagnostic outside the primary comparison. Original outcomes, journals, clocks, stages, and helpers remain unchanged. Only completed Groningen/Delft/Aalto, the original trial, and the frozen parent were read. No pending peer, reviewed dataset, label, or network/model call was accessed.
+
+Parent SHA256: 1922e117436afdc001bef7cbf867e8b91db4062fd0b98cfce044c3b980a74b72. Trial SHA256: c78aacedd2db9ecc82588e6a0f8eba4840186d80205720c06d82ab1ac50cf613.
+
+## Timing split
+
+Amounts below are seconds. Source work is nested inside workflow transport; do not add it again. Selector process time includes startup, service wait, reasoning, and output. Thinking time is not separately measured.
+
+| Case | Source | Selector | Workflow transport | Other metered mechanics | Wall result | Calls / queries | Processed / recorded | Original ending |
+|---|---:|---:|---:|---:|---:|---|---|---|
+| groningen | 11.611 | 531.737 | 343.192 | 25.532 | 901.088 | 6 / 0 | 5 / 6 | selector_timeout |
+| delft | 13.504 | 272.879 | 613.040 | 14.627 | 901.217 | 9 / 2 | 10 / 11 | selector_timeout |
+| aalto | 89.744 | 164.134 | 731.793 | 0.831 | 897.506 | 8 / 4 | 12 / 12 | explicit_commit |
+
+The exact previous source clock and counters were reused on every resume. The 60 reads/6 queries and original 900-second aware UTC guard were unchanged. All original raw source dispatches/completions and accepted checkpoint markers were before the deadline. Raw ledger hashes matched original controller receipts. Model and transport time were never injected into source start_ms.
+
+## Exact closure sequence
+
+### groningen
+
+- Last source step 6 completed at 2026-10-05T16:27:45.947090+00:00, with 19811.388 ms left. The original artifact receipt arrived at 2026-10-05T16:27:57.328048+00:00; source completion to receipt took 11380.958 ms.
+- Last selector turn 32 started at 2026-10-05T16:27:57.444034+00:00, with 8314.444 ms left; its recorded elapsed time was 8326 ms. It ended at 2026-10-05T16:28:05.769028+00:00; signed remaining time was -10.550 ms.
+- Last accepted marker: turn 31, at 2026-10-05T16:27:07.973830+00:00, 57784.648 ms before the deadline. The result finished at 2026-10-05T16:28:06.850728+00:00; signed remaining time was -1092.250 ms.
+- Preserved outcome: status=incomplete, error=selector_timeout, completion=None, finalization_note=active_budget_exhausted_during_closing_validation.
+- [Original result](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/groningen/result.json): structural fields /meter, /source_ms, /wall_elapsed_ms, /processed_through_action_count, and /accepted_trace_ended_at. SHA256: ba234e096f6703c8dcecdabd032fcec70ad07909928cfbd334ade9d02219aa19. Exact selector/summary/raw JSON pointers and hashes are in the companion JSON.
+
+### delft
+
+- Last source step 11 completed at 2026-10-05T16:27:43.608283+00:00, with 22150.302 ms left. The original artifact receipt arrived at 2026-10-05T16:28:00.997484+00:00; source completion to receipt took 17389.201 ms.
+- Last selector turn 18 started at 2026-10-05T16:28:01.062083+00:00, with 4696.502 ms left; its recorded elapsed time was 4708 ms. It ended at 2026-10-05T16:28:05.768549+00:00; signed remaining time was -9.964 ms.
+- Last accepted marker: turn 17, at 2026-10-05T16:26:37.828420+00:00, 87930.165 ms before the deadline. The result finished at 2026-10-05T16:28:06.974691+00:00; signed remaining time was -1216.106 ms.
+- Preserved outcome: status=incomplete, error=selector_timeout, completion=None, finalization_note=active_budget_exhausted_during_closing_validation.
+- [Original result](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/delft/result.json): structural fields /meter, /source_ms, /wall_elapsed_ms, /processed_through_action_count, and /accepted_trace_ended_at. SHA256: ab1b738ddf41c73c8ee0312e1f839f74425f9746402bc7856880cbfafdea52af. Exact selector/summary/raw JSON pointers and hashes are in the companion JSON.
+
+### aalto
+
+- Last source step 12 completed at 2026-10-05T16:27:30.770357+00:00, with 34988.245 ms left. The original artifact receipt arrived at 2026-10-05T16:27:46.671393+00:00; source completion to receipt took 15901.036 ms.
+- Last selector turn 13 started at 2026-10-05T16:27:46.691329+00:00, with 19067.273 ms left; its recorded elapsed time was 16537 ms. It ended at 2026-10-05T16:28:03.227309+00:00; signed remaining time was 2531.293 ms.
+- Last accepted marker: turn 13, at 2026-10-05T16:28:03.256587+00:00, 2502.015 ms before the deadline. The result finished at 2026-10-05T16:28:03.263945+00:00; signed remaining time was 2494.657 ms.
+- Preserved outcome: status=submitted, error=None, completion=explicit_commit, finalization_note=None.
+- [Original result](/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v12-2026-10-05/experts/aalto/result.json): structural fields /meter, /source_ms, /wall_elapsed_ms, /processed_through_action_count, and /accepted_trace_ended_at. SHA256: bf68b4b17ee125b20c1ed888726bdb7eadec093df7e56e9a1fd402193a9522f2. Exact selector/summary/raw JSON pointers and hashes are in the companion JSON.
+
+Groningen and Delft timed out in a pending data turn after the final workflow returned. Their tails remain explicit: 5/6 and 10/11. Partial timeout output was not promoted. Later mechanical validation notes do not replace selector_timeout. Groningen had 21 rejected checkpoints, including 19 consecutive turns 12–30; those rejected selector turns consumed 373.375 seconds. Delft had one rejection. This correction loop does not explain every timeout.
+
+Aalto’s final data turn had 19.067273 seconds remaining. It returned 2.531293 seconds before the deadline, accepted an authentic submit marker 2.502015 seconds before it, and recorded 897506 ms wall time. All 12 source actions were processed. Its ledger retains 8 robots-blocked Fetcher calls and 4 successful searches; no blocked page is relabelled as evidence and no score is inferred.
+
+## Prospective generic options
+
+### Amortize workflow delivery in a prospective trusted executor
+
+Non-source workflow envelopes are 331581/599536/642049 ms; each network action uses one separately delivered original workflow.
+
+New version/preflight only. Retain single controlled proposals, exact raw receipts/resume, 60 reads/6 queries and the same 900-second guard, Fetcher safeguards, default effort, refusal STOP before any next action, and OS isolation. This is not unchecked batching of multiple actions; mixed fetch/search plans need independent refusal regressions for every tool first. No redispatch or blind model network tools. Queue/setup/poll/download subphases are not individually timed, so exact avoidable latency is unknown.
+
+### Predeclare an internal final-data and delivery margin
+
+Final source delivery leaves 8.314444/4.696502/19.067273 seconds for the pending data selector. The first two use the guard remainder and time out.
+
+Prospective only, inside the unchanged 900000 ms guard, with no renewal or effort reduction. Stop proposing new source work sufficiently early for genuine source processing, an authenticated checkpoint, and mechanics. Unprocessed tails stay explicit/incomplete; never acknowledge pending sources using their hashes or salvage partial stdout. No reserve can guarantee completion under unbounded transport/model latency.
+
+### Bound repeated rejected-delta correction
+
+Groningen has 21 rejected checkpoint turns, including 19 consecutive turns 12-30, costing 373375 ms of selector process time; Delft has one and Aalto zero.
+
+Prospective generic validation-code/rejection budget only, without case values or weakened citation/year/scope checks. Exhaustion retains the prior accepted prefix with an explicit incomplete reason, or requests a genuine final commit only when sources were actually processed. No rejected-fact salvage or inferred answers.
+
+## Limits and original bytes
+
+Non-source workflow envelopes are 331.581/599.536/642.049 seconds. Queue/setup/poll/download portions are not separately available in the run receipts. Meter-to-wall residuals are 0.627/0.671/0.748 seconds. Exact original values and fractional timestamp differences are retained in JSON. No rounding allowance, extra time, waiver, or counterfactual success is claimed.
+
+504 consumed original artifacts were SHA256 checked before/after and remained identical. The [companion JSON audit](/tmp/unimatch-expert500-v12-controller-timing-audit.json) contains hashes and structural references. This audit does not alter any live selector, fact, outcome, seal, or score.

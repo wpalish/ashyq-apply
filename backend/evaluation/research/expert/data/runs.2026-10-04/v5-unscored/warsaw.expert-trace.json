@@ -1,0 +1,208 @@
+{
+  "schema_version": "1",
+  "case_id": "warsaw",
+  "packet_sha256": "222dc55215f773d55e3f2f60e79162a34f28187d7607fcbfa301bb8e1da96ee3",
+  "baseline_pipeline_sha": "e0ac678e8b8ae251519e65598d3f0da4ff2abb24",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T11:36:34.497607+00:00",
+  "ended_at": "2026-10-04T11:40:25.272299+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T11:37:18.111541+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:uw.edu.pl Computer Science first cycle admissions international",
+        "domains": [
+          "uw.edu.pl"
+        ],
+        "max_results": 5
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "warsaw-001.json",
+      "raw_log_sha256": "10323da6347bb23315bd2dfe339995a0b3b6f4bdb15eef20c247ffe93ab63a57",
+      "elapsed_ms": 1480,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 15251,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "Locate official bachelor Computer Science admissions and international requirements.",
+      "observed_from_step": null,
+      "action": "search_provider: site:uw.edu.pl Computer Science first cycle admissions international",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T11:38:07.143344+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "warsaw-002.json",
+      "raw_log_sha256": "f9e77e7d124f692eab407c70fd3be5f949fca4b23838f87105c35465a7b2273b",
+      "elapsed_ms": 2332,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 26272,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Open the official catalogue result to verify exact bachelor programme existence.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+      "stage": "page_understanding",
+      "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+      "final_url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/"
+    },
+    {
+      "at": "2026-10-04T11:39:19.816136+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://irk.uw.edu.pl/en-gb/offer/PELNE2026/programme/S1-INF/?from=field%3AP_INF"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "warsaw-003.json",
+      "raw_log_sha256": "572f81424ab2b3b1de185df0a068c90eade74429a063f79f005d1b18ce6f6615",
+      "elapsed_ms": 2030,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 59590,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "The official catalogue establishes the bachelor Computer Science programme. Next inspect its admissions entry.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://irk.uw.edu.pl/en-gb/offer/PELNE2026/programme/S1-INF/?from=field%3AP_INF",
+      "stage": "page_understanding",
+      "url": "https://irk.uw.edu.pl/en-gb/offer/PELNE2026/programme/S1-INF/?from=field%3AP_INF",
+      "final_url": "https://irk.uw.edu.pl/en-gb/offer/PELNE2026/programme/S1-INF/?from=field%3AP_INF"
+    }
+  ],
+  "proposals": [
+    {
+      "claim_key": "programme.exists",
+      "value": true,
+      "source_url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+      "excerpt": "Bachelor's degree, first cycle programme, Computer Science (S1-INF)",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Warsaw",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        2
+      ],
+      "status": "unreviewed"
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "supporting_steps": [
+        2
+      ],
+      "proposal_indices": [
+        0
+      ],
+      "evidence": [
+        {
+          "action_step": 2,
+          "source_url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+          "excerpt": "Bachelor's degree, first cycle programme, Computer Science (S1-INF)",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b8",
+            "section_path": [
+              "Bachelor's degree, first cycle programme, Computer Science (S1-INF)"
+            ],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "University of Warsaw",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Bachelor Computer Science is listed in the official catalogue."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

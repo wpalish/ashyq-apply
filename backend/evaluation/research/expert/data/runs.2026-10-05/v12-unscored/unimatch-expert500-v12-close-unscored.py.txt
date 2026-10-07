@@ -1,0 +1,88 @@
+"""Preserve every V12 original byte after the frozen report's pre-seal refusal."""
+import hashlib
+import json
+import tarfile
+from datetime import UTC, datetime
+from pathlib import Path
+
+REPO = Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply')
+ROOT = REPO / 'artifacts/expert-500/phase1-v12-2026-10-05'
+DEST = REPO / 'backend/evaluation/research/expert/data/runs.2026-10-05/v12-unscored'
+
+def sha(p):
+    return hashlib.sha256(p.read_bytes()).hexdigest()
+
+assert not DEST.exists()
+assert not (ROOT / 'submission-seal.json').exists()
+assert not (ROOT / 'comparison.json').exists()
+aggregate = json.loads((ROOT / 'experts-results.json').read_text())
+assert len(aggregate['results']) == 10 and aggregate['stopped'] is False
+assert aggregate['remaining_case_ids'] == []
+files = sorted(p for p in ROOT.rglob('*') if p.is_file())
+assert not any(p.is_symlink() for p in ROOT.rglob('*'))
+records = [{'path': str(p.relative_to(ROOT)), 'bytes': p.stat().st_size, 'sha256': sha(p)} for p in files]
+DEST.mkdir(parents=True)
+bundle = DEST / 'original-root.tar.gz'
+with tarfile.open(bundle, 'x:gz') as archive:
+    for p in files:
+        archive.add(p, arcname=str(p.relative_to(ROOT)), recursive=False)
+with tarfile.open(bundle, 'r:gz') as archive:
+    entries = archive.getmembers()
+    assert len(entries) == len(records)
+    for entry, record in zip(entries, records, strict=True):
+        assert entry.isfile() and entry.name == record['path'] and entry.size == record['bytes']
+        raw = archive.extractfile(entry)
+        assert raw is not None
+        assert hashlib.sha256(raw.read()).hexdigest() == record['sha256']
+extras = [Path('/tmp/unimatch-expert500-v12-report-original.log'),
+          Path('/tmp/unimatch-expert500-v12-descriptive-wall-failure-observation.json'),
+          Path('/tmp/unimatch-expert500-v12-experts-stage-original.log'),
+          Path('/tmp/unimatch-expert500-v12-hypothetical-preseal-audit.py'),
+          Path('/tmp/unimatch-expert500-v12-hypothetical-preseal-audit-original.log'),
+          Path('/tmp/unimatch-expert500-v12-prospective-citation-repair-note.md'),
+          Path('/tmp/unimatch-expert500-sequential-batch-contract-plan-2026-10-05.md'),
+          Path('/tmp/unimatch-expert500-sequential-batch-contract-plan-2026-10-05.json'),
+          Path(__file__)]
+extra_records = []
+for p in extras:
+    assert p.is_file() and not p.is_symlink()
+    name = p.name + '.txt'
+    data = p.read_bytes()
+    with (DEST / name).open('xb') as out:
+        out.write(data)
+    extra_records.append({'original_path': str(p), 'snapshot': name, 'bytes': len(data), 'sha256': sha(p)})
+cases = []
+for result in aggregate['results']:
+    case = result['case_id']
+    directories = sorted((ROOT / 'experts' / case).glob('controller-*'),
+                         key=lambda p: int(p.name.removeprefix('controller-')))
+    summary = json.loads((directories[-1] / 'artifact/summary.json').read_text())['final']
+    cases.append({'case_id': case, 'original_status': result['status'],
+                  'validated': result['validated'], 'error': result.get('error'),
+                  'completion_kind': result.get('completion_kind'),
+                  'recorded_source_actions': result['actions'],
+                  'accepted_source_actions': result['accepted_source_action_count'],
+                  'fetcher_calls': summary['fetcher_calls'], 'search_queries': summary['search_queries'],
+                  'source_ms': summary['elapsed_ms'], 'wall_elapsed_ms': result['wall_elapsed_ms'],
+                  'model_failure': result.get('model_failure'),
+                  'provider_failure': result.get('provider_failure')})
+manifest = {'schema_version': '1', 'closed_at': datetime.now(UTC).isoformat(),
+            'status': 'CLOSED_UNSCORED', 'close_reason': 'frozen_report_descriptive_wall_timestamp_mismatch',
+            'original_root': str(ROOT), 'selected_source_sha': '92dfdb6d4f1a4595865ea756f46b176ce0f6d891',
+            'trial_sha256': sha(ROOT / 'trial.json'), 'baseline_cases_complete': 10,
+            'expert_cases_complete': 10, 'batch_stopped': False,
+            'cases': cases, 'seal_created': False, 'reviewed_labels_read': 0,
+            'recovery_score': None, 'batch50_admitted': False, 'heldout150_untouched': True,
+            'hypothetical_preseal_audit_is_primary_acceptance': False,
+            'original_record_count': len(records), 'original_records': records,
+            'bundle': {'path': bundle.name, 'bytes': bundle.stat().st_size, 'sha256': sha(bundle)},
+            'extra_records': extra_records}
+with (DEST / 'manifest.json').open('x') as out:
+    out.write(json.dumps(manifest, indent=2) + '\n')
+for p, record in zip(files, records, strict=True):
+    assert sha(p) == record['sha256']
+for record in extra_records:
+    assert sha(DEST / record['snapshot']) == record['sha256']
+print(json.dumps({'status': manifest['status'], 'destination': str(DEST),
+                  'original_record_count': len(records), 'bundle_bytes': bundle.stat().st_size,
+                  'bundle_sha256': sha(bundle), 'manifest_sha256': sha(DEST / 'manifest.json')}))

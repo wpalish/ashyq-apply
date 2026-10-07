@@ -1,0 +1,250 @@
+{
+  "schema_version": "1",
+  "case_id": "delft",
+  "packet_sha256": "97460f548e05815e004deb59c3cb26cb778d2af206ca4802527cf1357705d2fd",
+  "baseline_pipeline_sha": "e0ac678e8b8ae251519e65598d3f0da4ff2abb24",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T11:32:39.048476+00:00",
+  "ended_at": "2026-10-04T11:36:34.350083+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T11:33:17.823191+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site.tudelft.nl bachelor Computer Science and Engineering admission international diploma English requirements",
+        "domains": [
+          "tudelft.nl"
+        ],
+        "max_results": 5
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "delft-001.json",
+      "raw_log_sha256": "478a1e98e68c80ac4482a75ff4bf47cf5354eade258f3368b9f1a94a47bcd0e7",
+      "elapsed_ms": 1795,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 11985,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "Locate official bachelor Computer Science programme and admissions pages.",
+      "observed_from_step": null,
+      "action": "search_provider: site.tudelft.nl bachelor Computer Science and Engineering admission international diploma English requirements",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T11:34:20.202724+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "delft-002.json",
+      "raw_log_sha256": "ae03bbb0b79a98af17bfb7adf5cd83e65ff098a03fed96375a0c4eb4799232b7",
+      "elapsed_ms": 871,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 25159,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Open the official programme application page to verify programme identity and the published deadline.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment",
+      "stage": "page_understanding",
+      "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment",
+      "final_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment"
+    },
+    {
+      "at": "2026-10-04T11:36:03.763917+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/admission-requirements"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "delft-003.json",
+      "raw_log_sha256": "2b3aff4eb31c5b8608975bbc92cde7d9f44190ff91cd54e364388926e42fff6a",
+      "elapsed_ms": 1122,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 80627,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "The page establishes the bachelor programme; its footer identifies Delft University of Technology. Next inspect admission requirements.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/admission-requirements",
+      "stage": "page_understanding",
+      "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/admission-requirements",
+      "final_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/admission-requirements"
+    }
+  ],
+  "proposals": [
+    {
+      "claim_key": "programme.exists",
+      "value": true,
+      "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment",
+      "excerpt": "Do you want to apply for the Bachelor of Computer Science & Engineering? Then there are several steps you need to take:",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": "Computer Science & Engineering",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        2
+      ],
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "deadline",
+      "value": "January 15 2027",
+      "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment",
+      "excerpt": "January 15 2027",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        2
+      ],
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "country_credential.international_diploma.requirement",
+      "value": "You may be admitted with an international diploma if it is equivalent to a Dutch VWO diploma with the correct subjects. TU Delft will determine this after registration.",
+      "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/admission-requirements",
+      "excerpt": "You may be admitted with an international diploma if it is equivalent to a Dutch VWO diploma with the correct subjects. TU Delft will determine this after registration.",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": "international diploma applicants",
+        "qualification": "international diploma",
+        "academic_year": null
+      },
+      "supporting_steps": [
+        3
+      ],
+      "status": "unreviewed"
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "supporting_steps": [
+        2
+      ],
+      "proposal_indices": [
+        0
+      ],
+      "evidence": [
+        {
+          "action_step": 2,
+          "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment",
+          "excerpt": "Do you want to apply for the Bachelor of Computer Science & Engineering? Then there are several steps you need to take:",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b43",
+            "section_path": [
+              "From application to enrollment"
+            ],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "Delft University of Technology",
+        "programme": "Computer Science & Engineering",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Official application text explicitly identifies the bachelor programme."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

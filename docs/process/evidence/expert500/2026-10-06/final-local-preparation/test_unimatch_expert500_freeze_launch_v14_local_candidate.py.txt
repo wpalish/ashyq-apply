@@ -1,0 +1,795 @@
+"""Offline synthetic freezer/launcher gates; never runs a proof/provider/model/Git."""
+
+from __future__ import annotations
+
+import ast
+import copy
+import importlib.util
+import json
+import os
+import subprocess
+import sys
+import threading
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+from typing import Any
+
+import pytest
+
+from evaluation.research.expert.packet import REQUEST_FIELDS, digest
+from evaluation.research.live import COHORT
+
+
+def load(name: str, path: Path) -> Any:
+    spec = importlib.util.spec_from_file_location(name, path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+freeze = load("_v14_test_freeze", Path("/tmp/unimatch-expert500-freeze-v14-local-candidate.py"))
+launch = load("_v14_test_launcher", Path("/tmp/unimatch-expert500-launch-v14-local-candidate.py"))
+HEAD = "a" * 40
+
+
+def write(path: Path, value: Any) -> dict[str, str]:
+    path.write_text(json.dumps(value))
+    return {"path": str(path), "sha256": freeze.sha(path)}
+
+
+def cases() -> list[dict[str, Any]]:
+    result = []
+    for case_id, domain in COHORT.items():
+        request = dict.fromkeys(REQUEST_FIELDS)
+        request.update(
+            university=case_id, degree="bachelor", field="computer science", intake="fall 2027"
+        )
+        result.append({"id": case_id, "university": case_id, "domain": domain, "request": request})
+    return result
+
+
+@pytest.fixture
+def configuration(tmp_path: Path) -> dict[str, Any]:
+    tmp_path = tmp_path.resolve()
+    source, deps, repo = tmp_path / "clean-source", tmp_path / "deps", tmp_path / "repo"
+    for folder in (source, deps, repo):
+        folder.mkdir()
+    files: dict[str, str] = {}
+    contents: dict[str, list[str]] = {}
+    for _name, (relative, constant) in freeze._DEFAULT_FILES.items():
+        value = 0.0 if constant == "DOCUMENT_SECONDS" else True
+        contents.setdefault(relative, []).append(f"{constant} = {value!r}\n")
+    for relative, lines in contents.items():
+        path = source / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("".join(lines))
+        files[relative] = freeze.sha(path)
+    (deps / "public_package.py").write_text("PUBLIC = True\n")
+    interpreter = tmp_path / "python-fixed"
+    interpreter.write_text("Synthetic interpreter bytes; never executed")
+    runtime: dict[str, Any] = {
+        "source_cwd": str(source),
+        "source_manifest": files,
+        "interpreter": str(interpreter),
+        "runtime_files": {
+            str(interpreter): freeze.sha(interpreter),
+            str(deps / "public_package.py"): freeze.sha(deps / "public_package.py"),
+        },
+        "runtime_import_roots": [str(deps)],
+        "public_environment": {
+            "HOME": str(tmp_path / "public-home"),
+            "PATH": "/public/bin",
+            "TMPDIR": str(tmp_path),
+        },
+    }
+    return {
+        "protocol_version": freeze.PROTOCOL,
+        "transport_kind": freeze.TRANSPORT_KIND,
+        "harness_sha": HEAD,
+        "frozen_ref": "prospective-v14",
+        "local_runtime": runtime,
+        "selector_environment": dict(runtime["public_environment"]),
+        "baseline_identity_registry": {
+            "path": str(tmp_path / "private-original-registry.json"),
+            "sha256": "e" * 64,
+        },
+        "baseline_identity_registry_source_sha": freeze.BASELINE_REGISTRY_SOURCE_SHA,
+        "public_cases": cases(),
+        "search_provider": "exa",
+        "algorithm_provider": "exa",
+        "expert_provider": "exa",
+        "_repo": repo,
+    }
+
+
+def test_complete_runtime_and_defaults_have_real_file_provenance(
+    configuration: dict[str, Any],
+) -> None:
+    selected = freeze.validate_configuration(configuration, configuration["_repo"])
+    assert selected["algorithm_defaults"] == freeze.EXPECTED_ALGORITHM_DEFAULTS
+    assert selected["local_runtime"] == configuration["local_runtime"]
+    assert selected["public_cases_sha256"] == digest(
+        {"version": "expert500-v14-public-v1", "cases": configuration["public_cases"]}
+    )
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "field_missing",
+        "source_hash",
+        "runtime_hash",
+        "unmanifested_source",
+        "unmanifested_dependency",
+        "startup_pth",
+        "interpreter_missing",
+        "docclock",
+        "doc2_off",
+        "import_alias",
+        "dotenv",
+    ],
+)
+def test_runtime_changes_fail_before_any_execution(
+    configuration: dict[str, Any], mutation: str
+) -> None:
+    runtime = copy.deepcopy(configuration["local_runtime"])
+    source = Path(runtime["source_cwd"])
+    deps = Path(runtime["runtime_import_roots"][0])
+    if mutation == "field_missing":
+        runtime.pop("runtime_files")
+    elif mutation == "source_hash":
+        runtime["source_manifest"][next(iter(runtime["source_manifest"]))] = "0" * 64
+    elif mutation == "runtime_hash":
+        runtime["runtime_files"][runtime["interpreter"]] = "0" * 64
+    elif mutation == "unmanifested_source":
+        (source / "app" / "new.py").write_text("PUBLIC = True")
+    elif mutation in {"unmanifested_dependency", "startup_pth"}:
+        (deps / ("inject.pth" if mutation == "startup_pth" else "new.py")).write_text("synthetic")
+    elif mutation == "interpreter_missing":
+        runtime["runtime_files"].pop(runtime["interpreter"])
+    elif mutation in {"docclock", "doc2_off"}:
+        relative = (
+            "evaluation/research/live.py"
+            if mutation == "docclock"
+            else "app/adapters/documents/web_documents.py"
+        )
+        path = source / relative
+        path.write_text(
+            path.read_text()
+            .replace("0.0", "1.0")
+            .replace("DOCUMENT_RULES_V2 = True", "DOCUMENT_RULES_V2 = False")
+        )
+        runtime["source_manifest"][relative] = freeze.sha(path)
+    elif mutation == "import_alias":
+        alias = deps.parent / "alias"
+        alias.symlink_to(deps, target_is_directory=True)
+        runtime["runtime_import_roots"] = [str(alias)]
+    else:
+        (source / ".env").write_text("SYNTHETIC_CONTENT_NEVER_READ")
+    with pytest.raises(ValueError):
+        freeze.validate_runtime(runtime)
+
+
+@pytest.mark.parametrize(
+    "environment",
+    [
+        {},
+        {"HOME": "x", "PATH": "y", "TMPDIR": "z", "EXA_API_KEY": "synthetic"},
+        {"HOME": "x", "PATH": "y", "TMPDIR": "z", "PYTHONPATH": "ambient"},
+        {"HOME": "x", "PATH": "y", "TMPDIR": "\0"},
+        {"HOME": "x", "PATH": "y", "TMPDIR": 3},
+    ],
+)
+def test_environment_requires_exact_public_allowlist(environment: Any) -> None:
+    with pytest.raises(ValueError):
+        freeze.public_environment(environment)
+
+
+def test_private_registry_is_metadata_only_and_exact_original_source(
+    configuration: dict[str, Any], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pointer = configuration["baseline_identity_registry"]
+    original_read = Path.read_bytes
+
+    def guarded(path: Path) -> bytes:
+        if path == Path(pointer["path"]):
+            raise AssertionError("No private registry contents may be read")
+        return original_read(path)
+
+    monkeypatch.setattr(Path, "read_bytes", guarded)
+    assert (
+        freeze.validate_private_registry(
+            pointer,
+            freeze.BASELINE_REGISTRY_SOURCE_SHA,
+            configuration["local_runtime"],
+            configuration["_repo"],
+        )
+        == pointer
+    )
+    with pytest.raises(ValueError, match="e327498"):
+        freeze.validate_private_registry(
+            pointer, "9" * 40, configuration["local_runtime"], configuration["_repo"]
+        )
+    with pytest.raises(ValueError, match="outside"):
+        freeze.validate_private_registry(
+            {**pointer, "path": str(configuration["_repo"] / "private.json")},
+            freeze.BASELINE_REGISTRY_SOURCE_SHA,
+            configuration["local_runtime"],
+            configuration["_repo"],
+        )
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("head_sha", "b" * 40),
+        ("conclusion", "failure"),
+        ("status", "queued"),
+        ("id", True),
+        ("path", ".github/workflows/benchmark-capture.yml"),
+        ("repository", {"full_name": "other/repo"}),
+        ("html_url", "https://example.invalid"),
+    ],
+)
+def test_ci_must_be_the_original_successful_selected_source(
+    tmp_path: Path, field: str, value: Any
+) -> None:
+    raw = {
+        "id": 123,
+        "head_sha": HEAD,
+        "status": "completed",
+        "conclusion": "success",
+        "path": ".github/workflows/ci.yml",
+        "name": "release-gates",
+        "repository": {"full_name": "wpalish/ashyq-apply"},
+        "html_url": "https://github.com/wpalish/ashyq-apply/actions/runs/123",
+    }
+    raw[field] = value
+    pointer = write(tmp_path / "ci.json", raw)
+    with pytest.raises(ValueError):
+        freeze.validate_ci(pointer, HEAD)
+
+
+def test_ci_hash_and_success_are_bound(tmp_path: Path) -> None:
+    raw = {
+        "id": 123,
+        "head_sha": HEAD,
+        "status": "completed",
+        "conclusion": "success",
+        "path": ".github/workflows/ci.yml",
+        "name": "release-gates",
+        "repository": {"full_name": "wpalish/ashyq-apply"},
+        "html_url": "https://github.com/wpalish/ashyq-apply/actions/runs/123",
+    }
+    pointer = write(tmp_path / "ci.json", raw)
+    proof = freeze.validate_ci(pointer, HEAD)
+    assert proof["run_id"] == 123
+    assert proof["workflow_name"] == "release-gates"
+    assert proof["workflow_path"] == ".github/workflows/ci.yml"
+    Path(pointer["path"]).write_text("{}")
+    with pytest.raises(ValueError, match="hash"):
+        freeze.validate_ci(pointer, HEAD)
+
+
+def test_source_clean_head_ref_checks_are_readonly_and_exact(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    seen = []
+
+    def command(argv: list[str], **kwargs: Any) -> str:
+        seen.append(argv)
+        return "" if argv[1] == "status" else HEAD
+
+    monkeypatch.setattr(freeze.subprocess, "check_output", command)
+    freeze.clean_head(tmp_path, HEAD, ref="prospective-v14")
+    assert len(seen) == 3 and all(argv[1] in {"rev-parse", "status"} for argv in seen)
+    monkeypatch.setattr(
+        freeze.subprocess,
+        "check_output",
+        lambda argv, **kwargs: "dirty" if argv[1] == "status" else HEAD,
+    )
+    with pytest.raises(ValueError, match="clean HEAD"):
+        freeze.clean_head(tmp_path, HEAD)
+
+
+def test_no_fresh_proof_means_no_freeze_publication(
+    configuration: dict[str, Any], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(freeze, "clean_head", lambda *args, **kwargs: None)
+    destination = tmp_path / "never-created"
+    with pytest.raises(ValueError, match="evidence"):
+        freeze.prepare_freeze(configuration, repo=configuration["_repo"], destination=destination)
+    assert not destination.exists()
+
+
+def synthetic_manifest(configuration: dict[str, Any]) -> dict[str, Any]:
+    selected = freeze.validate_configuration(configuration, configuration["_repo"])
+    return {
+        "schema_version": "1",
+        "protocol_version": freeze.PROTOCOL,
+        "transport_kind": freeze.TRANSPORT_KIND,
+        "live_v14_started": False,
+        **selected,
+        "cohort_case_ids": list(COHORT),
+        "search_provider": "exa",
+        "algorithm_provider": "exa",
+        "expert_provider": "exa",
+        "requested_model": "gpt-6-astra",
+        "requested_reasoning_effort": None,
+        "reasoning_effort_source": "cli_default",
+        "comparison_mode": freeze.NETWORK_COMPARISON_MODE,
+        "budget_model": freeze.BUDGET_MODEL,
+        "wall_guard_ms": 900000,
+        "turn_policy": freeze.policy_limits(),
+        "network_budget": freeze.expert_budget(),
+        "baseline_budget": {
+            "max_fetcher_calls": 60,
+            "max_search_queries": 6,
+            "max_elapsed_ms": 120000,
+            "browser_enabled": False,
+        },
+        "baseline_finalization_reserve_ms": 1000,
+        "baseline_source_work_deadline_ms": 119000,
+        "unchanged_reviewed_fact_count": 62,
+        "acceptance_threshold_recovered_facts": 40,
+        "max_parallel_experts": 3,
+        "files": [],
+        "scripts": {str(launch.PARENT_PATH): launch.sha(launch.PARENT_PATH)},
+    }
+
+
+@pytest.fixture
+def trial(
+    configuration: dict[str, Any], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> tuple[Path, Path, Path]:
+    monkeypatch.setattr(launch, "validate_manifest", lambda *args, **kwargs: None)
+    manifest = tmp_path / "manifest.json"
+    write(manifest, synthetic_manifest(configuration))
+    root = tmp_path.resolve() / "fresh-trial"
+    temp = tmp_path.resolve() / "workspace-pool"
+    temp.mkdir()
+    launch.prepare_trial(manifest, repo=configuration["_repo"], root=root, temp_root=temp)
+    return configuration["_repo"], root, manifest
+
+
+def test_trial_allocation_is_once_and_byte_bound(
+    trial: tuple[Path, Path, Path], tmp_path: Path
+) -> None:
+    repo, root, manifest = trial
+    value = launch.read(root / "trial.json")
+    assert (root / "trial.json").read_bytes() == (
+        root / "trial-at-baseline-start.json"
+    ).read_bytes()
+    assert value["transport_kind"] == "local_process_v1" and value["harness_sha"] == HEAD
+    assert value["admission_run_id"] and value["selector_environment_sha256"]
+    with pytest.raises(ValueError, match="never reset"):
+        launch.prepare_trial(manifest, repo=repo, root=root, temp_root=tmp_path)
+
+
+def test_crash_after_claim_never_allows_new_workspace_allocation(
+    configuration: dict[str, Any], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(launch, "validate_manifest", lambda *args, **kwargs: None)
+    pointer = write(tmp_path / "manifest.json", synthetic_manifest(configuration))
+    calls = []
+
+    def crash(*args: Any, **kwargs: Any) -> Any:
+        calls.append(1)
+        raise RuntimeError("synthetic allocation crash")
+
+    monkeypatch.setattr(launch, "allocate_workspaces", crash)
+    root = tmp_path.resolve() / "claimed"
+    with pytest.raises(RuntimeError):
+        launch.prepare_trial(
+            Path(pointer["path"]), repo=configuration["_repo"], root=root, temp_root=tmp_path
+        )
+    assert (root / "launch-start.json").exists()
+    with pytest.raises(ValueError):
+        launch.prepare_trial(
+            Path(pointer["path"]), repo=configuration["_repo"], root=root, temp_root=tmp_path
+        )
+    assert calls == [1]
+
+
+def test_concurrent_prepare_only_one_allocates(
+    configuration: dict[str, Any], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    barrier = threading.Barrier(2)
+    monkeypatch.setattr(
+        launch, "validate_manifest", lambda *args, **kwargs: barrier.wait(timeout=5)
+    )
+    pointer = write(tmp_path / "manifest.json", synthetic_manifest(configuration))
+    root = tmp_path.resolve() / "concurrent"
+    temp = tmp_path.resolve() / "pool"
+    temp.mkdir()
+
+    def prepare() -> bool:
+        try:
+            launch.prepare_trial(
+                Path(pointer["path"]), repo=configuration["_repo"], root=root, temp_root=temp
+            )
+            return True
+        except FileExistsError:
+            return False
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        outcomes = list(pool.map(lambda _number: prepare(), range(2)))
+    assert sorted(outcomes) == [False, True] and len(list(temp.iterdir())) == 10
+
+
+def test_parent_launch_passes_private_fd_only_and_never_inherits_env(
+    trial: tuple[Path, Path, Path], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, root, _manifest = trial
+    reader, writer = os.pipe()
+    os.close(writer)
+    seen = []
+
+    def run(argv: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        seen.append((argv, kwargs))
+        assert (root / "launch-baseline-stage-start.json").is_file()
+        return subprocess.CompletedProcess(argv, 0)
+
+    monkeypatch.setattr(launch.subprocess, "run", run)
+    assert launch.launch_stage(repo=repo, root=root, stage="baseline", source_key_fd=reader) == 0
+    argv, kwargs = seen[0]
+    assert argv[1:6] == ["-B", "-E", "-S", "-s", "-c"]
+    assert str(launch.PARENT_PATH) in argv[-1] and "--source-key-fd" in argv[-1]
+    assert kwargs["pass_fds"] == (reader,)
+    assert kwargs["env"] == launch.read(root / "trial.json")["selector_environment"]
+    assert not {"EXA_API_KEY", "UNIMATCH_EXA_API_KEY", "PYTHONPATH"} & set(kwargs["env"])
+    with pytest.raises(OSError):
+        os.fstat(reader)
+    next_reader, next_writer = os.pipe()
+    try:
+        with pytest.raises(ValueError, match="previously claimed"):
+            launch.launch_stage(repo=repo, root=root, stage="baseline", source_key_fd=next_reader)
+        assert len(seen) == 1
+    finally:
+        os.close(next_reader)
+        os.close(next_writer)
+
+
+@pytest.mark.parametrize("reason", ["model", "transport", "admission", "workspace"])
+def test_stopped_or_tampered_trial_dispatches_nothing(
+    trial: tuple[Path, Path, Path], monkeypatch: pytest.MonkeyPatch, reason: str
+) -> None:
+    repo, root, _manifest = trial
+    if reason == "workspace":
+        (root / "workspace-locations.json").write_text("{}")
+    else:
+        name = {
+            "model": "model-batch-stop.json",
+            "transport": "transport-batch-stop.json",
+            "admission": "source-admission/stop.json",
+        }[reason]
+        path = root / name
+        path.parent.mkdir(exist_ok=True)
+        path.write_text("{}")
+
+    def forbidden(*args: Any, **kwargs: Any) -> Any:
+        raise AssertionError("No external dispatch is permitted")
+
+    monkeypatch.setattr(launch.subprocess, "run", forbidden)
+    reader, writer = os.pipe()
+    try:
+        with pytest.raises(ValueError):
+            launch.launch_stage(repo=repo, root=root, stage="baseline", source_key_fd=reader)
+    finally:
+        os.close(reader)
+        os.close(writer)
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("wall_guard_ms", 120000),
+        ("requested_reasoning_effort", "low"),
+        ("unchanged_reviewed_fact_count", 70),
+        ("acceptance_threshold_recovered_facts", 39),
+        ("baseline_source_work_deadline_ms", 120000),
+        ("expert_provider", "exa_mcp"),
+        ("transport_kind", "github_actions"),
+    ],
+)
+def test_manifest_policy_drift_fails_before_proofs(
+    configuration: dict[str, Any], tmp_path: Path, field: str, value: Any
+) -> None:
+    manifest = synthetic_manifest(configuration)
+    manifest[field] = value
+    with pytest.raises(ValueError):
+        launch.validate_manifest(manifest, tmp_path / "manifest.json", repo=configuration["_repo"])
+
+
+def test_fresh_neutral_actual_runtime_binds_15_modules_and_three_local_helpers() -> None:
+    runtime = freeze.current_neutral_runtime()
+    assert len(freeze.NEUTRAL_RUNTIME_MODULES) == 15 and len(runtime) == 18
+    assert runtime["evaluation.research.expert.source_admission"]
+    for path in freeze.NEUTRAL_LOCAL_HELPERS:
+        assert runtime[str(path)] == freeze.sha(path)
+
+
+@pytest.mark.parametrize(
+    "mutation", ["missing_helper", "extra_module", "before_hash", "after_hash"]
+)
+def test_neutral_runtime_drift_rejects_actual_originals(mutation: str) -> None:
+    runtime = freeze.current_neutral_runtime()
+    proof = {
+        "runtime_modules_before": dict(runtime),
+        "runtime_modules_after": dict(runtime),
+        "runtime_unchanged": True,
+        "script_sha256_after": freeze.sha(freeze.NEUTRAL_SCRIPT),
+    }
+    freeze.validate_neutral_runtime(proof, neutral_script=freeze.NEUTRAL_SCRIPT)
+    if mutation == "missing_helper":
+        proof["runtime_modules_before"].pop(str(freeze.NEUTRAL_LOCAL_HELPERS[0]))
+    elif mutation == "extra_module":
+        proof["runtime_modules_after"]["invented.module"] = "a" * 64
+    elif mutation == "before_hash":
+        proof["runtime_modules_before"][next(iter(runtime))] = "0" * 64
+    else:
+        proof["runtime_modules_after"][next(iter(runtime))] = "0" * 64
+    with pytest.raises(ValueError, match="runtime bytes"):
+        freeze.validate_neutral_runtime(proof, neutral_script=freeze.NEUTRAL_SCRIPT)
+
+
+@pytest.mark.parametrize("top_level", [True, False])
+@pytest.mark.parametrize("mutation", ["missing_env", "missing_sha", "foreign_env", "bad_sha"])
+def test_neutral_environment_is_bound_at_top_request_and_phase(
+    configuration: dict[str, Any], monkeypatch: pytest.MonkeyPatch, top_level: bool, mutation: str
+) -> None:
+    expected = configuration["selector_environment"]
+    monkeypatch.setattr(freeze, "SELECTOR_ENVIRONMENT", expected)
+    field = "public_model_environment" if top_level else "selector_environment"
+    record = {field: dict(expected), field + "_sha256": digest(expected)}
+    freeze.validate_neutral_environment(record, top_level=top_level)
+    if mutation == "missing_env":
+        record.pop(field)
+    elif mutation == "missing_sha":
+        record.pop(field + "_sha256")
+    elif mutation == "foreign_env":
+        record[field]["PATH"] = "/synthetic/foreign"
+        record[field + "_sha256"] = digest(record[field])
+    else:
+        record[field + "_sha256"] = "0" * 64
+    with pytest.raises(ValueError, match="environment"):
+        freeze.validate_neutral_environment(record, top_level=top_level)
+
+
+def test_actual_neutral_request_phase_and_dispatch_bind_same_environment(
+    configuration: dict[str, Any], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Evaluate only the two saved environment expressions, never the proof runner.
+    tree = ast.parse(freeze.NEUTRAL_SCRIPT.read_bytes())
+    probe = next(
+        node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "run_probe"
+    )
+    request = next(
+        node.value
+        for node in ast.walk(probe)
+        if isinstance(node, ast.Assign)
+        and any(isinstance(target, ast.Name) and target.id == "request" for target in node.targets)
+    )
+    assert isinstance(request, ast.Dict)
+    request_values = {
+        key.value: value
+        for key, value in zip(request.keys, request.values, strict=True)
+        if isinstance(key, ast.Constant)
+        and key.value in {"selector_environment", "selector_environment_sha256"}
+    }
+    phase = next(
+        node
+        for node in ast.walk(probe)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and isinstance(node.func.value, ast.Name)
+        and node.func.value.id == "phase_result"
+        and node.func.attr == "update"
+        and any(item.arg == "selector_environment" for item in node.keywords)
+    )
+    phase_values = {item.arg: item.value for item in phase.keywords if item.arg in request_values}
+    expected = configuration["selector_environment"]
+    monkeypatch.setattr(freeze, "SELECTOR_ENVIRONMENT", expected)
+    namespace = {"PUBLIC_MODEL_ENVIRONMENT": expected, "digest": digest}
+    for expressions in (request_values, phase_values):
+        record = {
+            key: eval(compile(ast.Expression(value), "<neutral-env-only>", "eval"), namespace)
+            for key, value in expressions.items()
+        }
+        freeze.validate_neutral_environment(record)
+    select = next(
+        node
+        for node in ast.walk(probe)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id == "select"
+    )
+    environment = next(item.value for item in select.keywords if item.arg == "environment")
+    assert (
+        eval(compile(ast.Expression(environment), "<neutral-env-only>", "eval"), namespace)
+        == expected
+    )
+
+
+def test_parent_bootstrap_uses_only_declared_import_roots(configuration: dict[str, Any]) -> None:
+    trial = synthetic_manifest(configuration)
+    argv = launch.parent_command(
+        trial,
+        repo=configuration["_repo"],
+        root=Path("/synthetic/trial"),
+        stage="baseline",
+        source_key_fd=9,
+    )
+    tree = ast.parse(argv[-1])
+    assignment = next(node for node in tree.body if isinstance(node, ast.Assign))
+    assert ast.literal_eval(assignment.value) == [
+        configuration["local_runtime"]["source_cwd"],
+        *configuration["local_runtime"]["runtime_import_roots"],
+    ]
+    assert argv[1:6] == ["-B", "-E", "-S", "-s", "-c"]
+
+
+@pytest.fixture
+def synthetic_freeze(
+    configuration: dict[str, Any], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> tuple[Path, Path, dict[str, Any]]:
+    """Execute only the NEW pure byte freezer, injecting synthetic proof validators."""
+    import shutil
+    from types import SimpleNamespace
+
+    repo = configuration["_repo"]
+    source = repo / "backend"
+    shutil.copytree(Path(configuration["local_runtime"]["source_cwd"]), source)
+    manifest = configuration["local_runtime"]["source_manifest"]
+    for name in freeze.CORE_MODULES:
+        relative = name.replace(".", "/") + ".py"
+        path = source / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        if not path.exists():
+            path.write_text("# Synthetic public module; never imported.\n")
+        manifest[relative] = freeze.sha(path)
+    configuration["local_runtime"]["source_cwd"] = str(source)
+    monkeypatch.setattr(freeze, "REPO", repo)
+    monkeypatch.setattr(freeze, "clean_head", lambda *args, **kwargs: None)
+    monkeypatch.setattr(launch, "freezer", lambda: freeze)
+    monkeypatch.setattr(
+        freeze.importlib.util,
+        "find_spec",
+        lambda name: SimpleNamespace(origin=str(source / (name.replace(".", "/") + ".py"))),
+    )
+    helpers = tmp_path.resolve() / "synthetic-helpers"
+    helpers.mkdir()
+    paths = {name: helpers / (name + ".py") for name in freeze.HELPER_PATHS}
+    for path in paths.values():
+        path.write_text("# Synthetic helper; never invoked.\n")
+    monkeypatch.setattr(freeze, "HELPER_PATHS", paths)
+    monkeypatch.setattr(freeze, "PARENT_PATH", paths["parent"])
+    monkeypatch.setattr(freeze, "REPORT_PATH", paths["report"])
+    monkeypatch.setattr(freeze, "OS_HELPER", paths["os"])
+    monkeypatch.setattr(launch, "PARENT_PATH", paths["parent"])
+    executable = helpers / "codex-never-executed"
+    executable.write_text("Synthetic CLI bytes; never executed.")
+    monkeypatch.setattr(freeze, "FROZEN_CLI", str(executable))
+    capture = {
+        "module_defaults": {
+            key: value[1] for key, value in freeze.BASELINE_CAPTURE_DEFAULTS.items()
+        },
+        "optional_capture_arguments": [],
+    }
+    monkeypatch.setattr(freeze, "baseline_capture_config", lambda: capture)
+    proof_dir = tmp_path.resolve() / "synthetic-proofs"
+    proof_dir.mkdir()
+    neutral_result = proof_dir / "neutral-result.json"
+    write(neutral_result, {"synthetic_only": True})
+    monkeypatch.setattr(freeze, "NEUTRAL", neutral_result)
+    neutral_original = proof_dir / "neutral-originals.json"
+    configuration["neutral_originals"] = write(neutral_original, {"synthetic_only": True})
+    # Ensure configure_proofs' globals are restored by monkeypatch after the fixture.
+    monkeypatch.setattr(freeze, "NEUTRAL_MANIFEST", neutral_original)
+    monkeypatch.setattr(freeze, "NEUTRAL_MANIFEST_SHA256", freeze.sha(neutral_original))
+    monkeypatch.setattr(freeze, "SELECTOR_ENVIRONMENT", configuration["selector_environment"])
+    saved_request = proof_dir / "neutral-original-request.json"
+    saved_request.write_text("Synthetic original request bytes.")
+    monkeypatch.setattr(freeze, "validate_neutral_current", lambda: {"synthetic_only": True})
+    monkeypatch.setattr(
+        freeze,
+        "validate_neutral_archive",
+        lambda **kwargs: {"/synthetic/request.json": saved_request},
+    )
+    os_result = proof_dir / "os-result.json"
+    artifacts = proof_dir / "os-originals"
+    artifacts.mkdir()
+    (artifacts / "original.stdout.bin").write_bytes(b"INVENTED_PUBLIC_SENTINEL_ONLY")
+    os_proof = {
+        "protocol_version": freeze.PROTOCOL,
+        "parent_sha256": freeze.sha(paths["parent"]),
+        "cat_processes": 240,
+        "source_requests": 0,
+        "model_requests": 0,
+        "network_requests": 0,
+        "artifacts": str(artifacts),
+    }
+    configuration["os_preflight"] = write(os_result, os_proof)
+    monkeypatch.setattr(freeze, "OS_PREFLIGHT", os_result)
+
+    def public_helper(name: str) -> dict[str, Any]:
+        if name == str(paths["os"]):
+            return {"validate_result": lambda value: None}
+        return {"PROTOCOL_MODULES": freeze.CORE_MODULES, "FROZEN_CLI": str(executable)}
+
+    monkeypatch.setattr(freeze.runpy, "run_path", public_helper)
+    local_path = proof_dir / "local-gates.json"
+    gate_log = proof_dir / "synthetic-gate.log"
+    gate_log.write_text("Synthetic injected gate proof; not a genuine run.")
+    local = {
+        "schema_version": "1",
+        "protocol_version": freeze.PROTOCOL,
+        "all_passed": True,
+        "actual_ten_case_launcher_preflight": True,
+        "backend_coverage_percent": 94.0,
+        "backend_tests": 1,
+        "frontend_tests": 1,
+        "gates": dict.fromkeys(freeze.REQUIRED_GATES, True),
+        "raw_logs": {
+            name: {"path": str(gate_log), "sha256": freeze.sha(gate_log)}
+            for name in freeze.REQUIRED_GATES
+        },
+    }
+    configuration["local_gates"] = write(local_path, local)
+    ci_path = proof_dir / "ci.json"
+    configuration["ci_source_proof"] = write(
+        ci_path,
+        {
+            "id": 123,
+            "head_sha": HEAD,
+            "status": "completed",
+            "conclusion": "success",
+            "path": ".github/workflows/ci.yml",
+            "name": "release-gates",
+            "repository": {"full_name": "wpalish/ashyq-apply"},
+            "html_url": "https://github.com/wpalish/ashyq-apply/actions/runs/123",
+        },
+    )
+    registry = Path(configuration["baseline_identity_registry"]["path"])
+    original_read = Path.read_bytes
+
+    def guarded_read(path: Path) -> bytes:
+        if path == registry:
+            raise AssertionError("Private registry bytes must never enter a freeze")
+        return original_read(path)
+
+    monkeypatch.setattr(Path, "read_bytes", guarded_read)
+    destination = tmp_path.resolve() / "synthetic-freeze"
+    result = freeze.prepare_freeze(configuration, repo=repo, destination=destination)
+    return repo, destination, result
+
+
+def test_complete_synthetic_freeze_replays_and_copies_original_byte_proofs(
+    synthetic_freeze: tuple[Path, Path, dict[str, Any]],
+) -> None:
+    repo, destination, result = synthetic_freeze
+    launch.validate_manifest(result, destination / "manifest.json", repo=repo)
+    assert result["private_registry_bytes_read_by_freezer"] is False
+    assert result["ci_source_proof"]["workflow_name"] == "release-gates"
+    assert result["algorithm_defaults"]["document_seconds"] == 0.0
+    assert result["baseline_capture_config"]["module_defaults"]["DOCUMENT_RULES_V2"] is True
+    assert len(result["modules"]) == 22
+    assert (
+        next((destination / "neutral-originals").iterdir()).read_text()
+        == "Synthetic original request bytes."
+    )
+    assert (
+        destination / "os-originals/original.stdout.bin"
+    ).read_bytes() == b"INVENTED_PUBLIC_SENTINEL_ONLY"
+    assert str(freeze.PARENT_PATH) in result["scripts"]
+
+
+def test_frozen_original_copy_tampering_is_rejected_before_launch(
+    synthetic_freeze: tuple[Path, Path, dict[str, Any]],
+) -> None:
+    repo, destination, result = synthetic_freeze
+    (destination / "os-originals/original.stdout.bin").write_bytes(b"TAMPERED")
+    with pytest.raises(ValueError, match="byte copy differs"):
+        launch.validate_manifest(result, destination / "manifest.json", repo=repo)

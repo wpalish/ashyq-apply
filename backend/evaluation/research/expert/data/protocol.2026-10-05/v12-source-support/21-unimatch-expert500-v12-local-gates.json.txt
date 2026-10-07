@@ -1,0 +1,156 @@
+{
+  "schema_version": "1",
+  "protocol_version": "journal-v12",
+  "recorded_at": "2026-10-05T15:37:15.884401+00:00",
+  "all_passed": true,
+  "actual_ten_case_launcher_preflight": true,
+  "backend_tests": 4209,
+  "backend_coverage_percent": 94.92,
+  "frontend_tests": 232,
+  "current_runtime_tests_total": 639,
+  "current_runtime_partitions": {
+    "parent_workflow": 155,
+    "report": 314,
+    "actual_ten_cohort": 170
+  },
+  "static_source_files": 380,
+  "parent_quality_files": 11,
+  "frozen_helpers": 12,
+  "source_calls_in_local_gates": 0,
+  "neutral_model_calls": 3,
+  "neutral_university_requests": 0,
+  "separate_owner_exa_availability_diagnostic_queries": 1,
+  "integrated_main": "ff7988e9225c1db3a5bf124a0e82ffaa273637e9",
+  "gates": {
+    "backend_tests": true,
+    "backend_ruff": true,
+    "backend_format": true,
+    "backend_mypy": true,
+    "evaluation_quality": true,
+    "combined_parent_mocks": true,
+    "actual_ten_case_launcher_preflight": true,
+    "demo_order": true,
+    "alembic_single_head": true,
+    "exa_provider_pin": true,
+    "actual_ten_case_os_isolation": true,
+    "fresh_neutral_default_effort_runtime": true,
+    "ordinary_cli_usage_available_before_neutral": true,
+    "current_report_final": true,
+    "current_actual_ten_cohort_final": true,
+    "current_all_helper_ruff": true,
+    "current_all_helper_format": true,
+    "current_all_helper_mypy": true,
+    "durable_provider_http402_receipt_regressions": true,
+    "fresh_neutral_archive_replay": true,
+    "frontend_tests": true,
+    "frontend_typecheck": true,
+    "frontend_build": true,
+    "frontend_lint": true
+  },
+  "raw_logs": {
+    "backend_tests": {
+      "path": "/tmp/unimatch-expert500-v12-source-pytest-original.log",
+      "sha256": "c1dab9684af17c49d1d6fc16ee5a05d62bbe7d661163f3ca2ff4432c09401519"
+    },
+    "backend_ruff": {
+      "path": "/tmp/unimatch-expert500-v12-source-all-ruff-original.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "backend_format": {
+      "path": "/tmp/unimatch-expert500-v12-source-all-format-original.log",
+      "sha256": "a92860245c0d1bcd095b97be24fd27883dcc872907ee0da53651ccb15df64d5a"
+    },
+    "backend_mypy": {
+      "path": "/tmp/unimatch-expert500-v12-source-all-mypy-original.log",
+      "sha256": "b56e40afe7c03fb2d792aafba931f90207512911e058995be0cf2d6334235af0"
+    },
+    "evaluation_quality": {
+      "path": "/tmp/unimatch-expert500-v12-source-all-mypy-original.log",
+      "sha256": "b56e40afe7c03fb2d792aafba931f90207512911e058995be0cf2d6334235af0"
+    },
+    "combined_parent_mocks": {
+      "path": "/tmp/unimatch-expert500-v12-parent-workflow-mocks-final-green.log",
+      "sha256": "8744f13e9330e799304a5a41dd8301378b3574cb6e804fad043235d1b5633f56"
+    },
+    "actual_ten_case_launcher_preflight": {
+      "path": "/tmp/unimatch-expert500-v12-final-cohort-v2-original.log",
+      "sha256": "bccc80490f3510f1439cb3ed9f9ebae39869b7ef6d2c02b167009e2853597244"
+    },
+    "demo_order": {
+      "path": "/tmp/unimatch-expert500-main55-demo-verification-corrected-original.log",
+      "sha256": "ef11b4be92bb74a984d5ce7f464f053cfcdc04b6b08fab50fdc31420000c428c"
+    },
+    "alembic_single_head": {
+      "path": "/tmp/unimatch-expert500-main55-alembic-original.log",
+      "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b"
+    },
+    "exa_provider_pin": {
+      "path": "/tmp/unimatch-expert500-v12-final-cohort-v2-original.log",
+      "sha256": "bccc80490f3510f1439cb3ed9f9ebae39869b7ef6d2c02b167009e2853597244"
+    },
+    "actual_ten_case_os_isolation": {
+      "path": "/tmp/unimatch-expert500-v12-isolation-preflight-original.log",
+      "sha256": "999db15576f639f6bbcbb6ef8268983df1c987ed7d4f916b206490292daa5df5"
+    },
+    "fresh_neutral_default_effort_runtime": {
+      "path": "/tmp/unimatch-expert500-v12-neutral-original.log",
+      "sha256": "e38d2e2c8c16475b01ca0981ca3d060ed1cde927365f02435af6402946f27a8f"
+    },
+    "ordinary_cli_usage_available_before_neutral": {
+      "path": "/tmp/unimatch-expert500-v12-before-neutral-redacted-observation.json",
+      "sha256": "9e5f36688f98bee98694d576814dac1c3011539264490ed79cf9f9abee844b30"
+    },
+    "current_report_final": {
+      "path": "/tmp/unimatch-expert500-v12-report-focused-final.log",
+      "sha256": "abf11622fb57571f9e32561c54b04f7481c01ad14d40c46148283e0da9938de6"
+    },
+    "current_actual_ten_cohort_final": {
+      "path": "/tmp/unimatch-expert500-v12-final-cohort-v2-original.log",
+      "sha256": "bccc80490f3510f1439cb3ed9f9ebae39869b7ef6d2c02b167009e2853597244"
+    },
+    "current_all_helper_ruff": {
+      "path": "/tmp/unimatch-expert500-v12-final-all-helper-ruff-v2-original.log",
+      "sha256": "e610c9bd2f635d9b4850a703cd22de4773d292a70e0a223c76135f52af5be4ec"
+    },
+    "current_all_helper_format": {
+      "path": "/tmp/unimatch-expert500-v12-final-all-helper-format-v2-original.log",
+      "sha256": "a838be65fca2f677f449cf9199c8a263866a76f5be2a3e71946a188a2f730633"
+    },
+    "current_all_helper_mypy": {
+      "path": "/tmp/unimatch-expert500-v12-final-all-helper-mypy-v2-original.log",
+      "sha256": "fcd986a84295a262ac631c8a38deb725755ef3adefa3b6719b24eaef116e6f66"
+    },
+    "durable_provider_http402_receipt_regressions": {
+      "path": "/tmp/unimatch-expert500-v12-network-report402-final-green.log",
+      "sha256": "e20a822df5b054081b6291869505c01d48c529d9b1cb91a0618f56576de5b46d"
+    },
+    "fresh_neutral_archive_replay": {
+      "path": "/tmp/unimatch-expert500-v12-corrected-neutral-replay-original.log",
+      "sha256": "5711be4c827e8a76fef5029e9c71eba5d8edf3bd9c152f4c04af0157ea68d8d5"
+    },
+    "frontend_tests": {
+      "path": "/tmp/unimatch-expert500-v10-final-frontend-tests.log",
+      "sha256": "164bd9647960e3f9fc0475c950f65ad28db21b798639bf6f9dcc1b0abd81b7f9"
+    },
+    "frontend_typecheck": {
+      "path": "/tmp/unimatch-expert500-v10-final-frontend-typecheck.log",
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02"
+    },
+    "frontend_build": {
+      "path": "/tmp/unimatch-expert500-v10-final-frontend-build.log",
+      "sha256": "abb05af0f45b389c00ec408539c06863962ccafb5fea54130392f57035f6bc44"
+    },
+    "frontend_lint": {
+      "path": "/tmp/unimatch-expert500-v10-final-frontend-lint.log",
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a"
+    }
+  },
+  "frontend_tree": "4aaba144e9642060a4915a22527ef016ee8cc83d",
+  "migration_tree": "96469ee9697939efcd3c52b681838e1899989998",
+  "workflow_tree": "fc6cd24a90676173947f23fe262210a801ff9efc",
+  "frontend_proof_note": "Unchanged exact tree retains original V10 unit232/type/lint/build; main55 exact-source cloud8/8 independently passed. New-source cloud pending.",
+  "demo_proof_note": "Same unchanged app/migration trees as migrated main55 synthetic once demo20; corrected sameDB ranking.bucket read-only check retained. No reseed.",
+  "runtime_note": "Three independently executed original partitions155+314+170, not a single combined run. Predecessor178 additional48 argv unavailable; not asserted comparable.",
+  "legacy_note": "Immutable v1 helper9eaa88ef byte-pinned. Initial root12scope lint red preserved; current11 prospective-helper static scope matches predecessor11.",
+  "neutral_provenance_manifest_sha256": "ad3ea6a3ee9f2744d20c2e5a08df977abf473060923fb83db82b0c014bf41cb3"
+}

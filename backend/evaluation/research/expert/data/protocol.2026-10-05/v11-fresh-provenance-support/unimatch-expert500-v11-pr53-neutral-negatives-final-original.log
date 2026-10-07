@@ -1,0 +1,239 @@
+{"argv": ["/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/python", "-m", "pytest", "-o", "addopts=--strict-markers", "-q", "--tb=short", "/tmp/test_unimatch_expert500_actual_cohort_v11.py", "-k", "new_neutral"], "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend"}
+.EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE                                 [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[old_version] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[failed] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[stopped] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[source_counter] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[tool_counter] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[university_counter] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[bool_counter] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[accepted_fact] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[forced_effort] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[effort_origin] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[reasoning_override] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[missing_override] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[before_missing] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[before_hash] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[after_hash] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[after_extra] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[runtime_false] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[helper_after] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[model] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[long_guard] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[final_deadline] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[phases_count] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[phase_order] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[bool_returncode] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[missing_error_kind] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[phase_error] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[short_timer] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[late_phase] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[overlap_phase] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_replays_actual_bytes_not_success_flags[tool_event] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_replays_actual_bytes_not_success_flags[raw_failure] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_replays_actual_bytes_not_success_flags[incomplete_stream] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_replays_actual_bytes_not_success_flags[output_disagreement] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_replays_actual_bytes_not_success_flags[schema_bytes] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_replays_actual_bytes_not_success_flags[argv_path] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_replays_actual_bytes_not_success_flags[argv_effort] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_replays_actual_bytes_not_success_flags[peer_output] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_replays_actual_bytes_not_success_flags[stream_hash] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+_ ERROR at setup of test_v11_new_neutral_replays_actual_bytes_not_success_flags[symlink_copy] _
+/tmp/test_unimatch_expert500_actual_cohort_v11.py:178: in synthetic_neutral
+    answer["observation"] = schema["properties"]["observation"]["const"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'const'
+=========================== short test summary info ============================
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[old_version]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[failed]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[stopped]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[source_counter]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[tool_counter]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[university_counter]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[bool_counter]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[accepted_fact]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[forced_effort]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[effort_origin]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[reasoning_override]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[missing_override]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[before_missing]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[before_hash]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[after_hash]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[after_extra]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[runtime_false]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[helper_after]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[model]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[long_guard]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[final_deadline]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[phases_count]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[phase_order]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[bool_returncode]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[missing_error_kind]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[phase_error]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[short_timer]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[late_phase]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_rejects_provenance_counter_effort_runtime_and_timer_drift[overlap_phase]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_replays_actual_bytes_not_success_flags[tool_event]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_replays_actual_bytes_not_success_flags[raw_failure]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_replays_actual_bytes_not_success_flags[incomplete_stream]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_replays_actual_bytes_not_success_flags[output_disagreement]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_replays_actual_bytes_not_success_flags[schema_bytes]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_replays_actual_bytes_not_success_flags[argv_path]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_replays_actual_bytes_not_success_flags[argv_effort]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_replays_actual_bytes_not_success_flags[peer_output]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_replays_actual_bytes_not_success_flags[stream_hash]
+ERROR ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v11.py::test_v11_new_neutral_replays_actual_bytes_not_success_flags[symlink_copy]
+1 passed, 98 deselected, 39 errors in 0.91s

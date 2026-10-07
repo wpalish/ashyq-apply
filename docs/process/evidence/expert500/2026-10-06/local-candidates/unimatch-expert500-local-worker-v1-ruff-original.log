@@ -1,0 +1,128 @@
+/tmp/test_unimatch_expert500_local_worker_v1_candidate.py:6:8: F401 [*] `io` imported but unused
+  |
+4 | import asyncio
+5 | import importlib.util
+6 | import io
+  |        ^^ F401
+7 | import json
+8 | import os
+  |
+  = help: Remove unused import: `io`
+
+/tmp/test_unimatch_expert500_local_worker_v1_candidate.py:13:8: F401 [*] `threading` imported but unused
+   |
+11 | import subprocess
+12 | import sys
+13 | import threading
+   |        ^^^^^^^^^ F401
+14 | import uuid
+15 | from dataclasses import replace
+   |
+   = help: Remove unused import: `threading`
+
+/tmp/test_unimatch_expert500_local_worker_v1_candidate.py:236:33: E701 Multiple statements on one line (colon)
+    |
+234 |     else:
+235 |         changed = dict(delivery.receipt)
+236 |         if kind == 'unavailable': changed['status'] = 'unavailable'
+    |                                 ^ E701
+237 |         elif kind == 'unknown': changed['source_counters_known'] = False
+238 |         elif kind == 'counter_bool': changed['source_counters']['fetcher_calls'] = True
+    |
+
+/tmp/test_unimatch_expert500_local_worker_v1_candidate.py:237:31: E701 Multiple statements on one line (colon)
+    |
+235 |         changed = dict(delivery.receipt)
+236 |         if kind == 'unavailable': changed['status'] = 'unavailable'
+237 |         elif kind == 'unknown': changed['source_counters_known'] = False
+    |                               ^ E701
+238 |         elif kind == 'counter_bool': changed['source_counters']['fetcher_calls'] = True
+239 |         else: changed['run_id'] = 1234
+    |
+
+/tmp/test_unimatch_expert500_local_worker_v1_candidate.py:238:36: E701 Multiple statements on one line (colon)
+    |
+236 |         if kind == 'unavailable': changed['status'] = 'unavailable'
+237 |         elif kind == 'unknown': changed['source_counters_known'] = False
+238 |         elif kind == 'counter_bool': changed['source_counters']['fetcher_calls'] = True
+    |                                    ^ E701
+239 |         else: changed['run_id'] = 1234
+240 |         delivery.receipt_path.write_bytes(worker.canonical_bytes(changed))
+    |
+
+/tmp/test_unimatch_expert500_local_worker_v1_candidate.py:239:13: E701 Multiple statements on one line (colon)
+    |
+237 |         elif kind == 'unknown': changed['source_counters_known'] = False
+238 |         elif kind == 'counter_bool': changed['source_counters']['fetcher_calls'] = True
+239 |         else: changed['run_id'] = 1234
+    |             ^ E701
+240 |         delivery.receipt_path.write_bytes(worker.canonical_bytes(changed))
+241 |     with pytest.raises(ValueError):
+    |
+
+/tmp/unimatch-expert500-local-worker-v1-candidate.py:19:8: F401 [*] `math` imported but unused
+   |
+17 | import io
+18 | import json
+19 | import math
+   |        ^^^^ F401
+20 | import os
+21 | import queue
+   |
+   = help: Remove unused import: `math`
+
+/tmp/unimatch-expert500-local-worker-v1-candidate.py:30:59: F401 [*] `collections.abc.Sequence` imported but unused
+   |
+28 | import time
+29 | import uuid
+30 | from collections.abc import Awaitable, Callable, Mapping, Sequence
+   |                                                           ^^^^^^^^ F401
+31 | from dataclasses import dataclass
+32 | from datetime import UTC, datetime, timedelta
+   |
+   = help: Remove unused import: `collections.abc.Sequence`
+
+/tmp/unimatch-expert500-local-worker-v1-candidate.py:417:9: F841 Local variable `summary` is assigned to but never used
+    |
+415 |         output, errors = io.StringIO(), io.StringIO()
+416 |         self.poisoned = True  # clear only after all originals are durably saved
+417 |         summary = capture = None
+    |         ^^^^^^^ F841
+418 |         try:
+419 |             return await self._deliver_checked(request, destination, started, artifacts, output, errors)
+    |
+    = help: Remove assignment to unused variable `summary`
+
+/tmp/unimatch-expert500-local-worker-v1-candidate.py:417:19: F841 Local variable `capture` is assigned to but never used
+    |
+415 |         output, errors = io.StringIO(), io.StringIO()
+416 |         self.poisoned = True  # clear only after all originals are durably saved
+417 |         summary = capture = None
+    |                   ^^^^^^^ F841
+418 |         try:
+419 |             return await self._deliver_checked(request, destination, started, artifacts, output, errors)
+    |
+    = help: Remove assignment to unused variable `capture`
+
+/tmp/unimatch-expert500-local-worker-v1-candidate.py:782:23: SIM115 Use a context manager for opening files
+    |
+780 |         atomic_new(config.session_root / "session-bootstrap.json", canonical_bytes(bootstrap))
+781 |         self.stderr_path = config.session_root / "worker.stderr"
+782 |         self.stderr = open(self.stderr_path, "xb", buffering=0)
+    |                       ^^^^ SIM115
+783 |         os.chmod(self.stderr_path, 0o600)
+784 |         environment = source_environment(config, private_key)
+    |
+
+/tmp/unimatch-expert500-local-worker-v1-candidate.py:985:9: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+    |
+983 |         atomic_new(artifacts / "child.stderr", stderr)
+984 |         atomic_new(artifacts / "child-process.json", canonical_bytes({"pid": child.pid, "pgid": os.getpgid(0), "argv_sha256": digest(…
+985 |         raise TimeoutError("Baseline stock child exceeded its original process guard")
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ B904
+986 |     atomic_new(artifacts / "child.stdout", stdout)
+987 |     atomic_new(artifacts / "child.stderr", stderr)
+    |
+
+Found 12 errors.
+[*] 4 fixable with the `--fix` option (2 hidden fixes can be enabled with the `--unsafe-fixes` option).

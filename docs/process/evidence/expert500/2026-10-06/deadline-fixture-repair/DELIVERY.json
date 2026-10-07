@@ -1,0 +1,102 @@
+{
+  "schema_version": "1",
+  "status": "offline_test_only_candidate",
+  "original_ci_result_unchanged": "1 failed,4402 passed; failed cancellation assertion alone does not identify elapsed setup step",
+  "production_or_original_test_edits": false,
+  "actual_source_provider_model_requests": 0,
+  "original_registry_or_credentials_read": false,
+  "evidence": [
+    {
+      "path": "/tmp/unimatch-expert500-edb7367-ci37499415787-failed-original.log",
+      "bytes": 19542,
+      "sha256": "a20b59944fbecfde80916e65d23b3eb06ff5b30d23c7e17f7f2675d5e665727e"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/live.py",
+      "bytes": 57359,
+      "sha256": "484017d54c47688a543c1753e02f3eae10b96909e30167b1570fadf589ad3191"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/tests/test_expert_live_budget.py",
+      "bytes": 15533,
+      "sha256": "e2561ba2677b3010366db00cc0bd20904da43f55ea575f6e62280ba5ddbbe6d1"
+    }
+  ],
+  "candidate": {
+    "path": "/tmp/test_expert_live_budget_deadline_deterministic_candidate.py",
+    "bytes": 5014,
+    "sha256": "2767b4a29cea72c18e1e4832f4b696ae252cdb2b9d6376c5a58829c46e4a00af"
+  },
+  "patch": {
+    "path": "/tmp/unimatch-expert500-v14-baseline-deadline-candidate-ea0b0fdd91/deterministic-fixture-candidate.patch",
+    "bytes": 5778,
+    "sha256": "a802d580465dd282c4049f49c585dacd467cb05382474befd72d9e1122cdd793"
+  },
+  "original_fixture": {
+    "path": "/tmp/unimatch-expert500-v14-baseline-deadline-candidate-ea0b0fdd91/original-failing-fixture.py.txt",
+    "bytes": 1031,
+    "sha256": "438b9781022a3e0e6249129d6f2e330e2f4dd93614f18f05760b9362d541d60f"
+  },
+  "controlled_original_red": {
+    "returncode": 1,
+    "log": {
+      "path": "/tmp/unimatch-expert500-v14-baseline-deadline-candidate-ea0b0fdd91/controlled-original-red.log",
+      "bytes": 1553,
+      "sha256": "5afd209c4e6f3f215458c3762718d377e61cca21a21e8d2e32839898d4ef5822"
+    }
+  },
+  "candidate_green": {
+    "count": 2,
+    "returncode": 0,
+    "log": {
+      "path": "/tmp/unimatch-expert500-v14-baseline-deadline-candidate-ea0b0fdd91/pytest-original.log",
+      "bytes": 80,
+      "sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87"
+    }
+  },
+  "static": {
+    "mypy_returncode": 0,
+    "ruff_backend_config_returncode": 0,
+    "format_returncode": 0
+  },
+  "logs": [
+    {
+      "path": "/tmp/unimatch-expert500-v14-baseline-deadline-candidate-ea0b0fdd91/controlled-original-red.log",
+      "bytes": 1553,
+      "sha256": "5afd209c4e6f3f215458c3762718d377e61cca21a21e8d2e32839898d4ef5822"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v14-baseline-deadline-candidate-ea0b0fdd91/format-original.log",
+      "bytes": 25,
+      "sha256": "fd2299c9f1c6dc869070883e281051bfe93aacf66c1a3b0069f45b4aa410ca50"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v14-baseline-deadline-candidate-ea0b0fdd91/mypy-original.log",
+      "bytes": 42,
+      "sha256": "5d4b6d285b77932e3d08212c3b4974d0a803f98ec60408ac6ccf6a063fa6c19e"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v14-baseline-deadline-candidate-ea0b0fdd91/pytest-original.log",
+      "bytes": 80,
+      "sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v14-baseline-deadline-candidate-ea0b0fdd91/ruff-configured-backend-original.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "/tmp/unimatch-expert500-v14-baseline-deadline-candidate-ea0b0fdd91/ruff-original.log",
+      "bytes": 788,
+      "sha256": "4a292971c7cbd3a54e6cd3c2e518c4467f7809c5d3b2f022207ec2c605366a1a"
+    }
+  ],
+  "commands": {
+    "path": "/tmp/unimatch-expert500-v14-baseline-deadline-candidate-ea0b0fdd91/commands-original.json",
+    "bytes": 3346,
+    "sha256": "465abc6d62e8c224b508d91d0be3e509ec6d9fd70ffd3ca2d5f553dcca7c26e1"
+  },
+  "finding": "Capture entry begins the original clock before delayed imports/settings/identity parsing/checkpoint. remaining() can expire before run_canary coroutine is constructed. The old fixture unconditionally expects cancellation despite not proving entry.",
+  "repair": "Freeze only evaluator clock during setup, synchronize a pending mocked canary, then use actual asyncio.wait_for(task,0) to drive genuine cancellation at controlled expiry. Keep cleanup overrun250ms against declared150ms. Separate test proves250ms setup expiry produces no coroutine/timeout invocation and retains zero source counters.",
+  "limits": "Controlled reproduction proves the possible invalid fixture assumption; it does not determine which setup operation or resource condition caused the historical PostgreSQL CI failure."
+}

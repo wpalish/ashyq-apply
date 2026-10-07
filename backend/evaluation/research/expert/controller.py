@@ -17,6 +17,13 @@ ceiling for navigation, within ``max_ms``. It preserves time for a final
 submission without tool I/O and cannot be extended when resuming. Explicit
 outside-policy exploration also respects this navigation ceiling.
 
+Prospective ``independent_network_budget`` plans instead use the shared
+``network_actions_v1`` contract: exactly 60 reads and six queries, with model
+thinking excluded from the source ledger. Their 900000 ms ceiling is an
+immutable absolute wall hang guard. Fresh source counters start at zero;
+resumes use the exact measured counters, and every diagnostic action also
+respects that same wall deadline. Legacy plans keep their original semantics.
+
 Raw logs belong in ignored artifacts, never Git. ``resume_summary`` may hold
 the preceding returned summary to recheck raw-log hashes before resuming.
 Existing logs establish counter floors and retain a provider's HTTP 429 stop.
@@ -39,6 +46,25 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, BinaryIO
 from urllib.parse import urlsplit
+
+from .network_budget import (
+    BUDGET_MODEL,
+    MAX_FETCHER_CALLS,
+    MAX_SEARCH_QUERIES,
+    NETWORK_COMPARISON_MODE,
+    WALL_GUARD_MS,
+    WallGuard,
+    expert_budget,
+    parse_timestamp,
+    parse_wall_guard,
+)
+from .source_admission import (
+    SourceAdmission,
+    SourceAdmissionDeadline,
+    SourceAdmissionIntegrityError,
+    SourceAdmissionRefused,
+    StoredReceipt,
+)
 
 BLOCKED_HOSTS = (
     "github.com",
@@ -73,6 +99,10 @@ TOOL_POLICY = {
     "blocked_hosts": list(BLOCKED_HOSTS),
     "expert_tools": "none: the expert names actions; the controller executes and logs them",
 }
+
+
+class _WallGuardRefused(Exception):
+    """The wall expired during timeout setup, before any actual tool call."""
 
 
 def _host(url: str) -> str:
@@ -184,6 +214,7 @@ def _existing_state(
     strict: bool,
     budget_origin: str,
     action_deadline_ms: int | None,
+    wall_guard: WallGuard | None = None,
 ) -> tuple[int, dict[str, Any]]:
     """Locate the next log and reject counter resets or changed resume bytes."""
     pattern = re.compile(re.escape(prefix) + r"-(\d+)\.json\Z")
@@ -216,6 +247,9 @@ def _existing_state(
                 _action_deadline(resume, plan["max_ms"]) != action_deadline_ms
             ):
                 raise ValueError("Resume action_deadline_ms differs from the recorded summary")
+            if wall_guard is not None:
+                _check_network_identity(resume, wall_guard)
+                _check_network_identity(previous_policy, wall_guard)
         for name, sha in expected.items():
             if (
                 not isinstance(name, str)
@@ -232,13 +266,31 @@ def _existing_state(
     numbered = []
     for path in logs_dir.iterdir() if logs_dir.exists() else []:
         match = pattern.fullmatch(path.name)
+        if wall_guard is not None and path.suffix == ".json" and not match:
+            # A new prefix cannot turn the same case directory into a fresh
+            # budget or hide its quota stop when resume_summary is omitted.
+            if path.is_symlink() or not path.is_file():
+                raise ValueError("Network raw logs must be regular files")
+            if path.is_file():
+                try:
+                    other = json.loads(path.read_bytes())
+                except (ValueError, UnicodeDecodeError):
+                    other = None
+                if (
+                    isinstance(other, dict)
+                    and other.get("case_id") == plan["case_id"]
+                    and "request" in other
+                    and "tool_policy" in other
+                ):
+                    raise ValueError("Network case already belongs to a different log_prefix")
         if match:
             if path.is_symlink() or not path.is_file():
                 raise ValueError("Raw logs must be regular files")
             numbered.append((int(match[1]), path))
     state: dict[str, Any] = {}
     previous = (0, 0, 0)
-    provider_stopped = False
+    previous_completed_at = wall_guard.started_at if wall_guard is not None else None
+    provider_stop_reason = None
     for _number, path in sorted(numbered):
         data = path.read_bytes()
         if path.name in expected and hashlib.sha256(data).hexdigest() != expected[path.name]:
@@ -254,6 +306,9 @@ def _existing_state(
                 raise ValueError("Cannot resume legacy logs as a strict run")
             if record["tool_policy"].get("budget_origin") != budget_origin:
                 raise ValueError("Resume budget_origin differs from recorded policy")
+            if wall_guard is not None:
+                _check_network_identity(record, wall_guard)
+                _check_network_identity(record["tool_policy"], wall_guard)
             for key, plan_key in (
                 ("max_fetcher_calls", "max_calls"),
                 ("max_elapsed_ms", "max_ms"),
@@ -275,16 +330,72 @@ def _existing_state(
             )
             if any(value < old for value, old in zip(counters, previous, strict=True)):
                 raise ValueError("Existing raw log counters decrease")
+            if wall_guard is not None:
+                at = parse_timestamp(record.get("at", ""))
+                completed_at = parse_timestamp(record.get("completed_at", ""))
+                if previous_completed_at is None or not previous_completed_at <= at <= completed_at:
+                    raise ValueError("Existing network wall timestamps decrease")
+                executed = record.get("executed")
+                request = record.get("request") or {}
+                if type(executed) is not bool or executed != bool(record.get("response")):
+                    raise ValueError("Existing network executed flag disagrees with its response")
+                calls = int(executed and request.get("tool") == "fetcher")
+                queries = int(executed and request.get("tool") == "search_provider")
+                elapsed = _integer(record, "elapsed_ms")
+                if (
+                    _integer(record, "elapsed_ms_before") != previous[1]
+                    or _integer(record, "charged_elapsed_ms") != elapsed
+                    or counters
+                    != (previous[0] + calls, previous[1] + elapsed, previous[2] + queries)
+                    or (not executed and elapsed != 0)
+                ):
+                    raise ValueError(
+                        "Existing network counters differ from measured controlled actions"
+                    )
+                dispatch = record.get("dispatch_at")
+                if executed:
+                    if not isinstance(dispatch, str) or not (
+                        at <= parse_timestamp(dispatch) < wall_guard.deadline_at
+                        and parse_timestamp(dispatch) <= completed_at
+                    ):
+                        raise ValueError(
+                            "Existing network dispatch exceeds its original wall guard"
+                        )
+                elif dispatch is not None:
+                    raise ValueError("A refused network action cannot have a dispatch timestamp")
+                previous_completed_at = completed_at
             previous = counters
         state = record
-        provider_stopped = provider_stopped or record.get("stop_reason") == "http_429"
-    if provider_stopped:
-        state["stop_reason"] = "http_429"
+        recorded_stop = record.get("stop_reason")
+        if recorded_stop in {"http_402", "http_429"}:
+            provider_stop_reason = provider_stop_reason or recorded_stop
+    if provider_stop_reason:
+        state["stop_reason"] = provider_stop_reason
     first = _integer(plan, "first_log_number", max((n for n, _p in numbered), default=0) + 1)
     if first < 1 or any(first <= number for number, _path in numbered):
         raise ValueError("first_log_number would overwrite an existing log")
     state["raw_logs"] = expected
     return first, state
+
+
+def _check_network_identity(record: dict[str, Any], wall_guard: WallGuard) -> None:
+    """Bind both a summary and its independently saved raw policy to one wall."""
+    if record.get("budget_model") != BUDGET_MODEL:
+        raise ValueError("Resume budget_model differs from recorded network policy")
+    try:
+        recorded_guard = parse_wall_guard(
+            wall_started_at=record.get("wall_started_at", ""),
+            wall_deadline_at=record.get("wall_deadline_at", ""),
+        )
+    except ValueError as exc:
+        raise ValueError("Resume wall guard is missing or invalid") from exc
+    if recorded_guard != wall_guard or record.get("wall_guard_ms") != WALL_GUARD_MS:
+        raise ValueError("Resume wall guard differs from the recorded case")
+    if any(
+        type(record.get(key)) is not type(value) or record.get(key) != value
+        for key, value in expert_budget().items()
+    ):
+        raise ValueError("Resume network policy metadata differs from the recorded case")
 
 
 def _failure(exc: Exception, *, provider_name: str | None = None) -> dict[str, Any]:
@@ -363,7 +474,7 @@ def _search_domains(action: dict[str, Any], official_domains: tuple[str, ...]) -
     return domains
 
 
-async def execute(
+async def _execute(
     plan: dict[str, Any],
     logs_dir: Path,
     *,
@@ -372,6 +483,7 @@ async def execute(
     provider_name: str,
     now: Callable[[], datetime] = lambda: datetime.now(UTC),
     monotonic: Callable[[], float] = time.monotonic,
+    source_admission: SourceAdmission | None = None,
 ) -> dict[str, Any]:
     """Execute a bounded plan. Injectable clocks/tools keep verification offline."""
     strict = plan.get("strict_budget", False)
@@ -385,21 +497,57 @@ async def execute(
     max_queries = _integer(plan, "max_search_queries", STRICT_MAX_SEARCH_QUERIES)
     if max_calls < 1 or max_ms < 1 or max_queries < 1:
         raise ValueError("Run budgets must be positive")
+    origin = plan.get(
+        "budget_origin", "independent_full_budget" if strict else "baseline_intervention"
+    )
+    if origin not in {
+        "independent_full_budget",
+        "baseline_intervention",
+        NETWORK_COMPARISON_MODE,
+    }:
+        raise ValueError("Unsupported budget_origin")
+    network = origin == NETWORK_COMPARISON_MODE
+    wall_guard: WallGuard | None = None
+    if network:
+        if not strict or plan.get("budget_model") != BUDGET_MODEL:
+            raise ValueError("Network mode requires strict network_actions_v1 policy")
+        if (max_calls, max_queries, max_ms) != (
+            MAX_FETCHER_CALLS,
+            MAX_SEARCH_QUERIES,
+            WALL_GUARD_MS,
+        ):
+            raise ValueError("Network mode requires exactly 60 reads, six queries and a 900s guard")
+        if any(
+            key in plan and (type(plan[key]) is not type(value) or plan[key] != value)
+            for key, value in expert_budget().items()
+        ):
+            raise ValueError("Network plan metadata must declare the exact network policy")
+        wall_guard = parse_wall_guard(
+            wall_started_at=plan.get("wall_started_at", ""),
+            wall_deadline_at=plan.get("wall_deadline_at", ""),
+        )
+        wall_guard.remaining_seconds(now=now())
+        if plan.get("action_deadline_ms") is not None:
+            raise ValueError("Network mode uses only its absolute wall hang guard")
+    elif any(
+        key in plan
+        for key in ("budget_model", "wall_started_at", "wall_deadline_at", "wall_guard_ms")
+    ):
+        raise ValueError("Network wall policy requires the explicit network comparison mode")
     action_deadline_ms = _action_deadline(plan, max_ms)
-    if strict and (
-        max_calls > STRICT_MAX_CALLS
-        or max_ms > STRICT_MAX_MS
-        or max_queries > STRICT_MAX_SEARCH_QUERIES
+    if (
+        strict
+        and not network
+        and (
+            max_calls > STRICT_MAX_CALLS
+            or max_ms > STRICT_MAX_MS
+            or max_queries > STRICT_MAX_SEARCH_QUERIES
+        )
     ):
         raise ValueError("Strict run budget exceeds 60 Fetcher calls, 120 seconds or six queries")
     exploration = plan.get("exploration_mode", "same_policy")
     if exploration not in {"same_policy", "outside_policy"}:
         raise ValueError("exploration_mode must be same_policy or outside_policy")
-    origin = plan.get(
-        "budget_origin", "independent_full_budget" if strict else "baseline_intervention"
-    )
-    if origin not in {"independent_full_budget", "baseline_intervention"}:
-        raise ValueError("Unsupported budget_origin")
     prefix = plan.get("log_prefix", plan["case_id"])
     if not isinstance(prefix, str) or not _SAFE_ID.fullmatch(prefix):
         raise ValueError("log_prefix/case_id must be a safe identifier")
@@ -414,8 +562,14 @@ async def execute(
     if any(blocked("https://" + d) for d in official_domains):
         raise ValueError("Official domains cannot include a blocked repository host")
     number, state = _existing_state(
-        plan, logs_dir, prefix, provider_name, strict, origin, action_deadline_ms
+        plan, logs_dir, prefix, provider_name, strict, origin, action_deadline_ms, wall_guard
     )
+    if (
+        source_admission is not None
+        and state.get("request")
+        and (state.get("tool_policy", {}).get("source_admission") != source_admission.policy())
+    ):
+        raise ValueError("Resume source admission differs from independently recorded policy")
     initial = {
         key: _integer(plan, key, int(state.get(record_key, 0)))
         for key, record_key in (
@@ -433,6 +587,17 @@ async def execute(
         )
     ):
         raise ValueError("Resume counters cannot decrease")
+    if network and any(
+        initial[key] != int(state.get(record_key, 0))
+        for key, record_key in (
+            ("start_calls", "fetcher_calls_cumulative"),
+            ("start_ms", "elapsed_ms_cumulative"),
+            ("start_search_queries", "search_queries_cumulative"),
+        )
+    ):
+        raise ValueError(
+            "Network source counters must equal the independently measured previous counters"
+        )
     ledger = Ledger(
         max_calls,
         max_ms,
@@ -442,9 +607,17 @@ async def execute(
         search_queries=initial["start_search_queries"],
     )
     stop_reason = plan.get("stop_reason", state.get("stop_reason"))
-    if stop_reason not in {None, "http_429", "budget_exhausted", "action_deadline_exhausted"}:
+    allowed_stops = {None, "http_402", "http_429", "budget_exhausted", "action_deadline_exhausted"}
+    if network:
+        allowed_stops.add("wall_guard_exhausted")
+    if stop_reason not in allowed_stops:
         raise ValueError("Unsupported stop_reason")
-    if state.get("stop_reason") in {"http_429", "action_deadline_exhausted"}:
+    if state.get("stop_reason") in {
+        "http_402",
+        "http_429",
+        "action_deadline_exhausted",
+        "wall_guard_exhausted",
+    }:
         stop_reason = state["stop_reason"]
     policy = {
         **TOOL_POLICY,
@@ -458,6 +631,12 @@ async def execute(
     }
     if action_deadline_ms is not None:
         policy["action_deadline_ms"] = action_deadline_ms
+    network_metadata = {**expert_budget(), **wall_guard.as_dict()} if wall_guard is not None else {}
+    policy.update(network_metadata)
+    if network:
+        policy["exploration_mode"] = exploration
+    if source_admission is not None:
+        policy["source_admission"] = source_admission.policy()
     summary: dict[str, Any] = {
         "case_id": plan["case_id"],
         "provider": provider_name,
@@ -471,7 +650,15 @@ async def execute(
     }
     if action_deadline_ms is not None:
         summary["action_deadline_ms"] = action_deadline_ms
+    summary.update(network_metadata)
     run_began = monotonic()
+    previous_wall_at = (
+        parse_timestamp(state["completed_at"], field="completed_at")
+        if wall_guard is not None and "completed_at" in state
+        else wall_guard.started_at
+        if wall_guard is not None
+        else None
+    )
     for kind, items in (("replay", plan.get("replay", [])), ("actions", plan.get("actions", []))):
         for item in items:
             action: dict[str, Any] = (
@@ -484,8 +671,14 @@ async def execute(
             if (logs_dir / name).exists() or (logs_dir / name).is_symlink():
                 raise ValueError("Raw log already exists")
             at = now().isoformat()
+            if wall_guard is not None:
+                action_at = parse_timestamp(at)
+                wall_guard.remaining_seconds(now=action_at)
+                if previous_wall_at is not None and action_at < previous_wall_at:
+                    raise ValueError("Wall clock precedes the preceding controller action")
+                at = action_at.isoformat()
             began = monotonic()
-            if strict:
+            if strict and not network:
                 ledger.ms = max(
                     ledger.ms, initial["start_ms"] + math.ceil((began - run_began) * 1000)
                 )
@@ -504,6 +697,7 @@ async def execute(
                     "max_ms": max_ms,
                     "max_search_queries": max_queries if strict else None,
                 },
+                **network_metadata,
             }
             with _reserve_log(logs_dir, name, record) as output:
                 refusal: str | None = None
@@ -527,8 +721,25 @@ async def execute(
                             raise ValueError("Search result limit must be 1..100")
                     except ValueError:
                         refusal = "blocked_by_tool_policy"
-                if tool == "search_provider" and stop_reason == "http_429":
-                    refusal = "stopped_after_http_429"
+                # A provider account refusal stops every later source action.
+                if stop_reason in {"http_402", "http_429"}:
+                    refusal = f"stopped_after_{stop_reason}"
+                wall_remaining_seconds: float | None = None
+                network_timeout_at: float | None = None
+                if wall_guard is not None:
+                    # Capture the loop anchor before reading UTC. Setup after
+                    # this point consumes the existing period, never renews it.
+                    loop_anchor = asyncio.get_running_loop().time()
+                    dispatch_at = parse_timestamp(now().isoformat())
+                    wall_remaining_seconds = wall_guard.remaining_seconds(now=dispatch_at)
+                    assert wall_remaining_seconds is not None
+                    network_timeout_at = loop_anchor + wall_remaining_seconds
+                    if dispatch_at < action_at:
+                        raise ValueError("Wall clock decreased before dispatch")
+                    if wall_remaining_seconds <= 0 or stop_reason == "wall_guard_exhausted":
+                        refusal = "wall_guard_exhausted"
+                        stop_reason = stop_reason or "wall_guard_exhausted"
+                    record["dispatch_at"] = dispatch_at.isoformat() if refusal is None else None
                 action_start_ms = ledger.ms
                 if strict and action_deadline_ms is not None:
                     # Log reservation and input checks consume active time too.
@@ -538,7 +749,7 @@ async def execute(
                         initial["start_ms"] + math.ceil((monotonic() - run_began) * 1000),
                     )
                 exhausted = strict and (
-                    action_start_ms >= ledger.max_ms
+                    (not network and action_start_ms >= ledger.max_ms)
                     or (tool == "fetcher" and ledger.calls >= ledger.max_calls)
                     or (tool == "search_provider" and ledger.search_queries >= max_queries)
                 )
@@ -553,15 +764,19 @@ async def execute(
                 ):
                     refusal = "action_deadline_exhausted"
                     stop_reason = stop_reason or "action_deadline_exhausted"
+                admission_receipt: StoredReceipt | None = None
+                source_action_id = f"expert.{prefix}.{number:03d}"
                 calls = queries = 0
                 deadline_floor = 0
                 if refusal:
+                    if network:
+                        record["dispatch_at"] = None
                     record.update(outcome=refusal, outcome_status="blocked", executed=False)
                     elapsed = 0
                 else:
-                    record["executed"] = True
-                    calls = int(tool == "fetcher")
-                    queries = int(tool == "search_provider")
+                    record["executed"] = not network and source_admission is None
+                    calls = int(record["executed"] and tool == "fetcher")
+                    queries = int(record["executed"] and tool == "search_provider")
                     action_budget_ms = (
                         max_ms if exploration == "outside_policy" else max_ms - action_start_ms
                     )
@@ -575,9 +790,66 @@ async def execute(
                             action_budget_ms, action_deadline_ms - action_start_ms
                         )
                     try:
-                        async with asyncio.timeout(
-                            max(1, action_budget_ms) / 1000 if strict else None
-                        ):
+                        timeout_seconds = (
+                            wall_remaining_seconds
+                            if network
+                            else max(1, action_budget_ms) / 1000
+                            if strict
+                            else None
+                        )
+                        deadline_context = (
+                            asyncio.timeout_at(network_timeout_at)
+                            if network
+                            else asyncio.timeout(timeout_seconds)
+                        )
+                        async with deadline_context as deadline:
+                            if wall_guard is not None:
+                                actual_dispatch = parse_timestamp(now().isoformat())
+                                if actual_dispatch < dispatch_at:
+                                    raise ValueError("Wall clock decreased during timeout setup")
+                                if wall_guard.remaining_seconds(now=actual_dispatch) <= 0 or (
+                                    network_timeout_at is not None
+                                    and asyncio.get_running_loop().time() >= network_timeout_at
+                                ):
+                                    raise _WallGuardRefused
+                                record["dispatch_at"] = actual_dispatch.isoformat()
+                                if source_admission is None:
+                                    record["executed"] = True
+                                    calls = int(tool == "fetcher")
+                                    queries = int(tool == "search_provider")
+                            if source_admission is not None:
+
+                                def remaining_admission() -> float:
+                                    when = deadline.when()
+                                    assert when is not None
+                                    remaining = when - asyncio.get_running_loop().time()
+                                    if wall_guard is not None:
+                                        remaining = min(
+                                            remaining, wall_guard.remaining_seconds(now=now())
+                                        )
+                                    return remaining
+
+                                admission_receipt = await source_admission.admit(
+                                    case_id=plan["case_id"],
+                                    tool=tool,
+                                    action_id=source_action_id,
+                                    remaining=remaining_admission,
+                                )
+                                record["source_admission"] = admission_receipt.as_dict()
+                                # Receipt persistence/lock wait consumes the original guard.
+                                # Admission proves permission, never invented actual execution.
+                                if remaining_admission() <= 0:
+                                    raise SourceAdmissionDeadline("case_deadline_exhausted")
+                                if wall_guard is not None:
+                                    actual_dispatch = parse_timestamp(now().isoformat())
+                                    if actual_dispatch < dispatch_at:
+                                        raise ValueError("Wall clock decreased during admission")
+                                    if wall_guard.remaining_seconds(now=actual_dispatch) <= 0:
+                                        raise SourceAdmissionDeadline("case_deadline_exhausted")
+                                    record["dispatch_at"] = actual_dispatch.isoformat()
+                                record["executed"] = True
+                                calls = int(tool == "fetcher")
+                                queries = int(tool == "search_provider")
                             if tool == "fetcher":
                                 response = await _fetch(get, url)
                                 final_url = response["final_url"]
@@ -600,6 +872,16 @@ async def execute(
                                     domains=action["domains"],
                                     max_results=action.get("max_results", 10),
                                 )
+                                if source_admission is not None and (
+                                    getattr(answer, "provider", None) != provider_name
+                                    or any(
+                                        getattr(result, "provider", None) != provider_name
+                                        for result in answer.results
+                                    )
+                                ):
+                                    raise SourceAdmissionIntegrityError(
+                                        "provider_identity_mismatch"
+                                    )
                                 results = [
                                     {
                                         "rank": r.rank,
@@ -622,32 +904,189 @@ async def execute(
                                         for r in results
                                     ),
                                 }
-                    except TimeoutError:
-                        record["response"] = {
-                            "outcome": "action_timeout",
-                            "outcome_status": "failure",
-                            "error": "Action exceeded the remaining run deadline.",
-                        }
-                        if strict:
-                            stop_reason = stop_reason or (
-                                "action_deadline_exhausted"
+                            if network and deadline.expired():
+                                raise TimeoutError
+                    except SourceAdmissionRefused as exc:
+                        refusal = "batch_stopped"
+                        calls = queries = 0
+                        record.update(
+                            outcome=refusal,
+                            outcome_status="blocked",
+                            executed=False,
+                            source_admission_stop=exc.stop_record,
+                        )
+                        if network:
+                            record["dispatch_at"] = None
+                    except SourceAdmissionDeadline:
+                        refusal = (
+                            "wall_guard_exhausted"
+                            if network
+                            else "action_deadline_exhausted"
+                            if navigation_limited
+                            else "budget_exhausted"
+                        )
+                        calls = queries = 0
+                        stop_reason = stop_reason or refusal
+                        record.update(outcome=refusal, outcome_status="blocked", executed=False)
+                        if network:
+                            record["dispatch_at"] = None
+                    except SourceAdmissionIntegrityError as exc:
+                        assert source_admission is not None
+                        stop = source_admission.publish_integrity_failure(
+                            case_id=plan["case_id"],
+                            tool=tool,
+                            action_id=source_action_id,
+                            reason=exc.reason,
+                            origin_admission=admission_receipt,
+                        )
+                        record["source_admission_stop"] = stop.as_dict()
+                        if record["executed"]:
+                            record["response"] = {
+                                "outcome": "source_integrity_failure",
+                                "outcome_status": "failure",
+                                "error": "Controlled source integrity failed; detail withheld.",
+                            }
+                        else:
+                            refusal = "source_integrity_failure"
+                            record.update(outcome=refusal, outcome_status="blocked", executed=False)
+                            if network:
+                                record["dispatch_at"] = None
+                    except _WallGuardRefused:
+                        refusal = "wall_guard_exhausted"
+                        calls = queries = 0
+                        stop_reason = stop_reason or "wall_guard_exhausted"
+                        record.update(
+                            outcome=refusal,
+                            outcome_status="blocked",
+                            executed=False,
+                            dispatch_at=None,
+                        )
+                    except TimeoutError as exc:
+                        callback_timeout = (
+                            source_admission is not None
+                            and record["executed"]
+                            and not deadline.expired()
+                            and (wall_guard is None or wall_guard.remaining_seconds(now=now()) > 0)
+                        )
+                        if callback_timeout:
+                            record["response"] = _failure(
+                                exc,
+                                provider_name=provider_name if tool == "search_provider" else None,
+                            )
+                            if tool == "search_provider":
+                                assert source_admission is not None
+                                stop = source_admission.publish_provider_failure(
+                                    case_id=plan["case_id"],
+                                    action_id=source_action_id,
+                                    http_status=record["response"]["http_status"],
+                                    failure_reason=record["response"]["failure_reason"],
+                                    origin_admission=admission_receipt,
+                                )
+                                record["source_admission_stop"] = stop.as_dict()
+                        elif source_admission is not None and not record["executed"]:
+                            refusal = (
+                                "wall_guard_exhausted"
+                                if network
+                                else "action_deadline_exhausted"
                                 if navigation_limited
                                 else "budget_exhausted"
                             )
-                            if navigation_limited:
+                            record.update(outcome=refusal, outcome_status="blocked", executed=False)
+                            if network:
+                                record["dispatch_at"] = None
+                        else:
+                            record["response"] = {
+                                "outcome": "action_timeout",
+                                "outcome_status": "failure",
+                                "error": "Action exceeded the remaining run deadline.",
+                            }
+                        if strict and not callback_timeout:
+                            stop_reason = stop_reason or (
+                                "wall_guard_exhausted"
+                                if network
+                                else "action_deadline_exhausted"
+                                if navigation_limited
+                                else "budget_exhausted"
+                            )
+                            if network:
+                                record["timeout_reason"] = "wall_guard_exhausted"
+                            elif navigation_limited:
                                 assert action_deadline_ms is not None
                                 deadline_floor = action_deadline_ms
                             else:
                                 deadline_floor = max_ms
                     except Exception as exc:
+                        if network and not record["executed"]:
+                            # Keep the reserved pending record rather than
+                            # inventing a source attempt for invalid setup.
+                            raise
                         record["response"] = _failure(
                             exc, provider_name=provider_name if tool == "search_provider" else None
                         )
-                        if tool == "search_provider" and record["response"]["http_status"] == 429:
-                            stop_reason = "http_429"
-                    elapsed = max(0, math.ceil((monotonic() - began) * 1000))
-                    record["outcome_status"] = record["response"]["outcome_status"]
-                if strict:
+                        status = record["response"]["http_status"]
+                        if source_admission is not None and tool == "search_provider":
+                            declared = getattr(exc, "http_status", None)
+                            transport = getattr(getattr(exc, "response", None), "status_code", None)
+                            if (
+                                type(declared) is int
+                                and 100 <= declared <= 599
+                                and type(transport) is int
+                                and 100 <= transport <= 599
+                                and declared != transport
+                            ):
+                                stop = source_admission.publish_integrity_failure(
+                                    case_id=plan["case_id"],
+                                    tool=tool,
+                                    action_id=source_action_id,
+                                    reason="conflicting_provider_http_status",
+                                    origin_admission=admission_receipt,
+                                )
+                            else:
+                                stop = source_admission.publish_provider_failure(
+                                    case_id=plan["case_id"],
+                                    action_id=source_action_id,
+                                    http_status=status,
+                                    failure_reason=record["response"]["failure_reason"],
+                                    origin_admission=admission_receipt,
+                                )
+                            record["source_admission_stop"] = stop.as_dict()
+                        if tool == "search_provider" and status in {402, 429}:
+                            stop_reason = f"http_{status}"
+                    elapsed = (
+                        max(0, math.ceil((monotonic() - began) * 1000)) if record["executed"] else 0
+                    )
+                    if record["executed"]:
+                        record["outcome_status"] = record["response"]["outcome_status"]
+                if wall_guard is not None:
+                    completed_at = parse_timestamp(now().isoformat())
+                    wall_guard.remaining_seconds(now=completed_at)
+                    if completed_at < action_at or (
+                        record["dispatch_at"] is not None
+                        and completed_at < parse_timestamp(record["dispatch_at"])
+                    ):
+                        raise ValueError("Wall clock decreased during a controller action")
+                    if completed_at >= wall_guard.deadline_at:
+                        stop_reason = stop_reason or "wall_guard_exhausted"
+                        if record["executed"] and record["outcome_status"] == "success":
+                            # Bytes returned after cancellation/deadline cannot
+                            # become successful evidence, even if a tool catches
+                            # cancellation or blocks the loop while serializing.
+                            record["response"].update(
+                                outcome="action_timeout",
+                                outcome_status="failure",
+                                ok=False,
+                                content_b64="",
+                                results=[],
+                                error="Action returned after the absolute wall hang guard.",
+                            )
+                            record["outcome_status"] = "failure"
+                            record["timeout_reason"] = "wall_guard_exhausted"
+                    record["completed_at"] = completed_at.isoformat()
+                    record["wall_elapsed_ms"] = math.ceil(
+                        (completed_at - wall_guard.started_at).total_seconds() * 1000
+                    )
+                    previous_wall_at = completed_at
+                if strict and not network:
                     elapsed_total = max(
                         ledger.ms + elapsed,
                         initial["start_ms"] + math.ceil((monotonic() - run_began) * 1000),
@@ -693,6 +1132,16 @@ async def execute(
                         "elapsed_ms_cumulative": ledger.ms,
                         "search_queries_cumulative": ledger.search_queries,
                         "policy_mode": mode,
+                        **(
+                            {"source_admission": record["source_admission"]}
+                            if "source_admission" in record
+                            else {}
+                        ),
+                        **(
+                            {"source_admission_stop": record["source_admission_stop"]}
+                            if "source_admission_stop" in record
+                            else {}
+                        ),
                     }
                 )
     summary["final"] = {
@@ -702,7 +1151,66 @@ async def execute(
         "stop_reason": stop_reason,
         "next_log_number": number,
     }
+    if wall_guard is not None:
+        completed_at = parse_timestamp(now().isoformat())
+        wall_guard.remaining_seconds(now=completed_at)
+        if previous_wall_at is not None and completed_at < previous_wall_at:
+            raise ValueError("Wall clock precedes the preceding controller action")
+        wall_expired = completed_at >= wall_guard.deadline_at
+        summary["final"].update(
+            wall_elapsed_ms=math.ceil(
+                (completed_at - wall_guard.started_at).total_seconds() * 1000
+            ),
+            completed_at=completed_at.isoformat(),
+            wall_guard_exhausted=wall_expired or stop_reason == "wall_guard_exhausted",
+            stop_reason=stop_reason or ("wall_guard_exhausted" if wall_expired else None),
+        )
+    if source_admission is not None:
+        summary["source_admission"] = source_admission.policy()
+        summary["source_admission_stop"] = source_admission.stop_snapshot()
     return summary
+
+
+async def execute(
+    plan: dict[str, Any],
+    logs_dir: Path,
+    *,
+    get: Callable[[str], Awaitable[Any]],
+    search: Callable[..., Awaitable[Any]] | None,
+    provider_name: str,
+    now: Callable[[], datetime] = lambda: datetime.now(UTC),
+    monotonic: Callable[[], float] = time.monotonic,
+    source_admission: SourceAdmission | None = None,
+) -> dict[str, Any]:
+    try:
+        if source_admission is not None and (
+            plan.get("strict_budget") is not True or source_admission.provider != provider_name
+        ):
+            raise ValueError("Shared source admission requires strict configured provider identity")
+        return await _execute(
+            plan,
+            logs_dir,
+            get=get,
+            search=search,
+            provider_name=provider_name,
+            now=now,
+            monotonic=monotonic,
+            source_admission=source_admission,
+        )
+    except ValueError:
+        if source_admission is not None:
+            case_id = plan.get("case_id")
+            case_id = (
+                case_id
+                if isinstance(case_id, str) and _SAFE_ID.fullmatch(case_id)
+                else "unknown_case"
+            )
+            source_admission.publish_integrity_failure(
+                case_id=case_id,
+                action_id="expert.setup",
+                reason="source_resume_invalid",
+            )
+        raise
 
 
 async def run(plan_path: Path, logs_dir: Path, cache_dir: Path) -> dict[str, Any]:

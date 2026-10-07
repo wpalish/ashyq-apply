@@ -1,0 +1,31 @@
+........................................................................ [ 72%]
+...........F................                                             [100%]
+=================================== FAILURES ===================================
+_________ test_baseline_branch_stays_legacy_and_needs_no_expert_guard __________
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-467/test_baseline_branch_stays_leg0')
+
+    def test_baseline_branch_stays_legacy_and_needs_no_expert_guard(tmp_path: Path) -> None:
+        harness = Harness(tmp_path)
+        assert harness.workflow(inputs={"mode": "expert_baseline"}, wall_guard=None) == (
+            777,
+            HEAD,
+        )
+>       assert harness.calls == [] and not harness.destination.exists()
+E       AssertionError: assert ([] == []
+E         
+E         Use -v to get more diff and not True)
+E        +  where True = exists()
+E        +    where exists = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-467/test_baseline_branch_stays_leg0/controller-01').exists
+E        +      where PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-467/test_baseline_branch_stays_leg0/controller-01') = Harness(root=PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-467/test_bas... invalid_identity=False, audit_overrun=False, partial_download=False, receipt_expiry=False, submitted={}, generated={}).destination
+
+/tmp/test_unimatch_expert500_workflow_v10.py:499: AssertionError
+=============================== warnings summary ===============================
+test_unimatch_expert500_journal_pilot_v10.py: 2836 warnings
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/bs4/builder/_lxml.py:124: DeprecationWarning: The 'strip_cdata' option of HTMLParser() has never done anything and will eventually be removed.
+    parser = parser(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_workflow_v10.py::test_baseline_branch_stays_legacy_and_needs_no_expert_guard
+1 failed, 99 passed, 2836 warnings in 2.65s

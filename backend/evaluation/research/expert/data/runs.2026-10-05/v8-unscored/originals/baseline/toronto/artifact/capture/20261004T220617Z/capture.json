@@ -1,0 +1,133 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "1ec0433f7daf559156d4f9bb21bda4811de16a29",
+  "captured_at": "20261004T220617Z",
+  "mode": "live",
+  "config": {
+    "search_provider": "exa",
+    "seconds_per_case": 120,
+    "max_fetcher_calls_per_case": 60,
+    "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+    "search_before_navigation": false,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "browser_enabled": false,
+    "cohort": [
+      "groningen",
+      "delft",
+      "aalto",
+      "vienna",
+      "warsaw",
+      "ubc",
+      "toronto",
+      "hku",
+      "ntu",
+      "kaist"
+    ],
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "harness_sha256": "b4f906e06ffe5323317c390a4783e125c997a3070ec4247192857999621628cd",
+    "mapping_sha256": "06e9d005d7f9093ca9f33c05bcb8fe1582b14e349adbb3720785b0fd239b082a",
+    "strict_expert_budget": true,
+    "max_search_queries_per_case": 6,
+    "cold_fetcher_reads": true,
+    "child_active_seconds": 120,
+    "finalization_reserve_ms": 1000,
+    "source_work_deadline_ms": 119000,
+    "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+    "parent_process_reserve_seconds": 15,
+    "parent_process_timeout_seconds": 135,
+    "case_budgets": {
+      "toronto": {
+        "strict_expert_budget": true,
+        "provider": "exa",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "fetcher_calls": 24,
+        "search_queries": 6,
+        "blocked_search_queries": 0,
+        "network_http_requests": 28,
+        "elapsed_ms": 34379,
+        "stop_reason": null,
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 35.152585083000005,
+        "process_error": null,
+        "active_checkpoint_available": true
+      }
+    },
+    "batch_stop_reason": null,
+    "batch_completed_case_ids": [
+      "toronto"
+    ],
+    "batch_remaining_case_ids": []
+  },
+  "observations": [
+    {
+      "case_id": "toronto",
+      "programme_urls": [
+        "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/programs/computer-science",
+        "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science"
+      ],
+      "ranked_urls": [],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 24,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 34.37876963300002,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [
+        {
+          "category": "fetch-failed",
+          "url": "https://future.utoronto.ca/apply",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 403",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://future.utoronto.ca/finances/fees",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 403",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://future.utoronto.ca/finances/scholarships",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 403",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/programs/computer-science",
+          "page_type": "intake_specific_program",
+          "detail": "2 claims read from this page",
+          "characters": 6513
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/programs/computer-science",
+          "page_type": "intake_specific_program",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        }
+      ],
+      "error": null
+    }
+  ]
+}

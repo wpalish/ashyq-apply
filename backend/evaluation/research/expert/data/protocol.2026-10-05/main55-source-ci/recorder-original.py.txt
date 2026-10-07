@@ -1,0 +1,61 @@
+"""Once-only original CI delivery; no university, model, key or account change."""
+import hashlib
+import json
+import subprocess
+from datetime import UTC, datetime
+from pathlib import Path
+
+REPO = Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply')
+SOURCE = '1d38ba3d33c5954c87d36ab2243e5701e7902193'
+RUNS = (37329083381, 37329091591)
+TARGET = REPO / 'backend/evaluation/research/expert/data/protocol.2026-10-05/main55-source-ci'
+JOBS = {'backend (sqlite)', 'backend (postgresql)', 'frontend', 'security-and-containers'}
+assert not TARGET.exists()
+
+def call(*args):
+    return subprocess.check_output(args, cwd=REPO)
+
+receipts = {}
+seen = []
+for run_id in RUNS:
+    raw = call('gh', 'run', 'view', str(run_id), '--json', 'status,conclusion,headSha,event,headBranch,jobs,url,createdAt,updatedAt')
+    value = json.loads(raw)
+    assert value['headSha'] == SOURCE
+    assert value['status'] == 'completed' and value['conclusion'] == 'success'
+    assert len(value['jobs']) == 4 and {j['name'] for j in value['jobs']} == JOBS
+    assert all(j['status'] == 'completed' and j['conclusion'] == 'success' for j in value['jobs'])
+    seen.append((value['event'], value['headBranch']))
+    receipts[f'run-{run_id}.json'] = raw
+    receipts[f'run-{run_id}.log'] = call('gh', 'run', 'view', str(run_id), '--log')
+assert set(seen) == {('push', 'task/expert-500-phase1'), ('pull_request', 'task/expert-500-phase1')}
+for name in ['unimatch-expert500-main55-ci-push-watch-original.log', 'unimatch-expert500-main55-ci-pr-watch-original.log', 'unimatch-expert500-main55-source-ci-initial-original.json', 'unimatch-expert500-main55-pr-state-original.json', 'unimatch-expert500-main55-redacted-observation.json', 'unimatch-owner-exa-availability-once.json']:
+    p = Path('/tmp') / name
+    assert p.is_file()
+    receipts[name] = p.read_bytes()
+receipts['recorder-original.py.txt'] = Path(__file__).read_bytes()
+TARGET.mkdir()
+records = []
+for name, raw in receipts.items():
+    with (TARGET / name).open('xb') as f:
+        f.write(raw)
+    records.append({'snapshot': name, 'sha256': hashlib.sha256(raw).hexdigest(), 'bytes': len(raw)})
+manifest = {
+    'schema_version': '1', 'recorded_at': datetime.now(UTC).isoformat(),
+    'source_harness_sha': SOURCE, 'integrated_main_sha': 'ff7988e',
+    'status': 'both_integrated_source_ci_events_success', 'run_ids': list(RUNS),
+    'successful_jobs': 8, 'record_count': len(records),
+    'total_original_bytes': sum(r['bytes'] for r in records), 'records': records,
+    'local_integration_manifest_sha256': '2f4820c88e4242f1ff161f4f4be78afa4df4fe88e700880ed829ecfd54471703',
+    'pre_main55_branch_only_ci_manifest_sha256': 'd57cc269d700ea331b58d6e3c4d76023af7858f0c2835f6202be6caeaca67887',
+    'v11_closed_unscored_unchanged': True, 'reviewed_62_unchanged': True,
+    'signed_reviewed8_unselected': True, 'same_provider_account_key_binding': 'owner_supplied_existing_account_key_bound_secret_updated_2026-10-05T14:46:11Z_neutral_adapter_HTTP200',
+    'neutral_diagnostic_search_queries': 1, 'university_requests': 0, 'model_requests': 0, 'new_trial_allocated': False,
+    'private_dashboard_financial_identity_values_committed': False
+}
+raw = (json.dumps(manifest, ensure_ascii=False, indent=2) + '\n').encode()
+with (TARGET / 'manifest.json').open('xb') as f:
+    f.write(raw)
+for r in records:
+    raw = (TARGET / r['snapshot']).read_bytes()
+    assert len(raw) == r['bytes'] and hashlib.sha256(raw).hexdigest() == r['sha256']
+print(json.dumps({'target': str(TARGET), 'manifest_sha256': hashlib.sha256((TARGET / 'manifest.json').read_bytes()).hexdigest(), 'successful_jobs': 8, 'records': len(records)}))

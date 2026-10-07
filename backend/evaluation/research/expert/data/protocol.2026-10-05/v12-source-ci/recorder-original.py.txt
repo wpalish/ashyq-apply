@@ -1,0 +1,42 @@
+"""Archive original exact selected-source CI; read-only, never dispatches sources."""
+import hashlib
+import json
+import subprocess
+from datetime import UTC, datetime
+from pathlib import Path
+
+REPO = Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply')
+SOURCE = '92dfdb6d4f1a4595865ea756f46b176ce0f6d891'
+TAG = 'expert500-phase1-v12-2026-10-05-92dfdb6'
+RUNS = (37334543905,37334551772,37334573535)
+# Keep the selected source checkout fully clean until the once-only live stage.
+# Copy this immutable original archive into the public protocol folder afterward.
+TARGET = Path('/tmp/unimatch-expert500-v12-source-ci')
+JOBS = {'backend (sqlite)','backend (postgresql)','frontend','security-and-containers'}
+assert not TARGET.exists()
+def call(*args):return subprocess.check_output(args,cwd=REPO)
+receipts={};events=[]
+for run_id in RUNS:
+ raw=call('gh','run','view',str(run_id),'--json','status,conclusion,headSha,event,headBranch,jobs,url,createdAt,updatedAt')
+ value=json.loads(raw)
+ assert value['headSha']==SOURCE and value['status']=='completed' and value['conclusion']=='success'
+ assert {j['name'] for j in value['jobs']}==JOBS and len(value['jobs'])==4
+ assert all(j['conclusion']=='success' and j['status']=='completed' for j in value['jobs'])
+ events.append((value['event'],value['headBranch']))
+ receipts[f'run-{run_id}.json']=raw
+ receipts[f'run-{run_id}.log']=call('gh','run','view',str(run_id),'--log')
+ watcher=Path(f'/tmp/unimatch-expert500-v12-ci-{run_id}-watch-original.log')
+ receipts[watcher.name]=watcher.read_bytes()
+assert set(events)=={('push','task/expert-500-phase1'),('pull_request','task/expert-500-phase1'),('push',TAG)}
+receipts['recorder-original.py.txt']=Path(__file__).read_bytes()
+receipts['pr-current-original.json']=call('gh','pr','view','46','--json','state,isDraft,headRefOid,mergeable,url,body')
+assert json.loads(receipts['pr-current-original.json'])['headRefOid']==SOURCE
+TARGET.mkdir()
+records=[]
+for name,raw in receipts.items():
+ with (TARGET/name).open('xb') as out:out.write(raw)
+ records.append({'snapshot':name,'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw)})
+manifest={'schema_version':'1','recorded_at':datetime.now(UTC).isoformat(),'source_harness_sha':SOURCE,'frozen_ref':TAG,'status':'selected_source_branch_pr_tag_ci_success','run_ids':list(RUNS),'successful_jobs':12,'record_count':len(records),'records':records,'freeze_manifest_sha256':'382a7dcb1e2bc31f3883d95e9081551877b2eb2d54bc9639de734535e9b2b8b1','neutral_provenance_manifest_sha256':'ad3ea6a3ee9f2744d20c2e5a08df977abf473060923fb83db82b0c014bf41cb3','source_support_manifest_sha256':'2bea7da75df46141bc10d9960d7d95ebd87a0d980e8855ddbd9fd5a2c7166487','new_trial_started_by_recorder':False,'university_requests':0,'model_requests':0,'provider_queries':0,'reviewed62_unchanged':True,'signed_reviewed8_unselected':True,'heldout150_untouched':True}
+with (TARGET/'manifest.json').open('x') as out:out.write(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+for r in records:assert hashlib.sha256((TARGET/r['snapshot']).read_bytes()).hexdigest()==r['sha256']
+print(json.dumps({'target':str(TARGET),'records':len(records),'manifest_sha256':hashlib.sha256((TARGET/'manifest.json').read_bytes()).hexdigest(),'successful_jobs':12}))

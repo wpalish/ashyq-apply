@@ -1,0 +1,29 @@
+{
+  "results": [
+    {
+      "case_id": "delft",
+      "status": "failed",
+      "error": "ValueError: Separate selector workspace and nonempty sealed roots are required"
+    },
+    {
+      "case_id": "aalto",
+      "status": "failed",
+      "error": "ValueError: Separate selector workspace and nonempty sealed roots are required"
+    },
+    {
+      "case_id": "groningen",
+      "status": "failed",
+      "error": "ValueError: Separate selector workspace and nonempty sealed roots are required"
+    }
+  ],
+  "stopped": true,
+  "remaining_case_ids": [
+    "vienna",
+    "warsaw",
+    "ubc",
+    "toronto",
+    "hku",
+    "ntu",
+    "kaist"
+  ]
+}

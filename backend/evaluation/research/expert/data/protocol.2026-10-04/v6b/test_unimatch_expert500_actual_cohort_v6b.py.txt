@@ -1,0 +1,478 @@
+"""Actual ten-case V6b adapter preflight; no source/model/label/Git I/O.
+
+The real public COHORT remains a dict. Only the launcher's literal repository
+Path is redirected. Its script/module digests use the actual current sources;
+the private binding pointer alone is a harmless synthetic test fixture.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import importlib.util
+import json
+import pathlib
+import runpy
+import shutil
+import subprocess
+import sys
+from collections.abc import Iterator
+from dataclasses import dataclass, field, replace
+from pathlib import Path
+from typing import Any
+
+import pytest
+
+from evaluation.research import live
+from evaluation.research.expert import workspace_policy
+from evaluation.research.expert.blind_cli import selector_answer
+from evaluation.research.expert.journal import AcceptedJournal
+from evaluation.research.expert.research_timing import policy_limits as research_policy_limits
+from evaluation.research.expert.turn_policy import (
+    AstraLowEffortIsolation,
+    command_proof,
+    journal_schema_for_turn,
+    parse_turn_decision,
+    policy_limits,
+)
+from evaluation.research.expert.workspace_policy import (
+    allocate_workspaces,
+    selector_paths,
+    validate_selector_paths,
+    validate_workspaces,
+)
+from evaluation.research.live import COHORT
+
+REPO = Path(
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply"
+)
+LAUNCHER = Path("/tmp/unimatch-expert500-launch-v6b.py")
+PILOT = Path("/tmp/unimatch-expert500-journal-pilot-v6b.py")
+REPORT = Path("/tmp/unimatch-expert500-journal-report-v6b.py")
+LEGACY = Path("/tmp/unimatch-expert500-pilot-v1-frozen.py")
+HEAD = "b" * 40
+REF = "synthetic-v6b-frozen"
+MANIFEST_REL = Path("backend/evaluation/research/expert/data/protocol.2026-10-04/v6b/manifest.json")
+ARTIFACT_REL = Path("artifacts/expert-500/phase1-v6b-2026-10-04")
+
+
+def sha(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def write(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+
+
+def read(path: Path) -> Any:
+    return json.loads(path.read_text())
+
+
+def forbidden(*args: Any, **kwargs: Any) -> Any:
+    raise AssertionError("This actual-cohort preflight must not execute a source/model/Git process")
+
+
+@dataclass
+class ActualTrial:
+    repo: Path
+    root: Path
+    report: dict[str, Any]
+    parent: dict[str, Any]
+    manifest: dict[str, Any]
+    assignments: dict[str, str] = field(default_factory=dict)
+    receipts: dict[str, dict[str, Any]] = field(default_factory=dict)
+    allocated: list[Path] = field(default_factory=list)
+    allocation_arguments: list[Any] = field(default_factory=list)
+    git_arguments: list[list[str]] = field(default_factory=list)
+    redirected_paths: list[str] = field(default_factory=list)
+
+    def replace_contract(self) -> None:
+        """Rehash a synthetic contract so semantic guards, not hash drift, reject it."""
+        write(self.root / "workspace-locations.json", self.assignments)
+        write(self.root / "workspace-receipts.json", self.receipts)
+        trial = read(self.root / "trial.json")
+        trial["workspace_assignments_sha256"] = sha(self.root / "workspace-locations.json")
+        trial["workspace_receipts_sha256"] = sha(self.root / "workspace-receipts.json")
+        write(self.root / "trial.json", trial)
+        (self.root / "trial-at-baseline-start.json").write_bytes(
+            (self.root / "trial.json").read_bytes()
+        )
+
+
+@pytest.fixture
+def actual_trial(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator[ActualTrial]:
+    assert type(COHORT) is dict and len(COHORT) == 10
+    assert live.COHORT is COHORT
+    repo = tmp_path.resolve(strict=True) / "fixture-repo"
+    repo.mkdir()
+    report = runpy.run_path(str(REPORT))["main"].__globals__
+    parent = runpy.run_path(str(PILOT))["main"].__globals__
+    assert report["COHORT"] is COHORT and parent["legacy"]["COHORT"] is COHORT
+    parent["STOP"].clear()
+    report["read"] = read
+    parent.update(emit=lambda **kwargs: None, workflow=forbidden, select=forbidden)
+    binding = repo / "synthetic-binding-pointer.json"
+    write(binding, {"version": "synthetic-only", "bindings": []})
+    monkeypatch.setattr(live, "REVIEWED_BINDINGS", binding)
+    scripts = {str(path): sha(path) for path in (PILOT, REPORT, LEGACY, LAUNCHER)}
+    modules, files = {}, []
+    for name in sorted(report["PROTOCOL_MODULES"]):
+        spec = importlib.util.find_spec(name)
+        assert spec is not None and spec.origin is not None
+        source = Path(spec.origin)
+        relative = source.relative_to(REPO)
+        destination = repo / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, destination)
+        modules[name] = sha(source)
+        files.append({"path": str(relative), "sha256": sha(source), "module": name})
+    manifest = {
+        "protocol_version": "journal-v6b",
+        "scripts": scripts,
+        "modules": modules,
+        "files": files,
+        "binding_registry": {"path": str(binding), "sha256": sha(binding)},
+        "baseline_finalization_reserve_ms": 1000,
+        "effective_source_action_deadline_ms": 49000,
+        "requested_reasoning_effort": "low",
+        "turn_policy": policy_limits(),
+        "research_timing": research_policy_limits(),
+    }
+    write(repo / MANIFEST_REL, manifest)
+    fixture = ActualTrial(repo, repo / ARTIFACT_REL, report, parent, manifest)
+    real_allocate = workspace_policy.allocate_workspaces
+
+    def observed_allocate(case_ids: Any, **kwargs: Any) -> Any:
+        fixture.allocation_arguments.append(case_ids)
+        assignments, receipts = real_allocate(case_ids, **kwargs)
+        fixture.allocated.extend(Path(value) for value in assignments.values())
+        return assignments, receipts
+
+    def test_source(command: list[str], *, cwd: Path, text: bool) -> str:
+        assert cwd == repo and text is True
+        assert command in (["git", "rev-parse", "HEAD"], ["git", "rev-parse", REF])
+        fixture.git_arguments.append(command)
+        return HEAD + "\n"
+
+    monkeypatch.setattr(workspace_policy, "allocate_workspaces", observed_allocate)
+    monkeypatch.setattr(subprocess, "check_output", test_source)
+    monkeypatch.setattr(subprocess, "run", forbidden)
+    monkeypatch.setattr(subprocess, "Popen", forbidden)
+
+    def redirected_path(*args: Any, **kwargs: Any) -> Path:
+        if len(args) == 1 and str(args[0]) == str(REPO):
+            fixture.redirected_paths.append(str(args[0]))
+            return repo
+        return Path(*args, **kwargs)
+
+    try:
+        with monkeypatch.context() as launch_context:
+            launch_context.setattr(pathlib, "Path", redirected_path)
+            launch_context.setattr(
+                sys, "argv", [str(LAUNCHER), "--harness-sha", HEAD, "--frozen-ref", REF]
+            )
+            launched = runpy.run_path(str(LAUNCHER))
+        assert launched["COHORT"] is COHORT
+        fixture.assignments = read(fixture.root / "workspace-locations.json")
+        fixture.receipts = read(fixture.root / "workspace-receipts.json")
+        yield fixture
+    finally:
+        parent["STOP"].clear()
+        for workspace in fixture.allocated:
+            if workspace.is_symlink():
+                workspace.unlink()
+            elif workspace.exists():
+                shutil.rmtree(workspace)
+
+
+def mutate_contract(fixture: ActualTrial, mutation: str) -> None:
+    first, last = next(iter(COHORT)), next(reversed(COHORT))
+    if mutation == "missing_case":
+        fixture.assignments.pop(last)
+        fixture.receipts.pop(last)
+    elif mutation == "extra_case":
+        fixture.assignments["unexpected"] = fixture.assignments[first]
+        fixture.receipts["unexpected"] = dict(fixture.receipts[first])
+    elif mutation == "duplicate_workspace":
+        fixture.assignments[last] = fixture.assignments[first]
+        fixture.receipts[last] = dict(fixture.receipts[first])
+    elif mutation in {"dot_segment", "symlink_ancestor", "trailing_slash"}:
+        original = Path(fixture.assignments[first])
+        if mutation == "dot_segment":
+            alias = str(original.parent) + "/./" + original.name
+        elif mutation == "trailing_slash":
+            alias = str(original) + "/"
+        else:
+            parent_alias = fixture.repo / "workspace-parent-alias"
+            parent_alias.symlink_to(original.parent, target_is_directory=True)
+            alias = str(parent_alias / original.name)
+        assert Path(alias).samefile(original)
+        fixture.assignments[first] = alias
+        fixture.receipts[first]["path"] = alias
+    elif mutation in {"bool_device", "bool_inode", "wrong_inode"}:
+        field = "device" if mutation == "bool_device" else "inode"
+        fixture.receipts[first][field] = (
+            fixture.receipts[first][field] + 1 if mutation == "wrong_inode" else True
+        )
+    else:
+        raise AssertionError("Unknown synthetic mutation")
+    fixture.replace_contract()
+
+
+def run_baseline(
+    fixture: ActualTrial, monkeypatch: pytest.MonkeyPatch
+) -> tuple[list[Any], list[Any]]:
+    calls: list[Any] = []
+    verified: list[Any] = []
+    original_validate = fixture.parent["validate_workspaces"]
+
+    def observed_validate(assignments: Any, receipts: Any, *, case_ids: Any) -> Any:
+        paths = original_validate(assignments, receipts, case_ids=case_ids)
+        verified.append((case_ids, paths))
+        return paths
+
+    def no_source_baseline(repo: Path, ref: str, root: Path, case_id: str) -> dict[str, Any]:
+        assert repo == fixture.repo and ref == REF and root == fixture.root
+        assert len(verified) == 1 and verified[0][0] == tuple(COHORT)
+        assert verified[0][1][case_id] == Path(fixture.assignments[case_id])
+        calls.append((case_id, verified[0][1][case_id]))
+        return {"case_id": case_id, "status": "synthetic_no_source", "source_requests": 0}
+
+    fixture.parent.update(validate_workspaces=observed_validate, baseline=no_source_baseline)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            str(PILOT),
+            "--repo",
+            str(fixture.repo),
+            "--root",
+            str(fixture.root),
+            "--ref",
+            REF,
+            "--stage",
+            "baseline",
+        ],
+    )
+    fixture.parent["main"]()
+    return calls, verified
+
+
+def test_actual_dict_cohort_exposes_original_sequence_error_before_any_allocation(monkeypatch):
+    assert type(COHORT) is dict and len(COHORT) == 10
+    monkeypatch.setattr(workspace_policy.tempfile, "mkdtemp", forbidden)
+    with pytest.raises(ValueError, match="Case IDs must be a nonempty sequence"):
+        allocate_workspaces(COHORT)
+    with pytest.raises(ValueError, match="Case IDs must be a nonempty sequence"):
+        validate_workspaces({}, {}, case_ids=COHORT)
+
+
+def test_actual_launcher_freezes_all_ten_original_canonical_workspace_receipts(actual_trial):
+    fixture = actual_trial
+    assert fixture.redirected_paths == [str(REPO)]
+    assert fixture.allocation_arguments == [tuple(COHORT)]
+    assert fixture.git_arguments == [["git", "rev-parse", "HEAD"], ["git", "rev-parse", REF]]
+    assert tuple(fixture.assignments) == tuple(fixture.receipts) == tuple(COHORT)
+    verified = validate_workspaces(fixture.assignments, fixture.receipts, case_ids=tuple(COHORT))
+    assert (
+        len(verified) == 10
+        and len({(r["device"], r["inode"]) for r in fixture.receipts.values()}) == 10
+    )
+    for case_id, path in verified.items():
+        observed = path.stat()
+        assert path.resolve(strict=True) == path
+        assert fixture.receipts[case_id] == {
+            "path": str(path),
+            "device": observed.st_dev,
+            "inode": observed.st_ino,
+        }
+    trial = read(fixture.root / "trial.json")
+    assert (fixture.root / "trial.json").read_bytes() == (
+        fixture.root / "trial-at-baseline-start.json"
+    ).read_bytes()
+    assert trial["workspace_assignments_sha256"] == sha(fixture.root / "workspace-locations.json")
+    assert trial["workspace_receipts_sha256"] == sha(fixture.root / "workspace-receipts.json")
+    assert trial["harness_sha"] == HEAD and trial["frozen_ref"] == REF
+    assert trial["expert_protocol"]["manifest_file_sha256"] == sha(fixture.repo / MANIFEST_REL)
+    assert (
+        trial["scripts"] == fixture.manifest["scripts"]
+        and trial["modules"] == fixture.manifest["modules"]
+    )
+    assert not (fixture.root / "baseline-results.json").exists()
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="Actual macOS Isolation argv preflight")
+def test_actual_all_ten_workspace_schema_output_argv_and_completed_replay(actual_trial):
+    fixture = actual_trial
+    empty = AcceptedJournal.initial().sha256
+    paths = validate_workspaces(fixture.assignments, fixture.receipts, case_ids=tuple(COHORT))
+    for case_id, workspace in paths.items():
+        roots = [
+            REPO,
+            fixture.repo,
+            Path("/Users/wpalish/.codex/memories"),
+            Path("/Users/wpalish/.codex/sessions"),
+            Path("/Users/wpalish/.codex/attachments"),
+            Path("/Users/wpalish/Downloads"),
+            Path("/tmp/codex-remote-attachments"),
+            *[path for other, path in paths.items() if other != case_id],
+            *Path("/tmp").glob("unimatch-expert500*"),
+            *Path("/tmp").glob("test_unimatch_expert500*"),
+        ]
+        isolation = replace(
+            AstraLowEffortIsolation.local(workspace, roots),
+            codex_executable=fixture.report["FROZEN_CLI"],
+        )
+        schema, output = selector_paths(
+            fixture.assignments, fixture.receipts, case_id=case_id, turn=1, fresh_output=True
+        )
+        write(
+            schema,
+            journal_schema_for_turn(
+                journal_sha256=empty, canonical_university="Synthetic University", phase="bootstrap"
+            ),
+        )
+        validate_selector_paths(
+            fixture.assignments,
+            fixture.receipts,
+            case_id=case_id,
+            turn=1,
+            workspace=workspace,
+            schema=schema,
+            output=output,
+            fresh_output=True,
+        )
+        argv = isolation.command(schema, output=output, model="gpt-6-astra")
+        proof = command_proof(argv)
+        assert proof["command"] == argv and proof["model_reasoning_effort"] == "low"
+        assert argv[argv.index("-C") + 1] == str(workspace)
+        assert argv[argv.index("--output-schema") + 1] == str(workspace / "decision.schema.json")
+        assert argv[argv.index("--output-last-message") + 1] == str(workspace / "answer-01.json")
+        assert argv[3] == fixture.report["FROZEN_CLI"]
+        assert all(
+            str(path) in isolation.profile() for other, path in paths.items() if other != case_id
+        )
+        answer = {
+            "kind": "action",
+            "observation": "Synthetic serialization only; never dispatched.",
+            "journal_sha256": empty,
+            "facts": [],
+            "question_findings": [],
+            "action": {
+                "tool": "fetcher",
+                "url": "https://example.org/neutral",
+                "query": None,
+                "domains": [],
+                "max_results": None,
+                "source_step": None,
+                "page": None,
+                "offset": None,
+                "section_offset": None,
+                "link_offset": None,
+            },
+        }
+        write(output, answer)
+        raw = output.read_text()
+        events = "\n".join(
+            json.dumps(item)
+            for item in [
+                {"type": "thread.started", "thread_id": "synthetic-no-model"},
+                {"type": "turn.started"},
+                {
+                    "type": "item.completed",
+                    "item": {"id": "answer", "type": "agent_message", "text": raw},
+                },
+                {"type": "turn.completed", "usage": {"input_tokens": 1, "output_tokens": 1}},
+            ]
+        )
+        assert selector_answer(events, raw) == answer
+        assert (
+            parse_turn_decision(
+                raw,
+                journal_sha256=empty,
+                canonical_university="Synthetic University",
+                phase="bootstrap",
+            ).model_dump(mode="json")
+            == answer
+        )
+        validate_selector_paths(
+            fixture.assignments,
+            fixture.receipts,
+            case_id=case_id,
+            turn=1,
+            workspace=workspace,
+            schema=schema,
+            output=output,
+        )
+    assert fixture.allocation_arguments == [tuple(COHORT)]
+    assert not (fixture.root / "experts-results.json").exists()
+
+
+def test_actual_report_accepts_original_ten_workspace_contract_before_missing_baseline(
+    actual_trial,
+):
+    fixture = actual_trial
+    assert fixture.report["COHORT"] is COHORT
+    first = next(iter(COHORT))
+    with pytest.raises(FileNotFoundError) as failure:
+        fixture.report["validate_frozen_provenance"](fixture.root, PILOT)
+    assert str(fixture.root / "baseline" / first / "result.json") in str(failure.value)
+    assert not (fixture.root / "comparison.json").exists()
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "missing_case",
+        "extra_case",
+        "duplicate_workspace",
+        "dot_segment",
+        "symlink_ancestor",
+        "trailing_slash",
+        "bool_device",
+        "bool_inode",
+        "wrong_inode",
+    ],
+)
+def test_actual_report_rejects_self_consistent_ten_case_workspace_tampering(actual_trial, mutation):
+    fixture = actual_trial
+    mutate_contract(fixture, mutation)
+    assert (fixture.root / "trial.json").read_bytes() == (
+        fixture.root / "trial-at-baseline-start.json"
+    ).read_bytes()
+    with pytest.raises(ValueError):
+        fixture.report["validate_frozen_provenance"](fixture.root, PILOT)
+    assert not (fixture.root / "baseline-results.json").exists()
+
+
+def test_actual_parent_baseline_main_visits_exact_actual_ten_cases_without_source(
+    actual_trial, monkeypatch
+):
+    fixture = actual_trial
+    start_bytes = (fixture.root / "trial-at-baseline-start.json").read_bytes()
+    calls, verified = run_baseline(fixture, monkeypatch)
+    assert len(calls) == len({case for case, _ in calls}) == 10
+    assert {case for case, _ in calls} == set(COHORT)
+    assert verified[0][0] == tuple(COHORT)
+    assert verified[0][1] == {case: Path(path) for case, path in fixture.assignments.items()}
+    final = read(fixture.root / "baseline-results.json")
+    assert final["stopped"] is False and final["remaining_case_ids"] == []
+    assert len(final["results"]) == 10 and all(
+        item["source_requests"] == 0 for item in final["results"]
+    )
+    assert (fixture.root / "trial.json").read_bytes() == start_bytes
+    assert fixture.allocation_arguments == [tuple(COHORT)]
+
+
+@pytest.mark.parametrize(
+    "mutation", ["missing_case", "duplicate_workspace", "symlink_ancestor", "bool_inode"]
+)
+def test_actual_parent_baseline_main_rejects_contract_before_any_callback(
+    actual_trial, monkeypatch, mutation
+):
+    fixture = actual_trial
+    mutate_contract(fixture, mutation)
+    with pytest.raises(ValueError):
+        run_baseline(fixture, monkeypatch)
+    assert not (fixture.root / "baseline-results.json").exists()
+    assert not (fixture.root / "sealed-sentinel.txt").exists()

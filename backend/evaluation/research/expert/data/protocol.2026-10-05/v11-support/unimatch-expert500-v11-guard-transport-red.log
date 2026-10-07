@@ -1,0 +1,3997 @@
+FFFFFFFFFFFFFFFFFFF                                                      [100%]
+=================================== FAILURES ===================================
+_ test_v11_delivery_after_self_guard_precedes_cancel_and_retains_actual_counters _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_delivery_after_self_g0')
+
+    def test_v11_delivery_after_self_guard_precedes_cancel_and_retains_actual_counters(tmp_path):
+        h = V11TransportHarness(tmp_path, known_expiry=True, delivery_at=915)
+        assert h.run_workflow() == (123, HEAD)
+        receipt = h.receipt()
+        assert not h.stop.is_set()
+>       assert not any(call["argv"][2] == "cancel" for call in h.calls)
+E       assert not True
+E        +  where True = any(<generator object test_v11_delivery_after_self_guard_precedes_cancel_and_retains_actual_counters.<locals>.<genexpr> at 0x109987850>)
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1448: AssertionError
+______ test_v11_cancel_completion_race_retains_original_verified_artifact ______
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_cancel_completion_rac0')
+
+    def test_v11_cancel_completion_race_retains_original_verified_artifact(tmp_path):
+        h = V11TransportHarness(tmp_path, known_expiry=True, cancel_error=True)
+        assert h.run_workflow() == (123, HEAD)
+        receipt = h.receipt()
+        assert receipt["cancel_outcome"] == "RuntimeError"
+>       assert receipt["artifact_status"] == "verified" and receipt["source_counters_known"] is True
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'artifact_status'
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1462: KeyError
+_ test_v11_known_self_guard_missing_source_is_local_unknown_not_zero[download] _
+
+self = <test_unimatch_expert500_journal_pilot_v11.V11TransportHarness object at 0x109a486e0>
+argv = ['gh', 'run', 'view', '123', '--json', 'status,conclusion,headSha,url']
+kwargs = {'cwd': PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss0'), 'stdin': None, 'timeout': 60.0}
+
+    def command(self, argv, **kwargs):
+        if argv[:3] == ["gh", "run", "view"]:
+            if self.non_guard_error and not self.initial_error:
+                self.initial_error = True
+                self.clock.seconds = 900
+                self.calls.append({"argv": argv, "at": self.clock.seconds,
+                                   "timeout": kwargs["timeout"]})
+                raise RuntimeError("Original identity audit failed at the deadline")
+            if self.delivery_at is not None and self.clock.seconds >= self.delivery_at:
+                self.calls.append({"argv": argv, "at": self.clock.seconds,
+                                   "timeout": kwargs["timeout"]})
+                return json.dumps({"status": "completed", "conclusion": "success",
+                                   "headSha": HEAD, "url": "https://example.invalid/run/123"})
+        if argv[:3] == ["gh", "run", "download"] and self.download_absent:
+            self.calls.append({"argv": argv, "at": self.clock.seconds,
+                               "timeout": kwargs["timeout"]})
+            return ""  # Original cancelled run has no source artifact, not zero actions.
+>       result = self.original.command(argv, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1409: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Harness(root=PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11...ool": "fetcher", "url": "https://u.edu/admissions"}]}', 'case': 'u', 'run_tag': 'e500-b44edc4fa40f4a37'}, generated={})
+argv = ['gh', 'run', 'view', '123', '--json', 'status,conclusion,headSha,url']
+cwd = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss0')
+stdin = None, timeout = 60.0
+
+    def command(
+        self,
+        argv: list[str],
+        *,
+        cwd: Path,
+        stdin: str | None = None,
+        timeout: float = 60,
+    ) -> str:
+        assert cwd == self.root
+        assert 0 < timeout <= 60
+        self.calls.append({"argv": argv, "timeout": timeout, "at": self.clock.seconds})
+        if argv[:3] == ["gh", "workflow", "run"]:
+            assert len([call for call in self.calls if call["argv"][1] == "workflow"]) == 1
+            self.submitted = json.loads(stdin or "{}")
+            assert self.submitted["search_provider"] == "exa"
+            assert (self.destination / "dispatch.json").is_file()
+            if self.dispatch_expiry or self.ambiguous_dispatch:
+                self.clock.seconds = 900.0
+            if self.ambiguous_dispatch:
+                raise TimeoutError("Ambiguous source dispatch")
+            return ""
+        assert argv[:2] == ["gh", "run"] and argv[2] in {
+            "list",
+            "view",
+            "cancel",
+            "download",
+        }
+        if self.audit_overrun:
+            self.clock.advance(60.001)
+            return "[]"
+        if argv[2] == "list":
+            if self.unidentified:
+                return "[]"
+            match = {
+                "databaseId": True if self.invalid_identity else RUN,
+                "displayTitle": "Synthetic capture " + self.submitted["run_tag"],
+                "headSha": HEAD,
+                "status": "in_progress",
+                "conclusion": None,
+            }
+            # A different existing run cannot be selected by list ordering.
+            result = [{**match, "databaseId": 999, "displayTitle": "other-tag"}, match]
+            if self.duplicate_tag:
+                result.append({**match, "databaseId": 456})
+            return json.dumps(result)
+        assert argv[3] == str(RUN)
+        if argv[2] == "view":
+            if self.known_expiry and self.clock.seconds < 900:
+                self.clock.seconds = 900.0
+>               raise TimeoutError("Known source run expired")
+E               TimeoutError: Known source run expired
+
+/tmp/test_unimatch_expert500_workflow_v10.py:242: TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+repo = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss0')
+ref = 'frozen-ref', case_id = 'u'
+inputs = {'runner': 'ubuntu-latest', 'seconds_per_case': '120', 'max_pages': '60', 'search_provider': 'exa', ...}
+destination = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss0/controller-01')
+wall_guard = WallGuard(started_at=datetime.datetime(2026, 10, 4, 0, 0, tzinfo=datetime.timezone.utc), deadline_at=datetime.datetime(2026, 10, 4, 0, 15, tzinfo=datetime.timezone.utc))
+
+    def workflow(
+        repo: Path,
+        ref: str,
+        case_id: str,
+        inputs: dict[str, str],
+        destination: Path,
+        *,
+        wall_guard: WallGuard | None = None,
+    ) -> tuple[int, str]:
+        def claim_destination() -> None:
+            # The exact workflow is also replayed independently of parent setup.
+            try:
+                destination.mkdir(parents=True, exist_ok=False)
+            except FileExistsError:
+                STOP.set()
+                raise RuntimeError(
+                    "Source transport cannot reuse a case/controller destination"
+                ) from None
+    
+        if inputs.get("search_provider", "exa") != "exa":
+            STOP.set()
+            raise ValueError("V11 requires its pinned Exa search provider")
+        inputs = {**inputs, "search_provider": "exa"}
+        if inputs.get("mode") == "expert_baseline":
+            if STOP.is_set():
+                raise RuntimeError("Batch stopped before baseline dispatch")
+            claim_destination()
+            return legacy["workflow"](repo, ref, case_id, inputs, destination)
+        if wall_guard is None or STOP.is_set():
+            raise RuntimeError("Expert source requires its immutable guard and a live batch")
+        import uuid
+    
+        from evaluation.research.expert.network_report import (
+            SourceCounters,
+            validate_source_run,
+        )
+    
+        # A clean expiry must leave no apparent controller run for the raw replay.
+        if wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0:
+            raise TimeoutError("wall_guard_exhausted")
+    
+        plan = json.loads(inputs["plan"])
+        if (
+            not isinstance(plan, dict)
+            or inputs.get("mode") != "expert_actions"
+            or plan.get("provider") != "exa"
+        ):
+            raise RuntimeError("Expert transport requires its original controlled action plan")
+        run_id: int | None = None
+        head_sha: str | None = None
+        state: dict[str, Any] = {}
+        dispatch_attempted = False
+        audit_began: float | None = None
+        audit_started_at = None
+        cancel_attempted = False
+        cancel_outcome = None
+        artifact_proof: dict[str, Any] = {}
+        trigger_error = None
+    
+        def audit_remaining() -> float:
+            assert audit_began is not None
+            seconds = 60.0 - (time.monotonic() - audit_began)
+            if seconds <= 0:
+                raise TimeoutError("transport_audit_exhausted")
+            return seconds
+    
+        def remaining() -> float:
+            if audit_began is not None:
+                return audit_remaining()
+            seconds = wall_guard.remaining_seconds(now=datetime.now(UTC))
+            if seconds <= 0:
+                raise TimeoutError("wall_guard_exhausted")
+            return seconds
+    
+        def gh(argv: list[str], *, stdin: str | None = None) -> str:
+            nonlocal dispatch_attempted
+            timeout = min(60.0, remaining())
+            if audit_began is not None:
+                if argv[:2] != ["gh", "run"] or argv[2] not in {
+                    "list",
+                    "view",
+                    "cancel",
+                    "download",
+                }:
+                    raise RuntimeError("Transport audit cannot dispatch a new source action")
+            elif argv[:3] == ["gh", "workflow", "run"]:
+                if STOP.is_set():
+                    raise RuntimeError("Batch stopped before source dispatch")
+                timeout = min(timeout, remaining())
+                # Once the command is invoked even an exception is an ambiguous
+                # dispatch. Only identifying/auditing this tag is permitted next.
+                dispatch_attempted = True
+            result = legacy["command"](argv, cwd=repo, stdin=stdin, timeout=timeout)
+            if audit_began is not None:
+                audit_remaining()
+            return result
+    
+        tag = "e500-" + uuid.uuid4().hex[:16]
+        inputs = {
+            "runner": "ubuntu-latest",
+            "seconds_per_case": "120",
+            "max_pages": "60",
+            "search_provider": "exa",
+            **inputs,
+            "case": case_id,
+            "run_tag": tag,
+        }
+    
+        def receipt(status: str, *, error: str | None = None) -> None:
+            began = audit_began
+            elapsed = math.ceil((time.monotonic() - began) * 1000) if began is not None else 0
+            save(
+                destination / "transport-audit.json",
+                {
+                    "status": status,
+                    "case_id": case_id,
+                    "provider": "exa",
+                    "ref": ref,
+                    "run_tag": tag,
+                    **wall_guard.as_dict(),
+                    "dispatch_attempted": dispatch_attempted,
+                    "dispatch_count": int(dispatch_attempted),
+                    "audit_only": audit_began is not None,
+                    "audit_window_ms": 60000 if audit_began is not None else 0,
+                    "audit_started_at": audit_started_at,
+                    "audit_elapsed_ms": elapsed,
+                    "guard_exhausted": wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0,
+                    "trigger_error": trigger_error,
+                    "error": error,
+                    "run_id": run_id,
+                    "head_sha": head_sha,
+                    "run_status": state.get("status"),
+                    "conclusion": state.get("conclusion"),
+                    "cancel_attempted": cancel_attempted,
+                    "cancel_outcome": cancel_outcome,
+                    "artifact_verified": bool(artifact_proof),
+                    **artifact_proof,
+                },
+            )
+    
+        def identify() -> None:
+            nonlocal run_id, head_sha
+            while run_id is None:
+                runs = json.loads(
+                    gh(
+                        [
+                            "gh",
+                            "run",
+                            "list",
+                            "--workflow",
+                            "benchmark-capture.yml",
+                            "--branch",
+                            ref,
+                            "--event",
+                            "workflow_dispatch",
+                            "--limit",
+                            "40",
+                            "--json",
+                            "databaseId,displayTitle,headSha,status,conclusion",
+                        ]
+                    )
+                )
+                matches = [r for r in runs if r["displayTitle"].endswith(tag)]
+                if len(matches) > 1:
+                    raise RuntimeError("Dispatched tag identifies more than one workflow")
+                if matches:
+                    candidate_id, candidate_sha = matches[0]["databaseId"], matches[0]["headSha"]
+                    if (
+                        type(candidate_id) is not int
+                        or candidate_id <= 0
+                        or type(candidate_sha) is not str
+                        or len(candidate_sha) != 40
+                        or any(c not in "0123456789abcdef" for c in candidate_sha)
+                    ):
+                        raise RuntimeError("Dispatched workflow identity is invalid")
+                    run_id, head_sha = candidate_id, candidate_sha
+                    save(
+                        destination / "run.json",
+                        {"run_id": run_id, "head_sha": head_sha, "tag": tag},
+                    )
+                    emit(
+                        case=case_id,
+                        mode=inputs["mode"],
+                        run_id=run_id,
+                        state="dispatched",
+                        source=head_sha,
+                    )
+                    return
+                if audit_began is None and STOP.is_set():
+                    raise RuntimeError("Batch stopped before dispatched run could be identified")
+                time.sleep(min(5.0, remaining()))
+    
+        def completed() -> None:
+            nonlocal state, cancel_attempted, cancel_outcome
+            while True:
+                state = json.loads(
+                    gh(
+                        [
+                            "gh",
+                            "run",
+                            "view",
+                            str(run_id),
+                            "--json",
+                            "status,conclusion,headSha,url",
+                        ]
+                    )
+                )
+                if state["headSha"] != head_sha:
+                    raise RuntimeError("Workflow source changed unexpectedly")
+                if state["status"] == "completed":
+                    save(destination / "run.json", {"run_id": run_id, "tag": tag, **state})
+                    return
+                if audit_began is not None and not cancel_attempted:
+                    cancel_attempted = True
+                    try:
+                        gh(["gh", "run", "cancel", str(run_id)])
+                        cancel_outcome = "requested"
+                    except Exception as error:
+                        # A completion/cancel race can still yield a complete
+                        # original artifact; never retry this cancellation.
+                        cancel_outcome = type(error).__name__
+                    continue
+                if audit_began is None and STOP.is_set():
+                    raise RuntimeError("Canceled after batch provider429")
+                time.sleep(min(5.0 if audit_began is not None else 10.0, remaining()))
+    
+        def verify_artifact(folder: Path) -> dict[str, Any]:
+            remaining()
+            if folder.is_symlink() or not folder.is_dir():
+                raise RuntimeError("Original controlled artifact is unavailable")
+            logs = folder / "logs"
+            if logs.is_symlink() or not logs.is_dir():
+                raise RuntimeError("Original controlled raw logs are unavailable")
+    
+            def original(path: Path) -> bytes:
+                if path.is_symlink() or not path.is_file():
+                    raise RuntimeError("Original controlled artifact must contain regular files")
+                return path.read_bytes()
+    
+            if json.loads(original(folder / "plan.json")) != plan:
+                raise RuntimeError("Original artifact changed the dispatched action plan")
+            summary_bytes = original(folder / "summary.json")
+            summary = json.loads(summary_bytes)
+            produced, raw_logs = summary.get("actions"), summary.get("raw_logs")
+            if not isinstance(produced, list) or len(produced) != 1 or not isinstance(raw_logs, dict):
+                raise RuntimeError("Original controller action/checkpoint is incomplete")
+            if {path.name for path in logs.iterdir()} != set(raw_logs):
+                raise RuntimeError("Original artifact has unaccounted or missing raw source logs")
+            records = {}
+            provider_failures = []
+            for name, expected_sha in raw_logs.items():
+                if (
+                    type(name) is not str
+                    or name in {"", ".", ".."}
+                    or Path(name).name != name
+                    or "/" in name
+                    or "\\" in name
+                ):
+                    raise RuntimeError("Original raw source paths must be confined")
+                data = original(logs / name)
+                if hashlib.sha256(data).hexdigest() != expected_sha:
+                    raise RuntimeError("Original controlled raw source hash changed")
+                records[name] = json.loads(data)
+                raw = records[name]
+                if raw.get("provider") != "exa" or raw.get("case_id") != case_id:
+                    raise RuntimeError("Original raw source provider/case identity changed")
+                if (
+                    raw.get("executed") is True
+                    and raw.get("request", {}).get("tool") == "search_provider"
+                ):
+                    response = raw.get("response", {})
+                    statuses = {
+                        response.get(key)
+                        for key in ("http_status", "status_code")
+                        if type(response.get(key)) is int and response[key] in {401, 402, 403, 429}
+                    }
+                    for status in sorted(statuses):
+                        provider_failures.append(
+                            {
+                                "provider": "exa",
+                                "http_status": status,
+                                "raw_log_path": name,
+                                "raw_log_sha256": expected_sha,
+                            }
+                        )
+            name = produced[0]["raw_log_path"]
+            resume = plan.get("resume_summary")
+            prior = (
+                SourceCounters(
+                    resume["final"]["fetcher_calls"],
+                    resume["final"]["search_queries"],
+                    resume["final"]["elapsed_ms"],
+                )
+                if resume
+                else SourceCounters()
+            )
+            counters = validate_source_run(
+                plan,
+                summary,
+                records[name],
+                case_id=case_id,
+                official_domains=plan["official_domains"],
+                wall_guard=wall_guard,
+                raw_sha256=raw_logs[name],
+                prior=prior,
+                prior_summary=resume,
+                provider="exa",
+            )
+            remaining()
+            if provider_failures:
+                STOP.set()
+            return {
+                "summary_sha256": hashlib.sha256(summary_bytes).hexdigest(),
+                "plan_sha256": hashlib.sha256(original(folder / "plan.json")).hexdigest(),
+                "raw_logs": raw_logs,
+                "source_counters": counters.as_dict(),
+                "source_stop_reason": summary["final"].get("stop_reason"),
+                "provider_failures": provider_failures,
+            }
+    
+        def artifact() -> None:
+            nonlocal artifact_proof
+            folder = destination / "artifact"
+            if folder.exists():
+                try:
+                    artifact_proof = verify_artifact(folder)
+                    return
+                except Exception:
+                    if audit_began is None:
+                        raise
+            download = destination / "artifact-audit" if folder.exists() else folder
+            gh(
+                [
+                    "gh",
+                    "run",
+                    "download",
+                    str(run_id),
+                    "--name",
+                    f"expert-recovery-{run_id}",
+                    "--dir",
+                    str(download),
+                ]
+            )
+            artifact_proof = verify_artifact(download)
+            if download != folder:
+                folder.rename(destination / "artifact-incomplete")
+                download.rename(folder)
+            remaining()
+    
+        claim_destination()
+        save(
+            destination / "dispatch.json",
+            {"ref": ref, "inputs": inputs, **wall_guard.as_dict()},
+        )
+        try:
+            gh(
+                ["gh", "workflow", "run", "benchmark-capture.yml", "--ref", ref, "--json"],
+                stdin=json.dumps(inputs),
+            )
+            identify()
+            completed()
+            artifact()
+            if run_id is None or head_sha is None:
+                raise RuntimeError("Original dispatched workflow identity is unavailable")
+            receipt("completed")
+            return run_id, head_sha
+        except Exception as error:
+            trigger_error = type(error).__name__
+            if not dispatch_attempted:
+                STOP.set()
+                receipt("incomplete", error=trigger_error)
+                raise RuntimeError(
+                    "Source receipt exists but no dispatch outcome is auditable"
+                ) from error
+            audit_began = time.monotonic()
+            audit_started_at = datetime.now(UTC).isoformat()
+            try:
+                identify()
+                completed()
+>               artifact()
+
+/tmp/unimatch-expert500-journal-pilot-v11.py:708: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-pilot-v11.py:672: in artifact
+    artifact_proof = verify_artifact(download)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+folder = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss0/controller-01/artifact')
+
+    def verify_artifact(folder: Path) -> dict[str, Any]:
+        remaining()
+        if folder.is_symlink() or not folder.is_dir():
+>           raise RuntimeError("Original controlled artifact is unavailable")
+E           RuntimeError: Original controlled artifact is unavailable
+
+/tmp/unimatch-expert500-journal-pilot-v11.py:558: RuntimeError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss0')
+missing = 'download'
+
+    @pytest.mark.parametrize("missing", ["download", "summary", "raw"])
+    def test_v11_known_self_guard_missing_source_is_local_unknown_not_zero(tmp_path, missing):
+        h = V11TransportHarness(tmp_path, known_expiry=True,
+                                download_absent=missing == "download",
+                                artifact_kind="missing" if missing == "summary" else "valid",
+                                missing_raw=missing == "raw")
+        with pytest.raises(TimeoutError) as raised:
+>           h.run_workflow()
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1475: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1436: in run_workflow
+    return self.runtime["workflow"](
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+repo = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss0')
+ref = 'frozen-ref', case_id = 'u'
+inputs = {'runner': 'ubuntu-latest', 'seconds_per_case': '120', 'max_pages': '60', 'search_provider': 'exa', ...}
+destination = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss0/controller-01')
+wall_guard = WallGuard(started_at=datetime.datetime(2026, 10, 4, 0, 0, tzinfo=datetime.timezone.utc), deadline_at=datetime.datetime(2026, 10, 4, 0, 15, tzinfo=datetime.timezone.utc))
+
+    def workflow(
+        repo: Path,
+        ref: str,
+        case_id: str,
+        inputs: dict[str, str],
+        destination: Path,
+        *,
+        wall_guard: WallGuard | None = None,
+    ) -> tuple[int, str]:
+        def claim_destination() -> None:
+            # The exact workflow is also replayed independently of parent setup.
+            try:
+                destination.mkdir(parents=True, exist_ok=False)
+            except FileExistsError:
+                STOP.set()
+                raise RuntimeError(
+                    "Source transport cannot reuse a case/controller destination"
+                ) from None
+    
+        if inputs.get("search_provider", "exa") != "exa":
+            STOP.set()
+            raise ValueError("V11 requires its pinned Exa search provider")
+        inputs = {**inputs, "search_provider": "exa"}
+        if inputs.get("mode") == "expert_baseline":
+            if STOP.is_set():
+                raise RuntimeError("Batch stopped before baseline dispatch")
+            claim_destination()
+            return legacy["workflow"](repo, ref, case_id, inputs, destination)
+        if wall_guard is None or STOP.is_set():
+            raise RuntimeError("Expert source requires its immutable guard and a live batch")
+        import uuid
+    
+        from evaluation.research.expert.network_report import (
+            SourceCounters,
+            validate_source_run,
+        )
+    
+        # A clean expiry must leave no apparent controller run for the raw replay.
+        if wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0:
+            raise TimeoutError("wall_guard_exhausted")
+    
+        plan = json.loads(inputs["plan"])
+        if (
+            not isinstance(plan, dict)
+            or inputs.get("mode") != "expert_actions"
+            or plan.get("provider") != "exa"
+        ):
+            raise RuntimeError("Expert transport requires its original controlled action plan")
+        run_id: int | None = None
+        head_sha: str | None = None
+        state: dict[str, Any] = {}
+        dispatch_attempted = False
+        audit_began: float | None = None
+        audit_started_at = None
+        cancel_attempted = False
+        cancel_outcome = None
+        artifact_proof: dict[str, Any] = {}
+        trigger_error = None
+    
+        def audit_remaining() -> float:
+            assert audit_began is not None
+            seconds = 60.0 - (time.monotonic() - audit_began)
+            if seconds <= 0:
+                raise TimeoutError("transport_audit_exhausted")
+            return seconds
+    
+        def remaining() -> float:
+            if audit_began is not None:
+                return audit_remaining()
+            seconds = wall_guard.remaining_seconds(now=datetime.now(UTC))
+            if seconds <= 0:
+                raise TimeoutError("wall_guard_exhausted")
+            return seconds
+    
+        def gh(argv: list[str], *, stdin: str | None = None) -> str:
+            nonlocal dispatch_attempted
+            timeout = min(60.0, remaining())
+            if audit_began is not None:
+                if argv[:2] != ["gh", "run"] or argv[2] not in {
+                    "list",
+                    "view",
+                    "cancel",
+                    "download",
+                }:
+                    raise RuntimeError("Transport audit cannot dispatch a new source action")
+            elif argv[:3] == ["gh", "workflow", "run"]:
+                if STOP.is_set():
+                    raise RuntimeError("Batch stopped before source dispatch")
+                timeout = min(timeout, remaining())
+                # Once the command is invoked even an exception is an ambiguous
+                # dispatch. Only identifying/auditing this tag is permitted next.
+                dispatch_attempted = True
+            result = legacy["command"](argv, cwd=repo, stdin=stdin, timeout=timeout)
+            if audit_began is not None:
+                audit_remaining()
+            return result
+    
+        tag = "e500-" + uuid.uuid4().hex[:16]
+        inputs = {
+            "runner": "ubuntu-latest",
+            "seconds_per_case": "120",
+            "max_pages": "60",
+            "search_provider": "exa",
+            **inputs,
+            "case": case_id,
+            "run_tag": tag,
+        }
+    
+        def receipt(status: str, *, error: str | None = None) -> None:
+            began = audit_began
+            elapsed = math.ceil((time.monotonic() - began) * 1000) if began is not None else 0
+            save(
+                destination / "transport-audit.json",
+                {
+                    "status": status,
+                    "case_id": case_id,
+                    "provider": "exa",
+                    "ref": ref,
+                    "run_tag": tag,
+                    **wall_guard.as_dict(),
+                    "dispatch_attempted": dispatch_attempted,
+                    "dispatch_count": int(dispatch_attempted),
+                    "audit_only": audit_began is not None,
+                    "audit_window_ms": 60000 if audit_began is not None else 0,
+                    "audit_started_at": audit_started_at,
+                    "audit_elapsed_ms": elapsed,
+                    "guard_exhausted": wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0,
+                    "trigger_error": trigger_error,
+                    "error": error,
+                    "run_id": run_id,
+                    "head_sha": head_sha,
+                    "run_status": state.get("status"),
+                    "conclusion": state.get("conclusion"),
+                    "cancel_attempted": cancel_attempted,
+                    "cancel_outcome": cancel_outcome,
+                    "artifact_verified": bool(artifact_proof),
+                    **artifact_proof,
+                },
+            )
+    
+        def identify() -> None:
+            nonlocal run_id, head_sha
+            while run_id is None:
+                runs = json.loads(
+                    gh(
+                        [
+                            "gh",
+                            "run",
+                            "list",
+                            "--workflow",
+                            "benchmark-capture.yml",
+                            "--branch",
+                            ref,
+                            "--event",
+                            "workflow_dispatch",
+                            "--limit",
+                            "40",
+                            "--json",
+                            "databaseId,displayTitle,headSha,status,conclusion",
+                        ]
+                    )
+                )
+                matches = [r for r in runs if r["displayTitle"].endswith(tag)]
+                if len(matches) > 1:
+                    raise RuntimeError("Dispatched tag identifies more than one workflow")
+                if matches:
+                    candidate_id, candidate_sha = matches[0]["databaseId"], matches[0]["headSha"]
+                    if (
+                        type(candidate_id) is not int
+                        or candidate_id <= 0
+                        or type(candidate_sha) is not str
+                        or len(candidate_sha) != 40
+                        or any(c not in "0123456789abcdef" for c in candidate_sha)
+                    ):
+                        raise RuntimeError("Dispatched workflow identity is invalid")
+                    run_id, head_sha = candidate_id, candidate_sha
+                    save(
+                        destination / "run.json",
+                        {"run_id": run_id, "head_sha": head_sha, "tag": tag},
+                    )
+                    emit(
+                        case=case_id,
+                        mode=inputs["mode"],
+                        run_id=run_id,
+                        state="dispatched",
+                        source=head_sha,
+                    )
+                    return
+                if audit_began is None and STOP.is_set():
+                    raise RuntimeError("Batch stopped before dispatched run could be identified")
+                time.sleep(min(5.0, remaining()))
+    
+        def completed() -> None:
+            nonlocal state, cancel_attempted, cancel_outcome
+            while True:
+                state = json.loads(
+                    gh(
+                        [
+                            "gh",
+                            "run",
+                            "view",
+                            str(run_id),
+                            "--json",
+                            "status,conclusion,headSha,url",
+                        ]
+                    )
+                )
+                if state["headSha"] != head_sha:
+                    raise RuntimeError("Workflow source changed unexpectedly")
+                if state["status"] == "completed":
+                    save(destination / "run.json", {"run_id": run_id, "tag": tag, **state})
+                    return
+                if audit_began is not None and not cancel_attempted:
+                    cancel_attempted = True
+                    try:
+                        gh(["gh", "run", "cancel", str(run_id)])
+                        cancel_outcome = "requested"
+                    except Exception as error:
+                        # A completion/cancel race can still yield a complete
+                        # original artifact; never retry this cancellation.
+                        cancel_outcome = type(error).__name__
+                    continue
+                if audit_began is None and STOP.is_set():
+                    raise RuntimeError("Canceled after batch provider429")
+                time.sleep(min(5.0 if audit_began is not None else 10.0, remaining()))
+    
+        def verify_artifact(folder: Path) -> dict[str, Any]:
+            remaining()
+            if folder.is_symlink() or not folder.is_dir():
+                raise RuntimeError("Original controlled artifact is unavailable")
+            logs = folder / "logs"
+            if logs.is_symlink() or not logs.is_dir():
+                raise RuntimeError("Original controlled raw logs are unavailable")
+    
+            def original(path: Path) -> bytes:
+                if path.is_symlink() or not path.is_file():
+                    raise RuntimeError("Original controlled artifact must contain regular files")
+                return path.read_bytes()
+    
+            if json.loads(original(folder / "plan.json")) != plan:
+                raise RuntimeError("Original artifact changed the dispatched action plan")
+            summary_bytes = original(folder / "summary.json")
+            summary = json.loads(summary_bytes)
+            produced, raw_logs = summary.get("actions"), summary.get("raw_logs")
+            if not isinstance(produced, list) or len(produced) != 1 or not isinstance(raw_logs, dict):
+                raise RuntimeError("Original controller action/checkpoint is incomplete")
+            if {path.name for path in logs.iterdir()} != set(raw_logs):
+                raise RuntimeError("Original artifact has unaccounted or missing raw source logs")
+            records = {}
+            provider_failures = []
+            for name, expected_sha in raw_logs.items():
+                if (
+                    type(name) is not str
+                    or name in {"", ".", ".."}
+                    or Path(name).name != name
+                    or "/" in name
+                    or "\\" in name
+                ):
+                    raise RuntimeError("Original raw source paths must be confined")
+                data = original(logs / name)
+                if hashlib.sha256(data).hexdigest() != expected_sha:
+                    raise RuntimeError("Original controlled raw source hash changed")
+                records[name] = json.loads(data)
+                raw = records[name]
+                if raw.get("provider") != "exa" or raw.get("case_id") != case_id:
+                    raise RuntimeError("Original raw source provider/case identity changed")
+                if (
+                    raw.get("executed") is True
+                    and raw.get("request", {}).get("tool") == "search_provider"
+                ):
+                    response = raw.get("response", {})
+                    statuses = {
+                        response.get(key)
+                        for key in ("http_status", "status_code")
+                        if type(response.get(key)) is int and response[key] in {401, 402, 403, 429}
+                    }
+                    for status in sorted(statuses):
+                        provider_failures.append(
+                            {
+                                "provider": "exa",
+                                "http_status": status,
+                                "raw_log_path": name,
+                                "raw_log_sha256": expected_sha,
+                            }
+                        )
+            name = produced[0]["raw_log_path"]
+            resume = plan.get("resume_summary")
+            prior = (
+                SourceCounters(
+                    resume["final"]["fetcher_calls"],
+                    resume["final"]["search_queries"],
+                    resume["final"]["elapsed_ms"],
+                )
+                if resume
+                else SourceCounters()
+            )
+            counters = validate_source_run(
+                plan,
+                summary,
+                records[name],
+                case_id=case_id,
+                official_domains=plan["official_domains"],
+                wall_guard=wall_guard,
+                raw_sha256=raw_logs[name],
+                prior=prior,
+                prior_summary=resume,
+                provider="exa",
+            )
+            remaining()
+            if provider_failures:
+                STOP.set()
+            return {
+                "summary_sha256": hashlib.sha256(summary_bytes).hexdigest(),
+                "plan_sha256": hashlib.sha256(original(folder / "plan.json")).hexdigest(),
+                "raw_logs": raw_logs,
+                "source_counters": counters.as_dict(),
+                "source_stop_reason": summary["final"].get("stop_reason"),
+                "provider_failures": provider_failures,
+            }
+    
+        def artifact() -> None:
+            nonlocal artifact_proof
+            folder = destination / "artifact"
+            if folder.exists():
+                try:
+                    artifact_proof = verify_artifact(folder)
+                    return
+                except Exception:
+                    if audit_began is None:
+                        raise
+            download = destination / "artifact-audit" if folder.exists() else folder
+            gh(
+                [
+                    "gh",
+                    "run",
+                    "download",
+                    str(run_id),
+                    "--name",
+                    f"expert-recovery-{run_id}",
+                    "--dir",
+                    str(download),
+                ]
+            )
+            artifact_proof = verify_artifact(download)
+            if download != folder:
+                folder.rename(destination / "artifact-incomplete")
+                download.rename(folder)
+            remaining()
+    
+        claim_destination()
+        save(
+            destination / "dispatch.json",
+            {"ref": ref, "inputs": inputs, **wall_guard.as_dict()},
+        )
+        try:
+            gh(
+                ["gh", "workflow", "run", "benchmark-capture.yml", "--ref", ref, "--json"],
+                stdin=json.dumps(inputs),
+            )
+            identify()
+            completed()
+            artifact()
+            if run_id is None or head_sha is None:
+                raise RuntimeError("Original dispatched workflow identity is unavailable")
+            receipt("completed")
+            return run_id, head_sha
+        except Exception as error:
+            trigger_error = type(error).__name__
+            if not dispatch_attempted:
+                STOP.set()
+                receipt("incomplete", error=trigger_error)
+                raise RuntimeError(
+                    "Source receipt exists but no dispatch outcome is auditable"
+                ) from error
+            audit_began = time.monotonic()
+            audit_started_at = datetime.now(UTC).isoformat()
+            try:
+                identify()
+                completed()
+                artifact()
+                if run_id is None or head_sha is None:
+                    raise RuntimeError("Original dispatched workflow identity is unavailable")
+                receipt("recovered")
+                audit_remaining()
+                return run_id, head_sha
+            except Exception as audit_error:
+                STOP.set()
+                receipt("incomplete", error=type(audit_error).__name__)
+>               raise RuntimeError(
+                    "Source dispatch transport audit is incomplete; batch stopped"
+                ) from audit_error
+E               RuntimeError: Source dispatch transport audit is incomplete; batch stopped
+
+/tmp/unimatch-expert500-journal-pilot-v11.py:717: RuntimeError
+_ test_v11_known_self_guard_missing_source_is_local_unknown_not_zero[summary] __
+
+self = <test_unimatch_expert500_journal_pilot_v11.V11TransportHarness object at 0x109ab72f0>
+argv = ['gh', 'run', 'view', '123', '--json', 'status,conclusion,headSha,url']
+kwargs = {'cwd': PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss1'), 'stdin': None, 'timeout': 60.0}
+
+    def command(self, argv, **kwargs):
+        if argv[:3] == ["gh", "run", "view"]:
+            if self.non_guard_error and not self.initial_error:
+                self.initial_error = True
+                self.clock.seconds = 900
+                self.calls.append({"argv": argv, "at": self.clock.seconds,
+                                   "timeout": kwargs["timeout"]})
+                raise RuntimeError("Original identity audit failed at the deadline")
+            if self.delivery_at is not None and self.clock.seconds >= self.delivery_at:
+                self.calls.append({"argv": argv, "at": self.clock.seconds,
+                                   "timeout": kwargs["timeout"]})
+                return json.dumps({"status": "completed", "conclusion": "success",
+                                   "headSha": HEAD, "url": "https://example.invalid/run/123"})
+        if argv[:3] == ["gh", "run", "download"] and self.download_absent:
+            self.calls.append({"argv": argv, "at": self.clock.seconds,
+                               "timeout": kwargs["timeout"]})
+            return ""  # Original cancelled run has no source artifact, not zero actions.
+>       result = self.original.command(argv, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1409: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Harness(root=PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11...log_number': 2, 'wall_elapsed_ms': 10000, 'completed_at': '2026-10-04T00:00:10+00:00', 'wall_guard_exhausted': False}})
+argv = ['gh', 'run', 'view', '123', '--json', 'status,conclusion,headSha,url']
+cwd = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss1')
+stdin = None, timeout = 60.0
+
+    def command(
+        self,
+        argv: list[str],
+        *,
+        cwd: Path,
+        stdin: str | None = None,
+        timeout: float = 60,
+    ) -> str:
+        assert cwd == self.root
+        assert 0 < timeout <= 60
+        self.calls.append({"argv": argv, "timeout": timeout, "at": self.clock.seconds})
+        if argv[:3] == ["gh", "workflow", "run"]:
+            assert len([call for call in self.calls if call["argv"][1] == "workflow"]) == 1
+            self.submitted = json.loads(stdin or "{}")
+            assert self.submitted["search_provider"] == "exa"
+            assert (self.destination / "dispatch.json").is_file()
+            if self.dispatch_expiry or self.ambiguous_dispatch:
+                self.clock.seconds = 900.0
+            if self.ambiguous_dispatch:
+                raise TimeoutError("Ambiguous source dispatch")
+            return ""
+        assert argv[:2] == ["gh", "run"] and argv[2] in {
+            "list",
+            "view",
+            "cancel",
+            "download",
+        }
+        if self.audit_overrun:
+            self.clock.advance(60.001)
+            return "[]"
+        if argv[2] == "list":
+            if self.unidentified:
+                return "[]"
+            match = {
+                "databaseId": True if self.invalid_identity else RUN,
+                "displayTitle": "Synthetic capture " + self.submitted["run_tag"],
+                "headSha": HEAD,
+                "status": "in_progress",
+                "conclusion": None,
+            }
+            # A different existing run cannot be selected by list ordering.
+            result = [{**match, "databaseId": 999, "displayTitle": "other-tag"}, match]
+            if self.duplicate_tag:
+                result.append({**match, "databaseId": 456})
+            return json.dumps(result)
+        assert argv[3] == str(RUN)
+        if argv[2] == "view":
+            if self.known_expiry and self.clock.seconds < 900:
+                self.clock.seconds = 900.0
+>               raise TimeoutError("Known source run expired")
+E               TimeoutError: Known source run expired
+
+/tmp/test_unimatch_expert500_workflow_v10.py:242: TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+repo = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss1')
+ref = 'frozen-ref', case_id = 'u'
+inputs = {'runner': 'ubuntu-latest', 'seconds_per_case': '120', 'max_pages': '60', 'search_provider': 'exa', ...}
+destination = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss1/controller-01')
+wall_guard = WallGuard(started_at=datetime.datetime(2026, 10, 4, 0, 0, tzinfo=datetime.timezone.utc), deadline_at=datetime.datetime(2026, 10, 4, 0, 15, tzinfo=datetime.timezone.utc))
+
+    def workflow(
+        repo: Path,
+        ref: str,
+        case_id: str,
+        inputs: dict[str, str],
+        destination: Path,
+        *,
+        wall_guard: WallGuard | None = None,
+    ) -> tuple[int, str]:
+        def claim_destination() -> None:
+            # The exact workflow is also replayed independently of parent setup.
+            try:
+                destination.mkdir(parents=True, exist_ok=False)
+            except FileExistsError:
+                STOP.set()
+                raise RuntimeError(
+                    "Source transport cannot reuse a case/controller destination"
+                ) from None
+    
+        if inputs.get("search_provider", "exa") != "exa":
+            STOP.set()
+            raise ValueError("V11 requires its pinned Exa search provider")
+        inputs = {**inputs, "search_provider": "exa"}
+        if inputs.get("mode") == "expert_baseline":
+            if STOP.is_set():
+                raise RuntimeError("Batch stopped before baseline dispatch")
+            claim_destination()
+            return legacy["workflow"](repo, ref, case_id, inputs, destination)
+        if wall_guard is None or STOP.is_set():
+            raise RuntimeError("Expert source requires its immutable guard and a live batch")
+        import uuid
+    
+        from evaluation.research.expert.network_report import (
+            SourceCounters,
+            validate_source_run,
+        )
+    
+        # A clean expiry must leave no apparent controller run for the raw replay.
+        if wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0:
+            raise TimeoutError("wall_guard_exhausted")
+    
+        plan = json.loads(inputs["plan"])
+        if (
+            not isinstance(plan, dict)
+            or inputs.get("mode") != "expert_actions"
+            or plan.get("provider") != "exa"
+        ):
+            raise RuntimeError("Expert transport requires its original controlled action plan")
+        run_id: int | None = None
+        head_sha: str | None = None
+        state: dict[str, Any] = {}
+        dispatch_attempted = False
+        audit_began: float | None = None
+        audit_started_at = None
+        cancel_attempted = False
+        cancel_outcome = None
+        artifact_proof: dict[str, Any] = {}
+        trigger_error = None
+    
+        def audit_remaining() -> float:
+            assert audit_began is not None
+            seconds = 60.0 - (time.monotonic() - audit_began)
+            if seconds <= 0:
+                raise TimeoutError("transport_audit_exhausted")
+            return seconds
+    
+        def remaining() -> float:
+            if audit_began is not None:
+                return audit_remaining()
+            seconds = wall_guard.remaining_seconds(now=datetime.now(UTC))
+            if seconds <= 0:
+                raise TimeoutError("wall_guard_exhausted")
+            return seconds
+    
+        def gh(argv: list[str], *, stdin: str | None = None) -> str:
+            nonlocal dispatch_attempted
+            timeout = min(60.0, remaining())
+            if audit_began is not None:
+                if argv[:2] != ["gh", "run"] or argv[2] not in {
+                    "list",
+                    "view",
+                    "cancel",
+                    "download",
+                }:
+                    raise RuntimeError("Transport audit cannot dispatch a new source action")
+            elif argv[:3] == ["gh", "workflow", "run"]:
+                if STOP.is_set():
+                    raise RuntimeError("Batch stopped before source dispatch")
+                timeout = min(timeout, remaining())
+                # Once the command is invoked even an exception is an ambiguous
+                # dispatch. Only identifying/auditing this tag is permitted next.
+                dispatch_attempted = True
+            result = legacy["command"](argv, cwd=repo, stdin=stdin, timeout=timeout)
+            if audit_began is not None:
+                audit_remaining()
+            return result
+    
+        tag = "e500-" + uuid.uuid4().hex[:16]
+        inputs = {
+            "runner": "ubuntu-latest",
+            "seconds_per_case": "120",
+            "max_pages": "60",
+            "search_provider": "exa",
+            **inputs,
+            "case": case_id,
+            "run_tag": tag,
+        }
+    
+        def receipt(status: str, *, error: str | None = None) -> None:
+            began = audit_began
+            elapsed = math.ceil((time.monotonic() - began) * 1000) if began is not None else 0
+            save(
+                destination / "transport-audit.json",
+                {
+                    "status": status,
+                    "case_id": case_id,
+                    "provider": "exa",
+                    "ref": ref,
+                    "run_tag": tag,
+                    **wall_guard.as_dict(),
+                    "dispatch_attempted": dispatch_attempted,
+                    "dispatch_count": int(dispatch_attempted),
+                    "audit_only": audit_began is not None,
+                    "audit_window_ms": 60000 if audit_began is not None else 0,
+                    "audit_started_at": audit_started_at,
+                    "audit_elapsed_ms": elapsed,
+                    "guard_exhausted": wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0,
+                    "trigger_error": trigger_error,
+                    "error": error,
+                    "run_id": run_id,
+                    "head_sha": head_sha,
+                    "run_status": state.get("status"),
+                    "conclusion": state.get("conclusion"),
+                    "cancel_attempted": cancel_attempted,
+                    "cancel_outcome": cancel_outcome,
+                    "artifact_verified": bool(artifact_proof),
+                    **artifact_proof,
+                },
+            )
+    
+        def identify() -> None:
+            nonlocal run_id, head_sha
+            while run_id is None:
+                runs = json.loads(
+                    gh(
+                        [
+                            "gh",
+                            "run",
+                            "list",
+                            "--workflow",
+                            "benchmark-capture.yml",
+                            "--branch",
+                            ref,
+                            "--event",
+                            "workflow_dispatch",
+                            "--limit",
+                            "40",
+                            "--json",
+                            "databaseId,displayTitle,headSha,status,conclusion",
+                        ]
+                    )
+                )
+                matches = [r for r in runs if r["displayTitle"].endswith(tag)]
+                if len(matches) > 1:
+                    raise RuntimeError("Dispatched tag identifies more than one workflow")
+                if matches:
+                    candidate_id, candidate_sha = matches[0]["databaseId"], matches[0]["headSha"]
+                    if (
+                        type(candidate_id) is not int
+                        or candidate_id <= 0
+                        or type(candidate_sha) is not str
+                        or len(candidate_sha) != 40
+                        or any(c not in "0123456789abcdef" for c in candidate_sha)
+                    ):
+                        raise RuntimeError("Dispatched workflow identity is invalid")
+                    run_id, head_sha = candidate_id, candidate_sha
+                    save(
+                        destination / "run.json",
+                        {"run_id": run_id, "head_sha": head_sha, "tag": tag},
+                    )
+                    emit(
+                        case=case_id,
+                        mode=inputs["mode"],
+                        run_id=run_id,
+                        state="dispatched",
+                        source=head_sha,
+                    )
+                    return
+                if audit_began is None and STOP.is_set():
+                    raise RuntimeError("Batch stopped before dispatched run could be identified")
+                time.sleep(min(5.0, remaining()))
+    
+        def completed() -> None:
+            nonlocal state, cancel_attempted, cancel_outcome
+            while True:
+                state = json.loads(
+                    gh(
+                        [
+                            "gh",
+                            "run",
+                            "view",
+                            str(run_id),
+                            "--json",
+                            "status,conclusion,headSha,url",
+                        ]
+                    )
+                )
+                if state["headSha"] != head_sha:
+                    raise RuntimeError("Workflow source changed unexpectedly")
+                if state["status"] == "completed":
+                    save(destination / "run.json", {"run_id": run_id, "tag": tag, **state})
+                    return
+                if audit_began is not None and not cancel_attempted:
+                    cancel_attempted = True
+                    try:
+                        gh(["gh", "run", "cancel", str(run_id)])
+                        cancel_outcome = "requested"
+                    except Exception as error:
+                        # A completion/cancel race can still yield a complete
+                        # original artifact; never retry this cancellation.
+                        cancel_outcome = type(error).__name__
+                    continue
+                if audit_began is None and STOP.is_set():
+                    raise RuntimeError("Canceled after batch provider429")
+                time.sleep(min(5.0 if audit_began is not None else 10.0, remaining()))
+    
+        def verify_artifact(folder: Path) -> dict[str, Any]:
+            remaining()
+            if folder.is_symlink() or not folder.is_dir():
+                raise RuntimeError("Original controlled artifact is unavailable")
+            logs = folder / "logs"
+            if logs.is_symlink() or not logs.is_dir():
+                raise RuntimeError("Original controlled raw logs are unavailable")
+    
+            def original(path: Path) -> bytes:
+                if path.is_symlink() or not path.is_file():
+                    raise RuntimeError("Original controlled artifact must contain regular files")
+                return path.read_bytes()
+    
+            if json.loads(original(folder / "plan.json")) != plan:
+                raise RuntimeError("Original artifact changed the dispatched action plan")
+            summary_bytes = original(folder / "summary.json")
+            summary = json.loads(summary_bytes)
+            produced, raw_logs = summary.get("actions"), summary.get("raw_logs")
+            if not isinstance(produced, list) or len(produced) != 1 or not isinstance(raw_logs, dict):
+                raise RuntimeError("Original controller action/checkpoint is incomplete")
+            if {path.name for path in logs.iterdir()} != set(raw_logs):
+                raise RuntimeError("Original artifact has unaccounted or missing raw source logs")
+            records = {}
+            provider_failures = []
+            for name, expected_sha in raw_logs.items():
+                if (
+                    type(name) is not str
+                    or name in {"", ".", ".."}
+                    or Path(name).name != name
+                    or "/" in name
+                    or "\\" in name
+                ):
+                    raise RuntimeError("Original raw source paths must be confined")
+                data = original(logs / name)
+                if hashlib.sha256(data).hexdigest() != expected_sha:
+                    raise RuntimeError("Original controlled raw source hash changed")
+                records[name] = json.loads(data)
+                raw = records[name]
+                if raw.get("provider") != "exa" or raw.get("case_id") != case_id:
+                    raise RuntimeError("Original raw source provider/case identity changed")
+                if (
+                    raw.get("executed") is True
+                    and raw.get("request", {}).get("tool") == "search_provider"
+                ):
+                    response = raw.get("response", {})
+                    statuses = {
+                        response.get(key)
+                        for key in ("http_status", "status_code")
+                        if type(response.get(key)) is int and response[key] in {401, 402, 403, 429}
+                    }
+                    for status in sorted(statuses):
+                        provider_failures.append(
+                            {
+                                "provider": "exa",
+                                "http_status": status,
+                                "raw_log_path": name,
+                                "raw_log_sha256": expected_sha,
+                            }
+                        )
+            name = produced[0]["raw_log_path"]
+            resume = plan.get("resume_summary")
+            prior = (
+                SourceCounters(
+                    resume["final"]["fetcher_calls"],
+                    resume["final"]["search_queries"],
+                    resume["final"]["elapsed_ms"],
+                )
+                if resume
+                else SourceCounters()
+            )
+            counters = validate_source_run(
+                plan,
+                summary,
+                records[name],
+                case_id=case_id,
+                official_domains=plan["official_domains"],
+                wall_guard=wall_guard,
+                raw_sha256=raw_logs[name],
+                prior=prior,
+                prior_summary=resume,
+                provider="exa",
+            )
+            remaining()
+            if provider_failures:
+                STOP.set()
+            return {
+                "summary_sha256": hashlib.sha256(summary_bytes).hexdigest(),
+                "plan_sha256": hashlib.sha256(original(folder / "plan.json")).hexdigest(),
+                "raw_logs": raw_logs,
+                "source_counters": counters.as_dict(),
+                "source_stop_reason": summary["final"].get("stop_reason"),
+                "provider_failures": provider_failures,
+            }
+    
+        def artifact() -> None:
+            nonlocal artifact_proof
+            folder = destination / "artifact"
+            if folder.exists():
+                try:
+                    artifact_proof = verify_artifact(folder)
+                    return
+                except Exception:
+                    if audit_began is None:
+                        raise
+            download = destination / "artifact-audit" if folder.exists() else folder
+            gh(
+                [
+                    "gh",
+                    "run",
+                    "download",
+                    str(run_id),
+                    "--name",
+                    f"expert-recovery-{run_id}",
+                    "--dir",
+                    str(download),
+                ]
+            )
+            artifact_proof = verify_artifact(download)
+            if download != folder:
+                folder.rename(destination / "artifact-incomplete")
+                download.rename(folder)
+            remaining()
+    
+        claim_destination()
+        save(
+            destination / "dispatch.json",
+            {"ref": ref, "inputs": inputs, **wall_guard.as_dict()},
+        )
+        try:
+            gh(
+                ["gh", "workflow", "run", "benchmark-capture.yml", "--ref", ref, "--json"],
+                stdin=json.dumps(inputs),
+            )
+            identify()
+            completed()
+            artifact()
+            if run_id is None or head_sha is None:
+                raise RuntimeError("Original dispatched workflow identity is unavailable")
+            receipt("completed")
+            return run_id, head_sha
+        except Exception as error:
+            trigger_error = type(error).__name__
+            if not dispatch_attempted:
+                STOP.set()
+                receipt("incomplete", error=trigger_error)
+                raise RuntimeError(
+                    "Source receipt exists but no dispatch outcome is auditable"
+                ) from error
+            audit_began = time.monotonic()
+            audit_started_at = datetime.now(UTC).isoformat()
+            try:
+                identify()
+                completed()
+>               artifact()
+
+/tmp/unimatch-expert500-journal-pilot-v11.py:708: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-pilot-v11.py:672: in artifact
+    artifact_proof = verify_artifact(download)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/unimatch-expert500-journal-pilot-v11.py:570: in verify_artifact
+    summary_bytes = original(folder / "summary.json")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss1/controller-01/artifact/summary.json')
+
+    def original(path: Path) -> bytes:
+        if path.is_symlink() or not path.is_file():
+>           raise RuntimeError("Original controlled artifact must contain regular files")
+E           RuntimeError: Original controlled artifact must contain regular files
+
+/tmp/unimatch-expert500-journal-pilot-v11.py:565: RuntimeError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss1')
+missing = 'summary'
+
+    @pytest.mark.parametrize("missing", ["download", "summary", "raw"])
+    def test_v11_known_self_guard_missing_source_is_local_unknown_not_zero(tmp_path, missing):
+        h = V11TransportHarness(tmp_path, known_expiry=True,
+                                download_absent=missing == "download",
+                                artifact_kind="missing" if missing == "summary" else "valid",
+                                missing_raw=missing == "raw")
+        with pytest.raises(TimeoutError) as raised:
+>           h.run_workflow()
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1475: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1436: in run_workflow
+    return self.runtime["workflow"](
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+repo = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss1')
+ref = 'frozen-ref', case_id = 'u'
+inputs = {'runner': 'ubuntu-latest', 'seconds_per_case': '120', 'max_pages': '60', 'search_provider': 'exa', ...}
+destination = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss1/controller-01')
+wall_guard = WallGuard(started_at=datetime.datetime(2026, 10, 4, 0, 0, tzinfo=datetime.timezone.utc), deadline_at=datetime.datetime(2026, 10, 4, 0, 15, tzinfo=datetime.timezone.utc))
+
+    def workflow(
+        repo: Path,
+        ref: str,
+        case_id: str,
+        inputs: dict[str, str],
+        destination: Path,
+        *,
+        wall_guard: WallGuard | None = None,
+    ) -> tuple[int, str]:
+        def claim_destination() -> None:
+            # The exact workflow is also replayed independently of parent setup.
+            try:
+                destination.mkdir(parents=True, exist_ok=False)
+            except FileExistsError:
+                STOP.set()
+                raise RuntimeError(
+                    "Source transport cannot reuse a case/controller destination"
+                ) from None
+    
+        if inputs.get("search_provider", "exa") != "exa":
+            STOP.set()
+            raise ValueError("V11 requires its pinned Exa search provider")
+        inputs = {**inputs, "search_provider": "exa"}
+        if inputs.get("mode") == "expert_baseline":
+            if STOP.is_set():
+                raise RuntimeError("Batch stopped before baseline dispatch")
+            claim_destination()
+            return legacy["workflow"](repo, ref, case_id, inputs, destination)
+        if wall_guard is None or STOP.is_set():
+            raise RuntimeError("Expert source requires its immutable guard and a live batch")
+        import uuid
+    
+        from evaluation.research.expert.network_report import (
+            SourceCounters,
+            validate_source_run,
+        )
+    
+        # A clean expiry must leave no apparent controller run for the raw replay.
+        if wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0:
+            raise TimeoutError("wall_guard_exhausted")
+    
+        plan = json.loads(inputs["plan"])
+        if (
+            not isinstance(plan, dict)
+            or inputs.get("mode") != "expert_actions"
+            or plan.get("provider") != "exa"
+        ):
+            raise RuntimeError("Expert transport requires its original controlled action plan")
+        run_id: int | None = None
+        head_sha: str | None = None
+        state: dict[str, Any] = {}
+        dispatch_attempted = False
+        audit_began: float | None = None
+        audit_started_at = None
+        cancel_attempted = False
+        cancel_outcome = None
+        artifact_proof: dict[str, Any] = {}
+        trigger_error = None
+    
+        def audit_remaining() -> float:
+            assert audit_began is not None
+            seconds = 60.0 - (time.monotonic() - audit_began)
+            if seconds <= 0:
+                raise TimeoutError("transport_audit_exhausted")
+            return seconds
+    
+        def remaining() -> float:
+            if audit_began is not None:
+                return audit_remaining()
+            seconds = wall_guard.remaining_seconds(now=datetime.now(UTC))
+            if seconds <= 0:
+                raise TimeoutError("wall_guard_exhausted")
+            return seconds
+    
+        def gh(argv: list[str], *, stdin: str | None = None) -> str:
+            nonlocal dispatch_attempted
+            timeout = min(60.0, remaining())
+            if audit_began is not None:
+                if argv[:2] != ["gh", "run"] or argv[2] not in {
+                    "list",
+                    "view",
+                    "cancel",
+                    "download",
+                }:
+                    raise RuntimeError("Transport audit cannot dispatch a new source action")
+            elif argv[:3] == ["gh", "workflow", "run"]:
+                if STOP.is_set():
+                    raise RuntimeError("Batch stopped before source dispatch")
+                timeout = min(timeout, remaining())
+                # Once the command is invoked even an exception is an ambiguous
+                # dispatch. Only identifying/auditing this tag is permitted next.
+                dispatch_attempted = True
+            result = legacy["command"](argv, cwd=repo, stdin=stdin, timeout=timeout)
+            if audit_began is not None:
+                audit_remaining()
+            return result
+    
+        tag = "e500-" + uuid.uuid4().hex[:16]
+        inputs = {
+            "runner": "ubuntu-latest",
+            "seconds_per_case": "120",
+            "max_pages": "60",
+            "search_provider": "exa",
+            **inputs,
+            "case": case_id,
+            "run_tag": tag,
+        }
+    
+        def receipt(status: str, *, error: str | None = None) -> None:
+            began = audit_began
+            elapsed = math.ceil((time.monotonic() - began) * 1000) if began is not None else 0
+            save(
+                destination / "transport-audit.json",
+                {
+                    "status": status,
+                    "case_id": case_id,
+                    "provider": "exa",
+                    "ref": ref,
+                    "run_tag": tag,
+                    **wall_guard.as_dict(),
+                    "dispatch_attempted": dispatch_attempted,
+                    "dispatch_count": int(dispatch_attempted),
+                    "audit_only": audit_began is not None,
+                    "audit_window_ms": 60000 if audit_began is not None else 0,
+                    "audit_started_at": audit_started_at,
+                    "audit_elapsed_ms": elapsed,
+                    "guard_exhausted": wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0,
+                    "trigger_error": trigger_error,
+                    "error": error,
+                    "run_id": run_id,
+                    "head_sha": head_sha,
+                    "run_status": state.get("status"),
+                    "conclusion": state.get("conclusion"),
+                    "cancel_attempted": cancel_attempted,
+                    "cancel_outcome": cancel_outcome,
+                    "artifact_verified": bool(artifact_proof),
+                    **artifact_proof,
+                },
+            )
+    
+        def identify() -> None:
+            nonlocal run_id, head_sha
+            while run_id is None:
+                runs = json.loads(
+                    gh(
+                        [
+                            "gh",
+                            "run",
+                            "list",
+                            "--workflow",
+                            "benchmark-capture.yml",
+                            "--branch",
+                            ref,
+                            "--event",
+                            "workflow_dispatch",
+                            "--limit",
+                            "40",
+                            "--json",
+                            "databaseId,displayTitle,headSha,status,conclusion",
+                        ]
+                    )
+                )
+                matches = [r for r in runs if r["displayTitle"].endswith(tag)]
+                if len(matches) > 1:
+                    raise RuntimeError("Dispatched tag identifies more than one workflow")
+                if matches:
+                    candidate_id, candidate_sha = matches[0]["databaseId"], matches[0]["headSha"]
+                    if (
+                        type(candidate_id) is not int
+                        or candidate_id <= 0
+                        or type(candidate_sha) is not str
+                        or len(candidate_sha) != 40
+                        or any(c not in "0123456789abcdef" for c in candidate_sha)
+                    ):
+                        raise RuntimeError("Dispatched workflow identity is invalid")
+                    run_id, head_sha = candidate_id, candidate_sha
+                    save(
+                        destination / "run.json",
+                        {"run_id": run_id, "head_sha": head_sha, "tag": tag},
+                    )
+                    emit(
+                        case=case_id,
+                        mode=inputs["mode"],
+                        run_id=run_id,
+                        state="dispatched",
+                        source=head_sha,
+                    )
+                    return
+                if audit_began is None and STOP.is_set():
+                    raise RuntimeError("Batch stopped before dispatched run could be identified")
+                time.sleep(min(5.0, remaining()))
+    
+        def completed() -> None:
+            nonlocal state, cancel_attempted, cancel_outcome
+            while True:
+                state = json.loads(
+                    gh(
+                        [
+                            "gh",
+                            "run",
+                            "view",
+                            str(run_id),
+                            "--json",
+                            "status,conclusion,headSha,url",
+                        ]
+                    )
+                )
+                if state["headSha"] != head_sha:
+                    raise RuntimeError("Workflow source changed unexpectedly")
+                if state["status"] == "completed":
+                    save(destination / "run.json", {"run_id": run_id, "tag": tag, **state})
+                    return
+                if audit_began is not None and not cancel_attempted:
+                    cancel_attempted = True
+                    try:
+                        gh(["gh", "run", "cancel", str(run_id)])
+                        cancel_outcome = "requested"
+                    except Exception as error:
+                        # A completion/cancel race can still yield a complete
+                        # original artifact; never retry this cancellation.
+                        cancel_outcome = type(error).__name__
+                    continue
+                if audit_began is None and STOP.is_set():
+                    raise RuntimeError("Canceled after batch provider429")
+                time.sleep(min(5.0 if audit_began is not None else 10.0, remaining()))
+    
+        def verify_artifact(folder: Path) -> dict[str, Any]:
+            remaining()
+            if folder.is_symlink() or not folder.is_dir():
+                raise RuntimeError("Original controlled artifact is unavailable")
+            logs = folder / "logs"
+            if logs.is_symlink() or not logs.is_dir():
+                raise RuntimeError("Original controlled raw logs are unavailable")
+    
+            def original(path: Path) -> bytes:
+                if path.is_symlink() or not path.is_file():
+                    raise RuntimeError("Original controlled artifact must contain regular files")
+                return path.read_bytes()
+    
+            if json.loads(original(folder / "plan.json")) != plan:
+                raise RuntimeError("Original artifact changed the dispatched action plan")
+            summary_bytes = original(folder / "summary.json")
+            summary = json.loads(summary_bytes)
+            produced, raw_logs = summary.get("actions"), summary.get("raw_logs")
+            if not isinstance(produced, list) or len(produced) != 1 or not isinstance(raw_logs, dict):
+                raise RuntimeError("Original controller action/checkpoint is incomplete")
+            if {path.name for path in logs.iterdir()} != set(raw_logs):
+                raise RuntimeError("Original artifact has unaccounted or missing raw source logs")
+            records = {}
+            provider_failures = []
+            for name, expected_sha in raw_logs.items():
+                if (
+                    type(name) is not str
+                    or name in {"", ".", ".."}
+                    or Path(name).name != name
+                    or "/" in name
+                    or "\\" in name
+                ):
+                    raise RuntimeError("Original raw source paths must be confined")
+                data = original(logs / name)
+                if hashlib.sha256(data).hexdigest() != expected_sha:
+                    raise RuntimeError("Original controlled raw source hash changed")
+                records[name] = json.loads(data)
+                raw = records[name]
+                if raw.get("provider") != "exa" or raw.get("case_id") != case_id:
+                    raise RuntimeError("Original raw source provider/case identity changed")
+                if (
+                    raw.get("executed") is True
+                    and raw.get("request", {}).get("tool") == "search_provider"
+                ):
+                    response = raw.get("response", {})
+                    statuses = {
+                        response.get(key)
+                        for key in ("http_status", "status_code")
+                        if type(response.get(key)) is int and response[key] in {401, 402, 403, 429}
+                    }
+                    for status in sorted(statuses):
+                        provider_failures.append(
+                            {
+                                "provider": "exa",
+                                "http_status": status,
+                                "raw_log_path": name,
+                                "raw_log_sha256": expected_sha,
+                            }
+                        )
+            name = produced[0]["raw_log_path"]
+            resume = plan.get("resume_summary")
+            prior = (
+                SourceCounters(
+                    resume["final"]["fetcher_calls"],
+                    resume["final"]["search_queries"],
+                    resume["final"]["elapsed_ms"],
+                )
+                if resume
+                else SourceCounters()
+            )
+            counters = validate_source_run(
+                plan,
+                summary,
+                records[name],
+                case_id=case_id,
+                official_domains=plan["official_domains"],
+                wall_guard=wall_guard,
+                raw_sha256=raw_logs[name],
+                prior=prior,
+                prior_summary=resume,
+                provider="exa",
+            )
+            remaining()
+            if provider_failures:
+                STOP.set()
+            return {
+                "summary_sha256": hashlib.sha256(summary_bytes).hexdigest(),
+                "plan_sha256": hashlib.sha256(original(folder / "plan.json")).hexdigest(),
+                "raw_logs": raw_logs,
+                "source_counters": counters.as_dict(),
+                "source_stop_reason": summary["final"].get("stop_reason"),
+                "provider_failures": provider_failures,
+            }
+    
+        def artifact() -> None:
+            nonlocal artifact_proof
+            folder = destination / "artifact"
+            if folder.exists():
+                try:
+                    artifact_proof = verify_artifact(folder)
+                    return
+                except Exception:
+                    if audit_began is None:
+                        raise
+            download = destination / "artifact-audit" if folder.exists() else folder
+            gh(
+                [
+                    "gh",
+                    "run",
+                    "download",
+                    str(run_id),
+                    "--name",
+                    f"expert-recovery-{run_id}",
+                    "--dir",
+                    str(download),
+                ]
+            )
+            artifact_proof = verify_artifact(download)
+            if download != folder:
+                folder.rename(destination / "artifact-incomplete")
+                download.rename(folder)
+            remaining()
+    
+        claim_destination()
+        save(
+            destination / "dispatch.json",
+            {"ref": ref, "inputs": inputs, **wall_guard.as_dict()},
+        )
+        try:
+            gh(
+                ["gh", "workflow", "run", "benchmark-capture.yml", "--ref", ref, "--json"],
+                stdin=json.dumps(inputs),
+            )
+            identify()
+            completed()
+            artifact()
+            if run_id is None or head_sha is None:
+                raise RuntimeError("Original dispatched workflow identity is unavailable")
+            receipt("completed")
+            return run_id, head_sha
+        except Exception as error:
+            trigger_error = type(error).__name__
+            if not dispatch_attempted:
+                STOP.set()
+                receipt("incomplete", error=trigger_error)
+                raise RuntimeError(
+                    "Source receipt exists but no dispatch outcome is auditable"
+                ) from error
+            audit_began = time.monotonic()
+            audit_started_at = datetime.now(UTC).isoformat()
+            try:
+                identify()
+                completed()
+                artifact()
+                if run_id is None or head_sha is None:
+                    raise RuntimeError("Original dispatched workflow identity is unavailable")
+                receipt("recovered")
+                audit_remaining()
+                return run_id, head_sha
+            except Exception as audit_error:
+                STOP.set()
+                receipt("incomplete", error=type(audit_error).__name__)
+>               raise RuntimeError(
+                    "Source dispatch transport audit is incomplete; batch stopped"
+                ) from audit_error
+E               RuntimeError: Source dispatch transport audit is incomplete; batch stopped
+
+/tmp/unimatch-expert500-journal-pilot-v11.py:717: RuntimeError
+___ test_v11_known_self_guard_missing_source_is_local_unknown_not_zero[raw] ____
+
+self = <test_unimatch_expert500_journal_pilot_v11.V11TransportHarness object at 0x109ac76e0>
+argv = ['gh', 'run', 'view', '123', '--json', 'status,conclusion,headSha,url']
+kwargs = {'cwd': PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss2'), 'stdin': None, 'timeout': 60.0}
+
+    def command(self, argv, **kwargs):
+        if argv[:3] == ["gh", "run", "view"]:
+            if self.non_guard_error and not self.initial_error:
+                self.initial_error = True
+                self.clock.seconds = 900
+                self.calls.append({"argv": argv, "at": self.clock.seconds,
+                                   "timeout": kwargs["timeout"]})
+                raise RuntimeError("Original identity audit failed at the deadline")
+            if self.delivery_at is not None and self.clock.seconds >= self.delivery_at:
+                self.calls.append({"argv": argv, "at": self.clock.seconds,
+                                   "timeout": kwargs["timeout"]})
+                return json.dumps({"status": "completed", "conclusion": "success",
+                                   "headSha": HEAD, "url": "https://example.invalid/run/123"})
+        if argv[:3] == ["gh", "run", "download"] and self.download_absent:
+            self.calls.append({"argv": argv, "at": self.clock.seconds,
+                               "timeout": kwargs["timeout"]})
+            return ""  # Original cancelled run has no source artifact, not zero actions.
+>       result = self.original.command(argv, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1409: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Harness(root=PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11...log_number': 2, 'wall_elapsed_ms': 10000, 'completed_at': '2026-10-04T00:00:10+00:00', 'wall_guard_exhausted': False}})
+argv = ['gh', 'run', 'view', '123', '--json', 'status,conclusion,headSha,url']
+cwd = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss2')
+stdin = None, timeout = 60.0
+
+    def command(
+        self,
+        argv: list[str],
+        *,
+        cwd: Path,
+        stdin: str | None = None,
+        timeout: float = 60,
+    ) -> str:
+        assert cwd == self.root
+        assert 0 < timeout <= 60
+        self.calls.append({"argv": argv, "timeout": timeout, "at": self.clock.seconds})
+        if argv[:3] == ["gh", "workflow", "run"]:
+            assert len([call for call in self.calls if call["argv"][1] == "workflow"]) == 1
+            self.submitted = json.loads(stdin or "{}")
+            assert self.submitted["search_provider"] == "exa"
+            assert (self.destination / "dispatch.json").is_file()
+            if self.dispatch_expiry or self.ambiguous_dispatch:
+                self.clock.seconds = 900.0
+            if self.ambiguous_dispatch:
+                raise TimeoutError("Ambiguous source dispatch")
+            return ""
+        assert argv[:2] == ["gh", "run"] and argv[2] in {
+            "list",
+            "view",
+            "cancel",
+            "download",
+        }
+        if self.audit_overrun:
+            self.clock.advance(60.001)
+            return "[]"
+        if argv[2] == "list":
+            if self.unidentified:
+                return "[]"
+            match = {
+                "databaseId": True if self.invalid_identity else RUN,
+                "displayTitle": "Synthetic capture " + self.submitted["run_tag"],
+                "headSha": HEAD,
+                "status": "in_progress",
+                "conclusion": None,
+            }
+            # A different existing run cannot be selected by list ordering.
+            result = [{**match, "databaseId": 999, "displayTitle": "other-tag"}, match]
+            if self.duplicate_tag:
+                result.append({**match, "databaseId": 456})
+            return json.dumps(result)
+        assert argv[3] == str(RUN)
+        if argv[2] == "view":
+            if self.known_expiry and self.clock.seconds < 900:
+                self.clock.seconds = 900.0
+>               raise TimeoutError("Known source run expired")
+E               TimeoutError: Known source run expired
+
+/tmp/test_unimatch_expert500_workflow_v10.py:242: TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+repo = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss2')
+ref = 'frozen-ref', case_id = 'u'
+inputs = {'runner': 'ubuntu-latest', 'seconds_per_case': '120', 'max_pages': '60', 'search_provider': 'exa', ...}
+destination = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss2/controller-01')
+wall_guard = WallGuard(started_at=datetime.datetime(2026, 10, 4, 0, 0, tzinfo=datetime.timezone.utc), deadline_at=datetime.datetime(2026, 10, 4, 0, 15, tzinfo=datetime.timezone.utc))
+
+    def workflow(
+        repo: Path,
+        ref: str,
+        case_id: str,
+        inputs: dict[str, str],
+        destination: Path,
+        *,
+        wall_guard: WallGuard | None = None,
+    ) -> tuple[int, str]:
+        def claim_destination() -> None:
+            # The exact workflow is also replayed independently of parent setup.
+            try:
+                destination.mkdir(parents=True, exist_ok=False)
+            except FileExistsError:
+                STOP.set()
+                raise RuntimeError(
+                    "Source transport cannot reuse a case/controller destination"
+                ) from None
+    
+        if inputs.get("search_provider", "exa") != "exa":
+            STOP.set()
+            raise ValueError("V11 requires its pinned Exa search provider")
+        inputs = {**inputs, "search_provider": "exa"}
+        if inputs.get("mode") == "expert_baseline":
+            if STOP.is_set():
+                raise RuntimeError("Batch stopped before baseline dispatch")
+            claim_destination()
+            return legacy["workflow"](repo, ref, case_id, inputs, destination)
+        if wall_guard is None or STOP.is_set():
+            raise RuntimeError("Expert source requires its immutable guard and a live batch")
+        import uuid
+    
+        from evaluation.research.expert.network_report import (
+            SourceCounters,
+            validate_source_run,
+        )
+    
+        # A clean expiry must leave no apparent controller run for the raw replay.
+        if wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0:
+            raise TimeoutError("wall_guard_exhausted")
+    
+        plan = json.loads(inputs["plan"])
+        if (
+            not isinstance(plan, dict)
+            or inputs.get("mode") != "expert_actions"
+            or plan.get("provider") != "exa"
+        ):
+            raise RuntimeError("Expert transport requires its original controlled action plan")
+        run_id: int | None = None
+        head_sha: str | None = None
+        state: dict[str, Any] = {}
+        dispatch_attempted = False
+        audit_began: float | None = None
+        audit_started_at = None
+        cancel_attempted = False
+        cancel_outcome = None
+        artifact_proof: dict[str, Any] = {}
+        trigger_error = None
+    
+        def audit_remaining() -> float:
+            assert audit_began is not None
+            seconds = 60.0 - (time.monotonic() - audit_began)
+            if seconds <= 0:
+                raise TimeoutError("transport_audit_exhausted")
+            return seconds
+    
+        def remaining() -> float:
+            if audit_began is not None:
+                return audit_remaining()
+            seconds = wall_guard.remaining_seconds(now=datetime.now(UTC))
+            if seconds <= 0:
+                raise TimeoutError("wall_guard_exhausted")
+            return seconds
+    
+        def gh(argv: list[str], *, stdin: str | None = None) -> str:
+            nonlocal dispatch_attempted
+            timeout = min(60.0, remaining())
+            if audit_began is not None:
+                if argv[:2] != ["gh", "run"] or argv[2] not in {
+                    "list",
+                    "view",
+                    "cancel",
+                    "download",
+                }:
+                    raise RuntimeError("Transport audit cannot dispatch a new source action")
+            elif argv[:3] == ["gh", "workflow", "run"]:
+                if STOP.is_set():
+                    raise RuntimeError("Batch stopped before source dispatch")
+                timeout = min(timeout, remaining())
+                # Once the command is invoked even an exception is an ambiguous
+                # dispatch. Only identifying/auditing this tag is permitted next.
+                dispatch_attempted = True
+            result = legacy["command"](argv, cwd=repo, stdin=stdin, timeout=timeout)
+            if audit_began is not None:
+                audit_remaining()
+            return result
+    
+        tag = "e500-" + uuid.uuid4().hex[:16]
+        inputs = {
+            "runner": "ubuntu-latest",
+            "seconds_per_case": "120",
+            "max_pages": "60",
+            "search_provider": "exa",
+            **inputs,
+            "case": case_id,
+            "run_tag": tag,
+        }
+    
+        def receipt(status: str, *, error: str | None = None) -> None:
+            began = audit_began
+            elapsed = math.ceil((time.monotonic() - began) * 1000) if began is not None else 0
+            save(
+                destination / "transport-audit.json",
+                {
+                    "status": status,
+                    "case_id": case_id,
+                    "provider": "exa",
+                    "ref": ref,
+                    "run_tag": tag,
+                    **wall_guard.as_dict(),
+                    "dispatch_attempted": dispatch_attempted,
+                    "dispatch_count": int(dispatch_attempted),
+                    "audit_only": audit_began is not None,
+                    "audit_window_ms": 60000 if audit_began is not None else 0,
+                    "audit_started_at": audit_started_at,
+                    "audit_elapsed_ms": elapsed,
+                    "guard_exhausted": wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0,
+                    "trigger_error": trigger_error,
+                    "error": error,
+                    "run_id": run_id,
+                    "head_sha": head_sha,
+                    "run_status": state.get("status"),
+                    "conclusion": state.get("conclusion"),
+                    "cancel_attempted": cancel_attempted,
+                    "cancel_outcome": cancel_outcome,
+                    "artifact_verified": bool(artifact_proof),
+                    **artifact_proof,
+                },
+            )
+    
+        def identify() -> None:
+            nonlocal run_id, head_sha
+            while run_id is None:
+                runs = json.loads(
+                    gh(
+                        [
+                            "gh",
+                            "run",
+                            "list",
+                            "--workflow",
+                            "benchmark-capture.yml",
+                            "--branch",
+                            ref,
+                            "--event",
+                            "workflow_dispatch",
+                            "--limit",
+                            "40",
+                            "--json",
+                            "databaseId,displayTitle,headSha,status,conclusion",
+                        ]
+                    )
+                )
+                matches = [r for r in runs if r["displayTitle"].endswith(tag)]
+                if len(matches) > 1:
+                    raise RuntimeError("Dispatched tag identifies more than one workflow")
+                if matches:
+                    candidate_id, candidate_sha = matches[0]["databaseId"], matches[0]["headSha"]
+                    if (
+                        type(candidate_id) is not int
+                        or candidate_id <= 0
+                        or type(candidate_sha) is not str
+                        or len(candidate_sha) != 40
+                        or any(c not in "0123456789abcdef" for c in candidate_sha)
+                    ):
+                        raise RuntimeError("Dispatched workflow identity is invalid")
+                    run_id, head_sha = candidate_id, candidate_sha
+                    save(
+                        destination / "run.json",
+                        {"run_id": run_id, "head_sha": head_sha, "tag": tag},
+                    )
+                    emit(
+                        case=case_id,
+                        mode=inputs["mode"],
+                        run_id=run_id,
+                        state="dispatched",
+                        source=head_sha,
+                    )
+                    return
+                if audit_began is None and STOP.is_set():
+                    raise RuntimeError("Batch stopped before dispatched run could be identified")
+                time.sleep(min(5.0, remaining()))
+    
+        def completed() -> None:
+            nonlocal state, cancel_attempted, cancel_outcome
+            while True:
+                state = json.loads(
+                    gh(
+                        [
+                            "gh",
+                            "run",
+                            "view",
+                            str(run_id),
+                            "--json",
+                            "status,conclusion,headSha,url",
+                        ]
+                    )
+                )
+                if state["headSha"] != head_sha:
+                    raise RuntimeError("Workflow source changed unexpectedly")
+                if state["status"] == "completed":
+                    save(destination / "run.json", {"run_id": run_id, "tag": tag, **state})
+                    return
+                if audit_began is not None and not cancel_attempted:
+                    cancel_attempted = True
+                    try:
+                        gh(["gh", "run", "cancel", str(run_id)])
+                        cancel_outcome = "requested"
+                    except Exception as error:
+                        # A completion/cancel race can still yield a complete
+                        # original artifact; never retry this cancellation.
+                        cancel_outcome = type(error).__name__
+                    continue
+                if audit_began is None and STOP.is_set():
+                    raise RuntimeError("Canceled after batch provider429")
+                time.sleep(min(5.0 if audit_began is not None else 10.0, remaining()))
+    
+        def verify_artifact(folder: Path) -> dict[str, Any]:
+            remaining()
+            if folder.is_symlink() or not folder.is_dir():
+                raise RuntimeError("Original controlled artifact is unavailable")
+            logs = folder / "logs"
+            if logs.is_symlink() or not logs.is_dir():
+                raise RuntimeError("Original controlled raw logs are unavailable")
+    
+            def original(path: Path) -> bytes:
+                if path.is_symlink() or not path.is_file():
+                    raise RuntimeError("Original controlled artifact must contain regular files")
+                return path.read_bytes()
+    
+            if json.loads(original(folder / "plan.json")) != plan:
+                raise RuntimeError("Original artifact changed the dispatched action plan")
+            summary_bytes = original(folder / "summary.json")
+            summary = json.loads(summary_bytes)
+            produced, raw_logs = summary.get("actions"), summary.get("raw_logs")
+            if not isinstance(produced, list) or len(produced) != 1 or not isinstance(raw_logs, dict):
+                raise RuntimeError("Original controller action/checkpoint is incomplete")
+            if {path.name for path in logs.iterdir()} != set(raw_logs):
+                raise RuntimeError("Original artifact has unaccounted or missing raw source logs")
+            records = {}
+            provider_failures = []
+            for name, expected_sha in raw_logs.items():
+                if (
+                    type(name) is not str
+                    or name in {"", ".", ".."}
+                    or Path(name).name != name
+                    or "/" in name
+                    or "\\" in name
+                ):
+                    raise RuntimeError("Original raw source paths must be confined")
+                data = original(logs / name)
+                if hashlib.sha256(data).hexdigest() != expected_sha:
+                    raise RuntimeError("Original controlled raw source hash changed")
+                records[name] = json.loads(data)
+                raw = records[name]
+                if raw.get("provider") != "exa" or raw.get("case_id") != case_id:
+                    raise RuntimeError("Original raw source provider/case identity changed")
+                if (
+                    raw.get("executed") is True
+                    and raw.get("request", {}).get("tool") == "search_provider"
+                ):
+                    response = raw.get("response", {})
+                    statuses = {
+                        response.get(key)
+                        for key in ("http_status", "status_code")
+                        if type(response.get(key)) is int and response[key] in {401, 402, 403, 429}
+                    }
+                    for status in sorted(statuses):
+                        provider_failures.append(
+                            {
+                                "provider": "exa",
+                                "http_status": status,
+                                "raw_log_path": name,
+                                "raw_log_sha256": expected_sha,
+                            }
+                        )
+            name = produced[0]["raw_log_path"]
+            resume = plan.get("resume_summary")
+            prior = (
+                SourceCounters(
+                    resume["final"]["fetcher_calls"],
+                    resume["final"]["search_queries"],
+                    resume["final"]["elapsed_ms"],
+                )
+                if resume
+                else SourceCounters()
+            )
+            counters = validate_source_run(
+                plan,
+                summary,
+                records[name],
+                case_id=case_id,
+                official_domains=plan["official_domains"],
+                wall_guard=wall_guard,
+                raw_sha256=raw_logs[name],
+                prior=prior,
+                prior_summary=resume,
+                provider="exa",
+            )
+            remaining()
+            if provider_failures:
+                STOP.set()
+            return {
+                "summary_sha256": hashlib.sha256(summary_bytes).hexdigest(),
+                "plan_sha256": hashlib.sha256(original(folder / "plan.json")).hexdigest(),
+                "raw_logs": raw_logs,
+                "source_counters": counters.as_dict(),
+                "source_stop_reason": summary["final"].get("stop_reason"),
+                "provider_failures": provider_failures,
+            }
+    
+        def artifact() -> None:
+            nonlocal artifact_proof
+            folder = destination / "artifact"
+            if folder.exists():
+                try:
+                    artifact_proof = verify_artifact(folder)
+                    return
+                except Exception:
+                    if audit_began is None:
+                        raise
+            download = destination / "artifact-audit" if folder.exists() else folder
+            gh(
+                [
+                    "gh",
+                    "run",
+                    "download",
+                    str(run_id),
+                    "--name",
+                    f"expert-recovery-{run_id}",
+                    "--dir",
+                    str(download),
+                ]
+            )
+            artifact_proof = verify_artifact(download)
+            if download != folder:
+                folder.rename(destination / "artifact-incomplete")
+                download.rename(folder)
+            remaining()
+    
+        claim_destination()
+        save(
+            destination / "dispatch.json",
+            {"ref": ref, "inputs": inputs, **wall_guard.as_dict()},
+        )
+        try:
+            gh(
+                ["gh", "workflow", "run", "benchmark-capture.yml", "--ref", ref, "--json"],
+                stdin=json.dumps(inputs),
+            )
+            identify()
+            completed()
+            artifact()
+            if run_id is None or head_sha is None:
+                raise RuntimeError("Original dispatched workflow identity is unavailable")
+            receipt("completed")
+            return run_id, head_sha
+        except Exception as error:
+            trigger_error = type(error).__name__
+            if not dispatch_attempted:
+                STOP.set()
+                receipt("incomplete", error=trigger_error)
+                raise RuntimeError(
+                    "Source receipt exists but no dispatch outcome is auditable"
+                ) from error
+            audit_began = time.monotonic()
+            audit_started_at = datetime.now(UTC).isoformat()
+            try:
+                identify()
+                completed()
+>               artifact()
+
+/tmp/unimatch-expert500-journal-pilot-v11.py:708: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-pilot-v11.py:672: in artifact
+    artifact_proof = verify_artifact(download)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+folder = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss2/controller-01/artifact')
+
+    def verify_artifact(folder: Path) -> dict[str, Any]:
+        remaining()
+        if folder.is_symlink() or not folder.is_dir():
+            raise RuntimeError("Original controlled artifact is unavailable")
+        logs = folder / "logs"
+        if logs.is_symlink() or not logs.is_dir():
+            raise RuntimeError("Original controlled raw logs are unavailable")
+    
+        def original(path: Path) -> bytes:
+            if path.is_symlink() or not path.is_file():
+                raise RuntimeError("Original controlled artifact must contain regular files")
+            return path.read_bytes()
+    
+        if json.loads(original(folder / "plan.json")) != plan:
+            raise RuntimeError("Original artifact changed the dispatched action plan")
+        summary_bytes = original(folder / "summary.json")
+        summary = json.loads(summary_bytes)
+        produced, raw_logs = summary.get("actions"), summary.get("raw_logs")
+        if not isinstance(produced, list) or len(produced) != 1 or not isinstance(raw_logs, dict):
+            raise RuntimeError("Original controller action/checkpoint is incomplete")
+        if {path.name for path in logs.iterdir()} != set(raw_logs):
+>           raise RuntimeError("Original artifact has unaccounted or missing raw source logs")
+E           RuntimeError: Original artifact has unaccounted or missing raw source logs
+
+/tmp/unimatch-expert500-journal-pilot-v11.py:576: RuntimeError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss2')
+missing = 'raw'
+
+    @pytest.mark.parametrize("missing", ["download", "summary", "raw"])
+    def test_v11_known_self_guard_missing_source_is_local_unknown_not_zero(tmp_path, missing):
+        h = V11TransportHarness(tmp_path, known_expiry=True,
+                                download_absent=missing == "download",
+                                artifact_kind="missing" if missing == "summary" else "valid",
+                                missing_raw=missing == "raw")
+        with pytest.raises(TimeoutError) as raised:
+>           h.run_workflow()
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1475: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1436: in run_workflow
+    return self.runtime["workflow"](
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+repo = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss2')
+ref = 'frozen-ref', case_id = 'u'
+inputs = {'runner': 'ubuntu-latest', 'seconds_per_case': '120', 'max_pages': '60', 'search_provider': 'exa', ...}
+destination = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_known_self_guard_miss2/controller-01')
+wall_guard = WallGuard(started_at=datetime.datetime(2026, 10, 4, 0, 0, tzinfo=datetime.timezone.utc), deadline_at=datetime.datetime(2026, 10, 4, 0, 15, tzinfo=datetime.timezone.utc))
+
+    def workflow(
+        repo: Path,
+        ref: str,
+        case_id: str,
+        inputs: dict[str, str],
+        destination: Path,
+        *,
+        wall_guard: WallGuard | None = None,
+    ) -> tuple[int, str]:
+        def claim_destination() -> None:
+            # The exact workflow is also replayed independently of parent setup.
+            try:
+                destination.mkdir(parents=True, exist_ok=False)
+            except FileExistsError:
+                STOP.set()
+                raise RuntimeError(
+                    "Source transport cannot reuse a case/controller destination"
+                ) from None
+    
+        if inputs.get("search_provider", "exa") != "exa":
+            STOP.set()
+            raise ValueError("V11 requires its pinned Exa search provider")
+        inputs = {**inputs, "search_provider": "exa"}
+        if inputs.get("mode") == "expert_baseline":
+            if STOP.is_set():
+                raise RuntimeError("Batch stopped before baseline dispatch")
+            claim_destination()
+            return legacy["workflow"](repo, ref, case_id, inputs, destination)
+        if wall_guard is None or STOP.is_set():
+            raise RuntimeError("Expert source requires its immutable guard and a live batch")
+        import uuid
+    
+        from evaluation.research.expert.network_report import (
+            SourceCounters,
+            validate_source_run,
+        )
+    
+        # A clean expiry must leave no apparent controller run for the raw replay.
+        if wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0:
+            raise TimeoutError("wall_guard_exhausted")
+    
+        plan = json.loads(inputs["plan"])
+        if (
+            not isinstance(plan, dict)
+            or inputs.get("mode") != "expert_actions"
+            or plan.get("provider") != "exa"
+        ):
+            raise RuntimeError("Expert transport requires its original controlled action plan")
+        run_id: int | None = None
+        head_sha: str | None = None
+        state: dict[str, Any] = {}
+        dispatch_attempted = False
+        audit_began: float | None = None
+        audit_started_at = None
+        cancel_attempted = False
+        cancel_outcome = None
+        artifact_proof: dict[str, Any] = {}
+        trigger_error = None
+    
+        def audit_remaining() -> float:
+            assert audit_began is not None
+            seconds = 60.0 - (time.monotonic() - audit_began)
+            if seconds <= 0:
+                raise TimeoutError("transport_audit_exhausted")
+            return seconds
+    
+        def remaining() -> float:
+            if audit_began is not None:
+                return audit_remaining()
+            seconds = wall_guard.remaining_seconds(now=datetime.now(UTC))
+            if seconds <= 0:
+                raise TimeoutError("wall_guard_exhausted")
+            return seconds
+    
+        def gh(argv: list[str], *, stdin: str | None = None) -> str:
+            nonlocal dispatch_attempted
+            timeout = min(60.0, remaining())
+            if audit_began is not None:
+                if argv[:2] != ["gh", "run"] or argv[2] not in {
+                    "list",
+                    "view",
+                    "cancel",
+                    "download",
+                }:
+                    raise RuntimeError("Transport audit cannot dispatch a new source action")
+            elif argv[:3] == ["gh", "workflow", "run"]:
+                if STOP.is_set():
+                    raise RuntimeError("Batch stopped before source dispatch")
+                timeout = min(timeout, remaining())
+                # Once the command is invoked even an exception is an ambiguous
+                # dispatch. Only identifying/auditing this tag is permitted next.
+                dispatch_attempted = True
+            result = legacy["command"](argv, cwd=repo, stdin=stdin, timeout=timeout)
+            if audit_began is not None:
+                audit_remaining()
+            return result
+    
+        tag = "e500-" + uuid.uuid4().hex[:16]
+        inputs = {
+            "runner": "ubuntu-latest",
+            "seconds_per_case": "120",
+            "max_pages": "60",
+            "search_provider": "exa",
+            **inputs,
+            "case": case_id,
+            "run_tag": tag,
+        }
+    
+        def receipt(status: str, *, error: str | None = None) -> None:
+            began = audit_began
+            elapsed = math.ceil((time.monotonic() - began) * 1000) if began is not None else 0
+            save(
+                destination / "transport-audit.json",
+                {
+                    "status": status,
+                    "case_id": case_id,
+                    "provider": "exa",
+                    "ref": ref,
+                    "run_tag": tag,
+                    **wall_guard.as_dict(),
+                    "dispatch_attempted": dispatch_attempted,
+                    "dispatch_count": int(dispatch_attempted),
+                    "audit_only": audit_began is not None,
+                    "audit_window_ms": 60000 if audit_began is not None else 0,
+                    "audit_started_at": audit_started_at,
+                    "audit_elapsed_ms": elapsed,
+                    "guard_exhausted": wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0,
+                    "trigger_error": trigger_error,
+                    "error": error,
+                    "run_id": run_id,
+                    "head_sha": head_sha,
+                    "run_status": state.get("status"),
+                    "conclusion": state.get("conclusion"),
+                    "cancel_attempted": cancel_attempted,
+                    "cancel_outcome": cancel_outcome,
+                    "artifact_verified": bool(artifact_proof),
+                    **artifact_proof,
+                },
+            )
+    
+        def identify() -> None:
+            nonlocal run_id, head_sha
+            while run_id is None:
+                runs = json.loads(
+                    gh(
+                        [
+                            "gh",
+                            "run",
+                            "list",
+                            "--workflow",
+                            "benchmark-capture.yml",
+                            "--branch",
+                            ref,
+                            "--event",
+                            "workflow_dispatch",
+                            "--limit",
+                            "40",
+                            "--json",
+                            "databaseId,displayTitle,headSha,status,conclusion",
+                        ]
+                    )
+                )
+                matches = [r for r in runs if r["displayTitle"].endswith(tag)]
+                if len(matches) > 1:
+                    raise RuntimeError("Dispatched tag identifies more than one workflow")
+                if matches:
+                    candidate_id, candidate_sha = matches[0]["databaseId"], matches[0]["headSha"]
+                    if (
+                        type(candidate_id) is not int
+                        or candidate_id <= 0
+                        or type(candidate_sha) is not str
+                        or len(candidate_sha) != 40
+                        or any(c not in "0123456789abcdef" for c in candidate_sha)
+                    ):
+                        raise RuntimeError("Dispatched workflow identity is invalid")
+                    run_id, head_sha = candidate_id, candidate_sha
+                    save(
+                        destination / "run.json",
+                        {"run_id": run_id, "head_sha": head_sha, "tag": tag},
+                    )
+                    emit(
+                        case=case_id,
+                        mode=inputs["mode"],
+                        run_id=run_id,
+                        state="dispatched",
+                        source=head_sha,
+                    )
+                    return
+                if audit_began is None and STOP.is_set():
+                    raise RuntimeError("Batch stopped before dispatched run could be identified")
+                time.sleep(min(5.0, remaining()))
+    
+        def completed() -> None:
+            nonlocal state, cancel_attempted, cancel_outcome
+            while True:
+                state = json.loads(
+                    gh(
+                        [
+                            "gh",
+                            "run",
+                            "view",
+                            str(run_id),
+                            "--json",
+                            "status,conclusion,headSha,url",
+                        ]
+                    )
+                )
+                if state["headSha"] != head_sha:
+                    raise RuntimeError("Workflow source changed unexpectedly")
+                if state["status"] == "completed":
+                    save(destination / "run.json", {"run_id": run_id, "tag": tag, **state})
+                    return
+                if audit_began is not None and not cancel_attempted:
+                    cancel_attempted = True
+                    try:
+                        gh(["gh", "run", "cancel", str(run_id)])
+                        cancel_outcome = "requested"
+                    except Exception as error:
+                        # A completion/cancel race can still yield a complete
+                        # original artifact; never retry this cancellation.
+                        cancel_outcome = type(error).__name__
+                    continue
+                if audit_began is None and STOP.is_set():
+                    raise RuntimeError("Canceled after batch provider429")
+                time.sleep(min(5.0 if audit_began is not None else 10.0, remaining()))
+    
+        def verify_artifact(folder: Path) -> dict[str, Any]:
+            remaining()
+            if folder.is_symlink() or not folder.is_dir():
+                raise RuntimeError("Original controlled artifact is unavailable")
+            logs = folder / "logs"
+            if logs.is_symlink() or not logs.is_dir():
+                raise RuntimeError("Original controlled raw logs are unavailable")
+    
+            def original(path: Path) -> bytes:
+                if path.is_symlink() or not path.is_file():
+                    raise RuntimeError("Original controlled artifact must contain regular files")
+                return path.read_bytes()
+    
+            if json.loads(original(folder / "plan.json")) != plan:
+                raise RuntimeError("Original artifact changed the dispatched action plan")
+            summary_bytes = original(folder / "summary.json")
+            summary = json.loads(summary_bytes)
+            produced, raw_logs = summary.get("actions"), summary.get("raw_logs")
+            if not isinstance(produced, list) or len(produced) != 1 or not isinstance(raw_logs, dict):
+                raise RuntimeError("Original controller action/checkpoint is incomplete")
+            if {path.name for path in logs.iterdir()} != set(raw_logs):
+                raise RuntimeError("Original artifact has unaccounted or missing raw source logs")
+            records = {}
+            provider_failures = []
+            for name, expected_sha in raw_logs.items():
+                if (
+                    type(name) is not str
+                    or name in {"", ".", ".."}
+                    or Path(name).name != name
+                    or "/" in name
+                    or "\\" in name
+                ):
+                    raise RuntimeError("Original raw source paths must be confined")
+                data = original(logs / name)
+                if hashlib.sha256(data).hexdigest() != expected_sha:
+                    raise RuntimeError("Original controlled raw source hash changed")
+                records[name] = json.loads(data)
+                raw = records[name]
+                if raw.get("provider") != "exa" or raw.get("case_id") != case_id:
+                    raise RuntimeError("Original raw source provider/case identity changed")
+                if (
+                    raw.get("executed") is True
+                    and raw.get("request", {}).get("tool") == "search_provider"
+                ):
+                    response = raw.get("response", {})
+                    statuses = {
+                        response.get(key)
+                        for key in ("http_status", "status_code")
+                        if type(response.get(key)) is int and response[key] in {401, 402, 403, 429}
+                    }
+                    for status in sorted(statuses):
+                        provider_failures.append(
+                            {
+                                "provider": "exa",
+                                "http_status": status,
+                                "raw_log_path": name,
+                                "raw_log_sha256": expected_sha,
+                            }
+                        )
+            name = produced[0]["raw_log_path"]
+            resume = plan.get("resume_summary")
+            prior = (
+                SourceCounters(
+                    resume["final"]["fetcher_calls"],
+                    resume["final"]["search_queries"],
+                    resume["final"]["elapsed_ms"],
+                )
+                if resume
+                else SourceCounters()
+            )
+            counters = validate_source_run(
+                plan,
+                summary,
+                records[name],
+                case_id=case_id,
+                official_domains=plan["official_domains"],
+                wall_guard=wall_guard,
+                raw_sha256=raw_logs[name],
+                prior=prior,
+                prior_summary=resume,
+                provider="exa",
+            )
+            remaining()
+            if provider_failures:
+                STOP.set()
+            return {
+                "summary_sha256": hashlib.sha256(summary_bytes).hexdigest(),
+                "plan_sha256": hashlib.sha256(original(folder / "plan.json")).hexdigest(),
+                "raw_logs": raw_logs,
+                "source_counters": counters.as_dict(),
+                "source_stop_reason": summary["final"].get("stop_reason"),
+                "provider_failures": provider_failures,
+            }
+    
+        def artifact() -> None:
+            nonlocal artifact_proof
+            folder = destination / "artifact"
+            if folder.exists():
+                try:
+                    artifact_proof = verify_artifact(folder)
+                    return
+                except Exception:
+                    if audit_began is None:
+                        raise
+            download = destination / "artifact-audit" if folder.exists() else folder
+            gh(
+                [
+                    "gh",
+                    "run",
+                    "download",
+                    str(run_id),
+                    "--name",
+                    f"expert-recovery-{run_id}",
+                    "--dir",
+                    str(download),
+                ]
+            )
+            artifact_proof = verify_artifact(download)
+            if download != folder:
+                folder.rename(destination / "artifact-incomplete")
+                download.rename(folder)
+            remaining()
+    
+        claim_destination()
+        save(
+            destination / "dispatch.json",
+            {"ref": ref, "inputs": inputs, **wall_guard.as_dict()},
+        )
+        try:
+            gh(
+                ["gh", "workflow", "run", "benchmark-capture.yml", "--ref", ref, "--json"],
+                stdin=json.dumps(inputs),
+            )
+            identify()
+            completed()
+            artifact()
+            if run_id is None or head_sha is None:
+                raise RuntimeError("Original dispatched workflow identity is unavailable")
+            receipt("completed")
+            return run_id, head_sha
+        except Exception as error:
+            trigger_error = type(error).__name__
+            if not dispatch_attempted:
+                STOP.set()
+                receipt("incomplete", error=trigger_error)
+                raise RuntimeError(
+                    "Source receipt exists but no dispatch outcome is auditable"
+                ) from error
+            audit_began = time.monotonic()
+            audit_started_at = datetime.now(UTC).isoformat()
+            try:
+                identify()
+                completed()
+                artifact()
+                if run_id is None or head_sha is None:
+                    raise RuntimeError("Original dispatched workflow identity is unavailable")
+                receipt("recovered")
+                audit_remaining()
+                return run_id, head_sha
+            except Exception as audit_error:
+                STOP.set()
+                receipt("incomplete", error=type(audit_error).__name__)
+>               raise RuntimeError(
+                    "Source dispatch transport audit is incomplete; batch stopped"
+                ) from audit_error
+E               RuntimeError: Source dispatch transport audit is incomplete; batch stopped
+
+/tmp/unimatch-expert500-journal-pilot-v11.py:717: RuntimeError
+_ test_v11_real_source_integrity_failure_remains_global_after_self_guard[tampered] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_real_source_integrity0')
+kind = 'tampered'
+
+    @pytest.mark.parametrize("kind", ["tampered", "extra", "wrong_plan", "symlink", "mixed_provider", "counter"])
+    def test_v11_real_source_integrity_failure_remains_global_after_self_guard(tmp_path, kind):
+        h = V11TransportHarness(tmp_path, known_expiry=True,
+                                artifact_kind="valid" if kind == "counter" else kind,
+                                wrong_counter=kind == "counter")
+        with pytest.raises(RuntimeError, match="batch stopped"):
+            h.run_workflow()
+        assert h.stop.is_set()
+        receipt = h.receipt()
+>       assert receipt["stop_scope"] == "batch" and receipt["artifact_status"] == "invalid"
+               ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stop_scope'
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1502: KeyError
+_ test_v11_real_source_integrity_failure_remains_global_after_self_guard[extra] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_real_source_integrity1')
+kind = 'extra'
+
+    @pytest.mark.parametrize("kind", ["tampered", "extra", "wrong_plan", "symlink", "mixed_provider", "counter"])
+    def test_v11_real_source_integrity_failure_remains_global_after_self_guard(tmp_path, kind):
+        h = V11TransportHarness(tmp_path, known_expiry=True,
+                                artifact_kind="valid" if kind == "counter" else kind,
+                                wrong_counter=kind == "counter")
+        with pytest.raises(RuntimeError, match="batch stopped"):
+            h.run_workflow()
+        assert h.stop.is_set()
+        receipt = h.receipt()
+>       assert receipt["stop_scope"] == "batch" and receipt["artifact_status"] == "invalid"
+               ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stop_scope'
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1502: KeyError
+_ test_v11_real_source_integrity_failure_remains_global_after_self_guard[wrong_plan] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_real_source_integrity2')
+kind = 'wrong_plan'
+
+    @pytest.mark.parametrize("kind", ["tampered", "extra", "wrong_plan", "symlink", "mixed_provider", "counter"])
+    def test_v11_real_source_integrity_failure_remains_global_after_self_guard(tmp_path, kind):
+        h = V11TransportHarness(tmp_path, known_expiry=True,
+                                artifact_kind="valid" if kind == "counter" else kind,
+                                wrong_counter=kind == "counter")
+        with pytest.raises(RuntimeError, match="batch stopped"):
+            h.run_workflow()
+        assert h.stop.is_set()
+        receipt = h.receipt()
+>       assert receipt["stop_scope"] == "batch" and receipt["artifact_status"] == "invalid"
+               ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stop_scope'
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1502: KeyError
+_ test_v11_real_source_integrity_failure_remains_global_after_self_guard[symlink] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_real_source_integrity3')
+kind = 'symlink'
+
+    @pytest.mark.parametrize("kind", ["tampered", "extra", "wrong_plan", "symlink", "mixed_provider", "counter"])
+    def test_v11_real_source_integrity_failure_remains_global_after_self_guard(tmp_path, kind):
+        h = V11TransportHarness(tmp_path, known_expiry=True,
+                                artifact_kind="valid" if kind == "counter" else kind,
+                                wrong_counter=kind == "counter")
+        with pytest.raises(RuntimeError, match="batch stopped"):
+            h.run_workflow()
+        assert h.stop.is_set()
+        receipt = h.receipt()
+>       assert receipt["stop_scope"] == "batch" and receipt["artifact_status"] == "invalid"
+               ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stop_scope'
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1502: KeyError
+_ test_v11_real_source_integrity_failure_remains_global_after_self_guard[mixed_provider] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_real_source_integrity4')
+kind = 'mixed_provider'
+
+    @pytest.mark.parametrize("kind", ["tampered", "extra", "wrong_plan", "symlink", "mixed_provider", "counter"])
+    def test_v11_real_source_integrity_failure_remains_global_after_self_guard(tmp_path, kind):
+        h = V11TransportHarness(tmp_path, known_expiry=True,
+                                artifact_kind="valid" if kind == "counter" else kind,
+                                wrong_counter=kind == "counter")
+        with pytest.raises(RuntimeError, match="batch stopped"):
+            h.run_workflow()
+        assert h.stop.is_set()
+        receipt = h.receipt()
+>       assert receipt["stop_scope"] == "batch" and receipt["artifact_status"] == "invalid"
+               ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stop_scope'
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1502: KeyError
+_ test_v11_real_source_integrity_failure_remains_global_after_self_guard[counter] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_real_source_integrity5')
+kind = 'counter'
+
+    @pytest.mark.parametrize("kind", ["tampered", "extra", "wrong_plan", "symlink", "mixed_provider", "counter"])
+    def test_v11_real_source_integrity_failure_remains_global_after_self_guard(tmp_path, kind):
+        h = V11TransportHarness(tmp_path, known_expiry=True,
+                                artifact_kind="valid" if kind == "counter" else kind,
+                                wrong_counter=kind == "counter")
+        with pytest.raises(RuntimeError, match="batch stopped"):
+            h.run_workflow()
+        assert h.stop.is_set()
+        receipt = h.receipt()
+>       assert receipt["stop_scope"] == "batch" and receipt["artifact_status"] == "invalid"
+               ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stop_scope'
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1502: KeyError
+______ test_v11_non_guard_failure_at_deadline_cannot_claim_local_timeout _______
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_non_guard_failure_at_0')
+
+    def test_v11_non_guard_failure_at_deadline_cannot_claim_local_timeout(tmp_path):
+        h = V11TransportHarness(tmp_path, non_guard_error=True, download_absent=True)
+        with pytest.raises(RuntimeError, match="batch stopped"):
+            h.run_workflow()
+        assert h.stop.is_set()
+        receipt = h.receipt()
+>       assert receipt["stop_scope"] == "batch" and receipt["self_guard_exhausted"] is False
+               ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stop_scope'
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1513: KeyError
+_ test_v11_provider_refusal_after_guard_keeps_verified_counts_and_global_stop[401] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_provider_refusal_afte0')
+status = 401
+
+    @pytest.mark.parametrize("status", [401, 402, 403, 429])
+    def test_v11_provider_refusal_after_guard_keeps_verified_counts_and_global_stop(tmp_path, status):
+        h = V11TransportHarness(tmp_path, known_expiry=True, source_kind="provider_error", provider_status=status)
+        assert h.run_workflow() == (123, HEAD)
+        receipt = h.receipt()
+>       assert h.stop.is_set() and receipt["stop_scope"] == "batch"
+                                   ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stop_scope'
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1524: KeyError
+_ test_v11_provider_refusal_after_guard_keeps_verified_counts_and_global_stop[402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_provider_refusal_afte1')
+status = 402
+
+    @pytest.mark.parametrize("status", [401, 402, 403, 429])
+    def test_v11_provider_refusal_after_guard_keeps_verified_counts_and_global_stop(tmp_path, status):
+        h = V11TransportHarness(tmp_path, known_expiry=True, source_kind="provider_error", provider_status=status)
+        assert h.run_workflow() == (123, HEAD)
+        receipt = h.receipt()
+>       assert h.stop.is_set() and receipt["stop_scope"] == "batch"
+                                   ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stop_scope'
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1524: KeyError
+_ test_v11_provider_refusal_after_guard_keeps_verified_counts_and_global_stop[403] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_provider_refusal_afte2')
+status = 403
+
+    @pytest.mark.parametrize("status", [401, 402, 403, 429])
+    def test_v11_provider_refusal_after_guard_keeps_verified_counts_and_global_stop(tmp_path, status):
+        h = V11TransportHarness(tmp_path, known_expiry=True, source_kind="provider_error", provider_status=status)
+        assert h.run_workflow() == (123, HEAD)
+        receipt = h.receipt()
+>       assert h.stop.is_set() and receipt["stop_scope"] == "batch"
+                                   ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stop_scope'
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1524: KeyError
+_ test_v11_provider_refusal_after_guard_keeps_verified_counts_and_global_stop[429] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_provider_refusal_afte3')
+status = 429
+
+    @pytest.mark.parametrize("status", [401, 402, 403, 429])
+    def test_v11_provider_refusal_after_guard_keeps_verified_counts_and_global_stop(tmp_path, status):
+        h = V11TransportHarness(tmp_path, known_expiry=True, source_kind="provider_error", provider_status=status)
+        assert h.run_workflow() == (123, HEAD)
+        receipt = h.receipt()
+>       assert h.stop.is_set() and receipt["stop_scope"] == "batch"
+                                   ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stop_scope'
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1524: KeyError
+_ test_v11_missing_cancelled_dispatch_is_once_only_with_durable_original_receipts _
+
+self = <test_unimatch_expert500_journal_pilot_v11.V11TransportHarness object at 0x109e77a10>
+argv = ['gh', 'run', 'view', '123', '--json', 'status,conclusion,headSha,url']
+kwargs = {'cwd': PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_missing_cancelled_dis0'), 'stdin': None, 'timeout': 60.0}
+
+    def command(self, argv, **kwargs):
+        if argv[:3] == ["gh", "run", "view"]:
+            if self.non_guard_error and not self.initial_error:
+                self.initial_error = True
+                self.clock.seconds = 900
+                self.calls.append({"argv": argv, "at": self.clock.seconds,
+                                   "timeout": kwargs["timeout"]})
+                raise RuntimeError("Original identity audit failed at the deadline")
+            if self.delivery_at is not None and self.clock.seconds >= self.delivery_at:
+                self.calls.append({"argv": argv, "at": self.clock.seconds,
+                                   "timeout": kwargs["timeout"]})
+                return json.dumps({"status": "completed", "conclusion": "success",
+                                   "headSha": HEAD, "url": "https://example.invalid/run/123"})
+        if argv[:3] == ["gh", "run", "download"] and self.download_absent:
+            self.calls.append({"argv": argv, "at": self.clock.seconds,
+                               "timeout": kwargs["timeout"]})
+            return ""  # Original cancelled run has no source artifact, not zero actions.
+>       result = self.original.command(argv, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1409: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Harness(root=PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11...ool": "fetcher", "url": "https://u.edu/admissions"}]}', 'case': 'u', 'run_tag': 'e500-49c6ec28862f499a'}, generated={})
+argv = ['gh', 'run', 'view', '123', '--json', 'status,conclusion,headSha,url']
+cwd = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_missing_cancelled_dis0')
+stdin = None, timeout = 60.0
+
+    def command(
+        self,
+        argv: list[str],
+        *,
+        cwd: Path,
+        stdin: str | None = None,
+        timeout: float = 60,
+    ) -> str:
+        assert cwd == self.root
+        assert 0 < timeout <= 60
+        self.calls.append({"argv": argv, "timeout": timeout, "at": self.clock.seconds})
+        if argv[:3] == ["gh", "workflow", "run"]:
+            assert len([call for call in self.calls if call["argv"][1] == "workflow"]) == 1
+            self.submitted = json.loads(stdin or "{}")
+            assert self.submitted["search_provider"] == "exa"
+            assert (self.destination / "dispatch.json").is_file()
+            if self.dispatch_expiry or self.ambiguous_dispatch:
+                self.clock.seconds = 900.0
+            if self.ambiguous_dispatch:
+                raise TimeoutError("Ambiguous source dispatch")
+            return ""
+        assert argv[:2] == ["gh", "run"] and argv[2] in {
+            "list",
+            "view",
+            "cancel",
+            "download",
+        }
+        if self.audit_overrun:
+            self.clock.advance(60.001)
+            return "[]"
+        if argv[2] == "list":
+            if self.unidentified:
+                return "[]"
+            match = {
+                "databaseId": True if self.invalid_identity else RUN,
+                "displayTitle": "Synthetic capture " + self.submitted["run_tag"],
+                "headSha": HEAD,
+                "status": "in_progress",
+                "conclusion": None,
+            }
+            # A different existing run cannot be selected by list ordering.
+            result = [{**match, "databaseId": 999, "displayTitle": "other-tag"}, match]
+            if self.duplicate_tag:
+                result.append({**match, "databaseId": 456})
+            return json.dumps(result)
+        assert argv[3] == str(RUN)
+        if argv[2] == "view":
+            if self.known_expiry and self.clock.seconds < 900:
+                self.clock.seconds = 900.0
+>               raise TimeoutError("Known source run expired")
+E               TimeoutError: Known source run expired
+
+/tmp/test_unimatch_expert500_workflow_v10.py:242: TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+repo = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_missing_cancelled_dis0')
+ref = 'frozen-ref', case_id = 'u'
+inputs = {'runner': 'ubuntu-latest', 'seconds_per_case': '120', 'max_pages': '60', 'search_provider': 'exa', ...}
+destination = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_missing_cancelled_dis0/controller-01')
+wall_guard = WallGuard(started_at=datetime.datetime(2026, 10, 4, 0, 0, tzinfo=datetime.timezone.utc), deadline_at=datetime.datetime(2026, 10, 4, 0, 15, tzinfo=datetime.timezone.utc))
+
+    def workflow(
+        repo: Path,
+        ref: str,
+        case_id: str,
+        inputs: dict[str, str],
+        destination: Path,
+        *,
+        wall_guard: WallGuard | None = None,
+    ) -> tuple[int, str]:
+        def claim_destination() -> None:
+            # The exact workflow is also replayed independently of parent setup.
+            try:
+                destination.mkdir(parents=True, exist_ok=False)
+            except FileExistsError:
+                STOP.set()
+                raise RuntimeError(
+                    "Source transport cannot reuse a case/controller destination"
+                ) from None
+    
+        if inputs.get("search_provider", "exa") != "exa":
+            STOP.set()
+            raise ValueError("V11 requires its pinned Exa search provider")
+        inputs = {**inputs, "search_provider": "exa"}
+        if inputs.get("mode") == "expert_baseline":
+            if STOP.is_set():
+                raise RuntimeError("Batch stopped before baseline dispatch")
+            claim_destination()
+            return legacy["workflow"](repo, ref, case_id, inputs, destination)
+        if wall_guard is None or STOP.is_set():
+            raise RuntimeError("Expert source requires its immutable guard and a live batch")
+        import uuid
+    
+        from evaluation.research.expert.network_report import (
+            SourceCounters,
+            validate_source_run,
+        )
+    
+        # A clean expiry must leave no apparent controller run for the raw replay.
+        if wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0:
+            raise TimeoutError("wall_guard_exhausted")
+    
+        plan = json.loads(inputs["plan"])
+        if (
+            not isinstance(plan, dict)
+            or inputs.get("mode") != "expert_actions"
+            or plan.get("provider") != "exa"
+        ):
+            raise RuntimeError("Expert transport requires its original controlled action plan")
+        run_id: int | None = None
+        head_sha: str | None = None
+        state: dict[str, Any] = {}
+        dispatch_attempted = False
+        audit_began: float | None = None
+        audit_started_at = None
+        cancel_attempted = False
+        cancel_outcome = None
+        artifact_proof: dict[str, Any] = {}
+        trigger_error = None
+    
+        def audit_remaining() -> float:
+            assert audit_began is not None
+            seconds = 60.0 - (time.monotonic() - audit_began)
+            if seconds <= 0:
+                raise TimeoutError("transport_audit_exhausted")
+            return seconds
+    
+        def remaining() -> float:
+            if audit_began is not None:
+                return audit_remaining()
+            seconds = wall_guard.remaining_seconds(now=datetime.now(UTC))
+            if seconds <= 0:
+                raise TimeoutError("wall_guard_exhausted")
+            return seconds
+    
+        def gh(argv: list[str], *, stdin: str | None = None) -> str:
+            nonlocal dispatch_attempted
+            timeout = min(60.0, remaining())
+            if audit_began is not None:
+                if argv[:2] != ["gh", "run"] or argv[2] not in {
+                    "list",
+                    "view",
+                    "cancel",
+                    "download",
+                }:
+                    raise RuntimeError("Transport audit cannot dispatch a new source action")
+            elif argv[:3] == ["gh", "workflow", "run"]:
+                if STOP.is_set():
+                    raise RuntimeError("Batch stopped before source dispatch")
+                timeout = min(timeout, remaining())
+                # Once the command is invoked even an exception is an ambiguous
+                # dispatch. Only identifying/auditing this tag is permitted next.
+                dispatch_attempted = True
+            result = legacy["command"](argv, cwd=repo, stdin=stdin, timeout=timeout)
+            if audit_began is not None:
+                audit_remaining()
+            return result
+    
+        tag = "e500-" + uuid.uuid4().hex[:16]
+        inputs = {
+            "runner": "ubuntu-latest",
+            "seconds_per_case": "120",
+            "max_pages": "60",
+            "search_provider": "exa",
+            **inputs,
+            "case": case_id,
+            "run_tag": tag,
+        }
+    
+        def receipt(status: str, *, error: str | None = None) -> None:
+            began = audit_began
+            elapsed = math.ceil((time.monotonic() - began) * 1000) if began is not None else 0
+            save(
+                destination / "transport-audit.json",
+                {
+                    "status": status,
+                    "case_id": case_id,
+                    "provider": "exa",
+                    "ref": ref,
+                    "run_tag": tag,
+                    **wall_guard.as_dict(),
+                    "dispatch_attempted": dispatch_attempted,
+                    "dispatch_count": int(dispatch_attempted),
+                    "audit_only": audit_began is not None,
+                    "audit_window_ms": 60000 if audit_began is not None else 0,
+                    "audit_started_at": audit_started_at,
+                    "audit_elapsed_ms": elapsed,
+                    "guard_exhausted": wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0,
+                    "trigger_error": trigger_error,
+                    "error": error,
+                    "run_id": run_id,
+                    "head_sha": head_sha,
+                    "run_status": state.get("status"),
+                    "conclusion": state.get("conclusion"),
+                    "cancel_attempted": cancel_attempted,
+                    "cancel_outcome": cancel_outcome,
+                    "artifact_verified": bool(artifact_proof),
+                    **artifact_proof,
+                },
+            )
+    
+        def identify() -> None:
+            nonlocal run_id, head_sha
+            while run_id is None:
+                runs = json.loads(
+                    gh(
+                        [
+                            "gh",
+                            "run",
+                            "list",
+                            "--workflow",
+                            "benchmark-capture.yml",
+                            "--branch",
+                            ref,
+                            "--event",
+                            "workflow_dispatch",
+                            "--limit",
+                            "40",
+                            "--json",
+                            "databaseId,displayTitle,headSha,status,conclusion",
+                        ]
+                    )
+                )
+                matches = [r for r in runs if r["displayTitle"].endswith(tag)]
+                if len(matches) > 1:
+                    raise RuntimeError("Dispatched tag identifies more than one workflow")
+                if matches:
+                    candidate_id, candidate_sha = matches[0]["databaseId"], matches[0]["headSha"]
+                    if (
+                        type(candidate_id) is not int
+                        or candidate_id <= 0
+                        or type(candidate_sha) is not str
+                        or len(candidate_sha) != 40
+                        or any(c not in "0123456789abcdef" for c in candidate_sha)
+                    ):
+                        raise RuntimeError("Dispatched workflow identity is invalid")
+                    run_id, head_sha = candidate_id, candidate_sha
+                    save(
+                        destination / "run.json",
+                        {"run_id": run_id, "head_sha": head_sha, "tag": tag},
+                    )
+                    emit(
+                        case=case_id,
+                        mode=inputs["mode"],
+                        run_id=run_id,
+                        state="dispatched",
+                        source=head_sha,
+                    )
+                    return
+                if audit_began is None and STOP.is_set():
+                    raise RuntimeError("Batch stopped before dispatched run could be identified")
+                time.sleep(min(5.0, remaining()))
+    
+        def completed() -> None:
+            nonlocal state, cancel_attempted, cancel_outcome
+            while True:
+                state = json.loads(
+                    gh(
+                        [
+                            "gh",
+                            "run",
+                            "view",
+                            str(run_id),
+                            "--json",
+                            "status,conclusion,headSha,url",
+                        ]
+                    )
+                )
+                if state["headSha"] != head_sha:
+                    raise RuntimeError("Workflow source changed unexpectedly")
+                if state["status"] == "completed":
+                    save(destination / "run.json", {"run_id": run_id, "tag": tag, **state})
+                    return
+                if audit_began is not None and not cancel_attempted:
+                    cancel_attempted = True
+                    try:
+                        gh(["gh", "run", "cancel", str(run_id)])
+                        cancel_outcome = "requested"
+                    except Exception as error:
+                        # A completion/cancel race can still yield a complete
+                        # original artifact; never retry this cancellation.
+                        cancel_outcome = type(error).__name__
+                    continue
+                if audit_began is None and STOP.is_set():
+                    raise RuntimeError("Canceled after batch provider429")
+                time.sleep(min(5.0 if audit_began is not None else 10.0, remaining()))
+    
+        def verify_artifact(folder: Path) -> dict[str, Any]:
+            remaining()
+            if folder.is_symlink() or not folder.is_dir():
+                raise RuntimeError("Original controlled artifact is unavailable")
+            logs = folder / "logs"
+            if logs.is_symlink() or not logs.is_dir():
+                raise RuntimeError("Original controlled raw logs are unavailable")
+    
+            def original(path: Path) -> bytes:
+                if path.is_symlink() or not path.is_file():
+                    raise RuntimeError("Original controlled artifact must contain regular files")
+                return path.read_bytes()
+    
+            if json.loads(original(folder / "plan.json")) != plan:
+                raise RuntimeError("Original artifact changed the dispatched action plan")
+            summary_bytes = original(folder / "summary.json")
+            summary = json.loads(summary_bytes)
+            produced, raw_logs = summary.get("actions"), summary.get("raw_logs")
+            if not isinstance(produced, list) or len(produced) != 1 or not isinstance(raw_logs, dict):
+                raise RuntimeError("Original controller action/checkpoint is incomplete")
+            if {path.name for path in logs.iterdir()} != set(raw_logs):
+                raise RuntimeError("Original artifact has unaccounted or missing raw source logs")
+            records = {}
+            provider_failures = []
+            for name, expected_sha in raw_logs.items():
+                if (
+                    type(name) is not str
+                    or name in {"", ".", ".."}
+                    or Path(name).name != name
+                    or "/" in name
+                    or "\\" in name
+                ):
+                    raise RuntimeError("Original raw source paths must be confined")
+                data = original(logs / name)
+                if hashlib.sha256(data).hexdigest() != expected_sha:
+                    raise RuntimeError("Original controlled raw source hash changed")
+                records[name] = json.loads(data)
+                raw = records[name]
+                if raw.get("provider") != "exa" or raw.get("case_id") != case_id:
+                    raise RuntimeError("Original raw source provider/case identity changed")
+                if (
+                    raw.get("executed") is True
+                    and raw.get("request", {}).get("tool") == "search_provider"
+                ):
+                    response = raw.get("response", {})
+                    statuses = {
+                        response.get(key)
+                        for key in ("http_status", "status_code")
+                        if type(response.get(key)) is int and response[key] in {401, 402, 403, 429}
+                    }
+                    for status in sorted(statuses):
+                        provider_failures.append(
+                            {
+                                "provider": "exa",
+                                "http_status": status,
+                                "raw_log_path": name,
+                                "raw_log_sha256": expected_sha,
+                            }
+                        )
+            name = produced[0]["raw_log_path"]
+            resume = plan.get("resume_summary")
+            prior = (
+                SourceCounters(
+                    resume["final"]["fetcher_calls"],
+                    resume["final"]["search_queries"],
+                    resume["final"]["elapsed_ms"],
+                )
+                if resume
+                else SourceCounters()
+            )
+            counters = validate_source_run(
+                plan,
+                summary,
+                records[name],
+                case_id=case_id,
+                official_domains=plan["official_domains"],
+                wall_guard=wall_guard,
+                raw_sha256=raw_logs[name],
+                prior=prior,
+                prior_summary=resume,
+                provider="exa",
+            )
+            remaining()
+            if provider_failures:
+                STOP.set()
+            return {
+                "summary_sha256": hashlib.sha256(summary_bytes).hexdigest(),
+                "plan_sha256": hashlib.sha256(original(folder / "plan.json")).hexdigest(),
+                "raw_logs": raw_logs,
+                "source_counters": counters.as_dict(),
+                "source_stop_reason": summary["final"].get("stop_reason"),
+                "provider_failures": provider_failures,
+            }
+    
+        def artifact() -> None:
+            nonlocal artifact_proof
+            folder = destination / "artifact"
+            if folder.exists():
+                try:
+                    artifact_proof = verify_artifact(folder)
+                    return
+                except Exception:
+                    if audit_began is None:
+                        raise
+            download = destination / "artifact-audit" if folder.exists() else folder
+            gh(
+                [
+                    "gh",
+                    "run",
+                    "download",
+                    str(run_id),
+                    "--name",
+                    f"expert-recovery-{run_id}",
+                    "--dir",
+                    str(download),
+                ]
+            )
+            artifact_proof = verify_artifact(download)
+            if download != folder:
+                folder.rename(destination / "artifact-incomplete")
+                download.rename(folder)
+            remaining()
+    
+        claim_destination()
+        save(
+            destination / "dispatch.json",
+            {"ref": ref, "inputs": inputs, **wall_guard.as_dict()},
+        )
+        try:
+            gh(
+                ["gh", "workflow", "run", "benchmark-capture.yml", "--ref", ref, "--json"],
+                stdin=json.dumps(inputs),
+            )
+            identify()
+            completed()
+            artifact()
+            if run_id is None or head_sha is None:
+                raise RuntimeError("Original dispatched workflow identity is unavailable")
+            receipt("completed")
+            return run_id, head_sha
+        except Exception as error:
+            trigger_error = type(error).__name__
+            if not dispatch_attempted:
+                STOP.set()
+                receipt("incomplete", error=trigger_error)
+                raise RuntimeError(
+                    "Source receipt exists but no dispatch outcome is auditable"
+                ) from error
+            audit_began = time.monotonic()
+            audit_started_at = datetime.now(UTC).isoformat()
+            try:
+                identify()
+                completed()
+>               artifact()
+
+/tmp/unimatch-expert500-journal-pilot-v11.py:708: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-pilot-v11.py:672: in artifact
+    artifact_proof = verify_artifact(download)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+folder = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_missing_cancelled_dis0/controller-01/artifact')
+
+    def verify_artifact(folder: Path) -> dict[str, Any]:
+        remaining()
+        if folder.is_symlink() or not folder.is_dir():
+>           raise RuntimeError("Original controlled artifact is unavailable")
+E           RuntimeError: Original controlled artifact is unavailable
+
+/tmp/unimatch-expert500-journal-pilot-v11.py:558: RuntimeError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_missing_cancelled_dis0')
+
+    def test_v11_missing_cancelled_dispatch_is_once_only_with_durable_original_receipts(tmp_path):
+        h = V11TransportHarness(tmp_path, known_expiry=True, download_absent=True)
+        with pytest.raises(TimeoutError):
+>           h.run_workflow()
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1535: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1436: in run_workflow
+    return self.runtime["workflow"](
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+repo = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_missing_cancelled_dis0')
+ref = 'frozen-ref', case_id = 'u'
+inputs = {'runner': 'ubuntu-latest', 'seconds_per_case': '120', 'max_pages': '60', 'search_provider': 'exa', ...}
+destination = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_missing_cancelled_dis0/controller-01')
+wall_guard = WallGuard(started_at=datetime.datetime(2026, 10, 4, 0, 0, tzinfo=datetime.timezone.utc), deadline_at=datetime.datetime(2026, 10, 4, 0, 15, tzinfo=datetime.timezone.utc))
+
+    def workflow(
+        repo: Path,
+        ref: str,
+        case_id: str,
+        inputs: dict[str, str],
+        destination: Path,
+        *,
+        wall_guard: WallGuard | None = None,
+    ) -> tuple[int, str]:
+        def claim_destination() -> None:
+            # The exact workflow is also replayed independently of parent setup.
+            try:
+                destination.mkdir(parents=True, exist_ok=False)
+            except FileExistsError:
+                STOP.set()
+                raise RuntimeError(
+                    "Source transport cannot reuse a case/controller destination"
+                ) from None
+    
+        if inputs.get("search_provider", "exa") != "exa":
+            STOP.set()
+            raise ValueError("V11 requires its pinned Exa search provider")
+        inputs = {**inputs, "search_provider": "exa"}
+        if inputs.get("mode") == "expert_baseline":
+            if STOP.is_set():
+                raise RuntimeError("Batch stopped before baseline dispatch")
+            claim_destination()
+            return legacy["workflow"](repo, ref, case_id, inputs, destination)
+        if wall_guard is None or STOP.is_set():
+            raise RuntimeError("Expert source requires its immutable guard and a live batch")
+        import uuid
+    
+        from evaluation.research.expert.network_report import (
+            SourceCounters,
+            validate_source_run,
+        )
+    
+        # A clean expiry must leave no apparent controller run for the raw replay.
+        if wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0:
+            raise TimeoutError("wall_guard_exhausted")
+    
+        plan = json.loads(inputs["plan"])
+        if (
+            not isinstance(plan, dict)
+            or inputs.get("mode") != "expert_actions"
+            or plan.get("provider") != "exa"
+        ):
+            raise RuntimeError("Expert transport requires its original controlled action plan")
+        run_id: int | None = None
+        head_sha: str | None = None
+        state: dict[str, Any] = {}
+        dispatch_attempted = False
+        audit_began: float | None = None
+        audit_started_at = None
+        cancel_attempted = False
+        cancel_outcome = None
+        artifact_proof: dict[str, Any] = {}
+        trigger_error = None
+    
+        def audit_remaining() -> float:
+            assert audit_began is not None
+            seconds = 60.0 - (time.monotonic() - audit_began)
+            if seconds <= 0:
+                raise TimeoutError("transport_audit_exhausted")
+            return seconds
+    
+        def remaining() -> float:
+            if audit_began is not None:
+                return audit_remaining()
+            seconds = wall_guard.remaining_seconds(now=datetime.now(UTC))
+            if seconds <= 0:
+                raise TimeoutError("wall_guard_exhausted")
+            return seconds
+    
+        def gh(argv: list[str], *, stdin: str | None = None) -> str:
+            nonlocal dispatch_attempted
+            timeout = min(60.0, remaining())
+            if audit_began is not None:
+                if argv[:2] != ["gh", "run"] or argv[2] not in {
+                    "list",
+                    "view",
+                    "cancel",
+                    "download",
+                }:
+                    raise RuntimeError("Transport audit cannot dispatch a new source action")
+            elif argv[:3] == ["gh", "workflow", "run"]:
+                if STOP.is_set():
+                    raise RuntimeError("Batch stopped before source dispatch")
+                timeout = min(timeout, remaining())
+                # Once the command is invoked even an exception is an ambiguous
+                # dispatch. Only identifying/auditing this tag is permitted next.
+                dispatch_attempted = True
+            result = legacy["command"](argv, cwd=repo, stdin=stdin, timeout=timeout)
+            if audit_began is not None:
+                audit_remaining()
+            return result
+    
+        tag = "e500-" + uuid.uuid4().hex[:16]
+        inputs = {
+            "runner": "ubuntu-latest",
+            "seconds_per_case": "120",
+            "max_pages": "60",
+            "search_provider": "exa",
+            **inputs,
+            "case": case_id,
+            "run_tag": tag,
+        }
+    
+        def receipt(status: str, *, error: str | None = None) -> None:
+            began = audit_began
+            elapsed = math.ceil((time.monotonic() - began) * 1000) if began is not None else 0
+            save(
+                destination / "transport-audit.json",
+                {
+                    "status": status,
+                    "case_id": case_id,
+                    "provider": "exa",
+                    "ref": ref,
+                    "run_tag": tag,
+                    **wall_guard.as_dict(),
+                    "dispatch_attempted": dispatch_attempted,
+                    "dispatch_count": int(dispatch_attempted),
+                    "audit_only": audit_began is not None,
+                    "audit_window_ms": 60000 if audit_began is not None else 0,
+                    "audit_started_at": audit_started_at,
+                    "audit_elapsed_ms": elapsed,
+                    "guard_exhausted": wall_guard.remaining_seconds(now=datetime.now(UTC)) <= 0,
+                    "trigger_error": trigger_error,
+                    "error": error,
+                    "run_id": run_id,
+                    "head_sha": head_sha,
+                    "run_status": state.get("status"),
+                    "conclusion": state.get("conclusion"),
+                    "cancel_attempted": cancel_attempted,
+                    "cancel_outcome": cancel_outcome,
+                    "artifact_verified": bool(artifact_proof),
+                    **artifact_proof,
+                },
+            )
+    
+        def identify() -> None:
+            nonlocal run_id, head_sha
+            while run_id is None:
+                runs = json.loads(
+                    gh(
+                        [
+                            "gh",
+                            "run",
+                            "list",
+                            "--workflow",
+                            "benchmark-capture.yml",
+                            "--branch",
+                            ref,
+                            "--event",
+                            "workflow_dispatch",
+                            "--limit",
+                            "40",
+                            "--json",
+                            "databaseId,displayTitle,headSha,status,conclusion",
+                        ]
+                    )
+                )
+                matches = [r for r in runs if r["displayTitle"].endswith(tag)]
+                if len(matches) > 1:
+                    raise RuntimeError("Dispatched tag identifies more than one workflow")
+                if matches:
+                    candidate_id, candidate_sha = matches[0]["databaseId"], matches[0]["headSha"]
+                    if (
+                        type(candidate_id) is not int
+                        or candidate_id <= 0
+                        or type(candidate_sha) is not str
+                        or len(candidate_sha) != 40
+                        or any(c not in "0123456789abcdef" for c in candidate_sha)
+                    ):
+                        raise RuntimeError("Dispatched workflow identity is invalid")
+                    run_id, head_sha = candidate_id, candidate_sha
+                    save(
+                        destination / "run.json",
+                        {"run_id": run_id, "head_sha": head_sha, "tag": tag},
+                    )
+                    emit(
+                        case=case_id,
+                        mode=inputs["mode"],
+                        run_id=run_id,
+                        state="dispatched",
+                        source=head_sha,
+                    )
+                    return
+                if audit_began is None and STOP.is_set():
+                    raise RuntimeError("Batch stopped before dispatched run could be identified")
+                time.sleep(min(5.0, remaining()))
+    
+        def completed() -> None:
+            nonlocal state, cancel_attempted, cancel_outcome
+            while True:
+                state = json.loads(
+                    gh(
+                        [
+                            "gh",
+                            "run",
+                            "view",
+                            str(run_id),
+                            "--json",
+                            "status,conclusion,headSha,url",
+                        ]
+                    )
+                )
+                if state["headSha"] != head_sha:
+                    raise RuntimeError("Workflow source changed unexpectedly")
+                if state["status"] == "completed":
+                    save(destination / "run.json", {"run_id": run_id, "tag": tag, **state})
+                    return
+                if audit_began is not None and not cancel_attempted:
+                    cancel_attempted = True
+                    try:
+                        gh(["gh", "run", "cancel", str(run_id)])
+                        cancel_outcome = "requested"
+                    except Exception as error:
+                        # A completion/cancel race can still yield a complete
+                        # original artifact; never retry this cancellation.
+                        cancel_outcome = type(error).__name__
+                    continue
+                if audit_began is None and STOP.is_set():
+                    raise RuntimeError("Canceled after batch provider429")
+                time.sleep(min(5.0 if audit_began is not None else 10.0, remaining()))
+    
+        def verify_artifact(folder: Path) -> dict[str, Any]:
+            remaining()
+            if folder.is_symlink() or not folder.is_dir():
+                raise RuntimeError("Original controlled artifact is unavailable")
+            logs = folder / "logs"
+            if logs.is_symlink() or not logs.is_dir():
+                raise RuntimeError("Original controlled raw logs are unavailable")
+    
+            def original(path: Path) -> bytes:
+                if path.is_symlink() or not path.is_file():
+                    raise RuntimeError("Original controlled artifact must contain regular files")
+                return path.read_bytes()
+    
+            if json.loads(original(folder / "plan.json")) != plan:
+                raise RuntimeError("Original artifact changed the dispatched action plan")
+            summary_bytes = original(folder / "summary.json")
+            summary = json.loads(summary_bytes)
+            produced, raw_logs = summary.get("actions"), summary.get("raw_logs")
+            if not isinstance(produced, list) or len(produced) != 1 or not isinstance(raw_logs, dict):
+                raise RuntimeError("Original controller action/checkpoint is incomplete")
+            if {path.name for path in logs.iterdir()} != set(raw_logs):
+                raise RuntimeError("Original artifact has unaccounted or missing raw source logs")
+            records = {}
+            provider_failures = []
+            for name, expected_sha in raw_logs.items():
+                if (
+                    type(name) is not str
+                    or name in {"", ".", ".."}
+                    or Path(name).name != name
+                    or "/" in name
+                    or "\\" in name
+                ):
+                    raise RuntimeError("Original raw source paths must be confined")
+                data = original(logs / name)
+                if hashlib.sha256(data).hexdigest() != expected_sha:
+                    raise RuntimeError("Original controlled raw source hash changed")
+                records[name] = json.loads(data)
+                raw = records[name]
+                if raw.get("provider") != "exa" or raw.get("case_id") != case_id:
+                    raise RuntimeError("Original raw source provider/case identity changed")
+                if (
+                    raw.get("executed") is True
+                    and raw.get("request", {}).get("tool") == "search_provider"
+                ):
+                    response = raw.get("response", {})
+                    statuses = {
+                        response.get(key)
+                        for key in ("http_status", "status_code")
+                        if type(response.get(key)) is int and response[key] in {401, 402, 403, 429}
+                    }
+                    for status in sorted(statuses):
+                        provider_failures.append(
+                            {
+                                "provider": "exa",
+                                "http_status": status,
+                                "raw_log_path": name,
+                                "raw_log_sha256": expected_sha,
+                            }
+                        )
+            name = produced[0]["raw_log_path"]
+            resume = plan.get("resume_summary")
+            prior = (
+                SourceCounters(
+                    resume["final"]["fetcher_calls"],
+                    resume["final"]["search_queries"],
+                    resume["final"]["elapsed_ms"],
+                )
+                if resume
+                else SourceCounters()
+            )
+            counters = validate_source_run(
+                plan,
+                summary,
+                records[name],
+                case_id=case_id,
+                official_domains=plan["official_domains"],
+                wall_guard=wall_guard,
+                raw_sha256=raw_logs[name],
+                prior=prior,
+                prior_summary=resume,
+                provider="exa",
+            )
+            remaining()
+            if provider_failures:
+                STOP.set()
+            return {
+                "summary_sha256": hashlib.sha256(summary_bytes).hexdigest(),
+                "plan_sha256": hashlib.sha256(original(folder / "plan.json")).hexdigest(),
+                "raw_logs": raw_logs,
+                "source_counters": counters.as_dict(),
+                "source_stop_reason": summary["final"].get("stop_reason"),
+                "provider_failures": provider_failures,
+            }
+    
+        def artifact() -> None:
+            nonlocal artifact_proof
+            folder = destination / "artifact"
+            if folder.exists():
+                try:
+                    artifact_proof = verify_artifact(folder)
+                    return
+                except Exception:
+                    if audit_began is None:
+                        raise
+            download = destination / "artifact-audit" if folder.exists() else folder
+            gh(
+                [
+                    "gh",
+                    "run",
+                    "download",
+                    str(run_id),
+                    "--name",
+                    f"expert-recovery-{run_id}",
+                    "--dir",
+                    str(download),
+                ]
+            )
+            artifact_proof = verify_artifact(download)
+            if download != folder:
+                folder.rename(destination / "artifact-incomplete")
+                download.rename(folder)
+            remaining()
+    
+        claim_destination()
+        save(
+            destination / "dispatch.json",
+            {"ref": ref, "inputs": inputs, **wall_guard.as_dict()},
+        )
+        try:
+            gh(
+                ["gh", "workflow", "run", "benchmark-capture.yml", "--ref", ref, "--json"],
+                stdin=json.dumps(inputs),
+            )
+            identify()
+            completed()
+            artifact()
+            if run_id is None or head_sha is None:
+                raise RuntimeError("Original dispatched workflow identity is unavailable")
+            receipt("completed")
+            return run_id, head_sha
+        except Exception as error:
+            trigger_error = type(error).__name__
+            if not dispatch_attempted:
+                STOP.set()
+                receipt("incomplete", error=trigger_error)
+                raise RuntimeError(
+                    "Source receipt exists but no dispatch outcome is auditable"
+                ) from error
+            audit_began = time.monotonic()
+            audit_started_at = datetime.now(UTC).isoformat()
+            try:
+                identify()
+                completed()
+                artifact()
+                if run_id is None or head_sha is None:
+                    raise RuntimeError("Original dispatched workflow identity is unavailable")
+                receipt("recovered")
+                audit_remaining()
+                return run_id, head_sha
+            except Exception as audit_error:
+                STOP.set()
+                receipt("incomplete", error=type(audit_error).__name__)
+>               raise RuntimeError(
+                    "Source dispatch transport audit is incomplete; batch stopped"
+                ) from audit_error
+E               RuntimeError: Source dispatch transport audit is incomplete; batch stopped
+
+/tmp/unimatch-expert500-journal-pilot-v11.py:717: RuntimeError
+_ test_v11_parent_preserves_first_guard_error_and_accepted_prefix_during_finalization _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V11 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+
+    def test_v11_parent_preserves_first_guard_error_and_accepted_prefix_during_finalization(pilot):
+        bootstrap(pilot)
+        pilot.queue(lambda prompt: decision(prompt, "action", facts=[fact()], findings=[finding()]))
+        original = pilot.runtime["workflow"]
+    
+        def ended(repo, ref, case_id, inputs, destination, **kwargs):
+            if len(pilot.plans) == 0:
+                return original(repo, ref, case_id, inputs, destination, **kwargs)
+            guard = kwargs["wall_guard"]
+            FakeDatetime.current = guard.deadline_at + timedelta(seconds=20)
+            destination.mkdir(parents=True)
+            receipt = {
+                "schema_version": "1", "protocol_version": "journal-v11",
+                "status": "case_guard_ended", "stop_scope": "case",
+                "terminal_reason": "wall_guard_exhausted", "self_guard_exhausted": True,
+                "artifact_status": "unavailable", "source_counters_known": False,
+                "source_counters": None, "run_id": 222, "head_sha": HEAD,
+                "receipt_at": FakeDatetime.now(UTC).isoformat(),
+            }
+            path = destination / "transport-audit.json"
+            path.write_text(json.dumps(receipt))
+            raise pilot.runtime["CaseGuardEnded"](receipt, receipt_path=path)
+    
+        pilot.runtime["workflow"] = ended
+        result = pilot.run()
+>       assert not pilot.runtime["STOP"].is_set()
+E       assert not True
+E        +  where True = is_set()
+E        +    where is_set = <threading.Event at 0x109e76060: set>.is_set
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1570: AssertionError
+__ test_v11_concurrent_expiry_does_not_cancel_live_peer_or_prevent_next_case ___
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-473/test_v11_concurrent_expiry_doe0')
+
+    def test_v11_concurrent_expiry_does_not_cancel_live_peer_or_prevent_next_case(tmp_path):
+        shared = threading.Event()
+        ended = threading.Event()
+        barrier = threading.Barrier(2)
+        outcomes = {}
+        failures = []
+    
+        def worker(case):
+            try:
+                h = V11TransportHarness(tmp_path / case, known_expiry=case == "expired",
+                                        download_absent=case == "expired")
+                h.original.stop = shared
+                if case == "expired":
+                    barrier.wait(timeout=10)
+                    try:
+                        h.run_workflow()
+                    except TimeoutError:
+                        outcomes[case] = h.receipt()
+                        ended.set()
+                else:
+                    barrier.wait(timeout=10)
+                    assert ended.wait(timeout=10)
+                    outcomes[case] = h.run_workflow()
+                    assert not any(call["argv"][2] == "cancel" for call in h.calls)
+            except Exception as exc:
+                failures.append(exc)
+                ended.set()
+    
+        threads = [threading.Thread(target=worker, args=(case,)) for case in ("expired", "peer")]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join(timeout=15)
+            assert not thread.is_alive()
+>       assert failures == [] and not shared.is_set()
+E       assert ([AttributeErr...arrierError()] == []
+E         
+E         Left contains 2 more items, first extra item: AttributeError("'NoneType' object has no attribute '__dict__'")
+E         Use -v to get more diff)
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:1616: AssertionError
+=============================== warnings summary ===============================
+test_unimatch_expert500_journal_pilot_v11.py: 20 warnings
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/bs4/builder/_lxml.py:124: DeprecationWarning: The 'strip_cdata' option of HTMLParser() has never done anything and will eventually be removed.
+    parser = parser(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_delivery_after_self_guard_precedes_cancel_and_retains_actual_counters
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_cancel_completion_race_retains_original_verified_artifact
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_known_self_guard_missing_source_is_local_unknown_not_zero[download]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_known_self_guard_missing_source_is_local_unknown_not_zero[summary]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_known_self_guard_missing_source_is_local_unknown_not_zero[raw]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_real_source_integrity_failure_remains_global_after_self_guard[tampered]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_real_source_integrity_failure_remains_global_after_self_guard[extra]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_real_source_integrity_failure_remains_global_after_self_guard[wrong_plan]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_real_source_integrity_failure_remains_global_after_self_guard[symlink]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_real_source_integrity_failure_remains_global_after_self_guard[mixed_provider]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_real_source_integrity_failure_remains_global_after_self_guard[counter]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_non_guard_failure_at_deadline_cannot_claim_local_timeout
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_provider_refusal_after_guard_keeps_verified_counts_and_global_stop[401]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_provider_refusal_after_guard_keeps_verified_counts_and_global_stop[402]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_provider_refusal_after_guard_keeps_verified_counts_and_global_stop[403]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_provider_refusal_after_guard_keeps_verified_counts_and_global_stop[429]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_missing_cancelled_dispatch_is_once_only_with_durable_original_receipts
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_parent_preserves_first_guard_error_and_accepted_prefix_during_finalization
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_concurrent_expiry_does_not_cancel_live_peer_or_prevent_next_case
+19 failed, 64 deselected, 20 warnings in 15.34s

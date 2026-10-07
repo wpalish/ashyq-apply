@@ -1,0 +1,74 @@
+........................................................................ [ 49%]
+....F..........................F........................................ [ 98%]
+..                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_network_account_refusal_is_sanitized_sticky_and_cannot_be_cleared_by_prefix_or_resume[402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-499/test_network_account_refusal_i0')
+status = 402
+
+    @pytest.mark.parametrize("status", [402, 429])
+    def test_network_account_refusal_is_sanitized_sticky_and_cannot_be_cleared_by_prefix_or_resume(
+        tmp_path: Path,
+        status: int,
+    ) -> None:
+        calls = 0
+    
+        async def search(**kwargs: Any) -> Any:
+            nonlocal calls
+            calls += 1
+            raise SearchUnavailable("secret api_key=do-not-echo", http_status=status)
+    
+        action = {"tool": "search_provider", "query": "programme"}
+        first = _execute(tmp_path, _plan(actions=[action, action]), search=search)
+        assert calls == 1 and first["final"]["search_queries"] == 1
+        assert "do-not-echo" not in json.dumps(_record(tmp_path, first["actions"][0]))
+        resumed = _execute(
+            tmp_path, _plan(resume_summary=first, stop_reason=None, actions=[action]), search=search
+        )
+>       assert calls == 1 and resumed["final"]["stop_reason"] == f"http_{status}"
+E       assert (2 == 1)
+
+tests/test_expert_network_budget.py:565: AssertionError
+_ test_provider_account_refusal_is_sanitized_stops_calls_and_survives_resume[402] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-499/test_provider_account_refusal_0')
+status = 402
+
+    @pytest.mark.parametrize("status", [402, 429])
+    def test_provider_account_refusal_is_sanitized_stops_calls_and_survives_resume(
+        tmp_path: Path, status: int
+    ) -> None:
+        calls = 0
+    
+        async def search(**kwargs: Any) -> _Answer:
+            nonlocal calls
+            calls += 1
+            raise SearchUnavailable("Bearer sk-secret vendor URL ?api_key=hidden", http_status=status)
+    
+        action = {"tool": "search_provider", "query": "programme"}
+        first = _execute(tmp_path, _plan(actions=[action, action]), search=search)
+        assert calls == 1
+        assert first["actions"][0]["outcome_status"] == "failure"
+        record = _record(tmp_path, first["actions"][0])
+        assert record["response"]["http_status"] == record["response"]["status_code"] == status
+        assert "sk-secret" not in json.dumps(record) and "api_key" not in json.dumps(record)
+        assert first["actions"][1]["outcome"] == f"stopped_after_http_{status}"
+        assert first["final"]["stop_reason"] == f"http_{status}"
+        resumed = _execute(
+            tmp_path,
+            _plan(
+                actions=[action],
+                resume_summary=first,
+                start_ms=first["final"]["elapsed_ms"] + 200,
+                stop_reason=None,
+            ),
+            search=search,
+        )
+>       assert calls == 1
+E       assert 2 == 1
+
+tests/test_expert_controller_guard.py:153: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_expert_network_budget.py::test_network_account_refusal_is_sanitized_sticky_and_cannot_be_cleared_by_prefix_or_resume[402]
+FAILED tests/test_expert_controller_guard.py::test_provider_account_refusal_is_sanitized_stops_calls_and_survives_resume[402]

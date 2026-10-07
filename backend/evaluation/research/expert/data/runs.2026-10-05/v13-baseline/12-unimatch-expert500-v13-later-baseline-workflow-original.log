@@ -1,0 +1,478 @@
+expert	Set up job	﻿2026-10-05T19:09:12.5701840Z Current runner version: '2.337.0'
+expert	Set up job	2026-10-05T19:09:12.5739206Z ##[group]Runner Image Provisioner
+expert	Set up job	2026-10-05T19:09:12.5740620Z Hosted Compute Agent
+expert	Set up job	2026-10-05T19:09:12.5741978Z Version: 20260901.588
+expert	Set up job	2026-10-05T19:09:12.5743032Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+expert	Set up job	2026-10-05T19:09:12.5744531Z Build Date: 2026-09-01T19:56:44Z
+expert	Set up job	2026-10-05T19:09:12.5745773Z Worker ID: {9b0b4c90-bb35-45d3-9900-3c6bdfd18a3c}
+expert	Set up job	2026-10-05T19:09:12.5746911Z Azure Region: eastus2
+expert	Set up job	2026-10-05T19:09:12.5747981Z ##[endgroup]
+expert	Set up job	2026-10-05T19:09:12.5750036Z ##[group]Operating System
+expert	Set up job	2026-10-05T19:09:12.5751048Z Ubuntu
+expert	Set up job	2026-10-05T19:09:12.5751907Z 24.04.5
+expert	Set up job	2026-10-05T19:09:12.5752738Z LTS
+expert	Set up job	2026-10-05T19:09:12.5753983Z ##[endgroup]
+expert	Set up job	2026-10-05T19:09:12.5754865Z ##[group]Runner Image
+expert	Set up job	2026-10-05T19:09:12.5755999Z Image: ubuntu-24.04
+expert	Set up job	2026-10-05T19:09:12.5756896Z Version: 20260927.320.1
+expert	Set up job	2026-10-05T19:09:12.5758797Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+expert	Set up job	2026-10-05T19:09:12.5761564Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+expert	Set up job	2026-10-05T19:09:12.5763373Z ##[endgroup]
+expert	Set up job	2026-10-05T19:09:12.5765573Z ##[group]GITHUB_TOKEN Permissions
+expert	Set up job	2026-10-05T19:09:12.5768663Z Actions: read
+expert	Set up job	2026-10-05T19:09:12.5769581Z Contents: read
+expert	Set up job	2026-10-05T19:09:12.5770678Z Metadata: read
+expert	Set up job	2026-10-05T19:09:12.5771537Z ##[endgroup]
+expert	Set up job	2026-10-05T19:09:12.5774736Z Secret source: Actions
+expert	Set up job	2026-10-05T19:09:12.5776259Z Cache mode: write
+expert	Set up job	2026-10-05T19:09:12.5777464Z Prepare workflow directory
+expert	Set up job	2026-10-05T19:09:12.6532735Z Prepare all required actions
+expert	Set up job	2026-10-05T19:09:12.6602264Z Getting action download info
+expert	Set up job	2026-10-05T19:09:12.9322756Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+expert	Set up job	2026-10-05T19:09:13.4264141Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+expert	Set up job	2026-10-05T19:09:13.6716603Z Download action repository 'actions/cache@v4' (SHA:0057852bfaa89a56745cba8c7296529d2fc39830)
+expert	Set up job	2026-10-05T19:09:13.9870354Z Download action repository 'actions/download-artifact@v4' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+expert	Set up job	2026-10-05T19:09:14.2000609Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+expert	Set up job	2026-10-05T19:09:14.6329575Z Complete job name: expert
+expert	Run actions/checkout@v4	﻿2026-10-05T19:09:14.7111023Z ##[group]Run actions/checkout@v4
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7111711Z with:
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7112010Z   repository: wpalish/ashyq-apply
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7114811Z   token: ***
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7115104Z   ssh-strict: true
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7115399Z   ssh-user: git
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7115697Z   persist-credentials: true
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7116012Z   clean: true
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7116314Z   sparse-checkout-cone-mode: true
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7116644Z   fetch-depth: 1
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7116941Z   fetch-tags: false
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7117229Z   show-progress: true
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7117514Z   lfs: false
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7117777Z   submodules: false
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7118086Z   set-safe-directory: true
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7118417Z   allow-unsafe-pr-checkout: false
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7118938Z env:
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7119316Z   UNIMATCH_EXA_API_KEY: ***
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7119818Z   UNIMATCH_TAVILY_API_KEY: ***
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7120230Z   UNIMATCH_BRAVE_API_KEY: 
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7120751Z   UNIMATCH_SERPER_API_KEY: ***
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7121119Z   UNIMATCH_DEMO_MODE: false
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7121447Z   UNIMATCH_ENABLE_BROWSER_TIER: false
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7121882Z   UNIMATCH_FETCH_CONTACT: https://github.com/wpalish/ashyq-apply
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7122404Z   PLAN_JSON: 
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.7122698Z ##[endgroup]
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.8151087Z Syncing repository: wpalish/ashyq-apply
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.8152740Z ##[group]Getting Git version info
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.8153322Z Working directory is '/home/runner/work/ashyq-apply/ashyq-apply'
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.8154325Z [command]/usr/bin/git version
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.9878782Z git version 2.55.0
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.9900468Z ##[endgroup]
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.9918502Z Temporarily overriding HOME='/home/runner/work/_temp/ef8dc1e8-b0e0-4345-895b-494a34ab24a9' before making global git config changes
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.9920034Z Adding repository directory to the temporary git global config as a safe directory
+expert	Run actions/checkout@v4	2026-10-05T19:09:14.9925387Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/ashyq-apply/ashyq-apply
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0265943Z Deleting the contents of '/home/runner/work/ashyq-apply/ashyq-apply'
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0270315Z ##[group]Initializing the repository
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0275627Z [command]/usr/bin/git init /home/runner/work/ashyq-apply/ashyq-apply
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0985214Z hint: Using 'master' as the name for the initial branch. This default branch name
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0986416Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0987104Z hint: to use in all of your new repositories, which will suppress this warning,
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0988024Z hint: call:
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0988725Z hint:
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0989453Z hint: 	git config --global init.defaultBranch <name>
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0990221Z hint:
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0990945Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0992028Z hint: 'development'. The just-created branch can be renamed via this command:
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0992888Z hint:
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0993313Z hint: 	git branch -m <name>
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0994027Z hint:
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0994680Z hint: Disable this message with "git config set advice.defaultBranchName false"
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.0995836Z Initialized empty Git repository in /home/runner/work/ashyq-apply/ashyq-apply/.git/
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.1003951Z [command]/usr/bin/git remote add origin https://github.com/wpalish/ashyq-apply
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.1367392Z ##[endgroup]
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.1368021Z ##[group]Disabling automatic garbage collection
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.1372334Z [command]/usr/bin/git config --local gc.auto 0
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.1411401Z ##[endgroup]
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.1412101Z ##[group]Setting up auth
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.1418540Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.1455045Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.4046475Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.4095388Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.4367365Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.4413068Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.4688044Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.4739715Z ##[endgroup]
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.4740436Z ##[group]Fetching the repository
+expert	Run actions/checkout@v4	2026-10-05T19:09:15.4752834Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +e327498d605d3dbe14da177a8a535c664818ce9b:refs/tags/expert500-phase1-v13-2026-10-05-e327498
+expert	Run actions/checkout@v4	2026-10-05T19:09:18.8660183Z From https://github.com/wpalish/ashyq-apply
+expert	Run actions/checkout@v4	2026-10-05T19:09:18.8661466Z  * [new ref]         e327498d605d3dbe14da177a8a535c664818ce9b -> expert500-phase1-v13-2026-10-05-e327498
+expert	Run actions/checkout@v4	2026-10-05T19:09:18.8665403Z ##[endgroup]
+expert	Run actions/checkout@v4	2026-10-05T19:09:18.8666290Z ##[group]Determining the checkout info
+expert	Run actions/checkout@v4	2026-10-05T19:09:18.8668296Z ##[endgroup]
+expert	Run actions/checkout@v4	2026-10-05T19:09:18.8675316Z [command]/usr/bin/git sparse-checkout disable
+expert	Run actions/checkout@v4	2026-10-05T19:09:18.8916211Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+expert	Run actions/checkout@v4	2026-10-05T19:09:18.8969748Z ##[group]Checking out the ref
+expert	Run actions/checkout@v4	2026-10-05T19:09:18.8975910Z [command]/usr/bin/git checkout --progress --force refs/tags/expert500-phase1-v13-2026-10-05-e327498
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6370847Z Note: switching to 'refs/tags/expert500-phase1-v13-2026-10-05-e327498'.
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6371534Z 
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6371853Z You are in 'detached HEAD' state. You can look around, make experimental
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6372610Z changes and commit them, and you can discard any commits you make in this
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6373390Z state without impacting any branches by switching back to a branch.
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6374013Z 
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6374287Z If you want to create a new branch to retain commits you create, you may
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6374851Z do so (now or later) by using -c with the switch command. Example:
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6375119Z 
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6375247Z   git switch -c <new-branch-name>
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6375456Z 
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6375574Z Or undo this operation with:
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6394895Z 
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6415850Z   git switch -
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6416253Z 
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6416632Z Turn off this advice by setting config variable advice.detachedHead to false
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6417139Z 
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6417600Z HEAD is now at e327498 fix: [expert-500] freeze original year evidence and coherent network pilot
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6448011Z ##[endgroup]
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6505235Z [command]/usr/bin/git log -1 --format=%H
+expert	Run actions/checkout@v4	2026-10-05T19:09:19.6539913Z e327498d605d3dbe14da177a8a535c664818ce9b
+expert	Run actions/setup-python@v5	﻿2026-10-05T19:09:19.6826878Z ##[group]Run actions/setup-python@v5
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6827209Z with:
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6827432Z   python-version: 3.12
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6827676Z   cache: pip
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6827945Z   cache-dependency-path: backend/requirements*.txt
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6828289Z   check-latest: false
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6830675Z   token: ***
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6830972Z   update-environment: true
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6831260Z   allow-prereleases: false
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6831513Z   freethreaded: false
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6831749Z env:
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6832048Z   UNIMATCH_EXA_API_KEY: ***
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6832530Z   UNIMATCH_TAVILY_API_KEY: ***
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6832802Z   UNIMATCH_BRAVE_API_KEY: 
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6833145Z   UNIMATCH_SERPER_API_KEY: ***
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6833398Z   UNIMATCH_DEMO_MODE: false
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6833890Z   UNIMATCH_ENABLE_BROWSER_TIER: false
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6834269Z   UNIMATCH_FETCH_CONTACT: https://github.com/wpalish/ashyq-apply
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6834649Z   PLAN_JSON: 
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.6835049Z ##[endgroup]
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.8261034Z ##[group]Installed versions
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.8777918Z (node:2394) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.8779103Z (Use `node --trace-deprecation ...` to show where the warning was created)
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.8779801Z Successfully set up CPython (3.12.14)
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.8780357Z ##[endgroup]
+expert	Run actions/setup-python@v5	2026-10-05T19:09:19.9420406Z [command]/opt/hostedtoolcache/Python/3.12.14/x64/bin/pip cache dir
+expert	Run actions/setup-python@v5	2026-10-05T19:09:24.1394663Z /home/runner/.cache/pip
+expert	Run actions/setup-python@v5	2026-10-05T19:09:24.3018968Z Cache hit for: setup-python-Linux-x64-24.04-Ubuntu-python-3.12.14-pip-3e202fde25aa5b96c65b33bd5c57e533b3e6d4c51772e0ae61c0b922eeab40b7
+expert	Run actions/setup-python@v5	2026-10-05T19:09:24.3104764Z (node:2394) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+expert	Run actions/setup-python@v5	2026-10-05T19:09:24.8751359Z Received 122979618 of 122979618 (100.0%), 225.1 MBs/sec
+expert	Run actions/setup-python@v5	2026-10-05T19:09:24.8752322Z Cache Size: ~117 MB (122979618 B)
+expert	Run actions/setup-python@v5	2026-10-05T19:09:24.8783323Z [command]/usr/bin/tar -xf /home/runner/work/_temp/3a8efe90-eda4-4fc1-bd07-9c1b02579dec/cache.tzst -P -C /home/runner/work/ashyq-apply/ashyq-apply --use-compress-program unzstd
+expert	Run actions/setup-python@v5	2026-10-05T19:09:25.1335066Z Cache restored successfully
+expert	Run actions/setup-python@v5	2026-10-05T19:09:25.1398209Z Cache restored from key: setup-python-Linux-x64-24.04-Ubuntu-python-3.12.14-pip-3e202fde25aa5b96c65b33bd5c57e533b3e6d4c51772e0ae61c0b922eeab40b7
+expert	Bind the dependency environment	﻿2026-10-05T19:09:25.1642072Z ##[group]Run python - <<'PYENV'
+expert	Bind the dependency environment	2026-10-05T19:09:25.1642470Z ^[[36;1mpython - <<'PYENV'^[[0m
+expert	Bind the dependency environment	2026-10-05T19:09:25.1642804Z ^[[36;1mimport hashlib, json, os, platform, sys^[[0m
+expert	Bind the dependency environment	2026-10-05T19:09:25.1643173Z ^[[36;1midentity = {^[[0m
+expert	Bind the dependency environment	2026-10-05T19:09:25.1643712Z ^[[36;1m    'python': sys.version,^[[0m
+expert	Bind the dependency environment	2026-10-05T19:09:25.1644033Z ^[[36;1m    'executable': sys.executable,^[[0m
+expert	Bind the dependency environment	2026-10-05T19:09:25.1644372Z ^[[36;1m    'platform': platform.platform(),^[[0m
+expert	Bind the dependency environment	2026-10-05T19:09:25.1644834Z ^[[36;1m    **{name: os.environ.get(name, '') for name in (^[[0m
+expert	Bind the dependency environment	2026-10-05T19:09:25.1645327Z ^[[36;1m        'RUNNER_OS', 'RUNNER_ARCH', 'ImageOS', 'ImageVersion', 'GITHUB_WORKSPACE'^[[0m
+expert	Bind the dependency environment	2026-10-05T19:09:25.1645819Z ^[[36;1m    )},^[[0m
+expert	Bind the dependency environment	2026-10-05T19:09:25.1646034Z ^[[36;1m}^[[0m
+expert	Bind the dependency environment	2026-10-05T19:09:25.1646451Z ^[[36;1mfingerprint = hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()^[[0m
+expert	Bind the dependency environment	2026-10-05T19:09:25.1646992Z ^[[36;1mwith open(os.environ['GITHUB_OUTPUT'], 'a') as output:^[[0m
+expert	Bind the dependency environment	2026-10-05T19:09:25.1647534Z ^[[36;1m    output.write(f'identity={fingerprint}\n')^[[0m
+expert	Bind the dependency environment	2026-10-05T19:09:25.1648067Z ^[[36;1mPYENV^[[0m
+expert	Bind the dependency environment	2026-10-05T19:09:25.3270341Z shell: /usr/bin/bash -e {0}
+expert	Bind the dependency environment	2026-10-05T19:09:25.3270802Z env:
+expert	Bind the dependency environment	2026-10-05T19:09:25.3271428Z   UNIMATCH_EXA_API_KEY: ***
+expert	Bind the dependency environment	2026-10-05T19:09:25.3272006Z   UNIMATCH_TAVILY_API_KEY: ***
+expert	Bind the dependency environment	2026-10-05T19:09:25.3272298Z   UNIMATCH_BRAVE_API_KEY: 
+expert	Bind the dependency environment	2026-10-05T19:09:25.3272659Z   UNIMATCH_SERPER_API_KEY: ***
+expert	Bind the dependency environment	2026-10-05T19:09:25.3272979Z   UNIMATCH_DEMO_MODE: false
+expert	Bind the dependency environment	2026-10-05T19:09:25.3273248Z   UNIMATCH_ENABLE_BROWSER_TIER: false
+expert	Bind the dependency environment	2026-10-05T19:09:25.3273922Z   UNIMATCH_FETCH_CONTACT: https://github.com/wpalish/ashyq-apply
+expert	Bind the dependency environment	2026-10-05T19:09:25.3274323Z   PLAN_JSON: 
+expert	Bind the dependency environment	2026-10-05T19:09:25.3274626Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Bind the dependency environment	2026-10-05T19:09:25.3275131Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+expert	Bind the dependency environment	2026-10-05T19:09:25.3275584Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Bind the dependency environment	2026-10-05T19:09:25.3276018Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Bind the dependency environment	2026-10-05T19:09:25.3276434Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Bind the dependency environment	2026-10-05T19:09:25.3276843Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+expert	Bind the dependency environment	2026-10-05T19:09:25.3277195Z ##[endgroup]
+expert	Restore only installed dependencies	﻿2026-10-05T19:09:25.4486720Z ##[group]Run actions/cache/restore@v4
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4487060Z with:
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4487417Z   path: backend/.venv
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4488351Z   key: expert-venv-v1-e327498d605d3dbe14da177a8a535c664818ce9b-e4694463f19f9b0ded4673e57fa4d4acd00459832b8dff32d95a056c75ec79a4-3e202fde25aa5b96c65b33bd5c57e533b3e6d4c51772e0ae61c0b922eeab40b7
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4489371Z   enableCrossOsArchive: false
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4489792Z   fail-on-cache-miss: false
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4490063Z   lookup-only: false
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4490467Z env:
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4491122Z   UNIMATCH_EXA_API_KEY: ***
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4491688Z   UNIMATCH_TAVILY_API_KEY: ***
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4492100Z   UNIMATCH_BRAVE_API_KEY: 
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4492533Z   UNIMATCH_SERPER_API_KEY: ***
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4492809Z   UNIMATCH_DEMO_MODE: false
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4493096Z   UNIMATCH_ENABLE_BROWSER_TIER: false
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4494078Z   UNIMATCH_FETCH_CONTACT: https://github.com/wpalish/ashyq-apply
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4494694Z   PLAN_JSON: 
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4495083Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4495544Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4495991Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4496415Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4496817Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4497240Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+expert	Restore only installed dependencies	2026-10-05T19:09:25.4497826Z ##[endgroup]
+expert	Restore only installed dependencies	2026-10-05T19:09:25.5674390Z (node:2441) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+expert	Restore only installed dependencies	2026-10-05T19:09:25.5675200Z (Use `node --trace-deprecation ...` to show where the warning was created)
+expert	Restore only installed dependencies	2026-10-05T19:09:25.6801883Z Cache hit for: expert-venv-v1-e327498d605d3dbe14da177a8a535c664818ce9b-e4694463f19f9b0ded4673e57fa4d4acd00459832b8dff32d95a056c75ec79a4-3e202fde25aa5b96c65b33bd5c57e533b3e6d4c51772e0ae61c0b922eeab40b7
+expert	Restore only installed dependencies	2026-10-05T19:09:25.6946065Z (node:2441) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+expert	Restore only installed dependencies	2026-10-05T19:09:26.2790927Z Received 124866355 of 124866355 (100.0%), 213.0 MBs/sec
+expert	Restore only installed dependencies	2026-10-05T19:09:26.2791540Z Cache Size: ~119 MB (124866355 B)
+expert	Restore only installed dependencies	2026-10-05T19:09:26.2822597Z [command]/usr/bin/tar -xf /home/runner/work/_temp/a32797fe-a33c-401e-a01c-2ea04149b3c6/cache.tzst -P -C /home/runner/work/ashyq-apply/ashyq-apply --use-compress-program unzstd
+expert	Restore only installed dependencies	2026-10-05T19:09:27.2721332Z Cache restored successfully
+expert	Restore only installed dependencies	2026-10-05T19:09:27.2859826Z Cache restored from key: expert-venv-v1-e327498d605d3dbe14da177a8a535c664818ce9b-e4694463f19f9b0ded4673e57fa4d4acd00459832b8dff32d95a056c75ec79a4-3e202fde25aa5b96c65b33bd5c57e533b3e6d4c51772e0ae61c0b922eeab40b7
+expert	Verify the installed dependency environment	﻿2026-10-05T19:09:27.3057230Z ##[group]Run .venv/bin/python - <<'PYENV'
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3057641Z ^[[36;1m.venv/bin/python - <<'PYENV'^[[0m
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3058024Z ^[[36;1mimport hashlib, importlib.metadata, json, os, sys^[[0m
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3058422Z ^[[36;1massert sys.version_info[:2] == (3, 12)^[[0m
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3059043Z ^[[36;1massert os.path.realpath(sys._base_executable) == os.path.realpath(os.environ['pythonLocation'] + '/bin/python')^[[0m
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3059741Z ^[[36;1mpackages = sorted((distribution.metadata['Name'], distribution.version)^[[0m
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3060300Z ^[[36;1m                  for distribution in importlib.metadata.distributions())^[[0m
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3060890Z ^[[36;1mdigest = hashlib.sha256(json.dumps(packages, separators=(',', ':')).encode()).hexdigest()^[[0m
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3061524Z ^[[36;1mprint(json.dumps({'dependency_packages': packages, 'dependency_sha256': digest}))^[[0m
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3061976Z ^[[36;1mPYENV^[[0m
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3062220Z ^[[36;1m.venv/bin/pip check^[[0m
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3134946Z shell: /usr/bin/bash -e {0}
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3135237Z env:
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3135829Z   UNIMATCH_EXA_API_KEY: ***
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3136299Z   UNIMATCH_TAVILY_API_KEY: ***
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3136584Z   UNIMATCH_BRAVE_API_KEY: 
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3136945Z   UNIMATCH_SERPER_API_KEY: ***
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3137221Z   UNIMATCH_DEMO_MODE: false
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3137501Z   UNIMATCH_ENABLE_BROWSER_TIER: false
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3137905Z   UNIMATCH_FETCH_CONTACT: https://github.com/wpalish/ashyq-apply
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3138294Z   PLAN_JSON: 
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3138612Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3139104Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3139552Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3139961Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3140354Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3140783Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.3141133Z ##[endgroup]
+expert	Verify the installed dependency environment	2026-10-05T19:09:27.4985581Z {"dependency_packages": [["CacheControl", "0.14.4"], ["Mako", "1.4.3"], ["MarkupSafe", "3.0.4"], ["PyYAML", "6.0.3"], ["Pygments", "2.21.0"], ["SQLAlchemy", "2.0.36"], ["alembic", "1.14.0"], ["annotated-doc", "0.0.5"], ["annotated-types", "0.8.0"], ["anyio", "4.15.1"], ["beautifulsoup4", "4.12.3"], ["boolean.py", "5.0"], ["certifi", "2026.7.22"], ["charset-normalizer", "3.5.2"], ["click", "8.5.0"], ["coverage", "7.16.2"], ["cyclonedx-python-lib", "11.12.0"], ["defusedxml", "0.7.1"], ["et_xmlfile", "2.0.0"], ["fastapi", "0.142.2"], ["fasteners", "0.20"], ["filelock", "4.0.12"], ["greenlet", "3.5.6"], ["h11", "0.16.0"], ["httpcore", "1.0.9"], ["httptools", "0.8.0"], ["httpx", "0.28.1"], ["idna", "3.20"], ["iniconfig", "2.3.0"], ["license-expression", "30.4.4"], ["lxml", "6.1.0"], ["markdown-it-py", "4.2.0"], ["mdurl", "0.1.2"], ["msgpack", "1.2.3"], ["mypy", "1.14.1"], ["mypy_extensions", "1.1.0"], ["openpyxl", "3.1.5"], ["opentelemetry-api", "1.45.0"], ["packageurl-python", "0.17.6"], ["packaging", "26.3"], ["pgserver", "0.1.4"], ["pip", "25.0.1"], ["pip-requirements-parser", "32.0.1"], ["pip_api", "0.0.35"], ["pip_audit", "2.10.1"], ["platformdirs", "4.12.3"], ["playwright", "1.60.0"], ["pluggy", "1.6.0"], ["psutil", "7.2.2"], ["psycopg", "3.3.4"], ["psycopg-binary", "3.3.4"], ["py-serializable", "2.1.0"], ["pydantic", "2.13.4"], ["pydantic-settings", "2.7.0"], ["pydantic_core", "2.46.4"], ["pyee", "13.0.1"], ["pyparsing", "3.3.3"], ["pypdf", "6.19.0"], ["pytest", "9.1.1"], ["pytest-asyncio", "1.4.0"], ["pytest-cov", "6.0.0"], ["python-dotenv", "1.2.4"], ["python-multipart", "0.0.32"], ["requests", "2.34.2"], ["requests-file", "3.0.1"], ["respx", "0.22.0"], ["rich", "15.0.0"], ["ruff", "0.9.6"], ["sortedcontainers", "2.4.0"], ["soupsieve", "2.10"], ["starlette", "1.7.0"], ["tldextract", "5.3.2"], ["tomli", "2.4.1"], ["tomli_w", "1.2.0"], ["typing-inspection", "0.4.4"], ["typing_extensions", "4.16.0"], ["urllib3", "2.8.0"], ["uvicorn", "0.34.0"], ["uvloop", "0.23.0"], ["watchfiles", "1.3.0"], ["websockets", "17.2"]], "dependency_sha256": "e8b9b4a3a80bc339850d838a35c826e396123dfacf1ba9c73eced0084c76cdb7"}
+expert	Verify the installed dependency environment	2026-10-05T19:09:28.4159823Z No broken requirements found.
+expert	Select the search layer	﻿2026-10-05T19:09:28.4565769Z ##[group]Run set -euo pipefail
+expert	Select the search layer	2026-10-05T19:09:28.4566185Z ^[[36;1mset -euo pipefail^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4566506Z ^[[36;1mrequested="$REQUESTED_SEARCH_PROVIDER"^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4566880Z ^[[36;1mdecided_by="explicit input"^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4567174Z ^[[36;1mcase "$requested" in^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4567446Z ^[[36;1m  auto)^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4567736Z ^[[36;1m    if [ -n "$UNIMATCH_SERPER_API_KEY" ]; then^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4568143Z ^[[36;1m      provider=serper; decided_by=UNIMATCH_SERPER_API_KEY^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4568557Z ^[[36;1m    elif [ -n "$UNIMATCH_BRAVE_API_KEY" ]; then^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4568945Z ^[[36;1m      provider=brave; decided_by=UNIMATCH_BRAVE_API_KEY^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4569342Z ^[[36;1m    elif [ -n "$UNIMATCH_TAVILY_API_KEY" ]; then^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4569735Z ^[[36;1m      provider=tavily; decided_by=UNIMATCH_TAVILY_API_KEY^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4570120Z ^[[36;1m    elif [ -n "$UNIMATCH_EXA_API_KEY" ]; then^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4570492Z ^[[36;1m      provider=exa; decided_by=UNIMATCH_EXA_API_KEY^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4570854Z ^[[36;1m    else^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4571162Z ^[[36;1m      provider=none; decided_by="no configured search key"^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4571513Z ^[[36;1m    fi^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4571739Z ^[[36;1m    ;;^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4571953Z ^[[36;1m  exa)^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4572238Z ^[[36;1m    if [ -z "$UNIMATCH_EXA_API_KEY" ]; then^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4572677Z ^[[36;1m      echo "::error::exa requires UNIMATCH_EXA_API_KEY; no capture started"^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4573239Z ^[[36;1m      exit 1^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4573810Z ^[[36;1m    fi^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4574204Z ^[[36;1m    provider=exa; decided_by="explicit input and UNIMATCH_EXA_API_KEY"^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4574613Z ^[[36;1m    ;;^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4574879Z ^[[36;1m  exa_mcp|none) provider="$requested" ;;^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4575328Z ^[[36;1m  *) echo "::error::unknown search_provider; no capture started"; exit 1 ;;^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4575744Z ^[[36;1mesac^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4576058Z ^[[36;1mecho "UNIMATCH_SEARCH_PROVIDER=$provider" >> "$GITHUB_ENV"^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4576580Z ^[[36;1mecho "search provider: $provider (decided by $decided_by)"^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4577140Z ^[[36;1mmkdir -p out^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4577446Z ^[[36;1mecho "provider=$provider" > out/config.txt^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4577853Z ^[[36;1mecho "decided_by=$decided_by" >> out/config.txt^[[0m
+expert	Select the search layer	2026-10-05T19:09:28.4648018Z shell: /usr/bin/bash -e {0}
+expert	Select the search layer	2026-10-05T19:09:28.4648314Z env:
+expert	Select the search layer	2026-10-05T19:09:28.4648714Z   UNIMATCH_EXA_API_KEY: ***
+expert	Select the search layer	2026-10-05T19:09:28.4649289Z   UNIMATCH_TAVILY_API_KEY: ***
+expert	Select the search layer	2026-10-05T19:09:28.4649585Z   UNIMATCH_BRAVE_API_KEY: 
+expert	Select the search layer	2026-10-05T19:09:28.4649953Z   UNIMATCH_SERPER_API_KEY: ***
+expert	Select the search layer	2026-10-05T19:09:28.4650223Z   UNIMATCH_DEMO_MODE: false
+expert	Select the search layer	2026-10-05T19:09:28.4650509Z   UNIMATCH_ENABLE_BROWSER_TIER: false
+expert	Select the search layer	2026-10-05T19:09:28.4650913Z   UNIMATCH_FETCH_CONTACT: https://github.com/wpalish/ashyq-apply
+expert	Select the search layer	2026-10-05T19:09:28.4651285Z   PLAN_JSON: 
+expert	Select the search layer	2026-10-05T19:09:28.4651604Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Select the search layer	2026-10-05T19:09:28.4652056Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+expert	Select the search layer	2026-10-05T19:09:28.4652518Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Select the search layer	2026-10-05T19:09:28.4652918Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Select the search layer	2026-10-05T19:09:28.4653324Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Select the search layer	2026-10-05T19:09:28.4654063Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+expert	Select the search layer	2026-10-05T19:09:28.4654433Z   REQUESTED_SEARCH_PROVIDER: exa
+expert	Select the search layer	2026-10-05T19:09:28.4654719Z ##[endgroup]
+expert	Select the search layer	2026-10-05T19:09:28.4748883Z search provider: exa (decided by explicit input and UNIMATCH_EXA_API_KEY)
+expert	Provider	﻿2026-10-05T19:09:28.4795895Z ##[group]Run echo "search provider=$UNIMATCH_SEARCH_PROVIDER sha=$(git rev-parse HEAD)"
+expert	Provider	2026-10-05T19:09:28.4796571Z ^[[36;1mecho "search provider=$UNIMATCH_SEARCH_PROVIDER sha=$(git rev-parse HEAD)"^[[0m
+expert	Provider	2026-10-05T19:09:28.4797141Z ^[[36;1mecho "runner=GitHub Actions 1000005667 os=Linux environment=github-hosted"^[[0m
+expert	Provider	2026-10-05T19:09:28.4860723Z shell: /usr/bin/bash -e {0}
+expert	Provider	2026-10-05T19:09:28.4861007Z env:
+expert	Provider	2026-10-05T19:09:28.4861508Z   UNIMATCH_EXA_API_KEY: ***
+expert	Provider	2026-10-05T19:09:28.4861964Z   UNIMATCH_TAVILY_API_KEY: ***
+expert	Provider	2026-10-05T19:09:28.4862244Z   UNIMATCH_BRAVE_API_KEY: 
+expert	Provider	2026-10-05T19:09:28.4862612Z   UNIMATCH_SERPER_API_KEY: ***
+expert	Provider	2026-10-05T19:09:28.4862882Z   UNIMATCH_DEMO_MODE: false
+expert	Provider	2026-10-05T19:09:28.4863172Z   UNIMATCH_ENABLE_BROWSER_TIER: false
+expert	Provider	2026-10-05T19:09:28.4863893Z   UNIMATCH_FETCH_CONTACT: https://github.com/wpalish/ashyq-apply
+expert	Provider	2026-10-05T19:09:28.4864305Z   PLAN_JSON: 
+expert	Provider	2026-10-05T19:09:28.4864625Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Provider	2026-10-05T19:09:28.4865092Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+expert	Provider	2026-10-05T19:09:28.4865582Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Provider	2026-10-05T19:09:28.4865994Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Provider	2026-10-05T19:09:28.4866402Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Provider	2026-10-05T19:09:28.4866796Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+expert	Provider	2026-10-05T19:09:28.4867164Z   UNIMATCH_SEARCH_PROVIDER: exa
+expert	Provider	2026-10-05T19:09:28.4867436Z ##[endgroup]
+expert	Provider	2026-10-05T19:09:28.4974030Z search provider=exa sha=e327498d605d3dbe14da177a8a535c664818ce9b
+expert	Provider	2026-10-05T19:09:28.4974596Z runner=GitHub Actions 1000005667 os=Linux environment=github-hosted
+expert	Baseline capture and blinded packet	﻿2026-10-05T19:09:28.5007651Z ##[group]Run set -euo pipefail
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5008006Z ^[[36;1mset -euo pipefail^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5008283Z ^[[36;1mmkdir -p out^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5008536Z ^[[36;1mcase_flags=()^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5008794Z ^[[36;1mpacket_flags=()^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5009080Z ^[[36;1mif [ -n "$REQUESTED_CASE" ]; then^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5009467Z ^[[36;1m  case_flags=(--case "$REQUESTED_CASE")^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5009833Z ^[[36;1m  packet_flags=(--case "$REQUESTED_CASE")^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5010154Z ^[[36;1melse^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5010487Z ^[[36;1m  # Public cohort IDs only. The expert exporter copies no labels.^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5011156Z ^[[36;1m  for case_id in $(.venv/bin/python -c 'from evaluation.research.live import COHORT; print(" ".join(COHORT))'); do^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5011924Z ^[[36;1m    packet_flags+=(--case "$case_id")^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5012235Z ^[[36;1m  done^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5012464Z ^[[36;1mfi^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5012817Z ^[[36;1m.venv/bin/python -m evaluation.research.live --live --out out/capture \^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5013333Z ^[[36;1m  ${case_flags[@]+"${case_flags[@]}"} \^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5013969Z ^[[36;1m  --seconds-per-case "120" \^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5014409Z ^[[36;1m  --max-pages "60" --strict-expert-budget --finalization-reserve-ms 1000 \^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5014942Z ^[[36;1m  --search-provider "$UNIMATCH_SEARCH_PROVIDER" | tee out/capture.log^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5015376Z ^[[36;1mCAPTURE="$(tail -n 1 out/capture.log)"^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5015688Z ^[[36;1mtest -f "$CAPTURE"^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5016122Z ^[[36;1m.venv/bin/python -m evaluation.research.expert prepare \^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5016605Z ^[[36;1m  --dataset evaluation/research/data/ground_truth.reviewed.json \^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5017063Z ^[[36;1m  --capture "$CAPTURE" "${packet_flags[@]}" \^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5017404Z ^[[36;1m  --out out/packet.json^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5017989Z ^[[36;1mecho "extra_args=--strict-expert-budget --finalization-reserve-ms 1000" >> out/config.txt^[[0m
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5085550Z shell: /usr/bin/bash -e {0}
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5085889Z env:
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5086255Z   UNIMATCH_EXA_API_KEY: ***
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5086716Z   UNIMATCH_TAVILY_API_KEY: ***
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5087080Z   UNIMATCH_BRAVE_API_KEY: 
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5087688Z   UNIMATCH_SERPER_API_KEY: ***
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5088047Z   UNIMATCH_DEMO_MODE: false
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5088344Z   UNIMATCH_ENABLE_BROWSER_TIER: false
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5088843Z   UNIMATCH_FETCH_CONTACT: https://github.com/wpalish/ashyq-apply
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5089225Z   PLAN_JSON: 
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5089524Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5089996Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5090500Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5091160Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5091699Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5092118Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5092511Z   UNIMATCH_SEARCH_PROVIDER: exa
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5092822Z   REQUESTED_CASE: vienna
+expert	Baseline capture and blinded packet	2026-10-05T19:09:28.5093090Z ##[endgroup]
+expert	Baseline capture and blinded packet	2026-10-05T19:09:32.1417499Z search provider: exa
+expert	Baseline capture and blinded packet	2026-10-05T19:10:41.8101036Z vienna: complete
+expert	Baseline capture and blinded packet	2026-10-05T19:10:41.8101448Z out/capture/20261005T190932Z/capture.json
+expert	Baseline capture and blinded packet	2026-10-05T19:10:42.6464438Z Wrote 1 cases; packet sha256 27a4d0b087c69346d2fdc1d7cbc28ab031a4750723bd9688caa68b098ac5c4ab
+expert	Return everything in the log	﻿2026-10-05T19:10:42.7683587Z ##[group]Run tar -czf bundle.tgz out || true
+expert	Return everything in the log	2026-10-05T19:10:42.7684028Z ^[[36;1mtar -czf bundle.tgz out || true^[[0m
+expert	Return everything in the log	2026-10-05T19:10:42.7684364Z ^[[36;1msha256sum bundle.tgz^[[0m
+expert	Return everything in the log	2026-10-05T19:10:42.7684644Z ^[[36;1mecho "BUNDLE_BEGIN"^[[0m
+expert	Return everything in the log	2026-10-05T19:10:42.7684959Z ^[[36;1mbase64 -w 4000 bundle.tgz | sed 's/^/B64 /'^[[0m
+expert	Return everything in the log	2026-10-05T19:10:42.7685306Z ^[[36;1mecho "BUNDLE_END"^[[0m
+expert	Return everything in the log	2026-10-05T19:10:42.7755609Z shell: /usr/bin/bash -e {0}
+expert	Return everything in the log	2026-10-05T19:10:42.7755904Z env:
+expert	Return everything in the log	2026-10-05T19:10:42.7756288Z   UNIMATCH_EXA_API_KEY: ***
+expert	Return everything in the log	2026-10-05T19:10:42.7756861Z   UNIMATCH_TAVILY_API_KEY: ***
+expert	Return everything in the log	2026-10-05T19:10:42.7757148Z   UNIMATCH_BRAVE_API_KEY: 
+expert	Return everything in the log	2026-10-05T19:10:42.7757513Z   UNIMATCH_SERPER_API_KEY: ***
+expert	Return everything in the log	2026-10-05T19:10:42.7757792Z   UNIMATCH_DEMO_MODE: false
+expert	Return everything in the log	2026-10-05T19:10:42.7758070Z   UNIMATCH_ENABLE_BROWSER_TIER: false
+expert	Return everything in the log	2026-10-05T19:10:42.7758472Z   UNIMATCH_FETCH_CONTACT: https://github.com/wpalish/ashyq-apply
+expert	Return everything in the log	2026-10-05T19:10:42.7758848Z   PLAN_JSON: 
+expert	Return everything in the log	2026-10-05T19:10:42.7759158Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Return everything in the log	2026-10-05T19:10:42.7759687Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+expert	Return everything in the log	2026-10-05T19:10:42.7760345Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Return everything in the log	2026-10-05T19:10:42.7760747Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Return everything in the log	2026-10-05T19:10:42.7761147Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Return everything in the log	2026-10-05T19:10:42.7761546Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+expert	Return everything in the log	2026-10-05T19:10:42.7761905Z   UNIMATCH_SEARCH_PROVIDER: exa
+expert	Return everything in the log	2026-10-05T19:10:42.7762174Z ##[endgroup]
+expert	Return everything in the log	2026-10-05T19:10:42.7977799Z 1055fceeba06d7d6a44b4afe08543272f6e123720ba59d0aced1025bc238c47e  bundle.tgz
+expert	Return everything in the log	2026-10-05T19:10:42.7979843Z BUNDLE_BEGIN
+expert	Return everything in the log	2026-10-05T19:10:42.8016609Z B64 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
+expert	Return everything in the log	2026-10-05T19:10:42.8055366Z B64 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
+expert	Return everything in the log	2026-10-05T19:10:42.8093770Z B64 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
+expert	Return everything in the log	2026-10-05T19:10:42.8131801Z B64 2Fq/6/Iu2DWb7O9hdnlvMcKxZR1uAthrWZcboe5a1udGyLmW9bkZ+q2NOrcewNUyVpfu/FbBilrW72XgM2e77iQeUNpj10OaSLxquhVxaY6AuWUKGohOVmQxNKX9RDSBpNwtYapAl7RyOFbCfbSSkpJgNUZxtJKUFaEYd4aWJrCKOzbt6xASd2ZsGgMe7gxFzWELrSRpPexBK0laG0pwx5TDkmCAVo7ZnSH07djYLY+yZyuB2biuC5G3W/K5ApCdlQTeKQadlRTeMXKclTSWvJQ7gHyzksi7hnDbLSJXhVrbLSpXxkezksxNoZnZagtsBptsn4a2AZbYPpHbBBfMSnrvFeLLSg7cO0qXlVzYCrTWPnJiVWAsK3mxRXQrK/lhBxDV3rHmbsGjtm00NsR3sqWbTfCattzX9aGXbGH2yhBKthCwLiKSvZJEvSvusmLAGq+yK61tISF3jcRk5ZqyBqCSlfSshYq0IxQtj2xkJWF3gkq0U8pOBHjvHCaX329TsNWkRNO8LaSVC+omoZJ2irZlIY92Y7alb8wVV6jTDoFC9WjXtP5qTvTukrcAeQH+EGFjzIWt6MsE4WXU+2TcdtgEvEx4fAs+BfquB9pfRXQs5hv3NgAPHrqKzulBWhEWch8cX7lD+zezy3hIVSncV92TFX2WRjrG/Rp1c2N/yGx+3g2UbBSwwASa1Dbk7lsxzEtcc9qIgh5SvIE/8K59yV6zkNC7WxrzMrburG6CVsv33vIjfnremc0Cs2ossc8Cwg7vMWDsUTtPfCxYSEu75iwH5fCYClOw5IAx2k4LSHXQro076FdQXMWVaLxDd0PWg2tSY4vjHO/OGbtlowEHEUuDVdoE5mMniSTbqT2hpYkGiVaHRlCYjYxryXeh2i2zMpSwCX2dlZneRt8Z+tec4RwPn+q9QA7qEP4DDY8h57jNeCBZfIs7x8L37dTyU5HmWvSLiFFP9qjsGQOu57EYUde2ZDw6FFZXXxgb0eOhL8aFaEvdLNwcNZ4YgYtM42limnYoCUaBmDziMT/iMT/iMe8uHnOmn5TNr9WTiTlZAir2CNVsEW7wI1TzvdPzCNX8CNX8CNX8CNV8b/x4hGp+hGpesaNWQTVvxF0/gNUiEoEY37Tzok2PvN2tVNCkH9DhGNagqK/OMc/Q6fAmKHH33Svg2hgRcmzrF96zF2Aw3K+h1aBf6V6jJZZ3OntWmDwDhr+Gw+1Pno2QN+QI3bp94uplyqcTy3oUDmk0prWHyXZACkC8JWiRHZACKdwtrBAVTs5jqoI5PXxMVbCB/twhzvpWjimtoJfY4CaM1XRfQTXtGK3jBFTwA6E1HHJfSLGaVbVjtPowYRN1jXCV9XXHiAW1Dq4SfRjEfmITvF+QRiv3nl7aj7hLg4dDsIunJn3u4nqrNfNMoT0jeIi7NuzhjHAEfwfuAyLYXPhSC/DDsDU+0ZA+LKHGVDxBTP2HQ7H06ZUIcOP0oVCcIf6yeBg8kJns4m0zhcbxgNSXCunImAZxboXsPdER8/mAi0S281tLe0+0BNva4wG94g/Kxs4mNd7xpQ9FwjGYp8KzV6zt85jBr0nE9p9uDkv1OPeo1MA/GFnPAKVMCQzZ04D6Nw8jXgJjTmMQ8j73xzp3DvM4fTjDn+61Yn6aKFalUOdx3LJ5EJPfubkFOwaxVHTmJA9xurGR0QMSgiQYKODfjGQsCA0GDyqWGEYsnQ5YQv/+8MyAFJtGGpg4HxWBVPh3QNSwTSWnGgGPOyzef37gfVG80FyUjXRO8KBdMBZBj/yRYEYDm3jS4MyIAGtPWz0Kicjmvjp4VptJ2c527GsPmm2zu0ESR2mqEsNcm7s7BlE2FpCa+zodh3F27ReOfKcP2N0XSeBptDfUXcqw3TYJ27j6ahUo2qp54++198tnj9+O2pY3CELZOH/19q/gW9jPwgEmG3ZQ60d9JCKWG+oWcnTR3LeYpwrKmUXtpkfE7Vog7qizpb9//3zemwJBLfN5CZ/4rVB4mQsMMPUSdYXQrMpZM7/PfqcXgkfSU2s6fDGOElYoUwDjrSzncekK6NBNL8ANDOTOB31Wtq1uNZKsAFEtPCfp10EsKGjap6TYnackW87kU+IKGcM/RWDgZ+SdiNOmPOEmKrXQs8KAtcB74IqJhzMPe9AR3ufMm36rVRZDMxhedZ51T88Kr9U2hTm5CgR+9/J98Xv9BOP5g16fx/j253d/e/fjr+9a85kpM0Z2ik1QX7JeKPAi8JXi4m+lAcMBMPKHL4tC39LOEhAVtSP2ibmxoq5blOBWn8XuEAHh/EUvmdcWI3h1VHoViHaoMH2Ctr5ICmybL7rYw/gmnO1eCsYx/dUp1JDpL6uhn6lUlEoECbjGEos7BEb3IBAqEjs1p8pqo4WZKgfgiOL4zeNnWR2sghCTHd6dbivjHLaYMmuqjDukEXURUAALHR2eH02XyLiYd98jVBLT4FckEKSQi4u4NCAOIwiZQvqRGJMYXHEyAp4S0SfYp2ck5rHPXjx5CYuP8VcIWB75BCU0hmqM/BykaQex7i8KauMJ0Se35Ysn8GWPuVxCofThE4IUyRdICdG6V7747fei/iwp+orRKkn22sNUBZQ8fclzeuRyxlcOX5D4/sLBw672WBSJiPz1z/8h33/8+J4cd45XZoye1dVsWWFVqWLE1LyulOSzo6OLxZJ8SLTSnpZS/NwqHJlRZuvypTmq9hos6pwfLmYRNksm1LBIzU7XZSGorKfESeLpWW/IJ4p85qFWiDHfBoHJzGMCvFUcL1syG2Lv4tlYQI+rZKNeIiq51z1uzj3DL2yV9PkAA7TwR+J7qCjZdayaXYkzjafi+sh7g0bpFMp8nF1UV9ZfWgwlocQYRUQ1+BXpEDqhkUcQvwosug75I2EJLFGI/scDtYzoAtqm3lOFd/+8y+3/z4tPjHHZigXY4EWTrYVoZzxOdEaHgvmF3UP2lp45vnBHrGTMlpyL3NjN60w7FvPKzFrwcyzkwicXmsf1xnGFabzQMK4yi/8s92rWJJ5vEFeaw/OM4UpT+M/CqLnU98sdMJ+aNtQDcKUiGotoxur2GN4+D+a+i2mEMoc+09lcQ7wwRRd+7qjic0eLPnd+WvopfH2GC8bVlD3luJecv9SXT33vnisCcFzHU5IuRRK5zAgsMFVEnipxlgsoCksv5nqmF9jd59cK8qLs8aEyQuqKXqgTiYlk0VTJ0Ovjk9L8xf8r8vKpor2bbB6r5zM6il3z4poJggwWjM9vmde7on7CFglK69JoRPJBa0TyRRpCfyJJFjb5suj0arseK6dFi29To2lGK7aMcdJzQHQTybKFWiYOTmDyj6ad+UeLqMiDJEzFH9ASQoAlL2tqAsPYmpGWFEWxh2k7gWUui0Ll2b8KwAjA77FrOiaZR0f+73/JG/CnXg3Hc30hckDKNQ/IN6wvoCKqbjb16lvFtpwMCc8aEty43LfMB2eMB7FQXQA2+Mrvi5lrThkrW5IHgbhSjt9zYhaaee3hu+kvPyU3IoEVyveJFPCx1vRMurs12ShadFZXkVRQkT67AqupJ/WVamzkfU4bYrQVbywjMiRHmyuFhyyHxKomTYEJWgB7I3YzNQFgAY7pSFECS55PDjuHZ3m9FDmsdwMmoPKROoenB+USeM0apg+N0/ftbqfdOfnYvXje7Tw/6j477VycXhz/vdAbV4RTUz/J5Hh2gvYpHmCY8yIPn868qlYGGc1TtabJnf6eCBOfmjGbepfC7M2lAEx7HFd3ziuEpsbM5cVmZzSEkeE0y7kJC6ZK1lCTrz64onhKAHDdusib0XDuUPWXVz+9ef3m1be9y59/+unVu495ZeN4QGd6YxYPhadnzdjvRYnPiprcRF+1PjN9XbAcZPGOXgrhV7kkaCnqnLQ7x616LYlepAi8BG2tZdXGM/JfInkCYo+hebCEnYizPkElDrpgkrYGXx6Ctxr0BXHENfnrv/9FPs5o0lw9/5hWL0ayQhZx4ZFD
+expert	Return everything in the log	2026-10-05T19:10:42.8165382Z B64 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
+expert	Return everything in the log	2026-10-05T19:10:42.8179098Z BUNDLE_END
+expert	Preserve independently recorded expert evidence	﻿2026-10-05T19:10:42.8225526Z ##[group]Run actions/upload-artifact@v4
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8225929Z with:
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8226170Z   name: expert-recovery-37361131214
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8226463Z   path: backend/out
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8226712Z   if-no-files-found: warn
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8226974Z   retention-days: 14
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8227220Z   compression-level: 6
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8227461Z   overwrite: false
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8227717Z   include-hidden-files: false
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8227977Z env:
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8228317Z   UNIMATCH_EXA_API_KEY: ***
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8228765Z   UNIMATCH_TAVILY_API_KEY: ***
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8229044Z   UNIMATCH_BRAVE_API_KEY: 
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8229417Z   UNIMATCH_SERPER_API_KEY: ***
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8229695Z   UNIMATCH_DEMO_MODE: false
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8230286Z   UNIMATCH_ENABLE_BROWSER_TIER: false
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8230684Z   UNIMATCH_FETCH_CONTACT: https://github.com/wpalish/ashyq-apply
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8231062Z   PLAN_JSON: 
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8231370Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8231874Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8232337Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8232757Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8233165Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8233898Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8234272Z   UNIMATCH_SEARCH_PROVIDER: exa
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.8234553Z ##[endgroup]
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.9942026Z (node:2499) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:42.9942863Z (Use `node --trace-deprecation ...` to show where the warning was created)
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:43.0064894Z With the provided path, there will be 8 files uploaded
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:43.0066383Z Artifact name is valid!
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:43.0067026Z Root directory input is valid!
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:43.2396685Z Beginning upload of artifact content to blob storage
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:43.2706723Z (node:2499) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:43.3006749Z Uploaded bytes 17303
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:43.3125553Z Finished uploading artifact content to blob storage!
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:43.3126257Z SHA256 digest of uploaded artifact zip is d6689d7141f7b3242e1ebc79317d087181ea2503ef8b97e71273aba2440d3a9a
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:43.3128079Z Finalizing artifact upload
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:43.5348136Z Artifact expert-recovery-37361131214.zip successfully finalized. Artifact ID 11366927125
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:43.5349168Z Artifact expert-recovery-37361131214 has been successfully uploaded! Final size is 17303 bytes. Artifact ID is 11366927125
+expert	Preserve independently recorded expert evidence	2026-10-05T19:10:43.5354910Z Artifact download URL: https://github.com/wpalish/ashyq-apply/actions/runs/37361131214/artifacts/11366927125
+expert	Post Run actions/setup-python@v5	﻿2026-10-05T19:10:43.5543982Z Post job cleanup.
+expert	Post Run actions/setup-python@v5	2026-10-05T19:10:43.6767480Z Cache hit occurred on the primary key setup-python-Linux-x64-24.04-Ubuntu-python-3.12.14-pip-3e202fde25aa5b96c65b33bd5c57e533b3e6d4c51772e0ae61c0b922eeab40b7, not saving cache.
+expert	Post Run actions/setup-python@v5	2026-10-05T19:10:43.6768963Z (node:2512) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+expert	Post Run actions/setup-python@v5	2026-10-05T19:10:43.6769688Z (Use `node --trace-deprecation ...` to show where the warning was created)
+expert	Post Run actions/checkout@v4	﻿2026-10-05T19:10:43.6915943Z Post job cleanup.
+expert	Post Run actions/checkout@v4	2026-10-05T19:10:43.7780572Z [command]/usr/bin/git version
+expert	Post Run actions/checkout@v4	2026-10-05T19:10:43.7829607Z git version 2.55.0
+expert	Post Run actions/checkout@v4	2026-10-05T19:10:43.7871107Z Temporarily overriding HOME='/home/runner/work/_temp/6620c07c-0a05-4158-951f-57b4d5c3e67e' before making global git config changes
+expert	Post Run actions/checkout@v4	2026-10-05T19:10:43.7872484Z Adding repository directory to the temporary git global config as a safe directory
+expert	Post Run actions/checkout@v4	2026-10-05T19:10:43.7880211Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/ashyq-apply/ashyq-apply
+expert	Post Run actions/checkout@v4	2026-10-05T19:10:43.7923253Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+expert	Post Run actions/checkout@v4	2026-10-05T19:10:43.7959893Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+expert	Post Run actions/checkout@v4	2026-10-05T19:10:43.8252775Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+expert	Post Run actions/checkout@v4	2026-10-05T19:10:43.8293888Z http.https://github.com/.extraheader
+expert	Post Run actions/checkout@v4	2026-10-05T19:10:43.8307165Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+expert	Post Run actions/checkout@v4	2026-10-05T19:10:43.8351142Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+expert	Post Run actions/checkout@v4	2026-10-05T19:10:43.8688775Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+expert	Post Run actions/checkout@v4	2026-10-05T19:10:43.8738210Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+expert	Complete job	﻿2026-10-05T19:10:43.9177095Z Cleaning up orphan processes
+expert	Complete job	2026-10-05T19:10:43.9479874Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/cache/restore@v4, actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

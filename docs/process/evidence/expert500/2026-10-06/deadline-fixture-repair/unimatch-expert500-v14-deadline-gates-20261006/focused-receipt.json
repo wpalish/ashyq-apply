@@ -1,0 +1,27 @@
+{
+  "started_at": "2026-10-06T17:55:31.692171+00:00",
+  "finished_at": "2026-10-06T17:55:34.562149+00:00",
+  "gate": "focused",
+  "results": [
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/test_expert_source_admission.py",
+        "tests/test_expert_controller.py",
+        "tests/test_expert_live_budget.py",
+        "tests/test_expert_network_turn_policy.py",
+        "tests/test_expert_baseline_finalization.py",
+        "-q"
+      ],
+      "cwd": "backend",
+      "returncode": 0,
+      "log": "/tmp/unimatch-expert500-v14-deadline-gates-20261006/focused-00-original.log",
+      "bytes": 320,
+      "sha256": "c5f22b76c28f03bff9b231dd2790aff8f171f6ce2d73628df1e8b48e34e36f28"
+    }
+  ],
+  "credential_environment_override_empty": true,
+  "measured_pilot": false
+}

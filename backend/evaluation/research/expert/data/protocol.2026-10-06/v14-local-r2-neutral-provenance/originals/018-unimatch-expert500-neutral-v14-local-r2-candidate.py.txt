@@ -1,0 +1,659 @@
+"""Prepared source-free V14 local bootstrap/data/minimal-commit transport preflight.
+
+All fixture text is invented. No action is dispatched, no fact is accepted,
+and failure stops the remaining phases without retrying any model request.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import importlib.util
+import json
+import math
+import os
+import shutil
+import subprocess
+import time
+from collections.abc import Callable
+from dataclasses import replace
+from datetime import datetime, timedelta
+from functools import partial
+from pathlib import Path
+from typing import Any, TypeVar
+
+from evaluation.research.expert.blind_cli import selector_answer
+from evaluation.research.expert.journal import AcceptedJournal
+from evaluation.research.expert.network_budget import WALL_GUARD_MS, WallGuard
+from evaluation.research.expert.network_turn_policy import NetworkBudgetIsolation as Isolation
+from evaluation.research.expert.network_turn_policy import (
+    TurnPhase,
+    command_proof,
+    journal_schema_for_turn,
+    parse_turn_decision,
+    policy_card,
+    policy_limits,
+    select,
+    turn_window,
+    utc_now,
+)
+from evaluation.research.expert.question_contract import EFFECTIVE_JOURNAL_INSTRUCTIONS
+from evaluation.research.expert.representation import closing_prompt
+from evaluation.research.expert.workspace_policy import (
+    allocate_workspaces,
+    selector_paths,
+    validate_selector_paths,
+    validate_workspaces,
+)
+
+COHORT = ("neutral", "othercase")
+CASE_ID = "neutral"
+MODEL = "gpt-6-astra"
+CLI = "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex"
+PUBLIC_MODEL_PATH = str(Path(CLI).parent) + ":/usr/bin:/bin:/usr/sbin:/sbin"
+RESULT_PATH = Path("/tmp/unimatch-expert500-v14-local-r2-neutral-result.json")
+CANONICAL_UNIVERSITY = "Synthetic University"
+PHASES: tuple[TurnPhase, ...] = ("bootstrap", "data", "minimal_commit")
+T = TypeVar("T")
+NEUTRAL_RUNTIME_MODULES = frozenset(
+    "evaluation.research." + name
+    for name in (
+        "expert.blind_cli",
+        "expert.selector",
+        "expert.compact",
+        "expert.journal",
+        "expert.models",
+        "expert.representation",
+        "expert.network_turn_policy",
+        "expert.network_budget",
+        "expert.source_admission",
+        "expert.workspace_policy",
+        "expert.question_contract",
+        "mapping",
+        "metrics",
+        "schema",
+        "identities",
+    )
+)
+
+
+LOCAL_HELPERS = (
+    Path("/tmp/unimatch-expert500-journal-pilot-v14-local-r2-candidate.py"),
+    Path("/tmp/unimatch-expert500-journal-report-v14-local-r2-candidate.py"),
+    Path("/tmp/unimatch-expert500-local-worker-v1-candidate.py"),
+)
+PUBLIC_MODEL_ENVIRONMENT = {
+    "HOME": "/Users/wpalish",
+    "PATH": PUBLIC_MODEL_PATH,
+    "LANG": "en_US.UTF-8",
+    "LC_ALL": "en_US.UTF-8",
+    "TMPDIR": "/tmp",
+}
+
+
+def cli_discovery(search_path: str) -> dict[str, Any]:
+    """Check the declared PATH before any allocation or process invocation."""
+    if search_path != PUBLIC_MODEL_PATH:
+        raise ValueError("Neutral caller PATH must equal the pinned public model PATH")
+    codex = shutil.which("codex", path=search_path)
+    sandbox = shutil.which("sandbox-exec", path=search_path)
+    if codex != CLI or sandbox != "/usr/bin/sandbox-exec":
+        raise ValueError("Pinned public PATH must discover the exact bundled CLI and Seatbelt")
+    return {
+        "path": search_path,
+        "codex_executable": codex,
+        "sandbox_executable": sandbox,
+        "path_matches_public_model_environment": True,
+    }
+
+
+def runtime_hashes() -> dict[str, str]:
+    """Record the exact public runtime bytes used by this new neutral invocation."""
+    hashes = {}
+    for name in sorted(NEUTRAL_RUNTIME_MODULES):
+        spec = importlib.util.find_spec(name)
+        if spec is None or spec.origin is None:
+            raise ValueError("Neutral runtime source is unavailable")
+        source = Path(spec.origin)
+        if source.is_symlink() or not source.is_file():
+            raise ValueError("Neutral runtime source must be a regular non-symlink file")
+        hashes[name] = file_hash(source)
+    for helper in LOCAL_HELPERS:
+        if helper.is_symlink() or not helper.is_file():
+            raise ValueError("Actual local helper is unavailable")
+        hashes[str(helper)] = file_hash(helper)
+    return hashes
+
+
+def file_hash(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def digest(value: Any) -> str:
+    encoded = json.dumps(
+        value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False
+    )
+    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
+
+
+def save(path: Path, value: Any) -> None:
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
+
+
+def synthetic_record(journal_sha256: str) -> dict[str, Any]:
+    # The invented attribution is a schema fixture, never accepted source evidence.
+    scope = dict.fromkeys(
+        (
+            "university",
+            "programme",
+            "degree",
+            "field",
+            "intake",
+            "population",
+            "qualification",
+            "academic_year",
+        )
+    )
+    scope["university"] = CANONICAL_UNIVERSITY
+    return {
+        "kind": "record",
+        "observation": "Neutral synthetic data serialization.",
+        "journal_sha256": journal_sha256,
+        "action": None,
+        "facts": [
+            {
+                "id": f"probe{i}",
+                "question": "OTHER",
+                "claim_key": "synthetic_probe",
+                "value_json": json.dumps(f"public synthetic value {i}"),
+                "scope": dict(scope),
+                "source_step": 1,
+                "quotation": f"Synthetic University fixture statement {i}.",
+                "location": {
+                    "kind": "document_ir",
+                    "block_id": f"p:{i}",
+                    "section_path": ["Synthetic fixture"],
+                    "page": None,
+                },
+            }
+            for i in range(1, 5)
+        ],
+        "question_findings": [],
+    }
+
+
+def prompt_for_phase(phase: TurnPhase, journal_sha256: str) -> dict[str, Any]:
+    if phase == "minimal_commit":
+        return closing_prompt(journal_sha256=journal_sha256)
+    if phase == "bootstrap":
+        return {
+            "task": EFFECTIVE_JOURNAL_INSTRUCTIONS,
+            "network_policy": policy_card(),
+            "accepted_journal": {"sha256": journal_sha256},
+            "neutral_probe": (
+                "This is synthetic transport serialization only. No university research "
+                "or tool action is executed. Return kind=action with one proposed fetcher "
+                "action for https://example.org/public-probe, observation=neutral probe, "
+                "all irrelevant action fields null, domains=[], facts=[], "
+                "question_findings=[]. The parent will never execute this proposed action."
+            ),
+        }
+    return {
+        "task": EFFECTIVE_JOURNAL_INSTRUCTIONS,
+        "network_policy": policy_card(),
+        "neutral_probe": (
+            "Synthetic schema serialization only. No source or action was executed. "
+            "The invented fixture statements and coordinates below are not university "
+            "facts and cannot be accepted by the source/citation gates. Return exactly "
+            "the provided four-fact synthetic_record, preserving every null scope and "
+            "original string value. This is not a research checkpoint."
+        ),
+        "synthetic_record": synthetic_record(journal_sha256),
+    }
+
+
+def parse_answer(raw: str, phase: TurnPhase, journal_sha256: str) -> dict[str, Any]:
+    return parse_turn_decision(
+        raw,
+        journal_sha256=journal_sha256,
+        canonical_university=CANONICAL_UNIVERSITY,
+        phase=phase,
+    ).model_dump(mode="json")
+
+
+def run_probe(
+    *,
+    clock: Callable[[], datetime] = utc_now,
+    monotonic: Callable[[], float] = time.monotonic,
+) -> dict[str, Any]:
+    if RESULT_PATH.exists() or RESULT_PATH.is_symlink():
+        raise ValueError("Do not overwrite or retry an original neutral result")
+    # Begin before allocation, OS proof, CLI preparation, model queueing or thinking.
+    began = monotonic()
+    started_at = clock()
+    wall_guard = WallGuard(started_at, started_at + timedelta(milliseconds=WALL_GUARD_MS))
+    audit_ms = 0
+    meter: list[dict[str, Any]] = []
+    phases: list[dict[str, Any]] = []
+    result: dict[str, Any] = {
+        "protocol_version": "journal-v14-local",
+        "probe_kind": "synthetic_transport_only",
+        "started_at": started_at.isoformat(),
+        "wall_guard": wall_guard.as_dict(),
+        "script": str(Path(__file__)),
+        "script_sha256": file_hash(Path(__file__)),
+        "runtime_modules_before": runtime_hashes(),
+        "public_model_environment": PUBLIC_MODEL_ENVIRONMENT,
+        "public_model_environment_sha256": digest(PUBLIC_MODEL_ENVIRONMENT),
+        "requested_model": MODEL,
+        "requested_reasoning_effort": None,
+        "reasoning_override": None,
+        "reasoning_effort_source": "cli_default",
+        "university_requests": 0,
+        "source_requests": 0,
+        "tool_requests": 0,
+        "source_facts_accepted": False,
+        "turn_policy": policy_limits(),
+        "audit_time_basis": "neutral_work_only_not_controller_source_ledger",
+        "canonical_workspace_preflight_passed": False,
+        "completed_stream_replay_passed": False,
+        "status": "running",
+        "stopped": False,
+        "stop_reason": None,
+        "results": phases,
+    }
+
+    def charge(stage: str, operation: Callable[[], T]) -> T:
+        nonlocal audit_ms
+        started = monotonic()
+        try:
+            return operation()
+        finally:
+            elapsed = math.ceil((monotonic() - started) * 1000)
+            audit_ms += elapsed
+            meter.append({"stage": stage, "elapsed_ms": elapsed, "audit_ms": audit_ms})
+
+    def sync_clock(stage: str) -> None:
+        nonlocal audit_ms
+        elapsed = max(0, math.ceil((monotonic() - began) * 1000) - audit_ms)
+        audit_ms += elapsed
+        meter.append({"stage": stage, "elapsed_ms": elapsed, "audit_ms": audit_ms})
+
+    def require_guard() -> None:
+        if wall_guard.remaining_seconds(now=clock()) <= 0:
+            raise ValueError("Neutral transport exhausted the immutable case wall guard")
+
+    try:
+        require_guard()
+        discovery = charge("cli_discovery", lambda: cli_discovery(os.environ.get("PATH", "")))
+        result.update(cli_discovery=discovery, cli_discovery_sha256=digest(discovery))
+        require_guard()
+        assignments, receipts = charge("workspace_allocation", lambda: allocate_workspaces(COHORT))
+        verified = charge(
+            "workspace_identity_validation",
+            lambda: validate_workspaces(assignments, receipts, case_ids=COHORT),
+        )
+        workspace, metadata_root = verified[CASE_ID], verified["othercase"]
+        assignment_path, receipt_path = (
+            metadata_root / "workspace-locations.json",
+            metadata_root / "workspace-receipts.json",
+        )
+        charge("workspace_assignment_write", lambda: save(assignment_path, assignments))
+        charge("workspace_receipt_write", lambda: save(receipt_path, receipts))
+        assignment_hash = charge("workspace_assignment_hash", lambda: file_hash(assignment_path))
+        receipt_hash = charge("workspace_receipt_hash", lambda: file_hash(receipt_path))
+        result.update(
+            cohort=list(COHORT),
+            case_id=CASE_ID,
+            workspace=str(workspace),
+            artifacts=str(metadata_root),
+            workspace_assignments=assignments,
+            workspace_receipts=receipts,
+            workspace_assignments_path=str(assignment_path),
+            workspace_receipts_path=str(receipt_path),
+            workspace_assignments_sha256=assignment_hash,
+            workspace_receipts_sha256=receipt_hash,
+        )
+        # Persist the original identities and hashes before the first model process.
+        save(RESULT_PATH, result)
+        roots = [
+            Path("/Users/wpalish/Documents/Codex"),
+            Path("/Users/wpalish/.codex/memories"),
+            Path("/Users/wpalish/.codex/sessions"),
+            Path("/Users/wpalish/.codex/attachments"),
+            Path("/Users/wpalish/Downloads"),
+            Path("/tmp/codex-remote-attachments"),
+            *[path for case, path in verified.items() if case != CASE_ID],
+            *Path("/tmp").glob("unimatch-expert500*"),
+            *Path("/tmp").glob("test_unimatch_expert500*"),
+        ]
+        isolation = charge(
+            "isolation_construction",
+            lambda: replace(Isolation.local(workspace, roots), codex_executable=CLI),
+        )
+        allowed, sealed = workspace / "public-sentinel.txt", metadata_root / "sealed-sentinel.txt"
+        charge("allowed_sentinel_write", lambda: allowed.write_text("PUBLIC_NEUTRAL_SENTINEL_ONLY"))
+        charge("sealed_sentinel_write", lambda: sealed.write_text("SEALED_NEUTRAL_SENTINEL_ONLY"))
+        proof = charge(
+            "seatbelt_harmless_cat_proof", lambda: isolation.prove_access(allowed, sealed)
+        )
+        proof.update(
+            workspace=str(workspace),
+            sandbox_executable=isolation.sandbox_executable,
+            codex_executable=isolation.codex_executable,
+            profile=isolation.profile(),
+            allowed_sentinel=str(allowed),
+            sealed_sentinel=str(sealed),
+            probe_command="/bin/cat harmless sentinels only; no model/source requests",
+        )
+        result.update(isolation_proof=proof, isolation_proof_sha256=digest(proof))
+        version = charge(
+            "bundled_cli_version",
+            lambda: subprocess.run(
+                [CLI, "--version"], capture_output=True, text=True, check=True, timeout=10
+            ).stdout.strip(),
+        )
+        if version != "codex-cli 0.159.2":
+            raise ValueError("Neutral preflight requires the frozen bundled Codex CLI 0.159.2")
+        result.update(codex_cli=CLI, codex_cli_version=version)
+        result["codex_cli_sha256"] = charge("bundled_cli_hash", lambda: file_hash(Path(CLI)))
+        journal_sha256 = AcceptedJournal.initial().sha256
+        result["journal_sha256"] = journal_sha256
+        save(RESULT_PATH, result)
+        for turn, phase in enumerate(PHASES, 1):
+            require_guard()
+            phase_result: dict[str, Any] = {"turn": turn, "mode": phase, "status": "preflight"}
+            phases.append(phase_result)
+            schema_path, output = charge(
+                "selector_workspace_paths",
+                partial(
+                    selector_paths,
+                    assignments,
+                    receipts,
+                    case_id=CASE_ID,
+                    turn=turn,
+                    fresh_output=True,
+                ),
+            )
+            schema = charge(
+                "bound_schema_construction",
+                partial(
+                    journal_schema_for_turn,
+                    journal_sha256=journal_sha256,
+                    canonical_university=CANONICAL_UNIVERSITY,
+                    phase=phase,
+                ),
+            )
+            charge("bound_schema_write", partial(save, schema_path, schema))
+            prompt = charge("prompt_construction", partial(prompt_for_phase, phase, journal_sha256))
+            charge(
+                "selector_before_path_validation",
+                partial(
+                    validate_selector_paths,
+                    assignments,
+                    receipts,
+                    case_id=CASE_ID,
+                    turn=turn,
+                    workspace=workspace,
+                    schema=schema_path,
+                    output=output,
+                    fresh_output=True,
+                ),
+            )
+            argv = charge(
+                "selector_command",
+                partial(isolation.command, schema_path, output=output, model=MODEL),
+            )
+            argv_proof = charge("selector_command_proof", partial(command_proof, argv))
+            for option, expected in (
+                ("-C", str(workspace)),
+                ("--output-schema", str(schema_path)),
+                ("--output-last-message", str(output)),
+            ):
+                if argv.count(option) != 1 or argv[argv.index(option) + 1] != expected:
+                    raise ValueError("Neutral argv differs from its exact canonical assignment")
+            if (argv[0], argv[3]) != (isolation.sandbox_executable, CLI):
+                raise ValueError("Neutral argv does not use the frozen bundled CLI wrapper")
+            request = {
+                "turn": turn,
+                "selector_phase": phase,
+                "wall_guard": wall_guard.as_dict(),
+                "schema": schema,
+                "schema_sha256": digest(schema),
+                "selector_command": argv,
+                "selector_environment": dict(PUBLIC_MODEL_ENVIRONMENT),
+                "selector_environment_sha256": digest(PUBLIC_MODEL_ENVIRONMENT),
+                "command_proof": argv_proof,
+                "prompt": prompt,
+                "workspace_assignments_sha256": assignment_hash,
+                "workspace_receipts_sha256": receipt_hash,
+            }
+            request_path = metadata_root / f"selector-{turn:02d}.request.json"
+            charge("selector_request_write", partial(save, request_path, request))
+            sync_clock("selector_dispatch_wall_floor")
+            selector_start = audit_ms
+            window = turn_window(phase=phase, wall_guard=wall_guard, clock=clock)
+            if window.timeout_ms is None or window.timeout_seconds is None:
+                raise ValueError("No neutral phase remains inside the immutable wall guard")
+            phase_result.update(
+                selector_phase=phase,
+                workspace=str(workspace),
+                schema_path=str(schema_path),
+                output_path=str(output),
+                schema_sha256=digest(schema),
+                command_proof=argv_proof,
+                selector_command=argv,
+                selector_environment=dict(PUBLIC_MODEL_ENVIRONMENT),
+                selector_environment_sha256=digest(PUBLIC_MODEL_ENVIRONMENT),
+                selector_start_audit_ms=selector_start,
+                timeout_ms=window.timeout_ms,
+                timeout_seconds=window.timeout_seconds,
+                window=window.as_dict(),
+                request_path=str(request_path),
+                request_sha256=file_hash(request_path),
+            )
+            selected = select(
+                isolation,
+                schema_path,
+                output,
+                prompt,
+                wall_guard=wall_guard,
+                phase=phase,
+                model=MODEL,
+                clock=clock,
+                monotonic=monotonic,
+                environment=PUBLIC_MODEL_ENVIRONMENT,
+            )
+            audit_ms += selected.elapsed_ms
+            meter.append(
+                {
+                    "stage": "selector",
+                    "turn": turn,
+                    "elapsed_ms": selected.elapsed_ms,
+                    "audit_ms": audit_ms,
+                }
+            )
+            phase_result.update(
+                elapsed_ms=selected.elapsed_ms,
+                returncode=selected.returncode,
+                error_kind=selected.error_kind,
+                window=selected.window.as_dict(),
+                timeout_ms=selected.window.timeout_ms,
+                timeout_seconds=selected.window.timeout_seconds,
+                selector_started_at=selected.selector_started_at,
+                selector_finished_at=selected.selector_finished_at,
+            )
+            stdout_path, stderr_path = (
+                metadata_root / f"selector-{turn:02d}.events.jsonl",
+                metadata_root / f"selector-{turn:02d}.stderr.txt",
+            )
+            charge("selector_stdout_write", partial(stdout_path.write_text, selected.stdout))
+            charge("selector_stderr_write", partial(stderr_path.write_text, selected.stderr))
+            phase_result.update(
+                stdout_path=str(stdout_path),
+                stdout_sha256=file_hash(stdout_path),
+                stderr_path=str(stderr_path),
+                stderr_sha256=file_hash(stderr_path),
+            )
+            charge(
+                "selector_after_path_validation",
+                partial(
+                    validate_selector_paths,
+                    assignments,
+                    receipts,
+                    case_id=CASE_ID,
+                    turn=turn,
+                    workspace=workspace,
+                    schema=schema_path,
+                    output=output,
+                ),
+            )
+            if (
+                selected.error_kind
+                or type(selected.returncode) is not int
+                or selected.returncode != 0
+            ):
+                raise ValueError(selected.error_kind or "selector_process_failed")
+            require_guard()
+            raw = charge("selector_output_read", output.read_text)
+            replayed = charge(
+                "completed_tool_free_replay", partial(selector_answer, selected.stdout, raw)
+            )
+            if replayed != selected.answer:
+                raise ValueError("Completed neutral stdout and atomic output disagree")
+            answer = charge(
+                "bound_output_parse",
+                partial(parse_answer, raw, phase, journal_sha256),
+            )
+            if answer != replayed:
+                raise ValueError("Bound parsing changed the completed neutral decision")
+            if phase == "bootstrap":
+                expected_action: dict[str, Any] = {
+                    "tool": "fetcher",
+                    "url": "https://example.org/public-probe",
+                    "query": None,
+                    "domains": [],
+                    "max_results": None,
+                    "source_step": None,
+                    "page": None,
+                    "offset": None,
+                    "section_offset": None,
+                    "link_offset": None,
+                }
+                if (
+                    answer["kind"] != "action"
+                    or answer["action"] != expected_action
+                    or answer["facts"]
+                    or answer["question_findings"]
+                ):
+                    raise ValueError(
+                        "Neutral bootstrap did not serialize the sole unexecuted synthetic action"
+                    )
+            elif phase == "data" and answer != synthetic_record(journal_sha256):
+                raise ValueError(
+                    "Neutral data did not preserve exactly all four invented fixture facts"
+                )
+            if (
+                file_hash(assignment_path) != assignment_hash
+                or file_hash(receipt_path) != receipt_hash
+            ):
+                raise ValueError("Original neutral workspace assignment/receipt bytes changed")
+            charge(
+                "workspace_final_identity",
+                lambda: validate_workspaces(assignments, receipts, case_ids=COHORT),
+            )
+            sync_clock("completed_phase_wall_floor")
+            require_guard()
+            phase_result.update(
+                status="passed",
+                answer=answer,
+                output_sha256=file_hash(output),
+                replayed_answer_sha256=digest(replayed),
+                bound_answer_sha256=digest(answer),
+                completed_tool_free=True,
+                atomic_output_matches_stdout=True,
+                exact_paths_before=True,
+                exact_paths_after=True,
+                audit_ms=audit_ms,
+            )
+            save(RESULT_PATH, result)
+            require_guard()
+            print(
+                json.dumps(
+                    {
+                        "phase": phase,
+                        "status": "passed",
+                        "elapsed_ms": selected.elapsed_ms,
+                        "audit_ms": audit_ms,
+                    }
+                ),
+                flush=True,
+            )
+        result.update(
+            status="passed",
+            stopped=False,
+            stop_reason=None,
+            phases_completed=len(phases),
+            canonical_workspace_preflight_passed=True,
+            completed_stream_replay_passed=True,
+        )
+    except Exception as exc:
+        result.update(
+            status="failed",
+            stopped=True,
+            stop_reason=f"{type(exc).__name__}: {exc}",
+            phases_completed=sum(phase.get("status") == "passed" for phase in phases),
+            canonical_workspace_preflight_passed=False,
+            completed_stream_replay_passed=False,
+        )
+        if phases and phases[-1]["status"] != "passed":
+            phases[-1].update(status="failed", stopped=True, stop_reason=result["stop_reason"])
+    result["runtime_modules_after"] = charge("runtime_final_hashes", runtime_hashes)
+    result["script_sha256_after"] = charge("helper_final_hash", lambda: file_hash(Path(__file__)))
+    result["runtime_unchanged"] = (
+        result["runtime_modules_before"] == result["runtime_modules_after"]
+        and result["script_sha256"] == result["script_sha256_after"]
+    )
+    if result["runtime_unchanged"] is not True:
+        result.update(
+            status="failed",
+            stopped=True,
+            stop_reason="Neutral helper or runtime bytes changed during the original invocation",
+            canonical_workspace_preflight_passed=False,
+            completed_stream_replay_passed=False,
+        )
+    sync_clock("final_wall_floor")
+    result.update(
+        audit_ms=audit_ms,
+        meter=meter,
+        selector_elapsed_ms=sum(item.get("elapsed_ms", 0) for item in phases),
+        wall_elapsed_ms=math.ceil((monotonic() - began) * 1000),
+        finished_at=clock().isoformat(),
+    )
+    save(RESULT_PATH, result)
+    if result["status"] == "passed" and wall_guard.remaining_seconds(now=clock()) <= 0:
+        result.update(
+            status="failed",
+            stopped=True,
+            stop_reason="Immutable wall guard expired during final neutral persistence",
+            canonical_workspace_preflight_passed=False,
+            completed_stream_replay_passed=False,
+            finished_at=clock().isoformat(),
+        )
+        save(RESULT_PATH, result)
+    print(
+        json.dumps(
+            {
+                "result": str(RESULT_PATH),
+                "status": result["status"],
+                "stopped": result["stopped"],
+                "stop_reason": result["stop_reason"],
+                "audit_ms": audit_ms,
+            }
+        ),
+        flush=True,
+    )
+    return result
+
+
+if __name__ == "__main__":
+    raise SystemExit(0 if run_probe()["status"] == "passed" else 1)

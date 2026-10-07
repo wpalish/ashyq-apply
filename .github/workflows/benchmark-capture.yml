@@ -449,12 +449,56 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
+        id: expert-python
         with:
           python-version: '3.12'
           cache: pip
           cache-dependency-path: backend/requirements*.txt
-      - run: python -m venv .venv
-      - run: .venv/bin/pip install -q -r requirements-dev.txt
+      - name: Bind the dependency environment
+        id: expert-environment
+        run: |
+          python - <<'PYENV'
+          import hashlib, json, os, platform, sys
+          identity = {
+              'python': sys.version,
+              'executable': sys.executable,
+              'platform': platform.platform(),
+              **{name: os.environ.get(name, '') for name in (
+                  'RUNNER_OS', 'RUNNER_ARCH', 'ImageOS', 'ImageVersion', 'GITHUB_WORKSPACE'
+              )},
+          }
+          fingerprint = hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'identity={fingerprint}\n')
+          PYENV
+      - name: Restore only installed dependencies
+        id: expert-dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: backend/.venv
+          key: expert-venv-v1-${{ github.sha }}-${{ steps.expert-environment.outputs.identity }}-${{ hashFiles('backend/requirements*.txt') }}
+      - if: steps.expert-dependencies.outputs.cache-hit != 'true'
+        run: python -m venv .venv
+      - if: steps.expert-dependencies.outputs.cache-hit != 'true'
+        run: .venv/bin/pip install -q -r requirements-dev.txt
+      - name: Verify the installed dependency environment
+        run: |
+          .venv/bin/python - <<'PYENV'
+          import hashlib, importlib.metadata, json, os, sys
+          assert sys.version_info[:2] == (3, 12)
+          assert os.path.realpath(sys._base_executable) == os.path.realpath(os.environ['pythonLocation'] + '/bin/python')
+          packages = sorted((distribution.metadata['Name'], distribution.version)
+                            for distribution in importlib.metadata.distributions())
+          digest = hashlib.sha256(json.dumps(packages, separators=(',', ':')).encode()).hexdigest()
+          print(json.dumps({'dependency_packages': packages, 'dependency_sha256': digest}))
+          PYENV
+          .venv/bin/pip check
+      - name: Save only installed dependencies
+        if: steps.expert-dependencies.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: backend/.venv
+          key: ${{ steps.expert-dependencies.outputs.cache-primary-key }}
       - name: Select the search layer
         env:
           REQUESTED_SEARCH_PROVIDER: ${{ inputs.search_provider || 'auto' }}

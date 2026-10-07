@@ -1,0 +1,87 @@
+{
+  "kind": "unchanged-originals-relocation-static-correction",
+  "corrected_source_parent": "452edba8e17573ebf733e4d8fc2285f4b31da029",
+  "original_remote_conclusion": "failure",
+  "original_bundle_manifest": "6904e0f48b118bec15513e4ea680d09e3c9fa7b48c756233a0e13f882c73b880",
+  "new_coordinate": "docs/process/evidence/expert500/2026-10-06/main57-integration",
+  "semantic_source_changed": false,
+  "retained_full_local_test_results": {
+    "backend_passed": 4335,
+    "coverage": 94.85,
+    "frontend_passed": 232
+  },
+  "records": [
+    {
+      "file": "00-original.log",
+      "argv": [
+        "gh",
+        "run",
+        "view",
+        "37491235027",
+        "--json",
+        "headSha,status,conclusion,jobs"
+      ],
+      "returncode": 0,
+      "bytes": 10300,
+      "sha256": "69192a18e41744bf80c9fe95b48233b3c9164c5a5756654657ee77e9f210b6ed"
+    },
+    {
+      "file": "01-original.log",
+      "argv": [
+        "gh",
+        "run",
+        "view",
+        "37491235027",
+        "--log-failed"
+      ],
+      "returncode": 0,
+      "bytes": 11409,
+      "sha256": "d17d1b2cb14ce55442c334cda90991c773d037129e88b9a4c589ae826d569fd3"
+    },
+    {
+      "file": "02-original.log",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "returncode": 0,
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "file": "03-original.log",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "returncode": 0,
+      "bytes": 28,
+      "sha256": "d6f70559dc79d0585640e29e3a2ee6d2bf87ab6d13092f189460d06c2bf68e93"
+    },
+    {
+      "file": "04-original.log",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "returncode": 0,
+      "bytes": 8584,
+      "sha256": "0baaf2ad309aa399d18b9e05a6d47d57ee45ba79952228d025e0fcfbbc8649a8"
+    }
+  ]
+}

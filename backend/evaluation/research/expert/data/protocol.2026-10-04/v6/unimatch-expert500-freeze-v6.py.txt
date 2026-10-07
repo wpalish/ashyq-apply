@@ -1,0 +1,175 @@
+"""Freeze prospective V6 bytes only after all local/no-source preflight gates."""
+
+from __future__ import annotations
+
+import hashlib
+import importlib.util
+import json
+import runpy
+from datetime import UTC, datetime
+from pathlib import Path
+
+from evaluation.research.expert.research_timing import policy_limits as research_limits
+from evaluation.research.expert.turn_policy import policy_limits
+from evaluation.research.expert.workspace_policy import validate_workspaces
+from evaluation.research.live import REVIEWED_BINDINGS
+
+REPO = Path(
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply"
+)
+FOLDER = REPO / "backend/evaluation/research/expert/data/protocol.2026-10-04/v6"
+
+
+def sha(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def main() -> None:
+    if FOLDER.exists():
+        raise ValueError("A frozen V6 directory already exists; never overwrite it")
+    scripts = [
+        Path("/tmp") / name
+        for name in (
+            "unimatch-expert500-journal-pilot-v6.py",
+            "unimatch-expert500-journal-report-v6.py",
+            "unimatch-expert500-pilot-v1-frozen.py",
+            "unimatch-expert500-neutral-v6.py",
+            "test_unimatch_expert500_journal_pilot_v6.py",
+            "test_unimatch_expert500_journal_report_v6.py",
+            "unimatch-expert500-export-v6.py",
+            "unimatch-expert500-launch-v6.py",
+            "unimatch-expert500-freeze-v6.py",
+        )
+    ]
+    report = runpy.run_path(str(scripts[1]))
+    modules = {}
+    files = []
+    for name in sorted(report["PROTOCOL_MODULES"]):
+        spec = importlib.util.find_spec(name)
+        if spec is None or spec.origin is None:
+            raise ValueError("A frozen protocol module is unavailable")
+        source = Path(spec.origin)
+        modules[name] = sha(source)
+        files.append({"path": str(source.relative_to(REPO)), "sha256": modules[name]})
+    probe = json.loads(Path("/tmp/unimatch-expert500-v6-neutral-result.json").read_text())
+    if (
+        probe.get("university_requests") != 0
+        or len(probe.get("results", [])) != 3
+        or any(
+            r.get("error_kind") is not None or r.get("returncode") != 0 for r in probe["results"]
+        )
+        or probe.get("status") != "passed"
+        or probe.get("stopped") is not False
+        or probe.get("source_requests") != 0
+        or probe.get("tool_requests") != 0
+        or probe.get("source_facts_accepted") is not False
+        or probe.get("phases_completed") != 3
+        or any(
+            r.get(key) is not True
+            for r in probe["results"]
+            for key in (
+                "exact_paths_before",
+                "exact_paths_after",
+                "completed_tool_free",
+                "atomic_output_matches_stdout",
+            )
+        )
+    ):
+        raise ValueError("Actual canonical/tool-free three-phase neutral preflight did not pass")
+    local = json.loads(Path("/tmp/unimatch-expert500-v6-local-gates.json").read_text())
+    if probe["script_sha256"] != sha(Path(probe["script"])):
+        raise ValueError("Actual neutral source changed after its once-only run")
+    for key in ("workspace_assignments", "workspace_receipts"):
+        path = Path(probe[key + "_path"])
+        if sha(path) != probe[key + "_sha256"] or json.loads(path.read_text()) != probe[key]:
+            raise ValueError("Original neutral workspace mapping/receipt bytes changed")
+    validate_workspaces(
+        probe["workspace_assignments"], probe["workspace_receipts"], case_ids=probe["cohort"]
+    )
+    if any(
+        probe["isolation_proof"].get(key) is not True
+        for key in ("allowed_read", "sealed_read_denied", "sealed_stdout_empty")
+    ):
+        raise ValueError("Actual harmless-sentinel OS blinding preflight did not pass")
+    for result in probe["results"]:
+        for key in ("request", "stdout", "stderr"):
+            if sha(Path(result[key + "_path"])) != result[key + "_sha256"]:
+                raise ValueError("Original neutral archived selector record changed")
+        if sha(Path(result["output_path"])) != result["output_sha256"]:
+            raise ValueError("Original neutral completed atomic answer changed")
+    if (
+        local.get("all_passed") is not True
+        or local.get("backend_tests") != 3884
+        or local.get("backend_coverage_percent") != 94.89
+    ):
+        raise ValueError("Current full source gates must be recorded before freezing")
+    FOLDER.mkdir(parents=True)
+    for source in scripts:
+        target = FOLDER / (source.name + ".txt")
+        target.write_bytes(source.read_bytes())
+        if sha(target) != sha(source):
+            raise ValueError("Protocol source copy differs")
+        files.append(
+            {"path": target.name, "sha256": sha(source), "actual_parent_path": str(source)}
+        )
+    for name, data in (("neutral-probe.json", probe), ("local-gates.json", local)):
+        (FOLDER / name).write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
+    manifest = {
+        "prepared_at": datetime.now(UTC).isoformat(),
+        "protocol_version": "journal-v6",
+        "live_v6_started": False,
+        "requested_model": "gpt-6-astra",
+        "requested_reasoning_effort": "low",
+        "turn_policy": policy_limits(),
+        "research_timing": research_limits(),
+        "cli_version": "0.159.2",
+        "cli_source": "Existing ChatGPT.app bundled Codex CLI",
+        "neutral_probe": {
+            "successful": True,
+            "completed_tool_free": True,
+            "university_requests": 0,
+            "canonical_workspace_preflight_passed": True,
+            "completed_stream_replay_passed": True,
+            "elapsed_ms_by_mode": {r["mode"]: r["elapsed_ms"] for r in probe["results"]},
+            "original_result_sha256": sha(Path("/tmp/unimatch-expert500-v6-neutral-result.json")),
+        },
+        "limits": {
+            "cold_fetcher_calls": 60,
+            "search_queries": 6,
+            "total_active_ms": 120000,
+            "navigation_action_deadline_ms": 95000,
+            "closing_reserve_ms": 3000,
+        },
+        "effective_source_action_deadline_ms": 49000,
+        "effective_source_work_semantics": "Dispatch and controlled execution end at49000; cancellation is a tighter predeclared source ceiling within hard95000, never extra time.",
+        "baseline_finalization_reserve_ms": 1000,
+        "baseline_source_work_deadline_ms": 119000,
+        "active_clock": "All prompt/selector/parse/source/view/journal/citation/trace/closing work; excludes provisioning, GitHub transport and audit copies",
+        "max_parallel_experts": 3,
+        "files": files,
+        "modules": modules,
+        "scripts": {str(p): sha(p) for p in scripts},
+        "binding_registry": {
+            "path": str(REVIEWED_BINDINGS.resolve()),
+            "sha256": sha(REVIEWED_BINDINGS),
+        },
+        "public_profile": "KZ national secondary / bachelor Computer Science / fall2027",
+        "parent_knows_v1_v2_v3_v4_reviewed_labels": True,
+        "selectors_have_no_gold_access": True,
+        "prior_results_preserved": True,
+        "acceptance_threshold_recovered_facts": 40,
+        "unchanged_reviewed_fact_count": 62,
+        **local,
+        "production_app_tree": "49100542fa1ddd00ca3deff615422114ab54a27e",
+        "production_main_commit": "1f64a3a4d66734cb48d348a6ab09d9642fc0e90f",
+    }
+    (FOLDER / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+    print(
+        json.dumps(
+            {"scripts": len(scripts), "modules": len(modules), "binding_registry_unchanged": True}
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,211 @@
+{
+  "schema_version": "1",
+  "case_id": "kaist",
+  "packet_sha256": "4ebd7b098c73dc3813f3c83731752525d88060722c9c1a5ee47a02dfa43e9e4e",
+  "baseline_pipeline_sha": "e0ac678e8b8ae251519e65598d3f0da4ff2abb24",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T11:44:23.252455+00:00",
+  "ended_at": "2026-10-04T11:49:22.873365+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T11:45:10.202863+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:kaist.ac.kr international undergraduate admission scholarship computer science 2027",
+        "domains": [
+          "kaist.ac.kr"
+        ],
+        "max_results": 6
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-001.json",
+      "raw_log_sha256": "0c208f4dbfcb769088711888080fe32d3037b04fd20e835fd6b9139d9ae06d16",
+      "elapsed_ms": 2032,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 11098,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "Locate official undergraduate admissions and Computer Science programme sources.",
+      "observed_from_step": null,
+      "action": "search_provider: site:kaist.ac.kr international undergraduate admission scholarship computer science 2027",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T11:45:57.180916+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://admission.kaist.ac.kr/wz/api/common/files/view/intl-undergraduate/pdf/Admissions_Guide_for_2027_admission.pdf"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-002.json",
+      "raw_log_sha256": "8c6c0147b99067b73d1c0605629a22a3f6f46d189a56342a3633934bd80cc9ca",
+      "elapsed_ms": 11393,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 32452,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Read the official 2027 undergraduate admissions guide for programme and admissions evidence.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://admission.kaist.ac.kr/wz/api/common/files/view/intl-undergraduate/pdf/Admissions_Guide_for_2027_admission.pdf",
+      "stage": "page_understanding",
+      "url": "https://admission.kaist.ac.kr/wz/api/common/files/view/intl-undergraduate/pdf/Admissions_Guide_for_2027_admission.pdf",
+      "final_url": "https://admission.kaist.ac.kr/wz/api/common/files/view/intl-undergraduate/pdf/Admissions_Guide_for_2027_admission.pdf"
+    },
+    {
+      "at": "2026-10-04T11:46:52.860827+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-003.json",
+      "raw_log_sha256": "d519d721c5228ad98f1dd1ec54e4032ae35e6294233df1770c143f8410cb4d2a",
+      "elapsed_ms": 11332,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 52917,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "The admissions guide PDF was blocked; inspect the official HTML admissions calendar.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+      "stage": "page_understanding",
+      "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+      "final_url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline"
+    },
+    {
+      "at": "2026-10-04T11:47:57.819430+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site.kaist.ac.kr undergraduate computer science international scholarship IELTS eligibility",
+        "domains": [
+          "kaist.ac.kr"
+        ],
+        "max_results": 6
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-004.json",
+      "raw_log_sha256": "28d721d8be1974e95d912e089d56dfa612b8317bdb2eddb8327d029f614bfa11",
+      "elapsed_ms": 11455,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 73834,
+      "search_queries_cumulative": 2,
+      "step": 4,
+      "observed_before": "The admissions guide and timeline were blocked by robots policy. Search for accessible official programme and admissions evidence.",
+      "observed_from_step": 3,
+      "action": "search_provider: site.kaist.ac.kr undergraduate computer science international scholarship IELTS eligibility",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T11:48:52.003621+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-005.json",
+      "raw_log_sha256": "20980527acff49c7efedbc2225a453e69c6eb0b51fd9cce682d1c644d96d1e31",
+      "elapsed_ms": 1774,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 85543,
+      "search_queries_cumulative": 2,
+      "step": 5,
+      "observed_before": "Admissions timeline and guide reads were blocked; search results alone cannot support facts. Inspect the official scholarship page.",
+      "observed_from_step": 4,
+      "action": "fetcher: https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+      "stage": "page_understanding",
+      "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+      "final_url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/"
+    }
+  ],
+  "proposals": [],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

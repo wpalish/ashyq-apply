@@ -1,0 +1,101 @@
+{
+  "schema_version": "1",
+  "status": "ten_current_baselines_within_budget_no_provider_failure",
+  "source_harness_sha": "92dfdb6d4f1a4595865ea756f46b176ce0f6d891",
+  "baseline_results_sha256": "632ffc20a288aec56f57eb6db610b61c0d7227d4f47a4c9579e9694c52773e7f",
+  "rows": [
+    {
+      "case_id": "aalto",
+      "run_id": 37337773502,
+      "capture_sha256": "a5b6de3f5a29a64940a43bf815aecc017a235beaee62eb119c9f65758fa6fffe",
+      "fetcher_calls": 27,
+      "search_queries": 6,
+      "elapsed_ms": 32017,
+      "stop_reason": null
+    },
+    {
+      "case_id": "delft",
+      "run_id": 37337775951,
+      "capture_sha256": "23f41de84d5a7a4c466e213460a117825eb5a086ab1b2ca2ae338a1a1c534ae8",
+      "fetcher_calls": 35,
+      "search_queries": 6,
+      "elapsed_ms": 65616,
+      "stop_reason": null
+    },
+    {
+      "case_id": "groningen",
+      "run_id": 37337773707,
+      "capture_sha256": "0b587e351b52d7b0497159ba8550c1752ac386432bd22d33bf63cc1eef1e1986",
+      "fetcher_calls": 40,
+      "search_queries": 6,
+      "elapsed_ms": 119004,
+      "stop_reason": "source_work_deadline_exhausted"
+    },
+    {
+      "case_id": "vienna",
+      "run_id": 37337958150,
+      "capture_sha256": "a46e3220a98227d0350d0bb705498a67b2b109a0525f47d7722d2be28d076eed",
+      "fetcher_calls": 37,
+      "search_queries": 6,
+      "elapsed_ms": 78495,
+      "stop_reason": "search_budget_exhausted"
+    },
+    {
+      "case_id": "warsaw",
+      "run_id": 37338037224,
+      "capture_sha256": "bc16af01cb8ab7c633f0aab1b7be14043f9d58788e446e58e6ae517bb1498dc3",
+      "fetcher_calls": 35,
+      "search_queries": 6,
+      "elapsed_ms": 119005,
+      "stop_reason": "search_budget_exhausted"
+    },
+    {
+      "case_id": "toronto",
+      "run_id": 37338241990,
+      "capture_sha256": "cd5cbda1ca4fbdfb2302b8cd1f6717d4a1bae8aa68fa223143a378dce9473916",
+      "fetcher_calls": 27,
+      "search_queries": 6,
+      "elapsed_ms": 37933,
+      "stop_reason": null
+    },
+    {
+      "case_id": "ubc",
+      "run_id": 37338158071,
+      "capture_sha256": "88256f6176f8e20d966042c3107e4ea90a105338ac097836f81c17fb63cf9373",
+      "fetcher_calls": 50,
+      "search_queries": 6,
+      "elapsed_ms": 117444,
+      "stop_reason": "search_budget_exhausted"
+    },
+    {
+      "case_id": "hku",
+      "run_id": 37338417999,
+      "capture_sha256": "eaeb64cd256eaa97ed16f918a18858a4a3e348dba4860690d846dc8ebcec7888",
+      "fetcher_calls": 33,
+      "search_queries": 6,
+      "elapsed_ms": 58871,
+      "stop_reason": "search_budget_exhausted"
+    },
+    {
+      "case_id": "ntu",
+      "run_id": 37338449400,
+      "capture_sha256": "aaaf06d8df3474a02851833b5a1d38c1aad4751d1b3d57b8b8170ba09986b5dc",
+      "fetcher_calls": 44,
+      "search_queries": 4,
+      "elapsed_ms": 84385,
+      "stop_reason": null
+    },
+    {
+      "case_id": "kaist",
+      "run_id": 37338514880,
+      "capture_sha256": "09b4782f86a146ad4680a529ea4b9caa45069a3aa8f2a0f0bcaee59dd903d9eb",
+      "fetcher_calls": 25,
+      "search_queries": 6,
+      "elapsed_ms": 73157,
+      "stop_reason": null
+    }
+  ],
+  "reviewed_label_reads": 0,
+  "experts_started": false,
+  "ordinary_usage_observation_sha256": "230960e5261bd07e691fb076219cb98dbca7f78b5507a66f196a778f5c5c2fea"
+}

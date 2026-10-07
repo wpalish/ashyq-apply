@@ -1,0 +1,49 @@
+from __future__ import annotations
+
+import ast
+import difflib
+import hashlib
+import json
+from pathlib import Path
+
+base = Path(__file__).parent
+original_manifest = json.loads((base / 'original-manifest.json').read_bytes())
+entries = []
+patches = {'candidate.patch': [], 'source.patch': [], 'regression-draft.patch': []}
+added_tests = []
+
+def tests(data: str):
+    result = {}
+    for node in ast.parse(data).body:
+        if not isinstance(node, ast.FunctionDef) or not node.name.startswith('test_'):
+            continue
+        count = 1
+        for decorator in node.decorator_list:
+            if isinstance(decorator, ast.Call) and isinstance(decorator.func, ast.Attribute) and decorator.func.attr == 'parametrize':
+                values = decorator.args[1]
+                if isinstance(values, (ast.List, ast.Tuple)):
+                    count *= len(values.elts)
+        result[node.name] = count
+    return result
+
+for relative, receipt in original_manifest.items():
+    old_path = base / 'original' / relative
+    new_path = base / 'candidate' / relative
+    old = old_path.read_bytes()
+    new = new_path.read_bytes()
+    assert hashlib.sha256(old).hexdigest() == receipt['sha256']
+    assert Path(receipt['original_copy_source']).read_bytes() == old
+    ast.parse(new)
+    diff = ''.join(difflib.unified_diff(old.decode().splitlines(keepends=True), new.decode().splitlines(keepends=True), fromfile='a/' + relative, tofile='b/' + relative))
+    patches['candidate.patch'].append(diff)
+    category = 'regression-draft.patch' if '/tests/' in relative else 'source.patch'
+    patches[category].append(diff)
+    new_tests = {name: count for name, count in tests(new.decode()).items() if name not in tests(old.decode())}
+    if new_tests:
+        added_tests.append({'file': relative, 'functions': len(new_tests), 'cases': sum(new_tests.values()), 'tests': new_tests})
+    entries.append({'repository_path': relative, 'base_sha256': hashlib.sha256(old).hexdigest(), 'candidate_sha256': hashlib.sha256(new).hexdigest(), 'candidate_size_bytes': len(new), 'original_copy': str(old_path), 'candidate_copy': str(new_path), 'changed': old != new})
+for name, chunks in patches.items():
+    (base / name).write_text(''.join(chunks))
+manifest = {'schema_version': '1', 'purpose': 'Tmp-only prospective V2 delta from immutable V1 candidate; no repository/runtime application by this agent', 'files': entries, 'new_regressions': added_tests, 'new_test_functions': sum(item['functions'] for item in added_tests), 'new_test_cases': sum(item['cases'] for item in added_tests), 'checks': {'candidate_only_document_ir_pytest': '48 passed, one unrelated extraction-import test deselected', 'candidate_only_ast_year_helpers': '13 passed, fake app import and BeautifulSoup parser only', 'ruff': 'five candidate files passed with backend config plus app/evaluation first-party override', 'mypy': 'DocumentIR passed in isolation with follow-imports=skip; root must run actual transitive type checks', 'ast': 'five candidate files parsed'}, 'unchanged': ['Actual repository/helpers/tests/HANDOFF/Git', 'V1 candidate and its originals', 'Completed V12 citation audit outputs', 'All university/model/source/label artifacts'], 'artifacts': {name: {'path': str(base / name), 'sha256': hashlib.sha256((base / name).read_bytes()).hexdigest(), 'size_bytes': (base / name).stat().st_size} for name in patches}}
+(base / 'manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
+print(json.dumps({'new_functions': manifest['new_test_functions'], 'new_cases': manifest['new_test_cases'], 'files': entries, 'patches': manifest['artifacts']}, indent=2))

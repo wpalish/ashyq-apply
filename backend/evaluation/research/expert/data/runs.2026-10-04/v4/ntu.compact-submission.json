@@ -1,0 +1,79 @@
+{
+  "kind": "submit",
+  "observation": "Submit the complete journal; all proposed evidence remains unreviewed.",
+  "action": null,
+  "facts": [
+    {
+      "id": "f0",
+      "question": "Q0",
+      "claim_key": "programme.exists",
+      "value_json": "true",
+      "source_step": 2,
+      "quotation": "The\n Bachelor of Computing (Hons) in Computer Science \nat NTU’s \nCollege of Computing and Data Science (CCDS)\n is a \n4-year direct honours degree",
+      "location": {
+        "kind": "text",
+        "block_id": null,
+        "section_path": [],
+        "page": null
+      },
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": "Bachelor of Computing (Hons) in Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      }
+    },
+    {
+      "id": "f1",
+      "question": "Q2",
+      "claim_key": "country_credential.kazakhstan_high_school_certificate.direct_admission",
+      "value_json": "\"No, required additional qualification (see below)\"",
+      "source_step": 3,
+      "quotation": "No, required additional qualification (see below)",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b179",
+        "section_path": [
+          "All Other International Qualifications",
+          "Criteria"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": "High School Certificate (Kazakhstan)",
+        "academic_year": null
+      }
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "fact_ids": [
+        "f0"
+      ],
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": "Bachelor of Computing (Hons) in Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The official programme page describes the four-year direct honours degree.",
+      "supporting_steps": []
+    }
+  ]
+}

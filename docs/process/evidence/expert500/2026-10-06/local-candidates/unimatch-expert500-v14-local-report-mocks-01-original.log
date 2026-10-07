@@ -1,0 +1,373 @@
+.F..............................FFFFFF......F.....F..                    [100%]
+=================================== FAILURES ===================================
+_ test_report_replays_all_raw_prefix_and_keeps_model_time_outside_source_clock _
+
+report = {'__name__': '<run_path>', '__doc__': 'V14 local candidate: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+config = SessionConfig(case_id='u', stage='expert', source_sha='1111111111111111111111111111111111111111', source_cwd=PosixPath...0:00', 'wall_deadline_at': '2026-10-06T12:15:00+00:00', 'wall_guard_ms': 900000}, protocol_version='journal-v14-local')
+
+    def test_report_replays_all_raw_prefix_and_keeps_model_time_outside_source_clock(report, config):
+        engine, _, _, first = originals(config)
+        engine.clock.__self__.advance(180)
+        second = helpers.deliver(engine, helpers.plan(config, first), prior=first, turn=2)
+>       assert checked(report, second, config, first).source_counters["elapsed_ms"] == 20
+E       assert 21 == 20
+
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:129: AssertionError
+_ test_actual_mocked_local_client_final_streams_are_sealed_with_last_delivery __
+
+report = {'__name__': '<run_path>', '__doc__': 'V14 local candidate: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+config = SessionConfig(case_id='u', stage='expert', source_sha='1111111111111111111111111111111111111111', source_cwd=PosixPath...0:00', 'wall_deadline_at': '2026-10-06T12:15:00+00:00', 'wall_guard_ms': 900000}, protocol_version='journal-v14-local')
+
+    def test_actual_mocked_local_client_final_streams_are_sealed_with_last_delivery(report, config):
+        clock = helpers.FakeClock()
+        seen = {}
+    
+        def factory(argv, **kwargs):
+            seen.update(argv=argv, **kwargs)
+            return helpers.FakeProcess(config=config, clock=clock)
+    
+        session = worker.start_session(
+            config,
+            private_key="DUMMY_NOT_A_REAL_CREDENTIAL",
+            process_factory=factory,
+            clock=clock.now,
+            monotonic=clock.monotonic,
+        )
+        delivery = session.execute(helpers.plan(config), config.delivery_root / "controller-01", wall_guard=config.wall_guard)
+        terminal = session.close()
+        assert report["verify_local_session_terminal"](delivery, terminal) == terminal
+        records = report["local_session_originals"](delivery)
+        assert {Path(record["path"]).name for record in records} == {
+            "session-bootstrap.json", "session-start.json", "session-final.json", "worker.stdin", "worker.stdout", "worker.stderr"
+        }
+>       assert seen["env"][worker.KEY_NAME] == "DUMMY_NOT_A_REAL_CREDENTIAL"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'UNIMATCH_EXA_API_KEY'
+
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:272: KeyError
+_ test_local_source_runtime_must_match_the_pre_run_freeze[public_environment] __
+
+report = {'__name__': '<run_path>', '__doc__': 'V14 local candidate: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+config = SessionConfig(case_id='u', stage='expert', source_sha='1111111111111111111111111111111111111111', source_cwd=PosixPath...0:00', 'wall_deadline_at': '2026-10-06T12:15:00+00:00', 'wall_guard_ms': 900000}, protocol_version='journal-v14-local')
+field = 'public_environment'
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_local_source_runtime_must0')
+
+    @pytest.mark.parametrize("field", ["public_environment", "interpreter", "source_manifest", "runtime_files", "runtime_import_roots"])
+    def test_local_source_runtime_must_match_the_pre_run_freeze(report, config, field, tmp_path):
+        _, _, _, delivery = originals(config)
+        runtime = {key: config.as_dict()[key] for key in ("source_cwd", "source_manifest", "interpreter", "runtime_files", "runtime_import_roots", "public_environment")}
+        # Match the candidate's declared canonical layout before changing one field.
+        root = tmp_path / "trial"
+        expected = {**config.as_dict(), "session_root": str(root.resolve() / "source-workers/expert/u"), "delivery_root": str(root.resolve() / "experts/u"), "admission_root": str(root.resolve() / "source-admission")}
+        patched = replace(delivery, receipt={**delivery.receipt, "session_config": expected, "session_config_sha256": worker.digest(expected)})
+        trial = {"local_runtime": runtime, "harness_sha": config.source_sha, "admission_run_id": config.admission_run_id, "algorithm_defaults": worker.algorithm_defaults(config)}
+>       report["validate_local_runtime_binding"](patched, trial, root, "u", "expert", config.wall_guard)
+
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:289: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-report-v14-local-candidate.py:634: in validate_local_runtime_binding
+    actual_defaults = _worker_module().algorithm_defaults(_worker_module().SessionConfig.from_dict(expected))
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:226: in from_dict
+    result.validate()
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:244: in validate
+    _canonical_path(path, directory=True)
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:104: in _canonical_path
+    if not path.is_absolute() or path != path.resolve(strict=True):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1240: in resolve
+    s = self._flavour.realpath(self, strict=strict)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen posixpath>:424: in realpath
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_local_source_runtime_must0'
+rest = 'source-workers/expert/u', strict = True, seen = {}
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_local_source_runtime_must0/trial'
+
+<frozen posixpath>:468: FileNotFoundError
+_____ test_local_source_runtime_must_match_the_pre_run_freeze[interpreter] _____
+
+report = {'__name__': '<run_path>', '__doc__': 'V14 local candidate: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+config = SessionConfig(case_id='u', stage='expert', source_sha='1111111111111111111111111111111111111111', source_cwd=PosixPath...0:00', 'wall_deadline_at': '2026-10-06T12:15:00+00:00', 'wall_guard_ms': 900000}, protocol_version='journal-v14-local')
+field = 'interpreter'
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_local_source_runtime_must1')
+
+    @pytest.mark.parametrize("field", ["public_environment", "interpreter", "source_manifest", "runtime_files", "runtime_import_roots"])
+    def test_local_source_runtime_must_match_the_pre_run_freeze(report, config, field, tmp_path):
+        _, _, _, delivery = originals(config)
+        runtime = {key: config.as_dict()[key] for key in ("source_cwd", "source_manifest", "interpreter", "runtime_files", "runtime_import_roots", "public_environment")}
+        # Match the candidate's declared canonical layout before changing one field.
+        root = tmp_path / "trial"
+        expected = {**config.as_dict(), "session_root": str(root.resolve() / "source-workers/expert/u"), "delivery_root": str(root.resolve() / "experts/u"), "admission_root": str(root.resolve() / "source-admission")}
+        patched = replace(delivery, receipt={**delivery.receipt, "session_config": expected, "session_config_sha256": worker.digest(expected)})
+        trial = {"local_runtime": runtime, "harness_sha": config.source_sha, "admission_run_id": config.admission_run_id, "algorithm_defaults": worker.algorithm_defaults(config)}
+>       report["validate_local_runtime_binding"](patched, trial, root, "u", "expert", config.wall_guard)
+
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:289: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-report-v14-local-candidate.py:634: in validate_local_runtime_binding
+    actual_defaults = _worker_module().algorithm_defaults(_worker_module().SessionConfig.from_dict(expected))
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:226: in from_dict
+    result.validate()
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:244: in validate
+    _canonical_path(path, directory=True)
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:104: in _canonical_path
+    if not path.is_absolute() or path != path.resolve(strict=True):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1240: in resolve
+    s = self._flavour.realpath(self, strict=strict)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen posixpath>:424: in realpath
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_local_source_runtime_must1'
+rest = 'source-workers/expert/u', strict = True, seen = {}
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_local_source_runtime_must1/trial'
+
+<frozen posixpath>:468: FileNotFoundError
+___ test_local_source_runtime_must_match_the_pre_run_freeze[source_manifest] ___
+
+report = {'__name__': '<run_path>', '__doc__': 'V14 local candidate: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+config = SessionConfig(case_id='u', stage='expert', source_sha='1111111111111111111111111111111111111111', source_cwd=PosixPath...0:00', 'wall_deadline_at': '2026-10-06T12:15:00+00:00', 'wall_guard_ms': 900000}, protocol_version='journal-v14-local')
+field = 'source_manifest'
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_local_source_runtime_must2')
+
+    @pytest.mark.parametrize("field", ["public_environment", "interpreter", "source_manifest", "runtime_files", "runtime_import_roots"])
+    def test_local_source_runtime_must_match_the_pre_run_freeze(report, config, field, tmp_path):
+        _, _, _, delivery = originals(config)
+        runtime = {key: config.as_dict()[key] for key in ("source_cwd", "source_manifest", "interpreter", "runtime_files", "runtime_import_roots", "public_environment")}
+        # Match the candidate's declared canonical layout before changing one field.
+        root = tmp_path / "trial"
+        expected = {**config.as_dict(), "session_root": str(root.resolve() / "source-workers/expert/u"), "delivery_root": str(root.resolve() / "experts/u"), "admission_root": str(root.resolve() / "source-admission")}
+        patched = replace(delivery, receipt={**delivery.receipt, "session_config": expected, "session_config_sha256": worker.digest(expected)})
+        trial = {"local_runtime": runtime, "harness_sha": config.source_sha, "admission_run_id": config.admission_run_id, "algorithm_defaults": worker.algorithm_defaults(config)}
+>       report["validate_local_runtime_binding"](patched, trial, root, "u", "expert", config.wall_guard)
+
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:289: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-report-v14-local-candidate.py:634: in validate_local_runtime_binding
+    actual_defaults = _worker_module().algorithm_defaults(_worker_module().SessionConfig.from_dict(expected))
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:226: in from_dict
+    result.validate()
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:244: in validate
+    _canonical_path(path, directory=True)
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:104: in _canonical_path
+    if not path.is_absolute() or path != path.resolve(strict=True):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1240: in resolve
+    s = self._flavour.realpath(self, strict=strict)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen posixpath>:424: in realpath
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_local_source_runtime_must2'
+rest = 'source-workers/expert/u', strict = True, seen = {}
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_local_source_runtime_must2/trial'
+
+<frozen posixpath>:468: FileNotFoundError
+____ test_local_source_runtime_must_match_the_pre_run_freeze[runtime_files] ____
+
+report = {'__name__': '<run_path>', '__doc__': 'V14 local candidate: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+config = SessionConfig(case_id='u', stage='expert', source_sha='1111111111111111111111111111111111111111', source_cwd=PosixPath...0:00', 'wall_deadline_at': '2026-10-06T12:15:00+00:00', 'wall_guard_ms': 900000}, protocol_version='journal-v14-local')
+field = 'runtime_files'
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_local_source_runtime_must3')
+
+    @pytest.mark.parametrize("field", ["public_environment", "interpreter", "source_manifest", "runtime_files", "runtime_import_roots"])
+    def test_local_source_runtime_must_match_the_pre_run_freeze(report, config, field, tmp_path):
+        _, _, _, delivery = originals(config)
+        runtime = {key: config.as_dict()[key] for key in ("source_cwd", "source_manifest", "interpreter", "runtime_files", "runtime_import_roots", "public_environment")}
+        # Match the candidate's declared canonical layout before changing one field.
+        root = tmp_path / "trial"
+        expected = {**config.as_dict(), "session_root": str(root.resolve() / "source-workers/expert/u"), "delivery_root": str(root.resolve() / "experts/u"), "admission_root": str(root.resolve() / "source-admission")}
+        patched = replace(delivery, receipt={**delivery.receipt, "session_config": expected, "session_config_sha256": worker.digest(expected)})
+        trial = {"local_runtime": runtime, "harness_sha": config.source_sha, "admission_run_id": config.admission_run_id, "algorithm_defaults": worker.algorithm_defaults(config)}
+>       report["validate_local_runtime_binding"](patched, trial, root, "u", "expert", config.wall_guard)
+
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:289: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-report-v14-local-candidate.py:634: in validate_local_runtime_binding
+    actual_defaults = _worker_module().algorithm_defaults(_worker_module().SessionConfig.from_dict(expected))
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:226: in from_dict
+    result.validate()
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:244: in validate
+    _canonical_path(path, directory=True)
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:104: in _canonical_path
+    if not path.is_absolute() or path != path.resolve(strict=True):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1240: in resolve
+    s = self._flavour.realpath(self, strict=strict)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen posixpath>:424: in realpath
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_local_source_runtime_must3'
+rest = 'source-workers/expert/u', strict = True, seen = {}
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_local_source_runtime_must3/trial'
+
+<frozen posixpath>:468: FileNotFoundError
+_ test_local_source_runtime_must_match_the_pre_run_freeze[runtime_import_roots] _
+
+report = {'__name__': '<run_path>', '__doc__': 'V14 local candidate: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+config = SessionConfig(case_id='u', stage='expert', source_sha='1111111111111111111111111111111111111111', source_cwd=PosixPath...0:00', 'wall_deadline_at': '2026-10-06T12:15:00+00:00', 'wall_guard_ms': 900000}, protocol_version='journal-v14-local')
+field = 'runtime_import_roots'
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_local_source_runtime_must4')
+
+    @pytest.mark.parametrize("field", ["public_environment", "interpreter", "source_manifest", "runtime_files", "runtime_import_roots"])
+    def test_local_source_runtime_must_match_the_pre_run_freeze(report, config, field, tmp_path):
+        _, _, _, delivery = originals(config)
+        runtime = {key: config.as_dict()[key] for key in ("source_cwd", "source_manifest", "interpreter", "runtime_files", "runtime_import_roots", "public_environment")}
+        # Match the candidate's declared canonical layout before changing one field.
+        root = tmp_path / "trial"
+        expected = {**config.as_dict(), "session_root": str(root.resolve() / "source-workers/expert/u"), "delivery_root": str(root.resolve() / "experts/u"), "admission_root": str(root.resolve() / "source-admission")}
+        patched = replace(delivery, receipt={**delivery.receipt, "session_config": expected, "session_config_sha256": worker.digest(expected)})
+        trial = {"local_runtime": runtime, "harness_sha": config.source_sha, "admission_run_id": config.admission_run_id, "algorithm_defaults": worker.algorithm_defaults(config)}
+>       report["validate_local_runtime_binding"](patched, trial, root, "u", "expert", config.wall_guard)
+
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:289: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-report-v14-local-candidate.py:634: in validate_local_runtime_binding
+    actual_defaults = _worker_module().algorithm_defaults(_worker_module().SessionConfig.from_dict(expected))
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:226: in from_dict
+    result.validate()
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:244: in validate
+    _canonical_path(path, directory=True)
+/private/tmp/unimatch-expert500-local-worker-v1-candidate.py:104: in _canonical_path
+    if not path.is_absolute() or path != path.resolve(strict=True):
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1240: in resolve
+    s = self._flavour.realpath(self, strict=strict)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen posixpath>:424: in realpath
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_local_source_runtime_must4'
+rest = 'source-workers/expert/u', strict = True, seen = {}
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_local_source_runtime_must4/trial'
+
+<frozen posixpath>:468: FileNotFoundError
+_ test_selector_exact_public_env_is_replayed_not_ambient_or_worker_env[missing_meta] _
+
+report = {'__name__': '<run_path>', '__doc__': 'V14 local candidate: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_selector_exact_public_env6')
+change = 'missing_meta'
+
+    @pytest.mark.parametrize("change", ["proxy", "key", "python", "loader", "wrong_map", "digest", "missing_meta"])
+    def test_selector_exact_public_env_is_replayed_not_ambient_or_worker_env(report, tmp_path, change):
+        root = tmp_path / "trial"
+        folder = root / "experts/u"
+        folder.mkdir(parents=True)
+        expected = dict(MODEL_ENVIRONMENT)
+        trial = {"selector_environment": expected, "selector_environment_sha256": worker.digest(expected)}
+        record = {"selector_environment": expected, "selector_environment_sha256": worker.digest(expected)}
+        write(root / "trial.json", trial)
+        write(folder / "selector-01.request.json", record)
+        write(folder / "selector-01.meta.json", record)
+        report["verify_selector_environment_evidence"](folder)
+        altered = copy.deepcopy(record)
+        names = {"proxy": "HTTPS_PROXY", "key": "UNIMATCH_EXA_API_KEY", "python": "PYTHONPATH", "loader": "DYLD_INSERT_LIBRARIES"}
+        if change in names:
+            altered["selector_environment"][names[change]] = "DUMMY_PUBLIC_REJECTED_VALUE"
+            altered["selector_environment_sha256"] = worker.digest(altered["selector_environment"])
+        elif change == "wrong_map":
+            altered["selector_environment"]["PATH"] = "/wrong"
+            altered["selector_environment_sha256"] = worker.digest(altered["selector_environment"])
+        elif change == "digest":
+            altered["selector_environment_sha256"] = "f" * 64
+        else:
+            (folder / "selector-01.meta.json").unlink()
+        if change != "missing_meta":
+            write(folder / "selector-01.meta.json", altered)
+>       with pytest.raises((ValueError, FileNotFoundError)):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE any of (ValueError, FileNotFoundError)
+
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:328: Failed
+_ test_any_original_durable_batch_stop_refuses_before_private_dataset_read[model-batch-stop.json] _
+
+report = {'__name__': '<run_path>', '__doc__': 'V14 local candidate: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_any_original_durable_batc0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10c3c2e70>
+marker = 'model-batch-stop.json'
+
+    @pytest.mark.parametrize("marker", ["model-batch-stop.json", "transport-batch-stop.json", "source-admission/stop.json"])
+    def test_any_original_durable_batch_stop_refuses_before_private_dataset_read(report, tmp_path, monkeypatch, marker):
+        root = tmp_path / "stopped-trial"
+        root.mkdir()
+        write(root / marker, {"status": "stopped"})
+        forbidden = tmp_path / "never-read-private-dataset.json"
+        report["REVIEWED_62_DATASET"] = forbidden
+        monkeypatch.setattr(sys, "argv", [str(REPORT), "--root", str(root), "--dataset", str(forbidden), "--orchestrator", "/tmp/unimatch-expert500-journal-pilot-v14-local-candidate.py"])
+        original = Path.read_bytes
+    
+        def deny_dataset(path):
+            if path == forbidden:
+                raise AssertionError("Private dataset read before stopped trial refusal")
+            return original(path)
+    
+        monkeypatch.setattr(Path, "read_bytes", deny_dataset)
+        with pytest.raises(ValueError, match="stop|STOP|stopped"):
+>           report["main"]()
+
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:362: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-report-v14-local-candidate.py:1865: in main
+    final = read(root / "experts-results.json")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/unimatch-expert500-journal-report-v14-local-candidate.py:109: in read
+    return json.loads(path.read_text())
+                      ^^^^^^^^^^^^^^^^
+/tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py:73: in read_text
+    return original_read_text(path, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_any_original_durable_batc0/stopped-trial/experts-results.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-545/test_any_original_durable_batc0/stopped-trial/experts-results.json'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1013: FileNotFoundError
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py::test_report_replays_all_raw_prefix_and_keeps_model_time_outside_source_clock
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py::test_actual_mocked_local_client_final_streams_are_sealed_with_last_delivery
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py::test_local_source_runtime_must_match_the_pre_run_freeze[public_environment]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py::test_local_source_runtime_must_match_the_pre_run_freeze[interpreter]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py::test_local_source_runtime_must_match_the_pre_run_freeze[source_manifest]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py::test_local_source_runtime_must_match_the_pre_run_freeze[runtime_files]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py::test_local_source_runtime_must_match_the_pre_run_freeze[runtime_import_roots]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py::test_selector_exact_public_env_is_replayed_not_ambient_or_worker_env[missing_meta]
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_report_v14_local_candidate.py::test_any_original_durable_batch_stop_refuses_before_private_dataset_read[model-batch-stop.json]
+9 failed, 44 passed in 1.98s

@@ -1,0 +1,104 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-04T22:05:28.935935+00:00",
+    "duration_seconds": 113.5,
+    "run_error": "RuntimeError: BENCHMARK_PAGE_BUDGET_EXHAUSTED",
+    "batch": [
+      "University of British Columbia"
+    ],
+    "institutions": [
+      {
+        "institution": "University of British Columbia",
+        "country": "Canada",
+        "domain": "ubc.ca",
+        "access": "PARTIALLY_BLOCKED",
+        "robots_disallowed_requests": 13,
+        "pages_checked": 60,
+        "pages_failed": 17,
+        "failures": [
+          [
+            "https://www.ubc.ca/sitemap.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.ubc.ca/sitemap_index.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.ubc.ca/sitemap-index.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.ubc.ca/sitemap/sitemap.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "http://you.ubc.ca/",
+            "robots_disallowed: robots.txt unreachable (ReadError); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "https://cdn.ubc.ca/clf/ref/terms",
+            "robots_disallowed: robots.txt disallows this path"
+          ],
+          [
+            "https://cdn.ubc.ca/clf/ref/emergency",
+            "robots_disallowed: robots.txt disallows this path"
+          ],
+          [
+            "https://cdn.ubc.ca/clf/ref/aplaceofmind",
+            "robots_disallowed: robots.txt disallows this path"
+          ]
+        ],
+        "outcomes": {
+          "ok": 43,
+          "http_error": 4,
+          "robots_disallowed": 13
+        },
+        "discovered": {},
+        "discovery_trace": null,
+        "programs": [],
+        "program_page_found": false,
+        "scholarship_page_found": false,
+        "discovery_notes": "no candidate produced",
+        "claims": 0,
+        "claims_verified": 0,
+        "completeness": 0.0,
+        "eligibility": "no result",
+        "funding_fit": "no result",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {},
+        "page_types": {},
+        "page_diagnostics": []
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 0,
+      "blocked": 1,
+      "program_pages_found": 0,
+      "scholarship_pages_found": 0,
+      "claims": 0,
+      "false_positives": 0,
+      "page_outcomes": {},
+      "page_types": {},
+      "recall": {
+        "program": {
+          "numerator": 0,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 0,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 0,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 19,
+      "fetch_tiers": {}
+    }
+  },
+  "claims": []
+}

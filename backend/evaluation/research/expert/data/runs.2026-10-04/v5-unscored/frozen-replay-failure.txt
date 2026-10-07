@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/tmp/unimatch-expert500-journal-report-v5.py", line 1133, in <module>
+    main()
+  File "/tmp/unimatch-expert500-journal-report-v5.py", line 835, in main
+    journal_replay = verify_journal_replay(folder, trace, packet, log_dir, citation_guard)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/unimatch-expert500-journal-report-v5.py", line 606, in verify_journal_replay
+    verify_turn_policy_evidence(folder, result)
+  File "/tmp/unimatch-expert500-journal-report-v5.py", line 423, in verify_turn_policy_evidence
+    raise ValueError("Selector workspace differs from the original independently assigned case")
+ValueError: Selector workspace differs from the original independently assigned case

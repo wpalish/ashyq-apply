@@ -1,0 +1,57 @@
+{
+  "started_at": "2026-10-06T17:57:30.457512+00:00",
+  "finished_at": "2026-10-06T17:57:43.629420+00:00",
+  "gate": "static",
+  "results": [
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "backend",
+      "returncode": 0,
+      "log": "/tmp/unimatch-expert500-v14-deadline-final2-gates-20261006/static-00-original.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "backend",
+      "returncode": 0,
+      "log": "/tmp/unimatch-expert500-v14-deadline-final2-gates-20261006/static-01-original.log",
+      "bytes": 28,
+      "sha256": "681d35b1cf232b2a72d72fb3f824d62f4e49bddf5e5bc167dc34481caf918c40"
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "backend",
+      "returncode": 0,
+      "log": "/tmp/unimatch-expert500-v14-deadline-final2-gates-20261006/static-02-original.log",
+      "bytes": 8584,
+      "sha256": "891b47c4a799936bb78d79231ab42288e4d74da7e7116de48ba852ef09136936"
+    }
+  ],
+  "credential_environment_override_empty": true,
+  "measured_pilot": false
+}

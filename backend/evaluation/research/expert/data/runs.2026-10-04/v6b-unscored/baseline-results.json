@@ -1,0 +1,55 @@
+{
+  "results": [
+    {
+      "case_id": "aalto",
+      "run_id": 37207678059,
+      "head_sha": "d69ff52722ae9425a76761eafec2a108392970c0",
+      "capture": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v6b-2026-10-04/baseline/aalto/artifact/capture/20261004T140110Z/capture.json",
+      "packet": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v6b-2026-10-04/baseline/aalto/public-packet.json",
+      "budget": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "fetcher_calls": 27,
+        "search_queries": 6,
+        "blocked_search_queries": 0,
+        "network_http_requests": 1,
+        "elapsed_ms": 13500,
+        "stop_reason": "http_429",
+        "provider_failure": {
+          "http_status": 429,
+          "reason": null,
+          "error": "Search service unavailable (exa_mcp; HTTP 429)."
+        },
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 14.149792276999996,
+        "process_error": null,
+        "active_checkpoint_available": true
+      }
+    },
+    {
+      "case_id": "delft",
+      "status": "failed",
+      "error": "RuntimeError: Canceled in-flight run after batch provider429"
+    },
+    {
+      "case_id": "groningen",
+      "status": "failed",
+      "error": "RuntimeError: Canceled in-flight run after batch provider429"
+    }
+  ],
+  "stopped": true,
+  "remaining_case_ids": [
+    "vienna",
+    "warsaw",
+    "ubc",
+    "toronto",
+    "hku",
+    "ntu",
+    "kaist"
+  ]
+}

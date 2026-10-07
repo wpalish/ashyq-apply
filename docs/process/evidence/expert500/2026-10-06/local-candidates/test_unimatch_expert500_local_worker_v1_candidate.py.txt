@@ -1,0 +1,1555 @@
+"""Only synthetic files, tools, clocks and processes. No source/model/network calls."""
+
+from __future__ import annotations
+
+import asyncio
+import importlib.util
+import json
+import os
+import queue
+import signal
+import subprocess
+import sys
+import uuid
+from dataclasses import replace
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from types import SimpleNamespace
+from typing import Any
+
+import pytest
+
+REPO = Path(
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply"
+)
+CANDIDATE = Path("/tmp/unimatch-expert500-local-worker-v1-candidate.py").resolve()
+
+
+def load_module(name: str, path: Path) -> Any:
+    spec = importlib.util.spec_from_file_location(name, path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+worker = load_module("local_worker_candidate", CANDIDATE)
+admission_module = importlib.import_module("evaluation.research.expert.source_admission")
+OFFLINE_INTERPRETER_POPEN = subprocess.Popen
+
+controller = importlib.import_module("evaluation.research.expert.controller")
+
+
+class FakeClock:
+    def __init__(self) -> None:
+        self.value = datetime(2026, 10, 6, 12, tzinfo=UTC)
+        self.start = self.value
+
+    def now(self) -> datetime:
+        return self.value
+
+    def monotonic(self) -> float:
+        return (self.value - self.start).total_seconds()
+
+    def advance(self, seconds: float) -> None:
+        self.value += timedelta(seconds=seconds)
+
+    def guard(self) -> dict[str, Any]:
+        return {
+            "wall_started_at": self.start.isoformat(),
+            "wall_deadline_at": (self.start + timedelta(seconds=900)).isoformat(),
+            "wall_guard_ms": 900000,
+        }
+
+
+def baseline_config(config: Any) -> Any:
+    private_path = config.session_root / "synthetic-private-producer-input.json"
+    if not private_path.exists():
+        private_path.write_bytes(b'{"synthetic_only":true}')
+    return replace(
+        config,
+        stage="baseline",
+        wall_guard=None,
+        delivery_root=config.delivery_root.parent / "baseline-u",
+        baseline_identity_registry={
+            "path": str(private_path),
+            "sha256": worker.hashlib.sha256(private_path.read_bytes()).hexdigest(),
+        },
+    )
+
+
+@pytest.fixture
+def config(tmp_path: Path) -> Any:
+    root = tmp_path.resolve()
+    source = root / "clean-source"
+    source.mkdir()
+    (source / "public.py").write_text("PUBLIC = True\n")
+    constants: dict[str, dict[str, Any]] = {}
+    for name, (relative, constant) in worker._DEFAULT_CONSTANTS.items():
+        constants.setdefault(relative, {})[constant] = 0.0 if name == "document_seconds" else True
+    for relative, values in constants.items():
+        target = source / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("\n".join(f"{key} = {value!r}" for key, value in values.items()))
+    runtime = root / "runtime"
+    runtime.mkdir()
+    executable = runtime / "python"
+    executable.write_bytes(b"synthetic-interpreter-bytes-never-executed")
+    session = root / "source-session"
+    session.mkdir(mode=0o700)
+    admission = root / "admission"
+    admission.mkdir()
+    deliveries = root / "experts"
+    deliveries.mkdir()
+    return worker.SessionConfig(
+        case_id="u",
+        stage="expert",
+        source_sha="1" * 40,
+        source_cwd=source,
+        source_manifest={
+            str(path.relative_to(source)): worker._identity(path)["sha256"]
+            for path in source.rglob("*.py")
+        },
+        interpreter=executable,
+        runtime_files={str(executable): worker._identity(executable)["sha256"]},
+        runtime_import_roots=(runtime,),
+        session_root=session,
+        public_environment={"HOME": str(root), "PATH": str(runtime), "LANG": "C.UTF-8"},
+        admission_root=admission,
+        admission_run_id=str(uuid.uuid4()),
+        delivery_root=deliveries,
+        wall_guard=FakeClock().guard(),
+    )
+
+
+@pytest.fixture(autouse=True)
+def forbid_real_processes(monkeypatch: pytest.MonkeyPatch) -> None:
+    def denied(*_args: Any, **_kwargs: Any) -> Any:
+        raise AssertionError("Real process/network access is forbidden")
+
+    monkeypatch.setattr(subprocess, "Popen", denied)
+    monkeypatch.setattr(asyncio, "create_subprocess_exec", denied)
+    monkeypatch.setattr(worker.os, "killpg", denied)
+    # Replace the mapping without reading any ambient source key/credential.
+    monkeypatch.setattr(worker.os, "environ", {})
+
+
+def startup(config: Any, session_id: str, *, pid: int = 4567) -> dict[str, Any]:
+    environment = worker.source_environment(config, "synthetic-key-never-real")
+    environment.pop(worker.KEY_NAME)
+    argv = [
+        str(config.interpreter),
+        "-B",
+        "-E",
+        "-S",
+        "-s",
+        str(CANDIDATE),
+        "--worker",
+        str(config.session_root / "session-bootstrap.json"),
+    ]
+    result = {
+        "schema_version": "1",
+        "protocol_version": worker.PROTOCOL,
+        "transport_kind": worker.TRANSPORT,
+        "session_id": session_id,
+        "session_config": config.as_dict(),
+        "session_config_sha256": worker.digest(config.as_dict()),
+        "runtime_proof": worker.runtime_proof(config),
+        "started_at": FakeClock().start.isoformat(),
+        "pid": pid,
+        "pgid": pid,
+        "argv": argv,
+        "argv_sha256": worker.digest(argv),
+        "cwd": str(config.source_cwd),
+        "interpreter": str(config.interpreter),
+        "worker_script": worker._identity(CANDIDATE),
+        "public_environment": environment,
+        "public_environment_sha256": worker.digest(environment),
+        "source_key_delivery": "worker_env_only",
+        "source_key_in_public_environment": False,
+        "import_origins": {},
+        "algorithm_defaults": worker.algorithm_defaults(config),
+        "python_version": "synthetic",
+        "python_flags": {
+            "no_site": True,
+            "ignore_environment": True,
+            "no_user_site": True,
+            "dont_write_bytecode": True,
+        },
+    }
+    worker.atomic_new(config.session_root / "session-start.json", worker.canonical_bytes(result))
+    return result
+
+
+def plan(config: Any, prior: Any = None, *, tool: str = "fetcher") -> dict[str, Any]:
+    result = {
+        "case_id": config.case_id,
+        "provider": "exa",
+        "log_prefix": config.case_id,
+        "strict_budget": True,
+        "max_calls": 60,
+        "max_search_queries": 6,
+        "max_ms": 900000,
+        "budget_origin": "independent_network_budget",
+        "budget_model": "network_actions_v1",
+        **config.wall_guard,
+        "official_domains": ["example.edu"],
+        "actions": [
+            {"tool": tool, "url": "https://example.edu/course"}
+            if tool == "fetcher"
+            else {
+                "tool": tool,
+                "query": "site:example.edu undergraduate tuition",
+                "domains": ["example.edu"],
+            }
+        ],
+    }
+    if prior is not None:
+        summary = prior.summary if isinstance(prior, worker.LocalDelivery) else prior
+        result.update(
+            start_calls=summary["final"]["fetcher_calls"],
+            start_ms=summary["final"]["elapsed_ms"],
+            start_search_queries=summary["final"]["search_queries"],
+            resume_summary={
+                key: value
+                for key, value in summary.items()
+                if key not in {"actions", "replay", "initial"}
+            },
+        )
+    return result
+
+
+class FakeFetcher:
+    def __init__(self, clock: FakeClock) -> None:
+        self.clock = clock
+        self.calls: list[tuple[str, bool]] = []
+        self.robots: dict[str, str] = {}
+        self.pacing: dict[str, datetime] = {}
+
+    async def get(self, url: str, *, use_cache: bool) -> Any:
+        self.calls.append((url, use_cache))
+        self.robots.setdefault("example.edu", "same-object-policy")
+        self.pacing["example.edu"] = self.clock.now()
+        self.clock.advance(0.01)
+        return SimpleNamespace(
+            outcome=SimpleNamespace(value="ok"),
+            content=b"<h1>Undergraduate tuition</h1><p>2027/28 fee EUR 100</p>",
+            ok=True,
+            status_code=200,
+            final_url=url,
+            url=url,
+            content_type="text/html",
+            from_cache=False,
+            fetch_tier="http",
+            error="",
+            fetched_at=self.clock.now(),
+        )
+
+
+class FakeProvider:
+    def __init__(self, clock: FakeClock) -> None:
+        self.clock = clock
+        self.calls = 0
+        self.status: int | None = None
+
+    async def search(self, *_args: Any, **_kwargs: Any) -> Any:
+        self.calls += 1
+        self.clock.advance(0.01)
+        if self.status is not None:
+            from app.adapters.search.base import SearchUnavailable
+
+            raise SearchUnavailable("synthetic fixed failure", http_status=self.status)
+        return SimpleNamespace(provider="exa", results=[])
+
+
+def make_engine(config: Any, clock: FakeClock) -> tuple[Any, FakeFetcher, FakeProvider]:
+    fetcher, provider = FakeFetcher(clock), FakeProvider(clock)
+    gate = admission_module.SourceAdmission(
+        config.admission_root, run_id=config.admission_run_id, provider="exa", now=clock.now
+    )
+
+    async def cold_get(url: str) -> Any:
+        return await fetcher.get(url, use_cache=False)
+
+    engine = worker.PersistentWorker(
+        config,
+        str(uuid.uuid4()),
+        execute=controller.execute,
+        get=cold_get,
+        search=provider.search,
+        admission=gate,
+        clock=clock.now,
+        monotonic=clock.monotonic,
+    )
+    startup(config, engine.session_id)
+    worker.atomic_new(config.session_root / "worker.stdout", b"")
+    return engine, fetcher, provider
+
+
+def deliver(engine: Any, payload: dict[str, Any], *, prior: Any = None, turn: int = 1) -> Any:
+    destination = engine.config.delivery_root / f"controller-{turn:02d}"
+    destination.mkdir(mode=0o700)
+    request = {
+        "schema_version": "1",
+        "transport_kind": worker.TRANSPORT,
+        "session_id": engine.session_id,
+        "local_run_id": str(uuid.uuid4()),
+        "sequence": engine.sequence + 1,
+        "case_id": engine.config.case_id,
+        "stage": engine.config.stage,
+        "source_sha": engine.config.source_sha,
+        "session_config_sha256": worker.digest(engine.config.as_dict()),
+        "wall_guard": engine.config.wall_guard,
+        "prior_delivery_sha256": prior.receipt_sha256 if prior else None,
+        "payload": payload,
+    }
+    worker.atomic_new(destination / "request.json", worker.canonical_bytes(request))
+    frame = asyncio.run(engine.deliver(request, destination))
+    data = worker.canonical_bytes(frame) + b"\n"
+    stream = engine.config.session_root / "worker.stdout"
+    offset = stream.stat().st_size
+    with stream.open("ab") as output:
+        output.write(data)
+    delivery = worker._publish_local_receipt(
+        destination,
+        data,
+        engine.config,
+        stdout_range={
+            "offset": offset,
+            "length": len(data),
+            "sha256": worker.hashlib.sha256(data).hexdigest(),
+        },
+    )
+    engine.acknowledge(delivery.receipt_sha256)
+    return delivery
+
+
+def validate(delivery: Any, config: Any, prior: Any = None) -> Any:
+    return worker.validate_local_delivery(
+        delivery.receipt_path.parent,
+        expected_case_id=config.case_id,
+        expected_stage=config.stage,
+        expected_source_sha=config.source_sha,
+        expected_wall_guard=config.wall_guard,
+        prior_delivery=prior,
+    )
+
+
+def test_persistent_stock_controller_exact_resume_cold_reads_and_state(config: Any) -> None:
+    clock = FakeClock()
+    engine, fetcher, provider = make_engine(config, clock)
+    first = deliver(engine, plan(config))
+    assert validate(first, config).source_counters == {
+        "fetcher_calls": 1,
+        "search_queries": 0,
+        "elapsed_ms": 10,
+    }
+    clock.advance(180)  # model/transport waiting never enters source_ms
+    second = deliver(engine, plan(config, first), prior=first, turn=100)
+    verified = validate(second, config, first)
+    assert verified.source_counters["fetcher_calls"] == 2
+    assert verified.source_counters["search_queries"] == 0
+    assert 20 <= verified.source_counters["elapsed_ms"] <= 21
+    assert verified.source_counters == {
+        key: second.summary["final"][key]
+        for key in ("fetcher_calls", "search_queries", "elapsed_ms")
+    }
+    assert fetcher.calls == [("https://example.edu/course", False)] * 2
+    assert fetcher.robots == {"example.edu": "same-object-policy"}
+    assert provider.calls == 0
+    assert second.summary["raw_logs"].keys() > first.summary["raw_logs"].keys()
+    assert (
+        worker.selector_environment(worker.source_environment(config, "synthetic-key"))
+        == config.public_environment
+    )
+
+
+@pytest.mark.parametrize(
+    "key,value",
+    [
+        ("start_calls", 0),
+        ("start_ms", 190000),
+        ("start_search_queries", 1),
+        ("provider", "exa_mcp"),
+        ("wall_deadline_at", (FakeClock().start + timedelta(seconds=901)).isoformat()),
+        ("max_calls", True),
+        ("max_search_queries", 7),
+        ("max_ms", 120000),
+        ("exploration_mode", "outside_policy"),
+    ],
+)
+def test_resume_refuses_reset_model_time_provider_and_policy(
+    config: Any, key: str, value: Any
+) -> None:
+    engine, fetcher, _provider = make_engine(config, FakeClock())
+    first = deliver(engine, plan(config))
+    changed = plan(config, first)
+    changed[key] = value
+    with pytest.raises(ValueError):
+        worker._validate_plan(changed, config, first.summary)
+    assert len(fetcher.calls) == 1
+
+
+def test_resume_preserves_summary_metadata_not_guessed_subset(config: Any) -> None:
+    engine, _fetcher, _provider = make_engine(config, FakeClock())
+    first = deliver(engine, plan(config))
+    changed = plan(config, first)
+    changed["resume_summary"].pop("source_admission")
+    with pytest.raises(ValueError, match="entire original"):
+        worker._validate_plan(changed, config, first.summary)
+
+
+def test_provider_402_persists_real_latch_and_prevents_later_fetch(config: Any) -> None:
+    engine, fetcher, provider = make_engine(config, FakeClock())
+    provider.status = 402
+    first = deliver(engine, plan(config, tool="search_provider"))
+    assert validate(first, config).source_counters["search_queries"] == 1
+    assert first.summary["final"]["stop_reason"] == "http_402"
+    second = deliver(engine, plan(config, first), prior=first, turn=2)
+    assert validate(second, config, first).source_counters == first.source_counters
+    assert fetcher.calls == []
+    assert provider.calls == 1
+    assert second.summary["actions"][0]["executed"] is False
+
+
+@pytest.mark.parametrize(
+    "artifact",
+    [
+        "request.json",
+        "artifact/summary.json",
+        "artifact/logs/u.0001.json",
+        "worker-receipt.json",
+        "worker-response.jsonl",
+    ],
+)
+def test_any_original_artifact_tampering_refuses(config: Any, artifact: str) -> None:
+    engine, _fetcher, _provider = make_engine(config, FakeClock())
+    delivery = deliver(engine, plan(config))
+    target = delivery.receipt_path.parent / artifact
+    if not target.exists() and artifact.startswith("artifact/logs/"):
+        target = next((delivery.receipt_path.parent / "artifact/logs").iterdir())
+    target.write_bytes(target.read_bytes() + b" ")
+    with pytest.raises(ValueError):
+        validate(delivery, config)
+
+
+@pytest.mark.parametrize(
+    "kind",
+    ["case", "stage", "source", "guard", "unavailable", "unknown", "counter_bool", "process_alias"],
+)
+def test_foreign_or_unknown_delivery_never_seals(config: Any, kind: str) -> None:
+    engine, _fetcher, _provider = make_engine(config, FakeClock())
+    delivery = deliver(engine, plan(config))
+    arguments = {
+        "expected_case_id": config.case_id,
+        "expected_stage": config.stage,
+        "expected_source_sha": config.source_sha,
+        "expected_wall_guard": config.wall_guard,
+    }
+    if kind in {"case", "stage", "source", "guard"}:
+        key = {
+            "case": "expected_case_id",
+            "stage": "expected_stage",
+            "source": "expected_source_sha",
+            "guard": "expected_wall_guard",
+        }[kind]
+        arguments[key] = {
+            "case": "foreign",
+            "stage": "baseline",
+            "source": "2" * 40,
+            "guard": {**config.wall_guard, "wall_guard_ms": 120000},
+        }[kind]
+    else:
+        changed = dict(delivery.receipt)
+        if kind == "unavailable":
+            changed["status"] = "unavailable"
+        elif kind == "unknown":
+            changed["source_counters_known"] = False
+        elif kind == "counter_bool":
+            changed["source_counters"]["fetcher_calls"] = True
+        else:
+            changed["run_id"] = 1234
+        delivery.receipt_path.write_bytes(worker.canonical_bytes(changed))
+    with pytest.raises(ValueError):
+        worker.validate_local_delivery(delivery.receipt_path.parent, **arguments)
+
+
+def test_source_replacement_and_runtime_replacement_refused(config: Any) -> None:
+    old = worker.runtime_proof(config)
+    original = config.source_cwd / "public.py"
+    data = original.read_bytes()
+    original.rename(original.with_name("parked-original.py"))
+    original.write_bytes(data)
+    assert worker.runtime_proof(config) != old
+    engine, _fetcher, _provider = make_engine(config, FakeClock())
+    delivery = deliver(engine, plan(config))
+    config.interpreter.write_bytes(b"changed runtime")
+    with pytest.raises(ValueError, match="runtime"):
+        validate(delivery, config)
+
+
+@pytest.mark.parametrize(
+    "path_kind",
+    [
+        "alias",
+        "source_symlink",
+        "runtime_symlink",
+        "output_symlink",
+        "source_dotenv",
+        "extra_environment",
+        "manifest_private",
+    ],
+)
+def test_local_paths_env_and_import_inputs_fail_closed(config: Any, path_kind: str) -> None:
+    if path_kind == "alias":
+        alias = config.source_cwd.parent / "alias"
+        alias.symlink_to(config.source_cwd, target_is_directory=True)
+        altered = replace(config, source_cwd=alias)
+    elif path_kind == "source_symlink":
+        original = config.source_cwd / "public.py"
+        moved = config.source_cwd / "real.py"
+        original.rename(moved)
+        original.symlink_to(moved)
+        altered = config
+    elif path_kind == "runtime_symlink":
+        original = config.interpreter
+        moved = original.with_name("real")
+        original.rename(moved)
+        original.symlink_to(moved)
+        altered = config
+    elif path_kind == "output_symlink":
+        alias = config.delivery_root.parent / "alias"
+        alias.symlink_to(config.delivery_root, target_is_directory=True)
+        altered = replace(config, delivery_root=alias)
+    elif path_kind == "source_dotenv":
+        # Only creates synthetic bytes. Validator must check existence without reading.
+        (config.source_cwd / ".env").write_text("DO_NOT_READ_SYNTHETIC=1")
+        altered = config
+    elif path_kind == "extra_environment":
+        altered = replace(
+            config,
+            public_environment={
+                **config.public_environment,
+                "HTTPS_PROXY": "https://invalid.local",
+            },
+        )
+    else:
+        altered = replace(config, source_manifest={"ground_truth.reviewed.json": "0" * 64})
+    with pytest.raises(ValueError):
+        altered.validate()
+
+
+def test_allowlisted_env_excludes_proxy_ca_import_and_key_without_mutation(config: Any) -> None:
+    supplied = {
+        **config.public_environment,
+        "UNIMATCH_EXA_API_KEY": "synthetic-key",
+        "HTTP_PROXY": "proxy",
+        "https_proxy": "proxy",
+        "ALL_PROXY": "proxy",
+        "SSL_CERT_FILE": "foreign",
+        "PYTHONPATH": "foreign",
+        "PYTHONHOME": "foreign",
+        "DYLD_INSERT_LIBRARIES": "foreign",
+        "OPENAI_API_KEY": "synthetic-other-key",
+        "UNIMATCH_FETCH_DELAY_SECONDS": "0",
+    }
+    original = dict(supplied)
+    safe = worker.selector_environment(supplied)
+    assert safe == config.public_environment
+    assert supplied == original
+    source = worker.source_environment(config, "synthetic-key")
+    assert source[worker.KEY_NAME] == "synthetic-key"
+    assert source["UNIMATCH_FETCH_DELAY_SECONDS"] == "1.5"
+    assert source["UNIMATCH_RESPECT_ROBOTS"] == "true"
+    assert source["UNIMATCH_ENABLE_BROWSER_TIER"] == "false"
+    assert "synthetic-key" not in json.dumps(config.as_dict())
+
+
+@pytest.mark.parametrize(
+    "name", ["controller-00", "controller-001", "controller-1", "controller-+1", "foreign-01"]
+)
+def test_zero_and_aliased_controller_paths_refused(config: Any, name: str) -> None:
+    with pytest.raises(ValueError):
+        worker._validate_destination(config.delivery_root / name, config, exists=False)
+
+
+def test_duplicate_json_rejected() -> None:
+    with pytest.raises(ValueError, match="Duplicate"):
+        worker.load_json('{"case_id":"a","case_id":"b"}')
+
+
+def test_atomic_original_destination_not_overwritten(config: Any) -> None:
+    target = config.session_root / "original"
+    worker.atomic_new(target, b"first")
+    with pytest.raises(FileExistsError):
+        worker.atomic_new(target, b"second")
+    assert target.read_bytes() == b"first"
+
+
+def test_baseline_command_same_group_policy_and_capture_guard(config: Any) -> None:
+    baseline = baseline_config(config)
+    request = {
+        "case_id": "u",
+        "provider": "exa",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_elapsed_ms": 120000,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "browser_enabled": False,
+    }
+    worker._validate_baseline_request(request, baseline)
+    argv = worker.baseline_command(baseline, baseline.delivery_root / "observation.json")
+    assert "--child" in argv
+    assert argv[argv.index("--seconds-per-case") + 1] == "120"
+    assert argv[argv.index("--max-pages") + 1] == "60"
+    assert argv[argv.index("--finalization-reserve-ms") + 1] == "1000"
+    assert argv[argv.index("--source-admission-run-id") + 1] == baseline.admission_run_id
+    assert "synthetic-key" not in worker.canonical_bytes(argv).decode()
+    with pytest.raises(ValueError):
+        worker._validate_baseline_request({**request, "max_elapsed_ms": 121000}, baseline)
+
+
+def capture(config: Any) -> dict[str, Any]:
+    gate = admission_module.SourceAdmission(
+        config.admission_root, run_id=config.admission_run_id, provider="exa", now=FakeClock().now
+    )
+    actions: list[dict[str, Any]] = []
+    counts = {"fetcher_calls": 0, "search_queries": 0}
+    for number, tool in enumerate(("fetcher", "search_provider", "fetcher"), 1):
+        action_id = f"baseline-u-{number}"
+        proof = asyncio.run(
+            gate.admit(case_id="u", tool=tool, action_id=action_id, remaining=lambda: 119.0)
+        ).as_dict()
+        key = "fetcher_calls" if tool == "fetcher" else "search_queries"
+        after = {**counts, key: counts[key] + 1}
+        actions.append(
+            {
+                "source_admission": proof,
+                "tool": tool,
+                "action_id": action_id,
+                "executed": True,
+                "counter_before": dict(counts),
+                "counter_after": after,
+            }
+        )
+        counts = after
+    return {
+        "schema_version": "1",
+        "pipeline_sha": config.source_sha,
+        "captured_at": FakeClock().start.isoformat(),
+        "mode": "live",
+        "config": {
+            "search_provider": "exa",
+            "strict_expert_budget": True,
+            "seconds_per_case": 120,
+            "child_active_seconds": 120,
+            "max_fetcher_calls_per_case": 60,
+            "max_search_queries_per_case": 6,
+            "finalization_reserve_ms": 1000,
+            "source_work_deadline_ms": 119000,
+            "browser_enabled": False,
+            "cold_fetcher_reads": True,
+            "algorithm_defaults": worker.algorithm_defaults(config),
+            "case_budgets": {
+                "u": {
+                    "provider": "exa",
+                    "fetcher_calls": 2,
+                    "search_queries": 1,
+                    "elapsed_ms": 400,
+                    "finalization_reserve_ms": 1000,
+                    "source_work_deadline_ms": 119000,
+                    "process_error": None,
+                    "active_checkpoint_available": True,
+                    "provider_failure": None,
+                    "stop_reason": None,
+                    "source_admission_actions": actions,
+                    "source_admission_receipts": [row["source_admission"] for row in actions],
+                }
+            },
+        },
+        "observations": [
+            {
+                "case_id": "u",
+                "programme_urls": [],
+                "predictions": [],
+                "telemetry": {},
+                "page_outcomes": [],
+                "error": None,
+            }
+        ],
+    }
+
+
+@pytest.mark.parametrize(
+    "key,value",
+    [
+        ("elapsed_ms", 120001),
+        ("fetcher_calls", 61),
+        ("search_queries", 7),
+        ("elapsed_ms", True),
+        ("finalization_reserve_ms", 0),
+        ("source_work_deadline_ms", 120000),
+        ("active_checkpoint_available", False),
+        ("process_error", "WALL_CLOCK"),
+        ("provider_failure", {"http_status": 402}),
+        ("stop_reason", "http_429"),
+    ],
+)
+def test_real_capture_shape_rejects_incomplete_provider_and_budget(
+    config: Any, key: str, value: Any
+) -> None:
+    baseline = baseline_config(config)
+    original = capture(baseline)
+    worker._validate_capture(original, baseline)
+    original["config"]["case_budgets"]["u"][key] = value
+    with pytest.raises(ValueError):
+        worker._validate_capture(original, baseline)
+
+
+class FakeChild:
+    def __init__(self) -> None:
+        self.pid = 100
+        self.returncode: int | None = None
+        self.terminated = self.killed = False
+        self.calls = 0
+
+    async def communicate(self) -> tuple[bytes, bytes]:
+        self.calls += 1
+        if self.calls < 3:
+            raise TimeoutError("synthetic timeout")
+        self.returncode = -signal.SIGKILL
+        return b"original child stdout", b"original child stderr"
+
+    def terminate(self) -> None:
+        self.terminated = True
+
+    def kill(self) -> None:
+        self.killed = True
+
+
+def test_baseline_cleanup_keeps_child_in_worker_group_and_reaps(
+    config: Any, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    baseline = baseline_config(config)
+    artifact = config.session_root / "artifact"
+    artifact.mkdir()
+    child = FakeChild()
+    seen: dict[str, Any] = {}
+
+    async def spawn(*args: Any, **kwargs: Any) -> Any:
+        seen.update(kwargs)
+        seen["argv"] = list(args)
+        return child
+
+    monkeypatch.setattr(asyncio, "create_subprocess_exec", spawn)
+    monkeypatch.setattr(worker.os, "getpgid", lambda _pid: 4567)
+    request = {
+        "case_id": "u",
+        "provider": "exa",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_elapsed_ms": 120000,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "browser_enabled": False,
+    }
+    with pytest.raises(TimeoutError):
+        asyncio.run(worker._stock_baseline(baseline, request, artifact))
+    assert seen["start_new_session"] is False
+    assert child.terminated and child.killed and child.calls == 3
+    receipt = worker.load_json((artifact / "child-process.json").read_bytes())
+    assert receipt["pgid"] == 4567 and receipt["pgid"] != child.pid
+    assert receipt["reaped"] is True and receipt["returncode"] == -signal.SIGKILL
+    assert (artifact / "child.stdout").read_bytes() == b"original child stdout"
+
+
+class FakeStdout:
+    def __init__(self) -> None:
+        self.lines: queue.Queue[bytes] = queue.Queue()
+
+    def readline(self, _limit: int) -> bytes:
+        return self.lines.get(timeout=10)
+
+
+class FakeStdin:
+    def __init__(self, callback: Any) -> None:
+        self.callback = callback
+
+    def write(self, data: bytes) -> None:
+        self.callback(worker.load_json(data))
+
+    def flush(self) -> None:
+        pass
+
+
+class FakeProcess:
+    def __init__(self, *, config: Any, clock: FakeClock, hang: bool = False) -> None:
+        self.config, self.clock, self.hang = config, clock, hang
+        self.pid = 4567
+        self.stdout = FakeStdout()
+        self.stdin = FakeStdin(self.command)
+        self.returncode: int | None = None
+        self.wait_calls = 0
+        bootstrap = worker.load_json((config.session_root / "session-bootstrap.json").read_bytes())
+        session_id = bootstrap["session_id"]
+        startup(config, session_id, pid=self.pid)
+        fetcher = FakeFetcher(clock)
+        provider = FakeProvider(clock)
+        gate = admission_module.SourceAdmission(
+            config.admission_root, run_id=config.admission_run_id, provider="exa", now=clock.now
+        )
+
+        async def cold(url: str) -> Any:
+            return await fetcher.get(url, use_cache=False)
+
+        self.engine = worker.PersistentWorker(
+            config,
+            session_id,
+            execute=controller.execute,
+            get=cold,
+            search=provider.search,
+            admission=gate,
+            clock=clock.now,
+            monotonic=clock.monotonic,
+        )
+        self.stdout.lines.put(
+            worker.canonical_bytes({"kind": "ready", "session_id": session_id}) + b"\n"
+        )
+
+    def command(self, value: dict[str, Any]) -> None:
+        if value["kind"] == "close":
+            self.returncode = 0
+            self.stdout.lines.put(b"")
+        elif value["kind"] == "acknowledge":
+            self.engine.acknowledge(value["receipt_sha256"])
+        elif self.hang:
+            self.clock.advance(901)
+        else:
+            destination = Path(value["destination"])
+            frame = asyncio.run(
+                self.engine.deliver(
+                    worker.load_json((destination / "request.json").read_bytes()), destination
+                )
+            )
+            self.stdout.lines.put(worker.canonical_bytes(frame) + b"\n")
+
+    def poll(self) -> int | None:
+        return self.returncode
+
+    def wait(self, timeout: float) -> int:
+        self.wait_calls += 1
+        if self.returncode is None:
+            raise subprocess.TimeoutExpired("synthetic source process", timeout)
+        return self.returncode
+
+
+def test_client_actual_mocked_process_env_rpc_validation_and_clean_close(config: Any) -> None:
+    clock = FakeClock()
+    seen: dict[str, Any] = {}
+
+    def factory(argv: list[str], **kwargs: Any) -> FakeProcess:
+        seen.update({**kwargs, "env": dict(kwargs["env"]), "argv": argv})
+        return FakeProcess(config=config, clock=clock)
+
+    session = worker.start_session(
+        config,
+        private_key="synthetic-key-never-real",
+        process_factory=factory,
+        clock=clock.now,
+        monotonic=clock.monotonic,
+    )
+    first = session.execute(
+        plan(config), config.delivery_root / "controller-01", wall_guard=config.wall_guard
+    )
+    assert first.source_counters["fetcher_calls"] == 1
+    assert (
+        seen["start_new_session"] is True and seen["close_fds"] is True and seen["shell"] is False
+    )
+    assert seen["env"][worker.KEY_NAME] == "synthetic-key-never-real"
+    assert (
+        worker.KEY_NAME not in os.environ
+        or os.environ[worker.KEY_NAME] != "synthetic-key-never-real"
+    )
+    for path in config.session_root.rglob("*.json"):
+        assert b"synthetic-key-never-real" not in path.read_bytes()
+    clock.advance(180)
+    second = session.execute(
+        plan(config, first),
+        config.delivery_root / "controller-02",
+        wall_guard=config.wall_guard,
+        prior_delivery=first,
+    )
+    assert 20 <= second.source_counters["elapsed_ms"] <= 21
+    terminal = session.close()
+    assert terminal["returncode"] == 0 and terminal["unknown_tail"] is False
+    assert (
+        worker.validate_session_final(
+            config.session_root,
+            expected_session_id=session.session_id,
+            expected_source_sha=config.source_sha,
+            expected_case_id="u",
+            expected_stage="expert",
+        )
+        == terminal
+    )
+    assert session.close() == terminal
+
+
+def test_client_interrupted_guard_tail_unknown_refuses_replay_and_reaps(
+    config: Any, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    clock = FakeClock()
+    process: FakeProcess | None = None
+    kills: list[int] = []
+
+    def factory(_argv: Any, **_kwargs: Any) -> FakeProcess:
+        nonlocal process
+        process = FakeProcess(config=config, clock=clock, hang=True)
+        return process
+
+    def kill(pid: int, sig: int) -> None:
+        assert process is not None and pid == process.pid
+        kills.append(sig)
+        if sig == signal.SIGKILL:
+            process.returncode = -sig
+            process.stdout.lines.put(b"")
+
+    session = worker.start_session(
+        config,
+        private_key="synthetic-key",
+        process_factory=factory,
+        clock=clock.now,
+        monotonic=clock.monotonic,
+        kill_group=kill,
+    )
+    monkeypatch.setattr(
+        session, "_receive", lambda _timeout: (_ for _ in ()).throw(TimeoutError("synthetic guard"))
+    )
+    delivery = session.execute(
+        plan(config), config.delivery_root / "controller-01", wall_guard=config.wall_guard
+    )
+    assert delivery.receipt["status"] == "unavailable"
+    assert delivery.source_counters is None and delivery.receipt["source_counters_known"] is False
+    assert kills == [signal.SIGTERM, signal.SIGKILL]
+    assert process is not None and process.returncode == -signal.SIGKILL
+    assert (
+        worker.validate_unavailable_delivery(
+            delivery.receipt_path.parent,
+            expected_case_id=config.case_id,
+            expected_stage=config.stage,
+            expected_source_sha=config.source_sha,
+            expected_wall_guard=config.wall_guard,
+        )
+        == delivery
+    )
+    with pytest.raises(ValueError, match="Unknown"):
+        validate(delivery, config)
+    with pytest.raises(ValueError):
+        session.execute(
+            plan(config), config.delivery_root / "controller-02", wall_guard=config.wall_guard
+        )
+    with pytest.raises(ValueError):
+        worker.validate_session_final(
+            config.session_root,
+            expected_session_id=session.session_id,
+            expected_source_sha=config.source_sha,
+            expected_case_id="u",
+            expected_stage="expert",
+        )
+
+
+def synthetic_baseline_artifacts(config: Any, artifact: Path) -> dict[str, Any]:
+    from evaluation.research.schema import Capture
+
+    result = Capture.model_validate_json(worker.canonical_bytes(capture(config))).model_dump(
+        mode="json"
+    )
+    budget = result["config"]["case_budgets"][config.case_id]
+    budget["parent_process_elapsed_seconds"] = 0.8
+    original_budget = {
+        key: value
+        for key, value in budget.items()
+        if key
+        not in {"process_error", "active_checkpoint_available", "parent_process_elapsed_seconds"}
+    }
+    worker.atomic_new(
+        artifact / "observation.json", worker.canonical_bytes(result["observations"][0])
+    )
+    worker.atomic_new(artifact / "observation.budget.json", worker.canonical_bytes(original_budget))
+    argv = worker.baseline_command(config, artifact / "observation.json")
+    worker.atomic_new(
+        artifact / "child-command.json",
+        worker.canonical_bytes(
+            {
+                "argv": argv,
+                "argv_sha256": worker.digest(argv),
+                "stock_argv": [
+                    "evaluation.research.live",
+                    *worker.baseline_stock_arguments(config, artifact / "observation.json"),
+                ],
+            }
+        ),
+    )
+    worker.atomic_new(
+        artifact / "child-process.json",
+        worker.canonical_bytes(
+            {
+                "pid": 9999,
+                "pgid": 4567,
+                "argv_sha256": worker.digest(argv),
+                "returncode": 0,
+                "reaped": True,
+                "process_error": None,
+                "parent_process_elapsed_seconds": 0.8,
+            }
+        ),
+    )
+    environment = worker.source_environment(config, "synthetic-key")
+    environment.pop(worker.KEY_NAME)
+    child_runtime = {
+        "schema_version": "1",
+        "pid": 9999,
+        "pgid": 4567,
+        "source_sha": config.source_sha,
+        "session_config_sha256": worker.digest(config.as_dict()),
+        "cwd": str(config.source_cwd),
+        "interpreter": str(config.interpreter),
+        "no_site": True,
+        "stock_argv": [
+            "evaluation.research.live",
+            *worker.baseline_stock_arguments(config, artifact / "observation.json"),
+        ],
+        "public_environment": environment,
+        "public_environment_sha256": worker.digest(environment),
+        "runtime_proof": worker.runtime_proof(config),
+        "import_origins": {},
+        "algorithm_defaults": worker.algorithm_defaults(config),
+    }
+    worker.atomic_new(artifact / "child-runtime.json", worker.canonical_bytes(child_runtime))
+    worker.atomic_new(artifact / "child-import-origins.json", b"{}")
+    worker.atomic_new(artifact / "child.stdout", b"Original mocked stock stdout\n")
+    worker.atomic_new(artifact / "child.stderr", b"Original mocked stock stderr\n")
+    return result
+
+
+def baseline_delivery(config: Any) -> tuple[Any, Any]:
+    baseline = baseline_config(config)
+    clock = FakeClock()
+
+    async def runner(_request: dict[str, Any], artifact: Path) -> dict[str, Any]:
+        return await asyncio.to_thread(synthetic_baseline_artifacts, baseline, artifact)
+
+    engine = worker.PersistentWorker(
+        baseline,
+        str(uuid.uuid4()),
+        execute=None,
+        get=None,
+        search=None,
+        admission=None,
+        baseline_runner=runner,
+        clock=clock.now,
+        monotonic=clock.monotonic,
+    )
+    startup(baseline, engine.session_id)
+    worker.atomic_new(baseline.session_root / "worker.stdout", b"")
+    baseline.delivery_root.mkdir()
+    request = {
+        "schema_version": "1",
+        "transport_kind": worker.TRANSPORT,
+        "session_id": engine.session_id,
+        "local_run_id": str(uuid.uuid4()),
+        "sequence": 1,
+        "case_id": baseline.case_id,
+        "stage": baseline.stage,
+        "source_sha": baseline.source_sha,
+        "session_config_sha256": worker.digest(baseline.as_dict()),
+        "wall_guard": None,
+        "prior_delivery_sha256": None,
+        "payload": {
+            "case_id": "u",
+            "provider": "exa",
+            "max_fetcher_calls": 60,
+            "max_search_queries": 6,
+            "max_elapsed_ms": 120000,
+            "finalization_reserve_ms": 1000,
+            "source_work_deadline_ms": 119000,
+            "browser_enabled": False,
+        },
+    }
+    worker.atomic_new(baseline.delivery_root / "request.json", worker.canonical_bytes(request))
+    frame = asyncio.run(engine.deliver(request, baseline.delivery_root))
+    data = worker.canonical_bytes(frame) + b"\n"
+    (baseline.session_root / "worker.stdout").write_bytes(data)
+    delivery = worker._publish_local_receipt(
+        baseline.delivery_root,
+        data,
+        baseline,
+        stdout_range={
+            "offset": 0,
+            "length": len(data),
+            "sha256": worker.hashlib.sha256(data).hexdigest(),
+        },
+    )
+    return baseline, delivery
+
+
+def test_baseline_original_capture_packaging_receipt_and_frozen_defaults(config: Any) -> None:
+    baseline, delivery = baseline_delivery(config)
+    verified = validate(delivery, baseline)
+    assert verified.capture["config"]["algorithm_defaults"]["document_rules_v2"] is True
+    assert verified.capture["config"]["algorithm_defaults"]["document_leads"] is True
+    assert verified.capture["config"]["algorithm_defaults"]["document_seconds"] == 0.0
+    assert verified.source_counters == {"fetcher_calls": 2, "search_queries": 1, "elapsed_ms": 400}
+    assert (baseline.delivery_root / "artifact/capture/local/capture.json").exists()
+    assert not (baseline.delivery_root / "artifact/packet.json").exists()
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "observation.json",
+        "observation.budget.json",
+        "child-command.json",
+        "child-process.json",
+        "child.stdout",
+        "child.stderr",
+    ],
+)
+def test_baseline_original_child_artifacts_required_before_seal(config: Any, name: str) -> None:
+    baseline, delivery = baseline_delivery(config)
+    (baseline.delivery_root / "artifact" / name).unlink()
+    with pytest.raises((ValueError, FileNotFoundError)):
+        validate(delivery, baseline)
+
+
+def test_runtime_import_injection_pth_rejected_before_private_process(config: Any) -> None:
+    (config.runtime_import_roots[0] / "injection.pth").write_text(
+        "import unapproved_foreign_module\n"
+    )
+    with pytest.raises(ValueError, match="startup/import injection"):
+        config.validate()
+
+
+def test_import_origins_source_and_dependency_byte_proofs(config: Any) -> None:
+    origins = {
+        "source.public": worker._identity(config.source_cwd / "public.py"),
+        "runtime.binary": worker._identity(config.interpreter),
+    }
+    worker._verify_import_origins(origins, config)
+    alien = config.source_cwd.parent / "foreign.py"
+    alien.write_text("FOREIGN = True")
+    with pytest.raises(ValueError, match="unpinned"):
+        worker._verify_import_origins({"foreign": worker._identity(alien)}, config)
+
+
+def test_prior_summary_in_memory_changes_do_not_override_saved_original(config: Any) -> None:
+    engine, _fetcher, _provider = make_engine(config, FakeClock())
+    first = deliver(engine, plan(config))
+    second = deliver(engine, plan(config, first), prior=first, turn=2)
+    changed = replace(
+        first, summary={**first.summary, "final": {**first.summary["final"], "fetcher_calls": 0}}
+    )
+    with pytest.raises(ValueError, match="original saved bytes"):
+        validate(second, config, changed)
+
+
+def test_new_source_after_original_guard_refuses_without_io(config: Any) -> None:
+    clock = FakeClock()
+    engine, fetcher, provider = make_engine(config, clock)
+    first = deliver(engine, plan(config))
+    clock.advance(901)
+    with pytest.raises(TimeoutError, match="guard"):
+        deliver(engine, plan(config, first), prior=first, turn=2)
+    assert len(fetcher.calls) == 1 and provider.calls == 0
+
+
+def test_completed_late_failure_tail_is_counters_only_not_success(config: Any) -> None:
+    clock = FakeClock()
+    engine, fetcher, _provider = make_engine(config, clock)
+
+    async def interrupted(_url: str) -> Any:
+        clock.advance(901)
+        raise TimeoutError("synthetic immutable guard cancellation")
+
+    engine.get = interrupted
+    delivery = deliver(engine, plan(config))
+    verified = validate(delivery, config)
+    assert verified.source_counters["fetcher_calls"] == 1
+    assert verified.summary["actions"][0]["outcome_status"] == "failure"
+    assert verified.summary["final"]["stop_reason"] == "wall_guard_exhausted"
+    assert worker._stamp(verified.receipt["completed_at"]) > worker._stamp(
+        config.wall_guard["wall_deadline_at"]
+    )
+    assert fetcher.calls == []
+
+
+def test_delivery_response_stream_range_tampering_not_hidden_by_file_hashes(config: Any) -> None:
+    engine, _fetcher, _provider = make_engine(config, FakeClock())
+    delivery = deliver(engine, plan(config))
+    (config.session_root / "worker.stdout").write_bytes(b"changed original process stream")
+    with pytest.raises(ValueError, match="stream bytes"):
+        validate(delivery, config)
+
+
+def test_no_site_bootstrap_imports_only_synthetic_clean_app(config: Any) -> None:
+    """One synthetic Python probe; no stock app, source tool, key or model CLI."""
+    source = config.source_cwd
+    (source / "app").mkdir(exist_ok=True)
+    (source / "app/__init__.py").write_text("")
+    (source / "app/config.py").write_text("ORIGIN = 'clean-synthetic-config'\n")
+    ambient = source.parent / "ambient"
+    ambient.mkdir()
+    (ambient / "app").mkdir()
+    (ambient / "app/__init__.py").write_text("")
+    marker = source.parent / "ambient-hook-was-executed"
+    (ambient / "sitecustomize.py").write_text(
+        f"from pathlib import Path\nPath({str(marker)!r}).write_text('unsafe hook ran')\n"
+    )
+    (ambient / "app/config.py").write_text("ORIGIN = 'ambient-foreign-config'\n")
+    code = f"""
+import importlib, json, sys
+from pathlib import Path
+assert sys.flags.no_site and sys.flags.ignore_environment and sys.flags.no_user_site
+sys.path[:] = [{str(source)!r}, *(p for p in sys.path if p and Path(p).is_absolute() and Path(p) != Path({str(ambient)!r}))]
+module = importlib.import_module('app.config')
+print(json.dumps({{'origin': module.ORIGIN, 'file': module.__file__, 'no_site': bool(sys.flags.no_site)}}))
+"""
+    # Explicit private-free env. PYTHONPATH is a synthetic hostile input which
+    # -E must ignore; -S must keep the synthetic site hook from running.
+    process = OFFLINE_INTERPRETER_POPEN(
+        [str(REPO / "backend/.venv/bin/python"), "-B", "-E", "-S", "-s", "-c", code],
+        cwd=str(ambient),
+        env={"PATH": "/usr/bin:/bin", "LANG": "C", "PYTHONPATH": str(ambient)},
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        start_new_session=True,
+        close_fds=True,
+    )
+    stdout, stderr = process.communicate(timeout=10)
+    assert process.returncode == 0, stderr
+    result = worker.load_json(stdout)
+    assert result == {
+        "origin": "clean-synthetic-config",
+        "file": str(source / "app/config.py"),
+        "no_site": True,
+    }
+    assert not marker.exists()
+
+
+def baseline_with_permit_only_tail(config: Any) -> tuple[Any, dict[str, Any]]:
+    baseline = baseline_config(config)
+    original = capture(baseline)
+    budget = original["config"]["case_budgets"]["u"]
+    gate = admission_module.SourceAdmission(
+        baseline.admission_root,
+        run_id=baseline.admission_run_id,
+        provider="exa",
+        now=FakeClock().now,
+    )
+    proof = asyncio.run(
+        gate.admit(
+            case_id="u", tool="fetcher", action_id="baseline-u-permit-only", remaining=lambda: 119.0
+        )
+    ).as_dict()
+    counts = {"fetcher_calls": 2, "search_queries": 1}
+    budget["source_admission_actions"].append(
+        {
+            "source_admission": proof,
+            "tool": "fetcher",
+            "action_id": "baseline-u-permit-only",
+            "executed": False,
+            "counter_before": dict(counts),
+            "counter_after": dict(counts),
+        }
+    )
+    budget["source_admission_receipts"].append(proof)
+    return baseline, original
+
+
+def test_baseline_persisted_permit_without_execution_never_adds_a_page_read(config: Any) -> None:
+    baseline, original = baseline_with_permit_only_tail(config)
+    budget = original["config"]["case_budgets"]["u"]
+    assert len(budget["source_admission_receipts"]) == 4
+    assert worker._baseline_admission_counters(budget, baseline) == {
+        "fetcher_calls": 2,
+        "search_queries": 1,
+    }
+    worker._validate_capture(original, baseline)
+    assert {key: budget[key] for key in ("fetcher_calls", "search_queries", "elapsed_ms")} == {
+        "fetcher_calls": 2,
+        "search_queries": 1,
+        "elapsed_ms": 400,
+    }
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "false_delta",
+        "true_without_delta",
+        "bool_executed",
+        "bool_counter",
+        "prefix_reset",
+        "changed_tool",
+        "changed_case",
+        "duplicate_action",
+        "missing_action",
+        "missing_permit",
+        "permit_hash",
+        "claimed_permit_count",
+    ],
+)
+def test_baseline_original_execution_ledger_rejects_ambiguous_permits(
+    config: Any, mutation: str
+) -> None:
+    baseline, original = baseline_with_permit_only_tail(config)
+    budget = original["config"]["case_budgets"]["u"]
+    tail = budget["source_admission_actions"][-1]
+    if mutation == "false_delta":
+        tail["counter_after"]["fetcher_calls"] += 1
+    elif mutation == "true_without_delta":
+        tail["executed"] = True
+    elif mutation == "bool_executed":
+        tail["executed"] = 0
+    elif mutation == "bool_counter":
+        tail["counter_after"]["search_queries"] = True
+    elif mutation == "prefix_reset":
+        tail["counter_before"]["fetcher_calls"] = 0
+    elif mutation == "changed_tool":
+        tail["tool"] = "search_provider"
+    elif mutation == "changed_case":
+        tail["source_admission"]["case_id"] = "foreign-case"
+    elif mutation == "duplicate_action":
+        tail["action_id"] = budget["source_admission_actions"][0]["action_id"]
+    elif mutation == "missing_action":
+        budget["source_admission_actions"].pop()
+    elif mutation == "missing_permit":
+        budget["source_admission_receipts"].pop()
+    elif mutation == "permit_hash":
+        tail["source_admission"]["receipt_sha256"] = "0" * 64
+    elif mutation == "claimed_permit_count":
+        budget["fetcher_calls"] = 3
+    with pytest.raises((ValueError, admission_module.SourceAdmissionIntegrityError)):
+        worker._validate_capture(original, baseline)
+
+
+def test_expert_rejects_even_valid_baseline_private_input_pointer(config: Any) -> None:
+    baseline = baseline_config(config)
+    with pytest.raises(ValueError, match="cannot access a private producer registry"):
+        replace(config, baseline_identity_registry=baseline.baseline_identity_registry).validate()
+
+
+@pytest.mark.parametrize("mutation", ["missing", "extra", "hash", "source", "imports", "symlink"])
+def test_baseline_private_input_is_exact_opaque_and_outside_public_roots(
+    config: Any, mutation: str
+) -> None:
+    baseline = baseline_config(config)
+    pointer = dict(baseline.baseline_identity_registry)
+    if mutation == "missing":
+        replacement = None
+    else:
+        if mutation == "extra":
+            pointer["contents"] = "synthetic private contents must not be serialized"
+        elif mutation == "hash":
+            pointer["sha256"] = "0" * 64
+        elif mutation in {"source", "imports", "symlink"}:
+            private_path = Path(pointer["path"])
+            if mutation == "source":
+                moved = baseline.source_cwd / "private-input.json"
+                moved.write_bytes(private_path.read_bytes())
+            elif mutation == "imports":
+                moved = baseline.runtime_import_roots[0] / "private-input.json"
+                moved.write_bytes(private_path.read_bytes())
+            else:
+                moved = private_path.parent / "aliased-private-input.json"
+                moved.symlink_to(private_path)
+            pointer["path"] = str(moved)
+        replacement = pointer
+    with pytest.raises(ValueError):
+        replace(baseline, baseline_identity_registry=replacement).validate()
+
+
+def test_baseline_same_bytes_private_input_replacement_breaks_original_receipt(config: Any) -> None:
+    baseline, delivery = baseline_delivery(config)
+    validate(delivery, baseline)
+    private_path = Path(baseline.baseline_identity_registry["path"])
+    old = worker._identity(private_path)
+    saved_bytes = private_path.read_bytes()
+    private_path.rename(private_path.with_name("original-private-input-preserved.json"))
+    private_path.write_bytes(saved_bytes)
+    assert worker._identity(private_path)["sha256"] == old["sha256"]
+    assert worker._identity(private_path)["inode"] != old["inode"]
+    with pytest.raises(ValueError, match="identity changed"):
+        validate(delivery, baseline)
+
+
+def unavailable_delivery(
+    config: Any, monkeypatch: pytest.MonkeyPatch, *, with_prior: bool = False, early: bool = False
+) -> tuple[Any, Any]:
+    clock = FakeClock()
+
+    class InterruptedProcess(FakeProcess):
+        def command(self, value: dict[str, Any]) -> None:
+            if value["kind"] == "deliver" and self.hang:
+                artifact = Path(value["destination"]) / "artifact"
+                artifact.mkdir()
+                (artifact / "original-partial.txt").write_bytes(b"synthetic interrupted original")
+                if not early:
+                    clock.advance(901)
+                return
+            super().command(value)
+
+    process: InterruptedProcess | None = None
+
+    def factory(_argv: Any, **_kwargs: Any) -> InterruptedProcess:
+        nonlocal process
+        process = InterruptedProcess(config=config, clock=clock)
+        return process
+
+    def kill(_pid: int, sig: int) -> None:
+        assert process is not None
+        if sig == signal.SIGKILL:
+            process.returncode = -sig
+            process.stdout.lines.put(b"")
+
+    session = worker.start_session(
+        config,
+        private_key="synthetic-key",
+        process_factory=factory,
+        clock=clock.now,
+        monotonic=clock.monotonic,
+        kill_group=kill,
+    )
+    prior = (
+        session.execute(
+            plan(config), config.delivery_root / "controller-01", wall_guard=config.wall_guard
+        )
+        if with_prior
+        else None
+    )
+    assert process is not None
+    process.hang = True
+    monkeypatch.setattr(
+        session,
+        "_receive",
+        lambda _timeout: (_ for _ in ()).throw(TimeoutError("synthetic source wait")),
+    )
+    delivery = session.execute(
+        plan(config, prior),
+        config.delivery_root / ("controller-02" if prior else "controller-01"),
+        wall_guard=config.wall_guard,
+        prior_delivery=prior,
+    )
+    return delivery, prior
+
+
+@pytest.mark.parametrize("with_prior", [False, True])
+def test_unknown_guard_tail_preserves_only_original_prefix_and_partial_bytes(
+    config: Any, monkeypatch: pytest.MonkeyPatch, with_prior: bool
+) -> None:
+    delivery, prior = unavailable_delivery(config, monkeypatch, with_prior=with_prior)
+    verified = worker.validate_unavailable_delivery(
+        delivery.receipt_path.parent,
+        expected_case_id=config.case_id,
+        expected_stage=config.stage,
+        expected_source_sha=config.source_sha,
+        expected_wall_guard=config.wall_guard,
+        prior_delivery=prior,
+    )
+    assert verified == delivery
+    assert verified.receipt["terminal_reason"] == "wall_guard_exhausted"
+    assert (
+        verified.source_counters is None and verified.summary is None and verified.capture is None
+    )
+    assert set(verified.receipt["partial_artifacts"]) == {"original-partial.txt"}
+    if prior:
+        assert prior.source_counters["fetcher_calls"] == 1
+        assert verified.receipt["prior_delivery_sha256"] == prior.receipt_sha256
+    with pytest.raises(ValueError, match="Unknown"):
+        validate(verified, config, prior)
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "case",
+        "guard",
+        "count",
+        "flag",
+        "request",
+        "startup",
+        "stream",
+        "partial",
+        "reaped",
+        "returncode",
+        "prior",
+        "pid",
+    ],
+)
+def test_unknown_source_receipt_binding_cannot_be_reclassified_by_editable_metadata(
+    config: Any, monkeypatch: pytest.MonkeyPatch, mutation: str
+) -> None:
+    delivery, prior = unavailable_delivery(config, monkeypatch, with_prior=True)
+    receipt = worker.load_json(delivery.receipt_path.read_bytes())
+    if mutation == "case":
+        receipt["case_id"] = "other"
+    elif mutation == "guard":
+        receipt["wall_guard"]["wall_deadline_at"] = "2026-10-06T13:00:00+00:00"
+    elif mutation == "count":
+        receipt["source_counters"] = {"fetcher_calls": 1, "search_queries": 0, "elapsed_ms": 10}
+    elif mutation == "flag":
+        receipt["source_counters_known"] = 0
+    elif mutation == "request":
+        receipt["request_sha256"] = "0" * 64
+    elif mutation == "startup":
+        receipt["session_start_sha256"] = "0" * 64
+    elif mutation == "stream":
+        (config.session_root / "worker.stdout").write_bytes(b"forged terminal stream")
+    elif mutation == "partial":
+        (delivery.receipt_path.parent / "artifact/original-partial.txt").write_bytes(b"changed")
+    elif mutation == "reaped":
+        receipt["terminal_process"]["reaped"] = False
+    elif mutation == "returncode":
+        receipt["terminal_process"]["returncode"] = None
+    elif mutation == "prior":
+        receipt["prior_delivery_sha256"] = None
+    elif mutation == "pid":
+        receipt["terminal_process"]["pid"] += 1
+    delivery.receipt_path.write_bytes(worker.canonical_bytes(receipt))
+    with pytest.raises(ValueError):
+        worker.validate_unavailable_delivery(
+            delivery.receipt_path.parent,
+            expected_case_id=config.case_id,
+            expected_stage=config.stage,
+            expected_source_sha=config.source_sha,
+            expected_wall_guard=config.wall_guard,
+            prior_delivery=prior,
+        )
+
+
+def test_early_process_timeout_is_not_an_own_case_wall_guard_ending(
+    config: Any, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    delivery, _prior = unavailable_delivery(config, monkeypatch, early=True)
+    assert delivery.receipt["terminal_reason"] == "local_transport_integrity_failure"
+    worker.validate_unavailable_delivery(
+        delivery.receipt_path.parent,
+        expected_case_id=config.case_id,
+        expected_stage=config.stage,
+        expected_source_sha=config.source_sha,
+        expected_wall_guard=config.wall_guard,
+    )
+    altered = worker.load_json(delivery.receipt_path.read_bytes())
+    altered["terminal_reason"] = "wall_guard_exhausted"
+    delivery.receipt_path.write_bytes(worker.canonical_bytes(altered))
+    with pytest.raises(ValueError, match="counterfeit own-guard"):
+        worker.validate_unavailable_delivery(
+            delivery.receipt_path.parent,
+            expected_case_id=config.case_id,
+            expected_stage=config.stage,
+            expected_source_sha=config.source_sha,
+            expected_wall_guard=config.wall_guard,
+        )

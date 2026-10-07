@@ -1,0 +1,23 @@
+{
+  "started_at": "2026-10-06T17:55:32.977320+00:00",
+  "finished_at": "2026-10-06T17:56:38.986918+00:00",
+  "gate": "backend",
+  "results": [
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "--cov=app",
+        "--cov-fail-under=92"
+      ],
+      "cwd": "backend",
+      "returncode": -15,
+      "log": "/tmp/unimatch-expert500-v14-deadline-gates-20261006/backend-00-original.log",
+      "bytes": 176,
+      "sha256": "e52f645be1f87c2e8dd7d3bbf4c359eb24642bab28318b6562ba599fc00df85e"
+    }
+  ],
+  "credential_environment_override_empty": true,
+  "measured_pilot": false
+}

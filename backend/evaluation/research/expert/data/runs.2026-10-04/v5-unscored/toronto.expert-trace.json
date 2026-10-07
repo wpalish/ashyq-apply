@@ -1,0 +1,301 @@
+{
+  "schema_version": "1",
+  "case_id": "toronto",
+  "packet_sha256": "90d52c42b915b173f00b4da4e4f8894ce33c9df052c0a11088f16172d89aa3b0",
+  "baseline_pipeline_sha": "e0ac678e8b8ae251519e65598d3f0da4ff2abb24",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T11:39:43.447794+00:00",
+  "ended_at": "2026-10-04T11:44:23.044849+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T11:40:25.649877+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://future.utoronto.ca/undergraduate-programs/computer-science/"
+      },
+      "outcome": "http_error",
+      "outcome_status": "failure",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-001.json",
+      "raw_log_sha256": "08e4bf919b5956738418e8196f7405562c9891583825a84032943405bc8614d5",
+      "elapsed_ms": 101,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 11260,
+      "search_queries_cumulative": 0,
+      "step": 1,
+      "observed_before": "Start with the official undergraduate Computer Science programme page.",
+      "observed_from_step": null,
+      "action": "fetcher: https://future.utoronto.ca/undergraduate-programs/computer-science/",
+      "stage": "page_understanding",
+      "url": "https://future.utoronto.ca/undergraduate-programs/computer-science/",
+      "final_url": "https://future.utoronto.ca/undergraduate-programs/computer-science/"
+    },
+    {
+      "at": "2026-10-04T11:41:16.613933+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:utoronto.ca computer science undergraduate bachelor admission English Kazakhstan scholarships",
+        "domains": [
+          "utoronto.ca"
+        ],
+        "max_results": 6
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-002.json",
+      "raw_log_sha256": "7027956e20fd6032f4477812161277c9ea08d611f4dbb93e624ea511f4313965",
+      "elapsed_ms": 4699,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 25603,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "The initial programme page returned HTTP 403; search for accessible official programme and admissions sources.",
+      "observed_from_step": 1,
+      "action": "search_provider: site:utoronto.ca computer science undergraduate bachelor admission English Kazakhstan scholarships",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T11:42:13.787924+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.utm.utoronto.ca/future-students/programs/computer-science"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-003.json",
+      "raw_log_sha256": "dface8bcae6d1b5d9ae0d7564a7a42965fcd9abff983ae014fb69a5d0d57e2b0",
+      "elapsed_ms": 2765,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 37996,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "The initial programme URL returned 403. Search identified an official Mississauga programme page to inspect.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://www.utm.utoronto.ca/future-students/programs/computer-science",
+      "stage": "page_understanding",
+      "url": "https://www.utm.utoronto.ca/future-students/programs/computer-science",
+      "final_url": "https://www.utm.utoronto.ca/future-students/programs/computer-science"
+    },
+    {
+      "at": "2026-10-04T11:43:31.462347+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "toronto-004.json",
+      "raw_log_sha256": "915dbd65da8d2efa7a4854f9bb2789c5f5c618dff55ae2bf382e1e5e01059cdd",
+      "elapsed_ms": 5341,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 73967,
+      "search_queries_cumulative": 1,
+      "step": 4,
+      "observed_before": "The Mississauga programme page establishes a bachelor Computer Science programme and restricts entry to applicants directly from high school. Next inspect admission deadlines.",
+      "observed_from_step": 3,
+      "action": "fetcher: https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines",
+      "stage": "page_understanding",
+      "url": "https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines",
+      "final_url": "https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines"
+    }
+  ],
+  "proposals": [
+    {
+      "claim_key": "programme.exists",
+      "value": true,
+      "source_url": "https://www.utm.utoronto.ca/future-students/programs/computer-science",
+      "excerpt": "Bachelor of Computer Science",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Toronto",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        3
+      ],
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "programme.admission_route",
+      "value": "Transfer students who have completed any post-secondary studies (including studies at other divisions at the University of Toronto) are not eligible for admission to the Computer Science admission category. The Computer Science Specialist and Major are open only to those applying directly from high school.",
+      "source_url": "https://www.utm.utoronto.ca/future-students/programs/computer-science",
+      "excerpt": "Transfer students who have completed any post-secondary studies (including studies at other divisions at the University of Toronto) are not eligible for admission to the Computer Science admission category. The Computer Science Specialist and Major are open only to those applying directly from high school.",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Toronto",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        3
+      ],
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "deadline",
+      "value": {
+        "application_deadline": "January 15, 2027",
+        "recommended_early_consideration": "November 7"
+      },
+      "source_url": "https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines",
+      "excerpt": "January 15, 2027 November 7: Recommended application date for early consideration.",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Toronto",
+        "programme": "Computer Science",
+        "degree": null,
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        4
+      ],
+      "status": "unreviewed"
+    },
+    {
+      "claim_key": "documents.computer_science_supplementary_application",
+      "value": {
+        "deadline": "February 1, 2027",
+        "condition": "Review your deadline on the Join U of T website"
+      },
+      "source_url": "https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines",
+      "excerpt": "February 1, 2027 Review your deadline on the Join U of T website",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "University of Toronto",
+        "programme": "Computer Science",
+        "degree": null,
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        4
+      ],
+      "status": "unreviewed"
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "supporting_steps": [
+        3
+      ],
+      "proposal_indices": [
+        0
+      ],
+      "evidence": [
+        {
+          "action_step": 3,
+          "source_url": "https://www.utm.utoronto.ca/future-students/programs/computer-science",
+          "excerpt": "Bachelor of Computer Science",
+          "location": {
+            "kind": "document_ir",
+            "block_id": "b110",
+            "section_path": [
+              "Computer Science"
+            ],
+            "page": null
+          }
+        }
+      ],
+      "scope": {
+        "university": "University of Toronto",
+        "programme": "Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "The Mississauga page names Computer Science and its Bachelor of Computer Science degree."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

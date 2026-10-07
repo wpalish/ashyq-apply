@@ -1,0 +1,68 @@
+{
+  "operation": "version-literal clone; reviewed clock repair only in parent",
+  "originals_after": {
+    "/tmp/test_unimatch_expert500_completion_clock_v13.py": "f38467cf16e3c19716fbbfaa43ec1f1a5ac8f3aa59f6712e69bf1e3099a4d728",
+    "/tmp/test_unimatch_expert500_journal_pilot_v12.py": "fcbca530b952625d4e8fbe752fbf45692ee7c380f3f6c26fd83c9ad9e8a483a9",
+    "/tmp/test_unimatch_expert500_journal_report_v12.py": "22399055992901771107e48abb0c4e3ed987525fc9396797d0ecfbce75519d7d",
+    "/tmp/test_unimatch_expert500_workflow_v12.py": "c048d038f32c0a5d9479916377a0d5edf453b0c77c0b33a1c08c88a13e254e31",
+    "/tmp/unimatch-expert500-export-v12.py": "224c00558dd4fe7d5e6331414c40f2c40a692a77c9ea8407bc0890843c430f09",
+    "/tmp/unimatch-expert500-journal-pilot-v12.py": "1922e117436afdc001bef7cbf867e8b91db4062fd0b98cfce044c3b980a74b72",
+    "/tmp/unimatch-expert500-journal-pilot-v13.py": "3a70a6bc1f318a2761eb5e16093f2b36bc512abb89382c8f293bd56975558cb5",
+    "/tmp/unimatch-expert500-journal-report-v12.py": "5a36256591fe4b76186a36448c4c6a3d0a8eeab989b427eb4031ebf00405a4fb"
+  },
+  "originals_before": {
+    "/tmp/test_unimatch_expert500_completion_clock_v13.py": "f38467cf16e3c19716fbbfaa43ec1f1a5ac8f3aa59f6712e69bf1e3099a4d728",
+    "/tmp/test_unimatch_expert500_journal_pilot_v12.py": "fcbca530b952625d4e8fbe752fbf45692ee7c380f3f6c26fd83c9ad9e8a483a9",
+    "/tmp/test_unimatch_expert500_journal_report_v12.py": "22399055992901771107e48abb0c4e3ed987525fc9396797d0ecfbce75519d7d",
+    "/tmp/test_unimatch_expert500_workflow_v12.py": "c048d038f32c0a5d9479916377a0d5edf453b0c77c0b33a1c08c88a13e254e31",
+    "/tmp/unimatch-expert500-export-v12.py": "224c00558dd4fe7d5e6331414c40f2c40a692a77c9ea8407bc0890843c430f09",
+    "/tmp/unimatch-expert500-journal-pilot-v12.py": "1922e117436afdc001bef7cbf867e8b91db4062fd0b98cfce044c3b980a74b72",
+    "/tmp/unimatch-expert500-journal-pilot-v13.py": "3a70a6bc1f318a2761eb5e16093f2b36bc512abb89382c8f293bd56975558cb5",
+    "/tmp/unimatch-expert500-journal-report-v12.py": "5a36256591fe4b76186a36448c4c6a3d0a8eeab989b427eb4031ebf00405a4fb"
+  },
+  "originals_unchanged": true,
+  "records": [
+    {
+      "bytes": 90889,
+      "source": "/tmp/unimatch-expert500-journal-pilot-v13.py",
+      "source_sha256": "3a70a6bc1f318a2761eb5e16093f2b36bc512abb89382c8f293bd56975558cb5",
+      "target": "/tmp/unimatch-expert500-journal-pilot-v13-coherent.py",
+      "target_sha256": "c62fb07ec5e8fcf409672136709842867272b88e7194591a151bfe01ac52f395"
+    },
+    {
+      "bytes": 100652,
+      "source": "/tmp/unimatch-expert500-journal-report-v12.py",
+      "source_sha256": "5a36256591fe4b76186a36448c4c6a3d0a8eeab989b427eb4031ebf00405a4fb",
+      "target": "/tmp/unimatch-expert500-journal-report-v13.py",
+      "target_sha256": "205d2e475dc45ace08a182adfb697f19be75e30ae0faa01b5b1a1368503cc703"
+    },
+    {
+      "bytes": 97345,
+      "source": "/tmp/test_unimatch_expert500_journal_pilot_v12.py",
+      "source_sha256": "fcbca530b952625d4e8fbe752fbf45692ee7c380f3f6c26fd83c9ad9e8a483a9",
+      "target": "/tmp/test_unimatch_expert500_journal_pilot_v13.py",
+      "target_sha256": "05a0e5d640f3dceda9ec7081edce24f3483f19427921c2cffa58970513d28118"
+    },
+    {
+      "bytes": 100120,
+      "source": "/tmp/test_unimatch_expert500_journal_report_v12.py",
+      "source_sha256": "22399055992901771107e48abb0c4e3ed987525fc9396797d0ecfbce75519d7d",
+      "target": "/tmp/test_unimatch_expert500_journal_report_v13.py",
+      "target_sha256": "22c0881fcdaf8a574333622859a36527a9210e5b47bdd6deafaa67a27f541ebf"
+    },
+    {
+      "bytes": 27293,
+      "source": "/tmp/test_unimatch_expert500_workflow_v12.py",
+      "source_sha256": "c048d038f32c0a5d9479916377a0d5edf453b0c77c0b33a1c08c88a13e254e31",
+      "target": "/tmp/test_unimatch_expert500_workflow_v13.py",
+      "target_sha256": "b22c0be90f5a3de965830d9db0af78d4bbf47346cd6e5158c53ee957f705f33d"
+    },
+    {
+      "bytes": 23413,
+      "source": "/tmp/unimatch-expert500-export-v12.py",
+      "source_sha256": "224c00558dd4fe7d5e6331414c40f2c40a692a77c9ea8407bc0890843c430f09",
+      "target": "/tmp/unimatch-expert500-export-v13.py",
+      "target_sha256": "2728061d190834b89b4955a60161e22dd4517ca013a2dc77ff6271cd1a12fbb1"
+    }
+  ]
+}

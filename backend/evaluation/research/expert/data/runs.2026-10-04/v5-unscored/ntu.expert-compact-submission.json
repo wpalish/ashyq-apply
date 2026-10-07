@@ -1,0 +1,135 @@
+{
+  "kind": "submit",
+  "observation": "Submit the complete journal; all proposed evidence remains unreviewed.",
+  "action": null,
+  "facts": [
+    {
+      "id": "f1",
+      "question": "Q0",
+      "claim_key": "programme.exists",
+      "value_json": "true",
+      "source_step": 2,
+      "quotation": "The Bachelor of Computing (Hons) in Computer Science at NTU’s College of Computing and Data Science (CCDS) is a 4-year direct honours degree that provides rigorous training in computing fundamentals, algorithms, data systems, and software design.",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b77",
+        "section_path": [
+          "Bachelor of Computing (Hons) in Computer Science"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": "Bachelor of Computing (Hons) in Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      }
+    },
+    {
+      "id": "f2",
+      "question": "Q2",
+      "claim_key": "country_credential.kz_high_school.direct_admission",
+      "value_json": "\"No, required additional qualification (see below)\"",
+      "source_step": 3,
+      "quotation": "No, required additional qualification (see below)",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b179",
+        "section_path": [
+          "All Other International Qualifications",
+          "Criteria"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": "High School Certificate (Kazakhstan)",
+        "academic_year": null
+      }
+    },
+    {
+      "id": "f3",
+      "question": "Q2",
+      "claim_key": "country_credential.kz_nis.direct_admission",
+      "value_json": "\"Yes\"",
+      "source_step": 3,
+      "quotation": "Yes",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b219",
+        "section_path": [
+          "All Other International Qualifications",
+          "Criteria"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": "Kazakhstan NIS Grade 12 Certificate",
+        "academic_year": null
+      }
+    },
+    {
+      "id": "f4",
+      "question": "Q2",
+      "claim_key": "country_credential.kz_nis.minimum",
+      "value_json": "\"Score of A in all subjects taken at NIS Grade 12 Certificate exam.\"",
+      "source_step": 3,
+      "quotation": "Score of A in all subjects taken at NIS Grade 12 Certificate exam.",
+      "location": {
+        "kind": "document_ir",
+        "block_id": "b220",
+        "section_path": [
+          "All Other International Qualifications",
+          "Criteria"
+        ],
+        "page": null
+      },
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": null,
+        "degree": null,
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": "Kazakhstan NIS Grade 12 Certificate",
+        "academic_year": null
+      }
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "found",
+      "fact_ids": [
+        "f1"
+      ],
+      "scope": {
+        "university": "Nanyang Technological University",
+        "programme": "Bachelor of Computing (Hons) in Computer Science",
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "observation": "Exact programme existence established.",
+      "supporting_steps": []
+    }
+  ]
+}

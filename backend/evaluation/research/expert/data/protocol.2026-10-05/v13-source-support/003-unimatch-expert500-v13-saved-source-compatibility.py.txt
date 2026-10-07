@@ -1,0 +1,45 @@
+from __future__ import annotations
+import base64,hashlib,importlib.util,json,sys
+from dataclasses import asdict
+from datetime import UTC,datetime
+from pathlib import Path
+from app.adapters.document_ir import build_document_ir
+repo=Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply')
+# Untouched pre-change source copy; no old trial is replayed or scored.
+original=Path('/tmp/unimatch-expert500-v12-year-context-candidate/original/backend/app/adapters/document_ir.py')
+assert hashlib.sha256(original.read_bytes()).hexdigest()=='ec8b1c2f1f000333670c0fd4be559149fc5057fbed7bc3af7562fd18b3edb605'
+spec=importlib.util.spec_from_file_location('unimatch_expert500_v12_original_document_ir',original)
+assert spec is not None and spec.loader is not None
+module=importlib.util.module_from_spec(spec);sys.modules[spec.name]=module;spec.loader.exec_module(module)
+audit=json.loads(Path('/tmp/unimatch-expert500-v12-citation-failure-audit.json').read_text())
+assert hashlib.sha256(Path('/tmp/unimatch-expert500-v12-citation-failure-audit.json').read_bytes()).hexdigest()=='c558018b416bb0ab4e07158690520f23a00f430c38480515466a70b7007f6636'
+observations=[]
+for item in audit['observations']:
+    if item['id'] not in {'G1','G2'}:continue
+    info=item['source'];raw=Path(info['original_raw']['path']);data=raw.read_bytes()
+    assert hashlib.sha256(data).hexdigest()==info['original_raw']['sha256']
+    record=json.loads(data);payload=base64.b64decode(record['response']['content_b64'],validate=True)
+    assert hashlib.sha256(payload).hexdigest()==info['decoded_payload_sha256']
+    url=info['final_url'];html=payload.decode('utf-8')
+    before=module.build_document_ir(html,url);after=build_document_ir(html,url)
+    assert len(before.blocks)==len(after.blocks)
+    for a,b in zip(before.blocks,after.blocks,strict=True):
+        old=asdict(a);new=asdict(b);assert {k:new[k] for k in old}==old,(item['id'],a.id)
+    assert [asdict(x) for x in before.links]==[asdict(x) for x in after.links]
+    assert before.url==after.url and before.title==after.title
+    if item['id']=='G1':
+        block=next(b for b in after.blocks if b.id=='b165');(year,)=block.row_year_cells
+        assert block.text=='€ 19800' and year.text=='2027-2028' and year.block_id=='b164'
+        assert (year.table_id,year.row,year.col)==(5,4,1)
+        extra={'selected_block':asdict(block),'actual_declared_year_support':'2027-2028'}
+    else:
+        block=next(b for b in after.blocks if b.id=='b66');(year,)=block.section_year_labels
+        assert 'Foundation years' in block.text and year.text=='Academic year 2026/2027'
+        assert year.container_dom_path==block.semantic_container_dom_path
+        extra={'selected_block':asdict(block),'published_year_preserved':'2026/2027','fall2027_applicability_established':False}
+    assert raw.read_bytes()==data
+    observations.append({'id':item['id'],'raw_sha256':info['original_raw']['sha256'],'payload_sha256':info['decoded_payload_sha256'],'old_block_count':len(before.blocks),'old_fields_links_exact':True,**extra})
+result={'status':'saved_public_payload_compatibility_only','created_at':datetime.now(UTC).isoformat(),'primary_acceptance':False,'source_model_calls':0,'reviewed_labels_read':0,'v12_originals_edited':False,'current_ir_sha256':hashlib.sha256((repo/'backend/app/adapters/document_ir.py').read_bytes()).hexdigest(),'original_ir_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'observations':observations}
+path=Path('/tmp/unimatch-expert500-v13-saved-source-compatibility.json')
+with path.open('x') as f:json.dump(result,f,indent=2,ensure_ascii=False);f.write('\n')
+print(json.dumps({'status':result['status'],'observations':len(observations),'result_sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'primary_acceptance':False}))

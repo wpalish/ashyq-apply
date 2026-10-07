@@ -1,0 +1,1273 @@
+.......................FFFFFFFFFFFF..FFFFFFFFFFFF....................... [ 40%]
+........................................................................ [ 80%]
+.............FFFFFF.FF.FFFFFFFFFFFF                                      [100%]
+=================================== FAILURES ===================================
+_ test_year_label_does_not_exit_into_a_distinct_unheaded_semantic_container[main] _
+
+container = 'main'
+
+    @pytest.mark.parametrize("container", ["main", "article", "section"])
+    def test_year_label_does_not_exit_into_a_distinct_unheaded_semantic_container(container):
+        html = f"""<{container}><h2>Qualifications</h2>
+        <div>Academic year 2030/2031</div><p>First policy.</p></{container}>
+        <{container}><p>Unheaded sibling policy.</p></{container}>"""
+        doc = build_document_ir(html, "https://example.edu/x")
+        first = next(b for b in doc.blocks if b.text == "First policy.")
+        sibling = next(b for b in doc.blocks if b.text == "Unheaded sibling policy.")
+        assert first.section_year_labels
+>       assert not sibling.section_year_labels
+E       AssertionError: assert not (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/main[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h2[1]', section_path=('Qualifications',)),)
+E        +  where (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/main[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h2[1]', section_path=('Qualifications',)),) = EvidenceBlock(id='b2', kind='paragraph', text='Unheaded sibling policy.', section_path=('Qualifications',), table_id=N...[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h2[1]', section_path=('Qualifications',)),), row_year_cells=()).section_year_labels
+
+tests/test_document_ir.py:210: AssertionError
+_ test_year_label_does_not_exit_into_a_distinct_unheaded_semantic_container[article] _
+
+container = 'article'
+
+    @pytest.mark.parametrize("container", ["main", "article", "section"])
+    def test_year_label_does_not_exit_into_a_distinct_unheaded_semantic_container(container):
+        html = f"""<{container}><h2>Qualifications</h2>
+        <div>Academic year 2030/2031</div><p>First policy.</p></{container}>
+        <{container}><p>Unheaded sibling policy.</p></{container}>"""
+        doc = build_document_ir(html, "https://example.edu/x")
+        first = next(b for b in doc.blocks if b.text == "First policy.")
+        sibling = next(b for b in doc.blocks if b.text == "Unheaded sibling policy.")
+        assert first.section_year_labels
+>       assert not sibling.section_year_labels
+E       AssertionError: assert not (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/article[1]/div[1]', heading_dom_path='/html[1]/body[1]/article[1]/h2[1]', section_path=('Qualifications',)),)
+E        +  where (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/article[1]/div[1]', heading_dom_path='/html[1]/body[1]/article[1]/h2[1]', section_path=('Qualifications',)),) = EvidenceBlock(id='b2', kind='paragraph', text='Unheaded sibling policy.', section_path=('Qualifications',), table_id=N.../div[1]', heading_dom_path='/html[1]/body[1]/article[1]/h2[1]', section_path=('Qualifications',)),), row_year_cells=()).section_year_labels
+
+tests/test_document_ir.py:210: AssertionError
+_ test_year_label_does_not_exit_into_a_distinct_unheaded_semantic_container[section] _
+
+container = 'section'
+
+    @pytest.mark.parametrize("container", ["main", "article", "section"])
+    def test_year_label_does_not_exit_into_a_distinct_unheaded_semantic_container(container):
+        html = f"""<{container}><h2>Qualifications</h2>
+        <div>Academic year 2030/2031</div><p>First policy.</p></{container}>
+        <{container}><p>Unheaded sibling policy.</p></{container}>"""
+        doc = build_document_ir(html, "https://example.edu/x")
+        first = next(b for b in doc.blocks if b.text == "First policy.")
+        sibling = next(b for b in doc.blocks if b.text == "Unheaded sibling policy.")
+        assert first.section_year_labels
+>       assert not sibling.section_year_labels
+E       AssertionError: assert not (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/section[1]/div[1]', heading_dom_path='/html[1]/body[1]/section[1]/h2[1]', section_path=('Qualifications',)),)
+E        +  where (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/section[1]/div[1]', heading_dom_path='/html[1]/body[1]/section[1]/h2[1]', section_path=('Qualifications',)),) = EvidenceBlock(id='b2', kind='paragraph', text='Unheaded sibling policy.', section_path=('Qualifications',), table_id=N.../div[1]', heading_dom_path='/html[1]/body[1]/section[1]/h2[1]', section_path=('Qualifications',)),), row_year_cells=()).section_year_labels
+
+tests/test_document_ir.py:210: AssertionError
+____ test_same_heading_text_in_different_sections_keeps_distinct_dom_origin ____
+
+    def test_same_heading_text_in_different_sections_keeps_distinct_dom_origin():
+        html = """<main><section><h2>Qualifications</h2><div>Academic year 2030/2031</div>
+        <p>First policy.</p></section><section><h2>Qualifications</h2>
+        <div>Academic year 2031/2032</div><p>Second policy.</p></section></main>"""
+        doc = build_document_ir(html, "https://example.edu/x")
+        first = next(b for b in doc.blocks if b.text == "First policy.")
+        second = next(b for b in doc.blocks if b.text == "Second policy.")
+        assert first.section_path == second.section_path == ("Qualifications",)
+>       assert first.section_year_labels[0].container_dom_path.endswith("/section[1]")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'SectionYearLabel' object has no attribute 'container_dom_path'
+
+tests/test_document_ir.py:223: AttributeError
+_ test_nested_div_heading_wrapper_and_body_share_only_the_same_explicit_container _
+
+    def test_nested_div_heading_wrapper_and_body_share_only_the_same_explicit_container():
+        html = """<main><div><div><h2>Qualifications</h2><div>Academic year 2030/2031</div></div>
+        <div><p>Same content policy.</p></div></div></main>"""
+        doc = build_document_ir(html, "https://example.edu/x")
+        note = next(b for b in doc.blocks if b.text == "Same content policy.")
+        (label,) = note.section_year_labels
+        assert (
+>           label.container_dom_path == note.semantic_container_dom_path == "/html[1]/body[1]/main[1]"
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+E       AttributeError: 'SectionYearLabel' object has no attribute 'container_dom_path'
+
+tests/test_document_ir.py:235: AttributeError
+_ test_year_label_checks_hidden_navigation_and_control_descendants[<div><span hidden>Academic year 2030/2031</span></div>] _
+
+label = '<div><span hidden>Academic year 2030/2031</span></div>'
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            "<div><span hidden>Academic year 2030/2031</span></div>",
+            '<div><span aria-hidden="true">Academic year 2030/2031</span></div>',
+            '<div><span style="display: none">Academic year 2030/2031</span></div>',
+            '<div><span class="sr-only">Academic year 2030/2031</span></div>',
+            "<div><nav>Academic year 2030/2031</nav></div>",
+            "<div><footer>Academic year 2030/2031</footer></div>",
+            '<div><span role="navigation">Academic year 2030/2031</span></div>',
+            "<div><button>Academic year 2030/2031</button></div>",
+            "<div><form>Academic year 2030/2031</form></div>",
+        ],
+    )
+    def test_year_label_checks_hidden_navigation_and_control_descendants(label):
+        doc = build_document_ir(
+            f"<main><h1>Qualifications</h1>{label}<p>Policy.</p></main>", "https://example.edu/x"
+        )
+>       assert not next(b for b in doc.blocks if b.text == "Policy.").section_year_labels
+E       AssertionError: assert not (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/main[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),)
+E        +  where (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/main[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),) = EvidenceBlock(id='b1', kind='paragraph', text='Policy.', section_path=('Qualifications',), table_id=None, row=None, co...[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),), row_year_cells=()).section_year_labels
+E        +    where EvidenceBlock(id='b1', kind='paragraph', text='Policy.', section_path=('Qualifications',), table_id=None, row=None, co...[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),), row_year_cells=()) = next(<generator object test_year_label_checks_hidden_navigation_and_control_descendants.<locals>.<genexpr> at 0x10ccb4450>)
+
+tests/test_document_ir.py:258: AssertionError
+_ test_year_label_checks_hidden_navigation_and_control_descendants[<div><span aria-hidden="true">Academic year 2030/2031</span></div>] _
+
+label = '<div><span aria-hidden="true">Academic year 2030/2031</span></div>'
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            "<div><span hidden>Academic year 2030/2031</span></div>",
+            '<div><span aria-hidden="true">Academic year 2030/2031</span></div>',
+            '<div><span style="display: none">Academic year 2030/2031</span></div>',
+            '<div><span class="sr-only">Academic year 2030/2031</span></div>',
+            "<div><nav>Academic year 2030/2031</nav></div>",
+            "<div><footer>Academic year 2030/2031</footer></div>",
+            '<div><span role="navigation">Academic year 2030/2031</span></div>',
+            "<div><button>Academic year 2030/2031</button></div>",
+            "<div><form>Academic year 2030/2031</form></div>",
+        ],
+    )
+    def test_year_label_checks_hidden_navigation_and_control_descendants(label):
+        doc = build_document_ir(
+            f"<main><h1>Qualifications</h1>{label}<p>Policy.</p></main>", "https://example.edu/x"
+        )
+>       assert not next(b for b in doc.blocks if b.text == "Policy.").section_year_labels
+E       AssertionError: assert not (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/main[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),)
+E        +  where (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/main[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),) = EvidenceBlock(id='b1', kind='paragraph', text='Policy.', section_path=('Qualifications',), table_id=None, row=None, co...[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),), row_year_cells=()).section_year_labels
+E        +    where EvidenceBlock(id='b1', kind='paragraph', text='Policy.', section_path=('Qualifications',), table_id=None, row=None, co...[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),), row_year_cells=()) = next(<generator object test_year_label_checks_hidden_navigation_and_control_descendants.<locals>.<genexpr> at 0x10cd2f370>)
+
+tests/test_document_ir.py:258: AssertionError
+_ test_year_label_checks_hidden_navigation_and_control_descendants[<div><span style="display: none">Academic year 2030/2031</span></div>] _
+
+label = '<div><span style="display: none">Academic year 2030/2031</span></div>'
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            "<div><span hidden>Academic year 2030/2031</span></div>",
+            '<div><span aria-hidden="true">Academic year 2030/2031</span></div>',
+            '<div><span style="display: none">Academic year 2030/2031</span></div>',
+            '<div><span class="sr-only">Academic year 2030/2031</span></div>',
+            "<div><nav>Academic year 2030/2031</nav></div>",
+            "<div><footer>Academic year 2030/2031</footer></div>",
+            '<div><span role="navigation">Academic year 2030/2031</span></div>',
+            "<div><button>Academic year 2030/2031</button></div>",
+            "<div><form>Academic year 2030/2031</form></div>",
+        ],
+    )
+    def test_year_label_checks_hidden_navigation_and_control_descendants(label):
+        doc = build_document_ir(
+            f"<main><h1>Qualifications</h1>{label}<p>Policy.</p></main>", "https://example.edu/x"
+        )
+>       assert not next(b for b in doc.blocks if b.text == "Policy.").section_year_labels
+E       AssertionError: assert not (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/main[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),)
+E        +  where (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/main[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),) = EvidenceBlock(id='b1', kind='paragraph', text='Policy.', section_path=('Qualifications',), table_id=None, row=None, co...[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),), row_year_cells=()).section_year_labels
+E        +    where EvidenceBlock(id='b1', kind='paragraph', text='Policy.', section_path=('Qualifications',), table_id=None, row=None, co...[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),), row_year_cells=()) = next(<generator object test_year_label_checks_hidden_navigation_and_control_descendants.<locals>.<genexpr> at 0x10cd431d0>)
+
+tests/test_document_ir.py:258: AssertionError
+_ test_year_label_checks_hidden_navigation_and_control_descendants[<div><span class="sr-only">Academic year 2030/2031</span></div>] _
+
+label = '<div><span class="sr-only">Academic year 2030/2031</span></div>'
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            "<div><span hidden>Academic year 2030/2031</span></div>",
+            '<div><span aria-hidden="true">Academic year 2030/2031</span></div>',
+            '<div><span style="display: none">Academic year 2030/2031</span></div>',
+            '<div><span class="sr-only">Academic year 2030/2031</span></div>',
+            "<div><nav>Academic year 2030/2031</nav></div>",
+            "<div><footer>Academic year 2030/2031</footer></div>",
+            '<div><span role="navigation">Academic year 2030/2031</span></div>',
+            "<div><button>Academic year 2030/2031</button></div>",
+            "<div><form>Academic year 2030/2031</form></div>",
+        ],
+    )
+    def test_year_label_checks_hidden_navigation_and_control_descendants(label):
+        doc = build_document_ir(
+            f"<main><h1>Qualifications</h1>{label}<p>Policy.</p></main>", "https://example.edu/x"
+        )
+>       assert not next(b for b in doc.blocks if b.text == "Policy.").section_year_labels
+E       AssertionError: assert not (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/main[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),)
+E        +  where (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/main[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),) = EvidenceBlock(id='b1', kind='paragraph', text='Policy.', section_path=('Qualifications',), table_id=None, row=None, co...[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),), row_year_cells=()).section_year_labels
+E        +    where EvidenceBlock(id='b1', kind='paragraph', text='Policy.', section_path=('Qualifications',), table_id=None, row=None, co...[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),), row_year_cells=()) = next(<generator object test_year_label_checks_hidden_navigation_and_control_descendants.<locals>.<genexpr> at 0x10cd43850>)
+
+tests/test_document_ir.py:258: AssertionError
+_ test_year_label_checks_hidden_navigation_and_control_descendants[<div><nav>Academic year 2030/2031</nav></div>] _
+
+label = '<div><nav>Academic year 2030/2031</nav></div>'
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            "<div><span hidden>Academic year 2030/2031</span></div>",
+            '<div><span aria-hidden="true">Academic year 2030/2031</span></div>',
+            '<div><span style="display: none">Academic year 2030/2031</span></div>',
+            '<div><span class="sr-only">Academic year 2030/2031</span></div>',
+            "<div><nav>Academic year 2030/2031</nav></div>",
+            "<div><footer>Academic year 2030/2031</footer></div>",
+            '<div><span role="navigation">Academic year 2030/2031</span></div>',
+            "<div><button>Academic year 2030/2031</button></div>",
+            "<div><form>Academic year 2030/2031</form></div>",
+        ],
+    )
+    def test_year_label_checks_hidden_navigation_and_control_descendants(label):
+        doc = build_document_ir(
+            f"<main><h1>Qualifications</h1>{label}<p>Policy.</p></main>", "https://example.edu/x"
+        )
+>       assert not next(b for b in doc.blocks if b.text == "Policy.").section_year_labels
+E       AssertionError: assert not (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/main[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),)
+E        +  where (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/main[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),) = EvidenceBlock(id='b1', kind='paragraph', text='Policy.', section_path=('Qualifications',), table_id=None, row=None, co...[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),), row_year_cells=()).section_year_labels
+E        +    where EvidenceBlock(id='b1', kind='paragraph', text='Policy.', section_path=('Qualifications',), table_id=None, row=None, co...[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),), row_year_cells=()) = next(<generator object test_year_label_checks_hidden_navigation_and_control_descendants.<locals>.<genexpr> at 0x10cda4040>)
+
+tests/test_document_ir.py:258: AssertionError
+_ test_year_label_checks_hidden_navigation_and_control_descendants[<div><footer>Academic year 2030/2031</footer></div>] _
+
+label = '<div><footer>Academic year 2030/2031</footer></div>'
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            "<div><span hidden>Academic year 2030/2031</span></div>",
+            '<div><span aria-hidden="true">Academic year 2030/2031</span></div>',
+            '<div><span style="display: none">Academic year 2030/2031</span></div>',
+            '<div><span class="sr-only">Academic year 2030/2031</span></div>',
+            "<div><nav>Academic year 2030/2031</nav></div>",
+            "<div><footer>Academic year 2030/2031</footer></div>",
+            '<div><span role="navigation">Academic year 2030/2031</span></div>',
+            "<div><button>Academic year 2030/2031</button></div>",
+            "<div><form>Academic year 2030/2031</form></div>",
+        ],
+    )
+    def test_year_label_checks_hidden_navigation_and_control_descendants(label):
+        doc = build_document_ir(
+            f"<main><h1>Qualifications</h1>{label}<p>Policy.</p></main>", "https://example.edu/x"
+        )
+>       assert not next(b for b in doc.blocks if b.text == "Policy.").section_year_labels
+E       AssertionError: assert not (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/main[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),)
+E        +  where (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/main[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),) = EvidenceBlock(id='b1', kind='paragraph', text='Policy.', section_path=('Qualifications',), table_id=None, row=None, co...[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),), row_year_cells=()).section_year_labels
+E        +    where EvidenceBlock(id='b1', kind='paragraph', text='Policy.', section_path=('Qualifications',), table_id=None, row=None, co...[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),), row_year_cells=()) = next(<generator object test_year_label_checks_hidden_navigation_and_control_descendants.<locals>.<genexpr> at 0x10cd42740>)
+
+tests/test_document_ir.py:258: AssertionError
+_ test_year_label_checks_hidden_navigation_and_control_descendants[<div><span role="navigation">Academic year 2030/2031</span></div>] _
+
+label = '<div><span role="navigation">Academic year 2030/2031</span></div>'
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            "<div><span hidden>Academic year 2030/2031</span></div>",
+            '<div><span aria-hidden="true">Academic year 2030/2031</span></div>',
+            '<div><span style="display: none">Academic year 2030/2031</span></div>',
+            '<div><span class="sr-only">Academic year 2030/2031</span></div>',
+            "<div><nav>Academic year 2030/2031</nav></div>",
+            "<div><footer>Academic year 2030/2031</footer></div>",
+            '<div><span role="navigation">Academic year 2030/2031</span></div>',
+            "<div><button>Academic year 2030/2031</button></div>",
+            "<div><form>Academic year 2030/2031</form></div>",
+        ],
+    )
+    def test_year_label_checks_hidden_navigation_and_control_descendants(label):
+        doc = build_document_ir(
+            f"<main><h1>Qualifications</h1>{label}<p>Policy.</p></main>", "https://example.edu/x"
+        )
+>       assert not next(b for b in doc.blocks if b.text == "Policy.").section_year_labels
+E       AssertionError: assert not (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/main[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),)
+E        +  where (SectionYearLabel(text='Academic year 2030/2031', dom_path='/html[1]/body[1]/main[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),) = EvidenceBlock(id='b1', kind='paragraph', text='Policy.', section_path=('Qualifications',), table_id=None, row=None, co...[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),), row_year_cells=()).section_year_labels
+E        +    where EvidenceBlock(id='b1', kind='paragraph', text='Policy.', section_path=('Qualifications',), table_id=None, row=None, co...[1]/div[1]', heading_dom_path='/html[1]/body[1]/main[1]/h1[1]', section_path=('Qualifications',)),), row_year_cells=()) = next(<generator object test_year_label_checks_hidden_navigation_and_control_descendants.<locals>.<genexpr> at 0x10cda5220>)
+
+tests/test_document_ir.py:258: AssertionError
+_ test_hidden_or_navigation_year_sources_remain_explicitly_unusable[<td hidden>2030/2031</td>-<th>Year</th>-non_content_year_cell] _
+
+year_cell = '<td hidden>2030/2031</td>', year_header = '<th>Year</th>'
+reason = 'non_content_year_cell'
+
+    @pytest.mark.parametrize(
+        "year_cell,year_header,reason",
+        [
+            ("<td hidden>2030/2031</td>", "<th>Year</th>", "non_content_year_cell"),
+            (
+                '<td><span aria-hidden="true">2030/2031</span></td>',
+                "<th>Year</th>",
+                "non_content_year_cell",
+            ),
+            ("<td>2030/2031</td>", "<th hidden>Year</th>", "non_content_year_header"),
+            ("<td>2030/2031</td>", "<th><span hidden>Year</span></th>", "non_content_year_header"),
+            ("<td>2030/2031</td>", "<th><nav>Year</nav></th>", "non_content_year_header"),
+        ],
+    )
+    def test_hidden_or_navigation_year_sources_remain_explicitly_unusable(
+        year_cell, year_header, reason
+    ):
+        html = (
+            f"<table><tr>{year_header}<th>Fee</th></tr><tr>{year_cell}<td>EUR 19800</td></tr></table>"
+        )
+        fee = _cell(build_document_ir(html, "https://example.edu/x"), "EUR 19800")
+        (year,) = fee.row_year_cells
+>       assert year.blocked_reason == reason
+               ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'RowYearCell' object has no attribute 'blocked_reason'
+
+tests/test_document_ir.py:283: AttributeError
+_ test_hidden_or_navigation_year_sources_remain_explicitly_unusable[<td><span aria-hidden="true">2030/2031</span></td>-<th>Year</th>-non_content_year_cell] _
+
+year_cell = '<td><span aria-hidden="true">2030/2031</span></td>'
+year_header = '<th>Year</th>', reason = 'non_content_year_cell'
+
+    @pytest.mark.parametrize(
+        "year_cell,year_header,reason",
+        [
+            ("<td hidden>2030/2031</td>", "<th>Year</th>", "non_content_year_cell"),
+            (
+                '<td><span aria-hidden="true">2030/2031</span></td>',
+                "<th>Year</th>",
+                "non_content_year_cell",
+            ),
+            ("<td>2030/2031</td>", "<th hidden>Year</th>", "non_content_year_header"),
+            ("<td>2030/2031</td>", "<th><span hidden>Year</span></th>", "non_content_year_header"),
+            ("<td>2030/2031</td>", "<th><nav>Year</nav></th>", "non_content_year_header"),
+        ],
+    )
+    def test_hidden_or_navigation_year_sources_remain_explicitly_unusable(
+        year_cell, year_header, reason
+    ):
+        html = (
+            f"<table><tr>{year_header}<th>Fee</th></tr><tr>{year_cell}<td>EUR 19800</td></tr></table>"
+        )
+        fee = _cell(build_document_ir(html, "https://example.edu/x"), "EUR 19800")
+        (year,) = fee.row_year_cells
+>       assert year.blocked_reason == reason
+               ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'RowYearCell' object has no attribute 'blocked_reason'
+
+tests/test_document_ir.py:283: AttributeError
+_ test_hidden_or_navigation_year_sources_remain_explicitly_unusable[<td>2030/2031</td>-<th hidden>Year</th>-non_content_year_header] _
+
+year_cell = '<td>2030/2031</td>', year_header = '<th hidden>Year</th>'
+reason = 'non_content_year_header'
+
+    @pytest.mark.parametrize(
+        "year_cell,year_header,reason",
+        [
+            ("<td hidden>2030/2031</td>", "<th>Year</th>", "non_content_year_cell"),
+            (
+                '<td><span aria-hidden="true">2030/2031</span></td>',
+                "<th>Year</th>",
+                "non_content_year_cell",
+            ),
+            ("<td>2030/2031</td>", "<th hidden>Year</th>", "non_content_year_header"),
+            ("<td>2030/2031</td>", "<th><span hidden>Year</span></th>", "non_content_year_header"),
+            ("<td>2030/2031</td>", "<th><nav>Year</nav></th>", "non_content_year_header"),
+        ],
+    )
+    def test_hidden_or_navigation_year_sources_remain_explicitly_unusable(
+        year_cell, year_header, reason
+    ):
+        html = (
+            f"<table><tr>{year_header}<th>Fee</th></tr><tr>{year_cell}<td>EUR 19800</td></tr></table>"
+        )
+        fee = _cell(build_document_ir(html, "https://example.edu/x"), "EUR 19800")
+        (year,) = fee.row_year_cells
+>       assert year.blocked_reason == reason
+               ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'RowYearCell' object has no attribute 'blocked_reason'
+
+tests/test_document_ir.py:283: AttributeError
+_ test_hidden_or_navigation_year_sources_remain_explicitly_unusable[<td>2030/2031</td>-<th><span hidden>Year</span></th>-non_content_year_header] _
+
+year_cell = '<td>2030/2031</td>'
+year_header = '<th><span hidden>Year</span></th>'
+reason = 'non_content_year_header'
+
+    @pytest.mark.parametrize(
+        "year_cell,year_header,reason",
+        [
+            ("<td hidden>2030/2031</td>", "<th>Year</th>", "non_content_year_cell"),
+            (
+                '<td><span aria-hidden="true">2030/2031</span></td>',
+                "<th>Year</th>",
+                "non_content_year_cell",
+            ),
+            ("<td>2030/2031</td>", "<th hidden>Year</th>", "non_content_year_header"),
+            ("<td>2030/2031</td>", "<th><span hidden>Year</span></th>", "non_content_year_header"),
+            ("<td>2030/2031</td>", "<th><nav>Year</nav></th>", "non_content_year_header"),
+        ],
+    )
+    def test_hidden_or_navigation_year_sources_remain_explicitly_unusable(
+        year_cell, year_header, reason
+    ):
+        html = (
+            f"<table><tr>{year_header}<th>Fee</th></tr><tr>{year_cell}<td>EUR 19800</td></tr></table>"
+        )
+        fee = _cell(build_document_ir(html, "https://example.edu/x"), "EUR 19800")
+        (year,) = fee.row_year_cells
+>       assert year.blocked_reason == reason
+               ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'RowYearCell' object has no attribute 'blocked_reason'
+
+tests/test_document_ir.py:283: AttributeError
+_ test_hidden_or_navigation_year_sources_remain_explicitly_unusable[<td>2030/2031</td>-<th><nav>Year</nav></th>-non_content_year_header] _
+
+year_cell = '<td>2030/2031</td>', year_header = '<th><nav>Year</nav></th>'
+reason = 'non_content_year_header'
+
+    @pytest.mark.parametrize(
+        "year_cell,year_header,reason",
+        [
+            ("<td hidden>2030/2031</td>", "<th>Year</th>", "non_content_year_cell"),
+            (
+                '<td><span aria-hidden="true">2030/2031</span></td>',
+                "<th>Year</th>",
+                "non_content_year_cell",
+            ),
+            ("<td>2030/2031</td>", "<th hidden>Year</th>", "non_content_year_header"),
+            ("<td>2030/2031</td>", "<th><span hidden>Year</span></th>", "non_content_year_header"),
+            ("<td>2030/2031</td>", "<th><nav>Year</nav></th>", "non_content_year_header"),
+        ],
+    )
+    def test_hidden_or_navigation_year_sources_remain_explicitly_unusable(
+        year_cell, year_header, reason
+    ):
+        html = (
+            f"<table><tr>{year_header}<th>Fee</th></tr><tr>{year_cell}<td>EUR 19800</td></tr></table>"
+        )
+        fee = _cell(build_document_ir(html, "https://example.edu/x"), "EUR 19800")
+        (year,) = fee.row_year_cells
+>       assert year.blocked_reason == reason
+               ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'RowYearCell' object has no attribute 'blocked_reason'
+
+tests/test_document_ir.py:283: AttributeError
+_ test_explicit_non_year_or_unresolved_headers_never_fall_back_to_position[headers="a"] _
+
+headers = 'headers="a"'
+
+    @pytest.mark.parametrize(
+        "headers", ['headers="a"', 'headers="missing"', 'headers=""', 'headers="y y"']
+    )
+    def test_explicit_non_year_or_unresolved_headers_never_fall_back_to_position(headers):
+        html = f"""<table><tr><th id="a">Applicant</th><th id="y">Year</th><th>Fee</th></tr>
+        <tr><td>International</td><td {headers}>2030/2031</td><td>EUR 19800</td></tr></table>"""
+        (year,) = _cell(build_document_ir(html, "https://example.edu/x"), "EUR 19800").row_year_cells
+>       assert year.header_origin == "explicit"
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'RowYearCell' object has no attribute 'header_origin'
+
+tests/test_document_ir.py:295: AttributeError
+_ test_explicit_non_year_or_unresolved_headers_never_fall_back_to_position[headers="missing"] _
+
+headers = 'headers="missing"'
+
+    @pytest.mark.parametrize(
+        "headers", ['headers="a"', 'headers="missing"', 'headers=""', 'headers="y y"']
+    )
+    def test_explicit_non_year_or_unresolved_headers_never_fall_back_to_position(headers):
+        html = f"""<table><tr><th id="a">Applicant</th><th id="y">Year</th><th>Fee</th></tr>
+        <tr><td>International</td><td {headers}>2030/2031</td><td>EUR 19800</td></tr></table>"""
+        (year,) = _cell(build_document_ir(html, "https://example.edu/x"), "EUR 19800").row_year_cells
+>       assert year.header_origin == "explicit"
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'RowYearCell' object has no attribute 'header_origin'
+
+tests/test_document_ir.py:295: AttributeError
+_ test_explicit_non_year_or_unresolved_headers_never_fall_back_to_position[headers=""] _
+
+headers = 'headers=""'
+
+    @pytest.mark.parametrize(
+        "headers", ['headers="a"', 'headers="missing"', 'headers=""', 'headers="y y"']
+    )
+    def test_explicit_non_year_or_unresolved_headers_never_fall_back_to_position(headers):
+        html = f"""<table><tr><th id="a">Applicant</th><th id="y">Year</th><th>Fee</th></tr>
+        <tr><td>International</td><td {headers}>2030/2031</td><td>EUR 19800</td></tr></table>"""
+        (year,) = _cell(build_document_ir(html, "https://example.edu/x"), "EUR 19800").row_year_cells
+>       assert year.header_origin == "explicit"
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'RowYearCell' object has no attribute 'header_origin'
+
+tests/test_document_ir.py:295: AttributeError
+_ test_explicit_non_year_or_unresolved_headers_never_fall_back_to_position[headers="y y"] _
+
+headers = 'headers="y y"'
+
+    @pytest.mark.parametrize(
+        "headers", ['headers="a"', 'headers="missing"', 'headers=""', 'headers="y y"']
+    )
+    def test_explicit_non_year_or_unresolved_headers_never_fall_back_to_position(headers):
+        html = f"""<table><tr><th id="a">Applicant</th><th id="y">Year</th><th>Fee</th></tr>
+        <tr><td>International</td><td {headers}>2030/2031</td><td>EUR 19800</td></tr></table>"""
+        (year,) = _cell(build_document_ir(html, "https://example.edu/x"), "EUR 19800").row_year_cells
+>       assert year.header_origin == "explicit"
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'RowYearCell' object has no attribute 'header_origin'
+
+tests/test_document_ir.py:295: AttributeError
+_______ test_valid_explicit_year_header_list_has_exact_header_provenance _______
+
+    def test_valid_explicit_year_header_list_has_exact_header_provenance():
+        html = """<table><tr><th id="y">Year</th><th>Fee</th></tr>
+        <tr><td headers="y">2030/2031</td><td>EUR 19800</td></tr></table>"""
+        (year,) = _cell(build_document_ir(html, "https://example.edu/x"), "EUR 19800").row_year_cells
+>       assert year.header_origin == "explicit"
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'RowYearCell' object has no attribute 'header_origin'
+
+tests/test_document_ir.py:304: AttributeError
+_ test_year_row_header_has_original_header_proof_without_inventing_a_value_block _
+
+    def test_year_row_header_has_original_header_proof_without_inventing_a_value_block():
+        html = """<table><tr><th>Year</th><th>Fee</th></tr>
+        <tr><th scope="row">2030/2031</th><td>EUR 19800</td></tr></table>"""
+        doc = build_document_ir(html, "https://example.edu/x")
+        fee = _cell(doc, "EUR 19800")
+        (year,) = fee.row_year_cells
+        assert (
+>           year.source_kind == "row_header" and year.source_tag == "th" and year.source_scope == "row"
+            ^^^^^^^^^^^^^^^^
+        )
+E       AttributeError: 'RowYearCell' object has no attribute 'source_kind'
+
+tests/test_document_ir.py:316: AttributeError
+____ test_dropped_control_cannot_erase_original_year_header_classification _____
+
+    def test_dropped_control_cannot_erase_original_year_header_classification():
+        doc = build_document_ir(
+            "<table><tr><th><form>Year</form></th><th>Fee</th></tr>"
+            "<tr><td>2030/2031</td><td>EUR 19800</td></tr></table>",
+            "https://example.edu/x",
+        )
+>       (year,) = _cell(doc, "EUR 19800").row_year_cells
+        ^^^^^^^
+E       ValueError: not enough values to unpack (expected 1, got 0)
+
+tests/test_document_ir.py:330: ValueError
+__ test_a_label_cannot_supply_year_after_exiting_its_semantic_container[main] __
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_a_label_cannot_supply_yea0')
+container = 'main'
+
+    @pytest.mark.parametrize("container", ["main", "article", "section"])
+    def test_a_label_cannot_supply_year_after_exiting_its_semantic_container(
+        tmp_path: Path, container: str
+    ) -> None:
+        quote = "Foundation years are not considered."
+        html = f"""<{container}><h2>International bachelor qualifications</h2>
+        <div>Academic year 2030/2031</div><p>First policy.</p></{container}>
+        <{container}><p>{quote}</p></{container}>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(html, quote, question="Q2", scope=_scope(academic_year="2030/2031"))
+>       with pytest.raises(ValueError, match="Q2 fact .*academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1023: Failed
+_ test_a_label_cannot_supply_year_after_exiting_its_semantic_container[article] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_a_label_cannot_supply_yea1')
+container = 'article'
+
+    @pytest.mark.parametrize("container", ["main", "article", "section"])
+    def test_a_label_cannot_supply_year_after_exiting_its_semantic_container(
+        tmp_path: Path, container: str
+    ) -> None:
+        quote = "Foundation years are not considered."
+        html = f"""<{container}><h2>International bachelor qualifications</h2>
+        <div>Academic year 2030/2031</div><p>First policy.</p></{container}>
+        <{container}><p>{quote}</p></{container}>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(html, quote, question="Q2", scope=_scope(academic_year="2030/2031"))
+>       with pytest.raises(ValueError, match="Q2 fact .*academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1023: Failed
+_ test_a_label_cannot_supply_year_after_exiting_its_semantic_container[section] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_a_label_cannot_supply_yea2')
+container = 'section'
+
+    @pytest.mark.parametrize("container", ["main", "article", "section"])
+    def test_a_label_cannot_supply_year_after_exiting_its_semantic_container(
+        tmp_path: Path, container: str
+    ) -> None:
+        quote = "Foundation years are not considered."
+        html = f"""<{container}><h2>International bachelor qualifications</h2>
+        <div>Academic year 2030/2031</div><p>First policy.</p></{container}>
+        <{container}><p>{quote}</p></{container}>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(html, quote, question="Q2", scope=_scope(academic_year="2030/2031"))
+>       with pytest.raises(ValueError, match="Q2 fact .*academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1023: Failed
+_ test_non_content_label_descendants_cannot_become_citable_year_support[<div><span hidden>Academic year 2030/2031</span></div>] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_non_content_label_descend0')
+label = '<div><span hidden>Academic year 2030/2031</span></div>'
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            "<div><span hidden>Academic year 2030/2031</span></div>",
+            '<div><span style="visibility: hidden">Academic year 2030/2031</span></div>',
+            "<div><nav>Academic year 2030/2031</nav></div>",
+            "<div><button>Academic year 2030/2031</button></div>",
+        ],
+    )
+    def test_non_content_label_descendants_cannot_become_citable_year_support(
+        tmp_path: Path, label: str
+    ) -> None:
+        quote = "Foundation years are not considered."
+        html = f"<main><h1>International bachelor qualifications</h1>{label}<p>{quote}</p></main>"
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(html, quote, question="Q2", scope=_scope(academic_year="2030/2031"))
+>       with pytest.raises(ValueError, match="academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1043: Failed
+_ test_non_content_label_descendants_cannot_become_citable_year_support[<div><span style="visibility: hidden">Academic year 2030/2031</span></div>] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_non_content_label_descend1')
+label = '<div><span style="visibility: hidden">Academic year 2030/2031</span></div>'
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            "<div><span hidden>Academic year 2030/2031</span></div>",
+            '<div><span style="visibility: hidden">Academic year 2030/2031</span></div>',
+            "<div><nav>Academic year 2030/2031</nav></div>",
+            "<div><button>Academic year 2030/2031</button></div>",
+        ],
+    )
+    def test_non_content_label_descendants_cannot_become_citable_year_support(
+        tmp_path: Path, label: str
+    ) -> None:
+        quote = "Foundation years are not considered."
+        html = f"<main><h1>International bachelor qualifications</h1>{label}<p>{quote}</p></main>"
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(html, quote, question="Q2", scope=_scope(academic_year="2030/2031"))
+>       with pytest.raises(ValueError, match="academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1043: Failed
+_ test_non_content_label_descendants_cannot_become_citable_year_support[<div><nav>Academic year 2030/2031</nav></div>] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_non_content_label_descend2')
+label = '<div><nav>Academic year 2030/2031</nav></div>'
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            "<div><span hidden>Academic year 2030/2031</span></div>",
+            '<div><span style="visibility: hidden">Academic year 2030/2031</span></div>',
+            "<div><nav>Academic year 2030/2031</nav></div>",
+            "<div><button>Academic year 2030/2031</button></div>",
+        ],
+    )
+    def test_non_content_label_descendants_cannot_become_citable_year_support(
+        tmp_path: Path, label: str
+    ) -> None:
+        quote = "Foundation years are not considered."
+        html = f"<main><h1>International bachelor qualifications</h1>{label}<p>{quote}</p></main>"
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(html, quote, question="Q2", scope=_scope(academic_year="2030/2031"))
+>       with pytest.raises(ValueError, match="academic_year"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1043: Failed
+_ test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label[<td hidden>2030/2031</td>-<th id="y">Year</th>] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_hidden_year_value_or_head0')
+year_cell = '<td hidden>2030/2031</td>', year_header = '<th id="y">Year</th>'
+
+    @pytest.mark.parametrize(
+        "year_cell,year_header",
+        [
+            ("<td hidden>2030/2031</td>", '<th id="y">Year</th>'),
+            ("<td><nav>2030/2031</nav></td>", '<th id="y">Year</th>'),
+            ("<td><form>2030/2031</form></td>", '<th id="y">Year</th>'),
+            ("<td>2030/2031</td>", '<th id="y" hidden>Year</th>'),
+            ('<td headers="y">2030/2031</td>', '<th id="y"><span hidden>Year</span></th>'),
+            ("<td>2030/2031</td>", '<th id="y"><nav>Year</nav></th>'),
+        ],
+    )
+    def test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label(
+        tmp_path: Path, year_cell: str, year_header: str
+    ) -> None:
+        html = f"""<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div>
+        <table><tr><th>Applicant</th>{year_header}<th>Fee</th></tr>
+        <tr><td>International applicants</td>{year_cell}<td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1068: Failed
+_ test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label[<td><nav>2030/2031</nav></td>-<th id="y">Year</th>] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_hidden_year_value_or_head1')
+year_cell = '<td><nav>2030/2031</nav></td>'
+year_header = '<th id="y">Year</th>'
+
+    @pytest.mark.parametrize(
+        "year_cell,year_header",
+        [
+            ("<td hidden>2030/2031</td>", '<th id="y">Year</th>'),
+            ("<td><nav>2030/2031</nav></td>", '<th id="y">Year</th>'),
+            ("<td><form>2030/2031</form></td>", '<th id="y">Year</th>'),
+            ("<td>2030/2031</td>", '<th id="y" hidden>Year</th>'),
+            ('<td headers="y">2030/2031</td>', '<th id="y"><span hidden>Year</span></th>'),
+            ("<td>2030/2031</td>", '<th id="y"><nav>Year</nav></th>'),
+        ],
+    )
+    def test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label(
+        tmp_path: Path, year_cell: str, year_header: str
+    ) -> None:
+        html = f"""<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div>
+        <table><tr><th>Applicant</th>{year_header}<th>Fee</th></tr>
+        <tr><td>International applicants</td>{year_cell}<td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1068: Failed
+_ test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label[<td>2030/2031</td>-<th id="y" hidden>Year</th>] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_hidden_year_value_or_head3')
+year_cell = '<td>2030/2031</td>', year_header = '<th id="y" hidden>Year</th>'
+
+    @pytest.mark.parametrize(
+        "year_cell,year_header",
+        [
+            ("<td hidden>2030/2031</td>", '<th id="y">Year</th>'),
+            ("<td><nav>2030/2031</nav></td>", '<th id="y">Year</th>'),
+            ("<td><form>2030/2031</form></td>", '<th id="y">Year</th>'),
+            ("<td>2030/2031</td>", '<th id="y" hidden>Year</th>'),
+            ('<td headers="y">2030/2031</td>', '<th id="y"><span hidden>Year</span></th>'),
+            ("<td>2030/2031</td>", '<th id="y"><nav>Year</nav></th>'),
+        ],
+    )
+    def test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label(
+        tmp_path: Path, year_cell: str, year_header: str
+    ) -> None:
+        html = f"""<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div>
+        <table><tr><th>Applicant</th>{year_header}<th>Fee</th></tr>
+        <tr><td>International applicants</td>{year_cell}<td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1068: Failed
+_ test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label[<td headers="y">2030/2031</td>-<th id="y"><span hidden>Year</span></th>] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_hidden_year_value_or_head4')
+year_cell = '<td headers="y">2030/2031</td>'
+year_header = '<th id="y"><span hidden>Year</span></th>'
+
+    @pytest.mark.parametrize(
+        "year_cell,year_header",
+        [
+            ("<td hidden>2030/2031</td>", '<th id="y">Year</th>'),
+            ("<td><nav>2030/2031</nav></td>", '<th id="y">Year</th>'),
+            ("<td><form>2030/2031</form></td>", '<th id="y">Year</th>'),
+            ("<td>2030/2031</td>", '<th id="y" hidden>Year</th>'),
+            ('<td headers="y">2030/2031</td>', '<th id="y"><span hidden>Year</span></th>'),
+            ("<td>2030/2031</td>", '<th id="y"><nav>Year</nav></th>'),
+        ],
+    )
+    def test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label(
+        tmp_path: Path, year_cell: str, year_header: str
+    ) -> None:
+        html = f"""<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div>
+        <table><tr><th>Applicant</th>{year_header}<th>Fee</th></tr>
+        <tr><td>International applicants</td>{year_cell}<td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1068: Failed
+_ test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label[<td>2030/2031</td>-<th id="y"><nav>Year</nav></th>] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_hidden_year_value_or_head5')
+year_cell = '<td>2030/2031</td>'
+year_header = '<th id="y"><nav>Year</nav></th>'
+
+    @pytest.mark.parametrize(
+        "year_cell,year_header",
+        [
+            ("<td hidden>2030/2031</td>", '<th id="y">Year</th>'),
+            ("<td><nav>2030/2031</nav></td>", '<th id="y">Year</th>'),
+            ("<td><form>2030/2031</form></td>", '<th id="y">Year</th>'),
+            ("<td>2030/2031</td>", '<th id="y" hidden>Year</th>'),
+            ('<td headers="y">2030/2031</td>', '<th id="y"><span hidden>Year</span></th>'),
+            ("<td>2030/2031</td>", '<th id="y"><nav>Year</nav></th>'),
+        ],
+    )
+    def test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label(
+        tmp_path: Path, year_cell: str, year_header: str
+    ) -> None:
+        html = f"""<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div>
+        <table><tr><th>Applicant</th>{year_header}<th>Fee</th></tr>
+        <tr><td>International applicants</td>{year_cell}<td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1068: Failed
+_ test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references[a-False] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_authoritative_year_header0')
+headers = 'a', duplicate_id = False
+
+    @pytest.mark.parametrize(
+        "headers,duplicate_id",
+        [("a", False), ("missing", False), ("", False), ("y y", False), ("y", True)],
+    )
+    def test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references(
+        tmp_path: Path, headers: str, duplicate_id: bool
+    ) -> None:
+        applicant_id = "y" if duplicate_id else "a"
+        html = f"""<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div><table>
+        <tr><th id="{applicant_id}">Applicant</th><th id="y">Year</th><th>Fee</th></tr>
+        <tr><td>International applicants</td><td headers="{headers}">2030/2031</td>
+        <td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1088: Failed
+_ test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references[missing-False] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_authoritative_year_header1')
+headers = 'missing', duplicate_id = False
+
+    @pytest.mark.parametrize(
+        "headers,duplicate_id",
+        [("a", False), ("missing", False), ("", False), ("y y", False), ("y", True)],
+    )
+    def test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references(
+        tmp_path: Path, headers: str, duplicate_id: bool
+    ) -> None:
+        applicant_id = "y" if duplicate_id else "a"
+        html = f"""<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div><table>
+        <tr><th id="{applicant_id}">Applicant</th><th id="y">Year</th><th>Fee</th></tr>
+        <tr><td>International applicants</td><td headers="{headers}">2030/2031</td>
+        <td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1088: Failed
+_ test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references[-False] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_authoritative_year_header2')
+headers = '', duplicate_id = False
+
+    @pytest.mark.parametrize(
+        "headers,duplicate_id",
+        [("a", False), ("missing", False), ("", False), ("y y", False), ("y", True)],
+    )
+    def test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references(
+        tmp_path: Path, headers: str, duplicate_id: bool
+    ) -> None:
+        applicant_id = "y" if duplicate_id else "a"
+        html = f"""<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div><table>
+        <tr><th id="{applicant_id}">Applicant</th><th id="y">Year</th><th>Fee</th></tr>
+        <tr><td>International applicants</td><td headers="{headers}">2030/2031</td>
+        <td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1088: Failed
+_ test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references[y y-False] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_authoritative_year_header3')
+headers = 'y y', duplicate_id = False
+
+    @pytest.mark.parametrize(
+        "headers,duplicate_id",
+        [("a", False), ("missing", False), ("", False), ("y y", False), ("y", True)],
+    )
+    def test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references(
+        tmp_path: Path, headers: str, duplicate_id: bool
+    ) -> None:
+        applicant_id = "y" if duplicate_id else "a"
+        html = f"""<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div><table>
+        <tr><th id="{applicant_id}">Applicant</th><th id="y">Year</th><th>Fee</th></tr>
+        <tr><td>International applicants</td><td headers="{headers}">2030/2031</td>
+        <td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1088: Failed
+_ test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references[y-True] _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_authoritative_year_header4')
+headers = 'y', duplicate_id = True
+
+    @pytest.mark.parametrize(
+        "headers,duplicate_id",
+        [("a", False), ("missing", False), ("", False), ("y y", False), ("y", True)],
+    )
+    def test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references(
+        tmp_path: Path, headers: str, duplicate_id: bool
+    ) -> None:
+        applicant_id = "y" if duplicate_id else "a"
+        html = f"""<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div><table>
+        <tr><th id="{applicant_id}">Applicant</th><th id="y">Year</th><th>Fee</th></tr>
+        <tr><td>International applicants</td><td headers="{headers}">2030/2031</td>
+        <td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1088: Failed
+_ test_exact_explicit_year_header_list_is_valid_and_conserves_header_coordinates _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_exact_explicit_year_heade0')
+
+    def test_exact_explicit_year_header_list_is_valid_and_conserves_header_coordinates(
+        tmp_path: Path,
+    ) -> None:
+        html = """<h1>International bachelor tuition</h1><table>
+        <tr><th>Applicant</th><th id="y">Year</th><th>Fee</th></tr>
+        <tr><td>International applicants</td><td headers="y">2030/2031</td><td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+        (support,) = _validate(tmp_path, _decision(fact), [action])[0]["academic_year_support"]
+>       assert support["header_origin"] == "explicit"
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'header_origin'
+
+tests/test_expert_citations.py:1103: KeyError
+_ test_real_year_row_header_is_valid_without_nonexistent_value_block[scope="row"] _
+
+fact = CompactFact(id='example_english', question='Q4', claim_key='english_evidence.example.minimum', value_json='7.25', sour...degree='bachelor', field=None, intake=None, population='international', qualification=None, academic_year='2030/2031'))
+finding = QuestionFinding(question='Q4', status='unresolved', supporting_steps=[1], proposal_indices=[], evidence=[SourceEvidenc...ernational', 'qualification': None, 'academic_year': '2030/2031'}, observation='Mechanical citation-scope check only.')
+evidence = SourceEvidence(action_step=1, source_url=HttpUrl('https://example.edu/admissions'), excerpt='EUR 19800', location=EvidenceLocation(kind='document_ir', block_id='b1', section_path=['International bachelor tuition'], page=None))
+source = _SourceRead(url=HttpUrl('https://example.edu/admissions'), text='International bachelor tuition\n\nYear\nFee\n\n2030/2...able_id=0, row=1, col=0, rowspan=1, colspan=1, column_headers=('Year',), block_id=None),))], links=[]), pdf_pages=None)
+
+    def _check_fact_scope(
+        fact: CompactFact, finding: QuestionFinding, evidence: SourceEvidence, source: _SourceRead
+    ) -> None:
+        try:
+>           _evidence_scope(finding, evidence, source)
+
+evaluation/research/expert/citations.py:195: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+evaluation/research/expert/models.py:797: in _evidence_scope
+    published_years, _support = _academic_year_evidence(evidence, source, declared_year)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+evidence = SourceEvidence(action_step=1, source_url=HttpUrl('https://example.edu/admissions'), excerpt='EUR 19800', location=EvidenceLocation(kind='document_ir', block_id='b1', section_path=['International bachelor tuition'], page=None))
+source = _SourceRead(url=HttpUrl('https://example.edu/admissions'), text='International bachelor tuition\n\nYear\nFee\n\n2030/2...able_id=0, row=1, col=0, rowspan=1, colspan=1, column_headers=('Year',), block_id=None),))], links=[]), pdf_pages=None)
+declared = '2030/31'
+
+    def _academic_year_evidence(
+        evidence: SourceEvidence, source: _SourceRead, declared: str
+    ) -> tuple[set[str], list[dict[str, Any]]]:
+        """A year-only structural join; other scope always uses the original block."""
+        local_context, context = _scope_texts(evidence, source)
+        local_has_year = re.search(r"\b20\d{2}\b", local_context)
+        published = _published_years(local_context if local_has_year else context)
+        if evidence.location.kind != "document_ir":
+            return published, []
+        block = next(b for b in source.document.blocks if b.id == evidence.location.block_id)
+        support: list[dict[str, Any]] = []
+        if block.row_year_cells:
+            for cell in block.row_year_cells:
+                year_block = next((b for b in source.document.blocks if b.id == cell.block_id), None)
+                if (
+                    cell.table_id != block.table_id
+                    or cell.row != block.row
+                    or cell.rowspan != 1
+                    or cell.colspan != 1
+                    or (
+                        cell.text
+                        and (
+                            year_block is None
+                            or year_block.table_id != cell.table_id
+                            or year_block.row != cell.row
+                            or year_block.col != cell.col
+                            or year_block.section_path != block.section_path
+                            or year_block.text != cell.text
+                        )
+                    )
+                ):
+>                   raise _AcademicYearEvidenceError(declared, set(), "ambiguous")
+E                   evaluation.research.expert.models._AcademicYearEvidenceError: Q4 fee year evidence is ambiguous at its official location
+
+evaluation/research/expert/models.py:736: _AcademicYearEvidenceError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_real_year_row_header_is_v0')
+row_scope = 'scope="row"'
+
+    @pytest.mark.parametrize("row_scope", ['scope="row"', ""])
+    def test_real_year_row_header_is_valid_without_nonexistent_value_block(
+        tmp_path: Path, row_scope: str
+    ) -> None:
+        html = f"""<h1>International bachelor tuition</h1><table>
+        <tr><th>Year</th><th>Fee</th></tr>
+        <tr><th {row_scope}>2030/2031</th><td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       (support,) = _validate(tmp_path, _decision(fact), [action])[0]["academic_year_support"]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_expert_citations.py:1119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_expert_citations.py:150: in _validate
+    return validate_fact_citations(
+evaluation/research/expert/citations.py:273: in validate_fact_citations
+    _check_fact_scope(fact, check, scope_evidence, source)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fact = CompactFact(id='example_english', question='Q4', claim_key='english_evidence.example.minimum', value_json='7.25', sour...degree='bachelor', field=None, intake=None, population='international', qualification=None, academic_year='2030/2031'))
+finding = QuestionFinding(question='Q4', status='unresolved', supporting_steps=[1], proposal_indices=[], evidence=[SourceEvidenc...ernational', 'qualification': None, 'academic_year': '2030/2031'}, observation='Mechanical citation-scope check only.')
+evidence = SourceEvidence(action_step=1, source_url=HttpUrl('https://example.edu/admissions'), excerpt='EUR 19800', location=EvidenceLocation(kind='document_ir', block_id='b1', section_path=['International bachelor tuition'], page=None))
+source = _SourceRead(url=HttpUrl('https://example.edu/admissions'), text='International bachelor tuition\n\nYear\nFee\n\n2030/2...able_id=0, row=1, col=0, rowspan=1, colspan=1, column_headers=('Year',), block_id=None),))], links=[]), pdf_pages=None)
+
+    def _check_fact_scope(
+        fact: CompactFact, finding: QuestionFinding, evidence: SourceEvidence, source: _SourceRead
+    ) -> None:
+        try:
+            _evidence_scope(finding, evidence, source)
+        except _AcademicYearEvidenceError as exc:
+            location = evidence.location.model_dump(mode="json")
+>           raise ValueError(
+                f"{fact.question} fact {fact.id}: academic_year evidence {exc.reason}; "
+                f"declared={fact.scope.academic_year!r}, observed={list(exc.published)!r}, "
+                f"source_step={fact.source_step}, location={location!r}"
+            ) from exc
+E           ValueError: Q4 fact example_english: academic_year evidence ambiguous; declared='2030/2031', observed=[], source_step=1, location={'kind': 'document_ir', 'block_id': 'b1', 'section_path': ['International bachelor tuition'], 'page': None}
+
+evaluation/research/expert/citations.py:198: ValueError
+_____ test_real_year_row_header_is_valid_without_nonexistent_value_block[] _____
+
+fact = CompactFact(id='example_english', question='Q4', claim_key='english_evidence.example.minimum', value_json='7.25', sour...degree='bachelor', field=None, intake=None, population='international', qualification=None, academic_year='2030/2031'))
+finding = QuestionFinding(question='Q4', status='unresolved', supporting_steps=[1], proposal_indices=[], evidence=[SourceEvidenc...ernational', 'qualification': None, 'academic_year': '2030/2031'}, observation='Mechanical citation-scope check only.')
+evidence = SourceEvidence(action_step=1, source_url=HttpUrl('https://example.edu/admissions'), excerpt='EUR 19800', location=EvidenceLocation(kind='document_ir', block_id='b1', section_path=['International bachelor tuition'], page=None))
+source = _SourceRead(url=HttpUrl('https://example.edu/admissions'), text='International bachelor tuition\n\nYear\nFee\n\n2030/2...able_id=0, row=1, col=0, rowspan=1, colspan=1, column_headers=('Year',), block_id=None),))], links=[]), pdf_pages=None)
+
+    def _check_fact_scope(
+        fact: CompactFact, finding: QuestionFinding, evidence: SourceEvidence, source: _SourceRead
+    ) -> None:
+        try:
+>           _evidence_scope(finding, evidence, source)
+
+evaluation/research/expert/citations.py:195: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+evaluation/research/expert/models.py:797: in _evidence_scope
+    published_years, _support = _academic_year_evidence(evidence, source, declared_year)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+evidence = SourceEvidence(action_step=1, source_url=HttpUrl('https://example.edu/admissions'), excerpt='EUR 19800', location=EvidenceLocation(kind='document_ir', block_id='b1', section_path=['International bachelor tuition'], page=None))
+source = _SourceRead(url=HttpUrl('https://example.edu/admissions'), text='International bachelor tuition\n\nYear\nFee\n\n2030/2...able_id=0, row=1, col=0, rowspan=1, colspan=1, column_headers=('Year',), block_id=None),))], links=[]), pdf_pages=None)
+declared = '2030/31'
+
+    def _academic_year_evidence(
+        evidence: SourceEvidence, source: _SourceRead, declared: str
+    ) -> tuple[set[str], list[dict[str, Any]]]:
+        """A year-only structural join; other scope always uses the original block."""
+        local_context, context = _scope_texts(evidence, source)
+        local_has_year = re.search(r"\b20\d{2}\b", local_context)
+        published = _published_years(local_context if local_has_year else context)
+        if evidence.location.kind != "document_ir":
+            return published, []
+        block = next(b for b in source.document.blocks if b.id == evidence.location.block_id)
+        support: list[dict[str, Any]] = []
+        if block.row_year_cells:
+            for cell in block.row_year_cells:
+                year_block = next((b for b in source.document.blocks if b.id == cell.block_id), None)
+                if (
+                    cell.table_id != block.table_id
+                    or cell.row != block.row
+                    or cell.rowspan != 1
+                    or cell.colspan != 1
+                    or (
+                        cell.text
+                        and (
+                            year_block is None
+                            or year_block.table_id != cell.table_id
+                            or year_block.row != cell.row
+                            or year_block.col != cell.col
+                            or year_block.section_path != block.section_path
+                            or year_block.text != cell.text
+                        )
+                    )
+                ):
+>                   raise _AcademicYearEvidenceError(declared, set(), "ambiguous")
+E                   evaluation.research.expert.models._AcademicYearEvidenceError: Q4 fee year evidence is ambiguous at its official location
+
+evaluation/research/expert/models.py:736: _AcademicYearEvidenceError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_real_year_row_header_is_v1')
+row_scope = ''
+
+    @pytest.mark.parametrize("row_scope", ['scope="row"', ""])
+    def test_real_year_row_header_is_valid_without_nonexistent_value_block(
+        tmp_path: Path, row_scope: str
+    ) -> None:
+        html = f"""<h1>International bachelor tuition</h1><table>
+        <tr><th>Year</th><th>Fee</th></tr>
+        <tr><th {row_scope}>2030/2031</th><td>EUR 19800</td></tr></table>"""
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       (support,) = _validate(tmp_path, _decision(fact), [action])[0]["academic_year_support"]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_expert_citations.py:1119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_expert_citations.py:150: in _validate
+    return validate_fact_citations(
+evaluation/research/expert/citations.py:273: in validate_fact_citations
+    _check_fact_scope(fact, check, scope_evidence, source)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fact = CompactFact(id='example_english', question='Q4', claim_key='english_evidence.example.minimum', value_json='7.25', sour...degree='bachelor', field=None, intake=None, population='international', qualification=None, academic_year='2030/2031'))
+finding = QuestionFinding(question='Q4', status='unresolved', supporting_steps=[1], proposal_indices=[], evidence=[SourceEvidenc...ernational', 'qualification': None, 'academic_year': '2030/2031'}, observation='Mechanical citation-scope check only.')
+evidence = SourceEvidence(action_step=1, source_url=HttpUrl('https://example.edu/admissions'), excerpt='EUR 19800', location=EvidenceLocation(kind='document_ir', block_id='b1', section_path=['International bachelor tuition'], page=None))
+source = _SourceRead(url=HttpUrl('https://example.edu/admissions'), text='International bachelor tuition\n\nYear\nFee\n\n2030/2...able_id=0, row=1, col=0, rowspan=1, colspan=1, column_headers=('Year',), block_id=None),))], links=[]), pdf_pages=None)
+
+    def _check_fact_scope(
+        fact: CompactFact, finding: QuestionFinding, evidence: SourceEvidence, source: _SourceRead
+    ) -> None:
+        try:
+            _evidence_scope(finding, evidence, source)
+        except _AcademicYearEvidenceError as exc:
+            location = evidence.location.model_dump(mode="json")
+>           raise ValueError(
+                f"{fact.question} fact {fact.id}: academic_year evidence {exc.reason}; "
+                f"declared={fact.scope.academic_year!r}, observed={list(exc.published)!r}, "
+                f"source_step={fact.source_step}, location={location!r}"
+            ) from exc
+E           ValueError: Q4 fact example_english: academic_year evidence ambiguous; declared='2030/2031', observed=[], source_step=1, location={'kind': 'document_ir', 'block_id': 'b1', 'section_path': ['International bachelor tuition'], 'page': None}
+
+evaluation/research/expert/citations.py:198: ValueError
+_________ test_removing_a_control_keeps_original_year_header_unusable __________
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-527/test_removing_a_control_keeps_0')
+
+    def test_removing_a_control_keeps_original_year_header_unusable(tmp_path: Path) -> None:
+        html = (
+            "<h1>International bachelor tuition</h1><div>Academic year 2030/2031</div>"
+            "<table><tr><th><form>Year</form></th><th>Fee</th></tr>"
+            "<tr><td>2030/2031</td><td>EUR 19800</td></tr></table>"
+        )
+        action, _ = _source(tmp_path, body=html.encode())
+        fact = _ir_fact_for_html(
+            html, "EUR 19800", question="Q4", scope=_scope(academic_year="2030/2031")
+        )
+>       with pytest.raises(ValueError, match="academic_year evidence ambiguous"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_expert_citations.py:1138: Failed
+=========================== short test summary info ============================
+FAILED tests/test_document_ir.py::test_year_label_does_not_exit_into_a_distinct_unheaded_semantic_container[main]
+FAILED tests/test_document_ir.py::test_year_label_does_not_exit_into_a_distinct_unheaded_semantic_container[article]
+FAILED tests/test_document_ir.py::test_year_label_does_not_exit_into_a_distinct_unheaded_semantic_container[section]
+FAILED tests/test_document_ir.py::test_same_heading_text_in_different_sections_keeps_distinct_dom_origin
+FAILED tests/test_document_ir.py::test_nested_div_heading_wrapper_and_body_share_only_the_same_explicit_container
+FAILED tests/test_document_ir.py::test_year_label_checks_hidden_navigation_and_control_descendants[<div><span hidden>Academic year 2030/2031</span></div>]
+FAILED tests/test_document_ir.py::test_year_label_checks_hidden_navigation_and_control_descendants[<div><span aria-hidden="true">Academic year 2030/2031</span></div>]
+FAILED tests/test_document_ir.py::test_year_label_checks_hidden_navigation_and_control_descendants[<div><span style="display: none">Academic year 2030/2031</span></div>]
+FAILED tests/test_document_ir.py::test_year_label_checks_hidden_navigation_and_control_descendants[<div><span class="sr-only">Academic year 2030/2031</span></div>]
+FAILED tests/test_document_ir.py::test_year_label_checks_hidden_navigation_and_control_descendants[<div><nav>Academic year 2030/2031</nav></div>]
+FAILED tests/test_document_ir.py::test_year_label_checks_hidden_navigation_and_control_descendants[<div><footer>Academic year 2030/2031</footer></div>]
+FAILED tests/test_document_ir.py::test_year_label_checks_hidden_navigation_and_control_descendants[<div><span role="navigation">Academic year 2030/2031</span></div>]
+FAILED tests/test_document_ir.py::test_hidden_or_navigation_year_sources_remain_explicitly_unusable[<td hidden>2030/2031</td>-<th>Year</th>-non_content_year_cell]
+FAILED tests/test_document_ir.py::test_hidden_or_navigation_year_sources_remain_explicitly_unusable[<td><span aria-hidden="true">2030/2031</span></td>-<th>Year</th>-non_content_year_cell]
+FAILED tests/test_document_ir.py::test_hidden_or_navigation_year_sources_remain_explicitly_unusable[<td>2030/2031</td>-<th hidden>Year</th>-non_content_year_header]
+FAILED tests/test_document_ir.py::test_hidden_or_navigation_year_sources_remain_explicitly_unusable[<td>2030/2031</td>-<th><span hidden>Year</span></th>-non_content_year_header]
+FAILED tests/test_document_ir.py::test_hidden_or_navigation_year_sources_remain_explicitly_unusable[<td>2030/2031</td>-<th><nav>Year</nav></th>-non_content_year_header]
+FAILED tests/test_document_ir.py::test_explicit_non_year_or_unresolved_headers_never_fall_back_to_position[headers="a"]
+FAILED tests/test_document_ir.py::test_explicit_non_year_or_unresolved_headers_never_fall_back_to_position[headers="missing"]
+FAILED tests/test_document_ir.py::test_explicit_non_year_or_unresolved_headers_never_fall_back_to_position[headers=""]
+FAILED tests/test_document_ir.py::test_explicit_non_year_or_unresolved_headers_never_fall_back_to_position[headers="y y"]
+FAILED tests/test_document_ir.py::test_valid_explicit_year_header_list_has_exact_header_provenance
+FAILED tests/test_document_ir.py::test_year_row_header_has_original_header_proof_without_inventing_a_value_block
+FAILED tests/test_document_ir.py::test_dropped_control_cannot_erase_original_year_header_classification
+FAILED tests/test_expert_citations.py::test_a_label_cannot_supply_year_after_exiting_its_semantic_container[main]
+FAILED tests/test_expert_citations.py::test_a_label_cannot_supply_year_after_exiting_its_semantic_container[article]
+FAILED tests/test_expert_citations.py::test_a_label_cannot_supply_year_after_exiting_its_semantic_container[section]
+FAILED tests/test_expert_citations.py::test_non_content_label_descendants_cannot_become_citable_year_support[<div><span hidden>Academic year 2030/2031</span></div>]
+FAILED tests/test_expert_citations.py::test_non_content_label_descendants_cannot_become_citable_year_support[<div><span style="visibility: hidden">Academic year 2030/2031</span></div>]
+FAILED tests/test_expert_citations.py::test_non_content_label_descendants_cannot_become_citable_year_support[<div><nav>Academic year 2030/2031</nav></div>]
+FAILED tests/test_expert_citations.py::test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label[<td hidden>2030/2031</td>-<th id="y">Year</th>]
+FAILED tests/test_expert_citations.py::test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label[<td><nav>2030/2031</nav></td>-<th id="y">Year</th>]
+FAILED tests/test_expert_citations.py::test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label[<td>2030/2031</td>-<th id="y" hidden>Year</th>]
+FAILED tests/test_expert_citations.py::test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label[<td headers="y">2030/2031</td>-<th id="y"><span hidden>Year</span></th>]
+FAILED tests/test_expert_citations.py::test_hidden_year_value_or_header_cannot_be_rescued_by_a_matching_page_label[<td>2030/2031</td>-<th id="y"><nav>Year</nav></th>]
+FAILED tests/test_expert_citations.py::test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references[a-False]
+FAILED tests/test_expert_citations.py::test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references[missing-False]
+FAILED tests/test_expert_citations.py::test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references[-False]
+FAILED tests/test_expert_citations.py::test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references[y y-False]
+FAILED tests/test_expert_citations.py::test_authoritative_year_headers_reject_unknown_non_year_and_duplicate_references[y-True]
+FAILED tests/test_expert_citations.py::test_exact_explicit_year_header_list_is_valid_and_conserves_header_coordinates
+FAILED tests/test_expert_citations.py::test_real_year_row_header_is_valid_without_nonexistent_value_block[scope="row"]
+FAILED tests/test_expert_citations.py::test_real_year_row_header_is_valid_without_nonexistent_value_block[]
+FAILED tests/test_expert_citations.py::test_removing_a_control_keeps_original_year_header_unusable
+44 failed, 135 passed in 1.34s

@@ -1,0 +1,77 @@
+{
+  "changes": [
+    "Synthetic site failure uses actual FetchOutcome.HTTP_ERROR",
+    "Asserts original raw response exact status/outcome/ok/failure for site402/429",
+    "Compatibility kwargs explicitly dict[str,Any]"
+  ],
+  "expected_destination": "backend/tests/test_expert_source_admission.py",
+  "files": {
+    "format-installed-v2-original.log": {
+      "bytes": 25,
+      "sha256": "fd2299c9f1c6dc869070883e281051bfe93aacf66c1a3b0069f45b4aa410ca50"
+    },
+    "mypy-installed-v2-original.log": {
+      "bytes": 42,
+      "sha256": "5d4b6d285b77932e3d08212c3b4974d0a803f98ec60408ac6ccf6a063fa6c19e"
+    },
+    "pytest-installed-v2-original.log": {
+      "bytes": 99,
+      "sha256": "97cbc56676b5987d7266bf6f0f2096d26bf1930148d0807d4004ea853cbea11f"
+    },
+    "pytest-site-fixture-red-original.log": {
+      "bytes": 3241,
+      "sha256": "bd76870742775249dda7a6512eda1375fafa1b4158e3209161aa888dc62b8012"
+    },
+    "ruff-installed-v2-original.log": {
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "test-v2-pre-fixture-fix.py.txt": {
+      "bytes": 38920,
+      "sha256": "3670a6dbbd109f09d733bb16307fb73a708f0c47dc32d70dbf535f4ffbee917a"
+    }
+  },
+  "gates": {
+    "format": {
+      "command": "./.venv/bin/python -m ruff format --check --config ruff.toml /tmp/test_expert_source_admission_installed_candidate_v2_ea0b0fdd91.py",
+      "exit_code": 0,
+      "log": "format-installed-v2-original.log"
+    },
+    "mypy": {
+      "command": "PYTHONPATH=. MYPYPATH=. UNIMATCH_EXA_API_KEY='' ./.venv/bin/python -m mypy --config-file mypy.ini /tmp/test_expert_source_admission_installed_candidate_v2_ea0b0fdd91.py",
+      "exit_code": 0,
+      "log": "mypy-installed-v2-original.log",
+      "result": "Success: no issues found in 1 source file"
+    },
+    "pytest": {
+      "command": "PYTHONPATH=. UNIMATCH_EXA_API_KEY='' ./.venv/bin/python -m pytest /tmp/test_expert_source_admission_installed_candidate_v2_ea0b0fdd91.py -q -o addopts=''",
+      "exit_code": 0,
+      "log": "pytest-installed-v2-original.log",
+      "result": "....................................................................     [100%]\n68 passed in 0.89s"
+    },
+    "red": {
+      "exit_code": 1,
+      "log": "pytest-site-fixture-red-original.log",
+      "result": "2 failed,66 deselected; original wrong enum produced statusNone rather than actual402/429"
+    },
+    "ruff": {
+      "command": "./.venv/bin/python -m ruff check --config ruff.toml /tmp/test_expert_source_admission_installed_candidate_v2_ea0b0fdd91.py",
+      "exit_code": 0,
+      "log": "ruff-installed-v2-original.log"
+    }
+  },
+  "preserved_root_static_failure": {
+    "path": "/tmp/unimatch-expert500-v14-installed-core-gates-20261006/static-02-original.log",
+    "result": "7 errors: missing FetchOutcome.ERROR and **dict[str,object] compatibility kwargs",
+    "sha256": "648d14acef26164598b4608303446f7893d76efbcda462a06524d84892d1870b"
+  },
+  "prior_test_manifest_unchanged": "/tmp/unimatch-expert500-installed-admission-regression-ea0b0fdd91/manifest.json",
+  "repository_files_edited_by_agent": false,
+  "source_and_fixture_hashes_unchanged_from_v1": true,
+  "status": "final_installed_regression_v2_frozen",
+  "supersedes_test_sha256": "89c9c27ddf700837bdd264470d903944516f85dbc5396880a651f5116e3595ba",
+  "test_bytes": 38925,
+  "test_path": "/tmp/test_expert_source_admission_installed_candidate_v2_ea0b0fdd91.py",
+  "test_sha256": "02ffeaf668356f95f64717bbd77edf4dbb2d6670972668f079722765bbcf231a",
+  "working_directory": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend"
+}

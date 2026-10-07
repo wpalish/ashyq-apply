@@ -1,0 +1,183 @@
+"""Offline raw-ledger proof for exact provider402/429 controller stops."""
+
+from __future__ import annotations
+
+import asyncio
+import hashlib
+import json
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from typing import Any
+
+import pytest
+
+from app.adapters.fetching import FetchResult
+from app.adapters.search.base import SearchUnavailable
+from app.domain.enums import FetchOutcome
+from evaluation.research.expert.controller import execute
+from evaluation.research.expert.network_budget import (
+    BUDGET_MODEL,
+    NETWORK_COMPARISON_MODE,
+    WALL_GUARD_MS,
+    parse_wall_guard,
+)
+from evaluation.research.expert.network_report import SourceCounters, validate_source_run
+
+START = datetime(2026, 10, 5, tzinfo=UTC)
+
+
+def plan(**extra: Any) -> dict[str, Any]:
+    return {
+        "case_id": "provider-stop",
+        "provider": "exa",
+        "log_prefix": "provider-stop",
+        "strict_budget": True,
+        "max_calls": 60,
+        "max_ms": WALL_GUARD_MS,
+        "max_search_queries": 6,
+        "budget_origin": NETWORK_COMPARISON_MODE,
+        "budget_model": BUDGET_MODEL,
+        "official_domains": ["u.edu"],
+        "wall_started_at": START.isoformat(),
+        "wall_deadline_at": (START + timedelta(milliseconds=WALL_GUARD_MS)).isoformat(),
+        "actions": [{"tool": "search_provider", "query": "bachelor admissions"}],
+        **extra,
+    }
+
+
+def run_source(
+    folder: Path, source_plan: dict[str, Any], *, status: int
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    async def search(**kwargs: Any) -> Any:
+        raise SearchUnavailable("Synthetic provider account refusal", http_status=status)
+
+    async def get(url: str) -> FetchResult:
+        return FetchResult(
+            url=url,
+            final_url=url,
+            outcome=FetchOutcome.HTTP_ERROR,
+            status_code=status,
+            error="Synthetic university HTTP failure",
+        )
+
+    summary = asyncio.run(
+        execute(
+            source_plan,
+            folder,
+            get=get,
+            search=search,
+            provider_name="exa",
+            now=lambda: START,
+            monotonic=lambda: 0.0,
+        )
+    )
+    entry = summary["actions"][0]
+    raw = json.loads((folder / entry["raw_log_path"]).read_bytes())
+    return summary, raw
+
+
+def validate(
+    source_plan: dict[str, Any],
+    summary: dict[str, Any],
+    raw: dict[str, Any],
+    *,
+    prior: SourceCounters = SourceCounters(),
+    prior_summary: dict[str, Any] | None = None,
+) -> SourceCounters:
+    return validate_source_run(
+        source_plan,
+        summary,
+        raw,
+        case_id="provider-stop",
+        official_domains=["u.edu"],
+        wall_guard=parse_wall_guard(
+            wall_started_at=source_plan["wall_started_at"],
+            wall_deadline_at=source_plan["wall_deadline_at"],
+        ),
+        raw_sha256=summary["actions"][0]["raw_log_sha256"],
+        provider="exa",
+        prior=prior,
+        prior_summary=prior_summary,
+    )
+
+
+@pytest.mark.parametrize("status", [402, 429])
+def test_actual_provider_refusal_retains_exact_typed_stop_and_query_count(
+    tmp_path: Path, status: int
+) -> None:
+    source_plan = plan()
+    summary, raw = run_source(tmp_path, source_plan, status=status)
+    assert raw["response"]["http_status"] == status
+    assert raw["response"]["status_code"] == status
+    assert raw["stop_reason"] == summary["final"]["stop_reason"] == f"http_{status}"
+    assert validate(source_plan, summary, raw) == SourceCounters(0, 1, 0)
+
+
+@pytest.mark.parametrize("status", [402, 429])
+@pytest.mark.parametrize("change", ["erased", "wrong_code", "final_only"])
+def test_rehashed_provider_stop_cannot_be_erased_or_relabelled(
+    tmp_path: Path, status: int, change: str
+) -> None:
+    source_plan = plan()
+    summary, raw = run_source(tmp_path, source_plan, status=status)
+    changed = None if change != "wrong_code" else f"http_{429 if status == 402 else 402}"
+    if change != "final_only":
+        raw["stop_reason"] = changed
+    summary["final"]["stop_reason"] = changed
+    entry = summary["actions"][0]
+    raw_path = tmp_path / entry["raw_log_path"]
+    raw_path.write_text(json.dumps(raw, sort_keys=True))
+    sha = hashlib.sha256(raw_path.read_bytes()).hexdigest()
+    entry["raw_log_sha256"] = sha
+    summary["raw_logs"][raw_path.name] = sha
+    with pytest.raises(ValueError, match=f"HTTP{status}"):
+        validate(source_plan, summary, raw)
+
+
+@pytest.mark.parametrize("status", [402, 429])
+def test_provider_latch_resume_has_no_query_or_source_charge(tmp_path: Path, status: int) -> None:
+    source_plan = plan()
+    first, raw = run_source(tmp_path, source_plan, status=status)
+    prior = validate(source_plan, first, raw)
+    resume = {
+        key: value for key, value in first.items() if key not in {"actions", "replay", "initial"}
+    }
+    second_plan = plan(
+        start_calls=prior.fetcher_calls,
+        start_search_queries=prior.search_queries,
+        start_ms=prior.source_ms,
+        resume_summary=resume,
+    )
+    second, blocked = run_source(tmp_path, second_plan, status=status)
+    assert blocked["executed"] is False and blocked.get("response", {}) == {}
+    assert second["actions"][0]["outcome"] == f"stopped_after_http_{status}"
+    assert second["final"]["stop_reason"] == f"http_{status}"
+    assert validate(second_plan, second, blocked, prior=prior, prior_summary=first) == prior
+
+
+@pytest.mark.parametrize("status", [402, 429])
+def test_rehashed_conflicting_provider_http_fields_cannot_pick_a_stop_cause(
+    tmp_path: Path, status: int
+) -> None:
+    source_plan = plan()
+    summary, raw = run_source(tmp_path, source_plan, status=status)
+    raw["response"]["status_code"] = 429 if status == 402 else 402
+    entry = summary["actions"][0]
+    raw_path = tmp_path / entry["raw_log_path"]
+    raw_path.write_text(json.dumps(raw, sort_keys=True))
+    sha = hashlib.sha256(raw_path.read_bytes()).hexdigest()
+    entry["raw_log_sha256"] = sha
+    summary["raw_logs"][raw_path.name] = sha
+    with pytest.raises(ValueError, match="provider HTTP status fields disagree"):
+        validate(source_plan, summary, raw)
+
+
+@pytest.mark.parametrize("status", [402, 429])
+def test_university_http_failure_does_not_become_a_search_provider_latch(
+    tmp_path: Path, status: int
+) -> None:
+    source_plan = plan(actions=[{"tool": "fetcher", "url": "https://u.edu/admissions"}])
+    summary, raw = run_source(tmp_path, source_plan, status=status)
+    assert raw["response"]["status_code"] == status
+    assert raw["stop_reason"] is None and summary["final"]["stop_reason"] is None
+    assert validate(source_plan, summary, raw) == SourceCounters(1, 0, 0)

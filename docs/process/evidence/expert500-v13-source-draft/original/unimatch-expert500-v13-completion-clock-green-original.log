@@ -1,0 +1,10 @@
+{"argv": ["/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/python", "-m", "pytest", "-o", "addopts=--strict-markers", "-q", "/tmp/test_unimatch_expert500_completion_clock_v13.py"], "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend", "input_sha256": {"/tmp/unimatch-expert500-journal-pilot-v13.py": "3a70a6bc1f318a2761eb5e16093f2b36bc512abb89382c8f293bd56975558cb5", "/tmp/test_unimatch_expert500_completion_clock_v13.py": "e89c416dfb62c64df614b0507aba827b7ff394aded4832f47c27a0622bead9fb", "/tmp/unimatch-expert500-journal-pilot-v12.py": "1922e117436afdc001bef7cbf867e8b91db4062fd0b98cfce044c3b980a74b72", "/tmp/test_unimatch_expert500_journal_pilot_v12.py": "fcbca530b952625d4e8fbe752fbf45692ee7c380f3f6c26fd83c9ad9e8a483a9"}, "PYTHONPATH": "."}
+............                                                             [100%]
+=============================== warnings summary ===============================
+test_unimatch_expert500_completion_clock_v13.py: 300 warnings
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/bs4/builder/_lxml.py:124: DeprecationWarning: The 'strip_cdata' option of HTMLParser() has never done anything and will eventually be removed.
+    parser = parser(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+12 passed, 300 warnings in 1.00s
+{"exit_code": 0, "after_sha256": {"/tmp/unimatch-expert500-journal-pilot-v13.py": "3a70a6bc1f318a2761eb5e16093f2b36bc512abb89382c8f293bd56975558cb5", "/tmp/test_unimatch_expert500_completion_clock_v13.py": "e89c416dfb62c64df614b0507aba827b7ff394aded4832f47c27a0622bead9fb", "/tmp/unimatch-expert500-journal-pilot-v12.py": "1922e117436afdc001bef7cbf867e8b91db4062fd0b98cfce044c3b980a74b72", "/tmp/test_unimatch_expert500_journal_pilot_v12.py": "fcbca530b952625d4e8fbe752fbf45692ee7c380f3f6c26fd83c9ad9e8a483a9"}}

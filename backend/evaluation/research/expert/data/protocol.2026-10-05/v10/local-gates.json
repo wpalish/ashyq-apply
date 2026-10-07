@@ -1,0 +1,132 @@
+{
+  "schema_version": "1",
+  "protocol_version": "journal-v10",
+  "recorded_at": "2026-10-05T08:28:13.907972+00:00",
+  "all_passed": true,
+  "actual_ten_case_launcher_preflight": true,
+  "backend_tests": 4092,
+  "backend_coverage_percent": 94.86,
+  "frontend_tests": 232,
+  "actual_parent_mocks": 505,
+  "final_post_import_parent_report_tests": 334,
+  "static_source_files": 369,
+  "parent_quality_files": 10,
+  "source_calls": 0,
+  "new_neutral_model_calls": 0,
+  "integrated_main": "d6c2297c697783203171182ac9ee7b6dbb0d5008",
+  "gates": {
+    "backend_tests": true,
+    "backend_ruff": true,
+    "backend_format": true,
+    "backend_mypy": true,
+    "frontend_tests": true,
+    "frontend_typecheck": true,
+    "frontend_build": true,
+    "frontend_lint": true,
+    "evaluation_quality": true,
+    "combined_parent_mocks": true,
+    "actual_ten_case_launcher_preflight": true,
+    "demo_order": true,
+    "alembic_single_head": true,
+    "exa_provider_pin": true,
+    "actual_ten_case_os_isolation": true,
+    "final_test_import_reverification": true,
+    "neutral_transport_reuse": true,
+    "ordinary_cli_usage_available": true,
+    "pure_and_report_final": true,
+    "actual_parent_once_only": true,
+    "final_helper_mypy": true
+  },
+  "raw_logs": {
+    "backend_tests": {
+      "path": "/tmp/unimatch-expert500-v10-final-backend-tests.log",
+      "sha256": "f71d91f368f9fbb48d8d060394bd70226fadede71af1749325b6a9b15aea5d07"
+    },
+    "backend_ruff": {
+      "path": "/tmp/unimatch-expert500-v10-final-current-backend-ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "backend_format": {
+      "path": "/tmp/unimatch-expert500-v10-final-current-backend-format.log",
+      "sha256": "5e02de47569f8d0dab9b426b7814a7ce598f50e598afb588f3bd125ea39d5865"
+    },
+    "backend_mypy": {
+      "path": "/tmp/unimatch-expert500-v10-final-current-backend-mypy.log",
+      "sha256": "a06be59aff124b529ca564a154a77a5e74614b22bb8226a4ee05b8b46f483546"
+    },
+    "frontend_tests": {
+      "path": "/tmp/unimatch-expert500-v10-final-frontend-tests.log",
+      "sha256": "164bd9647960e3f9fc0475c950f65ad28db21b798639bf6f9dcc1b0abd81b7f9"
+    },
+    "frontend_typecheck": {
+      "path": "/tmp/unimatch-expert500-v10-final-frontend-typecheck.log",
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02"
+    },
+    "frontend_build": {
+      "path": "/tmp/unimatch-expert500-v10-final-frontend-build.log",
+      "sha256": "abb05af0f45b389c00ec408539c06863962ccafb5fea54130392f57035f6bc44"
+    },
+    "frontend_lint": {
+      "path": "/tmp/unimatch-expert500-v10-final-frontend-lint.log",
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a"
+    },
+    "evaluation_quality": {
+      "path": "/tmp/unimatch-expert500-v10-final-post-import-helper-quality.log",
+      "sha256": "9c8d541c82cb2b389f80edcb2916d0037197c04b3b207209575b9bd7d99764ec"
+    },
+    "combined_parent_mocks": {
+      "path": "/tmp/unimatch-expert500-v10-final-current-combined-mocks.log",
+      "sha256": "937d6d0ffca81c3706341f2f9779eddbfab3abe40cf1065ec2d6ece35b78767f"
+    },
+    "actual_ten_case_launcher_preflight": {
+      "path": "/tmp/unimatch-expert500-v10-final-current-combined-mocks.log",
+      "sha256": "937d6d0ffca81c3706341f2f9779eddbfab3abe40cf1065ec2d6ece35b78767f"
+    },
+    "demo_order": {
+      "path": "/tmp/unimatch-expert500-v10-final-demo.log",
+      "sha256": "59e914b6ada954b5351c7e54495ae81e03e1743f299af2f98662d4be81dcaf42"
+    },
+    "alembic_single_head": {
+      "path": "/tmp/unimatch-expert500-v10-final-alembic.log",
+      "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b"
+    },
+    "exa_provider_pin": {
+      "path": "/tmp/unimatch-expert500-v10-final-current-combined-mocks.log",
+      "sha256": "937d6d0ffca81c3706341f2f9779eddbfab3abe40cf1065ec2d6ece35b78767f"
+    },
+    "actual_ten_case_os_isolation": {
+      "path": "/tmp/unimatch-expert500-v10-final-isolation-preflight.log",
+      "sha256": "ef904d45d67ca348c006ce3c365313b7ec4216251af7a439db8e93d337094f74"
+    },
+    "final_test_import_reverification": {
+      "path": "/tmp/unimatch-expert500-v10-final-post-import-tests.log",
+      "sha256": "6bb5b81d1919cdbec948b5d19bf581487b61983cfe864789bed132318c00950c"
+    },
+    "neutral_transport_reuse": {
+      "path": "/tmp/unimatch-expert500-v10-final-neutral-reuse.log",
+      "sha256": "e6dd48b0e0e42973f13c0a50efd8942b7b813a51455c24bd9b242103c1a8b844"
+    },
+    "ordinary_cli_usage_available": {
+      "path": "/tmp/unimatch-expert500-v10-cli-availability-redacted.json",
+      "sha256": "b369e24d91582714f2f1ff5e22bd67643141c9822f45f82725ddce03576c031d"
+    },
+    "pure_and_report_final": {
+      "path": "/tmp/unimatch-expert500-v10-final-after-parent-stable.log",
+      "sha256": "11c867a2401bf906035a00dde6865987cb8ad48a001e1262af0468127d06777e"
+    },
+    "actual_parent_once_only": {
+      "path": "/tmp/unimatch-expert500-v10-once-only-parent-scope-final.log",
+      "sha256": "1eef9b971b824b674e9b96407b989f23a81b54969133600d731e7bdda2fcb028"
+    },
+    "final_helper_mypy": {
+      "path": "/tmp/unimatch-expert500-v10-final-post-import-helper-mypy.log",
+      "sha256": "37d1f47ffe2bc9320f5cfd94dc6a343dddf4f855dfe5c7c9e98f715f1425b600"
+    }
+  },
+  "app_test_source_gate_note": "4092 full app/tests gates on integrated PR51; subsequent changes only evaluation model_failure and research tests. App/tests source is unchanged.",
+  "combined_test_byte_note": "505 combined tests pass on final runtime bytes before import-only sorting of two test files; all334 affected parent/report tests pass after sorting. Both before-style test bytes and all earlier negatives are preserved.",
+  "immutable_prior_draft_manifest": "bc8e1d7cd0e94d51705fab721f0b8610b09c620b698945339c0fa0c3b6d18adf",
+  "frontend_tree": "4aaba144e9642060a4915a22527ef016ee8cc83d",
+  "migration_tree": "96469ee9697939efcd3c52b681838e1899989998",
+  "workflow_tree": "fc6cd24a90676173947f23fe262210a801ff9efc"
+}

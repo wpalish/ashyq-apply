@@ -1,0 +1,11 @@
+/tmp/test_unimatch_expert500_journal_pilot_v10.py:562:12: C401 Unnecessary generator (rewrite as a set comprehension)
+    |
+560 |         runtime["main"]()
+561 |     assert dispatched == [] and receipt.read_bytes() == original
+562 |     assert set(path.name for path in tmp_path.iterdir()) == {receipt.name}
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C401
+    |
+    = help: Rewrite as a set comprehension
+
+Found 1 error.
+No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).

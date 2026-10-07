@@ -1,0 +1,896 @@
+"""Replay hash-bound explicit journal submissions, seal, then score; offline only."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib.util
+import json
+import re
+import runpy
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
+from evaluation.research.expert.models import validate_trace
+from evaluation.research.expert.blind_cli import selector_answer
+from evaluation.research.expert.journal import AcceptedJournal, parse_journal_decision
+from evaluation.research.expert.compact import expand_submission, parse_compact_decision
+from evaluation.research.expert.packet import digest
+from evaluation.research.expert.representation import (
+    award_value,
+    closing_prompt,
+    closing_schema,
+    journal_schema_for_case,
+    parse_bound_journal_decision,
+)
+from evaluation.research.identities import IdentityMap
+from evaluation.research.live import COHORT
+from evaluation.research.mapping import (
+    CLAIM_KEYS,
+    STRUCTURED_KEYS,
+    normalize_claim,
+    normalize_subject_claims,
+)
+from evaluation.research.metrics import canonical_url, score, scope_matches
+from evaluation.research.schema import Capture, Dataset, Evidence, Observation, Prediction, Scope
+
+PROTOCOL_MODULES = frozenset(
+    "evaluation.research." + name
+    for name in (
+        "expert.blind_cli",
+        "expert.selector",
+        "expert.compact",
+        "expert.journal",
+        "expert.citations",
+        "expert.controller",
+        "expert.models",
+        "expert.packet",
+        "expert.representation",
+        "live",
+        "mapping",
+        "metrics",
+        "schema",
+        "identities",
+    )
+)
+
+
+def read(path: Path) -> Any:
+    return json.loads(path.read_text())
+
+
+def save(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+
+
+def file_hash(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def projected(item: dict[str, Any], identities: IdentityMap | None = None) -> list[tuple[str, Any]]:
+    """Only lossless fields already explicitly present in a submitted value."""
+    key, value = item["claim_key"], item["value"]
+    subject_value = award_value(key, value)
+    if subject_value is not None:
+        if identities is None:
+            raise ValueError("Award projection requires the frozen post-seal identity mapper")
+        subject, published = subject_value
+        raw = {
+            "subject_key": subject,
+            "normalized_value": published,
+            "source_url": item["source_url"],
+        }
+        return [
+            (output_key, published_value)
+            for output_key, published_value, _programme, _degree in normalize_subject_claims(
+                key, raw, identities
+            )
+        ]
+    if key in {"programme.exists", "program_exists"}:
+        if isinstance(value, dict) and type(value.get("exists")) is bool:
+            return [("programme.exists", value["exists"])]
+        return [("programme.exists", value)]
+    if key in CLAIM_KEYS or key in STRUCTURED_KEYS:
+        key, value, _, _ = normalize_claim(key, {"normalized_value": value})
+    return [(key, value)]
+
+
+def verified_cohort(root: Path, final: dict[str, Any], case_ids: Any) -> list[dict[str, Any]]:
+    entries = final["results"]
+    ids = [entry["case_id"] for entry in entries]
+    if final["stopped"] or len(ids) != len(set(ids)) or set(ids) != set(case_ids):
+        raise ValueError("All experts must be uniquely finalized before unsealing")
+    sealed = []
+    by_case = {entry["case_id"]: entry for entry in entries}
+    for case_id in case_ids:
+        recorded = read(root / "experts" / case_id / "result.json")
+        if recorded != by_case[case_id]:
+            raise ValueError("Aggregate differs from the per-case result being sealed")
+        sealed.append(recorded)
+    return sealed
+
+
+def immutable_seal(path: Path, seal: dict[str, Any]) -> dict[str, Any]:
+    if path.exists():
+        previous = read(path)
+        before = {k: v for k, v in previous.items() if k != "sealed_at"}
+        after = {k: v for k, v in seal.items() if k != "sealed_at"}
+        if before != after:
+            raise ValueError("Previous seal or fixed provenance differs")
+        return previous
+    save(path, seal)
+    return seal
+
+
+def exact_metering(result: dict[str, Any]) -> bool:
+    """Validate the entire cumulative ledger, not just its final sum."""
+    ledger = result.get("meter", [])
+    if not ledger or result.get("exact_metering") is not True:
+        return False
+    cumulative = 0
+    for entry in ledger:
+        elapsed = entry.get("elapsed_ms")
+        if type(elapsed) is not int or elapsed < 0:
+            return False
+        cumulative += elapsed
+        if entry.get("active_ms") != cumulative:
+            return False
+    return type(result.get("active_ms")) is int and result["active_ms"] == cumulative
+
+
+def protocol_hashes(folder: Path) -> list[dict[str, str]]:
+    selected = set(folder.glob("selector-*.decision.json"))
+    selected.update(folder.glob("selector-*.answer.json"))
+    selected.update(folder.glob("selector-*.meta.json"))
+    selected.update(folder.glob("selector-*.request.json"))
+    selected.update(folder.glob("selector-*.events.jsonl"))
+    selected.update(folder.glob("selector-*.stderr.txt"))
+    selected.update(folder.glob("validation-*.json"))
+    selected.update(folder.glob("checkpoint-*.json"))
+    selected.update(
+        folder / name
+        for name in (
+            "accepted-journal.json",
+            "journal-events.json",
+            "compact-citation-proof.json",
+            "isolation.json",
+        )
+    )
+    return [{"path": p.name, "sha256": file_hash(p)} for p in sorted(selected)]
+
+
+def validate_frozen_provenance(root: Path, orchestrator: Path) -> dict[str, Any]:
+    trial = read(root / "trial.json")
+    start = root / "trial-at-baseline-start.json"
+    if not start.is_file() or file_hash(start) != file_hash(root / "trial.json"):
+        raise ValueError("Trial changed after the pre-baseline freeze")
+    if trial.get("protocol_version") != "journal-v4" or not trial.get("harness_sha"):
+        raise ValueError("Trial lacks the frozen journal protocol/source")
+    scripts = trial.get("scripts", {})
+    required_scripts = (
+        orchestrator,
+        Path(__file__),
+        Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+    )
+    if any(scripts.get(str(path)) != file_hash(path) for path in required_scripts):
+        raise ValueError("Actual parent protocol differs from pre-run frozen scripts")
+    for name, expected in scripts.items():
+        if file_hash(Path(name)) != expected:
+            raise ValueError("Frozen parent script changed during research")
+    modules = trial.get("modules", {})
+    if set(modules) != PROTOCOL_MODULES:
+        raise ValueError("Frozen trial must bind the complete public protocol module set")
+    for name, expected in modules.items():
+        module = importlib.util.find_spec(name)
+        if module is None or module.origin is None or file_hash(Path(module.origin)) != expected:
+            raise ValueError("Frozen protocol module changed during research")
+    binding = trial.get("binding_registry", {})
+    from evaluation.research.live import REVIEWED_BINDINGS
+
+    if (
+        binding.get("path") != str(REVIEWED_BINDINGS.resolve())
+        or binding.get("sha256") != file_hash(REVIEWED_BINDINGS)
+        or type(trial.get("baseline_finalization_reserve_ms")) is not int
+        or trial.get("baseline_finalization_reserve_ms") != 1000
+    ):
+        raise ValueError("Trial must freeze unchanged private binding bytes and baseline reserve")
+    for case_id in COHORT:
+        baseline = read(root / "baseline" / case_id / "result.json")
+        packet = read(root / "baseline" / case_id / "public-packet.json")
+        if (
+            baseline["head_sha"] != trial["harness_sha"]
+            or packet["baseline_pipeline_sha"] != trial["harness_sha"]
+        ):
+            raise ValueError("Fresh baseline source differs from the frozen trial")
+        capture = Capture.model_validate_json(Path(baseline["capture"]).read_text())
+        if (
+            capture.pipeline_sha != trial["harness_sha"]
+            or capture.mode != "live"
+            or capture.config.get("strict_expert_budget") is not True
+            or capture.config.get("search_provider") != "exa_mcp"
+            or len(capture.observations) != 1
+            or capture.observations[0].case_id != case_id
+            or capture.config.get("case_budgets", {}).get(case_id) != baseline["budget"]
+        ):
+            raise ValueError("Baseline capture differs from its fresh controlled result")
+        validate_baseline_reserve(capture, baseline["budget"])
+        folder = root / "experts" / case_id
+        result = read(folder / "result.json")
+        run_ids = {
+            entry["run_id"]
+            for entry in result["meter"]
+            if entry["stage"] == "controlled_source_action"
+        }
+        recorded_ids = set()
+        sources = [
+            entry for entry in result["meter"] if entry["stage"] == "controlled_source_action"
+        ]
+        if len(sources) != len(run_ids):
+            raise ValueError("Each controlled source run must have one unique meter entry")
+        for path in folder.glob("controller-*/run.json"):
+            run = read(path)
+            if run.get("headSha") != trial["harness_sha"] or run.get("conclusion") != "success":
+                raise ValueError("Actual source controller differs from the frozen trial")
+            recorded_ids.add(run["run_id"])
+            source = next((entry for entry in sources if entry["run_id"] == run["run_id"]), None)
+            summary = read(path.parent / "artifact/summary.json")
+            dispatch = read(path.parent / "dispatch.json")
+            plan = json.loads(dispatch["inputs"]["plan"])
+            if (
+                source is None
+                or source["active_ms"] != summary["final"]["elapsed_ms"]
+                or source["elapsed_ms"] != source["active_ms"] - plan["start_ms"]
+            ):
+                raise ValueError("Source ledger differs from its independent controller clock")
+        if not run_ids or run_ids != recorded_ids:
+            raise ValueError("Controlled source ledger differs from recorded workflow executions")
+        isolation = read(folder / "isolation.json")
+        if not all(
+            isolation.get(k) is True
+            for k in ("allowed_read", "sealed_read_denied", "sealed_stdout_empty")
+        ):
+            raise ValueError("Real OS blinding proof failed")
+    return {
+        "scripts": scripts,
+        "modules": modules,
+        "harness_sha": trial["harness_sha"],
+        "binding_registry": binding,
+        "baseline_finalization_reserve_ms": 1000,
+    }
+
+
+def validate_baseline_reserve(capture: Capture, budget: dict[str, Any]) -> None:
+    """Bind exact declared original-clock deadlines; never fix recorded overruns."""
+    for values in (capture.config, budget):
+        if (
+            type(values.get("finalization_reserve_ms")) is not int
+            or values["finalization_reserve_ms"] != 1000
+            or type(values.get("source_work_deadline_ms")) not in (int, float)
+            or values["source_work_deadline_ms"] != 119000
+        ):
+            raise ValueError("Baseline must declare exact1000ms reserve within original120000ms")
+    for key in ("seconds_per_case", "child_active_seconds"):
+        if type(capture.config.get(key)) not in (int, float) or capture.config[key] != 120:
+            raise ValueError("Baseline original full clock must stay120 seconds")
+    if (
+        type(budget.get("max_active_seconds")) not in (int, float)
+        or budget["max_active_seconds"] != 120
+        or type(budget.get("max_fetcher_calls")) is not int
+        or budget["max_fetcher_calls"] != 60
+        or type(budget.get("max_search_queries")) is not int
+        or budget["max_search_queries"] != 6
+    ):
+        raise ValueError("Baseline declared original source caps changed")
+
+
+def baseline_within_budget(budget: dict[str, Any]) -> bool:
+    for key, limit in (("elapsed_ms", 120000), ("fetcher_calls", 60), ("search_queries", 6)):
+        if type(budget.get(key)) is not int or not 0 <= budget[key] <= limit:
+            return False
+    return (
+        budget.get("stop_reason") != "http_429"
+        and budget.get("process_error") is None
+        and budget.get("active_checkpoint_available") is True
+    )
+
+
+def verify_navigation_binding(
+    folder: Path, trace: dict[str, Any], packet: dict[str, Any], events: list[dict[str, Any]]
+) -> None:
+    """Each actual request must be the recorded model choice at its accepted turn."""
+    from evaluation.research.expert.controller import _search_domains
+
+    by_turn = {event["turn"]: event for event in events}
+    seen_paths = []
+    for directory in sorted(folder.glob("controller-*")):
+        if not directory.is_dir() or re.fullmatch(r"controller-[0-9]{2}", directory.name) is None:
+            raise ValueError("Malformed controller source-turn directory")
+        turn = int(directory.name.removeprefix("controller-"))
+        event = by_turn.get(turn)
+        if event is None:
+            raise ValueError("An actual controller run requires its accepted model action")
+        decision = parse_journal_decision(
+            (folder / f"selector-{turn:02d}.decision.json").read_text()
+        )
+        if decision.kind != "action" or decision.action is None or decision.action.tool == "view":
+            raise ValueError("Only an accepted source navigation action can dispatch a controller")
+        requested = decision.action.controller_request()
+        dispatch = read(directory / "dispatch.json")
+        plan = json.loads(dispatch["inputs"]["plan"])
+        if (
+            plan.get("actions") != [requested]
+            or plan.get("case_id") != trace["case_id"]
+            or plan.get("official_domains") != [packet["cases"][0]["domain"]]
+            or plan.get("strict_budget") is not True
+            or plan.get("max_calls") != 60
+            or plan.get("max_ms") != 120000
+            or plan.get("max_search_queries") != 6
+            or plan.get("action_deadline_ms") != 95000
+            or plan.get("budget_origin") != "independent_full_budget"
+        ):
+            raise ValueError(
+                "Dispatched source plan differs from the accepted model request/policy"
+            )
+        expected = dict(requested)
+        if expected["tool"] == "search_provider":
+            expected["domains"] = _search_domains(expected, tuple(plan["official_domains"]))
+        summary = read(directory / "artifact/summary.json")
+        fresh = summary.get("actions", [])
+        if len(fresh) != 1 or fresh[0].get("request") != expected:
+            raise ValueError("Actual controller request differs from the accepted model navigation")
+        produced = fresh[0]
+        index = len(seen_paths)
+        if event["source_action_count"] != index or index >= len(trace["actions"]):
+            raise ValueError("Controller chronology differs from the accepted action receipt")
+        action = trace["actions"][index]
+        keys = (
+            "at",
+            "tool",
+            "request",
+            "outcome",
+            "outcome_status",
+            "policy_mode",
+            "raw_log_path",
+            "raw_log_sha256",
+            "elapsed_ms",
+            "fetcher_calls_cumulative",
+            "elapsed_ms_cumulative",
+            "search_queries_cumulative",
+        )
+        if (
+            any(action[key] != produced[key] for key in keys)
+            or action["observed_before"] != decision.observation
+            or action.get("observed_from_step") != (index or None)
+        ):
+            raise ValueError("Final trace action differs from its controller/model source record")
+        seen_paths.append(produced["raw_log_path"])
+    if seen_paths != [action["raw_log_path"] for action in trace["actions"]]:
+        raise ValueError("Every final trace action must come from an accepted model dispatch")
+
+
+def verify_journal_replay(
+    folder: Path, trace: dict[str, Any], packet: dict[str, Any], log_dir: Path, citation_guard: Any
+) -> dict[str, Any]:
+    """Each accepted checkpoint must reproduce from completed original decisions."""
+    result = read(folder / "result.json")
+    events = read(folder / "journal-events.json")
+    if not isinstance(events, list) or not events:
+        raise ValueError("Journal lacks explicit accepted decision checkpoints")
+    current = AcceptedJournal.initial()
+    prior_turn, prior_count = 0, 0
+    prior_at = datetime.fromisoformat(trace["started_at"])
+    final_at = datetime.fromisoformat(trace["ended_at"])
+    commit_seen = False
+    for event in events:
+        turn, count = event["turn"], event["source_action_count"]
+        at = datetime.fromisoformat(event["at"])
+        if (
+            type(turn) is not int
+            or turn <= prior_turn
+            or type(count) is not int
+            or not prior_count <= count <= len(trace["actions"])
+            or at.tzinfo is None
+            or not prior_at <= at <= final_at
+            or commit_seen
+        ):
+            raise ValueError("Accepted journal event chronology/step count is invalid")
+        request = read(folder / f"selector-{turn:02d}.request.json")
+        if (
+            event.get("selector_request_sha256") != digest(request)
+            or request.get("source_action_count") != count
+            or type(request.get("source_action_count")) is not int
+            or request.get("processed_through_action_count") != prior_count
+            or type(request.get("processed_through_action_count")) is not int
+            or event.get("processed_through_action_count") != count
+            or type(event.get("processed_through_action_count")) is not int
+            or event.get("selector_mode") != request.get("selector_mode")
+        ):
+            raise ValueError("Accepted source-processing receipt or selector request changed")
+        mode = request.get("selector_mode")
+        if mode not in ("minimal_commit", "data_closure", "research"):
+            raise ValueError("Unknown frozen selector mode")
+        if mode == "minimal_commit":
+            if prior_count != count or not count:
+                raise ValueError("Hash-only closure cannot acknowledge an unprocessed source")
+            if request["prompt"] != closing_prompt(journal_sha256=current.sha256) or request[
+                "schema"
+            ] != closing_schema(journal_sha256=current.sha256):
+                raise ValueError("Hash-only closure must use only the minimal frozen envelope")
+        else:
+            expected_schema = journal_schema_for_case(
+                journal_sha256=current.sha256, canonical_university=packet["cases"][0]["university"]
+            )
+            if mode == "data_closure":
+                expected_schema["properties"]["kind"]["enum"] = ["record", "submit"]
+            if (
+                request["schema"] != expected_schema
+                or request["prompt"].get("accepted_journal", {}).get("sha256") != current.sha256
+                or request["prompt"].get("processed_through_action_count") != prior_count
+            ):
+                raise ValueError(
+                    "Data selector must bind its exact prior journal and source receipt"
+                )
+            visible_steps = {
+                item["step"] for item in request["prompt"].get("current_source_views", [])
+            }
+            if count > prior_count and count not in visible_steps:
+                raise ValueError(
+                    "A new source needs its recorded view in the data-bearing selector"
+                )
+        decision = parse_bound_journal_decision(
+            (folder / f"selector-{turn:02d}.decision.json").read_text(),
+            journal_sha256=current.sha256,
+            canonical_university=packet["cases"][0]["university"],
+            closing_only=mode == "minimal_commit",
+        )
+        if mode == "data_closure" and decision.kind == "action":
+            raise ValueError("Data closure cannot dispatch a source action")
+        if (
+            count > prior_count
+            and decision.kind == "submit"
+            and not decision.facts
+            and not decision.question_findings
+        ):
+            raise ValueError("Hash-only submit cannot acknowledge a pending recorded source")
+        meta = read(folder / f"selector-{turn:02d}.meta.json")
+        selector_entries = [
+            entry
+            for entry in result["meter"]
+            if entry.get("turn") == turn
+            and entry["stage"] in {"checkpoint_selector", "closing_selector"}
+        ]
+        if (
+            type(meta.get("returncode")) is not int
+            or meta["returncode"] != 0
+            or meta.get("error_kind") is not None
+            or type(meta.get("elapsed_ms")) is not int
+            or meta["elapsed_ms"] < 0
+            or len(selector_entries) != 1
+            or selector_entries[0]["elapsed_ms"] != meta["elapsed_ms"]
+        ):
+            raise ValueError("Accepted checkpoint selector process did not complete cleanly")
+        raw_answer = (folder / f"selector-{turn:02d}.answer.json").read_text()
+        selector_answer((folder / f"selector-{turn:02d}.events.jsonl").read_text(), raw_answer)
+        if (
+            parse_bound_journal_decision(
+                raw_answer,
+                journal_sha256=current.sha256,
+                canonical_university=packet["cases"][0]["university"],
+                closing_only=mode == "minimal_commit",
+            )
+            != decision
+        ):
+            raise ValueError("Accepted checkpoint differs from its completed tool-free selector")
+        if (
+            digest(decision.model_dump(mode="json")) != event["decision_sha256"]
+            or current.sha256 != event["prior_journal_sha256"]
+        ):
+            raise ValueError("Accepted decision or prior journal hash changed")
+        candidate = current.candidate(
+            decision, trace["actions"][:count], ended_at=at, case_id=trace["case_id"]
+        )
+        snapshot = AcceptedJournal.from_snapshot(read(folder / f"checkpoint-{turn:02d}.json"))
+        if (
+            snapshot.snapshot() != candidate.snapshot()
+            or candidate.sha256 != event["accepted_journal_sha256"]
+        ):
+            raise ValueError("Accepted checkpoint snapshot changed")
+        submission = candidate.as_submission()
+        expanded = expand_submission(
+            submission, trace["actions"][:count], ended_at=at, case_id=trace["case_id"]
+        )
+        proof: list[dict[str, Any]] = []
+        if count:
+            prefix = {
+                **trace,
+                "ended_at": event["at"],
+                "actions": trace["actions"][:count],
+                **expanded,
+            }
+            validate_trace(prefix, packet, logs_dir=log_dir)
+            proof = citation_guard(
+                submission, trace["actions"][:count], logs_dir=log_dir, packet=packet
+            )
+        elif submission.facts or submission.question_findings or decision.kind != "action":
+            raise ValueError("Empty bootstrap must contain only a navigation decision")
+        if digest(proof) != event["citation_proof_sha256"]:
+            raise ValueError("Accepted checkpoint citation proof changed")
+        current = candidate
+        prior_turn, prior_count, prior_at = turn, count, at
+        commit_seen = decision.kind == "submit"
+    verify_navigation_binding(folder, trace, packet, events)
+    final_journal = AcceptedJournal.from_snapshot(read(folder / "accepted-journal.json"))
+    if current.snapshot() != final_journal.snapshot() or current.sha256 != result["journal_sha256"]:
+        raise ValueError("Final journal differs from explicitly accepted checkpoints")
+    if current.as_submission().model_dump(mode="json") != read(folder / "compact-submission.json"):
+        raise ValueError("Mechanical final submission changed the accepted journal")
+    if (
+        result.get("explicit_commit") is not commit_seen
+        or result.get("accepted_turns") != len(events)
+        or (result.get("completion_kind") == "explicit_commit") != commit_seen
+    ):
+        raise ValueError("Explicit commit status or accepted event count changed")
+    if (
+        type(result.get("processed_through_action_count")) is not int
+        or result["processed_through_action_count"] != prior_count
+        or result.get("all_recorded_sources_processed")
+        is not (prior_count == len(trace["actions"]))
+    ):
+        raise ValueError("Final source processing receipt differs from accepted checkpoints")
+    if not exact_metering(result):
+        raise ValueError("Journal clock ledger is not exact")
+    return {
+        "events": len(events),
+        "final_journal_sha256": current.sha256,
+        "explicit_commit": commit_seen,
+        "events_file_sha256": file_hash(folder / "journal-events.json"),
+        "snapshot_file_sha256": file_hash(folder / "accepted-journal.json"),
+    }
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--dataset", type=Path, required=True)
+    parser.add_argument("--orchestrator", type=Path, required=True)
+    args = parser.parse_args()
+    root = args.root
+    final = read(root / "experts-results.json")
+    sealed_results = verified_cohort(root, final, COHORT)
+    frozen_provenance = validate_frozen_provenance(root, args.orchestrator)
+    citation_guard = runpy.run_path(str(args.orchestrator))["validate_all_fact_citations"]
+    submissions, traces, log_dirs = [], {}, {}
+    for case_id in COHORT:
+        folder = root / "experts" / case_id
+        result, packet = (
+            read(folder / "result.json"),
+            read(root / "baseline" / case_id / "public-packet.json"),
+        )
+        if not result.get("validated"):
+            raise ValueError(f"Unvalidated submission: {case_id}")
+        trace = read(folder / "trace.json")
+        latest = sorted(folder.glob("controller-*/artifact/summary.json"))[-1]
+        log_dir = latest.parent / "logs"
+        validate_trace(trace, packet, logs_dir=log_dir)
+        if digest(trace) != result["trace_sha256"]:
+            raise ValueError("A submitted trace changed before unsealing")
+        compact_path = folder / "compact-submission.json"
+        if trace["proposals"] and not compact_path.is_file():
+            raise ValueError("Proposals lack their original compact coordinates")
+        if compact_path.is_file():
+            compact = parse_compact_decision(compact_path.read_text())
+            expanded = expand_submission(
+                compact,
+                trace["actions"],
+                ended_at=datetime.fromisoformat(trace["ended_at"]),
+                case_id=case_id,
+            )
+            if any(expanded[key] != trace[key] for key in ("proposals", "question_findings")):
+                raise ValueError("Final trace differs from its original compact submission")
+            proof = citation_guard(compact, trace["actions"], logs_dir=log_dir, packet=packet)
+            if digest(proof) != result.get("citation_proof_sha256") or proof != read(
+                folder / "compact-citation-proof.json"
+            ):
+                raise ValueError("Final compact citation proof changed")
+        journal_replay = verify_journal_replay(folder, trace, packet, log_dir, citation_guard)
+        traces[case_id], log_dirs[case_id] = trace, log_dir
+        submissions.append(
+            {
+                "case_id": case_id,
+                "trace_sha256": digest(trace),
+                "trace_file_sha256": file_hash(folder / "trace.json"),
+                "result_sha256": file_hash(folder / "result.json"),
+                "packet_sha256": digest(packet),
+                "compact_submission_sha256": file_hash(compact_path)
+                if compact_path.is_file()
+                else None,
+                "journal_replay": journal_replay,
+                "protocol_artifacts": protocol_hashes(folder),
+                "baseline_result_sha256": file_hash(root / "baseline" / case_id / "result.json"),
+                "baseline_capture_sha256": file_hash(
+                    Path(read(root / "baseline" / case_id / "result.json")["capture"])
+                ),
+                "raw_logs": [
+                    {"path": a["raw_log_path"], "sha256": a["raw_log_sha256"]}
+                    for a in trace["actions"]
+                ],
+            }
+        )
+    seal = {
+        "sealed_at": datetime.now(UTC).isoformat(),
+        "count": len(submissions),
+        "all_traces_validated_with_raw_logs": True,
+        "submissions": submissions,
+        "orchestrator_sha256": file_hash(args.orchestrator),
+        "legacy_transport_sha256": file_hash(Path("/tmp/unimatch-expert500-pilot-v1-frozen.py")),
+        "trial_file_sha256": file_hash(root / "trial.json"),
+        "trial_at_baseline_start_file_sha256": file_hash(root / "trial-at-baseline-start.json"),
+        "cohort_results_sha256": file_hash(root / "experts-results.json"),
+        "all_compact_fact_locations_validated": True,
+        "all_accepted_journal_deltas_replayed": True,
+        "scorer_file_sha256": file_hash(Path(__file__)),
+        "frozen_provenance": frozen_provenance,
+    }
+    seal_path = root / "submission-seal.json"
+    seal = immutable_seal(seal_path, seal)
+    # Private identity bytes are pinned before calls; content is loaded only now,
+    # after every result/raw log/accepted checkpoint has been immutably sealed.
+    binding = frozen_provenance["binding_registry"]
+    binding_bytes = Path(binding["path"]).read_bytes()
+    if hashlib.sha256(binding_bytes).hexdigest() != binding["sha256"]:
+        raise ValueError("Private identity registry drifted after immutable seal")
+    identities = IdentityMap.model_validate_json(binding_bytes)
+    baseline_parts = [
+        Capture.model_validate_json(
+            Path(read(root / "baseline" / c / "result.json")["capture"]).read_text()
+        )
+        for c in COHORT
+    ]
+    frozen_shas = {part.pipeline_sha for part in baseline_parts}
+    if len(frozen_shas) != 1:
+        raise ValueError("Baseline harness source drift")
+    baseline = Capture(
+        pipeline_sha=baseline_parts[0].pipeline_sha,
+        captured_at=baseline_parts[0].captured_at,
+        mode="live",
+        config={
+            "independent_ten_case_runs": True,
+            "strict_expert_budget": True,
+            "search_provider": "exa_mcp",
+            "max_pages": 60,
+            "seconds_per_case": 120,
+            "max_search_queries": 6,
+            "run_ids": {c: read(root / "baseline" / c / "result.json")["run_id"] for c in COHORT},
+        },
+        observations=[obs for part in baseline_parts for obs in part.observations],
+    )
+    save(root / "baseline-capture.json", baseline.model_dump(mode="json"))
+    normalization, expert_observations, excluded, by_proposal = [], [], [], {}
+    for case_id, trace in traces.items():
+        predictions = []
+        for index, proposal in enumerate(trace["proposals"]):
+            by_proposal[case_id, index] = []
+            for key, value in projected(proposal, identities):
+                try:
+                    evidence = Evidence(
+                        url=proposal["source_url"],
+                        excerpt=proposal["excerpt"],
+                        scope=Scope.model_validate(proposal["scope"]),
+                        accessed_on=proposal["accessed_on"],
+                        source_type="official",
+                    )
+                    prediction = Prediction(key=key, value=value, evidence=evidence)
+                    predictions.append(prediction)
+                    by_proposal[case_id, index].append(prediction)
+                    normalization.append(
+                        {
+                            "case_id": case_id,
+                            "proposal_index": index,
+                            "input_key": proposal["claim_key"],
+                            "input_value": proposal["value"],
+                            "key": key,
+                            "value": value,
+                        }
+                    )
+                except ValueError as exc:
+                    excluded.append(
+                        {"case_id": case_id, "proposal_index": index, "reason": str(exc)[:500]}
+                    )
+        expert_observations.append(
+            Observation(
+                case_id=case_id,
+                predictions=predictions,
+                programme_urls=list(
+                    dict.fromkeys(
+                        p["source_url"]
+                        for f in trace["question_findings"]
+                        if f["question"] == "Q0" and f["status"] == "found"
+                        for p in (trace["proposals"][i] for i in f["proposal_indices"])
+                    )
+                ),
+            )
+        )
+    expert_capture = Capture(
+        pipeline_sha="blind-experts@" + next(iter(frozen_shas)),
+        captured_at=seal["sealed_at"],
+        mode="live",
+        config={
+            "unreviewed_proposals": True,
+            "comparison_mode": "independent_full_budget",
+            "source_harness_sha": next(iter(frozen_shas)),
+            "lossless_projection": True,
+            "excluded": excluded,
+        },
+        observations=expert_observations,
+    )
+    save(root / "expert-capture.json", expert_capture.model_dump(mode="json"))
+    save(root / "expert-value-projections.json", normalization)
+    # The only reviewed-label read follows the immutable seal and deterministic
+    # projection; no answer label participates in representation or identity work.
+    dataset_bytes = args.dataset.read_bytes()
+    dataset_sha256 = hashlib.sha256(dataset_bytes).hexdigest()
+    dataset = Dataset.model_validate_json(dataset_bytes)
+    baseline_score, expert_score = score(dataset, baseline), score(dataset, expert_capture)
+    save(root / "baseline-score.json", baseline_score)
+    save(root / "expert-score.json", expert_score)
+    rows = []
+    by_baseline = {o.case_id: o for o in baseline.observations}
+    by_expert = {o.case_id: o for o in expert_capture.observations}
+    for result in sealed_results:
+        case_id = result["case_id"]
+        trace, observation = traces[case_id], by_baseline[case_id]
+        budget = read(root / "baseline" / case_id / "result.json")["budget"]
+        raw_paths = list((root / "baseline" / case_id / "artifact").glob("capture/**/*.raw.json"))
+        raw = read(raw_paths[0]) if len(raw_paths) == 1 else None
+        row_raw = (raw or {}).get("canary", {}).get("institutions", [])
+        core_completeness = row_raw[0]["completeness"] if len(row_raw) == 1 else None
+        # V1 failed to meter a timed-out selector in finally. Preserve the
+        # recorded value; the client timeout is a lower bound, not an exact
+        # measurement or a hidden extra research allowance.
+        timeout_lower_bound = None
+        error = result.get("error", "")
+        match = re.search(r"timed out after ([\d.]+) seconds", error)
+        if match and "Command '['/usr/bin/sandbox-exec'" in error:
+            timeout_lower_bound = round(float(match.group(1)) * 1000)
+        matches, misses = {}, []
+        for finding in trace["question_findings"]:
+            question = finding["question"]
+            if finding["status"] != "found":
+                matches[question] = None
+                continue
+            wanted = [p for i in finding["proposal_indices"] for p in by_proposal[case_id, i]]
+
+            def question_scope(prediction: Prediction) -> Scope:
+                assert prediction.evidence is not None
+                scope = prediction.evidence.scope
+                if question == "Q0":
+                    # Q0 requires exact programme identity + bachelor degree.
+                    # The existing capture mapper does not emit field, whereas
+                    # programme identity already establishes the CS match.
+                    return Scope(
+                        university=scope.university, programme=scope.programme, degree=scope.degree
+                    )
+                return scope
+
+            matched = bool(wanted) and all(
+                any(
+                    p.key == q.key
+                    and p.value == q.value
+                    and p.evidence
+                    and q.evidence
+                    and scope_matches(question_scope(p), q.evidence.scope)
+                    for q in observation.predictions
+                )
+                for p in wanted
+            )
+            matches[question] = matched
+            if not matched:
+                source = canonical_url(finding["evidence"][0]["source_url"])
+                outcomes = [
+                    p.model_dump()
+                    for p in observation.page_outcomes
+                    if canonical_url(p.url) == source
+                ]
+                cause = (
+                    "ACCESS"
+                    if any(p["category"] in {"fetch-failed", "unreadable"} for p in outcomes)
+                    else "CLASSIFIER"
+                    if any(p["category"] == "classifier-rejected" for p in outcomes)
+                    else "EXTRACTOR"
+                    if any(p["category"] == "no-pattern-match" for p in outcomes)
+                    else "BUDGET"
+                    if budget.get("stop_reason")
+                    in {"wall_clock_budget_exhausted", "page_budget_exhausted"}
+                    else "UNRESOLVED_CAUSE"
+                )
+                misses.append(
+                    {
+                        "question": question,
+                        "cause": cause,
+                        "source_url": source,
+                        "baseline_page_outcomes": outcomes,
+                        "baseline_stop_reason": budget.get("stop_reason"),
+                        "diagnostic_only": True,
+                        "programme_confirmation_queue_absent": question == "Q0"
+                        and source
+                        not in {canonical_url(u) for u in (observation.ranked_urls or [])},
+                    }
+                )
+        rows.append(
+            {
+                "case_id": case_id,
+                "expert_status": result["status"],
+                "expert_error_type": result.get("error", "").split(":", 1)[0] or None,
+                "expert_active_ms_recorded": result["active_ms"],
+                "completion_kind": result.get("completion_kind"),
+                "accepted_turns": result.get("accepted_turns"),
+                "rejected_checkpoints": len(result.get("turn_errors", [])),
+                "unmetered_final_selector_timeout_lower_bound_ms": timeout_lower_bound,
+                "expert_reads": trace["actions"][-1]["fetcher_calls_cumulative"],
+                "expert_queries": trace["actions"][-1]["search_queries_cumulative"],
+                "expert_questions": {
+                    f["question"]: f["status"] for f in trace["question_findings"]
+                },
+                "algorithm_matches_expert": matches,
+                "miss_diagnosis": misses,
+                "baseline_budget": budget,
+                "baseline_raw_keys": list(raw or {}),
+                "raw_row_keys": list(row_raw[0]) if row_raw else [],
+                "baseline_score": next(
+                    r for r in baseline_score["cases"] if r["case_id"] == case_id
+                ),
+                "expert_score": next(r for r in expert_score["cases"] if r["case_id"] == case_id),
+                "algorithm_core_completeness": core_completeness,
+            }
+        )
+
+    def metered(result: dict[str, Any]) -> bool:
+        return exact_metering(result)
+
+    eligible = all(
+        r["status"] == "submitted"
+        and not r.get("error")
+        and not r.get("turn_errors")
+        and r.get("completion_kind") in {"explicit_commit", "budget_checkpoint"}
+        and r.get("protocol_version") == "journal-v4"
+        and r["active_ms"] <= 120000
+        and r.get("all_recorded_sources_processed") is True
+        and metered(r)
+        and r.get("requested_model") == "gpt-6-astra"
+        for r in sealed_results
+    )
+    eligible = eligible and all(
+        baseline_within_budget(row["baseline_budget"])
+        and by_baseline[row["case_id"]].error != "CAPTURE_IN_PROGRESS"
+        for row in rows
+    )
+    save(
+        root / "comparison.json",
+        {
+            "seal_sha256": digest(seal),
+            "dataset_file_sha256": dataset_sha256,
+            "baseline_metrics": baseline_score["metrics"],
+            "expert_metrics": expert_score["metrics"],
+            "cases": rows,
+            "protocol_eligible": eligible,
+            "protocol_gate": eligible
+            and expert_score["metrics"]["claim_recall"]["numerator"] >= 40,
+        },
+    )
+    print(
+        json.dumps(
+            {
+                "baseline": baseline_score["metrics"]["claim_recall"],
+                "expert": expert_score["metrics"]["claim_recall"],
+                "expert_precision": expert_score["metrics"]["claim_precision"],
+                "sealed_submissions": len(submissions),
+            },
+            ensure_ascii=False,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

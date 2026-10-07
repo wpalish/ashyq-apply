@@ -1,0 +1,95 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____ test_v11_model_origin_is_durable_before_peer_can_publish_cancellation _____
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-486/test_v11_model_origin_is_durab0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1084e4bc0>
+
+    def test_v11_model_origin_is_durable_before_peer_can_publish_cancellation(tmp_path, monkeypatch):
+        trial = tmp_path / "trial"
+        trial.mkdir()
+        peer = V11TransportHarness(tmp_path / "peer")
+        model_runtime = runpy.run_path(str(PILOT))["record_model_stop"].__globals__
+        shared = threading.Event()
+        peer.original.stop = model_runtime["STOP"] = shared
+        peer_waiting = threading.Event()
+        model_receipt_waiting = threading.Event()
+        peer_finished = threading.Event()
+        errors = []
+        observed_cascade = []
+        original_open = Path.open
+    
+        class DelayedModelReceipt:
+            def __init__(self, output):
+                self.output = output
+    
+            def __enter__(self):
+                return self
+    
+            def __exit__(self, *args):
+                self.output.close()
+    
+            def __getattr__(self, name):
+                return getattr(self.output, name)
+    
+            def write(self, value):
+                model_receipt_waiting.set()
+                assert peer_finished.wait(timeout=10)
+                return self.output.write(value)
+    
+        def opened(path, mode="r", *args, **kwargs):
+            output = original_open(path, mode, *args, **kwargs)
+            return DelayedModelReceipt(output) if path == trial / "model-batch-stop.json" and mode == "x" else output
+    
+        monkeypatch.setattr(Path, "open", opened)
+        old_command = peer.command
+    
+        def peer_command(argv, **kwargs):
+            if argv[:3] == ["gh", "run", "view"]:
+                peer.calls.append({"argv": argv, "at": peer.clock.seconds, "timeout": kwargs["timeout"]})
+                if not observed_cascade:
+                    peer_waiting.set()
+                    assert model_receipt_waiting.wait(timeout=10)
+                    observed_cascade.append(shared.is_set())
+                pending = observed_cascade[0] and not peer.cancelled
+                return json.dumps({"status": "in_progress" if pending else "completed",
+                                   "conclusion": None if pending else "cancelled" if peer.cancelled else "success",
+                                   "headSha": HEAD, "url": "https://example.invalid/run/123"})
+            return old_command(argv, **kwargs)
+    
+        peer.command = peer_command
+        refusal = {"kind": "model_usage_limit", "message": "Synthetic authoritative model refusal"}
+        finished_at = datetime.now(UTC).isoformat()
+    
+        def peer_worker():
+            try:
+                assert peer.run_workflow(trial_root=trial) == (123, HEAD)
+            except Exception as exc:
+                errors.append(exc)
+            finally:
+                peer_finished.set()
+    
+        def model_worker():
+            try:
+                assert peer_waiting.wait(timeout=10)
+                model_runtime["record_model_stop"](trial, "origin", 3, refusal, finished_at)
+            except Exception as exc:
+                errors.append(exc)
+    
+        threads = [threading.Thread(target=peer_worker), threading.Thread(target=model_worker)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join(timeout=15)
+            assert not thread.is_alive()
+        assert errors == []
+>       assert observed_cascade == [False] and not peer.cancelled
+E       assert ([True] == [False]
+E         
+E         At index 0 diff: True != False
+E         Use -v to get more diff)
+
+/tmp/test_unimatch_expert500_journal_pilot_v11.py:2043: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_journal_pilot_v11.py::test_v11_model_origin_is_durable_before_peer_can_publish_cancellation
+1 failed, 93 deselected in 0.51s

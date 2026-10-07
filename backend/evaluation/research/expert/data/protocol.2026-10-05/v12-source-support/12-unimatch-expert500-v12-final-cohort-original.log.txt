@@ -1,0 +1,110 @@
+cwd=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend
+env=PYTHONPATH=. MYPYPATH=.
+argv=["/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/python", "-m", "pytest", "-o", "addopts=--strict-markers", "-q", "/tmp/test_unimatch_expert500_actual_cohort_v12.py"]
+helper_count=12
+module_count=21
+before_sha256={"/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/blind_cli.py": "c529d0847008701c6f6b2711fd0ac10207d9c4dcd22bfac06dee532fc0ffd4aa", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/citations.py": "ad857e4bb3c58b9afd18e11bd2207f18b7058396ecba343758bbd1f369d4136e", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/compact.py": "1fdc7a62a29771def5420c2a607ec7036075683a43f036921e6971d934258e3e", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/controller.py": "ff29ee1c884e6ce310cce9eb0d873f62fc8f467db164aa9eff6f78197f8bdeb2", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/data/protocol.2026-10-05/v12-neutral-provenance/manifest.json": "ad3ea6a3ee9f2744d20c2e5a08df977abf473060923fb83db82b0c014bf41cb3", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/journal.py": "abe047f36851c5f3a83eb4b4dd5927906c98159a533031311d045c9c3087fda5", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/location_feedback.py": "2aeff8dada5ac712ca76bb2ff1af3b1c3472d5beb18bad1982be9d7361b99656", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/model_failure.py": "5ff1b58a93864fc9f95fb47c8564ad5e5eae28b17c4f7400c397a6ab26cf0fb5", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/models.py": "6dfdecc74b22f9cad8e27943a5b6779f978e4bf0a73ce9ec56b27d3a101ebe56", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/network_budget.py": "c37afa4435e4d7fb1bb02fea5ca6843cfee138f12bbf61d903b18bd80d6e0c87", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/network_report.py": "9b008a2f896c08f140b7552f575b39e03bc1ec90a98f9a725c8db9a53cc195d9", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/network_turn_policy.py": "931a8fd22638003fe8b9918936858203536ebf418ecf166773e5ed3594e8d1eb", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/packet.py": "6541bfc0fcf659bef1f69b16ee64d4b7b0bc95b06f98d654a3b1a59cce60fa0d", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/question_contract.py": "c8c5d56f56fa83d40f83a879315898ccae8dc860314f7754f0843dd4348c29d7", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/representation.py": "8d472f86ddbc17bba938f97b0f46790bf77b0624307f5077f8e324ac0d14af9c", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/selector.py": "17bfe9fb196cec0d2d4eead2575f9bd57a0a01974a1b3a8c1f8a3e4937e501e6", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/workspace_policy.py": "d87e89056b1501cb906bd7ced349e4112ea988b61f594c3883d4d2e4744271f9", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/identities.py": "459f6e735e0b4e77b0d8dc5e6a53b14f187efedc628f950a63daba3ea8f97619", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/live.py": "f3e67276795e8b338fbd13077b7557de82a087ad164beaa1c157c3dd9faf3326", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/mapping.py": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/metrics.py": "4c916cf8a83b49025496c7abd7b0803e8e25e63b246e222aa71fb65bf0c80dff", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/schema.py": "313a92ebeadcd534b8731b5a3254a2f00ffbd9d99a16795b79d1d7a2d41ce924", "/tmp/test_unimatch_expert500_actual_cohort_v11.py": "aba296c55aec76878ea55f9fab1f4d12d06a0aba87fa5ee36f97540281aecb42", "/tmp/test_unimatch_expert500_actual_cohort_v12.py": "406ed74b10ceca9ba1d6739b5558c83ab72727a38873e31376d22fa2c078b877", "/tmp/test_unimatch_expert500_journal_pilot_v12.py": "fcbca530b952625d4e8fbe752fbf45692ee7c380f3f6c26fd83c9ad9e8a483a9", "/tmp/test_unimatch_expert500_journal_report_v12.py": "22399055992901771107e48abb0c4e3ed987525fc9396797d0ecfbce75519d7d", "/tmp/test_unimatch_expert500_workflow_v12.py": "c048d038f32c0a5d9479916377a0d5edf453b0c77c0b33a1c08c88a13e254e31", "/tmp/unimatch-expert500-export-v12.py": "224c00558dd4fe7d5e6331414c40f2c40a692a77c9ea8407bc0890843c430f09", "/tmp/unimatch-expert500-freeze-v11.py": "049c7c0dfa166b60f36f40c289118f5f0224ea98e823be864e90830d8903d69f", "/tmp/unimatch-expert500-freeze-v12.py": "63e1e6706c9a2ebd71916a848dc694f8cfdb069b11ea6c07879c02116114c239", "/tmp/unimatch-expert500-isolation-preflight-v11.py": "d68f6e84e8edc16dd38156b4174055a605616257ac66e02fd28ed9d469e9994c", "/tmp/unimatch-expert500-isolation-preflight-v12.py": "858a7ab2a6275e95f940bf2578b47691673d0458ee5b4bec38ca506f3aaa8322", "/tmp/unimatch-expert500-journal-pilot-v12.py": "1922e117436afdc001bef7cbf867e8b91db4062fd0b98cfce044c3b980a74b72", "/tmp/unimatch-expert500-journal-report-v12.py": "5a36256591fe4b76186a36448c4c6a3d0a8eeab989b427eb4031ebf00405a4fb", "/tmp/unimatch-expert500-launch-v11.py": "a0da8327500717ba5c3c46b17acf8c84badb9a48d18246f7b0a24c5e182bf39f", "/tmp/unimatch-expert500-launch-v12.py": "365c2129bbca97c2eb1ba9a6791ae04c3e5bf85d60d5635db250f80d158f6327", "/tmp/unimatch-expert500-neutral-v11.py": "e83132685581e02561e277c5e9657881e9fc97d64f416d95048c1cbdc9be2fd7", "/tmp/unimatch-expert500-neutral-v12.py": "b691f3b3373ae76ddfc1eac6535c49841f6ce6a86b33953890757f6df0241455", "/tmp/unimatch-expert500-neutral-v7.py": "01506b5368e623f3237a7b03d1d3d6f11024232a7e866d86c91d9bc92b806029", "/tmp/unimatch-expert500-pilot-v1-frozen.py": "9eaa88effd037d17937bd96b16d341c711f02ac2825c74d0d6a1f5f95bb2c5a7", "/tmp/unimatch-expert500-v12-neutral-result.json": "266946fc74132049b9b63f205d66564d4647d1aa2810e02e8575eca946b02bd7"}
+................................F....................................... [ 42%]
+........................................................................ [ 84%]
+..........................                                               [100%]
+=================================== FAILURES ===================================
+_ test_actual_baseline_batch_failure_is_sticky_and_cannot_start_any_expert[http_429] _
+
+actual_trial = ActualTrial(repo=PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-516/test...2026/work/ashyq-apply', '/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply'])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e1fb800>
+failure = 'http_429'
+
+    @pytest.mark.parametrize("failure", ["exception", "http_429"])
+    def test_actual_baseline_batch_failure_is_sticky_and_cannot_start_any_expert(
+        actual_trial, monkeypatch, failure
+    ):
+        fixture = actual_trial
+        calls: list[str] = []
+        expert_calls: list[str] = []
+        trial_bytes = (fixture.root / "trial.json").read_bytes()
+    
+        if failure == "exception":
+    
+            def failed_baseline(repo: Path, ref: str, root: Path, case_id: str) -> dict[str, Any]:
+                assert repo == fixture.repo and ref == REF and root == fixture.root
+                calls.append(case_id)
+                raise RuntimeError("Synthetic baseline failure; no source dispatched")
+    
+            fixture.parent["baseline"] = failed_baseline
+        else:
+            # Exercise the actual baseline adapter's recorded429 -> STOP transition.
+            def completed429(
+                repo: Path, ref: str, case_id: str, inputs: dict[str, Any], destination: Path
+            ):
+                assert repo == fixture.repo and ref == REF and inputs["mode"] == "expert_baseline"
+                assert inputs["search_provider"] == "exa"
+                calls.append(case_id)
+                budget = {
+                    "stop_reason": "http_429",
+                    "elapsed_ms": 10,
+                    "fetcher_calls": 1,
+                    "search_queries": 1,
+                }
+                write(
+                    destination / "artifact/capture/mock/capture.json",
+                    {
+                        "pipeline_sha": HEAD,
+                        "config": {
+                            "search_provider": "exa",
+                            "strict_expert_budget": True,
+                            "case_budgets": {case_id: budget},
+                        },
+                    },
+                )
+                write(
+                    destination / "artifact/packet.json",
+                    {
+                        "schema_version": "1",
+                        "baseline_pipeline_sha": HEAD,
+                        "baseline_budget": {
+                            "max_fetcher_calls": 60,
+                            "max_elapsed_ms": 120000,
+                            "browser_enabled": False,
+                        },
+                        "cases": [],
+                    },
+                )
+                return 1, HEAD
+    
+            fixture.parent["workflow"] = completed429
+    
+        def forbidden_expert(repo, ref, root, case_id, workspaces):
+            expert_calls.append(case_id)
+            raise AssertionError("Stopped baseline reached an expert callback")
+    
+        fixture.parent["expert"] = forbidden_expert
+        stage(fixture, monkeypatch, "baseline")
+        assert 1 <= len(calls) <= 3 and len(calls) == len(set(calls))
+        final = read(fixture.root / "baseline-results.json")
+        assert final["stopped"] is True and final["remaining_case_ids"]
+        assert fixture.parent["STOP"].is_set()
+        if failure == "http_429":
+            assert all(item["budget"]["stop_reason"] == "http_429" for item in final["results"])
+            assert all(item["provider"] == "exa" for item in final["results"])
+            for case_id in calls:
+                packet = read(fixture.root / "baseline" / case_id / "public-packet.json")
+                assert packet["comparison_mode"] == NETWORK_COMPARISON_MODE
+                assert packet["expert_budget"] == expert_budget()
+                assert packet["baseline_budget"]["max_elapsed_ms"] == 120000
+        # A fresh process event cannot erase the saved provider/failed-stage receipt.
+        fixture.parent["STOP"].clear()
+>       with pytest.raises(ValueError, match="stopped/incomplete baseline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'stopped/incomplete baseline'
+E         Actual message: 'Do not restart a trial with an original transport batch stop'
+
+/tmp/test_unimatch_expert500_actual_cohort_v12.py:952: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+{"root": "/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-516/test_actual_baseline_batch_fai1/fixture-repo/artifacts/expert-500/phase1-v12-2026-10-05", "harness_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "trial_file_sha256": "7f0df381f3fb8200f52e4b2fa34baf09cdd7768cca43bd09e50f5d7b14f4df80"}
+=========================== short test summary info ============================
+FAILED ../../../../../../../../../tmp/test_unimatch_expert500_actual_cohort_v12.py::test_actual_baseline_batch_failure_is_sticky_and_cannot_start_any_expert[http_429]
+1 failed, 169 passed in 244.09s (0:04:04)
+pytest_exit_code=1
+after_sha256={"/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/blind_cli.py": "c529d0847008701c6f6b2711fd0ac10207d9c4dcd22bfac06dee532fc0ffd4aa", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/citations.py": "ad857e4bb3c58b9afd18e11bd2207f18b7058396ecba343758bbd1f369d4136e", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/compact.py": "1fdc7a62a29771def5420c2a607ec7036075683a43f036921e6971d934258e3e", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/controller.py": "ff29ee1c884e6ce310cce9eb0d873f62fc8f467db164aa9eff6f78197f8bdeb2", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/data/protocol.2026-10-05/v12-neutral-provenance/manifest.json": "ad3ea6a3ee9f2744d20c2e5a08df977abf473060923fb83db82b0c014bf41cb3", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/journal.py": "abe047f36851c5f3a83eb4b4dd5927906c98159a533031311d045c9c3087fda5", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/location_feedback.py": "2aeff8dada5ac712ca76bb2ff1af3b1c3472d5beb18bad1982be9d7361b99656", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/model_failure.py": "5ff1b58a93864fc9f95fb47c8564ad5e5eae28b17c4f7400c397a6ab26cf0fb5", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/models.py": "6dfdecc74b22f9cad8e27943a5b6779f978e4bf0a73ce9ec56b27d3a101ebe56", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/network_budget.py": "c37afa4435e4d7fb1bb02fea5ca6843cfee138f12bbf61d903b18bd80d6e0c87", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/network_report.py": "9b008a2f896c08f140b7552f575b39e03bc1ec90a98f9a725c8db9a53cc195d9", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/network_turn_policy.py": "931a8fd22638003fe8b9918936858203536ebf418ecf166773e5ed3594e8d1eb", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/packet.py": "6541bfc0fcf659bef1f69b16ee64d4b7b0bc95b06f98d654a3b1a59cce60fa0d", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/question_contract.py": "c8c5d56f56fa83d40f83a879315898ccae8dc860314f7754f0843dd4348c29d7", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/representation.py": "8d472f86ddbc17bba938f97b0f46790bf77b0624307f5077f8e324ac0d14af9c", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/selector.py": "17bfe9fb196cec0d2d4eead2575f9bd57a0a01974a1b3a8c1f8a3e4937e501e6", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/workspace_policy.py": "d87e89056b1501cb906bd7ced349e4112ea988b61f594c3883d4d2e4744271f9", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/identities.py": "459f6e735e0b4e77b0d8dc5e6a53b14f187efedc628f950a63daba3ea8f97619", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/live.py": "f3e67276795e8b338fbd13077b7557de82a087ad164beaa1c157c3dd9faf3326", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/mapping.py": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/metrics.py": "4c916cf8a83b49025496c7abd7b0803e8e25e63b246e222aa71fb65bf0c80dff", "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/schema.py": "313a92ebeadcd534b8731b5a3254a2f00ffbd9d99a16795b79d1d7a2d41ce924", "/tmp/test_unimatch_expert500_actual_cohort_v11.py": "aba296c55aec76878ea55f9fab1f4d12d06a0aba87fa5ee36f97540281aecb42", "/tmp/test_unimatch_expert500_actual_cohort_v12.py": "406ed74b10ceca9ba1d6739b5558c83ab72727a38873e31376d22fa2c078b877", "/tmp/test_unimatch_expert500_journal_pilot_v12.py": "fcbca530b952625d4e8fbe752fbf45692ee7c380f3f6c26fd83c9ad9e8a483a9", "/tmp/test_unimatch_expert500_journal_report_v12.py": "22399055992901771107e48abb0c4e3ed987525fc9396797d0ecfbce75519d7d", "/tmp/test_unimatch_expert500_workflow_v12.py": "c048d038f32c0a5d9479916377a0d5edf453b0c77c0b33a1c08c88a13e254e31", "/tmp/unimatch-expert500-export-v12.py": "224c00558dd4fe7d5e6331414c40f2c40a692a77c9ea8407bc0890843c430f09", "/tmp/unimatch-expert500-freeze-v11.py": "049c7c0dfa166b60f36f40c289118f5f0224ea98e823be864e90830d8903d69f", "/tmp/unimatch-expert500-freeze-v12.py": "63e1e6706c9a2ebd71916a848dc694f8cfdb069b11ea6c07879c02116114c239", "/tmp/unimatch-expert500-isolation-preflight-v11.py": "d68f6e84e8edc16dd38156b4174055a605616257ac66e02fd28ed9d469e9994c", "/tmp/unimatch-expert500-isolation-preflight-v12.py": "858a7ab2a6275e95f940bf2578b47691673d0458ee5b4bec38ca506f3aaa8322", "/tmp/unimatch-expert500-journal-pilot-v12.py": "1922e117436afdc001bef7cbf867e8b91db4062fd0b98cfce044c3b980a74b72", "/tmp/unimatch-expert500-journal-report-v12.py": "5a36256591fe4b76186a36448c4c6a3d0a8eeab989b427eb4031ebf00405a4fb", "/tmp/unimatch-expert500-launch-v11.py": "a0da8327500717ba5c3c46b17acf8c84badb9a48d18246f7b0a24c5e182bf39f", "/tmp/unimatch-expert500-launch-v12.py": "365c2129bbca97c2eb1ba9a6791ae04c3e5bf85d60d5635db250f80d158f6327", "/tmp/unimatch-expert500-neutral-v11.py": "e83132685581e02561e277c5e9657881e9fc97d64f416d95048c1cbdc9be2fd7", "/tmp/unimatch-expert500-neutral-v12.py": "b691f3b3373ae76ddfc1eac6535c49841f6ce6a86b33953890757f6df0241455", "/tmp/unimatch-expert500-neutral-v7.py": "01506b5368e623f3237a7b03d1d3d6f11024232a7e866d86c91d9bc92b806029", "/tmp/unimatch-expert500-pilot-v1-frozen.py": "9eaa88effd037d17937bd96b16d341c711f02ac2825c74d0d6a1f5f95bb2c5a7", "/tmp/unimatch-expert500-v12-neutral-result.json": "266946fc74132049b9b63f205d66564d4647d1aa2810e02e8575eca946b02bd7"}
+all_sources_and_originals_unchanged=true

@@ -1,0 +1,27 @@
+{
+  "case_id": "vienna",
+  "run_id": 37194653523,
+  "head_sha": "24865069715f82a22d83ade810b367c0d5442c67",
+  "capture": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v4-2026-10-04/baseline/vienna/artifact/capture/20261004T101338Z/capture.json",
+  "packet": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/artifacts/expert-500/phase1-v4-2026-10-04/baseline/vienna/public-packet.json",
+  "budget": {
+    "strict_expert_budget": true,
+    "provider": "exa_mcp",
+    "max_fetcher_calls": 60,
+    "max_search_queries": 6,
+    "max_active_seconds": 120,
+    "finalization_reserve_ms": 1000,
+    "source_work_deadline_ms": 119000,
+    "fetcher_calls": 54,
+    "search_queries": 6,
+    "blocked_search_queries": 1,
+    "network_http_requests": 71,
+    "elapsed_ms": 113254,
+    "stop_reason": "search_budget_exhausted",
+    "provider_failure": null,
+    "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+    "parent_process_elapsed_seconds": 113.888125806,
+    "process_error": null,
+    "active_checkpoint_available": true
+  }
+}

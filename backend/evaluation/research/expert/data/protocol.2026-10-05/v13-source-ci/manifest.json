@@ -1,0 +1,66 @@
+{
+  "schema_version": "1",
+  "recorded_at": "2026-10-05T19:04:50.876847+00:00",
+  "source_harness_sha": "e327498d605d3dbe14da177a8a535c664818ce9b",
+  "frozen_ref": "expert500-phase1-v13-2026-10-05-e327498",
+  "status": "selected_source_branch_pr_tag_ci_success",
+  "run_ids": [
+    37358070171,
+    37358078952,
+    37358148240
+  ],
+  "successful_jobs": 12,
+  "record_count": 8,
+  "records": [
+    {
+      "snapshot": "run-37358070171.json",
+      "sha256": "5203d4573da4d511d21140a502478699b8106215a0ae89d35e25a6494e31022a",
+      "bytes": 10495
+    },
+    {
+      "snapshot": "run-37358070171.log",
+      "sha256": "be0beecaaae1b9ee3fbeba80f1699f4db408c09c79ca640d80a46a46b1a8f152",
+      "bytes": 1012090
+    },
+    {
+      "snapshot": "run-37358078952.json",
+      "sha256": "a31cdf4d163f14890f9011928fff5cad5c90294b6f4456ea5f25f6a90e9057af",
+      "bytes": 10503
+    },
+    {
+      "snapshot": "run-37358078952.log",
+      "sha256": "e20a2fc90457771810c006e53a9a02b4dcc0db5f601445881270fb08b811e377",
+      "bytes": 1012164
+    },
+    {
+      "snapshot": "run-37358148240.json",
+      "sha256": "e26c8ed02002fcb96358d802bf3a18cf44362e9fd1e2c477009299fb2b985a89",
+      "bytes": 10512
+    },
+    {
+      "snapshot": "run-37358148240.log",
+      "sha256": "96fff32f907e47976cce536fff080f57b4c0b644fa583264dbe246383a193cdf",
+      "bytes": 1012601
+    },
+    {
+      "snapshot": "recorder-original.py.txt",
+      "sha256": "ab76b98ef90593113df538e8fa8aa1d93078831d960fb1d76cf83877348e4f79",
+      "bytes": 3172
+    },
+    {
+      "snapshot": "pr-current-original.json",
+      "sha256": "94d5b25cf79b129e099b961b2c56a247d5a75db2d5f1b4f6f3f40e5df21de432",
+      "bytes": 4673
+    }
+  ],
+  "freeze_manifest_sha256": "50d0d35767f95a3051119f8b29b21c445a86924777658899b85cc5cb066ecd4b",
+  "neutral_provenance_manifest_sha256": "c1e8362cdfe2b4dadbe0483772b384a3796433d5110237796852a2483b29a22d",
+  "source_support_manifest_sha256": "ca6f4bc75c20716f46f0dbdf02eb1b3979959e57b5f99426b5f03c4b9798e90a",
+  "new_trial_started_by_recorder": false,
+  "university_requests": 0,
+  "model_requests": 0,
+  "provider_queries": 0,
+  "reviewed62_unchanged": true,
+  "signed_reviewed8_unselected": true,
+  "heldout150_untouched": true
+}

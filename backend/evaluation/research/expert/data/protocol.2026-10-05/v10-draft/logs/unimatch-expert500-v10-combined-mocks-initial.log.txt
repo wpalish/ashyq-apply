@@ -1,0 +1,2374 @@
+...............................................F...........F.....FF..... [ 16%]
+......................................FFFFFFFF.F....FFFFFFFF..FFFFFFFFFF [ 32%]
+FFFFF........FFF....F................................................... [ 49%]
+.................................F...................................... [ 65%]
+........................................................................ [ 82%]
+........................................................................ [ 98%]
+.....                                                                    [100%]
+=================================== FAILURES ===================================
+_______ test_three_digit_turns_replay_original_sources_in_numeric_order ________
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e495f70>
+
+    def test_three_digit_turns_replay_original_sources_in_numeric_order(pilot, report, monkeypatch):
+        from test_unimatch_expert500_journal_pilot_v10 import source_action
+    
+        # Rejected complete choices, then saved views, are permitted turns and use no
+        # additional network budget. The original source runs are genuinely20/100.
+        for _ in range(19):
+            pilot.queue(lambda prompt: decision(prompt, "submit"), elapsed=1)
+        pilot.queue(elapsed=1)
+        for _ in range(79):
+            pilot.queue(lambda prompt: decision(prompt, action=source_action("view")), elapsed=1)
+        result = prepare_reporting(pilot, report)
+        assert [path.name for path in pilot.controller_dirs] == ["controller-20", "controller-100"]
+        assert pilot.read("journal-events.json")[-1]["turn"] == 102
+        verified = replay(pilot, report)
+        assert (
+            verified["explicit_commit"] and verified["final_journal_sha256"] == result["journal_sha256"]
+        )
+        ledger = report["verify_source_ledger"](pilot.folder, pilot.packet, result)
+        assert ledger["controller_count"] == 2 and ledger["counters"]["fetcher_calls"] == 2
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       report["main"]()
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:349: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-report-v10.py:1694: in main
+    frozen_provenance = validate_frozen_provenance(root, args.orchestrator)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-453/test_three_digit_turns_replay_0/results')
+orchestrator = PosixPath('/tmp/unimatch-expert500-journal-pilot-v10.py')
+
+    def validate_frozen_provenance(root: Path, orchestrator: Path) -> dict[str, Any]:
+        trial = read(root / "trial.json")
+        start = root / "trial-at-baseline-start.json"
+        if not start.is_file() or file_hash(start) != file_hash(root / "trial.json"):
+            raise ValueError("Trial changed after the pre-baseline freeze")
+        if trial.get("protocol_version") != "journal-v10" or not trial.get("harness_sha"):
+            raise ValueError("Trial lacks the frozen journal protocol/source")
+        if any(
+            trial.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        ):
+            raise ValueError("Trial must pin both research arms to the same Exa provider")
+        if (
+            digest(trial.get("turn_policy")) != digest(policy_limits())
+            or trial.get("requested_reasoning_effort") is not None
+            or trial.get("reasoning_effort_source") != "cli_default"
+            or digest(trial.get("network_budget")) != digest(expert_budget())
+            or trial.get("comparison_mode") != NETWORK_COMPARISON_MODE
+            or trial.get("budget_model") != BUDGET_MODEL
+            or type(trial.get("wall_guard_ms")) is not int
+            or trial["wall_guard_ms"] != WALL_GUARD_MS
+        ):
+            raise ValueError("Trial lacks the frozen equal-action/default-effort network policy")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if not (root / name).is_file() or trial.get(field) != file_hash(root / name):
+                raise ValueError("Original independently assigned workspace mappings changed")
+        validate_workspaces(
+            read(root / "workspace-locations.json"),
+            read(root / "workspace-receipts.json"),
+            case_ids=tuple(COHORT),
+        )
+        scripts = trial.get("scripts", {})
+        required_scripts = (
+            orchestrator,
+            Path(__file__),
+            Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+            Path("/tmp/unimatch-expert500-launch-v10.py"),
+        )
+        if any(scripts.get(str(path)) != file_hash(path) for path in required_scripts):
+            raise ValueError("Actual parent protocol differs from pre-run frozen scripts")
+        for name, expected in scripts.items():
+            if file_hash(Path(name)) != expected:
+                raise ValueError("Frozen parent script changed during research")
+        modules = trial.get("modules", {})
+        if set(modules) != PROTOCOL_MODULES:
+>           raise ValueError("Frozen trial must bind the complete public protocol module set")
+E           ValueError: Frozen trial must bind the complete public protocol module set
+
+/tmp/unimatch-expert500-journal-report-v10.py:322: ValueError
+___ test_terminal_selector_failure_cannot_be_followed_by_an_accepted_commit ____
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e1400e0>
+
+    def test_terminal_selector_failure_cannot_be_followed_by_an_accepted_commit(
+        pilot, report, monkeypatch
+    ):
+        result = prepare_reporting(pilot, report, rejected=True)
+        meta = pilot.read("selector-03.meta.json")
+        meta.update(error_kind="selector_timeout", returncode=None)
+        result.update(
+            status="incomplete",
+            error="selector_timeout",
+            turn_errors=[
+                {
+                    "turn": 3,
+                    "kind": "selector_timeout",
+                    "elapsed_ms": meta["elapsed_ms"],
+                }
+            ],
+        )
+        write(pilot.folder / "selector-03.meta.json", meta)
+        write(pilot.folder / "result.json", result)
+        write(pilot.root / "experts-results.json", {"stopped": False, "results": [result]})
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="continue after a terminal process failure"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'continue after a terminal process failure'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:424: AssertionError
+_ test_unaccepted_attempt_cannot_expand_schema_limits_and_recompute_its_own_hashes[timeout] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ddd8fb0>
+state = 'timeout'
+
+    @pytest.mark.parametrize("state", ["timeout", "rejected_delta"])
+    def test_unaccepted_attempt_cannot_expand_schema_limits_and_recompute_its_own_hashes(
+        pilot, report, monkeypatch, state
+    ):
+        prepare_reporting(pilot, report, failed=state == "timeout", rejected=state == "rejected_delta")
+        request = pilot.read("selector-03.request.json")
+        request["schema"]["properties"]["facts"]["maxItems"] = 16
+        request["schema"]["properties"]["question_findings"]["maxItems"] = 7
+        request["schema_sha256"] = report["digest"](request["schema"])
+        meta = pilot.read("selector-03.meta.json")
+        meta["schema_sha256"] = request["schema_sha256"]
+        write(pilot.folder / "selector-03.request.json", request)
+        write(pilot.folder / "selector-03.meta.json", meta)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="four-fact schema"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'four-fact schema'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:476: AssertionError
+_ test_unaccepted_attempt_cannot_expand_schema_limits_and_recompute_its_own_hashes[rejected_delta] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e7b9cd0>
+state = 'rejected_delta'
+
+    @pytest.mark.parametrize("state", ["timeout", "rejected_delta"])
+    def test_unaccepted_attempt_cannot_expand_schema_limits_and_recompute_its_own_hashes(
+        pilot, report, monkeypatch, state
+    ):
+        prepare_reporting(pilot, report, failed=state == "timeout", rejected=state == "rejected_delta")
+        request = pilot.read("selector-03.request.json")
+        request["schema"]["properties"]["facts"]["maxItems"] = 16
+        request["schema"]["properties"]["question_findings"]["maxItems"] = 7
+        request["schema_sha256"] = report["digest"](request["schema"])
+        meta = pilot.read("selector-03.meta.json")
+        meta["schema_sha256"] = request["schema_sha256"]
+        write(pilot.folder / "selector-03.request.json", request)
+        write(pilot.folder / "selector-03.meta.json", meta)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="four-fact schema"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'four-fact schema'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:476: AssertionError
+_ test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof[script] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+change = 'script'
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            "script",
+            "module",
+            "baseline_sha",
+            "packet_sha",
+            "controller_sha",
+            "controller_conclusion",
+            "source_run_id",
+            "isolation",
+        ],
+    )
+    def test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof(pilot, report, change):
+        prepare_reporting(pilot, report)
+>       frozen = report["validate_frozen_provenance"](pilot.root, PILOT)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:743: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-453/test_frozen_provenance_binds_a0/results')
+orchestrator = PosixPath('/tmp/unimatch-expert500-journal-pilot-v10.py')
+
+    def validate_frozen_provenance(root: Path, orchestrator: Path) -> dict[str, Any]:
+        trial = read(root / "trial.json")
+        start = root / "trial-at-baseline-start.json"
+        if not start.is_file() or file_hash(start) != file_hash(root / "trial.json"):
+            raise ValueError("Trial changed after the pre-baseline freeze")
+        if trial.get("protocol_version") != "journal-v10" or not trial.get("harness_sha"):
+            raise ValueError("Trial lacks the frozen journal protocol/source")
+        if any(
+            trial.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        ):
+            raise ValueError("Trial must pin both research arms to the same Exa provider")
+        if (
+            digest(trial.get("turn_policy")) != digest(policy_limits())
+            or trial.get("requested_reasoning_effort") is not None
+            or trial.get("reasoning_effort_source") != "cli_default"
+            or digest(trial.get("network_budget")) != digest(expert_budget())
+            or trial.get("comparison_mode") != NETWORK_COMPARISON_MODE
+            or trial.get("budget_model") != BUDGET_MODEL
+            or type(trial.get("wall_guard_ms")) is not int
+            or trial["wall_guard_ms"] != WALL_GUARD_MS
+        ):
+            raise ValueError("Trial lacks the frozen equal-action/default-effort network policy")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if not (root / name).is_file() or trial.get(field) != file_hash(root / name):
+                raise ValueError("Original independently assigned workspace mappings changed")
+        validate_workspaces(
+            read(root / "workspace-locations.json"),
+            read(root / "workspace-receipts.json"),
+            case_ids=tuple(COHORT),
+        )
+        scripts = trial.get("scripts", {})
+        required_scripts = (
+            orchestrator,
+            Path(__file__),
+            Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+            Path("/tmp/unimatch-expert500-launch-v10.py"),
+        )
+        if any(scripts.get(str(path)) != file_hash(path) for path in required_scripts):
+            raise ValueError("Actual parent protocol differs from pre-run frozen scripts")
+        for name, expected in scripts.items():
+            if file_hash(Path(name)) != expected:
+                raise ValueError("Frozen parent script changed during research")
+        modules = trial.get("modules", {})
+        if set(modules) != PROTOCOL_MODULES:
+>           raise ValueError("Frozen trial must bind the complete public protocol module set")
+E           ValueError: Frozen trial must bind the complete public protocol module set
+
+/tmp/unimatch-expert500-journal-report-v10.py:322: ValueError
+_ test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof[module] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+change = 'module'
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            "script",
+            "module",
+            "baseline_sha",
+            "packet_sha",
+            "controller_sha",
+            "controller_conclusion",
+            "source_run_id",
+            "isolation",
+        ],
+    )
+    def test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof(pilot, report, change):
+        prepare_reporting(pilot, report)
+>       frozen = report["validate_frozen_provenance"](pilot.root, PILOT)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:743: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-453/test_frozen_provenance_binds_a1/results')
+orchestrator = PosixPath('/tmp/unimatch-expert500-journal-pilot-v10.py')
+
+    def validate_frozen_provenance(root: Path, orchestrator: Path) -> dict[str, Any]:
+        trial = read(root / "trial.json")
+        start = root / "trial-at-baseline-start.json"
+        if not start.is_file() or file_hash(start) != file_hash(root / "trial.json"):
+            raise ValueError("Trial changed after the pre-baseline freeze")
+        if trial.get("protocol_version") != "journal-v10" or not trial.get("harness_sha"):
+            raise ValueError("Trial lacks the frozen journal protocol/source")
+        if any(
+            trial.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        ):
+            raise ValueError("Trial must pin both research arms to the same Exa provider")
+        if (
+            digest(trial.get("turn_policy")) != digest(policy_limits())
+            or trial.get("requested_reasoning_effort") is not None
+            or trial.get("reasoning_effort_source") != "cli_default"
+            or digest(trial.get("network_budget")) != digest(expert_budget())
+            or trial.get("comparison_mode") != NETWORK_COMPARISON_MODE
+            or trial.get("budget_model") != BUDGET_MODEL
+            or type(trial.get("wall_guard_ms")) is not int
+            or trial["wall_guard_ms"] != WALL_GUARD_MS
+        ):
+            raise ValueError("Trial lacks the frozen equal-action/default-effort network policy")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if not (root / name).is_file() or trial.get(field) != file_hash(root / name):
+                raise ValueError("Original independently assigned workspace mappings changed")
+        validate_workspaces(
+            read(root / "workspace-locations.json"),
+            read(root / "workspace-receipts.json"),
+            case_ids=tuple(COHORT),
+        )
+        scripts = trial.get("scripts", {})
+        required_scripts = (
+            orchestrator,
+            Path(__file__),
+            Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+            Path("/tmp/unimatch-expert500-launch-v10.py"),
+        )
+        if any(scripts.get(str(path)) != file_hash(path) for path in required_scripts):
+            raise ValueError("Actual parent protocol differs from pre-run frozen scripts")
+        for name, expected in scripts.items():
+            if file_hash(Path(name)) != expected:
+                raise ValueError("Frozen parent script changed during research")
+        modules = trial.get("modules", {})
+        if set(modules) != PROTOCOL_MODULES:
+>           raise ValueError("Frozen trial must bind the complete public protocol module set")
+E           ValueError: Frozen trial must bind the complete public protocol module set
+
+/tmp/unimatch-expert500-journal-report-v10.py:322: ValueError
+_ test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof[baseline_sha] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+change = 'baseline_sha'
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            "script",
+            "module",
+            "baseline_sha",
+            "packet_sha",
+            "controller_sha",
+            "controller_conclusion",
+            "source_run_id",
+            "isolation",
+        ],
+    )
+    def test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof(pilot, report, change):
+        prepare_reporting(pilot, report)
+>       frozen = report["validate_frozen_provenance"](pilot.root, PILOT)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:743: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-453/test_frozen_provenance_binds_a2/results')
+orchestrator = PosixPath('/tmp/unimatch-expert500-journal-pilot-v10.py')
+
+    def validate_frozen_provenance(root: Path, orchestrator: Path) -> dict[str, Any]:
+        trial = read(root / "trial.json")
+        start = root / "trial-at-baseline-start.json"
+        if not start.is_file() or file_hash(start) != file_hash(root / "trial.json"):
+            raise ValueError("Trial changed after the pre-baseline freeze")
+        if trial.get("protocol_version") != "journal-v10" or not trial.get("harness_sha"):
+            raise ValueError("Trial lacks the frozen journal protocol/source")
+        if any(
+            trial.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        ):
+            raise ValueError("Trial must pin both research arms to the same Exa provider")
+        if (
+            digest(trial.get("turn_policy")) != digest(policy_limits())
+            or trial.get("requested_reasoning_effort") is not None
+            or trial.get("reasoning_effort_source") != "cli_default"
+            or digest(trial.get("network_budget")) != digest(expert_budget())
+            or trial.get("comparison_mode") != NETWORK_COMPARISON_MODE
+            or trial.get("budget_model") != BUDGET_MODEL
+            or type(trial.get("wall_guard_ms")) is not int
+            or trial["wall_guard_ms"] != WALL_GUARD_MS
+        ):
+            raise ValueError("Trial lacks the frozen equal-action/default-effort network policy")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if not (root / name).is_file() or trial.get(field) != file_hash(root / name):
+                raise ValueError("Original independently assigned workspace mappings changed")
+        validate_workspaces(
+            read(root / "workspace-locations.json"),
+            read(root / "workspace-receipts.json"),
+            case_ids=tuple(COHORT),
+        )
+        scripts = trial.get("scripts", {})
+        required_scripts = (
+            orchestrator,
+            Path(__file__),
+            Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+            Path("/tmp/unimatch-expert500-launch-v10.py"),
+        )
+        if any(scripts.get(str(path)) != file_hash(path) for path in required_scripts):
+            raise ValueError("Actual parent protocol differs from pre-run frozen scripts")
+        for name, expected in scripts.items():
+            if file_hash(Path(name)) != expected:
+                raise ValueError("Frozen parent script changed during research")
+        modules = trial.get("modules", {})
+        if set(modules) != PROTOCOL_MODULES:
+>           raise ValueError("Frozen trial must bind the complete public protocol module set")
+E           ValueError: Frozen trial must bind the complete public protocol module set
+
+/tmp/unimatch-expert500-journal-report-v10.py:322: ValueError
+_ test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof[packet_sha] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+change = 'packet_sha'
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            "script",
+            "module",
+            "baseline_sha",
+            "packet_sha",
+            "controller_sha",
+            "controller_conclusion",
+            "source_run_id",
+            "isolation",
+        ],
+    )
+    def test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof(pilot, report, change):
+        prepare_reporting(pilot, report)
+>       frozen = report["validate_frozen_provenance"](pilot.root, PILOT)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:743: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-453/test_frozen_provenance_binds_a3/results')
+orchestrator = PosixPath('/tmp/unimatch-expert500-journal-pilot-v10.py')
+
+    def validate_frozen_provenance(root: Path, orchestrator: Path) -> dict[str, Any]:
+        trial = read(root / "trial.json")
+        start = root / "trial-at-baseline-start.json"
+        if not start.is_file() or file_hash(start) != file_hash(root / "trial.json"):
+            raise ValueError("Trial changed after the pre-baseline freeze")
+        if trial.get("protocol_version") != "journal-v10" or not trial.get("harness_sha"):
+            raise ValueError("Trial lacks the frozen journal protocol/source")
+        if any(
+            trial.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        ):
+            raise ValueError("Trial must pin both research arms to the same Exa provider")
+        if (
+            digest(trial.get("turn_policy")) != digest(policy_limits())
+            or trial.get("requested_reasoning_effort") is not None
+            or trial.get("reasoning_effort_source") != "cli_default"
+            or digest(trial.get("network_budget")) != digest(expert_budget())
+            or trial.get("comparison_mode") != NETWORK_COMPARISON_MODE
+            or trial.get("budget_model") != BUDGET_MODEL
+            or type(trial.get("wall_guard_ms")) is not int
+            or trial["wall_guard_ms"] != WALL_GUARD_MS
+        ):
+            raise ValueError("Trial lacks the frozen equal-action/default-effort network policy")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if not (root / name).is_file() or trial.get(field) != file_hash(root / name):
+                raise ValueError("Original independently assigned workspace mappings changed")
+        validate_workspaces(
+            read(root / "workspace-locations.json"),
+            read(root / "workspace-receipts.json"),
+            case_ids=tuple(COHORT),
+        )
+        scripts = trial.get("scripts", {})
+        required_scripts = (
+            orchestrator,
+            Path(__file__),
+            Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+            Path("/tmp/unimatch-expert500-launch-v10.py"),
+        )
+        if any(scripts.get(str(path)) != file_hash(path) for path in required_scripts):
+            raise ValueError("Actual parent protocol differs from pre-run frozen scripts")
+        for name, expected in scripts.items():
+            if file_hash(Path(name)) != expected:
+                raise ValueError("Frozen parent script changed during research")
+        modules = trial.get("modules", {})
+        if set(modules) != PROTOCOL_MODULES:
+>           raise ValueError("Frozen trial must bind the complete public protocol module set")
+E           ValueError: Frozen trial must bind the complete public protocol module set
+
+/tmp/unimatch-expert500-journal-report-v10.py:322: ValueError
+_ test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof[controller_sha] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+change = 'controller_sha'
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            "script",
+            "module",
+            "baseline_sha",
+            "packet_sha",
+            "controller_sha",
+            "controller_conclusion",
+            "source_run_id",
+            "isolation",
+        ],
+    )
+    def test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof(pilot, report, change):
+        prepare_reporting(pilot, report)
+>       frozen = report["validate_frozen_provenance"](pilot.root, PILOT)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:743: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-453/test_frozen_provenance_binds_a4/results')
+orchestrator = PosixPath('/tmp/unimatch-expert500-journal-pilot-v10.py')
+
+    def validate_frozen_provenance(root: Path, orchestrator: Path) -> dict[str, Any]:
+        trial = read(root / "trial.json")
+        start = root / "trial-at-baseline-start.json"
+        if not start.is_file() or file_hash(start) != file_hash(root / "trial.json"):
+            raise ValueError("Trial changed after the pre-baseline freeze")
+        if trial.get("protocol_version") != "journal-v10" or not trial.get("harness_sha"):
+            raise ValueError("Trial lacks the frozen journal protocol/source")
+        if any(
+            trial.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        ):
+            raise ValueError("Trial must pin both research arms to the same Exa provider")
+        if (
+            digest(trial.get("turn_policy")) != digest(policy_limits())
+            or trial.get("requested_reasoning_effort") is not None
+            or trial.get("reasoning_effort_source") != "cli_default"
+            or digest(trial.get("network_budget")) != digest(expert_budget())
+            or trial.get("comparison_mode") != NETWORK_COMPARISON_MODE
+            or trial.get("budget_model") != BUDGET_MODEL
+            or type(trial.get("wall_guard_ms")) is not int
+            or trial["wall_guard_ms"] != WALL_GUARD_MS
+        ):
+            raise ValueError("Trial lacks the frozen equal-action/default-effort network policy")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if not (root / name).is_file() or trial.get(field) != file_hash(root / name):
+                raise ValueError("Original independently assigned workspace mappings changed")
+        validate_workspaces(
+            read(root / "workspace-locations.json"),
+            read(root / "workspace-receipts.json"),
+            case_ids=tuple(COHORT),
+        )
+        scripts = trial.get("scripts", {})
+        required_scripts = (
+            orchestrator,
+            Path(__file__),
+            Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+            Path("/tmp/unimatch-expert500-launch-v10.py"),
+        )
+        if any(scripts.get(str(path)) != file_hash(path) for path in required_scripts):
+            raise ValueError("Actual parent protocol differs from pre-run frozen scripts")
+        for name, expected in scripts.items():
+            if file_hash(Path(name)) != expected:
+                raise ValueError("Frozen parent script changed during research")
+        modules = trial.get("modules", {})
+        if set(modules) != PROTOCOL_MODULES:
+>           raise ValueError("Frozen trial must bind the complete public protocol module set")
+E           ValueError: Frozen trial must bind the complete public protocol module set
+
+/tmp/unimatch-expert500-journal-report-v10.py:322: ValueError
+_ test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof[controller_conclusion] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+change = 'controller_conclusion'
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            "script",
+            "module",
+            "baseline_sha",
+            "packet_sha",
+            "controller_sha",
+            "controller_conclusion",
+            "source_run_id",
+            "isolation",
+        ],
+    )
+    def test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof(pilot, report, change):
+        prepare_reporting(pilot, report)
+>       frozen = report["validate_frozen_provenance"](pilot.root, PILOT)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:743: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-453/test_frozen_provenance_binds_a5/results')
+orchestrator = PosixPath('/tmp/unimatch-expert500-journal-pilot-v10.py')
+
+    def validate_frozen_provenance(root: Path, orchestrator: Path) -> dict[str, Any]:
+        trial = read(root / "trial.json")
+        start = root / "trial-at-baseline-start.json"
+        if not start.is_file() or file_hash(start) != file_hash(root / "trial.json"):
+            raise ValueError("Trial changed after the pre-baseline freeze")
+        if trial.get("protocol_version") != "journal-v10" or not trial.get("harness_sha"):
+            raise ValueError("Trial lacks the frozen journal protocol/source")
+        if any(
+            trial.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        ):
+            raise ValueError("Trial must pin both research arms to the same Exa provider")
+        if (
+            digest(trial.get("turn_policy")) != digest(policy_limits())
+            or trial.get("requested_reasoning_effort") is not None
+            or trial.get("reasoning_effort_source") != "cli_default"
+            or digest(trial.get("network_budget")) != digest(expert_budget())
+            or trial.get("comparison_mode") != NETWORK_COMPARISON_MODE
+            or trial.get("budget_model") != BUDGET_MODEL
+            or type(trial.get("wall_guard_ms")) is not int
+            or trial["wall_guard_ms"] != WALL_GUARD_MS
+        ):
+            raise ValueError("Trial lacks the frozen equal-action/default-effort network policy")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if not (root / name).is_file() or trial.get(field) != file_hash(root / name):
+                raise ValueError("Original independently assigned workspace mappings changed")
+        validate_workspaces(
+            read(root / "workspace-locations.json"),
+            read(root / "workspace-receipts.json"),
+            case_ids=tuple(COHORT),
+        )
+        scripts = trial.get("scripts", {})
+        required_scripts = (
+            orchestrator,
+            Path(__file__),
+            Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+            Path("/tmp/unimatch-expert500-launch-v10.py"),
+        )
+        if any(scripts.get(str(path)) != file_hash(path) for path in required_scripts):
+            raise ValueError("Actual parent protocol differs from pre-run frozen scripts")
+        for name, expected in scripts.items():
+            if file_hash(Path(name)) != expected:
+                raise ValueError("Frozen parent script changed during research")
+        modules = trial.get("modules", {})
+        if set(modules) != PROTOCOL_MODULES:
+>           raise ValueError("Frozen trial must bind the complete public protocol module set")
+E           ValueError: Frozen trial must bind the complete public protocol module set
+
+/tmp/unimatch-expert500-journal-report-v10.py:322: ValueError
+_ test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof[source_run_id] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+change = 'source_run_id'
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            "script",
+            "module",
+            "baseline_sha",
+            "packet_sha",
+            "controller_sha",
+            "controller_conclusion",
+            "source_run_id",
+            "isolation",
+        ],
+    )
+    def test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof(pilot, report, change):
+        prepare_reporting(pilot, report)
+>       frozen = report["validate_frozen_provenance"](pilot.root, PILOT)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:743: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-453/test_frozen_provenance_binds_a6/results')
+orchestrator = PosixPath('/tmp/unimatch-expert500-journal-pilot-v10.py')
+
+    def validate_frozen_provenance(root: Path, orchestrator: Path) -> dict[str, Any]:
+        trial = read(root / "trial.json")
+        start = root / "trial-at-baseline-start.json"
+        if not start.is_file() or file_hash(start) != file_hash(root / "trial.json"):
+            raise ValueError("Trial changed after the pre-baseline freeze")
+        if trial.get("protocol_version") != "journal-v10" or not trial.get("harness_sha"):
+            raise ValueError("Trial lacks the frozen journal protocol/source")
+        if any(
+            trial.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        ):
+            raise ValueError("Trial must pin both research arms to the same Exa provider")
+        if (
+            digest(trial.get("turn_policy")) != digest(policy_limits())
+            or trial.get("requested_reasoning_effort") is not None
+            or trial.get("reasoning_effort_source") != "cli_default"
+            or digest(trial.get("network_budget")) != digest(expert_budget())
+            or trial.get("comparison_mode") != NETWORK_COMPARISON_MODE
+            or trial.get("budget_model") != BUDGET_MODEL
+            or type(trial.get("wall_guard_ms")) is not int
+            or trial["wall_guard_ms"] != WALL_GUARD_MS
+        ):
+            raise ValueError("Trial lacks the frozen equal-action/default-effort network policy")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if not (root / name).is_file() or trial.get(field) != file_hash(root / name):
+                raise ValueError("Original independently assigned workspace mappings changed")
+        validate_workspaces(
+            read(root / "workspace-locations.json"),
+            read(root / "workspace-receipts.json"),
+            case_ids=tuple(COHORT),
+        )
+        scripts = trial.get("scripts", {})
+        required_scripts = (
+            orchestrator,
+            Path(__file__),
+            Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+            Path("/tmp/unimatch-expert500-launch-v10.py"),
+        )
+        if any(scripts.get(str(path)) != file_hash(path) for path in required_scripts):
+            raise ValueError("Actual parent protocol differs from pre-run frozen scripts")
+        for name, expected in scripts.items():
+            if file_hash(Path(name)) != expected:
+                raise ValueError("Frozen parent script changed during research")
+        modules = trial.get("modules", {})
+        if set(modules) != PROTOCOL_MODULES:
+>           raise ValueError("Frozen trial must bind the complete public protocol module set")
+E           ValueError: Frozen trial must bind the complete public protocol module set
+
+/tmp/unimatch-expert500-journal-report-v10.py:322: ValueError
+_ test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof[isolation] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+change = 'isolation'
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            "script",
+            "module",
+            "baseline_sha",
+            "packet_sha",
+            "controller_sha",
+            "controller_conclusion",
+            "source_run_id",
+            "isolation",
+        ],
+    )
+    def test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof(pilot, report, change):
+        prepare_reporting(pilot, report)
+>       frozen = report["validate_frozen_provenance"](pilot.root, PILOT)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:743: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-453/test_frozen_provenance_binds_a7/results')
+orchestrator = PosixPath('/tmp/unimatch-expert500-journal-pilot-v10.py')
+
+    def validate_frozen_provenance(root: Path, orchestrator: Path) -> dict[str, Any]:
+        trial = read(root / "trial.json")
+        start = root / "trial-at-baseline-start.json"
+        if not start.is_file() or file_hash(start) != file_hash(root / "trial.json"):
+            raise ValueError("Trial changed after the pre-baseline freeze")
+        if trial.get("protocol_version") != "journal-v10" or not trial.get("harness_sha"):
+            raise ValueError("Trial lacks the frozen journal protocol/source")
+        if any(
+            trial.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        ):
+            raise ValueError("Trial must pin both research arms to the same Exa provider")
+        if (
+            digest(trial.get("turn_policy")) != digest(policy_limits())
+            or trial.get("requested_reasoning_effort") is not None
+            or trial.get("reasoning_effort_source") != "cli_default"
+            or digest(trial.get("network_budget")) != digest(expert_budget())
+            or trial.get("comparison_mode") != NETWORK_COMPARISON_MODE
+            or trial.get("budget_model") != BUDGET_MODEL
+            or type(trial.get("wall_guard_ms")) is not int
+            or trial["wall_guard_ms"] != WALL_GUARD_MS
+        ):
+            raise ValueError("Trial lacks the frozen equal-action/default-effort network policy")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if not (root / name).is_file() or trial.get(field) != file_hash(root / name):
+                raise ValueError("Original independently assigned workspace mappings changed")
+        validate_workspaces(
+            read(root / "workspace-locations.json"),
+            read(root / "workspace-receipts.json"),
+            case_ids=tuple(COHORT),
+        )
+        scripts = trial.get("scripts", {})
+        required_scripts = (
+            orchestrator,
+            Path(__file__),
+            Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+            Path("/tmp/unimatch-expert500-launch-v10.py"),
+        )
+        if any(scripts.get(str(path)) != file_hash(path) for path in required_scripts):
+            raise ValueError("Actual parent protocol differs from pre-run frozen scripts")
+        for name, expected in scripts.items():
+            if file_hash(Path(name)) != expected:
+                raise ValueError("Frozen parent script changed during research")
+        modules = trial.get("modules", {})
+        if set(modules) != PROTOCOL_MODULES:
+>           raise ValueError("Frozen trial must bind the complete public protocol module set")
+E           ValueError: Frozen trial must bind the complete public protocol module set
+
+/tmp/unimatch-expert500-journal-report-v10.py:322: ValueError
+_______ test_post_seal_artifact_change_is_rejected_before_any_label_read _______
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e2c2240>
+
+    def test_post_seal_artifact_change_is_rejected_before_any_label_read(pilot, report, monkeypatch):
+        prepare_reporting(pilot, report)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       report["main"]()
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:792: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-report-v10.py:1694: in main
+    frozen_provenance = validate_frozen_provenance(root, args.orchestrator)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-453/test_post_seal_artifact_change0/results')
+orchestrator = PosixPath('/tmp/unimatch-expert500-journal-pilot-v10.py')
+
+    def validate_frozen_provenance(root: Path, orchestrator: Path) -> dict[str, Any]:
+        trial = read(root / "trial.json")
+        start = root / "trial-at-baseline-start.json"
+        if not start.is_file() or file_hash(start) != file_hash(root / "trial.json"):
+            raise ValueError("Trial changed after the pre-baseline freeze")
+        if trial.get("protocol_version") != "journal-v10" or not trial.get("harness_sha"):
+            raise ValueError("Trial lacks the frozen journal protocol/source")
+        if any(
+            trial.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        ):
+            raise ValueError("Trial must pin both research arms to the same Exa provider")
+        if (
+            digest(trial.get("turn_policy")) != digest(policy_limits())
+            or trial.get("requested_reasoning_effort") is not None
+            or trial.get("reasoning_effort_source") != "cli_default"
+            or digest(trial.get("network_budget")) != digest(expert_budget())
+            or trial.get("comparison_mode") != NETWORK_COMPARISON_MODE
+            or trial.get("budget_model") != BUDGET_MODEL
+            or type(trial.get("wall_guard_ms")) is not int
+            or trial["wall_guard_ms"] != WALL_GUARD_MS
+        ):
+            raise ValueError("Trial lacks the frozen equal-action/default-effort network policy")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if not (root / name).is_file() or trial.get(field) != file_hash(root / name):
+                raise ValueError("Original independently assigned workspace mappings changed")
+        validate_workspaces(
+            read(root / "workspace-locations.json"),
+            read(root / "workspace-receipts.json"),
+            case_ids=tuple(COHORT),
+        )
+        scripts = trial.get("scripts", {})
+        required_scripts = (
+            orchestrator,
+            Path(__file__),
+            Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+            Path("/tmp/unimatch-expert500-launch-v10.py"),
+        )
+        if any(scripts.get(str(path)) != file_hash(path) for path in required_scripts):
+            raise ValueError("Actual parent protocol differs from pre-run frozen scripts")
+        for name, expected in scripts.items():
+            if file_hash(Path(name)) != expected:
+                raise ValueError("Frozen parent script changed during research")
+        modules = trial.get("modules", {})
+        if set(modules) != PROTOCOL_MODULES:
+>           raise ValueError("Frozen trial must bind the complete public protocol module set")
+E           ValueError: Frozen trial must bind the complete public protocol module set
+
+/tmp/unimatch-expert500-journal-report-v10.py:322: ValueError
+___ test_malformed_baseline_capture_fails_before_sealing_or_label_read[mode] ___
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e7993d0>
+change = 'mode'
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            "mode",
+            "provider",
+            "strict",
+            "pipeline",
+            "identity",
+            "duplicate_case",
+            "budget",
+            "missing_budget",
+        ],
+    )
+    def test_malformed_baseline_capture_fails_before_sealing_or_label_read(
+        pilot, report, monkeypatch, change
+    ):
+        prepare_reporting(pilot, report)
+        path = pilot.root / "baseline/u/capture.json"
+        capture = json.loads(path.read_text())
+        if change == "mode":
+            capture["mode"] = "synthetic"
+        elif change == "provider":
+            capture["config"]["search_provider"] = "other_mock_provider"
+        elif change == "strict":
+            capture["config"]["strict_expert_budget"] = False
+        elif change == "pipeline":
+            capture["pipeline_sha"] = "b" * 40
+        elif change == "identity":
+            capture["observations"][0]["case_id"] = "another_synthetic_case"
+        elif change == "duplicate_case":
+            capture["observations"].append(copy.deepcopy(capture["observations"][0]))
+        elif change == "budget":
+            capture["config"]["case_budgets"]["u"]["elapsed_ms"] += 1
+        else:
+            capture["config"].pop("case_budgets")
+        write(path, capture)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline capture"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline capture'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:866: AssertionError
+_ test_malformed_baseline_capture_fails_before_sealing_or_label_read[provider] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e04f200>
+change = 'provider'
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            "mode",
+            "provider",
+            "strict",
+            "pipeline",
+            "identity",
+            "duplicate_case",
+            "budget",
+            "missing_budget",
+        ],
+    )
+    def test_malformed_baseline_capture_fails_before_sealing_or_label_read(
+        pilot, report, monkeypatch, change
+    ):
+        prepare_reporting(pilot, report)
+        path = pilot.root / "baseline/u/capture.json"
+        capture = json.loads(path.read_text())
+        if change == "mode":
+            capture["mode"] = "synthetic"
+        elif change == "provider":
+            capture["config"]["search_provider"] = "other_mock_provider"
+        elif change == "strict":
+            capture["config"]["strict_expert_budget"] = False
+        elif change == "pipeline":
+            capture["pipeline_sha"] = "b" * 40
+        elif change == "identity":
+            capture["observations"][0]["case_id"] = "another_synthetic_case"
+        elif change == "duplicate_case":
+            capture["observations"].append(copy.deepcopy(capture["observations"][0]))
+        elif change == "budget":
+            capture["config"]["case_budgets"]["u"]["elapsed_ms"] += 1
+        else:
+            capture["config"].pop("case_budgets")
+        write(path, capture)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline capture"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline capture'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:866: AssertionError
+__ test_malformed_baseline_capture_fails_before_sealing_or_label_read[strict] __
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dfe3a40>
+change = 'strict'
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            "mode",
+            "provider",
+            "strict",
+            "pipeline",
+            "identity",
+            "duplicate_case",
+            "budget",
+            "missing_budget",
+        ],
+    )
+    def test_malformed_baseline_capture_fails_before_sealing_or_label_read(
+        pilot, report, monkeypatch, change
+    ):
+        prepare_reporting(pilot, report)
+        path = pilot.root / "baseline/u/capture.json"
+        capture = json.loads(path.read_text())
+        if change == "mode":
+            capture["mode"] = "synthetic"
+        elif change == "provider":
+            capture["config"]["search_provider"] = "other_mock_provider"
+        elif change == "strict":
+            capture["config"]["strict_expert_budget"] = False
+        elif change == "pipeline":
+            capture["pipeline_sha"] = "b" * 40
+        elif change == "identity":
+            capture["observations"][0]["case_id"] = "another_synthetic_case"
+        elif change == "duplicate_case":
+            capture["observations"].append(copy.deepcopy(capture["observations"][0]))
+        elif change == "budget":
+            capture["config"]["case_budgets"]["u"]["elapsed_ms"] += 1
+        else:
+            capture["config"].pop("case_budgets")
+        write(path, capture)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline capture"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline capture'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:866: AssertionError
+_ test_malformed_baseline_capture_fails_before_sealing_or_label_read[pipeline] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e13ee10>
+change = 'pipeline'
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            "mode",
+            "provider",
+            "strict",
+            "pipeline",
+            "identity",
+            "duplicate_case",
+            "budget",
+            "missing_budget",
+        ],
+    )
+    def test_malformed_baseline_capture_fails_before_sealing_or_label_read(
+        pilot, report, monkeypatch, change
+    ):
+        prepare_reporting(pilot, report)
+        path = pilot.root / "baseline/u/capture.json"
+        capture = json.loads(path.read_text())
+        if change == "mode":
+            capture["mode"] = "synthetic"
+        elif change == "provider":
+            capture["config"]["search_provider"] = "other_mock_provider"
+        elif change == "strict":
+            capture["config"]["strict_expert_budget"] = False
+        elif change == "pipeline":
+            capture["pipeline_sha"] = "b" * 40
+        elif change == "identity":
+            capture["observations"][0]["case_id"] = "another_synthetic_case"
+        elif change == "duplicate_case":
+            capture["observations"].append(copy.deepcopy(capture["observations"][0]))
+        elif change == "budget":
+            capture["config"]["case_budgets"]["u"]["elapsed_ms"] += 1
+        else:
+            capture["config"].pop("case_budgets")
+        write(path, capture)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline capture"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline capture'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:866: AssertionError
+_ test_malformed_baseline_capture_fails_before_sealing_or_label_read[identity] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ef58a40>
+change = 'identity'
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            "mode",
+            "provider",
+            "strict",
+            "pipeline",
+            "identity",
+            "duplicate_case",
+            "budget",
+            "missing_budget",
+        ],
+    )
+    def test_malformed_baseline_capture_fails_before_sealing_or_label_read(
+        pilot, report, monkeypatch, change
+    ):
+        prepare_reporting(pilot, report)
+        path = pilot.root / "baseline/u/capture.json"
+        capture = json.loads(path.read_text())
+        if change == "mode":
+            capture["mode"] = "synthetic"
+        elif change == "provider":
+            capture["config"]["search_provider"] = "other_mock_provider"
+        elif change == "strict":
+            capture["config"]["strict_expert_budget"] = False
+        elif change == "pipeline":
+            capture["pipeline_sha"] = "b" * 40
+        elif change == "identity":
+            capture["observations"][0]["case_id"] = "another_synthetic_case"
+        elif change == "duplicate_case":
+            capture["observations"].append(copy.deepcopy(capture["observations"][0]))
+        elif change == "budget":
+            capture["config"]["case_budgets"]["u"]["elapsed_ms"] += 1
+        else:
+            capture["config"].pop("case_budgets")
+        write(path, capture)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline capture"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline capture'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:866: AssertionError
+_ test_malformed_baseline_capture_fails_before_sealing_or_label_read[duplicate_case] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dfe0f50>
+change = 'duplicate_case'
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            "mode",
+            "provider",
+            "strict",
+            "pipeline",
+            "identity",
+            "duplicate_case",
+            "budget",
+            "missing_budget",
+        ],
+    )
+    def test_malformed_baseline_capture_fails_before_sealing_or_label_read(
+        pilot, report, monkeypatch, change
+    ):
+        prepare_reporting(pilot, report)
+        path = pilot.root / "baseline/u/capture.json"
+        capture = json.loads(path.read_text())
+        if change == "mode":
+            capture["mode"] = "synthetic"
+        elif change == "provider":
+            capture["config"]["search_provider"] = "other_mock_provider"
+        elif change == "strict":
+            capture["config"]["strict_expert_budget"] = False
+        elif change == "pipeline":
+            capture["pipeline_sha"] = "b" * 40
+        elif change == "identity":
+            capture["observations"][0]["case_id"] = "another_synthetic_case"
+        elif change == "duplicate_case":
+            capture["observations"].append(copy.deepcopy(capture["observations"][0]))
+        elif change == "budget":
+            capture["config"]["case_budgets"]["u"]["elapsed_ms"] += 1
+        else:
+            capture["config"].pop("case_budgets")
+        write(path, capture)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline capture"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline capture'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:866: AssertionError
+__ test_malformed_baseline_capture_fails_before_sealing_or_label_read[budget] __
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e7b8770>
+change = 'budget'
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            "mode",
+            "provider",
+            "strict",
+            "pipeline",
+            "identity",
+            "duplicate_case",
+            "budget",
+            "missing_budget",
+        ],
+    )
+    def test_malformed_baseline_capture_fails_before_sealing_or_label_read(
+        pilot, report, monkeypatch, change
+    ):
+        prepare_reporting(pilot, report)
+        path = pilot.root / "baseline/u/capture.json"
+        capture = json.loads(path.read_text())
+        if change == "mode":
+            capture["mode"] = "synthetic"
+        elif change == "provider":
+            capture["config"]["search_provider"] = "other_mock_provider"
+        elif change == "strict":
+            capture["config"]["strict_expert_budget"] = False
+        elif change == "pipeline":
+            capture["pipeline_sha"] = "b" * 40
+        elif change == "identity":
+            capture["observations"][0]["case_id"] = "another_synthetic_case"
+        elif change == "duplicate_case":
+            capture["observations"].append(copy.deepcopy(capture["observations"][0]))
+        elif change == "budget":
+            capture["config"]["case_budgets"]["u"]["elapsed_ms"] += 1
+        else:
+            capture["config"].pop("case_budgets")
+        write(path, capture)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline capture"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline capture'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:866: AssertionError
+_ test_malformed_baseline_capture_fails_before_sealing_or_label_read[missing_budget] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e3d8fe0>
+change = 'missing_budget'
+
+    @pytest.mark.parametrize(
+        "change",
+        [
+            "mode",
+            "provider",
+            "strict",
+            "pipeline",
+            "identity",
+            "duplicate_case",
+            "budget",
+            "missing_budget",
+        ],
+    )
+    def test_malformed_baseline_capture_fails_before_sealing_or_label_read(
+        pilot, report, monkeypatch, change
+    ):
+        prepare_reporting(pilot, report)
+        path = pilot.root / "baseline/u/capture.json"
+        capture = json.loads(path.read_text())
+        if change == "mode":
+            capture["mode"] = "synthetic"
+        elif change == "provider":
+            capture["config"]["search_provider"] = "other_mock_provider"
+        elif change == "strict":
+            capture["config"]["strict_expert_budget"] = False
+        elif change == "pipeline":
+            capture["pipeline_sha"] = "b" * 40
+        elif change == "identity":
+            capture["observations"][0]["case_id"] = "another_synthetic_case"
+        elif change == "duplicate_case":
+            capture["observations"].append(copy.deepcopy(capture["observations"][0]))
+        elif change == "budget":
+            capture["config"]["case_budgets"]["u"]["elapsed_ms"] += 1
+        else:
+            capture["config"].pop("case_budgets")
+        write(path, capture)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline capture"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline capture'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:866: AssertionError
+_ test_bad_reserve_provenance_fails_before_any_seal_or_label_read[config-finalization_reserve_ms-None] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e4a6f30>
+target = 'config', key = 'finalization_reserve_ms', value = None
+
+    @pytest.mark.parametrize(
+        "target,key,value",
+        [
+            ("config", "finalization_reserve_ms", None),
+            ("config", "finalization_reserve_ms", False),
+            ("config", "finalization_reserve_ms", 999),
+            ("config", "source_work_deadline_ms", None),
+            ("config", "source_work_deadline_ms", True),
+            ("config", "source_work_deadline_ms", 120000),
+            ("config", "seconds_per_case", 119),
+            ("config", "child_active_seconds", False),
+            ("budget", "finalization_reserve_ms", None),
+            ("budget", "finalization_reserve_ms", True),
+            ("budget", "source_work_deadline_ms", False),
+            ("budget", "source_work_deadline_ms", 119001),
+            ("budget", "max_active_seconds", 121),
+            ("budget", "max_fetcher_calls", 61),
+            ("budget", "max_search_queries", True),
+        ],
+    )
+    def test_bad_reserve_provenance_fails_before_any_seal_or_label_read(
+        pilot, report, monkeypatch, target, key, value
+    ):
+        prepare_reporting(pilot, report)
+        changes = {f"{target}_changes": {key: value}}
+        update_baseline(pilot, **changes)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:938: AssertionError
+_ test_bad_reserve_provenance_fails_before_any_seal_or_label_read[config-finalization_reserve_ms-False] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e4a5ac0>
+target = 'config', key = 'finalization_reserve_ms', value = False
+
+    @pytest.mark.parametrize(
+        "target,key,value",
+        [
+            ("config", "finalization_reserve_ms", None),
+            ("config", "finalization_reserve_ms", False),
+            ("config", "finalization_reserve_ms", 999),
+            ("config", "source_work_deadline_ms", None),
+            ("config", "source_work_deadline_ms", True),
+            ("config", "source_work_deadline_ms", 120000),
+            ("config", "seconds_per_case", 119),
+            ("config", "child_active_seconds", False),
+            ("budget", "finalization_reserve_ms", None),
+            ("budget", "finalization_reserve_ms", True),
+            ("budget", "source_work_deadline_ms", False),
+            ("budget", "source_work_deadline_ms", 119001),
+            ("budget", "max_active_seconds", 121),
+            ("budget", "max_fetcher_calls", 61),
+            ("budget", "max_search_queries", True),
+        ],
+    )
+    def test_bad_reserve_provenance_fails_before_any_seal_or_label_read(
+        pilot, report, monkeypatch, target, key, value
+    ):
+        prepare_reporting(pilot, report)
+        changes = {f"{target}_changes": {key: value}}
+        update_baseline(pilot, **changes)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:938: AssertionError
+_ test_bad_reserve_provenance_fails_before_any_seal_or_label_read[config-finalization_reserve_ms-999] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e060920>
+target = 'config', key = 'finalization_reserve_ms', value = 999
+
+    @pytest.mark.parametrize(
+        "target,key,value",
+        [
+            ("config", "finalization_reserve_ms", None),
+            ("config", "finalization_reserve_ms", False),
+            ("config", "finalization_reserve_ms", 999),
+            ("config", "source_work_deadline_ms", None),
+            ("config", "source_work_deadline_ms", True),
+            ("config", "source_work_deadline_ms", 120000),
+            ("config", "seconds_per_case", 119),
+            ("config", "child_active_seconds", False),
+            ("budget", "finalization_reserve_ms", None),
+            ("budget", "finalization_reserve_ms", True),
+            ("budget", "source_work_deadline_ms", False),
+            ("budget", "source_work_deadline_ms", 119001),
+            ("budget", "max_active_seconds", 121),
+            ("budget", "max_fetcher_calls", 61),
+            ("budget", "max_search_queries", True),
+        ],
+    )
+    def test_bad_reserve_provenance_fails_before_any_seal_or_label_read(
+        pilot, report, monkeypatch, target, key, value
+    ):
+        prepare_reporting(pilot, report)
+        changes = {f"{target}_changes": {key: value}}
+        update_baseline(pilot, **changes)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:938: AssertionError
+_ test_bad_reserve_provenance_fails_before_any_seal_or_label_read[config-source_work_deadline_ms-None] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10f084fe0>
+target = 'config', key = 'source_work_deadline_ms', value = None
+
+    @pytest.mark.parametrize(
+        "target,key,value",
+        [
+            ("config", "finalization_reserve_ms", None),
+            ("config", "finalization_reserve_ms", False),
+            ("config", "finalization_reserve_ms", 999),
+            ("config", "source_work_deadline_ms", None),
+            ("config", "source_work_deadline_ms", True),
+            ("config", "source_work_deadline_ms", 120000),
+            ("config", "seconds_per_case", 119),
+            ("config", "child_active_seconds", False),
+            ("budget", "finalization_reserve_ms", None),
+            ("budget", "finalization_reserve_ms", True),
+            ("budget", "source_work_deadline_ms", False),
+            ("budget", "source_work_deadline_ms", 119001),
+            ("budget", "max_active_seconds", 121),
+            ("budget", "max_fetcher_calls", 61),
+            ("budget", "max_search_queries", True),
+        ],
+    )
+    def test_bad_reserve_provenance_fails_before_any_seal_or_label_read(
+        pilot, report, monkeypatch, target, key, value
+    ):
+        prepare_reporting(pilot, report)
+        changes = {f"{target}_changes": {key: value}}
+        update_baseline(pilot, **changes)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:938: AssertionError
+_ test_bad_reserve_provenance_fails_before_any_seal_or_label_read[config-source_work_deadline_ms-True] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dda14f0>
+target = 'config', key = 'source_work_deadline_ms', value = True
+
+    @pytest.mark.parametrize(
+        "target,key,value",
+        [
+            ("config", "finalization_reserve_ms", None),
+            ("config", "finalization_reserve_ms", False),
+            ("config", "finalization_reserve_ms", 999),
+            ("config", "source_work_deadline_ms", None),
+            ("config", "source_work_deadline_ms", True),
+            ("config", "source_work_deadline_ms", 120000),
+            ("config", "seconds_per_case", 119),
+            ("config", "child_active_seconds", False),
+            ("budget", "finalization_reserve_ms", None),
+            ("budget", "finalization_reserve_ms", True),
+            ("budget", "source_work_deadline_ms", False),
+            ("budget", "source_work_deadline_ms", 119001),
+            ("budget", "max_active_seconds", 121),
+            ("budget", "max_fetcher_calls", 61),
+            ("budget", "max_search_queries", True),
+        ],
+    )
+    def test_bad_reserve_provenance_fails_before_any_seal_or_label_read(
+        pilot, report, monkeypatch, target, key, value
+    ):
+        prepare_reporting(pilot, report)
+        changes = {f"{target}_changes": {key: value}}
+        update_baseline(pilot, **changes)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:938: AssertionError
+_ test_bad_reserve_provenance_fails_before_any_seal_or_label_read[config-source_work_deadline_ms-120000] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e063740>
+target = 'config', key = 'source_work_deadline_ms', value = 120000
+
+    @pytest.mark.parametrize(
+        "target,key,value",
+        [
+            ("config", "finalization_reserve_ms", None),
+            ("config", "finalization_reserve_ms", False),
+            ("config", "finalization_reserve_ms", 999),
+            ("config", "source_work_deadline_ms", None),
+            ("config", "source_work_deadline_ms", True),
+            ("config", "source_work_deadline_ms", 120000),
+            ("config", "seconds_per_case", 119),
+            ("config", "child_active_seconds", False),
+            ("budget", "finalization_reserve_ms", None),
+            ("budget", "finalization_reserve_ms", True),
+            ("budget", "source_work_deadline_ms", False),
+            ("budget", "source_work_deadline_ms", 119001),
+            ("budget", "max_active_seconds", 121),
+            ("budget", "max_fetcher_calls", 61),
+            ("budget", "max_search_queries", True),
+        ],
+    )
+    def test_bad_reserve_provenance_fails_before_any_seal_or_label_read(
+        pilot, report, monkeypatch, target, key, value
+    ):
+        prepare_reporting(pilot, report)
+        changes = {f"{target}_changes": {key: value}}
+        update_baseline(pilot, **changes)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:938: AssertionError
+_ test_bad_reserve_provenance_fails_before_any_seal_or_label_read[config-seconds_per_case-119] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e773350>
+target = 'config', key = 'seconds_per_case', value = 119
+
+    @pytest.mark.parametrize(
+        "target,key,value",
+        [
+            ("config", "finalization_reserve_ms", None),
+            ("config", "finalization_reserve_ms", False),
+            ("config", "finalization_reserve_ms", 999),
+            ("config", "source_work_deadline_ms", None),
+            ("config", "source_work_deadline_ms", True),
+            ("config", "source_work_deadline_ms", 120000),
+            ("config", "seconds_per_case", 119),
+            ("config", "child_active_seconds", False),
+            ("budget", "finalization_reserve_ms", None),
+            ("budget", "finalization_reserve_ms", True),
+            ("budget", "source_work_deadline_ms", False),
+            ("budget", "source_work_deadline_ms", 119001),
+            ("budget", "max_active_seconds", 121),
+            ("budget", "max_fetcher_calls", 61),
+            ("budget", "max_search_queries", True),
+        ],
+    )
+    def test_bad_reserve_provenance_fails_before_any_seal_or_label_read(
+        pilot, report, monkeypatch, target, key, value
+    ):
+        prepare_reporting(pilot, report)
+        changes = {f"{target}_changes": {key: value}}
+        update_baseline(pilot, **changes)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:938: AssertionError
+_ test_bad_reserve_provenance_fails_before_any_seal_or_label_read[config-child_active_seconds-False] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e183fe0>
+target = 'config', key = 'child_active_seconds', value = False
+
+    @pytest.mark.parametrize(
+        "target,key,value",
+        [
+            ("config", "finalization_reserve_ms", None),
+            ("config", "finalization_reserve_ms", False),
+            ("config", "finalization_reserve_ms", 999),
+            ("config", "source_work_deadline_ms", None),
+            ("config", "source_work_deadline_ms", True),
+            ("config", "source_work_deadline_ms", 120000),
+            ("config", "seconds_per_case", 119),
+            ("config", "child_active_seconds", False),
+            ("budget", "finalization_reserve_ms", None),
+            ("budget", "finalization_reserve_ms", True),
+            ("budget", "source_work_deadline_ms", False),
+            ("budget", "source_work_deadline_ms", 119001),
+            ("budget", "max_active_seconds", 121),
+            ("budget", "max_fetcher_calls", 61),
+            ("budget", "max_search_queries", True),
+        ],
+    )
+    def test_bad_reserve_provenance_fails_before_any_seal_or_label_read(
+        pilot, report, monkeypatch, target, key, value
+    ):
+        prepare_reporting(pilot, report)
+        changes = {f"{target}_changes": {key: value}}
+        update_baseline(pilot, **changes)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:938: AssertionError
+_ test_bad_reserve_provenance_fails_before_any_seal_or_label_read[budget-finalization_reserve_ms-None] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e143020>
+target = 'budget', key = 'finalization_reserve_ms', value = None
+
+    @pytest.mark.parametrize(
+        "target,key,value",
+        [
+            ("config", "finalization_reserve_ms", None),
+            ("config", "finalization_reserve_ms", False),
+            ("config", "finalization_reserve_ms", 999),
+            ("config", "source_work_deadline_ms", None),
+            ("config", "source_work_deadline_ms", True),
+            ("config", "source_work_deadline_ms", 120000),
+            ("config", "seconds_per_case", 119),
+            ("config", "child_active_seconds", False),
+            ("budget", "finalization_reserve_ms", None),
+            ("budget", "finalization_reserve_ms", True),
+            ("budget", "source_work_deadline_ms", False),
+            ("budget", "source_work_deadline_ms", 119001),
+            ("budget", "max_active_seconds", 121),
+            ("budget", "max_fetcher_calls", 61),
+            ("budget", "max_search_queries", True),
+        ],
+    )
+    def test_bad_reserve_provenance_fails_before_any_seal_or_label_read(
+        pilot, report, monkeypatch, target, key, value
+    ):
+        prepare_reporting(pilot, report)
+        changes = {f"{target}_changes": {key: value}}
+        update_baseline(pilot, **changes)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:938: AssertionError
+_ test_bad_reserve_provenance_fails_before_any_seal_or_label_read[budget-finalization_reserve_ms-True] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e141c70>
+target = 'budget', key = 'finalization_reserve_ms', value = True
+
+    @pytest.mark.parametrize(
+        "target,key,value",
+        [
+            ("config", "finalization_reserve_ms", None),
+            ("config", "finalization_reserve_ms", False),
+            ("config", "finalization_reserve_ms", 999),
+            ("config", "source_work_deadline_ms", None),
+            ("config", "source_work_deadline_ms", True),
+            ("config", "source_work_deadline_ms", 120000),
+            ("config", "seconds_per_case", 119),
+            ("config", "child_active_seconds", False),
+            ("budget", "finalization_reserve_ms", None),
+            ("budget", "finalization_reserve_ms", True),
+            ("budget", "source_work_deadline_ms", False),
+            ("budget", "source_work_deadline_ms", 119001),
+            ("budget", "max_active_seconds", 121),
+            ("budget", "max_fetcher_calls", 61),
+            ("budget", "max_search_queries", True),
+        ],
+    )
+    def test_bad_reserve_provenance_fails_before_any_seal_or_label_read(
+        pilot, report, monkeypatch, target, key, value
+    ):
+        prepare_reporting(pilot, report)
+        changes = {f"{target}_changes": {key: value}}
+        update_baseline(pilot, **changes)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:938: AssertionError
+_ test_bad_reserve_provenance_fails_before_any_seal_or_label_read[budget-source_work_deadline_ms-False] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e052f00>
+target = 'budget', key = 'source_work_deadline_ms', value = False
+
+    @pytest.mark.parametrize(
+        "target,key,value",
+        [
+            ("config", "finalization_reserve_ms", None),
+            ("config", "finalization_reserve_ms", False),
+            ("config", "finalization_reserve_ms", 999),
+            ("config", "source_work_deadline_ms", None),
+            ("config", "source_work_deadline_ms", True),
+            ("config", "source_work_deadline_ms", 120000),
+            ("config", "seconds_per_case", 119),
+            ("config", "child_active_seconds", False),
+            ("budget", "finalization_reserve_ms", None),
+            ("budget", "finalization_reserve_ms", True),
+            ("budget", "source_work_deadline_ms", False),
+            ("budget", "source_work_deadline_ms", 119001),
+            ("budget", "max_active_seconds", 121),
+            ("budget", "max_fetcher_calls", 61),
+            ("budget", "max_search_queries", True),
+        ],
+    )
+    def test_bad_reserve_provenance_fails_before_any_seal_or_label_read(
+        pilot, report, monkeypatch, target, key, value
+    ):
+        prepare_reporting(pilot, report)
+        changes = {f"{target}_changes": {key: value}}
+        update_baseline(pilot, **changes)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:938: AssertionError
+_ test_bad_reserve_provenance_fails_before_any_seal_or_label_read[budget-source_work_deadline_ms-119001] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e27a4e0>
+target = 'budget', key = 'source_work_deadline_ms', value = 119001
+
+    @pytest.mark.parametrize(
+        "target,key,value",
+        [
+            ("config", "finalization_reserve_ms", None),
+            ("config", "finalization_reserve_ms", False),
+            ("config", "finalization_reserve_ms", 999),
+            ("config", "source_work_deadline_ms", None),
+            ("config", "source_work_deadline_ms", True),
+            ("config", "source_work_deadline_ms", 120000),
+            ("config", "seconds_per_case", 119),
+            ("config", "child_active_seconds", False),
+            ("budget", "finalization_reserve_ms", None),
+            ("budget", "finalization_reserve_ms", True),
+            ("budget", "source_work_deadline_ms", False),
+            ("budget", "source_work_deadline_ms", 119001),
+            ("budget", "max_active_seconds", 121),
+            ("budget", "max_fetcher_calls", 61),
+            ("budget", "max_search_queries", True),
+        ],
+    )
+    def test_bad_reserve_provenance_fails_before_any_seal_or_label_read(
+        pilot, report, monkeypatch, target, key, value
+    ):
+        prepare_reporting(pilot, report)
+        changes = {f"{target}_changes": {key: value}}
+        update_baseline(pilot, **changes)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:938: AssertionError
+_ test_bad_reserve_provenance_fails_before_any_seal_or_label_read[budget-max_active_seconds-121] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e0abe30>
+target = 'budget', key = 'max_active_seconds', value = 121
+
+    @pytest.mark.parametrize(
+        "target,key,value",
+        [
+            ("config", "finalization_reserve_ms", None),
+            ("config", "finalization_reserve_ms", False),
+            ("config", "finalization_reserve_ms", 999),
+            ("config", "source_work_deadline_ms", None),
+            ("config", "source_work_deadline_ms", True),
+            ("config", "source_work_deadline_ms", 120000),
+            ("config", "seconds_per_case", 119),
+            ("config", "child_active_seconds", False),
+            ("budget", "finalization_reserve_ms", None),
+            ("budget", "finalization_reserve_ms", True),
+            ("budget", "source_work_deadline_ms", False),
+            ("budget", "source_work_deadline_ms", 119001),
+            ("budget", "max_active_seconds", 121),
+            ("budget", "max_fetcher_calls", 61),
+            ("budget", "max_search_queries", True),
+        ],
+    )
+    def test_bad_reserve_provenance_fails_before_any_seal_or_label_read(
+        pilot, report, monkeypatch, target, key, value
+    ):
+        prepare_reporting(pilot, report)
+        changes = {f"{target}_changes": {key: value}}
+        update_baseline(pilot, **changes)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:938: AssertionError
+_ test_bad_reserve_provenance_fails_before_any_seal_or_label_read[budget-max_fetcher_calls-61] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e13d490>
+target = 'budget', key = 'max_fetcher_calls', value = 61
+
+    @pytest.mark.parametrize(
+        "target,key,value",
+        [
+            ("config", "finalization_reserve_ms", None),
+            ("config", "finalization_reserve_ms", False),
+            ("config", "finalization_reserve_ms", 999),
+            ("config", "source_work_deadline_ms", None),
+            ("config", "source_work_deadline_ms", True),
+            ("config", "source_work_deadline_ms", 120000),
+            ("config", "seconds_per_case", 119),
+            ("config", "child_active_seconds", False),
+            ("budget", "finalization_reserve_ms", None),
+            ("budget", "finalization_reserve_ms", True),
+            ("budget", "source_work_deadline_ms", False),
+            ("budget", "source_work_deadline_ms", 119001),
+            ("budget", "max_active_seconds", 121),
+            ("budget", "max_fetcher_calls", 61),
+            ("budget", "max_search_queries", True),
+        ],
+    )
+    def test_bad_reserve_provenance_fails_before_any_seal_or_label_read(
+        pilot, report, monkeypatch, target, key, value
+    ):
+        prepare_reporting(pilot, report)
+        changes = {f"{target}_changes": {key: value}}
+        update_baseline(pilot, **changes)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:938: AssertionError
+_ test_bad_reserve_provenance_fails_before_any_seal_or_label_read[budget-max_search_queries-True] _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e13f170>
+target = 'budget', key = 'max_search_queries', value = True
+
+    @pytest.mark.parametrize(
+        "target,key,value",
+        [
+            ("config", "finalization_reserve_ms", None),
+            ("config", "finalization_reserve_ms", False),
+            ("config", "finalization_reserve_ms", 999),
+            ("config", "source_work_deadline_ms", None),
+            ("config", "source_work_deadline_ms", True),
+            ("config", "source_work_deadline_ms", 120000),
+            ("config", "seconds_per_case", 119),
+            ("config", "child_active_seconds", False),
+            ("budget", "finalization_reserve_ms", None),
+            ("budget", "finalization_reserve_ms", True),
+            ("budget", "source_work_deadline_ms", False),
+            ("budget", "source_work_deadline_ms", 119001),
+            ("budget", "max_active_seconds", 121),
+            ("budget", "max_fetcher_calls", 61),
+            ("budget", "max_search_queries", True),
+        ],
+    )
+    def test_bad_reserve_provenance_fails_before_any_seal_or_label_read(
+        pilot, report, monkeypatch, target, key, value
+    ):
+        prepare_reporting(pilot, report)
+        changes = {f"{target}_changes": {key: value}}
+        update_baseline(pilot, **changes)
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       with pytest.raises(ValueError, match="Baseline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Baseline'
+E         Actual message: 'Frozen trial must bind the complete public protocol module set'
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:938: AssertionError
+_ test_identity_content_and_label_interface_are_loaded_only_after_the_immutable_seal _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e1f06e0>
+
+    def test_identity_content_and_label_interface_are_loaded_only_after_the_immutable_seal(
+        pilot, report, monkeypatch
+    ):
+        prepare_reporting(pilot, report)
+        reads = run_without_labels(pilot, report, monkeypatch)
+        original_identities, original_dataset = report["IdentityMap"], report["Dataset"]
+        order = []
+        original_read_bytes = Path.read_bytes
+        post_seal_binding_reads = []
+    
+        def observed_read_bytes(path):
+            if (
+                path == report["synthetic_binding_path"]
+                and (pilot.root / "submission-seal.json").is_file()
+            ):
+                post_seal_binding_reads.append(path)
+            return original_read_bytes(path)
+    
+        monkeypatch.setattr(Path, "read_bytes", observed_read_bytes)
+    
+        class SealedIdentities:
+            @classmethod
+            def model_validate_json(cls, value):
+                assert (pilot.root / "submission-seal.json").is_file()
+                order.append("identities")
+                return original_identities.model_validate_json(value)
+    
+        class SealedLabels:
+            @classmethod
+            def model_validate_json(cls, value):
+                assert order == ["identities"]
+                order.append("labels")
+                return original_dataset.model_validate_json(value)
+    
+        report.update(IdentityMap=SealedIdentities, Dataset=SealedLabels)
+>       report["main"]()
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:1056: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-report-v10.py:1694: in main
+    frozen_provenance = validate_frozen_provenance(root, args.orchestrator)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-453/test_identity_content_and_labe0/results')
+orchestrator = PosixPath('/tmp/unimatch-expert500-journal-pilot-v10.py')
+
+    def validate_frozen_provenance(root: Path, orchestrator: Path) -> dict[str, Any]:
+        trial = read(root / "trial.json")
+        start = root / "trial-at-baseline-start.json"
+        if not start.is_file() or file_hash(start) != file_hash(root / "trial.json"):
+            raise ValueError("Trial changed after the pre-baseline freeze")
+        if trial.get("protocol_version") != "journal-v10" or not trial.get("harness_sha"):
+            raise ValueError("Trial lacks the frozen journal protocol/source")
+        if any(
+            trial.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        ):
+            raise ValueError("Trial must pin both research arms to the same Exa provider")
+        if (
+            digest(trial.get("turn_policy")) != digest(policy_limits())
+            or trial.get("requested_reasoning_effort") is not None
+            or trial.get("reasoning_effort_source") != "cli_default"
+            or digest(trial.get("network_budget")) != digest(expert_budget())
+            or trial.get("comparison_mode") != NETWORK_COMPARISON_MODE
+            or trial.get("budget_model") != BUDGET_MODEL
+            or type(trial.get("wall_guard_ms")) is not int
+            or trial["wall_guard_ms"] != WALL_GUARD_MS
+        ):
+            raise ValueError("Trial lacks the frozen equal-action/default-effort network policy")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if not (root / name).is_file() or trial.get(field) != file_hash(root / name):
+                raise ValueError("Original independently assigned workspace mappings changed")
+        validate_workspaces(
+            read(root / "workspace-locations.json"),
+            read(root / "workspace-receipts.json"),
+            case_ids=tuple(COHORT),
+        )
+        scripts = trial.get("scripts", {})
+        required_scripts = (
+            orchestrator,
+            Path(__file__),
+            Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+            Path("/tmp/unimatch-expert500-launch-v10.py"),
+        )
+        if any(scripts.get(str(path)) != file_hash(path) for path in required_scripts):
+            raise ValueError("Actual parent protocol differs from pre-run frozen scripts")
+        for name, expected in scripts.items():
+            if file_hash(Path(name)) != expected:
+                raise ValueError("Frozen parent script changed during research")
+        modules = trial.get("modules", {})
+        if set(modules) != PROTOCOL_MODULES:
+>           raise ValueError("Frozen trial must bind the complete public protocol module set")
+E           ValueError: Frozen trial must bind the complete public protocol module set
+
+/tmp/unimatch-expert500-journal-report-v10.py:322: ValueError
+_ test_identity_registry_drift_between_precheck_and_postseal_read_is_rejected __
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10df5ba40>
+
+    def test_identity_registry_drift_between_precheck_and_postseal_read_is_rejected(
+        pilot, report, monkeypatch
+    ):
+        prepare_reporting(pilot, report)
+        reads = run_without_labels(pilot, report, monkeypatch)
+        original_seal = report["immutable_seal"]
+    
+        def drift_after_seal(path, seal):
+            accepted = original_seal(path, seal)
+            report["synthetic_binding_path"].write_text(
+                json.dumps({"version": "synthetic-replaced-after-seal", "bindings": []})
+            )
+            return accepted
+    
+        report["immutable_seal"] = drift_after_seal
+        with pytest.raises(ValueError):
+            report["main"]()
+>       assert reads == [] and (pilot.root / "submission-seal.json").is_file()
+E       AssertionError: assert ([] == []
+E         
+E         Use -v to get more diff and False)
+E        +  where False = is_file()
+E        +    where is_file = (PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-453/test_identity_registry_drift_b0/results') / 'submission-seal.json').is_file
+E        +      where PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-453/test_identity_registry_drift_b0/results') = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429).root
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:1078: AssertionError
+_ test_dataset_hash_uses_the_exact_once_read_bytes_passed_to_the_label_interface _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e051550>
+
+    def test_dataset_hash_uses_the_exact_once_read_bytes_passed_to_the_label_interface(
+        pilot, report, monkeypatch
+    ):
+        prepare_reporting(pilot, report)
+        reads = run_without_labels(pilot, report, monkeypatch)
+        path = pilot.root / "no-labels-sentinel.txt"
+        original_read_bytes = Path.read_bytes
+        loaded = []
+    
+        def changed_after_read(candidate):
+            value = original_read_bytes(candidate)
+            if candidate == path:
+                assert (pilot.root / "submission-seal.json").is_file()
+                loaded.append(value)
+                candidate.write_bytes(b"SYNTHETIC_CHANGED_AFTER_SINGLE_LABEL_READ")
+            return value
+    
+        monkeypatch.setattr(Path, "read_bytes", changed_after_read)
+>       report["main"]()
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:1099: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-report-v10.py:1694: in main
+    frozen_provenance = validate_frozen_provenance(root, args.orchestrator)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-453/test_dataset_hash_uses_the_exa0/results')
+orchestrator = PosixPath('/tmp/unimatch-expert500-journal-pilot-v10.py')
+
+    def validate_frozen_provenance(root: Path, orchestrator: Path) -> dict[str, Any]:
+        trial = read(root / "trial.json")
+        start = root / "trial-at-baseline-start.json"
+        if not start.is_file() or file_hash(start) != file_hash(root / "trial.json"):
+            raise ValueError("Trial changed after the pre-baseline freeze")
+        if trial.get("protocol_version") != "journal-v10" or not trial.get("harness_sha"):
+            raise ValueError("Trial lacks the frozen journal protocol/source")
+        if any(
+            trial.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        ):
+            raise ValueError("Trial must pin both research arms to the same Exa provider")
+        if (
+            digest(trial.get("turn_policy")) != digest(policy_limits())
+            or trial.get("requested_reasoning_effort") is not None
+            or trial.get("reasoning_effort_source") != "cli_default"
+            or digest(trial.get("network_budget")) != digest(expert_budget())
+            or trial.get("comparison_mode") != NETWORK_COMPARISON_MODE
+            or trial.get("budget_model") != BUDGET_MODEL
+            or type(trial.get("wall_guard_ms")) is not int
+            or trial["wall_guard_ms"] != WALL_GUARD_MS
+        ):
+            raise ValueError("Trial lacks the frozen equal-action/default-effort network policy")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if not (root / name).is_file() or trial.get(field) != file_hash(root / name):
+                raise ValueError("Original independently assigned workspace mappings changed")
+        validate_workspaces(
+            read(root / "workspace-locations.json"),
+            read(root / "workspace-receipts.json"),
+            case_ids=tuple(COHORT),
+        )
+        scripts = trial.get("scripts", {})
+        required_scripts = (
+            orchestrator,
+            Path(__file__),
+            Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+            Path("/tmp/unimatch-expert500-launch-v10.py"),
+        )
+        if any(scripts.get(str(path)) != file_hash(path) for path in required_scripts):
+            raise ValueError("Actual parent protocol differs from pre-run frozen scripts")
+        for name, expected in scripts.items():
+            if file_hash(Path(name)) != expected:
+                raise ValueError("Frozen parent script changed during research")
+        modules = trial.get("modules", {})
+        if set(modules) != PROTOCOL_MODULES:
+>           raise ValueError("Frozen trial must bind the complete public protocol module set")
+E           ValueError: Frozen trial must bind the complete public protocol module set
+
+/tmp/unimatch-expert500-journal-report-v10.py:322: ValueError
+_ test_v6_canonical_assignments_and_identity_receipts_are_frozen_before_replay _
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e1f05f0>
+
+    def test_v6_canonical_assignments_and_identity_receipts_are_frozen_before_replay(
+        pilot, report, monkeypatch
+    ):
+        prepare_reporting(pilot, report, stored_view=True)
+        assignments = json.loads((pilot.root / "workspace-locations.json").read_text())
+        receipts = json.loads((pilot.root / "workspace-receipts.json").read_text())
+        trial = json.loads((pilot.root / "trial.json").read_text())
+        assert assignments == {"u": str(pilot.workspace)}
+        assert str(pilot.workspace.resolve(strict=True)) == assignments["u"]
+        stat = pilot.workspace.stat()
+        assert receipts == {
+            "u": {"path": assignments["u"], "device": stat.st_dev, "inode": stat.st_ino}
+        }
+        assert trial["workspace_assignments_sha256"] == report["file_hash"](
+            pilot.root / "workspace-locations.json"
+        )
+        assert trial["workspace_receipts_sha256"] == report["file_hash"](
+            pilot.root / "workspace-receipts.json"
+        )
+        assert trial["network_budget"] == expert_budget()
+        assert replay(pilot, report)["explicit_commit"]
+        reads = run_without_labels(pilot, report, monkeypatch)
+>       report["main"]()
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:1199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-report-v10.py:1694: in main
+    frozen_provenance = validate_frozen_provenance(root, args.orchestrator)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-453/test_v6_canonical_assignments_0/results')
+orchestrator = PosixPath('/tmp/unimatch-expert500-journal-pilot-v10.py')
+
+    def validate_frozen_provenance(root: Path, orchestrator: Path) -> dict[str, Any]:
+        trial = read(root / "trial.json")
+        start = root / "trial-at-baseline-start.json"
+        if not start.is_file() or file_hash(start) != file_hash(root / "trial.json"):
+            raise ValueError("Trial changed after the pre-baseline freeze")
+        if trial.get("protocol_version") != "journal-v10" or not trial.get("harness_sha"):
+            raise ValueError("Trial lacks the frozen journal protocol/source")
+        if any(
+            trial.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        ):
+            raise ValueError("Trial must pin both research arms to the same Exa provider")
+        if (
+            digest(trial.get("turn_policy")) != digest(policy_limits())
+            or trial.get("requested_reasoning_effort") is not None
+            or trial.get("reasoning_effort_source") != "cli_default"
+            or digest(trial.get("network_budget")) != digest(expert_budget())
+            or trial.get("comparison_mode") != NETWORK_COMPARISON_MODE
+            or trial.get("budget_model") != BUDGET_MODEL
+            or type(trial.get("wall_guard_ms")) is not int
+            or trial["wall_guard_ms"] != WALL_GUARD_MS
+        ):
+            raise ValueError("Trial lacks the frozen equal-action/default-effort network policy")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if not (root / name).is_file() or trial.get(field) != file_hash(root / name):
+                raise ValueError("Original independently assigned workspace mappings changed")
+        validate_workspaces(
+            read(root / "workspace-locations.json"),
+            read(root / "workspace-receipts.json"),
+            case_ids=tuple(COHORT),
+        )
+        scripts = trial.get("scripts", {})
+        required_scripts = (
+            orchestrator,
+            Path(__file__),
+            Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+            Path("/tmp/unimatch-expert500-launch-v10.py"),
+        )
+        if any(scripts.get(str(path)) != file_hash(path) for path in required_scripts):
+            raise ValueError("Actual parent protocol differs from pre-run frozen scripts")
+        for name, expected in scripts.items():
+            if file_hash(Path(name)) != expected:
+                raise ValueError("Frozen parent script changed during research")
+        modules = trial.get("modules", {})
+        if set(modules) != PROTOCOL_MODULES:
+>           raise ValueError("Frozen trial must bind the complete public protocol module set")
+E           ValueError: Frozen trial must bind the complete public protocol module set
+
+/tmp/unimatch-expert500-journal-report-v10.py:322: ValueError
+_________ test_unverified_outside_artifact_never_becomes_a_scored_fact _________
+
+pilot = Harness(runtime={'__name__': '<run_path>', '__doc__': 'V10 network-budget blind pilot: validate explicit incremental s...=None, workflow_error=None, source_body=None, source_content_type='text/html', plan_hook=None, search_error_status=429)
+report = {'__name__': '<run_path>', '__doc__': 'V10: replay original network actions and accepted journals, seal, then score offline.', '__package__': '', '__loader__': None, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e3597c0>
+
+    def test_unverified_outside_artifact_never_becomes_a_scored_fact(pilot, report, monkeypatch):
+        prepare_reporting(pilot, report)
+        path = pilot.root / "outside-policy-observations.json"
+        write(path, {"facts": [{"claim_key": "ielts.overall", "value": 9.0}]})
+        run_without_labels(pilot, report, monkeypatch)
+>       report["main"]()
+
+/tmp/test_unimatch_expert500_journal_report_v10.py:1781: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/unimatch-expert500-journal-report-v10.py:1694: in main
+    frozen_provenance = validate_frozen_provenance(root, args.orchestrator)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-453/test_unverified_outside_artifa0/results')
+orchestrator = PosixPath('/tmp/unimatch-expert500-journal-pilot-v10.py')
+
+    def validate_frozen_provenance(root: Path, orchestrator: Path) -> dict[str, Any]:
+        trial = read(root / "trial.json")
+        start = root / "trial-at-baseline-start.json"
+        if not start.is_file() or file_hash(start) != file_hash(root / "trial.json"):
+            raise ValueError("Trial changed after the pre-baseline freeze")
+        if trial.get("protocol_version") != "journal-v10" or not trial.get("harness_sha"):
+            raise ValueError("Trial lacks the frozen journal protocol/source")
+        if any(
+            trial.get(key) != PINNED_PROVIDER
+            for key in ("search_provider", "algorithm_provider", "expert_provider")
+        ):
+            raise ValueError("Trial must pin both research arms to the same Exa provider")
+        if (
+            digest(trial.get("turn_policy")) != digest(policy_limits())
+            or trial.get("requested_reasoning_effort") is not None
+            or trial.get("reasoning_effort_source") != "cli_default"
+            or digest(trial.get("network_budget")) != digest(expert_budget())
+            or trial.get("comparison_mode") != NETWORK_COMPARISON_MODE
+            or trial.get("budget_model") != BUDGET_MODEL
+            or type(trial.get("wall_guard_ms")) is not int
+            or trial["wall_guard_ms"] != WALL_GUARD_MS
+        ):
+            raise ValueError("Trial lacks the frozen equal-action/default-effort network policy")
+        for name, field in (
+            ("workspace-locations.json", "workspace_assignments_sha256"),
+            ("workspace-receipts.json", "workspace_receipts_sha256"),
+        ):
+            if not (root / name).is_file() or trial.get(field) != file_hash(root / name):
+                raise ValueError("Original independently assigned workspace mappings changed")
+        validate_workspaces(
+            read(root / "workspace-locations.json"),
+            read(root / "workspace-receipts.json"),
+            case_ids=tuple(COHORT),
+        )
+        scripts = trial.get("scripts", {})
+        required_scripts = (
+            orchestrator,
+            Path(__file__),
+            Path("/tmp/unimatch-expert500-pilot-v1-frozen.py"),
+            Path("/tmp/unimatch-expert500-launch-v10.py"),
+        )
+        if any(scripts.get(str(path)) != file_hash(path) for path in required_scripts):
+            raise ValueError("Actual parent protocol differs from pre-run frozen scripts")
+        for name, expected in scripts.items():
+            if file_hash(Path(name)) != expected:
+                raise ValueError("Frozen parent script changed during research")
+        modules = trial.get("modules", {})
+        if set(modules) != PROTOCOL_MODULES:
+>           raise ValueError("Frozen trial must bind the complete public protocol module set")
+E           ValueError: Frozen trial must bind the complete public protocol module set
+
+/tmp/unimatch-expert500-journal-report-v10.py:322: ValueError
+=========================== short test summary info ============================
+FAILED backend::test_three_digit_turns_replay_original_sources_in_numeric_order
+FAILED backend::test_terminal_selector_failure_cannot_be_followed_by_an_accepted_commit
+FAILED backend::test_unaccepted_attempt_cannot_expand_schema_limits_and_recompute_its_own_hashes[timeout]
+FAILED backend::test_unaccepted_attempt_cannot_expand_schema_limits_and_recompute_its_own_hashes[rejected_delta]
+FAILED backend::test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof[script]
+FAILED backend::test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof[module]
+FAILED backend::test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof[baseline_sha]
+FAILED backend::test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof[packet_sha]
+FAILED backend::test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof[controller_sha]
+FAILED backend::test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof[controller_conclusion]
+FAILED backend::test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof[source_run_id]
+FAILED backend::test_frozen_provenance_binds_actual_source_scripts_modules_and_os_proof[isolation]
+FAILED backend::test_post_seal_artifact_change_is_rejected_before_any_label_read
+FAILED backend::test_malformed_baseline_capture_fails_before_sealing_or_label_read[mode]
+FAILED backend::test_malformed_baseline_capture_fails_before_sealing_or_label_read[provider]
+FAILED backend::test_malformed_baseline_capture_fails_before_sealing_or_label_read[strict]
+FAILED backend::test_malformed_baseline_capture_fails_before_sealing_or_label_read[pipeline]
+FAILED backend::test_malformed_baseline_capture_fails_before_sealing_or_label_read[identity]
+FAILED backend::test_malformed_baseline_capture_fails_before_sealing_or_label_read[duplicate_case]
+FAILED backend::test_malformed_baseline_capture_fails_before_sealing_or_label_read[budget]
+FAILED backend::test_malformed_baseline_capture_fails_before_sealing_or_label_read[missing_budget]
+FAILED backend::test_bad_reserve_provenance_fails_before_any_seal_or_label_read[config-finalization_reserve_ms-None]
+FAILED backend::test_bad_reserve_provenance_fails_before_any_seal_or_label_read[config-finalization_reserve_ms-False]
+FAILED backend::test_bad_reserve_provenance_fails_before_any_seal_or_label_read[config-finalization_reserve_ms-999]
+FAILED backend::test_bad_reserve_provenance_fails_before_any_seal_or_label_read[config-source_work_deadline_ms-None]
+FAILED backend::test_bad_reserve_provenance_fails_before_any_seal_or_label_read[config-source_work_deadline_ms-True]
+FAILED backend::test_bad_reserve_provenance_fails_before_any_seal_or_label_read[config-source_work_deadline_ms-120000]
+FAILED backend::test_bad_reserve_provenance_fails_before_any_seal_or_label_read[config-seconds_per_case-119]
+FAILED backend::test_bad_reserve_provenance_fails_before_any_seal_or_label_read[config-child_active_seconds-False]
+FAILED backend::test_bad_reserve_provenance_fails_before_any_seal_or_label_read[budget-finalization_reserve_ms-None]
+FAILED backend::test_bad_reserve_provenance_fails_before_any_seal_or_label_read[budget-finalization_reserve_ms-True]
+FAILED backend::test_bad_reserve_provenance_fails_before_any_seal_or_label_read[budget-source_work_deadline_ms-False]
+FAILED backend::test_bad_reserve_provenance_fails_before_any_seal_or_label_read[budget-source_work_deadline_ms-119001]
+FAILED backend::test_bad_reserve_provenance_fails_before_any_seal_or_label_read[budget-max_active_seconds-121]
+FAILED backend::test_bad_reserve_provenance_fails_before_any_seal_or_label_read[budget-max_fetcher_calls-61]
+FAILED backend::test_bad_reserve_provenance_fails_before_any_seal_or_label_read[budget-max_search_queries-True]
+FAILED backend::test_identity_content_and_label_interface_are_loaded_only_after_the_immutable_seal
+FAILED backend::test_identity_registry_drift_between_precheck_and_postseal_read_is_rejected
+FAILED backend::test_dataset_hash_uses_the_exact_once_read_bytes_passed_to_the_label_interface
+FAILED backend::test_v6_canonical_assignments_and_identity_receipts_are_frozen_before_replay
+FAILED backend::test_unverified_outside_artifact_never_becomes_a_scored_fact

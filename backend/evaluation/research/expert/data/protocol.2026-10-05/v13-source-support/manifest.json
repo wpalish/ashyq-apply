@@ -1,0 +1,1250 @@
+{
+  "schema_version": "1",
+  "kind": "prospective_v13_source_support_originals",
+  "recorded_at": "2026-10-05T18:39:25.983571+00:00",
+  "backend_tests": 4328,
+  "coverage_percent": 94.9,
+  "runtime_mocks": 650,
+  "neutral_execution": "separate fresh22record archive",
+  "live_source_requests": 0,
+  "reviewed_labels_read": 0,
+  "primary_score": null,
+  "records": [
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-actual-red-original.log",
+      "path": "000-unimatch-expert500-v13-year-context-v2-actual-red-original.log",
+      "sha256": "36c5ee0a2e2ab2cd01aabe7c3ef42ea03b8b09166b5a65bc8724bb5e05036e51",
+      "bytes": 82021
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-actual-green-original.log",
+      "path": "001-unimatch-expert500-v13-year-context-v2-actual-green-original.log",
+      "sha256": "6131bc4baec3a6e6b24ac385493f356411659556b3083a47f9786084b41697d2",
+      "bytes": 93
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-actual-green-v2-original.log",
+      "path": "002-unimatch-expert500-v13-year-context-v2-actual-green-v2-original.log",
+      "sha256": "8173d0fc26cabfcc26e533c95db3471f896ab98003c690a5ff9de975de5659be",
+      "bytes": 580
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-saved-source-compatibility.py",
+      "path": "003-unimatch-expert500-v13-saved-source-compatibility.py.txt",
+      "sha256": "a5d0933b66bfdd8cfaa14e6b2b158ac70ca1dcb34a134fe9a2ee3631f2054afa",
+      "bytes": 3823
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-saved-source-compatibility.json",
+      "path": "004-unimatch-expert500-v13-saved-source-compatibility.json",
+      "sha256": "197b6700333c2f0f76b026e429c1bb90800d78ce70fec1eafda4beac144f083b",
+      "bytes": 3592
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-saved-source-compatibility-original.log",
+      "path": "005-unimatch-expert500-v13-saved-source-compatibility-original.log",
+      "sha256": "e99bc674eb46eed73a54b5782f359ff15106d707a6cbd5ef7221171faf0f4b64",
+      "bytes": 187
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-actual-ruff-original.log",
+      "path": "006-unimatch-expert500-v13-actual-ruff-original.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-actual-format-original.log",
+      "path": "007-unimatch-expert500-v13-actual-format-original.log",
+      "sha256": "47becdc7bcfd38c7c036ee66cb757f0aa4e68da6ad6e174ff6513d36cf87332b",
+      "bytes": 28
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-actual-mypy-original.log",
+      "path": "008-unimatch-expert500-v13-actual-mypy-original.log",
+      "sha256": "a4f263e14678441240a3f48062ec58dc536f87a13f82bc7321962a2f938a3cff",
+      "bytes": 8584
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-actual-full-pytest-original.log",
+      "path": "009-unimatch-expert500-v13-actual-full-pytest-original.log",
+      "sha256": "63295feefaaf89cef153bb1b400bae225d9db01c5ce8ba74b7833cc8227812d9",
+      "bytes": 16924
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-actual-demo-original.log",
+      "path": "010-unimatch-expert500-v13-actual-demo-original.log",
+      "sha256": "d0e7c45035da84b69912221ff9c2af97ba2ebed0b355ccb0f09a80e52f93b9d9",
+      "bytes": 5469
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-demo-gate-v13.py",
+      "path": "011-unimatch-expert500-demo-gate-v13.py.txt",
+      "sha256": "d9e78a8746b9b382f125e4ba75ef377e7ce72c2c9436539583d771bb6a908833",
+      "bytes": 1748
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-actual-alembic-original.log",
+      "path": "012-unimatch-expert500-v13-actual-alembic-original.log",
+      "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b",
+      "bytes": 20
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-actual-public-pins.json",
+      "path": "013-unimatch-expert500-v13-actual-public-pins.json",
+      "sha256": "46f7b40acad80ecffa78a9e17393b495c80b9660de52aedb75060063d2665a79",
+      "bytes": 841
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-workflow-pre-cache.yml",
+      "path": "014-unimatch-expert500-v13-workflow-pre-cache.yml",
+      "sha256": "dc585a6a0d8149b2cefc8527b0cc8d579569385cc25939f0ec080efc8d2b5c00",
+      "bytes": 30244
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v12-baseline-job-timing-original.json",
+      "path": "015-unimatch-expert500-v12-baseline-job-timing-original.json",
+      "sha256": "7e465f787afad1379fec4d04042737522e303b8c6bb1d0548f0b8a21b8a7e73c",
+      "bytes": 3511
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v12-expert-job-timing-original.json",
+      "path": "016-unimatch-expert500-v12-expert-job-timing-original.json",
+      "sha256": "7dc5c5ac43116b6beebd71653fea885f3314e75f7dc6d75d4b735d87beebee2d",
+      "bytes": 3511
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-workflow-cache-check.py",
+      "path": "017-unimatch-expert500-v13-workflow-cache-check.py.txt",
+      "sha256": "d376e2dbfda66dd3e46a13f9a8baea9379f177e8dd816803b99ea4f0f5afcb53",
+      "bytes": 3646
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-workflow-cache-check-v2.py",
+      "path": "018-unimatch-expert500-v13-workflow-cache-check-v2.py.txt",
+      "sha256": "4368611fa7b4f6acb681e0bedd2765c700d7cd116a20676cca4ef5e6fff5cec2",
+      "bytes": 3723
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-workflow-cache-check-v3.py",
+      "path": "019-unimatch-expert500-v13-workflow-cache-check-v3.py.txt",
+      "sha256": "85f7591983053125b629d4c11a5fefbf8de5b4b4b6ad1f0b4dd2ce4eeff0ea8b",
+      "bytes": 3729
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-workflow-cache-check-original.log",
+      "path": "020-unimatch-expert500-v13-workflow-cache-check-original.log",
+      "sha256": "dca953c3007a76d797e450835a50555699d13839819bf7e2a0c6883a234afb8c",
+      "bytes": 1017
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-workflow-cache-check-v2-original.log",
+      "path": "021-unimatch-expert500-v13-workflow-cache-check-v2-original.log",
+      "sha256": "510c0f8b1f68ce389cfda3eda32463cbf86fc736f345617e3efa7720e3022666",
+      "bytes": 584
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-workflow-cache-check-v3-original.log",
+      "path": "022-unimatch-expert500-v13-workflow-cache-check-v3-original.log",
+      "sha256": "b2b469af30a1d587b60f387ecd3b0f1932791fc0879e1867fc3b05701c617627",
+      "bytes": 584
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-workflow-cache-check.json",
+      "path": "023-unimatch-expert500-v13-workflow-cache-check.json",
+      "sha256": "ff9744cd287fbb6950af6066624792832c0bfcaf50d593642fd3fea7d6d7ca36",
+      "bytes": 618
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-workflow-cache-check-final.json",
+      "path": "024-unimatch-expert500-v13-workflow-cache-check-final.json",
+      "sha256": "f77dbadd680a9cc4ec1488b480436c1e7ddc96a48570e41c14359e27b690ed48",
+      "bytes": 618
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-workflow-existing-tests-original.log",
+      "path": "025-unimatch-expert500-v13-workflow-existing-tests-original.log",
+      "sha256": "ea033970c1ccf41e8e70bdd72d4b62d06c1f158d74c9860686ca336fa945110f",
+      "bytes": 98
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-local-dependency-check-original.log",
+      "path": "026-unimatch-expert500-v13-local-dependency-check-original.log",
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "bytes": 30
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-coherent-clone-original.log",
+      "path": "027-unimatch-expert500-v13-coherent-clone-original.log",
+      "sha256": "47d7cd05c1bc1a52393ffdf8ae5af518fb2c5c47b49dfdaba04ecc734d301cd6",
+      "bytes": 4217
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-coherent-quality-original.log",
+      "path": "028-unimatch-expert500-v13-coherent-quality-original.log",
+      "sha256": "954c832c0c42c4632539110ab419271be9c070ba895bff06f798213ed1bc808c",
+      "bytes": 4883
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-coherent-three-suite-mocks-original.log",
+      "path": "029-unimatch-expert500-v13-coherent-three-suite-mocks-original.log",
+      "sha256": "4f1302605fa0e4876f0e6dc71216f47236770f99cc914a47d6ee7afab8e44a38",
+      "bytes": 14799
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-final-all-runtime-mocks-original.log",
+      "path": "030-unimatch-expert500-v13-final-all-runtime-mocks-original.log",
+      "sha256": "74b9dc9a6f51936f538b74e52d76331b86e7e91dda0cb0b2e7420a4c947fad18",
+      "bytes": 1424
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-final-helper-inherited-config-diagnostic.log",
+      "path": "031-unimatch-expert500-v13-final-helper-inherited-config-diagnostic.log",
+      "sha256": "c14bcb0e7e3d62722af68b98f14c5afd67487e9308e96d9f5e9581f8598e80c8",
+      "bytes": 50264
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-final-helper-quality-original.log",
+      "path": "032-unimatch-expert500-v13-final-helper-quality-original.log",
+      "sha256": "b7f39626e8da756f36ecfa64d5e27980563bff1d02e8dd7b874259d395e83672",
+      "bytes": 3079
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-final-pin-format-original.log",
+      "path": "033-unimatch-expert500-v13-final-pin-format-original.log",
+      "sha256": "43affe539ba0ae8b202b306a3294d04f3b7fc062316c1c825399076d966c8f2d",
+      "bytes": 23
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-isolation-preflight-original.log",
+      "path": "034-unimatch-expert500-v13-isolation-preflight-original.log",
+      "sha256": "e2a0ffd200823ddcb7c544f7212e69c15b2f98d7dcb415eab59c1ad46bc43472",
+      "bytes": 257
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-neutral-provenance-recorder-original.log",
+      "path": "035-unimatch-expert500-v13-neutral-provenance-recorder-original.log",
+      "sha256": "0acd1a2d791e99bb86d48deeaf7d961abfe530896158c0f2aaa5cca97be32476",
+      "bytes": 198
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-local-execution-feasibility-audit.md",
+      "path": "036-unimatch-expert500-local-execution-feasibility-audit.md",
+      "sha256": "d678f7d08e2aa1fbd85bf2ec70c9080d67801ae1b14b15d99135a03f3811bbe3",
+      "bytes": 7136
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-local-execution-feasibility-audit-corrected.md",
+      "path": "037-unimatch-expert500-local-execution-feasibility-audit-corrected.md",
+      "sha256": "18b554899553da933084398f18a210da18ace6dfd13ba036c46e16558432b911",
+      "bytes": 4748
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-local-execution-feasibility-audit-corrected.json",
+      "path": "038-unimatch-expert500-local-execution-feasibility-audit-corrected.json",
+      "sha256": "21a5375b200619826257c9524f5d836229315d3aa758b9c3d126192ffc543648",
+      "bytes": 3401
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-completion-clock-quality-final-original.log",
+      "path": "039-unimatch-expert500-v13-completion-clock-quality-final-original.log",
+      "sha256": "981cd1b2406c933783daa6445503c484c44b8ca3a9044060605a63b2401d1335",
+      "bytes": 2175
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-completion-clock-green-final-original.log",
+      "path": "040-unimatch-expert500-v13-completion-clock-green-final-original.log",
+      "sha256": "40dc80ee4b218e94b735ee457ffddae2a9ce2b30d2414ca4a72a2f18e77f154e",
+      "bytes": 2218
+    },
+    {
+      "original_path": "/tmp/test_unimatch_expert500_completion_clock_v13.py",
+      "path": "041-test_unimatch_expert500_completion_clock_v13.py.txt",
+      "sha256": "f38467cf16e3c19716fbbfaa43ec1f1a5ac8f3aa59f6712e69bf1e3099a4d728",
+      "bytes": 8710
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-before-neutral-availability-original.log",
+      "path": "042-unimatch-expert500-v13-before-neutral-availability-original.log",
+      "sha256": "b58a73bbb17babb672d86a8ad351277b8466d44effa4ec8f0d40104d4348e734",
+      "bytes": 256
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-before-neutral-availability.py",
+      "path": "043-unimatch-expert500-v13-before-neutral-availability.py.txt",
+      "sha256": "5ecc28c0cc9188daf0fd469944c8e91a8b52af42e085dcca882554f1a3acbccf",
+      "bytes": 4659
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-source-support-recorder.py",
+      "path": "044-unimatch-expert500-v13-source-support-recorder.py.txt",
+      "sha256": "82ca39235a4b0b24140bb5529a228b48b4c2139f0d6fd48a8982553596309bfc",
+      "bytes": 5337
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/README.md",
+      "path": "045-README.md",
+      "sha256": "70c1597e4fca3bd6eeb2d3277c72a958c18f435afbdc340967a1e632b86f94d9",
+      "bytes": 4560
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/candidate/backend/app/adapters/document_ir.py",
+      "path": "046-document_ir.py.txt",
+      "sha256": "199e48ba8b2396cda444049cbe9ca728386247b116facb713ab24320d5b6a4b2",
+      "bytes": 23564
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/candidate/backend/evaluation/research/expert/citations.py",
+      "path": "047-citations.py.txt",
+      "sha256": "75adaa1534c4680982922d5f2c646353840da6dd814e3e8bb97df8d3c812a3f7",
+      "bytes": 13146
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/candidate/backend/evaluation/research/expert/models.py",
+      "path": "048-models.py.txt",
+      "sha256": "032d2a9ddaae87f71bc2653fc0bee7069accea19d0e0ed8042560fc9d1490ca8",
+      "bytes": 55305
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/candidate/backend/tests/test_document_ir.py",
+      "path": "049-test_document_ir.py.txt",
+      "sha256": "82ecbf62755462e2c771c2a8c8d9d3aa7db1683e8a28aa2711f6561e8b198647",
+      "bytes": 15541
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/candidate/backend/tests/test_expert_citations.py",
+      "path": "050-test_expert_citations.py.txt",
+      "sha256": "371f14c2ddcdce4712e0e44d3742bdf10d834eda5879358a18c5bf795d053fb1",
+      "bytes": 45195
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/candidate.patch",
+      "path": "051-candidate.patch",
+      "sha256": "d2b591e675919cd33a6e0bd76b7ddde84ecc5c8accebca82b3b674359eab2820",
+      "bytes": 31492
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/format-delivery.log",
+      "path": "052-format-delivery.log",
+      "sha256": "f114d83b30c5c657ee43a847a45bafccaea255d82673feb87c26d252c61e29c1",
+      "bytes": 26
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/isolated-checks-delivery.log",
+      "path": "053-isolated-checks-delivery.log",
+      "sha256": "6e09468980d5f3ac64a5c457078507e3a4da44cf23a442b61984269b55e77fc8",
+      "bytes": 1205
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/isolated-checks-final.log",
+      "path": "054-isolated-checks-final.log",
+      "sha256": "6e09468980d5f3ac64a5c457078507e3a4da44cf23a442b61984269b55e77fc8",
+      "bytes": 1205
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/isolated-checks-v2.log",
+      "path": "055-isolated-checks-v2.log",
+      "sha256": "077b172794c8a155143d61c6587039881d2cbe4167baf6ebad84f5501336fdd7",
+      "bytes": 1163
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/isolated-checks.log",
+      "path": "056-isolated-checks.log",
+      "sha256": "f2cee534d80143fe7e7e7a584db09b2afc3b9089e9b0b1806fcc99aac6f51e47",
+      "bytes": 570
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/isolated_checks.py",
+      "path": "057-isolated_checks.py.txt",
+      "sha256": "df9d072bb87ded96c1da8abe413200906565d705913c46a0249cb59330636859",
+      "bytes": 4404
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/manifest.json",
+      "path": "058-manifest.json",
+      "sha256": "383dd5b6cae2e37422af94799d7db8f338686c2bf44e71a07a318abbb07b4df6",
+      "bytes": 6204
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/.gitignore",
+      "path": "059-.gitignore",
+      "sha256": "6a69da670d11530d37f0f0cfdc7bed30b78ea6434e24f7a73208b982e29d322c",
+      "bytes": 34
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/@plugins_snapshot.json",
+      "path": "060-@plugins_snapshot.json",
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "bytes": 2
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/__future__.data.json",
+      "path": "061-__future__.data.json",
+      "sha256": "1f1b5a7b474cd0b75ae7434c86cf80c4c6017fb9ac1822858a6535dd58e8dd55",
+      "bytes": 8708
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/__future__.meta.json",
+      "path": "062-__future__.meta.json",
+      "sha256": "6c984381143556706287f5a0b4d385a6c992deb2f10d907c13f0ab315d0e9ca3",
+      "bytes": 1700
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/_ast.data.json",
+      "path": "063-_ast.data.json",
+      "sha256": "7a0dd1538cb1243bda01b163c862565f12405adb60e2b68f14d7b7f5ea312fa8",
+      "bytes": 12038
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/_ast.meta.json",
+      "path": "064-_ast.meta.json",
+      "sha256": "9a0b6024b1b50dfa3fe7847ceef1fc2970bf686e8a8ca534ab14bd8f02994e14",
+      "bytes": 1691
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/_codecs.data.json",
+      "path": "065-_codecs.data.json",
+      "sha256": "10a8f75ac207a86288d4b035de6db247e22ee00081fb18ede934e23a2db4363c",
+      "bytes": 61409
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/_codecs.meta.json",
+      "path": "066-_codecs.meta.json",
+      "sha256": "2d18dbbcb19e0b1e956f34492d2e451ad4811574bbe93e5a1633f61c38c1ab72",
+      "bytes": 1781
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/_collections_abc.data.json",
+      "path": "067-_collections_abc.data.json",
+      "sha256": "073793c04522f17f5ddf383604c5348afbdd478dcbad9a158ec34b559c66b3b4",
+      "bytes": 33277
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/_collections_abc.meta.json",
+      "path": "068-_collections_abc.meta.json",
+      "sha256": "97ed59db874a5d9151398db5097e4b318c06a2f99bbbed2e8798568ad524fcc6",
+      "bytes": 1714
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/_frozen_importlib.data.json",
+      "path": "069-_frozen_importlib.data.json",
+      "sha256": "f57cf2d6e82ee7b46f80bcb4ac53874811a28c8ee75c0340d5b5d31f1f3862ed",
+      "bytes": 37123
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/_frozen_importlib.meta.json",
+      "path": "070-_frozen_importlib.meta.json",
+      "sha256": "b2999d0581bc29243c728889160f38b3057ac93ba5602448408a8c13f01f8ba8",
+      "bytes": 1827
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/_frozen_importlib_external.data.json",
+      "path": "071-_frozen_importlib_external.data.json",
+      "sha256": "4b2edcfe56b9e243f27b97f463df4c05172d52045b3ee6cf4511d0dbb37190b0",
+      "bytes": 62849
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/_frozen_importlib_external.meta.json",
+      "path": "072-_frozen_importlib_external.meta.json",
+      "sha256": "e662e269a218282d060c6765461b6a34b22554303d99eb2417e15dead7680967",
+      "bytes": 2015
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/_io.data.json",
+      "path": "073-_io.data.json",
+      "sha256": "5c5572de60c8bd0f378ad294ce5904554235360b161e1a4c431f99c3605fbe2a",
+      "bytes": 115697
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/_io.meta.json",
+      "path": "074-_io.meta.json",
+      "sha256": "00216198fdb8fb4f1d1b7933a4f853122deb43b5015275c4177845df23323621",
+      "bytes": 1792
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/_typeshed/__init__.data.json",
+      "path": "075-__init__.data.json",
+      "sha256": "484c48eb0e964e16a4a881f64143c7c38ffa49db82eb3cdeffc371747298b754",
+      "bytes": 126826
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/_typeshed/__init__.meta.json",
+      "path": "076-__init__.meta.json",
+      "sha256": "3ce934917c0256e5e3ae38968ada107b7be24e91d129f1af2f9aef595b7e6a49",
+      "bytes": 1806
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/_typeshed/importlib.data.json",
+      "path": "077-importlib.data.json",
+      "sha256": "ec6716e1da70ccebafc6c697b417d52426d4f9830b471b561f21e38b9ba7d969",
+      "bytes": 7819
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/_typeshed/importlib.meta.json",
+      "path": "078-importlib.meta.json",
+      "sha256": "de8388795f5a87940274473bf1bb63ad6d0fc289e22d26675bfbe8f375670bad",
+      "bytes": 1740
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/abc.data.json",
+      "path": "079-abc.data.json",
+      "sha256": "abeb1d0a92943fa64869525515a9208446714d3d6e9e7661b33c21323e96ca33",
+      "bytes": 30126
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/abc.meta.json",
+      "path": "080-abc.meta.json",
+      "sha256": "71341487ef4d71d10e7bb4de954ff86ac13d366cd0546c72a3374f14a2f812cc",
+      "bytes": 1724
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/ast.data.json",
+      "path": "081-ast.data.json",
+      "sha256": "79eac951e5bb76f05f2743f7cbc1c79dde564657cc3793123bcc4e88b0713d84",
+      "bytes": 533878
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/ast.meta.json",
+      "path": "082-ast.meta.json",
+      "sha256": "ab88ad268f9b8f3150c81e2ef4e1f60f03253450703af0f23d50c8f808f60e12",
+      "bytes": 1783
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/builtins.data.json",
+      "path": "083-builtins.data.json",
+      "sha256": "0f73bf62f6dded30bd7d82ecd88d4a9cec71b472c94b67022175490b90df618a",
+      "bytes": 1900344
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/builtins.meta.json",
+      "path": "084-builtins.meta.json",
+      "sha256": "b6eb09a1b3931bc1e443bb5b81cddf86d162451dee3c5c851b432e2b1a9bfb48",
+      "bytes": 1800
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/codecs.data.json",
+      "path": "085-codecs.data.json",
+      "sha256": "0ed021c74c39c7f73ac27c912f240b9efe9406fb24e24ed1529303480319abc9",
+      "bytes": 139184
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/codecs.meta.json",
+      "path": "086-codecs.meta.json",
+      "sha256": "c55cb6e880b557d9057f8eec13f2d9a7011f092379747d35e8ab29b402bec7fd",
+      "bytes": 1768
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/collections/__init__.data.json",
+      "path": "087-__init__.data.json",
+      "sha256": "3db475b5f3f182be7fd32f58e470bf4f48896e45839c8207e50c63935cc6ff6d",
+      "bytes": 847482
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/collections/__init__.meta.json",
+      "path": "088-__init__.meta.json",
+      "sha256": "e23551af83e15bc1e1dd921b100617af4306f72554fe86e837ae3ed01b7cf3c3",
+      "bytes": 1784
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/collections/abc.data.json",
+      "path": "089-abc.data.json",
+      "sha256": "f3c3e3998bde6a98806774e1c58d01d390a9383ef615e44f483ca79b8d5041b4",
+      "bytes": 4125
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/collections/abc.meta.json",
+      "path": "090-abc.meta.json",
+      "sha256": "cb4f8f08a906f03ad8e2c4573dabac02cc3d57ad62cadc475a72fd3f18d06b33",
+      "bytes": 1695
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/contextlib.data.json",
+      "path": "091-contextlib.data.json",
+      "sha256": "b23eb892cbe3b8405ac6736da47b5314770d4eb50d897040ee6a48f9d350431a",
+      "bytes": 151277
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/contextlib.meta.json",
+      "path": "092-contextlib.meta.json",
+      "sha256": "4011f55a486ddccfbfdb0ec487f11dd53f6f02d9a3c0e4b8372c0735539bea27",
+      "bytes": 1747
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/dataclasses.data.json",
+      "path": "093-dataclasses.data.json",
+      "sha256": "f98267ce5439e8cf230253f9997edbc494864b87214fd12c1376a86bd5c57cd4",
+      "bytes": 87691
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/dataclasses.meta.json",
+      "path": "094-dataclasses.meta.json",
+      "sha256": "6eaaab8dbfc968728eed4c052329f19947880016001eb1f9b1f0b50a8ddb9df3",
+      "bytes": 1762
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/document_ir.data.json",
+      "path": "095-document_ir.data.json",
+      "sha256": "971cbd01e51f67b944a1b9b1d3ef0aa28d237780588c0930244990d75e197e53",
+      "bytes": 86664
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/document_ir.meta.json",
+      "path": "096-document_ir.meta.json",
+      "sha256": "b0f43dfd951b5a48b5d5e557aee41687c47d847d62f38527f82e7babf4c4ce27",
+      "bytes": 1771
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/email/__init__.data.json",
+      "path": "097-__init__.data.json",
+      "sha256": "6c27d124e88040923492d780df279965ef23f06ce4bc9e061dd8e790bd8b17db",
+      "bytes": 10383
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/email/__init__.meta.json",
+      "path": "098-__init__.meta.json",
+      "sha256": "a15d9565db75dc99f38124ad38b4f705c887abde1091078e6d06c1f00b7346aa",
+      "bytes": 1785
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/email/_policybase.data.json",
+      "path": "099-_policybase.data.json",
+      "sha256": "af39b81352af23fced1c996c83e3067f71236caa4814793d4ad23560eed6a899",
+      "bytes": 48880
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/email/_policybase.meta.json",
+      "path": "100-_policybase.meta.json",
+      "sha256": "9eeba21205fd0648c5290542e7d8b70e97aa4d38a76c16d7e008280826694cb6",
+      "bytes": 1771
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/email/charset.data.json",
+      "path": "101-charset.data.json",
+      "sha256": "13a73fc33ffde81a2f0c802e4ba818c4948c173baa7f615cf13a49b5b9679573",
+      "bytes": 17813
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/email/charset.meta.json",
+      "path": "102-charset.meta.json",
+      "sha256": "00e7677768b0d1385a61ecf300151f4e46d296e9e89f16cde5de1c4fcf57bf79",
+      "bytes": 1724
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/email/contentmanager.data.json",
+      "path": "103-contentmanager.data.json",
+      "sha256": "277fc3bd0e00a6ad5fdb6e4cffd9b19241dbbd0dad97285045b2940abf9df217",
+      "bytes": 8066
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/email/contentmanager.meta.json",
+      "path": "104-contentmanager.meta.json",
+      "sha256": "db7e8d8c494f420d3649f7293901fc0e3e649b9a5468cd3acf07de2e17ace663",
+      "bytes": 1737
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/email/errors.data.json",
+      "path": "105-errors.data.json",
+      "sha256": "30e31555f42bc2334cff0719d94627d4df18d007f21a9682a1779f373c82db67",
+      "bytes": 26824
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/email/errors.meta.json",
+      "path": "106-errors.meta.json",
+      "sha256": "1378464ec3dbce247a03eba4350da0c6de3d3e7c1fe6fbb49a5d635aaf87058a",
+      "bytes": 1709
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/email/header.data.json",
+      "path": "107-header.data.json",
+      "sha256": "ffebc10a1b9f2ed87bde42bce93382c0369cdd69f4482576869e8ff343a25c77",
+      "bytes": 10333
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/email/header.meta.json",
+      "path": "108-header.meta.json",
+      "sha256": "e8ec16351c76decb892860c4ef1ea02ed4bdc9c37e97e919bdbd1badf2314628",
+      "bytes": 1722
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/email/message.data.json",
+      "path": "109-message.data.json",
+      "sha256": "9295b728882a6067d1d28ab1726c83abd6a40f8972e8f262091c7224b034b292",
+      "bytes": 205543
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/email/message.meta.json",
+      "path": "110-message.meta.json",
+      "sha256": "ba59417dae8e8d820181b509a7260448c98d8d36e3eb8e45adffb83ac4d671ba",
+      "bytes": 1866
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/email/policy.data.json",
+      "path": "111-policy.data.json",
+      "sha256": "f77e4ccdefb2bbba50b51a6b6c306ff3e6e0e475037b32987e95594a21756458",
+      "bytes": 32841
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/email/policy.meta.json",
+      "path": "112-policy.meta.json",
+      "sha256": "c93da0016ce65183334b9145f26be8b60f2ae1f19ff4b892482c2fd743e51a8a",
+      "bytes": 1797
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/enum.data.json",
+      "path": "113-enum.data.json",
+      "sha256": "5e2d5e056024c372b6253a7bb572f658e7579e34f5b809f0afd1714ecc7b47ef",
+      "bytes": 136829
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/enum.meta.json",
+      "path": "114-enum.meta.json",
+      "sha256": "d644f19a8ca09cd9271dea0e666744a943e53b9156365f24ab85219dd06854dc",
+      "bytes": 1738
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/genericpath.data.json",
+      "path": "115-genericpath.data.json",
+      "sha256": "ad4bd2d206914e6f969919a4e1bcf82483b8b937ff3fefb21d4509f4d03f9143",
+      "bytes": 34288
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/genericpath.meta.json",
+      "path": "116-genericpath.meta.json",
+      "sha256": "adfa54beda8238e16ae84e6ae552b44ffa3883e0c66ec23f251197a13e41743a",
+      "bytes": 1748
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/__init__.data.json",
+      "path": "117-__init__.data.json",
+      "sha256": "bf585c3eda504f24a5615b706712a64a125157a6611279b4b2af97c9129ae575",
+      "bytes": 4803
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/__init__.meta.json",
+      "path": "118-__init__.meta.json",
+      "sha256": "1d59f18c40a35eddf3a7e29461eb8a0cd252ac6ef8e75fa9b010c2e22e3350eb",
+      "bytes": 1757
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/_abc.data.json",
+      "path": "119-_abc.data.json",
+      "sha256": "68cdc1d1d13b9bf047365ea6c66adcbfe976d94486d65fed2d41c5843ba1eba8",
+      "bytes": 5057
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/_abc.meta.json",
+      "path": "120-_abc.meta.json",
+      "sha256": "c1cdd1d58ccd219c85270c1b7d65b076c686cf3551e0c850790e864bbee636da",
+      "bytes": 1737
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/_bootstrap.data.json",
+      "path": "121-_bootstrap.data.json",
+      "sha256": "9bb80d287c4a37b37802d003d95a3e9fd6dcfbedb319ff8ca26370749d8a500c",
+      "bytes": 2396
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/_bootstrap.meta.json",
+      "path": "122-_bootstrap.meta.json",
+      "sha256": "f580dc34b0f7d37fa5aac21aa65d13d5278f31473945b1e4da9c44c4bb6caf70",
+      "bytes": 1682
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/_bootstrap_external.data.json",
+      "path": "123-_bootstrap_external.data.json",
+      "sha256": "4e08ad0a1329ec985d18e0743f3be3721199aba3061abdc961651884513ec0b9",
+      "bytes": 4477
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/_bootstrap_external.meta.json",
+      "path": "124-_bootstrap_external.meta.json",
+      "sha256": "f0d3318c12f572119bf88454f2d76f7f9fcab6d651595587db7907918a764cb1",
+      "bytes": 1734
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/abc.data.json",
+      "path": "125-abc.data.json",
+      "sha256": "21c2dc3eab43c4da56104d2efe9fdbcdb8f5678a79002cb61224232684f10627",
+      "bytes": 57813
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/abc.meta.json",
+      "path": "126-abc.meta.json",
+      "sha256": "1aeaa7192407e55f3761087b683eb8dde5c277aa727c0cecd2926079e09e5f33",
+      "bytes": 1944
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/machinery.data.json",
+      "path": "127-machinery.data.json",
+      "sha256": "59c4a2b910a9f439d01f8cd93659b35a31132b969050f4e6f5e4420abbcb1966",
+      "bytes": 4252
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/machinery.meta.json",
+      "path": "128-machinery.meta.json",
+      "sha256": "55f45fa49933c8ef819136e2c07b8558334f72fe0e77e9a3e1a0d150b7f38441",
+      "bytes": 1772
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/metadata/__init__.data.json",
+      "path": "129-__init__.data.json",
+      "sha256": "3205978901fa914bfc2b915e9fda55ab60e891549ee06b20ba1ad3a01ddb685e",
+      "bytes": 81145
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/metadata/__init__.meta.json",
+      "path": "130-__init__.meta.json",
+      "sha256": "6b13e3850b68b66997b861393f876a3cc5a69b349a0718e2444819d0b1b26778",
+      "bytes": 1905
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/metadata/_meta.data.json",
+      "path": "131-_meta.data.json",
+      "sha256": "045c7eb913f0bb6dfef2310485cfd37081fcf677ab167891f0fe16f012b9e1df",
+      "bytes": 31371
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/metadata/_meta.meta.json",
+      "path": "132-_meta.meta.json",
+      "sha256": "94862e4544857cbef0b5ee72e8d798ea60cb21656be2c5a35bd5230705088a4b",
+      "bytes": 1786
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/readers.data.json",
+      "path": "133-readers.data.json",
+      "sha256": "eac8895b5c543d59b3176005e8e656d7f3a75db95ede276be62999adfff86c68",
+      "bytes": 22924
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/readers.meta.json",
+      "path": "134-readers.meta.json",
+      "sha256": "a5062b3f2325fd8c30ebf7bb35e339baa9e93c8f6b2c33591eb505f73b176451",
+      "bytes": 1946
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/resources/__init__.data.json",
+      "path": "135-__init__.data.json",
+      "sha256": "ed9b56c033f5378a99d882741a6f9de585015c9f40f0edea07ce50038562fe0a",
+      "bytes": 10181
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/resources/__init__.meta.json",
+      "path": "136-__init__.meta.json",
+      "sha256": "7c1065d19db9cd2a93c65cda9b2277ba5c27ee6d78670e569c0b01363fa70e14",
+      "bytes": 1897
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/resources/_common.data.json",
+      "path": "137-_common.data.json",
+      "sha256": "054e491cf523fca85eb76c9ad5fc30ce3adf14ee3c705366d0ba19cfe6e15674",
+      "bytes": 13251
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/resources/_common.meta.json",
+      "path": "138-_common.meta.json",
+      "sha256": "40ca567481508bf5a48ff8b182b018448e71e662e09ed2fdd8a1836d234f9b48",
+      "bytes": 1847
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/resources/abc.data.json",
+      "path": "139-abc.data.json",
+      "sha256": "a962070fbcdac539417d666aea507f91465382d595644127860a862aea0f756e",
+      "bytes": 2531
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/importlib/resources/abc.meta.json",
+      "path": "140-abc.meta.json",
+      "sha256": "ce0f21f2be877e3af793c69b396e62d2a7f4649acf1d152a67291062e9c1ee4b",
+      "bytes": 1737
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/io.data.json",
+      "path": "141-io.data.json",
+      "sha256": "a1b34ad7832a0ee5b6068c8caeca68826136f3835cec95d0c3a9b304001a3652",
+      "bytes": 8864
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/io.meta.json",
+      "path": "142-io.meta.json",
+      "sha256": "066c9226754ae3d73af1248e4a459c23a072c37232e5d8b6410fbe8d77069554",
+      "bytes": 1699
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/os/__init__.data.json",
+      "path": "143-__init__.data.json",
+      "sha256": "9231921f3370cf3dd284866f2f6f0e628079cb36bc3692c1f4e7fac292231390",
+      "bytes": 400065
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/os/__init__.meta.json",
+      "path": "144-__init__.meta.json",
+      "sha256": "a617cfa90049fca6470addb0e10cc7595cfc45085c8fc3006881991efb809ed1",
+      "bytes": 1844
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/os/path.data.json",
+      "path": "145-path.data.json",
+      "sha256": "91ff1af80c30ef02f0d86cbe8d17fe3eccf780d504bec2fc0471dd9c247d5557",
+      "bytes": 5384
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/os/path.meta.json",
+      "path": "146-path.meta.json",
+      "sha256": "407c32ed9b47b7c0fc42e1233298977d91a0249449eae8db89700ff0fc8f8327",
+      "bytes": 1684
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/pathlib.data.json",
+      "path": "147-pathlib.data.json",
+      "sha256": "bffc11e1e001c7621a6d692944e9cbaa05b38d8566342665570ff76a712f3cd2",
+      "bytes": 113422
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/pathlib.meta.json",
+      "path": "148-pathlib.meta.json",
+      "sha256": "c8ccdb248a015a462f5e8f2a70d3d37574d16461f5b3e6ffd4a89a011f0e6006",
+      "bytes": 1801
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/posixpath.data.json",
+      "path": "149-posixpath.data.json",
+      "sha256": "ed3c6469eaca5a3408bf09906070011fba83226bb9ba4d547c4529075ec99e6a",
+      "bytes": 147244
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/posixpath.meta.json",
+      "path": "150-posixpath.meta.json",
+      "sha256": "bd5e7ab9b255656b46299fb1dea857145a215c731177abe247ad2abaa679f63c",
+      "bytes": 1764
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/re.data.json",
+      "path": "151-re.data.json",
+      "sha256": "b766cf03707b75da8206ca69bd7d7872958623e54f04776ccb36e69410ea2596",
+      "bytes": 263855
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/re.meta.json",
+      "path": "152-re.meta.json",
+      "sha256": "3515782de71a20b11f0bbf3426ec8b2c3a020cdebb22b012ebacbe406e2c0a0f",
+      "bytes": 1810
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/resource.data.json",
+      "path": "153-resource.data.json",
+      "sha256": "ae1c297936fe1d1933603fd7c93dda68d38e1674bb120d619aa7e8ceb860ddac",
+      "bytes": 43942
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/resource.meta.json",
+      "path": "154-resource.meta.json",
+      "sha256": "b04ddc96191cb89fd0866de1d2719bb5af6501c506bc1a9c71ad75c601f3bcd0",
+      "bytes": 1699
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/sre_compile.data.json",
+      "path": "155-sre_compile.data.json",
+      "sha256": "34f6607b3635e297d59c8d26e131236a81b0a9bc204d28e45c05d1981da93b0b",
+      "bytes": 14887
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/sre_compile.meta.json",
+      "path": "156-sre_compile.meta.json",
+      "sha256": "b3408c0a45b8b5e0e3a4f34aca157b23f22c9bd2500da81992a0f56ab6540068",
+      "bytes": 1709
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/sre_constants.data.json",
+      "path": "157-sre_constants.data.json",
+      "sha256": "a9a75bf0aabcccb78a922dcc42d87a5d8b7d9f1ec4c88df2a59251c85cefd88c",
+      "bytes": 26852
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/sre_constants.meta.json",
+      "path": "158-sre_constants.meta.json",
+      "sha256": "43e0888d2712db63333ceab4f09d29b27a1485cabec4efbc2da0c5676b33ecfb",
+      "bytes": 1743
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/sre_parse.data.json",
+      "path": "159-sre_parse.data.json",
+      "sha256": "cab395da8c7ba52bb45cc235acef3147f177111cdb1b28c5afd4228b3914452f",
+      "bytes": 54642
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/sre_parse.meta.json",
+      "path": "160-sre_parse.meta.json",
+      "sha256": "a04978fa295eb96ebe7a075ee5dcb28bb251ad222c04cc18ce14fabf9d8a421b",
+      "bytes": 1777
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/subprocess.data.json",
+      "path": "161-subprocess.data.json",
+      "sha256": "168247a8fb82b976ba796dd9d33d275e99dde4d06e8a86761f37a276a9c0a9c5",
+      "bytes": 251794
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/subprocess.meta.json",
+      "path": "162-subprocess.meta.json",
+      "sha256": "4a440e01b75c2da3b2452f716a0f7f00c7db5a2ced1f01c43caf5c4c19c43a95",
+      "bytes": 1783
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/sys/__init__.data.json",
+      "path": "163-__init__.data.json",
+      "sha256": "26db0596a35498dc110af8b78a53d2abd8e8bd9ac0ba364bc187a26b8d523364",
+      "bytes": 166322
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/sys/__init__.meta.json",
+      "path": "164-__init__.meta.json",
+      "sha256": "2e264dbc7df6a05464d0f6c5cbc8673b64c3ae1c6e025ba838017a34ba5ac745",
+      "bytes": 1804
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/sys/_monitoring.data.json",
+      "path": "165-_monitoring.data.json",
+      "sha256": "f0e24c7a2a7b30fd249766b05c4f8fc8f88c807563adeaddbf752eea031d4716",
+      "bytes": 15246
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/sys/_monitoring.meta.json",
+      "path": "166-_monitoring.meta.json",
+      "sha256": "e64900550ad920789e6f0f30191c16c3efef187d1c694177338a0c0efb6fc839",
+      "bytes": 1708
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/types.data.json",
+      "path": "167-types.data.json",
+      "sha256": "7c57540d2fa4b87acbc11658ff4834aad49e0bbde04ed73ab01cd95faca93beb",
+      "bytes": 339710
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/types.meta.json",
+      "path": "168-types.meta.json",
+      "sha256": "4fc947ed69abc89a59d9ff91676099e2332fe4ee347c948b1ed8d3dad4ed9630",
+      "bytes": 1784
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/typing.data.json",
+      "path": "169-typing.data.json",
+      "sha256": "053b214d240fa6b586742d0973de5fed9ac00379842ff8da829d3847f3092ae1",
+      "bytes": 637691
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/typing.meta.json",
+      "path": "170-typing.meta.json",
+      "sha256": "af969858e35ebedb5bf0b8bdd139352f4e46e87b6e04a0ff7b64c13fd5dbabb2",
+      "bytes": 1778
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/typing_extensions.data.json",
+      "path": "171-typing_extensions.data.json",
+      "sha256": "2620bcaf6a94bb8da39b4bc956fdbf2d4e3bae95bef9798336147594bdf267e3",
+      "bytes": 116298
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/typing_extensions.meta.json",
+      "path": "172-typing_extensions.meta.json",
+      "sha256": "fad4711258ac2c88afa9e73317e0a3e0684116f78d4c1e3f941e7b113d018aa1",
+      "bytes": 1782
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/urllib/__init__.data.json",
+      "path": "173-__init__.data.json",
+      "sha256": "c7b14f1f499107a97f32e440771e86fa87e8519b92f281754579fa1de06d4674",
+      "bytes": 1787
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/urllib/__init__.meta.json",
+      "path": "174-__init__.meta.json",
+      "sha256": "78cb1abb1dead739b232c4fb0503b6d4de2ff4b3ebf723431ac71fd6a23b8e32",
+      "bytes": 1662
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/urllib/parse.data.json",
+      "path": "175-parse.data.json",
+      "sha256": "c2c44a86f411db8837c0db77cc19be87a97e26599444367adbd7d8e32c9b9ef9",
+      "bytes": 247763
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/urllib/parse.meta.json",
+      "path": "176-parse.meta.json",
+      "sha256": "4975f7d4867f4da8644a4fe6e57bd386e04501a6874c6b7d3194b3cb83cd053e",
+      "bytes": 1753
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/zipfile/__init__.data.json",
+      "path": "177-__init__.data.json",
+      "sha256": "f7e1cc2b5fc0de5439ca37146d446aa32dd87c9954368a95a56f571d1ac64a70",
+      "bytes": 85703
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/zipfile/__init__.meta.json",
+      "path": "178-__init__.meta.json",
+      "sha256": "6f6679434e3eac8c974a4b6a90feb98ff73ddf5fb13cd14c6964f5627301ecf2",
+      "bytes": 1827
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/zipfile/_path.data.json",
+      "path": "179-_path.data.json",
+      "sha256": "118e7ff8ead016af500db371743d30d735c8831a49a76846a7796d7632583ca5",
+      "bytes": 47383
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/3.12/zipfile/_path.meta.json",
+      "path": "180-_path.meta.json",
+      "sha256": "426f711509a32f6dbf51f3ab196518c3162db6788d12cf8ce9f8e42888095874",
+      "bytes": 1798
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-cache/CACHEDIR.TAG",
+      "path": "181-CACHEDIR.TAG",
+      "sha256": "f1c13afc555358c9033b0f1f30aaa177fe88bda40f4b8a24598400d547876adc",
+      "bytes": 190
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-document-ir-final.log",
+      "path": "182-mypy-document-ir-final.log",
+      "sha256": "5d4b6d285b77932e3d08212c3b4974d0a803f98ec60408ac6ccf6a063fa6c19e",
+      "bytes": 42
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/mypy-document-ir.log",
+      "path": "183-mypy-document-ir.log",
+      "sha256": "a4553d42c3de534d38f9bdf7ed3c5be3c1439c269645333ea141b7fe61fd033a",
+      "bytes": 271
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/original/backend/app/adapters/document_ir.py",
+      "path": "184-document_ir.py.txt",
+      "sha256": "7d4dd829467ab55a25b9e07ccb9a4e7ffb8614be98a3bd1abcd2ebec056e7c44",
+      "bytes": 17276
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/original/backend/evaluation/research/expert/citations.py",
+      "path": "185-citations.py.txt",
+      "sha256": "75adaa1534c4680982922d5f2c646353840da6dd814e3e8bb97df8d3c812a3f7",
+      "bytes": 13146
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/original/backend/evaluation/research/expert/models.py",
+      "path": "186-models.py.txt",
+      "sha256": "00e3523e5c8e39298cc31ca561e6cd3329962fb3bc9e517ced334d0a071dcf50",
+      "bytes": 54286
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/original/backend/tests/test_document_ir.py",
+      "path": "187-test_document_ir.py.txt",
+      "sha256": "d14e7c7c25057f8d97eea34a6993b99f9c9a57add6937778b83289d25676132b",
+      "bytes": 8908
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/original/backend/tests/test_expert_citations.py",
+      "path": "188-test_expert_citations.py.txt",
+      "sha256": "3c24df3955342363786613a62676b43411aa9c969a13c341c91df8bf8bc24eaa",
+      "bytes": 38884
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/original-manifest.json",
+      "path": "189-original-manifest.json",
+      "sha256": "87d039eba9d800dc360a20391b5117d0c2830f52db0286e41a394f8b6d714053",
+      "bytes": 1456
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/package-inventory.log",
+      "path": "190-package-inventory.log",
+      "sha256": "6dbf860405e296d9d434c87a96383035e6bb862e6e1d1707a83d69aead75091f",
+      "bytes": 3698
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/package_candidate.py",
+      "path": "191-package_candidate.py.txt",
+      "sha256": "78a330e4d9b5cf390bfba0f54e6bdda3a66d26da6105552b08a4ecc452d00675",
+      "bytes": 3656
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/regression-draft.patch",
+      "path": "192-regression-draft.patch",
+      "sha256": "88b1f2f496dfbe4c618bc0a727c103c520a7b8f7ba392a60cd121b3d8f16035c",
+      "bytes": 14737
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/ruff-delivery.log",
+      "path": "193-ruff-delivery.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/ruff-final.log",
+      "path": "194-ruff-final.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-year-context-v2-candidate/source.patch",
+      "path": "195-source.patch",
+      "sha256": "2a2b2f4de46a8996e5c6ff8d742a9ab85db2a28f21550dda0e0aec10ac530852",
+      "bytes": 16755
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-unbound-proof-drafts/unimatch-expert500-freeze-v13.py.txt",
+      "path": "196-unimatch-expert500-freeze-v13.py.txt",
+      "sha256": "24ff5fed65840990e0c6ffec8dc94be98b1fcfcfa0ed30672b09060e8f6cd68d",
+      "bytes": 32786
+    },
+    {
+      "original_path": "/tmp/unimatch-expert500-v13-unbound-proof-drafts/unimatch-expert500-launch-v13.py.txt",
+      "path": "197-unimatch-expert500-launch-v13.py.txt",
+      "sha256": "cd09eef2aa59f03f2a0362ca0b1f86442df761343bd5febdd1ec38a2ff7ec4d2",
+      "bytes": 10330
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/.github/workflows/benchmark-capture.yml",
+      "path": "198-benchmark-capture.yml",
+      "sha256": "81e37ba2ca56f968bf04052c12421b4b399b7139ddf2f1eaebc55f708af364f9",
+      "bytes": 32465
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/app/adapters/document_ir.py",
+      "path": "199-document_ir.py.txt",
+      "sha256": "199e48ba8b2396cda444049cbe9ca728386247b116facb713ab24320d5b6a4b2",
+      "bytes": 23564
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/models.py",
+      "path": "200-models.py.txt",
+      "sha256": "032d2a9ddaae87f71bc2653fc0bee7069accea19d0e0ed8042560fc9d1490ca8",
+      "bytes": 55305
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/citations.py",
+      "path": "201-citations.py.txt",
+      "sha256": "75adaa1534c4680982922d5f2c646353840da6dd814e3e8bb97df8d3c812a3f7",
+      "bytes": 13146
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/evaluation/research/expert/controller.py",
+      "path": "202-controller.py.txt",
+      "sha256": "88482a7aaed79080c8c58df9df762cbe8c0bf734fa3c01b43764af7ef20d4fb4",
+      "bytes": 56679
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/tests/test_document_ir.py",
+      "path": "203-test_document_ir.py.txt",
+      "sha256": "82ecbf62755462e2c771c2a8c8d9d3aa7db1683e8a28aa2711f6561e8b198647",
+      "bytes": 15541
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/tests/test_expert_citations.py",
+      "path": "204-test_expert_citations.py.txt",
+      "sha256": "371f14c2ddcdce4712e0e44d3742bdf10d834eda5879358a18c5bf795d053fb1",
+      "bytes": 45195
+    },
+    {
+      "original_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/tests/test_expert_controller_mixed_provider_stop.py",
+      "path": "205-test_expert_controller_mixed_provider_stop.py.txt",
+      "sha256": "392d2102d0e97c406a090c02eb6da50a54e7827b777a50ea2d2dabdd996abe0c",
+      "bytes": 8776
+    }
+  ]
+}

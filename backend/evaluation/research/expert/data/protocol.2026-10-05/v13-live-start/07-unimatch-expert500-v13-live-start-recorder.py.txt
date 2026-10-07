@@ -1,0 +1,34 @@
+import hashlib
+import json
+import shutil
+from datetime import UTC, datetime
+from pathlib import Path
+
+repo=Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply')
+protocol=repo/'backend/evaluation/research/expert/data/protocol.2026-10-05'
+ci=Path('/tmp/unimatch-expert500-v13-source-ci')
+ci_target=protocol/'v13-source-ci'
+assert not ci_target.exists()
+manifest=json.loads((ci/'manifest.json').read_text())
+assert manifest['successful_jobs']==12 and manifest['source_harness_sha']=='e327498d605d3dbe14da177a8a535c664818ce9b'
+for r in manifest['records']:
+ assert hashlib.sha256((ci/r['snapshot']).read_bytes()).hexdigest()==r['sha256']
+shutil.copytree(ci,ci_target)
+for p in ci.iterdir(): assert (ci_target/p.name).read_bytes()==p.read_bytes()
+root=repo/'artifacts/expert-500/phase1-v13-2026-10-05'
+target=protocol/'v13-live-start'
+assert not target.exists()
+originals=[root/n for n in ('trial.json','trial-at-baseline-start.json','workspace-locations.json','workspace-receipts.json','baseline-stage-start.json')]
+originals += [Path('/tmp/unimatch-expert500-v13-launch-original.log'),Path('/tmp/unimatch-expert500-v13-source-ci-recorder-original.log'),Path(__file__)]
+assert all(p.is_file() for p in originals)
+assert (root/'trial.json').read_bytes()==(root/'trial-at-baseline-start.json').read_bytes()
+target.mkdir()
+records=[]
+for i,p in enumerate(originals):
+ raw=p.read_bytes(); name=f'{i:02d}-{p.name}'+('.txt' if p.suffix=='.py' else '')
+ with (target/name).open('xb') as out:out.write(raw)
+ records.append({'original':str(p),'snapshot':name,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()})
+value={'recorded_at':datetime.now(UTC).isoformat(),'source_harness_sha':manifest['source_harness_sha'],'frozen_ref':manifest['frozen_ref'],'trial_sha256':hashlib.sha256((root/'trial.json').read_bytes()).hexdigest(),'ci_manifest_sha256':hashlib.sha256((ci/'manifest.json').read_bytes()).hexdigest(),'status':'fresh_baseline_started_experts_unstarted_unscored','record_count':len(records),'records':records,'labels_opened':False,'heldout150_untouched':True,'deployment_performed':False}
+with (target/'manifest.json').open('x') as out:out.write(json.dumps(value,indent=2)+'\n')
+for r in records:assert hashlib.sha256((target/r['snapshot']).read_bytes()).hexdigest()==r['sha256']
+print(json.dumps({'ci_records':manifest['record_count'],'start_records':len(records),'ci_manifest_sha256':value['ci_manifest_sha256'],'live_start_manifest_sha256':hashlib.sha256((target/'manifest.json').read_bytes()).hexdigest(),'trial_sha256':value['trial_sha256']}))

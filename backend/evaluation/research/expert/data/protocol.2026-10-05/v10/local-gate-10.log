@@ -1,0 +1,48 @@
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+profile=7b5ca6796dd44a9995bb0dbadc805849  run=8d200ec2ccf74effab54bd8d331ab101
+
+stage=awaiting_user_decision  results=20  pages=98 (failed 15)  claims=427
+
+University                         Elig       Fit              Funding                             Gap  Score
+--------------------------------------------------------------------------------------------------------------------------
+University of Groningen            PENDING    STRONGER_FIT     FULL_RIDE_CONFIRMED           1,848 USD  0.79
+KU Leuven                          MET        STRONGER_FIT     FULL_TUITION                  7,554 USD  0.78
+University of Tokyo                MET        STRONGER_FIT     FULL_TUITION                  1,986 USD  0.70
+University of Toronto              MET        STRONGER_FIT     FULL_RIDE_CONFIRMED      not computable  0.69
+McGill University                  NEEDS_OFF  INSUFFICIENT_DA  UNKNOWN                  not computable  0.50
+University of Amsterdam            NEEDS_OFF  INSUFFICIENT_DA  UNKNOWN                  not computable  0.50
+Eindhoven University of Technolog  NEEDS_OFF  INSUFFICIENT_DA  UNKNOWN                  not computable  0.50
+University of Vienna               MET        STRONGER_FIT     UNKNOWN                  not computable  0.49
+National University of Singapore   MET        STRONGER_FIT     NEED_BASED_POSSIBLE      not computable  0.43
+Aalto University                   MET        STRONGER_FIT     FULL_TUITION                 11,859 USD  0.41
+University of British Columbia     MET        STRONGER_FIT     FULL_TUITION                 21,471 USD  0.40
+University of Oslo                 NEEDS_OFF  INSUFFICIENT_DA  UNKNOWN                  not computable  0.37
+Arizona State University           PENDING    PLAUSIBLE_FIT    FULL_TUITION                 19,400 USD  0.30
+Technical University of Munich     PENDING    STRONGER_FIT     PARTIAL                      18,663 USD  0.28
+University of Edinburgh            NEEDS_OFF  INSUFFICIENT_DA  UNKNOWN                  not computable  0.26
+Trinity College Dublin             MET        STRONGER_FIT     PARTIAL                      41,793 USD  0.25
+University of Warsaw               MET        STRONGER_FIT     PARTIAL                       9,239 USD  0.25
+Delft University of Technology     GAP        AMBITIOUS        FULL_RIDE_CONFIRMED           2,446 USD  0.00
+University of Melbourne            GAP        AMBITIOUS        PARTIAL                      46,267 USD  0.00
+EPFL                               GAP        AMBITIOUS        FULL_TUITION                  8,386 USD  0.00
+{"isolated_database": "/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-expert500-v8-demo-06zmuk_s/demo.db", "source": "bundled synthetic demo only", "results": 20, "first": "University of Groningen", "ubc_bucket": "OUT_OF_BUDGET", "passed": true}

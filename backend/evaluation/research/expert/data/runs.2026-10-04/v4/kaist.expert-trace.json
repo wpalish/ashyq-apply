@@ -1,0 +1,234 @@
+{
+  "schema_version": "1",
+  "case_id": "kaist",
+  "packet_sha256": "3ef2974d4589c7b71e703eb7856853285756fcafe0df6b500f1f45b0474ffedb",
+  "baseline_pipeline_sha": "24865069715f82a22d83ade810b367c0d5442c67",
+  "max_fetcher_calls": 60,
+  "max_elapsed_ms": 120000,
+  "max_search_queries": 6,
+  "initial_fetcher_calls": 0,
+  "initial_elapsed_ms": 0,
+  "initial_search_queries": 0,
+  "started_at": "2026-10-04T10:28:59.778770+00:00",
+  "ended_at": "2026-10-04T10:35:09.190073+00:00",
+  "actions": [
+    {
+      "at": "2026-10-04T10:29:45.548552+00:00",
+      "tool": "search_provider",
+      "request": {
+        "tool": "search_provider",
+        "query": "site:kaist.ac.kr international undergraduate admission 2027 computer science scholarship",
+        "domains": [
+          "kaist.ac.kr"
+        ],
+        "max_results": 6
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-001.json",
+      "raw_log_sha256": "8d74c834087f46aac317cbcb398134841bcc14be1445ddf3c5a4cac6834e8710",
+      "elapsed_ms": 2075,
+      "fetcher_calls_cumulative": 0,
+      "elapsed_ms_cumulative": 10708,
+      "search_queries_cumulative": 1,
+      "step": 1,
+      "observed_before": "Find official undergraduate admissions and Computer Science programme sources.",
+      "observed_from_step": null,
+      "action": "search_provider: site:kaist.ac.kr international undergraduate admission 2027 computer science scholarship",
+      "stage": "candidate_generation",
+      "url": null,
+      "final_url": null
+    },
+    {
+      "at": "2026-10-04T10:30:53.379871+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://admission.kaist.ac.kr/wz/api/common/files/view/intl-undergraduate/pdf/Admissions_Guide_for_2027_admission.pdf"
+      },
+      "outcome": "too_large",
+      "outcome_status": "failure",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-002.json",
+      "raw_log_sha256": "d406c3187c8d4052ca0aed735838bd85873ffb22c6f0b090b5a7f27efacf63cf",
+      "elapsed_ms": 1870,
+      "fetcher_calls_cumulative": 1,
+      "elapsed_ms_cumulative": 22229,
+      "search_queries_cumulative": 1,
+      "step": 2,
+      "observed_before": "Read the official 2027 undergraduate admissions guide for scoped requirements.",
+      "observed_from_step": 1,
+      "action": "fetcher: https://admission.kaist.ac.kr/wz/api/common/files/view/intl-undergraduate/pdf/Admissions_Guide_for_2027_admission.pdf",
+      "stage": "page_understanding",
+      "url": "https://admission.kaist.ac.kr/wz/api/common/files/view/intl-undergraduate/pdf/Admissions_Guide_for_2027_admission.pdf",
+      "final_url": "https://admission.kaist.ac.kr/wz/api/common/files/view/intl-undergraduate/pdf/Admissions_Guide_for_2027_admission.pdf"
+    },
+    {
+      "at": "2026-10-04T10:32:01.118535+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-003.json",
+      "raw_log_sha256": "8da3b0437f1c2e6068b34dab5dcfdf1f5c5c2cd490eff96b8a38e286cd2723da",
+      "elapsed_ms": 2455,
+      "fetcher_calls_cumulative": 2,
+      "elapsed_ms_cumulative": 34914,
+      "search_queries_cumulative": 1,
+      "step": 3,
+      "observed_before": "The admissions PDF exceeded the fetch limit. Read the official 2027 timeline page instead.",
+      "observed_from_step": 2,
+      "action": "fetcher: https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+      "stage": "page_understanding",
+      "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+      "final_url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline"
+    },
+    {
+      "at": "2026-10-04T10:33:05.719292+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/about/program"
+      },
+      "outcome": "timeout",
+      "outcome_status": "failure",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-004.json",
+      "raw_log_sha256": "9eb3e203bed9185fb05b63ab06805378d47461ce3e2bd8716d0d755e8082c6fc",
+      "elapsed_ms": 21568,
+      "fetcher_calls_cumulative": 3,
+      "elapsed_ms_cumulative": 72152,
+      "search_queries_cumulative": 1,
+      "step": 4,
+      "observed_before": "The 2027 calendar lists the regular Fall Track application period; its table caption inconsistently says 2023. Next inspect programme information.",
+      "observed_from_step": 3,
+      "action": "fetcher: https://admission.kaist.ac.kr/intl-undergraduate/about/program",
+      "stage": "page_understanding",
+      "url": "https://admission.kaist.ac.kr/intl-undergraduate/about/program",
+      "final_url": "https://admission.kaist.ac.kr/intl-undergraduate/about/program"
+    },
+    {
+      "at": "2026-10-04T10:34:24.165286+00:00",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist"
+      },
+      "outcome": "robots_disallowed",
+      "outcome_status": "blocked",
+      "policy_mode": "same_policy",
+      "raw_log_path": "kaist-005.json",
+      "raw_log_sha256": "2364f86534aa2c36e4ef94597e5b6fbadd38159daf49e035ddbd22a1b7636548",
+      "elapsed_ms": 10980,
+      "fetcher_calls_cumulative": 4,
+      "elapsed_ms_cumulative": 92467,
+      "search_queries_cumulative": 1,
+      "step": 5,
+      "observed_before": "Inspect the official scholarship page for award coverage and international eligibility.",
+      "observed_from_step": 4,
+      "action": "fetcher: https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist",
+      "stage": "page_understanding",
+      "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist",
+      "final_url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist"
+    }
+  ],
+  "proposals": [
+    {
+      "claim_key": "deadline",
+      "value": {
+        "track": "Regular Admissions — Fall Track Only",
+        "application_period_and_document_submission": "November 10, 2026 ~ January 14, 2027, 6:00 PM (KST)",
+        "heading": "Application Timeline for 2027 Admissions",
+        "table_caption": "Application Timeline for 2023 Admissions"
+      },
+      "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+      "excerpt": "November 10, 2026 ~ January 14, 2027, 6:00 PM (KST)",
+      "accessed_on": "2026-10-04",
+      "scope": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": "fall 2027",
+        "population": "international",
+        "qualification": null,
+        "academic_year": null
+      },
+      "supporting_steps": [
+        3
+      ],
+      "status": "unreviewed"
+    }
+  ],
+  "question_findings": [
+    {
+      "question": "Q0",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q1",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q2",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q3",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q4",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q5",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    },
+    {
+      "question": "Q6",
+      "status": "unresolved",
+      "supporting_steps": [],
+      "proposal_indices": [],
+      "evidence": [],
+      "scope": {},
+      "observation": "No finding was submitted for this question."
+    }
+  ],
+  "review_status": "unreviewed"
+}

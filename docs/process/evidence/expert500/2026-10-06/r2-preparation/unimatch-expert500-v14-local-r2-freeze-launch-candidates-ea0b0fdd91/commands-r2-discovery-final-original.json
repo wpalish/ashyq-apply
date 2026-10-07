@@ -1,0 +1,81 @@
+{
+  "environment": {
+    "HOME": "/Users/wpalish",
+    "PATH": "/usr/bin:/bin:/usr/sbin:/sbin",
+    "LANG": "en_US.UTF-8",
+    "LC_ALL": "en_US.UTF-8",
+    "TMPDIR": "/tmp",
+    "MYPYPATH": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend",
+    "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend"
+  },
+  "commands": [
+    {
+      "log": "/tmp/unimatch-expert500-v14-local-r2-freeze-launch-candidates-ea0b0fdd91/ruff-discovery-final-original.log",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/ruff",
+        "check",
+        "--config",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/ruff.toml",
+        "--ignore",
+        "E501,B023",
+        "/tmp/unimatch-expert500-freeze-v14-local-r2-candidate.py",
+        "/tmp/unimatch-expert500-launch-v14-local-r2-candidate.py",
+        "/tmp/test_unimatch_expert500_freeze_launch_v14_local_r2_candidate.py"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend",
+      "returncode": 1
+    },
+    {
+      "log": "/tmp/unimatch-expert500-v14-local-r2-freeze-launch-candidates-ea0b0fdd91/mypy-discovery-final-original.log",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/python",
+        "-B",
+        "-m",
+        "mypy",
+        "--config-file",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/mypy.ini",
+        "--follow-imports=skip",
+        "/tmp/unimatch-expert500-freeze-v14-local-r2-candidate.py",
+        "/tmp/unimatch-expert500-launch-v14-local-r2-candidate.py",
+        "/tmp/test_unimatch_expert500_freeze_launch_v14_local_r2_candidate.py"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend",
+      "returncode": 0
+    },
+    {
+      "log": "/tmp/unimatch-expert500-v14-local-r2-freeze-launch-candidates-ea0b0fdd91/format-discovery-final-original.log",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/ruff",
+        "format",
+        "--config",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/ruff.toml",
+        "--check",
+        "/tmp/unimatch-expert500-freeze-v14-local-r2-candidate.py",
+        "/tmp/unimatch-expert500-launch-v14-local-r2-candidate.py",
+        "/tmp/test_unimatch_expert500_freeze_launch_v14_local_r2_candidate.py"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend",
+      "returncode": 0
+    },
+    {
+      "log": "/tmp/unimatch-expert500-v14-local-r2-freeze-launch-candidates-ea0b0fdd91/pytest-r2-discovery-original.log",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-c",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/pytest.ini",
+        "--rootdir",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/tmp/test_unimatch_expert500_freeze_launch_v14_local_r2_candidate.py"
+      ],
+      "cwd": "/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-r2-sourcefree-gate-07hhezgf",
+      "returncode": 0
+    }
+  ]
+}

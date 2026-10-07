@@ -1,0 +1,19 @@
+/tmp/test_unimatch_expert500_freeze_launch_v14_local_r2_candidate.py:908:12: SIM300 [*] Yoda condition detected
+    |
+906 |           Path("/tmp/unimatch-expert500-freeze-v14-local-r2-candidate.py"),
+907 |       )
+908 |       assert module.SELECTOR_ENVIRONMENT == {
+    |  ____________^
+909 | |         "HOME": "/Users/wpalish",
+910 | |         "PATH": str(Path(module.FROZEN_CLI).parent) + ":/usr/bin:/bin:/usr/sbin:/sbin",
+911 | |         "LANG": "en_US.UTF-8",
+912 | |         "LC_ALL": "en_US.UTF-8",
+913 | |         "TMPDIR": "/tmp",
+914 | |     }
+    | |_____^ SIM300
+915 |       module.validate_neutral_environment(
+916 |           {
+    |
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.
