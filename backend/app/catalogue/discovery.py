@@ -126,6 +126,7 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
         candidate: Candidate,
         trace: DiscoveryTrace,
     ) -> tuple[Candidate, DiscoveryTrace]:
+        trace.search_queries_sent = max(trace.search_queries_sent, candidate.search_queries_used)
         entry = uni.registry_entry
         if entry is None:
             entry = await self._identify_site(uni, trace)
@@ -133,9 +134,13 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
             trace.search_limitations.append(
                 f"Official website identity not established for {uni.name}; candidate retained without verified programme facts."
             )
+            candidate.search_queries_used = trace.search_queries_sent
             return candidate, trace
-        enriched, discovered = await self._discover_one(entry, profile)
+        enriched, discovered = await self._discover_one(
+            entry, profile, search_queries_used=trace.search_queries_sent
+        )
         discovered.search_failures[:0] = trace.search_failures
+        discovered.search_limitations[:0] = trace.search_limitations
         enriched.discovery_source = f"local-catalogue:{uni.id}; {enriched.discovery_source}"
         return enriched, discovered
 
@@ -149,8 +154,22 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
                 return entry
         # Missing or stale seed websites use the same explicitly configured
         # search provider. Only institution identity enters this query.
+        from app.adapters.search import intent as intent_module
+
+        if (
+            intent_module.SHARED_QUERY_BUDGET
+            and trace.search_queries_sent >= intent_module.DEFAULT_QUERY_BUDGET
+        ):
+            trace.search_limitations.append(
+                "Identity search not run: earlier searches used the "
+                f"{intent_module.DEFAULT_QUERY_BUDGET}-query budget."
+            )
+            return None
         try:
             provider = get_search_provider()
+            # Charge the seam attempt, including local wrapper refusal. This
+            # ledger is a budget, not proof of a vendor HTTP request.
+            trace.charge_search_query_attempt()
             response = await provider.search(
                 query=f'"{uni.name}" "{uni.country}" official university website', max_results=3
             )

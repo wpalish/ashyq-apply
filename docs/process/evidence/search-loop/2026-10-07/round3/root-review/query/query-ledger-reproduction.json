@@ -1,0 +1,1007 @@
+{
+  "source_sha_before": {
+    "backend/app/catalogue/discovery.py": "b2f057bc90831ea465c35561e710ad4cded038e88c45a629f34c2bccf226daab",
+    "backend/app/adapters/discovery/live_discovery.py": "b1d7e8f34a3cb59a3a93a1606aee191256e32f5d08e4ba71bc08d75a03521c4f",
+    "backend/app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "backend/app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "backend/app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "backend/app/adapters/search/retrieval.py": "ccbe3611602762f8f9ff3729bc75e76bbce7b9a04388e74ae561e996a46e1d7b",
+    "backend/app/adapters/search/exa.py": "70149ed992c6a34938585045461d77e55102815766dd85b51c0df72a5b6a4a45",
+    "backend/app/adapters/requirements/web_requirements.py": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+    "backend/app/adapters/scholarship/web_scholarships.py": "d1ce759b48ae5100676b9b8e80709b910f76ba9addd2f42f3eed711e45eb870e",
+    "backend/app/pipeline/runner.py": "686a6961964eb020056cba8b80f51c3cee622d2e6d62e63194b7d520e55fd71f",
+    "backend/evaluation/research/live.py": "d537aaef6527572dd6dda929e3ac235861e28a5e3ef5cd829ef11f3c71b73399"
+  },
+  "source_sha_after": {
+    "backend/app/catalogue/discovery.py": "b2f057bc90831ea465c35561e710ad4cded038e88c45a629f34c2bccf226daab",
+    "backend/app/adapters/discovery/live_discovery.py": "b1d7e8f34a3cb59a3a93a1606aee191256e32f5d08e4ba71bc08d75a03521c4f",
+    "backend/app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "backend/app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "backend/app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "backend/app/adapters/search/retrieval.py": "ccbe3611602762f8f9ff3729bc75e76bbce7b9a04388e74ae561e996a46e1d7b",
+    "backend/app/adapters/search/exa.py": "70149ed992c6a34938585045461d77e55102815766dd85b51c0df72a5b6a4a45",
+    "backend/app/adapters/requirements/web_requirements.py": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+    "backend/app/adapters/scholarship/web_scholarships.py": "d1ce759b48ae5100676b9b8e80709b910f76ba9addd2f42f3eed711e45eb870e",
+    "backend/app/pipeline/runner.py": "686a6961964eb020056cba8b80f51c3cee622d2e6d62e63194b7d520e55fd71f",
+    "backend/evaluation/research/live.py": "d537aaef6527572dd6dda929e3ac235861e28a5e3ef5cd829ef11f3c71b73399"
+  },
+  "source_unchanged": true,
+  "source_functions": {
+    "backend/app/catalogue/discovery.py::CatalogueDiscoveryAdapter._enrich": {
+      "line": 122,
+      "end_line": 140,
+      "sha256": "299caee7cf66b084e61600a57e8f7f3157fe55229b602621e60fef0ffb7ee69d"
+    },
+    "backend/app/catalogue/discovery.py::CatalogueDiscoveryAdapter._identify_site": {
+      "line": 142,
+      "end_line": 174,
+      "sha256": "11086a248cffff5fdbd6f10e18f8da4ca9a2c9fdae23d37778e94612405ce9a1"
+    },
+    "backend/app/adapters/discovery/live_discovery.py::DiscoveryTrace.as_dict": {
+      "line": 826,
+      "end_line": 846,
+      "sha256": "a93f982633fe25bf5c6bb721614a14517df4d01d0a588e583987e73b768f51eb"
+    },
+    "backend/app/adapters/discovery/live_discovery.py::LiveDiscoveryAdapter._discover_one": {
+      "line": 1105,
+      "end_line": 1220,
+      "sha256": "b9b992554f6f6aff8447ff76d4e456d6ddeeaedd354355ac8d18bc0266bb02ee"
+    },
+    "backend/app/adapters/discovery/live_discovery.py::LiveDiscoveryAdapter._add_search_results": {
+      "line": 1417,
+      "end_line": 1562,
+      "sha256": "19b14ae2b4d5283cc700a59f54a0da5e23113ecce9a94556202b7fc7429d86fe"
+    },
+    "backend/app/adapters/discovery/live_discovery.py::LiveDiscoveryAdapter._add_multi_field_search_results": {
+      "line": 1564,
+      "end_line": 1735,
+      "sha256": "73292594c38582ce057a975c8054a83a1d2c967f51af9e5dfe3c5484dc7ea443"
+    },
+    "backend/app/adapters/discovery/live_discovery.py::LiveDiscoveryAdapter._apply": {
+      "line": 1877,
+      "end_line": 1945,
+      "sha256": "634acd19694dae09b9f5f061d19fc391af1f4121b3e288d1293c8320a3ef14d5"
+    },
+    "backend/app/adapters/search/__init__.py::_ThrottleLatch.search": {
+      "line": 75,
+      "end_line": 88,
+      "sha256": "f7e29d01e3337af0c0c3ea74717113c251f5fba7768c4b739e6175c06b47df29"
+    },
+    "backend/app/adapters/search/__init__.py::get_search_provider": {
+      "line": 91,
+      "end_line": 136,
+      "sha256": "6b15cd33146bc985bc7c203bc7231f829596bb179221abec3ebb9127ba987edd"
+    },
+    "backend/app/adapters/search/retrieval.py::discover_candidates": {
+      "line": 357,
+      "end_line": 513,
+      "sha256": "e37bb9d4402c96ef06157e1ea1046265d4f2eb946a867b96f87d870827a2e509"
+    },
+    "backend/evaluation/research/live.py::_ExpertBudget.before_search": {
+      "line": 134,
+      "end_line": 145,
+      "sha256": "5eb3826d5278637f7266f5ed8d9d4ef7289cd4c4dc03433b6bb7c04aba0ed404"
+    }
+  },
+  "shared_stop_before": null,
+  "shared_stop_after": null,
+  "shared_stop_unchanged": true,
+  "frozen_commit_owner_report": "d669fd2; no Git command run by reviewer",
+  "network_calls": 0,
+  "real_vendor_calls": 0,
+  "git_calls": 0,
+  "all_assertions_passed": true,
+  "reproduction_scope": "Actual production _enrich/_identify_site/_discover_one/_add_search_results/discover_candidates/_apply and real _ThrottleLatch; identity probes and unrelated sitemap/navigation/confirmation/walker IO mocked; vendor/session fake; strict case additionally actual local _ExpertBudget.before_search",
+  "cases": [
+    {
+      "name": "registry_control",
+      "fields": [
+        "Computer Science"
+      ],
+      "shared_query_budget": true,
+      "default_query_budget": 6,
+      "actual_offline_vendor_calls": 6,
+      "identity_vendor_calls": 0,
+      "programme_vendor_calls": 6,
+      "upstream_trace_search_queries_sent": 0,
+      "returned_trace_is_upstream": false,
+      "returned_trace_search_queries_sent": 6,
+      "candidate_search_queries_used": 6,
+      "trace_search_counter_serialized": false,
+      "programme_count": 0,
+      "probe_urls": [],
+      "queries": [
+        {
+          "query": "site:example.edu \"Computer Science\" \"bachelor\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "Example University bachelor undergraduate first cycle Computer Science programme",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu programmes \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu courses \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu undergraduate \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu admissions bachelor",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        }
+      ],
+      "returned_trace": {
+        "institution": "Example University",
+        "domain": "discovered.example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "search identity recovery: checked 0, confirmed 0",
+          "search identity recovery via exa; queries 6, failed 0, rejected {}"
+        ],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "fetcher_calls": 0,
+      "downstream_stages": {
+        "sitemaps": 1,
+        "navigation": 1,
+        "walker": 1
+      }
+    },
+    {
+      "name": "seed_identity_control",
+      "fields": [
+        "Computer Science"
+      ],
+      "shared_query_budget": true,
+      "default_query_budget": 6,
+      "actual_offline_vendor_calls": 6,
+      "identity_vendor_calls": 0,
+      "programme_vendor_calls": 6,
+      "upstream_trace_search_queries_sent": 0,
+      "returned_trace_is_upstream": false,
+      "returned_trace_search_queries_sent": 6,
+      "candidate_search_queries_used": 6,
+      "trace_search_counter_serialized": false,
+      "programme_count": 0,
+      "probe_urls": [
+        "https://example.edu/"
+      ],
+      "queries": [
+        {
+          "query": "site:example.edu \"Computer Science\" \"bachelor\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "Example University bachelor undergraduate first cycle Computer Science programme",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu programmes \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu courses \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu undergraduate \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu admissions bachelor",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        }
+      ],
+      "returned_trace": {
+        "institution": "Example University",
+        "domain": "discovered.example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "search identity recovery: checked 0, confirmed 0",
+          "search identity recovery via exa; queries 6, failed 0, rejected {}"
+        ],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "fetcher_calls": 0,
+      "downstream_stages": {
+        "sitemaps": 1,
+        "navigation": 1,
+        "walker": 1
+      }
+    },
+    {
+      "name": "identity_then_single_field",
+      "fields": [
+        "Computer Science"
+      ],
+      "shared_query_budget": true,
+      "default_query_budget": 6,
+      "actual_offline_vendor_calls": 7,
+      "identity_vendor_calls": 1,
+      "programme_vendor_calls": 6,
+      "upstream_trace_search_queries_sent": 0,
+      "returned_trace_is_upstream": false,
+      "returned_trace_search_queries_sent": 6,
+      "candidate_search_queries_used": 6,
+      "trace_search_counter_serialized": false,
+      "programme_count": 0,
+      "probe_urls": [
+        "https://example.edu/",
+        "http://www.example.edu/",
+        "https://discovered.example.edu/"
+      ],
+      "queries": [
+        {
+          "query": "\"Example University\" \"Test Country\" official university website",
+          "domains": [],
+          "max_results": 3
+        },
+        {
+          "query": "site:example.edu \"Computer Science\" \"bachelor\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "Example University bachelor undergraduate first cycle Computer Science programme",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu programmes \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu courses \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu undergraduate \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu admissions bachelor",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        }
+      ],
+      "returned_trace": {
+        "institution": "Example University",
+        "domain": "discovered.example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "search identity recovery: checked 0, confirmed 0",
+          "search identity recovery via exa; queries 6, failed 0, rejected {}"
+        ],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "fetcher_calls": 0,
+      "downstream_stages": {
+        "sitemaps": 1,
+        "navigation": 1,
+        "walker": 1
+      }
+    },
+    {
+      "name": "identity_then_multifield",
+      "fields": [
+        "Computer Science",
+        "Mathematics"
+      ],
+      "shared_query_budget": true,
+      "default_query_budget": 6,
+      "actual_offline_vendor_calls": 7,
+      "identity_vendor_calls": 1,
+      "programme_vendor_calls": 6,
+      "upstream_trace_search_queries_sent": 0,
+      "returned_trace_is_upstream": false,
+      "returned_trace_search_queries_sent": 6,
+      "candidate_search_queries_used": 6,
+      "trace_search_counter_serialized": false,
+      "programme_count": 0,
+      "probe_urls": [
+        "https://example.edu/",
+        "http://www.example.edu/",
+        "https://discovered.example.edu/"
+      ],
+      "queries": [
+        {
+          "query": "\"Example University\" \"Test Country\" official university website",
+          "domains": [],
+          "max_results": 3
+        },
+        {
+          "query": "site:example.edu \"Computer Science\" \"bachelor\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "Example University bachelor undergraduate first cycle Computer Science programme",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu programmes \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu \"Mathematics\" \"bachelor\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "Example University bachelor undergraduate first cycle Mathematics programme",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu programmes \"Mathematics\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        }
+      ],
+      "returned_trace": {
+        "institution": "Example University",
+        "domain": "discovered.example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "search identity recovery: checked 0, confirmed 0",
+          "search identity recovery via exa; queries 6, failed 0, rejected {}"
+        ],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {
+          "requested": 2,
+          "queried": 2,
+          "represented": 0
+        },
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "fetcher_calls": 0,
+      "downstream_stages": {
+        "sitemaps": 1,
+        "navigation": 1,
+        "walker": 1
+      }
+    },
+    {
+      "name": "identity_unknown",
+      "fields": [
+        "Computer Science"
+      ],
+      "shared_query_budget": true,
+      "default_query_budget": 6,
+      "actual_offline_vendor_calls": 1,
+      "identity_vendor_calls": 1,
+      "programme_vendor_calls": 0,
+      "upstream_trace_search_queries_sent": 0,
+      "returned_trace_is_upstream": true,
+      "returned_trace_search_queries_sent": 0,
+      "candidate_search_queries_used": 0,
+      "trace_search_counter_serialized": false,
+      "programme_count": 0,
+      "probe_urls": [
+        "https://example.edu/",
+        "http://www.example.edu/"
+      ],
+      "queries": [
+        {
+          "query": "\"Example University\" \"Test Country\" official university website",
+          "domains": [],
+          "max_results": 3
+        }
+      ],
+      "returned_trace": {
+        "institution": "Example University",
+        "domain": "example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [
+          "Official website identity not established for Example University; candidate retained without verified programme facts."
+        ],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "fetcher_calls": 0,
+      "downstream_stages": {
+        "sitemaps": 0,
+        "navigation": 0,
+        "walker": 0
+      }
+    },
+    {
+      "name": "identity_provider_error",
+      "fields": [
+        "Computer Science"
+      ],
+      "shared_query_budget": true,
+      "default_query_budget": 6,
+      "actual_offline_vendor_calls": 1,
+      "identity_vendor_calls": 1,
+      "programme_vendor_calls": 0,
+      "upstream_trace_search_queries_sent": 0,
+      "returned_trace_is_upstream": true,
+      "returned_trace_search_queries_sent": 0,
+      "candidate_search_queries_used": 0,
+      "trace_search_counter_serialized": false,
+      "programme_count": 0,
+      "probe_urls": [
+        "https://example.edu/",
+        "http://www.example.edu/"
+      ],
+      "queries": [
+        {
+          "query": "\"Example University\" \"Test Country\" official university website",
+          "domains": [],
+          "max_results": 3
+        }
+      ],
+      "returned_trace": {
+        "institution": "Example University",
+        "domain": "example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [],
+        "search_failures": [
+          "Search service unavailable (configured search provider; HTTP 500)."
+        ],
+        "search_limitations": [
+          "Official website identity not established for Example University; candidate retained without verified programme facts."
+        ],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "fetcher_calls": 0,
+      "downstream_stages": {
+        "sitemaps": 0,
+        "navigation": 0,
+        "walker": 0
+      }
+    },
+    {
+      "name": "identity_plus_strict_evaluation_guard",
+      "fields": [
+        "Computer Science"
+      ],
+      "shared_query_budget": true,
+      "default_query_budget": 6,
+      "actual_offline_vendor_calls": 6,
+      "identity_vendor_calls": 1,
+      "programme_vendor_calls": 5,
+      "upstream_trace_search_queries_sent": 0,
+      "returned_trace_is_upstream": false,
+      "returned_trace_search_queries_sent": 6,
+      "candidate_search_queries_used": 6,
+      "trace_search_counter_serialized": false,
+      "programme_count": 0,
+      "probe_urls": [
+        "https://example.edu/",
+        "http://www.example.edu/",
+        "https://discovered.example.edu/"
+      ],
+      "queries": [
+        {
+          "query": "\"Example University\" \"Test Country\" official university website",
+          "domains": [],
+          "max_results": 3
+        },
+        {
+          "query": "site:example.edu \"Computer Science\" \"bachelor\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "Example University bachelor undergraduate first cycle Computer Science programme",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu programmes \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu courses \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu undergraduate \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        }
+      ],
+      "returned_trace": {
+        "institution": "Example University",
+        "domain": "discovered.example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "search identity recovery: checked 0, confirmed 0",
+          "search identity recovery via exa; queries 6, failed 1, rejected {}"
+        ],
+        "search_failures": [
+          "Search service unavailable (exa)."
+        ],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "fetcher_calls": 0,
+      "downstream_stages": {
+        "sitemaps": 1,
+        "navigation": 1,
+        "walker": 1
+      },
+      "strict_guard": {
+        "attempts": 7,
+        "sent_count": 6,
+        "blocked_count": 1,
+        "stop_reason": "search_budget_exhausted",
+        "provider_failure": null
+      }
+    },
+    {
+      "name": "precounted_upstream_trace_is_discarded",
+      "fields": [
+        "Computer Science"
+      ],
+      "shared_query_budget": true,
+      "default_query_budget": 6,
+      "actual_offline_vendor_calls": 7,
+      "identity_vendor_calls": 1,
+      "programme_vendor_calls": 6,
+      "upstream_trace_search_queries_sent": 1,
+      "returned_trace_is_upstream": false,
+      "returned_trace_search_queries_sent": 6,
+      "candidate_search_queries_used": 6,
+      "trace_search_counter_serialized": false,
+      "programme_count": 0,
+      "probe_urls": [
+        "https://example.edu/",
+        "http://www.example.edu/",
+        "https://discovered.example.edu/"
+      ],
+      "queries": [
+        {
+          "query": "\"Example University\" \"Test Country\" official university website",
+          "domains": [],
+          "max_results": 3
+        },
+        {
+          "query": "site:example.edu \"Computer Science\" \"bachelor\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "Example University bachelor undergraduate first cycle Computer Science programme",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu programmes \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu courses \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu undergraduate \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu admissions bachelor",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        }
+      ],
+      "returned_trace": {
+        "institution": "Example University",
+        "domain": "discovered.example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "search identity recovery: checked 0, confirmed 0",
+          "search identity recovery via exa; queries 6, failed 0, rejected {}"
+        ],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "fetcher_calls": 0,
+      "downstream_stages": {
+        "sitemaps": 1,
+        "navigation": 1,
+        "walker": 1
+      }
+    }
+  ],
+  "planner_precharge_controls": [
+    {
+      "name": "single_field_precharged_one",
+      "fields": [
+        "Computer Science"
+      ],
+      "initial_count": 1,
+      "remaining_under_existing_six_query_contract": 5,
+      "new_fake_vendor_calls": 6,
+      "returned_trace_search_queries_sent": 7,
+      "queries": [
+        {
+          "query": "site:example.edu \"Computer Science\" \"bachelor\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "Example University bachelor undergraduate first cycle Computer Science programme",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu programmes \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu courses \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu undergraduate \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu admissions bachelor",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        }
+      ]
+    },
+    {
+      "name": "multifield_precharged_one",
+      "fields": [
+        "Computer Science",
+        "Mathematics"
+      ],
+      "initial_count": 1,
+      "remaining_under_existing_six_query_contract": 5,
+      "new_fake_vendor_calls": 6,
+      "returned_trace_search_queries_sent": 7,
+      "queries": [
+        {
+          "query": "site:example.edu \"Computer Science\" \"bachelor\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "Example University bachelor undergraduate first cycle Computer Science programme",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu programmes \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu \"Mathematics\" \"bachelor\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "Example University bachelor undergraduate first cycle Mathematics programme",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu programmes \"Mathematics\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        }
+      ]
+    },
+    {
+      "name": "already_exhausted",
+      "fields": [
+        "Computer Science"
+      ],
+      "initial_count": 6,
+      "remaining_under_existing_six_query_contract": 0,
+      "new_fake_vendor_calls": 6,
+      "returned_trace_search_queries_sent": 12,
+      "queries": [
+        {
+          "query": "site:example.edu \"Computer Science\" \"bachelor\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "Example University bachelor undergraduate first cycle Computer Science programme",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu programmes \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu courses \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu undergraduate \"Computer Science\"",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        },
+        {
+          "query": "site:example.edu admissions bachelor",
+          "domains": [
+            "example.edu"
+          ],
+          "max_results": 10
+        }
+      ]
+    }
+  ]
+}

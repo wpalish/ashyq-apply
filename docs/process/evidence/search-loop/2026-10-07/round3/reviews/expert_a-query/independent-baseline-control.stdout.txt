@@ -1,0 +1,148 @@
+FFFFFFF                                                                  [100%]
+=================================== FAILURES ===================================
+_____ test_vendor_identity_one_plus_five_no_callback_double_charge[False] ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10db4c680>
+multi = False
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("multi", [False, True])
+    async def test_vendor_identity_one_plus_five_no_callback_double_charge(monkeypatch, multi):
+        vendor = IndependentVendor()
+        instance, _ = adapter(monkeypatch, vendor)
+        uni = SimpleNamespace(id="audit", name=ENTRY["name"], country=ENTRY["country"], city=ENTRY["city"], domain="example.edu", registry_entry=None, seed_snapshot={})
+        candidate = Candidate(uni.name, uni.country, uni.city)
+        old_trace = DiscoveryTrace(uni.name, uni.domain)
+        found, trace = await instance._enrich(uni, profile(multi), candidate, old_trace)
+>       assert len(vendor.calls) == 6
+E       assert 7 == 6
+E        +  where 7 = len(['"Independent Test University" "Example Country" official university website', 'site:example.edu "Computer Science" "...ter Science"', 'site:example.edu courses "Computer Science"', 'site:example.edu undergraduate "Computer Science"', ...])
+E        +    where ['"Independent Test University" "Example Country" official university website', 'site:example.edu "Computer Science" "...ter Science"', 'site:example.edu courses "Computer Science"', 'site:example.edu undergraduate "Computer Science"', ...] = <test_independent_query_controls.IndependentVendor object at 0x10db4d550>.calls
+
+test_independent_query_controls.py:88: AssertionError
+______ test_vendor_identity_one_plus_five_no_callback_double_charge[True] ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e247290>
+multi = True
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("multi", [False, True])
+    async def test_vendor_identity_one_plus_five_no_callback_double_charge(monkeypatch, multi):
+        vendor = IndependentVendor()
+        instance, _ = adapter(monkeypatch, vendor)
+        uni = SimpleNamespace(id="audit", name=ENTRY["name"], country=ENTRY["country"], city=ENTRY["city"], domain="example.edu", registry_entry=None, seed_snapshot={})
+        candidate = Candidate(uni.name, uni.country, uni.city)
+        old_trace = DiscoveryTrace(uni.name, uni.domain)
+        found, trace = await instance._enrich(uni, profile(multi), candidate, old_trace)
+>       assert len(vendor.calls) == 6
+E       assert 7 == 6
+E        +  where 7 = len(['"Independent Test University" "Example Country" official university website', 'site:example.edu "Computer Science" "..."Mathematics" "bachelor"', 'Independent Test University bachelor undergraduate first cycle Mathematics programme', ...])
+E        +    where ['"Independent Test University" "Example Country" official university website', 'site:example.edu "Computer Science" "..."Mathematics" "bachelor"', 'Independent Test University bachelor undergraduate first cycle Mathematics programme', ...] = <test_independent_query_controls.IndependentVendor object at 0x10e247a40>.calls
+
+test_independent_query_controls.py:88: AssertionError
+___________ test_direct_real_planner_precharge_and_reentry[1-False] ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e2f1ac0>
+multi = False, precharged = 1
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("multi", [False, True])
+    @pytest.mark.parametrize("precharged", [1, 6])
+    async def test_direct_real_planner_precharge_and_reentry(monkeypatch, multi, precharged):
+        vendor = IndependentVendor()
+        instance, factories = adapter(monkeypatch, vendor)
+        trace = DiscoveryTrace(ENTRY["name"], "example.edu", search_queries_sent=precharged)
+        selected = {category: [] for category in PageCategory.ALL}
+        await instance._add_search_results(ENTRY, "example.edu", selected, trace, profile(multi))
+>       assert len(vendor.calls) == 6 - precharged
+E       assert 6 == (6 - 1)
+E        +  where 6 = len(['site:example.edu "Computer Science" "bachelor"', 'Independent Test University bachelor undergraduate first cycle Com...urses "Computer Science"', 'site:example.edu undergraduate "Computer Science"', 'site:example.edu admissions bachelor'])
+E        +    where ['site:example.edu "Computer Science" "bachelor"', 'Independent Test University bachelor undergraduate first cycle Com...urses "Computer Science"', 'site:example.edu undergraduate "Computer Science"', 'site:example.edu admissions bachelor'] = <test_independent_query_controls.IndependentVendor object at 0x10e2f0e30>.calls
+
+test_independent_query_controls.py:103: AssertionError
+____________ test_direct_real_planner_precharge_and_reentry[1-True] ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e3175f0>
+multi = True, precharged = 1
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("multi", [False, True])
+    @pytest.mark.parametrize("precharged", [1, 6])
+    async def test_direct_real_planner_precharge_and_reentry(monkeypatch, multi, precharged):
+        vendor = IndependentVendor()
+        instance, factories = adapter(monkeypatch, vendor)
+        trace = DiscoveryTrace(ENTRY["name"], "example.edu", search_queries_sent=precharged)
+        selected = {category: [] for category in PageCategory.ALL}
+        await instance._add_search_results(ENTRY, "example.edu", selected, trace, profile(multi))
+>       assert len(vendor.calls) == 6 - precharged
+E       assert 6 == (6 - 1)
+E        +  where 6 = len(['site:example.edu "Computer Science" "bachelor"', 'Independent Test University bachelor undergraduate first cycle Com...Test University bachelor undergraduate first cycle Mathematics programme', 'site:example.edu programmes "Mathematics"'])
+E        +    where ['site:example.edu "Computer Science" "bachelor"', 'Independent Test University bachelor undergraduate first cycle Com...Test University bachelor undergraduate first cycle Mathematics programme', 'site:example.edu programmes "Mathematics"'] = <test_independent_query_controls.IndependentVendor object at 0x10e3176b0>.calls
+
+test_independent_query_controls.py:103: AssertionError
+___________ test_direct_real_planner_precharge_and_reentry[6-False] ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e32b260>
+multi = False, precharged = 6
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("multi", [False, True])
+    @pytest.mark.parametrize("precharged", [1, 6])
+    async def test_direct_real_planner_precharge_and_reentry(monkeypatch, multi, precharged):
+        vendor = IndependentVendor()
+        instance, factories = adapter(monkeypatch, vendor)
+        trace = DiscoveryTrace(ENTRY["name"], "example.edu", search_queries_sent=precharged)
+        selected = {category: [] for category in PageCategory.ALL}
+        await instance._add_search_results(ENTRY, "example.edu", selected, trace, profile(multi))
+>       assert len(vendor.calls) == 6 - precharged
+E       assert 6 == (6 - 6)
+E        +  where 6 = len(['site:example.edu "Computer Science" "bachelor"', 'Independent Test University bachelor undergraduate first cycle Com...urses "Computer Science"', 'site:example.edu undergraduate "Computer Science"', 'site:example.edu admissions bachelor'])
+E        +    where ['site:example.edu "Computer Science" "bachelor"', 'Independent Test University bachelor undergraduate first cycle Com...urses "Computer Science"', 'site:example.edu undergraduate "Computer Science"', 'site:example.edu admissions bachelor'] = <test_independent_query_controls.IndependentVendor object at 0x10e329df0>.calls
+
+test_independent_query_controls.py:103: AssertionError
+____________ test_direct_real_planner_precharge_and_reentry[6-True] ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e345c70>
+multi = True, precharged = 6
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("multi", [False, True])
+    @pytest.mark.parametrize("precharged", [1, 6])
+    async def test_direct_real_planner_precharge_and_reentry(monkeypatch, multi, precharged):
+        vendor = IndependentVendor()
+        instance, factories = adapter(monkeypatch, vendor)
+        trace = DiscoveryTrace(ENTRY["name"], "example.edu", search_queries_sent=precharged)
+        selected = {category: [] for category in PageCategory.ALL}
+        await instance._add_search_results(ENTRY, "example.edu", selected, trace, profile(multi))
+>       assert len(vendor.calls) == 6 - precharged
+E       assert 6 == (6 - 6)
+E        +  where 6 = len(['site:example.edu "Computer Science" "bachelor"', 'Independent Test University bachelor undergraduate first cycle Com...Test University bachelor undergraduate first cycle Mathematics programme', 'site:example.edu programmes "Mathematics"'])
+E        +    where ['site:example.edu "Computer Science" "bachelor"', 'Independent Test University bachelor undergraduate first cycle Com...Test University bachelor undergraduate first cycle Mathematics programme', 'site:example.edu programmes "Mathematics"'] = <test_independent_query_controls.IndependentVendor object at 0x10e346ff0>.calls
+
+test_independent_query_controls.py:103: AssertionError
+____ test_candidate_upstream_five_survives_lower_trace_and_identity_charge _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e373200>
+
+    @pytest.mark.asyncio
+    async def test_candidate_upstream_five_survives_lower_trace_and_identity_charge(monkeypatch):
+        vendor = IndependentVendor()
+        instance, _ = adapter(monkeypatch, vendor)
+        uni = SimpleNamespace(id="audit", name=ENTRY["name"], country=ENTRY["country"], city=ENTRY["city"], domain="example.edu", registry_entry=None, seed_snapshot={})
+        candidate = Candidate(uni.name, uni.country, uni.city, search_queries_used=5)
+        found, trace = await instance._enrich(uni, profile(False), candidate, DiscoveryTrace(uni.name, uni.domain, search_queries_sent=2))
+>       assert len(vendor.calls) == 1
+E       assert 7 == 1
+E        +  where 7 = len(['"Independent Test University" "Example Country" official university website', 'site:example.edu "Computer Science" "...ter Science"', 'site:example.edu courses "Computer Science"', 'site:example.edu undergraduate "Computer Science"', ...])
+E        +    where ['"Independent Test University" "Example Country" official university website', 'site:example.edu "Computer Science" "...ter Science"', 'site:example.edu courses "Computer Science"', 'site:example.edu undergraduate "Computer Science"', ...] = <test_independent_query_controls.IndependentVendor object at 0x10e372c90>.calls
+
+test_independent_query_controls.py:137: AssertionError
+=========================== short test summary info ============================
+FAILED test_independent_query_controls.py::test_vendor_identity_one_plus_five_no_callback_double_charge[False]
+FAILED test_independent_query_controls.py::test_vendor_identity_one_plus_five_no_callback_double_charge[True]
+FAILED test_independent_query_controls.py::test_direct_real_planner_precharge_and_reentry[1-False]
+FAILED test_independent_query_controls.py::test_direct_real_planner_precharge_and_reentry[1-True]
+FAILED test_independent_query_controls.py::test_direct_real_planner_precharge_and_reentry[6-False]
+FAILED test_independent_query_controls.py::test_direct_real_planner_precharge_and_reentry[6-True]
+FAILED test_independent_query_controls.py::test_candidate_upstream_five_survives_lower_trace_and_identity_charge
+7 failed, 11 deselected in 0.17s

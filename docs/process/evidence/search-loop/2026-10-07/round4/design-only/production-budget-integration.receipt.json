@@ -1,0 +1,170 @@
+{
+  "status": "unreviewed external design and mock-only regression sketch",
+  "created_at_utc": "2026-10-07T19:34:47.039320+00:00",
+  "source_git_ref_supplied_by_parent": "frozen docs-only9330929, source d669 (not independently read via Git)",
+  "network_calls": 0,
+  "provider_calls": 0,
+  "source_edits": 0,
+  "git_actions": 0,
+  "migration_actions": 0,
+  "mock_tests": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python -m unittest -v test_draft_guard",
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a",
+    "final_exec_chunk_id": "5bbf74",
+    "exit_code": 0,
+    "tests": 24,
+    "reported_real_test_seconds": 0.019,
+    "scope": "external draft only; no app imports or production adapter replay",
+    "first_attempt": {
+      "chunk_id": "b990f5",
+      "exit_code": 1,
+      "errors": 2,
+      "cause": "test assertRaises boundaries ended inside sticky-stop scope; fixed external tests only; original logs retained"
+    }
+  },
+  "clock_choices_unapproved": [
+    "A_absolute",
+    "B_focused_accumulated"
+  ],
+  "known_limitations": [
+    "sync CPU overshoot detected only after return",
+    "final settlement commit latency not hard bounded",
+    "direct renderer is outside get-count metric",
+    "completed adapter outputs retained; unreturned adapter-local facts need an extra hook",
+    "integration actual source not implemented/tested"
+  ],
+  "source_snapshots": [
+    {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/source-snapshot/app/pipeline/runner.py",
+      "bytes": 81463,
+      "sha256_raw_bytes": "686a6961964eb020056cba8b80f51c3cee622d2e6d62e63194b7d520e55fd71f"
+    },
+    {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/state.py",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/source-snapshot/app/pipeline/state.py",
+      "bytes": 4786,
+      "sha256_raw_bytes": "ccf94b89dc44f3cbf136e6e77bb627411dda36489d214e91ac3a599446086a79"
+    },
+    {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/models/research.py",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/source-snapshot/app/models/research.py",
+      "bytes": 11415,
+      "sha256_raw_bytes": "03bc5f07438456d08e412ac2c0ed615464253a1a1bb9ecf3e548ff72d7aeef12"
+    },
+    {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/models/jobs.py",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/source-snapshot/app/models/jobs.py",
+      "bytes": 3559,
+      "sha256_raw_bytes": "438fff6a82ddadd99ab956e43054f3e606f039bfc1bddf0f654ccd9edf151789"
+    },
+    {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/config.py",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/source-snapshot/app/config.py",
+      "bytes": 19393,
+      "sha256_raw_bytes": "ee8bf0ecbd105941733da95283836844e1bee97c56db7ce59677aed33ab56539"
+    },
+    {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/base.py",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/source-snapshot/app/adapters/base.py",
+      "bytes": 3927,
+      "sha256_raw_bytes": "5b7a509c97e01d3e5b539ea0b2ebc15aeaae743a36ac1cf3ff803a198e1631f7"
+    },
+    {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/catalogue/discovery.py",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/source-snapshot/app/catalogue/discovery.py",
+      "bytes": 10890,
+      "sha256_raw_bytes": "b2f057bc90831ea465c35561e710ad4cded038e88c45a629f34c2bccf226daab"
+    },
+    {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/discovery/live_discovery.py",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/source-snapshot/app/adapters/discovery/live_discovery.py",
+      "bytes": 93253,
+      "sha256_raw_bytes": "b1d7e8f34a3cb59a3a93a1606aee191256e32f5d08e4ba71bc08d75a03521c4f"
+    },
+    {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/discovery/catalog_walker.py",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/source-snapshot/app/adapters/discovery/catalog_walker.py",
+      "bytes": 32036,
+      "sha256_raw_bytes": "218fbb73f8baa455449a9853ff0ad6769c0a9f6ebdb9d42cf551922bd66a01a7"
+    },
+    {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/fetching.py",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/source-snapshot/app/adapters/fetching.py",
+      "bytes": 47727,
+      "sha256_raw_bytes": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895"
+    },
+    {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/jobs/worker.py",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/source-snapshot/app/jobs/worker.py",
+      "bytes": 20885,
+      "sha256_raw_bytes": "491f5ccdeadd3556ad4e5bf6bfc2b4578207ef2cce129eb2fcd57b4b4e0e6681"
+    },
+    {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/jobs/store.py",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/source-snapshot/app/jobs/store.py",
+      "bytes": 18143,
+      "sha256_raw_bytes": "fbf69acb386db032beb64bb9a59af9ee43f75730d0037124959714faec1264cc"
+    },
+    {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/api/routes_research.py",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/source-snapshot/app/api/routes_research.py",
+      "bytes": 20623,
+      "sha256_raw_bytes": "f4f069abde5a3be929cc9154953e2f76f46a38b3a1d6fb7a811a7b9448c227b6"
+    },
+    {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/domain/diagnostics.py",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/source-snapshot/app/domain/diagnostics.py",
+      "bytes": 2966,
+      "sha256_raw_bytes": "7258ced7c67e1eb1c5e3df972b01aa54654dead3b989ba3263f7921402c1d054"
+    },
+    {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+      "snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/source-snapshot/evaluation/research/live.py",
+      "bytes": 56786,
+      "sha256_raw_bytes": "d537aaef6527572dd6dda929e3ac235861e28a5e3ef5cd829ef11f3c71b73399"
+    }
+  ],
+  "files": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/draft-tests.attempt1.stderr.txt",
+      "bytes": 7278,
+      "sha256_raw_bytes": "ea41ef505a98202f7ee8269de6931d122657a990b74fcd9c54bdb1751f24294c"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/draft-tests.attempt1.stdout.txt",
+      "bytes": 0,
+      "sha256_raw_bytes": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/draft-tests.stderr.txt",
+      "bytes": 4071,
+      "sha256_raw_bytes": "2065ea616f3d6d5e9cd86bf21aa884c4523024456a725dd22acd4926fdae1832"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/draft-tests.stdout.txt",
+      "bytes": 0,
+      "sha256_raw_bytes": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/draft_guard.py",
+      "bytes": 8334,
+      "sha256_raw_bytes": "6144d427493ca5e08414cced77c8028d5f08b70de5ee173aa56551d7e6dd103d"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/production-budget-integration.design.ru.md",
+      "bytes": 16263,
+      "sha256_raw_bytes": "3f39eb3bc100e0960fd14f2dca2ab4134f69576937596615fa757fd3dc752fad"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/production-budget-integration.proposed-patch.txt",
+      "bytes": 4594,
+      "sha256_raw_bytes": "da142af0318d025e60d134c4b07f1f89283f545c58a3117fe28995dfe6d5b958"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/test_draft_guard.py",
+      "bytes": 13797,
+      "sha256_raw_bytes": "953e82cc316cfcffda091526e5789602f839ab6664b4015cd37ad3b0bf6fb8d5"
+    }
+  ]
+}

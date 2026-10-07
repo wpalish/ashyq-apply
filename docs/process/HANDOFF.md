@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current search-loop holder: gpt-6-astra, 2026-10-07 18:18UTC, [search-loop], taking over b0b1a9ccacd59d8cf1fe34b0a5b6d65cd7b8e594.** Owner explicitly requests autonomous engineering rounds until search is launch-ready. The active goal and hourly thread heartbeat continue this work; they do not certify quality. New bounded branch `task/search-loop-discovery` may start from predecessor `task/search-development-baseline@b0b1a9c` without awaiting main merge. Parent alone owns source/Git/HANDOFF. Two existing experts may perform disjoint offline first-loss reviews. PR #61/#62 remain Draft; both exact-head eight-check rollups were independently verified SUCCESS before takeover. No purchase, gold signature, provider refusal reset, or owner merge impersonation.
+**Current search-loop holder: gpt-6-astra, 2026-10-07 19:59UTC, [search-loop], task/search-query-ledger from predecessor daff483.** Owner authorizes autonomous repeated rounds and two expert subagents. Round3 existing BL-1 correctness repair locally green; exact patch hashes and independent review in round3 evidence. Global live/hosted CI STOP is sticky after billing/spending refusal; no retry/payment/substitution/reset. New source pushes use wip + [skip ci], so final hosted checks remain blocked. Draft PR61/62/63 pending owner merge; no deployment or launch claim. Parent alone owns source/Git/HANDOFF.
 
 **Current development continuation holder: nobody; `[search-development]` ready-for-review in Draft PR #62, 2026-10-07 UTC.** Branch `task/search-development-baseline` from predecessor `task/search-claude-relay@e3d77d40e5888923edfe8e080f912025e76adf4c`; final executable source `0d3ad8ce3c5b8e5cbeb503136f17be7ffd84d408`. Latest source gates are green; exact final metadata-head cloud checks must be read in PR #62 before merge. Owner says continue and explicitly authorizes two collaboration expert subagents for the new universities. PR #61 remains a separate reviewable measuring-stick checkpoint; no merge/purchase/gold signature inferred. Parent owns source/git/HANDOFF and baseline. Experts own separate evidence-only folders; ordinary subagents are not OS-blinded.
 
@@ -62,7 +62,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**[search-loop] in progress:** retain the owner-approved Definition of Done targets and iterate on confirmed DEV losses. Round 2 begins with offline Dalian/Wits/Caltech discovery traces and retained official sources. Do not infer that Dalian's news announcement is an exact programme page. Journal: `docs/process/SEARCH_LOOP_LEDGER_2026-10-07.md`. Goal remains active until accepted quality, access honesty, budget/heldout targets and the current published logged-in path are verified.
+**[search-loop] in progress:** Round2 four arms complete; SI-1 remainsFalse because no stable programme/core-fact gain. Round3 query accounting locally verified, source checkpoint next. Two experts prepare disjoint off-by-default AUT subject-phrase and Wits primary-purpose classifier proposals offline. Durable production budget enforcement remains unresolved. Journal: `docs/process/SEARCH_LOOP_LEDGER_2026-10-07.md`. Goal remains active until accepted quality, access honesty, budget/heldout targets and the current published logged-in path are verified.
 
 **[search-development] ready-for-review (Draft PR #62):** opt-in imported catalogue selection for the prepared five DEV ids; global provider/auth/quota refusal stop for the controlled batch; offline regressions, frozen bounded baseline, two independent collaborative expert researches, original evidence and observed miss-cause review. Current bounded delivery additionally repairs the first source-proven population-transfer error before recall tuning. Broader programme/fact completeness remains unfinished; this checkpoint does not declare the search finished.
 
@@ -1800,6 +1800,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[search-loop] current 2026-10-07 19:59UTC:** Round3 source/gates complete and frozen: archive, push wip [skip ci], open dependent Draft PR64 and record actual commit. Then explicitly branch next bounded off-by-default subject-matcher rule from task/search-query-ledger despite unmerged predecessors. HANDOFF-before-code for each rule. Follow DoD flags/off-on-on-off/owner promotion; no live while work/development-STOP.json exists. AUT phrase and Wits secondary-funding loss proposals are independently reviewed offline; retain prior wrong outcomes and exact saved body hashes. Production durable read/time design remains unimplemented and must not be claimed as a hard bound. Continue useful offline work and preserve Claude journal after every step.
 
 **[search-loop] Round2 completed; global live STOP; Round3 write-ahead:** four SI-1 arms completed, all20terminal observations inside6/60/120000, exact source unchanged, no search/model refusal. Stable Wits/Caltech site identities, no stable programme/core-fact gain; SI-1 staysFalse. AUT Data Science misselection occurs on both on1/off2; Wits proper programme is misclassified by secondary funding section. Original closed launcher and missing bounded-timeout raw traces remain explicit. See round2/PAIRED_REVIEW.md and paired-resumed archive. All8 current9330929 hosted CI jobs were refused before steps due billing/spending-limit; raw annotations retained, source d6698/8SUCCESS. Sticky work/development-STOP.json is now present: no live captures/model/provider or hosted CI retries, payment/limit changes/substitution/reset. Offline engineering continues; all new relay pushes carry [skip ci] to preserve origin without retrying refused hosted jobs; current-head CI remains blocked, not passed.
 
@@ -3762,6 +3764,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[search-loop] Round3 final local source gates:**3743passed,2warnings,95.01%,416.07s;144parent focused;independent68pass plus7 old-byte negative controls. Ruff/format/mypy369clean;frontend232/type/lint/build pass; demo20 rows/stage counts byte-identical to Round2, Groningenfirst; legacy UBC caveat unchanged; onehead d8e412c6a901. Five source/test hashes frozen and unchanged; dotenv restored. Current hosted CI BLOCKED by billing/spending refusal, original diagnostics in ci-refusal evidence. d669 older source8/8SUCCESS is not current-head acceptance. No new hosted/live retry. Complete originals in round3/gates.
+
 **[search-loop] final SI-1 source gates:**3693passed,2warnings,94.88%,416.67s;68focused;Ruff/format368,mypy368;frontend232/typecheck/lint/build pass with complete logs. Demo20rows and stage/count totals byte-identical to preceding scope-fix source, Groningenfirst; legacy brief UBC vocabulary caveat unchanged. One Alembic head d8e412c6a901. Dedicated dotenv detached only during offline backend gates and restored; original untouched. SI-1 defaultFalse. No live four-arm measurement at this source checkpoint. Source/gates hashes retained in round2/source-gates.json. First candidate suite intentionally interrupted for reviewed identity fixes; not final green evidence.
 
 **[search-development] final scope source gates,2026-10-07:**3673passed,2warnings,94.88%,431.37s;66focused;Ruff/format369,mypy368;frontend232/typecheck/lint/build pass. Final-source20demo rows byte-identical to the baseline, Groningenfirst; legacy UBC vocabulary caveat remains documented. One Alembic head d8e412c6a901. Dedicated dotenv symlink detached during offline gates; original secret file untouched. Source hashes and final/historical logs are in scope-fix/source-gates.json and gates/. Earlier interrupted suites and duplicate-path mypy command are not green final checks.
@@ -4246,6 +4250,8 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+**2026-10-07 [search-loop] external blocker:** all eight hosted CI jobs on 9330929 were refused before steps for recent account payments or spending limit. Raw GitHub annotations are preserved; the alternative causes are not disambiguated. Sticky global live STOP stays set. Local source work continues; new source pushes deliberately skip hosted CI and cannot count as release checks. No purchase, retry, substitution, limit change or reset performed. Owner merge, signed gold, default promotions and fresh published-user acceptance remain pending.
+
 **[search-relay] 2026-10-07:** G-1/G-2 remain unsigned. Do not apply a gold change until the owner approves concrete verified evidence. Continuing engineering is authorized by the new request. No purchase authorized. Current local full gates pass (3619 backend /94.86%,232 frontend); exact-head cloud checks remain pending at this written checkpoint. G-1 proposed delta and current official HTML are retained; asynchronous signature request is pending. Historical Claude numbers remain evidence for their original captures only.
 
 **[expert-500] Current admission limitation:** V2 oracle protocol is too weak to expand: eight final-selector timeouts,1/62 versus required40/62, Q1–Q6 no positive submitted answers. Every timeout is now metered, raw proof and blinding pass, but production-search miss logic cannot be generalized from this incomplete oracle. KAIST Q0 has an observable transient ACCESS difference; queue absence alone is not NOT_DISCOVERED. Repair submission latency with small source-validated fact records, independent synthetic tests and the unchanged120s cap before another frozen ten-case pair. No gold fitting, robots weakening, production default rule or50-case batch. Draft PR46 is measurement/protocol work, not a finished search release.
@@ -4534,6 +4540,8 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+- 2026-10-07 19:59UTC [search-loop] optional synchronous discover_candidates(on_query_attempt=...) records every charged search seam attempt, including ordinary errors/local wrapper refusal; DiscoveryTrace.as_dict adds search_queries_attempted. _discover_one accepts keyword prior search_queries_used. Default-on BL-1 uses identity+programme shared remaining6; False retains six programme slots with truthful total. No public API/migration/default flag change; durable resume enforcement outside scope.
 
 - 2026-10-07 [search-loop] opt-in evaluation `--site-branding-identity` forwards SI-1 into child and records bool in ordinary/pre-start-stopped Capture.config. Off-by-default internal `catalogue.discovery.SITE_BRANDING_IDENTITY`; new branding proofs add `identity_basis` with exact DOM/OG excerpt. Legacy identity path/proof unchanged. No public schema, domain formula, provider/Fetcher/default/gold/migration change.
 
@@ -4912,6 +4920,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+| 2026-10-07 19:59UTC | gpt-6-astra | daff483 -> task/search-query-ledger locally green | Round2 four arms complete/no stable fact gain/SIoff; hosted billing refusal stickySTOP. Query accounting actual production repair3743/95.01%, frontend232, peer68, demo unchanged. Source checkpoint next, current cloudblocked. |
 
 - 2026-10-07 18:18UTC | Codex | [search-loop] | owner autonomous launch goal → take baton from b0b1a9c; hourly thread heartbeat unimatch ACTIVE; round2 offline first-loss diagnosis before source changes.
 
