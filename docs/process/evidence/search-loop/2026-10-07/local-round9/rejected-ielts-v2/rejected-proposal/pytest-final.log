@@ -1,0 +1,17 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/wpalish/Documents/Codex/2026-10-07/x20
+plugins: respx-0.22.0, cov-6.0.0, asyncio-1.4.0, platformdirs-4.12.1, anyio-4.15.1
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 60 items
+
+work/local-round8/b-ielts-section-proposal-v2/test_owned_ielts.py ...... [ 10%]
+......................................................                   [100%]
+
+=============================== warnings summary ===============================
+work/local-round8/b-ielts-section-proposal-v2/test_owned_ielts.py: 1098 warnings
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/bs4/builder/_lxml.py:124: DeprecationWarning: The 'strip_cdata' option of HTMLParser() has never done anything and will eventually be removed.
+    parser = parser(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+====================== 60 passed, 1098 warnings in 4.74s =======================

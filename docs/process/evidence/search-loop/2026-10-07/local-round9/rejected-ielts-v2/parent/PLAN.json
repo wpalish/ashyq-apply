@@ -1,0 +1,17 @@
+{
+  "status": "PREPARED_ONLY",
+  "scope": "Independent external v2 actual-admitted-reader review; no repository or live writes",
+  "proposal_manifest_sha256": "f5ee8caa8976829d532646b3fe0913108c704b738dae81d10e5256ed6b2aec15",
+  "controls": [
+    "Existing legitimate minimum/score/postfix/spelled-out IELTS wording survives",
+    "Heading-owned semantic list and div prose retain real IELTS minimum",
+    "Explicit each-component floor remains a subscore and not an overall",
+    "Fee and GPA numbers under an IELTS heading are not IELTS score minima",
+    "Explicit declined Academic wording does not grant IELTS numeric/type permission",
+    "Separate variants and sibling exam boundaries keep correct local evidence"
+  ],
+  "verification": "Run both frozen OFF and proposed ON through WebRequirementsAdapter.verify, require genuine admitted page and retain all output fields; do not override classifier",
+  "parent_source": "41836a8682dbbe5a43c3d338ce4deb81db1b429b; relevant six source modules must match pinned prepared snapshot",
+  "all_external_source_actions": 0,
+  "source_guard_default": false
+}

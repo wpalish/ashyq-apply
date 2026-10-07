@@ -1,0 +1,720 @@
+{
+  "root_original_sha256": "2344f4892431ae927b26f7b464da2197aeb1a7517fa19b15a0e61b239cdeb17b",
+  "all_year_fields_audited": true,
+  "external_actual_calls": 0,
+  "results": [
+    {
+      "case": "sibling_toefl_year",
+      "body": "<html><head><title>Bachelor admission requirements</title></head><body><main><h1>Bachelor admission requirements</h1><section><h2>IELTS Academic</h2><p>Minimum overall 6.5.</p></section><section><h2>TOEFL admission year 2027/28</h2><p>Overall 100.</p></section></main></body></html>",
+      "classifier_override": false,
+      "root_original_red": {
+        "claims": [
+          {
+            "claim_type": "ielts_min_overall",
+            "normalized_value": 6.5,
+            "original_text_excerpt": "IELTS Academic Minimum overall 6.5.",
+            "source_url": "https://admissions.example.edu/admission-requirements",
+            "page_title": "Bachelor admission requirements",
+            "relevant_section": "IELTS Academic",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "Fall 2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T00:00:00Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": "2027/28",
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "ielts_accepted_types",
+            "normalized_value": [
+              "academic"
+            ],
+            "original_text_excerpt": "IELTS Academic Minimum overall 6.5.",
+            "source_url": "https://admissions.example.edu/admission-requirements",
+            "page_title": "Bachelor admission requirements",
+            "relevant_section": "IELTS Academic",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "Fall 2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T00:00:00Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": "2027/28",
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://admissions.example.edu/admission-requirements",
+            "category": "fetched-ok",
+            "page_type": "intake_specific_program",
+            "detail": "2 claims read from this page",
+            "readable_chars": 141
+          }
+        ],
+        "errors": [
+          "https://admissions.example.edu/admission-requirements: not confirming 'Computer Science' \u2014 page subject 'Bachelor admission requirements' does not match the requested 'Computer Science' (shared: nothing)",
+          "https://admissions.example.edu/admission-requirements: no statement about the application window for Fall 2027; intake status is unknown, not open."
+        ],
+        "pages_checked": 1,
+        "pages_failed": 0,
+        "fetcher_calls": [
+          "https://admissions.example.edu/admission-requirements"
+        ]
+      },
+      "revised": {
+        "claims": [
+          {
+            "claim_type": "ielts_min_overall",
+            "normalized_value": 6.5,
+            "original_text_excerpt": "IELTS Academic Minimum overall 6.5.",
+            "source_url": "https://admissions.example.edu/admission-requirements",
+            "page_title": "Bachelor admission requirements",
+            "relevant_section": "IELTS Academic",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": null,
+            "accessed_at": "2026-10-07T00:00:00Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "ielts_accepted_types",
+            "normalized_value": [
+              "academic"
+            ],
+            "original_text_excerpt": "IELTS Academic Minimum overall 6.5.",
+            "source_url": "https://admissions.example.edu/admission-requirements",
+            "page_title": "Bachelor admission requirements",
+            "relevant_section": "IELTS Academic",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": null,
+            "accessed_at": "2026-10-07T00:00:00Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://admissions.example.edu/admission-requirements",
+            "category": "fetched-ok",
+            "page_type": "intake_specific_program",
+            "detail": "2 claims read from this page",
+            "readable_chars": 141
+          }
+        ],
+        "errors": [
+          "https://admissions.example.edu/admission-requirements: not confirming 'Computer Science' \u2014 page subject 'Bachelor admission requirements' does not match the requested 'Computer Science' (shared: nothing)",
+          "https://admissions.example.edu/admission-requirements: no statement about the application window for Fall 2027; intake status is unknown, not open."
+        ],
+        "pages_checked": 1,
+        "pages_failed": 0,
+        "fetcher_calls": [
+          "https://admissions.example.edu/admission-requirements"
+        ]
+      },
+      "control_passed": true
+    },
+    {
+      "case": "writing_months",
+      "body": "<html><head><title>Bachelor admission requirements</title></head><body><main><h1>Bachelor admission requirements</h1><h2>IELTS Academic</h2><p>Minimum overall 6.5. Complete the writing test within 6 months.</p></main></body></html>",
+      "classifier_override": false,
+      "root_original_red": {
+        "claims": [
+          {
+            "claim_type": "ielts_min_overall",
+            "normalized_value": 6.5,
+            "original_text_excerpt": "IELTS Academic Minimum overall 6.5. Complete the writing test within 6 months.",
+            "source_url": "https://admissions.example.edu/admission-requirements",
+            "page_title": "Bachelor admission requirements",
+            "relevant_section": "IELTS Academic",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "Fall 2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T00:00:00Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "university_admissions",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "ielts_min_subscore",
+            "normalized_value": {
+              "writing": 6.0
+            },
+            "original_text_excerpt": "IELTS Academic Minimum overall 6.5. Complete the writing test within 6 months.",
+            "source_url": "https://admissions.example.edu/admission-requirements",
+            "page_title": "Bachelor admission requirements",
+            "relevant_section": "IELTS Academic",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "Fall 2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T00:00:00Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "university_admissions",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "ielts_accepted_types",
+            "normalized_value": [
+              "academic"
+            ],
+            "original_text_excerpt": "IELTS Academic Minimum overall 6.5. Complete the writing test within 6 months.",
+            "source_url": "https://admissions.example.edu/admission-requirements",
+            "page_title": "Bachelor admission requirements",
+            "relevant_section": "IELTS Academic",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "Fall 2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T00:00:00Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "university_admissions",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://admissions.example.edu/admission-requirements",
+            "category": "fetched-ok",
+            "page_type": "program_detail",
+            "detail": "3 claims read from this page",
+            "readable_chars": 142
+          }
+        ],
+        "errors": [
+          "https://admissions.example.edu/admission-requirements: not confirming 'Computer Science' \u2014 page subject 'Bachelor admission requirements' does not match the requested 'Computer Science' (shared: nothing)",
+          "https://admissions.example.edu/admission-requirements: no statement about the application window for Fall 2027; intake status is unknown, not open."
+        ],
+        "pages_checked": 1,
+        "pages_failed": 0,
+        "fetcher_calls": [
+          "https://admissions.example.edu/admission-requirements"
+        ]
+      },
+      "revised": {
+        "claims": [
+          {
+            "claim_type": "ielts_min_overall",
+            "normalized_value": 6.5,
+            "original_text_excerpt": "IELTS Academic Minimum overall 6.5. Complete the writing test within 6 months.",
+            "source_url": "https://admissions.example.edu/admission-requirements",
+            "page_title": "Bachelor admission requirements",
+            "relevant_section": "IELTS Academic",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": null,
+            "accessed_at": "2026-10-07T00:00:00Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "university_admissions",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "ielts_accepted_types",
+            "normalized_value": [
+              "academic"
+            ],
+            "original_text_excerpt": "IELTS Academic Minimum overall 6.5. Complete the writing test within 6 months.",
+            "source_url": "https://admissions.example.edu/admission-requirements",
+            "page_title": "Bachelor admission requirements",
+            "relevant_section": "IELTS Academic",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": null,
+            "accessed_at": "2026-10-07T00:00:00Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "university_admissions",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://admissions.example.edu/admission-requirements",
+            "category": "fetched-ok",
+            "page_type": "program_detail",
+            "detail": "2 claims read from this page",
+            "readable_chars": 142
+          }
+        ],
+        "errors": [
+          "https://admissions.example.edu/admission-requirements: not confirming 'Computer Science' \u2014 page subject 'Bachelor admission requirements' does not match the requested 'Computer Science' (shared: nothing)",
+          "https://admissions.example.edu/admission-requirements: no statement about the application window for Fall 2027; intake status is unknown, not open."
+        ],
+        "pages_checked": 1,
+        "pages_failed": 0,
+        "fetcher_calls": [
+          "https://admissions.example.edu/admission-requirements"
+        ]
+      },
+      "control_passed": true
+    },
+    {
+      "case": "named_negative",
+      "body": "<html><head><title>Bachelor admission requirements</title></head><body><main><h1>Bachelor admission requirements</h1><h2>IELTS Academic</h2><p>Minimum overall 6.5, writing -6.5.</p></main></body></html>",
+      "classifier_override": false,
+      "root_original_red": {
+        "claims": [
+          {
+            "claim_type": "ielts_min_overall",
+            "normalized_value": 6.5,
+            "original_text_excerpt": "IELTS Academic Minimum overall 6.5, writing -6.5.",
+            "source_url": "https://admissions.example.edu/admission-requirements",
+            "page_title": "Bachelor admission requirements",
+            "relevant_section": "IELTS Academic",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "Fall 2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T00:00:00Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "university_admissions",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "ielts_min_subscore",
+            "normalized_value": {
+              "writing": 6.5
+            },
+            "original_text_excerpt": "IELTS Academic Minimum overall 6.5, writing -6.5.",
+            "source_url": "https://admissions.example.edu/admission-requirements",
+            "page_title": "Bachelor admission requirements",
+            "relevant_section": "IELTS Academic",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "Fall 2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T00:00:00Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "university_admissions",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "ielts_accepted_types",
+            "normalized_value": [
+              "academic"
+            ],
+            "original_text_excerpt": "IELTS Academic Minimum overall 6.5, writing -6.5.",
+            "source_url": "https://admissions.example.edu/admission-requirements",
+            "page_title": "Bachelor admission requirements",
+            "relevant_section": "IELTS Academic",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "Fall 2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T00:00:00Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "university_admissions",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://admissions.example.edu/admission-requirements",
+            "category": "fetched-ok",
+            "page_type": "program_detail",
+            "detail": "3 claims read from this page",
+            "readable_chars": 113
+          }
+        ],
+        "errors": [
+          "https://admissions.example.edu/admission-requirements: not confirming 'Computer Science' \u2014 page subject 'Bachelor admission requirements' does not match the requested 'Computer Science' (shared: nothing)",
+          "https://admissions.example.edu/admission-requirements: no statement about the application window for Fall 2027; intake status is unknown, not open."
+        ],
+        "pages_checked": 1,
+        "pages_failed": 0,
+        "fetcher_calls": [
+          "https://admissions.example.edu/admission-requirements"
+        ]
+      },
+      "revised": {
+        "claims": [
+          {
+            "claim_type": "ielts_min_overall",
+            "normalized_value": 6.5,
+            "original_text_excerpt": "IELTS Academic Minimum overall 6.5, writing -6.5.",
+            "source_url": "https://admissions.example.edu/admission-requirements",
+            "page_title": "Bachelor admission requirements",
+            "relevant_section": "IELTS Academic",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": null,
+            "accessed_at": "2026-10-07T00:00:00Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "university_admissions",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "ielts_accepted_types",
+            "normalized_value": [
+              "academic"
+            ],
+            "original_text_excerpt": "IELTS Academic Minimum overall 6.5, writing -6.5.",
+            "source_url": "https://admissions.example.edu/admission-requirements",
+            "page_title": "Bachelor admission requirements",
+            "relevant_section": "IELTS Academic",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": null,
+            "accessed_at": "2026-10-07T00:00:00Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "university_admissions",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://admissions.example.edu/admission-requirements",
+            "category": "fetched-ok",
+            "page_type": "program_detail",
+            "detail": "2 claims read from this page",
+            "readable_chars": 113
+          }
+        ],
+        "errors": [
+          "https://admissions.example.edu/admission-requirements: not confirming 'Computer Science' \u2014 page subject 'Bachelor admission requirements' does not match the requested 'Computer Science' (shared: nothing)",
+          "https://admissions.example.edu/admission-requirements: no statement about the application window for Fall 2027; intake status is unknown, not open."
+        ],
+        "pages_checked": 1,
+        "pages_failed": 0,
+        "fetcher_calls": [
+          "https://admissions.example.edu/admission-requirements"
+        ]
+      },
+      "control_passed": true
+    },
+    {
+      "case": "not_accepted",
+      "body": "<html><head><title>Bachelor admission requirements</title></head><body><main><h1>Bachelor admission requirements</h1><h2>IELTS Academic</h2><p>IELTS Academic is no longer accepted. Overall 6.5.</p></main></body></html>",
+      "classifier_override": false,
+      "root_original_red": {
+        "claims": [
+          {
+            "claim_type": "ielts_min_overall",
+            "normalized_value": 6.5,
+            "original_text_excerpt": "IELTS Academic IELTS Academic is no longer accepted. Overall 6.5.",
+            "source_url": "https://admissions.example.edu/admission-requirements",
+            "page_title": "Bachelor admission requirements",
+            "relevant_section": "IELTS Academic",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "Fall 2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T00:00:00Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "university_admissions",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "ielts_accepted_types",
+            "normalized_value": [
+              "academic"
+            ],
+            "original_text_excerpt": "IELTS Academic IELTS Academic is no longer accepted. Overall 6.5.",
+            "source_url": "https://admissions.example.edu/admission-requirements",
+            "page_title": "Bachelor admission requirements",
+            "relevant_section": "IELTS Academic",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "Fall 2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T00:00:00Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "university_admissions",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://admissions.example.edu/admission-requirements",
+            "category": "fetched-ok",
+            "page_type": "program_detail",
+            "detail": "2 claims read from this page",
+            "readable_chars": 129
+          }
+        ],
+        "errors": [
+          "https://admissions.example.edu/admission-requirements: not confirming 'Computer Science' \u2014 page subject 'Bachelor admission requirements' does not match the requested 'Computer Science' (shared: nothing)",
+          "https://admissions.example.edu/admission-requirements: no statement about the application window for Fall 2027; intake status is unknown, not open."
+        ],
+        "pages_checked": 1,
+        "pages_failed": 0,
+        "fetcher_calls": [
+          "https://admissions.example.edu/admission-requirements"
+        ]
+      },
+      "revised": {
+        "claims": [],
+        "page_outcomes": [
+          {
+            "url": "https://admissions.example.edu/admission-requirements",
+            "category": "no-pattern-match",
+            "page_type": "program_detail",
+            "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+            "readable_chars": 129
+          }
+        ],
+        "errors": [
+          "https://admissions.example.edu/admission-requirements: not confirming 'Computer Science' \u2014 page subject 'Bachelor admission requirements' does not match the requested 'Computer Science' (shared: nothing)",
+          "https://admissions.example.edu/admission-requirements: no statement about the application window for Fall 2027; intake status is unknown, not open."
+        ],
+        "pages_checked": 1,
+        "pages_failed": 0,
+        "fetcher_calls": [
+          "https://admissions.example.edu/admission-requirements"
+        ]
+      },
+      "control_passed": true
+    }
+  ]
+}
