@@ -2,7 +2,7 @@
 
 ## Start here
 
-Status: ready for review, baton released. Draft PR: https://github.com/wpalish/ashyq-apply/pull/61. Branch: `task/search-claude-relay`. Base: `1b2a554129f5744eb297848472f1c8fe8c7fde26` (main, PR #60 merged).
+Current bounded continuation is ready for review; baton released to nobody. Draft PR #62: https://github.com/wpalish/ashyq-apply/pull/62, branch `task/search-development-baseline`, executable source `0d3ad8ce3c5b8e5cbeb503136f17be7ffd84d408`. It depends on the separate Draft PR #61 (`task/search-claude-relay@e3d77d4`); owner merges in that order. Neither is merged/deployed. Exact final metadata-head CI is not yet claimed at this journal checkpoint; read live PR checks before merge. Original main base remains `1b2a554` (PR #60). Broader search completeness remains unfinished.
 Local checkout: `/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply`.
 This journal is committed/pushed so Claude can resume without this chat. Newest entries take precedence over older HANDOFF paragraphs.
 
@@ -81,3 +81,61 @@ The bounded relay step is complete and pushed: measuring-stick repair, raw evide
 A final additional CI-scope check (`app tests evaluation`) passed Ruff check, Ruff format (365 files) and mypy (365 source files). Local full backend3619 /94.86% and frontend232 remain the source gate results. At the time this journal was written, cloud release-gates on the PR were still running; read the PR check rollup for the eventual exact-head result. Future agents must not infer success from this pending entry.
 
 To resume, fetch this branch and read this journal plus HANDOFF's newest branch-specific entries. First review/merge PR #61, then implement the opt-in catalogue seed-case harness and global provider-failure stop described above. The five-case baseline is still PREPARED_NOT_RUN. The G-1 signature question is pending; reviewed9 and historical scoring are unchanged.
+
+## Owner continuation / two experts
+
+Owner now says “продолжай работать ... на 2ух субагентах запустить экспертов на новые уники”. Main engineer continues on `task/search-development-baseline` explicitly branched from PR #61's checkpoint e3d77d4, without waiting for a main merge. PR #61 stays reviewable. Two collaboration experts have disjoint evidence-only assignments; their work is independent of the upcoming algorithm baseline but is not an OS-blinded experiment. All new live work shares one refusal stop sentinel. Source/ledger/selector changes and tests are declared in HANDOFF §5 before edits. Groningen remains unsigned.
+
+## Permission interruption and restoration
+
+After the two experts started, filesystem/network permissions changed to read-only/restricted. All new live/write work stopped. Expert A retained one successful Dalian Exa discovery (0 Fetcher reads,1 query,2737 tool ms); other four were not started. No facts from snippets accepted. Parent could not update files until permissions restored.
+
+On owner restoring full access (7 October,16:07UTC), the parent resumed. Old child contexts still retained their read-only policy, so they completed without further I/O. Two fresh delegations resume the same disjoint assignments and existing ledger, without resetting Dalian's original15-minute guard or request counters. The other four per-case guards have not started. PR #61's exact e3d77d4 cloud check rollup was verified8/8SUCCESS before the interruption; no merge/deployment. Main source work remains the opt-in seed selector and fail-closed controlled batch declared in HANDOFF §5.
+
+## Development harness verification in progress
+
+Opt-in `--catalogue-id` now selects only imported identity/name/country/domain hints, never seed fact estimates or registry promotion. A shared STOP blocks source/search actions and each HTTP hop; first provider failure is sanitized and sticky. Parent batch preserves the planned, attempted and remaining ids, including a pre-start refusal with no observations; missing checkpoints stop as unmeasured. The ordinary curated selector and app defaults stay unchanged.
+
+Targeted offline suite:53 passed. Ruff check/format367 and mypy366 passed. Frontend232 tests/typecheck/lint/build passed. The first full backend run was intentionally interrupted after request-hop stop protection was added; its original log is preserved, and a complete run on the final source is in progress. No new algorithm baseline has started yet.
+
+Experts independently completed source reads for the five DEV identities. Dalian keeps all exact2027 questions unresolved because only2026/general sources were accessible; Nagoya distinguishes Japanese April Computer Science from October G30; AUT reports official403 access failures. These findings are still unsigned/unreviewed. All expert logs, counters and excerpts will be audited before comparison. No facts were inserted into gold or production.
+
+Next frozen capture command uses existing keyed `exa`, six queries/60coldFetcher/120active seconds with3000ms finalization reserve inside that cap, browser off, robots respected, explicit prepared ids, the shared development-STOP.json and no experimental flags. Keyed Exa differs from Claude's historical exa_mcp captures; do not infer like-for-like provider comparisons. No purchase or retry after refusal is authorized.
+
+## Offline gate environment isolation
+
+Final full gate:3633 passed,1 failure,2 warnings,94.86%,436.43s. The only failure is the existing no-key Exa configuration test: the dedicated `.env` symlink introduced for live research makes a key present. Temporarily detach that ignored symlink only, preserve the original failure log, repeat full offline gate and restore before live work. Neither original configuration nor test assertions change. Required Ruff/format367/mypy366 and frontend232/typecheck/lint/build are green. Current demo executes, Groningen first; its current product classification output is not the old v2-table vocabulary from the brief.
+
+Both experts have submitted all five cases, no unrun assignments and no provider refusal. Parent independently checked79original logs, body hashes, monotone exact counters and100verbatim source substrings, with0issues. This is integrity verification, not semantic gold acceptance.
+
+## Green development source checkpoint
+
+The complete clean-env gate on final source passed3635tests/2warnings/94.86%/449.26s. Focused54passed, Ruff/format367 and mypy366 clean; frontend232/typecheck/lint/build clean. The only earlier complete run's failure was the keyless configuration test seeing the dedicated dotenv symlink; no assertions weakened. Symlink restored, original untouched. One migrationhead d8e412c6a901. App tree5c4f52b7e00b15544c2324fc5b84cfd99ec2d4c0 remains equal to main.
+
+All385archived expert files independently hash-verified. Original79actions and100exact verbatim substrings pass integrity checks; all semantic findings remain unreviewed. All5assignments attempted, no provider refusal. Final reporting regression distinguishes an absent checkpoint from provider refusal; source now has16new regressions. Next: freeze committed HEAD and source hashes, execute the prepared single5case strict baseline unchanged, retain source cache/metadata without synthetic profile DB rows, then record a supported loss review. No new university algorithm baseline has started before this checkpoint.
+
+## Frozen five-case baseline and first supported error
+
+Actual source89fc891228d9b8987fce19b2ddc0254d69837c2e,5/5terminal case outputs,75Fetcher/15Exaqueries,194452active checkpointms total. Every case stays within6/60/120000; no provider failure or shared STOP. Original captures/child logs/checkpoints, frozen launch manifest, source-cache hashes and metadata retained under search-development evidence. No synthetic profile DB rows archived. Programme URLs are candidate leads, not verified full-degree/intake claims.
+
+Only emitted prediction: Nagoya IELTS5.5. Retained official language page has separate G30 and Exchange programs(NUPACE) sections;5.5 belongs to exchange. This is a confirmed population-transfer error, not a missing-year or access guess. Parent prioritizes a general section-scope repair before the Dalian title/recall hypothesis. Two experts re-engaged for offline independent review only, no new network. Scope filter must preserve genuine full-degree sibling evidence and tables; no page/acronym hardcode, cap/default/gold change.
+
+## Population-scope correction: offline evidence and review
+
+The immutable Nagoya source was replayed through the full baseline89fc891 adapter and the current adapter, with query budget exhausted and a retained-source-only Fetcher stub (zero sockets). Before: IELTS5.5, status NEEDS_OFFICIAL_CLARIFICATION; after: no IELTS claim. This removes a wrong-population answer, not a VERIFIED_CURRENT claim, and does not invent a full-degree minimum. G30/Japanese sibling content remains. Raw-byte SHA8b2f118c... and metadata8013d43a... differ by design: Fetcher content_hash is NFKC/whitespace normalized html_to_text; independently recomputing that formula matches.
+
+Independent expert reviews found and repaired sidebar/table heading leakage, non-degree token false joints, missing undergraduate/first-year audiences, audience-bound negation, or/comma joints, degree-level qualifiers within exchange headings, and prose bridges. Failed/interrupted source gates remain explicitly historical; only the final frozen source may be marked green. Focused66 tests pass at candidate helper8b2c8da3; full gates follow stable review. Original baseline audit was unintentionally ignored by the generic *-audit.json rule; force-add its unchanged file in this checkpoint. GitHub rejected92b6fc3 push once with Internal Server Error; ordinary retry succeeded, no history rewritten.
+
+## Scope-fix source gates completed
+
+Final source:3673passed,2warnings,94.88%,431.37s;66focused;Ruff/format369,mypy368;frontend232/typecheck/lint/build pass. Current-source demo20rows match pre-fix baseline byte-for-byte, Groningenfirst; one migrationhead d8e412c6a901. Both final hash-pinned independent reviews have no material findings in their stated coverage. All source/gates/reviews preserved under scope-fix/. HTML explicit-heading repair has no demonstrated PDF/non-heading audience coverage. Next frozen same5-case observation is prepared; no extra experiments or gold edits.
+
+## Final same-cohort observation and next baton
+
+Fixed executable source0d3ad8ce3c5b8e5cbeb503136f17be7ffd84d408, capture20261007T172952Z. All5terminal outputs;118Fetcher/20Exaqueries/279528active checkpointms, every case inside60/6/120000; provider failure/shared STOP none; source hashes and HEAD unchanged during the run. Original caps/profile/provider/5ids/harness/mapping unchanged. No model calls or purchases.
+
+Nagoya: before5.5, after no IELTS claim; official language-page bytes identical (SHA8b2f118c...). Together with fixed-byte adapter replay this supports the population-scope correction. It does not discover a full-degree minimum or confirm exact CSfall2027. AUT: the later algorithm read HTTP200 and yielded one official, verbatim CS-major Bachelor-of-Computer-and-Information-Sciences existence claim. Intake/year remain unknown. Earlier expert8/8read403 remains original evidence; access change is not assigned to this filter. Other3cases still have no emitted predictions. No signed quality/precision/completeness score calculated.
+
+Raw originals/checkpoints/logs, frozen launch, public-source metadata and all130cache files are under `scope-fix-repeat/`, tar/index hashes independently verified. No profile database rows archived; known secret-value scan passed across originals and uncompressed cache members. Both expert assignments2+3 attempted fully, raw findings remain unsigned/non-OS-blinded.
+
+Draft #62 is open, attached and targets predecessor branch #61. Local source gates3673/94.88%, frontend232,66focused,quality/demo/onehead green. Latest metadata-head cloud checks were pending at documentation freeze; inspect PR before merge. Baton released. Next: review these two drafts and investigate the first Dalian discovery/identity loss offline on retained bytes/trace before another source change. Keep robots/privacy,6/60/120, heldout segregation and global provider-refusal stop. G1 signature is still an owner input; do not modify reviewed9 or fabricate a new G30/CS requirement.

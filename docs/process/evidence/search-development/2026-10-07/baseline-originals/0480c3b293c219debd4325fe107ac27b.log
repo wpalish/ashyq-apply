@@ -1,0 +1,8 @@
+search provider: exa
+get #1 start t=0s https://aut.ac.nz/
+get #1 took 2.8s http_error
+get #2 start t=3s https://www.aut.ac.nz/
+get #2 took 1.5s http_error
+search #1 took 2.4s (t=7s)
+get #3 start t=7s https://www.aut.ac.nz/
+get #3 took 0.1s http_error

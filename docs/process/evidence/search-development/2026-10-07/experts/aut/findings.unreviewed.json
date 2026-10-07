@@ -1,0 +1,704 @@
+{
+  "university": "Auckland University of Technology",
+  "case_id": "0480c3b293c219debd4325fe107ac27b",
+  "review_status": "unreviewed",
+  "request": {
+    "citizenship": "Kazakhstan",
+    "level": "Bachelor",
+    "subject": "Computer Science",
+    "target_period": "2027 / 2027-28",
+    "requested_label": "fall 2027"
+  },
+  "intake_interpretation": "Не подтверждено чтением официального документа. Exa обнаружил candidate BCIS/Computer Science и даты Semester 1 / Semester 2 2027, но все попытки Fetcher вернули 403. Даты не объявлены проверенными и не названы fall intake.",
+  "questions": [
+    {
+      "id": "Q0",
+      "status": "unknown",
+      "answer_ru": "Точное название степени, major, campus, язык и наборы 2027 не подтверждены: официальная programme page и prospectus 2027 недоступны Fetcher (403). Поисковая подсказка называет Bachelor of Computer and Information Sciences с Computer Science major, City Campus и два набора, но она не использована как факт.",
+      "unknown_reasons": [
+        "HTTP403/no content на programme page и 2027 prospectus; search snippet является только discovery hint."
+      ],
+      "access_evidence": [
+        {
+          "action": 2,
+          "action_hash_sha256": "00997e9485ec69a58d3d353f8a12b8a99d326e23e8a9088e65087f5bc85c6bd7",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-002.json",
+          "raw_log_sha256": "60394b5fb1611eedd7306f57601a7cd5efaa104485c5f34326a7bdf0fb999f96",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences"
+          },
+          "outcome": "http_error",
+          "outcome_status": "failure",
+          "http_status": 403,
+          "scope": "access failure; no facts read",
+          "official_url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences",
+          "fetched_at": "2026-10-07T16:18:13.599238+00:00",
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text_sha256": null,
+          "text_total_chars": 0
+        },
+        {
+          "action": 4,
+          "action_hash_sha256": "055605896cf1b263c38be77f8bc222a27b0e3dc1822cc136dbb8f6ecfe8f5517",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-004.json",
+          "raw_log_sha256": "f48d8c8af7a224d0d568ec614414fe37f9c9b888b4b34ddd7d2c3ddbc208e99d",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0015/1112442/2027-Prospectus-web.pdf"
+          },
+          "outcome": "http_error",
+          "outcome_status": "failure",
+          "http_status": 403,
+          "scope": "access failure; no facts read",
+          "official_url": "https://www.aut.ac.nz/__data/assets/pdf_file/0015/1112442/2027-Prospectus-web.pdf",
+          "fetched_at": "2026-10-07T16:18:40.239178+00:00",
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text_sha256": null,
+          "text_total_chars": 0
+        }
+      ]
+    },
+    {
+      "id": "Q1",
+      "status": "unknown",
+      "answer_ru": "Официальные English language requirements не прочитаны; порог IELTS, секции, срок действия и альтернативы неизвестны.",
+      "unknown_reasons": [
+        "HTTP403/no content на bachelor English requirements; Exa выдержка не заменяет официальный Fetcher read."
+      ],
+      "access_evidence": [
+        {
+          "action": 8,
+          "action_hash_sha256": "366fb54526a0e81633990f6cb3cb38e6639cdf1d4029f35e1235df3c15851d2c",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-008.json",
+          "raw_log_sha256": "4bcc96a6b8418e50d3be23e8a95ee7ce427bfae8228ad6dbbc5b4178903ea655",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.aut.ac.nz/study/entry-requirements/english-language-requirements/bachelors-degrees"
+          },
+          "outcome": "http_error",
+          "outcome_status": "failure",
+          "http_status": 403,
+          "scope": "access failure; no facts read",
+          "official_url": "https://www.aut.ac.nz/study/entry-requirements/english-language-requirements/bachelors-degrees",
+          "fetched_at": "2026-10-07T16:19:13.369172+00:00",
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text_sha256": null,
+          "text_total_chars": 0
+        }
+      ]
+    },
+    {
+      "id": "Q2",
+      "status": "unknown",
+      "answer_ru": "Признание казахстанского аттестата и точный GPA/баллы для Computer Science не подтверждены.",
+      "unknown_reasons": [
+        "International student entry requirements вернула403; для конкретного Kazakhstan credential источник не прочитан."
+      ],
+      "access_evidence": [
+        {
+          "action": 7,
+          "action_hash_sha256": "bbccf6539880abf1a9b280ead4656d3d8a377deaa8167ab85e0fe89f2b1e6180",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-007.json",
+          "raw_log_sha256": "a67266548887667c0a69e90da9ad78cca04cb23a6583b4a0949eb85990fb6193",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.aut.ac.nz/study/entry-requirements/international-student-entry-requirements"
+          },
+          "outcome": "http_error",
+          "outcome_status": "failure",
+          "http_status": 403,
+          "scope": "access failure; no facts read",
+          "official_url": "https://www.aut.ac.nz/study/entry-requirements/international-student-entry-requirements",
+          "fetched_at": "2026-10-07T16:19:06.784088+00:00",
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text_sha256": null,
+          "text_total_chars": 0
+        },
+        {
+          "action": 2,
+          "action_hash_sha256": "00997e9485ec69a58d3d353f8a12b8a99d326e23e8a9088e65087f5bc85c6bd7",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-002.json",
+          "raw_log_sha256": "60394b5fb1611eedd7306f57601a7cd5efaa104485c5f34326a7bdf0fb999f96",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences"
+          },
+          "outcome": "http_error",
+          "outcome_status": "failure",
+          "http_status": 403,
+          "scope": "access failure; no facts read",
+          "official_url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences",
+          "fetched_at": "2026-10-07T16:18:13.599238+00:00",
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text_sha256": null,
+          "text_total_chars": 0
+        }
+      ]
+    },
+    {
+      "id": "Q3",
+      "status": "unknown",
+      "answer_ru": "Точный дедлайн для международного заявителя и соответствующих наборов 2027 неизвестен.",
+      "unknown_reasons": [
+        "Programme page и applying page вернули403. Обнаруженные в search dates/application hints не использованы как доказательство."
+      ],
+      "access_evidence": [
+        {
+          "action": 2,
+          "action_hash_sha256": "00997e9485ec69a58d3d353f8a12b8a99d326e23e8a9088e65087f5bc85c6bd7",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-002.json",
+          "raw_log_sha256": "60394b5fb1611eedd7306f57601a7cd5efaa104485c5f34326a7bdf0fb999f96",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences"
+          },
+          "outcome": "http_error",
+          "outcome_status": "failure",
+          "http_status": 403,
+          "scope": "access failure; no facts read",
+          "official_url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences",
+          "fetched_at": "2026-10-07T16:18:13.599238+00:00",
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text_sha256": null,
+          "text_total_chars": 0
+        },
+        {
+          "action": 9,
+          "action_hash_sha256": "d54723497ee700fabdaa8334fba971533b62788dbb060198303e9d619ca94526",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-009.json",
+          "raw_log_sha256": "8c753b012b25ef6353e6c6fcfc9093a8f801cd384330dc3971196ce8dccdd83c",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.aut.ac.nz/study/applying"
+          },
+          "outcome": "http_error",
+          "outcome_status": "failure",
+          "http_status": 403,
+          "scope": "access failure; no facts read",
+          "official_url": "https://www.aut.ac.nz/study/applying",
+          "fetched_at": "2026-10-07T16:19:22.165175+00:00",
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text_sha256": null,
+          "text_total_chars": 0
+        }
+      ]
+    },
+    {
+      "id": "Q4",
+      "status": "unknown",
+      "answer_ru": "Tuition, student services levy, годовая и полная стоимость 2027 в NZD не подтверждены.",
+      "unknown_reasons": [
+        "2027 International Student Fees PDF и programme page вернули403/no content; суммы search snippets не выданы за проверенные."
+      ],
+      "access_evidence": [
+        {
+          "action": 3,
+          "action_hash_sha256": "b49b650a3a3f597a6d08f9724f5faa02b3dd892cdb3520968437c644cf5e6125",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-003.json",
+          "raw_log_sha256": "534ac0ce7acd97cc153ccb5d0b2ab865f017018ccb4599c04fa6062800711874",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0004/708925/International-Student-Fees-2027-v1.pdf"
+          },
+          "outcome": "http_error",
+          "outcome_status": "failure",
+          "http_status": 403,
+          "scope": "access failure; no facts read",
+          "official_url": "https://www.aut.ac.nz/__data/assets/pdf_file/0004/708925/International-Student-Fees-2027-v1.pdf",
+          "fetched_at": "2026-10-07T16:18:30.401081+00:00",
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text_sha256": null,
+          "text_total_chars": 0
+        },
+        {
+          "action": 2,
+          "action_hash_sha256": "00997e9485ec69a58d3d353f8a12b8a99d326e23e8a9088e65087f5bc85c6bd7",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-002.json",
+          "raw_log_sha256": "60394b5fb1611eedd7306f57601a7cd5efaa104485c5f34326a7bdf0fb999f96",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences"
+          },
+          "outcome": "http_error",
+          "outcome_status": "failure",
+          "http_status": 403,
+          "scope": "access failure; no facts read",
+          "official_url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences",
+          "fetched_at": "2026-10-07T16:18:13.599238+00:00",
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text_sha256": null,
+          "text_total_chars": 0
+        }
+      ]
+    },
+    {
+      "id": "Q5",
+      "status": "unknown",
+      "answer_ru": "Условия, стоимость покрытия и дедлайн scholarship 2027 для целевого Bachelor applicant не подтверждены.",
+      "unknown_reasons": [
+        "International scholarship page и обнаруженный2027 accommodation scholarship regulations PDF вернули403; candidate awards остаются discovery-only."
+      ],
+      "access_evidence": [
+        {
+          "action": 5,
+          "action_hash_sha256": "c1992b71d06c0315a94c4d66f7878bb99d0a5d9ddcecd0b97b9c3632e3fffc3e",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-005.json",
+          "raw_log_sha256": "281d97425a3cd789dfb22966175065a470380caa50fddfaf00ee08724d4c39b5",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0010/1157860/AUT-International-Student-Accommodation-Scholarships-2027-Regulations-FINAL.pdf"
+          },
+          "outcome": "http_error",
+          "outcome_status": "failure",
+          "http_status": 403,
+          "scope": "access failure; no facts read",
+          "official_url": "https://www.aut.ac.nz/__data/assets/pdf_file/0010/1157860/AUT-International-Student-Accommodation-Scholarships-2027-Regulations-FINAL.pdf",
+          "fetched_at": "2026-10-07T16:18:46.480212+00:00",
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text_sha256": null,
+          "text_total_chars": 0
+        },
+        {
+          "action": 10,
+          "action_hash_sha256": "99425fad59b9bbd79eb65386c57ddf6083a7c27b2d400668323a0d47d5a8bce3",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-010.json",
+          "raw_log_sha256": "b93cd6ef7e2158641e2629df0bd2ebf6882eadfbe3f8b7a1cf0a18300cc057a1",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.aut.ac.nz/study/fees-and-scholarships/scholarships-and-awards-at-aut/international-scholarships"
+          },
+          "outcome": "http_error",
+          "outcome_status": "failure",
+          "http_status": 403,
+          "scope": "access failure; no facts read",
+          "official_url": "https://www.aut.ac.nz/study/fees-and-scholarships/scholarships-and-awards-at-aut/international-scholarships",
+          "fetched_at": "2026-10-07T16:19:30.170515+00:00",
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text_sha256": null,
+          "text_total_chars": 0
+        }
+      ]
+    },
+    {
+      "id": "Q6",
+      "status": "unknown",
+      "answer_ru": "Eligibility гражданина Казахстана для international funding не подтверждена. Нет вывода об отсутствии поддержки.",
+      "unknown_reasons": [
+        "Не удалось прочитать точные citizenship/programme/year ограничения в официальном содержимом."
+      ],
+      "access_evidence": [
+        {
+          "action": 5,
+          "action_hash_sha256": "c1992b71d06c0315a94c4d66f7878bb99d0a5d9ddcecd0b97b9c3632e3fffc3e",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-005.json",
+          "raw_log_sha256": "281d97425a3cd789dfb22966175065a470380caa50fddfaf00ee08724d4c39b5",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0010/1157860/AUT-International-Student-Accommodation-Scholarships-2027-Regulations-FINAL.pdf"
+          },
+          "outcome": "http_error",
+          "outcome_status": "failure",
+          "http_status": 403,
+          "scope": "access failure; no facts read",
+          "official_url": "https://www.aut.ac.nz/__data/assets/pdf_file/0010/1157860/AUT-International-Student-Accommodation-Scholarships-2027-Regulations-FINAL.pdf",
+          "fetched_at": "2026-10-07T16:18:46.480212+00:00",
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text_sha256": null,
+          "text_total_chars": 0
+        },
+        {
+          "action": 10,
+          "action_hash_sha256": "99425fad59b9bbd79eb65386c57ddf6083a7c27b2d400668323a0d47d5a8bce3",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-010.json",
+          "raw_log_sha256": "b93cd6ef7e2158641e2629df0bd2ebf6882eadfbe3f8b7a1cf0a18300cc057a1",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.aut.ac.nz/study/fees-and-scholarships/scholarships-and-awards-at-aut/international-scholarships"
+          },
+          "outcome": "http_error",
+          "outcome_status": "failure",
+          "http_status": 403,
+          "scope": "access failure; no facts read",
+          "official_url": "https://www.aut.ac.nz/study/fees-and-scholarships/scholarships-and-awards-at-aut/international-scholarships",
+          "fetched_at": "2026-10-07T16:19:30.170515+00:00",
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text_sha256": null,
+          "text_total_chars": 0
+        },
+        {
+          "action": 7,
+          "action_hash_sha256": "bbccf6539880abf1a9b280ead4656d3d8a377deaa8167ab85e0fe89f2b1e6180",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-007.json",
+          "raw_log_sha256": "a67266548887667c0a69e90da9ad78cca04cb23a6583b4a0949eb85990fb6193",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.aut.ac.nz/study/entry-requirements/international-student-entry-requirements"
+          },
+          "outcome": "http_error",
+          "outcome_status": "failure",
+          "http_status": 403,
+          "scope": "access failure; no facts read",
+          "official_url": "https://www.aut.ac.nz/study/entry-requirements/international-student-entry-requirements",
+          "fetched_at": "2026-10-07T16:19:06.784088+00:00",
+          "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text_sha256": null,
+          "text_total_chars": 0
+        }
+      ]
+    }
+  ],
+  "saved_at": "2026-10-07T16:28:09.049299+00:00",
+  "expert": "expert_b",
+  "method": "Independent collaborative expert. Existing controller.run and production Fetcher only; Exa is discovery only. No gold, algorithm outputs, or other expert evidence read. No source/git/docs edits.",
+  "budget": {
+    "fetcher_calls": 8,
+    "elapsed_ms": 16672,
+    "search_queries": 2,
+    "stop_reason": null,
+    "next_log_number": 11,
+    "active_ms_including_setup": 16799,
+    "max_fetcher_calls": 60,
+    "max_search_queries": 6,
+    "max_active_ms": 120000,
+    "first_action_at": "2026-10-07T16:17:54.802912+00:00",
+    "model_thinking_between_actions": "excluded",
+    "algorithm_comparison_caveat": "Algorithm120s includes setup; controller timing is separately reported. Expert active_ms_including_setup measures controller.run including its setup, excluding separate process import/model thinking."
+  },
+  "source_catalog": [
+    {
+      "action": 2,
+      "action_hash_sha256": "00997e9485ec69a58d3d353f8a12b8a99d326e23e8a9088e65087f5bc85c6bd7",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-002.json",
+      "raw_log_sha256": "60394b5fb1611eedd7306f57601a7cd5efaa104485c5f34326a7bdf0fb999f96",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences"
+      },
+      "outcome": "http_error",
+      "outcome_status": "failure",
+      "http_status": 403,
+      "scope": "access failure; no facts read",
+      "official_url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences",
+      "fetched_at": "2026-10-07T16:18:13.599238+00:00",
+      "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "text_sha256": null,
+      "text_total_chars": 0
+    },
+    {
+      "action": 3,
+      "action_hash_sha256": "b49b650a3a3f597a6d08f9724f5faa02b3dd892cdb3520968437c644cf5e6125",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-003.json",
+      "raw_log_sha256": "534ac0ce7acd97cc153ccb5d0b2ab865f017018ccb4599c04fa6062800711874",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0004/708925/International-Student-Fees-2027-v1.pdf"
+      },
+      "outcome": "http_error",
+      "outcome_status": "failure",
+      "http_status": 403,
+      "scope": "access failure; no facts read",
+      "official_url": "https://www.aut.ac.nz/__data/assets/pdf_file/0004/708925/International-Student-Fees-2027-v1.pdf",
+      "fetched_at": "2026-10-07T16:18:30.401081+00:00",
+      "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "text_sha256": null,
+      "text_total_chars": 0
+    },
+    {
+      "action": 4,
+      "action_hash_sha256": "055605896cf1b263c38be77f8bc222a27b0e3dc1822cc136dbb8f6ecfe8f5517",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-004.json",
+      "raw_log_sha256": "f48d8c8af7a224d0d568ec614414fe37f9c9b888b4b34ddd7d2c3ddbc208e99d",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0015/1112442/2027-Prospectus-web.pdf"
+      },
+      "outcome": "http_error",
+      "outcome_status": "failure",
+      "http_status": 403,
+      "scope": "access failure; no facts read",
+      "official_url": "https://www.aut.ac.nz/__data/assets/pdf_file/0015/1112442/2027-Prospectus-web.pdf",
+      "fetched_at": "2026-10-07T16:18:40.239178+00:00",
+      "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "text_sha256": null,
+      "text_total_chars": 0
+    },
+    {
+      "action": 5,
+      "action_hash_sha256": "c1992b71d06c0315a94c4d66f7878bb99d0a5d9ddcecd0b97b9c3632e3fffc3e",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-005.json",
+      "raw_log_sha256": "281d97425a3cd789dfb22966175065a470380caa50fddfaf00ee08724d4c39b5",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0010/1157860/AUT-International-Student-Accommodation-Scholarships-2027-Regulations-FINAL.pdf"
+      },
+      "outcome": "http_error",
+      "outcome_status": "failure",
+      "http_status": 403,
+      "scope": "access failure; no facts read",
+      "official_url": "https://www.aut.ac.nz/__data/assets/pdf_file/0010/1157860/AUT-International-Student-Accommodation-Scholarships-2027-Regulations-FINAL.pdf",
+      "fetched_at": "2026-10-07T16:18:46.480212+00:00",
+      "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "text_sha256": null,
+      "text_total_chars": 0
+    },
+    {
+      "action": 7,
+      "action_hash_sha256": "bbccf6539880abf1a9b280ead4656d3d8a377deaa8167ab85e0fe89f2b1e6180",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-007.json",
+      "raw_log_sha256": "a67266548887667c0a69e90da9ad78cca04cb23a6583b4a0949eb85990fb6193",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.aut.ac.nz/study/entry-requirements/international-student-entry-requirements"
+      },
+      "outcome": "http_error",
+      "outcome_status": "failure",
+      "http_status": 403,
+      "scope": "access failure; no facts read",
+      "official_url": "https://www.aut.ac.nz/study/entry-requirements/international-student-entry-requirements",
+      "fetched_at": "2026-10-07T16:19:06.784088+00:00",
+      "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "text_sha256": null,
+      "text_total_chars": 0
+    },
+    {
+      "action": 8,
+      "action_hash_sha256": "366fb54526a0e81633990f6cb3cb38e6639cdf1d4029f35e1235df3c15851d2c",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-008.json",
+      "raw_log_sha256": "4bcc96a6b8418e50d3be23e8a95ee7ce427bfae8228ad6dbbc5b4178903ea655",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.aut.ac.nz/study/entry-requirements/english-language-requirements/bachelors-degrees"
+      },
+      "outcome": "http_error",
+      "outcome_status": "failure",
+      "http_status": 403,
+      "scope": "access failure; no facts read",
+      "official_url": "https://www.aut.ac.nz/study/entry-requirements/english-language-requirements/bachelors-degrees",
+      "fetched_at": "2026-10-07T16:19:13.369172+00:00",
+      "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "text_sha256": null,
+      "text_total_chars": 0
+    },
+    {
+      "action": 9,
+      "action_hash_sha256": "d54723497ee700fabdaa8334fba971533b62788dbb060198303e9d619ca94526",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-009.json",
+      "raw_log_sha256": "8c753b012b25ef6353e6c6fcfc9093a8f801cd384330dc3971196ce8dccdd83c",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.aut.ac.nz/study/applying"
+      },
+      "outcome": "http_error",
+      "outcome_status": "failure",
+      "http_status": 403,
+      "scope": "access failure; no facts read",
+      "official_url": "https://www.aut.ac.nz/study/applying",
+      "fetched_at": "2026-10-07T16:19:22.165175+00:00",
+      "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "text_sha256": null,
+      "text_total_chars": 0
+    },
+    {
+      "action": 10,
+      "action_hash_sha256": "99425fad59b9bbd79eb65386c57ddf6083a7c27b2d400668323a0d47d5a8bce3",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-010.json",
+      "raw_log_sha256": "b93cd6ef7e2158641e2629df0bd2ebf6882eadfbe3f8b7a1cf0a18300cc057a1",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.aut.ac.nz/study/fees-and-scholarships/scholarships-and-awards-at-aut/international-scholarships"
+      },
+      "outcome": "http_error",
+      "outcome_status": "failure",
+      "http_status": 403,
+      "scope": "access failure; no facts read",
+      "official_url": "https://www.aut.ac.nz/study/fees-and-scholarships/scholarships-and-awards-at-aut/international-scholarships",
+      "fetched_at": "2026-10-07T16:19:30.170515+00:00",
+      "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "text_sha256": null,
+      "text_total_chars": 0
+    }
+  ],
+  "discovery_only_searches": [
+    {
+      "action": 1,
+      "action_hash_sha256": "8fa1ba828776867e63e2c7af1799f7ad6513f43da53d8882cc1aaac5c09ffaea",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-001.json",
+      "raw_log_sha256": "f8e7caf188c4bf0559012cdc6c55c6a7730245b3a5b1ef1efbbaea97aa7c7f08",
+      "tool": "search_provider",
+      "request": {
+        "domains": [
+          "aut.ac.nz"
+        ],
+        "max_results": 10,
+        "query": "Auckland University Technology Bachelor Computer Science 2027 international Kazakhstan entry requirements fees scholarships intake",
+        "tool": "search_provider"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": null,
+      "scope": "discovery hint only",
+      "results": [
+        {
+          "rank": 1,
+          "snippet": "## INTERNATIONAL STUDENT FEES 2027\n...\nAt most universities, experience comes after the degree. At AUT, it’s part of it. Based in Auckland – New Zealand’s economic capital and one of ... world’s most international cities – workplace experience with real employers is built into most of our programmes. You don’t just graduate with a qualification ... You graduate ready to use it. With 200,000+ alumni building careers worldwide and a five-star QS rating across teaching, facilities and employability, the results speak for themselves. This flyer gives you an indication of the fees you need to pay as ... international student at AUT. It provides an estimate for the range of costs associated with full-time study as an international student. This is based on estimates from the course selection of previous student enrolments within each qualification. This is an estimation assuming full-time study (120 points), unless otherwise indicated.\n...\n| Postgraduate Certificate in Computer and Informati",
+          "title": "INTERNATIONAL STUDENT FEES",
+          "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0004/708925/International-Student-Fees-2027-v1.pdf"
+        },
+        {
+          "rank": 2,
+          "snippet": "studying at AUT ... .\n\n Quick facts \n\nProgramme code: AK3697\n\nLevel: 7\n\nPoints: 360\n\nDuration: 3 years full-time / part-time available \n\nCampus:\n\n City Campus \n\nStarts:\n\n 22 Feb 2027 12 Jul 2027 \n\n Key semester dates\n\nDomestic\n\n $9,411.60 - $9,508.60 (for 120 points) ($8,190 - $8,287 tuition fees + $1,221.60 student services levy) \n\nInternational\n\n $42,621.60 (for 120 points) ($41,400 tuition fees + $1,221.60 student services levy) \n\n- Fees shown are based on a full-time workload for the points indicated next to the fee. The exact fee charged will depend on which courses you select at the time of enrolment.\n- Fees are subject to change year to year. If you are planning for study beyond the current year, fees may vary from those stated.\n- There may also be other fees and charges you need to pay.\n- International students' tuition fees reflect the full cost of tuition. Domestic students' tuition fees are less due to a proportion of the tuition fees being funded by the New Zealand Governme",
+          "title": "Bachelor of Computer and Information Sciences - AUT",
+          "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences"
+        },
+        {
+          "rank": 3,
+          "snippet": "• No need to reinvent yourself; we see you for who you truly are. Students from 140+ countries come to Auckland to study at AUT, joining locals from every corner of New Zealand \n• Teaching that recognises everyone’s brain works differently, plus plenty of academic support when you need it \n• Part-time, full-time, three campuses - we have study options that fit around your life\n...\nTiriti o Waitangi. Belonging ... . It’ ... explain yourself. ... Māori and Pacific communities where culture leads ... way, rainbow spaces that ... around what disabled, Deaf and neurodivergent students ... international students finding their place in ... oa, and advocacy ... sure your voice\n...\nBachelor of Computer and Information Sciences\n\n• Computer Science \n• Data Science \n• Digital Services \n• Networks and Cybersecurity \n• Software Development Duration 3 years full-time, part-time available Campus City Starts 22 Feb & 12 July 2027\n...\nPostgraduate Certificate in Computer and Information Sciences\n\nDurati",
+          "title": "",
+          "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0015/1112442/2027-Prospectus-web.pdf"
+        },
+        {
+          "rank": 4,
+          "snippet": "BACHELOR OF ENGINEERING TECHNOLOGY BACHELOR OF COMPUTER AND INFORMATION SCIENCES\n\nCode AK3719 AK3697 \nLevel 7 7 \nPoints 360 360 \nMajor(s) Electrical and Electronic Engineering \nMechanical Engineering \n\nComputer Science Data Science Digital Services Networks and Cybersecurity Software Development Duration 3 years full-time/part-time available 3 years full-time/part-time available Campus City City Starts 22 Feb & 12 July 2027 22 Feb & 12 July 2027 Minimum entry requirements\n\nUniversity Entrance or equivalent, including: \nNCEA: 14 credits or more at level 2 or above (including AS91261 and AS91262) OR \nNCEA level 3 in Maths, Stats or Calculus, AND \n14 credits or more at NCEA Level 2 or above in Physics \nCAIE: A D grade or better in Mathematics and Physics at AS level \nIB: Passes (level 4) in both Mathematics and Physics \nApplicants without UE must demonstrate competency in Mathematics (algebra) \nand Physics to at least level 2 or equivalent. \n\nUniversity Entrance or equivalent\n\nEnglish lan",
+          "title": "0800 AUT AUT (0800 288 288)",
+          "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0006/347901/CAG-2027-web.pdf"
+        },
+        {
+          "rank": 5,
+          "snippet": "There are many scholarships for international students who want to study at AUT. Find out more about the scholarships for international students you can apply for to support your studies at AUT.\n...\nThe AUT International Scholarships – South Asia, Southeast Asia, North Asia, Europe - Semester 2, 2026 Intake recognise and support high-achieving international students as they begin their journey towards becoming great graduates of AUT.\n...\n- South Asia: Afghanistan, India, Pakistan, Bangladesh, Sri Lanka, Nepal, Bhutan, Maldives More information\n- Southeast Asia: Brunei Darussalam, Cambodia, Indonesia, Laos PDR, Malaysia, Myanmar, Philippines, Singapore, Thailand, Viet Nam More information\n- North Asia: China, Hong Kong, Taiwan, Japan, Mongolia, Democratic People’s Republic of Korea, Republic of Korea More information\n- Europe: Countries from the Europe continent More information\n...\nThe AUT International Scholarships Semester 2, 2026 intakes are available to support high-achieving inter",
+          "title": "International Scholarships - AUT",
+          "url": "https://www.aut.ac.nz/study/fees-and-scholarships/scholarships-and-awards-at-aut/international-scholarships"
+        },
+        {
+          "rank": 6,
+          "snippet": "AUT International Scholarships –\n...\n### Closing Date: 22 November 2026 for Semester 1 scholarships and 23 May 2027 for Semester 2 scholarships, or until all places are filled (whichever occurs first).\n\nPURPOSE Auckland University of Technology (AUT) provides scholarships to recognise and support ... students as they begin ... journey in becoming great graduates of AUT.\n\nVALUE AND TYPE OF AWARD AUT International Scholarships are provided for the following levels of study:\n...\n• Contribution of $10,000 towards tuition fees for the first year of study in a bachelor’s degree programme.\n...\n• Applicants must be new full-fee paying international students. See additional notes. \n• Applicants must be citizens of one of the following countries: \n• South Asia: Afghanistan, India, Pakistan, Bangladesh, Sri Lanka, Nepal, Bhutan, Maldives. \n• Applicants must have a current and valid conditional or unconditional offer to study an eligible AUT programme commencing in either Semester 1 or Semester 2,",
+          "title": "AUT International Scholarships – South Asia",
+          "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0011/1157555/AUT-International-Scholarships-South-Asia-Regulations_FINAL.pdf"
+        },
+        {
+          "rank": 7,
+          "snippet": "Study in New Zealand at one of the world’s best modern universities. Located in Auckland, New Zealand’s economic powerhouse, AUT has a five-star rating from QS for teaching, research, facilities, global engagement, employability, good governance and environmental impact. Our mission is to create great graduates, and we have 150,000 alumni who have successful careers around ... world. We offer students exceptional modern learning experiences, and industry connections and workplace experience are an important part of our programmes. This flyer gives you an indication of the fees you need to pay as an international student at AUT. It provides an estimate for the range of costs associated with full-time study as an international student. This is based on estimates from the course selection of previous student enrolments within each qualification. This is an estimation assuming full-time study (120 points), unless otherwise indicated.\n...\nENGINEERING, COMPUTER & MATHEMATICAL SCIENCES (\n...\n",
+          "title": "INTERNATIONAL",
+          "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0004/708925/International-Student-Fees-2026-v3-002.pdf"
+        },
+        {
+          "rank": 8,
+          "snippet": "New Zealand, ... of the safest and friendliest places to study 4\n...\nin Auckland, New Zealand's economic powerhouse 6 \nWhy study at AUT? 8 \nBeyond learning and into employability 10 \nLife at AUT 12 \nYour new home: living on campus 13 \nBusiness, Economics & Law 14 \nCulture & Society 16 \nDesign & Creative Technologies 18 \nHealth & Environmental Sciences 20 \nStudy ... : study a semester or a year in New Zealand 22 \nGlobal partnerships 23 \nResearch and innovation 24 \nScholarships and awards 25 \nEntry requirements 26 \nPathways to degree study for international students 27 \nHow to apply 28 \nPreparing to study in New Zealand 30 \nFind out more 32\n...\nENGINEERING, COMPUTER \n& MATHEMATICAL SCIENCES \n(UNDERGRADUATE) \nCertificate in Science and Technology 1 year Feb/Jul \nDiploma in Computer and \nInformation Sciences \n\n1 year Feb/Jul Diploma in Engineering 1 year Feb/Jul Bachelor of Computer and Information Sciences\n\n• Computer Science \n• Data Science \n• Digital Services \n• Networks and Cybersecuri",
+          "title": "INTERNATIONAL STUDENT PROSPECTUS",
+          "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0010/598573/International-Student-Prospectus-2026-WEB.pdf"
+        },
+        {
+          "rank": 9,
+          "snippet": "## AUT International Student Accommodation Scholarship Semester One, 2027\n\nOpening Date: August 2026 \nClosing Date: Applications will remain open until all places are filled. Assessment and \nselection will be made on a first-come, first-served basis. \nPURPOSE \nAuckland University of Technology (AUT) is providing International Student Accommodation \nScholarships to support new-to-AUT and new-to-programme international students commencing \nstudy in Semester One, 2027. \nThe scholarship includes accommodation at AUT’s Te Āhuru Mayoral Drive Student Accommodation, \nlocated in the heart of Auckland city, just a minute’s walk from AUT City Campus, offering quality, \nmodern, single studio-style living. \nVALUE AND TYPE OF AWARD \nRecipients receive a 50% rebate on weekly rental, valued at $9,920 for 40 weeks, applied at Te Āhuru \nMayoral Drive Student Accommodation from Semester One, 2027. \n• The scholarship covers one self-catered studio room for a single resident. \n• The scholarship does not c",
+          "title": "AUT International Student Accommodation Scholarship Semester One, 2027",
+          "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0010/1157860/AUT-International-Student-Accommodation-Scholarships-2027-Regulations-FINAL.pdf"
+        },
+        {
+          "rank": 10,
+          "snippet": "| Programme Code | AK3697 |\n| --- | --- |\n| Method | Both Full & Parttime |\n| Further Details |\n...\n| Points |\n| --- |\n| Bachelor of Computer and Information Sciences (BCIS) | 360.00 |\n\n| Applications close 9 July 2027. | Application form |\n| --- | --- |\n| Applications close 19 February 2027. | Application form |\n\n| Purpose |\n| --- |\n| BCIS graduates will have a sound technical understanding of computer hardware and software and an ability to plan, develop and apply technologies to solving computing problems. They will be prepared for postgraduate study. |\n| Content |\n| Digital Services, Networks and Cybersecurity, Data Analysis, Software Development, Programming, Data and Process Modelling, Information Systems, Research and Development, Logical Database Design. |\n| Qualification Structure |\n| Application Details |\n...\nof AUT' ... Akoranga ... au) and if it ... aihorotiu",
+          "title": "Course search - AUT",
+          "url": "https://www.aut.ac.nz/study/course-search?sq_content_src=%2BdXJsPWh0dHBzJTNBJTJGJTJGYXJpb24uYXV0LmFjLm56JTJGQXJpb25NYWluJTJGQ291cnNlSW5mbyUyRkluZm9ybWF0aW9uJTJGUXVhbGlmaWNhdGlvbnMlMkZEZXRhaWxzJTJGUXVhbERldGFpbHMuYXNweCUzRmlkJTNEOTYzJmFsbD0x"
+        }
+      ]
+    },
+    {
+      "action": 6,
+      "action_hash_sha256": "b238ac61f95e23e15d901a020ea7e763c373c87fab2f33f24490e36e7f8a073a",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/aut/raw/aut-006.json",
+      "raw_log_sha256": "fb278f51edaad2bfe1a260baa44ec4f595a907b0208836b80824c938656d97cc",
+      "tool": "search_provider",
+      "request": {
+        "domains": [
+          "aut.ac.nz"
+        ],
+        "max_results": 8,
+        "query": "AUT undergraduate international entry requirements Kazakhstan IELTS Bachelor Computer Information Sciences 2027",
+        "tool": "search_provider"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": null,
+      "scope": "discovery hint only",
+      "results": [
+        {
+          "rank": 1,
+          "snippet": "Considering AUT for your studies? We're glad you're here. Applying from overseas means navigating different entry requirements, and we're here to make that easier. Find all the entry requirement information you need for international students below.\n\n Bachelor's degrees and diplomas (includes entry requirements by country) \n\nAll applicants need to meet AUT’s minimum entry requirements. Because of competition for places, you may need to have more than the minimum entry requirements for admission to some programmes.\n...\n| Worldwide | Worldwide International Baccalaureate (IB) with successful completion of a minimum of 24 points. Cambridge International Examination - a minimum of 120 points on the UCAS Tariff* at A or AS level from any subjects which are broadly equivalent to the subjects in the NCEA approved subject list. Must include at least three subjects (excluding Thinking Skills) with grades D or above. Numeracy: A minimum grade of D in International General Certificate of Secondar",
+          "title": "International Students - Entry Requirements - AUT",
+          "url": "https://www.aut.ac.nz/study/entry-requirements/international-student-entry-requirements"
+        },
+        {
+          "rank": 2,
+          "snippet": "There are several ways to show that you meet the English language requirements for an AUT bachelor’s degree, depending on your situation.\n...\n- You’ll need to meet your English requirements in a single sitting of your chosen English language proficiency test (see table below) or through an approved alternative\n- Your test results are valid for two years from the date on the test certificate to the time of your application to a programme at AUT\n- There are some AUT bachelor’s degrees with higher English language requirements than those listed below\n...\nRequired score \n\nIELTS (Academic) 1, 2 \n\n6.0 overall with all bands 5.5 or higher\n...\n05\n\n 1. IELTS One Skill Retake is accepted at AUT. This means you can retake one skill below the required band to meet the IELTS requirements. Your One Skill Retake must be completed within 60 days of your original IELTS test and must be completed as a \"One Skill Retake\". 2. IELTS Academic Online and PTE Academic Online are not accepted. \n\n## Completing ",
+          "title": "English language requirements for bachelor's degrees - AUT",
+          "url": "https://www.aut.ac.nz/study/entry-requirements/english-language-requirements/bachelors-degrees"
+        },
+        {
+          "rank": 3,
+          "snippet": "Check the entry requirements on the ... page for your chosen programme ... ’ll need to meet.\n...\n- University Entrance is the minimum requirement for admission to bachelor's degrees at AUT. For some bachelor’s degrees you also need other specified admission requirements, including specific school subjects, portfolios and interviews\n...\nThis is your step-by-step guide to becoming an international student at AUT. It includes the steps you take before you apply, how to apply and what happens through each stage of the journey.\n...\n- Most undergraduate programmes will start in both Semester 1 and Semester 2 each year. However, a few programmes only start at the beginning of the year\n- We recommend that you apply at least three months before the start of the programme to allow for visa processing and travel to New Zealand\n...\n- Check the entry criteria on the programme page on the website to see the academic requirements you’ll need to meet. You can choose from 24 countries in a drop-down me",
+          "title": "Applying to study at AUT - AUT",
+          "url": "https://www.aut.ac.nz/study/applying"
+        },
+        {
+          "rank": 4,
+          "snippet": "2 Feb 2 ... 27 12 Jul ... 27\n...\n87 tuition\n...\n2,62 ... .60 (for 120 points) ($41,400 tuition fees + $ ... ,221.60 student services levy)\n...\n### If you have qualifications from another country\n\nSee entry requirements for students from other countries. Select your country from the dropdown menu.\n\n## English language requirements\n\n- IELTS (Academic) 6.0 overall with all bands 5.5 or higher; or equivalent",
+          "title": "Bachelor of Computer and Information Sciences - AUT",
+          "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences"
+        },
+        {
+          "rank": 5,
+          "snippet": "Bachelor of Computer and Information Sciences\n\n• Computer Science \n• Data Science \n• Digital Services \n• Networks and Cybersecurity \n• Software Development Duration 3 years full-time, part-time available Campus City Starts 22 Feb & 12 July 2027\n...\nPostgraduate Certificate in Computer and Information Sciences\n...\nfull-time, part-time available Campus City Starts 22 Feb & 12 July 2027\n\nPostgraduate Diploma in Computer and Information Sciences\n\nDuration 1 ... , part-time available Campus City Starts 22 Feb & 12 July 2027\n\nMaster of Computer and Information Sciences\n\nDuration 1½ years full-time, part-time available Campus City Starts 22 Feb & 12 July 2027",
+          "title": "",
+          "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0015/1112442/2027-Prospectus-web.pdf"
+        },
+        {
+          "rank": 6,
+          "snippet": "Want to study at AUT? Good choice. Here's what you actually need to know about entry requirements. Whether you want to study a certificate, diploma, bachelor's degree, graduate certificate, graduate diploma, or postgraduate programme – here's what you need to get in.\n...\n- University Entrance (UE) for bachelor's degrees\n- Postgraduate entry requirements\n- English language requirements\n- International student entry requirements\n- Australian school students planning to study at AUT\n- Cross-credit your experience: recognition of prior learning (RPL)\n...\nYour chosen AUT programme may have higher entry requirements than the ones in this section. You can find entry requirements for each AUT programme on the relevant programme page or in the AUT Calendar; the official document for all regulations related to AUT programmes.",
+          "title": "Entry Requirements - Applying to Study - AUT",
+          "url": "https://www.aut.ac.nz/study/entry-requirements"
+        },
+        {
+          "rank": 7,
+          "snippet": "Contents \nAcademic Dates for 2027 6 \nThe Symbol – Te Tohu 8 \nGlossary 9 \nIndex of Subject Codes 12 \nOfficers of AUT 14 \nCouncil 16 \nCommittees and Boards 17 \nHonorary Qualifications and Awards 18 \nAUT Research Institutes and Networks 22 \nAUT Faculties and Schools 23 \nLearning and Academic Engagement 24 \nThe General Academic Statute 25 \nPart 1 Introduction 26 \nPart 2 Administrative Structure 27 \nPart 3 Qualifications and Awards 31 \nPart 4 Academic Regulations 34 \nThe General Academic Regulations 35 \nPart 1 General 35 \nPart 2 Resources Management 36 \nPart 3 Admission and Enrolment Requirements 37 \nPart 4 Recognition of Prior Learning 44 \nPart 5 Assessment and Granting of Credit 47 \nPart 6 Academic Appeals 51 \nPart 7 Academic Discipline 54 \nPart 8 Granting of Qualifications and Awards 57 \nPart 9 Standard Qualification Regulations 65 \nSchedule 1 English Language Requirements 76 \nSchedule 2 Admission to Bachelor’s Degrees, Diplomas and Certificates 80 \nSchedule 3 Format of Parchments and St",
+          "title": "",
+          "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0004/119506/Calendar_2027.pdf"
+        },
+        {
+          "rank": 8,
+          "snippet": "There's more than one way to get here. Depending on your age, qualifications and study history, one of these pathways could be the right fit.\n\n International student entry requirements \n\nDid your secondary schooling outside New Zealand? If you're an international student, check our international entry requirements.\n\n Special Admission\n...\n- Have received secondary schooling to at least New Zealand Year 12 level (or its equivalent overseas) and completed NCEA Level 2 endorsed ... Merit or better. This should include at least 14 credits in each of 4 NCEA Level 2 subjects, at least 3 of which must be on the approved subject list; and\n...\nnumeracy standards, or their equivalents; and\n...\n- An Australian high school ranking with an ATAR rank of 69. ... or above or an OP rank of 14 or\n...\n- An appropriate qualification from an overseas secondary school or tertiary institution, deemed by AUT to be sufficient for admission into a bachelor’s programme*\n...\n- An appropriate course of study at Le",
+          "title": "University Entrance - Applying to Study - AUT",
+          "url": "https://www.aut.ac.nz/study/entry-requirements/university-entrance"
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "raw_hashes_verified": true,
+    "content_hashes_verified": true,
+    "excerpts_exactly_matched": true,
+    "cumulative_counters_monotone": true,
+    "no_repeated_exact_actions": true,
+    "source_facts_human_review": "unreviewed"
+  }
+}

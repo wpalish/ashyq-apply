@@ -1,0 +1,187 @@
+{
+  "status": "FIVE_TERMINAL_CASES_NO_PROVIDER_FAILURE_OR_OVERRUN",
+  "source_pin": "0d3ad8ce3c5b8e5cbeb503136f17be7ffd84d408",
+  "baseline_source_pin": "89fc891228d9b8987fce19b2ddc0254d69837c2e",
+  "cases": [
+    {
+      "case_id": "01d3bb22815c61aa8454283116cbd4fa",
+      "predictions": [],
+      "budget": {
+        "strict_expert_budget": true,
+        "provider": "exa",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 3000,
+        "source_work_deadline_ms": 117000,
+        "fetcher_calls": 26,
+        "search_queries": 6,
+        "blocked_search_queries": 1,
+        "network_http_requests": 26,
+        "elapsed_ms": 52026,
+        "stop_reason": "search_budget_exhausted",
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 52.556338333990425,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "candidate_programme_urls": [
+        "http://en.dlut.edu.cn/info/1103/2308.htm"
+      ],
+      "error": null
+    },
+    {
+      "case_id": "01ea8dd78746c15f2655b59fd4f5deab",
+      "predictions": [],
+      "budget": {
+        "strict_expert_budget": true,
+        "provider": "exa",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 3000,
+        "source_work_deadline_ms": 117000,
+        "fetcher_calls": 39,
+        "search_queries": 6,
+        "blocked_search_queries": 1,
+        "network_http_requests": 61,
+        "elapsed_ms": 101958,
+        "stop_reason": "search_budget_exhausted",
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 102.58431833400391,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "candidate_programme_urls": [],
+      "error": null
+    },
+    {
+      "case_id": "0386940c5cef525b3c8e7966868f5ed6",
+      "predictions": [],
+      "budget": {
+        "strict_expert_budget": true,
+        "provider": "exa",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 3000,
+        "source_work_deadline_ms": 117000,
+        "fetcher_calls": 3,
+        "search_queries": 1,
+        "blocked_search_queries": 0,
+        "network_http_requests": 6,
+        "elapsed_ms": 9529,
+        "stop_reason": null,
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 10.18333916598931,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "candidate_programme_urls": [],
+      "error": null
+    },
+    {
+      "case_id": "0480c3b293c219debd4325fe107ac27b",
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+            "excerpt": "Computer Science Major - Bachelor of Computer and Information Sciences Study computer science and gain the skills to develop sophisticated software solutions, solve complex problems and use the power of computing technologies i",
+            "scope": {
+              "university": "Auckland University of Technology",
+              "programme": "Computer Science Major - Bachelor of Computer and Information Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-07",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "budget": {
+        "strict_expert_budget": true,
+        "provider": "exa",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 3000,
+        "source_work_deadline_ms": 117000,
+        "fetcher_calls": 46,
+        "search_queries": 6,
+        "blocked_search_queries": 0,
+        "network_http_requests": 52,
+        "elapsed_ms": 101795,
+        "stop_reason": null,
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 102.42988662503194,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "candidate_programme_urls": [
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+        "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+      ],
+      "error": null
+    },
+    {
+      "case_id": "05e4d59f87261553f15d14b0cdb470d2",
+      "predictions": [],
+      "budget": {
+        "strict_expert_budget": true,
+        "provider": "exa",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 3000,
+        "source_work_deadline_ms": 117000,
+        "fetcher_calls": 4,
+        "search_queries": 1,
+        "blocked_search_queries": 0,
+        "network_http_requests": 7,
+        "elapsed_ms": 14220,
+        "stop_reason": null,
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 14.85261325002648,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "candidate_programme_urls": [],
+      "error": null
+    }
+  ],
+  "total_fetcher_calls": 118,
+  "total_search_queries": 20,
+  "total_active_checkpoint_ms": 279528,
+  "nagoya": {
+    "before_ielts": 5.5,
+    "after_ielts": null,
+    "source_bytes_identical": true,
+    "body_byte_sha256": "8b2f118cb5dcba242cdf0852918bb68dc4ee2b681378b4c87967a579054b6327",
+    "interpretation": "Exchange-only value removed; full-degree minimum remains unknown"
+  },
+  "aut": {
+    "programme_quote_verbatim": true,
+    "http_status": 200,
+    "scope": "CS major within Bachelor of Computer and Information Sciences; no intake/year confirmation",
+    "interpretation": "Access differs from earlier403; no causal credit to scope filter"
+  },
+  "source_cache_files": 130,
+  "archive_sha256": "d610eb32cf0fe35742cb20d5948a110e92a68859079a1f3feda30c79fcb5a683",
+  "quality_score": null,
+  "limits": "one sequential observation, unsigned research, no readiness claim"
+}

@@ -49,7 +49,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session, sessionmaker
 
 from app.adapters.discovery.live_discovery import (
     REGISTRY_PATH,
@@ -77,6 +77,7 @@ from app.models.research import (
     ResearchRun,
 )
 from app.models.source_page import SourcePage
+from app.models.university import University
 from app.pipeline.runner import ResearchRunner
 from app.pipeline.state import RunState
 from app.schemas.profile import (
@@ -348,6 +349,29 @@ def select_registry_entries(registry: list[dict], selectors: list[str] | None) -
     return selected
 
 
+def select_catalogue_entries(session: Session, ids: list[str]) -> list[dict]:
+    """Explicit imported identities only; never export seed facts or research routes."""
+    if not ids or len(set(ids)) != len(ids):
+        raise ValueError("Catalogue selection must be nonempty and have no duplicate ids")
+    entries = []
+    for university_id in ids:
+        if not re.fullmatch(r"[0-9a-f]{32}", university_id):
+            raise ValueError("Catalogue selection requires stable 32-character ids")
+        university = session.get(University, university_id)
+        if university is None or not university.domain:
+            raise ValueError("Catalogue id is unknown or has no public domain hint")
+        entries.append(
+            {
+                "id": university.id,
+                "name": university.name,
+                "country": university.country,
+                "homepage": f"https://{university.domain}/",
+                "identity_status": university.domain_status,
+            }
+        )
+    return entries
+
+
 def recall_metrics(rows: list[dict]) -> dict[str, dict[str, float | int]]:
     """Publish recall as honest numerators and denominators, never a slogan."""
     program_numerator = sum(bool(row.get("program_page_found")) for row in rows)
@@ -374,7 +398,11 @@ async def run_canary(
     only: str | None,
     verbose: bool,
     batch: list[str] | None = None,
+    *,
+    catalogue_ids: list[str] | None = None,
 ) -> dict:
+    if catalogue_ids is not None and (only or batch):
+        raise ValueError("Catalogue ids cannot be combined with registry selectors")
     registry = json.loads(REGISTRY_PATH.read_text())
     selectors = batch or ([only] if only else None)
     registry = select_registry_entries(registry, selectors)
@@ -387,6 +415,13 @@ async def run_canary(
     Base.metadata.create_all(engine)
     session = sessionmaker(bind=engine)()
     import_catalogue(session)
+    if catalogue_ids is not None:
+        try:
+            registry = select_catalogue_entries(session, catalogue_ids)
+        except ValueError:
+            session.close()
+            engine.dispose()
+            raise
 
     settings = Settings(
         cache_dir=workdir / "cache",
@@ -420,7 +455,9 @@ async def run_canary(
         stage_state=RunState.load(None).dump(),
         candidate_limit=len(registry),
         verify_limit=len(registry),
-        university_ids=[stable_id(identity_key(e["name"], e["country"])) for e in registry],
+        university_ids=[
+            e.get("id") or stable_id(identity_key(e["name"], e["country"])) for e in registry
+        ],
     )
     session.add(run)
     session.flush()
@@ -492,6 +529,7 @@ async def run_canary(
         )
 
         row_out = {
+            "catalogue_id": entry.get("id"),
             "institution": name,
             "country": entry["country"],
             "domain": domain,
@@ -661,6 +699,9 @@ async def main() -> int:
     )
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument(
+        "--catalogue-id", action="append", help="opt-in imported identity id; repeat for a batch"
+    )
+    parser.add_argument(
         "--check-seeds",
         action="store_true",
         help="only verify that the registry's manual seeds still resolve",
@@ -669,13 +710,15 @@ async def main() -> int:
 
     if args.only and args.batch:
         parser.error("--only and --batch are mutually exclusive")
+    if args.catalogue_id and (args.only or args.batch or args.check_seeds):
+        parser.error("--catalogue-id cannot be combined with registry/seed selectors")
 
     if args.check_seeds:
         return await check_seeds()
 
     print("Live canary — real network, real sites, robots.txt respected.", flush=True)
     batch = [item.strip() for item in args.batch.split(",")] if args.batch else None
-    report = await run_canary(args.only, args.verbose, batch=batch)
+    report = await run_canary(args.only, args.verbose, batch=batch, catalogue_ids=args.catalogue_id)
 
     print()
     print(markdown_table(report))

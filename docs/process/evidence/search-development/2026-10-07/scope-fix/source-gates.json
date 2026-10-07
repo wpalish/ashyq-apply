@@ -1,0 +1,32 @@
+{
+  "status": "GREEN",
+  "recorded_at": "2026-10-07T17:29:10.244172+00:00",
+  "source_file_sha256": {
+    "backend/app/adapters/requirements/section_scope.py": "8b2c8da32b7595f95aab817d97b90f7900aca93bab21060499a39ecfc83a2f79",
+    "backend/app/adapters/requirements/web_requirements.py": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+    "backend/tests/test_requirement_section_scope.py": "cea0cf4a4859b2f5a3de0f61b882ec4b18b30fa08ef01158637b505e5753547b"
+  },
+  "backend": {
+    "passed": 3673,
+    "warnings": 2,
+    "coverage_percent": 94.88,
+    "seconds": 431.37
+  },
+  "focused": {
+    "passed": 66
+  },
+  "ruff": "passed369files",
+  "mypy": "passed368sourcefiles",
+  "frontend": {
+    "passed": 232,
+    "typecheck": "passed",
+    "lint": "passed",
+    "build": "passed",
+    "tree_unchanged": true,
+    "stdout_retention": "build full log; preceding stages tool output with explicit truncation metadata"
+  },
+  "demo": "20rows byte-identical to pre-fix baseline;Groningenfirst;current product vocabulary as noted in journal",
+  "migration_head": "d8e412c6a901",
+  "offline_gate_configuration": "Dedicated dotenv symlink detached; original untouched; no real provider/model calls",
+  "historical_attempts": "Interrupted prior full suites and wrong mypy duplicate-path invocation are not final source gates"
+}

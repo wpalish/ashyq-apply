@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current development continuation holder: nobody; `[search-development]` ready-for-review in Draft PR #62, 2026-10-07 UTC.** Branch `task/search-development-baseline` from predecessor `task/search-claude-relay@e3d77d40e5888923edfe8e080f912025e76adf4c`; final executable source `0d3ad8ce3c5b8e5cbeb503136f17be7ffd84d408`. Latest source gates are green; exact final metadata-head cloud checks must be read in PR #62 before merge. Owner says continue and explicitly authorizes two collaboration expert subagents for the new universities. PR #61 remains a separate reviewable measuring-stick checkpoint; no merge/purchase/gold signature inferred. Parent owns source/git/HANDOFF and baseline. Experts own separate evidence-only folders; ordinary subagents are not OS-blinded.
+
 **Current search relay holder: nobody; `[search-relay]` ready-for-review in Draft PR #61, 2026-10-07 UTC. Branch `task/search-claude-relay`, executable source `0bc152226cb1aacf89e293a4dba82507e324abf6`, base `origin/main@1b2a554129f5744eb297848472f1c8fe8c7fde26`.** Owner asks to analyse Claude session `session_0142YLhoNdiGxNVtxJBDaNfX` and continue while keeping a persistent handoff. This newest branch-specific record supersedes the stale 2026-10-05 search-plan paragraph below. Dedicated checkout; other branch dirty work preserved. Read `docs/process/CLAUDE_SEARCH_RELAY_2026-10-07.md` first.
 
 **claude-opus-5, search improvement plan, 2026-10-05 (owner: "Начинай выполнение по плану"):** eval-driven loop. Done and merged: ER-08/09/10 on by default (PR #52, #53), ER-08 within the per-institution query budget, `python -m evaluation.research.scorecard` (per-label outcomes, stable gains/losses, core questions, budget; scorer judgement shared via `metrics.adjudicate`, outputs byte-identical), `docs/process/SEARCH_DEFINITION_OF_DONE.md`, `backend/evaluation/research/ERROR_ANALYSIS_2026-10-05.md` (46 misses: ACCESS-from-runner 17, OTHER_PAGE 10, EXTRACTOR 9, STALE_SOURCE 6, REPRESENTATION 3, IDENTITY 1; the 11 "wrong" claims are scope/representation, no invented fact; 13 document labels are unmeasurable because the benchmark stops before the post-approval document stage). On this branch: corpus **draft8** (unsigned, 74/220 known; core-question labels + moved sources; owner must review `REVIEW_DRAFT8.md`), rule **DL-2** `DEADLINE_V2` (off; abbreviated months, date-first "Applications due", catch-all qualification window: Aalto 2027-01-22, UBC 2027-01-15, NTU 2027-01-20 on live pages), rule **BL-1** `SHARED_QUERY_BUDGET` (off; scholarship query inside the six). Paired runs pending for both. Owner decisions open: scorer treatment of claims explicitly about another population/programme, academic-year spelling, corpus vocabulary vs product enums, measuring ACCESS from the production network, document stage in the benchmark, signing draft8. No extractor produces country-credential claims; that is a larger task (owner: model-based extraction?).
@@ -57,6 +59,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[search-development] ready-for-review (Draft PR #62):** opt-in imported catalogue selection for the prepared five DEV ids; global provider/auth/quota refusal stop for the controlled batch; offline regressions, frozen bounded baseline, two independent collaborative expert researches, original evidence and observed miss-cause review. Current bounded delivery additionally repairs the first source-proven population-transfer error before recall tuning. Broader programme/fact completeness remains unfinished; this checkpoint does not declare the search finished.
 
 **[search-relay] ready-for-review (Draft PR #61):** scorecard now exposes missing/in-progress captures, unknown telemetry and exact budget overruns; RL-1/heldout originals audited and retained; production NTU/Aalto recheck complete. Local full gates green. Exact-head CI pending at this handoff; use PR check links for the eventual result. Five development seed identities prepared; the new-case harness and live baseline are not implemented/run. Owner merges after review. No gold signature, purchase or deployment performed.
 
@@ -137,6 +141,12 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[search-development] frozen source0d3ad8ce3c5b8e5cbeb503136f17be7ffd84d408 and completed same5-case observation:** all5 terminal outputs,118Fetcher/20Exaqueries,279528active checkpointms, no overruns/provider failures/shared STOP. Source unchanged throughout. Nagoya5.5 removed on identical source bytes; full-degree minimum unknown. AUT official200/verbatim CS-major Bachelor existence only, intake/year unknown; this access change is not credited to the filter. Original captures/checkpoints/130cache files archived with verified hashes; no synthetic profile DB rows/secret values archived. Both experts attempted their2+3cases, unreviewed. Draft #62 attached, base is predecessor #61; neither merged/deployed.
+
+**[search-development] scope source checkpoint (this commit; git log):** DOM audience filtering repairs the retained Nagoya exchange-only IELTS5.5 prediction;38 new regressions,66 focused pass. Both table paths/prose/English waiver/type extraction share the view; original verifier context and genuine siblings remain. Fixed-byte full adapter replay5.5(NEEDS_OFFICIAL_CLARIFICATION)→unknown, zero network. Both independent offline reviews pin helper8b2c8da3 and find no remaining material issue in reviewed cases. Full3673/94.88%, frontend232/quality/demo/onehead pass. First baseline89fc891 and its now explicitly added ignored audit remain immutable; same5-case repeat still prepared, not yet run.
+
+**[search-development] source checkpoint (this commit; see git log):** opt-in imported identity selectors, shared sticky refusal stop including HTTP hops, planned/attempted/remaining cohort metadata and missing-budget stop without an inferred provider cause;16 new offline regressions. Expert385-file originals/79raw logs and100exact quote proofs retained, unreviewed. Prior WIP a95a164; full clean-env source gates now green.
 
 **[search-relay] green source checkpoint (commit this entry with the source; see git log):** precise scorecard budget checks, unknown counters, incomplete paired-case status and guarded stable gains;9 synthetic regressions; archived original RL-1/heldout artifacts and Aalto/NTU public probe. Takeover commit `96f0b14`.
 
@@ -1784,6 +1794,12 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[search-development] NEXT — review then first confirmed DEV loss:**
+1. Fetch origin and read the current journal plus Draft #61 and #62. Review #61 measuring-stick repair first; #62 depends on it. Owner merges. Check exact-head CI live before any merge; no merge authorization inferred.
+2. `git show origin/task/search-development-baseline:docs/process/evidence/search-development/2026-10-07/scope-fix-repeat/summary.json` gives the completed fixed-source observation. Baseline89fc891, source0d3ad8c, all130repeat cache files and raw per-case traces are immutable. No provider/model/auth/quota failure occurred in these5cases; never reset an earlier pilot's stop.
+3. The next implementation candidate is Dalian's first loss, not ranking weights. Inspect its retained raw trace and official source offline: programme candidate exists but no full-degree/intake claim, HTTP robots failure and generic-title classification are distinct observations. Establish which stage actually lost an applicable programme before source edits. Do not assume an English faculty heading is an exact programme or that an inaccessible URL means no programme.
+4. Write the resulting small source/test plan here before coding. Fresh network only as a separate pinned bounded development step, unchanged6/60/120 and global refusal stop. Do not tune the9caseheldout/HELDOUT150, promote unsigned expert findings, substitute Nagoya G30 thresholds or sign ownerG1. Broader completeness and published logged-in journey remain unconfirmed.
 
 **[search-relay] next after PR #61 review/merge:** implement opt-in catalogue seed-case selection in `evaluation/research/live.py` and `scripts/canary_discovery.py` using prepared Dalian/Nagoya/Witwatersrand/AUT/Caltech ids. First add a global provider/auth/quota refusal stop for the new batch; then run a frozen strict 6/60/120 baseline, retaining started/remaining ids and raw originals. No rule tuning before that baseline. Current scope ends at the green scorecard source `0bc1522`; the development harness is **not implemented or run**.
 
@@ -3722,6 +3738,12 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[search-development] final scope source gates,2026-10-07:**3673passed,2warnings,94.88%,431.37s;66focused;Ruff/format369,mypy368;frontend232/typecheck/lint/build pass. Final-source20demo rows byte-identical to the baseline, Groningenfirst; legacy UBC vocabulary caveat remains documented. One Alembic head d8e412c6a901. Dedicated dotenv symlink detached during offline gates; original secret file untouched. Source hashes and final/historical logs are in scope-fix/source-gates.json and gates/. Earlier interrupted suites and duplicate-path mypy command are not green final checks.
+
+**[search-development] final green source gate,2026-10-07:**3635backend tests/2warnings/94.86%/449.26s;54targetedpass; Ruff/format367/mypy366clean; frontend232/type/lint/buildclean. Dedicated dotenv symlink detached during offline gate, original untouched and restored before live. One Alembichead d8e412c6a901; app Git tree5c4f52b7e00b15544c2324fc5b84cfd99ec2d4c0 equals main. Logs/summary under `evidence/search-development/2026-10-07/gates/`. Earlier red/interrupted entries below are historical.
+
+**[search-development] WIP source:**53targetedpassed; Ruff/format367 and mypy366 green; frontend232/type/lint/build green; final full backend3633passed/1configurationfailure/2warnings/94.86% in436.43s because dedicated dotenv symlink supplies a real key to a keyless configuration test. A clean-env full rerun is pending; source has not been frozen/launched. Offline demo executes withGroningen first; one migrationhead d8e412c6a901.
+
 **[search-relay] 2026-10-07 scorecard checkpoint:** backend3619 passed /2 warnings /94.86% coverage /520.35s; Ruff check/format and mypy clean; broader CI scope `app tests evaluation` additionally passes Ruff/format and mypy365; frontend232 tests, typecheck/lint/build clean;15 scorecard tests pass. Raw logs in `docs/process/evidence/claude-relay/2026-10-07/gates/`. No production/application source changes.
 
 **[expert-500] V4 source gates:**3458 backend tests,2 warnings,94.89%; Ruff/format/mypy345; frontend type/lint/232/build green. Representation107, baseline reserve18 new tests and156 actual-parent mock regressions green, including demonstrated pending-source hash-only and model/actual-request bugs. Real neutral tool-free bound8671ms/closing5781ms,0 university requests.14 protocol module fingerprints +7 actual parent-script snapshots pinned. App/frontend trees unchanged; Alembic onehead d8e412c6a901. Fresh10+10 V4 source calls not yet started;40/62 admission still unproved.
@@ -4487,6 +4509,10 @@ next agent does not reopen it.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
+- 2026-10-07 [search-development] internal pure `requirements.section_scope.full_degree_sections` returns filtered DOM plus separate retained prose regions for full-degree requirements. No public schema/default/provider/Fetcher/gold/migration change. Original verifier text stays intact; explicit non-degree headings are excluded, joint/negated headings remain, table/sidebar scope stays local.
+
+**[search-development] evaluation-only:** `canary.run_canary(..., catalogue_ids=...)` / repeatable CLI `--catalogue-id` select imported public identities only; `capture_one(..., catalogue_id=..., stop_file=...)` and strict CLI `--stop-file` propagate a sticky sanitized global refusal. Capture config includes actual planned cohort/selection/attempted/remaining ids; single-run scorecards infer missing cases from that cohort. No app/API/schema/gold/production-default change.
+
 **[search-relay] 2026-10-07, evaluation only:** scorecard adds `measurement_status`, per-arm `completeness`, `changes.unassessed_cases`, per-row `missing_telemetry`, target `capture_complete`, tri-state `targets.met`, optional CLI `--expected-cases`. Cost retains exact latency and zero instead of treating missing as zero. Product schemas/API/flags unchanged.
 
 - [expert-500] V4 evaluation only: `expert/representation.py` public exact-university/hash bound schemas and six-field minimal closure; literal `scholarship_exists` name or exact `subject/value` AWARD_KEYS/coverage wrapper with selected-context proof. Parent request/event hash binds processed-through source count; empty submit cannot process a new source. Existing private mapper reused only after seal with exact pinned bytes. `live.capture_one`/CLI opt-in `finalization_reserve_ms=1000` closes work119000ms on original120000ms clock; default0. No existing app/journal/citation/gold/registry contract changes.
@@ -5015,3 +5041,7 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-07 UTC | Codex | [search-relay] | Claude token limit → dedicated takeover from main1b2a554; reconcile evidence, production access and next discovery step.
 
 - 2026-10-07 15:36UTC | Codex | [search-relay] | source0bc1522, evidence523ec3d → Draft PR #61; baton released, next review/merge then opt-in DEV harness; local green, final cloud status via PR.
+
+- 2026-10-07 15:56UTC | Codex | [search-development] | owner continuation/two experts → take baton from e3d77d4 on dependent branch; opt-in seed baseline and disjoint expert evidence.
+
+- 2026-10-07 17:40UTC | Codex | [search-development] | source0d3ad8c +5expert cases/2captures/scope repair → baton released to nobody, Draft #62 dependent on #61; next offline Dalian first-loss review.

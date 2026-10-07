@@ -1,0 +1,101 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-07T16:50:18.346415+00:00",
+    "duration_seconds": 11.8,
+    "run_error": "",
+    "batch": [
+      "University of Witwatersrand"
+    ],
+    "institutions": [
+      {
+        "catalogue_id": "0386940c5cef525b3c8e7966868f5ed6",
+        "institution": "University of Witwatersrand",
+        "country": "South Africa",
+        "domain": "wits.ac.za",
+        "access": "REACHED",
+        "robots_disallowed_requests": 0,
+        "pages_checked": 3,
+        "pages_failed": 0,
+        "failures": [],
+        "outcomes": {
+          "ok": 3
+        },
+        "discovered": {},
+        "discovery_trace": {
+          "institution": "University of Witwatersrand",
+          "domain": "wits.ac.za",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for University of Witwatersrand; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        },
+        "programs": [],
+        "program_page_found": false,
+        "scholarship_page_found": false,
+        "discovery_notes": "Institution candidate; programme, cost and requirements need research.",
+        "claims": 0,
+        "claims_verified": 0,
+        "completeness": 0.0,
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {},
+        "page_types": {},
+        "page_diagnostics": []
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 1,
+      "blocked": 0,
+      "program_pages_found": 0,
+      "scholarship_pages_found": 0,
+      "claims": 0,
+      "false_positives": 0,
+      "page_outcomes": {},
+      "page_types": {},
+      "recall": {
+        "program": {
+          "numerator": 0,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 0,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 0,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 0,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 3,
+        "browser": 0,
+        "pdf": 0
+      }
+    }
+  },
+  "claims": []
+}

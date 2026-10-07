@@ -1,0 +1,102 @@
+"""Retain completed capture/source originals and summarize without a gold score."""
+import hashlib
+import json
+import shutil
+import sqlite3
+import tarfile
+from pathlib import Path
+
+from app.adapters.extraction import readable_text
+from app.domain.claim_verifier import is_verbatim_excerpt
+
+WORK = Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work')
+REPO = WORK / 'ashyq-apply'
+EVIDENCE = REPO / 'docs/process/evidence/search-development/2026-10-07/scope-fix-repeat'
+RUN = WORK / 'scope-fix-repeat/20261007T172952Z'
+TEMPS = WORK / 'scope-fix-repeat-temp'
+EVIDENCE.mkdir(exist_ok=True)
+launch = json.loads((WORK / 'scope-fix-repeat-launch.json').read_text())
+capture = json.loads((RUN / 'capture.json').read_text())
+baseline = json.loads((REPO / 'docs/process/evidence/search-development/2026-10-07/baseline-originals/capture.json').read_text())
+assert launch['exit_code'] == 0 and launch['source_unchanged_during_capture']
+assert not launch['shared_stop_present'] and not (WORK / 'development-STOP.json').exists()
+assert capture['pipeline_sha'] == launch['source_pin']
+expected = [x['university_id'] for x in launch['cohort']]
+assert [o['case_id'] for o in capture['observations']] == expected
+assert capture['config']['cohort'] == baseline['config']['cohort'] == expected
+for key in ['search_provider','seconds_per_case','max_fetcher_calls_per_case',
+            'harness_sha256','mapping_sha256','max_search_queries_per_case',
+            'finalization_reserve_ms','source_work_deadline_ms','cold_fetcher_reads']:
+    assert capture['config'][key] == baseline['config'][key]
+rows = []
+for observation in capture['observations']:
+    case = observation['case_id']
+    budget = capture['config']['case_budgets'][case]
+    assert observation['error'] is None and budget['provider_failure'] is None
+    assert budget['active_checkpoint_available']
+    assert budget['fetcher_calls'] <= 60 and budget['search_queries'] <= 6
+    assert budget['elapsed_ms'] <= 120000
+    for suffix in ['.json','.raw.json','.budget.json','.log']:
+        assert (RUN / (case + suffix)).exists()
+    rows.append({'case_id':case, 'predictions':observation['predictions'], 'budget':budget,
+                 'candidate_programme_urls':observation['programme_urls'], 'error':None})
+nagoya = expected[1]
+assert not next(o for o in capture['observations'] if o['case_id']==nagoya)['predictions']
+old_nagoya = next(o for o in baseline['observations'] if o['case_id']==nagoya)
+assert old_nagoya['predictions'][0]['value'] == 5.5
+language = 'https://en.nagoya-u.ac.jp/admissions/japan/language/'
+digest = hashlib.sha256(language.encode()).hexdigest()[:32]
+relative = '*/cache/'+digest[:2]+'/'+digest+'.body'
+before_body = next((WORK / 'development-baseline-temp').glob(relative))
+after_body = next(TEMPS.glob(relative))
+assert before_body.read_bytes() == after_body.read_bytes()
+predictions = [p for o in capture['observations'] for p in o['predictions']]
+assert len(predictions) == 1 and predictions[0]['key']=='programme.exists'
+prediction = predictions[0]
+url = prediction['evidence']['url']
+digest = hashlib.sha256(url.encode()).hexdigest()[:32]
+body = next(TEMPS.glob('*/cache/'+digest[:2]+'/'+digest+'.body'))
+meta = json.loads(body.with_suffix('.meta.json').read_text())
+assert meta['status_code'] == 200
+assert is_verbatim_excerpt(prediction['evidence']['excerpt'], readable_text(body.read_text()))
+assert prediction['evidence']['scope']['intake'] is None
+source_files = sorted(p for p in TEMPS.glob('*/cache/**/*') if p.is_file())
+index = [{'path':str(p.relative_to(TEMPS)), 'bytes':p.stat().st_size,
+          'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in source_files]
+archive = EVIDENCE / 'source-cache.tgz'
+with tarfile.open(archive,'w:gz') as tar:
+    for file in source_files:
+        tar.add(file,arcname=str(file.relative_to(TEMPS)),recursive=False)
+with tarfile.open(archive,'r:gz') as tar:
+    for item in index:
+        stream=tar.extractfile(item['path']); assert stream is not None
+        assert hashlib.sha256(stream.read()).hexdigest()==item['sha256']
+(EVIDENCE / 'source-cache-index.json').write_text(json.dumps(index,indent=2)+'\n')
+metadata=[]
+for database in sorted(TEMPS.glob('*/canary.db')):
+    with sqlite3.connect('file:'+str(database)+'?mode=ro',uri=True) as db:
+        db.row_factory=sqlite3.Row
+        for row in db.execute('SELECT url,registrable_domain,institution_key,content_hash,http_status,page_type,fetched_at FROM source_pages'):
+            metadata.append({'temp_directory':database.parent.name,**dict(row)})
+(EVIDENCE / 'source-metadata.json').write_text(json.dumps(metadata,indent=2)+'\n')
+shutil.copytree(RUN,EVIDENCE/'originals',dirs_exist_ok=True)
+shutil.copy2(WORK/'scope-fix-repeat-parent.log',EVIDENCE/'parent.log')
+shutil.copy2(WORK/'scope-fix-repeat-launch.json',EVIDENCE/'launch.frozen.json')
+summary = {
+    'status':'FIVE_TERMINAL_CASES_NO_PROVIDER_FAILURE_OR_OVERRUN',
+    'source_pin':launch['source_pin'], 'baseline_source_pin':baseline['pipeline_sha'],
+    'cases':rows, 'total_fetcher_calls':sum(r['budget']['fetcher_calls'] for r in rows),
+    'total_search_queries':sum(r['budget']['search_queries'] for r in rows),
+    'total_active_checkpoint_ms':sum(r['budget']['elapsed_ms'] for r in rows),
+    'nagoya':{'before_ielts':5.5,'after_ielts':None,'source_bytes_identical':True,
+              'body_byte_sha256':hashlib.sha256(after_body.read_bytes()).hexdigest(),
+              'interpretation':'Exchange-only value removed; full-degree minimum remains unknown'},
+    'aut':{'programme_quote_verbatim':True,'http_status':200,
+           'scope':'CS major within Bachelor of Computer and Information Sciences; no intake/year confirmation',
+           'interpretation':'Access differs from earlier403; no causal credit to scope filter'},
+    'source_cache_files':len(index), 'archive_sha256':hashlib.sha256(archive.read_bytes()).hexdigest(),
+    'quality_score':None, 'limits':'one sequential observation, unsigned research, no readiness claim',
+}
+(EVIDENCE/'summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps({k:summary[k] for k in ['status','total_fetcher_calls','total_search_queries',
+                                      'total_active_checkpoint_ms','source_cache_files']}))

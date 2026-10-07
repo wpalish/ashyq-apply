@@ -1,0 +1,551 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-07T17:32:38.838850+00:00",
+    "duration_seconds": 101.6,
+    "run_error": "",
+    "batch": [
+      "Auckland University of Technology"
+    ],
+    "institutions": [
+      {
+        "catalogue_id": "0480c3b293c219debd4325fe107ac27b",
+        "institution": "Auckland University of Technology",
+        "country": "New Zealand",
+        "domain": "aut.ac.nz",
+        "access": "REACHED",
+        "robots_disallowed_requests": 0,
+        "pages_checked": 46,
+        "pages_failed": 28,
+        "failures": [
+          [
+            "https://www.aut.ac.nz/robots.txt",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.aut.ac.nz/sitemap.xml",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.aut.ac.nz/sitemap_index.xml",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.aut.ac.nz/sitemap-index.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.aut.ac.nz/sitemap/sitemap.xml",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.aut.ac.nz/study/study-options/health-sciences",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.aut.ac.nz/study/study-options/science",
+            "http_error: HTTP 403"
+          ]
+        ],
+        "outcomes": {
+          "ok": 18,
+          "http_error": 28
+        },
+        "discovered": {
+          "program_catalog": [
+            "https://www.aut.ac.nz/study/study-options/communication-studies",
+            "https://www.aut.ac.nz/study/study-options/workplace-experience-work-integrated-learning-in-aut-programmes"
+          ],
+          "program_page": [
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "admissions": [
+            "https://www.aut.ac.nz/study/applying",
+            "https://www.aut.ac.nz/study/entry-requirements",
+            "https://www.aut.ac.nz/international/international-student-support"
+          ],
+          "costs": [
+            "https://www.aut.ac.nz/study/fees-and-scholarships",
+            "https://www.aut.ac.nz/study/fees-and-scholarships/scholarships-and-awards-at-aut/international-scholarships"
+          ],
+          "scholarships": [
+            "https://www.aut.ac.nz/international/scholarships-for-international-students"
+          ]
+        },
+        "discovery_trace": {
+          "institution": "Auckland University of Technology",
+          "domain": "www.aut.ac.nz",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {
+            "program_catalog": [
+              "https://www.aut.ac.nz/study/study-options/communication-studies",
+              "https://www.aut.ac.nz/study/study-options/workplace-experience-work-integrated-learning-in-aut-programmes"
+            ],
+            "program_page": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "admissions": [
+              "https://www.aut.ac.nz/study/applying",
+              "https://www.aut.ac.nz/study/entry-requirements",
+              "https://www.aut.ac.nz/international/international-student-support"
+            ],
+            "costs": [
+              "https://www.aut.ac.nz/study/fees-and-scholarships",
+              "https://www.aut.ac.nz/study/fees-and-scholarships/scholarships-and-awards-at-aut/international-scholarships"
+            ],
+            "scholarships": [
+              "https://www.aut.ac.nz/international/scholarships-for-international-students"
+            ]
+          },
+          "rejected_sample": [
+            [
+              "https://www.aut.ac.nz/study/study-options",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/why-study-at-aut",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/changing-my-enrolment",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/information-for-high-school-students",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/careers-advisors",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/parents",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/returning-to-study-information-for-adult-students",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/semester-dates",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/architecture-and-built-environment",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/art-and-design",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/business",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/creative-technologies",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/education",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/hospitality-tourism-and-events",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/language-and-culture",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/law",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/sport-and-recreation",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/maori-and-indigenous-development",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/meet-us-on-campus-to-discuss-your-options",
+              "navigation lead names none of the applicant's subjects"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences",
+              "could not be read (http_error)"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/health-sciences",
+              "could not be read (http_error)"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/science",
+              "could not be read (http_error)"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/software-development-major",
+              "search lead unresolved (http_error)"
+            ],
+            [
+              "https://cerv.aut.ac.nz/bcis/2023-BCIS-Structure.pdf",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://cerv.aut.ac.nz/bcis/CSSE.html",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://arion.aut.ac.nz/arionmain/courseinfo/Information/Qualifications/Details/QualDetails.aspx?id=963",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/diploma-in-computer-and-information-sciences",
+              "reads as general_admissions, not a programme page"
+            ],
+            [
+              "https://www.aut.ac.nz/courses/bachelor-of-science",
+              "search lead unresolved (http_error)"
+            ]
+          ],
+          "rejected_total": 28,
+          "errors": [
+            "robots.txt unavailable: http_error",
+            "https://www.aut.ac.nz/sitemap.xml: http_error — HTTP 403",
+            "https://www.aut.ac.nz/sitemap_index.xml: http_error — HTTP 403",
+            "https://www.aut.ac.nz/sitemap-index.xml: http_error — HTTP 404",
+            "https://www.aut.ac.nz/sitemap/sitemap.xml: http_error — HTTP 403",
+            "search identity recovery: checked 8, confirmed 2",
+            "search identity recovery via exa; queries 6, failed 0, rejected {'duplicate': 28, 'wrong_degree_level': 2}"
+          ],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": true,
+          "kept_by_link_text": [],
+          "walker": {
+            "catalogs_walked": 2,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/communication-studies",
+                "outcome": "http_error"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/communication-studies",
+                "outcome": "js_no_program_list"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/workplace-experience-work-integrated-learning-in-aut-programmes",
+                "outcome": "http_error"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/workplace-experience-work-integrated-learning-in-aut-programmes",
+                "outcome": "js_no_program_list"
+              }
+            ]
+          }
+        },
+        "programs": [
+          "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+          "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+        ],
+        "program_page_found": true,
+        "scholarship_page_found": true,
+        "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+        "claims": 0,
+        "claims_verified": 0,
+        "completeness": 0.0,
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {
+          "fetch-failed": 15,
+          "classifier-rejected": 5,
+          "fetched-ok": 4,
+          "no-pattern-match": 1
+        },
+        "page_types": {
+          "unknown": 4,
+          "irrelevant": 2,
+          "program_detail": 1,
+          "scholarship_award": 2,
+          "scholarship_index": 1
+        },
+        "page_diagnostics": [
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/study/applying",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/study/applying",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/study/fees-and-scholarships",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "classifier-rejected",
+            "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0010/1157860/AUT-International-Student-Accommodation-Scholarships-2027-Regulations-FINAL.pdf",
+            "page_type": "unknown",
+            "characters": null,
+            "detail": "not an award page; no scholarship recorded (0 award links, 0 below it: )"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0011/1157555/AUT-International-Scholarships-South-Asia-Regulations_FINAL.pdf",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0003/1157556/AUT-International-Scholarships-Southeast-Asia-Regulations_FINAL.pdf",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0009/1157553/AUT-International-Scholarships-North-Asia-Regulations_FINAL.pdf",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0008/1157552/AUT-International-Scholarships-Europe-Regulations_FINAL.pdf",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/study/fees-and-scholarships/scholarships-and-awards-at-aut/manaaki-new-zealand-government-scholarships",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/study/fees-and-scholarships/scholarships-and-awards-at-aut/doctoral-scholarships",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/study/fees-and-scholarships/scholarships-and-awards-at-aut/china-scholarship-council-csc-scholarships",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "classifier-rejected",
+            "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0010/1157860/AUT-International-Student-Accommodation-Scholarships-2027-Regulations-FINAL.pdf",
+            "page_type": "unknown",
+            "characters": null,
+            "detail": "not an award page; no scholarship recorded (0 award links, 0 below it: )"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0011/1157555/AUT-International-Scholarships-South-Asia-Regulations_FINAL.pdf",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0003/1157556/AUT-International-Scholarships-Southeast-Asia-Regulations_FINAL.pdf",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "classifier-rejected",
+            "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0009/1157553/AUT-International-Scholarships-North-Asia-Regulations_FINAL.pdf",
+            "page_type": "unknown",
+            "characters": null,
+            "detail": "not an award page; no scholarship recorded (0 award links, 0 below it: )"
+          },
+          {
+            "category": "classifier-rejected",
+            "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0008/1157552/AUT-International-Scholarships-Europe-Regulations_FINAL.pdf",
+            "page_type": "unknown",
+            "characters": null,
+            "detail": "not an award page; no scholarship recorded (0 award links, 0 below it: )"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/study/fees-and-scholarships/scholarships-and-awards-at-aut/manaaki-new-zealand-government-scholarships",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "classifier-rejected",
+            "url": "https://www.aut.ac.nz/study/fees-and-scholarships/scholarships-and-awards-at-aut/doctoral-scholarships",
+            "page_type": "irrelevant",
+            "characters": null,
+            "detail": "not an award page; no scholarship recorded (2 award links, 0 below it: /__data/assets/pdf_file/0017/1081331/AUT_Doctoral_Scholarships_Regulations_2026.pdf, /__data/assets/pdf_file/0003/123546/AUT-Doctoral-Scholarship-Ranking-Website-version-2017.pdf)"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aut.ac.nz/__data/assets/pdf_file/0005/763538/CSC-scholarship-application-brochure.pdf",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 403"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+            "page_type": "program_detail",
+            "characters": "5684",
+            "detail": "1 claims read from this page"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.aut.ac.nz/study/fees-and-scholarships",
+            "page_type": "irrelevant",
+            "characters": "796",
+            "detail": "page was read but no cost figures could be extracted"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.aut.ac.nz/international/scholarships-for-international-students",
+            "page_type": "scholarship_award",
+            "characters": null,
+            "detail": "read as a funding index; 8 award links, 8 queued within the award budget"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.aut.ac.nz/international/scholarships-for-international-students",
+            "page_type": "scholarship_award",
+            "characters": null,
+            "detail": "read as a funding index; 8 award links, 8 queued within the award budget"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.aut.ac.nz/study/fees-and-scholarships/scholarships-and-awards-at-aut/china-scholarship-council-csc-scholarships",
+            "page_type": "scholarship_index",
+            "characters": null,
+            "detail": "read as a funding index; 1 award links, 1 queued within the award budget"
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 1,
+      "blocked": 0,
+      "program_pages_found": 1,
+      "scholarship_pages_found": 1,
+      "claims": 0,
+      "false_positives": 0,
+      "page_outcomes": {
+        "fetch-failed": 15,
+        "classifier-rejected": 5,
+        "fetched-ok": 4,
+        "no-pattern-match": 1
+      },
+      "page_types": {
+        "unknown": 4,
+        "irrelevant": 2,
+        "program_detail": 1,
+        "scholarship_award": 2,
+        "scholarship_index": 1
+      },
+      "recall": {
+        "program": {
+          "numerator": 1,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 3,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 2,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 0,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 14,
+        "browser": 0,
+        "pdf": 4
+      }
+    }
+  },
+  "claims": [
+    {
+      "claim_type": "program_exists",
+      "normalized_value": {
+        "program": "Computer Science Major - Bachelor of Computer and Information Sciences",
+        "degree": "bachelor",
+        "language": null,
+        "matched_because": "page subject 'Computer Science Major - Bachelor of Computer and Information Sciences' covers every requested subject word"
+      },
+      "original_text_excerpt": "Computer Science Major - Bachelor of Computer and Information Sciences Study computer science and gain the skills to develop sophisticated software solutions, solve complex problems and use the power of computing technologies i",
+      "source_url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+      "page_title": "Computer Science - Computer and Information Sciences - AUT",
+      "relevant_section": "Programme identity",
+      "official_domain": true,
+      "program": "Computer Science Major Bachelor Of Computer And Information Sciences",
+      "subject_key": null,
+      "intake": "fall 2027",
+      "academic_year": "2027/28",
+      "accessed_at": "2026-10-07T17:33:42.681480Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "program_intake",
+      "confidence": 0.9,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": ""
+    }
+  ]
+}

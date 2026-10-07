@@ -1,0 +1,436 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-07T17:29:53.474427+00:00",
+    "duration_seconds": 51.8,
+    "run_error": "",
+    "batch": [
+      "Dalian University of Technology"
+    ],
+    "institutions": [
+      {
+        "catalogue_id": "01d3bb22815c61aa8454283116cbd4fa",
+        "institution": "Dalian University of Technology",
+        "country": "China",
+        "domain": "dlut.edu.cn",
+        "access": "PARTIALLY_BLOCKED",
+        "robots_disallowed_requests": 6,
+        "pages_checked": 26,
+        "pages_failed": 12,
+        "failures": [
+          [
+            "https://dlut.edu.cn/",
+            "blocked: Refusing 'dlut.edu.cn': it does not resolve ([Errno 8] nodename nor servname provided, or not known)."
+          ],
+          [
+            "https://en.dlut.edu.cn/robots.txt",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://en.dlut.edu.cn/sitemap.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://en.dlut.edu.cn/sitemap_index.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://en.dlut.edu.cn/sitemap-index.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://en.dlut.edu.cn/sitemap/sitemap.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "http://sie.dlut.edu.cn/English/Admissions/Degree_Programs/Master_Programs1.htm",
+            "robots_disallowed: robots.txt unreachable (ReadError); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "http://sie.dlut.edu.cn/English/Admissions/Degree_Programs/Bachelor_Programs1.htm",
+            "robots_disallowed: robots.txt unreachable (ReadError); RFC 9309 treats the whole site as disallowed"
+          ]
+        ],
+        "outcomes": {
+          "blocked": 1,
+          "ok": 14,
+          "http_error": 5,
+          "robots_disallowed": 6
+        },
+        "discovered": {
+          "program_page": [
+            "http://en.dlut.edu.cn/info/1103/2308.htm"
+          ],
+          "admissions": [
+            "https://en.dlut.edu.cn/Admission_Studies.htm",
+            "https://sie.dlut.edu.cn/English/Admissions/Non_degree_Programs/Non_Degree_Programs1.htm",
+            "http://sie.dlut.edu.cn/English/Admissions/Degree_Programs/Bachelor_Programs1.htm"
+          ]
+        },
+        "discovery_trace": {
+          "institution": "Dalian University of Technology",
+          "domain": "en.dlut.edu.cn",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {
+            "program_page": [
+              "http://en.dlut.edu.cn/info/1103/2308.htm"
+            ],
+            "admissions": [
+              "https://en.dlut.edu.cn/Admission_Studies.htm",
+              "https://sie.dlut.edu.cn/English/Admissions/Non_degree_Programs/Non_Degree_Programs1.htm",
+              "http://sie.dlut.edu.cn/English/Admissions/Degree_Programs/Bachelor_Programs1.htm"
+            ]
+          },
+          "rejected_sample": [
+            [
+              "https://math.dlut.edu.cn/info/2711/94691.htm",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://math.dlut.edu.cn/English/Undergraduate/Programme.htm",
+              "page subject 'Programme-大连理工大学数学科学学院' does not match requested fields ['computer science']"
+            ],
+            [
+              "https://math.dlut.edu.cn/info/2051/64931.htm",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "http://en.dlut.edu.cn/info/1103/2308.htm",
+              "search lead unresolved (robots_disallowed)"
+            ],
+            [
+              "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm",
+              "page subject 'Undergraduate Education-计算机科学与技术学院' does not match requested fields ['computer science']"
+            ],
+            [
+              "https://dutdice.dlut.edu.cn/en/info/1026/3619.htm",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://dutdice.dlut.edu.cn/en/info/1011/3629.htm",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://en.dlut.edu.cn/info/1103/2308.htm",
+              "reads as unknown, not a programme page"
+            ]
+          ],
+          "rejected_total": 8,
+          "errors": [
+            "robots.txt unavailable: http_error",
+            "https://en.dlut.edu.cn/sitemap.xml: http_error — HTTP 404",
+            "https://en.dlut.edu.cn/sitemap_index.xml: http_error — HTTP 404",
+            "https://en.dlut.edu.cn/sitemap-index.xml: http_error — HTTP 404",
+            "https://en.dlut.edu.cn/sitemap/sitemap.xml: http_error — HTTP 404",
+            "search identity recovery: checked 8, confirmed 0",
+            "search identity recovery via exa; queries 6, failed 1, rejected {'not_a_programme_page': 2, 'duplicate': 16, 'wrong_degree_level': 1}"
+          ],
+          "search_failures": [
+            "Search service unavailable (exa)."
+          ],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": true,
+          "kept_by_link_text": [],
+          "walker": {
+            "catalogs_walked": 1,
+            "candidates": [
+              {
+                "url": "http://sie.dlut.edu.cn/English/Admissions/Degree_Programs/Master_Programs1.htm",
+                "label": "Master Programs",
+                "score": 4,
+                "source": "html"
+              },
+              {
+                "url": "http://sie.dlut.edu.cn/English/Admissions/Degree_Programs/Bachelor_Programs1.htm",
+                "label": "Bachelor Programs",
+                "score": 4,
+                "source": "html"
+              }
+            ],
+            "programs_confirmed": 0,
+            "outcomes": [
+              {
+                "url": "https://www.linkedin.com/school/dlut",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://m.weibo.cn/u/3082822153",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://space.bilibili.com/215986465",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/index.htm",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.dlut.edu.cn/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/About/About_Us.htm",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/About/Current_Leadership.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/About/Facts_and_Figures.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/About/Faculties___Schools1/Main_Campus.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/About/Specialities___Strengths.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/About/Distinguished_Faculty.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/About/Academic_Calendar.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/Research/Research_Programs.htm",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/Research/Labs___Centers1/Key_Laboratories.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "http://dutdice.dlut.edu.cn/en/University/Faculty_Profiles1/Main_Campus/School_of_Chemical_Engineering1.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/Career.htm",
+                "outcome": "short_label"
+              },
+              {
+                "url": "http://dutdice.dlut.edu.cn/gjhzyjlcyw/Research/Visiting_Scholar_Programs.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/Career/Work_with_Us1/Overseas_Recruitment.htm",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/Admission_Studies.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://sie.dlut.edu.cn/English/Admissions/Non_degree_Programs/Non_Degree_Programs1.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "http://sie.dlut.edu.cn/info/1179/2481.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "http://sie.dlut.edu.cn/English/Admissions/Degree_Programs/Ph_D_Programs1.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/Collaboration.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "http://dutdice.dlut.edu.cn/gjhzyjlcyw/Collaboration/Alliance.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "http://dutdice.dlut.edu.cn/gjhzyjlcyw/Collaboration/Partnerships.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/Collaboration/International_Joint_Institutions.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://dutdice.dlut.edu.cn/en/Contacts1/Study_at_DUT.htm?jump=3",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/News___Events.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/News___Events/News.htm",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/News___Events/Events.htm",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/Campus_Life.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/Campus_Life/Campus_View.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/Campus_Life/Housing___Dining1/Canteens.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/Campus_Life/Maps___Transportation.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/Campus_Life/Arts___Athletics.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/Campus_Life/Libraries.htm",
+                "outcome": "short_label"
+              },
+              {
+                "url": "http://dutdice.dlut.edu.cn/en/University/Living_in_Dalian.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/Giving_to_DUT1.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/images/d5d353f7-bfa6-49b4-acb4-836254ced68.jpg",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/images/5fc3eaf3-c807-4e53-a4a0-caf3dd1c.jpg",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/images/f4646148-495f-4775-bc6f-60d.jpg",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/info/1103/2328.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/info/1103/2318.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/info/1103/2308.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://en.dlut.edu.cn/info/1103/2298.htm",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "http://sie.dlut.edu.cn/English/Admissions/Degree_Programs/Master_Programs1.htm",
+                "outcome": "robots_disallowed"
+              },
+              {
+                "url": "http://sie.dlut.edu.cn/English/Admissions/Degree_Programs/Bachelor_Programs1.htm",
+                "outcome": "robots_disallowed"
+              }
+            ]
+          }
+        },
+        "programs": [
+          "http://en.dlut.edu.cn/info/1103/2308.htm"
+        ],
+        "program_page_found": true,
+        "scholarship_page_found": false,
+        "discovery_notes": "Sitemap-first discovery found: program_page, admissions. Not found: program_catalog, costs, scholarships, documents.",
+        "claims": 0,
+        "claims_verified": 0,
+        "completeness": 0.0,
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {
+          "fetch-failed": 2,
+          "classifier-rejected": 1
+        },
+        "page_types": {
+          "unknown": 1
+        },
+        "page_diagnostics": [
+          {
+            "category": "fetch-failed",
+            "url": "http://en.dlut.edu.cn/info/1103/2308.htm",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ReadError); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "classifier-rejected",
+            "url": "https://en.dlut.edu.cn/Admission_Studies.htm",
+            "page_type": "unknown",
+            "characters": "2044",
+            "detail": "classified as unknown; no requirement can be read from this kind of page. title='Admission Studies-DALIAN UNIVERSITY OF TECHNOLOGY' signals='no decisive signals' chars=2044 degrees=[]"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "http://en.dlut.edu.cn/info/1103/2308.htm",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ReadError); RFC 9309 treats the whole site as disallowed"
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 0,
+      "blocked": 1,
+      "program_pages_found": 1,
+      "scholarship_pages_found": 0,
+      "claims": 0,
+      "false_positives": 0,
+      "page_outcomes": {
+        "fetch-failed": 2,
+        "classifier-rejected": 1
+      },
+      "page_types": {
+        "unknown": 1
+      },
+      "recall": {
+        "program": {
+          "numerator": 1,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 1,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 1,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 0,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 14,
+        "browser": 0,
+        "pdf": 0
+      }
+    }
+  },
+  "claims": []
+}
