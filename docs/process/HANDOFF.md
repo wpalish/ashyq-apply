@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current development continuation holder: Codex, 2026-10-07 UTC, [search-development], branch `task/search-development-baseline` from predecessor `task/search-claude-relay@e3d77d40e5888923edfe8e080f912025e76adf4c`.** Owner says continue and explicitly authorizes two collaboration expert subagents for the new universities. PR #61 remains a separate reviewable measuring-stick checkpoint; no merge/purchase/gold signature inferred. Parent owns source/git/HANDOFF and baseline. Experts own separate evidence-only folders; ordinary subagents are not OS-blinded.
+
 **Current search relay holder: nobody; `[search-relay]` ready-for-review in Draft PR #61, 2026-10-07 UTC. Branch `task/search-claude-relay`, executable source `0bc152226cb1aacf89e293a4dba82507e324abf6`, base `origin/main@1b2a554129f5744eb297848472f1c8fe8c7fde26`.** Owner asks to analyse Claude session `session_0142YLhoNdiGxNVtxJBDaNfX` and continue while keeping a persistent handoff. This newest branch-specific record supersedes the stale 2026-10-05 search-plan paragraph below. Dedicated checkout; other branch dirty work preserved. Read `docs/process/CLAUDE_SEARCH_RELAY_2026-10-07.md` first.
 
 **claude-opus-5, search improvement plan, 2026-10-05 (owner: "Начинай выполнение по плану"):** eval-driven loop. Done and merged: ER-08/09/10 on by default (PR #52, #53), ER-08 within the per-institution query budget, `python -m evaluation.research.scorecard` (per-label outcomes, stable gains/losses, core questions, budget; scorer judgement shared via `metrics.adjudicate`, outputs byte-identical), `docs/process/SEARCH_DEFINITION_OF_DONE.md`, `backend/evaluation/research/ERROR_ANALYSIS_2026-10-05.md` (46 misses: ACCESS-from-runner 17, OTHER_PAGE 10, EXTRACTOR 9, STALE_SOURCE 6, REPRESENTATION 3, IDENTITY 1; the 11 "wrong" claims are scope/representation, no invented fact; 13 document labels are unmeasurable because the benchmark stops before the post-approval document stage). On this branch: corpus **draft8** (unsigned, 74/220 known; core-question labels + moved sources; owner must review `REVIEW_DRAFT8.md`), rule **DL-2** `DEADLINE_V2` (off; abbreviated months, date-first "Applications due", catch-all qualification window: Aalto 2027-01-22, UBC 2027-01-15, NTU 2027-01-20 on live pages), rule **BL-1** `SHARED_QUERY_BUDGET` (off; scholarship query inside the six). Paired runs pending for both. Owner decisions open: scorer treatment of claims explicitly about another population/programme, academic-year spelling, corpus vocabulary vs product enums, measuring ACCESS from the production network, document stage in the benchmark, signing draft8. No extractor produces country-credential claims; that is a larger task (owner: model-based extraction?).
@@ -57,6 +59,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[search-development] in-progress:** opt-in imported catalogue selection for the prepared five DEV ids; global provider/auth/quota refusal stop for the controlled batch; offline regressions, frozen bounded baseline, two independent collaborative expert researches, original evidence and observed miss-cause review.
 
 **[search-relay] ready-for-review (Draft PR #61):** scorecard now exposes missing/in-progress captures, unknown telemetry and exact budget overruns; RL-1/heldout originals audited and retained; production NTU/Aalto recheck complete. Local full gates green. Exact-head CI pending at this handoff; use PR check links for the eventual result. Five development seed identities prepared; the new-case harness and live baseline are not implemented/run. Owner merges after review. No gold signature, purchase or deployment performed.
 
@@ -1784,6 +1788,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[search-development] write-ahead:** branch explicitly from predecessor `task/search-claude-relay@e3d77d4` while PR #61 awaits owner review. Implement opt-in `--catalogue-id` selection in `evaluation/research/live.py` and `scripts/canary_discovery.py`, with imported database identity validation and default curated cohort unchanged. Add strict ledger + parent-wide stop on every configured-provider failure, save actual attempted/remaining ids, no retry/provider replacement. Add offline selector/controller regressions. Freeze source before one 6/60/120 five-case baseline. Two owner-authorized experts research disjoint assignments (Dalian/Nagoya; Witwatersrand/AUT/Caltech), through existing Fetcher/controller only, max60 reads/6 configured-provider searches per case, no model-time charge and15min stall guard. Preserve raw files. A shared stop sentinel stops all live work after provider/auth/quota refusal. Do not describe shared-repository collaboration as OS-blind. No gold or rule/default promotion.
 
 **[search-relay] next after PR #61 review/merge:** implement opt-in catalogue seed-case selection in `evaluation/research/live.py` and `scripts/canary_discovery.py` using prepared Dalian/Nagoya/Witwatersrand/AUT/Caltech ids. First add a global provider/auth/quota refusal stop for the new batch; then run a frozen strict 6/60/120 baseline, retaining started/remaining ids and raw originals. No rule tuning before that baseline. Current scope ends at the green scorecard source `0bc1522`; the development harness is **not implemented or run**.
 
@@ -5015,3 +5021,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-07 UTC | Codex | [search-relay] | Claude token limit → dedicated takeover from main1b2a554; reconcile evidence, production access and next discovery step.
 
 - 2026-10-07 15:36UTC | Codex | [search-relay] | source0bc1522, evidence523ec3d → Draft PR #61; baton released, next review/merge then opt-in DEV harness; local green, final cloud status via PR.
+
+- 2026-10-07 15:56UTC | Codex | [search-development] | owner continuation/two experts → take baton from e3d77d4 on dependent branch; opt-in seed baseline and disjoint expert evidence.

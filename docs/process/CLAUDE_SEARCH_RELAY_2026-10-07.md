@@ -81,3 +81,7 @@ The bounded relay step is complete and pushed: measuring-stick repair, raw evide
 A final additional CI-scope check (`app tests evaluation`) passed Ruff check, Ruff format (365 files) and mypy (365 source files). Local full backend3619 /94.86% and frontend232 remain the source gate results. At the time this journal was written, cloud release-gates on the PR were still running; read the PR check rollup for the eventual exact-head result. Future agents must not infer success from this pending entry.
 
 To resume, fetch this branch and read this journal plus HANDOFF's newest branch-specific entries. First review/merge PR #61, then implement the opt-in catalogue seed-case harness and global provider-failure stop described above. The five-case baseline is still PREPARED_NOT_RUN. The G-1 signature question is pending; reviewed9 and historical scoring are unchanged.
+
+## Owner continuation / two experts
+
+Owner now says “продолжай работать ... на 2ух субагентах запустить экспертов на новые уники”. Main engineer continues on `task/search-development-baseline` explicitly branched from PR #61's checkpoint e3d77d4, without waiting for a main merge. PR #61 stays reviewable. Two collaboration experts have disjoint evidence-only assignments; their work is independent of the upcoming algorithm baseline but is not an OS-blinded experiment. All new live work shares one refusal stop sentinel. Source/ledger/selector changes and tests are declared in HANDOFF §5 before edits. Groningen remains unsigned.
