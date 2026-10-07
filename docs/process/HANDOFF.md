@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current holder: gpt-6-astra,2026-10-07 23:00UTC, task/search-production-read-budget from clean7c0f8938.** Prior goal turn classified PROGRESS:10freshlocalcases+517selectedfiles+sealednegative proposals+pushedmetadata. Source integration now active; parent ownsapp/Git/HANDOFF, A owns explicitly listed new actual-module tests, B externalIELTSproposal only. SourceFalse until measured; no blind score/default/production/purchase.
+
 **Current search-loop holder: gpt-6-astra,2026-10-07 22:50UTC.** Freshoriginal10 terminal capture checkpoint complete/UNSCORED; source5472 unchanged/Draft66. Archive and push metadata, next reviewed actual-module durable60readguard + typedWorkerbusy integration; WS-1 unscopedstop rejected. GoalACTIVE.
 
 **Current search-loop holder: gpt-6-astra, 2026-10-07 22:00UTC.** Local full PASS; prepare pinned fresh local baseline while independent budget PG review runs. Source5472 unchanged, goal ACTIVE.
@@ -65,6 +67,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[search-production-read-budget] in progress.** Integrate reviewed durable60 v2 and narrow typedWorker checkpoint_busy fix on ordinary repository modules; verify meaningful same-job/cross-session/cancellation paths on SQLite and realPG; preserve defaultFalse/unknown legacy episode. No production hard120/query/renderer/docs guarantee. Predecessor task/search-programme-purpose unmerged exception explicitly permitted below.
 
 **[search-loop/local-pilot] ready-for-review, source5472/Draft66.** Fresh local original10 onceeach413/58 captured on immutable7277+b18tree; selectedevidence preserved. Next `[search-production-read-budget]` is queued under the explicit branch exception in §5; sourcenotapplied.
 
@@ -1819,6 +1823,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[search-production-read-budget] exact write-ahead BEFORE CODE 2026-10-07 23:00UTC:** branch created from clean7c0f8938 under explicit unmerged-predecessor exception. Verify Bready236e9a53 SHA eachoriginal/proposed/dependency; copy only app/adapters/base.py, app/catalogue/discovery.py, app/adapters/discovery/live_discovery.py, app/adapters/discovery/catalog_walker.py, app/pipeline/runner.py, newapp/pipeline/control.py and read_budget.py from exact proposed bytes; Worker49f5original→e6b7561dtypedbusy proposal. Parent examines exactSQLite/PG reserve+freshJSONlock merge+fence/state/cancel/control caller paths. A owns newbackendtests readguard_support.py, test_production_readguard.py, test_readguard_revision_controls.py, test_readguard_sqlite_concurrency.py, test_worker_checkpoint_busy.py, test_readguard_postgres.py only: removeMetaPath/shadow/legacyenv/absoluteexternalfallbacks, assert actual import/class provenance; actualenqueue/claim/fence/reaper andsourceFalse/currentON fullentry controls. Existingpostgres_url/pg_engine fixtures only, own synthetic DB/session scopes, no realnetwork/model/provider. Port/gate failure must be repaired in repo, not hidden with skips/changedassertions. Root reviews eachport andformatter/typingdiff from sourcepin; strictactualPG executedcount distinguishes skips. Then requiredlocalcore/full gates onfrozen source snapshot, isolateddemo order/oneAlembichead; archiveexactlogs/hash+patch+imports/receipts, push[skipci]≤45min and dependentDraftPR. NewgenuineJob canaryprotocol07208229 is follow-up BEFORE readguardON live; no fakefence/manualRUNNINGJob in claimed fullentry. ExistingdirectunfencedON failclosed. No source flagpromotion, hard120production/renderer/querydurability/generalpreexistingOFF↔ON/crossprocesscrash guarantee, or livecaptures/HELDOUT150/gold/purchase/hostedworkflow inthisstep. B separatelyowns externalIELTSsection/numericquote proof; do not apply unreviewed source or broadtopicclassifierpermission.
 
 **Sealed rejected-quality evidence:** A WS-1 receiptf67ae293 and B Toronto073284be retained in local-round7/rejected-quality-proposals. Actual frozen reader diagnostics6RED/6GREEN are intentional rejection controls, not application gate failure. Exact causes: IELTS_SUB captures first digit6 inside CAEL60; qualification scopeIB leaks between sibling tests; UTM document deadlineFeb1 replaces CSapplicationJan15; ECE matches inside December without word boundary. No broad classifier permission or unscoped stop is approved/applied. Next source priority remains reviewed durable60readguard+typedWorkerfix, then small scope-safe reader fixes.
 
@@ -5144,3 +5150,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-07 17:40UTC | Codex | [search-development] | source0d3ad8c +5expert cases/2captures/scope repair → baton released to nobody, Draft #62 dependent on #61; next offline Dalian first-loss review.
 
 **2026-10-07 22:50UTC session checkpoint, gpt-6-astra:** 7277c154 → this metadata commit. Captured10freshlocalcases/preservedallclosedprotocolstates and442selectedoriginalfiles. Source5472 unchanged. No gold/HELDOUT/default/production/purchase/required-status change; next durableguard integration per§5, no rerun of completed10.
+
+**2026-10-07 23:00UTC takeover gpt-6-astra:**7c0f8938→task/search-production-read-budget, explicit owner-directedloop, source plannedabove beforeapplication.
