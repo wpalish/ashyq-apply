@@ -2,7 +2,7 @@
 
 ## Start here
 
-Status: in progress. Branch: `task/search-claude-relay`. Base: `1b2a554129f5744eb297848472f1c8fe8c7fde26` (main, PR #60 merged).
+Status: ready for review, baton released. Draft PR: https://github.com/wpalish/ashyq-apply/pull/61. Branch: `task/search-claude-relay`. Base: `1b2a554129f5744eb297848472f1c8fe8c7fde26` (main, PR #60 merged).
 Local checkout: `/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply`.
 This journal is committed/pushed so Claude can resume without this chat. Newest entries take precedence over older HANDOFF paragraphs.
 
@@ -73,3 +73,11 @@ git show origin/task/search-claude-relay:docs/process/CLAUDE_SEARCH_RELAY_2026-1
 ```
 
 If using a different checkout, do not reset local changes. The private expert500 branch's dirty funnel work is a separate workstream. No fresh model, expert, provider search, or new university benchmark was launched in this relay step. No main merge or deployment was performed.
+
+## Released checkpoint / PR #61
+
+The bounded relay step is complete and pushed: measuring-stick repair, raw evidence audit, production access recheck and next development plan. The holder is now nobody. Review the Draft PR before merging; the owner merges. This is not a claim that the whole search product is finished.
+
+A final additional CI-scope check (`app tests evaluation`) passed Ruff check, Ruff format (365 files) and mypy (365 source files). Local full backend3619 /94.86% and frontend232 remain the source gate results. At the time this journal was written, cloud release-gates on the PR were still running; read the PR check rollup for the eventual exact-head result. Future agents must not infer success from this pending entry.
+
+To resume, fetch this branch and read this journal plus HANDOFF's newest branch-specific entries. First review/merge PR #61, then implement the opt-in catalogue seed-case harness and global provider-failure stop described above. The five-case baseline is still PREPARED_NOT_RUN. The G-1 signature question is pending; reviewed9 and historical scoring are unchanged.
