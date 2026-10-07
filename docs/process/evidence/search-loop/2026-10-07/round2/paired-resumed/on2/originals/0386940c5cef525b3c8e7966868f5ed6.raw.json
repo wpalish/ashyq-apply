@@ -1,0 +1,354 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-07T19:28:51.382499+00:00",
+    "duration_seconds": 55.6,
+    "run_error": "",
+    "batch": [
+      "University of Witwatersrand"
+    ],
+    "institutions": [
+      {
+        "catalogue_id": "0386940c5cef525b3c8e7966868f5ed6",
+        "institution": "University of Witwatersrand",
+        "country": "South Africa",
+        "domain": "wits.ac.za",
+        "access": "REACHED",
+        "robots_disallowed_requests": 0,
+        "pages_checked": 20,
+        "pages_failed": 4,
+        "failures": [
+          [
+            "https://www.wits.ac.za/sitemap.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.wits.ac.za/sitemap_index.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.wits.ac.za/sitemap-index.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.wits.ac.za/sitemap/sitemap.xml",
+            "http_error: HTTP 404"
+          ]
+        ],
+        "outcomes": {
+          "ok": 16,
+          "http_error": 4
+        },
+        "discovered": {
+          "admissions": [
+            "https://www.wits.ac.za/applications"
+          ]
+        },
+        "discovery_trace": {
+          "institution": "University of Witwatersrand",
+          "domain": "www.wits.ac.za",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {
+            "admissions": [
+              "https://www.wits.ac.za/applications"
+            ]
+          },
+          "rejected_sample": [
+            [
+              "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+              "reads as scholarship_index, not a programme page"
+            ],
+            [
+              "https://libguides.wits.ac.za/c.php?g=670778&p=4721482",
+              "reads as navigation, not a programme page"
+            ],
+            [
+              "https://www.wits.ac.za/course-finder/undergraduate/science/mathematical-sciences",
+              "reads as scholarship_index, not a programme page"
+            ],
+            [
+              "https://www.wits.ac.za/course-finder/undergraduate/science/computational-and-applied-mathematics",
+              "reads as scholarship_index, not a programme page"
+            ],
+            [
+              "http://web.wits.ac.za/course-finder/undergraduate/science/computational-and-applied-mathematics",
+              "reads as scholarship_index, not a programme page"
+            ],
+            [
+              "https://www.wits.ac.za/science/undergraduate/wits-bsc",
+              "page subject 'Wits BSc' does not match requested fields ['computer science']"
+            ],
+            [
+              "https://www.wits.ac.za/csam",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://www.wits.ac.za/admintest/science-test/undergraduate-programmes",
+              "page subject 'Undergraduate programmes - Wits University' does not match requested fields ['computer science']"
+            ]
+          ],
+          "rejected_total": 8,
+          "errors": [
+            "https://www.wits.ac.za/sitemap.xml: http_error — HTTP 404",
+            "https://www.wits.ac.za/sitemap_index.xml: http_error — HTTP 404",
+            "https://www.wits.ac.za/sitemap-index.xml: http_error — HTTP 404",
+            "https://www.wits.ac.za/sitemap/sitemap.xml: http_error — HTTP 404",
+            "search identity recovery: checked 8, confirmed 0",
+            "search identity recovery via exa; queries 6, failed 0, rejected {'wrong_degree_level': 14, 'duplicate': 20}"
+          ],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": true,
+          "kept_by_link_text": [],
+          "walker": {
+            "catalogs_walked": 1,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": [
+              {
+                "url": "https://www.webtickets.co.za/v2/event.aspx?itemid=1597892034",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://youtu.be/uLaJoeVD0FU",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://youtu.be/uLaJoeVD0FU",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://witsshop.co.za/",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "http://www.facebook.com/witsuniversity",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.instagram.com/wits__university",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "http://twitter.com/witsuniversity",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/user/WitsWebmaster",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "http://www.linkedin.com/company/university-of-the-witwatersrand",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.tiktok.com/@witsuniversity",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.tiktok.com/@witsuniversity",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.wits.ac.za/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.wits.ac.za/about-wits",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.wits.ac.za/people",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.wits.ac.za/alumni",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.wits.ac.za/library",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.wits.ac.za/campus-life",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "http://giving.wits.ac.za/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.wits.ac.za/applications",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.wits.ac.za/study-at-wits",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.wits.ac.za/students",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.wits.ac.za/faculties-and-schools",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.wits.ac.za/teaching-and-learning",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.wits.ac.za/research",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.wits.ac.za/news",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.wits.ac.za/news/latest-news/general-news/2026/2026-09/wits-cultural-precinct-to-breathe-new-life-into-jozi.html",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.wits.ac.za/curiosity",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.wits.ac.za/news/latest-news/research-news/2026/2026-10/advisor-confidant-and-friend-without-benefits.html",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.wits.ac.za/news/latest-news/research-news/2026/2026-10/tiny-technologies-advance-neurotherapeutics.html",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.wits.ac.za/news/latest-news/research-news/2026/2026-10/climate-change-could-push-mosquito-borne-diseases-into-new-parts-of-africa.html",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.wits.ac.za/display/events",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.wits.ac.za/events-archive/2026/technics-of-the-page--the-last-human-reader-.php",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.wits.ac.za/events-archive/2026/a-symposium-celebrating-sol-plaatje-on-his-150th.php",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.wits.ac.za/ai-policies",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.wits.ac.za/conferences",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.wits.ac.za/about-wits/contact-us",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.wits.ac.za/vacancies",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.wits.ac.za/students/academic-matters/term-dates",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.wits.ac.za/about-wits/tenders",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.wits.ac.za/site-assets/small-footer/terms-and-conditions-of-use",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.wits.ac.za/popia",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.wits.ac.za/paia",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.wits.ac.za/site-assets/small-footer/ispa",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.wits.ac.za/site-assets/small-footer/browser-support",
+                "outcome": "walker_no_signal"
+              }
+            ]
+          }
+        },
+        "programs": [],
+        "program_page_found": false,
+        "scholarship_page_found": false,
+        "discovery_notes": "Sitemap-first discovery found: admissions. Not found: program_catalog, program_page, costs, scholarships, documents.",
+        "claims": 0,
+        "claims_verified": 0,
+        "completeness": 0.0,
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {
+          "unreadable": 1
+        },
+        "page_types": {},
+        "page_diagnostics": [
+          {
+            "category": "unreadable",
+            "url": "https://www.wits.ac.za/applications",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "page fetched but no readable text could be extracted"
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 1,
+      "blocked": 0,
+      "program_pages_found": 0,
+      "scholarship_pages_found": 0,
+      "claims": 0,
+      "false_positives": 0,
+      "page_outcomes": {
+        "unreadable": 1
+      },
+      "page_types": {},
+      "recall": {
+        "program": {
+          "numerator": 0,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 1,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 1,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 0,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 16,
+        "browser": 0,
+        "pdf": 0
+      }
+    }
+  },
+  "claims": []
+}

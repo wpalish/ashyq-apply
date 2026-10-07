@@ -1,0 +1,33 @@
+"""Summarise only retained stage outcomes; never create unsigned quality rates."""
+import json
+from pathlib import Path
+
+ROOT=Path(__file__).resolve().parent
+REPO=ROOT.parent/'ashyq-apply'
+OUT=REPO/'docs/process/evidence/search-loop/2026-10-07/round2/paired-resumed'
+summary=json.loads((OUT/'summary.unreviewed.json').read_text())
+assert summary['status']=='FOUR_ARMS_COMPLETED'
+assert [a['arm'] for a in summary['arms']]==['off1','on1','on2','off2']
+names={'01d3bb22815c61aa8454283116cbd4fa':'Dalian','01ea8dd78746c15f2655b59fd4f5deab':'Nagoya',
+ '0386940c5cef525b3c8e7966868f5ed6':'Wits','0480c3b293c219debd4325fe107ac27b':'AUT','05e4d59f87261553f15d14b0cdb470d2':'Caltech'}
+rows=[]
+for uid,name in names.items():
+    states=[]
+    for arm in summary['arms']:
+        case=next(c for c in arm['cases'] if c['case_id']==uid)
+        budget=case['budget']
+        proofs=json.loads((OUT/arm['arm']/'site-identity-proofs.json').read_text())
+        own=[p['proof'] for p in proofs if p['university_id']==uid]
+        states.append(dict(arm=arm['arm'],flag=arm['site_branding_identity'],
+            pipeline_sha=arm['pipeline_sha'],error=case['error'],raw_canary_available=case['raw_canary_available'],
+            fetcher_calls=budget['fetcher_calls'],search_queries=budget['search_queries'],elapsed_ms=budget['elapsed_ms'],
+            blocked_search_queries=budget.get('blocked_search_queries'),stop_reason=budget.get('stop_reason'),
+            programme_urls=case['candidate_programme_urls'],predictions=case['predictions'],
+            quote_checks=case['quote_checks'],site_identity_proofs=own))
+    rows.append(dict(university=name,university_id=uid,arms=states))
+result=dict(status=summary['status'],rows=rows,quality_score=None,semantic_review='pending',
+    caution='Site identity is not programme existence; no causal credit for changing access; bounded exhaustion remains limited; no signed gold score or default promotion.')
+(OUT/'comparison.stage-only.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+for row in rows:
+    print(row['university'],[(a['arm'],a['fetcher_calls'],a['search_queries'],a['elapsed_ms'],
+        len(a['site_identity_proofs']),len(a['programme_urls']),len(a['predictions']),a['error']) for a in row['arms']])

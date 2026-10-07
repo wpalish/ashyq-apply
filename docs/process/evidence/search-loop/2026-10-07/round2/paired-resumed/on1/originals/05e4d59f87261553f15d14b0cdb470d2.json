@@ -1,0 +1,37 @@
+{
+  "case_id": "05e4d59f87261553f15d14b0cdb470d2",
+  "programme_urls": [],
+  "ranked_urls": [],
+  "predictions": [],
+  "telemetry": {
+    "http_fetches": 21,
+    "browser_fetches": 0,
+    "pdf_fetches": 0,
+    "search_calls": 6,
+    "model_input_tokens": 0,
+    "jev_input_tokens": 0,
+    "latency_seconds": 117.00658141705208,
+    "cost_usd": null,
+    "human_review_required": null,
+    "document_reads": null,
+    "document_seconds": null,
+    "document_stop": null
+  },
+  "page_outcomes": [
+    {
+      "category": "no-pattern-match",
+      "url": "https://www.cms.caltech.edu/academics/ugrad/ugrad_cs",
+      "page_type": "program_detail",
+      "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+      "characters": 3779
+    },
+    {
+      "category": "no-pattern-match",
+      "url": "https://www.caltech.edu/admissions-aid",
+      "page_type": "general_admissions",
+      "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+      "characters": 3165
+    }
+  ],
+  "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+}

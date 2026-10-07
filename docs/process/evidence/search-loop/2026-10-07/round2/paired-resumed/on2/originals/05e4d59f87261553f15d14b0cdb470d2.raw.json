@@ -1,0 +1,217 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-07T19:30:45.332003+00:00",
+    "duration_seconds": 108.1,
+    "run_error": "",
+    "batch": [
+      "California Institute of Technology"
+    ],
+    "institutions": [
+      {
+        "catalogue_id": "05e4d59f87261553f15d14b0cdb470d2",
+        "institution": "California Institute of Technology",
+        "country": "United States",
+        "domain": "caltech.edu",
+        "access": "PARTIALLY_BLOCKED",
+        "robots_disallowed_requests": 3,
+        "pages_checked": 21,
+        "pages_failed": 3,
+        "failures": [
+          [
+            "https://caltech.edu/",
+            "robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "http://online.caltech.edu/courses",
+            "robots_disallowed: robots.txt disallows this path"
+          ],
+          [
+            "http://online.caltech.edu/courses",
+            "robots_disallowed: robots.txt disallows this path"
+          ]
+        ],
+        "outcomes": {
+          "robots_disallowed": 3,
+          "ok": 18
+        },
+        "discovered": {
+          "program_catalog": [
+            "http://online.caltech.edu/courses"
+          ],
+          "program_page": [
+            "https://www.cms.caltech.edu/academics/ugrad/ugrad_cs"
+          ],
+          "admissions": [
+            "https://www.caltech.edu/admissions-aid",
+            "http://www.gradoffice.caltech.edu/admissions"
+          ]
+        },
+        "discovery_trace": {
+          "institution": "California Institute of Technology",
+          "domain": "www.caltech.edu",
+          "sitemaps_declared": [
+            "https://www.caltech.edu/sitemap.xml"
+          ],
+          "sitemaps_read": [
+            "https://www.caltech.edu/sitemap.xml"
+          ],
+          "sitemap_urls_seen": 64,
+          "sitemap_urls_kept": 1,
+          "manual_seeds": {},
+          "selected": {
+            "program_catalog": [
+              "http://online.caltech.edu/courses"
+            ],
+            "program_page": [
+              "https://www.cms.caltech.edu/academics/ugrad/ugrad_cs"
+            ],
+            "admissions": [
+              "https://www.caltech.edu/admissions-aid",
+              "http://www.gradoffice.caltech.edu/admissions"
+            ]
+          },
+          "rejected_sample": [
+            [
+              "https://www.cms.caltech.edu/academics/ugrad",
+              "reads as program_catalog, not a programme page"
+            ],
+            [
+              "https://www.cms.caltech.edu/research/theoretical-computer-science",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://www.cms.caltech.edu/academics/ugrad/ugrad_cs_minor",
+              "page names an alternate programme variant not requested: Minor"
+            ],
+            [
+              "https://www.cms.caltech.edu/academics/grad/grad_cs",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://catalog.caltech.edu/current/information-for-undergraduate-students/graduation-requirements-all-options/computer-science-option-and-minor-cs",
+              "page names an alternate programme variant not requested: Minor, minor"
+            ],
+            [
+              "https://www.catalog.caltech.edu/current/areas-of-study-and-research/computer-science",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://www.catalog.caltech.edu/current/information-for-undergraduate-students/graduation-requirements-all-options/computer-science-option-and-minor-cs",
+              "page names an alternate programme variant not requested: Minor, minor"
+            ]
+          ],
+          "rejected_total": 7,
+          "errors": [
+            "navigation fallback: http://online.caltech.edu/courses unreachable (robots_disallowed)",
+            "search identity recovery: checked 8, confirmed 1",
+            "search identity recovery via exa; queries 6, failed 0, rejected {'duplicate': 21, 'wrong_degree_level': 1, 'not_a_programme_page': 1}"
+          ],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": true,
+          "kept_by_link_text": [],
+          "walker": {
+            "catalogs_walked": 1,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": [
+              {
+                "url": "http://online.caltech.edu/courses",
+                "outcome": "robots_disallowed"
+              },
+              {
+                "url": "http://online.caltech.edu/courses",
+                "outcome": "js_no_program_list"
+              }
+            ]
+          }
+        },
+        "programs": [
+          "https://www.cms.caltech.edu/academics/ugrad/ugrad_cs"
+        ],
+        "program_page_found": true,
+        "scholarship_page_found": false,
+        "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions. Not found: costs, scholarships, documents.",
+        "claims": 0,
+        "claims_verified": 0,
+        "completeness": 0.0,
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {
+          "no-pattern-match": 2,
+          "fetched-ok": 1
+        },
+        "page_types": {
+          "program_detail": 2,
+          "general_admissions": 1
+        },
+        "page_diagnostics": [
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.cms.caltech.edu/academics/ugrad/ugrad_cs",
+            "page_type": "program_detail",
+            "characters": "3779",
+            "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.caltech.edu/admissions-aid",
+            "page_type": "general_admissions",
+            "characters": "3165",
+            "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.cms.caltech.edu/academics/ugrad/ugrad_cs",
+            "page_type": "program_detail",
+            "characters": null,
+            "detail": "read as a funding index; 0 award links, 0 queued within the award budget"
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 0,
+      "blocked": 1,
+      "program_pages_found": 1,
+      "scholarship_pages_found": 0,
+      "claims": 0,
+      "false_positives": 0,
+      "page_outcomes": {
+        "no-pattern-match": 2,
+        "fetched-ok": 1
+      },
+      "page_types": {
+        "program_detail": 2,
+        "general_admissions": 1
+      },
+      "recall": {
+        "program": {
+          "numerator": 1,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 1,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 1,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 0,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 18,
+        "browser": 0,
+        "pdf": 0
+      }
+    }
+  },
+  "claims": []
+}

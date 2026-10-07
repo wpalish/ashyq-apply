@@ -1,0 +1,46 @@
+{
+  "case_id": "01d3bb22815c61aa8454283116cbd4fa",
+  "programme_urls": [
+    "http://en.dlut.edu.cn/info/1103/2308.htm"
+  ],
+  "ranked_urls": [],
+  "predictions": [],
+  "telemetry": {
+    "http_fetches": 26,
+    "browser_fetches": 0,
+    "pdf_fetches": 0,
+    "search_calls": 6,
+    "model_input_tokens": 0,
+    "jev_input_tokens": 0,
+    "latency_seconds": 35.31706208293326,
+    "cost_usd": null,
+    "human_review_required": null,
+    "document_reads": null,
+    "document_seconds": null,
+    "document_stop": null
+  },
+  "page_outcomes": [
+    {
+      "category": "fetch-failed",
+      "url": "http://en.dlut.edu.cn/info/1103/2308.htm",
+      "page_type": "unclassified",
+      "detail": "robots_disallowed — robots.txt unreachable (ReadError); RFC 9309 treats the whole site as disallowed",
+      "characters": null
+    },
+    {
+      "category": "classifier-rejected",
+      "url": "https://en.dlut.edu.cn/Admission_Studies.htm",
+      "page_type": "unknown",
+      "detail": "classified as unknown; no requirement can be read from this kind of page. title='Admission Studies-DALIAN UNIVERSITY OF TECHNOLOGY' signals='no decisive signals' chars=2044 degrees=[]",
+      "characters": 2044
+    },
+    {
+      "category": "fetch-failed",
+      "url": "http://en.dlut.edu.cn/info/1103/2308.htm",
+      "page_type": "unclassified",
+      "detail": "robots_disallowed — robots.txt unreachable (ReadError); RFC 9309 treats the whole site as disallowed",
+      "characters": null
+    }
+  ],
+  "error": null
+}
