@@ -1,0 +1,94 @@
+{
+  "subject_arguments": [
+    "--no-subject-phrase-match"
+  ],
+  "initial_subject": false,
+  "shared_default": true,
+  "shared_explicit": false,
+  "stop_before": false,
+  "stop_after_first": true,
+  "child_effective": [
+    {
+      "subject_phrase_match": false,
+      "shared_query_budget": true
+    }
+  ],
+  "commands": [
+    [
+      "--live",
+      "--child",
+      "--catalogue-id",
+      "offline-test-a",
+      "--out",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_refusal_between_cases_kee0/capture/20261007T201933Z/offline-test-a.json",
+      "--max-pages",
+      "60",
+      "--seconds-per-case",
+      "120",
+      "--strict-expert-budget",
+      "--stop-file",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round5/reviews/expert_a/harness-review/pytest-temp-final3/test_refusal_between_cases_kee0/synthetic-STOP.json",
+      "--no-subject-phrase-match",
+      "--search-funding-fallback",
+      "--recover-search-candidates",
+      "--target-award-search"
+    ]
+  ],
+  "capture": {
+    "schema_version": "1",
+    "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "captured_at": "20261007T201933Z",
+    "mode": "live",
+    "config": {
+      "strict_expert_budget": true,
+      "search_provider": "exa_mcp",
+      "site_branding_identity": false,
+      "subject_phrase_match": false,
+      "shared_query_budget": true,
+      "seconds_per_case": 120,
+      "max_fetcher_calls_per_case": 60,
+      "max_search_queries_per_case": 6,
+      "browser_enabled": false,
+      "cohort": [
+        "offline-test-a",
+        "offline-test-b"
+      ],
+      "selection": "catalogue_id",
+      "batch_stop_reason": "external_provider_failure",
+      "batch_attempted_case_ids": [
+        "offline-test-a"
+      ],
+      "batch_remaining_case_ids": [
+        "offline-test-b"
+      ]
+    },
+    "observations": [
+      {
+        "case_id": "offline-test-a",
+        "programme_urls": [],
+        "ranked_urls": null,
+        "predictions": [],
+        "telemetry": {
+          "http_fetches": null,
+          "browser_fetches": null,
+          "pdf_fetches": null,
+          "search_calls": null,
+          "model_input_tokens": null,
+          "jev_input_tokens": null,
+          "latency_seconds": null,
+          "cost_usd": null,
+          "human_review_required": null,
+          "document_reads": null,
+          "document_seconds": null,
+          "document_stop": null
+        },
+        "page_outcomes": [],
+        "error": null
+      }
+    ]
+  },
+  "pipeline_sha_is_mock": true,
+  "network_calls": 0,
+  "capture_one_is_mock": true,
+  "real_subprocess_calls": 0
+}

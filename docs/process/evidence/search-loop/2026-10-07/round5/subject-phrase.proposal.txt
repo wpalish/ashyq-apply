@@ -1,0 +1,29 @@
+def matches_field_text(label: str, fields: list[str]) -> bool:
+    """Whether a link's own text names one of the applicant's subjects.
+
+    A catalogue page links to its programmes under the university's own names
+    for them, and those names are often nowhere in the URL: Toronto's bachelor
+    lead is ``/data-computer-science`` behind the text "Data & Computer
+    Science", which no path pattern for "programmes" would ever match.
+    """
+    words = {w for w in re.split(r"[^a-z]+", label.lower()) if len(w) > 3}
+    if not words:
+        return False
+    own = {f.lower() for f in fields}
+    for field_name in with_strong_aliases(fields):
+        wanted = {w for w in re.split(r"[^a-z]+", field_name.lower()) if len(w) > 3}
+        if not wanted or not wanted <= words:
+            continue
+        if field_name.lower() in own:
+            label_words = re.findall(r"[a-z]+", label.lower())
+            field_words = re.findall(r"[a-z]+", field_name.lower())
+            if any(label_words[i:i+len(field_words)] == field_words for i in range(len(label_words)-len(field_words)+1)):
+                return True
+            continue
+        # An alias names the field only when nothing else in the title names
+        # another subject: "Informatics" is computer science, "Business
+        # Informatics" is not, and "Computing and Data Science" is not
+        # "Computing" (run 50, Vienna and HKU).
+        if words - wanted <= _TITLE_FILLER:
+            return True
+    return False

@@ -18,6 +18,8 @@ Global STOP `/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-STOP
 
 ## Next resume
 
+Latest 2026-10-07 20:24UTC: Round5 SPH-1 local source3892/95.01% and retained-reader checks complete; sourcecheckpoint/PR65 next. FlagFalse, liveSTOPsticky/cloudblocked. Next Wits stronger programme-purpose proof; first two candidate rules rejected by negative controls, not applied. Query sourcec6a1bdc in DraftPR64; no durable60/120 guarantee.
+
 Latest 2026-10-07 19:59UTC: Round3 source locally verified;3743/95.01%,144focused,independent68,frontend232/quality/demo unchanged/singlehead. Branch task/search-query-ledger; archive and push wip[skip ci], then dependent off-by-default AUT phrase/Wits classifier rounds. Live and hostedCI remain blocked by sticky refusal STOP; no retry/purchase/reset. Current source counter is charged seam attempts, not HTTP dispatch or durable guard. Original pending commands below are historical and must not be re-executed.
 
 Latest19:39UTC: Round2 four-arm observation completed and reviewed in round2/PAIRED_REVIEW.md. All20terminal outcomes inside unchanged caps; stable site identity only, no stable programme/core-fact gain; SI-1 remainsFalse. AUT major mismatch and Wits secondary-funding classifier loss independently reproduced on retained bytes. GitHub refused all8 hosted jobs9330929 before any steps for billing/spending-limit; exact source d669 had8/8SUCCESS. Raw annotations retained. Global live STOP is sticky; no live/hosted retry/purchase/substitution/reset. Continue offline Round3 query-budget correctness repair, then production guard/subject/classifier repairs. New pushes use explicit[skip ci] and retain blocked final CI, never claim a passed release.

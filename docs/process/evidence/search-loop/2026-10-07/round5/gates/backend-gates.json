@@ -1,0 +1,72 @@
+{
+  "started_at": "2026-10-07T20:12:00.807173+00:00",
+  "source_sha256": {
+    "backend/app/adapters/discovery/live_discovery.py": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6",
+    "backend/evaluation/research/live.py": "e89734bb6f550dad4ce3328f1073c6b9fa9a6437e6a73fc41337f1507b7f90d8",
+    "backend/tests/test_subject_phrase_guard.py": "982c7881a0e06d0674350f6502d3ca20d553738e0416c5f8db047a54e0392912",
+    "backend/tests/test_subject_phrase_capture.py": "d051c525527f397eb4889e6195d6f132015feb4439875211d20e2117ae773082"
+  },
+  "commands": [
+    {
+      "name": "ruff",
+      "arguments": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "format",
+      "arguments": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "mypy",
+      "arguments": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "backend-pytest",
+      "arguments": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "--cov=app",
+        "--cov-fail-under=92"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "alembic-heads",
+      "arguments": [
+        ".venv/bin/alembic",
+        "heads"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "finished_at": "2026-10-07T20:19:03.232017+00:00",
+  "dotenv_restored": true,
+  "source_unchanged": true
+}

@@ -1,0 +1,45 @@
+{
+  "subject_arguments": [
+    "--subject-phrase-match"
+  ],
+  "initial_subject": false,
+  "shared_default": true,
+  "shared_explicit": false,
+  "stop_before": true,
+  "stop_after_first": false,
+  "child_effective": [],
+  "commands": [],
+  "capture": {
+    "schema_version": "1",
+    "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "captured_at": "20261007T201933Z",
+    "mode": "live",
+    "config": {
+      "strict_expert_budget": true,
+      "search_provider": "exa_mcp",
+      "site_branding_identity": false,
+      "subject_phrase_match": true,
+      "shared_query_budget": true,
+      "seconds_per_case": 120,
+      "max_fetcher_calls_per_case": 60,
+      "max_search_queries_per_case": 6,
+      "browser_enabled": false,
+      "cohort": [
+        "offline-test-a",
+        "offline-test-b"
+      ],
+      "selection": "catalogue_id",
+      "batch_stop_reason": "external_provider_failure",
+      "batch_attempted_case_ids": [],
+      "batch_remaining_case_ids": [
+        "offline-test-a",
+        "offline-test-b"
+      ]
+    },
+    "observations": []
+  },
+  "pipeline_sha_is_mock": true,
+  "network_calls": 0,
+  "capture_one_is_mock": true,
+  "real_subprocess_calls": 0
+}

@@ -588,6 +588,11 @@ def looks_like_catalogue(url: str) -> bool:
     return bool(_CATALOGUE_PATH.search(path))
 
 
+#: Off until an off/on/on/off capture and an owner default decision.
+#: Require an ordered subject phrase instead of collecting words across a title.
+SUBJECT_PHRASE_MATCH = False
+
+
 def matches_field_text(label: str, fields: list[str]) -> bool:
     """Whether a link's own text names one of the applicant's subjects.
 
@@ -599,11 +604,24 @@ def matches_field_text(label: str, fields: list[str]) -> bool:
     words = {w for w in re.split(r"[^a-z]+", label.lower()) if len(w) > 3}
     if not words:
         return False
+    label_words = re.findall(r"[a-z]+", label.lower()) if SUBJECT_PHRASE_MATCH else []
     own = {f.lower() for f in fields}
     for field_name in with_strong_aliases(fields):
         wanted = {w for w in re.split(r"[^a-z]+", field_name.lower()) if len(w) > 3}
         if not wanted or not wanted <= words:
             continue
+        if SUBJECT_PHRASE_MATCH:
+            field_words = re.findall(r"[a-z]+", field_name.lower())
+            if not any(
+                label_words[i : i + len(field_words)] == field_words
+                for i in range(len(label_words) - len(field_words) + 1)
+            ):
+                continue
+            # A precise multiword strong alias names the field even when its
+            # parent degree adds other words. Ambiguous one-word aliases
+            # retain the existing extra-subject restriction below.
+            if len(field_words) > 1:
+                return True
         if field_name.lower() in own:
             return True
         # An alias names the field only when nothing else in the title names
