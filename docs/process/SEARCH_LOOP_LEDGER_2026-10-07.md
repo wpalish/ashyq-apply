@@ -1,5 +1,8 @@
 # Search engineering loop — persistent continuation
 
+**[search-loop] 2026-10-07 21:30UTC — readguard b603fe6a/c09219f0 REJECTED before source application.** Independent A7 controls6pass/1deliberate red reproduced actual SQLite first-namespace erasure: 61original gets/count1 after stale OFF save removes count60. Actual verification busy caller escapes OperationalError, zeroIO/priorfacts equal, durable unknown empty; borrowed70tests pass. Ordinary duplicate-worker reachability is not proved and is not assumed safe. A report61a8fb48/receipt e5abdbc3 and parent source audit preserved externally. B revision in disjoint expert_b-readguard-v2; no production patch applied. Require A/root review of atomic replacement/no-autoflush/typed busy and same-job guard-intent preservation before exact write-ahead/new branch. RealPG/120s/query durability and genuine fenced capture remain unknown. STOP unchanged.
+
+
 Owner instruction (7 October 2026): continue successive rounds autonomously until the search can support a product launch. Goal is active. Hourly thread heartbeat `unimatch` is ACTIVE on this conversation; it resumes from Git/HANDOFF and avoids duplicate live jobs.
 
 ## Acceptance

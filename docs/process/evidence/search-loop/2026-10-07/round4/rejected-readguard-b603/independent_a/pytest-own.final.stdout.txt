@@ -1,0 +1,45 @@
+......F                                                                  [100%]
+=================================== FAILURES ===================================
+_ test_mixed_off_save_before_first_namespace_creation_can_erase_60_then_read_61 _
+
+context = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert...x/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard/pytest-own-final/test_mixed_off_save_before_fir0'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e843b90>
+
+    def test_mixed_off_save_before_first_namespace_creation_can_erase_60_then_read_61(context,monkeypatch):
+        f=controls.activate(context);c=controls.candidate();seen=controls.mock_original_get(monkeypatch,context)
+        with context.factory() as off_session:
+            stale=off_session.get(ResearchRun,context.run.id)
+            off=ResearchRunner(off_session,stale,context.profile,context.settings,job_id=context.job.id,worker_id='worker-one',lease_token=1)
+            off._read_guard_enabled=False
+            stale.settings_snapshot={'off_writer':'predates first namespace'}
+            stale.stage=PipelineStage.CANDIDATE_DISCOVERY.value
+            actual=off_session.execute;intercepted=[]
+            def execute(statement,*args,**kwargs):
+                result=actual(statement,*args,**kwargs)
+                if not intercepted and getattr(statement,'is_select',False) and any(getattr(d.get('expr'),'key',None)=='settings_snapshot' for d in getattr(statement,'column_descriptions',[])):
+                    old=result.scalar_one();intercepted.append(old)
+                    async def on_work():
+                        with context.runner._university_read_scope(c):
+                            for i in range(60):await f.get('https://example.edu/on/'+str(i))
+                    asyncio.run(on_work())
+                    assert controls.counts(context)['catalogue:u-one']==60
+                    return SimpleNamespace(scalar_one=lambda:old)
+                return result
+            monkeypatch.setattr(off_session,'execute',execute)
+            off._save()
+            after_off=snapshot(context)
+            async def last():
+                with context.runner._university_read_scope(c):await f.get('https://example.edu/on/61')
+            asyncio.run(last())
+            after_last=snapshot(context)
+            write_raw(context,'mixed-off-on-first-namespace-hole',{'off_preflight':intercepted,'durable_after_off_save':after_off,'durable_after_extra_get':after_last,'original_get_count':len(seen),'all_observed_durable_counts':seen,'same_job':True,'same_worker':True,'same_attempt':True,'on_episode_fresh_retained':context.runner._read_episode_fresh,'ordinary_worker_reachability':'not established by this synthetic concurrent-runner control','frozen_guard_intent_enforced':False,'network_calls':0})
+            # Deliberately red universal-contract control. Candidate excludes this mode;
+            # durable intent or a reachability proof is needed before universal claims.
+>           assert len(seen)<=60
+E           AssertionError: assert 61 <= 60
+E            +  where 61 = len([{'url': 'https://example.edu/on/0', 'kwargs': {'use_cache': True, 'etag': None, 'if_modified_since': None}, 'durable'...on/5', 'kwargs': {'use_cache': True, 'etag': None, 'if_modified_since': None}, 'durable': {'catalogue:u-one': 6}}, ...])
+
+work/search-loop-round4/reviews/expert_a-readguard/test_independent_sql_review.py:188: AssertionError
+=========================== short test summary info ============================
+FAILED work/search-loop-round4/reviews/expert_a-readguard/test_independent_sql_review.py::test_mixed_off_save_before_first_namespace_creation_can_erase_60_then_read_61
+1 failed, 6 passed in 1.37s

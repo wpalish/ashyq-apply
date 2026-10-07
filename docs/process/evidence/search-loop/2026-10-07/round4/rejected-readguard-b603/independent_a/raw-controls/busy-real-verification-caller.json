@@ -1,0 +1,39 @@
+{
+  "escaped_type": "OperationalError",
+  "escaped_reason": null,
+  "before": {
+    "university_research_budget_v1": {
+      "version": 1,
+      "read_limit": 60,
+      "active_episode": "decision:7a692459de00404180f7a128ea80ec78",
+      "episodes": {
+        "decision:7a692459de00404180f7a128ea80ec78": {
+          "read_counts": {
+            "catalogue:u-one": 0
+          }
+        }
+      }
+    }
+  },
+  "after": {
+    "university_research_budget_v1": {
+      "version": 1,
+      "read_limit": 60,
+      "active_episode": "decision:7a692459de00404180f7a128ea80ec78",
+      "episodes": {
+        "decision:7a692459de00404180f7a128ea80ec78": {
+          "read_counts": {
+            "catalogue:u-one": 0
+          }
+        }
+      }
+    }
+  },
+  "prior_claim_preserved": true,
+  "prior_result_preserved": true,
+  "durable_unknowns": [],
+  "original_get_count": 0,
+  "scope": "Actual _stage_verify; local busy catch cannot promise durable diagnostic persistence while database remains locked",
+  "database": "actual local SQLite only",
+  "network_calls": 0
+}
