@@ -1,0 +1,86 @@
+"""Offline integrity audit of collaborative development evidence; no scoring or I/O network."""
+import base64
+import hashlib
+import io
+import json
+import logging
+from pathlib import Path
+from urllib.parse import urlparse
+
+from app.adapters.extraction import pdf_to_text, readable_text
+from pypdf import PdfReader
+
+logging.getLogger('pypdf').setLevel(logging.ERROR)
+SOURCE_CACHE = {}
+BASE = Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts')
+CASES = [('expert_a','dalian','findings.unreviewed.json'),('expert_a','nagoya','findings.unreviewed.json'),('expert_b','wits','findings.json'),('expert_b','aut','findings.json'),('expert_b','caltech','findings.json')]
+
+def digest(data):
+    return hashlib.sha256(data).hexdigest()
+
+def text_views(record):
+    response = record.get('response') or {}
+    body = base64.b64decode(response.get('content_b64') or '')
+    if not body:
+        return []
+    if 'pdf' in (response.get('content_type') or '').lower():
+        return [pdf_to_text(body, max_pages=40)] + [(p.extract_text() or '') for p in PdfReader(io.BytesIO(body)).pages[:40]]
+    return [readable_text(body.decode('utf-8', errors='replace'))]
+
+rows = []
+for owner, name, filename in CASES:
+    directory = BASE / owner / name
+    findings = json.loads((directory / filename).read_text())
+    raw = sorted((directory / 'raw').glob(f'{name}-*.json'))
+    records = {p.name: json.loads(p.read_text()) for p in raw}
+    issues = []
+    provider_refusals = []
+    counters = {'fetcher_calls':0, 'search_queries':0, 'elapsed_ms':0}
+    outcomes = {}
+    for p in raw:
+        r = records[p.name]
+        response = r.get('response') or {}
+        body = base64.b64decode(response.get('content_b64') or '', validate=True)
+        if body and response.get('content_sha256') != digest(body):
+            issues.append(f'{p.name}: body hash mismatch')
+        for key, field in [('fetcher_calls','fetcher_calls_cumulative'),('search_queries','search_queries_cumulative'),('elapsed_ms','elapsed_ms_cumulative')]:
+            value = r.get(field)
+            if type(value) is not int or value < counters[key]:
+                issues.append(f'{p.name}: missing or regressing {field}')
+            else:
+                counters[key] = value
+        if r['request']['tool'] == 'search_provider' and r.get('outcome_status') != 'success':
+            provider_refusals.append(p.name)
+        outcome = response.get('outcome',r.get('outcome_status','unknown'))
+        outcomes[outcome] = outcomes.get(outcome,0) + 1
+    for key, cap in [('fetcher_calls',60),('search_queries',6),('elapsed_ms',120000)]:
+        if counters[key] > cap or counters[key] != findings['budget'][key]:
+            issues.append(f'budget {key}: raw={counters[key]}, declared={findings["budget"][key]}, cap={cap}')
+    # Verify every declared original hash, keeping normalization separate from verbatim proof.
+    evidence = list(findings.get('evidence',{}).values()) if owner == 'expert_a' else findings.get('source_catalog',[]) + [e for q in findings['questions'] for e in q.get('evidence',[]) + q.get('access_evidence',[])]
+    quotes = []
+    for index, e in enumerate(evidence):
+        original = Path(e.get('raw_path') or e.get('raw_log_path',''))
+        expected = e.get('raw_sha256') or e.get('raw_log_sha256')
+        if not original.is_file() or digest(original.read_bytes()) != expected:
+            issues.append(f'evidence {index}: raw hash mismatch')
+            continue
+        r = json.loads(original.read_text())
+        quote = e.get('verbatim_excerpt') if owner == 'expert_a' else e.get('excerpt')
+        if not quote:
+            continue
+        if original not in SOURCE_CACHE:
+            SOURCE_CACHE[original] = text_views(r)
+        texts = SOURCE_CACHE[original]
+        if not any(quote in text for text in texts):
+            issues.append(f'evidence {index}/{original.name}: verbatim substring not found')
+        quote_hash = e.get('verbatim_excerpt_sha256')
+        if quote_hash and digest(quote.encode()) != quote_hash:
+            issues.append(f'evidence {index}: quote hash mismatch')
+        quotes.append({'raw_log':str(original.relative_to(BASE)), 'excerpt_sha256':digest(quote.encode()), 'exact_substring':any(quote in t for t in texts)})
+    rows.append({'case':name,'case_id':findings['case_id'],'findings':str((directory/filename).relative_to(BASE)), 'findings_sha256':digest((directory/filename).read_bytes()),'raw_logs':len(raw),'raw_hashes':{str(p.relative_to(BASE)):digest(p.read_bytes()) for p in raw},'budget':counters,'outcomes':outcomes,'provider_refusals':provider_refusals,'verbatim_quotes_checked':len(quotes),'quote_proofs':quotes,'issues':issues,'semantic_status':'UNREVIEWED_NOT_GOLD'})
+result={'audit':'offline raw/content hashes, monotone declared budget counters, verbatim source substrings; no semantic score', 'case_count':len(rows),'cases':rows,'total_issues':sum(len(r['issues']) for r in rows), 'total_raw_logs':sum(r['raw_logs'] for r in rows), 'total_verbatim_quotes_checked':sum(r['verbatim_quotes_checked'] for r in rows)}
+Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts-audit.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
+print(json.dumps({k:v for k,v in result.items() if k!='cases'}))
+for r in rows:
+    print(json.dumps({k:v for k,v in r.items() if k not in ('raw_hashes','quote_proofs')},ensure_ascii=False))

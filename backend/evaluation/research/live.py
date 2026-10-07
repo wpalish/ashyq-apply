@@ -5,7 +5,7 @@ Each institution runs in its own process with a hard wall-clock budget.
 
 ``--strict-expert-budget`` adds evaluation wrappers around the unchanged app:
 60 cumulative cold Fetcher.get calls and six configured Exa queries across
-all stages, with no further provider call after HTTP 429. Active time starts
+all stages, with no further network action after a provider failure. Active time starts
 at capture_one entry and lasts the requested 120 seconds by default, including
 canary setup, discovery, verification, and funding. The parent adds a separate
 15-second process reserve for startup and cancellation/output cleanup; this
@@ -93,6 +93,8 @@ class _ExpertBudget:
     network_http_requests: int = 0
     stop_reason: str | None = None
     provider_failure: dict[str, Any] | None = None
+    stop_file: Path | None = None
+    case_id: str | None = None
 
     @property
     def source_work_deadline_ms(self) -> int:
@@ -123,6 +125,7 @@ class _ExpertBudget:
 
     def before_fetch(self) -> None:
         self.remaining()
+        self._check_provider_stop()
         if self.fetcher_calls >= self.max_fetcher_calls:
             self.stop_reason = self.stop_reason or "page_budget_exhausted"
             raise RuntimeError("BENCHMARK_PAGE_BUDGET_EXHAUSTED")
@@ -134,16 +137,24 @@ class _ExpertBudget:
         self.remaining()
         if provider_name != self.provider_name or provider_name not in STRICT_PROVIDERS:
             raise SearchUnavailable("Strict capture refused a different provider identity")
-        if self.provider_failure and self.provider_failure.get("http_status") == 429:
-            self.blocked_search_queries += 1
-            raise SearchUnavailable(
-                "Strict capture stopped provider calls after HTTP 429", http_status=429
-            )
+        self._check_provider_stop(search=True)
         if self.search_queries >= self.max_search_queries:
             self.blocked_search_queries += 1
             self.stop_reason = self.stop_reason or "search_budget_exhausted"
             raise SearchUnavailable("Strict capture search query budget exhausted")
         self.search_queries += 1
+
+    def _check_provider_stop(self, *, search: bool = False) -> None:
+        from app.adapters.search.base import SearchUnavailable
+
+        if self.provider_failure or (self.stop_file is not None and self.stop_file.exists()):
+            self.stop_reason = self.stop_reason or "external_provider_failure"
+            if search:
+                self.blocked_search_queries += 1
+            raise SearchUnavailable(
+                "Strict capture stopped after provider failure",
+                http_status=(self.provider_failure or {}).get("http_status"),
+            )
 
     def failed_search(self, exc: Exception) -> Exception:
         """Keep a fixed diagnostic/status, never vendor exception text or keys."""
@@ -163,13 +174,28 @@ class _ExpertBudget:
         sanitized = SearchUnavailable(
             "Configured search provider unavailable", http_status=status, reason=reason
         )
-        self.provider_failure = {
+        self.provider_failure = self.provider_failure or {
             "http_status": status,
             "reason": reason.value if reason else None,
             "error": search_failure_diagnostic(self.provider_name, sanitized),
         }
-        if status == 429:
-            self.stop_reason = "http_429"
+        self.stop_reason = self.stop_reason or ("http_429" if status == 429 else "provider_failure")
+        if self.stop_file is not None:
+            self.stop_file.parent.mkdir(parents=True, exist_ok=True)
+            try:
+                with self.stop_file.open("x", encoding="utf-8") as out:
+                    json.dump(
+                        {
+                            "case_id": self.case_id,
+                            "provider": self.provider_name,
+                            "http_status": self.provider_failure["http_status"],
+                            "failure_reason": self.provider_failure["reason"],
+                            "time": datetime.now(UTC).isoformat(),
+                        },
+                        out,
+                    )
+            except FileExistsError:
+                pass
         return sanitized
 
     def snapshot(self) -> dict[str, Any]:
@@ -250,12 +276,18 @@ async def capture_one(
     *,
     strict_expert_budget: bool = False,
     finalization_reserve_ms: int = 0,
+    catalogue_id: str | None = None,
+    stop_file: Path | None = None,
 ) -> None:
     entered = time.monotonic()
     if type(finalization_reserve_ms) is not int or finalization_reserve_ms < 0:
         raise ValueError("Finalization reserve must be a nonnegative integer in milliseconds")
     if finalization_reserve_ms and not strict_expert_budget:
         raise ValueError("Finalization reserve requires strict expert budget mode")
+    if stop_file is not None and not strict_expert_budget:
+        raise ValueError("Shared stop file requires strict expert budget mode")
+    if catalogue_id is not None and catalogue_id != case_id:
+        raise ValueError("Capture and catalogue identity must match")
     # Delayed imports keep ordinary offline evaluation entirely independent of I/O.
     from app.adapters import fetching
     from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, PageCategory
@@ -291,6 +323,8 @@ async def capture_one(
             entered,
             clock=time.monotonic,
             finalization_reserve_ms=finalization_reserve_ms,
+            stop_file=stop_file,
+            case_id=case_id,
         )
 
     predictions: list[Prediction] = []
@@ -404,6 +438,7 @@ async def capture_one(
 
     def counted_request(*args, **kwargs):
         if budget:
+            budget._check_provider_stop()
             budget.network_http_requests += 1
         else:
             observation.telemetry.http_fetches = (observation.telemetry.http_fetches or 0) + 1
@@ -431,6 +466,8 @@ async def capture_one(
 
             async def bounded(url, **kwargs):
                 nonlocal requests, network_reads
+                if budget:
+                    budget._check_provider_stop()
                 # The budget bounds reads that reach a server. A page two
                 # stages both need is served from the cache the second time,
                 # and until 2026-09-23 that repeat still spent the budget: run
@@ -577,7 +614,10 @@ async def capture_one(
         try:
             active_seconds = budget.remaining() if budget else seconds
             report = await asyncio.wait_for(
-                canary.run_canary({**COHORT, **HELDOUT}[case_id], False), active_seconds
+                canary.run_canary(None, False, catalogue_ids=[catalogue_id])
+                if catalogue_id is not None
+                else canary.run_canary({**COHORT, **HELDOUT}[case_id], False),
+                active_seconds,
             )
         except TimeoutError:
             # The child stops itself just short of the parent's kill, so the
@@ -604,6 +644,8 @@ async def capture_one(
     observation.programme_urls = [HttpUrl(url) for r in rows for url in r["programs"]]
     observation.predictions = predictions
     observation.error = report["run_error"] or None
+    if budget and (budget.provider_failure or budget.stop_reason == "external_provider_failure"):
+        observation.error = "BENCHMARK_PROVIDER_FAILURE"
     if budget is None or not budget.finalization_reserve_ms:
         checkpoint()
     await documents_stage()
@@ -626,13 +668,18 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live", action="store_true", required=True)
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--case", choices=[*COHORT, *HELDOUT])
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument("--case", choices=[*COHORT, *HELDOUT])
+    selection.add_argument(
+        "--catalogue-id", action="append", help="opt-in imported identity id; repeat for a batch"
+    )
+    parser.add_argument("--stop-file", type=Path, help="strict batch shared refusal stop sentinel")
     parser.add_argument("--seconds-per-case", type=int, default=120)
     parser.add_argument("--max-pages", type=int, default=None)
     parser.add_argument(
         "--strict-expert-budget",
         action="store_true",
-        help="evaluation only: cold 60 get / 6 provider query / 120 active second caps; stop batch on 429",
+        help="evaluation only: cold 60 get / 6 query / 120 active second caps; stop batch on provider failure",
     )
     parser.add_argument(
         "--finalization-reserve-ms",
@@ -791,6 +838,18 @@ def main() -> None:
     )
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
+    if args.stop_file is not None and not args.strict_expert_budget:
+        parser.error("--stop-file requires --strict-expert-budget")
+    if args.child and args.catalogue_id is not None and len(args.catalogue_id) != 1:
+        parser.error("A child capture requires exactly one catalogue id")
+    if args.catalogue_id is not None:
+        from .expert.catalogue import load_catalogue
+
+        identities = {identity.id: identity for identity in load_catalogue().identities}
+        if len(set(args.catalogue_id)) != len(args.catalogue_id):
+            parser.error("Duplicate catalogue ids are not allowed")
+        if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+            parser.error("Catalogue id is unknown or has no public domain hint")
     if args.max_pages is None:
         args.max_pages = STRICT_MAX_FETCHER_CALLS if args.strict_expert_budget else 40
     if not 1 <= args.seconds_per_case <= 600 or not 1 <= args.max_pages <= 100:
@@ -933,8 +992,18 @@ def main() -> None:
                 )
                 if args.finalization_reserve_ms is not None:
                     strict_arguments["finalization_reserve_ms"] = finalization_reserve_ms
+                if args.catalogue_id is not None:
+                    strict_arguments["catalogue_id"] = args.catalogue_id[0]
+                if args.stop_file is not None:
+                    strict_arguments["stop_file"] = args.stop_file
                 asyncio.run(
-                    capture_one(args.case, args.out, args.max_pages, soft, **strict_arguments)
+                    capture_one(
+                        args.catalogue_id[0] if args.catalogue_id else args.case,
+                        args.out,
+                        args.max_pages,
+                        soft,
+                        **strict_arguments,
+                    )
                 )
             finally:
                 get_settings.cache_clear()
@@ -943,11 +1012,35 @@ def main() -> None:
     directory = args.out / stamp
     directory.mkdir(parents=True)
     sha = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
-    observations = []
-    planned_cases = [args.case] if args.case else list(COHORT)
+    observations: list[Observation] = []
+    planned_cases = args.catalogue_id or ([args.case] if args.case else list(COHORT))
     case_budgets: dict[str, Any] = {}
     batch_stop_reason = None
     for case_index, case_id in enumerate(planned_cases):
+        if args.stop_file is not None and args.stop_file.exists():
+            batch_stop_reason = "external_provider_failure"
+            stopped_capture = Capture(
+                pipeline_sha=sha,
+                captured_at=stamp,
+                mode="live",
+                config={
+                    "strict_expert_budget": True,
+                    "search_provider": search_provider,
+                    "seconds_per_case": args.seconds_per_case,
+                    "max_fetcher_calls_per_case": args.max_pages,
+                    "max_search_queries_per_case": STRICT_MAX_SEARCH_QUERIES,
+                    "browser_enabled": False,
+                    "cohort": planned_cases,
+                    "selection": "catalogue_id" if args.catalogue_id else "curated",
+                    "batch_stop_reason": batch_stop_reason,
+                    "batch_attempted_case_ids": planned_cases[:case_index],
+                    "batch_remaining_case_ids": planned_cases[case_index:],
+                },
+                observations=observations,
+            )
+            (directory / "capture.json").write_text(stopped_capture.model_dump_json(indent=2))
+            print("Capture stopped by shared provider refusal; remaining cases not attempted.")
+            break
         output = directory / f"{case_id}.json"
         started = time.monotonic()
         environment = dict(
@@ -969,7 +1062,7 @@ def main() -> None:
                         "evaluation.research.live",
                         "--live",
                         "--child",
-                        "--case",
+                        "--catalogue-id" if args.catalogue_id else "--case",
                         case_id,
                         "--out",
                         str(output),
@@ -978,6 +1071,11 @@ def main() -> None:
                         "--seconds-per-case",
                         str(args.seconds_per_case),
                         *(["--strict-expert-budget"] if args.strict_expert_budget else []),
+                        *(
+                            ["--stop-file", str(args.stop_file)]
+                            if args.stop_file is not None
+                            else []
+                        ),
                         *(
                             ["--finalization-reserve-ms", str(finalization_reserve_ms)]
                             if args.finalization_reserve_ms is not None
@@ -1058,6 +1156,12 @@ def main() -> None:
                 case_budgets[case_id] = json.loads(budget_output.read_text(encoding="utf-8"))
                 if case_budgets[case_id].get("stop_reason") == "http_429":
                     batch_stop_reason = "http_429"
+                elif case_budgets[case_id].get("provider_failure"):
+                    batch_stop_reason = "provider_failure"
+                elif case_budgets[case_id].get("stop_reason") == "external_provider_failure":
+                    batch_stop_reason = "external_provider_failure"
+            else:
+                batch_stop_reason = "capture_unavailable"
             case_budgets.setdefault(case_id, {}).update(
                 parent_process_elapsed_seconds=process_elapsed_seconds,
                 process_error=error,
@@ -1084,6 +1188,7 @@ def main() -> None:
                 + STRICT_PROCESS_RESERVE_SECONDS,
                 "case_budgets": case_budgets,
                 "batch_stop_reason": batch_stop_reason,
+                "batch_attempted_case_ids": planned_cases[: case_index + 1],
                 "batch_completed_case_ids": planned_cases[: case_index + 1],
                 "batch_remaining_case_ids": planned_cases[case_index + 1 :],
             }
@@ -1108,7 +1213,8 @@ def main() -> None:
                 "admission_lexicon": args.admission_lexicon,
                 "navigation_slot": args.navigation_slot,
                 "browser_enabled": False,
-                "cohort": list(COHORT),
+                "cohort": planned_cases,
+                "selection": "catalogue_id" if args.catalogue_id else "curated",
                 "scope": "current production pipeline; HTTP-only bounded cold run",
                 "rank_stage": "programme confirmation queue before catalogue walking",
                 "harness_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
@@ -1123,7 +1229,7 @@ def main() -> None:
         print(f"{case_id}: {observation.error or 'complete'}", flush=True)
         if batch_stop_reason:
             print(
-                "Capture stopped after provider HTTP 429; remaining cases were not attempted.",
+                "Capture stopped after provider failure; remaining cases were not attempted.",
                 flush=True,
             )
             break

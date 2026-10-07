@@ -85,3 +85,25 @@ To resume, fetch this branch and read this journal plus HANDOFF's newest branch-
 ## Owner continuation / two experts
 
 Owner now says “продолжай работать ... на 2ух субагентах запустить экспертов на новые уники”. Main engineer continues on `task/search-development-baseline` explicitly branched from PR #61's checkpoint e3d77d4, without waiting for a main merge. PR #61 stays reviewable. Two collaboration experts have disjoint evidence-only assignments; their work is independent of the upcoming algorithm baseline but is not an OS-blinded experiment. All new live work shares one refusal stop sentinel. Source/ledger/selector changes and tests are declared in HANDOFF §5 before edits. Groningen remains unsigned.
+
+## Permission interruption and restoration
+
+After the two experts started, filesystem/network permissions changed to read-only/restricted. All new live/write work stopped. Expert A retained one successful Dalian Exa discovery (0 Fetcher reads,1 query,2737 tool ms); other four were not started. No facts from snippets accepted. Parent could not update files until permissions restored.
+
+On owner restoring full access (7 October,16:07UTC), the parent resumed. Old child contexts still retained their read-only policy, so they completed without further I/O. Two fresh delegations resume the same disjoint assignments and existing ledger, without resetting Dalian's original15-minute guard or request counters. The other four per-case guards have not started. PR #61's exact e3d77d4 cloud check rollup was verified8/8SUCCESS before the interruption; no merge/deployment. Main source work remains the opt-in seed selector and fail-closed controlled batch declared in HANDOFF §5.
+
+## Development harness verification in progress
+
+Opt-in `--catalogue-id` now selects only imported identity/name/country/domain hints, never seed fact estimates or registry promotion. A shared STOP blocks source/search actions and each HTTP hop; first provider failure is sanitized and sticky. Parent batch preserves the planned, attempted and remaining ids, including a pre-start refusal with no observations; missing checkpoints stop as unmeasured. The ordinary curated selector and app defaults stay unchanged.
+
+Targeted offline suite:53 passed. Ruff check/format367 and mypy366 passed. Frontend232 tests/typecheck/lint/build passed. The first full backend run was intentionally interrupted after request-hop stop protection was added; its original log is preserved, and a complete run on the final source is in progress. No new algorithm baseline has started yet.
+
+Experts independently completed source reads for the five DEV identities. Dalian keeps all exact2027 questions unresolved because only2026/general sources were accessible; Nagoya distinguishes Japanese April Computer Science from October G30; AUT reports official403 access failures. These findings are still unsigned/unreviewed. All expert logs, counters and excerpts will be audited before comparison. No facts were inserted into gold or production.
+
+Next frozen capture command uses existing keyed `exa`, six queries/60coldFetcher/120active seconds with3000ms finalization reserve inside that cap, browser off, robots respected, explicit prepared ids, the shared development-STOP.json and no experimental flags. Keyed Exa differs from Claude's historical exa_mcp captures; do not infer like-for-like provider comparisons. No purchase or retry after refusal is authorized.
+
+## Offline gate environment isolation
+
+Final full gate:3633 passed,1 failure,2 warnings,94.86%,436.43s. The only failure is the existing no-key Exa configuration test: the dedicated `.env` symlink introduced for live research makes a key present. Temporarily detach that ignored symlink only, preserve the original failure log, repeat full offline gate and restore before live work. Neither original configuration nor test assertions change. Required Ruff/format367/mypy366 and frontend232/typecheck/lint/build are green. Current demo executes, Groningen first; its current product classification output is not the old v2-table vocabulary from the brief.
+
+Both experts have submitted all five cases, no unrun assignments and no provider refusal. Parent independently checked79original logs, body hashes, monotone exact counters and100verbatim source substrings, with0issues. This is integrity verification, not semantic gold acceptance.

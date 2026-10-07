@@ -1789,6 +1789,12 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**[search-development] isolated offline gates:** full run on final source returned3633passed/1failure/94.86%; only `test_selecting_exa_without_a_key_refuses_to_start` saw the real key through the dedicated `.env` symlink. Temporarily unlink only that symlink (original file untouched), rerun full gate, then restore with `ln -s /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.env backend/.env` before the frozen live capture. Original failing/interrupted logs remain retained. No test assertion/source weakened.
+
+**[search-development] request-hop stop write-ahead:** check the shared/provider refusal at `_pinned_request` as well as `Fetcher.get`, so a read already in progress cannot open a later robots/page/redirect HTTP hop after another action records refusal. Add a network-free capture regression that permits the first mocked hop, publishes STOP and refuses the second before transport. Restart the still-running backend gate after this edit; do not claim it verified an earlier tree.
+
+**[search-development] pre-start stop write-ahead:** a shared refusal may stop before any case starts. Persist the planned cohort, attempted/remaining ids and original caps even with zero observations. `scorecard.load_run` must use that planned cohort to mark absent rows incomplete, never pass an empty capture. Add a regression before the frozen live baseline. Parent attempts whose budget checkpoint is unavailable stop the batch as unmeasured; do not infer a provider cause from missing logs.
+
 **[search-development] write-ahead:** branch explicitly from predecessor `task/search-claude-relay@e3d77d4` while PR #61 awaits owner review. Implement opt-in `--catalogue-id` selection in `evaluation/research/live.py` and `scripts/canary_discovery.py`, with imported database identity validation and default curated cohort unchanged. Add strict ledger + parent-wide stop on every configured-provider failure, save actual attempted/remaining ids, no retry/provider replacement. Add offline selector/controller regressions. Freeze source before one 6/60/120 five-case baseline. Two owner-authorized experts research disjoint assignments (Dalian/Nagoya; Witwatersrand/AUT/Caltech), through existing Fetcher/controller only, max60 reads/6 configured-provider searches per case, no model-time charge and15min stall guard. Preserve raw files. A shared stop sentinel stops all live work after provider/auth/quota refusal. Do not describe shared-repository collaboration as OS-blind. No gold or rule/default promotion.
 
 **[search-relay] next after PR #61 review/merge:** implement opt-in catalogue seed-case selection in `evaluation/research/live.py` and `scripts/canary_discovery.py` using prepared Dalian/Nagoya/Witwatersrand/AUT/Caltech ids. First add a global provider/auth/quota refusal stop for the new batch; then run a frozen strict 6/60/120 baseline, retaining started/remaining ids and raw originals. No rule tuning before that baseline. Current scope ends at the green scorecard source `0bc1522`; the development harness is **not implemented or run**.
@@ -3728,6 +3734,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[search-development] WIP source:**53targetedpassed; Ruff/format367 and mypy366 green; frontend232/type/lint/build green; final full backend3633passed/1configurationfailure/2warnings/94.86% in436.43s because dedicated dotenv symlink supplies a real key to a keyless configuration test. A clean-env full rerun is pending; source has not been frozen/launched. Offline demo executes withGroningen first; one migrationhead d8e412c6a901.
+
 **[search-relay] 2026-10-07 scorecard checkpoint:** backend3619 passed /2 warnings /94.86% coverage /520.35s; Ruff check/format and mypy clean; broader CI scope `app tests evaluation` additionally passes Ruff/format and mypy365; frontend232 tests, typecheck/lint/build clean;15 scorecard tests pass. Raw logs in `docs/process/evidence/claude-relay/2026-10-07/gates/`. No production/application source changes.
 
 **[expert-500] V4 source gates:**3458 backend tests,2 warnings,94.89%; Ruff/format/mypy345; frontend type/lint/232/build green. Representation107, baseline reserve18 new tests and156 actual-parent mock regressions green, including demonstrated pending-source hash-only and model/actual-request bugs. Real neutral tool-free bound8671ms/closing5781ms,0 university requests.14 protocol module fingerprints +7 actual parent-script snapshots pinned. App/frontend trees unchanged; Alembic onehead d8e412c6a901. Fresh10+10 V4 source calls not yet started;40/62 admission still unproved.
@@ -4492,6 +4500,8 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+**[search-development] evaluation-only:** `canary.run_canary(..., catalogue_ids=...)` / repeatable CLI `--catalogue-id` select imported public identities only; `capture_one(..., catalogue_id=..., stop_file=...)` and strict CLI `--stop-file` propagate a sticky sanitized global refusal. Capture config includes actual planned cohort/selection/attempted/remaining ids; single-run scorecards infer missing cases from that cohort. No app/API/schema/gold/production-default change.
 
 **[search-relay] 2026-10-07, evaluation only:** scorecard adds `measurement_status`, per-arm `completeness`, `changes.unassessed_cases`, per-row `missing_telemetry`, target `capture_complete`, tri-state `targets.met`, optional CLI `--expected-cases`. Cost retains exact latency and zero instead of treating missing as zero. Product schemas/API/flags unchanged.
 

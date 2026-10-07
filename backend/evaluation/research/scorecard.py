@@ -222,7 +222,20 @@ def load_run(run_dir: Path, *, expected_cases: set[str] | None = None) -> dict[s
             per_arm[match["arm"]][match["case"]].append(capture_path)
     if not per_arm:
         single = run_dir / "capture.json" if run_dir.is_dir() else run_dir
-        arm = Arm(name="run", repetitions=[_read(single)], expected_cases=expected_cases or set())
+        capture = _read(single)
+        planned = capture.config.get("cohort", [])
+        if not isinstance(planned, list):
+            raise ValueError("Capture cohort must contain case ids")
+        planned_ids: set[str] = set()
+        for case in planned:
+            if not isinstance(case, str):
+                raise ValueError("Capture cohort must contain case ids")
+            planned_ids.add(case)
+        arm = Arm(
+            name="run",
+            repetitions=[capture],
+            expected_cases=planned_ids if expected_cases is None else expected_cases,
+        )
         return {"run": arm}
     arms: dict[str, Arm] = {}
     inferred_cases = {case for cases in per_arm.values() for case in cases}

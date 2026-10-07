@@ -1,0 +1,1492 @@
+{
+  "university": "California Institute of Technology (Caltech)",
+  "case_id": "05e4d59f87261553f15d14b0cdb470d2",
+  "review_status": "unreviewed",
+  "request": {
+    "citizenship": "Kazakhstan",
+    "level": "Bachelor",
+    "subject": "Computer Science",
+    "target_period": "2027 / 2027-28",
+    "requested_label": "fall 2027"
+  },
+  "intake_interpretation": "First-year fall 2027. Общий приём на первый курс, затем выбор option; отдельное зачисление непосредственно на CS major не подтверждено.",
+  "questions": [
+    {
+      "id": "Q0",
+      "status": "partial",
+      "answer_ru": "Computer Science — undergraduate option/major в Computing & Mathematical Sciences, в рамках Bachelor of Science. Для когорты 2027-28 selection of option делается к середине третьего term первого года. Campus Caltech находится в Pasadena, California. Fall entry подтверждён. Английский требуется для учёбы и заявления; отдельная явная декларация medium of instruction для CS 2027 не обнаружена. Точные CS course regulations 2027-28 не подтверждены: прочитанная CS catalogue page — current2026-27.",
+      "unknown_reasons": [
+        "CS catalogue current относится к2026-27; не используется как гарантия содержания2027-28.",
+        "Нет отдельного явного утверждения о языке всех CS courses в2027."
+      ],
+      "evidence": [
+        {
+          "action": 10,
+          "excerpt": "The undergraduate computer science option introduces students to the mathematical and engineering foundations of the discipline.",
+          "action_hash_sha256": "6e7e6ae05e2d5be4721ec806a5614cdae71e3964c94d649fa6b07cbe44c74b84",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-010.json",
+          "raw_log_sha256": "90e588764356e90ac2f33e6d008eeeaadcc1ac20b6d148656a80a3793460dce6",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.cms.caltech.edu/academics/ugrad_cs"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.cms.caltech.edu/academics/ugrad/ugrad_cs",
+          "fetched_at": "2026-10-07T16:22:46.122447+00:00",
+          "content_sha256": "5a50faf2f64e8bef18cd0c3039968b9b4a133c9aad83f7dddcebd550276f7350",
+          "text_sha256": "5df3dd13acd667fc4384cd5a1930a371a9e4c9df375688d5078d1e1ff2eca1d1",
+          "text_total_chars": 3779,
+          "excerpt_text_start": 1710
+        },
+        {
+          "action": 9,
+          "excerpt": "The Institute has approved changes to the undergraduate second option and minor policies for the incoming class entering 2027.",
+          "action_hash_sha256": "ad7721450c5127c69f1089047c370ee0fe26ecf8864de49ea0ccdc1dbb24b8a2",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-009.json",
+          "raw_log_sha256": "21fed1ee2faf2bdd2251e2b271627304acf40fcae08057018bfb492b2521a303",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.catalog.caltech.edu/current/information-for-undergraduate-students/graduation-requirements-all-options/appendix-a/"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.catalog.caltech.edu/current/information-for-undergraduate-students/graduation-requirements-all-options/appendix-a/",
+          "fetched_at": "2026-10-07T16:22:21.936494+00:00",
+          "content_sha256": "ed5cf9647fad4b9c70fb147d3713b7e20f2ccd4b39bf01b880f230efc46b331b",
+          "text_sha256": "be5a0f7711e1d2daa25438a930c5f5f0f1859b9d264c3ba11caa5b92b5c9eba9",
+          "text_total_chars": 2615,
+          "excerpt_text_start": 66
+        },
+        {
+          "action": 9,
+          "excerpt": "By the middle of the third term, first-year students must notify the Registrar’s Office of their selection of an option in engineering, humanities, social sciences, or science to be pursued in subsequent years.",
+          "action_hash_sha256": "ad7721450c5127c69f1089047c370ee0fe26ecf8864de49ea0ccdc1dbb24b8a2",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-009.json",
+          "raw_log_sha256": "21fed1ee2faf2bdd2251e2b271627304acf40fcae08057018bfb492b2521a303",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.catalog.caltech.edu/current/information-for-undergraduate-students/graduation-requirements-all-options/appendix-a/"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.catalog.caltech.edu/current/information-for-undergraduate-students/graduation-requirements-all-options/appendix-a/",
+          "fetched_at": "2026-10-07T16:22:21.936494+00:00",
+          "content_sha256": "ed5cf9647fad4b9c70fb147d3713b7e20f2ccd4b39bf01b880f230efc46b331b",
+          "text_sha256": "be5a0f7711e1d2daa25438a930c5f5f0f1859b9d264c3ba11caa5b92b5c9eba9",
+          "text_total_chars": 2615,
+          "excerpt_text_start": 497
+        },
+        {
+          "action": 9,
+          "excerpt": "Undergraduate students may be allowed to major in two options for the Bachelor of Science degree.",
+          "action_hash_sha256": "ad7721450c5127c69f1089047c370ee0fe26ecf8864de49ea0ccdc1dbb24b8a2",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-009.json",
+          "raw_log_sha256": "21fed1ee2faf2bdd2251e2b271627304acf40fcae08057018bfb492b2521a303",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.catalog.caltech.edu/current/information-for-undergraduate-students/graduation-requirements-all-options/appendix-a/"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.catalog.caltech.edu/current/information-for-undergraduate-students/graduation-requirements-all-options/appendix-a/",
+          "fetched_at": "2026-10-07T16:22:21.936494+00:00",
+          "content_sha256": "ed5cf9647fad4b9c70fb147d3713b7e20f2ccd4b39bf01b880f230efc46b331b",
+          "text_sha256": "be5a0f7711e1d2daa25438a930c5f5f0f1859b9d264c3ba11caa5b92b5c9eba9",
+          "text_total_chars": 2615,
+          "excerpt_text_start": 1622
+        },
+        {
+          "action": 16,
+          "excerpt": "Caltech is located in\n \nPasadena, California",
+          "action_hash_sha256": "19216f2fa06084e42e60579104dc0e943c7d17a400eaad0147079ceb777d01d2",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-016.json",
+          "raw_log_sha256": "d21ba7050cf6f4042b6d1f0883c603fcbabf29b219fed280492652a329a7439c",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/why-caltech/about-caltech"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.admissions.caltech.edu/why-caltech/about-caltech",
+          "fetched_at": "2026-10-07T16:24:15.237026+00:00",
+          "content_sha256": "8d4bd5faf6d6c18018506887ca7e80184bae7869f14342e7a00dcfef5fcf51d7",
+          "text_sha256": "10ddd26e6b45b8bee8ac3801ec21ea1a13d0011f686c97a369a059c3d5dc4fa7",
+          "text_total_chars": 2927,
+          "excerpt_text_start": 2067
+        },
+        {
+          "action": 2,
+          "excerpt": "We admit students to start in the fall term",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 2628
+        }
+      ]
+    },
+    {
+      "id": "Q1",
+      "status": "confirmed",
+      "answer_ru": "International applicants: IELTS минимум7 overall и7 в каждой area; DET130 total и130 в каждой area. TOEFL до21 января2026:100 total/25 каждая area; TOEFL начиная21 января2026:5 total/5 каждая area. Тест нужно сдать до application deadline. Исключения: native language English либо English как primary language of instruction в secondary school; для non-native English speaker из English-medium school экзамен всё равно strongly recommended. Kazakhstan citizenship сам по себе не освобождает.",
+      "scope": "Страница international applicants с таблицей дедлайнов2026/2027; school/native-language exemptions зависят от конкретного абитуриента.",
+      "unknown_reasons": [],
+      "evidence": [
+        {
+          "action": 2,
+          "excerpt": "English Proficiency Exam scores are required of all international applicants \nunless\n 1) your native language is English \nor\n 2) English is the primary language of instruction in your secondary school.",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Страница international applicants с таблицей дедлайнов2026/2027; school/native-language exemptions зависят от конкретного абитуриента.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 7060
+        },
+        {
+          "action": 2,
+          "excerpt": "The English proficiency exam must be taken\n \nprior\n to the application deadline.",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Страница international applicants с таблицей дедлайнов2026/2027; school/native-language exemptions зависят от конкретного абитуриента.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 7502
+        },
+        {
+          "action": 2,
+          "excerpt": "IELTS\n \n\n 7\n \n\n 7",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Страница international applicants с таблицей дедлайнов2026/2027; school/native-language exemptions зависят от конкретного абитуриента.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 7637
+        },
+        {
+          "action": 2,
+          "excerpt": "TOEFL (taken before Jan. 21, 2026)\n \n\n 100\n \n\n 25",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Страница international applicants с таблицей дедлайнов2026/2027; school/native-language exemptions зависят от конкретного абитуриента.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 7659
+        },
+        {
+          "action": 2,
+          "excerpt": "TOEFL (taken on or after Jan. 21, 2026)\n \n\n 5\n \n\n 5",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Страница international applicants с таблицей дедлайнов2026/2027; school/native-language exemptions зависят от конкретного абитуриента.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 7713
+        },
+        {
+          "action": 2,
+          "excerpt": "Duolingo English Test\n \n\n 130\n \n\n 130",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Страница international applicants с таблицей дедлайнов2026/2027; school/native-language exemptions зависят от конкретного абитуриента.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 7769
+        }
+      ]
+    },
+    {
+      "id": "Q2",
+      "status": "partial",
+      "answer_ru": "При подаче в последнем классе secondary school требуются official transcript прямо из школы, оригинал и English translation при неанглийском языке; оценки не нужно конвертировать в американскую систему. Подготовка: 4 года maths, включая calculus, год physics, год chemistry, 4 года English, 2 года history/social sciences; biology рекомендована. SAT либо ACT требуется для fall 2027; ACT writing/science optional, SAT/ACT cut-off не установлен. Точного Kazakhstan school-leaving credential/minimum GPA для поступления не найдено. GPA 1.9 на CS page относится к продолжению уже начатой учёбы, а не к порогу поступления.",
+      "unknown_reasons": [
+        "Нет точного списка допустимых казахстанских школьных документов/минимального GPA в прочитанных источниках.",
+        "Порог 1.9 в current CS catalogue — правило продолжения учёбы, не поступления; не перенесён на 2027."
+      ],
+      "evidence": [
+        {
+          "action": 2,
+          "excerpt": "We require official documents (transcripts) that note your class titles, grades, and predicted grades/scores (if applicable); the transcript must be sent to us directly from your school.",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 3603
+        },
+        {
+          "action": 2,
+          "excerpt": "Caltech admissions officers are trained to understand your education system, so there is no need to translate or convert grades to the American system.",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 3999
+        },
+        {
+          "action": 2,
+          "excerpt": "Four years of math, including one year of calculus",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 1304
+        },
+        {
+          "action": 11,
+          "excerpt": "Caltech requires first-year applicants to submit either the SAT or the ACT for admissions to Caltech. For fall 2027 applicants, Caltech does not require the ACT writing or science subscores.",
+          "action_hash_sha256": "c7f2a1ed27430379ea5e4daecd199c8f6ee64bc41891610592ef4eb385de4935",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-011.json",
+          "raw_log_sha256": "9c2db1b91edc1621ca08eea48c0d0d364859b163323b100ef7bf26ae4f628d53",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/standardized-tests"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/standardized-tests",
+          "fetched_at": "2026-10-07T16:23:02.318795+00:00",
+          "content_sha256": "cf6229db66e86dc05b4f196513d06a1da8b15430e51a2205b7a680dbf0b5d071",
+          "text_sha256": "7e0ce3acea9f5043da7e86c001359a71cce9e3913ab6e89ac23873323beec417",
+          "text_total_chars": 7432,
+          "excerpt_text_start": 206
+        },
+        {
+          "action": 11,
+          "excerpt": "Very intentionally, Caltech faculty did not decide to require a minimum score for the SAT or ACT",
+          "action_hash_sha256": "c7f2a1ed27430379ea5e4daecd199c8f6ee64bc41891610592ef4eb385de4935",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-011.json",
+          "raw_log_sha256": "9c2db1b91edc1621ca08eea48c0d0d364859b163323b100ef7bf26ae4f628d53",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/standardized-tests"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/standardized-tests",
+          "fetched_at": "2026-10-07T16:23:02.318795+00:00",
+          "content_sha256": "cf6229db66e86dc05b4f196513d06a1da8b15430e51a2205b7a680dbf0b5d071",
+          "text_sha256": "7e0ce3acea9f5043da7e86c001359a71cce9e3913ab6e89ac23873323beec417",
+          "text_total_chars": 7432,
+          "excerpt_text_start": 4408
+        }
+      ]
+    },
+    {
+      "id": "Q3",
+      "status": "confirmed",
+      "answer_ru": "Fall 2027 first-year: REA application 1 ноября 2026, required/supplemental materials до 6 ноября 2026; SAT/ACT before 30 ноября 2026. Regular Decision application 4 января 2027, materials до 10 января 2027; SAT/ACT before 31 декабря 2026. English proficiency exam до application deadline. Срок ответа на offer — 1 мая 2027. Один RD абзац на deadline page пишет May 1, 2026; international applicants и другие места той же deadline page пишут 2027. Конфликт сохранён.",
+      "scope": "First-year admission fall2027; это не aid application deadlines.",
+      "unknown_reasons": [],
+      "source_conflicts": [
+        "Один RD paragraph указывает replyMay1,2026, хотя currenttable и повторные sections указываютMay1,2027."
+      ],
+      "evidence": [
+        {
+          "action": 2,
+          "excerpt": "Restrictive Early Action deadline\n \n\n November 1, 2026",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "First-year admission fall2027; это не aid application deadlines.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 3236
+        },
+        {
+          "action": 2,
+          "excerpt": "Regular Decision deadline\n \n\n January 4, 2027",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "First-year admission fall2027; это не aid application deadlines.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 3370
+        },
+        {
+          "action": 3,
+          "excerpt": "Although REA applications are due November 1, you will have until November 6 to submit all required and supplemental materials and standardized testing must be completed before November 30.",
+          "action_hash_sha256": "ed8d30b041b6373ea445680d9458b8b2830f7ba0ac4c1a1f1a52c06829a8275b",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-003.json",
+          "raw_log_sha256": "d01025f1be453602eda11abaae883448419806767afd05e93003d935c1cbf752",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/deadlines"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "First-year admission fall2027; это не aid application deadlines.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/deadlines",
+          "fetched_at": "2026-10-07T16:20:39.533046+00:00",
+          "content_sha256": "e1923579e680a340c26b2a04fc272ac85c3da03f5455c5d55221ee6e62fff618",
+          "text_sha256": "df11216e67c0f590ad97c181dcc8a851809743855a518661a7b9528d30000d86",
+          "text_total_chars": 10747,
+          "excerpt_text_start": 943
+        },
+        {
+          "action": 3,
+          "excerpt": "Although RD applications are due January 4, you will have until January 10 to submit all required and supplemental materials and standardized testing must be completed before December 31, 2026.",
+          "action_hash_sha256": "ed8d30b041b6373ea445680d9458b8b2830f7ba0ac4c1a1f1a52c06829a8275b",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-003.json",
+          "raw_log_sha256": "d01025f1be453602eda11abaae883448419806767afd05e93003d935c1cbf752",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/deadlines"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "First-year admission fall2027; это не aid application deadlines.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/deadlines",
+          "fetched_at": "2026-10-07T16:20:39.533046+00:00",
+          "content_sha256": "e1923579e680a340c26b2a04fc272ac85c3da03f5455c5d55221ee6e62fff618",
+          "text_sha256": "df11216e67c0f590ad97c181dcc8a851809743855a518661a7b9528d30000d86",
+          "text_total_chars": 10747,
+          "excerpt_text_start": 9430
+        },
+        {
+          "action": 2,
+          "excerpt": "Restrictive Early Action and Regular Decision admit reply deadline\n \n\n May 1, 2027",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "First-year admission fall2027; это не aid application deadlines.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 3475
+        },
+        {
+          "action": 3,
+          "excerpt": "Admitted students will then have until May 1, 2026 to decide if they will accept Caltech's offer of admission.",
+          "action_hash_sha256": "ed8d30b041b6373ea445680d9458b8b2830f7ba0ac4c1a1f1a52c06829a8275b",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-003.json",
+          "raw_log_sha256": "d01025f1be453602eda11abaae883448419806767afd05e93003d935c1cbf752",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/deadlines"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "First-year admission fall2027; это не aid application deadlines.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/deadlines",
+          "fetched_at": "2026-10-07T16:20:39.533046+00:00",
+          "content_sha256": "e1923579e680a340c26b2a04fc272ac85c3da03f5455c5d55221ee6e62fff618",
+          "text_sha256": "df11216e67c0f590ad97c181dcc8a851809743855a518661a7b9528d30000d86",
+          "text_total_chars": 10747,
+          "excerpt_text_start": 9721
+        }
+      ]
+    },
+    {
+      "id": "Q4",
+      "status": "unknown",
+      "answer_ru": "Tuition и полный cost of attendance для 2027–28 неизвестны. Официальная costs page явно относится к 2026–27: девять месяцев, full-time undergraduate, Caltech-owned housing; данные этого года не перенесены на 2027–28. Указаны отдельные direct/indirect costs, страховка и entering orientation fee, поэтому tuition не равна полному бюджету. Airfare из Казахстана не включён в опубликованное правило travel allowance для другой группы.",
+      "unknown_reasons": [
+        "Официальная cost page только за 2026–27; точной суммы 2027–28 в USD нет.",
+        "Нет конкретного бюджета 2027–28 для international Kazakhstan entrant, включая применимые health/travel costs."
+      ],
+      "evidence": [
+        {
+          "action": 7,
+          "excerpt": "Enrolled full-time in the 2026-27 school year",
+          "action_hash_sha256": "a6499add12f2e67811ea914c361df28c59eabec2ef1bbefc45953ad466c49824",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-007.json",
+          "raw_log_sha256": "1664a2e9428d83128154869bff837badf2b1fef256533af7992e2218885b1c60",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.finaid.caltech.edu/costs"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.finaid.caltech.edu/costs",
+          "fetched_at": "2026-10-07T16:21:55.345799+00:00",
+          "content_sha256": "2a4de8da07f0ad3a3d3e447c07ba0ec515f84994896870a406991796877f250a",
+          "text_sha256": "2d8ee96736de85e43726b9d3a0d9b349b4df4940c10914558214efdfee762635",
+          "text_total_chars": 2862,
+          "excerpt_text_start": 359
+        },
+        {
+          "action": 7,
+          "excerpt": "The charts below list the estimated nine-month, full-time cost of attendance budgets",
+          "action_hash_sha256": "a6499add12f2e67811ea914c361df28c59eabec2ef1bbefc45953ad466c49824",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-007.json",
+          "raw_log_sha256": "1664a2e9428d83128154869bff837badf2b1fef256533af7992e2218885b1c60",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.finaid.caltech.edu/costs"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.finaid.caltech.edu/costs",
+          "fetched_at": "2026-10-07T16:21:55.345799+00:00",
+          "content_sha256": "2a4de8da07f0ad3a3d3e447c07ba0ec515f84994896870a406991796877f250a",
+          "text_sha256": "2d8ee96736de85e43726b9d3a0d9b349b4df4940c10914558214efdfee762635",
+          "text_total_chars": 2862,
+          "excerpt_text_start": 209
+        },
+        {
+          "action": 7,
+          "excerpt": "Fees do not include the \nCaltech Student Health Insurance Plan\n.",
+          "action_hash_sha256": "a6499add12f2e67811ea914c361df28c59eabec2ef1bbefc45953ad466c49824",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-007.json",
+          "raw_log_sha256": "1664a2e9428d83128154869bff837badf2b1fef256533af7992e2218885b1c60",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.finaid.caltech.edu/costs"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.finaid.caltech.edu/costs",
+          "fetched_at": "2026-10-07T16:21:55.345799+00:00",
+          "content_sha256": "2a4de8da07f0ad3a3d3e447c07ba0ec515f84994896870a406991796877f250a",
+          "text_sha256": "2d8ee96736de85e43726b9d3a0d9b349b4df4940c10914558214efdfee762635",
+          "text_total_chars": 2862,
+          "excerpt_text_start": 1723
+        },
+        {
+          "action": 7,
+          "excerpt": "All entering undergraduate students are charged a one-time, $600 Orientation Fee in addition to the mandatory fees applicable to all undergraduate students.",
+          "action_hash_sha256": "a6499add12f2e67811ea914c361df28c59eabec2ef1bbefc45953ad466c49824",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-007.json",
+          "raw_log_sha256": "1664a2e9428d83128154869bff837badf2b1fef256533af7992e2218885b1c60",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.finaid.caltech.edu/costs"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.finaid.caltech.edu/costs",
+          "fetched_at": "2026-10-07T16:21:55.345799+00:00",
+          "content_sha256": "2a4de8da07f0ad3a3d3e447c07ba0ec515f84994896870a406991796877f250a",
+          "text_sha256": "2d8ee96736de85e43726b9d3a0d9b349b4df4940c10914558214efdfee762635",
+          "text_total_chars": 2862,
+          "excerpt_text_start": 2321
+        },
+        {
+          "action": 7,
+          "excerpt": "for U.S. Citizens or eligible non-citizens\n who reside in the US, associated US territories, Canada, or Mexico.",
+          "action_hash_sha256": "a6499add12f2e67811ea914c361df28c59eabec2ef1bbefc45953ad466c49824",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-007.json",
+          "raw_log_sha256": "1664a2e9428d83128154869bff837badf2b1fef256533af7992e2218885b1c60",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.finaid.caltech.edu/costs"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.finaid.caltech.edu/costs",
+          "fetched_at": "2026-10-07T16:21:55.345799+00:00",
+          "content_sha256": "2a4de8da07f0ad3a3d3e447c07ba0ec515f84994896870a406991796877f250a",
+          "text_sha256": "2d8ee96736de85e43726b9d3a0d9b349b4df4940c10914558214efdfee762635",
+          "text_total_chars": 2862,
+          "excerpt_text_start": 2751
+        }
+      ]
+    },
+    {
+      "id": "Q5",
+      "status": "partial",
+      "answer_ru": "Caltech не выдаёт merit scholarships. Поддержка основана на demonstrated financial need и может сочетать grants/scholarships, work-study и loans. Для admitted international applicant опубликовано покрытие полной подтверждённой нуждаемости с учётом cost of attendance, включая tuition, housing, dining, books, fees и personal expenses. Это не фиксированная стипендия и не обещание бесплатного обучения любому абитуриенту: оценка учитывает вклад семьи. Точные суммы 2027–28 и financial aid priority deadlines неизвестны: официальные REA/RD aid pages всё ещё относятся к fall 2026.",
+      "unknown_reasons": [
+        "Aid зависит от индивидуальной оценки семьи, admission и своевременной подачи; персональная сумма без данных неизвестна.",
+        "Сроки и формы на прочитанных aid REA/RD страницах для fall 2026; не перенесены на fall 2027."
+      ],
+      "evidence": [
+        {
+          "action": 5,
+          "excerpt": "Caltech does not award merit scholarships. Financial aid is need-based",
+          "action_hash_sha256": "cf032d64eb152c7ed3651692d6790732a96be5c00265a50724563b45e519ed7d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-005.json",
+          "raw_log_sha256": "64697a7d502d2602f1a5edc1f1212dc16ffd810d2fea1fcbe110eb9c60c6d480",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/afford"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.admissions.caltech.edu/afford",
+          "fetched_at": "2026-10-07T16:21:10.712827+00:00",
+          "content_sha256": "d8f21f2f25ca910e3210782b80600aa14ed7a4a58cb4ee26aef19768776f9340",
+          "text_sha256": "f2ef9495fb359d53e559fe98cddc4f851573e1c9b440064e9dbb096f77794065",
+          "text_total_chars": 3273,
+          "excerpt_text_start": 1055
+        },
+        {
+          "action": 5,
+          "excerpt": "admitted Caltech students who applied for financial aid will receive scholarships and grants (which are gifts and do not have to be paid back), work-study and loans to meet their level of financial need.",
+          "action_hash_sha256": "cf032d64eb152c7ed3651692d6790732a96be5c00265a50724563b45e519ed7d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-005.json",
+          "raw_log_sha256": "64697a7d502d2602f1a5edc1f1212dc16ffd810d2fea1fcbe110eb9c60c6d480",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/afford"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.admissions.caltech.edu/afford",
+          "fetched_at": "2026-10-07T16:21:10.712827+00:00",
+          "content_sha256": "d8f21f2f25ca910e3210782b80600aa14ed7a4a58cb4ee26aef19768776f9340",
+          "text_sha256": "f2ef9495fb359d53e559fe98cddc4f851573e1c9b440064e9dbb096f77794065",
+          "text_total_chars": 3273,
+          "excerpt_text_start": 851
+        },
+        {
+          "action": 2,
+          "excerpt": "Financial aid covers the \nfull cost of attendance\n, including tuition, housing, dining, books, fees, and personal expenses.",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 6671
+        },
+        {
+          "action": 12,
+          "excerpt": "Use this page if you are applying to Caltech for admission as a first-year for entry in fall 2026",
+          "action_hash_sha256": "05f3054aa7fea3a3fdf0ea25c6e38ba1138b1ff849fba681fa3e1b09945da8b5",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-012.json",
+          "raw_log_sha256": "a2ede04ac60bd2cd60771c9186078c5b9939682b9de82d55bdcac540df2592e9",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.finaid.caltech.edu/applying/how/newinternationalrea"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.finaid.caltech.edu/applying/how/newinternationalrea",
+          "fetched_at": "2026-10-07T16:23:16.449698+00:00",
+          "content_sha256": "c74fbe1915a6695710097c75d9f8aa3dc95e048d9347eb52085d4b8dd06ae335",
+          "text_sha256": "33cb78ba75187a5a9ee3c660a6e3fff54ed12e21b2599262563d0a3bcd4b533a",
+          "text_total_chars": 1876,
+          "excerpt_text_start": 812
+        },
+        {
+          "action": 13,
+          "excerpt": "Use this page if you are applying to Caltech for admission as a first-year for entry in fall 2026",
+          "action_hash_sha256": "f7796d5f1ef2939aab414bdeaea7c7b6811bca92a5d80472535b058369733448",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-013.json",
+          "raw_log_sha256": "0997902cfbe502d71c4cee600ec4b9b042d61be4b7ec621ed55ca958c41b1418",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.finaid.caltech.edu/applying/how/newinternationalrd"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Claim limited by answer and unknown_reasons; source year is not widened.",
+          "official_url": "https://www.finaid.caltech.edu/applying/how/newinternationalrd",
+          "fetched_at": "2026-10-07T16:23:28.577891+00:00",
+          "content_sha256": "ec520bd43b4f708602be3cb2f1e367a8d909931a86f3a85104724a5813485afe",
+          "text_sha256": "c24c31e1d373fb009e2e753bfd78da775b76aa21892b5cbe1268f8d91e1a5bfe",
+          "text_total_chars": 1821,
+          "excerpt_text_start": 796
+        }
+      ]
+    },
+    {
+      "id": "Q6",
+      "status": "confirmed",
+      "answer_ru": "Обычный гражданин Казахстана, поступающий из зарубежной secondary school и не имеющий статуса US citizen/PR, относится к international applicant. International first-year students могут запрашивать need-based aid; Caltech учитывает финансовую нужду при приёме, то есть need-aware. Намерение получить aid нужно указать при admission и запросить помощь на первый год; если не подал или не получил aid в первый год, последующие запросы обычно невозможны. International transfer/3-2 aid недоступно; Federal Student Aid международным студентам недоступно. Право запросить поддержку не равно её присуждению.",
+      "scope": "Общие правила для international first-year applicants на странице с fall 2027 admission deadlines; точные priority deadlines 2027–28 для aid ещё не подтверждены.",
+      "unknown_reasons": [],
+      "evidence": [
+        {
+          "action": 2,
+          "excerpt": "Caltech defines international applicants as students who are non-U.S. citizens or permanent residents attending secondary school outside of the United States.",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Общие правила для international first-year applicants на странице с fall 2027 admission deadlines; точные priority deadlines 2027–28 для aid ещё не подтверждены.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 353
+        },
+        {
+          "action": 2,
+          "excerpt": "We are need-aware for international students because the total amount of financial aid funds for international students is limited.",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Общие правила для international first-year applicants на странице с fall 2027 admission deadlines; точные priority deadlines 2027–28 для aid ещё не подтверждены.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 5788
+        },
+        {
+          "action": 2,
+          "excerpt": "you must apply for it at the time that you apply for admission.",
+          "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+          "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Общие правила для international first-year applicants на странице с fall 2027 admission deadlines; точные priority deadlines 2027–28 для aid ещё не подтверждены.",
+          "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+          "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+          "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+          "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+          "text_total_chars": 10570,
+          "excerpt_text_start": 6177
+        },
+        {
+          "action": 6,
+          "excerpt": "If you are applying for aid as an international student, you must disclose that you are planning to apply for financial aid on your admissions application.",
+          "action_hash_sha256": "704e1fbe7e83a5f9afa0a1b31c46fd80a758c4db5bcc9f472b378e9dd92accce",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-006.json",
+          "raw_log_sha256": "3424038062d1e7414d01b88c3762042c6942c792ff95caad51da28972785e914",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.finaid.caltech.edu/applying/international-students"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Общие правила для international first-year applicants на странице с fall 2027 admission deadlines; точные priority deadlines 2027–28 для aid ещё не подтверждены.",
+          "official_url": "https://www.finaid.caltech.edu/applying/international-students",
+          "fetched_at": "2026-10-07T16:21:32.383153+00:00",
+          "content_sha256": "9092949446e2825c95d2fa104c16345dfac248125e033361043297da814a24fa",
+          "text_sha256": "bae291183a2d2f0e5a3ac9885a663d959bdd1f967849195ad56475e74e941334",
+          "text_total_chars": 2815,
+          "excerpt_text_start": 1661
+        },
+        {
+          "action": 6,
+          "excerpt": "There is no financial aid available for international students who apply for admission as a transfer or 3/2.",
+          "action_hash_sha256": "704e1fbe7e83a5f9afa0a1b31c46fd80a758c4db5bcc9f472b378e9dd92accce",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-006.json",
+          "raw_log_sha256": "3424038062d1e7414d01b88c3762042c6942c792ff95caad51da28972785e914",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.finaid.caltech.edu/applying/international-students"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Общие правила для international first-year applicants на странице с fall 2027 admission deadlines; точные priority deadlines 2027–28 для aid ещё не подтверждены.",
+          "official_url": "https://www.finaid.caltech.edu/applying/international-students",
+          "fetched_at": "2026-10-07T16:21:32.383153+00:00",
+          "content_sha256": "9092949446e2825c95d2fa104c16345dfac248125e033361043297da814a24fa",
+          "text_sha256": "bae291183a2d2f0e5a3ac9885a663d959bdd1f967849195ad56475e74e941334",
+          "text_total_chars": 2815,
+          "excerpt_text_start": 1552
+        },
+        {
+          "action": 6,
+          "excerpt": "International students are not eligible for Federal Student Aid funds.",
+          "action_hash_sha256": "704e1fbe7e83a5f9afa0a1b31c46fd80a758c4db5bcc9f472b378e9dd92accce",
+          "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-006.json",
+          "raw_log_sha256": "3424038062d1e7414d01b88c3762042c6942c792ff95caad51da28972785e914",
+          "tool": "fetcher",
+          "request": {
+            "tool": "fetcher",
+            "url": "https://www.finaid.caltech.edu/applying/international-students"
+          },
+          "outcome": "ok",
+          "outcome_status": "success",
+          "http_status": 200,
+          "scope": "Общие правила для international first-year applicants на странице с fall 2027 admission deadlines; точные priority deadlines 2027–28 для aid ещё не подтверждены.",
+          "official_url": "https://www.finaid.caltech.edu/applying/international-students",
+          "fetched_at": "2026-10-07T16:21:32.383153+00:00",
+          "content_sha256": "9092949446e2825c95d2fa104c16345dfac248125e033361043297da814a24fa",
+          "text_sha256": "bae291183a2d2f0e5a3ac9885a663d959bdd1f967849195ad56475e74e941334",
+          "text_total_chars": 2815,
+          "excerpt_text_start": 1837
+        }
+      ]
+    }
+  ],
+  "saved_at": "2026-10-07T16:28:09.067286+00:00",
+  "expert": "expert_b",
+  "method": "Independent collaborative expert. Existing controller.run and production Fetcher only; Exa is discovery only. No gold, algorithm outputs, or other expert evidence read. No source/git/docs edits.",
+  "budget": {
+    "fetcher_calls": 12,
+    "elapsed_ms": 49668,
+    "search_queries": 4,
+    "stop_reason": null,
+    "next_log_number": 17,
+    "active_ms_including_setup": 49799,
+    "max_fetcher_calls": 60,
+    "max_search_queries": 6,
+    "max_active_ms": 120000,
+    "first_action_at": "2026-10-07T16:20:09.987093+00:00",
+    "model_thinking_between_actions": "excluded",
+    "algorithm_comparison_caveat": "Algorithm120s includes setup; controller timing is separately reported. Expert active_ms_including_setup measures controller.run including its setup, excluding separate process import/model thinking."
+  },
+  "source_catalog": [
+    {
+      "action": 2,
+      "action_hash_sha256": "909e73677320e283f9d5243b079a029ef6acd0293e77769a1936ba6e0ad53d9d",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-002.json",
+      "raw_log_sha256": "cbbb57f0768f6ee9ade3c2168fae690d3beedfa0233e6c324ad3f0015ad6f9d8",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": 200,
+      "scope": "official Fetcher content",
+      "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+      "fetched_at": "2026-10-07T16:20:22.842498+00:00",
+      "content_sha256": "5b7d6a5942f8c45ecc7b38bb14eea770bad8bb19393a211dcd0e2844597ca5cb",
+      "text_sha256": "e7de42034a4d9b7c8a3e6d17c149e8f583ba86f70a9e9a042952a6911de23843",
+      "text_total_chars": 10570
+    },
+    {
+      "action": 3,
+      "action_hash_sha256": "ed8d30b041b6373ea445680d9458b8b2830f7ba0ac4c1a1f1a52c06829a8275b",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-003.json",
+      "raw_log_sha256": "d01025f1be453602eda11abaae883448419806767afd05e93003d935c1cbf752",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/deadlines"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": 200,
+      "scope": "official Fetcher content",
+      "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/deadlines",
+      "fetched_at": "2026-10-07T16:20:39.533046+00:00",
+      "content_sha256": "e1923579e680a340c26b2a04fc272ac85c3da03f5455c5d55221ee6e62fff618",
+      "text_sha256": "df11216e67c0f590ad97c181dcc8a851809743855a518661a7b9528d30000d86",
+      "text_total_chars": 10747
+    },
+    {
+      "action": 5,
+      "action_hash_sha256": "cf032d64eb152c7ed3651692d6790732a96be5c00265a50724563b45e519ed7d",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-005.json",
+      "raw_log_sha256": "64697a7d502d2602f1a5edc1f1212dc16ffd810d2fea1fcbe110eb9c60c6d480",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.admissions.caltech.edu/afford"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": 200,
+      "scope": "official Fetcher content",
+      "official_url": "https://www.admissions.caltech.edu/afford",
+      "fetched_at": "2026-10-07T16:21:10.712827+00:00",
+      "content_sha256": "d8f21f2f25ca910e3210782b80600aa14ed7a4a58cb4ee26aef19768776f9340",
+      "text_sha256": "f2ef9495fb359d53e559fe98cddc4f851573e1c9b440064e9dbb096f77794065",
+      "text_total_chars": 3273
+    },
+    {
+      "action": 6,
+      "action_hash_sha256": "704e1fbe7e83a5f9afa0a1b31c46fd80a758c4db5bcc9f472b378e9dd92accce",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-006.json",
+      "raw_log_sha256": "3424038062d1e7414d01b88c3762042c6942c792ff95caad51da28972785e914",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.finaid.caltech.edu/applying/international-students"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": 200,
+      "scope": "official Fetcher content",
+      "official_url": "https://www.finaid.caltech.edu/applying/international-students",
+      "fetched_at": "2026-10-07T16:21:32.383153+00:00",
+      "content_sha256": "9092949446e2825c95d2fa104c16345dfac248125e033361043297da814a24fa",
+      "text_sha256": "bae291183a2d2f0e5a3ac9885a663d959bdd1f967849195ad56475e74e941334",
+      "text_total_chars": 2815
+    },
+    {
+      "action": 7,
+      "action_hash_sha256": "a6499add12f2e67811ea914c361df28c59eabec2ef1bbefc45953ad466c49824",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-007.json",
+      "raw_log_sha256": "1664a2e9428d83128154869bff837badf2b1fef256533af7992e2218885b1c60",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.finaid.caltech.edu/costs"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": 200,
+      "scope": "official Fetcher content",
+      "official_url": "https://www.finaid.caltech.edu/costs",
+      "fetched_at": "2026-10-07T16:21:55.345799+00:00",
+      "content_sha256": "2a4de8da07f0ad3a3d3e447c07ba0ec515f84994896870a406991796877f250a",
+      "text_sha256": "2d8ee96736de85e43726b9d3a0d9b349b4df4940c10914558214efdfee762635",
+      "text_total_chars": 2862
+    },
+    {
+      "action": 8,
+      "action_hash_sha256": "458930850a95fdbe5ad49fd463ed9f0c9fa17fa42754ad3a33bdc1d61f38dbda",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-008.json",
+      "raw_log_sha256": "89479fb9d87d21325da08b93a6df667f13b41e29d6ed1e53333b49b58616701f",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.catalog.caltech.edu/current/information-for-undergraduate-students/graduation-requirements-all-options/computer-science-option-and-minor-cs/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": 200,
+      "scope": "official Fetcher content",
+      "official_url": "https://www.catalog.caltech.edu/current/information-for-undergraduate-students/graduation-requirements-all-options/computer-science-option-and-minor-cs/",
+      "fetched_at": "2026-10-07T16:22:12.101722+00:00",
+      "content_sha256": "03f09d8ca0ac912946af6921e2b70f102ce32131e46d37019204d04a9f232db9",
+      "text_sha256": "b4942b1843c73366cd23d5fe4b94702d478b3b6cc3cc1cbe97eb1a64feaae7de",
+      "text_total_chars": 7061
+    },
+    {
+      "action": 9,
+      "action_hash_sha256": "ad7721450c5127c69f1089047c370ee0fe26ecf8864de49ea0ccdc1dbb24b8a2",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-009.json",
+      "raw_log_sha256": "21fed1ee2faf2bdd2251e2b271627304acf40fcae08057018bfb492b2521a303",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.catalog.caltech.edu/current/information-for-undergraduate-students/graduation-requirements-all-options/appendix-a/"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": 200,
+      "scope": "official Fetcher content",
+      "official_url": "https://www.catalog.caltech.edu/current/information-for-undergraduate-students/graduation-requirements-all-options/appendix-a/",
+      "fetched_at": "2026-10-07T16:22:21.936494+00:00",
+      "content_sha256": "ed5cf9647fad4b9c70fb147d3713b7e20f2ccd4b39bf01b880f230efc46b331b",
+      "text_sha256": "be5a0f7711e1d2daa25438a930c5f5f0f1859b9d264c3ba11caa5b92b5c9eba9",
+      "text_total_chars": 2615
+    },
+    {
+      "action": 10,
+      "action_hash_sha256": "6e7e6ae05e2d5be4721ec806a5614cdae71e3964c94d649fa6b07cbe44c74b84",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-010.json",
+      "raw_log_sha256": "90e588764356e90ac2f33e6d008eeeaadcc1ac20b6d148656a80a3793460dce6",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.cms.caltech.edu/academics/ugrad_cs"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": 200,
+      "scope": "official Fetcher content",
+      "official_url": "https://www.cms.caltech.edu/academics/ugrad/ugrad_cs",
+      "fetched_at": "2026-10-07T16:22:46.122447+00:00",
+      "content_sha256": "5a50faf2f64e8bef18cd0c3039968b9b4a133c9aad83f7dddcebd550276f7350",
+      "text_sha256": "5df3dd13acd667fc4384cd5a1930a371a9e4c9df375688d5078d1e1ff2eca1d1",
+      "text_total_chars": 3779
+    },
+    {
+      "action": 11,
+      "action_hash_sha256": "c7f2a1ed27430379ea5e4daecd199c8f6ee64bc41891610592ef4eb385de4935",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-011.json",
+      "raw_log_sha256": "9c2db1b91edc1621ca08eea48c0d0d364859b163323b100ef7bf26ae4f628d53",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/standardized-tests"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": 200,
+      "scope": "official Fetcher content",
+      "official_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/standardized-tests",
+      "fetched_at": "2026-10-07T16:23:02.318795+00:00",
+      "content_sha256": "cf6229db66e86dc05b4f196513d06a1da8b15430e51a2205b7a680dbf0b5d071",
+      "text_sha256": "7e0ce3acea9f5043da7e86c001359a71cce9e3913ab6e89ac23873323beec417",
+      "text_total_chars": 7432
+    },
+    {
+      "action": 12,
+      "action_hash_sha256": "05f3054aa7fea3a3fdf0ea25c6e38ba1138b1ff849fba681fa3e1b09945da8b5",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-012.json",
+      "raw_log_sha256": "a2ede04ac60bd2cd60771c9186078c5b9939682b9de82d55bdcac540df2592e9",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.finaid.caltech.edu/applying/how/newinternationalrea"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": 200,
+      "scope": "official Fetcher content",
+      "official_url": "https://www.finaid.caltech.edu/applying/how/newinternationalrea",
+      "fetched_at": "2026-10-07T16:23:16.449698+00:00",
+      "content_sha256": "c74fbe1915a6695710097c75d9f8aa3dc95e048d9347eb52085d4b8dd06ae335",
+      "text_sha256": "33cb78ba75187a5a9ee3c660a6e3fff54ed12e21b2599262563d0a3bcd4b533a",
+      "text_total_chars": 1876
+    },
+    {
+      "action": 13,
+      "action_hash_sha256": "f7796d5f1ef2939aab414bdeaea7c7b6811bca92a5d80472535b058369733448",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-013.json",
+      "raw_log_sha256": "0997902cfbe502d71c4cee600ec4b9b042d61be4b7ec621ed55ca958c41b1418",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.finaid.caltech.edu/applying/how/newinternationalrd"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": 200,
+      "scope": "official Fetcher content",
+      "official_url": "https://www.finaid.caltech.edu/applying/how/newinternationalrd",
+      "fetched_at": "2026-10-07T16:23:28.577891+00:00",
+      "content_sha256": "ec520bd43b4f708602be3cb2f1e367a8d909931a86f3a85104724a5813485afe",
+      "text_sha256": "c24c31e1d373fb009e2e753bfd78da775b76aa21892b5cbe1268f8d91e1a5bfe",
+      "text_total_chars": 1821
+    },
+    {
+      "action": 16,
+      "action_hash_sha256": "19216f2fa06084e42e60579104dc0e943c7d17a400eaad0147079ceb777d01d2",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-016.json",
+      "raw_log_sha256": "d21ba7050cf6f4042b6d1f0883c603fcbabf29b219fed280492652a329a7439c",
+      "tool": "fetcher",
+      "request": {
+        "tool": "fetcher",
+        "url": "https://www.admissions.caltech.edu/why-caltech/about-caltech"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": 200,
+      "scope": "official Fetcher content",
+      "official_url": "https://www.admissions.caltech.edu/why-caltech/about-caltech",
+      "fetched_at": "2026-10-07T16:24:15.237026+00:00",
+      "content_sha256": "8d4bd5faf6d6c18018506887ca7e80184bae7869f14342e7a00dcfef5fcf51d7",
+      "text_sha256": "10ddd26e6b45b8bee8ac3801ec21ea1a13d0011f686c97a369a059c3d5dc4fa7",
+      "text_total_chars": 2927
+    }
+  ],
+  "discovery_only_searches": [
+    {
+      "action": 1,
+      "action_hash_sha256": "a1463caecbd1147bcd2d4941cab6baa20622b51fe53ba7bd3944d485b52dbd09",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-001.json",
+      "raw_log_sha256": "32a077c768371379965f2250f2e423020b8eb0a211d40e5ec972b9c1fab2ee9a",
+      "tool": "search_provider",
+      "request": {
+        "domains": [
+          "caltech.edu"
+        ],
+        "max_results": 10,
+        "query": "Caltech undergraduate Computer Science international applicants fall 2027 English requirements financial aid tuition application deadline",
+        "tool": "search_provider"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": null,
+      "scope": "discovery hint only",
+      "results": [
+        {
+          "rank": 1,
+          "snippet": "Caltech defines international applicants as students who are non-U.S. citizens or permanent residents attending secondary school outside of the United States. If you are in the U.S. as an asylee, refugee, or undocumented student, you are a domestic applicant.\n\nOther than financial need consideration for international students, the application and review processes are the same for all applicants, and we offer need-based financial aid that meets 100% of your demonstrated financial need. Regardless of where you live or attend school, we will review your application in the context of your school.\n...\n| To prepare for core, students must demonstrate mastery in the following subjects: |\n| --- |\n| Four years of math, including one year of calculus 1, 2 |\n| One year of physics 1 |\n| One year of chemistry 1 |\n| One year of biology (recommended) |\n| Four years of English 3 |\n| Two years of history and/or social sciences courses (3+ years recommended) |\n...\nStudents apply to U.S. colleges/univers",
+          "title": "International Applicants\n  \n\n     - \n    \n    Undergraduate Admissions",
+          "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+        },
+        {
+          "rank": 2,
+          "snippet": "First-Year Application Requirements - Undergraduate Admissions\n...\n- Common App or QuestBridge Application\n- $85 application fee or fee waiver\n- Letters of Recommendation\n...\n- If you have taken ... , you will be asked to\n...\n- English Language Proficiency Test (if International applicant)\n- Optional Supplemental Materials\n\n \n\n### International applicants\n\nCaltech defines an international applicant as a student who is neither a US citizen nor a permanent resident and who has attended secondary school outside of the United States.\n\nAdditional requirements of applicants who are international applicants:\n\n- English Proficiency Exam scores: Required of all international applicants unless 1) your native language is English or 2) English is the primary language of instruction in your secondary school. For non-Native English speakers where English is the primary language of instruction in your secondary school, Caltech strongly recommends an English Proficiency Exam score. We accept the Duoli",
+          "title": "First-Year Application Requirements\n  \n\n     - \n    \n    Undergraduate Admissions",
+          "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements"
+        },
+        {
+          "rank": 3,
+          "snippet": "Restrictive Early Action (REA) is a non-binding early admissions process for students who are confident that Caltech is their first-choice university, are excited about the possibility of attending Caltech, and want to learn early if they are admitted to Caltech. At the same time, students will not be required to accept a Caltech REA offer and may compare financial aid options if they choose to apply to other institutions during the Regular Decision process. Although REA applications are due November 1, you will have until November 6 to submit all required and supplemental materials and standardized testing must be completed before November 30. Students will be notified of their admissions decision (admit, defer, or deny) by mid-December. Admitted students will then have until May 1, 2027 to decide if they will accept Caltech's offer of admission.\n...\n- An institution outside of the United States;\n- Any public institution that has a non-binding admissions policy with a fall application",
+          "title": "First-Year Application Deadlines\n  \n\n     - \n    \n    Undergraduate Admissions",
+          "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/deadlines"
+        },
+        {
+          "rank": 4,
+          "snippet": "Caltech requires first-year applicants to submit either the SAT or the ACT for admissions to Caltech. For fall 2027 applicants, Caltech does not require the ACT writing or science subscores. In fairness, Caltech will not consider a student's composite score and instead, Caltech will consider each individual subscore: Math, English, Reading, Science (optional), and Writing (optional).\n...\n## Caltech Testing Deadlines for Fall 2027 Entry \n\nSee below for the last day which SAT or ACT scores must be submitted to Caltech. These deadlines include any test re-submissions.\n\n| Application Round | Submission Due Date |\n| --- | --- |\n| QuestBridge | Before October 31, 2026 |\n| Restrictive Early Action | Before November 30, 2026 |\n| Regular Decisions | Before December 31, 2026 |\n...\nCaltech requires applicants to report all Advanced Placement (AP) and International Baccalaureate (IB) examinations taken, regardless of the score earned or whether the applicant intends for the results to be considere",
+          "title": "Standardized Tests\n  \n\n     - \n    \n    Undergraduate Admissions",
+          "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/standardized-tests"
+        },
+        {
+          "rank": 5,
+          "snippet": "| To prepare for core, students must demonstrate mastery in the following subjects: |\n| --- |\n| Four years of math, including one year of calculus* |\n| One year of physics* |\n| One year of chemistry* |\n| One year of biology (recommended) |\n| Four years of English |\n| Two years of history and/or social sciences courses (3+ years recommended) |\n...\n## Application requirements\n\n- There are two ways to apply for first-year admissions to Caltech. Applicants should select the option that fits them best.\n\n- Common Application or QuestBridge National College Match Application with Supplemental Application Essays\n- $85 application fee or fee waiver.\n- Letters of recommendation (1 math or science and 1 humanities or social science). Recommenders are welcome to check out our writing advice.\n- School Report: This document provides context about your school that helps the Admissions Committee evaluate student applications holistically. We want the full picture.\n- Academic transcripts\n\n## Additional",
+          "title": "For Counselors\n  \n\n     - \n    \n    Undergraduate Admissions",
+          "url": "https://www.admissions.caltech.edu/apply/for-counselors"
+        },
+        {
+          "rank": 6,
+          "snippet": "There are two applications to Caltech for Fall 2027: the Common App or the QuestBridge application. Caltech does not have a preference between any of our 2 applications. Choose the option that best suits you.\n...\nCaltech is a highly specialized institution for students who are passionate about science, technology, engineering, and mathematics. Students must demonstrate mastery in calculus, chemistry, and physics for admission to Caltech. For international students, learn more here.By the completion of high school, will you have taken calculus, chemistry, and physics?If a student selects \"No,\" the following information will appear:If a student is unable to take a calculus, chemistry, and/or physics course in high school because it is not available to them or they experienced unresolvable course conflicts, Caltech will accept examination scores or certifications showing proof of knowledge in the subject in lieu of an academic course requirement, provided both the student and their counse",
+          "title": "How Does This Process Work?\n  \n\n     - \n    \n    Undergraduate Admissions",
+          "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/academic-requirements-for-first-year-applicants/how-does-this-process-work"
+        },
+        {
+          "rank": 7,
+          "snippet": "The Institute meets 100% of students' demonstrated financial need and we do not consider domestic students' financial resources, or their ability to pay tuition, at any point in the admissions process.\n\nCaltech Admissions is need-blind for domestic students (including undocumented and DACA students who graduate from a U.S. high school). We are need-aware for international students because the total amount of financial aid funds for international students is limited.\n...\nWe're committed to providing you with a financial aid package that fully meets your demonstrated financial need. Through a combination of different types of aid, admitted Caltech students who applied for financial aid will receive scholarships and grants (which are gifts and do not have to be paid back), work-study and loans to meet their level of financial need.\n\nCaltech does not award merit scholarships. Financial aid is need-based to ensure our commitment to low- and middle-income families.\n...\n- For the incoming fal",
+          "title": "Afford\n  \n\n     - \n    \n    Undergraduate Admissions",
+          "url": "https://www.admissions.caltech.edu/afford"
+        },
+        {
+          "rank": 8,
+          "snippet": "Academic Requirements for First-Year Applicants - Undergraduate Admissions\n...\n| To prepare for core, students must demonstrate mastery in the following subjects: |\n| --- |\n| Four years of math, including one year of calculus* |\n| One year of physics* |\n| One year of chemistry* |\n| One year of biology (recommended) |\n| Four years of English |\n| Two years of history and/or social sciences courses (3+ years recommended) |\n...\n- A score of 5 on AP exams in ... AB, AP Calculus ... exam must be ... by application deadline.\n...\nthe IB Mathematics HL; Chemistry ... HL examinations. The IB ... application deadline.\n- Completing the course ... house.world in ... of the following courses ... College Chemistry; ... Physics 1 Proof of certification from ... is required within one week of the application deadline.\n\nFor in-coming fall 2026 first-year applicants, these are the only avenues for substituting course requirements in calculus, chemistry, and/or physics at Caltech. There will be no excepti",
+          "title": "Academic Requirements for First-Year Applicants\n  \n\n     - \n    \n    Undergraduate Admissions",
+          "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/academic-requirements-for-first-year-applicants"
+        },
+        {
+          "rank": 9,
+          "snippet": "Slightly different procedures and deadlines exist for each category of students applying for financial aid. Detailed descriptions of these procedures and priority due dates for prospective and continuing students may be found on the Caltech Financial Aid Office website at finaid.caltech.edu.\n...\n## International Applicants\n\nIf you are applying for admission as a first-year student for the fall of 2026 and are not a citizen or permanent resident of the United States at the time of your application for admission, you will need to refer to the Caltech Financial Aid Office website at finaid.caltech.edu/applying/international-students for instructions for applying for financial aid.\n...\nInternational students who want to apply for financial aid must do so as an incoming first-year. If you do not apply for aid as a first-year, or if you apply but do not qualify for aid as a first-year, you will not be permitted to apply for aid in subsequent years at Caltech. There is no financial aid availa",
+          "title": "How to Apply for Financial Aid/Loans | Caltech Academic Catalog",
+          "url": "https://catalog.caltech.edu/current/information-for-undergraduate-students/financial-aid/how-to-apply-for-financial-aid/"
+        },
+        {
+          "rank": 10,
+          "snippet": "Register for the 2026-2027 CSS Profile and designate \"California Institute of Technology\" as one of the recipients by using our CSS Code 4034.\n\nPlease ensure that you input your SSN correctly on the Profile application. The SSN you report on your Profile must match the SSN you report on your FAFSA. If these numbers do not match, your financial aid application will be delayed.\n...\nFor domestic applicants: Fee waivers are granted automatically based on the information entered into the CSS Profile application. Fee waivers will only be made available to domestic undergraduate applicants who meet the fee waiver requirements. Caltech does not provide fee payment codes to domestic students.\n\nFor international applicants: Caltech will determine which international applicants are eligible for a fee waiver and provide them with a fee payment code before admission decisions are made.\n\nFor international students currently enrolled at Caltech: Fee payment codes will be provided via email to financi",
+          "title": "CSS Profile\n  \n\n     - \n    \n    Financial Aid",
+          "url": "https://www.finaid.caltech.edu/applying/forms/profile"
+        }
+      ]
+    },
+    {
+      "action": 4,
+      "action_hash_sha256": "a23fa066ccda7a0857f4d1ea92545cb3a72ae5dfd367c2a1f7319b2bc55f2fa5",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-004.json",
+      "raw_log_sha256": "f4801f30e1191d6da9917a66689b3824831e52eb589921bdba2bb7802a835429",
+      "tool": "search_provider",
+      "request": {
+        "domains": [
+          "caltech.edu"
+        ],
+        "max_results": 8,
+        "query": "Caltech undergraduate computer science option Bachelor of Science 2027 cost attendance 2027-2028 tuition fees campus English",
+        "tool": "search_provider"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": null,
+      "scope": "discovery hint only",
+      "results": [
+        {
+          "rank": 1,
+          "snippet": "For first- ... and transfer students applying for admission, ... application fee. This fee is nonrefundable\n...\n## Estimated Cost of Attendance 2025-26\n\nThe chart below lists the estimated nine-month, full-time cost of attendance budgets that are generally applicable to Caltech undergraduate students enrolled in the 2025-26 school year. With the exception of the Orientation Fee, all direct charges, i.e., tuition, fees, housing and food, are divided evenly between the fall, winter and spring terms.\n\n| Category | On-Campus | Off-Campus | Living with Parents |\n| --- | --- | --- | --- |\n| Tuition | $65,622 | $65,622 | $65,622 |\n| Fees 1,2 | 2,586 | 2,586 | 2,586 |\n| Housing | 12,105 | 15,219 | See Living Expenses |\n| Food/Meals | 8,886 | 7,533 | See Living Expenses |\n| Books, Course Materials, Supplies and Equipment (est.) 3 | 1,428 | 1,428 | 1,428 |\n| Living Expenses | N/A | N/A | 11,835 |\n| Personal Expenses (est.) | 3,285 | 5,067 | 4,140 |\n| Total Estimated Cost of Attendance 4 | $93,91",
+          "title": "Undergraduate Expenses | Caltech Academic Catalog",
+          "url": "https://www.catalog.caltech.edu/current/information-for-undergraduate-students/undergraduate-expenses/"
+        },
+        {
+          "rank": 2,
+          "snippet": "## CHANGES TO THE OPTION AND MINOR POLICY FOR ACADEMIC YEAR 2027-28 \n\nThe Institute has approved changes to the undergraduate second option and minor policies for the incoming class entering 2027.\n\nThe policies in bold will go into effect starting with the 2027-28 cohort. These are changes to the catalog section: Departmental and Option Regulations. The section is located in 'Information for Undergraduate Students' and 'Scholastic Requirements.'\n...\nBy the middle of the third term, first-year students must notify the Registrar’s Office of their selection of an option in engineering, humanities, social sciences, or science to be pursued in subsequent years. Upon the selection of an option, a first-year student will be assigned an adviser in that option, whose approval must then be obtained for registration for the following year.\n...\nUndergraduate students may be allowed to major in two options for the Bachelor of Science degree. In order to do so the student must present a rationale fo",
+          "title": "Appendix A | Caltech Academic Catalog",
+          "url": "https://www.catalog.caltech.edu/current/information-for-undergraduate-students/graduation-requirements-all-options/appendix-a/"
+        },
+        {
+          "rank": 3,
+          "snippet": "’s financial \naid program ... with \nthe ... what to expect ... the rights and responsibilities\n...\nstate and federal\n...\naid recipients who have repaid their student loans\n...\nannual gifts to\n...\nare eligible for\n...\nThe amount\n...\ntheir parents’— ... estimated cost of \nattendance at ... and a student or ... expected contribution is referred to as the\n...\nfinancial need.\n...\nleast 36 units per quarter) for the academic year, i.e. fall, winter, and spring. You must be enrolled in at least this number of units to receive the types and amounts of financial aid enumerated in your offer. Changing the amount of units you are taking might affect your financial aid. For more information, please refer to the Caltech Financial Aid website. Your financial aid offer for the 2026-27 academic year is based on your class level, enrollment status, federal and state aid program regulations, as well as Caltech financial aid policies and funding limitations. Award amounts are subject to change based on c",
+          "title": "FINANCIAL AID OFFER",
+          "url": "https://www.finaid.caltech.edu/documents/33818/2627_Finanical_Aid_Offer_Guide_RD.pdf"
+        },
+        {
+          "rank": 4,
+          "snippet": "- For the incoming fall 2024 class, the average grant aid was just under $73,000\n- The average loan indebtedness for the Class of 2023 was approximately $16,000\n- Most students from families making less than $200,000 (with typical assets) can expect an aid package that covers tuition\n...\n- Awarding student scholarships based exclusively on financial need (you're also welcome and encouraged to apply for outside scholarships\n- Most students from families making less than $100,000 (with typical assets) can expect a no-loan financial aid package that covers tuition, fees, housing, and food\n- Since 2021, Caltech has increased significantly its investments in our students and families, investing millions of dollars more in annual financial aid and support packages\n- At least 20% of first-year students in the past three incoming classes were Pell eligible students\n...\nCaltech will estimate your family's ability to contribute to your education expenses on a yearly basis, based on the financial",
+          "title": "Afford\n  \n\n     - \n    \n    Undergraduate Admissions",
+          "url": "https://www.admissions.caltech.edu/afford"
+        },
+        {
+          "rank": 5,
+          "snippet": "Q. How do I access my bill and make an online payment? \nThe first statement for Fall 2026-2027 will be available in Transact/CASHNet, Caltech’s online student billing \nsystem, on September 11 th, 2026. Click here for Transact/CASHNet instructions. Please note: You have to have \na balance due in order to make a payment. \nQ. Where can I wire a payment? \n• California Institute of Technology – Account Number 926011052 \n• General Bank Reference Address: JP Morgan Chase, New York, NY 10004 \n• Bank Routing and Transit Number 021000021 \n• SWIFT Code: CHASUS33 \n• Remit US Dollar amount only \n• Reference student name and UID in the memo section of the wire Q. Is there a payment plan available for tuition and fees? Yes, Transact/CASHNet offers a Three Installment Payment Plan to pay in smaller, more manageable installments. You will be able to choose a payment plan that will divide your total due into three payments for the term. Transact/CASHNet charges a $35.00 enrollment fee per term and late ",
+          "title": "FREQUENTLY ASKED QUESTIONS",
+          "url": "https://bursar.caltech.edu/documents/28610/2026_2027_Pre-Bill_FAQ__Form_LAerUM6.pdf"
+        },
+        {
+          "rank": 6,
+          "snippet": "Computer Science Option and Minor (CS) | Caltech Academic Catalog\n...\nStudy in the computer science option within the Computing & Mathematical Sciences department emphasizes rigor and creativity, and is good preparation either for graduate study followed by a research career, or for a variety of professional or entrepreneurial occupations.\n\nThe option introduces students to the mathematical and engineering foundations of the discipline. It provides considerable flexibility in course selection, together with a capstone project giving an opportunity for independent work in an area of the student’s choice. Individual programs will be worked out in consultation with faculty advisers (the materials at cms.caltech.edu/academics/ugrad_cs may be helpful for this purpose).\n...\n## CS Typical Course Schedule \n\n| | | ... per term | | |\n| ... | --- |\n...\n| | | |\n...\n- | - |\n...\n| Intro. to Programming Methods 1 | - | 9 | - |\n...\n9 | -\n...\nComputing | - | -\n...\n1 | Decidability and Tractability | - ",
+          "title": "Computer Science Option and Minor (CS) | Caltech Academic Catalog",
+          "url": "https://www.catalog.caltech.edu/current/information-for-undergraduate-students/graduation-requirements-all-options/computer-science-option-and-minor-cs/"
+        },
+        {
+          "rank": 7,
+          "snippet": "Courses 2026-27 | Caltech Academic Catalog\n\n## Introduction to Computer Programming \n\n 9 units (3-0-6) | first, third terms \n\n A course on computer programming emphasizing the program design process and pragmatic programming skills. We will primarily use the Python programming language and no previous programming experience is needed or expected. The course will include data types, variables, assignment, control structures, functions, scoping, compound data, string processing, modules, basic input/output (terminal and file), as well as more advanced topics such as recursion, exception handling and object-oriented programming. We will also teach program development, debugging, and how to write documentation. Projects will include problems drawn from many different areas such as physics, chemistry, math, and games. At the end of the course, students will be ready to take more advanced courses in the computer science option. \n\n Instructor: Blank \n\n CS 1 x \n\n## Intermediate Computer Progra",
+          "title": "Courses 2026-27 | Caltech Academic Catalog",
+          "url": "https://catalog.caltech.edu/current/2026-27/department/CS/"
+        },
+        {
+          "rank": 8,
+          "snippet": "2026-2027 Catalog | Caltech Academic Catalog\n\n## Sections \n\nIntroduction (PDF) Areas of Study and Research (PDF) Information for Undergraduate Students (PDF) Information for Graduate Students (PDF) Courses (PDF) Trustees, Administration, Faculty (PDF)\n\n## Full Catalog \n\nFull Catalog (PDF)\n\n Published Date: Sept. 18, 2026 \n\n1200 East California Boulevard\n\nPasadena, California 91125",
+          "title": "2026-2027 Catalog | Caltech Academic Catalog",
+          "url": "https://catalog.caltech.edu/current/"
+        }
+      ]
+    },
+    {
+      "action": 14,
+      "action_hash_sha256": "885cf453c0af457b45fa626072a5eb8f9c88739b41976c02ed31a72becd33ea7",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-014.json",
+      "raw_log_sha256": "5a13bcb3d675c7f3d52596e4d2bcf60220923c260aeec7ee3502e234a35693fa",
+      "tool": "search_provider",
+      "request": {
+        "domains": [
+          "caltech.edu"
+        ],
+        "max_results": 6,
+        "query": "Caltech undergraduate admissions minimum GPA Kazakhstan credential English language of instruction Pasadena Computer Science Bachelor of Science",
+        "tool": "search_provider"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": null,
+      "scope": "discovery hint only",
+      "results": [
+        {
+          "rank": 1,
+          "snippet": "Caltech defines international applicants as students who are non-U.S. citizens or permanent residents attending secondary school outside of the United States. If you are in the U.S. as an asylee, refugee, or undocumented student, you are a domestic applicant.\n...\n| To prepare for core, students must demonstrate mastery in the following subjects: |\n| --- |\n| Four years of math, including one year of calculus 1, 2 |\n| One year of physics 1 |\n| One year of chemistry 1 |\n| One year of biology (recommended) |\n| Four years of English 3 |\n| Two years of history and/or social sciences courses (3+ years recommended) |\n...\nWe require official documents (transcripts) that note your class titles, grades, and predicted grades/scores (if applicable); the transcript must be sent to us directly from your school. If the language of instruction in your school is not English, we require the original document and an English translation. Consider asking an English teacher or school official to translate th",
+          "title": "International Applicants\n  \n\n     - \n    \n    Undergraduate Admissions",
+          "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+        },
+        {
+          "rank": 2,
+          "snippet": "First-Year Application Requirements - Undergraduate Admissions\n...\n- 1 STEM: Calculus (or beyond), Chemistry, Physics, or Biology\n- 1 Humanities or Social Sciences: English, History, Government, or Economics\n- Academic Materials\n...\n- English Language Proficiency Test (if International applicant)\n- Optional Supplemental Materials\n...\nCaltech defines an international applicant as a student who is neither a US citizen nor a permanent resident and who has attended secondary school outside of the United States.\n...\n- English Proficiency Exam scores: Required of all international applicants unless 1) your native language is English or 2) English is the primary language of instruction in your secondary school. For non-Native English speakers where English is the primary language of instruction in your secondary school, Caltech strongly recommends an English Proficiency Exam score. We accept the Duolingo English Test (DET), IELTS, or the TOEFL. The English proficiency exam must be taken prior",
+          "title": "First-Year Application Requirements\n  \n\n     - \n    \n    Undergraduate Admissions",
+          "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements"
+        },
+        {
+          "rank": 3,
+          "snippet": "2, or AP Physics C\n...\nSL or HL examinations\n...\n● A certification from Schoolhouse.world in ... the following courses ... AP/College Calculus AB or BC; AP/College ... ; High School ... or AP/College\n...\nin calculus, chemistry\n...\nbe no exceptions. \nStandardized Exams \nCaltech requires first-year applicants to submit either the SAT or the \nACT for admissions to Caltech. For fall 2026 applicants, Caltech does \nnot require the ACT writing or science subscores. In fairness, Caltech \nwill not consider a student’s composite score and instead, Caltech will \nconsider each individual subscore: Math, English, Reading, Science \n(optional), and Writing (optional) \nFor more information on the standardized testing policy, visit the \nUGA Standardized Testing page. \nSAT Subject Tests: As of January 2020, Caltech eliminated the \nrequirement for applicants to submit two SAT Subject Tests. These \nsections will not be considered in the application review process. \nEnglish Proficiency Scores are required ",
+          "title": "Information for Undergraduate Students",
+          "url": "https://catalog-prod.resources.caltech.edu/documents/catalog_25_26_part3.pdf"
+        },
+        {
+          "rank": 4,
+          "snippet": "Academic Requirements for First-Year Applicants - Undergraduate Admissions\n...\n| To prepare for core, students must demonstrate mastery in the following subjects: |\n| --- |\n| Four years of math, including one year of calculus* |\n| One year of physics* |\n| One year of chemistry* |\n| One year of biology (recommended) |\n| Four years of English |\n| Two years of history and/or social sciences courses (3+ years recommended) |\n...\nWe understand that not ... resources. It is okay if students who exhaust their math curriculum before their senior ... of high school to not have four years of math. To be eligible for first-year admissions, Caltech expects that all students have taken as much math as possible, including one year of calculus, to be prepared for the core curriculum. Some students who have run the course of their high school curriculum and would like to take more math, for example, consider taking online or local college classes but that is not a requirement. We certainly don't ... yo",
+          "title": "Academic Requirements for First-Year Applicants\n  \n\n     - \n    \n    Undergraduate Admissions",
+          "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/academic-requirements-for-first-year-applicants"
+        },
+        {
+          "rank": 5,
+          "snippet": "Caltech defines international applicants as students who are non-U.S. citizens or permanent residents attending school outside of the United States. If you are in the U.S. as an asylee, refugee, or undocumented student, you are a domestic applicant.\n...\nWe require official documents (transcripts) that note your class titles, grades, and predicted grades (if applicable); the transcript must be sent to us directly from your school. If the language of instruction in your school is not English, we require the original document and an English translation. Consider asking an English teacher or school official to translate the document. Caltech admissions officers are trained to understand your education system, so there is no need to translate or convert grades to the American system.\n\nCaltech requires two college faculty letters of recommendation from math, science, or engineering professors.\n...\nCaltech will challenge your English skills, and we want to make sure that you will thrive in ou",
+          "title": "International Transfer Applicants\n  \n\n     - \n    \n    Undergraduate Admissions",
+          "url": "https://www.admissions.caltech.edu/apply/transfer-applicants/international-transfer-applicants"
+        },
+        {
+          "rank": 6,
+          "snippet": "Students are admitted to the first-year class on the basis of strong academic performance in a rigorous course of college preparatory study, especially in the areas of math and science; teacher and counselor recommendations; personal characteristics; a strong demonstrated interest in math, science, or engineering; and information provided on the application. Information on the application process can be found on the admissions office website at admissions.caltech.edu. Students are encouraged to apply online through the Common App or the QuestBridge program. For further information on admission, please e-mail [email protected]. To be considered for admission, applications to the first-year class must be submitted online by November 1 for Restrictive Early Action or January 5, 2026 for Regular Decision.\n...\n- Four years of math, including one year of calculus*\n- One year of physics*\n- One year of chemistry*\n- One year of biology (recommended)\n- Four years of English\n- Two years of histor",
+          "title": "Admission to the First-Year Class | Caltech Academic Catalog",
+          "url": "https://catalog.caltech.edu/archive/2025-26/information-for-undergraduate-students/admission-to-the-first-year-class/"
+        }
+      ]
+    },
+    {
+      "action": 15,
+      "action_hash_sha256": "719c8a01364c80e96255fa573f63f433e1a782bbf7b20b9d11f4c8261fd55a83",
+      "raw_log_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_b/caltech/raw/caltech-015.json",
+      "raw_log_sha256": "3551459b56f551e9509f43435e51ba5d5b006f584d0ea2d77674cef078772215",
+      "tool": "search_provider",
+      "request": {
+        "domains": [
+          "caltech.edu"
+        ],
+        "max_results": 8,
+        "query": "Caltech financial aid fall 2027 2027-28 international CSS Profile deadline tuition cost attendance",
+        "tool": "search_provider"
+      },
+      "outcome": "ok",
+      "outcome_status": "success",
+      "http_status": null,
+      "scope": "discovery hint only",
+      "results": [
+        {
+          "rank": 1,
+          "snippet": "CSS Profile - Financial Aid\n...\nRegister for the 2026-2027 CSS Profile and designate \"California Institute of Technology\" as one of the recipients by using our CSS Code 4034.\n\nPlease ensure that you input your SSN correctly on the Profile application. The SSN you report on your Profile must match the SSN you report on your FAFSA. If these numbers do not match, your financial aid application will be delayed.\n...\nFor domestic applicants: Fee waivers are granted automatically based on the information entered into the CSS Profile application. Fee waivers will only be made available to domestic undergraduate applicants who meet the fee waiver requirements. Caltech does not provide fee payment codes to domestic students.\n\nFor international applicants: Caltech will determine which international applicants are eligible for a fee waiver and provide them with a fee payment code before admission decisions are made.\n\nFor international students currently enrolled at Caltech: Fee payment codes will ",
+          "title": "CSS Profile\n  \n\n     - \n    \n    Financial Aid",
+          "url": "https://www.finaid.caltech.edu/applying/forms/profile"
+        },
+        {
+          "rank": 2,
+          "snippet": "Other than financial need consideration for international students, the application and review processes are the same for all applicants, and we offer need-based financial aid that meets 100% of your demonstrated financial need. Regardless of where you live or attend school, we will review your application in the context of your school.\n...\nStudents apply to U.S. colleges/universities during their final year of high school. We admit students to start in the fall term, and our application deadlines are during U.S. fall and winter. We know that some applicants will not have final grades available at that point, and we will consider the most recent grades on your transcript in our application review. You may apply for Restrictive Early Action or Regular Decision.\n...\n| Action | Date |\n| --- | --- |\n| Restrictive Early Action deadline | November 1, 2026 |\n| Restrictive Early Action decision notifications | Mid-December, 2026 |\n| Regular Decision deadline | January 4, 2027 |\n| Regular Decis",
+          "title": "International Applicants\n  \n\n     - \n    \n    Undergraduate Admissions",
+          "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants"
+        },
+        {
+          "rank": 3,
+          "snippet": "Restrictive Early Action (REA) is a non-binding early admissions process for students who are confident that Caltech is their first-choice university, are excited about the possibility of attending Caltech, and want to learn early if they are admitted to Caltech. At the same time, students will not be required to accept a Caltech REA offer and may compare financial aid options if they choose to apply to other institutions during the Regular Decision process. Although REA applications are due November 1, you will have until November 6 to submit all required and supplemental materials and standardized testing must be completed before November 30. Students will be notified of their admissions decision (admit, defer, or deny) by mid-December. Admitted students will then have until May 1, 2027 to decide if they will accept Caltech's offer of admission.\n...\n- An institution outside of the United States;\n- Any public institution that has a non-binding admissions policy with a fall application",
+          "title": "First-Year Application Deadlines\n  \n\n     - \n    \n    Undergraduate Admissions",
+          "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/deadlines"
+        },
+        {
+          "rank": 4,
+          "snippet": "The Institute meets 100% of students' demonstrated financial need and we do not consider domestic students' financial resources, or their ability to pay tuition, at any point in the admissions process.\n\nCaltech Admissions is need-blind for domestic students (including undocumented and DACA students who graduate from a U.S. high school). We are need-aware for international students because the total amount of financial aid funds for international students is limited.\n...\nWe're committed to providing you with a financial aid package that fully meets your demonstrated financial need. Through a combination of different types of aid, admitted Caltech students who applied for financial aid will receive scholarships and grants (which are gifts and do not have to be paid back), work-study and loans to meet their level of financial need.\n\nCaltech does not award merit scholarships. Financial aid is need-based to ensure our commitment to low- and middle-income families.\n...\n- For the incoming fal",
+          "title": "Afford\n  \n\n     - \n    \n    Undergraduate Admissions",
+          "url": "https://www.admissions.caltech.edu/afford"
+        },
+        {
+          "rank": 5,
+          "snippet": "Slightly different procedures and deadlines exist for each category of students applying for financial aid. Detailed descriptions of these procedures and priority due dates for prospective and continuing students may be found on the Caltech Financial Aid Office website at finaid.caltech.edu.\n...\n## International Applicants\n\nIf you are applying for admission as a first-year student for the fall of 2026 and are not a citizen or permanent resident of the United States at the time of your application for admission, you will need to refer to the Caltech Financial Aid Office website at finaid.caltech.edu/applying/international-students for instructions for applying for financial aid.\n...\nInternational students who want to apply for financial aid must do so as an incoming first-year. If you do not apply for aid as a first-year, or if you apply but do not qualify for aid as a first-year, you will not be permitted to apply for aid in subsequent years at Caltech. There is no financial aid availa",
+          "title": "How to Apply for Financial Aid/Loans | Caltech Academic Catalog",
+          "url": "https://catalog.caltech.edu/current/information-for-undergraduate-students/financial-aid/how-to-apply-for-financial-aid/"
+        },
+        {
+          "rank": 6,
+          "snippet": "INTERNATIONAL FINANCIAL AID STATEMENT OF INTENT Caltech offers admission to students based on their academic and personal strengths, as well as their accomplishments. Additionally, Caltech is committed to meeting the full demonstrated financial need of all admitted students. For U.S. citizens (including dual citizens) and U.S. Permanent Residents, Caltech is need blind, so admissions decisions do not take into consideration the student’s ability to afford the cost of a Caltech education. For international citizens, however, Caltech is need-aware, because the total amount of financial aid funds is limited for these students, and we remain committed to meeting the demonstrated need of all admitted students. This limitation may result in financial need being a factor in the Institute’s admissions decisions for international applicants who are neither U.S. citizens nor U.S. Permanent Residents. To that end, when a student applies for first-year admission and indicates that they are an inte",
+          "title": "INTERNATIONAL FINANCIAL AID STATEMENT OF INTENT",
+          "url": "https://www.admissions.caltech.edu/documents/6959/International_Financial_Aid_Statement_of_Intent.pdf"
+        },
+        {
+          "rank": 7,
+          "snippet": "Accepting Your Financial Aid \nTo accept your financial aid, go to the access.caltech portal and then to My Financial Aid, \nwhere you will find each of your financial aid awards available to accept or decline. You \nwill not be able to log on to access.caltech without an IMSS username and password. \nThese credentials will be issued to matriculating students in early summer. \nPlease note that: \n• You must actively accept or decline all your awards. \n• If there are changes in your enrollment status or housing status that affect your cost of attendance or you receive outside scholarships, your Financial Aid Offer will be revised accordingly. \n• If you are offered a loan, you may choose to accept an amount less than what is offered. \nDetermination of Family Contribution and Financial Need \nThe Family Contribution is the result of federal and/or institutional need analysis formulae \nthat are applied to the income and asset information reported on your Free Application \nfor Federal Student Aid",
+          "title": "FINANCIAL AID OFFER",
+          "url": "https://www.finaid.caltech.edu/documents/33818/2627_Finanical_Aid_Offer_Guide_RD.pdf"
+        },
+        {
+          "rank": 8,
+          "snippet": "Caltech believes that qualified students who wish to attend the Institute should not be prevented from doing so for financial reasons. Although the Institute expects students and families to finance the cost of education to the fullest extent possible, the Institute will make every effort to assist those who need help.\n\nDemonstrated financial need is the difference between the annual cost of attending Caltech and the amount the student and parents can reasonably be expected to contribute toward those costs. Costs include actual tuition, student fees, housing, food/meals, books and supplies, and personal expenses. For U.S. citizens or eligible noncitizens who reside in the United States, Canada, Mexico, or Guam, costs include a travel allowance designed to (partially) offset the cost (airfare) of two round-trips from a student’s home during the academic year. Caltech’s estimate of a family’s ability to contribute is determined annually in accordance with nationally established guideline",
+          "title": "Financial Aid | Caltech Academic Catalog",
+          "url": "https://catalog.caltech.edu/current/information-for-undergraduate-students/financial-aid/"
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "raw_hashes_verified": true,
+    "content_hashes_verified": true,
+    "excerpts_exactly_matched": true,
+    "cumulative_counters_monotone": true,
+    "no_repeated_exact_actions": true,
+    "source_facts_human_review": "unreviewed"
+  }
+}

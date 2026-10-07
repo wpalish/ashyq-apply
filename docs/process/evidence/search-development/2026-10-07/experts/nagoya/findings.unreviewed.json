@@ -1,0 +1,594 @@
+{
+  "case_id": "01ea8dd78746c15f2655b59fd4f5deab",
+  "university": "Nagoya University",
+  "domain": "nagoya-u.ac.jp",
+  "review_status": "unreviewed",
+  "requested_scope": {
+    "citizenship": "Kazakhstan / international",
+    "level": "Bachelor",
+    "field": "Computer Science",
+    "intake": "fall2027 / 2027-28"
+  },
+  "final_state": "partial_scope_mismatch",
+  "wall_start": "2026-10-07T16:15:28.226239+00:00",
+  "finished_at": "2026-10-07T16:24:56.447436+00:00",
+  "finalization_reason": "Research reached officialroutecomparison and scopedpartialanswers withinoriginalfreshwallguard andstricttoolbudget. ExactfallCSrouteunresolved; furtheradjacentprogrammefacts wouldnotconfirmit.",
+  "budget": {
+    "fetcher_calls": 15,
+    "elapsed_ms": 49833,
+    "search_queries": 3,
+    "stop_reason": null,
+    "next_log_number": 19
+  },
+  "budget_policy": {
+    "strict_budget": true,
+    "max_calls": 60,
+    "max_search_queries": 6,
+    "max_ms": 120000,
+    "budget_origin": "independent_full_budget",
+    "official_domains": [
+      "nagoya-u.ac.jp"
+    ]
+  },
+  "questions": [
+    {
+      "id": "Q0",
+      "status": "unresolved",
+      "answer": null,
+      "known_scopes": {
+        "exact_CS_department_exists": true,
+        "Japanese_route_2027_CS_recruitment": true,
+        "Japanese_route_intake": "April pathway",
+        "historical_or_general_awarded_degree": "Bachelor of Informatics / 学士(情報学)",
+        "general_campus": "Higashiyama, Informatics campus/access",
+        "October_2027_G30_exact_CS": false,
+        "adjacent_G30_programme": "Automotive Engineering (Electrical, Electronic/Information Engineering course)"
+      },
+      "evidence_ids": [
+        "g30_2027",
+        "g30_faq",
+        "cs_department",
+        "april_route",
+        "cs_2027_japanese_list",
+        "degree_general",
+        "campus_general"
+      ],
+      "unknown_reason": "No official exact Computer Science bachelor offer for fall2027 established. 2027 G30 list excludes exact CS; Japanese CS exists under April pathway. Do not substitute Automotive Engineering or April intake, or infer university-wide CS absence."
+    },
+    {
+      "id": "Q1",
+      "status": "unresolved",
+      "answer": null,
+      "other_route_support": {
+        "Japanese_2027_CS": "EJU Japanese300+ (writing/read/listen/listen-read) and combined science+mathCourse2 265+; exam languageJapanese; TOEFLiBT61+ oldscale, taken2025-02-01 onward. Informatics IELTS acceptance not listed. EJU2025second or2026first.",
+        "G30_October2027": "IELTSAcademic6.0; TOEFLiBT80 preJan2026scale or4.0 postJan2026scale; DET110; CEFR C1; English-medium3consecutiveyears inclfinalsecondaryyear exemption with schoolproof."
+      },
+      "evidence_ids": [
+        "japanese_cs_language_tests",
+        "g30_english_2027"
+      ],
+      "unknown_reason": "Requirements confirmed for two distinct official routes, but exact fall2027CS route not matched; no mandatoryJLPTN1 assigned from generic most-programmes statement."
+    },
+    {
+      "id": "Q2",
+      "status": "unresolved",
+      "answer": null,
+      "other_route_support": {
+        "Japanese_2027_CS": "NonJapanese nationality, excludesJapanese dualnationality/Japanpermanentresidence; foreign12-year curriculum by2027-03-31 or recognizedalternatives; EJU and TOEFLthresholds; individualreviewwindow2026-09-01..09-30.",
+        "G30_October2027": "12-year curriculum by2027-09-30 or alternative recognized qualifications; at least2 oflast3secondaryyears primarilyoutsideJapanese system; excellenthighschoolachievement.",
+        "numeric_GPA_minimum": null,
+        "Kazakhstan_school_equivalence": null
+      },
+      "evidence_ids": [
+        "japanese_cs_school_qualification",
+        "japanese_cs_language_tests",
+        "g30_school_qualification"
+      ],
+      "unknown_reason": "No applicant-specific Kazakhstan qualification equivalence or numericGPA minimum proven; the exact requested fallCS route remains unmatched."
+    },
+    {
+      "id": "Q3",
+      "status": "unresolved",
+      "answer": null,
+      "other_route_support": {
+        "Japanese_2027_CS": {
+          "portal_registration_fee_deadline": "2026-12-03 15:00 Japan local time",
+          "mailed_documents_received_deadline": "2026-12-04 15:00 Japan local time",
+          "exam_date": "2027-01-29"
+        },
+        "G30_October2027": {
+          "round1_deadline": "2026-11-19 12:00 JST",
+          "round2_deadline": "2027-01-21 12:00 JST; limited programmes"
+        }
+      },
+      "evidence_ids": [
+        "japanese_deadlines",
+        "g30_deadlines"
+      ],
+      "unknown_reason": "Official2027 deadlines are route-specific. No exact fall2027CS deadline because requested route not established."
+    },
+    {
+      "id": "Q4",
+      "status": "partial",
+      "answer": null,
+      "other_route_support": {
+        "currency": "JPY",
+        "2027_annual_tuition": 535800,
+        "registration_fee": 282000,
+        "PAS_insurance": 4660,
+        "application_fee_Japanese_route": 17000,
+        "application_fee_G30": 10000,
+        "general_monthly_living_estimate": [
+          86500,
+          106500
+        ],
+        "full_annual_official_total": null
+      },
+      "derived_scenarios": [
+        {
+          "scope": "Annual tuition +12months general living estimate only; not exactfallCS2027total",
+          "range_JPY": [
+            1573800,
+            1813800
+          ],
+          "formula": "535800 + 12 * [86500,106500]",
+          "excludes": "registration/application/PAS/processing/travel and any other one-off costs"
+        }
+      ],
+      "evidence_ids": [
+        "tuition_japanese_2027",
+        "tuition_g30_2027",
+        "living_estimate_general"
+      ],
+      "unknown_reason": "2027 annual tuition amount established for publishedroutes, while complete exactfallCS2027 cost not established. Official living figures are estimates."
+    },
+    {
+      "id": "Q5",
+      "status": "unresolved",
+      "answer": null,
+      "general_support": {
+        "G30_scholarship": "Tuition4years; registrationfee reimbursement; stipend wording preserved; G30 admission eligibility required.",
+        "MEXT_university_recommendation": "Tuition/fees with stated remission;117000JPY/month+3000regional on generalG30page.",
+        "Honors_self_financed": "48000JPY/month for6months oruntilMarch31 on generalpage.",
+        "fee_waiver": "50–100% possible, selection required."
+      },
+      "evidence_ids": [
+        "g30_scholarships_general",
+        "international_scholarship_general"
+      ],
+      "unknown_reason": "General schemes exist but no exactfall2027CS scholarship match; G30 awards cannot be assigned to JapaneseSchoolInformaticsCS; explicitly2019 source not used ascurrent."
+    },
+    {
+      "id": "Q6",
+      "status": "unresolved",
+      "answer": null,
+      "general_support": {
+        "G30_scholarship_international_eligibility": "Applicants meetingG30undergraduateadmission criteria and submittingcomplete scholarshipapplicationbydeadline may apply.",
+        "MEXT_Kazakhstan_in_historical_designated_list": true,
+        "nonJapanese_Honors_scheme_exists": true
+      },
+      "evidence_ids": [
+        "g30_scholarships_general",
+        "international_scholarship_general",
+        "mext_designated_countries_old"
+      ],
+      "unknown_reason": "Kazakhstan appears in a list explicitlyasofSeptember2023; no2027exactCSnomination/category/country confirmation. No exclusion or guarantee inferred."
+    }
+  ],
+  "evidence": {
+    "g30_2027": {
+      "action": 2,
+      "official_url": "https://admissions.g30.nagoya-u.ac.jp/upload/2027_admission_requirements_en.pdf",
+      "final_url": "https://admissions.g30.nagoya-u.ac.jp/upload/2027_admission_requirements_en.pdf",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-002.json",
+      "raw_sha256": "1fa1e8ea78ccdc298a3741e9da67077a4ea47b054933e587055e4f0d8cd308d6",
+      "excerpts": [
+        "Nagoya University International Programs Admission Requirements for Undergraduate Students for Academic Year 2027 (October Admission)",
+        "full degree undergraduate programs with English as a medium of instruction",
+        "Programs: Automotive Engineering; Physics; Chemistry; Biological Science; Social Sciences; Japan-in-Asia Cultural Studies. Automotive Engineering: School of Engineering (Mechanical Engineering Course); School of Engineering (Electrical, Electronic/Information Engineering Course)."
+      ],
+      "excerpt_scope": "2027 October G30 bachelor programme list. Exact Computer Science is not listed. Programme-list excerpt normalizes table/line breaks.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "document_page": "1, 11",
+      "verbatim_excerpt": "Availability of Programs \n \n \n \nPrograms School \n \nAutomotive Engineering \nSchool of Engineering \n(Mechanical Engineering Course) \nSchool of Engineering \n(Electrical, Electronic/Information Engineering Course) \nPhysics School of Science \nChemistry \nSchool of Science \nSchool of Engineering \nBiological Science \nSchool of Science \nSchool of Agricultural Sciences \n(Applied Biosciences) \nSocial Sciences \nSchool of Law \nSchool of Economics \nJapan-in-Asia Cultural \nStudies \nSchool of Humanities \n: First Round \n : Second Round \n\n \n12 \n \nNotes: \n(1) Applicants can apply only once in an academic year for one program. \n(2) There will be no Second Round for the Chemistry Program (Science), the Biological Science Programs, \nthe Social Sciences Programs and the Japan-in-Asia Cultural Studies Program. \n(3) If the application fee is not fully received by the deadline, your application will not be considered.  \n(4) If required documents are missing, y our application will be regarded a s incomplete. See List of \nApplication Documents. \n(5) If you experience some difficulties with your payment or in filling out your application, please contact us \nthrough the Online Admissions System. Similarly, if we notice any issues with your application, we will \ncontact you through the Online Admissions System. \n2. Payment of Application Fee  \n \nPlease submit all required documents and pay the application fee according to the respective deadlines and \nmethods prescribed. Please follow the instructions on page 24 when preparing your documents. Early \npayment is recommended to give sufficient time for the applicant to submit any missing documents after the \ninitial check by the admissions office. Please",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "31a58e8db7c51fdff57637959e574d3051374bfceab4f93c220f059ef209fb07"
+    },
+    "g30_faq": {
+      "action": 3,
+      "official_url": "https://admissions.g30.nagoya-u.ac.jp/faqs.html",
+      "final_url": "https://admissions.g30.nagoya-u.ac.jp/faqs/",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-003.json",
+      "raw_sha256": "44a98113984a4796af7278410d8abd0d33848bd0a804155c5565437568e6df7a",
+      "excerpts": [
+        "No. As of 2025, the G30 program does not offer programs that teach Computer Science or Information Technology exclusively."
+      ],
+      "excerpt_scope": "Explicit negative proof limited to G30 as of 2025; cannot prove university-wide or all 2027 routes absent.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "I am interested in Computer Science and the field of Artificial Intelligence. Is there any program that suits me?\n\nNo. As of 2025, the G30 program does not offer programs that teach Computer Science or Information Technology exclusively.\n\n UG \n\nWhat is the difference between Mechanical Engineering (Auto Mec) and Electrical, Electronic and Informati",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "9207b7be96bdd1b8027597eae8f4c3d8bd06842cc131997082e56825c12a2141"
+    },
+    "cs_department": {
+      "action": 5,
+      "official_url": "https://www.i.nagoya-u.ac.jp/en/si/cs/",
+      "final_url": "https://www.i.nagoya-u.ac.jp/en/si/cs/",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-005.json",
+      "raw_sha256": "3383cc52ae83840268b3c3f8d95df39b3d3888161e8ba6dad58269dae844f188",
+      "excerpts": [
+        "Department of Computer Science",
+        "The Department of Computer Science fosters advanced information engineers with a deep understanding of the information society."
+      ],
+      "excerpt_scope": "School of Informatics department identity and curriculum, no fall2027 intake promise.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "Department of Computer Science\n \n\nSummary\n\nThe Department of Computer Science fosters advanced information engineers with a deep understanding of the information society. In other words, students learn sophisticated information science technologies such as computers, networks, applied artificial intelligence, and audio-visual processing, gaining comprehensive insight into the society and nature. We train intellectuals who can contribute to the cr",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "5932afea4dff3b068057c72f2fa7d6b513f6a0b4987f06f0945d7f17de4ea00e"
+    },
+    "april_route": {
+      "action": 8,
+      "official_url": "https://en.nagoya-u.ac.jp/admissions/undergraduate/april/",
+      "final_url": "https://en.nagoya-u.ac.jp/admissions/undergraduate/april/",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-008.json",
+      "raw_sha256": "45dc16e253aa14516a134466f2b7884653944747d4efdbc0a8582bba3453d8b7",
+      "excerpts": [
+        "April admission",
+        "Nagoya University offers undergraduate degree programs taught in Japanese across all schools and departments.",
+        "Privately-funded students"
+      ],
+      "excerpt_scope": "Official April admission page links to the privately-funded international admissions route; Japanese language route. The generic statement most programmes require JLPT N1 is not assigned as a CS-specific mandatory requirement.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "April admission\n\nStudent making pledge at Nagoya University to President Sugiyama\n\nNagoya University offers undergraduate degree programs taught in Japanese across all schools and departments. These programs provide international students the opportunity to study alongside Japanese students in their chosen field while developing advanced Japanese language proficiency.\n\nStudents who wish to pursue degree programs taught in Japanese should have sufficient Japanese language ability to participate in lectures, seminars, and research activities. Most programs require Japanese Language Proficiency Test (JLPT) N1 level.",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "fa964addb6221e194376c743c832ec25cac197ff51b5f7414e21ec5770ecc223"
+    },
+    "cs_2027_japanese_list": {
+      "action": 11,
+      "official_url": "https://www.nagoya-u.ac.jp/admissions/exam/upload/2027_shihi_yoko.pdf",
+      "final_url": "https://www.nagoya-u.ac.jp/admissions/exam/upload/2027_shihi_yoko.pdf",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-011.json",
+      "raw_sha256": "8111e1090db83818fd50972aec963fadf0fbad7655ec1e6b5aa07ac634f1bf3e",
+      "excerpts": [
+        "情報学部，理学部，医学部及び農学部については学科・専攻別に募集します。",
+        "コ ン ピ ュ ー タ 科 学 科 若干名"
+      ],
+      "excerpt_scope": "2027 privately-funded international undergraduate recruitment list includes Computer Science. Reached through April admission, not fall G30.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "document_page": "printed 3",
+      "verbatim_excerpt": "Ⅰ 募 集 人 員 \n \n募集人員は，各学部・学科・専攻のいずれも若干名とします。 \n工学部の募集はありません。 \n情報学部，理学部，医学部及び農学部については学科・専攻別に募集します。 \n \n学 部 ・ 学 科 等  募集人員 \n文 学 部  若干名  \n教 育 学 部  若干名  \n法 学 部  若干名  \n経 済 学 部  若干名  \n情 報 学 部 自然情報学科  若干名  \n 人間・社会情報学科  若干名  \n コ ン ピ ュ ー タ 科 学 科  若干名  \n理 学 部  数 理 学 科  若干名  \n 物 理 学 科  若干名  \n 化 学 科  若干名  \n 生 命 理 学 科  若干名  \n 地 球 惑 星 科 学 科  若干名  \n医 学 部  医 学 科  若干名  \n \n保健 \n学科 \n看 護 学 専 攻  若干名  \n 放射線技術科学専攻 若干名  \n 検 査 技 術 科 学 専 攻 若干名  \n 理 学 療 法 学 専 攻  若干名  \n 作 業 療 法 学 専 攻  若干名  \n農 学 部  生 物 環 境 科 学 科  若干名  \n 資 源 生 物 科 学 科  若干名  \n 応 用 生 命 科 学 科  若干名  \n       ※上記学部・学科（専攻）の併願は，認められません。 \n  \n- 4 - \n \nⅡ 出願 手 続から入 学手 続 までの日 程 \n \n \n事   項 日   程 \nインターネット出願登録期間 \n及び \n入学検定料納入期間 \n202６年 11 月 24 日（火）10 時～12 月３日（木）15 時 \n出 願期 間 202６年 1１月 30 日（月）～12 月４日（金）15 時 郵送必着 \n受験票ダウンロード開始 202６",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "f67fe5d559911bcf1dc44d83781665fef5c041891f8a2f3c8f986e03033c019c"
+    },
+    "degree_general": {
+      "action": 17,
+      "official_url": "https://www.nagoya-u.ac.jp/about-nu/upload_images/nagoya_2310i_kihon_3.pdf",
+      "final_url": "https://www.nagoya-u.ac.jp/about-nu/upload_images/nagoya_2310i_kihon_3.pdf",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-017.json",
+      "raw_sha256": "f6c34841f1781d9f38bbeafd84671c7f15288b8364082888e79e135bcb55d93f",
+      "excerpts": [
+        "コ ン ピ ュ ー タ 科 学 科 学 士 ( 情 報 学 )",
+        "【Department of Computer Science】【Bachelor of Informatics】"
+      ],
+      "excerpt_scope": "Official basic-plan PDF with 2023 path / AY2024 medical-capacity amendment; historical/general degree mapping, not a 2027 intake guarantee.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "note": "Whitespace normalized from spaced text. Exact original bytes and view retained.",
+      "verbatim_excerpt": "コ ン ピ ュ ー タ 科 学 科 学 士 ( 情 報 学 )\n理 学 部\n【 S c h o o l  o f  S c i e n c e 】\n数 理 学 科 学 士 ( 理 学 )\n別 記 様 式 第 ２ 号 （ そ の １ の １ ）\n（ 用 紙 　 日 本 産 業 規 格 Ａ ４ 縦 型 ）\n基 　 本 　 計 　 画 　 書\n基 本 計 画\n事 項 記 入 欄\n学 位 又\nは 称 号\n",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "4ef015ec84d503a4de5907b804c285c548dbb55d94b5306f714f4d280ac49e4b"
+    },
+    "campus_general": {
+      "action": 15,
+      "official_url": "https://www.i.nagoya-u.ac.jp/en/access/",
+      "final_url": "https://www.i.nagoya-u.ac.jp/en/access/",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-015.json",
+      "raw_sha256": "5e9c50aea66f25e31f95e3c926e29d65a498c70dc6c12867882232811c4628c2",
+      "excerpts": [
+        "Most Labratories of GSI/SI-NU are located in the GSI Building or Integrated Building.",
+        "Higashiyama district campus map（Nagoya University Homepage）",
+        "School/Graduate School of Informatics, Nagoya University, Furo-cho, Chikusa-ward, Nagoya-City, 464-8601"
+      ],
+      "excerpt_scope": "General Informatics location/access; no exact fall2027 CS offer.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "Most Labratories of GSI/SI-NU are located in the GSI Building or Integrated Building.\n\nBut, please Confirm the locations before your visit.\n\n \n\nHigashiyama district campus map（Nagoya University Homepage）\n\n \n\nContact（General affairs）and Access\n\nContact\n\n　Graduate School of Informatics, Nagoya University\n\n　　　Furo-cho, Chikusa-ward, Nagoya-City, 464-8601\n\n　　　Tel　:　+81-(0)52-789-4716(Japanese Language are appreciated)\n\n　",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "04bfa2852ba83a1ed2d5c2989b0392a5d8344b3b6b6d8dce36cb8909a3a2f6ec"
+    },
+    "g30_english_2027": {
+      "action": 2,
+      "official_url": "https://admissions.g30.nagoya-u.ac.jp/upload/2027_admission_requirements_en.pdf",
+      "final_url": "https://admissions.g30.nagoya-u.ac.jp/upload/2027_admission_requirements_en.pdf",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-002.json",
+      "raw_sha256": "1fa1e8ea78ccdc298a3741e9da67077a4ea47b054933e587055e4f0d8cd308d6",
+      "excerpts": [
+        "IELTS (Academic Module) Overall band score of 6.0",
+        "TOEFL iBT: Overall score of 80 (Pre-January 2026 scoring system) or 4.0 (Post-January 2026 scoring system)",
+        "Duolingo English Test (DET) 110 and above; CEFR C1 and above",
+        "three or more consecutive years of education — including the final year of secondary education — in which English was the medium of instruction are exempt"
+      ],
+      "excerpt_scope": "2027 G30 admissions English requirements only; not assignable to Japanese Computer Science.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "document_page": "6, 30",
+      "verbatim_excerpt": "Appendix 1 \nList of English Qualifications (Application Requirements II. 2) \n \nList of English Qualifications (Application Requirements II. 2)  \nEnglish Language Proficiency Test Qualification (Minimum) Remark \nIELTS (Academic Module) Overall band score of 6.0 One Skill Retake is acceptable \nTOEFL \n iBT: Overall score of 80 (Pre-\nJanuary 2026 scoring system) or \n4.0 (Post-January 2026 scoring \nsystem) \n \n60 Paper-delivered Test \nTOEFL iBT Home Edition is \nacceptable. \nTOEFL MyBest score is \nacceptable. \nTOEIC® and TOEFL- ITP® are \nnot accepted \nDuolingo English Test (DET) 110 and above  \nCommon European Framework of \nReference for Languages (CEFR) C1 and above Must be stated in official \ntranscripts \nIf you have any other certificate of English proficiency test score which is equivalent to the above -mentioned tests, \nplease contact the Admissions Office for the International Programs through e-mail at least one month before the \nfirst day of the application period for which you are applying. (See “Ⅸ Inquiries” below) \n \n  ",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "abd41f6030e5c5623a615a97c3b748477a4377466167b87c07e901094c01a683"
+    },
+    "japanese_cs_language_tests": {
+      "action": 11,
+      "official_url": "https://www.nagoya-u.ac.jp/admissions/exam/upload/2027_shihi_yoko.pdf",
+      "final_url": "https://www.nagoya-u.ac.jp/admissions/exam/upload/2027_shihi_yoko.pdf",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-011.json",
+      "raw_sha256": "8111e1090db83818fd50972aec963fadf0fbad7655ec1e6b5aa07ac634f1bf3e",
+      "excerpts": [
+        "情報学部（コンピュータ科学科）日本語，理科（物理1科目及び「化学，生物」から1科目選択の合計2科目），数学コース2",
+        "日本語（記述，読解，聴解，聴読解）：300点以上; 理科・数学コース2：265点以上",
+        "受験科目の出題言語は，日本語を選択し受験してください。",
+        "教育学部・情報学部 医学部（保健学科） 61点以上 ―"
+      ],
+      "excerpt_scope": "2027 Japanese privately-funded CS route: EJU specified sessions 2025 second or 2026 first; TOEFL iBT61 old0–120scale, taken2025-02-01 or later. IELTS is not listed as an accepted option for Informatics.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "document_page": "printed 7-8",
+      "note": "Table line breaks normalized; minimum265 is combined science+math score, not265 per subject.",
+      "verbatim_excerpt": "情報学部 \n（コンピュータ科学科） \n日本語，理科（物理1科目及び「化学，\n生 物 」 か ら1 科 目 選 択 の 合 計2 科\n目），数学コース2 \n日本語（記述，読解，聴解，聴読解）：300点以上 \n理科・数学コース2：265点以上 \n理学部 日本語，理科（物理，化学，生物から \n2科目選択），数学コース2 \n日本語（記述，読解，聴解，聴読解）：330点以上 \n理科・数学コース 2：310点以上 \n医学部（医学科） 日本語，理科（物理，化学，生物から \n2科目選択），数学コース2 \n日本語（記述，読解，聴解，聴読解）：420点以上 \n理科・数学コース 2：380点以上 \n医学部（保健学科） 日本語，理科（物理，化学，生物から \n2科目選択），数学コース2 \n日本語（記述，読解，聴解，聴読解）：300点以上 \n理科・数学コース 2：265点以上 \n農学部 日本語，理科（物理，化学，生物から \n2科目選択），数学コース2 \n日本語（記述，読解，聴解，聴読解）：350点以上 \n理科・数学コース 2：310点以上 \n【注】受験科目の出題言語は，日本語を選択し受験してください。 \n \n⑵ TOEFL 又は IELTS（Academic Module）を2025 年2 月１日以降に受験し，下記の学部（学科）が指\n定したいずれかの得点を取得した者。 \n \n学部 （学科） TOEFL iBT ※ IELTS \n文学部・法学部 61点以上 5.5以上 \n教育学部・情報学部 \n医学部（保健学科） 61点以上 ― \n経済学部 71点以上 ― \n理学部 71点以上 6.0以上 \n医学部（医学科） 90点以上 ― \n農学部 61点以上 6.0以上 \n \n※TOEFL iBT は、2026 年 1 月から新スコアスケール（1-6）が導入されているが、旧スコアスケール（0-120）を\n採用します。 \n \n- 8 - \n \n【注】 \n○TOEFL を受験する場合 \n・農学部を除き，「MyBest スコア」を利用します。 \n・「TOEFL iBT Home Edition」テストスコアを，TOEFL iBT テストスコアと同様に取り扱います。 \n・TOEFL-ITP のスコアは利用できません。 \n・本学の私費外国人留学生入試の TOEFL における DI コード（Designated Institution Code）は\n「0312」です。 \n・「Test Taker Score Report」を本学へ送付する手配が必要です。 \n※出願期間最終日までに，本学が ETS のサービス「TOEFL○R Access」上で確認できない場合は，出願を\n受け付けません。 \n \n○IELTS（Academic Module）を受験する場合 \n・成績証明書（Test Report Form）の原本をテスト実施機関から大学へ送付する手続きを必ず行ってくだ\nさい。なお，成績証明書（Test Report Form）が出願期間最終日までに届かない場合は，書類不備のた\nめ出願を受け付けできません。また，テスト実施機関から送付される電子証明書は無効です。 \n・本人宛ての成績証明書（Test Report Form）の原本を送付いただくことも可能です。 \n・「IELTS Online」の成績証明書（Tes",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "d2709e67028c8cfe90a7c9adcc0b759645eae458a361a9d933d07e37e7f82535"
+    },
+    "japanese_cs_school_qualification": {
+      "action": 11,
+      "official_url": "https://www.nagoya-u.ac.jp/admissions/exam/upload/2027_shihi_yoko.pdf",
+      "final_url": "https://www.nagoya-u.ac.jp/admissions/exam/upload/2027_shihi_yoko.pdf",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-011.json",
+      "raw_sha256": "8111e1090db83818fd50972aec963fadf0fbad7655ec1e6b5aa07ac634f1bf3e",
+      "excerpts": [
+        "日本国籍を有しない者（日本国籍と他国との多重国籍者及び日本国の永住許可を得ている者は出願できません。）",
+        "外国において，学校教育における12年の課程を修了した者及び2027年3月31日までに修了見込みの者，又はこれに準ずる者で文部科学大臣の指定したもの",
+        "本学において，個別の入学資格審査により，高等学校を卒業したものと同等以上の学力があると認めた者で，2027年3月31日までに18歳に達する者"
+      ],
+      "excerpt_scope": "2027 Japanese international route qualifications; alternative IB/Abitur/Baccalaureate/A-level/accredited-school categories also exist. Individual review application2026-09-01 to2026-09-30. Kazakhstan school-equivalence not established.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "document_page": "printed 5-6",
+      "verbatim_excerpt": "1． 出 願 資 格 \n次の⑴及び⑵に該当する者 \n \n⑴ 日本国籍を有しない者（日本国籍と他国との多重国籍者及び日本国の永住許可を得ている者は出願でき\nません。） \n⑵ 次のいずれかに該当する者 \n① 外国において，学校教育における12 年の課程を修了した者及び2027 年3 月 31 日までに修了見\n込みの者，又はこれに準ずる者で文部科学大臣の指定したもの \n \n【注】上記出願資格の「外国において，学校教育における 12 年の課程」には，日本の教育課程による期間も\n含まれますが，日本の高等学校又は高等学校に対応する学校の課程を卒業（修了）した者及び 202７年\n3 月 31 日までに卒業（修了）する見込みの者は，出願が認められません。なお，不明な点は教育推進部\n入試課まで照会してください。 \n上記の「これに準ずる者で文部科学大臣の指定したもの」は次のものが含まれます。 \n一 外国において，学校教育における 12 年の課程を修了した者と同等の学力があるかどうかに関する認\n定試験であると認められる当該国の検定（国の検定に準ずるものを含む。次号において同じ。）に合格し\nた者で，202７年 3 月 31 日までに 18 歳に達する者 \n二 外国において，高等学校に対応する学校の課程（ 12 年未満）を修了した者（これと同等以上の学力が\nあるかどうかに関する認定試験であると認められる当該国の検定に合格した者を含む。）で，文部科学\n大臣が別に定めるところにより指定した我が国の大学に入学するための準備教育を行う課程（ ※1）又\nは文部科学大臣指定研修施設一覧（※ 2）に掲げる施設における研修並びに同表に掲げる施設におけ\nる我が国の大学に入学するために必要な教科に係る教育をもって編成される当該課程等を修了した者  \n三 外国において，高等学校に対応する学校の課程（その修了者が当該外国の学校教育における 11 年以\n上の課程を修了したとされるものであることその他の文部科学大臣が定める基準を満たすものに限る。）\nで文部科学大臣が別に指定するものを修了した者 \n四 我が国において，高等学校に対応する外国の学校の課程と同等の課程を有するものとして当該外国\nの学校教育制度において位置付けられた「我が国において，高等学校相当として指定した外国人学校\n一覧」（※3）に掲げる教育施設の学校教育における 12 年の課程を修了した者又は，学校教育における\n12 年未満の課程を修了し，準備教育を行",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "9f6b8cd6c529c4d00b5b3420e402ca3f0c2c7a7979f7d4950e5e21875242103f"
+    },
+    "g30_school_qualification": {
+      "action": 2,
+      "official_url": "https://admissions.g30.nagoya-u.ac.jp/upload/2027_admission_requirements_en.pdf",
+      "final_url": "https://admissions.g30.nagoya-u.ac.jp/upload/2027_admission_requirements_en.pdf",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-002.json",
+      "raw_sha256": "1fa1e8ea78ccdc298a3741e9da67077a4ea47b054933e587055e4f0d8cd308d6",
+      "excerpts": [
+        "The applicant must have received education primarily outside of the Japanese education system for at least two years during the last three years of his/her secondary education.",
+        "completed, or is expected to complete, a 12-year curriculum by September 30, 2027",
+        "The applicant must have demonstrated excellent academic achievement in high school."
+      ],
+      "excerpt_scope": "2027 G30 only. Alternative recognized qualifications and individual eligibility review exist; no numeric GPA established. Not exact CS.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "I. Eligibility for Application ................................................................................................... 3 \nII. Application Requirements ................................................................................................ 6 \nⅢ. Selection Criteria.............................................................................................................. 6 \nⅣ. Application Procedure ..................................................................................................... 7 \n1. Application Periods ......................................................................................................... 11 \n2. Payment of Application Fee ............................................................................................ 12 \n3. Submitting Required Documents ................................................................................... 13 \n4. List of Application Documents ....................................................................................... 16 \n5. Applicants with Special Needs ....................................................................................... 25 \n6. Other ................................................................................................................................. 25 \nⅤ. Selection Method ........................................................................................................... 26 \nⅥ. Announcement of Admission Results ......................................................................... 27 \nⅦ. Admission Procedure .................................................................................................... 27 \n1. Payment of the Registration Fee .................................................................................... 27 \n2. Other Fees Required After Enrollment .......................................................................... 28 \n3. For applicants who have not yet completed their high school education at the time \nof application: ...................................................................................................................... 28 \nⅧ. Other ............................................................................................................................... 29 \nⅨ. Inquiries .....................................................................................................",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "5aac029c11c3629f3e45f9d680238fcffdfe498ddd389c597bc6b2c4cbb2b23b"
+    },
+    "g30_deadlines": {
+      "action": 2,
+      "official_url": "https://admissions.g30.nagoya-u.ac.jp/upload/2027_admission_requirements_en.pdf",
+      "final_url": "https://admissions.g30.nagoya-u.ac.jp/upload/2027_admission_requirements_en.pdf",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-002.json",
+      "raw_sha256": "1fa1e8ea78ccdc298a3741e9da67077a4ea47b054933e587055e4f0d8cd308d6",
+      "excerpts": [
+        "First Round November 2, 2026, 9:00 (JST or UTC +9) — November 19, 2026, 12:00 noon (JST or UTC +9)",
+        "Second Round January 5, 2027, 9:00 (JST or UTC +9) — January 21, 2027, 12:00 noon (JST or UTC +9)"
+      ],
+      "excerpt_scope": "2027 G30 October programme application windows. Second round limited programmes. Not exact CS.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "document_page": "11",
+      "verbatim_excerpt": "Admission Round Starts Deadline \nFirst Round November 2, 2026, 9:00 \n(JST or UTC +9) \nNovember 19, 2026, 12:00 noon  \n(JST or UTC +9) \nSecond Round January 5, 2027, 9:00 \n(JST or UTC +9) \nJanuary 21, 2027, 12:00 noon  \n(JST or UTC +9) \n \nAvailability of Programs \n \n \n \nPrograms School \n \nAutomotive Engineering \nSchool of Engineering \n(Mechanical Engineering Course) \nSchool of Engineering \n(Electrical, Electronic/Information Engineering Course) \nPhysics School of Science \nChemistry \nSchool of Science \nSchool of Engi",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "b7ace21da4ac7506450f94218710c610ee2c5ebaf633c16cd9bfaf4c27b0fa41"
+    },
+    "japanese_deadlines": {
+      "action": 9,
+      "official_url": "https://www.nagoya-u.ac.jp/admissions/exam/us-exam/cat2/",
+      "final_url": "https://www.nagoya-u.ac.jp/admissions/exam/us-exam/cat2/",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-009.json",
+      "raw_sha256": "10fba0639a2be3676f277c65489ba4758b046e1c55ca9b94bcddfc1fa6b44969",
+      "excerpts": [
+        "インターネット出願登録期間 および入学検定料払込期間 2026年11月24日(火)10時～2026年12月3日(木)15時",
+        "出願書類郵送期間 2026年11月30日(月)～2026年12月４日(金)15時必着",
+        "情報学部 2027年1月29日(金)"
+      ],
+      "excerpt_scope": "2027 privately-funded Japanese route reached via April admission. Mail receipt required. Local Japanese time; not a fall2027 CS deadline.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "■2027年度入試日程\n\nインターネット出願登録期間\n\nおよび入学検定料払込期間\n\n2026年11月24日(火)10時～2026年12月3日(木)15時\n\n出願書類郵送期間\n\n2026年11月30日(月)～2026年12月４日(金)15時必着\n\n第１次選考結果発表\n\n教育学部\n情報学部\n理学部\n\n2026年12月22日(火)17時\n\n試験日\n\n経済学部\n理学部\n\n2027年1月28日(木)\n\n文学部\n教育学部\n法学部\n情報学部\n医学部医学科\n医学部保健学科\n農学部\n\n2027年1月29日(金)\n\n合格者発表\n\n全学部\n\n2027年2月10日(水) 17時\n\n \n\n学部入試\n\nアドミッションポリシー\n\n選抜方法の変更点\n\n一般選抜\n\n学校推薦型選抜\n\n総合型選抜\n\n私費外国人留学生選抜\n\n入学資格個別審査\n\n国際プログラム群入試（10月入学）\n\n学部(3年次・2年次)編入学試験\n\n問い合わせ先\n\n出願・入学手続\n\n各種資料（大学案内・選抜要項・募集要項）\n\n選抜状況・試験問題（過年度）・成績開示\n\nオープンキャンパス・進学相談会・大学見学など\n\n大学院入試",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "c22922e45b24bba4e01b589760e9adb380a90629a51cfe2391f8b7fded08af43"
+    },
+    "tuition_g30_2027": {
+      "action": 2,
+      "official_url": "https://admissions.g30.nagoya-u.ac.jp/upload/2027_admission_requirements_en.pdf",
+      "final_url": "https://admissions.g30.nagoya-u.ac.jp/upload/2027_admission_requirements_en.pdf",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-002.json",
+      "raw_sha256": "1fa1e8ea78ccdc298a3741e9da67077a4ea47b054933e587055e4f0d8cd308d6",
+      "excerpts": [
+        "All Programs: Annual tuition (total of first and second semester payments): JPY 535,800",
+        "registration fee (JPY 282,000)",
+        "Application fee: JPY 10,000",
+        "Premium for Personal Accident Insurance ... JPY 4,660"
+      ],
+      "excerpt_scope": "2027 G30 all-program fees subject to change. Not exact CS.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "document_page": "12, 27-28",
+      "verbatim_excerpt": "2. Other Fees Required After Enrollment \n(Subject to change) \nProgram name Tuition \nPremium for Personal Accident \nInsurance for Students Pursuing \nEducation and Research (PAS) \n \nAll Programs \nFirst semester payment:  \nJPY 267,900 \n \nAnnual tuition (total of first \nand second semester \npayments):  \nJPY 535,800 \nJPY 4,660 \nNotes: \n(1) If there is any change made to the tuition fee when you apply or after you enroll at the University, the \nnew fee system will automatically apply when a revision becomes effective. \n(2) The tuition fee must be paid after enrollment. \n(3) For detailed information on other enrollment procedures, please refer to the Enrollment Instructions \nwhich will be available on the Online Admissions System in early July. \n \n \n3. For applicants who have not yet completed their high school \neducation at the time of application: \nApplicants who have not yet earned an academic qualification equivalent to high school graduation must \nensure that official copies of a certificate of graduation or an academic qualification, record of final academic \ntranscripts, test results",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "faa5b08ee0d0e843f866c9ed3781dab577931e72bc5dfd059f5cdf7953808d8a"
+    },
+    "tuition_japanese_2027": {
+      "action": 11,
+      "official_url": "https://www.nagoya-u.ac.jp/admissions/exam/upload/2027_shihi_yoko.pdf",
+      "final_url": "https://www.nagoya-u.ac.jp/admissions/exam/upload/2027_shihi_yoko.pdf",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-011.json",
+      "raw_sha256": "8111e1090db83818fd50972aec963fadf0fbad7655ec1e6b5aa07ac634f1bf3e",
+      "excerpts": [
+        "入学料 282,000円; 前期分267,900円; 年額535,800円; 4,660円 ... 情報学部",
+        "入学検定料：17,000円（検定料のほかに事務手数料が必要です。）"
+      ],
+      "excerpt_scope": "2027 privately-funded Japanese route: annual535800JPY, registration282000, Informatics insurance4660, application17000 plus processing. Subject to revision; not fall2027 offer.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "document_page": "printed 14, 25",
+      "verbatim_excerpt": "⑶ 入学料等学生納入金，及び学生教育研究災害傷害保険料（予定額）  \n『Web 入学手続システム』を利用して手続を行い，下表の入学料及び学生教育研究災害傷害保険\n料を納入してください。授業料については「入学手続要領」で確認し，入学後に納入してください。 \n \n入学料 授業料 \n学生教育研究災害\n傷害保険料 \n（学研災付帯責任賠償 \n保険を含む。） \n学部（学科） \n282,000 円 \n前期分267,900 円 \n \n年 額 535,800 円 \n4,660 円  \n文学 部，教育学部，法学 部， \n経済学部，情報学部，理学 部， \n農学 部 \n7,800 円  医学部医学科 \n5,370 円  医学部保健学科 \n【注】① 入学時又は在学中に学生納入金の改定が行われた場合には，改定時から新たな入学料額及び\n授業料額が適用されます。 \n② 納入済みの入学料は返還しません。 \n③ 学生教育研究災害傷害保険料は，学部（学科）により異なります。 \n保険料の納入方法は，「入学手続要領」を参照してください。 \nなお，保険料の改定が行われた場合，改定時から新たな保険料が適用されます。 \n④ 入学料等納入時に別途事務手数料が必要になります。 事務手数料の金額は， 決済内容確認の画\n面に表示されます。 \n⑤ その他，入学に必要な手続の詳細は，「入学手続要領」を参照してください。 \n \n⑷ 入学辞退の手続き \n私費外国人留学生入試の合格者で，真にやむを得ない事情により入学を辞退する場合は，以下の\nサイトから本学所定の「入学辞退届」を印刷し，必要事項を自署のうえ，2027 年 2 月 17 日（水）\n12 時までに名古屋大学入試課へ郵送またはFAX により提出してください。 \n▶ 名古屋大学 受験生応援サイト〔入試情報を知りたい→出願・入学手続→入学手続〕  \nhttps://www.nagoya-u.ac.jp/admissions/exam/cat/cat3/index.html  \n- 26 - \n \nⅨ 個人 情 報 の取 扱い \n \n⑴ 個人情報については， 「個人情報の保護に関する法律」 及び 「東海国立大学機構個人情報保護規程」\nに基づき，適切に取り扱います。 \n⑵ 出願時に得た住所， 氏名， 生年月日， その他の個人情報については， 入学者選抜， 合格者発表， 入学\n手続業務を行うために利用します。 \n⑶ 出願時に得た個人情報内容及び入学者選抜に用いた試験成績は，今後の入学者選抜方法の検討資料\nの作成のために利用します。 また， 入学者についてのみ ①教務関係 （学籍， 修学指導等） ， ②学生支\n援関係（健康管理，就職支援，授業料免除・奨学金申請等），③授業料徴収に関する業務を行うため\nに利用します。 \n⑷ 上記⑵及び⑶の各種業務での利用に当たっては，一部の業務を本学が委託した業者に対して，当該\n業務を遂行するために必要となる限度内で個人情報の全部又は一部を提供します。また，大学生活準\n備の情報提供のため， 合格者の氏名 ・ 住所等の個人情報を名古屋大学消費生活協同組合に提供します。 \n⑸ 日本留学試験の成績を入学者選抜に利用するため， 日本留学試験受験番号， 氏名， 生年月日その他の\n個人情報を日本学生支援機構又はその委託業者に送付します。 \n \n  \n- 27 - \n \nⅩ 202 6（ 令 和８） 年 度 私費 外 国 人 留学 生 入 試 選 ",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "3822e02bd160161229cef51870ebbc9d904494cbdb87f0f6846b3bf31761b6ec"
+    },
+    "living_estimate_general": {
+      "action": 12,
+      "official_url": "https://en.nagoya-u.ac.jp/admissions/financial/costs/",
+      "final_url": "https://en.nagoya-u.ac.jp/admissions/financial/costs/",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-012.json",
+      "raw_sha256": "b9d524fd32e5ada0c90b4ce535ff904e4eaa6fe5e247a0f2bfcb8a84e73c1038",
+      "excerpts": [
+        "Monthly expenses are estimated to be around 86,500 to 106,500 yen.",
+        "Living expenses vary depending on students’ lifestyle and spending patterns. The amount suggested above is for reference only."
+      ],
+      "excerpt_scope": "General official living estimate, not a 2027 guarantee or an official total annual cost.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "Monthly living expenses\n\nOverall monthly budget\n\nNagoya, a crucial industrial and cultural hub, balances modernity with tradition, offering a moderate cost of living for students. Monthly expenses are estimated to be around 86,500 to 106,500 yen.\n\nItem\nEstimated monthly cost\nAccommodation (Off-campus apartment)\n¥ 30,000–50,000\nUtilities\n¥ 10,000\nFood\n¥ 30,000\nTelecommunications\n¥ 5,000\nInsurance\n¥ 1,500\nOther personal expenses\n¥ 10,000\nTotal\n¥ 86,500–106,500\n\nLiving expenses vary depending on students’ lifestyle and spending patterns. The amount suggested above is for reference only.\n\nFood and dining\n\nJapan offers excellent value for fresh, healthy food:\n\nUniversity cafeterias: Most affordable option with nutritious meals\n\nCooking at home: Groceries can be affordable, especially if you buy locally produced items\n\nLocal specialties: The food in the city is mostly prepared locally and fresh, and eating out is much cheaper than many OECD ountries\n\nTransportation\n\nPublic transport: Efficie",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "e6936cbe5ff7a70104c61067b57bed687441dafc7ed11d90e1f7e99bc1164b32"
+    },
+    "g30_scholarships_general": {
+      "action": 10,
+      "official_url": "https://admissions.g30.nagoya-u.ac.jp/studentlife/scholarships/",
+      "final_url": "https://admissions.g30.nagoya-u.ac.jp/studentlife/scholarships/",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-010.json",
+      "raw_sha256": "9e64953a33fdabb4397713c5b3ac5a428afb1b91d7fc9f5dbd02f4decde13022",
+      "excerpts": [
+        "Applicants must satisfy Nagoya University’s undergraduate admissions eligibility criteria for the Global 30 International Programs.",
+        "The tuition will be fully covered for 4 years.",
+        "The scholarship recipient needs to pay the registration fee, but it will be reimbursed after enrollment.",
+        "Annual Stipend: The total of 500,000 yen will be provided for 4 years.",
+        "MEXT Scholarship – University Recommendation: Monthly Stipend: 117,000 yen/ Month; Regional Rate JPY 3,000 yen / Month"
+      ],
+      "excerpt_scope": "General current G30 scholarship page, not 2027 CS offer. Stipend text has an Annual Stipend heading but ambiguous total/four-year wording, retained verbatim rather than silently resolved.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "G30 Undergraduate Scholarship \n\nScholarship\n\nTuition\n\nThe tuition will be fully covered for 4 years.\n\nRegistration fee\n\nThe scholarship recipient needs to pay the registration fee, but it will be reimbursed after enrollment.\n\nAnnual Stipend\n\nThe total of 500,000 yen will be provided for 4 years.\n\nTerms and Conditions to Continue Receiving Scholarship\n\nRecipients must satisfy both requirements below to receive the scholarship:\n\nSelected recipients must matriculate at Nagoya University in the year applied, with the intention of completing the program at Nagoya University.\n\nIf a recipient receives an additional scholarship from other governmental and/or private sources equivalent to or greater than JPY500,000 per year, s/he will forfeit this scholarship.\n\nDuration of Scholarship\n\nIn principle, the scholarship will cover the four years of the recipient’s undergraduate study at Nagoya University. However, continuation each year will be contingent on the recipient maintaining the “Responsibilities of the Recipients.” Scholarships can be terminated at any time if it is found that the “Responsibilities of the Recipients” are not being met or the recipient has not abided by the rules and regulations of Nagoya University as well as of Japan.\n\nResponsibilities of the Recipient\n\nThe recipient should:\n\nMaintain good academic records. \n\nDemonstrate ethical leadership and be a good role model on campus and the general community.\n\nRepresent Nagoya University as a “Student Ambassador.”\n\n MEXT Scholarship – University Recommendation \n\nScholarship\n\nFee Remissions\n\nThe application fee will be ",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "cf4e6e04821619ee5b9d60831d6dbe80fdea79aa7cd0f6d36241822d8bb2c66f"
+    },
+    "international_scholarship_general": {
+      "action": 10,
+      "official_url": "https://admissions.g30.nagoya-u.ac.jp/studentlife/scholarships/",
+      "final_url": "https://admissions.g30.nagoya-u.ac.jp/studentlife/scholarships/",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-010.json",
+      "raw_sha256": "9e64953a33fdabb4397713c5b3ac5a428afb1b91d7fc9f5dbd02f4decde13022",
+      "excerpts": [
+        "<Non-Japanese Nationals> The Monbukagakusho Honors Scholarship ... available for self-financed international students at Nagoya University.",
+        "48,000 yen / month for six months or until March 31",
+        "Registration and tuition fee exemption might be available ... fee reduction of between 50% and 100%"
+      ],
+      "excerpt_scope": "Generic undergraduate/international assistance; no exact2027CS award guarantee.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "<Non-Japanese Nationals>\nThe Monbukagakusho Honors Scholarship or 学習奨励費 are available for self-financed international students at Nagoya University. The Admissions Office or graduate schools will contact those admitted for any details regarding how to apply. \n\nMonthly Stipend\n\n48,000 yen / month for six months or until March 31\n\nFind More\n\nCommon\n\n \nPrivate Scholarships for Self-Funded International Students\n \n\nMore informatio",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "ca263577531ec36c6d50cda3aca107c331e2bb8de2fc257550f1df2719b0a2ac"
+    },
+    "mext_designated_countries_old": {
+      "action": 18,
+      "official_url": "https://admissions.g30.nagoya-u.ac.jp/wp-content/uploads/2024/04/Countries-and-regions-designated-by-MEXT_0912.pdf",
+      "final_url": "https://admissions.g30.nagoya-u.ac.jp/wp-content/uploads/2024/04/Countries-and-regions-designated-by-MEXT_0912.pdf",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-018.json",
+      "raw_sha256": "544d48d0b20d2f292ef37b6d3fd811735515fc6848073b3573e03163902c4fc2",
+      "excerpts": [
+        "As of September 2023",
+        "カザフスタン Kazakhstan"
+      ],
+      "excerpt_scope": "Kazakhstan is in the linked historical MEXT designated-countries list; not confirmation that a 2027 nomination is available.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "As of September 2023\n○東アジア East Asia ○アフリカ地域 Africa ○北米 North America\n○\n東南アジア Southeast Asia\nインドネシア Indonesia\nカンボジア Cambodia\nシンガポール Singapore\nタイ Thailand\nフィリピン Philippines\nブルネイ Brune \nベトナム Viet Nam \nマレーシア Malaysia\nミャンマー Myanmar\nラオス Laos\n○南西アジア Southwest Asia\nインド India\nスリランカ Sri Lanka\nネパール Nepal\nパキスタン Pakistan \nバングラデシュ Bangladesh \nブータン Bhutan \nモルディブ Maldives\n○中東・北アフリカ地域\nMi\nddle East & North Africa\nアフガニスタン Afghanistan\nアラブ首長国連邦 United Arab Emirates\nイエメン Yemen\nイスラエル Israel\nイラク Iraq\nイラン Iran\nオマーン Oman\nカタール Qatar\nクウェート Kuwait\nサウジアラビア Saudi Arabia\nシリア Syria\nトルコ Turkey\nバーレーン Bahrain \nヨルダン Jordan\nレバノン Lebanon\nパレスチナ Palestine \nアルジェリア Algeria\nエジプト Egypt\nチュニジア Tunisia\nモロッコ Morocco\nリビア Libya\n○南米 South America\nアルゼンチン Argentine\nウルグアイ Uruguay\nエクアドル Ecuador\nガイアナ Guyana \nコロンビア Colombia\nスリナム Suriname\nチリ Chile\nパラグアイ Paraguay \nブラジル Brazil \nベネズエラ Venezuela \nペルー Peru \nボリビア Bolivia \n○中東欧 Central and Eastern Europe\nアルバニア Albania\nウクライナ Ukraine\nオーストリア Austria\nキプロス Cyprus\nギリシア Greece \nクロアチア Croatia\nスイス Switzerland\nスロバキア Slovakia\nスロベニア Slovenia\nチェコ Czech Republic\nボスニア・ヘルツェゴビナ  \nBosnia and Herzegovina  \nハンガリー Hungary\nブルガリア Bulgaria \nポーランド Poland \n北マケドニア North Macedonia \nリヒテンシュタイン Liechtenstein\nルーマニア Romania\nセルビア Serbia\nモンテネグロ Montenegro\nコソボ Kosovo\n○CIS諸国 CIS\nアゼルバイジャン Azerbaijan\nアルメニア Armenia\nウズベキスタン Uzbekistan\nカザフスタン Kazakhstan\nキルギス Kyrgyz Republic\nタジキスタン Tajikistan\nトルクメニスタン Turkmenistan\nモルドバ Moldova\n       \nアメリカ合衆国 United Statesモンゴル Mongolia アンゴラ Angola\nウガンダ Uganda\nエチオピア Ethiopia\nエリトリア Eritrea\nガーナ Ghana \nカーボヴェルデ Cape Verde\nガボン Gabon \nカメルーン Cameroon\nガンビア Gambia \nギニア Guinea \nギニアビサウ Guinea-Bissau \nケニア Kenya\nコートジボワール Côte d'Ivoire\nコモロ Comoros\nコンゴ共和国 Republic of Congo\nコンゴ民主共和国\nDemocratic Republic of the C",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "272a18f829f82318cf8f432855f74eb336451cc8660a4210295ee26c0a268096"
+    },
+    "outdated_scholarship_page": {
+      "action": 13,
+      "official_url": "https://en.nagoya-u.ac.jp/admissions/financial/scholarships/",
+      "final_url": "https://en.nagoya-u.ac.jp/admissions/financial/scholarships/",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/nagoya/raw/nagoya-013.json",
+      "raw_sha256": "ef5d8e26d021dae10e72cbaa5da2ffb1e7f1048507f0cad32f0af1116eae38c4",
+      "excerpts": [
+        "Scholarship Provision (2019)",
+        "Undergraduate students – 48,000 yen per month ... (as of 2019)"
+      ],
+      "excerpt_scope": "Official page contains explicitly old figures; not used as current2027 scholarship confirmation.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "Scholarship Provision (2019)\n\nTypes of students\n \n\nMonthly stipend (3)\n \n\nAdditional stipend for designated area (1)\n \n\nUndergraduate Students (2)\n \n\n117,000\n \n\n3,000\n \n\nJapanese Language / Japanese Study Students\n \n\nResearch Students, Teacher Training Students\n \n\nResearch students, Non-degree students\n \n\n143,000\n \n\nMaster’s course\n \n\n144,000\n \n\nDoctoral course\n \n\n145,000\n \n\nYoung Leaders’ Program Students\n \n\n242,000\n \n\nStudents who study/research in a designated region will be provided an additional stipend monthly of 2,000 yen or 3,000 yen. Nagoya city = 3,000 yen.\n\nIncluding students in the Japan-Korea Joint Program in Science and Engineer",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "excerpts_processing": "Existing excerpts normalize line/table layout; verbatim_excerpt supplies direct retained text.",
+      "verbatim_excerpt_sha256": "d3c8c727aa06b6c44ac11a9703127624620f990d2aaaf360a26aea7c7827394d"
+    }
+  },
+  "negative_findings": [
+    {
+      "statement": "ExactComputerScience not listed among2027OctoberG30undergraduateprogrammes",
+      "scope": "G30October2027 only",
+      "evidence_ids": [
+        "g30_2027",
+        "g30_faq"
+      ],
+      "university_wide_absence": false
+    }
+  ],
+  "provider_discovery_not_fact_evidence": [
+    1,
+    4,
+    16
+  ],
+  "website_partial_outcomes": [],
+  "limitations": [
+    "PDFCFF-font extraction warning forJapanese2027 guide: fontToolsnotinstalled; textvisibleandpreserved, nopackageinstalled.",
+    "NoOST-level blindness; ordinarysharedrepoexpert restrictedtoownevidence/controller; nogold/algorithmoutcomes/other-expertreportsread."
+  ],
+  "timing_note": "Recordedcontroller tooltime excludesmodelthinking; not directlyidenticaltoalgorithm120secondsetup-inclusivelimit.",
+  "evidence_validation": {
+    "at": "2026-10-07T16:25:59.868272+00:00",
+    "raw_hashes_verified": 18,
+    "failures": [],
+    "schema_review": "unreviewed",
+    "semantic_review": "unreviewed"
+  }
+}
