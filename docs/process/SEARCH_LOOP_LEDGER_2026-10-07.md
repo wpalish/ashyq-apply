@@ -17,6 +17,10 @@ Starting HEAD b0b1a9ccacd59d8cf1fe34b0a5b6d65cd7b8e594, dependent branch `task/s
 Global STOP `/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-STOP.json` must remain sticky after first model/provider/auth/quota refusal. No purchase/substitution/retry/reset. Original Expert500V9 remains closed unscored. Public source reading always uses Fetcher; snippets only discover URLs. Original dirty sibling checkout stays untouched. No tuning on heldout, no owner gold signature fabricated.
 
 ## Next resume
+## Latest preserved source 2026-10-07 21:21UTC
+
+Round6 source5472a8337e38aecf55addacf5e02fa057477cb51 pushed in DraftPR66 https://github.com/wpalish/ashyq-apply/pull/66, base task/search-subject-phrase/#65. Exact source PR metadata matches; checks[] isnotpass. PF-1False;4077/95.06%,frontend232/all local gates/demo20 unchanged/onehead,227focused/49external/31independent capture controls. Source/body/quote/rejected prototypes and scope limits preserved. B durable60get final manifestb603fe6a/patchc09219f0 has70actual-path tests and honest boundaries; A/root independent SQL/fence review now started, not applied. Mixed intent and realPG races unproved;120s/render/query/docs/recheck excluded. LiveSTOPsticky/hostedrefusal remains; no reset, purchase, gold/heldout/default, merge/deployment/launch. Continue accepted-budget review then exact write-ahead on task/search-production-read-budget from this predecessor; neverapply oldSQLite2gets/count1candidate.
+
 
 ## Latest Round6 checkpoint 2026-10-07 21:12UTC
 

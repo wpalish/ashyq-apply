@@ -1,5 +1,9 @@
 # Claude search relay — 7 October 2026
 
+## Latest preserved source 2026-10-07 21:21UTC
+
+Round6 source5472a8337e38aecf55addacf5e02fa057477cb51 pushed in DraftPR66 https://github.com/wpalish/ashyq-apply/pull/66, base task/search-subject-phrase/#65. Exact source PR metadata matches; checks[] isnotpass. PF-1False;4077/95.06%,frontend232/all local gates/demo20 unchanged/onehead,227focused/49external/31independent capture controls. Source/body/quote/rejected prototypes and scope limits preserved. B durable60get final manifestb603fe6a/patchc09219f0 has70actual-path tests and honest boundaries; A/root independent SQL/fence review now started, not applied. Mixed intent and realPG races unproved;120s/render/query/docs/recheck excluded. LiveSTOPsticky/hostedrefusal remains; no reset, purchase, gold/heldout/default, merge/deployment/launch. Continue accepted-budget review then exact write-ahead on task/search-production-read-budget from this predecessor; neverapply oldSQLite2gets/count1candidate.
+
 ## Latest Round6 checkpoint 2026-10-07 21:12UTC
 
 PF-1 off-default source locally verified4077/95.06%,frontend232/all gates/unchangeddemo20/onehead;227focused,49external,31independent capture controls. Real Wits reader programme0/1/1/0, funding traversal retained on direct/depth1 routes; intake/yearUnknown, SI-1False prevents standalone fullpipeline gain.79executions/70unique off snapshots and manual semantic fixtures; FAQ/UNKNOWN/doc/catalog/support unchanged. Four rejected candidates and all originals retained in round6. Sourcecheckpoint/DraftPR66 next, no live/default/hostedCI/launch claim. Next durable60get guard only after B final pin/A/root SQL/fence review: SQLite predecessor2gets/count1 rejected, corrected69control bundle still pending.120s hardwall/renderer/querydurability remains unresolved. StickySTOP unchanged; no resets, payments, substitutions, gold/heldout changes. Newest section supersedes old planned steps below.
