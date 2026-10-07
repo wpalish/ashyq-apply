@@ -1,0 +1,88 @@
+{
+  "real_bounded_terminal_outcome_accepted": true,
+  "source_run": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round2/pair/off1/20261007T185255Z",
+  "missing_aut_raw_recorded": true,
+  "provider_failure": null,
+  "controls": [
+    {
+      "control": "time_overrun",
+      "errors": [
+        "0480c3b293c219debd4325fe107ac27b:invalid_elapsed_ms"
+      ]
+    },
+    {
+      "control": "read_overrun",
+      "errors": [
+        "0480c3b293c219debd4325fe107ac27b:invalid_fetcher_calls"
+      ]
+    },
+    {
+      "control": "query_overrun",
+      "errors": [
+        "0480c3b293c219debd4325fe107ac27b:invalid_search_queries"
+      ]
+    },
+    {
+      "control": "missing_counter",
+      "errors": [
+        "0480c3b293c219debd4325fe107ac27b:invalid_elapsed_ms"
+      ]
+    },
+    {
+      "control": "bool_counter",
+      "errors": [
+        "0480c3b293c219debd4325fe107ac27b:invalid_search_queries"
+      ]
+    },
+    {
+      "control": "unfinished_checkpoint",
+      "errors": [
+        "0480c3b293c219debd4325fe107ac27b:missing_final_checkpoint"
+      ]
+    },
+    {
+      "control": "provider_failure",
+      "errors": [
+        "0480c3b293c219debd4325fe107ac27b:provider_failure"
+      ]
+    },
+    {
+      "control": "parent_process_failure",
+      "errors": [
+        "0480c3b293c219debd4325fe107ac27b:process_failure"
+      ]
+    },
+    {
+      "control": "unknown_stop",
+      "errors": [
+        "0480c3b293c219debd4325fe107ac27b:unavailable_or_unknown_error"
+      ]
+    },
+    {
+      "control": "missing_case",
+      "errors": [
+        "missing_or_reordered_observation"
+      ]
+    },
+    {
+      "control": "in_progress",
+      "errors": [
+        "0480c3b293c219debd4325fe107ac27b:unavailable_or_unknown_error"
+      ]
+    },
+    {
+      "control": "missing_raw_without_timeout",
+      "errors": [
+        "0480c3b293c219debd4325fe107ac27b:missing_completed_raw"
+      ]
+    },
+    {
+      "control": "wrong_flag",
+      "errors": [
+        "wrong_experiment_state"
+      ]
+    }
+  ],
+  "network_actions": 0,
+  "interpretation": "Known clean in-cap source-work exhaustion remains a measured limited result; all faults rejected"
+}
