@@ -1,0 +1,35 @@
+{
+  "queries": [
+    {
+      "at_ns": 810530944510583,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('ccb8145c4a1d4b75b9ebd0e3a04b81bb',)"
+    },
+    {
+      "elapsed_ns": 20375,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810530944673291,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = ?",
+      "params": "('3f257646c5db4ac4988e3048859f9fbc',)"
+    },
+    {
+      "elapsed_ns": 13125,
+      "sql_prefix": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = ?"
+    },
+    {
+      "at_ns": 810530944799666,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('ccb8145c4a1d4b75b9ebd0e3a04b81bb',)"
+    },
+    {
+      "elapsed_ns": 7667,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?"
+    }
+  ],
+  "sql_errors": []
+}

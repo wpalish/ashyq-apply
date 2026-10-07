@@ -43,6 +43,8 @@ class Candidate:
     #: Search-seam attempts charged to this institution, including local
     #: wrapper refusals; this budget ledger does not prove HTTP dispatch.
     search_queries_used: int = 0
+    #: Stable imported identity for internal university-wide source-work scope.
+    catalogue_id: str | None = None
 
     @property
     def verifiable(self) -> bool:

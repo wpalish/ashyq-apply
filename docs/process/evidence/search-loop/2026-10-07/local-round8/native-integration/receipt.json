@@ -1,0 +1,2029 @@
+{
+  "created_at": "2026-10-07T23:14:25.175214+00:00",
+  "kind": "actual repository readguard integration; full source gates pending",
+  "source_branch": "task/search-production-read-budget",
+  "source_default": false,
+  "focused_passed": 134,
+  "focused_failed": 0,
+  "focused_skipped": 0,
+  "real_postgresql_cases": 33,
+  "application_static_passed": "Ruff/format/mypy; full scope381 (before final direct-import port repair)",
+  "first_port_attempt": "133 passed / 1 stale-helper reference failure; original retained; repaired direct app import",
+  "full_local_gates": "NOT YET RUN on new source",
+  "quality_precision_recall": "UNMEASURED",
+  "live_calls": 0,
+  "configured_secret_matches": 0,
+  "selected_files": {
+    "root/application-receipt-before-format.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/application-receipt-before-format.json",
+      "sha256": "36963559e70f547ee927d5f430a72353c26e41090900df7b2a841f9afe2cf336",
+      "bytes": 1903
+    },
+    "root/application-receipt-post-format.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/application-receipt-post-format.json",
+      "sha256": "aafe46195182276793f67a28e3e119561f28687fdb390f4765e2290f68bba547",
+      "bytes": 2264
+    },
+    "root/baton-commit.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/baton-commit.log",
+      "sha256": "5290697585359f0e08c39afcb3d7b0862592236c4c73e3faeb84369506a562cd",
+      "bytes": 638
+    },
+    "root/baton-push.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/baton-push.log",
+      "sha256": "27dda624e8702d6f097fb7f88adbc15c2d82819b6affada8c567c4cb21cae48e",
+      "bytes": 471
+    },
+    "root/format-all-first.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/format-all-first.log",
+      "sha256": "47becdc7bcfd38c7c036ee66cb757f0aa4e68da6ad6e174ff6513d36cf87332b",
+      "bytes": 28
+    },
+    "root/format-app-final.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/format-app-final.log",
+      "sha256": "4e91bbf655ac088fa970a2002c8966ba5c052e2564c54c28dee1de4d4385e996",
+      "bytes": 28
+    },
+    "root/format-application-initial.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/format-application-initial.log",
+      "sha256": "2a888d53d85b92f1d4ac7d2900c2f0dee62c9a5836cdd4ec067f5d13ecd81e8b",
+      "bytes": 154
+    },
+    "root/format-tests-initial.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/format-tests-initial.log",
+      "sha256": "75a1a0b84df254a5914206de15dfb687d14e0be3046751da61f2b4b66da13a6b",
+      "bytes": 43
+    },
+    "root/git-fetch.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/git-fetch.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "root/handoff-check-original.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/handoff-check-original.log",
+      "sha256": "e4dda2c79494ddf70a88a79e4ea156680ece3eaea3acab09abe88173b87d6e1b",
+      "bytes": 519477
+    },
+    "root/mypy-all-first.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/mypy-all-first.log",
+      "sha256": "733a9764e731d8b96013f30bb1f4a4b836c0d71675adbfc5c9a19f912b3ab179",
+      "bytes": 8737
+    },
+    "root/mypy-app-initial.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/mypy-app-initial.log",
+      "sha256": "467364859149a6d51b16354d7d71beef180cec376644e32fbdc65429522ad603",
+      "bytes": 45
+    },
+    "root/ruff-all-first.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/ruff-all-first.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    "root/ruff-app-final.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/ruff-app-final.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    "root/ruff-application-before-format.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/ruff-application-before-format.log",
+      "sha256": "5037bdbbf384d3878c09196d795c3ad606cc81c16df27e42f6e73e3204bd12e5",
+      "bytes": 60
+    },
+    "root/ruff-application-initial.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/ruff-application-initial.log",
+      "sha256": "d54ba8205993c816b6b75f198019c19ca61b17182ff3e706d79f2ebc050d49b7",
+      "bytes": 217
+    },
+    "root/ruff-format-fix.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/ruff-format-fix.log",
+      "sha256": "96a977f329ec3c59092d40e041a019b49dcf03ca04055e177aa0ccb8c27234df",
+      "bytes": 20
+    },
+    "root/ruff-import-format-fix.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/ruff-import-format-fix.log",
+      "sha256": "6f4e3c8cb6a43f32a8b47add0b65207f17bd814c84308623b3720ad789c0d769",
+      "bytes": 39
+    },
+    "root/ruff-tests-after-format.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/ruff-tests-after-format.json",
+      "sha256": "a5aacd02466b78833635215e603c8437e0ab422064cc327b5b0ab3b1bb997b7b",
+      "bytes": 39517
+    },
+    "root/ruff-tests-initial-fix.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/ruff-tests-initial-fix.log",
+      "sha256": "8c82f49f647d63fb28876c16839f3bd3e533412d78700ee1e8fe8af97d54752f",
+      "bytes": 116922
+    },
+    "expert-a/actual-imports.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/actual-imports.json",
+      "sha256": "35b73fdd8571917b9dc7f0c615ff130b8ed66cff2762b5d90e26361ea5ff6dd7",
+      "bytes": 2372
+    },
+    "expert-a/attempt1.diagnosis.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/attempt1.diagnosis.json",
+      "sha256": "2b24d46794fa5ebb0fdfa2b458b307321c0777ac3bd20b3d4b63a60527586734",
+      "bytes": 465
+    },
+    "expert-a/attempt1.junit.xml": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/attempt1.junit.xml",
+      "sha256": "82ea6bb482e20313ba582da71261ce350206c8bf8bf1caaee4b87183e69582ce",
+      "bytes": 24773
+    },
+    "expert-a/attempt1.preflight.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/attempt1.preflight.json",
+      "sha256": "28c1d8f986c4c87c6c9d6dbc1a6d943bca9a5786228e199f42ee89c5cb9c087b",
+      "bytes": 2555
+    },
+    "expert-a/attempt1.result.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/attempt1.result.json",
+      "sha256": "cd23c8b0a295beab666bee07a3c03646a84d8ad417a15f0e103bef3b0a8b84dd",
+      "bytes": 243
+    },
+    "expert-a/attempt1.stderr.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/attempt1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "expert-a/attempt1.stdout.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/attempt1.stdout.log",
+      "sha256": "7bf88fe8ceae3119a389b1ca3f4fee62c7c64ef1f80cd6c1905dc1da101592b4",
+      "bytes": 8723
+    },
+    "expert-a/attempt2.junit.xml": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/attempt2.junit.xml",
+      "sha256": "d6d6aa9eaaf9c5f4c4bf937f15d3c767d91e7cac78c1d3bc24a111a315be3d1d",
+      "bytes": 19827
+    },
+    "expert-a/attempt2.preflight.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/attempt2.preflight.json",
+      "sha256": "48d9327cc6f44026246cc659d31736d6b5dd1ec7fd65e4daea8e69b760282dbc",
+      "bytes": 2342
+    },
+    "expert-a/attempt2.result.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/attempt2.result.json",
+      "sha256": "81868a6e94ffc0178bf833deb1c9013d9fab4ee95ddb876a5e8ec4f1d26376d2",
+      "bytes": 21
+    },
+    "expert-a/attempt2.stderr.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/attempt2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "expert-a/attempt2.stdout.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/attempt2.stdout.log",
+      "sha256": "9fcce73e834531098154ea2022611027a5c3349e89417dad5925d5d12fc4979e",
+      "bytes": 160
+    },
+    "expert-a/attempt2.summary.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/attempt2.summary.json",
+      "sha256": "86c3f17c0f6ee3a43665f5dd51b62bcb4e035d7fc8d5ea49c25f6721819e323c",
+      "bytes": 4622
+    },
+    "expert-a/cleanup.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/cleanup.json",
+      "sha256": "12e93beb5d3729e8f117d356fa8c01ee12a56fe5f64fd6a9c40ca7504326fc4c",
+      "bytes": 283
+    },
+    "expert-a/final-format.stderr.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/final-format.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "expert-a/final-format.stdout.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/final-format.stdout.log",
+      "sha256": "ef7d13d02214e98ca902b05257cdbe6a8e84f3b4714508efdc19766460b54209",
+      "bytes": 26
+    },
+    "expert-a/final-ruff.stderr.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/final-ruff.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "expert-a/final-ruff.stdout.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/final-ruff.stdout.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    "expert-a/ports-before-application.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/ports-before-application.json",
+      "sha256": "0d9ccf4371f6c356173aa699c3a19d3965aafd8bcffafd7bf438898955425e34",
+      "bytes": 1680
+    },
+    "expert-a/receipt.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/receipt.json",
+      "sha256": "70eb1d12de74f907fd233a8557d7c1ebf2271581cf687b35b4f396c126d77b29",
+      "bytes": 8665
+    },
+    "expert-a/sealed-evidence-manifest.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/sealed-evidence-manifest.json",
+      "sha256": "b81a2644b456cdc5416ff088dc7d2c6ce979649f80046494f5a24c1044253696",
+      "bytes": 80868
+    },
+    "expert-a/writeahead-plan.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/writeahead-plan.json",
+      "sha256": "bd1fc56f6ac8cb5b498e87579d7180d887b2a55b9038d8e30447bc4a3d0d543a",
+      "bytes": 5859
+    },
+    "expert-a/pytest-attempt1/test_60_actual_fetcher_get_the0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_60_actual_fetcher_get_the0/readguard-evidence/sql.json",
+      "sha256": "7edb4c932df8c6d4dc0385f75d5e0322fde46841e06a9b9022a11564529cf535",
+      "bytes": 262549
+    },
+    "expert-a/pytest-attempt1/test_60_actual_fetcher_get_the1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_60_actual_fetcher_get_the1/readguard-evidence/sql.json",
+      "sha256": "7b7f2d13a3531c094da0d8d87b687b3f3274bd62005dbb5c0860e0cf7f04c229",
+      "bytes": 262556
+    },
+    "expert-a/pytest-attempt1/test_60_actual_fetcher_get_the2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_60_actual_fetcher_get_the2/readguard-evidence/sql.json",
+      "sha256": "dc50ef07888af064f82d869028fd1dd8c7e01972b6e40e7658e5e5863f036dd1",
+      "bytes": 262642
+    },
+    "expert-a/pytest-attempt1/test_60_actual_fetcher_get_the3/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_60_actual_fetcher_get_the3/readguard-evidence/sql.json",
+      "sha256": "c08e1fe9a2baf566b003f4599e07a734eaccbbe0751aa2fc10697443072e0f0b",
+      "bytes": 262651
+    },
+    "expert-a/pytest-attempt1/test_60_actual_fetcher_get_the4/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_60_actual_fetcher_get_the4/readguard-evidence/sql.json",
+      "sha256": "462cf259f43b45749a33db7f88879380e3f8727197b19e4ff52ae0e3e9854ca4",
+      "bytes": 262674
+    },
+    "expert-a/pytest-attempt1/test_actual_application_module0/actual-imports.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_actual_application_module0/actual-imports.json",
+      "sha256": "35b73fdd8571917b9dc7f0c615ff130b8ed66cff2762b5d90e26361ea5ff6dd7",
+      "bytes": 2372
+    },
+    "expert-a/pytest-attempt1/test_actual_disk_cache_hit_is_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_actual_disk_cache_hit_is_0/readguard-evidence/sql.json",
+      "sha256": "19f2aba3f2f22819638297829bd70a29d2183419a7ae53217e53562157ae671c",
+      "bytes": 262313
+    },
+    "expert-a/pytest-attempt1/test_actual_pending_settings_o0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_actual_pending_settings_o0/readguard-evidence/sql.json",
+      "sha256": "b25a0f5a3c60b2a28e61a6aef2b099615f3957f3842d36e01100c46d1ed48f86",
+      "bytes": 13443
+    },
+    "expert-a/pytest-attempt1/test_actual_sqlite_write_lock_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_actual_sqlite_write_lock_0/readguard-evidence/sql.json",
+      "sha256": "7f9e98ae0ddbeb2f3491686e704f8c9c62aa82dfa7af39410a508fe154cdf04e",
+      "bytes": 6674
+    },
+    "expert-a/pytest-attempt1/test_actual_verify_later_cost_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_actual_verify_later_cost_0/readguard-evidence/sql.json",
+      "sha256": "f677847179d87d972eae88bac124094d0552e6cd402d3f18906d1e4b30c78313",
+      "bytes": 296076
+    },
+    "expert-a/pytest-attempt1/test_actual_verify_later_cost_1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_actual_verify_later_cost_1/readguard-evidence/sql.json",
+      "sha256": "487c6e2058fb94acadf93cd2ca970b4b1b80e0a7e0c43945120e19522c2db7fc",
+      "bytes": 308300
+    },
+    "expert-a/pytest-attempt1/test_actual_worker_dispatch_fu0/readguard-evidence/full-worker-postgresql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_actual_worker_dispatch_fu0/readguard-evidence/full-worker-postgresql.json",
+      "sha256": "be9e0c320ad7c76ff0e21aad7825df4334c824b09644b101f5ab7bbaddd2cd4e",
+      "bytes": 19842
+    },
+    "expert-a/pytest-attempt1/test_actual_worker_dispatch_fu0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_actual_worker_dispatch_fu0/readguard-evidence/sql.json",
+      "sha256": "911bccc0c5baa26797b8b80b31dd0f0115483287812359c3539298ff7357afb0",
+      "bytes": 387733
+    },
+    "expert-a/pytest-attempt1/test_actual_worker_dispatch_fu1/readguard-evidence/full-worker-sqlite.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_actual_worker_dispatch_fu1/readguard-evidence/full-worker-sqlite.json",
+      "sha256": "4c5bc429c168d642734e7b062989d1eda01b07cd5fd12423b9cb6878eeb3d854",
+      "bytes": 19838
+    },
+    "expert-a/pytest-attempt1/test_actual_worker_dispatch_fu1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_actual_worker_dispatch_fu1/readguard-evidence/sql.json",
+      "sha256": "6a6953ac9820499fc37d0d492c3b54e4482f1e9a7ddff3e40b88a2935b310223",
+      "bytes": 387861
+    },
+    "expert-a/pytest-attempt1/test_bad_count_with_valid_epis0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_bad_count_with_valid_epis0/readguard-evidence/sql.json",
+      "sha256": "0f94f934fc8de4471f4877e1a45532815a7b4ead683297d17377aa8c1293b370",
+      "bytes": 3318
+    },
+    "expert-a/pytest-attempt1/test_bad_count_with_valid_epis1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_bad_count_with_valid_epis1/readguard-evidence/sql.json",
+      "sha256": "b616ad727778eeb40a3dbddad9492b1a8c347084514f4f33d3bf940d284b97bc",
+      "bytes": 3318
+    },
+    "expert-a/pytest-attempt1/test_bad_count_with_valid_epis2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_bad_count_with_valid_epis2/readguard-evidence/sql.json",
+      "sha256": "3af74fa10766a6a52ef4d5be58e9f2818d892e77a3e4ea88b24e1ecbc491c169",
+      "bytes": 3320
+    },
+    "expert-a/pytest-attempt1/test_bad_count_with_valid_epis3/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_bad_count_with_valid_epis3/readguard-evidence/sql.json",
+      "sha256": "442c6512bf3e39c6c002d5a0996b268d1621640bfda9407e8762cc4b0a63af56",
+      "bytes": 3321
+    },
+    "expert-a/pytest-attempt1/test_bad_count_with_valid_epis4/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_bad_count_with_valid_epis4/readguard-evidence/sql.json",
+      "sha256": "4eec3fa4cdb4bc8378407b021545ca587cfe20d2df0f70d15eded3a9e403e4b4",
+      "bytes": 3322
+    },
+    "expert-a/pytest-attempt1/test_bad_count_with_valid_epis5/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_bad_count_with_valid_epis5/readguard-evidence/sql.json",
+      "sha256": "3cd9f8f0b17c2f3d9c3d3817801c1c52b21fbeeae22b74670159dae48f5649da",
+      "bytes": 3319
+    },
+    "expert-a/pytest-attempt1/test_bad_count_with_valid_epis6/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_bad_count_with_valid_epis6/readguard-evidence/sql.json",
+      "sha256": "d74d19225399bf914242d647745f9ac7221d5a43e916229d737a374a2fb1375d",
+      "bytes": 3320
+    },
+    "expert-a/pytest-attempt1/test_busy_actual_caller_propag0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_actual_caller_propag0/readguard-evidence/sql.json",
+      "sha256": "8a41131cc35abe7d972919d34cfc4aed6bbecf0c896969006d80fa43f2195540",
+      "bytes": 31163
+    },
+    "expert-a/pytest-attempt1/test_busy_actual_caller_propag1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_actual_caller_propag1/readguard-evidence/sql.json",
+      "sha256": "a3ff62230c2b47f9b3e40e18b8a860502406b82f032955516d094286ee72ee9d",
+      "bytes": 30812
+    },
+    "expert-a/pytest-attempt1/test_busy_actual_caller_propag2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_actual_caller_propag2/readguard-evidence/sql.json",
+      "sha256": "ca7bb2832ac6829b1953034ec306b76564dc280630637cf373dc4553a6eb315b",
+      "bytes": 29001
+    },
+    "expert-a/pytest-attempt1/test_busy_actual_caller_propag3/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_actual_caller_propag3/readguard-evidence/sql.json",
+      "sha256": "f88aa3c0b34a51191ff235f0848abff3641bc51b1a6fed2efdb6e0a89f01299b",
+      "bytes": 28651
+    },
+    "expert-a/pytest-attempt1/test_busy_actual_other_source_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_actual_other_source_0/readguard-evidence/sql.json",
+      "sha256": "d901875c7449b4986d90b3266608d8f1840f56a7a058287744dbc27b3fa83ca0",
+      "bytes": 28472
+    },
+    "expert-a/pytest-attempt1/test_busy_actual_other_source_1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_actual_other_source_1/readguard-evidence/sql.json",
+      "sha256": "776e1f2d2d4f6c5d43cf30e6a40c0d8e8a5f4659966a1a5a0ed0e7c863f24319",
+      "bytes": 30816
+    },
+    "expert-a/pytest-attempt1/test_busy_bounded_return_no_fa0/readguard-evidence/busy-postgresql-first.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_bounded_return_no_fa0/readguard-evidence/busy-postgresql-first.json",
+      "sha256": "65045b4ed88029388cf967434f6da8decf465b68abfe36cc697738f990494417",
+      "bytes": 24392
+    },
+    "expert-a/pytest-attempt1/test_busy_bounded_return_no_fa0/readguard-evidence/recovery-postgresql-first.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_bounded_return_no_fa0/readguard-evidence/recovery-postgresql-first.json",
+      "sha256": "30562fe1d53664ea31b68e16912ca56d7d24e571ec83c3fe64c35c335285f102",
+      "bytes": 8032
+    },
+    "expert-a/pytest-attempt1/test_busy_bounded_return_no_fa0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_bounded_return_no_fa0/readguard-evidence/sql.json",
+      "sha256": "98516282cd6f97739d41b652be35da5affd234a952d40db3ad77cd392ddcd7ef",
+      "bytes": 351172
+    },
+    "expert-a/pytest-attempt1/test_busy_bounded_return_no_fa1/readguard-evidence/busy-postgresql-second.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_bounded_return_no_fa1/readguard-evidence/busy-postgresql-second.json",
+      "sha256": "f6ee17ca93d69b88c638a8488739ae6aa8dcb8611efadcdd9a226db9665f870a",
+      "bytes": 24392
+    },
+    "expert-a/pytest-attempt1/test_busy_bounded_return_no_fa1/readguard-evidence/recovery-postgresql-second.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_bounded_return_no_fa1/readguard-evidence/recovery-postgresql-second.json",
+      "sha256": "a2079ca90174a8baa16c2e7e8df9daa71e7547e6f88c44f62889e786dbb3d454",
+      "bytes": 8032
+    },
+    "expert-a/pytest-attempt1/test_busy_bounded_return_no_fa1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_bounded_return_no_fa1/readguard-evidence/sql.json",
+      "sha256": "83cfaeec5f2367ab8f8247b60bfef4ae6c7b4f6c0b6674ba5513f2ee647b97b6",
+      "bytes": 351592
+    },
+    "expert-a/pytest-attempt1/test_busy_bounded_return_no_fa2/readguard-evidence/busy-sqlite-first.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_bounded_return_no_fa2/readguard-evidence/busy-sqlite-first.json",
+      "sha256": "61c5a7b8006a20188bd496ac4e6e42df073042d1fe1d06b84cc2ded0f649fff4",
+      "bytes": 24280
+    },
+    "expert-a/pytest-attempt1/test_busy_bounded_return_no_fa2/readguard-evidence/recovery-sqlite-first.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_bounded_return_no_fa2/readguard-evidence/recovery-sqlite-first.json",
+      "sha256": "a289e0f15f1017958feb59e9c8001e0baebad85987c3ea93c0ac7b069557fb35",
+      "bytes": 8032
+    },
+    "expert-a/pytest-attempt1/test_busy_bounded_return_no_fa2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_bounded_return_no_fa2/readguard-evidence/sql.json",
+      "sha256": "7def71e48d3a15f85d16e69237d8d97674666d33f3e772c7260fc996b6274e07",
+      "bytes": 322875
+    },
+    "expert-a/pytest-attempt1/test_busy_bounded_return_no_fa3/readguard-evidence/busy-sqlite-second.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_bounded_return_no_fa3/readguard-evidence/busy-sqlite-second.json",
+      "sha256": "7bdfb3aa808459b65161afcba4b67fd241e66d6769e4397c0a44dccbf32f746f",
+      "bytes": 24280
+    },
+    "expert-a/pytest-attempt1/test_busy_bounded_return_no_fa3/readguard-evidence/recovery-sqlite-second.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_bounded_return_no_fa3/readguard-evidence/recovery-sqlite-second.json",
+      "sha256": "098fe0243ee672623909388eeea6a0a6c6469893056123bd9b73144433c09552",
+      "bytes": 8032
+    },
+    "expert-a/pytest-attempt1/test_busy_bounded_return_no_fa3/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_busy_bounded_return_no_fa3/readguard-evidence/sql.json",
+      "sha256": "9c86f6bf9d7a12ae52538d0e789d037f6060bd07c851166b1bbe3190a92d9373",
+      "bytes": 320639
+    },
+    "expert-a/pytest-attempt1/test_cancel_is_not_budget_or_h0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_cancel_is_not_budget_or_h0/readguard-evidence/sql.json",
+      "sha256": "19ac3b8aa5652b688e9cd90b3316a4a48235c12c21fb9510a34553137e3fc816",
+      "bytes": 9341
+    },
+    "expert-a/pytest-attempt1/test_catalogue_walker_broad_ca0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_catalogue_walker_broad_ca0/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt1/test_catalogue_walker_broad_ca1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_catalogue_walker_broad_ca1/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt1/test_catalogue_walker_broad_ca2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_catalogue_walker_broad_ca2/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt1/test_checkpoint_failure_preven0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_checkpoint_failure_preven0/readguard-evidence/sql.json",
+      "sha256": "7e729b94d9e8080218f9375c4b0e3f19918f91aadf10f03ca7c1a1f6c8a142d8",
+      "bytes": 8193
+    },
+    "expert-a/pytest-attempt1/test_clean_default_off_checkpo0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_clean_default_off_checkpo0/readguard-evidence/sql.json",
+      "sha256": "154afecb60a47191a79c068653556c27ad8add87c76364ed1685d09d22a23697",
+      "bytes": 1123
+    },
+    "expert-a/pytest-attempt1/test_clean_excluded_job_checkp0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_clean_excluded_job_checkp0/readguard-evidence/sql.json",
+      "sha256": "830bd2703cd1abbe4ca7e0c52c925d5c349bfd372907ddbe9468ded5ac33a8e0",
+      "bytes": 6156
+    },
+    "expert-a/pytest-attempt1/test_clean_excluded_job_checkp1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_clean_excluded_job_checkp1/readguard-evidence/sql.json",
+      "sha256": "d30d100ef241f9568bea46fdbe698e7c28de049d6ad0494d40969d10e6a64d87",
+      "bytes": 6155
+    },
+    "expert-a/pytest-attempt1/test_conditional_cache_argumen0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_conditional_cache_argumen0/readguard-evidence/sql.json",
+      "sha256": "0ffd3fe0a658deea5e125c6f13b08f5d82b183066a842e3950f933794abc49bf",
+      "bytes": 8576
+    },
+    "expert-a/pytest-attempt1/test_context_initial_claim_use0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_context_initial_claim_use0/readguard-evidence/sql.json",
+      "sha256": "5d22e34a7fcde07d65565ef1714b34ca57dfc6eff1cdb28ea1235075f770c142",
+      "bytes": 1087
+    },
+    "expert-a/pytest-attempt1/test_corrupt_envelope_no_reset0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_corrupt_envelope_no_reset0/readguard-evidence/sql.json",
+      "sha256": "906fab693a675edd875759d40daaa08067215fd2071a257b089d9cca051b36bf",
+      "bytes": 3112
+    },
+    "expert-a/pytest-attempt1/test_corrupt_envelope_no_reset1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_corrupt_envelope_no_reset1/readguard-evidence/sql.json",
+      "sha256": "58d26e778aba3339e92a6f31a28159b307dabb15e7b40aca4212d11172e7e502",
+      "bytes": 3110
+    },
+    "expert-a/pytest-attempt1/test_corrupt_envelope_no_reset2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_corrupt_envelope_no_reset2/readguard-evidence/sql.json",
+      "sha256": "c8420b2b0280b5c9102c790e6b38fe80281644a3ba2889df68e7568abcc2dbfb",
+      "bytes": 3110
+    },
+    "expert-a/pytest-attempt1/test_corrupt_envelope_no_reset3/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_corrupt_envelope_no_reset3/readguard-evidence/sql.json",
+      "sha256": "6bf3b70ef733a43896bb93a61bcdc4e35a3dbf79cb9aaaa9d368f6cf449f1380",
+      "bytes": 3162
+    },
+    "expert-a/pytest-attempt1/test_corrupt_envelope_no_reset4/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_corrupt_envelope_no_reset4/readguard-evidence/sql.json",
+      "sha256": "05207aa24ba857eb3beab132bd66f5a0265ddd36b89f8676a8d26a9382e05fa1",
+      "bytes": 3165
+    },
+    "expert-a/pytest-attempt1/test_corrupt_envelope_no_reset5/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_corrupt_envelope_no_reset5/readguard-evidence/sql.json",
+      "sha256": "322593ff58454731a158f764ed3edb099a045d18ecf52842daf5d70df5a0ce4d",
+      "bytes": 3200
+    },
+    "expert-a/pytest-attempt1/test_corrupt_envelope_no_reset6/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_corrupt_envelope_no_reset6/readguard-evidence/sql.json",
+      "sha256": "2fee2b279e2cfd22838ccc7a81d8836e7797b00a16976693efd96ab262185462",
+      "bytes": 3198
+    },
+    "expert-a/pytest-attempt1/test_curated_fallback_real_dis0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_curated_fallback_real_dis0/readguard-evidence/sql.json",
+      "sha256": "57491af0313c8bff5a4c3d229378303a96dc8350f9ca164712cf1be274d2a6c0",
+      "bytes": 266204
+    },
+    "expert-a/pytest-attempt1/test_demo_factory_never_claims0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_demo_factory_never_claims0/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt1/test_demo_pending_replacement_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_demo_pending_replacement_0/readguard-evidence/sql.json",
+      "sha256": "f0f7f8ab3de102c6cc472b5206ebe7d6cf5bb7eee254b23dc5dd71f3883aaca3",
+      "bytes": 1006
+    },
+    "expert-a/pytest-attempt1/test_direct_nojob_dirty_replac0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_direct_nojob_dirty_replac0/readguard-evidence/sql.json",
+      "sha256": "1ff069172f07f608fb6aeb7e882226b16e793b4f48bf2f51e65c74f30b7169bb",
+      "bytes": 3825
+    },
+    "expert-a/pytest-attempt1/test_direct_nojob_dirty_save_t0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_direct_nojob_dirty_save_t0/readguard-evidence/sql.json",
+      "sha256": "0f391ea27355545105b8954b768fa00005154757c21ca74c6fa345656f75e3a3",
+      "bytes": 1796
+    },
+    "expert-a/pytest-attempt1/test_dirty_excluded_job_replac0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_dirty_excluded_job_replac0/readguard-evidence/sql.json",
+      "sha256": "d5ad8795d57b6dc1ea6e563a3be75366369899bdc96b6fc9b5d23bbf1a5d7de9",
+      "bytes": 8777
+    },
+    "expert-a/pytest-attempt1/test_dirty_excluded_job_replac1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_dirty_excluded_job_replac1/readguard-evidence/sql.json",
+      "sha256": "d9f034eee34c04d0656c6d3281974b80f75e80f2b00b6d04e4acf421540a1a5f",
+      "bytes": 8774
+    },
+    "expert-a/pytest-attempt1/test_dirty_off_cancel_check_ca0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_dirty_off_cancel_check_ca0/readguard-evidence/sql.json",
+      "sha256": "3ba102e7ab6a7ab022077c4c7500dfcd5f1d9b60187d70d9c3fd70fb1002b73a",
+      "bytes": 264746
+    },
+    "expert-a/pytest-attempt1/test_dirty_off_first_replaceme0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_dirty_off_first_replaceme0/readguard-evidence/sql.json",
+      "sha256": "c63efded9130e2d658d593e93c4b697ff30b6daf33baddcd87b2104ce541ffa1",
+      "bytes": 278100
+    },
+    "expert-a/pytest-attempt1/test_documents_explicitly_do_n0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_documents_explicitly_do_n0/readguard-evidence/sql.json",
+      "sha256": "aeae675268244110b87cbfb09d0c026d6353424682f71ffe3e4865ec4125f2ee",
+      "bytes": 15572
+    },
+    "expert-a/pytest-attempt1/test_existing_save_final_heart0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_existing_save_final_heart0/readguard-evidence/sql.json",
+      "sha256": "a1edd72039ceb5b41ce22a221960665b8c00073b9ed3db3f91edb3c689b044f4",
+      "bytes": 6885
+    },
+    "expert-a/pytest-attempt1/test_failed_original_get_reser0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_failed_original_get_reser0/readguard-evidence/sql.json",
+      "sha256": "ac2c7c9ed5a7b90e93ea03787dac28a389c808392d6959d9bf5c08d922c510b9",
+      "bytes": 8192
+    },
+    "expert-a/pytest-attempt1/test_fence_loss_between_preche0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_fence_loss_between_preche0/readguard-evidence/sql.json",
+      "sha256": "39be55db7e37733536db3ec943bcaf6166b5a1ca83cbc8f3988ab909f4735ae6",
+      "bytes": 5925
+    },
+    "expert-a/pytest-attempt1/test_foreign_asyncio_cancel_pr0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_foreign_asyncio_cancel_pr0/readguard-evidence/sql.json",
+      "sha256": "83644bb1efc7da627894117ad669dd977c5a5e2b210f295ab7aa661b44b7d6c0",
+      "bytes": 8578
+    },
+    "expert-a/pytest-attempt1/test_fresh_row_statement_reque0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_fresh_row_statement_reque0/readguard-evidence/sql.json",
+      "sha256": "545d0657699bbefefaaab67e602e7a3a62a7440ef456f5546ad7f7e330491e83",
+      "bytes": 3976
+    },
+    "expert-a/pytest-attempt1/test_guard_off_checkpoint_with0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_guard_off_checkpoint_with0/readguard-evidence/sql.json",
+      "sha256": "93dc13b305f524b5662e7535510a6f6fe1b1f557665b0cb6ea3b9e1aecb4dd66",
+      "bytes": 12338
+    },
+    "expert-a/pytest-attempt1/test_guard_off_stale_snapshot_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_guard_off_stale_snapshot_0/readguard-evidence/sql.json",
+      "sha256": "ffb47bdbbe9c5a3c3abd8cabf0eed6769933d6a4bf6ca98a3c6bb5f69e8010e5",
+      "bytes": 4254
+    },
+    "expert-a/pytest-attempt1/test_guarded_cancellation_read0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_guarded_cancellation_read0/readguard-evidence/sql.json",
+      "sha256": "22a9b5dc768135ea1e4b382254e92345632635d663e649c8c8a1f7f09f1f62a3",
+      "bytes": 8213
+    },
+    "expert-a/pytest-attempt1/test_legacy_flag_off_still_all0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_legacy_flag_off_still_all0/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt1/test_lock_order_job_then_run_a0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_lock_order_job_then_run_a0/readguard-evidence/sql.json",
+      "sha256": "6cccb19cc278cfae628b4f33f8078f58e835b9d9e7b1514e61e0e86fd1bdb70b",
+      "bytes": 8192
+    },
+    "expert-a/pytest-attempt1/test_malformed_current_on_ledg0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_malformed_current_on_ledg0/readguard-evidence/sql.json",
+      "sha256": "ef7ce817109cfe243f9598c37aa9a55684052a976840229bcf8b678f7f82cee9",
+      "bytes": 5410
+    },
+    "expert-a/pytest-attempt1/test_missing_active_episode_is0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_missing_active_episode_is0/readguard-evidence/sql.json",
+      "sha256": "2d956d5ca7d9ff789740219b192565cddc8df045cb13f9fa45bbd3b865f0e742",
+      "bytes": 3252
+    },
+    "expert-a/pytest-attempt1/test_missing_active_episode_is1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_missing_active_episode_is1/readguard-evidence/sql.json",
+      "sha256": "361ca267fef7b11869c21991c280e1b9313dbd548794f939f15e5e223b4564a7",
+      "bytes": 3227
+    },
+    "expert-a/pytest-attempt1/test_missing_retry_episode_nev0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_missing_retry_episode_nev0/readguard-evidence/sql.json",
+      "sha256": "94e6f1827de4ab914a5a74d62c2038fb99684629981c0557546be998c8fca854",
+      "bytes": 5318
+    },
+    "expert-a/pytest-attempt1/test_nonresearch_fenced_job_ha0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_nonresearch_fenced_job_ha0/readguard-evidence/sql.json",
+      "sha256": "5eff3c88fc3bc828049fff331bfd69203fe8b27b9b6f281481f7f70f419a26be",
+      "bytes": 3390
+    },
+    "expert-a/pytest-attempt1/test_other_errors_still_real_o0/readguard-evidence/ordinary-postgresql-message_only.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_other_errors_still_real_o0/readguard-evidence/ordinary-postgresql-message_only.json",
+      "sha256": "ebc64e72ce3d9619db703860e91d7c22eb10677670bf0595e81ba677d9f89cce",
+      "bytes": 24332
+    },
+    "expert-a/pytest-attempt1/test_other_errors_still_real_o0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_other_errors_still_real_o0/readguard-evidence/sql.json",
+      "sha256": "022f39e72ede927f191addc8f51a87e8a21a7c4ae291119791fc9f9bdf7d4dc2",
+      "bytes": 308562
+    },
+    "expert-a/pytest-attempt1/test_other_errors_still_real_o1/readguard-evidence/ordinary-postgresql-typed_other_reason.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_other_errors_still_real_o1/readguard-evidence/ordinary-postgresql-typed_other_reason.json",
+      "sha256": "ee3fe7b2a9caa33bd6f9b80f74ee489b1093a197fb803ad90e6e8a75b914a700",
+      "bytes": 24342
+    },
+    "expert-a/pytest-attempt1/test_other_errors_still_real_o1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_other_errors_still_real_o1/readguard-evidence/sql.json",
+      "sha256": "8ca6bc3d174d5e9f74e1b03a08c1f5e6afda71be7c4bc6d88651f99d64b68e6b",
+      "bytes": 308300
+    },
+    "expert-a/pytest-attempt1/test_other_errors_still_real_o2/readguard-evidence/ordinary-sqlite-message_only.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_other_errors_still_real_o2/readguard-evidence/ordinary-sqlite-message_only.json",
+      "sha256": "1e60097acefdc2664b113f942f425432eda63b8ab35e0d0fbcea05a58d5a0f01",
+      "bytes": 24218
+    },
+    "expert-a/pytest-attempt1/test_other_errors_still_real_o2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_other_errors_still_real_o2/readguard-evidence/sql.json",
+      "sha256": "fee6234a3e2128a7f3ef2c0892899b7b3fefb7a89bdc41ec15709c2f9e1a141e",
+      "bytes": 282341
+    },
+    "expert-a/pytest-attempt1/test_other_errors_still_real_o3/readguard-evidence/ordinary-sqlite-typed_other_reason.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_other_errors_still_real_o3/readguard-evidence/ordinary-sqlite-typed_other_reason.json",
+      "sha256": "44104e9f52cc2b016f78c4b2fc09a886cee57666c5adb7c92a818d9a97667290",
+      "bytes": 24228
+    },
+    "expert-a/pytest-attempt1/test_other_errors_still_real_o3/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_other_errors_still_real_o3/readguard-evidence/sql.json",
+      "sha256": "28ed50537d1af06c0ccb355c6c955f12721e3dfb9dfb85f2e6fff32a2c429e18",
+      "bytes": 282422
+    },
+    "expert-a/pytest-attempt1/test_parallel_same_episode_rea0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_parallel_same_episode_rea0/readguard-evidence/sql.json",
+      "sha256": "f123f000e412390f55bffdfeda2add822ecf042d4d62476241b672af8e8dce1d",
+      "bytes": 284144
+    },
+    "expert-a/pytest-attempt1/test_pg_00_real_isolated_runti0/readguard-evidence/PG-00.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_00_real_isolated_runti0/readguard-evidence/PG-00.json",
+      "sha256": "0debbde9c01af9f17cf72d22f95b5a9765bd30f0088360a5fb9b2d4ce4aced82",
+      "bytes": 145
+    },
+    "expert-a/pytest-attempt1/test_pg_00_real_isolated_runti0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_00_real_isolated_runti0/readguard-evidence/sql.json",
+      "sha256": "3c13e97a96046038d7c3c96b5ff34a8b8a4a2138ed5c4b2e0051fa6e4e05120b",
+      "bytes": 650
+    },
+    "expert-a/pytest-attempt1/test_pg_01_02_actual_nowait_lo0/readguard-evidence/PG-01.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_01_02_actual_nowait_lo0/readguard-evidence/PG-01.json",
+      "sha256": "60958776d647ee7e5f176d4897d068faf51a562d0b0fde632ea2051583a07ecf",
+      "bytes": 1575
+    },
+    "expert-a/pytest-attempt1/test_pg_01_02_actual_nowait_lo0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_01_02_actual_nowait_lo0/readguard-evidence/sql.json",
+      "sha256": "e347dfeb0fbe2d123c0b34704b4dc4cc0bcce9f04904b7d7144a1876c5c7adcd",
+      "bytes": 3352
+    },
+    "expert-a/pytest-attempt1/test_pg_01_02_actual_nowait_lo1/readguard-evidence/PG-02.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_01_02_actual_nowait_lo1/readguard-evidence/PG-02.json",
+      "sha256": "a11881b0117afd59f29f023cea95ec2c8f0a0a5019998a9d395ece6853b93a6f",
+      "bytes": 1563
+    },
+    "expert-a/pytest-attempt1/test_pg_01_02_actual_nowait_lo1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_01_02_actual_nowait_lo1/readguard-evidence/sql.json",
+      "sha256": "22148c994c9ec36018dcdb2a262cbe7d6f925f78e80b771e5d17e0075287bebf",
+      "bytes": 4091
+    },
+    "expert-a/pytest-attempt1/test_pg_03_exact_80_attempts_60/readguard-evidence/PG-03.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_03_exact_80_attempts_60/readguard-evidence/PG-03.json",
+      "sha256": "12b6bbd2879009aca67f063e2cc4cfd28135cb1aa61bb07db0684536b61123e8",
+      "bytes": 22425
+    },
+    "expert-a/pytest-attempt1/test_pg_03_exact_80_attempts_60/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_03_exact_80_attempts_60/readguard-evidence/sql.json",
+      "sha256": "fd699162ad21b9f994d45e9d4469fd72cc7748a2a1cfd26c663928b4026d2c42",
+      "bytes": 801184
+    },
+    "expert-a/pytest-attempt1/test_pg_04_simultaneous_nowait0/readguard-evidence/PG-04.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_04_simultaneous_nowait0/readguard-evidence/PG-04.json",
+      "sha256": "cab0a86f598df84454aabacf0de9dc2ddd4b49c884b9b982debc899aa55d6341",
+      "bytes": 1484
+    },
+    "expert-a/pytest-attempt1/test_pg_04_simultaneous_nowait0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_04_simultaneous_nowait0/readguard-evidence/sql.json",
+      "sha256": "dc433dc8cbd31cc9c2a9af06206c06ba53bf7689b5842685446448d84b8a319f",
+      "bytes": 977021
+    },
+    "expert-a/pytest-attempt1/test_pg_05_real_reap_claim_fre0/readguard-evidence/PG-05-worker-two.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_05_real_reap_claim_fre0/readguard-evidence/PG-05-worker-two.json",
+      "sha256": "62355b995e68ef6342d615d85273ebbaf2969da3919986fc1f0b17e349de5a88",
+      "bytes": 210
+    },
+    "expert-a/pytest-attempt1/test_pg_05_real_reap_claim_fre0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_05_real_reap_claim_fre0/readguard-evidence/sql.json",
+      "sha256": "d02637840707e33e8c67966c59932e0d7d9abbda452936c4de30ab154dbc3729",
+      "bytes": 32344
+    },
+    "expert-a/pytest-attempt1/test_pg_05_real_reap_claim_fre1/readguard-evidence/PG-05-worker-one.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_05_real_reap_claim_fre1/readguard-evidence/PG-05-worker-one.json",
+      "sha256": "80f1149f4128d24df5b62b99d35469f7d37a8ca8dc2f381fc7336fdd250ec741",
+      "bytes": 210
+    },
+    "expert-a/pytest-attempt1/test_pg_05_real_reap_claim_fre1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_05_real_reap_claim_fre1/readguard-evidence/sql.json",
+      "sha256": "ffa3227102983d47c8d5eabba1ee28c00876db609b76d47791d7ef09ba085c9e",
+      "bytes": 32281
+    },
+    "expert-a/pytest-attempt1/test_pg_06_actual_walker_cance0/readguard-evidence/PG-06-walker-cancel.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_06_actual_walker_cance0/readguard-evidence/PG-06-walker-cancel.json",
+      "sha256": "d18636d99418bf80babb259e16a7e4303f5283be8acf2896a46164ee8efe03ae",
+      "bytes": 284
+    },
+    "expert-a/pytest-attempt1/test_pg_06_actual_walker_cance0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_06_actual_walker_cance0/readguard-evidence/sql.json",
+      "sha256": "79e162aa13d3e6470f7a0bcf0493be5a7dc798d0d335100fbb43fcf4f71344a9",
+      "bytes": 6713
+    },
+    "expert-a/pytest-attempt1/test_pg_06_actual_walker_cance1/readguard-evidence/PG-06-walker-fence.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_06_actual_walker_cance1/readguard-evidence/PG-06-walker-fence.json",
+      "sha256": "96e29cd22e422bc66de7e98373ee452a79ba050ed7fc9b160f8779eb7e03bc24",
+      "bytes": 299
+    },
+    "expert-a/pytest-attempt1/test_pg_06_actual_walker_cance1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_06_actual_walker_cance1/readguard-evidence/sql.json",
+      "sha256": "89d49ea45290776650116e59b6e513dcdd4dc910afbd7f797f9e9051cf590946",
+      "bytes": 7380
+    },
+    "expert-a/pytest-attempt1/test_pg_06_actual_walker_plain0/readguard-evidence/PG-06-walker-renderer-False.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_06_actual_walker_plain0/readguard-evidence/PG-06-walker-renderer-False.json",
+      "sha256": "1d102e98104ff04916d4bc07b3c2878da0bf36c3061836bd0e250c4bdc423f3b",
+      "bytes": 1076
+    },
+    "expert-a/pytest-attempt1/test_pg_06_actual_walker_plain0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_06_actual_walker_plain0/readguard-evidence/sql.json",
+      "sha256": "6c402402c8a6e59fb178638b95fc909072c764178cc4ae47fafc5250c260a2b6",
+      "bytes": 7765
+    },
+    "expert-a/pytest-attempt1/test_pg_06_actual_walker_plain1/readguard-evidence/PG-06-walker-renderer-True.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_06_actual_walker_plain1/readguard-evidence/PG-06-walker-renderer-True.json",
+      "sha256": "db256c461469ecdc097b427cbb9fcbe86a7e39a1429351b39c0c1ba9f0209ee7",
+      "bytes": 1075
+    },
+    "expert-a/pytest-attempt1/test_pg_06_actual_walker_plain1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_06_actual_walker_plain1/readguard-evidence/sql.json",
+      "sha256": "614dfd183eff3eb09b4ec5d5acb3a7c884a0836e63bf6211fcb121e04fbd089a",
+      "bytes": 7765
+    },
+    "expert-a/pytest-attempt1/test_pg_06_committed_user_canc0/readguard-evidence/PG-06-user.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_06_committed_user_canc0/readguard-evidence/PG-06-user.json",
+      "sha256": "171e7d2ef21d7b7636bd0c8ed420bbb6bc6402002b1379a0c8fac0dff2ddd2e3",
+      "bytes": 135
+    },
+    "expert-a/pytest-attempt1/test_pg_06_committed_user_canc0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_06_committed_user_canc0/readguard-evidence/sql.json",
+      "sha256": "9c095cdcb1a010e409e93bdad9bbbb3cdf37fa02eeddf42a20452b6e75fa3879",
+      "bytes": 11913
+    },
+    "expert-a/pytest-attempt1/test_pg_06_committed_user_canc1/readguard-evidence/PG-06-coroutine.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_06_committed_user_canc1/readguard-evidence/PG-06-coroutine.json",
+      "sha256": "95f556eca2e2bbf87c7eb7e0874c234e4366b8d216475fe1abf87f3f48d7e0bc",
+      "bytes": 134
+    },
+    "expert-a/pytest-attempt1/test_pg_06_committed_user_canc1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_06_committed_user_canc1/readguard-evidence/sql.json",
+      "sha256": "d240aebbfaad879a5a51fb4c5adb4bd5186e17fbaadc59faf451fc0f7401c81e",
+      "bytes": 9981
+    },
+    "expert-a/pytest-attempt1/test_pg_07_explicit_new_untrac0/readguard-evidence/PG-07-untracked-off-boundary.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_07_explicit_new_untrac0/readguard-evidence/PG-07-untracked-off-boundary.json",
+      "sha256": "dc577c65e7ed0fc6d9f8bb16078b45bc86163934787cbb87254b62891faf9048",
+      "bytes": 168
+    },
+    "expert-a/pytest-attempt1/test_pg_07_explicit_new_untrac0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_07_explicit_new_untrac0/readguard-evidence/sql.json",
+      "sha256": "5fb1721074ad7405aa99b5c9928b0161babc5b391c5fce62c1e64566cfab09e6",
+      "bytes": 27051
+    },
+    "expert-a/pytest-attempt1/test_pg_07_first_namespace_dir0/readguard-evidence/PG-07.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_07_first_namespace_dir0/readguard-evidence/PG-07.json",
+      "sha256": "cdd2b833b4992f5dcfb745c681d4bb9c28abe0435e9d852d95f4a5bb96619ec9",
+      "bytes": 1749
+    },
+    "expert-a/pytest-attempt1/test_pg_07_first_namespace_dir0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_07_first_namespace_dir0/readguard-evidence/sql.json",
+      "sha256": "4e78311a7a3ae743d0c22453e7dc48e05dce931cef69981b45ac0baacfa56c74",
+      "bytes": 302253
+    },
+    "expert-a/pytest-attempt1/test_pg_08_actual_funding_busy0/readguard-evidence/PG-08-funding-job.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_08_actual_funding_busy0/readguard-evidence/PG-08-funding-job.json",
+      "sha256": "ae2b698a2e6c23862c35f483f4077509f55608f6cf7832ccf74fce99b016b639",
+      "bytes": 9078
+    },
+    "expert-a/pytest-attempt1/test_pg_08_actual_funding_busy0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_08_actual_funding_busy0/readguard-evidence/sql.json",
+      "sha256": "1ebfac701a1a5ce9c190310ae07b971d6b61c1534a704d793aa30c44353efad9",
+      "bytes": 27900
+    },
+    "expert-a/pytest-attempt1/test_pg_08_actual_funding_busy1/readguard-evidence/PG-08-funding-run.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_08_actual_funding_busy1/readguard-evidence/PG-08-funding-run.json",
+      "sha256": "a34503401578c6f1dc9ec519ddaa5e52bbeeba4f64b25f269079756de86c4a5d",
+      "bytes": 8849
+    },
+    "expert-a/pytest-attempt1/test_pg_08_actual_funding_busy1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_08_actual_funding_busy1/readguard-evidence/sql.json",
+      "sha256": "3dca40e2acf33c8890a47fd075d60779bd3cedaa21acf89c1634e7c532856be8",
+      "bytes": 28262
+    },
+    "expert-a/pytest-attempt1/test_pg_08_busy_actual_caller_0/readguard-evidence/PG-08-job-stage_verify.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_08_busy_actual_caller_0/readguard-evidence/PG-08-job-stage_verify.json",
+      "sha256": "def081edd5af5440cb7dd83c82a5f76e4ad4d3ec30e2c45704266ffbb8380276",
+      "bytes": 9270
+    },
+    "expert-a/pytest-attempt1/test_pg_08_busy_actual_caller_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_08_busy_actual_caller_0/readguard-evidence/sql.json",
+      "sha256": "53ef9e1d24f7fbfc56217fd7da5c1d77c77a4620753c1b5047cd48019c5ae0f9",
+      "bytes": 29200
+    },
+    "expert-a/pytest-attempt1/test_pg_08_busy_actual_caller_1/readguard-evidence/PG-08-run-stage_verify.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_08_busy_actual_caller_1/readguard-evidence/PG-08-run-stage_verify.json",
+      "sha256": "ea6d366c50adc3f23f840fdb8491071ee0a144c1692b366a44eae80d707f25ed",
+      "bytes": 9041
+    },
+    "expert-a/pytest-attempt1/test_pg_08_busy_actual_caller_1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_08_busy_actual_caller_1/readguard-evidence/sql.json",
+      "sha256": "cbc87ef10f5136a01f01d36fa148e34f06dd2465a182a9d4bc320c5c6bbb9241",
+      "bytes": 29563
+    },
+    "expert-a/pytest-attempt1/test_pg_08_busy_actual_caller_2/readguard-evidence/PG-08-job-run_to_decision.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_08_busy_actual_caller_2/readguard-evidence/PG-08-job-run_to_decision.json",
+      "sha256": "5eb63c6c72b9fb5383e2b245ab2158343ff90752884e7e74fbe2dcc2f9dc24b6",
+      "bytes": 9270
+    },
+    "expert-a/pytest-attempt1/test_pg_08_busy_actual_caller_2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_08_busy_actual_caller_2/readguard-evidence/sql.json",
+      "sha256": "f91d4e6e93a9e807d4a5e1f6416a39d519de42091aecc644072766251ee20989",
+      "bytes": 29326
+    },
+    "expert-a/pytest-attempt1/test_pg_08_busy_actual_caller_3/readguard-evidence/PG-08-run-run_to_decision.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_08_busy_actual_caller_3/readguard-evidence/PG-08-run-run_to_decision.json",
+      "sha256": "1a4df6f62ef941a188c53f461034612c6fb2f4d88e0564c59d98b8afad8f4292",
+      "bytes": 9041
+    },
+    "expert-a/pytest-attempt1/test_pg_08_busy_actual_caller_3/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_08_busy_actual_caller_3/readguard-evidence/sql.json",
+      "sha256": "f7f03b29935f56c678ef7ec3c64caa622a1b4096b79195f22c4029188802a5d7",
+      "bytes": 29691
+    },
+    "expert-a/pytest-attempt1/test_pg_09_real_discovery_broa0/readguard-evidence/PG-09-discovery-catalogue.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_09_real_discovery_broa0/readguard-evidence/PG-09-discovery-catalogue.json",
+      "sha256": "45013d5dd8be31b7a261284d36acc98313a302dd3fba082f689d6ed35d321241",
+      "bytes": 1263
+    },
+    "expert-a/pytest-attempt1/test_pg_09_real_discovery_broa0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_09_real_discovery_broa0/readguard-evidence/sql.json",
+      "sha256": "fe9715ebaf41bb2caae6e1b4e655f3beb36a3570ff7714171d385443b2cf08aa",
+      "bytes": 7402
+    },
+    "expert-a/pytest-attempt1/test_pg_09_real_discovery_broa1/readguard-evidence/PG-09-discovery-curated.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_09_real_discovery_broa1/readguard-evidence/PG-09-discovery-curated.json",
+      "sha256": "2819adb03a08f7420a8f29be1552f124043ad1b7c443429af5bd15631f9832f1",
+      "bytes": 1263
+    },
+    "expert-a/pytest-attempt1/test_pg_09_real_discovery_broa1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_09_real_discovery_broa1/readguard-evidence/sql.json",
+      "sha256": "d1b007fd7bcac9d6a9cf0d7320f78563ecce3502106755fc4d0d0c689f60ee93",
+      "bytes": 7401
+    },
+    "expert-a/pytest-attempt1/test_pg_10_actual_source_recor0/readguard-evidence/PG-10-actual-source-recorder.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_10_actual_source_recor0/readguard-evidence/PG-10-actual-source-recorder.json",
+      "sha256": "56a52400d387b7904aff02c85d157030904fb2bb636ce0f5dbee3fa263d798c8",
+      "bytes": 8749
+    },
+    "expert-a/pytest-attempt1/test_pg_10_actual_source_recor0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_10_actual_source_recor0/readguard-evidence/sql.json",
+      "sha256": "88d3eea3281e5d4749f88e1dee6d7985958767f1a0de6db5b16f21f50704e9c5",
+      "bytes": 31727
+    },
+    "expert-a/pytest-attempt1/test_pg_10_prior_dirty_run_flu0/readguard-evidence/PG-10.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_10_prior_dirty_run_flu0/readguard-evidence/PG-10.json",
+      "sha256": "ed7bf7679cdf0985bfd5680b2a8df3611025742a0e44ca532a57584235e31755",
+      "bytes": 1643
+    },
+    "expert-a/pytest-attempt1/test_pg_10_prior_dirty_run_flu0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_10_prior_dirty_run_flu0/readguard-evidence/sql.json",
+      "sha256": "02d0f70b46ec6ca9640e22e8d571836d2c4cf35287356663ee4e9819720395aa",
+      "bytes": 10975
+    },
+    "expert-a/pytest-attempt1/test_pg_11_corrupt_envelope_an0/readguard-evidence/PG-11.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_11_corrupt_envelope_an0/readguard-evidence/PG-11.json",
+      "sha256": "35c26434ca905accdbc8d5f5b9b6895f51fc8ae9c06e6974f93f4f90e311b609",
+      "bytes": 482
+    },
+    "expert-a/pytest-attempt1/test_pg_11_corrupt_envelope_an0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_pg_11_corrupt_envelope_an0/readguard-evidence/sql.json",
+      "sha256": "af0f725d3d1f4df66120898426fcccc2ee1b3f6d78b55378f37dc213f655acc5",
+      "bytes": 25965
+    },
+    "expert-a/pytest-attempt1/test_postgres_lock_unavailable0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_postgres_lock_unavailable0/readguard-evidence/sql.json",
+      "sha256": "dec4076e9a0fa61b7cedf96dd7e2b89f1ed6e000bd9832589bf54501701128a9",
+      "bytes": 5058
+    },
+    "expert-a/pytest-attempt1/test_previous_episode_cannot_p0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_previous_episode_cannot_p0/readguard-evidence/sql.json",
+      "sha256": "e92b7a59685fd44084ca9a2cd809cad2469b1f3b5ede72d9c4ac3676b79b698a",
+      "bytes": 14751
+    },
+    "expert-a/pytest-attempt1/test_previous_episode_cannot_p1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_previous_episode_cannot_p1/readguard-evidence/sql.json",
+      "sha256": "b83722274272d58542fe627ce110e1aeb30a2d8103855271ac20cb6327953a78",
+      "bytes": 6331
+    },
+    "expert-a/pytest-attempt1/test_real_attempt_takeover_pre0/readguard-evidence/lease-postgresql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_real_attempt_takeover_pre0/readguard-evidence/lease-postgresql.json",
+      "sha256": "fb1ba2344501a6555352521d3c3b4960d0c86ca75c7ec7cb7c2f881cc42c665d",
+      "bytes": 24250
+    },
+    "expert-a/pytest-attempt1/test_real_attempt_takeover_pre0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_real_attempt_takeover_pre0/readguard-evidence/sql.json",
+      "sha256": "6760bfea1ce200db7a97abb733d0bfbf74f80fae5a36a7b958bb831c27093ffe",
+      "bytes": 317218
+    },
+    "expert-a/pytest-attempt1/test_real_attempt_takeover_pre1/readguard-evidence/lease-sqlite.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_real_attempt_takeover_pre1/readguard-evidence/lease-sqlite.json",
+      "sha256": "cf56ecf15dedbd559ece112e06ce4cdf8c04d1c1e0cc6ba062c6fdff8b0336da",
+      "bytes": 24130
+    },
+    "expert-a/pytest-attempt1/test_real_attempt_takeover_pre1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_real_attempt_takeover_pre1/readguard-evidence/sql.json",
+      "sha256": "e53787eeb23318de348c86243aa63cb30b117986f3449d4e38b7460120af3316",
+      "bytes": 289401
+    },
+    "expert-a/pytest-attempt1/test_real_catalogue_discovery_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_real_catalogue_discovery_0/readguard-evidence/sql.json",
+      "sha256": "31d5423622af25be4524d947a51b07a318e52349749f7a69bfd471b2bd298127",
+      "bytes": 262294
+    },
+    "expert-a/pytest-attempt1/test_real_direct_run_without_w0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_real_direct_run_without_w0/readguard-evidence/sql.json",
+      "sha256": "5306d54deae728fd5a402e0d1c6758a1a8ee53929b4200f957232fef9dbac77d",
+      "bytes": 60926
+    },
+    "expert-a/pytest-attempt1/test_real_run_to_decision_shar0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_real_run_to_decision_shar0/readguard-evidence/sql.json",
+      "sha256": "bf0ec5d36450e66d5db39fab56e4ce616a695482f78168d2eaddd159c2914ca4",
+      "bytes": 401910
+    },
+    "expert-a/pytest-attempt1/test_real_user_cancel_keeps_ca0/readguard-evidence/cancel-postgresql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_real_user_cancel_keeps_ca0/readguard-evidence/cancel-postgresql.json",
+      "sha256": "fdead07bc650d29a2f883d2ea51de2591e2d223e22455a4f2a540df96221e61d",
+      "bytes": 16101
+    },
+    "expert-a/pytest-attempt1/test_real_user_cancel_keeps_ca0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_real_user_cancel_keeps_ca0/readguard-evidence/sql.json",
+      "sha256": "18a2268885c4bc6a96f40db382c2a9da8bc42d05673c1a33b881a11d0c9ca25c",
+      "bytes": 311809
+    },
+    "expert-a/pytest-attempt1/test_real_user_cancel_keeps_ca1/readguard-evidence/cancel-sqlite.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_real_user_cancel_keeps_ca1/readguard-evidence/cancel-sqlite.json",
+      "sha256": "32f0c35e7d567c3ea498751ad01a9ca7fc7ba24cdeae0b7025831f7a3255bee4",
+      "bytes": 16041
+    },
+    "expert-a/pytest-attempt1/test_real_user_cancel_keeps_ca1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_real_user_cancel_keeps_ca1/readguard-evidence/sql.json",
+      "sha256": "6fa8e59c4cb7e80264fe0ee4ad9735976b0fdae5b1d6a97af6caa811bba43e15",
+      "bytes": 285481
+    },
+    "expert-a/pytest-attempt1/test_recheck_explicitly_exclud0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_recheck_explicitly_exclud0/readguard-evidence/sql.json",
+      "sha256": "057facee75fd4c26fac8d750b0e2a314fe07a8f77406f9715994f2fa8b59f414",
+      "bytes": 14005
+    },
+    "expert-a/pytest-attempt1/test_resume_intent_read_busy_i0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_resume_intent_read_busy_i0/readguard-evidence/sql.json",
+      "sha256": "c3d669b3bd8c92759b03b368afafa20fa1ebdf7fdf2e5ac6156efc36b5467976",
+      "bytes": 8523
+    },
+    "expert-a/pytest-attempt1/test_same_genuine_job_reclaim_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_same_genuine_job_reclaim_0/readguard-evidence/sql.json",
+      "sha256": "eec1f6a66055cfd01b4317042967ead15f2d0b110b686774061bb080371693af",
+      "bytes": 273511
+    },
+    "expert-a/pytest-attempt1/test_same_job_two_stale_runner0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_same_job_two_stale_runner0/readguard-evidence/sql.json",
+      "sha256": "24694b1ae13c5ff9b5a9b0e5e08f60cb81ef35548bc62a264e03e45b53022d39",
+      "bytes": 554535
+    },
+    "expert-a/pytest-attempt1/test_same_university_all_progr0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_same_university_all_progr0/readguard-evidence/sql.json",
+      "sha256": "64f8bfdf9ef85ad09871e9bbc318f85f0da2e3193a49c7cbc236ace1649d076e",
+      "bytes": 288516
+    },
+    "expert-a/pytest-attempt1/test_save_refreshes_stale_json0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_save_refreshes_stale_json0/readguard-evidence/sql.json",
+      "sha256": "06a08132b4509f4991e359da70bd635767f5f07269212ae9bc895b8f17b9519d",
+      "bytes": 24859
+    },
+    "expert-a/pytest-attempt1/test_scope_less_or_unfenced_ge0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_scope_less_or_unfenced_ge0/readguard-evidence/sql.json",
+      "sha256": "6aa6a339ef3ae13f5b16726ef993aa90799cd537629768fbc87042af50742bd1",
+      "bytes": 1108
+    },
+    "expert-a/pytest-attempt1/test_sitemap_broad_catch_does_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_sitemap_broad_catch_does_0/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt1/test_sitemap_broad_catch_does_1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_sitemap_broad_catch_does_1/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt1/test_sitemap_broad_catch_does_2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_sitemap_broad_catch_does_2/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt1/test_standalone_renderer_contr0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_standalone_renderer_contr0/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt1/test_standalone_renderer_contr1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_standalone_renderer_contr1/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt1/test_standalone_renderer_contr2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_standalone_renderer_contr2/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt1/test_started_legacy_episode_wi0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_started_legacy_episode_wi0/readguard-evidence/sql.json",
+      "sha256": "596ef88de0251e660bb24f89304e4f3c8d67b203444a768512e0cefa479f16cf",
+      "bytes": 3031
+    },
+    "expert-a/pytest-attempt1/test_two_actual_sqlite_session0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_two_actual_sqlite_session0/readguard-evidence/sql.json",
+      "sha256": "40405805b459d32dc2ec8af684a1c91528225caace5a3dff8caed515346f5386",
+      "bytes": 583765
+    },
+    "expert-a/pytest-attempt1/test_two_sqlite_sessions_canno0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_two_sqlite_sessions_canno0/readguard-evidence/sql.json",
+      "sha256": "0fc365152ad74a43327f3e0fa93984fdc6dc57ab99ee288a68260bac371e4f76",
+      "bytes": 27745
+    },
+    "expert-a/pytest-attempt1/test_unknown_saved_episode_can0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_unknown_saved_episode_can0/readguard-evidence/sql.json",
+      "sha256": "a41048751288b4408c8910aeb7e334ba115ed64304a9ad62a704b010287d9863",
+      "bytes": 3270
+    },
+    "expert-a/pytest-attempt1/test_unknown_saved_episode_can1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_unknown_saved_episode_can1/readguard-evidence/sql.json",
+      "sha256": "d83d08e7374cbe5c99697628bd6a558086076d60d327ccdda005a4c49f2e322b",
+      "bytes": 3690
+    },
+    "expert-a/pytest-attempt1/test_untracked_new_job_on_star0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_untracked_new_job_on_star0/readguard-evidence/sql.json",
+      "sha256": "bd6c5e3e51ec33d942b9ec0aff40479596f81698a6e04eadbee21adc4ffbefc7",
+      "bytes": 11989
+    },
+    "expert-a/pytest-attempt1/test_worker_retry_and_stale_at0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt1/test_worker_retry_and_stale_at0/readguard-evidence/sql.json",
+      "sha256": "5e6ba60e813f6f68701b33299231149621e1e59ab32cb09046d7f251a63ca6ee",
+      "bytes": 277142
+    },
+    "expert-a/pytest-attempt2/test_60_actual_fetcher_get_the0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_60_actual_fetcher_get_the0/readguard-evidence/sql.json",
+      "sha256": "867fe9a97ff8ae297d8b2b4358e8c7f570c4305dfea023a19ccd5a7b4091dba7",
+      "bytes": 262606
+    },
+    "expert-a/pytest-attempt2/test_60_actual_fetcher_get_the1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_60_actual_fetcher_get_the1/readguard-evidence/sql.json",
+      "sha256": "e6565716743778af36c6c78fb8bda4722761f47ea6c730d12e4333407cfa9a98",
+      "bytes": 262548
+    },
+    "expert-a/pytest-attempt2/test_60_actual_fetcher_get_the2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_60_actual_fetcher_get_the2/readguard-evidence/sql.json",
+      "sha256": "477a0eacd5c3226814eaa0de843b5f48f2a0824304753be03f7ff0f7adc4ac43",
+      "bytes": 262666
+    },
+    "expert-a/pytest-attempt2/test_60_actual_fetcher_get_the3/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_60_actual_fetcher_get_the3/readguard-evidence/sql.json",
+      "sha256": "a3c65ffcb2e95f22dafa1d8eb41a72cbfb20ac9b310147046ff26eeca5cf8df4",
+      "bytes": 262589
+    },
+    "expert-a/pytest-attempt2/test_60_actual_fetcher_get_the4/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_60_actual_fetcher_get_the4/readguard-evidence/sql.json",
+      "sha256": "ffd9891318144150ab37052f162be5d5c9a21490f5580adcb263b4e0228e447b",
+      "bytes": 262671
+    },
+    "expert-a/pytest-attempt2/test_actual_application_module0/actual-imports.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_actual_application_module0/actual-imports.json",
+      "sha256": "35b73fdd8571917b9dc7f0c615ff130b8ed66cff2762b5d90e26361ea5ff6dd7",
+      "bytes": 2372
+    },
+    "expert-a/pytest-attempt2/test_actual_disk_cache_hit_is_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_actual_disk_cache_hit_is_0/readguard-evidence/sql.json",
+      "sha256": "a19046b0606df4c05412fb077a4e2aa2364ac01073cfb84f0d3e9af79c9180a8",
+      "bytes": 262282
+    },
+    "expert-a/pytest-attempt2/test_actual_pending_settings_o0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_actual_pending_settings_o0/readguard-evidence/sql.json",
+      "sha256": "c21ff59974beb48935b3b1aeed44e98c06c870671b0dcf75422707d3ab6a60ce",
+      "bytes": 13443
+    },
+    "expert-a/pytest-attempt2/test_actual_sqlite_write_lock_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_actual_sqlite_write_lock_0/readguard-evidence/sql.json",
+      "sha256": "d2d167eeb8e88ff168dc1089f35aa2f2bc7e609003327f86d5ce407da5fc4bea",
+      "bytes": 6673
+    },
+    "expert-a/pytest-attempt2/test_actual_verify_later_cost_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_actual_verify_later_cost_0/readguard-evidence/sql.json",
+      "sha256": "6f2cc76c0f3c2ad504baaf17939446862ccebfafddde0b1394652ce6262adb1c",
+      "bytes": 296102
+    },
+    "expert-a/pytest-attempt2/test_actual_verify_later_cost_1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_actual_verify_later_cost_1/readguard-evidence/sql.json",
+      "sha256": "0c2ecfa30d2f33af917a68b890cd0b9f74d9a03d3d03588264dbc3d4d4902acf",
+      "bytes": 308300
+    },
+    "expert-a/pytest-attempt2/test_actual_worker_dispatch_fu0/readguard-evidence/full-worker-postgresql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_actual_worker_dispatch_fu0/readguard-evidence/full-worker-postgresql.json",
+      "sha256": "150430f817115236896b3d4d5813508bd95dc4ff42f7450adc7a34fa24d4aba9",
+      "bytes": 19842
+    },
+    "expert-a/pytest-attempt2/test_actual_worker_dispatch_fu0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_actual_worker_dispatch_fu0/readguard-evidence/sql.json",
+      "sha256": "43fea62641859f243d9ab91e7e6e3057ce8287acb6abfe41feb85198bc4143e6",
+      "bytes": 387731
+    },
+    "expert-a/pytest-attempt2/test_actual_worker_dispatch_fu1/readguard-evidence/full-worker-sqlite.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_actual_worker_dispatch_fu1/readguard-evidence/full-worker-sqlite.json",
+      "sha256": "754df7a8f5d37b3b01f201e5f8620bd941a1714947bb7d4cbd1c776444e8aafe",
+      "bytes": 19838
+    },
+    "expert-a/pytest-attempt2/test_actual_worker_dispatch_fu1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_actual_worker_dispatch_fu1/readguard-evidence/sql.json",
+      "sha256": "9c5fb59c9670dfd7bba74a9eb6978585b31a5a06c330ca85a95fdf57669a8795",
+      "bytes": 387984
+    },
+    "expert-a/pytest-attempt2/test_bad_count_with_valid_epis0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_bad_count_with_valid_epis0/readguard-evidence/sql.json",
+      "sha256": "f798bf551343aa29caeb32f1cc7bc69c11e7949af655fb78b2f15348d4ff41cb",
+      "bytes": 3319
+    },
+    "expert-a/pytest-attempt2/test_bad_count_with_valid_epis1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_bad_count_with_valid_epis1/readguard-evidence/sql.json",
+      "sha256": "0874433e26b7121ea8b7570742d682181725bd13db928c140d617ab1a8a27ed1",
+      "bytes": 3318
+    },
+    "expert-a/pytest-attempt2/test_bad_count_with_valid_epis2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_bad_count_with_valid_epis2/readguard-evidence/sql.json",
+      "sha256": "5956fa123506a59f7ae9375740a067c77dd577bb1504c5cc47d11acd0884444c",
+      "bytes": 3320
+    },
+    "expert-a/pytest-attempt2/test_bad_count_with_valid_epis3/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_bad_count_with_valid_epis3/readguard-evidence/sql.json",
+      "sha256": "9173d449bf882e012f6a66a0da3bd35bb29959019fe8cbba0314de747daaca47",
+      "bytes": 3322
+    },
+    "expert-a/pytest-attempt2/test_bad_count_with_valid_epis4/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_bad_count_with_valid_epis4/readguard-evidence/sql.json",
+      "sha256": "f3293d4aa8ab3fb38cd31fed77956130d1a4d78acacd7323abd43047b5e17d62",
+      "bytes": 3322
+    },
+    "expert-a/pytest-attempt2/test_bad_count_with_valid_epis5/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_bad_count_with_valid_epis5/readguard-evidence/sql.json",
+      "sha256": "556d4bc870c59098ce5a72d2c4157f8a48d2118f247c9569a5d9e7cfd4e7e68b",
+      "bytes": 3320
+    },
+    "expert-a/pytest-attempt2/test_bad_count_with_valid_epis6/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_bad_count_with_valid_epis6/readguard-evidence/sql.json",
+      "sha256": "d40c3faf878d87934321b0d7ef0da9abe1c90ab06ca7bf6c21bf7bb663451660",
+      "bytes": 3321
+    },
+    "expert-a/pytest-attempt2/test_busy_actual_caller_propag0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_actual_caller_propag0/readguard-evidence/sql.json",
+      "sha256": "237ce5e868eb188acfac840d032b4dc3a224a03a8971e2728556cb4a7b186fd9",
+      "bytes": 31160
+    },
+    "expert-a/pytest-attempt2/test_busy_actual_caller_propag1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_actual_caller_propag1/readguard-evidence/sql.json",
+      "sha256": "ce32abd94850d4480dba14fedeace07083a8cddfe017f6093a9c5292d30df28f",
+      "bytes": 30809
+    },
+    "expert-a/pytest-attempt2/test_busy_actual_caller_propag2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_actual_caller_propag2/readguard-evidence/sql.json",
+      "sha256": "e0a9108ec6a4648d6393204f813110d852c7f091e9bcd5eef1c9e73e5fca89c1",
+      "bytes": 28998
+    },
+    "expert-a/pytest-attempt2/test_busy_actual_caller_propag3/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_actual_caller_propag3/readguard-evidence/sql.json",
+      "sha256": "80d7469e402bcb9695fcfd878319b507ebb5776eb84a039bb4e7ebc645fd8994",
+      "bytes": 28651
+    },
+    "expert-a/pytest-attempt2/test_busy_actual_other_source_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_actual_other_source_0/readguard-evidence/sql.json",
+      "sha256": "8ec03de002fa41eeba001b895f13a8b09e4457cee5fef952559b42ff5a718d15",
+      "bytes": 28472
+    },
+    "expert-a/pytest-attempt2/test_busy_actual_other_source_1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_actual_other_source_1/readguard-evidence/sql.json",
+      "sha256": "350b36db273708c8abaf912d18d86482e14ab1b208bcbe08ea0699d2d155d444",
+      "bytes": 30814
+    },
+    "expert-a/pytest-attempt2/test_busy_bounded_return_no_fa0/readguard-evidence/busy-postgresql-first.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_bounded_return_no_fa0/readguard-evidence/busy-postgresql-first.json",
+      "sha256": "dad351278e5b3eec6288a53363fef484f30a53d14f068b0628abfa58f61780c2",
+      "bytes": 24392
+    },
+    "expert-a/pytest-attempt2/test_busy_bounded_return_no_fa0/readguard-evidence/recovery-postgresql-first.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_bounded_return_no_fa0/readguard-evidence/recovery-postgresql-first.json",
+      "sha256": "ef00d31e13f1e9e5b14969f5d088d23d8512004aa8bc0039466eea0be697b7d9",
+      "bytes": 8032
+    },
+    "expert-a/pytest-attempt2/test_busy_bounded_return_no_fa0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_bounded_return_no_fa0/readguard-evidence/sql.json",
+      "sha256": "788261f6566fc51ba1ab3ec48441af5124b78d5366301eb5b02f3f86af1fdf0d",
+      "bytes": 351203
+    },
+    "expert-a/pytest-attempt2/test_busy_bounded_return_no_fa1/readguard-evidence/busy-postgresql-second.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_bounded_return_no_fa1/readguard-evidence/busy-postgresql-second.json",
+      "sha256": "5b3f8bfd452ba140bb6c668b7738f0bde64ee6634a574ece299b9ce72a3a77b7",
+      "bytes": 24392
+    },
+    "expert-a/pytest-attempt2/test_busy_bounded_return_no_fa1/readguard-evidence/recovery-postgresql-second.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_bounded_return_no_fa1/readguard-evidence/recovery-postgresql-second.json",
+      "sha256": "768def676ab932901c3ee355b5042f22ebe900945aebc5192e3b2241cd8d846b",
+      "bytes": 8032
+    },
+    "expert-a/pytest-attempt2/test_busy_bounded_return_no_fa1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_bounded_return_no_fa1/readguard-evidence/sql.json",
+      "sha256": "1917f2f3be6ddef9466944bb1042ff848d6a91cc5074d59957e1d926b0c93e42",
+      "bytes": 351593
+    },
+    "expert-a/pytest-attempt2/test_busy_bounded_return_no_fa2/readguard-evidence/busy-sqlite-first.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_bounded_return_no_fa2/readguard-evidence/busy-sqlite-first.json",
+      "sha256": "fd9ee328e9972b2ac0f12dae4a4fa010b9b29418a146950c15fdd42581053071",
+      "bytes": 24280
+    },
+    "expert-a/pytest-attempt2/test_busy_bounded_return_no_fa2/readguard-evidence/recovery-sqlite-first.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_bounded_return_no_fa2/readguard-evidence/recovery-sqlite-first.json",
+      "sha256": "b99982bd7e2c5a30748a0477bfa07fbbd040ba48692c7c0cf52a6667c28ac424",
+      "bytes": 8032
+    },
+    "expert-a/pytest-attempt2/test_busy_bounded_return_no_fa2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_bounded_return_no_fa2/readguard-evidence/sql.json",
+      "sha256": "ca2006f51d453a8267436b6ebe923027c26a94580c58ff6ac155d58cf038b18e",
+      "bytes": 322921
+    },
+    "expert-a/pytest-attempt2/test_busy_bounded_return_no_fa3/readguard-evidence/busy-sqlite-second.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_bounded_return_no_fa3/readguard-evidence/busy-sqlite-second.json",
+      "sha256": "c3f42418d22187ff94c6cc98c3c4631503b77db35b0d0951292e8f4b34a8cc96",
+      "bytes": 24280
+    },
+    "expert-a/pytest-attempt2/test_busy_bounded_return_no_fa3/readguard-evidence/recovery-sqlite-second.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_bounded_return_no_fa3/readguard-evidence/recovery-sqlite-second.json",
+      "sha256": "3a7f334efc86a090adbc4af0d127cf3f2f3a5bd2234d7a33c4d5d9fac8fa0ae2",
+      "bytes": 8032
+    },
+    "expert-a/pytest-attempt2/test_busy_bounded_return_no_fa3/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_busy_bounded_return_no_fa3/readguard-evidence/sql.json",
+      "sha256": "67a92726d0c07f5a932ee23c79239cf774cdf0a67fb17a03d263d16d650fb41d",
+      "bytes": 320623
+    },
+    "expert-a/pytest-attempt2/test_cancel_is_not_budget_or_h0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_cancel_is_not_budget_or_h0/readguard-evidence/sql.json",
+      "sha256": "8dab8d294ff1d44bce621cf349576b65e3dd981d029f10f896969e7945d03bc4",
+      "bytes": 9340
+    },
+    "expert-a/pytest-attempt2/test_catalogue_walker_broad_ca0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_catalogue_walker_broad_ca0/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt2/test_catalogue_walker_broad_ca1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_catalogue_walker_broad_ca1/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt2/test_catalogue_walker_broad_ca2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_catalogue_walker_broad_ca2/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt2/test_checkpoint_failure_preven0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_checkpoint_failure_preven0/readguard-evidence/sql.json",
+      "sha256": "ada4d21ab8b8cb9248b2ba9fcc0b183c8fde652b0ebb4c2d17b3d6002d4cf583",
+      "bytes": 8192
+    },
+    "expert-a/pytest-attempt2/test_clean_default_off_checkpo0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_clean_default_off_checkpo0/readguard-evidence/sql.json",
+      "sha256": "1871b60a962cc1bce5ad69484878fdfb4d70e81f4114ffa36c0316fbaf8ad05a",
+      "bytes": 1123
+    },
+    "expert-a/pytest-attempt2/test_clean_excluded_job_checkp0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_clean_excluded_job_checkp0/readguard-evidence/sql.json",
+      "sha256": "e9c77e98ece8f177b5b5c102c590570985fbc5aef5da860f42191f8a9a4e0f3a",
+      "bytes": 6156
+    },
+    "expert-a/pytest-attempt2/test_clean_excluded_job_checkp1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_clean_excluded_job_checkp1/readguard-evidence/sql.json",
+      "sha256": "478cacec0f7433edd1425c171799783e93621bcac9f7f362bddaefad39238064",
+      "bytes": 6154
+    },
+    "expert-a/pytest-attempt2/test_conditional_cache_argumen0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_conditional_cache_argumen0/readguard-evidence/sql.json",
+      "sha256": "b2fea60b2b33fcccdb933cbfbf6d57e52330854d3fe0922859cf151e3d764384",
+      "bytes": 8574
+    },
+    "expert-a/pytest-attempt2/test_context_initial_claim_use0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_context_initial_claim_use0/readguard-evidence/sql.json",
+      "sha256": "2adcf702159b6740cc28c2a31a24b47ac795395b90de6c3bd388218b8a12bc93",
+      "bytes": 1087
+    },
+    "expert-a/pytest-attempt2/test_corrupt_envelope_no_reset0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_corrupt_envelope_no_reset0/readguard-evidence/sql.json",
+      "sha256": "e9dbd42f80ac9a9da12716ec7465623e227c257f8de812f3807865009252617d",
+      "bytes": 3111
+    },
+    "expert-a/pytest-attempt2/test_corrupt_envelope_no_reset1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_corrupt_envelope_no_reset1/readguard-evidence/sql.json",
+      "sha256": "d5877f66009dbad07b7bab48d1b22414e8c614f591ffa280cfc270c0fed04d50",
+      "bytes": 3108
+    },
+    "expert-a/pytest-attempt2/test_corrupt_envelope_no_reset2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_corrupt_envelope_no_reset2/readguard-evidence/sql.json",
+      "sha256": "4f6c01e7e96409d1ab847ca2214f414a16db61360f8ca119be46c451ae9e0816",
+      "bytes": 3109
+    },
+    "expert-a/pytest-attempt2/test_corrupt_envelope_no_reset3/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_corrupt_envelope_no_reset3/readguard-evidence/sql.json",
+      "sha256": "ee8fe8ee44f007abac5093bccb29743ca4c83f1b25520f87262a43a5bbca941c",
+      "bytes": 3160
+    },
+    "expert-a/pytest-attempt2/test_corrupt_envelope_no_reset4/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_corrupt_envelope_no_reset4/readguard-evidence/sql.json",
+      "sha256": "83de454c29fd19a584360a3154b85a2584d92533e1d62b8bc52f4fa15a90bce4",
+      "bytes": 3163
+    },
+    "expert-a/pytest-attempt2/test_corrupt_envelope_no_reset5/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_corrupt_envelope_no_reset5/readguard-evidence/sql.json",
+      "sha256": "3e212ff306eb03fab1cf2aed6d35f87746fd1bff7362b6cd45f4dcf48d9b83a0",
+      "bytes": 3199
+    },
+    "expert-a/pytest-attempt2/test_corrupt_envelope_no_reset6/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_corrupt_envelope_no_reset6/readguard-evidence/sql.json",
+      "sha256": "ff50241ff0fb2a343952f2d15fbfe987d8d5829b3ad2c6f13ac81a1f7811e7b1",
+      "bytes": 3197
+    },
+    "expert-a/pytest-attempt2/test_curated_fallback_real_dis0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_curated_fallback_real_dis0/readguard-evidence/sql.json",
+      "sha256": "4481433048c5ba6630bc1834f8f5905d07b6f81db0d94a6d35d8da581413c78d",
+      "bytes": 266182
+    },
+    "expert-a/pytest-attempt2/test_demo_factory_never_claims0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_demo_factory_never_claims0/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt2/test_demo_pending_replacement_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_demo_pending_replacement_0/readguard-evidence/sql.json",
+      "sha256": "61090d2be71ef7b7dee562dbdfe0dd71df7cef40c90f4ca021f225976e240341",
+      "bytes": 1006
+    },
+    "expert-a/pytest-attempt2/test_direct_nojob_dirty_replac0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_direct_nojob_dirty_replac0/readguard-evidence/sql.json",
+      "sha256": "db5fc1b90d634a992cc074524437a63c7b15b4728f09e39fa570d48c39f59689",
+      "bytes": 3825
+    },
+    "expert-a/pytest-attempt2/test_direct_nojob_dirty_save_t0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_direct_nojob_dirty_save_t0/readguard-evidence/sql.json",
+      "sha256": "2a3ed73938e3613b259d45c7b9c4ccbdce0eea8a5dfe72ed4abcbaceaa0acebc",
+      "bytes": 1796
+    },
+    "expert-a/pytest-attempt2/test_dirty_excluded_job_replac0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_dirty_excluded_job_replac0/readguard-evidence/sql.json",
+      "sha256": "002ed6df427ae39e9c747f66e9f1d7e996b16b17cb74ce45b41317a2da0fca66",
+      "bytes": 8777
+    },
+    "expert-a/pytest-attempt2/test_dirty_excluded_job_replac1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_dirty_excluded_job_replac1/readguard-evidence/sql.json",
+      "sha256": "feb13e9546a2226c950e19c37b48b1af8256ba87431fce89cd44f8c6f81dca72",
+      "bytes": 8772
+    },
+    "expert-a/pytest-attempt2/test_dirty_off_cancel_check_ca0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_dirty_off_cancel_check_ca0/readguard-evidence/sql.json",
+      "sha256": "b267af1cf5f10aa000737e471fd5b5b85813e01a418dfc948fd0af175a307238",
+      "bytes": 264743
+    },
+    "expert-a/pytest-attempt2/test_dirty_off_first_replaceme0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_dirty_off_first_replaceme0/readguard-evidence/sql.json",
+      "sha256": "aa4ced501f164eb05ae23f4d72c2fa0a2da0b2a35860616e0e66f9149a884277",
+      "bytes": 278102
+    },
+    "expert-a/pytest-attempt2/test_documents_explicitly_do_n0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_documents_explicitly_do_n0/readguard-evidence/sql.json",
+      "sha256": "f7165e9e6692238de5232ab1de92c0e132ffc336fc50ea3cc34cfeb638d86111",
+      "bytes": 15573
+    },
+    "expert-a/pytest-attempt2/test_existing_save_final_heart0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_existing_save_final_heart0/readguard-evidence/sql.json",
+      "sha256": "03cdb6531ed7d3fc9655652bc767c38f8c7909256fcc028fac3eecd29b0f406f",
+      "bytes": 6884
+    },
+    "expert-a/pytest-attempt2/test_failed_original_get_reser0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_failed_original_get_reser0/readguard-evidence/sql.json",
+      "sha256": "8fe425d57fd7c4113f8b12a514b5aad59bd37d8eb74c3f66a870bf4b178fdc6e",
+      "bytes": 8192
+    },
+    "expert-a/pytest-attempt2/test_fence_loss_between_preche0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_fence_loss_between_preche0/readguard-evidence/sql.json",
+      "sha256": "f6ce446617baba327e7f64800389de79798bda571ec5411dc6e556809e137b59",
+      "bytes": 5923
+    },
+    "expert-a/pytest-attempt2/test_foreign_asyncio_cancel_pr0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_foreign_asyncio_cancel_pr0/readguard-evidence/sql.json",
+      "sha256": "be4309ad73cdfd1bbd084594d570b05d1eb98ec649a644860fb426f15c7ed09a",
+      "bytes": 8576
+    },
+    "expert-a/pytest-attempt2/test_fresh_row_statement_reque0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_fresh_row_statement_reque0/readguard-evidence/sql.json",
+      "sha256": "b27b811b4434b7dd3e1d660744ae518afcb95a3e3df61ee1f7bfae2a646e0253",
+      "bytes": 3976
+    },
+    "expert-a/pytest-attempt2/test_guard_off_checkpoint_with0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_guard_off_checkpoint_with0/readguard-evidence/sql.json",
+      "sha256": "064dcaaa341282e7c06892cc161e0d5523ce2937e1853d3834325729d0caa540",
+      "bytes": 12336
+    },
+    "expert-a/pytest-attempt2/test_guard_off_stale_snapshot_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_guard_off_stale_snapshot_0/readguard-evidence/sql.json",
+      "sha256": "10a88b023df3d9654bf65d36af2c744f4d30bd1954628445f4641289894b0c1b",
+      "bytes": 4255
+    },
+    "expert-a/pytest-attempt2/test_guarded_cancellation_read0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_guarded_cancellation_read0/readguard-evidence/sql.json",
+      "sha256": "5b2bad2b9489b285ffc8caacd42d33af89b54410687dc7a252e8c281f438c47d",
+      "bytes": 8213
+    },
+    "expert-a/pytest-attempt2/test_legacy_flag_off_still_all0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_legacy_flag_off_still_all0/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt2/test_lock_order_job_then_run_a0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_lock_order_job_then_run_a0/readguard-evidence/sql.json",
+      "sha256": "d9b0ae1ba23584483313d530788c4c7ed99a41b57f4addcc660929426208c6d0",
+      "bytes": 8192
+    },
+    "expert-a/pytest-attempt2/test_malformed_current_on_ledg0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_malformed_current_on_ledg0/readguard-evidence/sql.json",
+      "sha256": "ade855f7d85e742a501849117848680390f5d0948cb3921f202bb592f6c46398",
+      "bytes": 5410
+    },
+    "expert-a/pytest-attempt2/test_missing_active_episode_is0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_missing_active_episode_is0/readguard-evidence/sql.json",
+      "sha256": "1e6c4c95c04f81b0e332e093fa0324977eaf2d12c96316bbd8d5ece390936592",
+      "bytes": 3253
+    },
+    "expert-a/pytest-attempt2/test_missing_active_episode_is1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_missing_active_episode_is1/readguard-evidence/sql.json",
+      "sha256": "c16fdf9984bcbd983fb179e7fbb9643ef62edb652c391bc42d5d79bb9851bce3",
+      "bytes": 3227
+    },
+    "expert-a/pytest-attempt2/test_missing_retry_episode_nev0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_missing_retry_episode_nev0/readguard-evidence/sql.json",
+      "sha256": "468c040dbd18feae01d8082e343d62d7af22c3722ee709746535504a06585211",
+      "bytes": 5318
+    },
+    "expert-a/pytest-attempt2/test_nonresearch_fenced_job_ha0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_nonresearch_fenced_job_ha0/readguard-evidence/sql.json",
+      "sha256": "873a0a00eaafe8bc12afcf981a6119dfeb73a30988f3e165b2e76563b666c6ec",
+      "bytes": 3390
+    },
+    "expert-a/pytest-attempt2/test_other_errors_still_real_o0/readguard-evidence/ordinary-postgresql-message_only.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_other_errors_still_real_o0/readguard-evidence/ordinary-postgresql-message_only.json",
+      "sha256": "13eb91c8e66a731ba05220a8a8f1e89d37e6fbdf34ab17462f02a717751a0623",
+      "bytes": 24332
+    },
+    "expert-a/pytest-attempt2/test_other_errors_still_real_o0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_other_errors_still_real_o0/readguard-evidence/sql.json",
+      "sha256": "7a87a868eeb7a85f67ee9c24d7eea7c928f7c8be2a4831e1e7f1cec26f063464",
+      "bytes": 308562
+    },
+    "expert-a/pytest-attempt2/test_other_errors_still_real_o1/readguard-evidence/ordinary-postgresql-typed_other_reason.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_other_errors_still_real_o1/readguard-evidence/ordinary-postgresql-typed_other_reason.json",
+      "sha256": "6546efa97045bae22edb53c49a026a6ab6a992eab7e2177d65c9561cf3d1bb9a",
+      "bytes": 24342
+    },
+    "expert-a/pytest-attempt2/test_other_errors_still_real_o1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_other_errors_still_real_o1/readguard-evidence/sql.json",
+      "sha256": "5e731d0a834e7d4303378858ef6a568e7e4cdca9035c10147b042466531bd488",
+      "bytes": 308541
+    },
+    "expert-a/pytest-attempt2/test_other_errors_still_real_o2/readguard-evidence/ordinary-sqlite-message_only.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_other_errors_still_real_o2/readguard-evidence/ordinary-sqlite-message_only.json",
+      "sha256": "184fba34a291f8412cdcb68436ba7f4b2ae2863d7ef4b3541c07c0bd57dbf195",
+      "bytes": 24218
+    },
+    "expert-a/pytest-attempt2/test_other_errors_still_real_o2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_other_errors_still_real_o2/readguard-evidence/sql.json",
+      "sha256": "07885c4e1c8586db5a34bc436556a520a7a1777277961d1fe9a60a32d79e1113",
+      "bytes": 282332
+    },
+    "expert-a/pytest-attempt2/test_other_errors_still_real_o3/readguard-evidence/ordinary-sqlite-typed_other_reason.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_other_errors_still_real_o3/readguard-evidence/ordinary-sqlite-typed_other_reason.json",
+      "sha256": "5b2fb472d70ff9cec913a78ff4b4d64ee4a2dcc5b2e66b825de88d256e128530",
+      "bytes": 24228
+    },
+    "expert-a/pytest-attempt2/test_other_errors_still_real_o3/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_other_errors_still_real_o3/readguard-evidence/sql.json",
+      "sha256": "48f400b07b55f91569843a740a937feeea994d31fea20bca16587401677c6d9e",
+      "bytes": 282481
+    },
+    "expert-a/pytest-attempt2/test_parallel_same_episode_rea0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_parallel_same_episode_rea0/readguard-evidence/sql.json",
+      "sha256": "510bbf44ded3e84a67f0e56affa1e00f9ab5bf7278a688cc801a2b32eb232bef",
+      "bytes": 284134
+    },
+    "expert-a/pytest-attempt2/test_pg_00_real_isolated_runti0/readguard-evidence/PG-00.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_00_real_isolated_runti0/readguard-evidence/PG-00.json",
+      "sha256": "53f7c8c055983bbfab565a922631588b801271b7cdfbf547f8a7298568f2e690",
+      "bytes": 145
+    },
+    "expert-a/pytest-attempt2/test_pg_00_real_isolated_runti0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_00_real_isolated_runti0/readguard-evidence/sql.json",
+      "sha256": "ee4686c28dbacf172f8794e227b1ed0daf5636950230c8997eb1b5e9263f9edc",
+      "bytes": 650
+    },
+    "expert-a/pytest-attempt2/test_pg_01_02_actual_nowait_lo0/readguard-evidence/PG-01.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_01_02_actual_nowait_lo0/readguard-evidence/PG-01.json",
+      "sha256": "ae08b957feab8f6f911341f48da09bcef650b7190bfcb2e9cd147da79c51626a",
+      "bytes": 1575
+    },
+    "expert-a/pytest-attempt2/test_pg_01_02_actual_nowait_lo0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_01_02_actual_nowait_lo0/readguard-evidence/sql.json",
+      "sha256": "32ca27e045a79538420287b496a39d57b0e6ebce44c02b92a8b47b365ed01244",
+      "bytes": 3352
+    },
+    "expert-a/pytest-attempt2/test_pg_01_02_actual_nowait_lo1/readguard-evidence/PG-02.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_01_02_actual_nowait_lo1/readguard-evidence/PG-02.json",
+      "sha256": "458592c373a8769942bb469f84103f95d99ab0aec813f7c586facdb8699b82c5",
+      "bytes": 1564
+    },
+    "expert-a/pytest-attempt2/test_pg_01_02_actual_nowait_lo1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_01_02_actual_nowait_lo1/readguard-evidence/sql.json",
+      "sha256": "197b0a0ae3063515771a40d3f39d0a9330d097167192504b929ec718ac579222",
+      "bytes": 4092
+    },
+    "expert-a/pytest-attempt2/test_pg_03_exact_80_attempts_60/readguard-evidence/PG-03.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_03_exact_80_attempts_60/readguard-evidence/PG-03.json",
+      "sha256": "dd3fb33652541d808053b1abba1c906bdce215ae9f35d4e86a7bb55120e53b71",
+      "bytes": 22425
+    },
+    "expert-a/pytest-attempt2/test_pg_03_exact_80_attempts_60/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_03_exact_80_attempts_60/readguard-evidence/sql.json",
+      "sha256": "648d45541b93814e39a10d4a8ce8a237f2eb11533e7b4ef59558b34e6122fa6e",
+      "bytes": 801201
+    },
+    "expert-a/pytest-attempt2/test_pg_04_simultaneous_nowait0/readguard-evidence/PG-04.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_04_simultaneous_nowait0/readguard-evidence/PG-04.json",
+      "sha256": "344fa148a42a1c744f0f4814f1cb560c334f4c6439ec00a12dd1de738ab14c2e",
+      "bytes": 1484
+    },
+    "expert-a/pytest-attempt2/test_pg_04_simultaneous_nowait0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_04_simultaneous_nowait0/readguard-evidence/sql.json",
+      "sha256": "1a3dba09b515dd05e19be761f748da53b08e57e1d6f469d3a8c924256646b713",
+      "bytes": 1010872
+    },
+    "expert-a/pytest-attempt2/test_pg_05_real_reap_claim_fre0/readguard-evidence/PG-05-worker-two.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_05_real_reap_claim_fre0/readguard-evidence/PG-05-worker-two.json",
+      "sha256": "62355b995e68ef6342d615d85273ebbaf2969da3919986fc1f0b17e349de5a88",
+      "bytes": 210
+    },
+    "expert-a/pytest-attempt2/test_pg_05_real_reap_claim_fre0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_05_real_reap_claim_fre0/readguard-evidence/sql.json",
+      "sha256": "cd403e49e33e6a18d0343673de6cfe3c0625fe13fe745da439093c240057469c",
+      "bytes": 32324
+    },
+    "expert-a/pytest-attempt2/test_pg_05_real_reap_claim_fre1/readguard-evidence/PG-05-worker-one.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_05_real_reap_claim_fre1/readguard-evidence/PG-05-worker-one.json",
+      "sha256": "80f1149f4128d24df5b62b99d35469f7d37a8ca8dc2f381fc7336fdd250ec741",
+      "bytes": 210
+    },
+    "expert-a/pytest-attempt2/test_pg_05_real_reap_claim_fre1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_05_real_reap_claim_fre1/readguard-evidence/sql.json",
+      "sha256": "3aebebf1b79031a32216274c2879e92ad0e77c227b1aa4b745f07a4955af7179",
+      "bytes": 32284
+    },
+    "expert-a/pytest-attempt2/test_pg_06_actual_walker_cance0/readguard-evidence/PG-06-walker-cancel.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_06_actual_walker_cance0/readguard-evidence/PG-06-walker-cancel.json",
+      "sha256": "d18636d99418bf80babb259e16a7e4303f5283be8acf2896a46164ee8efe03ae",
+      "bytes": 284
+    },
+    "expert-a/pytest-attempt2/test_pg_06_actual_walker_cance0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_06_actual_walker_cance0/readguard-evidence/sql.json",
+      "sha256": "a26ce9831699fcc77b7d78e16a9d1b68011d9f101eed5984410e02ede750b471",
+      "bytes": 6712
+    },
+    "expert-a/pytest-attempt2/test_pg_06_actual_walker_cance1/readguard-evidence/PG-06-walker-fence.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_06_actual_walker_cance1/readguard-evidence/PG-06-walker-fence.json",
+      "sha256": "96e29cd22e422bc66de7e98373ee452a79ba050ed7fc9b160f8779eb7e03bc24",
+      "bytes": 299
+    },
+    "expert-a/pytest-attempt2/test_pg_06_actual_walker_cance1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_06_actual_walker_cance1/readguard-evidence/sql.json",
+      "sha256": "4c04b854a79300052acd607ae1fcd5ec6c16720e4156ca376fce928a6a10ba8a",
+      "bytes": 7380
+    },
+    "expert-a/pytest-attempt2/test_pg_06_actual_walker_plain0/readguard-evidence/PG-06-walker-renderer-False.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_06_actual_walker_plain0/readguard-evidence/PG-06-walker-renderer-False.json",
+      "sha256": "da40f97e86970c45b2d392a6059f4fce26b1360b7af3c00e6c44aeb7229500ee",
+      "bytes": 1076
+    },
+    "expert-a/pytest-attempt2/test_pg_06_actual_walker_plain0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_06_actual_walker_plain0/readguard-evidence/sql.json",
+      "sha256": "ff1c5906fe0d269bef01fc538237f7cf8d078bee0d195493cf434bab024561a7",
+      "bytes": 7765
+    },
+    "expert-a/pytest-attempt2/test_pg_06_actual_walker_plain1/readguard-evidence/PG-06-walker-renderer-True.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_06_actual_walker_plain1/readguard-evidence/PG-06-walker-renderer-True.json",
+      "sha256": "dd795c78a300d5d16d8e89ee97f067250525c3f7e5e5841399aea680e6cc4d07",
+      "bytes": 1075
+    },
+    "expert-a/pytest-attempt2/test_pg_06_actual_walker_plain1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_06_actual_walker_plain1/readguard-evidence/sql.json",
+      "sha256": "09fb5afed6f1d5d6b8c1b9d6bba9828f0e91b59d327d03cd7bbe2acde56d1431",
+      "bytes": 7765
+    },
+    "expert-a/pytest-attempt2/test_pg_06_committed_user_canc0/readguard-evidence/PG-06-user.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_06_committed_user_canc0/readguard-evidence/PG-06-user.json",
+      "sha256": "171e7d2ef21d7b7636bd0c8ed420bbb6bc6402002b1379a0c8fac0dff2ddd2e3",
+      "bytes": 135
+    },
+    "expert-a/pytest-attempt2/test_pg_06_committed_user_canc0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_06_committed_user_canc0/readguard-evidence/sql.json",
+      "sha256": "e46e203e337a8a622ced9aa2d0ddf47e9e2882cbcda2f4ccf1ff1363ad0c0a2e",
+      "bytes": 11926
+    },
+    "expert-a/pytest-attempt2/test_pg_06_committed_user_canc1/readguard-evidence/PG-06-coroutine.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_06_committed_user_canc1/readguard-evidence/PG-06-coroutine.json",
+      "sha256": "95f556eca2e2bbf87c7eb7e0874c234e4366b8d216475fe1abf87f3f48d7e0bc",
+      "bytes": 134
+    },
+    "expert-a/pytest-attempt2/test_pg_06_committed_user_canc1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_06_committed_user_canc1/readguard-evidence/sql.json",
+      "sha256": "7cebbf4c2ec322e33cc6fddd350b2558b4403c8c9c9aefacc2eb68b10a70321b",
+      "bytes": 9981
+    },
+    "expert-a/pytest-attempt2/test_pg_07_explicit_new_untrac0/readguard-evidence/PG-07-untracked-off-boundary.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_07_explicit_new_untrac0/readguard-evidence/PG-07-untracked-off-boundary.json",
+      "sha256": "dc577c65e7ed0fc6d9f8bb16078b45bc86163934787cbb87254b62891faf9048",
+      "bytes": 168
+    },
+    "expert-a/pytest-attempt2/test_pg_07_explicit_new_untrac0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_07_explicit_new_untrac0/readguard-evidence/sql.json",
+      "sha256": "0301b651332b675fcd049f85adbb6b8500f153aaf5665892576fde06c476d8a4",
+      "bytes": 27051
+    },
+    "expert-a/pytest-attempt2/test_pg_07_first_namespace_dir0/readguard-evidence/PG-07.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_07_first_namespace_dir0/readguard-evidence/PG-07.json",
+      "sha256": "72973b2b0d58018bcb1dd808a83e87848f3c9ac7abf8e72d1bd2eaf469766707",
+      "bytes": 1749
+    },
+    "expert-a/pytest-attempt2/test_pg_07_first_namespace_dir0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_07_first_namespace_dir0/readguard-evidence/sql.json",
+      "sha256": "1b59a260706b3bd29dd0c7a131169258acdf49cad0c846165a320a1fea5d025c",
+      "bytes": 302255
+    },
+    "expert-a/pytest-attempt2/test_pg_08_actual_funding_busy0/readguard-evidence/PG-08-funding-job.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_08_actual_funding_busy0/readguard-evidence/PG-08-funding-job.json",
+      "sha256": "ea792a229e4eafbea674dd345c71d0f848877f0e76d601416bfebf4370fce501",
+      "bytes": 9078
+    },
+    "expert-a/pytest-attempt2/test_pg_08_actual_funding_busy0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_08_actual_funding_busy0/readguard-evidence/sql.json",
+      "sha256": "d676926f767d409f43233b7774f44ae1182eaaddc776b79f881904d15ade542d",
+      "bytes": 27900
+    },
+    "expert-a/pytest-attempt2/test_pg_08_actual_funding_busy1/readguard-evidence/PG-08-funding-run.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_08_actual_funding_busy1/readguard-evidence/PG-08-funding-run.json",
+      "sha256": "4a17c8e4165ccb081d41bbc462c0fbfa31743a8b7afcac6139f8f2fac42b9158",
+      "bytes": 8849
+    },
+    "expert-a/pytest-attempt2/test_pg_08_actual_funding_busy1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_08_actual_funding_busy1/readguard-evidence/sql.json",
+      "sha256": "88862d76a3431367382e07f90764928530fddcacefc57fc64ac5e96a631f0526",
+      "bytes": 28242
+    },
+    "expert-a/pytest-attempt2/test_pg_08_busy_actual_caller_0/readguard-evidence/PG-08-job-stage_verify.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_08_busy_actual_caller_0/readguard-evidence/PG-08-job-stage_verify.json",
+      "sha256": "db9bf6843045e38493ec487c638b842ac08f9908afb9e66acb0cac14f4e29c7d",
+      "bytes": 9270
+    },
+    "expert-a/pytest-attempt2/test_pg_08_busy_actual_caller_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_08_busy_actual_caller_0/readguard-evidence/sql.json",
+      "sha256": "126c93390f8f53e1330b0a7daba39608a169bd9c8500191b2a0d69fe8902651d",
+      "bytes": 29201
+    },
+    "expert-a/pytest-attempt2/test_pg_08_busy_actual_caller_1/readguard-evidence/PG-08-run-stage_verify.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_08_busy_actual_caller_1/readguard-evidence/PG-08-run-stage_verify.json",
+      "sha256": "0d69b87b5155a7c60502b39b4ddfefda6cc13177f5adf72b968a029ad79eb8f3",
+      "bytes": 9041
+    },
+    "expert-a/pytest-attempt2/test_pg_08_busy_actual_caller_1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_08_busy_actual_caller_1/readguard-evidence/sql.json",
+      "sha256": "995d2f32c088fe8191434a12c69e0dcc0aee3bb412395e8c69bd151fb3075d75",
+      "bytes": 29565
+    },
+    "expert-a/pytest-attempt2/test_pg_08_busy_actual_caller_2/readguard-evidence/PG-08-job-run_to_decision.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_08_busy_actual_caller_2/readguard-evidence/PG-08-job-run_to_decision.json",
+      "sha256": "14dfe0bc5ba33d933ca5d4523e497013c1f938aa22ee86234f87149e4baeebcf",
+      "bytes": 9270
+    },
+    "expert-a/pytest-attempt2/test_pg_08_busy_actual_caller_2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_08_busy_actual_caller_2/readguard-evidence/sql.json",
+      "sha256": "fec22e6615db72daf371fe48cf158e648a249705c0ca373c50bfcc9bd29baec6",
+      "bytes": 29329
+    },
+    "expert-a/pytest-attempt2/test_pg_08_busy_actual_caller_3/readguard-evidence/PG-08-run-run_to_decision.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_08_busy_actual_caller_3/readguard-evidence/PG-08-run-run_to_decision.json",
+      "sha256": "f478175e00fa549c325577833ff742cdda99d4986889e2a36ce217096045e503",
+      "bytes": 9041
+    },
+    "expert-a/pytest-attempt2/test_pg_08_busy_actual_caller_3/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_08_busy_actual_caller_3/readguard-evidence/sql.json",
+      "sha256": "0fc6b5b4e36ea5723808fe6a8591d8df0cbc15da52b0233100db3db82c7fe3d1",
+      "bytes": 29671
+    },
+    "expert-a/pytest-attempt2/test_pg_09_real_discovery_broa0/readguard-evidence/PG-09-discovery-catalogue.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_09_real_discovery_broa0/readguard-evidence/PG-09-discovery-catalogue.json",
+      "sha256": "31faea2074d1f1d8ede7b60c161ad804c8a2205c33ce94d0ad0c79c3deb73606",
+      "bytes": 1263
+    },
+    "expert-a/pytest-attempt2/test_pg_09_real_discovery_broa0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_09_real_discovery_broa0/readguard-evidence/sql.json",
+      "sha256": "2020e0c845e52663fa41016e88a23c2de9e524fee4b1fceb883a4b3fd63bb484",
+      "bytes": 7401
+    },
+    "expert-a/pytest-attempt2/test_pg_09_real_discovery_broa1/readguard-evidence/PG-09-discovery-curated.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_09_real_discovery_broa1/readguard-evidence/PG-09-discovery-curated.json",
+      "sha256": "442c0a656bb2839605ad9c25fa28c512f35a041882c29df3e2429737f8d357ca",
+      "bytes": 1263
+    },
+    "expert-a/pytest-attempt2/test_pg_09_real_discovery_broa1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_09_real_discovery_broa1/readguard-evidence/sql.json",
+      "sha256": "5b9bae5a2e5069624cf54d127f61427783de343ce1d5a7814db499c86f249d4c",
+      "bytes": 7402
+    },
+    "expert-a/pytest-attempt2/test_pg_10_actual_source_recor0/readguard-evidence/PG-10-actual-source-recorder.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_10_actual_source_recor0/readguard-evidence/PG-10-actual-source-recorder.json",
+      "sha256": "93e1817f136e4cdbd41759606cd6a1784d8ffdbe7b1dba516f17f8b831ef79e2",
+      "bytes": 8749
+    },
+    "expert-a/pytest-attempt2/test_pg_10_actual_source_recor0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_10_actual_source_recor0/readguard-evidence/sql.json",
+      "sha256": "fb02bfabcd1fd2367e6aa1e69c06704863680e935daa465accbae993c4bbd5df",
+      "bytes": 31748
+    },
+    "expert-a/pytest-attempt2/test_pg_10_prior_dirty_run_flu0/readguard-evidence/PG-10.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_10_prior_dirty_run_flu0/readguard-evidence/PG-10.json",
+      "sha256": "a8102acf327806493930322b0ea076cc00ab5c4fe1fc0b8ff94c340f8cc45fae",
+      "bytes": 1643
+    },
+    "expert-a/pytest-attempt2/test_pg_10_prior_dirty_run_flu0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_10_prior_dirty_run_flu0/readguard-evidence/sql.json",
+      "sha256": "4267b9ae9eadf26499ac3178474c2e5c2afd149f0228370272a61155ec736f1d",
+      "bytes": 10973
+    },
+    "expert-a/pytest-attempt2/test_pg_11_corrupt_envelope_an0/readguard-evidence/PG-11.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_11_corrupt_envelope_an0/readguard-evidence/PG-11.json",
+      "sha256": "a175146b410137b1861c10073aa522e862b3c88c3773e59f989e6bf0db31231e",
+      "bytes": 482
+    },
+    "expert-a/pytest-attempt2/test_pg_11_corrupt_envelope_an0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_pg_11_corrupt_envelope_an0/readguard-evidence/sql.json",
+      "sha256": "7395c9c809695a461ea8cd31e97fa8d6b492534a9ba8f19f223a7813482d9403",
+      "bytes": 25966
+    },
+    "expert-a/pytest-attempt2/test_postgres_lock_unavailable0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_postgres_lock_unavailable0/readguard-evidence/sql.json",
+      "sha256": "f9eb4e335537a847a09d9651d8b7eb8e245754430e08406fcffcff54c774a356",
+      "bytes": 5058
+    },
+    "expert-a/pytest-attempt2/test_previous_episode_cannot_p0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_previous_episode_cannot_p0/readguard-evidence/sql.json",
+      "sha256": "8ac5abe3f299e6461097f554f4f21a07dc86df920ba4772386d04847be8fc9b5",
+      "bytes": 57185
+    },
+    "expert-a/pytest-attempt2/test_previous_episode_cannot_p1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_previous_episode_cannot_p1/readguard-evidence/sql.json",
+      "sha256": "630d9c6f5c1dcedb6b55173c49bc739732e28f610b0fea8ca7eed6500092f664",
+      "bytes": 6331
+    },
+    "expert-a/pytest-attempt2/test_real_attempt_takeover_pre0/readguard-evidence/lease-postgresql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_real_attempt_takeover_pre0/readguard-evidence/lease-postgresql.json",
+      "sha256": "a1654ca5bc363f2b93e47b9800961c962a3312522418ae1a09d6c6b4f067cd47",
+      "bytes": 24250
+    },
+    "expert-a/pytest-attempt2/test_real_attempt_takeover_pre0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_real_attempt_takeover_pre0/readguard-evidence/sql.json",
+      "sha256": "7a1350aab760ce265fa9ef43240cbbb1b949df2cd64bf461fafaa201df18e9d1",
+      "bytes": 316899
+    },
+    "expert-a/pytest-attempt2/test_real_attempt_takeover_pre1/readguard-evidence/lease-sqlite.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_real_attempt_takeover_pre1/readguard-evidence/lease-sqlite.json",
+      "sha256": "b35bc5f4d99fc23f76f2fbf90f72fdcebf0c44db53a6f0191c3eab28efed6f8a",
+      "bytes": 24130
+    },
+    "expert-a/pytest-attempt2/test_real_attempt_takeover_pre1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_real_attempt_takeover_pre1/readguard-evidence/sql.json",
+      "sha256": "392ed272c0fc901dc7f70efbf3beb80b2b329e40b21dd26d67f7de994457bfee",
+      "bytes": 289552
+    },
+    "expert-a/pytest-attempt2/test_real_catalogue_discovery_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_real_catalogue_discovery_0/readguard-evidence/sql.json",
+      "sha256": "cf7d67c987f3f451ab5871a44edf1428c568b287046398571843f6851e17ecc0",
+      "bytes": 262289
+    },
+    "expert-a/pytest-attempt2/test_real_direct_run_without_w0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_real_direct_run_without_w0/readguard-evidence/sql.json",
+      "sha256": "dc04ced4f346b9ddd6db78292d0addd530808895da66727f517ff9c09631ed6b",
+      "bytes": 60925
+    },
+    "expert-a/pytest-attempt2/test_real_run_to_decision_shar0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_real_run_to_decision_shar0/readguard-evidence/sql.json",
+      "sha256": "a6032ab033118977b3b8940f676ec765baa9e34a20f5d09e6acdb35292dd528c",
+      "bytes": 401868
+    },
+    "expert-a/pytest-attempt2/test_real_user_cancel_keeps_ca0/readguard-evidence/cancel-postgresql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_real_user_cancel_keeps_ca0/readguard-evidence/cancel-postgresql.json",
+      "sha256": "7d1e79b80b1e11874cc4180a4f7e6de7b6abdce435f685d01a2022d14fb2f015",
+      "bytes": 16101
+    },
+    "expert-a/pytest-attempt2/test_real_user_cancel_keeps_ca0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_real_user_cancel_keeps_ca0/readguard-evidence/sql.json",
+      "sha256": "de10d73db4e67bcb8f3d1b1510bfbc601f62892abf6fe3ad61ad7b58de79fd68",
+      "bytes": 311807
+    },
+    "expert-a/pytest-attempt2/test_real_user_cancel_keeps_ca1/readguard-evidence/cancel-sqlite.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_real_user_cancel_keeps_ca1/readguard-evidence/cancel-sqlite.json",
+      "sha256": "1808dc3ce1c650c5ce9612b606fa48aeaefad4db7524f21279a21b21ad2e7f93",
+      "bytes": 16041
+    },
+    "expert-a/pytest-attempt2/test_real_user_cancel_keeps_ca1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_real_user_cancel_keeps_ca1/readguard-evidence/sql.json",
+      "sha256": "c717ab06b45928923a63b9dc4d680350a89a315a9e279fa7c038a5e05e1d7a64",
+      "bytes": 285385
+    },
+    "expert-a/pytest-attempt2/test_recheck_explicitly_exclud0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_recheck_explicitly_exclud0/readguard-evidence/sql.json",
+      "sha256": "effd1706151439d7a768c0fab671e7731af05a1e98d573d1b53a879baad3fe01",
+      "bytes": 14006
+    },
+    "expert-a/pytest-attempt2/test_resume_intent_read_busy_i0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_resume_intent_read_busy_i0/readguard-evidence/sql.json",
+      "sha256": "b579844bae5e9f4c9225932583b847f4dcf752d882ef6dd2c80641ac26cae887",
+      "bytes": 8522
+    },
+    "expert-a/pytest-attempt2/test_same_genuine_job_reclaim_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_same_genuine_job_reclaim_0/readguard-evidence/sql.json",
+      "sha256": "48eb33b09b92d2ce37992399512e099eb57181967e7ccac86c57377d70bcdd84",
+      "bytes": 273535
+    },
+    "expert-a/pytest-attempt2/test_same_job_two_stale_runner0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_same_job_two_stale_runner0/readguard-evidence/sql.json",
+      "sha256": "21359d8343cc1f7749c11aa216da2abc32fdfc3f386639ba555f270a3f911260",
+      "bytes": 554527
+    },
+    "expert-a/pytest-attempt2/test_same_university_all_progr0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_same_university_all_progr0/readguard-evidence/sql.json",
+      "sha256": "ce81523909554d7b1a51683ddaeb1b02f220643bbe6b3a002af545329565cc9b",
+      "bytes": 288526
+    },
+    "expert-a/pytest-attempt2/test_save_refreshes_stale_json0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_save_refreshes_stale_json0/readguard-evidence/sql.json",
+      "sha256": "fcbb8cfb3fd865ec20c2b4862495fafbcbec05bdbefc2b5b764b8e526a77be66",
+      "bytes": 24853
+    },
+    "expert-a/pytest-attempt2/test_scope_less_or_unfenced_ge0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_scope_less_or_unfenced_ge0/readguard-evidence/sql.json",
+      "sha256": "0bf5725c4d07405f29ac32076dded02585456983b2a1bb432d699bf33b349148",
+      "bytes": 1108
+    },
+    "expert-a/pytest-attempt2/test_sitemap_broad_catch_does_0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_sitemap_broad_catch_does_0/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt2/test_sitemap_broad_catch_does_1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_sitemap_broad_catch_does_1/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt2/test_sitemap_broad_catch_does_2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_sitemap_broad_catch_does_2/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt2/test_standalone_renderer_contr0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_standalone_renderer_contr0/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt2/test_standalone_renderer_contr1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_standalone_renderer_contr1/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt2/test_standalone_renderer_contr2/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_standalone_renderer_contr2/readguard-evidence/sql.json",
+      "sha256": "5308822076add71016c0d67074f4268064cd5adedda31279f7544160e8fbe5d1",
+      "bytes": 40
+    },
+    "expert-a/pytest-attempt2/test_started_legacy_episode_wi0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_started_legacy_episode_wi0/readguard-evidence/sql.json",
+      "sha256": "5643a8bec70b232e53d02b0fa770fd276b159167ee6336166914c4c8ef5796cb",
+      "bytes": 3032
+    },
+    "expert-a/pytest-attempt2/test_two_actual_sqlite_session0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_two_actual_sqlite_session0/readguard-evidence/sql.json",
+      "sha256": "78de8d9be20a1c5af0a8996bd724e4d426629b16835200e61409033fbddd98f1",
+      "bytes": 582895
+    },
+    "expert-a/pytest-attempt2/test_two_sqlite_sessions_canno0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_two_sqlite_sessions_canno0/readguard-evidence/sql.json",
+      "sha256": "cd6ec31d45fba1232f3ab1bc57fce3b6459cc100016953d6c19018320fecaade",
+      "bytes": 27746
+    },
+    "expert-a/pytest-attempt2/test_unknown_saved_episode_can0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_unknown_saved_episode_can0/readguard-evidence/sql.json",
+      "sha256": "07dc570031f39313f7f078edbe050601b82d5653317adf7fb33cda280c93a590",
+      "bytes": 3270
+    },
+    "expert-a/pytest-attempt2/test_unknown_saved_episode_can1/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_unknown_saved_episode_can1/readguard-evidence/sql.json",
+      "sha256": "e573d26d582949d1c3921d20c910fbdd52bb3430b300539b347e440e7f8add74",
+      "bytes": 3690
+    },
+    "expert-a/pytest-attempt2/test_untracked_new_job_on_star0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_untracked_new_job_on_star0/readguard-evidence/sql.json",
+      "sha256": "6f37b980bdf42c912b9653a00c8acd82c1dc5290c4a1b65ad202b5734dbe3647",
+      "bytes": 11987
+    },
+    "expert-a/pytest-attempt2/test_worker_retry_and_stale_at0/readguard-evidence/sql.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_worker_retry_and_stale_at0/readguard-evidence/sql.json",
+      "sha256": "e7ef9bd420cab70194e8a3e40fa897fdcd74724b38197e3a0904054af78b59ef",
+      "bytes": 277070
+    },
+    "root/original/app/adapters/base.py": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/original/app/adapters/base.py",
+      "sha256": "68355f99ee62ea2eefac63a7b991b057b16c374a26a9b1b210a0a07cad1e9637",
+      "bytes": 4005
+    },
+    "root/original/app/adapters/discovery/catalog_walker.py": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/original/app/adapters/discovery/catalog_walker.py",
+      "sha256": "218fbb73f8baa455449a9853ff0ad6769c0a9f6ebdb9d42cf551922bd66a01a7",
+      "bytes": 32036
+    },
+    "root/original/app/adapters/discovery/live_discovery.py": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/original/app/adapters/discovery/live_discovery.py",
+      "sha256": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6",
+      "bytes": 95295
+    },
+    "root/original/app/catalogue/discovery.py": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/original/app/catalogue/discovery.py",
+      "sha256": "717ea35eaddadc5b3db7a10c3b92280e6beb137f46b3bbffeadec46c08572b02",
+      "bytes": 11829
+    },
+    "root/original/app/jobs/worker.py": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/original/app/jobs/worker.py",
+      "sha256": "491f5ccdeadd3556ad4e5bf6bfc2b4578207ef2cce129eb2fcd57b4b4e0e6681",
+      "bytes": 20885
+    },
+    "root/original/app/pipeline/runner.py": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-integration/original/app/pipeline/runner.py",
+      "sha256": "686a6961964eb020056cba8b80f51c3cee622d2e6d62e63194b7d520e55fd71f",
+      "bytes": 81463
+    }
+  },
+  "excluded": "All SQLite/PGDATA/WAL/socket/privateGit/credentials; only synthetic JSON SQL evidence, logs, receipts and public source originals selected"
+}

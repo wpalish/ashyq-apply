@@ -33,6 +33,7 @@ import json
 import logging
 import re
 from collections.abc import Callable
+from contextlib import AbstractContextManager, nullcontext
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
@@ -52,6 +53,7 @@ from app.adapters.search.ontology import canonical_field, load_ontology
 from app.domain.enums import FetchOutcome
 from app.domain.site_identity import hosts_share_site
 from app.domain.site_identity import registrable_domain as site_domain
+from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
 from app.schemas.profile import ApplicantProfileIn
 from app.schemas.result import RankingEntry
 
@@ -1065,7 +1067,9 @@ class LiveDiscoveryAdapter:
         registry_path: Path | None = None,
         *,
         page_recorder: PageRecorder | None = None,
+        research_scope: Callable[[Candidate], AbstractContextManager] | None = None,
     ) -> None:
+        self.research_scope = research_scope
         self.fetcher = fetcher
         self.registry_path = registry_path or REGISTRY_PATH
         self.sitemaps = SitemapReader(fetcher)
@@ -1129,7 +1133,20 @@ class LiveDiscoveryAdapter:
         self.walker_outcomes = []
         out: list[Candidate] = []
         for entry in entries:
-            candidate, trace = await self._discover_one(entry, profile)
+            seed = Candidate(
+                name=entry["name"], country=entry["country"], city=entry.get("city", "")
+            )
+            try:
+                with self.research_scope(seed) if self.research_scope else nullcontext():
+                    candidate, trace = await self._discover_one(entry, profile)
+            except UniversityReadStopped as stopped:
+                if stopped.reason == "checkpoint_busy":
+                    raise
+                candidate = seed
+                trace = DiscoveryTrace(institution=seed.name, domain="")
+                trace.search_limitations.append(
+                    f"Remaining research remains unknown: university read allowance unavailable ({stopped.reason})."
+                )
             self.traces.append(trace)
             out.append(candidate)
         return out
@@ -1197,6 +1214,8 @@ class LiveDiscoveryAdapter:
 
         try:
             await self.sitemaps.collect(entry["homepage"], domain, trace, keep)
+        except (UniversityReadStopped, RunCancelled, LeaseLost):
+            raise
         except Exception as exc:  # a malformed sitemap must not end the run
             trace.errors.append(f"sitemap discovery failed: {type(exc).__name__}: {exc}")
 
@@ -1409,6 +1428,8 @@ class LiveDiscoveryAdapter:
         )
         try:
             walks = await walker.walk(catalogues[:WALKER_MAX_CATALOGS])
+        except (UniversityReadStopped, RunCancelled, LeaseLost):
+            raise
         except Exception as exc:  # a walker failure must not end discovery
             trace.errors.append(f"catalog walker failed: {type(exc).__name__}: {exc}"[:300])
             return

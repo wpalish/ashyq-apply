@@ -1,0 +1,12 @@
+{
+  "test": "test_previous_episode_cannot_prove_untracked_current_job_intent_or_fake_zero[False]",
+  "cause": "Port helper no longer exported a transitive DiscoveryTrace import after Ruff unused-import cleanup. Direct app import repairs the test seam; no application logic changed.",
+  "changes": [
+    "tests/test_readguard_revision_controls.py direct DiscoveryTrace import"
+  ],
+  "collected": 134,
+  "passed": 133,
+  "failure": 1,
+  "error": 0,
+  "skipped": 0
+}
