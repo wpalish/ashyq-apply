@@ -1,0 +1,62 @@
+--- a/backend/app/adapters/page_classifier.py
++++ b/backend/app/adapters/page_classifier.py
+@@ -21,6 +21,10 @@
+ from urllib.parse import urlparse
+ 
+ from bs4 import BeautifulSoup
++
++
++# Off until a paired owner-approved experiment measures the general rule.
++PROGRAMME_IDENTITY_BEFORE_FUNDING = False
+ 
+ 
+ class PageType(StrEnum):
+@@ -474,7 +478,14 @@
+         )
+ 
+     # --- funding family ---------------------------------------------------
+-    if _SCHOLARSHIP_WORD.search(low_head) or "scholarship" in path or "financial-aid" in path:
++    funding_head = low_head
++    if PROGRAMME_IDENTITY_BEFORE_FUNDING and _programme_content_identity(
++        identity, title, path, body, headings
++    ):
++        # Programme identity and academic content protect a subsidiary funding
++        # section. Funding URLs and the page's own funding identity still win.
++        funding_head = f"{title} {identity}".lower()
++    if _SCHOLARSHIP_WORD.search(funding_head) or "scholarship" in path or "financial-aid" in path:
+         if _FAQ.search(low_head):
+             return PageClassification(PageType.SCHOLARSHIP_FAQ, 0.9, ["FAQ markers"], title)
+ 
+@@ -637,6 +648,32 @@
+     return PageClassification(PageType.UNKNOWN, 0.2, ["no decisive signals"], title)
+ 
+ 
++def _programme_content_identity(
++    identity: str, title: str, path: str, body: str, headings: list[str]
++) -> bool:
++    """A single programme with its own academic content, not merely a support label."""
++    primary = f"{title} {identity}"
++    if _SCHOLARSHIP_WORD.search(primary) or _award_name(identity):
++        return False
++    subject = _program_name(identity) or _program_name_from_context(
++        identity, title, path, body[:4000]
++    )
++    if not subject:
++        return False
++    # Secondary funding can also be the main purpose of a generically headed
++    # support page. Restrict the bypass to an explicit academic-content block;
++    # title/degree words alone would promote "Undergraduate support".
++    return any(
++        re.fullmatch(
++            r"curriculum|(?:course|programme|program|degree) structure|"
++            r"(?:course|programme|program) content|what you (?:will )?(?:learn|study)",
++            heading.strip(),
++            re.IGNORECASE,
++        )
++        for heading in headings
++    )
++
++
+ # --- helpers ---------------------------------------------------------------
+ 
+ 

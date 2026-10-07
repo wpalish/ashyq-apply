@@ -1,6 +1,10 @@
 # Claude search relay — 7 October 2026
 
-## Latest Round5 checkpoint 2026-10-07 20:24UTC
+## Latest reviewed checkpoint 2026-10-07 20:44UTC
+
+**[search-loop] current 2026-10-07 20:44UTC:** Round5 source d29bcf8 and metadata640c797 pushed in DraftPR65 (base PR64). Local3892/95.01%, frontend232/all quality/demo/onehead; SPH-1=False. Round6 four external candidates rejected and archived; no classifier source applied. Latest rev2 bd21146 fixes earlier false programme/scope controls but causes real depth1 Wits funding-link loss. A prepares bounded revision3 preserving subsidiary funding discovery; await independent semantic/caller review before source application. Two rev2 conservative missed gains stay explicit. B prepares durable60-Fetcher.get production guard with real SQL/fencing tests, not hard120/render/query durability. Global CI-refusal/liveSTOP sticky, no live/hosted retry/reset/purchase/gold/heldout/default change. Parent owns all code/Git; two experts external only.
+
+## Previous Round5 checkpoint 2026-10-07 20:24UTC
 
 SPH-1 opt-in source locally verified3892/95.01%,frontend232/all local gates/demo unchanged/onehead. Retained AUT production reader removes wrong Data major1/0/0/1 and preserves true CS1/1/1/1 with no invented intake/year. Source task/search-subject-phrase follows DraftPR64 query accounting c6a1bdc; source checkpoint/PR65 next. RuleFalse pending live pair/owner promotion; no live while stickySTOP. Wits alternatives have two independently proven false-positive blockers and are not applied. Continue stronger offline proof/review rather than promoting them. Production durable60/120 remains unresolved. No current cloud CI or launch claim. Newest section supersedes older planned steps below.
 

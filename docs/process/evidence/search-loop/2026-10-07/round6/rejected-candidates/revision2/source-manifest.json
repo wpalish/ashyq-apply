@@ -1,0 +1,46 @@
+{
+  "status": "EXTERNAL_REVIEW_CANDIDATE_FROZEN",
+  "revision": 2,
+  "flag": "PROGRAMME_IDENTITY_BEFORE_FUNDING",
+  "default": false,
+  "applied_to_repo": false,
+  "live_capture_run": false,
+  "default_promotion_allowed": false,
+  "frozen_source_sha256": "2f73f7c662ae0da1c31de6f23a9e068574c43f648a2472765a5398c2a093b158",
+  "proposed_source_sha256": "bd21146bff824c059defa47ce2a1e5e3490d34822a2485c3b4dfb16116ae5303",
+  "source_files_sha256": {
+    "work/ashyq-apply/backend/app/adapters/page_classifier.py": "2f73f7c662ae0da1c31de6f23a9e068574c43f648a2472765a5398c2a093b158",
+    "work/ashyq-apply/backend/app/adapters/requirements/web_requirements.py": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+    "work/ashyq-apply/backend/app/domain/claim_verifier.py": "7c33bada893a2e3c98fbd68e67d84ff9e8bf587a04c13088dfc904fc3219f249"
+  },
+  "artifacts_sha256": {
+    "proposed_page_classifier.py": "bd21146bff824c059defa47ce2a1e5e3490d34822a2485c3b4dfb16116ae5303",
+    "programme-identity-before-funding.patch": "df94273e9a2ebd3d920a954993011f9c82830f4b0833703f5cdf78a2360d31ad",
+    "test_programme_funding_scope.py": "a502f059d62710d1e6fdf741c7d8f52f5920be5cca9c739e57f07726e1b4f434",
+    "replay_classifier.py": "4d6ec15b12400f1ac340722ee31cccb43269f0cd432a8a3d233db3516f962ffa",
+    "independent-replay.json": "32304bf44aece2929f7733bb4005e7a45bdd1e3728e15a6a777b54e866346340",
+    "pytest-proposal.log": "de7494ec66f4146c129ec6ed6e4b5bcc861bdfe258bb645c572204263b2f042a",
+    "pytest-red.log": "4ebe209ca012059d9b9b439db05a1e2c05873796c7c0d6b5c0eb0b5229482203",
+    "ruff.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "expert-a-negative-controls.json": "4be1b6b239784e89a2fe841f4c335f0f7e1c3fe8abcdc08aa6566dd5af01db27"
+  },
+  "sticky_stop_sha256": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+  "body_sha256": "88d1f716c82840fa66317ff1ceb42a152439a924d7625c0d2ef18a0f315f0a87",
+  "checks": {
+    "external_proposal": {
+      "passed": 126,
+      "failed": 0,
+      "time_seconds": 0.69
+    },
+    "frozen_red_baseline": {
+      "passed": 114,
+      "failed": 12,
+      "time_seconds": 0.57
+    },
+    "ruff": "passed",
+    "independent_semantic_controls": 61,
+    "expert_a_exact_controls": 9,
+    "all_six_confirmed_blockers_fixed": true
+  },
+  "rejected_prior_candidate": "ed79828af03c2ec2664705b13d1e04328c29fa5e433465cb703035dacf8135e6"
+}
