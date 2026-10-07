@@ -1,0 +1,103 @@
+{
+  "mode": "Proposed acceptance controls; not implemented or executed",
+  "controls": [
+    {
+      "case": "actual_dalian_training_page",
+      "input": "Retained actual HTML with sidebar-page-container article and aside menu",
+      "content": "Keep actual training h2 and curriculum; remove actual sidebar from identity view",
+      "identity": "Unresolved subject/level resource; exact programme UNKNOWN",
+      "rationale": "No explicit single awarded-degree/major identity entry; training heading is descriptive and plural"
+    },
+    {
+      "case": "mixed_layout_exact_programme",
+      "input": "<div class=\"sidebar-page-container\"><section><h2>BSc Computer Science</h2><p>This BSc programme has...</p></section><aside><a>Other degrees</a></aside></div>",
+      "content": "Keep main section; discard aside identity evidence",
+      "identity": "Single programme identity eligible if other programme guards and field equivalence pass; intake remains UNKNOWN",
+      "rationale": "Layout classname must not erase an explicit main programme name"
+    },
+    {
+      "case": "sidebar_only_programme_link",
+      "input": "<aside><h2>BSc Computer Science</h2><ul><li><a href=\"/cs\">Find this degree</a></li></ul></aside>",
+      "content": "Link lead may be followed within ordinary budget; sidebar title not page identity",
+      "identity": "No confirmed programme identity from this page",
+      "rationale": "Navigation labels describe targets rather than containing page"
+    },
+    {
+      "case": "div_sidebar_menu",
+      "input": "<div class=\"sidebar-menu\"><h2>BSc Computer Science</h2><ul><li><a>One</a></li><li><a>Two</a></li></ul></div>",
+      "content": "Remove menu from identity view by structure, not solely classname",
+      "identity": "No confirmed programme identity",
+      "rationale": "Restoring layout wrappers must not restore pure menu headings"
+    },
+    {
+      "case": "generic_h1_explicit_main_h2",
+      "input": "<main><h1>Study</h1><h2>Bachelor of Science in Computer Science</h2><p>This degree programme...</p></main>",
+      "content": "Keep main h1/h2 and local programme context",
+      "identity": "Use unique explicit degree-name h2; record heading source",
+      "rationale": "A generic h1 is not programme identity and does not veto a stronger named programme"
+    },
+    {
+      "case": "generic_degree_title",
+      "input": "<title>Undergraduate Education</title><main><h2>Educational objectives</h2><p>Our department teaches computer science...</p></main>",
+      "content": "Keep substantive resource text",
+      "identity": "UNKNOWN; do not label Undergraduate Education a programme",
+      "rationale": "Degree-level word alone is not a programme name"
+    },
+    {
+      "case": "multiple_named_degree_entries",
+      "input": "<main><h1>Our degrees</h1><h2>BSc Computer Science</h2><p>...</p><h2>BSc Mathematics</h2><p>...</p></main>",
+      "content": "Keep separate bounded programme entries",
+      "identity": "Catalogue/multiple entries; no whole-page single-programme identity",
+      "rationale": "Do not choose whichever heading matches applicant first"
+    },
+    {
+      "case": "field_training_plural",
+      "input": "<main><h2>Introduction to Undergraduate Training Programs in Computer Science</h2><p>Cultivation objectives...</p></main>",
+      "content": "Keep heading and training description",
+      "identity": "Field-specific education resource; programme cardinality UNKNOWN",
+      "rationale": "Do not transform plural training description into a singular awarded programme"
+    },
+    {
+      "case": "named_major_and_level_labels",
+      "input": "<main><h2>Programme information</h2><dl><dt>Major</dt><dd>Computer Science and Technology</dd><dt>Level</dt><dd>Undergraduate</dd></dl></main>",
+      "content": "Preserve labelled single-record block",
+      "identity": "Can establish one named programme at undergraduate level if record unambiguous; awarded degree/title remains UNKNOWN",
+      "rationale": "Equivalent structured identity evidence, not heading-only hard requirement"
+    },
+    {
+      "case": "degree_in_entry_qualification",
+      "input": "<main><h2>Professional certificate in Computing</h2><p>Applicants must hold a bachelor degree in computer science.</p></main>",
+      "content": "Keep qualification wording",
+      "identity": "No Bachelor programme identity",
+      "rationale": "Required entrant qualification is not awarded programme"
+    },
+    {
+      "case": "news_or_research_heading",
+      "input": "<main><h2>Research on undergraduate computer science programmes</h2><p>Publication findings...</p></main>",
+      "content": "Keep research/news classification; no positive heading override",
+      "identity": "No programme identity confirmation",
+      "rationale": "Degree+field in a paper/event headline is not a degree offer"
+    },
+    {
+      "case": "one_joint_degree",
+      "input": "<main><h2>BSc Computer Science and Mathematics</h2><p>This joint degree...</p></main>",
+      "content": "Keep full joint title; do not shorten",
+      "identity": "One joint programme; equivalence to requested exact CS remains UNKNOWN unless explicitly bound",
+      "rationale": "Same-level field overlap is not exact programme match"
+    },
+    {
+      "case": "course_topics_not_programmes",
+      "input": "<main><h2>BSc Computer Science</h2><p>Core topics include software engineering, AI and networks.</p></main>",
+      "content": "Keep course topics within programme section",
+      "identity": "Topics do not create extra programme identities or catalogue status",
+      "rationale": "Catalogue status requires separate named programme entries"
+    },
+    {
+      "case": "footer_and_year_scope",
+      "input": "<main><h2>BSc Computer Science</h2><p>Curriculum overview.</p></main><footer>Campus address; Copyright2027; English website</footer>",
+      "content": "Separate footer from identity/intake reading",
+      "identity": "No intake2027, campus assignment or English teaching-language confirmation",
+      "rationale": "Global metadata/footer language and year do not fill programme scope"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+# Round 3 — shared identity/programme query accounting
+
+Confirmed fake-provider production path previously made one identity plus six programme calls while reporting six. The same red evidence shows both planners ignored a precharged trace. No real provider or university calls were made for this diagnosis or repair.
+
+Existing default-on BL-1 now charges identity attempts after factory resolution, propagates prior charge, and reserves only the remaining slots in both planners. A callback before each seam attempt preserves ordinary errors/cancellation accounting and avoids double-charge. Zero slots never call queries_for(0) or the factory. SHARED_QUERY_BUDGET=False deliberately retains legacy six new programme attempts and reports the truthful larger total.
+
+The telemetry is charged search seam attempts, including local wrapper rejection, not proof of vendor HTTP dispatch. It is in-memory within a discovery episode: durable cancellation/crash/resume guards and production 60-read/120-second enforcement remain unresolved. Free-text multi queries N counts completed reports, so use search_queries_attempted for the charged total. Effective shared flag capture metadata is still a separate follow-up.
+
+Final proposed patch d36a6cd4a815c997d07883edad252913a855dc19851af41ea44d7e53b7516245; four applied source hashes match the proposal. Retained proposal metadata applied_to_repo=false describes the original external proposal, not the parent application. Independent A review has no blocking finding: B50+own18=68 passed; seven old-byte controls fail as expected. Parent focused selection144 passed. Final backend3743 passed/2 warnings/95.01%/416.07s; Ruff/format/mypy369 clean; frontend232/typecheck/lint/build pass; demo20 rows/stage totals identical to preceding green source; one Alembic head d8e412c6a901. Complete original logs and historical failed attempts are retained.
+
+All new hosted CI remains blocked by the preserved billing/spending refusal. Source was tested locally; this archive is not current-head hosted CI success or launch acceptance. Global live STOP remains sticky. No default change, gold/heldout/Fetcher/production mutation, purchase or reset. Round4 design-only is a separate unresolved guard design and explicitly does not meet a hard synchronous wall-clock guarantee.

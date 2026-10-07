@@ -1,0 +1,273 @@
+{
+  "status": "unreviewed independent mock replay",
+  "created_at_utc": "2026-10-07T19:50:52.193595+00:00",
+  "real_network_calls": 0,
+  "real_provider_calls": 0,
+  "source_used": "hash-pinned proposal-source; external loader conftest",
+  "reproducer_sha256": "6a2b68ea1f02dbf2da539bf36ec7da49758d3d29737ece23685ccb76765adea3",
+  "cases": [
+    {
+      "case": "identity_then_programmes",
+      "multi": false,
+      "vendor_search_calls": 6,
+      "identity_calls": 1,
+      "candidate_count": 6,
+      "trace_attempts": 6,
+      "trace_raw": {
+        "institution": "Independent Test University",
+        "domain": "discovered.example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "search identity recovery: checked 0, confirmed 0",
+          "search identity recovery via exa; queries 5, failed 0, rejected {}"
+        ],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {},
+        "search_queries_attempted": 6,
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "vendor_queries": [
+        "\"Independent Test University\" \"Example Country\" official university website",
+        "site:example.edu \"Computer Science\" \"bachelor\"",
+        "Independent Test University bachelor undergraduate first cycle Computer Science programme",
+        "site:example.edu programmes \"Computer Science\"",
+        "site:example.edu courses \"Computer Science\"",
+        "site:example.edu undergraduate \"Computer Science\""
+      ]
+    },
+    {
+      "case": "identity_then_programmes",
+      "multi": true,
+      "vendor_search_calls": 6,
+      "identity_calls": 1,
+      "candidate_count": 6,
+      "trace_attempts": 6,
+      "trace_raw": {
+        "institution": "Independent Test University",
+        "domain": "discovered.example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "search identity recovery: checked 0, confirmed 0",
+          "search identity recovery via exa; queries 5, failed 0, rejected {}"
+        ],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {
+          "requested": 2,
+          "queried": 2,
+          "represented": 0
+        },
+        "search_queries_attempted": 6,
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "vendor_queries": [
+        "\"Independent Test University\" \"Example Country\" official university website",
+        "site:example.edu \"Computer Science\" \"bachelor\"",
+        "Independent Test University bachelor undergraduate first cycle Computer Science programme",
+        "site:example.edu programmes \"Computer Science\"",
+        "site:example.edu \"Mathematics\" \"bachelor\"",
+        "Independent Test University bachelor undergraduate first cycle Mathematics programme"
+      ]
+    },
+    {
+      "case": "ordinary_SearchError_second_query_then_reentry",
+      "multi": false,
+      "upstream_precharge": 1,
+      "before_reentry": {
+        "vendor_search_calls": 2,
+        "trace_attempts": 3,
+        "trace_raw": {
+          "institution": "Independent Test University",
+          "domain": "example.edu",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [
+            "Search service unavailable (exa)."
+          ],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "search_queries_attempted": 3,
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "final_vendor_search_calls": 5,
+      "final_trace_attempts": 6,
+      "final_trace_raw": {
+        "institution": "Independent Test University",
+        "domain": "example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "search identity recovery: checked 0, confirmed 0",
+          "search identity recovery via exa; queries 3, failed 0, rejected {}"
+        ],
+        "search_failures": [
+          "Search service unavailable (exa)."
+        ],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {},
+        "search_queries_attempted": 6,
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "vendor_queries": [
+        "site:example.edu \"Computer Science\" \"bachelor\"",
+        "Independent Test University bachelor undergraduate first cycle Computer Science programme",
+        "site:example.edu \"Computer Science\" \"bachelor\"",
+        "Independent Test University bachelor undergraduate first cycle Computer Science programme",
+        "site:example.edu programmes \"Computer Science\""
+      ]
+    },
+    {
+      "case": "ordinary_SearchError_second_query_then_reentry",
+      "multi": true,
+      "upstream_precharge": 1,
+      "before_reentry": {
+        "vendor_search_calls": 4,
+        "trace_attempts": 5,
+        "trace_raw": {
+          "institution": "Independent Test University",
+          "domain": "example.edu",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [
+            "search identity recovery: checked 0, confirmed 0",
+            "search identity recovery via exa; queries 2, failed 0, rejected {}"
+          ],
+          "search_failures": [
+            "Search service unavailable (exa)."
+          ],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {
+            "requested": 2,
+            "queried": 2,
+            "represented": 0
+          },
+          "search_queries_attempted": 5,
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "final_vendor_search_calls": 5,
+      "final_trace_attempts": 6,
+      "final_trace_raw": {
+        "institution": "Independent Test University",
+        "domain": "example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "search identity recovery: checked 0, confirmed 0",
+          "search identity recovery via exa; queries 2, failed 0, rejected {}",
+          "search identity recovery: checked 0, confirmed 0",
+          "search identity recovery via exa; queries 1, failed 0, rejected {}"
+        ],
+        "search_failures": [
+          "Search service unavailable (exa)."
+        ],
+        "search_limitations": [
+          "Search coverage limited at Independent Test University: 1 of 2 requested subjects were queried; 1 were not searched because of the six-query budget. Search remaining subjects in a separate run."
+        ],
+        "field_sources": {},
+        "search_coverage": {
+          "requested": 2,
+          "queried": 1,
+          "represented": 0
+        },
+        "search_queries_attempted": 6,
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "vendor_queries": [
+        "site:example.edu \"Computer Science\" \"bachelor\"",
+        "Independent Test University bachelor undergraduate first cycle Computer Science programme",
+        "site:example.edu \"Mathematics\" \"bachelor\"",
+        "Independent Test University bachelor undergraduate first cycle Mathematics programme",
+        "site:example.edu \"Computer Science\" \"bachelor\""
+      ]
+    }
+  ]
+}

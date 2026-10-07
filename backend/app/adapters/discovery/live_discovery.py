@@ -806,8 +806,9 @@ class DiscoveryTrace:
     public_fields: list[str] | None = None
     #: Subjects assigned a provider query in this run, for coverage accounting.
     queried_fields: list[str] = field(default_factory=list)
-    #: Provider queries discovery sent for this institution; later stages
-    #: spend only what remains of the per-institution query budget.
+    #: Search-seam attempts charged to this institution, including local
+    #: wrapper refusals; not proof of vendor HTTP dispatch. The historical
+    #: field name is retained. Later stages spend only the remaining budget.
     search_queries_sent: int = 0
     search_coverage: dict[str, int] = field(default_factory=dict)
     used_navigation_fallback: bool = False
@@ -822,6 +823,10 @@ class DiscoveryTrace:
         # Bounded: a large sitemap would otherwise produce a huge trace.
         if len(self.rejected) < 200:
             self.rejected.append((url, reason))
+
+    def charge_search_query_attempt(self) -> None:
+        """Reserve one seam attempt; a local refusal is not HTTP dispatch."""
+        self.search_queries_sent += 1
 
     def as_dict(self) -> dict:
         return {
@@ -840,10 +845,19 @@ class DiscoveryTrace:
             "search_limitations": self.search_limitations,
             "field_sources": self.field_sources,
             "search_coverage": self.search_coverage,
+            "search_queries_attempted": self.search_queries_sent,
             "used_navigation_fallback": self.used_navigation_fallback,
             "kept_by_link_text": self.kept_by_link_text,
             "walker": dict(self.walker),
         }
+
+
+def _remaining_search_query_budget(trace: DiscoveryTrace) -> int:
+    from app.adapters.search import intent as intent_module
+
+    if not intent_module.SHARED_QUERY_BUDGET:
+        return intent_module.DEFAULT_QUERY_BUDGET
+    return max(0, intent_module.DEFAULT_QUERY_BUDGET - trace.search_queries_sent)
 
 
 def _remember_field_source(
@@ -1103,10 +1117,12 @@ class LiveDiscoveryAdapter:
         return out
 
     async def _discover_one(
-        self, entry: dict, profile: ApplicantProfileIn
+        self, entry: dict, profile: ApplicantProfileIn, *, search_queries_used: int = 0
     ) -> tuple[Candidate, DiscoveryTrace]:
         domain = urlparse(entry["homepage"]).netloc
-        trace = DiscoveryTrace(institution=entry["name"], domain=domain)
+        trace = DiscoveryTrace(
+            institution=entry["name"], domain=domain, search_queries_sent=search_queries_used
+        )
 
         candidate = Candidate(
             name=entry["name"],
@@ -1444,6 +1460,13 @@ class LiveDiscoveryAdapter:
         from app.adapters.search.intent import DiscoveryIntent
         from app.adapters.search.retrieval import discover_candidates
 
+        query_budget = _remaining_search_query_budget(trace)
+        if not query_budget:
+            trace.search_limitations.append(
+                f"Programme search not run at {entry['name']}: earlier searches used "
+                "the per-institution query budget."
+            )
+            return
         provider = self._search_provider_or_none()
         if provider is None:
             return
@@ -1499,11 +1522,17 @@ class LiveDiscoveryAdapter:
             )
 
         try:
-            report = await discover_candidates(provider, intent, fetch=read, top_k=10)
+            report = await discover_candidates(
+                provider,
+                intent,
+                query_budget=query_budget,
+                fetch=read,
+                top_k=10,
+                on_query_attempt=trace.charge_search_query_attempt,
+            )
         except SearchError as exc:
             trace.search_failures.append(search_failure_diagnostic(provider.name, exc))
             return
-        trace.search_queries_sent += len(report.queries_run)
 
         trace.search_failures.extend(report.failure_diagnostics)
         if report.throttled:
@@ -1567,7 +1596,7 @@ class LiveDiscoveryAdapter:
         """Search distinct subjects under one institution-wide paid/read budget."""
         from app.adapters.search import SearchError
         from app.adapters.search.base import search_failure_diagnostic
-        from app.adapters.search.intent import DEFAULT_QUERY_BUDGET, DiscoveryIntent
+        from app.adapters.search.intent import DiscoveryIntent
         from app.adapters.search.retrieval import DEFAULT_HOP_ENTRY_POINTS, discover_candidates
 
         fields = _distinct_fields(list(profile.context.intended_fields))
@@ -1593,7 +1622,8 @@ class LiveDiscoveryAdapter:
                 f"Search coverage limited at {entry['name']}: {skipped} requested subject(s) "
                 "failed query privacy validation and were not searched."
             )
-        chosen = intents[:DEFAULT_QUERY_BUDGET]
+        query_budget = _remaining_search_query_budget(trace)
+        chosen = intents[:query_budget]
         trace.queried_fields = [intent.field for intent in chosen]
         if len(intents) > len(chosen):
             trace.search_limitations.append(
@@ -1617,7 +1647,7 @@ class LiveDiscoveryAdapter:
             return
 
         query_budgets = [1] * len(chosen)
-        for slot in range(DEFAULT_QUERY_BUDGET - len(chosen)):
+        for slot in range(query_budget - len(chosen)):
             query_budgets[slot % len(chosen)] += 1
         hop_budgets = [0] * len(chosen)
         for slot in range(DEFAULT_HOP_ENTRY_POINTS):
@@ -1644,6 +1674,7 @@ class LiveDiscoveryAdapter:
                     fetch=read,
                     hop_entry_points=hop_budget,
                     top_k=10,
+                    on_query_attempt=trace.charge_search_query_attempt,
                 )
             except SearchError as exc:
                 trace.search_failures.append(search_failure_diagnostic(provider.name, exc))
@@ -1653,7 +1684,6 @@ class LiveDiscoveryAdapter:
             # Counted before a throttle stop: the queries sent before the 429
             # were spent, and leaving them out understated the run's cost.
             query_count += len(report.queries_run)
-            trace.search_queries_sent += len(report.queries_run)
             failed_count += len(report.failed_queries)
             if report.throttled:
                 # One rate-limit answer ends the run's searching, not just this

@@ -1,0 +1,105 @@
+{
+  "status": "unreviewed offline evidence",
+  "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. .venv/bin/python /Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.reproduce.py",
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend",
+  "exec_tool_chunk_id": "85a436",
+  "exit_code": 0,
+  "real_tool_wall_seconds": 0.53633075,
+  "network_calls": 0,
+  "provider_calls": 0,
+  "source_edits": 0,
+  "git_actions": 0,
+  "files": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.reproduce.py",
+      "bytes": 13963,
+      "sha256_raw_bytes": "a76f435a1045f721f44b7a750671ebeb095eddc11a096368df0cd48afa31a89e"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.offline.json",
+      "bytes": 34060,
+      "sha256_raw_bytes": "e6830459ee1a556009f669bfa437647789b307fb85ffd02cc5dde4c8326901fd"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.review.ru.md",
+      "bytes": 10210,
+      "sha256_raw_bytes": "53666b147e090ea6bddb9d752587fe526a378c5ea3a5623fc61a57fc0e368751"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.source-snapshot/app/adapters/browser.py",
+      "bytes": 11693,
+      "sha256_raw_bytes": "330cfbcdff7119dcbb8c6ffd745dcd2ce24e8688facec0af15fa9de31525f1fb"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.source-snapshot/app/adapters/cost/web_costs.py",
+      "bytes": 8986,
+      "sha256_raw_bytes": "e624ae4afdbe4500c793bc6f463fe8f5ed82c68be298f72ddf86ec9cef8230ed"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.source-snapshot/app/adapters/discovery/catalog_walker.py",
+      "bytes": 32036,
+      "sha256_raw_bytes": "218fbb73f8baa455449a9853ff0ad6769c0a9f6ebdb9d42cf551922bd66a01a7"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.source-snapshot/app/adapters/discovery/live_discovery.py",
+      "bytes": 93253,
+      "sha256_raw_bytes": "b1d7e8f34a3cb59a3a93a1606aee191256e32f5d08e4ba71bc08d75a03521c4f"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.source-snapshot/app/adapters/fetching.py",
+      "bytes": 47727,
+      "sha256_raw_bytes": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.source-snapshot/app/adapters/government/web_government.py",
+      "bytes": 3198,
+      "sha256_raw_bytes": "3aee91ba650b34f44a9228f97514516c550fd6042eb913f924c4671fffaffa82"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.source-snapshot/app/adapters/requirements/web_requirements.py",
+      "bytes": 43883,
+      "sha256_raw_bytes": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.source-snapshot/app/adapters/scholarship/web_scholarships.py",
+      "bytes": 61487,
+      "sha256_raw_bytes": "d1ce759b48ae5100676b9b8e80709b910f76ba9addd2f42f3eed711e45eb870e"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.source-snapshot/app/api/routes_research.py",
+      "bytes": 20623,
+      "sha256_raw_bytes": "f4f069abde5a3be929cc9154953e2f76f46a38b3a1d6fb7a811a7b9448c227b6"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.source-snapshot/app/catalogue/discovery.py",
+      "bytes": 10890,
+      "sha256_raw_bytes": "b2f057bc90831ea465c35561e710ad4cded038e88c45a629f34c2bccf226daab"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.source-snapshot/app/config.py",
+      "bytes": 19393,
+      "sha256_raw_bytes": "ee8bf0ecbd105941733da95283836844e1bee97c56db7ce59677aed33ab56539"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.source-snapshot/app/jobs/store.py",
+      "bytes": 18143,
+      "sha256_raw_bytes": "fbf69acb386db032beb64bb9a59af9ee43f75730d0037124959714faec1264cc"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.source-snapshot/app/jobs/worker.py",
+      "bytes": 20885,
+      "sha256_raw_bytes": "491f5ccdeadd3556ad4e5bf6bfc2b4578207ef2cce129eb2fcd57b4b4e0e6681"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.source-snapshot/app/pipeline/runner.py",
+      "bytes": 81463,
+      "sha256_raw_bytes": "686a6961964eb020056cba8b80f51c3cee622d2e6d62e63194b7d520e55fd71f"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a/production-budget-audit.source-snapshot/evaluation/research/live.py",
+      "bytes": 56786,
+      "sha256_raw_bytes": "d537aaef6527572dd6dda929e3ac235861e28a5e3ef5cd829ef11f3c71b73399"
+    }
+  ],
+  "evidence_created_at_utc": "2026-10-07T19:12:16.725347+00:00"
+}

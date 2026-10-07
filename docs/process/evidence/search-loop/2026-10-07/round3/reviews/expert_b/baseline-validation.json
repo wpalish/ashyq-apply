@@ -1,0 +1,45 @@
+{
+  "network_calls": 0,
+  "real_vendor_calls": 0,
+  "git_calls": 0,
+  "production_path_reproductions": 8,
+  "precharged_planner_controls": 3,
+  "all_offline_assertions_passed": true,
+  "baseline_tests": [
+    {
+      "files": [
+        "tests/test_shared_query_budget.py",
+        "tests/test_search_layer_budget_fixes.py",
+        "tests/test_search_throttle_latch.py",
+        "tests/test_multifield_search.py"
+      ],
+      "passed": 44,
+      "elapsed_seconds": 0.88,
+      "exit_code": 0
+    },
+    {
+      "files": [
+        "tests/test_university_catalogue.py"
+      ],
+      "selection": "provider_outage or identity_checks_page or live_budget_and_timeout",
+      "passed": 3,
+      "deselected": 47,
+      "elapsed_seconds": 0.86,
+      "exit_code": 0
+    }
+  ],
+  "source_sha_after": {
+    "backend/app/catalogue/discovery.py": "b2f057bc90831ea465c35561e710ad4cded038e88c45a629f34c2bccf226daab",
+    "backend/app/adapters/discovery/live_discovery.py": "b1d7e8f34a3cb59a3a93a1606aee191256e32f5d08e4ba71bc08d75a03521c4f",
+    "backend/app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "backend/app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "backend/app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "backend/app/adapters/search/retrieval.py": "ccbe3611602762f8f9ff3729bc75e76bbce7b9a04388e74ae561e996a46e1d7b",
+    "backend/app/adapters/search/exa.py": "70149ed992c6a34938585045461d77e55102815766dd85b51c0df72a5b6a4a45",
+    "backend/app/adapters/requirements/web_requirements.py": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+    "backend/app/adapters/scholarship/web_scholarships.py": "d1ce759b48ae5100676b9b8e80709b910f76ba9addd2f42f3eed711e45eb870e",
+    "backend/app/pipeline/runner.py": "686a6961964eb020056cba8b80f51c3cee622d2e6d62e63194b7d520e55fd71f",
+    "backend/evaluation/research/live.py": "d537aaef6527572dd6dda929e3ac235861e28a5e3ef5cd829ef11f3c71b73399"
+  },
+  "finding_status": "Confirmed in unchanged source, no fix implemented by reviewer"
+}

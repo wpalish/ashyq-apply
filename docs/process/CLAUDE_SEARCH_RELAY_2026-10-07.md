@@ -1,6 +1,10 @@
 # Claude search relay — 7 October 2026
 
-## Autonomous loop continuation (newest instruction)
+## Current checkpoint 2026-10-07 19:59UTC
+
+Round2 all four arms completed before the CI refusal, 20 terminal observations within unchanged6/60/120000; stable site identity Wits/Caltech, no stable programme/core-fact gain, SI-1 remainsFalse. See round2/PAIRED_REVIEW.md. Original stopped launcher and two bounded outcomes without full raw remain explicit. Round3 default-on BL-1 identity/programme accounting repair locally passes3743/95.01%, frontend232/quality/demo/onehead; source branch task/search-query-ledger checkpoint next. Independent68test review has no blockers. GitHub refused all8 jobs9330929 before steps for billing/spending-limit; d669 previous8/8 is historical source proof. Global live STOP work/development-STOP.json is sticky: no live/provider/model/hosted retry, payment, substitution or reset. New source checkpoints use wip [skip ci], not a CI pass. Next: preserve query checkpoint then off-by-default AUT phrase rule and Wits primary-purpose classifier rule, each review/gates/pair/owner promotion per DoD; live remains blocked. Production durable60/120 guard design exists only as an explicitly incomplete sketch. Goal and hourly heartbeat remain ACTIVE; no merge/deployment/launch claim. Newest paragraph supersedes the historical planned-pair statements below.
+
+## Autonomous loop continuation (historical Round2 start)
 
 Owner asks to continue successive engineering rounds until the search is ready for product launch. Active goal and hourly thread heartbeat `unimatch` are configured; continue from `SEARCH_LOOP_LEDGER_2026-10-07.md` and latest HANDOFF entries. Branch `task/search-loop-discovery` explicitly follows b0b1a9c without awaiting main merge. PR #61/#62 exact heads had8/8cloud checks SUCCESS; neither merged/deployed.
 

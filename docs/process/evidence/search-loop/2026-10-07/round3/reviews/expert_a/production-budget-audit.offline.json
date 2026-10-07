@@ -1,0 +1,945 @@
+{
+  "status": "unreviewed offline audit",
+  "created_at_utc": "2026-10-07T19:12:16.725347+00:00",
+  "network_calls_attempted": 0,
+  "provider_calls": 0,
+  "original_cache_reads": 0,
+  "scope": "Production read and elapsed-time guards only; query budget is reviewed separately.",
+  "source_root": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend",
+  "source_hashes_sha256_raw_bytes": {
+    "app/pipeline/runner.py": "686a6961964eb020056cba8b80f51c3cee622d2e6d62e63194b7d520e55fd71f",
+    "app/adapters/fetching.py": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+    "app/config.py": "ee8bf0ecbd105941733da95283836844e1bee97c56db7ce59677aed33ab56539",
+    "app/catalogue/discovery.py": "b2f057bc90831ea465c35561e710ad4cded038e88c45a629f34c2bccf226daab",
+    "app/adapters/discovery/live_discovery.py": "b1d7e8f34a3cb59a3a93a1606aee191256e32f5d08e4ba71bc08d75a03521c4f",
+    "app/jobs/worker.py": "491f5ccdeadd3556ad4e5bf6bfc2b4578207ef2cce129eb2fcd57b4b4e0e6681",
+    "app/jobs/store.py": "fbf69acb386db032beb64bb9a59af9ee43f75730d0037124959714faec1264cc",
+    "app/api/routes_research.py": "f4f069abde5a3be929cc9154953e2f76f46a38b3a1d6fb7a811a7b9448c227b6",
+    "app/adapters/browser.py": "330cfbcdff7119dcbb8c6ffd745dcd2ce24e8688facec0af15fa9de31525f1fb",
+    "app/adapters/discovery/catalog_walker.py": "218fbb73f8baa455449a9853ff0ad6769c0a9f6ebdb9d42cf551922bd66a01a7",
+    "app/adapters/requirements/web_requirements.py": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+    "app/adapters/cost/web_costs.py": "e624ae4afdbe4500c793bc6f463fe8f5ed82c68be298f72ddf86ec9cef8230ed",
+    "app/adapters/scholarship/web_scholarships.py": "d1ce759b48ae5100676b9b8e80709b910f76ba9addd2f42f3eed711e45eb870e",
+    "app/adapters/government/web_government.py": "3aee91ba650b34f44a9228f97514516c550fd6042eb913f924c4671fffaffa82",
+    "evaluation/research/live.py": "d537aaef6527572dd6dda929e3ac235861e28a5e3ef5cd829ef11f3c71b73399"
+  },
+  "source_unchanged_during_run": {
+    "app/pipeline/runner.py": true,
+    "app/adapters/fetching.py": true,
+    "app/config.py": true,
+    "app/catalogue/discovery.py": true,
+    "app/adapters/discovery/live_discovery.py": true,
+    "app/jobs/worker.py": true,
+    "app/jobs/store.py": true,
+    "app/api/routes_research.py": true,
+    "app/adapters/browser.py": true,
+    "app/adapters/discovery/catalog_walker.py": true,
+    "app/adapters/requirements/web_requirements.py": true,
+    "app/adapters/cost/web_costs.py": true,
+    "app/adapters/scholarship/web_scholarships.py": true,
+    "app/adapters/government/web_government.py": true,
+    "evaluation/research/live.py": true
+  },
+  "reproducer_sha256": "a76f435a1045f721f44b7a750671ebeb095eddc11a096368df0cd48afa31a89e",
+  "results": [
+    {
+      "case": "selected-discovery-61",
+      "selected_catalogue": true,
+      "production_orchestration": "ResearchRunner.run_to_decision -> actual _stage_discover -> CatalogueDiscoveryAdapter.discover/_enrich; real Fetcher.get/_request_with_redirects/_request_one_hop/_read_response",
+      "mocked": [
+        "DB/persistence/recheck",
+        "university retrieval",
+        "leaf discovery workload",
+        "verification/funding workloads except cancellation case",
+        "DNS resolution",
+        "HTTP send",
+        "event-loop clock (3 simulated seconds per successful response)",
+        "politeness delay/robots disabled solely for offline mock response"
+      ],
+      "source_bytes_pinned": true,
+      "outcome": "completed",
+      "run_stage": "awaiting_user_decision",
+      "fetcher_get_successes": 61,
+      "mock_http_responses": 61,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 61,
+        "browser": 0,
+        "pdf": 0
+      },
+      "virtual_elapsed_s": 183.0,
+      "real_wall_s": 0.071327,
+      "virtual_is_real_wall": false,
+      "per_request_virtual_seconds": 3,
+      "production_request_timeout_s": 20.0,
+      "candidates_returned": 1,
+      "cancel_checks": 5,
+      "responses_after_cancel_request": null,
+      "reads": [
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-0.html",
+          "virtual_started_s": 0.0,
+          "virtual_finished_s": 3.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-1.html",
+          "virtual_started_s": 3.0,
+          "virtual_finished_s": 6.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-2.html",
+          "virtual_started_s": 6.0,
+          "virtual_finished_s": 9.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-3.html",
+          "virtual_started_s": 9.0,
+          "virtual_finished_s": 12.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-4.html",
+          "virtual_started_s": 12.0,
+          "virtual_finished_s": 15.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-5.html",
+          "virtual_started_s": 15.0,
+          "virtual_finished_s": 18.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-6.html",
+          "virtual_started_s": 18.0,
+          "virtual_finished_s": 21.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-7.html",
+          "virtual_started_s": 21.0,
+          "virtual_finished_s": 24.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-8.html",
+          "virtual_started_s": 24.0,
+          "virtual_finished_s": 27.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-9.html",
+          "virtual_started_s": 27.0,
+          "virtual_finished_s": 30.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-10.html",
+          "virtual_started_s": 30.0,
+          "virtual_finished_s": 33.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-11.html",
+          "virtual_started_s": 33.0,
+          "virtual_finished_s": 36.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-12.html",
+          "virtual_started_s": 36.0,
+          "virtual_finished_s": 39.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-13.html",
+          "virtual_started_s": 39.0,
+          "virtual_finished_s": 42.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-14.html",
+          "virtual_started_s": 42.0,
+          "virtual_finished_s": 45.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-15.html",
+          "virtual_started_s": 45.0,
+          "virtual_finished_s": 48.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-16.html",
+          "virtual_started_s": 48.0,
+          "virtual_finished_s": 51.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-17.html",
+          "virtual_started_s": 51.0,
+          "virtual_finished_s": 54.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-18.html",
+          "virtual_started_s": 54.0,
+          "virtual_finished_s": 57.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-19.html",
+          "virtual_started_s": 57.0,
+          "virtual_finished_s": 60.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-20.html",
+          "virtual_started_s": 60.0,
+          "virtual_finished_s": 63.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-21.html",
+          "virtual_started_s": 63.0,
+          "virtual_finished_s": 66.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-22.html",
+          "virtual_started_s": 66.0,
+          "virtual_finished_s": 69.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-23.html",
+          "virtual_started_s": 69.0,
+          "virtual_finished_s": 72.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-24.html",
+          "virtual_started_s": 72.0,
+          "virtual_finished_s": 75.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-25.html",
+          "virtual_started_s": 75.0,
+          "virtual_finished_s": 78.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-26.html",
+          "virtual_started_s": 78.0,
+          "virtual_finished_s": 81.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-27.html",
+          "virtual_started_s": 81.0,
+          "virtual_finished_s": 84.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-28.html",
+          "virtual_started_s": 84.0,
+          "virtual_finished_s": 87.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-29.html",
+          "virtual_started_s": 87.0,
+          "virtual_finished_s": 90.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-30.html",
+          "virtual_started_s": 90.0,
+          "virtual_finished_s": 93.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-31.html",
+          "virtual_started_s": 93.0,
+          "virtual_finished_s": 96.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-32.html",
+          "virtual_started_s": 96.0,
+          "virtual_finished_s": 99.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-33.html",
+          "virtual_started_s": 99.0,
+          "virtual_finished_s": 102.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-34.html",
+          "virtual_started_s": 102.0,
+          "virtual_finished_s": 105.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-35.html",
+          "virtual_started_s": 105.0,
+          "virtual_finished_s": 108.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-36.html",
+          "virtual_started_s": 108.0,
+          "virtual_finished_s": 111.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-37.html",
+          "virtual_started_s": 111.0,
+          "virtual_finished_s": 114.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-38.html",
+          "virtual_started_s": 114.0,
+          "virtual_finished_s": 117.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-39.html",
+          "virtual_started_s": 117.0,
+          "virtual_finished_s": 120.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-40.html",
+          "virtual_started_s": 120.0,
+          "virtual_finished_s": 123.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-41.html",
+          "virtual_started_s": 123.0,
+          "virtual_finished_s": 126.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-42.html",
+          "virtual_started_s": 126.0,
+          "virtual_finished_s": 129.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-43.html",
+          "virtual_started_s": 129.0,
+          "virtual_finished_s": 132.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-44.html",
+          "virtual_started_s": 132.0,
+          "virtual_finished_s": 135.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-45.html",
+          "virtual_started_s": 135.0,
+          "virtual_finished_s": 138.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-46.html",
+          "virtual_started_s": 138.0,
+          "virtual_finished_s": 141.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-47.html",
+          "virtual_started_s": 141.0,
+          "virtual_finished_s": 144.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-48.html",
+          "virtual_started_s": 144.0,
+          "virtual_finished_s": 147.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-49.html",
+          "virtual_started_s": 147.0,
+          "virtual_finished_s": 150.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-50.html",
+          "virtual_started_s": 150.0,
+          "virtual_finished_s": 153.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-51.html",
+          "virtual_started_s": 153.0,
+          "virtual_finished_s": 156.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-52.html",
+          "virtual_started_s": 156.0,
+          "virtual_finished_s": 159.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-53.html",
+          "virtual_started_s": 159.0,
+          "virtual_finished_s": 162.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-54.html",
+          "virtual_started_s": 162.0,
+          "virtual_finished_s": 165.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-55.html",
+          "virtual_started_s": 165.0,
+          "virtual_finished_s": 168.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-56.html",
+          "virtual_started_s": 168.0,
+          "virtual_finished_s": 171.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-57.html",
+          "virtual_started_s": 171.0,
+          "virtual_finished_s": 174.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-58.html",
+          "virtual_started_s": 174.0,
+          "virtual_finished_s": 177.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-59.html",
+          "virtual_started_s": 177.0,
+          "virtual_finished_s": 180.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-60.html",
+          "virtual_started_s": 180.0,
+          "virtual_finished_s": 183.0,
+          "phase": "discovery-0"
+        }
+      ]
+    },
+    {
+      "case": "ordinary-catalogue-shared-61",
+      "selected_catalogue": false,
+      "production_orchestration": "ResearchRunner.run_to_decision -> actual _stage_discover -> CatalogueDiscoveryAdapter.discover/_enrich; real Fetcher.get/_request_with_redirects/_request_one_hop/_read_response",
+      "mocked": [
+        "DB/persistence/recheck",
+        "university retrieval",
+        "leaf discovery workload",
+        "verification/funding workloads except cancellation case",
+        "DNS resolution",
+        "HTTP send",
+        "event-loop clock (3 simulated seconds per successful response)",
+        "politeness delay/robots disabled solely for offline mock response"
+      ],
+      "source_bytes_pinned": true,
+      "outcome": "completed",
+      "run_stage": "awaiting_user_decision",
+      "fetcher_get_successes": 61,
+      "mock_http_responses": 61,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 61,
+        "browser": 0,
+        "pdf": 0
+      },
+      "virtual_elapsed_s": 183.0,
+      "real_wall_s": 0.02518,
+      "virtual_is_real_wall": false,
+      "per_request_virtual_seconds": 3,
+      "production_request_timeout_s": 20.0,
+      "candidates_returned": 1,
+      "cancel_checks": 5,
+      "responses_after_cancel_request": null,
+      "reads": [
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-0.html",
+          "virtual_started_s": 0.0,
+          "virtual_finished_s": 3.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-1.html",
+          "virtual_started_s": 3.0,
+          "virtual_finished_s": 6.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-2.html",
+          "virtual_started_s": 6.0,
+          "virtual_finished_s": 9.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-3.html",
+          "virtual_started_s": 9.0,
+          "virtual_finished_s": 12.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-4.html",
+          "virtual_started_s": 12.0,
+          "virtual_finished_s": 15.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-5.html",
+          "virtual_started_s": 15.0,
+          "virtual_finished_s": 18.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-6.html",
+          "virtual_started_s": 18.0,
+          "virtual_finished_s": 21.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-7.html",
+          "virtual_started_s": 21.0,
+          "virtual_finished_s": 24.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-8.html",
+          "virtual_started_s": 24.0,
+          "virtual_finished_s": 27.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-9.html",
+          "virtual_started_s": 27.0,
+          "virtual_finished_s": 30.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-10.html",
+          "virtual_started_s": 30.0,
+          "virtual_finished_s": 33.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-0.html",
+          "virtual_started_s": 33.0,
+          "virtual_finished_s": 36.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-1.html",
+          "virtual_started_s": 36.0,
+          "virtual_finished_s": 39.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-2.html",
+          "virtual_started_s": 39.0,
+          "virtual_finished_s": 42.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-3.html",
+          "virtual_started_s": 42.0,
+          "virtual_finished_s": 45.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-4.html",
+          "virtual_started_s": 45.0,
+          "virtual_finished_s": 48.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-5.html",
+          "virtual_started_s": 48.0,
+          "virtual_finished_s": 51.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-6.html",
+          "virtual_started_s": 51.0,
+          "virtual_finished_s": 54.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-7.html",
+          "virtual_started_s": 54.0,
+          "virtual_finished_s": 57.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-8.html",
+          "virtual_started_s": 57.0,
+          "virtual_finished_s": 60.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-9.html",
+          "virtual_started_s": 60.0,
+          "virtual_finished_s": 63.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-10.html",
+          "virtual_started_s": 63.0,
+          "virtual_finished_s": 66.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-11.html",
+          "virtual_started_s": 66.0,
+          "virtual_finished_s": 69.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-12.html",
+          "virtual_started_s": 69.0,
+          "virtual_finished_s": 72.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-13.html",
+          "virtual_started_s": 72.0,
+          "virtual_finished_s": 75.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-14.html",
+          "virtual_started_s": 75.0,
+          "virtual_finished_s": 78.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-15.html",
+          "virtual_started_s": 78.0,
+          "virtual_finished_s": 81.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-16.html",
+          "virtual_started_s": 81.0,
+          "virtual_finished_s": 84.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-17.html",
+          "virtual_started_s": 84.0,
+          "virtual_finished_s": 87.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-18.html",
+          "virtual_started_s": 87.0,
+          "virtual_finished_s": 90.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-19.html",
+          "virtual_started_s": 90.0,
+          "virtual_finished_s": 93.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-20.html",
+          "virtual_started_s": 93.0,
+          "virtual_finished_s": 96.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-21.html",
+          "virtual_started_s": 96.0,
+          "virtual_finished_s": 99.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-22.html",
+          "virtual_started_s": 99.0,
+          "virtual_finished_s": 102.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-23.html",
+          "virtual_started_s": 102.0,
+          "virtual_finished_s": 105.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/verification/page-24.html",
+          "virtual_started_s": 105.0,
+          "virtual_finished_s": 108.0,
+          "phase": "verification"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-0.html",
+          "virtual_started_s": 108.0,
+          "virtual_finished_s": 111.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-1.html",
+          "virtual_started_s": 111.0,
+          "virtual_finished_s": 114.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-2.html",
+          "virtual_started_s": 114.0,
+          "virtual_finished_s": 117.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-3.html",
+          "virtual_started_s": 117.0,
+          "virtual_finished_s": 120.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-4.html",
+          "virtual_started_s": 120.0,
+          "virtual_finished_s": 123.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-5.html",
+          "virtual_started_s": 123.0,
+          "virtual_finished_s": 126.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-6.html",
+          "virtual_started_s": 126.0,
+          "virtual_finished_s": 129.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-7.html",
+          "virtual_started_s": 129.0,
+          "virtual_finished_s": 132.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-8.html",
+          "virtual_started_s": 132.0,
+          "virtual_finished_s": 135.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-9.html",
+          "virtual_started_s": 135.0,
+          "virtual_finished_s": 138.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-10.html",
+          "virtual_started_s": 138.0,
+          "virtual_finished_s": 141.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-11.html",
+          "virtual_started_s": 141.0,
+          "virtual_finished_s": 144.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-12.html",
+          "virtual_started_s": 144.0,
+          "virtual_finished_s": 147.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-13.html",
+          "virtual_started_s": 147.0,
+          "virtual_finished_s": 150.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-14.html",
+          "virtual_started_s": 150.0,
+          "virtual_finished_s": 153.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-15.html",
+          "virtual_started_s": 153.0,
+          "virtual_finished_s": 156.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-16.html",
+          "virtual_started_s": 156.0,
+          "virtual_finished_s": 159.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-17.html",
+          "virtual_started_s": 159.0,
+          "virtual_finished_s": 162.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-18.html",
+          "virtual_started_s": 162.0,
+          "virtual_finished_s": 165.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-19.html",
+          "virtual_started_s": 165.0,
+          "virtual_finished_s": 168.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-20.html",
+          "virtual_started_s": 168.0,
+          "virtual_finished_s": 171.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-21.html",
+          "virtual_started_s": 171.0,
+          "virtual_finished_s": 174.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-22.html",
+          "virtual_started_s": 174.0,
+          "virtual_finished_s": 177.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-23.html",
+          "virtual_started_s": 177.0,
+          "virtual_finished_s": 180.0,
+          "phase": "funding"
+        },
+        {
+          "url": "https://audit-university.invalid/funding/page-24.html",
+          "virtual_started_s": 180.0,
+          "virtual_finished_s": 183.0,
+          "phase": "funding"
+        }
+      ]
+    },
+    {
+      "case": "selected-cancel-during-discovery",
+      "selected_catalogue": true,
+      "production_orchestration": "ResearchRunner.run_to_decision -> actual _stage_discover -> CatalogueDiscoveryAdapter.discover/_enrich; real Fetcher.get/_request_with_redirects/_request_one_hop/_read_response",
+      "mocked": [
+        "DB/persistence/recheck",
+        "university retrieval",
+        "leaf discovery workload",
+        "verification/funding workloads except cancellation case",
+        "DNS resolution",
+        "HTTP send",
+        "event-loop clock (3 simulated seconds per successful response)",
+        "politeness delay/robots disabled solely for offline mock response"
+      ],
+      "source_bytes_pinned": true,
+      "outcome": "RunCancelled",
+      "run_stage": "cancelled",
+      "fetcher_get_successes": 6,
+      "mock_http_responses": 6,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 6,
+        "browser": 0,
+        "pdf": 0
+      },
+      "virtual_elapsed_s": 18.0,
+      "real_wall_s": 0.00539,
+      "virtual_is_real_wall": false,
+      "per_request_virtual_seconds": 3,
+      "production_request_timeout_s": 20.0,
+      "candidates_returned": 2,
+      "cancel_checks": 3,
+      "responses_after_cancel_request": 5,
+      "reads": [
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-0.html",
+          "virtual_started_s": 0.0,
+          "cancel_requested_here": true,
+          "virtual_finished_s": 3.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-1.html",
+          "virtual_started_s": 3.0,
+          "virtual_finished_s": 6.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-0/page-2.html",
+          "virtual_started_s": 6.0,
+          "virtual_finished_s": 9.0,
+          "phase": "discovery-0"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-1/page-0.html",
+          "virtual_started_s": 9.0,
+          "virtual_finished_s": 12.0,
+          "phase": "discovery-1"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-1/page-1.html",
+          "virtual_started_s": 12.0,
+          "virtual_finished_s": 15.0,
+          "phase": "discovery-1"
+        },
+        {
+          "url": "https://audit-university.invalid/discovery-1/page-2.html",
+          "virtual_started_s": 15.0,
+          "virtual_finished_s": 18.0,
+          "phase": "discovery-1"
+        }
+      ]
+    }
+  ],
+  "evaluation_positive_controls": {
+    "class_extracted_from_exact_original_source": true,
+    "module_or_dataset_not_imported": true,
+    "reads": {
+      "accepted": 60,
+      "attempt_61": "BENCHMARK_PAGE_BUDGET_EXHAUSTED",
+      "stop_reason": "page_budget_exhausted"
+    },
+    "time": {
+      "accepted_at_s": 119,
+      "blocked_at_s": 120,
+      "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+      "stop_reason": "wall_clock_budget_exhausted"
+    }
+  },
+  "limits_of_reproduction": [
+    "Workloads are synthetic mocks, not actual Dalian or another university trace.",
+    "183 seconds is a controlled event-loop clock, not real elapsed time or benchmark latency.",
+    "Browser disabled; renderer subrequests are discussed from source only.",
+    "DB persistence and worker dispatch were traced from source, not exercised in a live worker.",
+    "No launch success, empirical production read maximum, or university facts are asserted."
+  ]
+}

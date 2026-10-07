@@ -1,0 +1,42 @@
+{
+  "output": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/root-review/reads/production-budget-audit.offline.json",
+  "sha256": "73598b4c978250dee15676236ce6bfd6e067c9eac2f15648f596564b5e49db81",
+  "cases": [
+    {
+      "case": "selected-discovery-61",
+      "outcome": "completed",
+      "fetcher_get_successes": 61,
+      "virtual_elapsed_s": 183.0,
+      "responses_after_cancel_request": null
+    },
+    {
+      "case": "ordinary-catalogue-shared-61",
+      "outcome": "completed",
+      "fetcher_get_successes": 61,
+      "virtual_elapsed_s": 183.0,
+      "responses_after_cancel_request": null
+    },
+    {
+      "case": "selected-cancel-during-discovery",
+      "outcome": "RunCancelled",
+      "fetcher_get_successes": 6,
+      "virtual_elapsed_s": 18.0,
+      "responses_after_cancel_request": 5
+    }
+  ],
+  "positive_controls": {
+    "class_extracted_from_exact_original_source": true,
+    "module_or_dataset_not_imported": true,
+    "reads": {
+      "accepted": 60,
+      "attempt_61": "BENCHMARK_PAGE_BUDGET_EXHAUSTED",
+      "stop_reason": "page_budget_exhausted"
+    },
+    "time": {
+      "accepted_at_s": 119,
+      "blocked_at_s": 120,
+      "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+      "stop_reason": "wall_clock_budget_exhausted"
+    }
+  }
+}

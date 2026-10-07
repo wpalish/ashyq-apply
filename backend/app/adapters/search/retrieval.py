@@ -167,6 +167,8 @@ class RetrievalReport:
     """What one discovery run did, in the shape telemetry and a benchmark want."""
 
     candidates: tuple[RankedCandidate, ...]
+    #: Query families whose search-seam call was attempted; includes local
+    #: wrapper refusal and is not a count of vendor HTTP requests.
     queries_run: tuple[str, ...]
     provider: str
     ontology_version: str
@@ -363,6 +365,7 @@ async def discover_candidates(
     top_k: int = 20,
     fetch: FetchPage | None = None,
     hop_entry_points: int = DEFAULT_HOP_ENTRY_POINTS,
+    on_query_attempt: Callable[[], None] | None = None,
 ) -> RetrievalReport:
     """Queries → provider → prefilter → ranking, bounded at every step.
 
@@ -392,11 +395,17 @@ async def discover_candidates(
     # SearchResult: a provider reports what it returned, and which of our
     # queries asked for it is our bookkeeping, not part of its contract.
     families: dict[str, list[str]] = {}
-    #: The families actually sent. A 429 stops the loop, and reporting the
-    #: planned families as run overstated the queries spent (V6b audit).
+    #: Families attempted at the search seam, charged before the call. A
+    #: wrapper may reject locally, so these do not prove vendor dispatch.
+    #: A 429 stops the loop; unattempted planned families remain uncharged.
     sent: list[str] = []
     for query in queries:
         sent.append(query.family)
+        # Reserve the attempt before an ordinary SearchError or cancellation
+        # can escape without a report. This proves no vendor HTTP dispatch
+        # and remains in-memory bookkeeping.
+        if on_query_attempt is not None:
+            on_query_attempt()
         try:
             response = await provider.search(
                 query=query.text,

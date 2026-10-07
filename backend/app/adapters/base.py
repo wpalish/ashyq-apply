@@ -40,7 +40,8 @@ class Candidate:
     attributes: dict[str, str] = field(default_factory=dict)
     discovery_source: str = ""
     notes: str = ""
-    #: Provider queries discovery already spent on this institution.
+    #: Search-seam attempts charged to this institution, including local
+    #: wrapper refusals; this budget ledger does not prove HTTP dispatch.
     search_queries_used: int = 0
 
     @property

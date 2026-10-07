@@ -1,0 +1,29 @@
+{
+  "output": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round3/reviews/expert_a-query/independent-query-replay.offline.json",
+  "cases": [
+    {
+      "case": "identity_then_programmes",
+      "multi": false,
+      "count": 6,
+      "trace": 6
+    },
+    {
+      "case": "identity_then_programmes",
+      "multi": true,
+      "count": 6,
+      "trace": 6
+    },
+    {
+      "case": "ordinary_SearchError_second_query_then_reentry",
+      "multi": false,
+      "count": 5,
+      "trace": 6
+    },
+    {
+      "case": "ordinary_SearchError_second_query_then_reentry",
+      "multi": true,
+      "count": 5,
+      "trace": 6
+    }
+  ]
+}
