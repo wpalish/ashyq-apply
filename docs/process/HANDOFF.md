@@ -138,6 +138,8 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**[search-relay] green source checkpoint (commit this entry with the source; see git log):** precise scorecard budget checks, unknown counters, incomplete paired-case status and guarded stable gains;9 synthetic regressions; archived original RL-1/heldout artifacts and Aalto/NTU public probe. Takeover commit `96f0b14`.
+
 **Workflow-only search-layer selection — LANDED on `main` as `b672349` via PR #42 (2026-10-03):** `.github/workflows/benchmark-capture.yml` has a `search_provider` input (`auto` default, `exa`, `exa_mcp`, `none`). The provider was previously decided by a nested secrets expression in two jobs and re-derived by hand in the log line, so the printed mode could disagree with the process; one "Select the search layer" step per job now resolves it once, exports it through `$GITHUB_ENV` and names the deciding secret, and the log line, `out/config.txt`, the Provider step, the `--search-provider` argument and `capture.config` all read that one value. `exa` without `UNIMATCH_EXA_API_KEY` and any unknown value fail the job before the capture starts. `auto` keeps the historical Serper→Brave→Tavily→Exa→none precedence. Workflow only: no application, test, schema, migration, ranking, Fetcher or golden file is touched. **This session's own copy of the same edit (`62dac4c`, never pushed — the sandbox's GitHub App lacked the `workflows` scope) is superseded; discard it, do not re-apply it. Task 2 is therefore unblocked.**
 
 - [expert-500] V4 source preparation at7894816 successor: pure public representation and exact selected-context award subjects, hash-bound minimal closure and processed-source receipts, model-request/controller/trace route binding, strict original-clock baseline reserve and eligibility, immutable initial manifest and post-seal exact registry/dataset bytes. Full3458/94.89%, frontend232, actual-parent156 and real neutral8671/5781ms passed. New frozen V4 scripts/module manifest preserved; fresh paired measurement is still pending.
@@ -1782,6 +1784,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[search-relay] development-cohort write-ahead:** add five opt-in identity-only development cases, deterministically chosen from the frozen expert500 DEV list (first stable ids with public domain hints, one per country). Extend only evaluation `live.py` and canary selector to choose existing seed catalogue identities without treating seed estimates as facts; default ten-case cohort and curated registry unchanged. New cases: Dalian, Nagoya, Witwatersrand, AUT, Caltech. Tests are offline. Freeze a baseline before changing discovery rules; strict 6/60/120 mode, stop on first provider refusal, no heldout tuning.
+
+**[search-relay] scorecard repair write-ahead:** `evaluation/research/scorecard.py`: compare unrounded telemetry to the original 6/60/120 limits; mark missing telemetry as unknown; expose missing/unfinished paired repetitions and suppress stable gain/loss decisions for those cases. Tests in `tests/test_scorecard.py` reproduce hidden 120.004-second overruns, missing counters, missing repetition and CAPTURE_IN_PROGRESS. Original captures and gold unchanged. Re-score RL-1/heldout artifacts offline, archive precise counts, then required full gates.
 
 **[search-relay] write-ahead 2026-10-07:** archive Fly status and unchanged `probe_access.py --case aalto --case ntu` output; inspect artifact 37554279823 and the scorecard treatment of interrupted cases; reproduce any measuring-stick defect offline before changing product rules. Next changes will be declared here and in the relay journal before editing. Keep 6 queries / 60 reads / 120 seconds and original artifacts.
 
@@ -3713,6 +3719,8 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**[search-relay] 2026-10-07 scorecard checkpoint:** backend3619 passed /2 warnings /94.86% coverage /520.35s; Ruff check/format and mypy336 clean; frontend232 tests, typecheck/lint/build clean;15 scorecard tests pass. Raw logs in `docs/process/evidence/claude-relay/2026-10-07/gates/`. No production/application source changes.
 
 **[expert-500] V4 source gates:**3458 backend tests,2 warnings,94.89%; Ruff/format/mypy345; frontend type/lint/232/build green. Representation107, baseline reserve18 new tests and156 actual-parent mock regressions green, including demonstrated pending-source hash-only and model/actual-request bugs. Real neutral tool-free bound8671ms/closing5781ms,0 university requests.14 protocol module fingerprints +7 actual parent-script snapshots pinned. App/frontend trees unchanged; Alembic onehead d8e412c6a901. Fresh10+10 V4 source calls not yet started;40/62 admission still unproved.
 

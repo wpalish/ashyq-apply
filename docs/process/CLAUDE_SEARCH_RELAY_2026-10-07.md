@@ -37,3 +37,24 @@ G-1/G-2 gold corrections are not applied. Paid Exa is not authorized. A free que
 ## Resume checkpoint
 
 Next action: execute step 1, inspect the saved heldout artifact and add actual results below. No source edits made at takeover.
+
+## Step 1 / step 2 findings (before source edits)
+
+- Owner supplied fresh NTU DNS evidence on the same Fly machine: `socket.getaddrinfo` returned `104.16.4.14`; `nslookup` is unavailable. This does not itself prove a page read.
+- Repeated production probe completed: NTU pages readable; Aalto robots unreachable. Raw output under `evidence/claude-relay/2026-10-07/`. Full details to be added after parsing.
+- Downloaded original artifacts for heldout 37554279823 and RL-1 37545452839 into local work. Heldout has 35 capture files (36 planned); NU-off has only one repetition. All 18 on files exist, so the original nine-case on-arm measurement can still be examined separately.
+- Reproduced measuring-stick defects by reading code and original telemetry: `cost()` rounds seconds before checking the cap (Masaryk 120.003–120.006 s becomes 120.0); null counters are treated as zero; `load_run()` silently merges an incomplete second repetition and `stable_changes()` can declare a gain from missing cases.
+- Write-ahead: repair those scorecard behaviours with independent synthetic tests; preserve original artifacts, scorer decisions, corpus, production flags and heldout facts. Keep ordinary completed budget exhaustion as a measured outcome, distinguish it from an unfinished capture or an absent repetition.
+
+## Step 3 write-ahead: disjoint development cohort
+
+Choose five deterministic existing catalogue seed identities from the frozen DEV split, sorted by stable id and taking a distinct country each time: Dalian University of Technology, Nagoya University, University of Witwatersrand, AUT, Caltech. None is in the ten-case cohort, the nine curated heldout cases, or the expert500 HELDOUT150. This is an identity-only working set, not signed gold.
+
+The live harness currently accepts only the curated 19, so extend its opt-in case selectors and canary diagnostics to select an existing imported seed identity. Do not add these to the production curated registry or import seed costs/admission hints as claims. Preserve the default ten-case run. Run the five-case baseline in strict mode before any rule tuning.
+
+## Green checkpoint: scorecard repair and access audit
+
+- Source tests: 15 scorecard tests pass (9 new). Ruff check/format and mypy 336 source files pass. Full backend: **3619 passed, 2 warnings, 94.86% coverage, 520.35 s**. Frontend: typecheck/lint/build pass, **232 tests** pass. No app/pipeline/ranking/schema/Fetcher or production defaults changed.
+- RL-1 replay still has the same two stable gains and zero losses. All evidence and precise heldout audit are under `docs/process/evidence/claude-relay/2026-10-07/README.md`.
+- G-1 now has a concrete unsigned proposal (6.0 overall / each component) and owner was asked asynchronously; no gold change is applied.
+- Five-case development manifest prepared; no baseline yet. Before launching it, add opt-in catalogue identity selection and explicit global stop on any provider failure; current paired shell workflow alone is not safe for that requirement.

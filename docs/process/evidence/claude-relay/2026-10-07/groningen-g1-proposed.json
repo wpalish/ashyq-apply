@@ -1,0 +1,34 @@
+{
+  "status": "UNSIGNED_PROPOSAL",
+  "supersedes": "G-1 proposal to set Groningen IELTS unknown",
+  "date": "2026-10-07",
+  "case": "groningen",
+  "degree": "bachelor",
+  "programme": "Computing Science",
+  "intake": "fall 2027",
+  "academic_year": "2027/28",
+  "changes": [
+    {
+      "key": "ielts.overall",
+      "old": 6.5,
+      "proposed": 6.0
+    },
+    {
+      "key": "ielts.subscores",
+      "old": {
+        "reading": 6.5,
+        "listening": 6.5,
+        "speaking": 6.5,
+        "writing": 6.5
+      },
+      "proposed": {
+        "reading": 6.0,
+        "listening": 6.0,
+        "speaking": 6.0,
+        "writing": 6.0
+      }
+    }
+  ],
+  "official_source": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/language-requirement?lang=en",
+  "verification": "Browser rendered table and DOM cell ancestry. Computing science /bachelors/computing-science/ is in column 0, Bachelor, of Level 1. Computing Science /masters/computing-science/ is in column 1, Master, of Level 2. Level 1 IELTS is 6.0 overall and every component. Source last modified 7 October 2026 12:22 p.m. No change to historical labels or scores."
+}
