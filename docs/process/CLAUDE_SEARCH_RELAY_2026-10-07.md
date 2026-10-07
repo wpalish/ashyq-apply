@@ -2,7 +2,7 @@
 
 ## Start here
 
-Status: ready for review, baton released. Draft PR: https://github.com/wpalish/ashyq-apply/pull/61. Branch: `task/search-claude-relay`. Base: `1b2a554129f5744eb297848472f1c8fe8c7fde26` (main, PR #60 merged).
+Current continuation: `[search-development]` on `task/search-development-baseline`, parent holds baton until source gates and same5-case observation finish. This branch starts from the separate ready-for-review Draft PR #61 (`task/search-claude-relay@e3d77d4`), not from a merged predecessor. Main base remains `1b2a554129f5744eb297848472f1c8fe8c7fde26` (PR #60). PR #61 is open/draft with8 exact-head successful checks; owner merges. Read the newest development entries below for work after that relay checkpoint.
 Local checkout: `/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply`.
 This journal is committed/pushed so Claude can resume without this chat. Newest entries take precedence over older HANDOFF paragraphs.
 
@@ -119,3 +119,13 @@ All385archived expert files independently hash-verified. Original79actions and10
 Actual source89fc891228d9b8987fce19b2ddc0254d69837c2e,5/5terminal case outputs,75Fetcher/15Exaqueries,194452active checkpointms total. Every case stays within6/60/120000; no provider failure or shared STOP. Original captures/child logs/checkpoints, frozen launch manifest, source-cache hashes and metadata retained under search-development evidence. No synthetic profile DB rows archived. Programme URLs are candidate leads, not verified full-degree/intake claims.
 
 Only emitted prediction: Nagoya IELTS5.5. Retained official language page has separate G30 and Exchange programs(NUPACE) sections;5.5 belongs to exchange. This is a confirmed population-transfer error, not a missing-year or access guess. Parent prioritizes a general section-scope repair before the Dalian title/recall hypothesis. Two experts re-engaged for offline independent review only, no new network. Scope filter must preserve genuine full-degree sibling evidence and tables; no page/acronym hardcode, cap/default/gold change.
+
+## Population-scope correction: offline evidence and review
+
+The immutable Nagoya source was replayed through the full baseline89fc891 adapter and the current adapter, with query budget exhausted and a retained-source-only Fetcher stub (zero sockets). Before: IELTS5.5, status NEEDS_OFFICIAL_CLARIFICATION; after: no IELTS claim. This removes a wrong-population answer, not a VERIFIED_CURRENT claim, and does not invent a full-degree minimum. G30/Japanese sibling content remains. Raw-byte SHA8b2f118c... and metadata8013d43a... differ by design: Fetcher content_hash is NFKC/whitespace normalized html_to_text; independently recomputing that formula matches.
+
+Independent expert reviews found and repaired sidebar/table heading leakage, non-degree token false joints, missing undergraduate/first-year audiences, audience-bound negation, or/comma joints, degree-level qualifiers within exchange headings, and prose bridges. Failed/interrupted source gates remain explicitly historical; only the final frozen source may be marked green. Focused66 tests pass at candidate helper8b2c8da3; full gates follow stable review. Original baseline audit was unintentionally ignored by the generic *-audit.json rule; force-add its unchanged file in this checkpoint. GitHub rejected92b6fc3 push once with Internal Server Error; ordinary retry succeeded, no history rewritten.
+
+## Scope-fix source gates completed
+
+Final source:3673passed,2warnings,94.88%,431.37s;66focused;Ruff/format369,mypy368;frontend232/typecheck/lint/build pass. Current-source demo20rows match pre-fix baseline byte-for-byte, Groningenfirst; one migrationhead d8e412c6a901. Both final hash-pinned independent reviews have no material findings in their stated coverage. All source/gates/reviews preserved under scope-fix/. HTML explicit-heading repair has no demonstrated PDF/non-heading audience coverage. Next frozen same5-case observation is prepared; no extra experiments or gold edits.

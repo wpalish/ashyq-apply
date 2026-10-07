@@ -1,0 +1,98 @@
+"""Offline before/after adapter replay; reads immutable cache, never a socket."""
+import asyncio
+import hashlib
+import json
+import subprocess
+import sys
+import types
+from dataclasses import asdict
+from pathlib import Path
+
+from app.adapters.base import Candidate, CandidateProgram
+from app.adapters.fetching import FetchResult, ResponseCache, _content_hash
+from app.adapters.requirements.section_scope import full_degree_sections
+from app.adapters.requirements.web_requirements import WebRequirementsAdapter
+from app.adapters.extraction import readable_text
+from app.domain.enums import DegreeLevel, FetchOutcome
+
+WORK = Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work')
+REPO = WORK / 'ashyq-apply'
+CACHE = WORK / 'development-baseline-temp/canary-dvmv__z3/cache'
+URL = 'https://en.nagoya-u.ac.jp/admissions/japan/language/'
+BASE = '89fc891228d9b8987fce19b2ddc0254d69837c2e'
+
+
+class OnlyRetainedSources:
+    def __init__(self):
+        self.cache = ResponseCache(CACHE, ttl_seconds=10**12)
+        self.reads = []
+
+    async def get(self, url, **kwargs):
+        self.reads.append(url)
+        return self.cache.get(url) or FetchResult(
+            url=url, outcome=FetchOutcome.HTTP_ERROR, error='offline source not retained'
+        )
+
+
+async def replay(adapter):
+    fetcher = OnlyRetainedSources()
+    candidate = Candidate(
+        name='Nagoya University', country='Japan', city='Nagoya', domain='nagoya-u.ac.jp',
+        search_queries_used=6,
+    )
+    program = CandidateProgram(
+        name='computer science (bachelor)', field='computer science',
+        degree=DegreeLevel.BACHELOR, url=URL,
+    )
+    result = await adapter(fetcher, '2027/28').verify(candidate, program, 'fall 2027')
+    return {
+        'source_reads_from_retained_cache': fetcher.reads,
+        'claims': [c.model_dump(mode='json') for c in result.claims],
+        'page_outcomes': [asdict(o) for o in result.page_outcomes],
+    }
+
+
+async def main():
+    original = subprocess.run(
+        ['git', 'show', BASE + ':backend/app/adapters/requirements/web_requirements.py'],
+        cwd=REPO, check=True, capture_output=True, text=True,
+    ).stdout
+    module = types.ModuleType('offline_baseline_requirements')
+    sys.modules[module.__name__] = module
+    namespace = module.__dict__
+    exec(compile(original, '<frozen-baseline-adapter>', 'exec'), namespace)
+    before = await replay(namespace['WebRequirementsAdapter'])
+    after = await replay(WebRequirementsAdapter)
+    source = ResponseCache(CACHE, ttl_seconds=10**12).get(URL)
+    assert source is not None
+    body_sha = hashlib.sha256(source.content).hexdigest()
+    computed_hash = _content_hash(source.text)
+    assert computed_hash == source.content_hash
+    old = [c for c in before['claims'] if c['claim_type'] == 'ielts_min_overall']
+    new = [c for c in after['claims'] if c['claim_type'] == 'ielts_min_overall']
+    assert len(old) == 1 and old[0]['normalized_value'] == 5.5
+    assert not new
+    view = full_degree_sections(source.text, readable_text(source.text))
+    assert 'G30 International Programs' in view.html
+    assert 'Japanese language requirements' in view.html
+    record = {
+        'mode': 'offline adapter replay with original cached sources only',
+        'baseline_source': BASE, 'network_calls': 0,
+        'request': 'synthetic Bachelor computer science, fall2027',
+        'before': before, 'after': after,
+        'source': {'url': URL, 'fetched_at': source.fetched_at.isoformat(),
+                   'body_byte_sha256': body_sha, 'metadata_content_hash': source.content_hash,
+                   'computed_fetcher_content_hash': computed_hash,
+                   'hash_semantics': 'NFKC normalized whitespace-collapsed html_to_text; distinct from raw bytes'},
+        'excluded_sections': view.excluded_sections,
+        'scope_result': 'exchange-only IELTS5.5 removed; full-degree minimum stays unknown',
+    }
+    (WORK / 'nagoya-scope-replay.offline.json').write_text(
+        json.dumps(record, ensure_ascii=False, indent=2) + '\n'
+    )
+    print(json.dumps({'before_ielts': [c['normalized_value'] for c in old],
+                      'after_ielts': [], 'excluded_sections': view.excluded_sections,
+                      'network_calls': 0, 'content_hash_verified': True}))
+
+
+asyncio.run(main())
