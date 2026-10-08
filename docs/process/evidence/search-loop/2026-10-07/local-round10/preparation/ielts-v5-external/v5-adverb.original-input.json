@@ -1,0 +1,89 @@
+[
+  {
+    "case": "modal_adverb_before_not",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS Academic will currently not be accepted. Overall minimum 6.5.</p>",
+    "expected": {},
+    "reason": "Bounded neutral-adverb placement within same explicit exam predicate; positive relation preserved"
+  },
+  {
+    "case": "modal_adverb_after_not",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS Academic will not currently be accepted. Overall minimum 6.5.</p>",
+    "expected": {},
+    "reason": "Bounded neutral-adverb placement within same explicit exam predicate; positive relation preserved"
+  },
+  {
+    "case": "modal_adverb_after_be",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS Academic will not be presently accepted. Overall minimum 6.5.</p>",
+    "expected": {},
+    "reason": "Bounded neutral-adverb placement within same explicit exam predicate; positive relation preserved"
+  },
+  {
+    "case": "reverse_adverb_before_not",
+    "inner": "<h2>IELTS Academic</h2><p>We do currently not accept IELTS Academic. Overall minimum 6.5.</p>",
+    "expected": {},
+    "reason": "Bounded neutral-adverb placement within same explicit exam predicate; positive relation preserved"
+  },
+  {
+    "case": "refusal_parenthetical_results",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS (Academic test results) are not accepted. Overall minimum 6.5.</p>",
+    "expected": {},
+    "reason": "Bounded neutral-adverb placement within same explicit exam predicate; positive relation preserved"
+  },
+  {
+    "case": "nonrequire_copula_adverb",
+    "inner": "<h2>IELTS Academic</h2><p>Overall minimum 6.5 is presently not required.</p>",
+    "expected": {},
+    "reason": "Bounded neutral-adverb placement within same explicit exam predicate; positive relation preserved"
+  },
+  {
+    "case": "nonrequire_adverb_after_not",
+    "inner": "<h2>IELTS Academic</h2><p>Overall minimum 6.5 is not presently required.</p>",
+    "expected": {},
+    "reason": "Bounded neutral-adverb placement within same explicit exam predicate; positive relation preserved"
+  },
+  {
+    "case": "nonrequire_modal_adverb",
+    "inner": "<h2>IELTS Academic</h2><p>Overall minimum 6.5 will not presently be required.</p>",
+    "expected": {},
+    "reason": "Bounded neutral-adverb placement within same explicit exam predicate; positive relation preserved"
+  },
+  {
+    "case": "nonrequire_modal_after_be",
+    "inner": "<h2>IELTS Academic</h2><p>Overall minimum 6.5 will not be currently mandatory.</p>",
+    "expected": {},
+    "reason": "Bounded neutral-adverb placement within same explicit exam predicate; positive relation preserved"
+  },
+  {
+    "case": "positive_modal_adverb",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS Academic will currently be accepted with overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "reason": "Bounded neutral-adverb placement within same explicit exam predicate; positive relation preserved"
+  },
+  {
+    "case": "positive_modal_requirement_adverb",
+    "inner": "<h2>IELTS Academic</h2><p>Overall minimum 6.5 will currently be required.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "reason": "Bounded neutral-adverb placement within same explicit exam predicate; positive relation preserved"
+  },
+  {
+    "case": "distinct_variant_modal_adverb",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS General Training will currently not be accepted. IELTS Academic is accepted with overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "reason": "Bounded neutral-adverb placement within same explicit exam predicate; positive relation preserved"
+  }
+]

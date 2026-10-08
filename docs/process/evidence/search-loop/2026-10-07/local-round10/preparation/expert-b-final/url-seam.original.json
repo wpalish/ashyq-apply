@@ -1,0 +1,791 @@
+{
+  "driver_sha256": "4fa670fb54d6f62c296b68e682c2f46417cf02ba0daf75deb69f329be32f269b",
+  "source_actual_normal_imports": true,
+  "synthetic_source_representation_control": true,
+  "network_main_preflight_calls": 0,
+  "results": [
+    {
+      "raw_url": "https://example.edu?programme=cs",
+      "observed_urls": [
+        "https://example.edu/?programme=cs"
+      ],
+      "envelope": {
+        "case": "groningen",
+        "capture": {
+          "schema_version": "1",
+          "pipeline_sha": "f0c8fece0b59de3e964d20a1a4daf131e92c4ef8",
+          "captured_at": "20261008T000000Z",
+          "mode": "live",
+          "config": {
+            "search_provider": "exa_mcp",
+            "seconds_per_case": 120,
+            "max_fetcher_calls_per_case": 60,
+            "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+            "search_before_navigation": false,
+            "university_read_budget": false,
+            "fenced_research_job": true,
+            "research_job_protocol": "genuine-research-job",
+            "native_ledger_counts": "committed guarded Fetcher.get reservations; separate from outer attempts and hostname audit",
+            "site_branding_identity": false,
+            "subject_phrase_match": false,
+            "programme_identity_before_funding": false,
+            "shared_query_budget": true,
+            "recover_search_candidates": true,
+            "search_funding_fallback": true,
+            "target_award_search": true,
+            "skip_refused_search_hosts": false,
+            "reject_archive_hosts": false,
+            "admission_lexicon": false,
+            "navigation_slot": false,
+            "browser_enabled": false,
+            "cohort": [
+              "groningen"
+            ],
+            "selection": "curated",
+            "scope": "current production pipeline; HTTP-only bounded cold run",
+            "rank_stage": "programme confirmation queue before catalogue walking",
+            "harness_sha256": "b847ac30fcd1fbb37df1b5fc5c5a147d701b6e34cef975721c1cbeab1ca86c55",
+            "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+            "strict_expert_budget": true,
+            "max_search_queries_per_case": 6,
+            "cold_fetcher_reads": true,
+            "child_active_seconds": 120,
+            "finalization_reserve_ms": 1000,
+            "source_work_deadline_ms": 119000,
+            "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+            "parent_process_reserve_seconds": 15,
+            "parent_process_timeout_seconds": 135,
+            "case_budgets": {
+              "groningen": {
+                "strict_expert_budget": true,
+                "provider": "exa_mcp",
+                "max_fetcher_calls": 60,
+                "max_search_queries": 6,
+                "max_active_seconds": 120,
+                "finalization_reserve_ms": 1000,
+                "source_work_deadline_ms": 119000,
+                "fetcher_calls": 3,
+                "search_queries": 1,
+                "blocked_search_queries": 0,
+                "network_http_requests": 0,
+                "elapsed_ms": 9500,
+                "stop_reason": null,
+                "provider_failure": null,
+                "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+                "parent_process_elapsed_seconds": 10.2,
+                "process_error": null,
+                "active_checkpoint_available": true
+              }
+            },
+            "batch_stop_reason": null,
+            "batch_attempted_case_ids": [
+              "groningen"
+            ],
+            "batch_completed_case_ids": [
+              "groningen"
+            ],
+            "batch_remaining_case_ids": []
+          },
+          "observations": [
+            {
+              "case_id": "groningen",
+              "programme_urls": [
+                "https://example.edu/?programme=cs"
+              ],
+              "ranked_urls": null,
+              "predictions": [],
+              "telemetry": {
+                "http_fetches": 3,
+                "browser_fetches": 0,
+                "pdf_fetches": 0,
+                "search_calls": 1,
+                "model_input_tokens": 0,
+                "jev_input_tokens": 0,
+                "latency_seconds": 9.5,
+                "cost_usd": null,
+                "human_review_required": null,
+                "document_reads": null,
+                "document_seconds": null,
+                "document_stop": null
+              },
+              "page_outcomes": [],
+              "error": null
+            }
+          ]
+        },
+        "observed": {
+          "case_id": "groningen",
+          "programme_urls": [
+            "https://example.edu/?programme=cs"
+          ],
+          "ranked_urls": null,
+          "predictions": [],
+          "telemetry": {
+            "http_fetches": 3,
+            "browser_fetches": 0,
+            "pdf_fetches": 0,
+            "search_calls": 1,
+            "model_input_tokens": 0,
+            "jev_input_tokens": 0,
+            "latency_seconds": 9.5,
+            "cost_usd": null,
+            "human_review_required": null,
+            "document_reads": null,
+            "document_seconds": null,
+            "document_stop": null
+          },
+          "page_outcomes": [],
+          "error": null
+        },
+        "budget": {
+          "strict_expert_budget": true,
+          "provider": "exa_mcp",
+          "max_fetcher_calls": 60,
+          "max_search_queries": 6,
+          "max_active_seconds": 120,
+          "finalization_reserve_ms": 1000,
+          "source_work_deadline_ms": 119000,
+          "fetcher_calls": 3,
+          "search_queries": 1,
+          "blocked_search_queries": 0,
+          "network_http_requests": 0,
+          "elapsed_ms": 9500,
+          "stop_reason": null,
+          "provider_failure": null,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only"
+        },
+        "raw": {
+          "canary": {
+            "accessed_at": "2026-10-08T00:00:00+00:00",
+            "duration_seconds": 9.4,
+            "run_error": "",
+            "batch": [
+              "Synthetic institution"
+            ],
+            "institutions": [
+              {
+                "catalogue_id": "synthetic-catalogue-1",
+                "institution": "Synthetic institution",
+                "country": "Synthetic",
+                "domain": "example.edu",
+                "access": "REACHED",
+                "robots_disallowed_requests": 0,
+                "pages_checked": 3,
+                "pages_failed": 0,
+                "failures": [],
+                "outcomes": {
+                  "ok": 3
+                },
+                "discovered": {},
+                "discovery_trace": null,
+                "programs": [
+                  "https://example.edu?programme=cs"
+                ],
+                "program_page_found": true,
+                "scholarship_page_found": false,
+                "discovery_notes": "no candidate produced",
+                "claims": 0,
+                "claims_verified": 0,
+                "completeness": 0.0,
+                "eligibility": "no result",
+                "funding_fit": "no result",
+                "scholarships_found": 0,
+                "false_positives": [],
+                "page_outcomes": {},
+                "page_types": {},
+                "page_diagnostics": []
+              }
+            ],
+            "totals": {
+              "institutions": 1,
+              "reached": 1,
+              "blocked": 0,
+              "program_pages_found": 1,
+              "scholarship_pages_found": 0,
+              "claims": 0,
+              "false_positives": 0,
+              "page_outcomes": {},
+              "page_types": {},
+              "recall": {},
+              "catalogs_walked": 0,
+              "walker_programs_confirmed": 0,
+              "source_pages_recorded": 3,
+              "fetch_tiers": {}
+            },
+            "job_protocol": {
+              "kind": "genuine-research-job",
+              "sqlite_case_database": "/synthetic-isolated-case/canary.db",
+              "started": true,
+              "native_ledger": null,
+              "native_enabled": false,
+              "worker_id": "synthetic-worker:123",
+              "observation_available": true,
+              "control_error": null,
+              "control_message": null,
+              "run_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "job_id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "claim_token": 1,
+              "heartbeat_tasks": 1,
+              "heartbeat_done": [
+                true
+              ],
+              "heartbeat_cancelled": [
+                true
+              ],
+              "worker_jobs_done": 1,
+              "worker_jobs_failed": 0,
+              "job_status": "succeeded",
+              "lease_token": 1,
+              "recorded_worker_id": null,
+              "page_outcomes": [],
+              "run_unknowns": [
+                "Synthetic empty result; programme remains unknown"
+              ],
+              "run_errors": [],
+              "claim_records": []
+            }
+          },
+          "claims": [],
+          "protocol_observation_available": true
+        }
+      },
+      "modes": {
+        "strict_default": {
+          "expected_accept": true,
+          "errors": [],
+          "accepted": true,
+          "passed": true
+        },
+        "bounded_partial": {
+          "expected_accept": true,
+          "errors": [],
+          "accepted": true,
+          "passed": true
+        }
+      }
+    },
+    {
+      "raw_url": "https://EXAMPLE.edu:443/programme/computer-science",
+      "observed_urls": [
+        "https://example.edu/programme/computer-science"
+      ],
+      "envelope": {
+        "case": "groningen",
+        "capture": {
+          "schema_version": "1",
+          "pipeline_sha": "f0c8fece0b59de3e964d20a1a4daf131e92c4ef8",
+          "captured_at": "20261008T000000Z",
+          "mode": "live",
+          "config": {
+            "search_provider": "exa_mcp",
+            "seconds_per_case": 120,
+            "max_fetcher_calls_per_case": 60,
+            "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+            "search_before_navigation": false,
+            "university_read_budget": false,
+            "fenced_research_job": true,
+            "research_job_protocol": "genuine-research-job",
+            "native_ledger_counts": "committed guarded Fetcher.get reservations; separate from outer attempts and hostname audit",
+            "site_branding_identity": false,
+            "subject_phrase_match": false,
+            "programme_identity_before_funding": false,
+            "shared_query_budget": true,
+            "recover_search_candidates": true,
+            "search_funding_fallback": true,
+            "target_award_search": true,
+            "skip_refused_search_hosts": false,
+            "reject_archive_hosts": false,
+            "admission_lexicon": false,
+            "navigation_slot": false,
+            "browser_enabled": false,
+            "cohort": [
+              "groningen"
+            ],
+            "selection": "curated",
+            "scope": "current production pipeline; HTTP-only bounded cold run",
+            "rank_stage": "programme confirmation queue before catalogue walking",
+            "harness_sha256": "b847ac30fcd1fbb37df1b5fc5c5a147d701b6e34cef975721c1cbeab1ca86c55",
+            "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+            "strict_expert_budget": true,
+            "max_search_queries_per_case": 6,
+            "cold_fetcher_reads": true,
+            "child_active_seconds": 120,
+            "finalization_reserve_ms": 1000,
+            "source_work_deadline_ms": 119000,
+            "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+            "parent_process_reserve_seconds": 15,
+            "parent_process_timeout_seconds": 135,
+            "case_budgets": {
+              "groningen": {
+                "strict_expert_budget": true,
+                "provider": "exa_mcp",
+                "max_fetcher_calls": 60,
+                "max_search_queries": 6,
+                "max_active_seconds": 120,
+                "finalization_reserve_ms": 1000,
+                "source_work_deadline_ms": 119000,
+                "fetcher_calls": 3,
+                "search_queries": 1,
+                "blocked_search_queries": 0,
+                "network_http_requests": 0,
+                "elapsed_ms": 9500,
+                "stop_reason": null,
+                "provider_failure": null,
+                "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+                "parent_process_elapsed_seconds": 10.2,
+                "process_error": null,
+                "active_checkpoint_available": true
+              }
+            },
+            "batch_stop_reason": null,
+            "batch_attempted_case_ids": [
+              "groningen"
+            ],
+            "batch_completed_case_ids": [
+              "groningen"
+            ],
+            "batch_remaining_case_ids": []
+          },
+          "observations": [
+            {
+              "case_id": "groningen",
+              "programme_urls": [
+                "https://example.edu/programme/computer-science"
+              ],
+              "ranked_urls": null,
+              "predictions": [],
+              "telemetry": {
+                "http_fetches": 3,
+                "browser_fetches": 0,
+                "pdf_fetches": 0,
+                "search_calls": 1,
+                "model_input_tokens": 0,
+                "jev_input_tokens": 0,
+                "latency_seconds": 9.5,
+                "cost_usd": null,
+                "human_review_required": null,
+                "document_reads": null,
+                "document_seconds": null,
+                "document_stop": null
+              },
+              "page_outcomes": [],
+              "error": null
+            }
+          ]
+        },
+        "observed": {
+          "case_id": "groningen",
+          "programme_urls": [
+            "https://example.edu/programme/computer-science"
+          ],
+          "ranked_urls": null,
+          "predictions": [],
+          "telemetry": {
+            "http_fetches": 3,
+            "browser_fetches": 0,
+            "pdf_fetches": 0,
+            "search_calls": 1,
+            "model_input_tokens": 0,
+            "jev_input_tokens": 0,
+            "latency_seconds": 9.5,
+            "cost_usd": null,
+            "human_review_required": null,
+            "document_reads": null,
+            "document_seconds": null,
+            "document_stop": null
+          },
+          "page_outcomes": [],
+          "error": null
+        },
+        "budget": {
+          "strict_expert_budget": true,
+          "provider": "exa_mcp",
+          "max_fetcher_calls": 60,
+          "max_search_queries": 6,
+          "max_active_seconds": 120,
+          "finalization_reserve_ms": 1000,
+          "source_work_deadline_ms": 119000,
+          "fetcher_calls": 3,
+          "search_queries": 1,
+          "blocked_search_queries": 0,
+          "network_http_requests": 0,
+          "elapsed_ms": 9500,
+          "stop_reason": null,
+          "provider_failure": null,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only"
+        },
+        "raw": {
+          "canary": {
+            "accessed_at": "2026-10-08T00:00:00+00:00",
+            "duration_seconds": 9.4,
+            "run_error": "",
+            "batch": [
+              "Synthetic institution"
+            ],
+            "institutions": [
+              {
+                "catalogue_id": "synthetic-catalogue-1",
+                "institution": "Synthetic institution",
+                "country": "Synthetic",
+                "domain": "example.edu",
+                "access": "REACHED",
+                "robots_disallowed_requests": 0,
+                "pages_checked": 3,
+                "pages_failed": 0,
+                "failures": [],
+                "outcomes": {
+                  "ok": 3
+                },
+                "discovered": {},
+                "discovery_trace": null,
+                "programs": [
+                  "https://EXAMPLE.edu:443/programme/computer-science"
+                ],
+                "program_page_found": true,
+                "scholarship_page_found": false,
+                "discovery_notes": "no candidate produced",
+                "claims": 0,
+                "claims_verified": 0,
+                "completeness": 0.0,
+                "eligibility": "no result",
+                "funding_fit": "no result",
+                "scholarships_found": 0,
+                "false_positives": [],
+                "page_outcomes": {},
+                "page_types": {},
+                "page_diagnostics": []
+              }
+            ],
+            "totals": {
+              "institutions": 1,
+              "reached": 1,
+              "blocked": 0,
+              "program_pages_found": 1,
+              "scholarship_pages_found": 0,
+              "claims": 0,
+              "false_positives": 0,
+              "page_outcomes": {},
+              "page_types": {},
+              "recall": {},
+              "catalogs_walked": 0,
+              "walker_programs_confirmed": 0,
+              "source_pages_recorded": 3,
+              "fetch_tiers": {}
+            },
+            "job_protocol": {
+              "kind": "genuine-research-job",
+              "sqlite_case_database": "/synthetic-isolated-case/canary.db",
+              "started": true,
+              "native_ledger": null,
+              "native_enabled": false,
+              "worker_id": "synthetic-worker:123",
+              "observation_available": true,
+              "control_error": null,
+              "control_message": null,
+              "run_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "job_id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "claim_token": 1,
+              "heartbeat_tasks": 1,
+              "heartbeat_done": [
+                true
+              ],
+              "heartbeat_cancelled": [
+                true
+              ],
+              "worker_jobs_done": 1,
+              "worker_jobs_failed": 0,
+              "job_status": "succeeded",
+              "lease_token": 1,
+              "recorded_worker_id": null,
+              "page_outcomes": [],
+              "run_unknowns": [
+                "Synthetic empty result; programme remains unknown"
+              ],
+              "run_errors": [],
+              "claim_records": []
+            }
+          },
+          "claims": [],
+          "protocol_observation_available": true
+        }
+      },
+      "modes": {
+        "strict_default": {
+          "expected_accept": true,
+          "errors": [],
+          "accepted": true,
+          "passed": true
+        },
+        "bounded_partial": {
+          "expected_accept": true,
+          "errors": [],
+          "accepted": true,
+          "passed": true
+        }
+      }
+    },
+    {
+      "raw_url": "https://example.edu/programme/computer%20science",
+      "observed_urls": [
+        "https://example.edu/programme/computer%20science"
+      ],
+      "envelope": {
+        "case": "groningen",
+        "capture": {
+          "schema_version": "1",
+          "pipeline_sha": "f0c8fece0b59de3e964d20a1a4daf131e92c4ef8",
+          "captured_at": "20261008T000000Z",
+          "mode": "live",
+          "config": {
+            "search_provider": "exa_mcp",
+            "seconds_per_case": 120,
+            "max_fetcher_calls_per_case": 60,
+            "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+            "search_before_navigation": false,
+            "university_read_budget": false,
+            "fenced_research_job": true,
+            "research_job_protocol": "genuine-research-job",
+            "native_ledger_counts": "committed guarded Fetcher.get reservations; separate from outer attempts and hostname audit",
+            "site_branding_identity": false,
+            "subject_phrase_match": false,
+            "programme_identity_before_funding": false,
+            "shared_query_budget": true,
+            "recover_search_candidates": true,
+            "search_funding_fallback": true,
+            "target_award_search": true,
+            "skip_refused_search_hosts": false,
+            "reject_archive_hosts": false,
+            "admission_lexicon": false,
+            "navigation_slot": false,
+            "browser_enabled": false,
+            "cohort": [
+              "groningen"
+            ],
+            "selection": "curated",
+            "scope": "current production pipeline; HTTP-only bounded cold run",
+            "rank_stage": "programme confirmation queue before catalogue walking",
+            "harness_sha256": "b847ac30fcd1fbb37df1b5fc5c5a147d701b6e34cef975721c1cbeab1ca86c55",
+            "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+            "strict_expert_budget": true,
+            "max_search_queries_per_case": 6,
+            "cold_fetcher_reads": true,
+            "child_active_seconds": 120,
+            "finalization_reserve_ms": 1000,
+            "source_work_deadline_ms": 119000,
+            "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+            "parent_process_reserve_seconds": 15,
+            "parent_process_timeout_seconds": 135,
+            "case_budgets": {
+              "groningen": {
+                "strict_expert_budget": true,
+                "provider": "exa_mcp",
+                "max_fetcher_calls": 60,
+                "max_search_queries": 6,
+                "max_active_seconds": 120,
+                "finalization_reserve_ms": 1000,
+                "source_work_deadline_ms": 119000,
+                "fetcher_calls": 3,
+                "search_queries": 1,
+                "blocked_search_queries": 0,
+                "network_http_requests": 0,
+                "elapsed_ms": 9500,
+                "stop_reason": null,
+                "provider_failure": null,
+                "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+                "parent_process_elapsed_seconds": 10.2,
+                "process_error": null,
+                "active_checkpoint_available": true
+              }
+            },
+            "batch_stop_reason": null,
+            "batch_attempted_case_ids": [
+              "groningen"
+            ],
+            "batch_completed_case_ids": [
+              "groningen"
+            ],
+            "batch_remaining_case_ids": []
+          },
+          "observations": [
+            {
+              "case_id": "groningen",
+              "programme_urls": [
+                "https://example.edu/programme/computer%20science"
+              ],
+              "ranked_urls": null,
+              "predictions": [],
+              "telemetry": {
+                "http_fetches": 3,
+                "browser_fetches": 0,
+                "pdf_fetches": 0,
+                "search_calls": 1,
+                "model_input_tokens": 0,
+                "jev_input_tokens": 0,
+                "latency_seconds": 9.5,
+                "cost_usd": null,
+                "human_review_required": null,
+                "document_reads": null,
+                "document_seconds": null,
+                "document_stop": null
+              },
+              "page_outcomes": [],
+              "error": null
+            }
+          ]
+        },
+        "observed": {
+          "case_id": "groningen",
+          "programme_urls": [
+            "https://example.edu/programme/computer%20science"
+          ],
+          "ranked_urls": null,
+          "predictions": [],
+          "telemetry": {
+            "http_fetches": 3,
+            "browser_fetches": 0,
+            "pdf_fetches": 0,
+            "search_calls": 1,
+            "model_input_tokens": 0,
+            "jev_input_tokens": 0,
+            "latency_seconds": 9.5,
+            "cost_usd": null,
+            "human_review_required": null,
+            "document_reads": null,
+            "document_seconds": null,
+            "document_stop": null
+          },
+          "page_outcomes": [],
+          "error": null
+        },
+        "budget": {
+          "strict_expert_budget": true,
+          "provider": "exa_mcp",
+          "max_fetcher_calls": 60,
+          "max_search_queries": 6,
+          "max_active_seconds": 120,
+          "finalization_reserve_ms": 1000,
+          "source_work_deadline_ms": 119000,
+          "fetcher_calls": 3,
+          "search_queries": 1,
+          "blocked_search_queries": 0,
+          "network_http_requests": 0,
+          "elapsed_ms": 9500,
+          "stop_reason": null,
+          "provider_failure": null,
+          "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only"
+        },
+        "raw": {
+          "canary": {
+            "accessed_at": "2026-10-08T00:00:00+00:00",
+            "duration_seconds": 9.4,
+            "run_error": "",
+            "batch": [
+              "Synthetic institution"
+            ],
+            "institutions": [
+              {
+                "catalogue_id": "synthetic-catalogue-1",
+                "institution": "Synthetic institution",
+                "country": "Synthetic",
+                "domain": "example.edu",
+                "access": "REACHED",
+                "robots_disallowed_requests": 0,
+                "pages_checked": 3,
+                "pages_failed": 0,
+                "failures": [],
+                "outcomes": {
+                  "ok": 3
+                },
+                "discovered": {},
+                "discovery_trace": null,
+                "programs": [
+                  "https://example.edu/programme/computer%20science"
+                ],
+                "program_page_found": true,
+                "scholarship_page_found": false,
+                "discovery_notes": "no candidate produced",
+                "claims": 0,
+                "claims_verified": 0,
+                "completeness": 0.0,
+                "eligibility": "no result",
+                "funding_fit": "no result",
+                "scholarships_found": 0,
+                "false_positives": [],
+                "page_outcomes": {},
+                "page_types": {},
+                "page_diagnostics": []
+              }
+            ],
+            "totals": {
+              "institutions": 1,
+              "reached": 1,
+              "blocked": 0,
+              "program_pages_found": 1,
+              "scholarship_pages_found": 0,
+              "claims": 0,
+              "false_positives": 0,
+              "page_outcomes": {},
+              "page_types": {},
+              "recall": {},
+              "catalogs_walked": 0,
+              "walker_programs_confirmed": 0,
+              "source_pages_recorded": 3,
+              "fetch_tiers": {}
+            },
+            "job_protocol": {
+              "kind": "genuine-research-job",
+              "sqlite_case_database": "/synthetic-isolated-case/canary.db",
+              "started": true,
+              "native_ledger": null,
+              "native_enabled": false,
+              "worker_id": "synthetic-worker:123",
+              "observation_available": true,
+              "control_error": null,
+              "control_message": null,
+              "run_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "job_id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "claim_token": 1,
+              "heartbeat_tasks": 1,
+              "heartbeat_done": [
+                true
+              ],
+              "heartbeat_cancelled": [
+                true
+              ],
+              "worker_jobs_done": 1,
+              "worker_jobs_failed": 0,
+              "job_status": "succeeded",
+              "lease_token": 1,
+              "recorded_worker_id": null,
+              "page_outcomes": [],
+              "run_unknowns": [
+                "Synthetic empty result; programme remains unknown"
+              ],
+              "run_errors": [],
+              "claim_records": []
+            }
+          },
+          "claims": [],
+          "protocol_observation_available": true
+        }
+      },
+      "modes": {
+        "strict_default": {
+          "expected_accept": true,
+          "errors": [],
+          "accepted": true,
+          "passed": true
+        },
+        "bounded_partial": {
+          "expected_accept": true,
+          "errors": [],
+          "accepted": true,
+          "passed": true
+        }
+      }
+    }
+  ],
+  "assertions": 6,
+  "pass": 6,
+  "red": 0
+}

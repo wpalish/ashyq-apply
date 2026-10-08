@@ -1,0 +1,258 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "7c74a12d71bd00228014c11d194928d223e110be",
+  "captured_at": "20261008T012349Z",
+  "mode": "live",
+  "config": {
+    "search_provider": "exa_mcp",
+    "seconds_per_case": 120,
+    "max_fetcher_calls_per_case": 60,
+    "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+    "search_before_navigation": false,
+    "university_read_budget": false,
+    "fenced_research_job": true,
+    "research_job_protocol": "genuine-research-job",
+    "native_ledger_counts": "committed guarded Fetcher.get reservations; separate from outer attempts and hostname audit",
+    "site_branding_identity": false,
+    "subject_phrase_match": false,
+    "programme_identity_before_funding": false,
+    "shared_query_budget": true,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "browser_enabled": false,
+    "cohort": [
+      "warsaw"
+    ],
+    "selection": "curated",
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "harness_sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+    "strict_expert_budget": true,
+    "max_search_queries_per_case": 6,
+    "cold_fetcher_reads": true,
+    "child_active_seconds": 120,
+    "finalization_reserve_ms": 1000,
+    "source_work_deadline_ms": 119000,
+    "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+    "parent_process_reserve_seconds": 15,
+    "parent_process_timeout_seconds": 135,
+    "case_budgets": {
+      "warsaw": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "fetcher_calls": 35,
+        "search_queries": 6,
+        "blocked_search_queries": 0,
+        "network_http_requests": 73,
+        "elapsed_ms": 115920,
+        "stop_reason": null,
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 116.20021254208405,
+        "process_error": null,
+        "active_checkpoint_available": true
+      }
+    },
+    "batch_stop_reason": null,
+    "batch_attempted_case_ids": [
+      "warsaw"
+    ],
+    "batch_completed_case_ids": [
+      "warsaw"
+    ],
+    "batch_remaining_case_ids": []
+  },
+  "observations": [
+    {
+      "case_id": "warsaw",
+      "programme_urls": [
+        "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF",
+        "http://informatorects.uw.edu.pl/en/programme?q=S1-INF",
+        "https://informatorects.uw.edu.pl/en/programmes-first/IN/S1-INF"
+      ],
+      "ranked_urls": [],
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+            "excerpt": "Bachelor's degree, first cycle programme, Computer Science \n(S1-INF)\n(in Polish: Informatyka, stacjonarne, pierwszego stopnia)\nFaculty of Mathematics, Informatics, and Mechanics\nfirst cycle programme\nfull-time, 3-year studies\nLanguage: Polish",
+            "scope": {
+              "university": "University of Warsaw",
+              "programme": "Bachelor's degree, first cycle programme, Computer Science (S1-INF)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-08",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.language",
+          "value": "Polish",
+          "evidence": {
+            "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+            "excerpt": "Bachelor's degree, first cycle programme, Computer Science \n(S1-INF)\n(in Polish: Informatyka, stacjonarne, pierwszego stopnia)\nFaculty of Mathematics, Informatics, and Mechanics\nfirst cycle programme\nfull-time, 3-year studies\nLanguage: Polish",
+            "scope": {
+              "university": "University of Warsaw",
+              "programme": "Bachelor's degree, first cycle programme, Computer Science (S1-INF)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-08",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+            "excerpt": "Bachelor's degree, first cycle programme, Computer Science \n(S1-INF)\n(in Polish: Informatyka, stacjonarne, pierwszego stopnia)\nFaculty of Mathematics, Informatics, and Mechanics\nfirst cycle programme\nfull-time, 3-year studies\nLanguage: Polish",
+            "scope": {
+              "university": "University of Warsaw",
+              "programme": "Bachelor's degree, first cycle programme, Computer Science (S1-INF)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-08",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.language",
+          "value": "Polish",
+          "evidence": {
+            "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+            "excerpt": "Bachelor's degree, first cycle programme, Computer Science \n(S1-INF)\n(in Polish: Informatyka, stacjonarne, pierwszego stopnia)\nFaculty of Mathematics, Informatics, and Mechanics\nfirst cycle programme\nfull-time, 3-year studies\nLanguage: Polish",
+            "scope": {
+              "university": "University of Warsaw",
+              "programme": "Bachelor's degree, first cycle programme, Computer Science (S1-INF)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-08",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 35,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 115.9202102079289,
+        "cost_usd": null,
+        "human_review_required": null,
+        "document_reads": null,
+        "document_seconds": null,
+        "document_stop": null
+      },
+      "page_outcomes": [
+        {
+          "category": "classifier-rejected",
+          "url": "https://en.uw.edu.pl/studies/admission",
+          "page_type": "unknown",
+          "detail": "classified as unknown; no requirement can be read from this kind of page. title='Admission 2016/2017 | University of Warsaw' signals='no decisive signals' chars=2154 degrees=[]",
+          "characters": 2154
+        },
+        {
+          "category": "classifier-rejected",
+          "url": "https://en.uw.edu.pl/studies/admission",
+          "page_type": "unknown",
+          "detail": "classified as unknown; no requirement can be read from this kind of page. title='Admission 2016/2017 | University of Warsaw' signals='no decisive signals' chars=2154 degrees=[]",
+          "characters": 2154
+        },
+        {
+          "category": "fetch-failed",
+          "url": "http://en01.uw.edu.pl/badania/granty-i-subsydia",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ConnectTimeout); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "http://en01.uw.edu.pl/badania/granty-i-subsydia",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ConnectTimeout); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF",
+          "page_type": "intake_specific_program",
+          "detail": "1 claims read from this page",
+          "characters": 8779
+        },
+        {
+          "category": "fetched-ok",
+          "url": "http://informatorects.uw.edu.pl/en/programme?q=S1-INF",
+          "page_type": "intake_specific_program",
+          "detail": "1 claims read from this page",
+          "characters": 8779
+        },
+        {
+          "category": "fetched-ok",
+          "url": "http://informatorects.uw.edu.pl/en/programme?q=S1-INF",
+          "page_type": "intake_specific_program",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF",
+          "page_type": "intake_specific_program",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        }
+      ],
+      "error": null
+    }
+  ]
+}

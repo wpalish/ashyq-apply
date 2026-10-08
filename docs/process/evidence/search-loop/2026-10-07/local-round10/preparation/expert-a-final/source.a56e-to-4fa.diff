@@ -1,0 +1,15 @@
+--- sealed-a56e
++++ reviewed-4fa
+@@ -285,7 +285,11 @@
+     if job_status == "succeeded":
+         require(protocol.get("worker_jobs_done") == 1 and protocol.get("worker_jobs_failed") == 0 and protocol.get("recorded_worker_id") is None, "completed Job state inconsistency")
+     if not raw_error and error is None:
+-        require(observed.get("programme_urls") == institution.get("programs"), "raw/observation programme URLs mismatch")
++        try:
++            from pydantic import HttpUrl
++            require([str(url) for url in Observation.model_validate(observed).programme_urls] == [str(HttpUrl(url)) for url in institution["programs"]], "raw/observation programme URLs mismatch")
++        except Exception as exc:
++            errors.append("raw programme URL invalid: " + type(exc).__name__)
+     return errors
+ 
+ 

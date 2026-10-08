@@ -1,0 +1,12 @@
+{
+  "driver_sha256": "4fa670fb54d6f62c296b68e682c2f46417cf02ba0daf75deb69f329be32f269b",
+  "source_actual_normal_imports": true,
+  "synthetic_source_representation_control": true,
+  "network_main_preflight_calls": 0,
+  "assertions": 6,
+  "pass": 6,
+  "red": 0
+}
+https://example.edu?programme=cs ['https://example.edu/?programme=cs'] {'strict_default': {'expected_accept': True, 'errors': [], 'accepted': True, 'passed': True}, 'bounded_partial': {'expected_accept': True, 'errors': [], 'accepted': True, 'passed': True}}
+https://EXAMPLE.edu:443/programme/computer-science ['https://example.edu/programme/computer-science'] {'strict_default': {'expected_accept': True, 'errors': [], 'accepted': True, 'passed': True}, 'bounded_partial': {'expected_accept': True, 'errors': [], 'accepted': True, 'passed': True}}
+https://example.edu/programme/computer%20science ['https://example.edu/programme/computer%20science'] {'strict_default': {'expected_accept': True, 'errors': [], 'accepted': True, 'passed': True}, 'bounded_partial': {'expected_accept': True, 'errors': [], 'accepted': True, 'passed': True}}

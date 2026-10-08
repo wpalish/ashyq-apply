@@ -1,0 +1,25 @@
+{
+  "driver_sha256": "4fa670fb54d6f62c296b68e682c2f46417cf02ba0daf75deb69f329be32f269b",
+  "verdict": "PASS_BOUNDED_INDEPENDENT_VALIDATOR_CLOSURE",
+  "controls": 157,
+  "lane_assertions": 314,
+  "pass": 314,
+  "red": 0,
+  "exceptions": 0,
+  "original140_expectations_unchanged": true,
+  "normal_file_import": true,
+  "calls": {
+    "main": 0,
+    "preflight": 0,
+    "execute": 0,
+    "network": 0,
+    "provider": 0,
+    "model": 0
+  },
+  "results": {
+    "results.repaired.json": "d3bbf5c151c1843d082b7bcccecb0935b071cff8ec449460b7082884de002300",
+    "url-seam.original.json": "ac038b46d29c9a5ee68086ea375b90f087edf23f33927e8b79d84c467c45855a",
+    "url-negatives.original.json": "468fee9b1b79e7e04e69ec15ed0badaab2a6a1fb5c8d7862d2607283ebadd4a8"
+  },
+  "limits": "Synthetic source-format envelopes, not runtime Job/scoring/new7cPLAN execution proof."
+}

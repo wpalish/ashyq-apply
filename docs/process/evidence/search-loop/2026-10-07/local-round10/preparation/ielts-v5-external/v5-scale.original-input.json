@@ -1,0 +1,31 @@
+[
+  {
+    "case": "scale_currency",
+    "inner": "<h2>IELTS Academic</h2><p>A minimum score of 6.5/9 USD is required.</p>",
+    "expected": {},
+    "reason": "Read whole denominator atom and unit; no suffix truncation"
+  },
+  {
+    "case": "nested_scale",
+    "inner": "<h2>IELTS Academic</h2><p>A minimum score of 6.5/9/100 is required.</p>",
+    "expected": {},
+    "reason": "Read whole denominator atom and unit; no suffix truncation"
+  },
+  {
+    "case": "separated_decimal_scale",
+    "inner": "<h2>IELTS Academic</h2><p>A minimum score of 6.5/9. 50 is required.</p>",
+    "expected": {},
+    "reason": "Read whole denominator atom and unit; no suffix truncation"
+  },
+  {
+    "case": "canonical_decimal_scale",
+    "inner": "<h2>IELTS Academic</h2><p>A minimum score of 6.5/9.0 is required.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "reason": "Read whole denominator atom and unit; no suffix truncation"
+  }
+]

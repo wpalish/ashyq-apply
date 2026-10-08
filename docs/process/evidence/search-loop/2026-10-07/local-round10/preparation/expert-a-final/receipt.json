@@ -1,0 +1,132 @@
+{
+  "created_utc": "2026-10-08T01:13:15.378179+00:00",
+  "status": "SEALED_ACCEPTED_REQUESTED_PROTOCOL_VALIDATOR_4FA_NOT_LIVE_OR_TRANSFER_PREFLIGHT",
+  "driver_sha256": "4fa670fb54d6f62c296b68e682c2f46417cf02ba0daf75deb69f329be32f269b",
+  "controls_sha256": "d2827e969fd80ad6b3d001e22403c1b092ab50e6fd1c37f216d48e12ce0ebb10",
+  "plan_sha256": "eb68256ed0de038b50c00afbd974c0247a2beeef91bfd98ec0151bcabe633f14",
+  "group_summaries": {
+    "A134": {
+      "controls": 134,
+      "definite_lane_assertions": 134,
+      "pass": 132,
+      "red": 2,
+      "policy": 0,
+      "exceptions": 0,
+      "capture_kind_checks": 0,
+      "capture_kind_red": 0,
+      "input_mutation": 0
+    },
+    "A46": {
+      "controls": 46,
+      "definite_lane_assertions": 89,
+      "pass": 89,
+      "red": 0,
+      "policy": 3,
+      "exceptions": 0,
+      "capture_kind_checks": 11,
+      "capture_kind_red": 0,
+      "input_mutation": 0
+    },
+    "B140": {
+      "controls": 140,
+      "definite_lane_assertions": 280,
+      "pass": 280,
+      "red": 0,
+      "policy": 0,
+      "exceptions": 0,
+      "capture_kind_checks": 1,
+      "capture_kind_red": 0,
+      "input_mutation": 0
+    },
+    "B18_original_red_subset": {
+      "controls": 18,
+      "definite_lane_assertions": 36,
+      "pass": 36,
+      "red": 0,
+      "policy": 0,
+      "exceptions": 0,
+      "capture_kind_checks": 0,
+      "capture_kind_red": 0,
+      "input_mutation": 0
+    },
+    "B5": {
+      "controls": 5,
+      "definite_lane_assertions": 10,
+      "pass": 10,
+      "red": 0,
+      "policy": 0,
+      "exceptions": 0,
+      "capture_kind_checks": 5,
+      "capture_kind_red": 0,
+      "input_mutation": 0
+    },
+    "B3URL": {
+      "controls": 3,
+      "definite_lane_assertions": 6,
+      "pass": 6,
+      "red": 0,
+      "policy": 0,
+      "exceptions": 0,
+      "capture_kind_checks": 3,
+      "capture_kind_red": 0,
+      "input_mutation": 0
+    },
+    "own6URL": {
+      "controls": 6,
+      "definite_lane_assertions": 12,
+      "pass": 12,
+      "red": 0,
+      "policy": 0,
+      "exceptions": 0,
+      "capture_kind_checks": 1,
+      "capture_kind_red": 0,
+      "input_mutation": 0
+    }
+  },
+  "unique_inputs": 334,
+  "unique_definite_assertions": 531,
+  "raw_pass": 529,
+  "raw_red": 2,
+  "qualified_pass": 531,
+  "qualified_noop_cases": [
+    "nested_list_raw_claims",
+    "nested_list_raw_canary_job_protocol_claim_records"
+  ],
+  "duplicate_B18_assertions": 36,
+  "capture_kind_pass": 21,
+  "capture_kind_fail": 0,
+  "only_change_actual_HttpUrl_normalized_URLcomparison_with_order_and_closedexceptions": true,
+  "actual_dependency_modules": [
+    {
+      "name": "evaluation.research.schema",
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T000741Z-check-0aa9ad4d/source/backend/evaluation/research/schema.py",
+      "sha256": "313a92ebeadcd534b8731b5a3254a2f00ffbd9d99a16795b79d1d7a2d41ce924"
+    },
+    {
+      "name": "evaluation.research.mapping",
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T000741Z-check-0aa9ad4d/source/backend/evaluation/research/mapping.py",
+      "sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14"
+    },
+    {
+      "name": "evaluation.research.identities",
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T000741Z-check-0aa9ad4d/source/backend/evaluation/research/identities.py",
+      "sha256": "459f6e735e0b4e77b0d8dc5e6a53b14f187efedc628f950a63daba3ea8f97619"
+    },
+    {
+      "name": "app.schemas.claim",
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T000741Z-check-0aa9ad4d/source/backend/app/schemas/claim.py",
+      "sha256": "109d65d69da8d0d773618b8ff35487d4bea1bb37b8f60acb8895d1baaa9bf794"
+    },
+    {
+      "name": "app.domain.enums",
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T000741Z-check-0aa9ad4d/source/backend/app/domain/enums.py",
+      "sha256": "a72d0935767d4b1cfe37c3c255674bfdaa23a368fb3b0ed21a8a782b7e18db42"
+    }
+  ],
+  "actual_mapping_asset_sha256": "4c0c60852461711480f5edb4ffe6015ac34de8b0079de8cc11bb434e73adf91b",
+  "main_preflight_process_network_provider_model_calls": 0,
+  "no_source_transfer_preflight_claim": true,
+  "original_inputs_verified_unchanged": true,
+  "original_expectations_unchanged": true,
+  "accepted_for_requested_contract_not_universal_corruption_proof": true
+}

@@ -1,0 +1,30 @@
+{
+  "driver_sha256": "a56e6f034a733356724263cfc01968b88f91a454689cf335116ea66e45d4466e",
+  "results_sha256": "f32d403a9ec85ab8d645b6d413d3609f50ed27c68f49792f162c901875a12130",
+  "url_red_sha256": "4d413d24ec39043069cb32314e63114b84dba2188b6aaeafbd866cd9f09d819a",
+  "original140": {
+    "pass": 280,
+    "red": 0,
+    "exceptions": 0
+  },
+  "positive5": {
+    "pass": 10,
+    "red": 0,
+    "exceptions": 0
+  },
+  "additional_url_controls": {
+    "controls": 3,
+    "pass": 2,
+    "red": 4,
+    "distinct_red": 2
+  },
+  "calls": {
+    "main": 0,
+    "preflight": 0,
+    "execute": 0,
+    "network": 0,
+    "provider": 0,
+    "model": 0
+  },
+  "verdict": "BLOCKED_SOURCE_URL_REPRESENTATION_SEAM"
+}

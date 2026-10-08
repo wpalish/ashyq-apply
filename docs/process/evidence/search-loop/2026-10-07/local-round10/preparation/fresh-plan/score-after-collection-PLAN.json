@@ -1,0 +1,22 @@
+{
+  "status": "PREPARED_OFFLINE_ONLY_NO_SCORE_YET",
+  "condition": "execution-receipt status TERMINAL_ORIGINAL10_CAPTURE_COMPLETE_AWAIT_OFFLINE_SCORING, all10 bounded terminal captures validated with their recorded capture_kind",
+  "cohort": "sameoriginal10, not oldcohort/repeatedarm/blindexpertpilot",
+  "datasets": [
+    "ground_truth.reviewed.json",
+    "ground_truth.reviewed9.json"
+  ],
+  "scorer": "unchanged pinned evaluation.research.metrics.score and scorecard.label_outcomes",
+  "merge": "one capture observation per case in immutable original order; source/config/budget/capture_kind/raw hashes retained; no fabricated unknown observation",
+  "rules": [
+    "allow_drafts False",
+    "partial/missing/unknown stay denominator",
+    "do not infer all predictions judged from claim_precision alone",
+    "report claim_adjudication_rate/support_adjudication_rate and labelled/unlabelled/other-scope/partial separately",
+    "rates by each corpus independently, do not conflate original62 and73",
+    "no gain without matching protocol+repeats",
+    "dataset/scorer/source SHA before scoring"
+  ],
+  "no_network_model_provider_process": true,
+  "no_gold_or_prediction_writes": true
+}

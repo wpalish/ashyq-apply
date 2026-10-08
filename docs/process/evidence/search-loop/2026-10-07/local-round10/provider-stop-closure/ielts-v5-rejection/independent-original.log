@@ -1,0 +1,12 @@
+controls 18 PASS 7 RED 11
+positive_overall_minimum_score_of expected {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} actual {} old {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} failed_guards []
+positive_colon_at_least expected {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} actual {} old {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} failed_guards []
+negative_recommendation_tail expected {} actual {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} old {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} failed_guards []
+negative_optional_score expected {} actual {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} old {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} failed_guards []
+negative_refused_results_from expected {} actual {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} old {'ielts_accepted_types': ['academic']} failed_guards []
+negative_unacceptable_exam expected {} actual {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} old {'ielts_accepted_types': ['academic']} failed_guards []
+negative_currency_symbol expected {} actual {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} old {'ielts_accepted_types': ['academic']} failed_guards []
+component_postfix_in_writing expected {'ielts_min_subscore': {'writing': 6.5}, 'ielts_accepted_types': ['academic']} actual {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} old {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} failed_guards []
+duplicate_block_after_unowned_text expected {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} actual {} old {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} failed_guards []
+duplicate_block_after_other_exam expected {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} actual {} old {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} failed_guards []
+sibling_domestic_scope_not_IELTS expected {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} actual {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} old {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']} failed_guards ['scope_expected']

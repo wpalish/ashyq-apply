@@ -1,0 +1,17 @@
+{
+  "status": "PREPARATION_ONLY_COLLECTION_NOT_READ",
+  "scope": "Static source/pin/denominator review; no score invocation/controller import/live output read or gold contents inspection until parent completion signal",
+  "inputs": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/genuine-baseline/score_after_collection.py": "faf201cdf72ccf7c91a07b1c51e38bb36387c3c4730e908cb509fdeb6274cdf5",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/genuine-baseline/score-pins.json": "d86e57d1ad7fd6b0af8e8f10a2334de8feae7c5e6c665da0055dfc34f20704dd",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/genuine-baseline/PLAN.json": "031ba703f3fa41079bb59650322af8505d32eb6bd4094ebdb538f42fb8b7e078",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/genuine-baseline/execute_baseline.py": "4fa670fb54d6f62c296b68e682c2f46417cf02ba0daf75deb69f329be32f269b"
+  },
+  "code_pins": {
+    "evaluation/research/metrics.py": "4c916cf8a83b49025496c7abd7b0803e8e25e63b246e222aa71fb65bf0c80dff",
+    "evaluation/research/scorecard.py": "4618186b63d1d09ea72e581c3b6906c87d2390e30c32f625512b150e742fa07d",
+    "evaluation/research/schema.py": "313a92ebeadcd534b8731b5a3254a2f00ffbd9d99a16795b79d1d7a2d41ce924"
+  },
+  "planned_checks": "one original capture per planned10, all partial errors retained, physical provenance closure, separate62/73 corpora, immutable unchanged scorer semantics and n/d/coverage reporting; source-backed historical native-cause mapping only",
+  "forbidden": "No scorer/label_outcomes invocation, no Dataset/corpus load, no active execution receipt/capture/log/budget/raw read; no network/provider/model/repo/Git/STOP writes"
+}
