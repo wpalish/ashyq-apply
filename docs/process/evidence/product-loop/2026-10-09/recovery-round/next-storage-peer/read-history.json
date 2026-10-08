@@ -1,0 +1,16 @@
+{
+  "errors": [
+    {
+      "action": "static source read",
+      "requested": "frontend/src/components/AuthGate.tsx",
+      "stderr": "sed: work/ashyq-apply/frontend/src/components/AuthGate.tsx: No such file or directory",
+      "correction": "Exact source pin is frontend/src/AuthGate.tsx"
+    },
+    {
+      "action": "static seal attempt1; no report/source writes reached",
+      "requested": "work/product-round5/a-native-closure/READY.json",
+      "exception": "FileNotFoundError",
+      "exact_error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/a-native-closure/READY.json'"
+    }
+  ]
+}

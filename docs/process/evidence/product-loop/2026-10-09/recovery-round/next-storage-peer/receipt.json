@@ -1,0 +1,23 @@
+{
+  "created_at": "2026-10-08T23:27:27.588425+00:00",
+  "verdict": "QUALIFIED_ACCEPT_DESIGN_ONLY_NOT_SOURCE_READY",
+  "author_ready_sha256": "7b528036719fcb8cfa8daef39c8e71bee4ca2e17744b803917cd722c059d21b4",
+  "author_files_verified": 5,
+  "source_pins_verified": 31,
+  "migration_pins_verified": 19,
+  "source_checks_only": true,
+  "STOP_unchanged": true,
+  "core_seal_unchanged": true,
+  "material_design_blockers": 0,
+  "implementation_gate": "Separate exact source proposal and real native tests/migration required",
+  "not_run": [
+    "app imports",
+    "tests",
+    "SQL",
+    "Alembic",
+    "runtime",
+    "network",
+    "provider/model",
+    "primary/Git writes"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "decision": "OWN_CORE_8_PASS_VERIFIED_FULL_PENDING",
+  "source_head": "c7ece3c0a057a4fe6a8b8b5e43c3b17c8338cbd4",
+  "core_tree": "0a0497a352655630d11985ecbe577fcc1413c8a7e8a27cc4cb9523c2fca0db23",
+  "core_steps": 8,
+  "core_all_zero": true,
+  "source16_equal": true,
+  "full_source16_equal": true,
+  "full_source_only": true,
+  "core_sqlite": {
+    "passed_log": 4369,
+    "warnings": 32,
+    "test_seconds": 497.15,
+    "coverage_percent": 95.28,
+    "JUnit_total": 4369,
+    "JUnit_unique": 4369,
+    "failure": 0,
+    "error": 0,
+    "skip": 0,
+    "identities_sha256": "d7015b2cef3475a516382a1d687a7862e7994acc39aaaaf931edc3d8f6117d42",
+    "same_previous4369": true,
+    "previous_JUnit_pin": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/backend-sqlite.xml",
+      "sha256": "391b493f486d2b51013215815530492012ad485643375d5e1297100076e74904",
+      "bytes": 654153
+    }
+  },
+  "frontend": {
+    "passed": 301,
+    "files": 30,
+    "intentional_ErrorBoundary_stderr_present": true
+  },
+  "mypy_files": 386,
+  "archive_allowlist_count": 11,
+  "archive_allowlist_bytes": 5013720,
+  "STOP_equal": true,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "prior_A_mismatches": [],
+  "private_selection_violations": [],
+  "reviewer_checks_rerun": 0,
+  "full_status": "PENDING_ROOT_TERMINAL",
+  "UI_status": "PENDING_ROOT_OUTPUTS",
+  "product_search_completion_claim": false
+}
