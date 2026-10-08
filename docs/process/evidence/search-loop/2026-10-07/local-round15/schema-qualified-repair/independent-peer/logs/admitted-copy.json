@@ -1,0 +1,70 @@
+{
+  "time_utc": "2026-10-08T08:43:29.670045+00:00",
+  "A_manifest": {
+    "sha256": "804e0959a665ad116465921c2235da69d2df7875ca80e21b4dd2bde717c4e17e",
+    "bytes": 5340
+  },
+  "A_all34_checked": true,
+  "A_selected_bytes": 411737,
+  "two_changes": [
+    "backend/evaluation/research/expert/models.py",
+    "backend/tests/test_local_pilot.py"
+  ],
+  "six_exact_copied": {
+    "backend/evaluation/research/expert/controller.py": {
+      "sha256": "aefe7e1f883e1a70449cfa4add659649b7c6108162c40c0efeb091097167fc09",
+      "bytes": 46899
+    },
+    "backend/evaluation/research/expert/models.py": {
+      "sha256": "52039924cd1d0e1806ecb03fdb16a2dc8cb7567ca0c5e9502226d75077eb501e",
+      "bytes": 47643
+    },
+    "backend/evaluation/research/expert/selector.py": {
+      "sha256": "d9cbefb4780648a8cd0ee91708202db5e2f9dc87997f282c3b6717d7f6ca0af1",
+      "bytes": 5236
+    },
+    "backend/evaluation/research/local_pilot.py": {
+      "sha256": "c7ddc2c68ef6b149e84308ad3016bb75a9087bc1099324558acabc4a85d20d10",
+      "bytes": 65752
+    },
+    "backend/evaluation/research/pilot_admission.py": {
+      "sha256": "ea4ff281ad038b2321bc9851c0d6f7c7d7704603d79a5ff2ec4c5534f4a55bca",
+      "bytes": 23615
+    },
+    "backend/tests/test_local_pilot.py": {
+      "sha256": "1cf361de7f01b0974682e93acd4241d66bdfc0af10193fe24ae9a75b1aa6bcda",
+      "bytes": 44993
+    }
+  },
+  "primary_before": {
+    "backend/evaluation/research/expert/controller.py": {
+      "sha256": "aefe7e1f883e1a70449cfa4add659649b7c6108162c40c0efeb091097167fc09",
+      "bytes": 46899
+    },
+    "backend/evaluation/research/expert/models.py": {
+      "sha256": "4800d4aa9c6e13546cdfba7410bb480aea60117193172e0c147d21226c4ef39a",
+      "bytes": 45201
+    },
+    "backend/evaluation/research/expert/selector.py": {
+      "sha256": "d9cbefb4780648a8cd0ee91708202db5e2f9dc87997f282c3b6717d7f6ca0af1",
+      "bytes": 5236
+    },
+    "backend/evaluation/research/local_pilot.py": {
+      "sha256": "c7ddc2c68ef6b149e84308ad3016bb75a9087bc1099324558acabc4a85d20d10",
+      "bytes": 65752
+    },
+    "backend/evaluation/research/pilot_admission.py": {
+      "sha256": "ea4ff281ad038b2321bc9851c0d6f7c7d7704603d79a5ff2ec4c5534f4a55bca",
+      "bytes": 23615
+    },
+    "backend/tests/test_local_pilot.py": {
+      "sha256": "2efdb2de5dbf517c5f87f199dcbadd2781f26947bc328c802632e2b607195762",
+      "bytes": 41818
+    }
+  },
+  "STOP": {
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "status": "EXACT_PINNED_COPY_READY_FOR_NATIVE_OFFLINE_PEER"
+}

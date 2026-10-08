@@ -1,0 +1,55 @@
+{
+  "repo": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+  "source_manifest": "source-after-1002.json",
+  "destination": "docs/process/evidence/search-loop/2026-10-07/local-round15/first-full-failure",
+  "status": "FIRST_FULL_FAILED_11PASS_2BACKEND_SCHEMA_EQUALITY_FAIL_NO_FIXTURE_REGENERATION",
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "packets": [
+    {
+      "folder": "local-round15/root-orchestrator/first-full-raw",
+      "manifest": "ready-manifest.json",
+      "sha256": "596862dcbe0e8ba9eae9b57138b19c83dc5e88b619243d78701c22e0ef63ddd4",
+      "label": "full-raw"
+    },
+    {
+      "folder": "local-round15/b-full-closure",
+      "manifest": "ready-manifest.json",
+      "sha256": "d553e2fc4afb98d20aa8bd449355f6526d111efa00d09d8f6a83b94e34e62b34",
+      "label": "independent-failed-closure"
+    },
+    {
+      "folder": "local-round15/a-owned-seed",
+      "manifest": "ready-manifest.json",
+      "sha256": "b7e50f3abd6f6ef56704fccd7990c4dc4dfa9a1ca8196df02e0966767ad1e57d",
+      "label": "seed"
+    },
+    {
+      "folder": "local-round15/a-prepare-only",
+      "manifest": "ready-manifest.json",
+      "sha256": "2693dace62047b70540a5af91f58e6ca14fffb3478fca2ba0825e1ee774025db",
+      "label": "static-prepare-only"
+    }
+  ],
+  "parent_files": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/source-after-1002.json",
+      "name": "source-after-1002.json",
+      "sha256": "d1220c3cca63df9427e43fd2dcbbd296fc41dee62977c9cef9373be7448badee"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/full-start-binding.json",
+      "name": "full-start-binding.json",
+      "sha256": "b3d18d1c571445d71d91874a34aa0ffcc731294f889b96134c91bc8d237d7ab6"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/application-ready.json",
+      "name": "application-ready.json",
+      "sha256": "b721bf21fbcd98d90cc68e1235df338ef313b7f7853dc725e7722585d7bb1ec6"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/seed-verification.json",
+      "name": "seed-verification.json",
+      "sha256": "c808e4b624ccf00ea42c5a003fd6ac79950486c46b4986688d130e67d12a716b"
+    }
+  ]
+}

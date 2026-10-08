@@ -1,0 +1,57 @@
+{
+  "time": "2026-10-08T06:58:12.290395+00:00",
+  "decision": "DESIGN_CONTRACT_READY_NEW_ROUTE_UNREVIEWED_LIVE_NOT_ADMITTED",
+  "current_contract_cases": 12,
+  "PASS": 12,
+  "RED": 0,
+  "real_network_provider_model_CLI_Fetcher_HTTP": 0,
+  "primary_source_inputs": 12,
+  "source_prepost_equal": true,
+  "STOP_prepost_equal": true,
+  "new_runtime_receipt_or_pilot_admission": false,
+  "selected_files_count": 10,
+  "selected_files_bytes": 38800,
+  "files": {
+    "PLAN.json": {
+      "sha256": "052c8ba9cf1e7c4f6d976e337e7f23f335e1399aa236772a4cc403fdfe45bda6",
+      "bytes": 2910
+    },
+    "prove_contracts.py": {
+      "sha256": "c519d34e9fe984a7fa9d747a4db72c5b5c9c40737e12147e5b2d4033b05cf7c6",
+      "bytes": 7454
+    },
+    "execution.json": {
+      "sha256": "f78e5a36e82caed3a3ea66f5c4a7b110f05f7d0516aa941fcbe9d3cccca14979",
+      "bytes": 822
+    },
+    "native-contract-proof.json": {
+      "sha256": "34904c677e91708c31b8508b773f3105784749940685c31d1baf5a9f74c20eae",
+      "bytes": 4039
+    },
+    "proof.stdout.log": {
+      "sha256": "601412ad860f38cb721ac19790b19e0d042654945890e66b37f2e4b475868358",
+      "bytes": 125
+    },
+    "proof.stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "source-post.json": {
+      "sha256": "7d7adb7808b707190d43effb779bcc55a529491def4d150d39e219a58fa231d2",
+      "bytes": 2157
+    },
+    "route-contract.json": {
+      "sha256": "f5abfe3c3bb8d0d03c06096185b8fc86a1f675bb91b64cdd1d94f2fb99e6928c",
+      "bytes": 5294
+    },
+    "REPORT.ru.md": {
+      "sha256": "1e9448c55cf74edbdd4c495a59f5a55a98f8e784280c280ca0e0f0e7082706be",
+      "bytes": 14199
+    },
+    "runtime/legacy120/contract-001.json": {
+      "sha256": "263a619b244d2c7abe8b48ef3c03a5e050f02043e1fc259152d6f4d397adc836",
+      "bytes": 1800
+    }
+  },
+  "next": "Separate exact-source peer after A immutable ready; no mutable import/source integration or live actions by B"
+}

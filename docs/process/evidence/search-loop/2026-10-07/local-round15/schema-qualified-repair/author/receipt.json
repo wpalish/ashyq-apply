@@ -1,0 +1,152 @@
+{
+  "status": "EXTERNAL_SCHEMA_REPAIR_READY_FOR_PEER_NOT_APPLIED",
+  "sealed_utc": "2026-10-08T08:41:37.131729+00:00",
+  "origin_A_ready": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/ready-manifest.json",
+    "sha256": "f4867ac3befe294c650e7e5e7e972470ddb9f491d82e2a1214d7d5cd6392196b",
+    "bytes": 20008
+  },
+  "six_proposal_files": {
+    "backend/evaluation/research/expert/controller.py": {
+      "origin_A": {
+        "sha256": "aefe7e1f883e1a70449cfa4add659649b7c6108162c40c0efeb091097167fc09",
+        "bytes": 46899
+      },
+      "proposal": {
+        "sha256": "aefe7e1f883e1a70449cfa4add659649b7c6108162c40c0efeb091097167fc09",
+        "bytes": 46899
+      },
+      "current_primary": {
+        "sha256": "aefe7e1f883e1a70449cfa4add659649b7c6108162c40c0efeb091097167fc09",
+        "bytes": 46899
+      },
+      "unchanged": true
+    },
+    "backend/evaluation/research/expert/models.py": {
+      "origin_A": {
+        "sha256": "4800d4aa9c6e13546cdfba7410bb480aea60117193172e0c147d21226c4ef39a",
+        "bytes": 45201
+      },
+      "proposal": {
+        "sha256": "52039924cd1d0e1806ecb03fdb16a2dc8cb7567ca0c5e9502226d75077eb501e",
+        "bytes": 47643
+      },
+      "current_primary": {
+        "sha256": "4800d4aa9c6e13546cdfba7410bb480aea60117193172e0c147d21226c4ef39a",
+        "bytes": 45201
+      },
+      "unchanged": false
+    },
+    "backend/evaluation/research/expert/selector.py": {
+      "origin_A": {
+        "sha256": "d9cbefb4780648a8cd0ee91708202db5e2f9dc87997f282c3b6717d7f6ca0af1",
+        "bytes": 5236
+      },
+      "proposal": {
+        "sha256": "d9cbefb4780648a8cd0ee91708202db5e2f9dc87997f282c3b6717d7f6ca0af1",
+        "bytes": 5236
+      },
+      "current_primary": {
+        "sha256": "d9cbefb4780648a8cd0ee91708202db5e2f9dc87997f282c3b6717d7f6ca0af1",
+        "bytes": 5236
+      },
+      "unchanged": true
+    },
+    "backend/evaluation/research/local_pilot.py": {
+      "origin_A": {
+        "sha256": "c7ddc2c68ef6b149e84308ad3016bb75a9087bc1099324558acabc4a85d20d10",
+        "bytes": 65752
+      },
+      "proposal": {
+        "sha256": "c7ddc2c68ef6b149e84308ad3016bb75a9087bc1099324558acabc4a85d20d10",
+        "bytes": 65752
+      },
+      "current_primary": {
+        "sha256": "c7ddc2c68ef6b149e84308ad3016bb75a9087bc1099324558acabc4a85d20d10",
+        "bytes": 65752
+      },
+      "unchanged": true
+    },
+    "backend/evaluation/research/pilot_admission.py": {
+      "origin_A": {
+        "sha256": "ea4ff281ad038b2321bc9851c0d6f7c7d7704603d79a5ff2ec4c5534f4a55bca",
+        "bytes": 23615
+      },
+      "proposal": {
+        "sha256": "ea4ff281ad038b2321bc9851c0d6f7c7d7704603d79a5ff2ec4c5534f4a55bca",
+        "bytes": 23615
+      },
+      "current_primary": {
+        "sha256": "ea4ff281ad038b2321bc9851c0d6f7c7d7704603d79a5ff2ec4c5534f4a55bca",
+        "bytes": 23615
+      },
+      "unchanged": true
+    },
+    "backend/tests/test_local_pilot.py": {
+      "origin_A": {
+        "sha256": "2efdb2de5dbf517c5f87f199dcbadd2781f26947bc328c802632e2b607195762",
+        "bytes": 41818
+      },
+      "proposal": {
+        "sha256": "1cf361de7f01b0974682e93acd4241d66bdfc0af10193fe24ae9a75b1aa6bcda",
+        "bytes": 44993
+      },
+      "current_primary": {
+        "sha256": "2efdb2de5dbf517c5f87f199dcbadd2781f26947bc328c802632e2b607195762",
+        "bytes": 41818
+      },
+      "unchanged": false
+    }
+  },
+  "two_changed_files": [
+    "backend/evaluation/research/expert/models.py",
+    "backend/tests/test_local_pilot.py"
+  ],
+  "patch": {
+    "sha256": "2138dd338ac8bce0dad636b6ae1fe85eb88b036bac85f56d9615780328740cd8",
+    "bytes": 6476
+  },
+  "native_controls": {
+    "same_new_scenarios": 20,
+    "existing_regression_node": 1,
+    "passed": 21,
+    "failed": 0,
+    "warnings": 4,
+    "seconds": 0.87,
+    "execution": {
+      "sha256": "42dbdc66277ce03a0035169a62a94eaab58c8220531c73ee250c8b09ea481a32",
+      "bytes": 6271
+    }
+  },
+  "current_before_repair_existing_node": {
+    "failed": 1,
+    "warnings": 4,
+    "execution": {
+      "sha256": "87466f88e96465f9f1110e32bcbfcc82fe309efd5ab5e9a56ac95298f724622f",
+      "bytes": 1261
+    }
+  },
+  "original_first_full": "FAILED as independently reported by B; default schema regression both DBs. This packet hashes/counts immutable SQLite XML and leaves all original full artifacts unchanged. No full PASS.",
+  "legacy_whole_fixture_bytes_equal": 3905,
+  "legacy_parity_execution": {
+    "sha256": "f80d259f15b4a7f52279269006661620cf8f1bc38f15d7f7f268676a72abc413",
+    "bytes": 3310
+  },
+  "default_schema": "Entire unchanged trace.schema.json, including definitions/required fields; no regenerated fixture or test expectations",
+  "explicit_wall_schema": "ExpertTrace.expert_wall_only_json_schema, nullable/null active cap, const60reads/6queries/900000wall and required exact integer initials; Python remains authoritative for crossfield/raw/citations",
+  "schema_options": "Pydantic positional/keyword args forwarded; ref_template/by_alias tested on both schema methods",
+  "AST_delta": {
+    "sha256": "67f4c8722e1c7d38fc3f8d8f487842be14c8773b761554619ddd2fb3bc822e57",
+    "bytes": 407
+  },
+  "STOP": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "primary_source_changed": false,
+  "live_model_provider_SQL_calls": 0,
+  "runtime_admission": false,
+  "owner_grant": "PENDING",
+  "score": null
+}

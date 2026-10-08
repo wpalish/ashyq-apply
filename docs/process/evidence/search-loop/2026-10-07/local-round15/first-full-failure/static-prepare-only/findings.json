@@ -1,0 +1,136 @@
+{
+  "status": "BLOCKED_STATIC_ONLY_MISSING_SELECTOR_MODEL_BINDING",
+  "prepared_utc": "2026-10-08T08:31:41.639582+00:00",
+  "no_prepare_invocation": true,
+  "runtime_admission": false,
+  "owner_live_grant": "PENDING",
+  "source_head": "c8c9dfcd9fb810a13a80e983f8d16754a1e3fde2",
+  "source_tree_sha256": "7b1bf63c3f5e6234bb2bb99e138d0aa390e2cf8ef93c179a75de2585fbb199a9",
+  "manifest_filemap_digest_verified": true,
+  "frozen_file_count": 9656,
+  "source_manifest": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T082019Z-check-b4a62808/source-manifest.json",
+    "sha256": "bf18c9a60db9b6b1b368eb504f3cec8b9f0c3bdb7225c735bbf84d378af2c1e1",
+    "bytes": 2027541
+  },
+  "full_receipt_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T082019Z-check-b4a62808/summary.json",
+  "full_terminal_qualification": "NOT_INSPECTED/ROOT_FULL_STILL_RUNNING; exact terminal13/13 source equality required before prepare",
+  "module": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T082019Z-check-b4a62808/source/backend/evaluation/research/local_pilot.py",
+    "sha256": "c7ddc2c68ef6b149e84308ad3016bb75a9087bc1099324558acabc4a85d20d10",
+    "bytes": 65752,
+    "prepare_lines": [
+      254,
+      393
+    ],
+    "main_lines": [
+      1538,
+      1584
+    ]
+  },
+  "registry": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T082019Z-check-b4a62808/source/backend/app/adapters/discovery/institution_registry.json",
+    "sha256": "07e84d95461d2579aa67cd1d004c886af189b13d44cac86b27aadb8383fa4951",
+    "bytes": 12057,
+    "public_name_domain_only": true,
+    "one_official_domain_match_per_case": true
+  },
+  "profile": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T082019Z-check-b4a62808/source/backend/scripts/canary_discovery.py",
+    "sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+    "bytes": 44506,
+    "function_sha256": "8b8be5545994f5a5cfa94fdd9820ca0c5ce094f13dc1c3fc8ca66844009aa0f4",
+    "context_source": {
+      "level": "DegreeLevel.BACHELOR",
+      "intended_fields": "['computer science']",
+      "intake_term": "'fall'",
+      "intake_year": "2027",
+      "citizenship": "'Kazakhstan'",
+      "country_of_residence": "'Kazakhstan'",
+      "education_country": "'Kazakhstan'",
+      "education_system": "'KZ national secondary'",
+      "graduation_date": "'2027-05-25'"
+    },
+    "public_request_academic_year": null,
+    "synthetic_academics_and_funding_remain_declared_in_source": true,
+    "native_raw_fullprofile_absent_source_and_actual_argv_binding_required": true
+  },
+  "public_input": {
+    "sha256": "a07ea9f35ed7a65b83bc0bc513bc75175957ad56b2e12d0f9e3273d2484b54b9",
+    "bytes": 4458
+  },
+  "executables": {
+    "python": {
+      "lexical": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T082019Z-check-b4a62808/source/backend/.venv/bin/python",
+      "resolved": "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/bin/python3.12",
+      "sha256": "bc9a27bd52c265e86fcd73ef1d4165ec8a47695cffb7624cb0ee618dca83e6c0",
+      "bytes": 18038672
+    },
+    "codex": {
+      "lexical": "/Users/wpalish/.npm-global/bin/codex",
+      "resolved": "/Users/wpalish/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+      "sha256": "134063e133f0b4244fa3b251acf973d4fe4b4aeeacbdc135211bf480f59f1477",
+      "bytes": 7236
+    },
+    "sandbox": {
+      "lexical": "/usr/bin/sandbox-exec",
+      "resolved": "/usr/bin/sandbox-exec",
+      "sha256": "abc5bb136d6b5cce8fa85d789f78e3326c51ca60cae637b2064adfb67a1dcd9a",
+      "bytes": 102368
+    }
+  },
+  "selector_model": null,
+  "model_missing_reason": "Current Holder gpt-6-astra is not selector choice. Historical omitted --model does not prove a pinned model. No auth/config/key or answer values inspected; no CLI/help/version/model call. Root confirmed missing pointer.",
+  "nonexecutable_template": [
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T082019Z-check-b4a62808/source/backend/.venv/bin/python",
+    "-m",
+    "evaluation.research.local_pilot",
+    "--source-manifest",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T082019Z-check-b4a62808/source-manifest.json",
+    "--full-receipt",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T082019Z-check-b4a62808/summary.json",
+    "--public-input",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-prepare-only/public-input.source-bound.json",
+    "--retained-stop",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+    "--out",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-prepare-only/fresh-cycle-not-created",
+    "--selector-model",
+    "<MISSING_CONFIRMED_SELECTOR_MODEL>",
+    "--sealed-root",
+    "/Users/wpalish/Documents/Codex",
+    "--sealed-root",
+    "/Users/wpalish/.codex/memories",
+    "--sealed-root",
+    "/Users/wpalish/.codex/sessions",
+    "--sealed-root",
+    "/Users/wpalish/.codex/skills"
+  ],
+  "sealed_roots": [
+    "/Users/wpalish/Documents/Codex",
+    "/Users/wpalish/.codex/memories",
+    "/Users/wpalish/.codex/sessions",
+    "/Users/wpalish/.codex/skills"
+  ],
+  "future_bootstrap_contract": {
+    "implemented_or_executed": false,
+    "require_confirmed_model_and_root_explicit_go_ahead": true,
+    "source_import": "ordinary exact frozen evaluation.research.local_pilot",
+    "socket_DNS": "deny connect/connect_ex/create_connection/getaddrinfo before import",
+    "process_model_SQL": "deny process dispatch + SQLite/SQL connections during prepare-only; zero call counters",
+    "environment": "minimal HOME/PATH/PYTHONPATH/PYTHONDONTWRITEBYTECODE; own empty DB/cache/export dirs, no .env; no keys/config dumps",
+    "execute_allowed": false
+  },
+  "STOP": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "claims_not_made": [
+    "actual prepare PASS",
+    "full PASS",
+    "neutral model/OS runtime admission",
+    "genuineJob live outcome",
+    "quality/score"
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "time": "2026-10-08T07:29:15.432773+00:00",
+  "status": "STATIC_REVIEW_R0_REJECT_NOT_APPLICABLE",
+  "manifest_sha256": "5c252dfd3e167a8470ca58d73d135b998a8a5322a051fd96b89edd2662b66796",
+  "verified_files": 5,
+  "findings": [
+    {
+      "id": "R1",
+      "lines": "local_pilot.py:147",
+      "issue": "Plain-host _domain applied to full registry homepageURL; normal prepare fails.",
+      "sent_to_author": true
+    },
+    {
+      "id": "R2",
+      "lines": "local_pilot.py:463",
+      "issue": "University collection precedes any two neutral runtime/schema admission turns; required preflight missing.",
+      "sent_to_author": true
+    },
+    {
+      "id": "R3",
+      "lines": "local_pilot.py:478",
+      "issue": "Attempted case lists appended before gate/dispatch; no-action queue may be mislabeled.",
+      "sent_to_author": true
+    },
+    {
+      "id": "R4",
+      "lines": "local_pilot.py:191",
+      "issue": "Sealed root coverage only current source/repo/newout; full known history roots need binding.",
+      "sent_to_author": true
+    },
+    {
+      "id": "R5",
+      "lines": "local_pilot.py:171",
+      "issue": "Input hashes omit influencing non-code source paths beyond explicit registry/namespace.",
+      "sent_to_author": true
+    },
+    {
+      "id": "R6",
+      "lines": "local_pilot.py:261",
+      "issue": "Detached parsed physical dicts validated before late disk hashes; require byte snapshot/hash-before/after closure.",
+      "sent_to_author": true
+    },
+    {
+      "id": "R7",
+      "lines": "expert/selector.py:44",
+      "issue": "Owned timeout cleanup does not drain/preserve trailing original streams after kill; legacy timeout diagnostic unnecessarily changed.",
+      "sent_to_author": true
+    },
+    {
+      "id": "R8",
+      "lines": "local_pilot.py:497",
+      "issue": "Final source/refusal gate occurs after immutable successful closure is stored; late failure must qualify state before seal.",
+      "sent_to_author": true
+    },
+    {
+      "id": "R9",
+      "lines": "local_pilot.py:488",
+      "issue": "Fallback expert protocol failures misattributed to KAIST by algorithm list length instead of actual current case/expert.",
+      "sent_to_author": true
+    },
+    {
+      "id": "R10",
+      "lines": "local_pilot.py:493",
+      "issue": "Final receipt must replay all accepted earlier stream/hash/delta/action-prefix links, not only final submit; B independently confirmed.",
+      "sent_to_author": true
+    },
+    {
+      "id": "R11",
+      "lines": "local_pilot.py:165",
+      "issue": "Declared source_tree hash equality does not bind supplied manifest filemap; recompute native map digest and exact full.source/manifest relationship.",
+      "sent_to_author": true
+    }
+  ],
+  "code_or_imports_executed": false,
+  "primary_application": false,
+  "live": false,
+  "scoring": false,
+  "author_working_copy_fixes_unreviewed": true
+}

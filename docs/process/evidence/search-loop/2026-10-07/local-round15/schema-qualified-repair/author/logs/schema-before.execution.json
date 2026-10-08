@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/native_checks.py",
+    "tests/test_expert_catalogue_trace.py::test_complete_findings_are_unreviewed_and_match_the_saved_source",
+    "-q",
+    "--junitxml=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/logs/schema-before.xml"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/runtime/backend",
+  "environment": {
+    "HOME": "/Users/wpalish",
+    "PATH": "/usr/bin:/bin",
+    "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/runtime/backend",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "UNIMATCH_DEMO_MODE": "true",
+    "UNIMATCH_ENABLE_BROWSER_TIER": "false"
+  },
+  "exit_code": 1,
+  "models_sha256": "4800d4aa9c6e13546cdfba7410bb480aea60117193172e0c147d21226c4ef39a",
+  "fixture_sha256": "de2efb6c801d5c4f94ee079f5706072711f84ac299790ecccbd4d45fe9a6bb20",
+  "qualification": "actual unchanged failing node; socket/DNS denied; full source original retained separately"
+}

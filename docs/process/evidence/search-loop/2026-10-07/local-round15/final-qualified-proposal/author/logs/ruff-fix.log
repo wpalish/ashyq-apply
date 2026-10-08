@@ -1,0 +1,1810 @@
+evaluation/research/expert/controller.py:211:13: SIM102 Use a single `if` statement instead of nested `if` statements
+    |
+209 |   …         raise ValueError("Resume budget_origin differs from the recorded run")
+210 |   …     previous_policy = resume.get("tool_policy", {})
+211 | / …     if plan.get("timing_policy") == "expert_wall_only":
+212 | | …         if resume.get("timing_policy") != "expert_wall_only" or type(resume.get("protective_wall_ms")) is not int or resume["protective_wall_ms"] != 900_000 or not isinstance(previous_policy, dict) or previous_policy.get("timing_policy") != "expert_wall_only" or previous_policy.get("thinking_in_tool_ms") is not False or type(previous_policy.get("protective_wall_ms")) is not int or previous_policy.get("protective_wall_ms") != 900_000 or (previous_policy.get("max_fetcher_calls"), previous_policy.get("max_search_queries"), previous_policy.get("max_elapsed_ms")) != (60, 6, None):
+    | |________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________^ SIM102
+213 |   …             raise ValueError("Resume summary wall policy incomplete or contradictory")
+214 |   …     if not isinstance(previous_policy, dict) or (
+    |
+    = help: Combine `if` statements using `and`
+
+evaluation/research/expert/selector.py:40:9: SIM105 Use `contextlib.suppress(ProcessLookupError)` instead of `try`-`except`-`pass`
+   |
+38 |           stdout, stderr = process.communicate(input=input, timeout=timeout)
+39 |       except BaseException as exc:
+40 | /         try:
+41 | |             os.killpg(process.pid, signal.SIGKILL)
+42 | |         except ProcessLookupError:
+43 | |             pass
+   | |________________^ SIM105
+44 |           try:
+45 |               stdout, stderr = process.communicate()
+   |
+   = help: Replace with `contextlib.suppress(ProcessLookupError)`
+
+evaluation/research/local_pilot.py:244:9: SIM105 Use `contextlib.suppress(FileExistsError)` instead of `try`-`except`-`pass`
+    |
+242 |       def refuse(self, kind: str, case: str, *, raw_paths: list[Path], diagnostic: dict[str, Any]) -> None:
+243 |           value = {"cycle_id": self.plan["cycle_id"], "case_id": case, "kind": kind, "time": datetime.now(UTC).isoformat(), "diagnostic…
+244 | /         try:
+245 | |             store(self.stop, value)
+246 | |         except FileExistsError:
+247 | |             pass
+    | |________________^ SIM105
+248 |           raise Stopped("First failure retained; all remaining actions unrun")
+    |
+    = help: Replace with `contextlib.suppress(FileExistsError)`
+
+evaluation/research/local_pilot.py:407:5: E731 Do not assign a `lambda` expression, use a `def`
+    |
+405 |     began, started = clock(), datetime.now(UTC)
+406 |     root.mkdir(parents=True)
+407 |     wall_elapsed = lambda: max(0, math.ceil((clock() - began) * 1000))
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E731
+408 |     packet = expert_packet(gate.plan, public, case)
+409 |     store(root / "packet.original.json", packet)
+    |
+    = help: Rewrite `wall_elapsed` as a `def`
+
+evaluation/research/local_pilot.py:530:9: SIM105 Use `contextlib.suppress(OSError)` instead of `try`-`except`-`pass`
+    |
+528 |   …     raw_files = sorted((root / "raw").glob("*.json")) if (root / "raw").exists() else []
+529 |   …     receipt = {"case_id": case["case_id"], "expert": expert, "status": "partial_control_failure", "complete_eligible": False, "erro…
+530 | / …     try:
+531 | | …         store(root / "receipt.json", receipt)
+532 | | …     except OSError:
+533 | | …         pass  # Preserve the original control; no successful receipt is inferred.
+    | |______________^ SIM105
+534 |   …     raise
+    |
+    = help: Replace with `contextlib.suppress(OSError)`
+
+evaluation/research/local_pilot.py:624:17: SIM105 Use `contextlib.suppress(Stopped)` instead of `try`-`except`-`pass`
+    |
+622 |   …         error = type(exc).__name__
+623 |   …         if not gate.stop.exists():
+624 | / …             try:
+625 | | …                 gate.refuse("protocol_failure", current_case, raw_paths=[root / "EXECUTION-START.original.json"], diagnostic={"type…
+626 | | …             except Stopped:
+627 | | …                 pass
+    | |______________________^ SIM105
+628 |   …     attempted_algorithms = [case for case in COHORT if (root / "private/algorithm" / case / "launch.original.json").is_file()]
+629 |   …     attempted_experts = [(case, expert) for case in COHORT for expert in ("A", "B") if (root / "private/experts" / expert / case / …
+    |
+    = help: Replace with `contextlib.suppress(Stopped)`
+
+tests/test_local_pilot.py:26:56: E702 Multiple statements on one line (semicolon)
+   |
+24 | def denied_network(monkeypatch):
+25 |     def denied(*_args, **_kwargs):raise AssertionError('Real network/DNS forbidden')
+26 |     monkeypatch.setattr(socket.socket,'connect',denied);monkeypatch.setattr(socket,'getaddrinfo',denied)
+   |                                                        ^ E702
+27 |
+28 | def public_input():
+   |
+
+tests/test_local_pilot.py:33:22: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+31 | …in in zip(p.COHORT,domains,strict=True):
+32 | …ty='Synthetic '+key.title()+' University'
+33 | …pend(dict(case_id=key,university=university,domain=domain,request=dict(university=university,programme=None,degree='bachelor',field='computer science',intake='fall 2027',population='international',qualification='KZ national secondary',academic_year=None)))
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+34 | …schema_version='1',public_profile={'education_system':'KZ national secondary'},cases=cases)
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:33:83: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+31 | …
+32 | …
+33 | …uest=dict(university=university,programme=None,degree='bachelor',field='computer science',intake='fall 2027',population='international',qualification='KZ national secondary',academic_year=None)))
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+34 | …ional secondary'},cases=cases)
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:34:12: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+32 |         university='Synthetic '+key.title()+' University'
+33 |         cases.append(dict(case_id=key,university=university,domain=domain,request=dict(university=university,programme=None,degree='ba…
+34 |     return dict(schema_version='1',public_profile={'education_system':'KZ national secondary'},cases=cases)
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+35 |
+36 | def setup(tmp_path):
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:37:51: E702 Multiple statements on one line (semicolon)
+   |
+36 | def setup(tmp_path):
+37 |     research=Path(c.__file__).resolve().parents[1];backend=research.parents[1];source=backend.parent
+   |                                                   ^ E702
+38 |     old=tmp_path/'old-stop.json';old.write_text('{"original":"refused"}')
+39 |     public=public_input();public_path=tmp_path/'public.json';p.store(public_path,public)
+   |
+
+tests/test_local_pilot.py:37:79: E702 Multiple statements on one line (semicolon)
+   |
+36 | def setup(tmp_path):
+37 |     research=Path(c.__file__).resolve().parents[1];backend=research.parents[1];source=backend.parent
+   |                                                                               ^ E702
+38 |     old=tmp_path/'old-stop.json';old.write_text('{"original":"refused"}')
+39 |     public=public_input();public_path=tmp_path/'public.json';p.store(public_path,public)
+   |
+
+tests/test_local_pilot.py:38:33: E702 Multiple statements on one line (semicolon)
+   |
+36 | def setup(tmp_path):
+37 |     research=Path(c.__file__).resolve().parents[1];backend=research.parents[1];source=backend.parent
+38 |     old=tmp_path/'old-stop.json';old.write_text('{"original":"refused"}')
+   |                                 ^ E702
+39 |     public=public_input();public_path=tmp_path/'public.json';p.store(public_path,public)
+40 |     manifest={'files':{f'backend/evaluation/research/{name}.py':p.sha(research/f'{name}.py') for name in ('live','mapping')}}
+   |
+
+tests/test_local_pilot.py:39:26: E702 Multiple statements on one line (semicolon)
+   |
+37 |     research=Path(c.__file__).resolve().parents[1];backend=research.parents[1];source=backend.parent
+38 |     old=tmp_path/'old-stop.json';old.write_text('{"original":"refused"}')
+39 |     public=public_input();public_path=tmp_path/'public.json';p.store(public_path,public)
+   |                          ^ E702
+40 |     manifest={'files':{f'backend/evaluation/research/{name}.py':p.sha(research/f'{name}.py') for name in ('live','mapping')}}
+41 |     manifest_path=tmp_path/'manifest.json';p.store(manifest_path,manifest)
+   |
+
+tests/test_local_pilot.py:39:61: E702 Multiple statements on one line (semicolon)
+   |
+37 |     research=Path(c.__file__).resolve().parents[1];backend=research.parents[1];source=backend.parent
+38 |     old=tmp_path/'old-stop.json';old.write_text('{"original":"refused"}')
+39 |     public=public_input();public_path=tmp_path/'public.json';p.store(public_path,public)
+   |                                                             ^ E702
+40 |     manifest={'files':{f'backend/evaluation/research/{name}.py':p.sha(research/f'{name}.py') for name in ('live','mapping')}}
+41 |     manifest_path=tmp_path/'manifest.json';p.store(manifest_path,manifest)
+   |
+
+tests/test_local_pilot.py:41:43: E702 Multiple statements on one line (semicolon)
+   |
+39 |     public=public_input();public_path=tmp_path/'public.json';p.store(public_path,public)
+40 |     manifest={'files':{f'backend/evaluation/research/{name}.py':p.sha(research/f'{name}.py') for name in ('live','mapping')}}
+41 |     manifest_path=tmp_path/'manifest.json';p.store(manifest_path,manifest)
+   |                                           ^ E702
+42 |     value=dict(provider='exa_mcp',cases=list(p.COHORT),source_snapshot=str(source),source_head='synthetic-source',source_tree_sha256='…
+43 |     root=tmp_path/'cycle';root.mkdir();pp=root/'PLAN.json';p.store(pp,value)
+   |
+
+tests/test_local_pilot.py:42:11: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+40 | …anifest={'files':{f'backend/evaluation/research/{name}.py':p.sha(research/f'{name}.py') for name in ('live','mapping')}}
+41 | …anifest_path=tmp_path/'manifest.json';p.store(manifest_path,manifest)
+42 | …alue=dict(provider='exa_mcp',cases=list(p.COHORT),source_snapshot=str(source),source_head='synthetic-source',source_tree_sha256='a'*64,source_manifest=str(manifest_path),public_input=str(public_path),cycle_id='synthetic-fresh',pins=[dict(path=str(public_path),sha256=p.sha(public_path)),dict(path=str(manifest_path),sha256=p.sha(manifest_path))],retained_stop=dict(path=str(old),sha256=p.sha(old)),executables=dict(python='/mock/python',codex='/mock/codex',sandbox='/mock/sandbox'),selector_model='explicit-test-model',sealed_roots=[str(tmp_path)],profile_contract={'qualification':'synthetic source/argv only'})
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+43 | …oot=tmp_path/'cycle';root.mkdir();pp=root/'PLAN.json';p.store(pp,value)
+44 | …rant=dict(schema_version='1',approved_by='human-owner',plan_sha256=p.sha(pp),cycle_id=value['cycle_id'],source_tree_sha256=value['source_tree_sha256'],retained_stop_sha256=p.sha(old),provider='exa_mcp',cases=list(p.COHORT),two_independent_experts=True,selector_model=value['selector_model'],expert_timing_policy='expert_wall_only',protective_wall_ms=900000,authorization_id='synthetic-untrusted-test-only')
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:42:239: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+40 | …
+41 | …
+42 | …th),cycle_id='synthetic-fresh',pins=[dict(path=str(public_path),sha256=p.sha(public_path)),dict(path=str(manifest_path),sha256=p.sha(…
+   |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+43 | …
+44 | …_mcp',cases=list(p.COHORT),two_independent_experts=True,selector_model=value['selector_model'],expert_timing_policy='expert_wall_only…
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:42:293: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+40 | …
+41 | …
+42 | …c_path),sha256=p.sha(public_path)),dict(path=str(manifest_path),sha256=p.sha(manifest_path))],retained_stop=dict(path=str(old),sha256…
+   |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+43 | …
+44 | …selector_model=value['selector_model'],expert_timing_policy='expert_wall_only',protective_wall_ms=900000,authorization_id='synthetic-…
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:42:366: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+40 | …
+41 | …
+42 | …,sha256=p.sha(manifest_path))],retained_stop=dict(path=str(old),sha256=p.sha(old)),executables=dict(python='/mock/python',codex='/moc…
+   |                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+43 | …
+44 | …pert_wall_only',protective_wall_ms=900000,authorization_id='synthetic-untrusted-test-only')
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:42:416: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+40 | …
+41 | …
+42 | …256=p.sha(old)),executables=dict(python='/mock/python',codex='/mock/codex',sandbox='/mock/sandbox'),selector_model='explicit-test-mod…
+   |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+43 | …
+44 | …ic-untrusted-test-only')
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:43:26: E702 Multiple statements on one line (semicolon)
+   |
+41 |     manifest_path=tmp_path/'manifest.json';p.store(manifest_path,manifest)
+42 |     value=dict(provider='exa_mcp',cases=list(p.COHORT),source_snapshot=str(source),source_head='synthetic-source',source_tree_sha256='…
+43 |     root=tmp_path/'cycle';root.mkdir();pp=root/'PLAN.json';p.store(pp,value)
+   |                          ^ E702
+44 |     grant=dict(schema_version='1',approved_by='human-owner',plan_sha256=p.sha(pp),cycle_id=value['cycle_id'],source_tree_sha256=value[…
+45 |     gp=tmp_path/'grant.json';p.store(gp,grant)
+   |
+
+tests/test_local_pilot.py:43:39: E702 Multiple statements on one line (semicolon)
+   |
+41 |     manifest_path=tmp_path/'manifest.json';p.store(manifest_path,manifest)
+42 |     value=dict(provider='exa_mcp',cases=list(p.COHORT),source_snapshot=str(source),source_head='synthetic-source',source_tree_sha256='…
+43 |     root=tmp_path/'cycle';root.mkdir();pp=root/'PLAN.json';p.store(pp,value)
+   |                                       ^ E702
+44 |     grant=dict(schema_version='1',approved_by='human-owner',plan_sha256=p.sha(pp),cycle_id=value['cycle_id'],source_tree_sha256=value[…
+45 |     gp=tmp_path/'grant.json';p.store(gp,grant)
+   |
+
+tests/test_local_pilot.py:43:59: E702 Multiple statements on one line (semicolon)
+   |
+41 |     manifest_path=tmp_path/'manifest.json';p.store(manifest_path,manifest)
+42 |     value=dict(provider='exa_mcp',cases=list(p.COHORT),source_snapshot=str(source),source_head='synthetic-source',source_tree_sha256='…
+43 |     root=tmp_path/'cycle';root.mkdir();pp=root/'PLAN.json';p.store(pp,value)
+   |                                                           ^ E702
+44 |     grant=dict(schema_version='1',approved_by='human-owner',plan_sha256=p.sha(pp),cycle_id=value['cycle_id'],source_tree_sha256=value[…
+45 |     gp=tmp_path/'grant.json';p.store(gp,grant)
+   |
+
+tests/test_local_pilot.py:44:11: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+42 | …alue=dict(provider='exa_mcp',cases=list(p.COHORT),source_snapshot=str(source),source_head='synthetic-source',source_tree_sha256='a'*64,source_manifest=str(manifest_path),public_input=str(public_path),cycle_id='synthetic-fresh',pins=[dict(path=str(public_path),sha256=p.sha(public_path)),dict(path=str(manifest_path),sha256=p.sha(manifest_path))],retained_stop=dict(path=str(old),sha256=p.sha(old)),executables=d…
+43 | …oot=tmp_path/'cycle';root.mkdir();pp=root/'PLAN.json';p.store(pp,value)
+44 | …rant=dict(schema_version='1',approved_by='human-owner',plan_sha256=p.sha(pp),cycle_id=value['cycle_id'],source_tree_sha256=value['source_tree_sha256'],retained_stop_sha256=p.sha(old),provider='exa_mcp',cases=list(p.COHORT),two_independent_experts=True,selector_model=value['selector_model'],expert_timing_policy='expert_wall_only',protective_wall_ms=900000,authorization_id='synthetic-untrusted-test-only')
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+45 | …p=tmp_path/'grant.json';p.store(gp,grant)
+46 | …eturn p.Gate(root,value),public,pp,gp
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:45:29: E702 Multiple statements on one line (semicolon)
+   |
+43 |     root=tmp_path/'cycle';root.mkdir();pp=root/'PLAN.json';p.store(pp,value)
+44 |     grant=dict(schema_version='1',approved_by='human-owner',plan_sha256=p.sha(pp),cycle_id=value['cycle_id'],source_tree_sha256=value[…
+45 |     gp=tmp_path/'grant.json';p.store(gp,grant)
+   |                             ^ E702
+46 |     return p.Gate(root,value),public,pp,gp
+   |
+
+tests/test_local_pilot.py:49:11: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+48 | …lan(**changes):
+49 | …alue=dict(case_id='synthetic',provider='exa_mcp',log_prefix='synthetic',strict_budget=True,max_calls=60,max_search_queries=6,max_ms=None,timing_policy='expert_wall_only',protective_wall_ms=900000,wall_elapsed_before_ms=0,official_domains=['example.edu'],budget_origin='independent_full_budget',actions=[dict(tool='fetcher',url='https://example.edu/admissions')]);valu…
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+50 | … def get(url):return SimpleNamespace(url=url,final_url=url,ok=True,outcome='ok',status_code=200,content_type='text/plain',content=b'Synthetic admissions source information',error='',from_cache=False,fetch_tier='http',fetched_at=datetime.now(UTC))
+51 | … def search(**_kwargs):return SimpleNamespace(results=[])
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:49:309: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+48 | …
+49 | …'independent_full_budget',actions=[dict(tool='fetcher',url='https://example.edu/admissions')]);value.update(changes);return value
+   |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+50 | …
+51 | …
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:49:368: E702 Multiple statements on one line (semicolon)
+   |
+48 | …
+49 | …ns=[dict(tool='fetcher',url='https://example.edu/admissions')]);value.update(changes);return value
+   |                                                                 ^ E702
+50 | …
+51 | …
+   |
+
+tests/test_local_pilot.py:49:390: E702 Multiple statements on one line (semicolon)
+   |
+48 | …
+49 | …',url='https://example.edu/admissions')]);value.update(changes);return value
+   |                                                                 ^ E702
+50 | …
+51 | …
+   |
+
+tests/test_local_pilot.py:55:79: E701 Multiple statements on one line (colon)
+   |
+53 | def legacy_plan():
+54 |     value=plan(max_ms=120000)
+55 |     for key in ('timing_policy','protective_wall_ms','wall_elapsed_before_ms'):value.pop(key)
+   |                                                                               ^ E701
+56 |     return value
+   |
+
+tests/test_local_pilot.py:60:12: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+58 | …pture_fixture(case,source_plan,manifest):
+59 | …sis='capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only'
+60 | …dget=dict(fetcher_calls=0,search_queries=0,elapsed_ms=100,blocked_search_queries=0,network_http_requests=0,max_fetcher_calls=60,max_search_queries=6,max_active_seconds=120,finalization_reserve_ms=1000,source_work_deadline_ms=119000,strict_expert_budget=True,provider='exa_mcp',active_time_basis=basis,provider_failure=None,protocol_persistence_error=None,stop_reason=None)
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+61 | …served=dict(case_id=case['case_id'],programme_urls=[],ranked_urls=None,predictions=[],telemetry=dict(http_fetches=0,search_calls=0,browser_fetches=0,model_input_tokens=0,jev_input_tokens=0,latency_seconds=.1),page_outcomes=[],error=None)
+62 | …otocol=dict(kind='genuine-research-job',started=True,job_id='synthetic-job',run_id='synthetic-run',worker_id='synthetic-worker',sqlite_case_database='synthetic.db',claim_token=1,lease_token=1,native_enabled=False,native_ledger=None,observation_available=True,heartbeat_tasks=1,heartbeat_done=[True],heartbeat_cancelled=[True],job_status='succeeded',worker_jobs_done=1,worker_jo…
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:61:14: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+59 | …s='capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only'
+60 | …et=dict(fetcher_calls=0,search_queries=0,elapsed_ms=100,blocked_search_queries=0,network_http_requests=0,max_fetcher_calls=60,max_search_queries=6,max_active_seconds=120,finalization_reserve_ms=1000,source_work_deadline_ms=119000,strict_exp…
+61 | …rved=dict(case_id=case['case_id'],programme_urls=[],ranked_urls=None,predictions=[],telemetry=dict(http_fetches=0,search_calls=0,browser_fetches=0,model_input_tokens=0,jev_input_tokens=0,latency_seconds=.1),page_outcomes=[],error=None)
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+62 | …ocol=dict(kind='genuine-research-job',started=True,job_id='synthetic-job',run_id='synthetic-run',worker_id='synthetic-worker',sqlite_case_database='synthetic.db',claim_token=1,lease_token=1,native_enabled=False,native_ledger=None,observatio…
+63 | …dict(canary=dict(institutions=[dict(institution=case['university'],domain=case['domain'],programs=[])],totals={},batch=[case['university']],job_protocol=protocol,run_error=''),claims=[],protocol_observation_available=True)
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:61:103: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+59 | …nup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only'
+60 | …rk_http_requests=0,max_fetcher_calls=60,max_search_queries=6,max_active_seconds=120,finalization_reserve_ms=1000,source_work_deadline…
+61 | …lemetry=dict(http_fetches=0,search_calls=0,browser_fetches=0,model_input_tokens=0,jev_input_tokens=0,latency_seconds=.1),page_outcome…
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+62 | …hetic-run',worker_id='synthetic-worker',sqlite_case_database='synthetic.db',claim_token=1,lease_token=1,native_enabled=False,native_l…
+63 | …'],programs=[])],totals={},batch=[case['university']],job_protocol=protocol,run_error=''),claims=[],protocol_observation_available=Tr…
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:62:14: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+60 | …et=dict(fetcher_calls=0,search_queries=0,elapsed_ms=100,blocked_search_queries=0,network_http_requests=0,max_fetcher_calls=60,max_search_queries=6,max_active_seconds=120,finalization_reserve_ms=1000,source_work_deadline_ms=119000,strict_expert_budget=True,provider='exa_mcp',active_time_basis=basis,provider_failure=None,protocol_persistence_error=None,stop_reason=None)
+61 | …rved=dict(case_id=case['case_id'],programme_urls=[],ranked_urls=None,predictions=[],telemetry=dict(http_fetches=0,search_calls=0,browser_fetches=0,model_input_tokens=0,jev_input_tokens=0,latency_seconds=.1),page_outcomes=[],error=None)
+62 | …ocol=dict(kind='genuine-research-job',started=True,job_id='synthetic-job',run_id='synthetic-run',worker_id='synthetic-worker',sqlite_case_database='synthetic.db',claim_token=1,lease_token=1,native_enabled=False,native_ledger=None,observation_available=True,heartbeat_tasks=1,heartbeat_done=[True],heartbeat_cancelled=[True],job_status='succeeded',worker_jobs_done=1,worker_jobs_failed=0,recorded_worker_id=None,claim_records=[],page_outcomes=[],run_unknowns=[],run_errors=[],control_error=None,control_type=None,control_reason=None,control_message=None)
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+63 | …dict(canary=dict(institutions=[dict(institution=case['university'],domain=case['domain'],programs=[])],totals={},batch=[case['university']],job_protocol=protocol,run_error=''),claims=[],protocol_observation_available=True)
+64 | …ig=dict(harness_sha256=manifest['files']['backend/evaluation/research/live.py'],mapping_sha256=manifest['files']['backend/evaluation/research/mapping.py'],cohort=[case['case_id']],search_provider='exa_mcp',fenced_research_job=True,university_read_budget=False,research_job_protocol='genuine-research-job',strict_expert_budget=True,shared_query_budget=True,browser_enabled=False,cold_fetcher_reads=True,site_branding_identity=False,subject_phrase_match=False,programme_identity_before_funding=False,seconds_per_case=120,child_active_seconds=120,max_fetcher_ca…
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:63:9: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+61 | … observed=dict(case_id=case['case_id'],programme_urls=[],ranked_urls=None,predictions=[],telemetry=dict(http_fetches=0,search_calls=0,browser_fetches=0,model_input_tokens=0,jev_input_tokens=0,latency_seconds=.1),page_outcomes=[],err…
+62 | … protocol=dict(kind='genuine-research-job',started=True,job_id='synthetic-job',run_id='synthetic-run',worker_id='synthetic-worker',sqlite_case_database='synthetic.db',claim_token=1,lease_token=1,native_enabled=False,native_ledger=No…
+63 | … raw=dict(canary=dict(institutions=[dict(institution=case['university'],domain=case['domain'],programs=[])],totals={},batch=[case['university']],job_protocol=protocol,run_error=''),claims=[],protocol_observation_available=True)
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+64 | … config=dict(harness_sha256=manifest['files']['backend/evaluation/research/live.py'],mapping_sha256=manifest['files']['backend/evaluation/research/mapping.py'],cohort=[case['case_id']],search_provider='exa_mcp',fenced_research_job=T…
+65 | … capture=dict(schema_version='1',pipeline_sha=source_plan['source_head'],captured_at=datetime.now(UTC).isoformat(),mode='live',config=config,observations=[observed]);return capture,observed,budget,raw
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:63:21: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+61 | …ct(case_id=case['case_id'],programme_urls=[],ranked_urls=None,predictions=[],telemetry=dict(http_fetches=0,search_calls=0,browser_fetches=0,model_input_tokens=0,jev_input_to…
+62 | …ct(kind='genuine-research-job',started=True,job_id='synthetic-job',run_id='synthetic-run',worker_id='synthetic-worker',sqlite_case_database='synthetic.db',claim_token=1,leas…
+63 | …nary=dict(institutions=[dict(institution=case['university'],domain=case['domain'],programs=[])],totals={},batch=[case['university']],job_protocol=protocol,run_error=''),clai…
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+64 | …(harness_sha256=manifest['files']['backend/evaluation/research/live.py'],mapping_sha256=manifest['files']['backend/evaluation/research/mapping.py'],cohort=[case['case_id']],…
+65 | …t(schema_version='1',pipeline_sha=source_plan['source_head'],captured_at=datetime.now(UTC).isoformat(),mode='live',config=config,observations=[observed]);return capture,obse…
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:63:40: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+61 |     observed=dict(case_id=case['case_id'],programme_urls=[],ranked_urls=None,predictions=[],telemetry=dict(http_fetches=0,search_calls…
+62 |     protocol=dict(kind='genuine-research-job',started=True,job_id='synthetic-job',run_id='synthetic-run',worker_id='synthetic-worker',…
+63 |     raw=dict(canary=dict(institutions=[dict(institution=case['university'],domain=case['domain'],programs=[])],totals={},batch=[case['…
+   |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+64 |     config=dict(harness_sha256=manifest['files']['backend/evaluation/research/live.py'],mapping_sha256=manifest['files']['backend/eval…
+65 |     capture=dict(schema_version='1',pipeline_sha=source_plan['source_head'],captured_at=datetime.now(UTC).isoformat(),mode='live',conf…
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:64:12: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+62 | …otocol=dict(kind='genuine-research-job',started=True,job_id='synthetic-job',run_id='synthetic-run',worker_id='synthetic-worker',sqlite_case_database='synthetic.db',claim_token=1,lease_token=1,native_enabled=False,native_ledger=None,observation_available=True,heartbeat_tasks=1,heartbeat_done=[True],heartbeat_cancelled=[True],job_status='succeeded',worker_jobs_done=1,worker_jobs_failed=0,recorded_worker_id=None,claim_records=[],page_outcomes=[],run_unknowns=[],run_errors=[],control_error=None,control_type=None,control_reason=None,control_message=None)
+63 | …w=dict(canary=dict(institutions=[dict(institution=case['university'],domain=case['domain'],programs=[])],totals={},batch=[case['university']],job_protocol=protocol,run_error=''),claims=[],protocol_observation_available=True)
+64 | …nfig=dict(harness_sha256=manifest['files']['backend/evaluation/research/live.py'],mapping_sha256=manifest['files']['backend/evaluation/research/mapping.py'],cohort=[case['case_id']],search_provider='exa_mcp',fenced_research_job=True,university_read_budget=False,research_job_protocol='genuine-research-job',strict_expert_budget=True,shared_query_budget=True,browser_enabled=False,cold_fetcher_reads=True,site_branding_identity=False,subject_phrase_match=False,programme_identity_before_funding=False,seconds_per_case=120,child_active_seconds=120,max_fetcher_calls_per_case=60,max_search_queries_per_case=6,finalization_reserve_ms=1000,source_work_deadline_ms=119000,parent_process_reserve_seconds=15,parent_process_timeout_seconds=135,page_budget_counts='every Fetcher.get invocation; cache hits consume a call',batch_attempted_case_ids=[case['case_id']],batch_completed_case_ids=[case['case_id']],batch_remaining_case_ids=[],batch_stop_reason=None,active_time_basis=basis,case_budgets={case['case_id']:{**budget,'parent_process_elapsed_seconds':.2,'process_error':None,'active_checkpoint_available':True}})
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+65 | …pture=dict(schema_version='1',pipeline_sha=source_plan['source_head'],captured_at=datetime.now(UTC).isoformat(),mode='live',config=config,observations=[observed]);return capture,observed,budget,raw
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:65:13: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+63 | …=dict(canary=dict(institutions=[dict(institution=case['university'],domain=case['domain'],programs=[])],totals={},batch=[case['university']],job_protocol=protocol,run…
+64 | …fig=dict(harness_sha256=manifest['files']['backend/evaluation/research/live.py'],mapping_sha256=manifest['files']['backend/evaluation/research/mapping.py'],cohort=[ca…
+65 | …ture=dict(schema_version='1',pipeline_sha=source_plan['source_head'],captured_at=datetime.now(UTC).isoformat(),mode='live',config=config,observations=[observed]);retu…
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+66 | …
+67 | …e_process(gate,public,refusal=False):
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:65:169: E702 Multiple statements on one line (semicolon)
+   |
+63 | …=[])],totals={},batch=[case['university']],job_protocol=protocol,run_error=''),claims=[],protocol_observation_available=True)
+64 | …nifest['files']['backend/evaluation/research/mapping.py'],cohort=[case['case_id']],search_provider='exa_mcp',fenced_research_job=True…
+65 | ….isoformat(),mode='live',config=config,observations=[observed]);return capture,observed,budget,raw
+   |                                                                 ^ E702
+66 | …
+67 | …
+   |
+
+tests/test_local_pilot.py:69:98: E702 Multiple statements on one line (semicolon)
+   |
+67 | def fake_process(gate,public,refusal=False):
+68 |     def run(argv,**_kwargs):
+69 |         case=next(row for row in public['cases'] if row['case_id']==argv[argv.index('--case')+1]);out=Path(argv[argv.index('--out')+1]…
+   |                                                                                                  ^ E702
+70 |         values=capture_fixture(case,gate.plan,p.read(Path(gate.plan['source_manifest'])))
+71 |         if refusal:values[2]['provider_failure']=dict(http_status=None,failure_reason='rate limited')
+   |
+
+tests/test_local_pilot.py:71:19: E701 Multiple statements on one line (colon)
+   |
+69 | …     case=next(row for row in public['cases'] if row['case_id']==argv[argv.index('--case')+1]);out=Path(argv[argv.index('--out')+1])/…
+70 | …     values=capture_fixture(case,gate.plan,p.read(Path(gate.plan['source_manifest'])))
+71 | …     if refusal:values[2]['provider_failure']=dict(http_status=None,failure_reason='rate limited')
+   |                 ^ E701
+72 | …     for name,value in zip(('capture.json',case['case_id']+'.json',case['case_id']+'.budget.json',case['case_id']+'.raw.json'),values…
+73 | …     return subprocess.CompletedProcess(argv,0,'synthetic process','not actual Job')
+   |
+
+tests/test_local_pilot.py:71:50: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+69 | …     case=next(row for row in public['cases'] if row['case_id']==argv[argv.index('--case')+1]);out=Path(argv[argv.index('--out')+1])/…
+70 | …     values=capture_fixture(case,gate.plan,p.read(Path(gate.plan['source_manifest'])))
+71 | …     if refusal:values[2]['provider_failure']=dict(http_status=None,failure_reason='rate limited')
+   |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+72 | …     for name,value in zip(('capture.json',case['case_id']+'.json',case['case_id']+'.budget.json',case['case_id']+'.raw.json'),values…
+73 | …     return subprocess.CompletedProcess(argv,0,'synthetic process','not actual Job')
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:72:150: E701 Multiple statements on one line (colon)
+   |
+70 | …)))
+71 | …'rate limited')
+72 | …'.budget.json',case['case_id']+'.raw.json'),values,strict=True):p.store(out/name,value)
+   |                                                                 ^ E701
+73 | …)
+74 | …
+   |
+
+tests/test_local_pilot.py:76:65: E702 Multiple statements on one line (semicolon)
+   |
+74 |     return run
+75 | class FakeIsolation:
+76 |     def __init__(self,workspace,_roots):self.workspace=workspace;self.codex_executable='/mock/codex';self.sandbox_executable='/mock/sa…
+   |                                                                 ^ E702
+77 |     def prove_access(self,*_args):return dict(synthetic=True,not_actual_OS_admission=True)
+78 | def streams(answer):
+   |
+
+tests/test_local_pilot.py:76:101: E702 Multiple statements on one line (semicolon)
+   |
+74 |     return run
+75 | class FakeIsolation:
+76 |     def __init__(self,workspace,_roots):self.workspace=workspace;self.codex_executable='/mock/codex';self.sandbox_executable='/mock/sa…
+   |                                                                                                     ^ E702
+77 |     def prove_access(self,*_args):return dict(synthetic=True,not_actual_OS_admission=True)
+78 | def streams(answer):
+   |
+
+tests/test_local_pilot.py:77:42: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+75 | class FakeIsolation:
+76 |     def __init__(self,workspace,_roots):self.workspace=workspace;self.codex_executable='/mock/codex';self.sandbox_executable='/mock/sa…
+77 |     def prove_access(self,*_args):return dict(synthetic=True,not_actual_OS_admission=True)
+   |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+78 | def streams(answer):
+79 |     return '\n'.join(json.dumps(row) for row in ({'type':'thread.started','thread_id':'test'},{'type':'turn.started'},{'type':'item.co…
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:84:40: E702 Multiple statements on one line (semicolon)
+   |
+82 |     assert 'algorithm' not in prompt and 'score' not in prompt
+83 |     if 'acknowledgment' in prompt:
+84 |         answer=prompt['acknowledgment'];output.write_text(json.dumps(answer));return s.SelectorTurn(answer,1000,streams(answer),'',0,N…
+   |                                        ^ E702
+85 |     case=prompt['public_packet']['cases'][0];observed=bool(prompt['source_views'])
+86 |     action=dict(tool='fetcher',url='https://'+case['domain']+'/admissions',query=None,domains=[],max_results=None,source_step=None,pag…
+   |
+
+tests/test_local_pilot.py:84:78: E702 Multiple statements on one line (semicolon)
+   |
+82 |     assert 'algorithm' not in prompt and 'score' not in prompt
+83 |     if 'acknowledgment' in prompt:
+84 |         answer=prompt['acknowledgment'];output.write_text(json.dumps(answer));return s.SelectorTurn(answer,1000,streams(answer),'',0,N…
+   |                                                                              ^ E702
+85 |     case=prompt['public_packet']['cases'][0];observed=bool(prompt['source_views'])
+86 |     action=dict(tool='fetcher',url='https://'+case['domain']+'/admissions',query=None,domains=[],max_results=None,source_step=None,pag…
+   |
+
+tests/test_local_pilot.py:85:45: E702 Multiple statements on one line (semicolon)
+   |
+83 |     if 'acknowledgment' in prompt:
+84 |         answer=prompt['acknowledgment'];output.write_text(json.dumps(answer));return s.SelectorTurn(answer,1000,streams(answer),'',0,N…
+85 |     case=prompt['public_packet']['cases'][0];observed=bool(prompt['source_views'])
+   |                                             ^ E702
+86 |     action=dict(tool='fetcher',url='https://'+case['domain']+'/admissions',query=None,domains=[],max_results=None,source_step=None,pag…
+87 |     answer=dict(kind='submit' if observed else 'action',observation='Source read; leave applicant scope unknown.' if observed else 'St…
+   |
+
+tests/test_local_pilot.py:86:12: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+84 | …  answer=prompt['acknowledgment'];output.write_text(json.dumps(answer));return s.SelectorTurn(answer,1000,streams(answer),'',0,None)
+85 | …se=prompt['public_packet']['cases'][0];observed=bool(prompt['source_views'])
+86 | …tion=dict(tool='fetcher',url='https://'+case['domain']+'/admissions',query=None,domains=[],max_results=None,source_step=None,page=None,offset=None,section_offset=None,link_offset=None)
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+87 | …swer=dict(kind='submit' if observed else 'action',observation='Source read; leave applicant scope unknown.' if observed else 'Start independent official source read.',journal_sha256=prompt[…
+88 | …tput.write_text(json.dumps(answer));return s.SelectorTurn(answer,1000,streams(answer),'',0,None)
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:87:12: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+85 | …se=prompt['public_packet']['cases'][0];observed=bool(prompt['source_views'])
+86 | …tion=dict(tool='fetcher',url='https://'+case['domain']+'/admissions',query=None,domains=[],max_results=None,source_step=None,page=None,offset=None,section_offset=None,link_offset=None)
+87 | …swer=dict(kind='submit' if observed else 'action',observation='Source read; leave applicant scope unknown.' if observed else 'Start independent official source read.',journal_sha256=prompt['journal']['journal_sha256'],action=None if observed else action,facts=[],question_findings=[])
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+88 | …tput.write_text(json.dumps(answer));return s.SelectorTurn(answer,1000,streams(answer),'',0,None)
+89 | …def native_tool(plan_path,raw,_cache):return await c.execute(p.read(plan_path),raw,get=get,search=search,provider_name='exa_mcp')
+   |
+   = help: Rewrite as a literal
+
+tests/test_local_pilot.py:88:42: E702 Multiple statements on one line (semicolon)
+   |
+86 |     action=dict(tool='fetcher',url='https://'+case['domain']+'/admissions',query=None,domains=[],max_results=None,source_step=None,pag…
+87 |     answer=dict(kind='submit' if observed else 'action',observation='Source read; leave applicant scope unknown.' if observed else 'St…
+88 |     output.write_text(json.dumps(answer));return s.SelectorTurn(answer,1000,streams(answer),'',0,None)
+   |                                          ^ E702
+89 | async def native_tool(plan_path,raw,_cache):return await c.execute(p.read(plan_path),raw,get=get,search=search,provider_name='exa_mcp')
+   |
+
+tests/test_local_pilot.py:92:105: E702 Multiple statements on one line (semicolon)
+   |
+91 | def test_legacy_default_raw_output_shape(tmp_path):
+92 |     result=run_tool(legacy_plan(),tmp_path,monotonic=lambda:1.,now=lambda:datetime(2026,1,1,tzinfo=UTC));raw=p.read(tmp_path/result['a…
+   |                                                                                                         ^ E702
+93 |     assert result['tool_policy']['max_elapsed_ms']==120000 and c.STRICT_MAX_MS==120000
+94 |     assert not {'timing_policy','protective_wall_ms','wall_elapsed_before_ms'}&result.keys()
+   |
+
+tests/test_local_pilot.py:99:39: E701 Multiple statements on one line (colon)
+    |
+ 97 | def test_null_unknown_crossmode_and_types_fail_closed(tmp_path):
+ 98 |     for value in (legacy_plan()|{'max_ms':None},plan(timing_policy='unknown'),plan(protective_wall_ms=True),plan(budget_origin='basel…
+ 99 |         with pytest.raises(ValueError):run_tool(value,tmp_path)
+    |                                       ^ E701
+100 |     assert not list(tmp_path.glob('*.json'))
+101 | def test_tool_over120_and_resume_original_wall(tmp_path):
+    |
+
+tests/test_local_pilot.py:103:38: E702 Multiple statements on one line (semicolon)
+    |
+101 | def test_tool_over120_and_resume_original_wall(tmp_path):
+102 |     tick=[0.]
+103 |     async def slow(url):tick[0]+=130.;return await get(url)
+    |                                      ^ E702
+104 |     first=asyncio.run(c.execute(plan(wall_elapsed_before_ms=200000),tmp_path,get=slow,search=search,provider_name='exa_mcp',monotonic…
+105 |     assert first['final']['elapsed_ms']>=130000 and first['actions'][0]['policy_mode']=='same_policy'
+    |
+
+tests/test_local_pilot.py:106:112: E702 Multiple statements on one line (semicolon)
+    |
+104 |     first=asyncio.run(c.execute(plan(wall_elapsed_before_ms=200000),tmp_path,get=slow,search=search,provider_name='exa_mcp',monotonic…
+105 |     assert first['final']['elapsed_ms']>=130000 and first['actions'][0]['policy_mode']=='same_policy'
+106 |     second=run_tool(plan(wall_elapsed_before_ms=340000,resume_summary=first),tmp_path,monotonic=lambda:tick[0]);assert second['final'…
+    |                                                                                                                ^ E702
+107 |     with pytest.raises(ValueError,match='wall cannot reset'):run_tool(plan(wall_elapsed_before_ms=1,resume_summary=second),tmp_path)
+108 |     contradictory=copy.deepcopy(second);contradictory['protective_wall_ms']=1
+    |
+
+tests/test_local_pilot.py:107:61: E701 Multiple statements on one line (colon)
+    |
+105 |     assert first['final']['elapsed_ms']>=130000 and first['actions'][0]['policy_mode']=='same_policy'
+106 |     second=run_tool(plan(wall_elapsed_before_ms=340000,resume_summary=first),tmp_path,monotonic=lambda:tick[0]);assert second['final'…
+107 |     with pytest.raises(ValueError,match='wall cannot reset'):run_tool(plan(wall_elapsed_before_ms=1,resume_summary=second),tmp_path)
+    |                                                             ^ E701
+108 |     contradictory=copy.deepcopy(second);contradictory['protective_wall_ms']=1
+109 |     with pytest.raises(ValueError,match='summary'):run_tool(plan(wall_elapsed_before_ms=350000,resume_summary=contradictory),tmp_path)
+    |
+
+tests/test_local_pilot.py:108:40: E702 Multiple statements on one line (semicolon)
+    |
+106 |     second=run_tool(plan(wall_elapsed_before_ms=340000,resume_summary=first),tmp_path,monotonic=lambda:tick[0]);assert second['final'…
+107 |     with pytest.raises(ValueError,match='wall cannot reset'):run_tool(plan(wall_elapsed_before_ms=1,resume_summary=second),tmp_path)
+108 |     contradictory=copy.deepcopy(second);contradictory['protective_wall_ms']=1
+    |                                        ^ E702
+109 |     with pytest.raises(ValueError,match='summary'):run_tool(plan(wall_elapsed_before_ms=350000,resume_summary=contradictory),tmp_path)
+110 | def test_read60_query6_no_extra_dispatch(tmp_path):
+    |
+
+tests/test_local_pilot.py:109:51: E701 Multiple statements on one line (colon)
+    |
+107 |     with pytest.raises(ValueError,match='wall cannot reset'):run_tool(plan(wall_elapsed_before_ms=1,resume_summary=second),tmp_path)
+108 |     contradictory=copy.deepcopy(second);contradictory['protective_wall_ms']=1
+109 |     with pytest.raises(ValueError,match='summary'):run_tool(plan(wall_elapsed_before_ms=350000,resume_summary=contradictory),tmp_path)
+    |                                                   ^ E701
+110 | def test_read60_query6_no_extra_dispatch(tmp_path):
+111 |     gets=[];queries=[]
+    |
+
+tests/test_local_pilot.py:111:12: E702 Multiple statements on one line (semicolon)
+    |
+109 |     with pytest.raises(ValueError,match='summary'):run_tool(plan(wall_elapsed_before_ms=350000,resume_summary=contradictory),tmp_path)
+110 | def test_read60_query6_no_extra_dispatch(tmp_path):
+111 |     gets=[];queries=[]
+    |            ^ E702
+112 |     async def getter(url):gets.append(url);return await get(url)
+113 |     async def searcher(**kwargs):queries.append(kwargs);return await search(**kwargs)
+    |
+
+tests/test_local_pilot.py:112:43: E702 Multiple statements on one line (semicolon)
+    |
+110 | def test_read60_query6_no_extra_dispatch(tmp_path):
+111 |     gets=[];queries=[]
+112 |     async def getter(url):gets.append(url);return await get(url)
+    |                                           ^ E702
+113 |     async def searcher(**kwargs):queries.append(kwargs);return await search(**kwargs)
+114 |     value=plan(actions=[dict(tool='fetcher',url='https://example.edu/')]*61+[dict(tool='search_provider',query='admissions',domains=[…
+    |
+
+tests/test_local_pilot.py:113:56: E702 Multiple statements on one line (semicolon)
+    |
+111 |     gets=[];queries=[]
+112 |     async def getter(url):gets.append(url);return await get(url)
+113 |     async def searcher(**kwargs):queries.append(kwargs);return await search(**kwargs)
+    |                                                        ^ E702
+114 |     value=plan(actions=[dict(tool='fetcher',url='https://example.edu/')]*61+[dict(tool='search_provider',query='admissions',domains=[…
+115 |     result=asyncio.run(c.execute(value,tmp_path,get=getter,search=searcher,provider_name='exa_mcp'))
+    |
+
+tests/test_local_pilot.py:114:25: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+112 |     async def getter(url):gets.append(url);return await get(url)
+113 |     async def searcher(**kwargs):queries.append(kwargs);return await search(**kwargs)
+114 |     value=plan(actions=[dict(tool='fetcher',url='https://example.edu/')]*61+[dict(tool='search_provider',query='admissions',domains=[…
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+115 |     result=asyncio.run(c.execute(value,tmp_path,get=getter,search=searcher,provider_name='exa_mcp'))
+116 |     assert len(gets)==60 and len(queries)==6 and result['final']['fetcher_calls']==60 and result['final']['search_queries']==6
+    |
+    = help: Rewrite as a literal
+
+tests/test_local_pilot.py:114:78: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+112 | …get(url)
+113 | …return await search(**kwargs)
+114 | …/example.edu/')]*61+[dict(tool='search_provider',query='admissions',domains=['example.edu'],max_results=1)]*7)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+115 | …er,search=searcher,provider_name='exa_mcp'))
+116 | …'final']['fetcher_calls']==60 and result['final']['search_queries']==6
+    |
+    = help: Rewrite as a literal
+
+tests/test_local_pilot.py:120:50: E701 Multiple statements on one line (colon)
+    |
+118 | def test_resume_legacy_to_wall_rejected(tmp_path):
+119 |     first=run_tool(legacy_plan(),tmp_path)
+120 |     with pytest.raises(ValueError,match='policy'):run_tool(plan(resume_summary=first),tmp_path)
+    |                                                  ^ E701
+121 | def test_selector_wall_remaining_and_legacy55(tmp_path,monkeypatch):
+122 |     isolation=SimpleNamespace(workspace=tmp_path,command=lambda *_a,**_k:['synthetic']);output=tmp_path/'answer.json';schema=tmp_path…
+    |
+
+tests/test_local_pilot.py:122:88: E702 Multiple statements on one line (semicolon)
+    |
+120 |     with pytest.raises(ValueError,match='policy'):run_tool(plan(resume_summary=first),tmp_path)
+121 | def test_selector_wall_remaining_and_legacy55(tmp_path,monkeypatch):
+122 |     isolation=SimpleNamespace(workspace=tmp_path,command=lambda *_a,**_k:['synthetic']);output=tmp_path/'answer.json';schema=tmp_path…
+    |                                                                                        ^ E702
+123 |     def owned(argv,**kwargs):seen.append(kwargs['timeout']);output.write_text(json.dumps(answer));return subprocess.CompletedProcess(…
+124 |     monkeypatch.setattr(s,'run_owned_process',owned)
+    |
+
+tests/test_local_pilot.py:122:118: E702 Multiple statements on one line (semicolon)
+    |
+120 |     with pytest.raises(ValueError,match='policy'):run_tool(plan(resume_summary=first),tmp_path)
+121 | def test_selector_wall_remaining_and_legacy55(tmp_path,monkeypatch):
+122 |     isolation=SimpleNamespace(workspace=tmp_path,command=lambda *_a,**_k:['synthetic']);output=tmp_path/'answer.json';schema=tmp_path…
+    |                                                                                                                      ^ E702
+123 |     def owned(argv,**kwargs):seen.append(kwargs['timeout']);output.write_text(json.dumps(answer));return subprocess.CompletedProcess(…
+124 |     monkeypatch.setattr(s,'run_owned_process',owned)
+    |
+
+tests/test_local_pilot.py:122:148: E702 Multiple statements on one line (semicolon)
+    |
+120 | …),tmp_path)
+121 | …
+122 | …']);output=tmp_path/'answer.json';schema=tmp_path/'schema.json';schema.write_text('{}');answer={'synthetic':'answer'};seen=[]
+    |                                                                 ^ E702
+123 | …umps(answer));return subprocess.CompletedProcess(argv,0,streams(answer),'')
+124 | …
+    |
+
+tests/test_local_pilot.py:122:172: E702 Multiple statements on one line (semicolon)
+    |
+120 | …
+121 | …
+122 | …wer.json';schema=tmp_path/'schema.json';schema.write_text('{}');answer={'synthetic':'answer'};seen=[]
+    |                                                                 ^ E702
+123 | …process.CompletedProcess(argv,0,streams(answer),'')
+124 | …
+    |
+
+tests/test_local_pilot.py:122:202: E702 Multiple statements on one line (semicolon)
+    |
+120 | …
+121 | …
+122 | …ema.json';schema.write_text('{}');answer={'synthetic':'answer'};seen=[]
+    |                                                                 ^ E702
+123 | …0,streams(answer),'')
+124 | …
+    |
+
+tests/test_local_pilot.py:123:60: E702 Multiple statements on one line (semicolon)
+    |
+121 | def test_selector_wall_remaining_and_legacy55(tmp_path,monkeypatch):
+122 |     isolation=SimpleNamespace(workspace=tmp_path,command=lambda *_a,**_k:['synthetic']);output=tmp_path/'answer.json';schema=tmp_path…
+123 |     def owned(argv,**kwargs):seen.append(kwargs['timeout']);output.write_text(json.dumps(answer));return subprocess.CompletedProcess(…
+    |                                                            ^ E702
+124 |     monkeypatch.setattr(s,'run_owned_process',owned)
+125 |     turn=s.select(isolation,schema,output,{},timeout_seconds=899,timeout_policy='expert_wall_only');assert turn.answer==answer and se…
+    |
+
+tests/test_local_pilot.py:123:98: E702 Multiple statements on one line (semicolon)
+    |
+121 | def test_selector_wall_remaining_and_legacy55(tmp_path,monkeypatch):
+122 |     isolation=SimpleNamespace(workspace=tmp_path,command=lambda *_a,**_k:['synthetic']);output=tmp_path/'answer.json';schema=tmp_path…
+123 |     def owned(argv,**kwargs):seen.append(kwargs['timeout']);output.write_text(json.dumps(answer));return subprocess.CompletedProcess(…
+    |                                                                                                  ^ E702
+124 |     monkeypatch.setattr(s,'run_owned_process',owned)
+125 |     turn=s.select(isolation,schema,output,{},timeout_seconds=899,timeout_policy='expert_wall_only');assert turn.answer==answer and se…
+    |
+
+tests/test_local_pilot.py:125:100: E702 Multiple statements on one line (semicolon)
+    |
+123 |     def owned(argv,**kwargs):seen.append(kwargs['timeout']);output.write_text(json.dumps(answer));return subprocess.CompletedProcess(…
+124 |     monkeypatch.setattr(s,'run_owned_process',owned)
+125 |     turn=s.select(isolation,schema,output,{},timeout_seconds=899,timeout_policy='expert_wall_only');assert turn.answer==answer and se…
+    |                                                                                                    ^ E702
+126 |     with pytest.raises(ValueError):s.select(isolation,schema,output,{},timeout_seconds=56)
+127 | def test_owned_process_timeout_kills_own_group(monkeypatch):
+    |
+
+tests/test_local_pilot.py:126:35: E701 Multiple statements on one line (colon)
+    |
+124 |     monkeypatch.setattr(s,'run_owned_process',owned)
+125 |     turn=s.select(isolation,schema,output,{},timeout_seconds=899,timeout_policy='expert_wall_only');assert turn.answer==answer and se…
+126 |     with pytest.raises(ValueError):s.select(isolation,schema,output,{},timeout_seconds=56)
+    |                                   ^ E701
+127 | def test_owned_process_timeout_kills_own_group(monkeypatch):
+128 |     calls=[]
+    |
+
+tests/test_local_pilot.py:130:19: E702 Multiple statements on one line (semicolon)
+    |
+128 |     calls=[]
+129 |     class Process:
+130 |         pid=424242;returncode=None
+    |                   ^ E702
+131 |         def communicate(self,**kwargs):
+132 |             if kwargs:raise subprocess.TimeoutExpired('synthetic',1)
+    |
+
+tests/test_local_pilot.py:132:22: E701 Multiple statements on one line (colon)
+    |
+130 |         pid=424242;returncode=None
+131 |         def communicate(self,**kwargs):
+132 |             if kwargs:raise subprocess.TimeoutExpired('synthetic',1)
+    |                      ^ E701
+133 |             return 'drained stdout','drained stderr'
+134 |         def wait(self):calls.append('wait');return -9
+    |
+
+tests/test_local_pilot.py:134:44: E702 Multiple statements on one line (semicolon)
+    |
+132 |             if kwargs:raise subprocess.TimeoutExpired('synthetic',1)
+133 |             return 'drained stdout','drained stderr'
+134 |         def wait(self):calls.append('wait');return -9
+    |                                            ^ E702
+135 |     monkeypatch.setattr(s.subprocess,'Popen',lambda *_a,**k:(calls.append(k['start_new_session']) or Process()));monkeypatch.setattr(…
+136 |     with pytest.raises(subprocess.TimeoutExpired) as stopped:s.run_owned_process(['synthetic'],cwd=Path('/synthetic'),timeout=1)
+    |
+
+tests/test_local_pilot.py:135:113: E702 Multiple statements on one line (semicolon)
+    |
+133 |             return 'drained stdout','drained stderr'
+134 |         def wait(self):calls.append('wait');return -9
+135 |     monkeypatch.setattr(s.subprocess,'Popen',lambda *_a,**k:(calls.append(k['start_new_session']) or Process()));monkeypatch.setattr(…
+    |                                                                                                                 ^ E702
+136 |     with pytest.raises(subprocess.TimeoutExpired) as stopped:s.run_owned_process(['synthetic'],cwd=Path('/synthetic'),timeout=1)
+137 |     assert stopped.value.stdout=='drained stdout' and stopped.value.stderr=='drained stderr'
+    |
+
+tests/test_local_pilot.py:136:61: E701 Multiple statements on one line (colon)
+    |
+134 |         def wait(self):calls.append('wait');return -9
+135 |     monkeypatch.setattr(s.subprocess,'Popen',lambda *_a,**k:(calls.append(k['start_new_session']) or Process()));monkeypatch.setattr(…
+136 |     with pytest.raises(subprocess.TimeoutExpired) as stopped:s.run_owned_process(['synthetic'],cwd=Path('/synthetic'),timeout=1)
+    |                                                             ^ E701
+137 |     assert stopped.value.stdout=='drained stdout' and stopped.value.stderr=='drained stderr'
+138 |     assert calls[0] is True and calls[1][0]==424242 and calls[-1]=='wait'
+    |
+
+tests/test_local_pilot.py:140:39: E702 Multiple statements on one line (semicolon)
+    |
+138 |     assert calls[0] is True and calls[1][0]==424242 and calls[-1]=='wait'
+139 | def test_prepare_only_and_exact_owner_grant(tmp_path,monkeypatch):
+140 |     gate,_public,pp,gp=setup(tmp_path);assert p.authorize(pp,gp,p.sha(gp),gate.plan['retained_stop']['sha256'])==gate.plan
+    |                                       ^ E702
+141 |     bad=p.read(gp);bad['two_independent_experts']=1;p.store(tmp_path/'bad.json',bad)
+142 |     with pytest.raises(ValueError):p.authorize(pp,tmp_path/'bad.json',p.sha(tmp_path/'bad.json'),gate.plan['retained_stop']['sha256'])
+    |
+
+tests/test_local_pilot.py:141:19: E702 Multiple statements on one line (semicolon)
+    |
+139 | def test_prepare_only_and_exact_owner_grant(tmp_path,monkeypatch):
+140 |     gate,_public,pp,gp=setup(tmp_path);assert p.authorize(pp,gp,p.sha(gp),gate.plan['retained_stop']['sha256'])==gate.plan
+141 |     bad=p.read(gp);bad['two_independent_experts']=1;p.store(tmp_path/'bad.json',bad)
+    |                   ^ E702
+142 |     with pytest.raises(ValueError):p.authorize(pp,tmp_path/'bad.json',p.sha(tmp_path/'bad.json'),gate.plan['retained_stop']['sha256'])
+143 |     monkeypatch.setattr(p,'execute',lambda *_a,**_k:pytest.fail('prepare must not execute'))
+    |
+
+tests/test_local_pilot.py:141:52: E702 Multiple statements on one line (semicolon)
+    |
+139 | def test_prepare_only_and_exact_owner_grant(tmp_path,monkeypatch):
+140 |     gate,_public,pp,gp=setup(tmp_path);assert p.authorize(pp,gp,p.sha(gp),gate.plan['retained_stop']['sha256'])==gate.plan
+141 |     bad=p.read(gp);bad['two_independent_experts']=1;p.store(tmp_path/'bad.json',bad)
+    |                                                    ^ E702
+142 |     with pytest.raises(ValueError):p.authorize(pp,tmp_path/'bad.json',p.sha(tmp_path/'bad.json'),gate.plan['retained_stop']['sha256'])
+143 |     monkeypatch.setattr(p,'execute',lambda *_a,**_k:pytest.fail('prepare must not execute'))
+    |
+
+tests/test_local_pilot.py:142:35: E701 Multiple statements on one line (colon)
+    |
+140 |     gate,_public,pp,gp=setup(tmp_path);assert p.authorize(pp,gp,p.sha(gp),gate.plan['retained_stop']['sha256'])==gate.plan
+141 |     bad=p.read(gp);bad['two_independent_experts']=1;p.store(tmp_path/'bad.json',bad)
+142 |     with pytest.raises(ValueError):p.authorize(pp,tmp_path/'bad.json',p.sha(tmp_path/'bad.json'),gate.plan['retained_stop']['sha256'])
+    |                                   ^ E701
+143 |     monkeypatch.setattr(p,'execute',lambda *_a,**_k:pytest.fail('prepare must not execute'))
+144 |     with pytest.raises(SystemExit):p.main([])
+    |
+
+tests/test_local_pilot.py:144:35: E701 Multiple statements on one line (colon)
+    |
+142 |     with pytest.raises(ValueError):p.authorize(pp,tmp_path/'bad.json',p.sha(tmp_path/'bad.json'),gate.plan['retained_stop']['sha256'])
+143 |     monkeypatch.setattr(p,'execute',lambda *_a,**_k:pytest.fail('prepare must not execute'))
+144 |     with pytest.raises(SystemExit):p.main([])
+    |                                   ^ E701
+145 |     assert not (gate.root/'EXECUTION-START.original.json').exists()
+146 | def test_public_profile_scope_canonical_closed():
+    |
+
+tests/test_local_pilot.py:149:30: E702 Multiple statements on one line (semicolon)
+    |
+147 |     assert len(p.public_cases(public_input()))==10
+148 |     for target,value in (('field','data science'),('population','domestic'),('intake','fall 2026'),('programme','invented exact')):
+149 |         public=public_input();public['cases'][0]['request'][target]=value
+    |                              ^ E702
+150 |         with pytest.raises(ValueError):p.public_cases(public)
+151 |     public=public_input();public['public_profile']['education_system']='different'
+    |
+
+tests/test_local_pilot.py:150:39: E701 Multiple statements on one line (colon)
+    |
+148 |     for target,value in (('field','data science'),('population','domestic'),('intake','fall 2026'),('programme','invented exact')):
+149 |         public=public_input();public['cases'][0]['request'][target]=value
+150 |         with pytest.raises(ValueError):p.public_cases(public)
+    |                                       ^ E701
+151 |     public=public_input();public['public_profile']['education_system']='different'
+152 |     with pytest.raises(ValueError):p.public_cases(public)
+    |
+
+tests/test_local_pilot.py:151:26: E702 Multiple statements on one line (semicolon)
+    |
+149 |         public=public_input();public['cases'][0]['request'][target]=value
+150 |         with pytest.raises(ValueError):p.public_cases(public)
+151 |     public=public_input();public['public_profile']['education_system']='different'
+    |                          ^ E702
+152 |     with pytest.raises(ValueError):p.public_cases(public)
+153 | def test_neutral_completed_and_honest_partial(tmp_path):
+    |
+
+tests/test_local_pilot.py:152:35: E701 Multiple statements on one line (colon)
+    |
+150 |         with pytest.raises(ValueError):p.public_cases(public)
+151 |     public=public_input();public['public_profile']['education_system']='different'
+152 |     with pytest.raises(ValueError):p.public_cases(public)
+    |                                   ^ E701
+153 | def test_neutral_completed_and_honest_partial(tmp_path):
+154 |     gate,public,_pp,_gp=setup(tmp_path);values=capture_fixture(public['cases'][0],gate.plan,p.read(Path(gate.plan['source_manifest'])…
+    |
+
+tests/test_local_pilot.py:154:40: E702 Multiple statements on one line (semicolon)
+    |
+152 |     with pytest.raises(ValueError):p.public_cases(public)
+153 | def test_neutral_completed_and_honest_partial(tmp_path):
+154 |     gate,public,_pp,_gp=setup(tmp_path);values=capture_fixture(public['cases'][0],gate.plan,p.read(Path(gate.plan['source_manifest'])…
+    |                                        ^ E702
+155 |     kwargs=dict(plan=gate.plan,source_manifest=p.read(Path(gate.plan['source_manifest'])),identities=IdentityMap(version='synthetic',…
+156 |     from app.schemas.claim import Claim
+    |
+
+tests/test_local_pilot.py:155:12: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+153 | …st_neutral_completed_and_honest_partial(tmp_path):
+154 | …te,public,_pp,_gp=setup(tmp_path);values=capture_fixture(public['cases'][0],gate.plan,p.read(Path(gate.plan['source_manifest'])))
+155 | …args=dict(plan=gate.plan,source_manifest=p.read(Path(gate.plan['source_manifest'])),identities=IdentityMap(version='synthetic',bindings=[]));asse…
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+156 | …om app.schemas.claim import Claim
+157 | …om evaluation.research.mapping import evidence_scope, normalize_subject_claims
+    |
+    = help: Rewrite as a literal
+
+tests/test_local_pilot.py:155:147: E702 Multiple statements on one line (semicolon)
+    |
+153 | …
+154 | …ate.plan,p.read(Path(gate.plan['source_manifest'])))
+155 | …st'])),identities=IdentityMap(version='synthetic',bindings=[]));assert validate_algorithm('groningen',*values,**kwargs)==[]
+    |                                                                 ^ E702
+156 | …
+157 | …s
+    |
+
+tests/test_local_pilot.py:160:64: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+158 | …ction
+159 | …
+160 | …ngs=[dict(kind='award',source_url='https://rug.nl/award',subject='Synthetic Merit Award',key='scholarships.synthetic_merit',notes='synthetic namespace, not correctness label')])
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+161 | …_value='Synthetic Merit Award',subject_key='Synthetic Merit Award',source_url='https://rug.nl/award',original_text_excerpt='Synthetic Merit Award is listed.',official_domain=True,a…
+162 | …
+    |
+    = help: Rewrite as a literal
+
+tests/test_local_pilot.py:163:12: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+161 | …aim=Claim(claim_type='scholarship_exists',normalized_value='Synthetic Merit Award',subject_key='Synthetic Merit Award',source_url='https://rug.nl/aw…
+162 | …yload=claim.model_dump(mode='json')
+163 | …cord=dict(id='synthetic-claim',claim_type=claim.claim_type.value,source_url=claim.source_url,accessed_at='2026-01-01T00:00:00',payload=payload)
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+164 | …pped[3]['claims']=[payload];mapped[3]['canary']['job_protocol']['claim_records']=[record]
+165 | …edictions=[]
+    |
+    = help: Rewrite as a literal
+
+tests/test_local_pilot.py:164:34: E702 Multiple statements on one line (semicolon)
+    |
+162 |     payload=claim.model_dump(mode='json')
+163 |     record=dict(id='synthetic-claim',claim_type=claim.claim_type.value,source_url=claim.source_url,accessed_at='2026-01-01T00:00:00',…
+164 |     mapped[3]['claims']=[payload];mapped[3]['canary']['job_protocol']['claim_records']=[record]
+    |                                  ^ E702
+165 |     predictions=[]
+166 |     for key,value,programme,degree in normalize_subject_claims(record['claim_type'],payload,native_namespace):
+    |
+
+tests/test_local_pilot.py:171:54: E702 Multiple statements on one line (semicolon)
+    |
+169 |     assert validate_algorithm('groningen',*mapped,**(kwargs|{'identities':native_namespace}))==[]
+170 |     assert validate_algorithm('groningen',*mapped,**kwargs)
+171 |     values[3]['canary']['run_error']='CancelledError';values[3]['canary']['job_protocol'].update(control_error='CancelledError',contr…
+    |                                                      ^ E702
+172 |     assert validate_algorithm('groningen',*values,require_complete_job=False,**kwargs)==[] and validate_algorithm('groningen',*values…
+173 | def test_algorithm_exit0_refusal_global_stop(tmp_path):
+    |
+
+tests/test_local_pilot.py:171:237: E702 Multiple statements on one line (semicolon)
+    |
+169 | …
+170 | …
+171 | …ning',worker_jobs_done=0,recorded_worker_id='synthetic-worker');values[1]['error']='CancelledError'
+    |                                                                 ^ E702
+172 | …
+173 | …
+    |
+
+tests/test_local_pilot.py:174:38: E702 Multiple statements on one line (semicolon)
+    |
+172 |     assert validate_algorithm('groningen',*values,require_complete_job=False,**kwargs)==[] and validate_algorithm('groningen',*values…
+173 | def test_algorithm_exit0_refusal_global_stop(tmp_path):
+174 |     gate,public,pp,gp=setup(tmp_path);old=gate.plan['retained_stop']['sha256'];result=p.execute(pp,gp,p.sha(gp),old,process_run=fake_…
+    |                                      ^ E702
+175 |     assert result['status']=='STOPPED_PARTIAL_UNSCORED' and result['attempted_algorithms']==['groningen'] and result['attempted_exper…
+176 |     assert len(result['unrun_algorithms'])==9 and len(result['unrun_experts'])==20 and p.read(gate.stop)['diagnostic']['provider_fail…
+    |
+
+tests/test_local_pilot.py:174:79: E702 Multiple statements on one line (semicolon)
+    |
+172 |     assert validate_algorithm('groningen',*values,require_complete_job=False,**kwargs)==[] and validate_algorithm('groningen',*values…
+173 | def test_algorithm_exit0_refusal_global_stop(tmp_path):
+174 |     gate,public,pp,gp=setup(tmp_path);old=gate.plan['retained_stop']['sha256'];result=p.execute(pp,gp,p.sha(gp),old,process_run=fake_…
+    |                                                                               ^ E702
+175 |     assert result['status']=='STOPPED_PARTIAL_UNSCORED' and result['attempted_algorithms']==['groningen'] and result['attempted_exper…
+176 |     assert len(result['unrun_algorithms'])==9 and len(result['unrun_experts'])==20 and p.read(gate.stop)['diagnostic']['provider_fail…
+    |
+
+tests/test_local_pilot.py:179:38: E702 Multiple statements on one line (semicolon)
+    |
+177 |     assert p.sha(Path(gate.plan['retained_stop']['path']))==old
+178 | def test_algorithm_wrong_identity_stops_before_expert(tmp_path):
+179 |     gate,public,pp,gp=setup(tmp_path);run=fake_process(gate,public)
+    |                                      ^ E702
+180 |     def wrong(argv,**kwargs):
+181 |         completed=run(argv,**kwargs);out=Path(argv[argv.index('--out')+1]);raw=next(out.glob('*/groningen.raw.json'));value=p.read(ra…
+    |
+
+tests/test_local_pilot.py:181:37: E702 Multiple statements on one line (semicolon)
+    |
+179 |     gate,public,pp,gp=setup(tmp_path);run=fake_process(gate,public)
+180 |     def wrong(argv,**kwargs):
+181 |         completed=run(argv,**kwargs);out=Path(argv[argv.index('--out')+1]);raw=next(out.glob('*/groningen.raw.json'));value=p.read(ra…
+    |                                     ^ E702
+182 |     result=p.execute(pp,gp,p.sha(gp),gate.plan['retained_stop']['sha256'],process_run=wrong,isolate=FakeIsolation,select=adaptive_sel…
+183 | def test_isolation_failure_partial_receipt_zero_dispatch(tmp_path):
+    |
+
+tests/test_local_pilot.py:181:75: E702 Multiple statements on one line (semicolon)
+    |
+179 |     gate,public,pp,gp=setup(tmp_path);run=fake_process(gate,public)
+180 |     def wrong(argv,**kwargs):
+181 |         completed=run(argv,**kwargs);out=Path(argv[argv.index('--out')+1]);raw=next(out.glob('*/groningen.raw.json'));value=p.read(ra…
+    |                                                                           ^ E702
+182 |     result=p.execute(pp,gp,p.sha(gp),gate.plan['retained_stop']['sha256'],process_run=wrong,isolate=FakeIsolation,select=adaptive_sel…
+183 | def test_isolation_failure_partial_receipt_zero_dispatch(tmp_path):
+    |
+
+tests/test_local_pilot.py:181:118: E702 Multiple statements on one line (semicolon)
+    |
+179 |     gate,public,pp,gp=setup(tmp_path);run=fake_process(gate,public)
+180 |     def wrong(argv,**kwargs):
+181 |         completed=run(argv,**kwargs);out=Path(argv[argv.index('--out')+1]);raw=next(out.glob('*/groningen.raw.json'));value=p.read(ra…
+    |                                                                                                                      ^ E702
+182 |     result=p.execute(pp,gp,p.sha(gp),gate.plan['retained_stop']['sha256'],process_run=wrong,isolate=FakeIsolation,select=adaptive_sel…
+183 | def test_isolation_failure_partial_receipt_zero_dispatch(tmp_path):
+    |
+
+tests/test_local_pilot.py:181:136: E702 Multiple statements on one line (semicolon)
+    |
+179 | …
+180 | …
+181 | …]);raw=next(out.glob('*/groningen.raw.json'));value=p.read(raw);value['canary']['institutions'][0]['domain']='other.edu';raw.write_t…
+    |                                                                 ^ E702
+182 | …],process_run=wrong,isolate=FakeIsolation,select=adaptive_select,run_tool=native_tool);assert result['attempted_experts']==[] and re…
+183 | …
+    |
+
+tests/test_local_pilot.py:181:193: E702 Multiple statements on one line (semicolon)
+    |
+179 | …
+180 | …
+181 | …d(raw);value['canary']['institutions'][0]['domain']='other.edu';raw.write_text(json.dumps(value));return completed
+    |                                                                 ^ E702
+182 | …_select,run_tool=native_tool);assert result['attempted_experts']==[] and result['error_type']=='Stopped'
+183 | …
+    |
+
+tests/test_local_pilot.py:181:227: E702 Multiple statements on one line (semicolon)
+    |
+179 | …
+180 | …
+181 | …ns'][0]['domain']='other.edu';raw.write_text(json.dumps(value));return completed
+    |                                                                 ^ E702
+182 | …rt result['attempted_experts']==[] and result['error_type']=='Stopped'
+183 | …
+    |
+
+tests/test_local_pilot.py:182:159: E702 Multiple statements on one line (semicolon)
+    |
+180 | …
+181 | …/groningen.raw.json'));value=p.read(raw);value['canary']['institutions'][0]['domain']='other.edu';raw.write_text(json.dumps(value));…
+182 | …late=FakeIsolation,select=adaptive_select,run_tool=native_tool);assert result['attempted_experts']==[] and result['error_type']=='St…
+    |                                                                 ^ E702
+183 | …
+184 | …
+    |
+
+tests/test_local_pilot.py:187:37: E701 Multiple statements on one line (colon)
+    |
+185 |     class Failed(FakeIsolation):
+186 |         def prove_access(self,*_a):raise RuntimeError('synthetic unavailable')
+187 |     with pytest.raises(RuntimeError):asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=Failed,select=lambda *_a…
+    |                                     ^ E701
+188 |     receipt=p.read(gate.root/'private/experts/A/groningen/receipt.json');assert receipt['complete_eligible'] is False and receipt['at…
+189 | def test_complete_adaptive10_plus20_not_runtime_admitted(tmp_path):
+    |
+
+tests/test_local_pilot.py:188:73: E702 Multiple statements on one line (semicolon)
+    |
+186 |         def prove_access(self,*_a):raise RuntimeError('synthetic unavailable')
+187 |     with pytest.raises(RuntimeError):asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=Failed,select=lambda *_a…
+188 |     receipt=p.read(gate.root/'private/experts/A/groningen/receipt.json');assert receipt['complete_eligible'] is False and receipt['at…
+    |                                                                         ^ E702
+189 | def test_complete_adaptive10_plus20_not_runtime_admitted(tmp_path):
+190 |     gate,public,pp,gp=setup(tmp_path);result=p.execute(pp,gp,p.sha(gp),gate.plan['retained_stop']['sha256'],process_run=fake_process(…
+    |
+
+tests/test_local_pilot.py:190:38: E702 Multiple statements on one line (semicolon)
+    |
+188 |     receipt=p.read(gate.root/'private/experts/A/groningen/receipt.json');assert receipt['complete_eligible'] is False and receipt['at…
+189 | def test_complete_adaptive10_plus20_not_runtime_admitted(tmp_path):
+190 |     gate,public,pp,gp=setup(tmp_path);result=p.execute(pp,gp,p.sha(gp),gate.plan['retained_stop']['sha256'],process_run=fake_process(…
+    |                                      ^ E702
+191 |     assert result['status']=='COLLECTION_SEALED_UNREVIEWED' and len(result['algorithms'])==10 and len(result['experts'])==20 and resu…
+192 |     assert all(row['recorded_action_count']==row['processed_through_action_count']==1 and row['complete_eligible'] is False for row i…
+    |
+
+tests/test_local_pilot.py:195:40: E701 Multiple statements on one line (colon)
+    |
+193 |     assert (gate.root/'SEALED-MANIFEST.json').is_file() and result['score'] is None and result['evaluator_access_authorized'] is False
+194 |     assert len(list(gate.root.glob('private/experts/*/*/selector-*.prompt.json')))==40
+195 |     with pytest.raises(FileExistsError):p.execute(pp,gp,p.sha(gp),gate.plan['retained_stop']['sha256'],process_run=fake_process(gate,…
+    |                                        ^ E701
+196 | def test_zero_source_submit_partial_not_unrun(tmp_path):
+197 |     gate,public,_pp,_gp=setup(tmp_path)
+    |
+
+tests/test_local_pilot.py:198:85: E702 Multiple statements on one line (semicolon)
+    |
+196 | def test_zero_source_submit_partial_not_unrun(tmp_path):
+197 |     gate,public,_pp,_gp=setup(tmp_path)
+198 |     def submit(isolation,schema,output,prompt,**kwargs):prompt=copy.deepcopy(prompt);prompt['source_views']=[{'synthetic':True}];retu…
+    |                                                                                     ^ E702
+199 |     receipt=asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolation,select=submit,run_tool=native_tool)…
+200 | def test_failed_later_model_preserves_journal_and_raw(tmp_path):
+    |
+
+tests/test_local_pilot.py:198:129: E702 Multiple statements on one line (semicolon)
+    |
+196 | …
+197 | …
+198 | …py.deepcopy(prompt);prompt['source_views']=[{'synthetic':True}];return adaptive_select(isolation,schema,output,prompt,**kwargs)
+    |                                                                 ^ E702
+199 | …s'][0],'A',isolate=FakeIsolation,select=submit,run_tool=native_tool));assert receipt['status']=='partial_no_source_actions' and rece…
+200 | …
+    |
+
+tests/test_local_pilot.py:199:135: E702 Multiple statements on one line (semicolon)
+    |
+197 | …
+198 | …pcopy(prompt);prompt['source_views']=[{'synthetic':True}];return adaptive_select(isolation,schema,output,prompt,**kwargs)
+199 | …,'A',isolate=FakeIsolation,select=submit,run_tool=native_tool));assert receipt['status']=='partial_no_source_actions' and receipt['c…
+    |                                                                 ^ E702
+200 | …
+201 | …
+    |
+
+tests/test_local_pilot.py:203:34: E701 Multiple statements on one line (colon)
+    |
+201 |     gate,public,_pp,_gp=setup(tmp_path)
+202 |     def failed(isolation,schema,output,prompt,**kwargs):
+203 |         if prompt['source_views']:return s.SelectorTurn(None,200,'original unfinished stream','refusal',1,'selector_process_failed')
+    |                                  ^ E701
+204 |         return adaptive_select(isolation,schema,output,prompt,**kwargs)
+205 |     with pytest.raises(p.Stopped):asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolation,select=failed…
+    |
+
+tests/test_local_pilot.py:205:34: E701 Multiple statements on one line (colon)
+    |
+203 |         if prompt['source_views']:return s.SelectorTurn(None,200,'original unfinished stream','refusal',1,'selector_process_failed')
+204 |         return adaptive_select(isolation,schema,output,prompt,**kwargs)
+205 |     with pytest.raises(p.Stopped):asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolation,select=failed…
+    |                                  ^ E701
+206 |     root=gate.root/'private/experts/A/groningen';receipt=p.read(root/'receipt.json');assert receipt['attempted_model_turns']==2 and r…
+207 |     assert len(receipt['source_raw_files'])==1 and p.read(root/'selector-0002.original.json')['stdout']=='original unfinished stream'…
+    |
+
+tests/test_local_pilot.py:206:49: E702 Multiple statements on one line (semicolon)
+    |
+204 |         return adaptive_select(isolation,schema,output,prompt,**kwargs)
+205 |     with pytest.raises(p.Stopped):asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolation,select=failed…
+206 |     root=gate.root/'private/experts/A/groningen';receipt=p.read(root/'receipt.json');assert receipt['attempted_model_turns']==2 and r…
+    |                                                 ^ E702
+207 |     assert len(receipt['source_raw_files'])==1 and p.read(root/'selector-0002.original.json')['stdout']=='original unfinished stream'…
+208 | def test_protective_wall_includes_thinking_no_reset(tmp_path):
+    |
+
+tests/test_local_pilot.py:206:85: E702 Multiple statements on one line (semicolon)
+    |
+204 |         return adaptive_select(isolation,schema,output,prompt,**kwargs)
+205 |     with pytest.raises(p.Stopped):asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolation,select=failed…
+206 |     root=gate.root/'private/experts/A/groningen';receipt=p.read(root/'receipt.json');assert receipt['attempted_model_turns']==2 and r…
+    |                                                                                     ^ E702
+207 |     assert len(receipt['source_raw_files'])==1 and p.read(root/'selector-0002.original.json')['stdout']=='original unfinished stream'…
+208 | def test_protective_wall_includes_thinking_no_reset(tmp_path):
+    |
+
+tests/test_local_pilot.py:209:40: E702 Multiple statements on one line (semicolon)
+    |
+207 |     assert len(receipt['source_raw_files'])==1 and p.read(root/'selector-0002.original.json')['stdout']=='original unfinished stream'…
+208 | def test_protective_wall_includes_thinking_no_reset(tmp_path):
+209 |     gate,public,_pp,_gp=setup(tmp_path);tick=[0.];calls=[]
+    |                                        ^ E702
+210 |     def thinking(isolation,schema,output,prompt,**kwargs):calls.append(kwargs['timeout_seconds']);tick[0]+=901;return adaptive_select…
+211 |     receipt=asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolation,select=thinking,run_tool=native_too…
+    |
+
+tests/test_local_pilot.py:209:50: E702 Multiple statements on one line (semicolon)
+    |
+207 |     assert len(receipt['source_raw_files'])==1 and p.read(root/'selector-0002.original.json')['stdout']=='original unfinished stream'…
+208 | def test_protective_wall_includes_thinking_no_reset(tmp_path):
+209 |     gate,public,_pp,_gp=setup(tmp_path);tick=[0.];calls=[]
+    |                                                  ^ E702
+210 |     def thinking(isolation,schema,output,prompt,**kwargs):calls.append(kwargs['timeout_seconds']);tick[0]+=901;return adaptive_select…
+211 |     receipt=asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolation,select=thinking,run_tool=native_too…
+    |
+
+tests/test_local_pilot.py:210:98: E702 Multiple statements on one line (semicolon)
+    |
+208 | def test_protective_wall_includes_thinking_no_reset(tmp_path):
+209 |     gate,public,_pp,_gp=setup(tmp_path);tick=[0.];calls=[]
+210 |     def thinking(isolation,schema,output,prompt,**kwargs):calls.append(kwargs['timeout_seconds']);tick[0]+=901;return adaptive_select…
+    |                                                                                                  ^ E702
+211 |     receipt=asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolation,select=thinking,run_tool=native_too…
+212 | def test_stale_delta_cannot_replace_latest_journal(tmp_path):
+    |
+
+tests/test_local_pilot.py:210:111: E702 Multiple statements on one line (semicolon)
+    |
+208 | def test_protective_wall_includes_thinking_no_reset(tmp_path):
+209 |     gate,public,_pp,_gp=setup(tmp_path);tick=[0.];calls=[]
+210 |     def thinking(isolation,schema,output,prompt,**kwargs):calls.append(kwargs['timeout_seconds']);tick[0]+=901;return adaptive_select…
+    |                                                                                                               ^ E702
+211 |     receipt=asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolation,select=thinking,run_tool=native_too…
+212 | def test_stale_delta_cannot_replace_latest_journal(tmp_path):
+    |
+
+tests/test_local_pilot.py:211:158: E702 Multiple statements on one line (semicolon)
+    |
+209 | …
+210 | …']);tick[0]+=901;return adaptive_select(isolation,schema,output,prompt,**kwargs)
+211 | …ion,select=thinking,run_tool=native_tool,clock=lambda:tick[0]));assert len(calls)==1 and receipt['wall_elapsed_ms']>=900000 and rece…
+    |                                                                 ^ E702
+212 | …
+213 | …
+    |
+
+tests/test_local_pilot.py:217:45: E702 Multiple statements on one line (semicolon)
+    |
+215 |         turn=adaptive_select(isolation,schema,output,prompt,**kwargs)
+216 |         if prompt['source_views']:
+217 |             value=copy.deepcopy(turn.answer);value['journal_sha256']='f'*64;output.write_text(json.dumps(value));return s.SelectorTur…
+    |                                             ^ E702
+218 |         return turn
+219 |     with pytest.raises(ValueError,match='journal'):asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolat…
+    |
+
+tests/test_local_pilot.py:217:76: E702 Multiple statements on one line (semicolon)
+    |
+215 |         turn=adaptive_select(isolation,schema,output,prompt,**kwargs)
+216 |         if prompt['source_views']:
+217 |             value=copy.deepcopy(turn.answer);value['journal_sha256']='f'*64;output.write_text(json.dumps(value));return s.SelectorTur…
+    |                                                                            ^ E702
+218 |         return turn
+219 |     with pytest.raises(ValueError,match='journal'):asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolat…
+    |
+
+tests/test_local_pilot.py:217:113: E702 Multiple statements on one line (semicolon)
+    |
+215 |         turn=adaptive_select(isolation,schema,output,prompt,**kwargs)
+216 |         if prompt['source_views']:
+217 |             value=copy.deepcopy(turn.answer);value['journal_sha256']='f'*64;output.write_text(json.dumps(value));return s.SelectorTur…
+    |                                                                                                                 ^ E702
+218 |         return turn
+219 |     with pytest.raises(ValueError,match='journal'):asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolat…
+    |
+
+tests/test_local_pilot.py:219:51: E701 Multiple statements on one line (colon)
+    |
+217 |             value=copy.deepcopy(turn.answer);value['journal_sha256']='f'*64;output.write_text(json.dumps(value));return s.SelectorTur…
+218 |         return turn
+219 |     with pytest.raises(ValueError,match='journal'):asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolat…
+    |                                                   ^ E701
+220 |     receipt=p.read(gate.root/'private/experts/A/groningen/receipt.json');assert receipt['processed_through_action_count']==0 and rece…
+    |
+
+tests/test_local_pilot.py:220:73: E702 Multiple statements on one line (semicolon)
+    |
+218 |         return turn
+219 |     with pytest.raises(ValueError,match='journal'):asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolat…
+220 |     receipt=p.read(gate.root/'private/experts/A/groningen/receipt.json');assert receipt['processed_through_action_count']==0 and rece…
+    |                                                                         ^ E702
+221 |
+222 | def test_prepare_real_shaped_homepage_and_opaque_bindings(tmp_path,monkeypatch):
+    |
+
+tests/test_local_pilot.py:225:38: E702 Multiple statements on one line (semicolon)
+    |
+223 |     gate,public,_pp,_gp=setup(tmp_path)
+224 |     from shutil import copyfile
+225 |     source=tmp_path/'prepared-source';backend=source/'backend';scripts=backend/'scripts';scripts.mkdir(parents=True)
+    |                                      ^ E702
+226 |     current_backend=Path(p.__file__).resolve().parents[2]
+227 |     # Current profile source copied as code, never imported or executed.
+    |
+
+tests/test_local_pilot.py:225:63: E702 Multiple statements on one line (semicolon)
+    |
+223 |     gate,public,_pp,_gp=setup(tmp_path)
+224 |     from shutil import copyfile
+225 |     source=tmp_path/'prepared-source';backend=source/'backend';scripts=backend/'scripts';scripts.mkdir(parents=True)
+    |                                                               ^ E702
+226 |     current_backend=Path(p.__file__).resolve().parents[2]
+227 |     # Current profile source copied as code, never imported or executed.
+    |
+
+tests/test_local_pilot.py:225:89: E702 Multiple statements on one line (semicolon)
+    |
+223 |     gate,public,_pp,_gp=setup(tmp_path)
+224 |     from shutil import copyfile
+225 |     source=tmp_path/'prepared-source';backend=source/'backend';scripts=backend/'scripts';scripts.mkdir(parents=True)
+    |                                                                                         ^ E702
+226 |     current_backend=Path(p.__file__).resolve().parents[2]
+227 |     # Current profile source copied as code, never imported or executed.
+    |
+
+tests/test_local_pilot.py:230:80: E702 Multiple statements on one line (semicolon)
+    |
+228 |     original=current_backend/'scripts/canary_discovery.py'
+229 |     (scripts/'canary_discovery.py').write_bytes(original.read_bytes())
+230 |     bindings=backend/'evaluation/research/data/identity_bindings.reviewed.json';bindings.parent.mkdir(parents=True);copyfile(current_…
+    |                                                                                ^ E702
+231 |     marker=backend/'evaluation/research/expert/controller.py';marker.parent.mkdir();copyfile(Path(c.__file__),marker)
+232 |     monkeypatch.setattr(c,'__file__',str(marker))
+    |
+
+tests/test_local_pilot.py:230:116: E702 Multiple statements on one line (semicolon)
+    |
+228 |     original=current_backend/'scripts/canary_discovery.py'
+229 |     (scripts/'canary_discovery.py').write_bytes(original.read_bytes())
+230 |     bindings=backend/'evaluation/research/data/identity_bindings.reviewed.json';bindings.parent.mkdir(parents=True);copyfile(current_…
+    |                                                                                                                    ^ E702
+231 |     marker=backend/'evaluation/research/expert/controller.py';marker.parent.mkdir();copyfile(Path(c.__file__),marker)
+232 |     monkeypatch.setattr(c,'__file__',str(marker))
+    |
+
+tests/test_local_pilot.py:231:62: E702 Multiple statements on one line (semicolon)
+    |
+229 |     (scripts/'canary_discovery.py').write_bytes(original.read_bytes())
+230 |     bindings=backend/'evaluation/research/data/identity_bindings.reviewed.json';bindings.parent.mkdir(parents=True);copyfile(current_…
+231 |     marker=backend/'evaluation/research/expert/controller.py';marker.parent.mkdir();copyfile(Path(c.__file__),marker)
+    |                                                              ^ E702
+232 |     monkeypatch.setattr(c,'__file__',str(marker))
+233 |     registry=backend/'app/adapters/discovery/institution_registry.json';registry.parent.mkdir(parents=True)
+    |
+
+tests/test_local_pilot.py:231:84: E702 Multiple statements on one line (semicolon)
+    |
+229 |     (scripts/'canary_discovery.py').write_bytes(original.read_bytes())
+230 |     bindings=backend/'evaluation/research/data/identity_bindings.reviewed.json';bindings.parent.mkdir(parents=True);copyfile(current_…
+231 |     marker=backend/'evaluation/research/expert/controller.py';marker.parent.mkdir();copyfile(Path(c.__file__),marker)
+    |                                                                                    ^ E702
+232 |     monkeypatch.setattr(c,'__file__',str(marker))
+233 |     registry=backend/'app/adapters/discovery/institution_registry.json';registry.parent.mkdir(parents=True)
+    |
+
+tests/test_local_pilot.py:233:72: E702 Multiple statements on one line (semicolon)
+    |
+231 |     marker=backend/'evaluation/research/expert/controller.py';marker.parent.mkdir();copyfile(Path(c.__file__),marker)
+232 |     monkeypatch.setattr(c,'__file__',str(marker))
+233 |     registry=backend/'app/adapters/discovery/institution_registry.json';registry.parent.mkdir(parents=True)
+    |                                                                        ^ E702
+234 |     registry.write_text(json.dumps([dict(name=row['university'],homepage='https://www.'+row['domain']+'/') for row in public['cases']…
+235 |     binaries=tmp_path/'binaries';binaries.mkdir()
+    |
+
+tests/test_local_pilot.py:234:37: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+232 |     monkeypatch.setattr(c,'__file__',str(marker))
+233 |     registry=backend/'app/adapters/discovery/institution_registry.json';registry.parent.mkdir(parents=True)
+234 |     registry.write_text(json.dumps([dict(name=row['university'],homepage='https://www.'+row['domain']+'/') for row in public['cases']…
+    |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+235 |     binaries=tmp_path/'binaries';binaries.mkdir()
+236 |     for name in ('codex','sandbox-exec'):(binaries/name).write_text('synthetic binary, never executed')
+    |
+    = help: Rewrite as a literal
+
+tests/test_local_pilot.py:235:33: E702 Multiple statements on one line (semicolon)
+    |
+233 |     registry=backend/'app/adapters/discovery/institution_registry.json';registry.parent.mkdir(parents=True)
+234 |     registry.write_text(json.dumps([dict(name=row['university'],homepage='https://www.'+row['domain']+'/') for row in public['cases']…
+235 |     binaries=tmp_path/'binaries';binaries.mkdir()
+    |                                 ^ E702
+236 |     for name in ('codex','sandbox-exec'):(binaries/name).write_text('synthetic binary, never executed')
+237 |     monkeypatch.setattr(p.shutil,'which',lambda name:str(binaries/name))
+    |
+
+tests/test_local_pilot.py:236:41: E701 Multiple statements on one line (colon)
+    |
+234 |     registry.write_text(json.dumps([dict(name=row['university'],homepage='https://www.'+row['domain']+'/') for row in public['cases']…
+235 |     binaries=tmp_path/'binaries';binaries.mkdir()
+236 |     for name in ('codex','sandbox-exec'):(binaries/name).write_text('synthetic binary, never executed')
+    |                                         ^ E701
+237 |     monkeypatch.setattr(p.shutil,'which',lambda name:str(binaries/name))
+238 |     venv=backend/'.venv/bin';venv.mkdir(parents=True,exist_ok=True)
+    |
+
+tests/test_local_pilot.py:238:29: E702 Multiple statements on one line (semicolon)
+    |
+236 |     for name in ('codex','sandbox-exec'):(binaries/name).write_text('synthetic binary, never executed')
+237 |     monkeypatch.setattr(p.shutil,'which',lambda name:str(binaries/name))
+238 |     venv=backend/'.venv/bin';venv.mkdir(parents=True,exist_ok=True)
+    |                             ^ E702
+239 |     executable=venv/'python'
+240 |     if not executable.exists():
+    |
+
+tests/test_local_pilot.py:243:14: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+241 | …import sys
+242 | …executable.symlink_to(Path(sys.executable))
+243 | …fest=dict(snapshot=str(source),repository=str(source),source_status='',source_head='synthetic',source_tree_sha256='b'*64,files={str(file.relative_to(source)):p.sha(file) for file in [registry,scripts/'canary_discovery.py',backend/'evaluation/research/data/identity_bindings.reviewed.json']})
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+244 | …mp_path/'prepare-manifest.json';p.store(mp,manifest)
+245 | …=tmp_path/'synthetic-full.json';p.store(full,dict(status='passed',suite='full',steps=[dict(exit_code=0) for _ in range(13)],source={'source_tree_sha256':'b'*64}))
+    |
+    = help: Rewrite as a literal
+
+tests/test_local_pilot.py:244:40: E702 Multiple statements on one line (semicolon)
+    |
+242 |         executable.symlink_to(Path(sys.executable))
+243 |     manifest=dict(snapshot=str(source),repository=str(source),source_status='',source_head='synthetic',source_tree_sha256='b'*64,file…
+244 |     mp=tmp_path/'prepare-manifest.json';p.store(mp,manifest)
+    |                                        ^ E702
+245 |     full=tmp_path/'synthetic-full.json';p.store(full,dict(status='passed',suite='full',steps=[dict(exit_code=0) for _ in range(13)],s…
+246 |     pp=p.prepare(mp,Path(gate.plan['public_input']),Path(gate.plan['retained_stop']['path']),tmp_path/'prepared',selector_model='test…
+    |
+
+tests/test_local_pilot.py:245:40: E702 Multiple statements on one line (semicolon)
+    |
+243 |     manifest=dict(snapshot=str(source),repository=str(source),source_status='',source_head='synthetic',source_tree_sha256='b'*64,file…
+244 |     mp=tmp_path/'prepare-manifest.json';p.store(mp,manifest)
+245 |     full=tmp_path/'synthetic-full.json';p.store(full,dict(status='passed',suite='full',steps=[dict(exit_code=0) for _ in range(13)],s…
+    |                                        ^ E702
+246 |     pp=p.prepare(mp,Path(gate.plan['public_input']),Path(gate.plan['retained_stop']['path']),tmp_path/'prepared',selector_model='test…
+247 |     prepared=p.read(pp)
+    |
+
+tests/test_local_pilot.py:245:54: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+243 | …y=str(source),source_status='',source_head='synthetic',source_tree_sha256='b'*64,files={str(file.relative_to(source)):p.sha(file) fo…
+244 | …mp,manifest)
+245 | …full,dict(status='passed',suite='full',steps=[dict(exit_code=0) for _ in range(13)],source={'source_tree_sha256':'b'*64}))
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+246 | …']),Path(gate.plan['retained_stop']['path']),tmp_path/'prepared',selector_model='test-model',sealed_roots=[tmp_path,source],full_rec…
+247 | …
+    |
+    = help: Rewrite as a literal
+
+tests/test_local_pilot.py:245:95: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+243 |     manifest=dict(snapshot=str(source),repository=str(source),source_status='',source_head='synthetic',source_tree_sha256='b'*64,file…
+244 |     mp=tmp_path/'prepare-manifest.json';p.store(mp,manifest)
+245 |     full=tmp_path/'synthetic-full.json';p.store(full,dict(status='passed',suite='full',steps=[dict(exit_code=0) for _ in range(13)],s…
+    |                                                                                               ^^^^^^^^^^^^^^^^^ C408
+246 |     pp=p.prepare(mp,Path(gate.plan['public_input']),Path(gate.plan['retained_stop']['path']),tmp_path/'prepared',selector_model='test…
+247 |     prepared=p.read(pp)
+    |
+    = help: Rewrite as a literal
+
+tests/test_local_pilot.py:253:35: E702 Multiple statements on one line (semicolon)
+    |
+251 |     assert not (pp.parent/'EXECUTION-START.original.json').exists()
+252 |     # Exact lexical venv path is retained, but a retarget fails before dispatch.
+253 |     target=tmp_path/'other-python';target.write_text('never executed')
+    |                                   ^ E702
+254 |     executable.unlink();executable.symlink_to(target)
+255 |     with pytest.raises(ValueError,match='executable'):p.verify_binding(prepared)
+    |
+
+tests/test_local_pilot.py:254:24: E702 Multiple statements on one line (semicolon)
+    |
+252 |     # Exact lexical venv path is retained, but a retarget fails before dispatch.
+253 |     target=tmp_path/'other-python';target.write_text('never executed')
+254 |     executable.unlink();executable.symlink_to(target)
+    |                        ^ E702
+255 |     with pytest.raises(ValueError,match='executable'):p.verify_binding(prepared)
+256 |     executable.unlink()
+    |
+
+tests/test_local_pilot.py:255:54: E701 Multiple statements on one line (colon)
+    |
+253 |     target=tmp_path/'other-python';target.write_text('never executed')
+254 |     executable.unlink();executable.symlink_to(target)
+255 |     with pytest.raises(ValueError,match='executable'):p.verify_binding(prepared)
+    |                                                      ^ E701
+256 |     executable.unlink()
+    |
+
+tests/test_local_pilot.py:266:57: E702 Multiple statements on one line (semicolon)
+    |
+264 | …     if prompt.get('source_views'):
+265 | …         value=copy.deepcopy(turn.answer)
+266 | …         scope={key:None for key in p.REQUEST_FIELDS};scope['university']=public['cases'][0]['university']
+    |                                                       ^ E702
+267 | …         value['facts']=[dict(id='fact1',question='OTHER',claim_key='unmapped.admissions_info',value_json='"Synthetic admissions sou…
+268 | …         output.write_text(json.dumps(value));return s.SelectorTurn(value,1,streams(value),'',0,None)
+    |
+
+tests/test_local_pilot.py:267:29: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+265 | …deepcopy(turn.answer)
+266 | …None for key in p.REQUEST_FIELDS};scope['university']=public['cases'][0]['university']
+267 | …s']=[dict(id='fact1',question='OTHER',claim_key='unmapped.admissions_info',value_json='"Synthetic admissions source information"',source_step=1,quotation='Synthetic admissions source information',location=dict(kind='text',block_id=None,section_path=[],page=None),scope=scope)]
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+268 | …e_text(json.dumps(value));return s.SelectorTurn(value,1,streams(value),'',0,None)
+269 | …
+    |
+    = help: Rewrite as a literal
+
+tests/test_local_pilot.py:267:229: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+265 | …
+266 | …
+267 | …sions source information',location=dict(kind='text',block_id=None,section_path=[],page=None),scope=scope)]
+    |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+268 | …
+269 | …
+    |
+    = help: Rewrite as a literal
+
+tests/test_local_pilot.py:268:49: E702 Multiple statements on one line (semicolon)
+    |
+266 |             scope={key:None for key in p.REQUEST_FIELDS};scope['university']=public['cases'][0]['university']
+267 |             value['facts']=[dict(id='fact1',question='OTHER',claim_key='unmapped.admissions_info',value_json='"Synthetic admissions s…
+268 |             output.write_text(json.dumps(value));return s.SelectorTurn(value,1,streams(value),'',0,None)
+    |                                                 ^ E702
+269 |         return turn
+270 |     receipt=asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolation,select=evidence,run_tool=native_too…
+    |
+
+tests/test_local_pilot.py:273:43: E702 Multiple statements on one line (semicolon)
+    |
+271 |     assert receipt['trace']['proposals'] and receipt['complete_eligible'] is False
+272 |     p.verify_admitted_outputs(gate.root,[],[receipt])
+273 |     legacy=copy.deepcopy(receipt['trace']);legacy['max_elapsed_ms']=120000;legacy.pop('timing_policy');legacy.pop('protective_wall_ms…
+    |                                           ^ E702
+274 |     native_legacy=ExpertTrace.model_validate(legacy).model_dump(mode='json')
+275 |     assert 'timing_policy' not in native_legacy and 'protective_wall_ms' not in native_legacy
+    |
+
+tests/test_local_pilot.py:273:75: E702 Multiple statements on one line (semicolon)
+    |
+271 |     assert receipt['trace']['proposals'] and receipt['complete_eligible'] is False
+272 |     p.verify_admitted_outputs(gate.root,[],[receipt])
+273 |     legacy=copy.deepcopy(receipt['trace']);legacy['max_elapsed_ms']=120000;legacy.pop('timing_policy');legacy.pop('protective_wall_ms…
+    |                                                                           ^ E702
+274 |     native_legacy=ExpertTrace.model_validate(legacy).model_dump(mode='json')
+275 |     assert 'timing_policy' not in native_legacy and 'protective_wall_ms' not in native_legacy
+    |
+
+tests/test_local_pilot.py:273:103: E702 Multiple statements on one line (semicolon)
+    |
+271 |     assert receipt['trace']['proposals'] and receipt['complete_eligible'] is False
+272 |     p.verify_admitted_outputs(gate.root,[],[receipt])
+273 |     legacy=copy.deepcopy(receipt['trace']);legacy['max_elapsed_ms']=120000;legacy.pop('timing_policy');legacy.pop('protective_wall_ms…
+    |                                                                                                       ^ E702
+274 |     native_legacy=ExpertTrace.model_validate(legacy).model_dump(mode='json')
+275 |     assert 'timing_policy' not in native_legacy and 'protective_wall_ms' not in native_legacy
+    |
+
+tests/test_local_pilot.py:276:49: E702 Multiple statements on one line (semicolon)
+    |
+274 |     native_legacy=ExpertTrace.model_validate(legacy).model_dump(mode='json')
+275 |     assert 'timing_policy' not in native_legacy and 'protective_wall_ms' not in native_legacy
+276 |     root=gate.root/'private/experts/A/groningen';earlier=root/'selector-0001.original.json';original=earlier.read_bytes();earlier.wri…
+    |                                                 ^ E702
+277 |     with pytest.raises(ValueError,match='selector original changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+278 |     earlier.write_bytes(original)
+    |
+
+tests/test_local_pilot.py:276:92: E702 Multiple statements on one line (semicolon)
+    |
+274 |     native_legacy=ExpertTrace.model_validate(legacy).model_dump(mode='json')
+275 |     assert 'timing_policy' not in native_legacy and 'protective_wall_ms' not in native_legacy
+276 |     root=gate.root/'private/experts/A/groningen';earlier=root/'selector-0001.original.json';original=earlier.read_bytes();earlier.wri…
+    |                                                                                            ^ E702
+277 |     with pytest.raises(ValueError,match='selector original changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+278 |     earlier.write_bytes(original)
+    |
+
+tests/test_local_pilot.py:276:122: E702 Multiple statements on one line (semicolon)
+    |
+274 |     native_legacy=ExpertTrace.model_validate(legacy).model_dump(mode='json')
+275 |     assert 'timing_policy' not in native_legacy and 'protective_wall_ms' not in native_legacy
+276 |     root=gate.root/'private/experts/A/groningen';earlier=root/'selector-0001.original.json';original=earlier.read_bytes();earlier.wri…
+    |                                                                                                                          ^ E702
+277 |     with pytest.raises(ValueError,match='selector original changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+278 |     earlier.write_bytes(original)
+    |
+
+tests/test_local_pilot.py:277:69: E701 Multiple statements on one line (colon)
+    |
+275 |     assert 'timing_policy' not in native_legacy and 'protective_wall_ms' not in native_legacy
+276 |     root=gate.root/'private/experts/A/groningen';earlier=root/'selector-0001.original.json';original=earlier.read_bytes();earlier.wri…
+277 |     with pytest.raises(ValueError,match='selector original changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+    |                                                                     ^ E701
+278 |     earlier.write_bytes(original)
+279 |     raw=next((root/'raw').glob('*.json'));before=raw.read_bytes();raw.write_text('{}')
+    |
+
+tests/test_local_pilot.py:279:42: E702 Multiple statements on one line (semicolon)
+    |
+277 |     with pytest.raises(ValueError,match='selector original changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+278 |     earlier.write_bytes(original)
+279 |     raw=next((root/'raw').glob('*.json'));before=raw.read_bytes();raw.write_text('{}')
+    |                                          ^ E702
+280 |     with pytest.raises(ValueError,match='expert raw changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+281 |     raw.write_bytes(before)
+    |
+
+tests/test_local_pilot.py:279:66: E702 Multiple statements on one line (semicolon)
+    |
+277 |     with pytest.raises(ValueError,match='selector original changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+278 |     earlier.write_bytes(original)
+279 |     raw=next((root/'raw').glob('*.json'));before=raw.read_bytes();raw.write_text('{}')
+    |                                                                  ^ E702
+280 |     with pytest.raises(ValueError,match='expert raw changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+281 |     raw.write_bytes(before)
+    |
+
+tests/test_local_pilot.py:280:62: E701 Multiple statements on one line (colon)
+    |
+278 |     earlier.write_bytes(original)
+279 |     raw=next((root/'raw').glob('*.json'));before=raw.read_bytes();raw.write_text('{}')
+280 |     with pytest.raises(ValueError,match='expert raw changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+    |                                                              ^ E701
+281 |     raw.write_bytes(before)
+282 |     p.verify_admitted_outputs(gate.root,[],[receipt])
+    |
+
+tests/test_local_pilot.py:285:205: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+283 | …
+284 | …
+285 | …s']),resume_summary=summary,actions=[dict(tool='fetcher',url='https://rug.nl/admissions')]),root/'raw')
+    |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+286 | …
+287 | …
+    |
+    = help: Rewrite as a literal
+
+tests/test_local_pilot.py:289:47: E702 Multiple statements on one line (semicolon)
+    |
+287 |     second=copy.deepcopy(receipt['trace']['actions'][0])
+288 |     second.update(step=2,at=row['at'],observed_before='Read the source again.',observed_from_step=1,action='Read the source again.',r…
+289 |     full_trace=copy.deepcopy(receipt['trace']);full_trace['actions'].append(second);full_trace['ended_at']=datetime.now(UTC).isoforma…
+    |                                               ^ E702
+290 |     packet=p.read(root/'packet.original.json')
+291 |     validate_trace(full_trace,packet,logs_dir=root/'raw')
+    |
+
+tests/test_local_pilot.py:289:84: E702 Multiple statements on one line (semicolon)
+    |
+287 |     second=copy.deepcopy(receipt['trace']['actions'][0])
+288 |     second.update(step=2,at=row['at'],observed_before='Read the source again.',observed_from_step=1,action='Read the source again.',r…
+289 |     full_trace=copy.deepcopy(receipt['trace']);full_trace['actions'].append(second);full_trace['ended_at']=datetime.now(UTC).isoforma…
+    |                                                                                    ^ E702
+290 |     packet=p.read(root/'packet.original.json')
+291 |     validate_trace(full_trace,packet,logs_dir=root/'raw')
+    |
+
+tests/test_local_pilot.py:292:46: E702 Multiple statements on one line (semicolon)
+    |
+290 |     packet=p.read(root/'packet.original.json')
+291 |     validate_trace(full_trace,packet,logs_dir=root/'raw')
+292 |     raw_second=root/'raw'/row['raw_log_path'];value=p.read(raw_second);value['wall_elapsed_ms_before']=0;raw_second.write_text(json.d…
+    |                                              ^ E702
+293 |     with pytest.raises(ValueError,match='between actions'):validate_trace(full_trace,packet,logs_dir=root/'raw')
+294 |     with pytest.raises(ValueError,match='structured'):_controller_budget(ExpertTrace.model_validate(legacy),Action.model_validate(leg…
+    |
+
+tests/test_local_pilot.py:292:71: E702 Multiple statements on one line (semicolon)
+    |
+290 |     packet=p.read(root/'packet.original.json')
+291 |     validate_trace(full_trace,packet,logs_dir=root/'raw')
+292 |     raw_second=root/'raw'/row['raw_log_path'];value=p.read(raw_second);value['wall_elapsed_ms_before']=0;raw_second.write_text(json.d…
+    |                                                                       ^ E702
+293 |     with pytest.raises(ValueError,match='between actions'):validate_trace(full_trace,packet,logs_dir=root/'raw')
+294 |     with pytest.raises(ValueError,match='structured'):_controller_budget(ExpertTrace.model_validate(legacy),Action.model_validate(leg…
+    |
+
+tests/test_local_pilot.py:292:105: E702 Multiple statements on one line (semicolon)
+    |
+290 |     packet=p.read(root/'packet.original.json')
+291 |     validate_trace(full_trace,packet,logs_dir=root/'raw')
+292 |     raw_second=root/'raw'/row['raw_log_path'];value=p.read(raw_second);value['wall_elapsed_ms_before']=0;raw_second.write_text(json.d…
+    |                                                                                                         ^ E702
+293 |     with pytest.raises(ValueError,match='between actions'):validate_trace(full_trace,packet,logs_dir=root/'raw')
+294 |     with pytest.raises(ValueError,match='structured'):_controller_budget(ExpertTrace.model_validate(legacy),Action.model_validate(leg…
+    |
+
+tests/test_local_pilot.py:292:146: E702 Multiple statements on one line (semicolon)
+    |
+290 | …
+291 | …
+292 | …_elapsed_ms_before']=0;raw_second.write_text(json.dumps(value));full_trace['actions'][1]['raw_log_sha256']=p.sha(raw_second)
+    |                                                                 ^ E702
+293 | …ce,packet,logs_dir=root/'raw')
+294 | …ce.model_validate(legacy),Action.model_validate(legacy['actions'][0]),{'tool_policy':['malformed']},'independent_full_budget')
+    |
+
+tests/test_local_pilot.py:293:59: E701 Multiple statements on one line (colon)
+    |
+291 |     validate_trace(full_trace,packet,logs_dir=root/'raw')
+292 |     raw_second=root/'raw'/row['raw_log_path'];value=p.read(raw_second);value['wall_elapsed_ms_before']=0;raw_second.write_text(json.d…
+293 |     with pytest.raises(ValueError,match='between actions'):validate_trace(full_trace,packet,logs_dir=root/'raw')
+    |                                                           ^ E701
+294 |     with pytest.raises(ValueError,match='structured'):_controller_budget(ExpertTrace.model_validate(legacy),Action.model_validate(leg…
+295 |     # All OTHER citations remain gated; a fabricated quote cannot enter a journal.
+    |
+
+tests/test_local_pilot.py:294:54: E701 Multiple statements on one line (colon)
+    |
+292 |     raw_second=root/'raw'/row['raw_log_path'];value=p.read(raw_second);value['wall_elapsed_ms_before']=0;raw_second.write_text(json.d…
+293 |     with pytest.raises(ValueError,match='between actions'):validate_trace(full_trace,packet,logs_dir=root/'raw')
+294 |     with pytest.raises(ValueError,match='structured'):_controller_budget(ExpertTrace.model_validate(legacy),Action.model_validate(leg…
+    |                                                      ^ E701
+295 |     # All OTHER citations remain gated; a fabricated quote cannot enter a journal.
+296 |     second=public['cases'][1]
+    |
+
+tests/test_local_pilot.py:300:45: E702 Multiple statements on one line (semicolon)
+    |
+298 |         turn=evidence(isolation,schema,output,prompt,**kwargs)
+299 |         if prompt.get('source_views'):
+300 |             value=copy.deepcopy(turn.answer);value['facts'][0]['scope']['university']=second['university'];value['facts'][0]['quotati…
+    |                                             ^ E702
+301 |         return turn
+302 |     with pytest.raises(ValueError):asyncio.run(p.collect_expert(gate,public,second,'B',isolate=FakeIsolation,select=bad,run_tool=nati…
+    |
+
+tests/test_local_pilot.py:300:107: E702 Multiple statements on one line (semicolon)
+    |
+298 |         turn=evidence(isolation,schema,output,prompt,**kwargs)
+299 |         if prompt.get('source_views'):
+300 |             value=copy.deepcopy(turn.answer);value['facts'][0]['scope']['university']=second['university'];value['facts'][0]['quotati…
+    |                                                                                                           ^ E702
+301 |         return turn
+302 |     with pytest.raises(ValueError):asyncio.run(p.collect_expert(gate,public,second,'B',isolate=FakeIsolation,select=bad,run_tool=nati…
+    |
+
+tests/test_local_pilot.py:300:160: E702 Multiple statements on one line (semicolon)
+    |
+298 | …
+299 | …
+300 | …iversity'];value['facts'][0]['quotation']='Not in saved source';output.write_text(json.dumps(value));return s.SelectorTurn(value,1,s…
+    |                                                                 ^ E702
+301 | …
+302 | …akeIsolation,select=bad,run_tool=native_tool))
+    |
+
+tests/test_local_pilot.py:300:197: E702 Multiple statements on one line (semicolon)
+    |
+298 | …
+299 | …
+300 | …on']='Not in saved source';output.write_text(json.dumps(value));return s.SelectorTurn(value,1,streams(value),'',0,None)
+    |                                                                 ^ E702
+301 | …
+302 | …ve_tool))
+    |
+
+tests/test_local_pilot.py:302:35: E701 Multiple statements on one line (colon)
+    |
+300 |             value=copy.deepcopy(turn.answer);value['facts'][0]['scope']['university']=second['university'];value['facts'][0]['quotati…
+301 |         return turn
+302 |     with pytest.raises(ValueError):asyncio.run(p.collect_expert(gate,public,second,'B',isolate=FakeIsolation,select=bad,run_tool=nati…
+    |                                   ^ E701
+303 |     failed=p.read(gate.root/'private/experts/B/delft/receipt.json')
+304 |     assert failed['complete_eligible'] is False and failed['last_accepted_journal']['facts']==[]
+    |
+
+Found 188 errors (11 fixed, 177 remaining).
+No fixes available (40 hidden fixes can be enabled with the `--unsafe-fixes` option).

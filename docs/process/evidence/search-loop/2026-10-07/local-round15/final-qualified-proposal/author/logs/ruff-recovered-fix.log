@@ -1,0 +1,678 @@
+tests/test_local_pilot.py:26:56: E702 Multiple statements on one line (semicolon)
+   |
+24 | def denied_network(monkeypatch):
+25 |     def denied(*_args,**_kwargs):raise AssertionError('Real network/DNS forbidden')
+26 |     monkeypatch.setattr(socket.socket,'connect',denied);monkeypatch.setattr(socket,'getaddrinfo',denied)
+   |                                                        ^ E702
+27 |
+28 | def public_input():
+   |
+
+tests/test_local_pilot.py:37:51: E702 Multiple statements on one line (semicolon)
+   |
+36 | def setup(tmp_path):
+37 |     research=Path(c.__file__).resolve().parents[1];backend=research.parents[1];source=backend.parent
+   |                                                   ^ E702
+38 |     old=tmp_path/'old-stop.json';old.write_text('{"original":"refused"}')
+39 |     public=public_input();public_path=tmp_path/'public.json';p.store(public_path,public)
+   |
+
+tests/test_local_pilot.py:37:79: E702 Multiple statements on one line (semicolon)
+   |
+36 | def setup(tmp_path):
+37 |     research=Path(c.__file__).resolve().parents[1];backend=research.parents[1];source=backend.parent
+   |                                                                               ^ E702
+38 |     old=tmp_path/'old-stop.json';old.write_text('{"original":"refused"}')
+39 |     public=public_input();public_path=tmp_path/'public.json';p.store(public_path,public)
+   |
+
+tests/test_local_pilot.py:38:33: E702 Multiple statements on one line (semicolon)
+   |
+36 | def setup(tmp_path):
+37 |     research=Path(c.__file__).resolve().parents[1];backend=research.parents[1];source=backend.parent
+38 |     old=tmp_path/'old-stop.json';old.write_text('{"original":"refused"}')
+   |                                 ^ E702
+39 |     public=public_input();public_path=tmp_path/'public.json';p.store(public_path,public)
+40 |     manifest={'files':{f'backend/evaluation/research/{name}.py':p.sha(research/f'{name}.py') for name in ('live','mapping')}}
+   |
+
+tests/test_local_pilot.py:39:26: E702 Multiple statements on one line (semicolon)
+   |
+37 |     research=Path(c.__file__).resolve().parents[1];backend=research.parents[1];source=backend.parent
+38 |     old=tmp_path/'old-stop.json';old.write_text('{"original":"refused"}')
+39 |     public=public_input();public_path=tmp_path/'public.json';p.store(public_path,public)
+   |                          ^ E702
+40 |     manifest={'files':{f'backend/evaluation/research/{name}.py':p.sha(research/f'{name}.py') for name in ('live','mapping')}}
+41 |     manifest_path=tmp_path/'manifest.json';p.store(manifest_path,manifest)
+   |
+
+tests/test_local_pilot.py:39:61: E702 Multiple statements on one line (semicolon)
+   |
+37 |     research=Path(c.__file__).resolve().parents[1];backend=research.parents[1];source=backend.parent
+38 |     old=tmp_path/'old-stop.json';old.write_text('{"original":"refused"}')
+39 |     public=public_input();public_path=tmp_path/'public.json';p.store(public_path,public)
+   |                                                             ^ E702
+40 |     manifest={'files':{f'backend/evaluation/research/{name}.py':p.sha(research/f'{name}.py') for name in ('live','mapping')}}
+41 |     manifest_path=tmp_path/'manifest.json';p.store(manifest_path,manifest)
+   |
+
+tests/test_local_pilot.py:41:43: E702 Multiple statements on one line (semicolon)
+   |
+39 |     public=public_input();public_path=tmp_path/'public.json';p.store(public_path,public)
+40 |     manifest={'files':{f'backend/evaluation/research/{name}.py':p.sha(research/f'{name}.py') for name in ('live','mapping')}}
+41 |     manifest_path=tmp_path/'manifest.json';p.store(manifest_path,manifest)
+   |                                           ^ E702
+42 |     value={'provider':'exa_mcp','cases':list(p.COHORT),'source_snapshot':str(source),'source_head':'synthetic-source','source_tree_sha…
+43 |     root=tmp_path/'cycle';root.mkdir();pp=root/'PLAN.json';p.store(pp,value)
+   |
+
+tests/test_local_pilot.py:43:26: E702 Multiple statements on one line (semicolon)
+   |
+41 |     manifest_path=tmp_path/'manifest.json';p.store(manifest_path,manifest)
+42 |     value={'provider':'exa_mcp','cases':list(p.COHORT),'source_snapshot':str(source),'source_head':'synthetic-source','source_tree_sha…
+43 |     root=tmp_path/'cycle';root.mkdir();pp=root/'PLAN.json';p.store(pp,value)
+   |                          ^ E702
+44 |     grant={'schema_version':'1','approved_by':'human-owner','plan_sha256':p.sha(pp),'cycle_id':value['cycle_id'],'source_tree_sha256':…
+45 |     gp=tmp_path/'grant.json';p.store(gp,grant);return p.Gate(root,value),public,pp,gp
+   |
+
+tests/test_local_pilot.py:43:39: E702 Multiple statements on one line (semicolon)
+   |
+41 |     manifest_path=tmp_path/'manifest.json';p.store(manifest_path,manifest)
+42 |     value={'provider':'exa_mcp','cases':list(p.COHORT),'source_snapshot':str(source),'source_head':'synthetic-source','source_tree_sha…
+43 |     root=tmp_path/'cycle';root.mkdir();pp=root/'PLAN.json';p.store(pp,value)
+   |                                       ^ E702
+44 |     grant={'schema_version':'1','approved_by':'human-owner','plan_sha256':p.sha(pp),'cycle_id':value['cycle_id'],'source_tree_sha256':…
+45 |     gp=tmp_path/'grant.json';p.store(gp,grant);return p.Gate(root,value),public,pp,gp
+   |
+
+tests/test_local_pilot.py:43:59: E702 Multiple statements on one line (semicolon)
+   |
+41 |     manifest_path=tmp_path/'manifest.json';p.store(manifest_path,manifest)
+42 |     value={'provider':'exa_mcp','cases':list(p.COHORT),'source_snapshot':str(source),'source_head':'synthetic-source','source_tree_sha…
+43 |     root=tmp_path/'cycle';root.mkdir();pp=root/'PLAN.json';p.store(pp,value)
+   |                                                           ^ E702
+44 |     grant={'schema_version':'1','approved_by':'human-owner','plan_sha256':p.sha(pp),'cycle_id':value['cycle_id'],'source_tree_sha256':…
+45 |     gp=tmp_path/'grant.json';p.store(gp,grant);return p.Gate(root,value),public,pp,gp
+   |
+
+tests/test_local_pilot.py:45:29: E702 Multiple statements on one line (semicolon)
+   |
+43 |     root=tmp_path/'cycle';root.mkdir();pp=root/'PLAN.json';p.store(pp,value)
+44 |     grant={'schema_version':'1','approved_by':'human-owner','plan_sha256':p.sha(pp),'cycle_id':value['cycle_id'],'source_tree_sha256':…
+45 |     gp=tmp_path/'grant.json';p.store(gp,grant);return p.Gate(root,value),public,pp,gp
+   |                             ^ E702
+46 |
+47 | def plan(**changes):
+   |
+
+tests/test_local_pilot.py:45:47: E702 Multiple statements on one line (semicolon)
+   |
+43 |     root=tmp_path/'cycle';root.mkdir();pp=root/'PLAN.json';p.store(pp,value)
+44 |     grant={'schema_version':'1','approved_by':'human-owner','plan_sha256':p.sha(pp),'cycle_id':value['cycle_id'],'source_tree_sha256':…
+45 |     gp=tmp_path/'grant.json';p.store(gp,grant);return p.Gate(root,value),public,pp,gp
+   |                                               ^ E702
+46 |
+47 | def plan(**changes):
+   |
+
+tests/test_local_pilot.py:48:390: E702 Multiple statements on one line (semicolon)
+   |
+47 | …
+48 | …s':[{'tool':'fetcher','url':'https://example.edu/admissions'}]};value.update(changes);return value
+   |                                                                 ^ E702
+49 | …
+50 | …
+   |
+
+tests/test_local_pilot.py:48:412: E702 Multiple statements on one line (semicolon)
+   |
+47 | …
+48 | …'url':'https://example.edu/admissions'}]};value.update(changes);return value
+   |                                                                 ^ E702
+49 | …
+50 | …
+   |
+
+tests/test_local_pilot.py:54:79: E701 Multiple statements on one line (colon)
+   |
+52 | def legacy_plan():
+53 |     value=plan(max_ms=120000)
+54 |     for key in ('timing_policy','protective_wall_ms','wall_elapsed_before_ms'):value.pop(key)
+   |                                                                               ^ E701
+55 |     return value
+   |
+
+tests/test_local_pilot.py:64:177: E702 Multiple statements on one line (semicolon)
+   |
+62 | …als':{},'batch':[case['university']],'job_protocol':protocol,'run_error':''},'claims':[],'protocol_observation_available':True}
+63 | …files']['backend/evaluation/research/mapping.py'],'cohort':[case['case_id']],'search_provider':'exa_mcp','fenced_research_job':True,'…
+64 | …rmat(),'mode':'live','config':config,'observations':[observed]};return capture,observed,budget,raw
+   |                                                                 ^ E702
+65 | …
+66 | …
+   |
+
+tests/test_local_pilot.py:630:38: E702 Multiple statements on one line (semicolon)
+    |
+628 |     import sys
+629 |     gate,public,_pp,_gp=setup(tmp_path)
+630 |     source=tmp_path/'prepared-source';backend=source/'backend';scripts=backend/'scripts';scripts.mkdir(parents=True)
+    |                                      ^ E702
+631 |     current_backend=Path(p.__file__).resolve().parents[2]
+632 |     (scripts/'canary_discovery.py').write_bytes((current_backend/'scripts/canary_discovery.py').read_bytes())
+    |
+
+tests/test_local_pilot.py:630:63: E702 Multiple statements on one line (semicolon)
+    |
+628 |     import sys
+629 |     gate,public,_pp,_gp=setup(tmp_path)
+630 |     source=tmp_path/'prepared-source';backend=source/'backend';scripts=backend/'scripts';scripts.mkdir(parents=True)
+    |                                                               ^ E702
+631 |     current_backend=Path(p.__file__).resolve().parents[2]
+632 |     (scripts/'canary_discovery.py').write_bytes((current_backend/'scripts/canary_discovery.py').read_bytes())
+    |
+
+tests/test_local_pilot.py:630:89: E702 Multiple statements on one line (semicolon)
+    |
+628 |     import sys
+629 |     gate,public,_pp,_gp=setup(tmp_path)
+630 |     source=tmp_path/'prepared-source';backend=source/'backend';scripts=backend/'scripts';scripts.mkdir(parents=True)
+    |                                                                                         ^ E702
+631 |     current_backend=Path(p.__file__).resolve().parents[2]
+632 |     (scripts/'canary_discovery.py').write_bytes((current_backend/'scripts/canary_discovery.py').read_bytes())
+    |
+
+tests/test_local_pilot.py:633:80: E702 Multiple statements on one line (semicolon)
+    |
+631 |     current_backend=Path(p.__file__).resolve().parents[2]
+632 |     (scripts/'canary_discovery.py').write_bytes((current_backend/'scripts/canary_discovery.py').read_bytes())
+633 |     bindings=backend/'evaluation/research/data/identity_bindings.reviewed.json';bindings.parent.mkdir(parents=True);bindings.write_by…
+    |                                                                                ^ E702
+634 |     marker=backend/'evaluation/research/expert/controller.py';marker.parent.mkdir();marker.write_bytes(Path(c.__file__).read_bytes())…
+635 |     registry=backend/'app/adapters/discovery/institution_registry.json';registry.parent.mkdir(parents=True);registry.write_text(json.…
+    |
+
+tests/test_local_pilot.py:633:116: E702 Multiple statements on one line (semicolon)
+    |
+631 |     current_backend=Path(p.__file__).resolve().parents[2]
+632 |     (scripts/'canary_discovery.py').write_bytes((current_backend/'scripts/canary_discovery.py').read_bytes())
+633 |     bindings=backend/'evaluation/research/data/identity_bindings.reviewed.json';bindings.parent.mkdir(parents=True);bindings.write_by…
+    |                                                                                                                    ^ E702
+634 |     marker=backend/'evaluation/research/expert/controller.py';marker.parent.mkdir();marker.write_bytes(Path(c.__file__).read_bytes())…
+635 |     registry=backend/'app/adapters/discovery/institution_registry.json';registry.parent.mkdir(parents=True);registry.write_text(json.…
+    |
+
+tests/test_local_pilot.py:634:62: E702 Multiple statements on one line (semicolon)
+    |
+632 |     (scripts/'canary_discovery.py').write_bytes((current_backend/'scripts/canary_discovery.py').read_bytes())
+633 |     bindings=backend/'evaluation/research/data/identity_bindings.reviewed.json';bindings.parent.mkdir(parents=True);bindings.write_by…
+634 |     marker=backend/'evaluation/research/expert/controller.py';marker.parent.mkdir();marker.write_bytes(Path(c.__file__).read_bytes())…
+    |                                                              ^ E702
+635 |     registry=backend/'app/adapters/discovery/institution_registry.json';registry.parent.mkdir(parents=True);registry.write_text(json.…
+636 |     binaries=tmp_path/'binaries';binaries.mkdir()
+    |
+
+tests/test_local_pilot.py:634:84: E702 Multiple statements on one line (semicolon)
+    |
+632 |     (scripts/'canary_discovery.py').write_bytes((current_backend/'scripts/canary_discovery.py').read_bytes())
+633 |     bindings=backend/'evaluation/research/data/identity_bindings.reviewed.json';bindings.parent.mkdir(parents=True);bindings.write_by…
+634 |     marker=backend/'evaluation/research/expert/controller.py';marker.parent.mkdir();marker.write_bytes(Path(c.__file__).read_bytes())…
+    |                                                                                    ^ E702
+635 |     registry=backend/'app/adapters/discovery/institution_registry.json';registry.parent.mkdir(parents=True);registry.write_text(json.…
+636 |     binaries=tmp_path/'binaries';binaries.mkdir()
+    |
+
+tests/test_local_pilot.py:634:134: E702 Multiple statements on one line (semicolon)
+    |
+632 | …pts/canary_discovery.py').read_bytes())
+633 | …wed.json';bindings.parent.mkdir(parents=True);bindings.write_bytes((current_backend/'evaluation/research/data/identity_bindings.revi…
+634 | …arent.mkdir();marker.write_bytes(Path(c.__file__).read_bytes());monkeypatch.setattr(c,'__file__',str(marker))
+    |                                                                 ^ E702
+635 | …';registry.parent.mkdir(parents=True);registry.write_text(json.dumps([{'name':row['university'],'homepage':'https://www.'+row['domai…
+636 | …
+    |
+
+tests/test_local_pilot.py:635:72: E702 Multiple statements on one line (semicolon)
+    |
+633 |     bindings=backend/'evaluation/research/data/identity_bindings.reviewed.json';bindings.parent.mkdir(parents=True);bindings.write_by…
+634 |     marker=backend/'evaluation/research/expert/controller.py';marker.parent.mkdir();marker.write_bytes(Path(c.__file__).read_bytes())…
+635 |     registry=backend/'app/adapters/discovery/institution_registry.json';registry.parent.mkdir(parents=True);registry.write_text(json.…
+    |                                                                        ^ E702
+636 |     binaries=tmp_path/'binaries';binaries.mkdir()
+637 |     for name in ('codex','sandbox-exec'):(binaries/name).write_text('synthetic binary, never executed')
+    |
+
+tests/test_local_pilot.py:635:108: E702 Multiple statements on one line (semicolon)
+    |
+633 |     bindings=backend/'evaluation/research/data/identity_bindings.reviewed.json';bindings.parent.mkdir(parents=True);bindings.write_by…
+634 |     marker=backend/'evaluation/research/expert/controller.py';marker.parent.mkdir();marker.write_bytes(Path(c.__file__).read_bytes())…
+635 |     registry=backend/'app/adapters/discovery/institution_registry.json';registry.parent.mkdir(parents=True);registry.write_text(json.…
+    |                                                                                                            ^ E702
+636 |     binaries=tmp_path/'binaries';binaries.mkdir()
+637 |     for name in ('codex','sandbox-exec'):(binaries/name).write_text('synthetic binary, never executed')
+    |
+
+tests/test_local_pilot.py:636:33: E702 Multiple statements on one line (semicolon)
+    |
+634 |     marker=backend/'evaluation/research/expert/controller.py';marker.parent.mkdir();marker.write_bytes(Path(c.__file__).read_bytes())…
+635 |     registry=backend/'app/adapters/discovery/institution_registry.json';registry.parent.mkdir(parents=True);registry.write_text(json.…
+636 |     binaries=tmp_path/'binaries';binaries.mkdir()
+    |                                 ^ E702
+637 |     for name in ('codex','sandbox-exec'):(binaries/name).write_text('synthetic binary, never executed')
+638 |     monkeypatch.setattr(p.shutil,'which',lambda name:str(binaries/name))
+    |
+
+tests/test_local_pilot.py:637:41: E701 Multiple statements on one line (colon)
+    |
+635 |     registry=backend/'app/adapters/discovery/institution_registry.json';registry.parent.mkdir(parents=True);registry.write_text(json.…
+636 |     binaries=tmp_path/'binaries';binaries.mkdir()
+637 |     for name in ('codex','sandbox-exec'):(binaries/name).write_text('synthetic binary, never executed')
+    |                                         ^ E701
+638 |     monkeypatch.setattr(p.shutil,'which',lambda name:str(binaries/name))
+639 |     venv=backend/'.venv/bin';venv.mkdir(parents=True);executable=venv/'python';executable.symlink_to(Path(sys.executable))
+    |
+
+tests/test_local_pilot.py:639:29: E702 Multiple statements on one line (semicolon)
+    |
+637 |     for name in ('codex','sandbox-exec'):(binaries/name).write_text('synthetic binary, never executed')
+638 |     monkeypatch.setattr(p.shutil,'which',lambda name:str(binaries/name))
+639 |     venv=backend/'.venv/bin';venv.mkdir(parents=True);executable=venv/'python';executable.symlink_to(Path(sys.executable))
+    |                             ^ E702
+640 |     manifest={'snapshot':str(source),'repository':str(source),'source_status':'','source_head':'synthetic','source_tree_sha256':'b'*6…
+641 |     mp=tmp_path/'prepare-manifest.json';p.store(mp,manifest)
+    |
+
+tests/test_local_pilot.py:639:54: E702 Multiple statements on one line (semicolon)
+    |
+637 |     for name in ('codex','sandbox-exec'):(binaries/name).write_text('synthetic binary, never executed')
+638 |     monkeypatch.setattr(p.shutil,'which',lambda name:str(binaries/name))
+639 |     venv=backend/'.venv/bin';venv.mkdir(parents=True);executable=venv/'python';executable.symlink_to(Path(sys.executable))
+    |                                                      ^ E702
+640 |     manifest={'snapshot':str(source),'repository':str(source),'source_status':'','source_head':'synthetic','source_tree_sha256':'b'*6…
+641 |     mp=tmp_path/'prepare-manifest.json';p.store(mp,manifest)
+    |
+
+tests/test_local_pilot.py:639:79: E702 Multiple statements on one line (semicolon)
+    |
+637 |     for name in ('codex','sandbox-exec'):(binaries/name).write_text('synthetic binary, never executed')
+638 |     monkeypatch.setattr(p.shutil,'which',lambda name:str(binaries/name))
+639 |     venv=backend/'.venv/bin';venv.mkdir(parents=True);executable=venv/'python';executable.symlink_to(Path(sys.executable))
+    |                                                                               ^ E702
+640 |     manifest={'snapshot':str(source),'repository':str(source),'source_status':'','source_head':'synthetic','source_tree_sha256':'b'*6…
+641 |     mp=tmp_path/'prepare-manifest.json';p.store(mp,manifest)
+    |
+
+tests/test_local_pilot.py:641:40: E702 Multiple statements on one line (semicolon)
+    |
+639 |     venv=backend/'.venv/bin';venv.mkdir(parents=True);executable=venv/'python';executable.symlink_to(Path(sys.executable))
+640 |     manifest={'snapshot':str(source),'repository':str(source),'source_status':'','source_head':'synthetic','source_tree_sha256':'b'*6…
+641 |     mp=tmp_path/'prepare-manifest.json';p.store(mp,manifest)
+    |                                        ^ E702
+642 |     full=tmp_path/'synthetic-full.json';p.store(full,{'status':'passed','suite':'full','steps':[{'exit_code':0} for _ in range(13)],'…
+643 |     pp=p.prepare(mp,Path(gate.plan['public_input']),Path(gate.plan['retained_stop']['path']),tmp_path/'prepared',selector_model='test…
+    |
+
+tests/test_local_pilot.py:642:40: E702 Multiple statements on one line (semicolon)
+    |
+640 |     manifest={'snapshot':str(source),'repository':str(source),'source_status':'','source_head':'synthetic','source_tree_sha256':'b'*6…
+641 |     mp=tmp_path/'prepare-manifest.json';p.store(mp,manifest)
+642 |     full=tmp_path/'synthetic-full.json';p.store(full,{'status':'passed','suite':'full','steps':[{'exit_code':0} for _ in range(13)],'…
+    |                                        ^ E702
+643 |     pp=p.prepare(mp,Path(gate.plan['public_input']),Path(gate.plan['retained_stop']['path']),tmp_path/'prepared',selector_model='test…
+644 |     prepared=p.read(pp)
+    |
+
+tests/test_local_pilot.py:649:35: E702 Multiple statements on one line (semicolon)
+    |
+647 |     assert str(Path.home()/'Documents/Codex') in prepared['sealed_roots'] and str(Path.home()/'.codex/sessions') in prepared['sealed_…
+648 |     assert not (pp.parent/'EXECUTION-START.original.json').exists()
+649 |     target=tmp_path/'other-python';target.write_text('never executed');executable.unlink();executable.symlink_to(target)
+    |                                   ^ E702
+650 |     with pytest.raises(ValueError,match='executable'):p.verify_binding(prepared)
+    |
+
+tests/test_local_pilot.py:649:71: E702 Multiple statements on one line (semicolon)
+    |
+647 |     assert str(Path.home()/'Documents/Codex') in prepared['sealed_roots'] and str(Path.home()/'.codex/sessions') in prepared['sealed_…
+648 |     assert not (pp.parent/'EXECUTION-START.original.json').exists()
+649 |     target=tmp_path/'other-python';target.write_text('never executed');executable.unlink();executable.symlink_to(target)
+    |                                                                       ^ E702
+650 |     with pytest.raises(ValueError,match='executable'):p.verify_binding(prepared)
+    |
+
+tests/test_local_pilot.py:649:91: E702 Multiple statements on one line (semicolon)
+    |
+647 |     assert str(Path.home()/'Documents/Codex') in prepared['sealed_roots'] and str(Path.home()/'.codex/sessions') in prepared['sealed_…
+648 |     assert not (pp.parent/'EXECUTION-START.original.json').exists()
+649 |     target=tmp_path/'other-python';target.write_text('never executed');executable.unlink();executable.symlink_to(target)
+    |                                                                                           ^ E702
+650 |     with pytest.raises(ValueError,match='executable'):p.verify_binding(prepared)
+    |
+
+tests/test_local_pilot.py:650:54: E701 Multiple statements on one line (colon)
+    |
+648 |     assert not (pp.parent/'EXECUTION-START.original.json').exists()
+649 |     target=tmp_path/'other-python';target.write_text('never executed');executable.unlink();executable.symlink_to(target)
+650 |     with pytest.raises(ValueError,match='executable'):p.verify_binding(prepared)
+    |                                                      ^ E701
+    |
+
+tests/test_local_pilot.py:664:45: E702 Multiple statements on one line (semicolon)
+    |
+662 | …     turn=adaptive_select(isolation,schema,output,prompt,**kwargs)
+663 | …     if prompt.get('source_views'):
+664 | …         value=copy.deepcopy(turn.answer);scope={key:None for key in p.REQUEST_FIELDS};scope['university']=public['cases'][0]['unive…
+    |                                           ^ E702
+665 | …         value['facts']=[{'id':'fact1','question':'OTHER','claim_key':'unmapped.admissions_info','value_json':'"Synthetic admissions…
+666 | …         output.write_text(json.dumps(value));return s.SelectorTurn(value,1,streams(value),'',0,None)
+    |
+
+tests/test_local_pilot.py:664:90: E702 Multiple statements on one line (semicolon)
+    |
+662 | …     turn=adaptive_select(isolation,schema,output,prompt,**kwargs)
+663 | …     if prompt.get('source_views'):
+664 | …         value=copy.deepcopy(turn.answer);scope={key:None for key in p.REQUEST_FIELDS};scope['university']=public['cases'][0]['unive…
+    |                                                                                        ^ E702
+665 | …         value['facts']=[{'id':'fact1','question':'OTHER','claim_key':'unmapped.admissions_info','value_json':'"Synthetic admissions…
+666 | …         output.write_text(json.dumps(value));return s.SelectorTurn(value,1,streams(value),'',0,None)
+    |
+
+tests/test_local_pilot.py:666:49: E702 Multiple statements on one line (semicolon)
+    |
+664 |             value=copy.deepcopy(turn.answer);scope={key:None for key in p.REQUEST_FIELDS};scope['university']=public['cases'][0]['uni…
+665 |             value['facts']=[{'id':'fact1','question':'OTHER','claim_key':'unmapped.admissions_info','value_json':'"Synthetic admissio…
+666 |             output.write_text(json.dumps(value));return s.SelectorTurn(value,1,streams(value),'',0,None)
+    |                                                 ^ E702
+667 |         return turn
+668 |     receipt=asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolation,select=evidence,run_tool=native_too…
+    |
+
+tests/test_local_pilot.py:671:43: E702 Multiple statements on one line (semicolon)
+    |
+669 |     assert receipt['trace']['proposals'] and receipt['complete_eligible'] is False
+670 |     p.verify_admitted_outputs(gate.root,[],[receipt])
+671 |     legacy=copy.deepcopy(receipt['trace']);legacy['max_elapsed_ms']=120000;legacy.pop('timing_policy');legacy.pop('protective_wall_ms…
+    |                                           ^ E702
+672 |     native_legacy=ExpertTrace.model_validate(legacy).model_dump(mode='json')
+673 |     assert 'timing_policy' not in native_legacy and 'protective_wall_ms' not in native_legacy
+    |
+
+tests/test_local_pilot.py:671:75: E702 Multiple statements on one line (semicolon)
+    |
+669 |     assert receipt['trace']['proposals'] and receipt['complete_eligible'] is False
+670 |     p.verify_admitted_outputs(gate.root,[],[receipt])
+671 |     legacy=copy.deepcopy(receipt['trace']);legacy['max_elapsed_ms']=120000;legacy.pop('timing_policy');legacy.pop('protective_wall_ms…
+    |                                                                           ^ E702
+672 |     native_legacy=ExpertTrace.model_validate(legacy).model_dump(mode='json')
+673 |     assert 'timing_policy' not in native_legacy and 'protective_wall_ms' not in native_legacy
+    |
+
+tests/test_local_pilot.py:671:103: E702 Multiple statements on one line (semicolon)
+    |
+669 |     assert receipt['trace']['proposals'] and receipt['complete_eligible'] is False
+670 |     p.verify_admitted_outputs(gate.root,[],[receipt])
+671 |     legacy=copy.deepcopy(receipt['trace']);legacy['max_elapsed_ms']=120000;legacy.pop('timing_policy');legacy.pop('protective_wall_ms…
+    |                                                                                                       ^ E702
+672 |     native_legacy=ExpertTrace.model_validate(legacy).model_dump(mode='json')
+673 |     assert 'timing_policy' not in native_legacy and 'protective_wall_ms' not in native_legacy
+    |
+
+tests/test_local_pilot.py:674:49: E702 Multiple statements on one line (semicolon)
+    |
+672 |     native_legacy=ExpertTrace.model_validate(legacy).model_dump(mode='json')
+673 |     assert 'timing_policy' not in native_legacy and 'protective_wall_ms' not in native_legacy
+674 |     root=gate.root/'private/experts/A/groningen';earlier=root/'selector-0001.original.json';original=earlier.read_bytes();earlier.wri…
+    |                                                 ^ E702
+675 |     with pytest.raises(ValueError,match='selector original changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+676 |     earlier.write_bytes(original);raw=next((root/'raw').glob('*.json'));before=raw.read_bytes();raw.write_text('{}')
+    |
+
+tests/test_local_pilot.py:674:92: E702 Multiple statements on one line (semicolon)
+    |
+672 |     native_legacy=ExpertTrace.model_validate(legacy).model_dump(mode='json')
+673 |     assert 'timing_policy' not in native_legacy and 'protective_wall_ms' not in native_legacy
+674 |     root=gate.root/'private/experts/A/groningen';earlier=root/'selector-0001.original.json';original=earlier.read_bytes();earlier.wri…
+    |                                                                                            ^ E702
+675 |     with pytest.raises(ValueError,match='selector original changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+676 |     earlier.write_bytes(original);raw=next((root/'raw').glob('*.json'));before=raw.read_bytes();raw.write_text('{}')
+    |
+
+tests/test_local_pilot.py:674:122: E702 Multiple statements on one line (semicolon)
+    |
+672 |     native_legacy=ExpertTrace.model_validate(legacy).model_dump(mode='json')
+673 |     assert 'timing_policy' not in native_legacy and 'protective_wall_ms' not in native_legacy
+674 |     root=gate.root/'private/experts/A/groningen';earlier=root/'selector-0001.original.json';original=earlier.read_bytes();earlier.wri…
+    |                                                                                                                          ^ E702
+675 |     with pytest.raises(ValueError,match='selector original changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+676 |     earlier.write_bytes(original);raw=next((root/'raw').glob('*.json'));before=raw.read_bytes();raw.write_text('{}')
+    |
+
+tests/test_local_pilot.py:675:69: E701 Multiple statements on one line (colon)
+    |
+673 |     assert 'timing_policy' not in native_legacy and 'protective_wall_ms' not in native_legacy
+674 |     root=gate.root/'private/experts/A/groningen';earlier=root/'selector-0001.original.json';original=earlier.read_bytes();earlier.wri…
+675 |     with pytest.raises(ValueError,match='selector original changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+    |                                                                     ^ E701
+676 |     earlier.write_bytes(original);raw=next((root/'raw').glob('*.json'));before=raw.read_bytes();raw.write_text('{}')
+677 |     with pytest.raises(ValueError,match='expert raw changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+    |
+
+tests/test_local_pilot.py:676:34: E702 Multiple statements on one line (semicolon)
+    |
+674 |     root=gate.root/'private/experts/A/groningen';earlier=root/'selector-0001.original.json';original=earlier.read_bytes();earlier.wri…
+675 |     with pytest.raises(ValueError,match='selector original changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+676 |     earlier.write_bytes(original);raw=next((root/'raw').glob('*.json'));before=raw.read_bytes();raw.write_text('{}')
+    |                                  ^ E702
+677 |     with pytest.raises(ValueError,match='expert raw changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+678 |     raw.write_bytes(before);p.verify_admitted_outputs(gate.root,[],[receipt])
+    |
+
+tests/test_local_pilot.py:676:72: E702 Multiple statements on one line (semicolon)
+    |
+674 |     root=gate.root/'private/experts/A/groningen';earlier=root/'selector-0001.original.json';original=earlier.read_bytes();earlier.wri…
+675 |     with pytest.raises(ValueError,match='selector original changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+676 |     earlier.write_bytes(original);raw=next((root/'raw').glob('*.json'));before=raw.read_bytes();raw.write_text('{}')
+    |                                                                        ^ E702
+677 |     with pytest.raises(ValueError,match='expert raw changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+678 |     raw.write_bytes(before);p.verify_admitted_outputs(gate.root,[],[receipt])
+    |
+
+tests/test_local_pilot.py:676:96: E702 Multiple statements on one line (semicolon)
+    |
+674 |     root=gate.root/'private/experts/A/groningen';earlier=root/'selector-0001.original.json';original=earlier.read_bytes();earlier.wri…
+675 |     with pytest.raises(ValueError,match='selector original changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+676 |     earlier.write_bytes(original);raw=next((root/'raw').glob('*.json'));before=raw.read_bytes();raw.write_text('{}')
+    |                                                                                                ^ E702
+677 |     with pytest.raises(ValueError,match='expert raw changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+678 |     raw.write_bytes(before);p.verify_admitted_outputs(gate.root,[],[receipt])
+    |
+
+tests/test_local_pilot.py:677:62: E701 Multiple statements on one line (colon)
+    |
+675 |     with pytest.raises(ValueError,match='selector original changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+676 |     earlier.write_bytes(original);raw=next((root/'raw').glob('*.json'));before=raw.read_bytes();raw.write_text('{}')
+677 |     with pytest.raises(ValueError,match='expert raw changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+    |                                                              ^ E701
+678 |     raw.write_bytes(before);p.verify_admitted_outputs(gate.root,[],[receipt])
+679 |     summary=p.read(root/'tool-0001.summary.json')
+    |
+
+tests/test_local_pilot.py:678:28: E702 Multiple statements on one line (semicolon)
+    |
+676 |     earlier.write_bytes(original);raw=next((root/'raw').glob('*.json'));before=raw.read_bytes();raw.write_text('{}')
+677 |     with pytest.raises(ValueError,match='expert raw changed'):p.verify_admitted_outputs(gate.root,[],[receipt])
+678 |     raw.write_bytes(before);p.verify_admitted_outputs(gate.root,[],[receipt])
+    |                            ^ E702
+679 |     summary=p.read(root/'tool-0001.summary.json')
+680 |     second_summary=run_tool(plan(case_id='groningen',log_prefix='groningen',official_domains=['rug.nl'],wall_elapsed_before_ms=max(10…
+    |
+
+tests/test_local_pilot.py:680:271: E702 Multiple statements on one line (semicolon)
+    |
+678 | …
+679 | …
+680 | …ool':'fetcher','url':'https://rug.nl/admissions'}]),root/'raw');row=second_summary['actions'][0]
+    |                                                                 ^ E702
+681 | …log_path'],raw_log_sha256=row['raw_log_sha256'],request=row['request'],final_url=row['final_url'],elapsed_ms=row['elapsed_ms'],elaps…
+682 | …
+    |
+
+tests/test_local_pilot.py:681:57: E702 Multiple statements on one line (semicolon)
+    |
+679 |     summary=p.read(root/'tool-0001.summary.json')
+680 |     second_summary=run_tool(plan(case_id='groningen',log_prefix='groningen',official_domains=['rug.nl'],wall_elapsed_before_ms=max(10…
+681 |     second=copy.deepcopy(receipt['trace']['actions'][0]);second.update(step=2,at=row['at'],observed_before='Read the source again.',o…
+    |                                                         ^ E702
+682 |     full_trace=copy.deepcopy(receipt['trace']);full_trace['actions'].append(second);full_trace['ended_at']=datetime.now(UTC).isoforma…
+683 |     validate_trace(full_trace,packet,logs_dir=root/'raw')
+    |
+
+tests/test_local_pilot.py:682:47: E702 Multiple statements on one line (semicolon)
+    |
+680 |     second_summary=run_tool(plan(case_id='groningen',log_prefix='groningen',official_domains=['rug.nl'],wall_elapsed_before_ms=max(10…
+681 |     second=copy.deepcopy(receipt['trace']['actions'][0]);second.update(step=2,at=row['at'],observed_before='Read the source again.',o…
+682 |     full_trace=copy.deepcopy(receipt['trace']);full_trace['actions'].append(second);full_trace['ended_at']=datetime.now(UTC).isoforma…
+    |                                               ^ E702
+683 |     validate_trace(full_trace,packet,logs_dir=root/'raw')
+684 |     raw_second=root/'raw'/row['raw_log_path'];value=p.read(raw_second);value['wall_elapsed_ms_before']=0;raw_second.write_text(json.d…
+    |
+
+tests/test_local_pilot.py:682:84: E702 Multiple statements on one line (semicolon)
+    |
+680 |     second_summary=run_tool(plan(case_id='groningen',log_prefix='groningen',official_domains=['rug.nl'],wall_elapsed_before_ms=max(10…
+681 |     second=copy.deepcopy(receipt['trace']['actions'][0]);second.update(step=2,at=row['at'],observed_before='Read the source again.',o…
+682 |     full_trace=copy.deepcopy(receipt['trace']);full_trace['actions'].append(second);full_trace['ended_at']=datetime.now(UTC).isoforma…
+    |                                                                                    ^ E702
+683 |     validate_trace(full_trace,packet,logs_dir=root/'raw')
+684 |     raw_second=root/'raw'/row['raw_log_path'];value=p.read(raw_second);value['wall_elapsed_ms_before']=0;raw_second.write_text(json.d…
+    |
+
+tests/test_local_pilot.py:682:137: E702 Multiple statements on one line (semicolon)
+    |
+680 | …n',official_domains=['rug.nl'],wall_elapsed_before_ms=max(100,summary['final']['wall_elapsed_ms']),resume_summary=summary,actions=[{…
+681 | …ep=2,at=row['at'],observed_before='Read the source again.',observed_from_step=1,action='Read the source again.',raw_log_path=row['ra…
+682 | …nd(second);full_trace['ended_at']=datetime.now(UTC).isoformat();packet=p.read(root/'packet.original.json')
+    |                                                                 ^ E702
+683 | …
+684 | …lue['wall_elapsed_ms_before']=0;raw_second.write_text(json.dumps(value));full_trace['actions'][1]['raw_log_sha256']=p.sha(raw_second)
+    |
+
+tests/test_local_pilot.py:684:46: E702 Multiple statements on one line (semicolon)
+    |
+682 |     full_trace=copy.deepcopy(receipt['trace']);full_trace['actions'].append(second);full_trace['ended_at']=datetime.now(UTC).isoforma…
+683 |     validate_trace(full_trace,packet,logs_dir=root/'raw')
+684 |     raw_second=root/'raw'/row['raw_log_path'];value=p.read(raw_second);value['wall_elapsed_ms_before']=0;raw_second.write_text(json.d…
+    |                                              ^ E702
+685 |     with pytest.raises(ValueError,match='between actions'):validate_trace(full_trace,packet,logs_dir=root/'raw')
+686 |     with pytest.raises(ValueError,match='structured'):_controller_budget(ExpertTrace.model_validate(legacy),Action.model_validate(leg…
+    |
+
+tests/test_local_pilot.py:684:71: E702 Multiple statements on one line (semicolon)
+    |
+682 |     full_trace=copy.deepcopy(receipt['trace']);full_trace['actions'].append(second);full_trace['ended_at']=datetime.now(UTC).isoforma…
+683 |     validate_trace(full_trace,packet,logs_dir=root/'raw')
+684 |     raw_second=root/'raw'/row['raw_log_path'];value=p.read(raw_second);value['wall_elapsed_ms_before']=0;raw_second.write_text(json.d…
+    |                                                                       ^ E702
+685 |     with pytest.raises(ValueError,match='between actions'):validate_trace(full_trace,packet,logs_dir=root/'raw')
+686 |     with pytest.raises(ValueError,match='structured'):_controller_budget(ExpertTrace.model_validate(legacy),Action.model_validate(leg…
+    |
+
+tests/test_local_pilot.py:684:105: E702 Multiple statements on one line (semicolon)
+    |
+682 |     full_trace=copy.deepcopy(receipt['trace']);full_trace['actions'].append(second);full_trace['ended_at']=datetime.now(UTC).isoforma…
+683 |     validate_trace(full_trace,packet,logs_dir=root/'raw')
+684 |     raw_second=root/'raw'/row['raw_log_path'];value=p.read(raw_second);value['wall_elapsed_ms_before']=0;raw_second.write_text(json.d…
+    |                                                                                                         ^ E702
+685 |     with pytest.raises(ValueError,match='between actions'):validate_trace(full_trace,packet,logs_dir=root/'raw')
+686 |     with pytest.raises(ValueError,match='structured'):_controller_budget(ExpertTrace.model_validate(legacy),Action.model_validate(leg…
+    |
+
+tests/test_local_pilot.py:684:146: E702 Multiple statements on one line (semicolon)
+    |
+682 | …);full_trace['ended_at']=datetime.now(UTC).isoformat();packet=p.read(root/'packet.original.json')
+683 | …
+684 | …_elapsed_ms_before']=0;raw_second.write_text(json.dumps(value));full_trace['actions'][1]['raw_log_sha256']=p.sha(raw_second)
+    |                                                                 ^ E702
+685 | …ce,packet,logs_dir=root/'raw')
+686 | …ce.model_validate(legacy),Action.model_validate(legacy['actions'][0]),{'tool_policy':['malformed']},'independent_full_budget')
+    |
+
+tests/test_local_pilot.py:685:59: E701 Multiple statements on one line (colon)
+    |
+683 |     validate_trace(full_trace,packet,logs_dir=root/'raw')
+684 |     raw_second=root/'raw'/row['raw_log_path'];value=p.read(raw_second);value['wall_elapsed_ms_before']=0;raw_second.write_text(json.d…
+685 |     with pytest.raises(ValueError,match='between actions'):validate_trace(full_trace,packet,logs_dir=root/'raw')
+    |                                                           ^ E701
+686 |     with pytest.raises(ValueError,match='structured'):_controller_budget(ExpertTrace.model_validate(legacy),Action.model_validate(leg…
+687 |     second_case=public['cases'][1]
+    |
+
+tests/test_local_pilot.py:686:54: E701 Multiple statements on one line (colon)
+    |
+684 |     raw_second=root/'raw'/row['raw_log_path'];value=p.read(raw_second);value['wall_elapsed_ms_before']=0;raw_second.write_text(json.d…
+685 |     with pytest.raises(ValueError,match='between actions'):validate_trace(full_trace,packet,logs_dir=root/'raw')
+686 |     with pytest.raises(ValueError,match='structured'):_controller_budget(ExpertTrace.model_validate(legacy),Action.model_validate(leg…
+    |                                                      ^ E701
+687 |     second_case=public['cases'][1]
+688 |     def bad(isolation,schema,output,prompt,**kwargs):
+    |
+
+tests/test_local_pilot.py:691:45: E702 Multiple statements on one line (semicolon)
+    |
+689 |         turn=evidence(isolation,schema,output,prompt,**kwargs)
+690 |         if prompt.get('source_views'):
+691 |             value=copy.deepcopy(turn.answer);value['facts'][0]['scope']['university']=second_case['university'];value['facts'][0]['qu…
+    |                                             ^ E702
+692 |         return turn
+693 |     with pytest.raises(ValueError):asyncio.run(p.collect_expert(gate,public,second_case,'B',isolate=FakeIsolation,select=bad,run_tool…
+    |
+
+tests/test_local_pilot.py:691:112: E702 Multiple statements on one line (semicolon)
+    |
+689 |         turn=evidence(isolation,schema,output,prompt,**kwargs)
+690 |         if prompt.get('source_views'):
+691 |             value=copy.deepcopy(turn.answer);value['facts'][0]['scope']['university']=second_case['university'];value['facts'][0]['qu…
+    |                                                                                                                ^ E702
+692 |         return turn
+693 |     with pytest.raises(ValueError):asyncio.run(p.collect_expert(gate,public,second_case,'B',isolate=FakeIsolation,select=bad,run_tool…
+    |
+
+tests/test_local_pilot.py:691:165: E702 Multiple statements on one line (semicolon)
+    |
+689 | …
+690 | …
+691 | …iversity'];value['facts'][0]['quotation']='Not in saved source';output.write_text(json.dumps(value));return s.SelectorTurn(value,1,s…
+    |                                                                 ^ E702
+692 | …
+693 | …akeIsolation,select=bad,run_tool=native_tool))
+    |
+
+tests/test_local_pilot.py:691:202: E702 Multiple statements on one line (semicolon)
+    |
+689 | …
+690 | …
+691 | …on']='Not in saved source';output.write_text(json.dumps(value));return s.SelectorTurn(value,1,streams(value),'',0,None)
+    |                                                                 ^ E702
+692 | …
+693 | …ve_tool))
+    |
+
+tests/test_local_pilot.py:693:35: E701 Multiple statements on one line (colon)
+    |
+691 |             value=copy.deepcopy(turn.answer);value['facts'][0]['scope']['university']=second_case['university'];value['facts'][0]['qu…
+692 |         return turn
+693 |     with pytest.raises(ValueError):asyncio.run(p.collect_expert(gate,public,second_case,'B',isolate=FakeIsolation,select=bad,run_tool…
+    |                                   ^ E701
+694 |     failed=p.read(gate.root/'private/experts/B/delft/receipt.json');assert failed['complete_eligible'] is False and failed['last_acce…
+    |
+
+tests/test_local_pilot.py:694:68: E702 Multiple statements on one line (semicolon)
+    |
+692 |         return turn
+693 |     with pytest.raises(ValueError):asyncio.run(p.collect_expert(gate,public,second_case,'B',isolate=FakeIsolation,select=bad,run_tool…
+694 |     failed=p.read(gate.root/'private/experts/B/delft/receipt.json');assert failed['complete_eligible'] is False and failed['last_acce…
+    |                                                                    ^ E702
+    |
+
+Found 71 errors (2 fixed, 69 remaining).

@@ -1,0 +1,86 @@
+{
+  "status": "DESIGN_CONTRACT_READY_NEW_ROUTE_UNREVIEWED_LIVE_NOT_ADMITTED",
+  "algorithm": {
+    "clock": "same_policy",
+    "max_fetcher_invocations": 60,
+    "max_search_attempts": 6,
+    "max_wall_ms": 120000,
+    "physical_capture_separately_pinned": true
+  },
+  "independent_expert": {
+    "comparison_mode": "independent_full_budget",
+    "required_selected_mode": "expert_wall_only",
+    "max_fetcher_invocations": 60,
+    "max_search_attempts": 6,
+    "active_elapsed_cap": null,
+    "protective_wall_ms": 900000,
+    "thinking_excluded_from_research_elapsed": true,
+    "thinking_counts_toward_protective_wall": true,
+    "no_extra_55_or_120_second_cap": true
+  },
+  "clock_binding": [
+    "packet declares explicit selected expert policy and references separately unchanged algorithm budget/capture",
+    "trace/raw tool_policy/raw budgets/summary/resume agree with explicit selected mode and nullable active cap",
+    "original per-case wall anchor and deadline retained; before each selector/source dispatch compute remaining wall, never reset by turns/resume",
+    "legacy absent mode retains strict120 and selector55; null active cap accepted only in explicit wall-only policy",
+    "strict non-bool integer nonnegative read/query/elapsed counters; exact per-case increasing raw numbering/hash/cumulative equations"
+  ],
+  "adaptive_acceptance": [
+    "one real completed model turn selects next action or submits journal delta",
+    "original JSONL lifecycle and exact last-output JSON are preserved, parsed and validated by native selector_answer",
+    "new immutable journal candidate is re-expanded using all current-case recorded actions, complete trace/raw validator and every-fact citation validator",
+    "award literal subject checked in independently validated fact-local source context",
+    "only after all gates atomically save accepted journal snapshot and append accepted event"
+  ],
+  "receipt_derived_complete": [
+    "successful final submit model original stream/output matches",
+    "latest whole journal passes all acceptance gates against all recorded actions",
+    "processed_through_action_count equals number of recorded actions",
+    "source/runtime/isolation/clock/gate provenance is pinned and admitted, not supplied booleans",
+    "receipt keeps all current-case original streams, raw actions, acceptance/rejection events and journal hashes"
+  ],
+  "partial_unrun": [
+    "failed final model/action keeps prior accepted snapshot as prior snapshot, not final submit",
+    "attempted model with zero source actions is partial/no-source, not unrun or fabricated min-one ExpertTrace",
+    "queue cases with no process/model/source attempt are unrun with exact original reason",
+    "local cap/deadline/robots/access/website failures give unknown or inaccessible, never absence",
+    "global refusal closes collection UNSCORED and leaves remaining queue unrun; no retry/switch/purchase/score"
+  ],
+  "global_gate": [
+    "new cycle gate is distinct from immutable historical STOP and requires explicit owner approval",
+    "check gate before each process/model/source reservation and after each result",
+    "provider refusal in physical budget/raw even subprocess exit0 closes gate before any later queue work",
+    "model error/refusal/nonzero/incomplete turn closes gate according to selected first-refusal route; originals retained",
+    "original typed reason and HTTP status None retained; no fabricated429",
+    "strict route scopes both MCP retry flagsFalse then restores, without changing public defaults; concurrency restore is isolated",
+    "legacy TRANSPORT continuation tests remain unchanged under absent selected mode"
+  ],
+  "fresh_runtime_admission": [
+    "exact executable paths/hashes and future observed CLI support pinned; no inference from installation metadata",
+    "separate blind workspace and complete real sealed roots; fresh commands native disabled features/rules/memory/tools",
+    "real harmless allowed/denied OS sentinels and two real completed tool-free neutral turns after approval",
+    "same public canonical original10 identities/requests across algorithm/expert outputs; no answer/label/corpus copying",
+    "fresh post-integration source full-gate and executable/protocol pins before university/model pilot"
+  ],
+  "seal_sequence": [
+    "collection-only no labels or scoring",
+    "pin each case originals/counters/status/journal/source provenance",
+    "seal all original10 outcomes including partial/unrun before private projection/labels",
+    "real refusal leaves an UNSCORED immutable closure and forbids downstream score"
+  ],
+  "proof": {
+    "cases": 12,
+    "PASS": 12,
+    "RED": 0,
+    "network_calls": 0,
+    "model_CLI_processes": 0,
+    "real_Fetcher_HTTP": 0,
+    "real_provider": 0,
+    "qualification": "Current source contracts only; no proposed route implementation/runtime/live admission proof"
+  },
+  "legacy_serialization_gate": [
+    "actual absent-mode legacy model_dump bytes and canonical trace/journal/packet digests equal preserved original fixtures",
+    "adding default clock fields must not alter old serialized keys; no regenerated fixture acceptance",
+    "cross-mode packet/raw/trace/resume rejected; independent wall-only mode cannot be labelled baseline_intervention"
+  ]
+}

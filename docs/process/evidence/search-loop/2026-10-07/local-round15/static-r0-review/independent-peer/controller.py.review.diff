@@ -1,0 +1,185 @@
+--- immutable-current/backend/evaluation/research/expert/controller.py
++++ immutable-r0/backend/evaluation/research/expert/controller.py
+@@ -116,9 +116,9 @@
+     return value
+ 
+ 
+-def _action_deadline(plan: dict[str, Any], max_ms: int) -> int | None:
++def _action_deadline(plan: dict[str, Any], max_ms: int | None) -> int | None:
+     value = plan.get("action_deadline_ms")
+-    if value is not None and (type(value) is not int or not 1 <= value <= max_ms):
++    if value is not None and (type(value) is not int or not (max_ms is not None and 1 <= value <= max_ms)):
+         raise ValueError("action_deadline_ms must be an integer from 1 to max_ms")
+     return value
+ 
+@@ -126,7 +126,7 @@
+ @dataclass
+ class Ledger:
+     max_calls: int
+-    max_ms: int
++    max_ms: int | None
+     calls: int = 0
+     ms: int = 0
+     entries: list[dict[str, Any]] = field(default_factory=list)
+@@ -139,7 +139,7 @@
+         self.search_queries += search_queries
+         within = (
+             self.calls <= self.max_calls
+-            and self.ms <= self.max_ms
++            and (self.max_ms is None or self.ms <= self.max_ms)
+             and (self.max_search_queries is None or self.search_queries <= self.max_search_queries)
+         )
+         return "same_policy" if within else "outside_policy"
+@@ -238,6 +238,7 @@
+             numbered.append((int(match[1]), path))
+     state: dict[str, Any] = {}
+     previous = (0, 0, 0)
++    previous_wall = 0
+     provider_stopped = False
+     for _number, path in sorted(numbered):
+         data = path.read_bytes()
+@@ -252,6 +253,16 @@
+                 raise ValueError("Existing log case/provider differs from this run")
+             if not (record.get("tool_policy") or {}).get("strict_budget"):
+                 raise ValueError("Cannot resume legacy logs as a strict run")
++            if record["tool_policy"].get("timing_policy", "legacy_active") != plan.get("timing_policy", "legacy_active"):
++                raise ValueError("Resume timing policy differs from recorded policy")
++            if plan.get("timing_policy") == "expert_wall_only" and (record["tool_policy"].get("protective_wall_ms") != 900_000 or record["tool_policy"].get("thinking_in_tool_ms") is not False):
++                raise ValueError("Resume protective wall policy changed")
++            if plan.get("timing_policy") == "expert_wall_only":
++                wb = _integer(record, "wall_elapsed_ms_before")
++                wa = _integer(record, "wall_elapsed_ms_cumulative")
++                if not previous_wall <= wb <= wa <= 900_000:
++                    raise ValueError("Protective wall raw counters invalid/decrease")
++                previous_wall = wa
+             if record["tool_policy"].get("budget_origin") != budget_origin:
+                 raise ValueError("Resume budget_origin differs from recorded policy")
+             for key, plan_key in (
+@@ -381,20 +392,32 @@
+         raise ValueError("Strict expert runs require configured exa or exa_mcp")
+     if plan.get("provider", provider_name) != provider_name:
+         raise ValueError("Plan provider differs from the configured provider")
+-    max_calls, max_ms = _integer(plan, "max_calls"), _integer(plan, "max_ms")
++    timing_policy = plan.get("timing_policy", "legacy_active")
++    if timing_policy not in {"legacy_active", "expert_wall_only"}:
++        raise ValueError("Unknown expert timing policy")
++    wall_only = timing_policy == "expert_wall_only"
++    if wall_only and (not strict or plan.get("budget_origin") != "independent_full_budget" or plan.get("max_ms") is not None or type(plan.get("protective_wall_ms")) is not int or plan.get("protective_wall_ms") != 900_000 or "max_ms" not in plan or plan.get("max_calls") != 60 or plan.get("max_search_queries") != 6):
++        raise ValueError("Wall-only requires explicit independent strict60/6 policy, null active cap and900s wall")
++    wall_before = _integer(plan, "wall_elapsed_before_ms") if wall_only else 0
++    if wall_only and not 0 <= wall_before < 900_000:
++        raise ValueError("Original protective wall exhausted or invalid")
++    max_calls = _integer(plan, "max_calls")
++    max_ms = None if wall_only else _integer(plan, "max_ms")
+     max_queries = _integer(plan, "max_search_queries", STRICT_MAX_SEARCH_QUERIES)
+-    if max_calls < 1 or max_ms < 1 or max_queries < 1:
++    if max_calls < 1 or (max_ms is not None and max_ms < 1) or max_queries < 1:
+         raise ValueError("Run budgets must be positive")
+     action_deadline_ms = _action_deadline(plan, max_ms)
+     if strict and (
+         max_calls > STRICT_MAX_CALLS
+-        or max_ms > STRICT_MAX_MS
++        or (max_ms is not None and max_ms > STRICT_MAX_MS)
+         or max_queries > STRICT_MAX_SEARCH_QUERIES
+     ):
+         raise ValueError("Strict run budget exceeds 60 Fetcher calls, 120 seconds or six queries")
+     exploration = plan.get("exploration_mode", "same_policy")
+     if exploration not in {"same_policy", "outside_policy"}:
+         raise ValueError("exploration_mode must be same_policy or outside_policy")
++    if wall_only and exploration != "same_policy":
++        raise ValueError("Independent wall route cannot expand read/query caps")
+     origin = plan.get(
+         "budget_origin", "independent_full_budget" if strict else "baseline_intervention"
+     )
+@@ -416,6 +439,8 @@
+     number, state = _existing_state(
+         plan, logs_dir, prefix, provider_name, strict, origin, action_deadline_ms
+     )
++    if wall_only and wall_before < int(state.get("wall_elapsed_ms_cumulative", 0)):
++        raise ValueError("Protective wall cannot reset on resume")
+     initial = {
+         key: _integer(plan, key, int(state.get(record_key, 0)))
+         for key, record_key in (
+@@ -456,6 +481,8 @@
+         "max_elapsed_ms": max_ms,
+         "budget_origin": origin,
+     }
++    if wall_only:
++        policy.update(timing_policy=timing_policy, protective_wall_ms=900_000, thinking_in_tool_ms=False)
+     if action_deadline_ms is not None:
+         policy["action_deadline_ms"] = action_deadline_ms
+     summary: dict[str, Any] = {
+@@ -472,6 +499,8 @@
+     if action_deadline_ms is not None:
+         summary["action_deadline_ms"] = action_deadline_ms
+     run_began = monotonic()
++    if wall_only:
++        summary.update(timing_policy=timing_policy, protective_wall_ms=900_000, wall_elapsed_before_ms=wall_before)
+     for kind, items in (("replay", plan.get("replay", [])), ("actions", plan.get("actions", []))):
+         for item in items:
+             action: dict[str, Any] = (
+@@ -505,6 +534,8 @@
+                     "max_search_queries": max_queries if strict else None,
+                 },
+             }
++            if wall_only:
++                record["wall_elapsed_ms_before"] = wall_before + math.ceil((monotonic() - run_began) * 1000)
+             with _reserve_log(logs_dir, name, record) as output:
+                 refusal: str | None = None
+                 if tool == "fetcher":
+@@ -538,7 +569,9 @@
+                         initial["start_ms"] + math.ceil((monotonic() - run_began) * 1000),
+                     )
+                 exhausted = strict and (
+-                    action_start_ms >= ledger.max_ms
++                    (wall_only and wall_before + math.ceil((monotonic() - run_began) * 1000) >= 900_000)
++                    or
++                    (ledger.max_ms is not None and action_start_ms >= ledger.max_ms)
+                     or (tool == "fetcher" and ledger.calls >= ledger.max_calls)
+                     or (tool == "search_provider" and ledger.search_queries >= max_queries)
+                 )
+@@ -563,7 +596,7 @@
+                     calls = int(tool == "fetcher")
+                     queries = int(tool == "search_provider")
+                     action_budget_ms = (
+-                        max_ms if exploration == "outside_policy" else max_ms - action_start_ms
++                        max(1, 900_000 - wall_before - math.ceil((monotonic() - run_began) * 1000)) if wall_only else max_ms if exploration == "outside_policy" else max_ms - action_start_ms
+                     )
+                     navigation_limited = (
+                         strict
+@@ -576,7 +609,7 @@
+                         )
+                     try:
+                         async with asyncio.timeout(
+-                            max(1, action_budget_ms) / 1000 if strict else None
++                            max(1, action_budget_ms) / 1000 if strict and action_budget_ms is not None else None
+                         ):
+                             if tool == "fetcher":
+                                 response = await _fetch(get, url)
+@@ -638,7 +671,7 @@
+                                 assert action_deadline_ms is not None
+                                 deadline_floor = action_deadline_ms
+                             else:
+-                                deadline_floor = max_ms
++                                deadline_floor = max_ms or 0
+                     except Exception as exc:
+                         record["response"] = _failure(
+                             exc, provider_name=provider_name if tool == "search_provider" else None
+@@ -673,6 +706,8 @@
+                     policy_mode=mode,
+                     stop_reason=stop_reason,
+                 )
++                if wall_only:
++                    record["wall_elapsed_ms_cumulative"] = wall_before + math.ceil((monotonic() - run_began) * 1000)
+                 name, sha = _write_log(logs_dir, name, record, output=output)
+                 summary["raw_logs"][name] = sha
+                 number += 1
+@@ -702,6 +737,8 @@
+         "stop_reason": stop_reason,
+         "next_log_number": number,
+     }
++    if wall_only:
++        summary["final"]["wall_elapsed_ms"] = wall_before + math.ceil((monotonic() - run_began) * 1000)
+     return summary
+ 
+ 

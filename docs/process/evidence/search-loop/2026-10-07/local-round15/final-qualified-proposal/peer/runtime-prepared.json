@@ -1,0 +1,63 @@
+{
+  "time": "2026-10-08T08:10:55.028851+00:00",
+  "author_manifest": {
+    "sha256": "f4867ac3befe294c650e7e5e7e972470ddb9f491d82e2a1214d7d5cd6392196b",
+    "bytes": 20008
+  },
+  "selected_files": 127,
+  "selected_bytes": 1975126,
+  "author_source_manifest": {
+    "sha256": "32cab0b45c4ece6f65150074a664cada52a7d907c54191e2a076ddf99d8bcfab",
+    "bytes": 2270
+  },
+  "source_files": {
+    "tests/test_local_pilot.py": {
+      "sha256": "2efdb2de5dbf517c5f87f199dcbadd2781f26947bc328c802632e2b607195762",
+      "bytes": 41818
+    },
+    "evaluation/research/local_pilot.py": {
+      "sha256": "c7ddc2c68ef6b149e84308ad3016bb75a9087bc1099324558acabc4a85d20d10",
+      "bytes": 65752
+    },
+    "evaluation/research/pilot_admission.py": {
+      "sha256": "ea4ff281ad038b2321bc9851c0d6f7c7d7704603d79a5ff2ec4c5534f4a55bca",
+      "bytes": 23615
+    },
+    "evaluation/research/expert/controller.py": {
+      "sha256": "aefe7e1f883e1a70449cfa4add659649b7c6108162c40c0efeb091097167fc09",
+      "bytes": 46899
+    },
+    "evaluation/research/expert/models.py": {
+      "sha256": "4800d4aa9c6e13546cdfba7410bb480aea60117193172e0c147d21226c4ef39a",
+      "bytes": 45201
+    },
+    "evaluation/research/expert/selector.py": {
+      "sha256": "d9cbefb4780648a8cd0ee91708202db5e2f9dc87997f282c3b6717d7f6ca0af1",
+      "bytes": 5236
+    }
+  },
+  "primary_before": {
+    "backend/evaluation/research/expert/controller.py": {
+      "sha256": "5c081ac3ec25950bccdedf9a6e63c424e37fded2c48bbd6ed60fc23c434284cc",
+      "bytes": 41839
+    },
+    "backend/evaluation/research/expert/models.py": {
+      "sha256": "7e4a396322855ed1e0a790576540c840e81a0ac1342f3151d6f735accfddd2ea",
+      "bytes": 41498
+    },
+    "backend/evaluation/research/expert/selector.py": {
+      "sha256": "17bfe9fb196cec0d2d4eead2575f9bd57a0a01974a1b3a8c1f8a3e4937e501e6",
+      "bytes": 2447
+    }
+  },
+  "stop_before": {
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "own_import_root": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/runtime/backend",
+  "no_private_namespace_content_copied": true,
+  "socket_and_process_denial": {
+    "sha256": "3fa7d5403e19aed3f2bd0ebb329946d885ee2297cac8b0f85426b6a7990ecfc5",
+    "bytes": 294
+  }
+}

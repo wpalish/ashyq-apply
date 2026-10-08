@@ -1,0 +1,49 @@
+{
+  "time": "2026-10-08T08:16:58.891293+00:00",
+  "A_final_manifest": {
+    "sha256": "f4867ac3befe294c650e7e5e7e972470ddb9f491d82e2a1214d7d5cd6392196b",
+    "bytes": 20008
+  },
+  "A_selected_count": 127,
+  "A_selected_bytes": 1975126,
+  "A_all_selected_unchanged": true,
+  "final_six": {
+    "backend/evaluation/research/expert/controller.py": {
+      "sha256": "aefe7e1f883e1a70449cfa4add659649b7c6108162c40c0efeb091097167fc09",
+      "bytes": 46899
+    },
+    "backend/evaluation/research/expert/models.py": {
+      "sha256": "4800d4aa9c6e13546cdfba7410bb480aea60117193172e0c147d21226c4ef39a",
+      "bytes": 45201
+    },
+    "backend/evaluation/research/expert/selector.py": {
+      "sha256": "d9cbefb4780648a8cd0ee91708202db5e2f9dc87997f282c3b6717d7f6ca0af1",
+      "bytes": 5236
+    },
+    "backend/evaluation/research/local_pilot.py": {
+      "sha256": "c7ddc2c68ef6b149e84308ad3016bb75a9087bc1099324558acabc4a85d20d10",
+      "bytes": 65752
+    },
+    "backend/evaluation/research/pilot_admission.py": {
+      "sha256": "ea4ff281ad038b2321bc9851c0d6f7c7d7704603d79a5ff2ec4c5534f4a55bca",
+      "bytes": 23615
+    },
+    "backend/tests/test_local_pilot.py": {
+      "sha256": "2efdb2de5dbf517c5f87f199dcbadd2781f26947bc328c802632e2b607195762",
+      "bytes": 41818
+    }
+  },
+  "primary_existing_three_pre_post_equal": true,
+  "primary_new_files_still_absent": true,
+  "primary999_reference": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/source-after-999.json",
+    "sha256": "30808fcb536f6757d668afea60716f4a61ac13caa326fa72a080f5a5a2f13771",
+    "bytes": 130944
+  },
+  "primary999_current_hash_equal": true,
+  "primary999_count": 999,
+  "STOP": {
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "time": "2026-10-08T09:14:12.753549+00:00",
+  "command": [
+    "python3",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-corrected-full-closure/verify_corrected_full.py"
+  ],
+  "tool_chunk": "ee8aed",
+  "exit_code": 1,
+  "error_type": "AttributeError",
+  "error": "module 'datetime' has no attribute 'UTC'",
+  "locations": [
+    "verify_corrected_full.py:177 final receipt construction",
+    "verify_corrected_full.py:185 exception receipt used same incompatible constant"
+  ],
+  "all_review_assertions_completed_before_serializer_error": true,
+  "qualification": "System stdlib runtime compatibility of own verifier only; no app test or saved-evidence assertion failed. Original verifier preserved; disjoint .compat uses datetime.timezone.utc only."
+}

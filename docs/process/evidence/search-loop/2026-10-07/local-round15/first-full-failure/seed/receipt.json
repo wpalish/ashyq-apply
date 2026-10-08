@@ -1,0 +1,169 @@
+{
+  "status": "PASS_SYNTHETIC_COMPATIBILITY_NOT_QUALITY",
+  "sealed_utc": "2026-10-08T08:22:25.636576+00:00",
+  "application_binding": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/application-ready.json",
+    "sha256": "b721bf21fbcd98d90cc68e1235df338ef313b7f7853dc725e7722585d7bb1ec6",
+    "bytes": 32419
+  },
+  "source_head": "c8c9dfcd9fb810a13a80e983f8d16754a1e3fde2",
+  "physical_source_files": 265,
+  "app": 242,
+  "migrations": 21,
+  "primary_pre_equals_post_equals_candidate": true,
+  "applied_six_unchanged": true,
+  "commands": [
+    {
+      "action": "heads",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-owned-seed/guarded_child.py",
+        "heads"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-owned-seed/candidate/backend",
+      "exit_code": 0,
+      "control": null,
+      "seconds": 0.21218016697093844,
+      "guard_sha256": "62ef31a0a48d1b560c26b369a87a5880b1f1aa0603b721418b9ef40ae33dedc1",
+      "application_binding_sha256": "b721bf21fbcd98d90cc68e1235df338ef313b7f7853dc725e7722585d7bb1ec6",
+      "stdout_sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "safe_flags": {
+        "demo": true,
+        "browser": false,
+        "provider": "none",
+        "auto_migrate": false
+      },
+      "primary_265_equal": true,
+      "STOP_unchanged": true
+    },
+    {
+      "action": "migrate",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-owned-seed/guarded_child.py",
+        "migrate"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-owned-seed/candidate/backend",
+      "exit_code": 0,
+      "control": null,
+      "seconds": 0.3807534580118954,
+      "guard_sha256": "62ef31a0a48d1b560c26b369a87a5880b1f1aa0603b721418b9ef40ae33dedc1",
+      "application_binding_sha256": "b721bf21fbcd98d90cc68e1235df338ef313b7f7853dc725e7722585d7bb1ec6",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "808373af2029870e86053e68822b91376ef3a0151c9e2273b3ccdf3b172a102a",
+      "safe_flags": {
+        "demo": true,
+        "browser": false,
+        "provider": "none",
+        "auto_migrate": false
+      },
+      "primary_265_equal": true,
+      "STOP_unchanged": true
+    },
+    {
+      "action": "seed",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-owned-seed/guarded_child.py",
+        "seed"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-owned-seed/candidate/backend",
+      "exit_code": 0,
+      "control": null,
+      "seconds": 1.9619459999958053,
+      "guard_sha256": "62ef31a0a48d1b560c26b369a87a5880b1f1aa0603b721418b9ef40ae33dedc1",
+      "application_binding_sha256": "b721bf21fbcd98d90cc68e1235df338ef313b7f7853dc725e7722585d7bb1ec6",
+      "stdout_sha256": "d67341bc09f061d266b1c0939ccdb09926f429db144c95f90c14410a412a95f6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "safe_flags": {
+        "demo": true,
+        "browser": false,
+        "provider": "none",
+        "auto_migrate": false
+      },
+      "primary_265_equal": true,
+      "STOP_unchanged": true
+    },
+    {
+      "action": "inspect",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-owned-seed/guarded_child.py",
+        "inspect"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-owned-seed/candidate/backend",
+      "exit_code": 0,
+      "control": null,
+      "seconds": 0.15950912493281066,
+      "guard_sha256": "62ef31a0a48d1b560c26b369a87a5880b1f1aa0603b721418b9ef40ae33dedc1",
+      "application_binding_sha256": "b721bf21fbcd98d90cc68e1235df338ef313b7f7853dc725e7722585d7bb1ec6",
+      "stdout_sha256": "bfaa33acb5bbeb9a097328195de3e058df975e542d89307cc0e60db96959c709",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "safe_flags": {
+        "demo": true,
+        "browser": false,
+        "provider": "none",
+        "auto_migrate": false
+      },
+      "primary_265_equal": true,
+      "STOP_unchanged": true
+    }
+  ],
+  "inspection": {
+    "heads": [
+      "d8e412c6a901"
+    ],
+    "database_revisions": [
+      "d8e412c6a901"
+    ],
+    "rows": 20,
+    "first": "University of Groningen",
+    "UBC": {
+      "university": "University of British Columbia",
+      "funding_classification": "FULL_TUITION",
+      "portfolio_bucket": "OUT_OF_BUDGET"
+    },
+    "run": {
+      "stage": "awaiting_user_decision",
+      "pages_checked": 98,
+      "pages_failed": 15,
+      "claims_recorded": 427
+    },
+    "all_undecided_no_approve": true,
+    "qualification": "Synthetic demo ordering; no live university or quality evidence."
+  },
+  "network_attempts": 0,
+  "provider_model_university_calls": 0,
+  "approved_requests": 0,
+  "runtime_scope": "own isolated SQLite/cache/exports only",
+  "STOP": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "safe_env": {
+    "module": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py",
+    "sha256": "161f5f0df441465fee4ce03e4df406ff9389f0a0462b3541a77bb891cc2c20ac",
+    "environment_values_not_disclosed": true
+  },
+  "outer_execution": {
+    "argv": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-owned-seed/execute_seed.py",
+      "--application-binding",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/application-ready.json",
+      "--application-binding-sha256",
+      "b721bf21fbcd98d90cc68e1235df338ef313b7f7853dc725e7722585d7bb1ec6"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-owned-seed",
+    "tool_chunk": "fc0793",
+    "exit_code": 0,
+    "qualification": "The preceding stdlib-only correction preserved a metadata-count fixture error; native fourcommands ran once only."
+  },
+  "initial_preflight_error": {
+    "sha256": "27af9896ede88896be53badc2cc31f5974d590adde4136aea01c9ee7f4f7187a",
+    "bytes": 360
+  },
+  "qualification": "Native synthetic demo compatibility only; not live runtime neutral admission, first-refusal experiment, real university quality, official scoring or launch acceptance. Root full gates separate and not claimed here."
+}
