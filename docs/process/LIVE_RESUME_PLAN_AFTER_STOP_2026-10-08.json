@@ -1,0 +1,51 @@
+{
+  "created_at": "2026-10-08T06:13:55.412723+00:00",
+  "status": "PREPARED_NOT_EXECUTED_OWNER_AUTHORIZATION_REQUIRED",
+  "review_PR": "https://github.com/wpalish/ashyq-apply/pull/73",
+  "tested_head": "ab273163d73f3fc6af78b7ebbee47d6863044aa3",
+  "tested_snapshot_sha256": "75497406d33bb8c4fe3015d44b13e20786d8cf9a74d4e6138c16d3341164d446",
+  "required_source_binding": "All999 source/test/evaluation/script/frontend paths must still equal full source-after999 before dispatch",
+  "retained_STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "basis": "Owner pasted task section7: globally stop live actions on provider/model/auth/quota refusal; no retry/substitution. Fresh explicit owner authorization needed. Old collection stays UNSCORED.",
+  "provider": "exa_mcp",
+  "provider_change_purchase": "NOT_AUTHORIZED_NOT_PLANNED",
+  "first_case": "groningen",
+  "first_command_requires_explicit_authorization": [
+    "python3",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py",
+    "--repo",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+    "live",
+    "--provider",
+    "exa_mcp",
+    "--case",
+    "groningen",
+    "--execute",
+    "--resume-stop-sha256",
+    "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d"
+  ],
+  "first_case_limits": {
+    "seconds": 120,
+    "Fetcher_read_allowance": 60,
+    "shared_query_allowance": 6,
+    "strict_action_ledger": true
+  },
+  "first_case_interpretation": "Availability/capture smoke only, comparison_eligibleFalse; no automatic scoring, no expert evaluation. Do not fold it into accepted quality metrics.",
+  "subsequent_scope_if_authorized": "Original10 only; fresh genuine-Job/independent-expert protocol must pass current admission preflight before dispatch. Do not auto-run old V9/V13/V14 or stopped expert controller.",
+  "algorithm_limits": {
+    "seconds": 120,
+    "reads": 60,
+    "queries": 6
+  },
+  "expert_limits": {
+    "reads": 60,
+    "queries": 6,
+    "protective_deadline_seconds": 900,
+    "thinking_outside_network_budget": true
+  },
+  "two_experts": "Maintain blind isolated source evidence; open labels only after eligible actions completed/sealed, record outside_policy separately. Coordinate global first-refusal stop.",
+  "first_new_refusal": "Immediately stop ALL live actions; retain new complete raw refusal and old STOP unchanged; no retry, substitute, reset, purchase, effort reduction or incomplete scoring.",
+  "heldout150": "NOT_AUTHORIZED",
+  "batch50_gate": "At least40of62 available expert facts in a complete valid accepted pilot; no extrapolation from tests.",
+  "quality_and_launch": "UNKNOWN; requires accepted precision/core/wrongscope measurements and published user-path acceptance."
+}
