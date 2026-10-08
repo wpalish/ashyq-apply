@@ -1,0 +1,39 @@
+{
+  "frontend/src/screens/ShortlistScreen.tsx": {
+    "same_expressions": {
+      "rows": true,
+      "clearFilters": true,
+      "activeFilters": true,
+      "decideRow": true,
+      "renderTable": true
+    },
+    "same_prop_signature": true
+  },
+  "frontend/src/screens/ShortlistScreen.test.tsx": {
+    "old_templates": 22,
+    "new_templates": 29,
+    "old_bodies_exact": true,
+    "missing": 0
+  },
+  "frontend/src/components/ResultDetail.tsx": {
+    "source_diff_checked_separately": true
+  },
+  "frontend/src/components/ResultDetail.scope.test.tsx": {
+    "old_templates": 5,
+    "new_templates": 7,
+    "old_bodies_exact": true,
+    "missing": 0
+  },
+  "ResultDetail_hint_only": {
+    "opcodes": [
+      [
+        "replace",
+        354,
+        357,
+        354,
+        357
+      ]
+    ],
+    "single_three_line_replacement": true
+  }
+}

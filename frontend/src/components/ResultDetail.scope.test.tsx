@@ -163,3 +163,34 @@ describe('an award', () => {
     expect(screen.queryByText(/financial need/)).not.toBeInTheDocument();
   });
 });
+
+
+describe('Documents for saved programmes', () => {
+  it.each(['approved', 'maybe'] as const)('explains collection in Plan for %s without asking for another approval', (user_decision) => {
+    const saved = { ...result([]), user_decision, checklist: null } as ProgramResult;
+    const original = JSON.stringify(saved);
+    render(<ResultDetail result={saved} />);
+    fireEvent.click(screen.getByTestId('tab-documents'));
+    expect(screen.getByText(/Documents are collected for programmes marked “Chosen by you” or “Considering” in Plan/)).toBeInTheDocument();
+    expect(screen.getByText(/Use “Collect documents” in Plan/)).toBeInTheDocument();
+    expect(screen.getByText(/does not mean an application is ready/)).toBeInTheDocument();
+    expect(screen.queryByText(/Approve this row/)).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Collect documents/ })).not.toBeInTheDocument();
+    expect(JSON.stringify(saved)).toBe(original);
+  });
+
+  it('continues to show the returned checklist rather than the no-checklist hint', () => {
+    const saved: ProgramResult = { ...result([]), user_decision: 'maybe', checklist: {
+      result_id: 'result-1', university: 'Delft University of Technology', program: 'BSc Computer Science',
+      admission_documents: [], scholarship_documents: [], applicant_actions: [], school_actions: [],
+      recommender_actions: [], certification_actions: [], unresolved: [],
+      completeness: 'partial', generated_at: '2026-10-09T00:00:00Z',
+      ordered_steps: ['1. Confirm the official transcript format'],
+    } };
+    render(<ResultDetail result={saved} />);
+    fireEvent.click(screen.getByTestId('tab-documents'));
+    expect(screen.getByText('partially read')).toBeInTheDocument();
+    expect(screen.getByText('Confirm the official transcript format')).toBeInTheDocument();
+    expect(screen.queryByText(/Use “Collect documents” in Plan/)).not.toBeInTheDocument();
+  });
+});

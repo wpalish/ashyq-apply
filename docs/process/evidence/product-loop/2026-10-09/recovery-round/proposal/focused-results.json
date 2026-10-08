@@ -1,0 +1,1128 @@
+{
+  "final": {
+    "total": 54,
+    "old_cases": 35,
+    "new_cases": 19,
+    "on_pass": 54,
+    "off_pass": 38,
+    "off_expected_red": 16,
+    "error": 0,
+    "skip": 0
+  },
+  "cases": {
+    "off": [
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "a requirement check > shows the scope the page published it under",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "a requirement check > says nothing when the page did not say",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "an award > says when an admission offer must come first",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "an award > says when it is decided on financial need",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "an award > stays quiet when the award page did not say",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "Documents for saved programmes > explains collection in Plan for approved without asking for another approval",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "Documents for saved programmes > explains collection in Plan for maybe without asking for another approval",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "Documents for saved programmes > continues to show the returned checklist rather than the no-checklist hint",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > asks for a reason instead of silently sending an empty one",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > records the reason typed by the applicant",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > offers the common reasons as one click",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > keeps the reason optional: saying No with nothing typed still works",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > shows the stored reason on a row already rejected",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > does not ask for a reason when approving",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "filter labels > offers readable statuses, not raw enum tokens",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "filter labels > keeps the enum as the option value, so filtering still works",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "Find search > removes a saved approved programme instead of changing its decision silently",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "Find search > removes a saved maybe programme instead of changing its decision silently",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "Find search > filters by university, programme and country without changing the saved results",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "Find search > opens a source-backed result and compares only selected programmes",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "notes > saves a note without deciding the row",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "the v2 ranking on the shortlist > shows the match, what is confirmed, and the bucket",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "the v2 ranking on the shortlist > never presents the match as a probability",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "the v2 ranking on the shortlist > moves an unaffordable row out of the ranked table into its own section",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "the v2 ranking on the shortlist > keeps a row assessed before v2 in the ranked table",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > keeps a readable removal button outside collapsed Filters and shows filtered / total",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Search: Groningen and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only List: Saved and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Country: Netherlands and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Eligibility: Met and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Funding: Full ride and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Hide rejected and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > clears all filters locally while preserving sort, compare, notes and unknown evidence",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > uses the same local reset from the no-match recovery action",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > does not describe whitespace-only search as an active filter",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > makes Priority list context removable without changing decisions",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > makes Saved list context removable without changing decisions",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > makes Exploring list context removable without changing decisions",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty failed stage without starting work",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty retryable stage without starting work",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty cancelled stage without starting work",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty cancelled flag despite a running job without starting work",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty stale despite a running job without starting work",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty dead job without starting work",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty failed job without starting work",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty cancelled job without starting work",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > reviews an empty awaiting_user_decision run without claiming absence",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > reviews an empty completed run without claiming absence",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > shows progress for an empty queued job instead of a second start",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > shows progress for an empty running job instead of a second start",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > shows an honest empty-run notice without an inert callback button",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > keeps the existing Start route only when no run exists",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > retains partial rows, filters, compare, unsaved notes and unknowns when the run stops",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > does not turn locally filtered-zero rows into a stopped or empty research run",
+        "status": "FAIL"
+      }
+    ],
+    "on": [
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "a requirement check > shows the scope the page published it under",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "a requirement check > says nothing when the page did not say",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "an award > says when an admission offer must come first",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "an award > says when it is decided on financial need",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "an award > stays quiet when the award page did not say",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "Documents for saved programmes > explains collection in Plan for approved without asking for another approval",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "Documents for saved programmes > explains collection in Plan for maybe without asking for another approval",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "Documents for saved programmes > continues to show the returned checklist rather than the no-checklist hint",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > asks for a reason instead of silently sending an empty one",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > records the reason typed by the applicant",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > offers the common reasons as one click",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > keeps the reason optional: saying No with nothing typed still works",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > shows the stored reason on a row already rejected",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > does not ask for a reason when approving",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "filter labels > offers readable statuses, not raw enum tokens",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "filter labels > keeps the enum as the option value, so filtering still works",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "Find search > removes a saved approved programme instead of changing its decision silently",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "Find search > removes a saved maybe programme instead of changing its decision silently",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "Find search > filters by university, programme and country without changing the saved results",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "Find search > opens a source-backed result and compares only selected programmes",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "notes > saves a note without deciding the row",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "the v2 ranking on the shortlist > shows the match, what is confirmed, and the bucket",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "the v2 ranking on the shortlist > never presents the match as a probability",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "the v2 ranking on the shortlist > moves an unaffordable row out of the ranked table into its own section",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "the v2 ranking on the shortlist > keeps a row assessed before v2 in the ranked table",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > keeps a readable removal button outside collapsed Filters and shows filtered / total",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Search: Groningen and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only List: Saved and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Country: Netherlands and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Eligibility: Met and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Funding: Full ride and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Hide rejected and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > clears all filters locally while preserving sort, compare, notes and unknown evidence",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > uses the same local reset from the no-match recovery action",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > does not describe whitespace-only search as an active filter",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > makes Priority list context removable without changing decisions",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > makes Saved list context removable without changing decisions",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > makes Exploring list context removable without changing decisions",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty failed stage without starting work",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty retryable stage without starting work",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty cancelled stage without starting work",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty cancelled flag despite a running job without starting work",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty stale despite a running job without starting work",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty dead job without starting work",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty failed job without starting work",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty cancelled job without starting work",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > reviews an empty awaiting_user_decision run without claiming absence",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > reviews an empty completed run without claiming absence",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > shows progress for an empty queued job instead of a second start",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > shows progress for an empty running job instead of a second start",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > shows an honest empty-run notice without an inert callback button",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > keeps the existing Start route only when no run exists",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > retains partial rows, filters, compare, unsaved notes and unknowns when the run stops",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > does not turn locally filtered-zero rows into a stopped or empty research run",
+        "status": "FAIL"
+      }
+    ],
+    "off.final": [
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "a requirement check > shows the scope the page published it under",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "a requirement check > says nothing when the page did not say",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "an award > says when an admission offer must come first",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "an award > says when it is decided on financial need",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "an award > stays quiet when the award page did not say",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "Documents for saved programmes > explains collection in Plan for approved without asking for another approval",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "Documents for saved programmes > explains collection in Plan for maybe without asking for another approval",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "Documents for saved programmes > continues to show the returned checklist rather than the no-checklist hint",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > asks for a reason instead of silently sending an empty one",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > records the reason typed by the applicant",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > offers the common reasons as one click",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > keeps the reason optional: saying No with nothing typed still works",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > shows the stored reason on a row already rejected",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > does not ask for a reason when approving",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "filter labels > offers readable statuses, not raw enum tokens",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "filter labels > keeps the enum as the option value, so filtering still works",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "Find search > removes a saved approved programme instead of changing its decision silently",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "Find search > removes a saved maybe programme instead of changing its decision silently",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "Find search > filters by university, programme and country without changing the saved results",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "Find search > opens a source-backed result and compares only selected programmes",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "notes > saves a note without deciding the row",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "the v2 ranking on the shortlist > shows the match, what is confirmed, and the bucket",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "the v2 ranking on the shortlist > never presents the match as a probability",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "the v2 ranking on the shortlist > moves an unaffordable row out of the ranked table into its own section",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "the v2 ranking on the shortlist > keeps a row assessed before v2 in the ranked table",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > keeps a readable removal button outside collapsed Filters and shows filtered / total",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Search: Groningen and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only List: Saved and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Country: Netherlands and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Eligibility: Met and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Funding: Full ride and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Hide rejected and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > clears all filters locally while preserving sort, compare, notes and unknown evidence",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > uses the same local reset from the no-match recovery action",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > does not describe whitespace-only search as an active filter",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > makes Priority list context removable without changing decisions",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > makes Saved list context removable without changing decisions",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > makes Exploring list context removable without changing decisions",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty failed stage without starting work",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty retryable stage without starting work",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty cancelled stage without starting work",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty cancelled flag despite a running job without starting work",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty stale despite a running job without starting work",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty dead job without starting work",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty failed job without starting work",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty cancelled job without starting work",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > reviews an empty awaiting_user_decision run without claiming absence",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > reviews an empty completed run without claiming absence",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > shows progress for an empty queued job instead of a second start",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > shows progress for an empty running job instead of a second start",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > shows an honest empty-run notice without an inert callback button",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > keeps the existing Start route only when no run exists",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > retains partial rows, filters, compare, unsaved notes and unknowns when the run stops",
+        "status": "FAIL"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > does not turn locally filtered-zero rows into a stopped or empty research run",
+        "status": "PASS"
+      }
+    ],
+    "on.final": [
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "a requirement check > shows the scope the page published it under",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "a requirement check > says nothing when the page did not say",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "an award > says when an admission offer must come first",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "an award > says when it is decided on financial need",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "an award > stays quiet when the award page did not say",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "Documents for saved programmes > explains collection in Plan for approved without asking for another approval",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "Documents for saved programmes > explains collection in Plan for maybe without asking for another approval",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/components/ResultDetail.scope.test.tsx",
+        "name": "Documents for saved programmes > continues to show the returned checklist rather than the no-checklist hint",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > asks for a reason instead of silently sending an empty one",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > records the reason typed by the applicant",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > offers the common reasons as one click",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > keeps the reason optional: saying No with nothing typed still works",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > shows the stored reason on a row already rejected",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "rejecting a programme > does not ask for a reason when approving",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "filter labels > offers readable statuses, not raw enum tokens",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "filter labels > keeps the enum as the option value, so filtering still works",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "Find search > removes a saved approved programme instead of changing its decision silently",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "Find search > removes a saved maybe programme instead of changing its decision silently",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "Find search > filters by university, programme and country without changing the saved results",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "Find search > opens a source-backed result and compares only selected programmes",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "notes > saves a note without deciding the row",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "the v2 ranking on the shortlist > shows the match, what is confirmed, and the bucket",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "the v2 ranking on the shortlist > never presents the match as a probability",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "the v2 ranking on the shortlist > moves an unaffordable row out of the ranked table into its own section",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "the v2 ranking on the shortlist > keeps a row assessed before v2 in the ranked table",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > keeps a readable removal button outside collapsed Filters and shows filtered / total",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Search: Groningen and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only List: Saved and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Country: Netherlands and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Eligibility: Met and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Funding: Full ride and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > removes only Hide rejected and leaves the other active filters in place",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > clears all filters locally while preserving sort, compare, notes and unknown evidence",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > uses the same local reset from the no-match recovery action",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > does not describe whitespace-only search as an active filter",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > makes Priority list context removable without changing decisions",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > makes Saved list context removable without changing decisions",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "visible active filters > makes Exploring list context removable without changing decisions",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty failed stage without starting work",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty retryable stage without starting work",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty cancelled stage without starting work",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty cancelled flag despite a running job without starting work",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty stale despite a running job without starting work",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty dead job without starting work",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty failed job without starting work",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > opens Progress for empty cancelled job without starting work",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > reviews an empty awaiting_user_decision run without claiming absence",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > reviews an empty completed run without claiming absence",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > shows progress for an empty queued job instead of a second start",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > shows progress for an empty running job instead of a second start",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > shows an honest empty-run notice without an inert callback button",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > keeps the existing Start route only when no run exists",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > retains partial rows, filters, compare, unsaved notes and unknowns when the run stops",
+        "status": "PASS"
+      },
+      {
+        "classname": "src/screens/ShortlistScreen.test.tsx",
+        "name": "research recovery in Find > does not turn locally filtered-zero rows into a stopped or empty research run",
+        "status": "PASS"
+      }
+    ]
+  },
+  "denied_transport_receipts": {
+    "logs/network-on/network-48301.json": {
+      "pid": 48301,
+      "network_or_listen_attempts": 0
+    },
+    "logs/network-on-typecheck/network-48404.json": {
+      "pid": 48404,
+      "network_or_listen_attempts": 0
+    },
+    "logs/network-on-lint/network-48405.json": {
+      "pid": 48405,
+      "network_or_listen_attempts": 0
+    },
+    "logs/network-off/network-48300.json": {
+      "pid": 48300,
+      "network_or_listen_attempts": 0
+    },
+    "logs/network-off-final/network-48358.json": {
+      "pid": 48358,
+      "network_or_listen_attempts": 0
+    },
+    "logs/network-on-final/network-48359.json": {
+      "pid": 48359,
+      "network_or_listen_attempts": 0
+    }
+  }
+}

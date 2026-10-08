@@ -352,9 +352,9 @@ function Documents({ result }: { result: ProgramResult }) {
     return (
       <Notice kind="info">
         <div>
-          Documents are collected only for programmes you approve — it is the expensive step, so it
-          runs on your shortlist rather than on all {result.university ? '' : ''}candidates. Approve
-          this row, then run “Collect documents”.
+          Documents are collected for programmes marked “Chosen by you” or “Considering” in Plan.
+          Use “Collect documents” in Plan to request their requirements. A collected checklist
+          does not mean an application is ready.
         </div>
       </Notice>
     );

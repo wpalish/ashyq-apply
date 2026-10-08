@@ -1,0 +1,126 @@
+{
+  "created_at": "2026-10-08T22:52:20.553394+00:00",
+  "environment": {
+    "env_i": true,
+    "PATH": "/Users/wpalish/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+    "NODE_OPTIONS": "--require=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/b-recovery-proposal/support/deny-network.cjs",
+    "REVIEW_NETWORK_LOG_DIR": "separate owned directory per unit/static command"
+  },
+  "dependencies": "Primary installed packages linked individually into owned node_modules; no installation. Own Vite cacheDir only in runtime config.",
+  "commands": [
+    {
+      "name": "off_initial",
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/b-recovery-proposal/runtime/off/frontend",
+      "node": "/Users/wpalish/.local/bin/node",
+      "argv": [
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "src/screens/ShortlistScreen.test.tsx",
+        "src/components/ResultDetail.scope.test.tsx",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile.junit=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/b-recovery-proposal/logs/off.junit.xml"
+      ],
+      "session": 58728,
+      "exit": 1,
+      "log": "logs/off.log",
+      "junit": "logs/off.junit.xml"
+    },
+    {
+      "name": "on_initial",
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/b-recovery-proposal/runtime/on/frontend",
+      "node": "/Users/wpalish/.local/bin/node",
+      "argv": [
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "src/screens/ShortlistScreen.test.tsx",
+        "src/components/ResultDetail.scope.test.tsx",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile.junit=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/b-recovery-proposal/logs/on.junit.xml"
+      ],
+      "session": 77797,
+      "exit": 1,
+      "log": "logs/on.log",
+      "junit": "logs/on.junit.xml"
+    },
+    {
+      "name": "off_final",
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/b-recovery-proposal/runtime/off/frontend",
+      "node": "/Users/wpalish/.local/bin/node",
+      "argv": [
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "src/screens/ShortlistScreen.test.tsx",
+        "src/components/ResultDetail.scope.test.tsx",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile.junit=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/b-recovery-proposal/logs/off.final.junit.xml"
+      ],
+      "session": 91702,
+      "exit": 1,
+      "log": "logs/off.final.log",
+      "junit": "logs/off.final.junit.xml"
+    },
+    {
+      "name": "on_final",
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/b-recovery-proposal/runtime/on/frontend",
+      "node": "/Users/wpalish/.local/bin/node",
+      "argv": [
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "src/screens/ShortlistScreen.test.tsx",
+        "src/components/ResultDetail.scope.test.tsx",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile.junit=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/b-recovery-proposal/logs/on.final.junit.xml"
+      ],
+      "session": 41633,
+      "exit": 0,
+      "log": "logs/on.final.log",
+      "junit": "logs/on.final.junit.xml"
+    },
+    {
+      "name": "typecheck",
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/b-recovery-proposal/runtime/on/frontend",
+      "argv": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "session": 64021,
+      "exit": 0,
+      "log": "logs/typecheck.log"
+    },
+    {
+      "name": "selected_eslint",
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/b-recovery-proposal/runtime/on/frontend",
+      "argv": [
+        "node_modules/eslint/bin/eslint.js",
+        "src/components/ResultDetail.scope.test.tsx",
+        "src/components/ResultDetail.tsx",
+        "src/screens/ShortlistScreen.test.tsx",
+        "src/screens/ShortlistScreen.tsx"
+      ],
+      "session": 20937,
+      "exit": 0,
+      "log": "logs/lint.log"
+    },
+    {
+      "name": "ast_compatibility",
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/b-recovery-proposal",
+      "argv": [
+        "support/check-compatibility.cjs"
+      ],
+      "exit": 0,
+      "log": "logs/compatibility.log"
+    }
+  ],
+  "qualification": "Initial new singular-label fixture assertion failure preserved; final expectations maintain native singular text. Application proposal unchanged across attempts. Compatibility command is read-only source AST, no app import.",
+  "not_run": [
+    "Primary application/Git",
+    "Backend/API/SQL",
+    "Server/ports/browser/E2E",
+    "Full frontend suite/build or local-runner/full",
+    "Auth/live/provider/model/university/labels/scoring"
+  ]
+}
