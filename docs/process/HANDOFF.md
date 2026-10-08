@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current holder: nobody; [search-fenced-capture] ready-for-review (Draft PR #68), 2026-10-08 01:16 UTC.** https://github.com/wpalish/ashyq-apply/pull/68, base task/search-production-read-budget/#67, pushed metadata1d559434 and executable7c74a12d. Draft attached; OPEN/Draft/head/base verified, cloud rollup[] is not a pass. Goal ACTIVE; next task branches from this predecessor under §5.
+
 **Current holder: nobody; [search-fenced-capture] ready-for-review, dependent Draft creation next, 2026-10-08 01:07 UTC.** Final executable source `7c74a12d71bd00228014c11d194928d223e110be` passed exact full LOCAL 13/13; archive receipt `c8017ad9`. Genuine Job capture and strict first-provider-refusal controls are complete. No new live capture. External baseline validator remains rejected on 18 distinct corrupt inputs; A IELTS v5 remains external pending peer review. Goal ACTIVE. Next task may explicitly branch from this unmerged predecessor as recorded in §5.
 
 **Current holder: gpt-6-astra,2026-10-08 00:31UTC, task/search-fenced-capture@f0c8fece.** Exact source full LOCAL13/13 completed and archived receipt4fb41d2e. No fresh live. New strict-capture internal provider retry defect independently confirmed; scoped repair planned before any new capture. A works external IELTSv4; B actual-provider mock controls. Goal ACTIVE.
@@ -75,6 +77,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[search-fenced-capture] ready-for-review (Draft PR #68).** Final source7c74 exact full13/13 PASS; selected originals committed/pushed1d559434. Review/merge belongs to the owner. No new live, native flagFalse, no quality/default/launch claim.
 
 **[search-fenced-capture] ready-for-review; exact-source full LOCAL PASS.** Source `7c74a12d`, snapshot `19f349a0a242478e13f95e1905e8f41662a769b579833b004cafb03b73825c9a`, run `20261008T004040Z-check-bc90e5dc`: 13/13 steps PASS, 4292 unique backend cases on SQLite and the same 4292 on PostgreSQL, coverage 95.25%, frontend 232, demo 79 PASS/1 skip, auth 6, mypy 383, dependency audits zero known vulnerabilities. App/provider source unchanged; native guard remains False. Only the genuine Job canary and strict capture retry scope changed. This is protocol/reliability proof, not a fresh quality or launch score.
 
@@ -180,6 +184,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**Draft #68 created/attached and verified, 2026-10-08 01:16 UTC.** URL https://github.com/wpalish/ashyq-apply/pull/68, base task/search-production-read-budget, head task/search-fenced-capture@1d559434. External driver a56e6f03 repair ready for two independent normal-import-only reviews; IELTSv5 ready-manifest1de653d9 external229PASS remains unaccepted.
 
 **[search-fenced-capture] final source `7c74a12d` green, 2026-10-08.** Four harness/test paths are pinned in exact full source manifest. Added 31 normal-import actual-provider MockTransport controls; combined protocol file 48 PASS, focused capture/provider/budget subset 154 PASS. Both MCP internal retry switches are scoped False only while a strict budget exists and restored on every exit. Provider module/defaults unchanged. Full receipt `docs/process/evidence/search-loop/2026-10-07/local-round9/strict-first-refusal-full/receipt.json` SHA `c8017ad9825b00e7d0a464a9f8f2a741ca6d6639b15f3dc6f8267100cdefdfd2`, 22 selected originals / 4,549,257 bytes; previous originals remain immutable.
 
@@ -1855,6 +1861,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Next explicit branch exception, 2026-10-08 01:16 UTC:** fenced task ready-for-review in Draft68 with full exactsource PASS. Create task/search-genuine-baseline from clean task/search-fenced-capture@current metadata; predecessor remains unmerged. Task is fresh same-original10 capture and honest offline scoring; no app/test/harness changes. Driver a56e6f03 is frozen outside repo for A/B independent review. Fresh PLAN must pin tested source7c74/snapshot19f349 and new strict retry flags; oldround9 not execute. Live only after review accepted and STOP/source preflight. [skip ci] local route; no hosted workflow, defaults, merge or production changes.
 
 **NEXT after final-full archive:** create and attach dependent Draft `task/search-fenced-capture` against `task/search-production-read-budget`/#67. Then explicitly branch `task/search-genuine-baseline` from this clean predecessor (unmerged-predecessor exception; no merge). Before external controller repair, preserve rejected SHA `788f8a2e`, B manifest `e0459780` and all 18 distinct corrupt/24 lane RED. Repair only `work/local-round9/genuine-baseline/execute_baseline.py`: typed Job/cause/owner/counter coherence; mandatory raw batch/totals/institution; actual ClaimRow provenance/schema and pure mapping/prediction consistency; raw page-outcome equality. Run normal-import-only independent reviews, including a legitimate nonempty claim positive. No main/preflight/network in reviews. Only after accepted driver prepare a fresh round10 PLAN on exact full `7c74a12d`/snapshot `19f349a0`, immutable old attempt, same original10 sequential, 6/60/120, 119s source guard +1s finalization, native False/documents False and global first-refusal STOP. Main may preserve admissible bounded partial Jobs explicitly; missing/unknown facts remain in the full cohort denominator.
 
@@ -5246,3 +5254,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 **2026-10-07 23:39 UTC gpt-6-astra checkpoint:** source3b3a2fb8 → metadata/evidence8614a91f, fullLOCAL13/13, native134/33realPG, dependent Draft67 created/attached/verified. Goal ACTIVE; two external next proposals; next genuine-Job capture after exact pin/review. No merge/default/launch.
 
 - 2026-10-08 01:07 UTC — gpt-6-astra: source7c74 exact full13/13 completed; final22 originals archived, fenced capture ready for dependent Draft; external driver remains rejected and IELTSv5 pending peer; no fresh live.
+
+- 2026-10-08 01:16 UTC — gpt-6-astra: final fenced task released ready-for-review Draft68, full13/13 source7c74; next fresh baseline branch exception recorded.
