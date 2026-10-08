@@ -1,0 +1,120 @@
+{
+  "status": "EXTERNAL_PROPOSED_NOT_APPLIED_NOT_LIVE",
+  "plan_sha256": "e4c6a521adc0074976fa97559bcc3e4c63c3274599faef462089d3a23368a61e",
+  "source_originals": {
+    "scripts/canary_discovery.py": "37f60bcfcafda9b33f87285141dedae8b66c65dd6b0518ed7457cfece404de70",
+    "evaluation/research/live.py": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df"
+  },
+  "source_proposals": {
+    "scripts/canary_discovery.py": "2367096b1689bfe85a4202a65fca57c3a54e1abc32e76b9012f953952f9e42a3",
+    "evaluation/research/live.py": "7898a47e5fc123e6a48f6d2915ae1538a1113e6c416cf908ec25e17fc827fdeb"
+  },
+  "future_tests": {
+    "tests/test_canary_fenced_job.py": "c2c83a74942a842ec173ddd356ea80f41fcdc5e6d036667715d332d1c7618dcb",
+    "tests/test_readguard_capture_protocol.py": "dd41ddf33c7485296e1c0f5834e371cc3a60ef29896ebea48f237b932b5f3c20"
+  },
+  "patch_sha256": "b5d20e97bf10d205da40476f2f4edb6804a68bc7c7bb9353d17fc4908c11a789",
+  "final_tests": {
+    "passed": 41,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "duration_xml": "3.253",
+    "by_module": {
+      "local-round8.a-genuine-canary.proposed.tests.test_canary_fenced_job": 24,
+      "local-round8.a-genuine-canary.proposed.tests.test_readguard_capture_protocol": 17
+    },
+    "warnings": 15,
+    "warning_kind": "Existing SQLAlchemy default Python3.12 SQLite datetime adapter DeprecationWarning"
+  },
+  "static": [
+    {
+      "name": "ruff",
+      "exit_code": 0
+    },
+    {
+      "name": "format",
+      "exit_code": 0
+    }
+  ],
+  "actual_module_imports": {
+    "actual_modules": [
+      {
+        "name": "app.jobs.worker",
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/jobs/worker.py",
+        "sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df"
+      },
+      {
+        "name": "app.jobs.store",
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/jobs/store.py",
+        "sha256": "fbf69acb386db032beb64bb9a59af9ee43f75730d0037124959714faec1264cc"
+      },
+      {
+        "name": "app.pipeline.runner",
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py",
+        "sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c"
+      },
+      {
+        "name": "app.pipeline.control",
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/control.py",
+        "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd"
+      },
+      {
+        "name": "app.pipeline.read_budget",
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/read_budget.py",
+        "sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf"
+      },
+      {
+        "name": "app.adapters.fetching",
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/fetching.py",
+        "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895"
+      }
+    ],
+    "proposal_harness_only": [
+      "scripts.canary_discovery",
+      "evaluation.research.live"
+    ],
+    "app_shadow_loader": false,
+    "final_source_flag": false
+  },
+  "historical_attempts": [
+    {
+      "attempt": 1,
+      "passed": 30,
+      "failed": 6,
+      "cause": "Missing unchanged adjacent mapping.py in external layout; not actual app module failure"
+    },
+    {
+      "attempt": 2,
+      "passed": 38,
+      "failed": 1,
+      "cause": "Clock test used nonexistent full_budget_ms key; corrected to existing max_active_seconds; source clock elapsed17000 already true"
+    },
+    {
+      "attempt": 3,
+      "passed": 40,
+      "failed": 0,
+      "cause": null
+    },
+    {
+      "attempt": 4,
+      "passed": 41,
+      "failed": 0,
+      "cause": null
+    }
+  ],
+  "network_provider_model_university_calls": 0,
+  "repo_source_test_git_stop_writes": 0,
+  "native_default_promotion": false,
+  "limitations": [
+    "SQLite protocol proof; no new PG run or production rollout/time/render/query/docs/recheck/global cap proof",
+    "Strict outer60 stops before native61. Distinct raw causes/counters; no native cap gain inferred from equal60 totals. Standalone mocked native61 tested independently",
+    "Scoped worker factories/module bool require one isolated child process per case; concurrent canary coroutines in shared interpreter are unsupported",
+    "Fresh reporting can contend; counters null/not invented and original typed busy retained; no durable unknown or global DB latency claim",
+    "All university/source transports synthetic; no facts/intake/population quality or live4arm comparison claimed",
+    "Legacy full normalized report frozen from exact original; historical20 unfenced captures never relabeled",
+    "New fenced CLI partial run_error returns2; default legacy CLI behavior retained",
+    "Engine disposal and heartbeat task join observed for final case outputs; DB/cache runtime excluded from review bundle"
+  ],
+  "manifest_sha256": "448be1059e6a571287dd19680ddf19dfac112888448d476da03d335cb292ecff"
+}

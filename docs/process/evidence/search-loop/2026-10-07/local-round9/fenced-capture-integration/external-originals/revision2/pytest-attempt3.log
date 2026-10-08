@@ -1,0 +1,168 @@
+........................FF......................                         [100%]
+=================================== FAILURES ===================================
+________ test_unrecognized_generic_control_payload_is_redacted[runtime] ________
+
+case = namespace(state=<function case.<locals>.state at 0x10ef9ade0>, engines=[Engine(sqlite:////Users/wpalish/Documents/Code...c_cont0'), entry={'name': 'Test University', 'country': 'Example', 'city': 'City', 'homepage': 'https://example.edu/'})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ef8dee0>
+error_kind = 'runtime'
+
+    @pytest.mark.parametrize("error_kind", ["runtime", "operational"])
+    def test_unrecognized_generic_control_payload_is_redacted(case, monkeypatch, error_kind):
+        private = "SYNTHETIC_PRIVATE_CONTROL_PAYLOAD"
+        error = (
+            RuntimeError(private)
+            if error_kind == "runtime"
+            else OperationalError("SELECT synthetic_private", {"private": private}, Exception(private))
+        )
+    
+        async def failed_funding(*args, **kwargs):
+            raise error
+    
+        monkeypatch.setattr(rm.WebScholarshipAdapter, "find", failed_funding)
+        report = asyncio.run(
+            canary.run_canary(
+                None,
+                False,
+                catalogue_ids=[ID],
+                university_read_budget=True,
+                fenced_research_job=True,
+            )
+        )
+        protocol = report["job_protocol"]
+        assert protocol["control_type"] == type(error).__name__
+        assert protocol["control_message"] is None and protocol["control_reason"] is None
+        assert report["run_error"] == type(error).__name__
+        assert private not in json.dumps(protocol) + report["run_error"]
+        assert protocol["terminal_run_error_payload_redacted"] is True
+        assert protocol["run_errors"][-1] == type(error).__name__
+        assert native_count(protocol) == {"catalogue:" + ID: 36}
+>       assert protocol["job_status"] == "pending" and protocol["heartbeat_done"] == [True]
+E       AssertionError: assert ('queued' == 'pending'
+E         
+E         - pending
+E         + queued)
+
+../../local-round8/a-genuine-canary/revision2/proposed/tests/test_canary_fenced_job.py:628: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    unimatch.pipeline:runner.py:472 run e95e41a23d314d3d813b39392213c8df failed
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py", line 442, in run_to_decision
+    await self._maybe(PipelineStage.FUNDING_DISCOVERY, self._stage_funding, fetcher)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py", line 488, in _maybe
+    await step(*args)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py", line 1051, in _stage_funding
+    scholarships, ar = await adapter.find(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-genuine-canary/revision2/proposed/tests/test_canary_fenced_job.py", line 608, in failed_funding
+    raise error
+RuntimeError: SYNTHETIC_PRIVATE_CONTROL_PAYLOAD
+ERROR    unimatch.worker:worker.py:159 job 51ab247f failed
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/jobs/worker.py", line 136, in execute
+    await self._dispatch(session, store, job, lease_token=lease_token)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/jobs/worker.py", line 335, in _dispatch
+    await runner.run_to_decision()
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-genuine-canary/revision2/proposed/scripts/canary_discovery.py", line 500, in run_to_decision
+    return await super().run_to_decision()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py", line 442, in run_to_decision
+    await self._maybe(PipelineStage.FUNDING_DISCOVERY, self._stage_funding, fetcher)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py", line 488, in _maybe
+    await step(*args)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py", line 1051, in _stage_funding
+    scholarships, ar = await adapter.find(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-genuine-canary/revision2/proposed/tests/test_canary_fenced_job.py", line 608, in failed_funding
+    raise error
+RuntimeError: SYNTHETIC_PRIVATE_CONTROL_PAYLOAD
+______ test_unrecognized_generic_control_payload_is_redacted[operational] ______
+
+case = namespace(state=<function case.<locals>.state at 0x114161580>, engines=[Engine(sqlite:////Users/wpalish/Documents/Code...c_cont1'), entry={'name': 'Test University', 'country': 'Example', 'city': 'City', 'homepage': 'https://example.edu/'})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ee2c3e0>
+error_kind = 'operational'
+
+    @pytest.mark.parametrize("error_kind", ["runtime", "operational"])
+    def test_unrecognized_generic_control_payload_is_redacted(case, monkeypatch, error_kind):
+        private = "SYNTHETIC_PRIVATE_CONTROL_PAYLOAD"
+        error = (
+            RuntimeError(private)
+            if error_kind == "runtime"
+            else OperationalError("SELECT synthetic_private", {"private": private}, Exception(private))
+        )
+    
+        async def failed_funding(*args, **kwargs):
+            raise error
+    
+        monkeypatch.setattr(rm.WebScholarshipAdapter, "find", failed_funding)
+        report = asyncio.run(
+            canary.run_canary(
+                None,
+                False,
+                catalogue_ids=[ID],
+                university_read_budget=True,
+                fenced_research_job=True,
+            )
+        )
+        protocol = report["job_protocol"]
+        assert protocol["control_type"] == type(error).__name__
+        assert protocol["control_message"] is None and protocol["control_reason"] is None
+        assert report["run_error"] == type(error).__name__
+        assert private not in json.dumps(protocol) + report["run_error"]
+        assert protocol["terminal_run_error_payload_redacted"] is True
+        assert protocol["run_errors"][-1] == type(error).__name__
+        assert native_count(protocol) == {"catalogue:" + ID: 36}
+>       assert protocol["job_status"] == "pending" and protocol["heartbeat_done"] == [True]
+E       AssertionError: assert ('queued' == 'pending'
+E         
+E         - pending
+E         + queued)
+
+../../local-round8/a-genuine-canary/revision2/proposed/tests/test_canary_fenced_job.py:628: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    unimatch.pipeline:runner.py:472 run 18a9137141ad49f5b2bba7217bf5a6e8 failed
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py", line 442, in run_to_decision
+    await self._maybe(PipelineStage.FUNDING_DISCOVERY, self._stage_funding, fetcher)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py", line 488, in _maybe
+    await step(*args)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py", line 1051, in _stage_funding
+    scholarships, ar = await adapter.find(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-genuine-canary/revision2/proposed/tests/test_canary_fenced_job.py", line 608, in failed_funding
+    raise error
+sqlalchemy.exc.OperationalError: (builtins.Exception) SYNTHETIC_PRIVATE_CONTROL_PAYLOAD
+[SQL: SELECT synthetic_private]
+[parameters: {'private': 'SYNTHETIC_PRIVATE_CONTROL_PAYLOAD'}]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+ERROR    unimatch.worker:worker.py:159 job c1aae097 failed
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/jobs/worker.py", line 136, in execute
+    await self._dispatch(session, store, job, lease_token=lease_token)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/jobs/worker.py", line 335, in _dispatch
+    await runner.run_to_decision()
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-genuine-canary/revision2/proposed/scripts/canary_discovery.py", line 500, in run_to_decision
+    return await super().run_to_decision()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py", line 442, in run_to_decision
+    await self._maybe(PipelineStage.FUNDING_DISCOVERY, self._stage_funding, fetcher)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py", line 488, in _maybe
+    await step(*args)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py", line 1051, in _stage_funding
+    scholarships, ar = await adapter.find(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-genuine-canary/revision2/proposed/tests/test_canary_fenced_job.py", line 608, in failed_funding
+    raise error
+sqlalchemy.exc.OperationalError: (builtins.Exception) SYNTHETIC_PRIVATE_CONTROL_PAYLOAD
+[SQL: SELECT synthetic_private]
+[parameters: {'private': 'SYNTHETIC_PRIVATE_CONTROL_PAYLOAD'}]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+=============================== warnings summary ===============================
+local-round8/a-genuine-canary/revision2/proposed/tests/test_canary_fenced_job.py: 22 warnings
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: DeprecationWarning: The default datetime adapter is deprecated as of Python 3.12; see the sqlite3 documentation for suggested replacement recipes
+    cursor.execute(statement, parameters)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../local-round8/a-genuine-canary/revision2/proposed/tests/test_canary_fenced_job.py::test_unrecognized_generic_control_payload_is_redacted[runtime]
+FAILED ../../local-round8/a-genuine-canary/revision2/proposed/tests/test_canary_fenced_job.py::test_unrecognized_generic_control_payload_is_redacted[operational]
+2 failed, 46 passed, 22 warnings in 7.11s

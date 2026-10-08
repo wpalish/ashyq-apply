@@ -1,0 +1,159 @@
+{
+  "status": "EXTERNAL_REVISION2_PINNED_FOR_PARENT_REVIEW_NOT_APPLIED_NOT_LIVE",
+  "rejected_parent_receipt_sha256": "8222d4eb8db63f47086384841e9aad48e910fd24358d19d0411deb3da70bc66a",
+  "writeahead_plan_sha256": "4579a7e3cf300541875d9d1ce3e200af602f942920097c3354630ca51bddea43",
+  "source_originals": {
+    "scripts/canary_discovery.py": "37f60bcfcafda9b33f87285141dedae8b66c65dd6b0518ed7457cfece404de70",
+    "evaluation/research/live.py": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df"
+  },
+  "source_proposals": {
+    "scripts/canary_discovery.py": "9a05edeceb25f28b67e191f3434301d70622b0c4672f753dea18e0b52ba459ae",
+    "evaluation/research/live.py": "8cfb6272b0b7443ae141004aae5ecfa7ff996ce4d0a80e2ca5a9329aab05af6e"
+  },
+  "future_tests": {
+    "tests/test_canary_fenced_job.py": "04d3111a7eafa59116e5c78578594af7ac1e88db3bb36c48094220817b593960",
+    "tests/test_readguard_capture_protocol.py": "dd41ddf33c7485296e1c0f5834e371cc3a60ef29896ebea48f237b932b5f3c20"
+  },
+  "patch_sha256": "193e875810315e043d1ef9a30a26157687390250a544296d3b6db8f18dc0caf0",
+  "final_controls": {
+    "passed": 48,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 6.962,
+    "by_module": {
+      "local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job": 31,
+      "local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol": 17
+    }
+  },
+  "historical_controls": {
+    "old-candidate-control/pytest-red1.xml": {
+      "passed": 0,
+      "failed": 5,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 3.626,
+      "by_module": {
+        "local-round8.a-genuine-canary.revision2.old-candidate-control.test_canary_fenced_job": 5
+      }
+    },
+    "pre-provenance-control/pytest-red1.xml": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.359,
+      "by_module": {
+        "local-round8.a-genuine-canary.revision2.pre-provenance-control.test_canary_fenced_job": 1
+      }
+    },
+    "pytest-attempt1.xml": {
+      "passed": 46,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 6.602,
+      "by_module": {
+        "local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job": 29,
+        "local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol": 17
+      }
+    },
+    "pytest-attempt2.xml": {
+      "passed": 46,
+      "failed": 2,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 7.096,
+      "by_module": {
+        "local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job": 31,
+        "local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol": 17
+      }
+    },
+    "pytest-attempt3.xml": {
+      "passed": 46,
+      "failed": 2,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 7.109,
+      "by_module": {
+        "local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job": 31,
+        "local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol": 17
+      }
+    },
+    "pytest-attempt4.xml": {
+      "passed": 48,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 6.962,
+      "by_module": {
+        "local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job": 31,
+        "local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol": 17
+      }
+    }
+  },
+  "final_stdout": "48 passed, 22 existing Python3.12 SQLite datetime warnings in6.97s",
+  "ruff_check": true,
+  "ruff_format_check": true,
+  "actual_module_imports": {
+    "actual_modules": [
+      {
+        "name": "app.jobs.worker",
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/jobs/worker.py",
+        "sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df"
+      },
+      {
+        "name": "app.jobs.store",
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/jobs/store.py",
+        "sha256": "fbf69acb386db032beb64bb9a59af9ee43f75730d0037124959714faec1264cc"
+      },
+      {
+        "name": "app.pipeline.runner",
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py",
+        "sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c"
+      },
+      {
+        "name": "app.pipeline.control",
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/control.py",
+        "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd"
+      },
+      {
+        "name": "app.pipeline.read_budget",
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/read_budget.py",
+        "sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf"
+      },
+      {
+        "name": "app.adapters.fetching",
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/fetching.py",
+        "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895"
+      }
+    ],
+    "proposal_harness_only": [
+      "scripts.canary_discovery",
+      "evaluation.research.live"
+    ],
+    "app_shadow_loader": false,
+    "final_source_flag": false
+  },
+  "raw_clock_proof_sha256": "a32c6b595d0fc0551294231ad8bcef281b9f0e06bb67d5065d59cbae48fd3202",
+  "original_stop_sha256": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+  "network_provider_model_university_calls": 0,
+  "repo_source_test_git_stop_writes": 0,
+  "native_default_promotion": false,
+  "postgres_processes_started": 0,
+  "sqlite_cleanup": "source engine.dispose finally + test finalizers close reopened pools; no DB copied to bundle",
+  "limitations": [
+    "SQLite protocol proof; no new PG run or production rollout/time/render/query/docs/recheck/global cap proof",
+    "Strict outer60 stops before native61. Distinct raw causes/counters; no native cap gain inferred from equal60 totals. Standalone mocked native61 tested independently",
+    "Scoped worker factories/module bool require one isolated child process per case; concurrent canary coroutines in shared interpreter are unsupported",
+    "Fresh reporting can contend; counters null/not invented and original typed busy retained; no durable unknown or global DB latency claim",
+    "All university/source transports synthetic; no facts/intake/population quality or live4arm comparison claimed",
+    "Legacy full normalized report frozen from exact original; historical20 unfenced captures never relabeled",
+    "New fenced CLI partial run_error returns2; default legacy CLI behavior retained",
+    "Engine disposal and heartbeat task join observed for final case outputs; DB/cache runtime excluded from review bundle",
+    "Final metering-envelope write is audit-only: no claim that it can measure its own last byte. Actual raw/output first checkpoint work is charged; no new work clock or budget expansion.",
+    "Raw/checkpoint persistence failure may prevent durable final output. Original TimeoutError or typed control propagates; surviving raw/prior checkpoints and redacted stdout remain partial evidence.",
+    "Only current terminal FAILED run_errors entry is redacted in new fenced protocol envelope. Existing app logging/durable error strings and other source diagnostics remain untouched; no general secret-redaction guarantee.",
+    "Focused SQLite source-transport proof only. No new PG/full production gates for these external harness changes; parent owns actual application and full gates."
+  ]
+}

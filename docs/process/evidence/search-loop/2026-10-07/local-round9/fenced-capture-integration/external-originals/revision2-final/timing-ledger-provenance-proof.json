@@ -1,0 +1,52 @@
+[
+  {
+    "artifact_folder": "revision2-final/pytest-attempt1/test_capture_outer_attempts_an0",
+    "elapsed_ms": 242,
+    "latency_seconds": 0.24164399993605912,
+    "original_full_seconds": 120,
+    "source_work_deadline_ms": 120000,
+    "fetcher_calls": 60,
+    "max_fetcher_calls": 60,
+    "max_search_queries": 6,
+    "stop_reason": "page_budget_exhausted",
+    "capture_error": "RuntimeError: BENCHMARK_PAGE_BUDGET_EXHAUSTED",
+    "actual_job_status": "queued",
+    "claim_token": 1,
+    "current_lease_token": 1,
+    "native_counts": {
+      "catalogue:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": 60
+    },
+    "heartbeat_done": [
+      true
+    ],
+    "prior_claim_count": 1,
+    "control_type": "RuntimeError",
+    "control_message": "BENCHMARK_PAGE_BUDGET_EXHAUSTED",
+    "actual_run_error": "RuntimeError: BENCHMARK_PAGE_BUDGET_EXHAUSTED"
+  },
+  {
+    "artifact_folder": "revision2-final/pytest-attempt1/test_actual_timeout_raw_write_0",
+    "elapsed_ms": 4015,
+    "latency_seconds": 4.014538208022714,
+    "original_full_seconds": 1,
+    "source_work_deadline_ms": 1000,
+    "fetcher_calls": 36,
+    "max_fetcher_calls": 60,
+    "max_search_queries": 6,
+    "stop_reason": "wall_clock_budget_exhausted",
+    "capture_error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+    "actual_job_status": "running",
+    "claim_token": 1,
+    "current_lease_token": 1,
+    "native_counts": {
+      "catalogue:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": 36
+    },
+    "heartbeat_done": [
+      true
+    ],
+    "prior_claim_count": 1,
+    "control_type": "CancelledError",
+    "control_message": null,
+    "actual_run_error": "CancelledError"
+  }
+]

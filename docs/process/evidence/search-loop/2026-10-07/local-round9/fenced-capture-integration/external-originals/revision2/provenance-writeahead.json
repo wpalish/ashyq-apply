@@ -1,0 +1,8 @@
+{
+  "change": "Fixed strict outer budget message allowlist in fenced control_message/run_error; arbitrary RuntimeError/OperationalError payloads remain redacted",
+  "existing_green_count": 46,
+  "historical_attempt1_immutable": true,
+  "adds": "two redaction negatives and explicit exact-message assertions in existing outer60 control",
+  "network_calls": 0,
+  "repo_edits": false
+}

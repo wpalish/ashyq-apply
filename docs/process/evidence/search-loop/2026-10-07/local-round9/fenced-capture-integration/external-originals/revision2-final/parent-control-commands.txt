@@ -1,0 +1,15 @@
+These commands are NOT executed by the child. Parent owns source application after review/write-ahead. No live flags, provider, package install or remote DB.
+
+# Verify the final immutable receipt/source/patch hashes before transfer.
+shasum -a 256 /Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-genuine-canary/revision2-final/receipt.json /Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-genuine-canary/revision2-final/genuine-canary-revision2-final.patch
+
+# Independently replay external candidate; use a NEW basetemp/output name, not child originals.
+cd /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend .venv/bin/python -m pytest -q -o addopts='' /Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-genuine-canary/revision2-final/proposed/tests --basetemp=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-fenced-review/pytest-external --junitxml=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-fenced-review/pytest-external.xml
+
+# After parent has ported the four files, these use ACTUAL repo modules without external conftest/shadow/env paths.
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest -q -o addopts='' tests/test_canary_fenced_job.py tests/test_readguard_capture_protocol.py tests/test_canary_checks.py tests/test_expert_live_budget.py tests/test_expert_baseline_finalization.py
+.venv/bin/python -m ruff check scripts/canary_discovery.py evaluation/research/live.py tests/test_canary_fenced_job.py tests/test_readguard_capture_protocol.py
+.venv/bin/python -m ruff format --check scripts/canary_discovery.py evaluation/research/live.py tests/test_canary_fenced_job.py tests/test_readguard_capture_protocol.py
+
+Parent then owns configured complete static/backend/frontend/PG gates and exact import/source recording. Future rollout requires explicit same fenced protocol in all four arms, unchanged strict caps, provider STOP handling and owner default decision. No live run authorized by this external proposal.

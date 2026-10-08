@@ -1,0 +1,44 @@
+[
+  {
+    "folder": "revision2-final/pytest-attempt1/test_successful_job_late_persi0",
+    "capture_error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+    "full_seconds": 1,
+    "elapsed_ms": 3188,
+    "latency_seconds": 3.1881005839677528,
+    "stop_reason": "wall_clock_budget_exhausted",
+    "original_source_work_deadline_ms": 1000,
+    "max_fetcher_calls": 60,
+    "max_search_queries": 6,
+    "fetcher_calls": 36,
+    "actual_job_status": "succeeded",
+    "claim_token": 1,
+    "native_counts": {
+      "catalogue:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": 36
+    },
+    "heartbeat_done": [
+      true
+    ],
+    "prediction_count": 1
+  },
+  {
+    "folder": "revision2-final/pytest-attempt1/test_successful_job_late_persi1",
+    "capture_error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+    "full_seconds": 1,
+    "elapsed_ms": 3168,
+    "latency_seconds": 3.16873462498188,
+    "stop_reason": "wall_clock_budget_exhausted",
+    "original_source_work_deadline_ms": 1000,
+    "max_fetcher_calls": 60,
+    "max_search_queries": 6,
+    "fetcher_calls": 36,
+    "actual_job_status": "succeeded",
+    "claim_token": 1,
+    "native_counts": {
+      "catalogue:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": 36
+    },
+    "heartbeat_done": [
+      true
+    ],
+    "prediction_count": 1
+  }
+]

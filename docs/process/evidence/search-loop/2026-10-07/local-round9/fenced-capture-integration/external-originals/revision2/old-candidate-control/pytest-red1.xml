@@ -1,0 +1,702 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="5" time="3.626" timestamp="2026-10-08T04:47:42.599337+05:00" hostname="iMac-Aliser.local"><testcase classname="local-round8.a-genuine-canary.revision2.old-candidate-control.test_canary_fenced_job" name="test_actual_timeout_raw_write_is_charged_before_final_checkpoint" time="1.020"><failure message="assert 1016 &gt;= 4000">case = namespace(state=&lt;function case.&lt;locals&gt;.state at 0x10db1cb80&gt;, engines=[Engine(sqlite:////Users/wpalish/Documents/Code...write_0'), entry={'name': 'Test University', 'country': 'Example', 'city': 'City', 'homepage': 'https://example.edu/'})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10da3e690&gt;
+
+    def test_actual_timeout_raw_write_is_charged_before_final_checkpoint(case, monkeypatch):
+        live, output = _capture_persistence_case(case, monkeypatch)
+        monkeypatch.setattr(rm.WebScholarshipAdapter, "find", _funding_exceeds_timeout)
+        original_clock = live.time.monotonic
+        offset = [0.0]
+        monkeypatch.setattr(live.time, "monotonic", lambda: original_clock() + offset[0])
+        original_write = Path.write_text
+        raw_writes = []
+    
+        def advancing_write(path, data, *args, **kwargs):
+            written = original_write(path, data, *args, **kwargs)
+            if path == output.with_suffix(".raw.json"):
+                raw_writes.append(path)
+                offset[0] += 3.0
+            return written
+    
+        monkeypatch.setattr(Path, "write_text", advancing_write)
+        _capture_with_native_job(live, output)
+        budget = json.loads(output.with_suffix(".budget.json").read_text())
+        observed = json.loads(output.read_text())
+        raw = json.loads(output.with_suffix(".raw.json").read_text())
+        protocol = raw["canary"]["job_protocol"]
+        assert raw_writes == [output.with_suffix(".raw.json")]
+&gt;       assert budget["elapsed_ms"] &gt;= 4000
+E       assert 1016 &gt;= 4000
+
+../../local-round8/a-genuine-canary/revision2/old-candidate-control/test_canary_fenced_job.py:645: AssertionError</failure></testcase><testcase classname="local-round8.a-genuine-canary.revision2.old-candidate-control.test_canary_fenced_job" name="test_raw_failure_preserves_actual_timeout_and_committed_native_provenance" time="1.014"><failure message="OSError: synthetic raw persistence error">args = (&lt;app.adapters.scholarship.web_scholarships.WebScholarshipAdapter object at 0x113891b80&gt;, Candidate(name='Test Univers...d_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False))
+kwargs = {'allow_search': True}
+
+    async def _funding_exceeds_timeout(*args, **kwargs):
+&gt;       await asyncio.sleep(2)
+
+../../local-round8/a-genuine-canary/revision2/old-candidate-control/test_canary_fenced_job.py:603: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+delay = 2, result = None
+
+    async def sleep(delay, result=None):
+        """Coroutine that completes after a given time (in seconds)."""
+        if delay &lt;= 0:
+            await __sleep0()
+            return result
+    
+        loop = events.get_running_loop()
+        future = loop.create_future()
+        h = loop.call_later(delay,
+                            futures._set_result_unless_cancelled,
+                            future, result)
+        try:
+&gt;           return await future
+                   ^^^^^^^^^^^^
+E           asyncio.exceptions.CancelledError
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/tasks.py:665: CancelledError
+
+The above exception was the direct cause of the following exception:
+
+case_id = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+output = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-genuine-canary/revision2/old-candidate-control/pytest-red1/test_raw_failure_preserves_act0/observed.json')
+max_pages = 60, seconds = 1, strict_expert_budget = True
+finalization_reserve_ms = 0, catalogue_id = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+stop_file = None, university_read_budget = True, fenced_research_job = True
+
+    async def capture_one(
+        case_id: str,
+        output: Path,
+        max_pages: int,
+        seconds: float | None = None,
+        *,
+        strict_expert_budget: bool = False,
+        finalization_reserve_ms: int = 0,
+        catalogue_id: str | None = None,
+        stop_file: Path | None = None,
+        university_read_budget: bool | None = None,
+        fenced_research_job: bool = False,
+    ) -&gt; None:
+        entered = time.monotonic()
+        from app.pipeline import read_budget
+    
+        native = (
+            read_budget.UNIVERSITY_READ_BUDGET
+            if university_read_budget is None
+            else university_read_budget
+        )
+        if native and not fenced_research_job:
+            raise ValueError("University read budget requires a genuine fenced research Job")
+        if fenced_research_job and (DOCUMENT_SECONDS or not case_id):
+            raise ValueError("Fenced protocol requires one identity and excludes documents")
+        if type(finalization_reserve_ms) is not int or finalization_reserve_ms &lt; 0:
+            raise ValueError("Finalization reserve must be a nonnegative integer in milliseconds")
+        if finalization_reserve_ms and not strict_expert_budget:
+            raise ValueError("Finalization reserve requires strict expert budget mode")
+        if stop_file is not None and not strict_expert_budget:
+            raise ValueError("Shared stop file requires strict expert budget mode")
+        if catalogue_id is not None and catalogue_id != case_id:
+            raise ValueError("Capture and catalogue identity must match")
+        # Delayed imports keep ordinary offline evaluation entirely independent of I/O.
+        from app.adapters import fetching
+        from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, PageCategory
+        from app.adapters.search.exa import ExaSearchProvider
+        from app.domain.enums import UserDecision
+        from app.models.research import ClaimRow, ProgramResultRow
+        from scripts import canary_discovery as canary
+    
+        budget = None
+        if strict_expert_budget:
+            from app.config import get_settings
+    
+            seconds = STRICT_MAX_SECONDS if seconds is None else seconds
+            if (
+                type(max_pages) is not int
+                or not 1 &lt;= max_pages &lt;= STRICT_MAX_FETCHER_CALLS
+                or not 0 &lt; seconds &lt;= STRICT_MAX_SECONDS
+            ):
+                raise ValueError(
+                    "Strict capture budget must be at most 60 Fetcher calls and 120 active seconds"
+                )
+            if finalization_reserve_ms &gt;= seconds * 1000:
+                raise ValueError("Finalization reserve must be less than the full case clock")
+            settings = get_settings()
+            if settings.search_provider not in STRICT_PROVIDERS:
+                raise ValueError("Strict live capture requires configured exa or exa_mcp")
+            if settings.enable_browser_tier or not settings.respect_robots:
+                raise ValueError("Strict live capture requires browser tier off and robots respected")
+            budget = _ExpertBudget(
+                max_pages,
+                seconds,
+                settings.search_provider,
+                entered,
+                clock=time.monotonic,
+                finalization_reserve_ms=finalization_reserve_ms,
+                stop_file=stop_file,
+                case_id=case_id,
+            )
+    
+        predictions: list[Prediction] = []
+        raw_claims: list[dict[str, Any]] = []
+        identities = IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text(encoding="utf-8"))
+        started = entered if budget else time.monotonic()
+        observation = Observation(
+            case_id=case_id,
+            error="CAPTURE_IN_PROGRESS",
+            telemetry=Telemetry(
+                http_fetches=0,
+                browser_fetches=0,
+                pdf_fetches=0,
+                search_calls=0,
+                model_input_tokens=0,
+                jev_input_tokens=0,
+            ),
+        )
+    
+        fetchers: list[Any] = []
+        #: D7: the runner, kept for the documents stage that follows the decision.
+        runners: list[Any] = []
+        fenced_reports: list[dict[str, Any]] = []
+        recorded_claims: set[str] = set()
+        documents_phase = False
+    
+        def budget_checkpoint() -&gt; None:
+            assert budget is not None
+            budget_output = output.with_suffix(".budget.json")
+            budget_temporary = budget_output.with_suffix(".pending")
+            budget_temporary.write_text(json.dumps(budget.snapshot(), indent=2), encoding="utf-8")
+            budget_temporary.replace(budget_output)
+    
+        def checkpoint() -&gt; None:
+            observation.telemetry.latency_seconds = time.monotonic() - started
+            # Counted from the fetcher's own tier tally, never assumed: a zero
+            # that nothing increments is a counter invented after the fact.
+            observation.telemetry.browser_fetches = sum(
+                f.tier_counts.get("browser", 0) for f in fetchers if hasattr(f, "tier_counts")
+            )
+            temporary = output.with_suffix(".pending")
+            temporary.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
+            temporary.replace(output)
+            if budget:
+                budget_checkpoint()
+    
+        def final_checkpoint() -&gt; None:
+            checkpoint()
+            if budget and budget.finalization_reserve_ms:
+                # Record the completed first checkpoint's own work from the same
+                # clock. This final metering envelope never opens a new work budget.
+                budget_checkpoint()
+    
+        checkpoint()
+        if fenced_research_job and budget and stop_file is not None and stop_file.exists():
+            budget.stop_reason = "external_provider_failure"
+            observation.error = "BENCHMARK_PROVIDER_FAILURE"
+            final_checkpoint()
+            output.with_suffix(".raw.json").write_text(
+                json.dumps(
+                    {
+                        "job_protocol": {
+                            "started": False,
+                            "native_enabled": native,
+                            "native_ledger": None,
+                        }
+                    }
+                )
+            )
+            return
+        original_request = fetching._pinned_request
+        # Every provider's search is counted, not only Exa's: runs 80-93 used
+        # Serper and recorded search_calls=0 while six queries ran per case.
+        from app.adapters.search.brave import BraveSearchProvider
+        from app.adapters.search.exa_mcp import ExaMcpSearchProvider
+        from app.adapters.search.serper import SerperSearchProvider
+        from app.adapters.search.tavily import TavilySearchProvider
+    
+        provider_classes = (
+            ExaSearchProvider,
+            ExaMcpSearchProvider,
+            TavilySearchProvider,
+            BraveSearchProvider,
+            SerperSearchProvider,
+        )
+        originals = {cls: cls.search for cls in provider_classes}
+    
+        def counted_for(cls):
+            async def counted(provider, *args, **kwargs):
+                return await counted_search(originals[cls], provider, *args, **kwargs)
+    
+            return counted
+    
+        async def counted_search(original_search, provider, *args, **kwargs):
+            # Each search call is counted and timed into this case's own log: a
+            # case that runs out of wall clock after two fetches spent the time
+            # somewhere, and search is the first place to look.
+            if budget:
+                budget.before_search(getattr(provider, "name", ""))
+                observation.telemetry.search_calls = budget.search_queries
+            else:
+                observation.telemetry.search_calls = (observation.telemetry.search_calls or 0) + 1
+            began = time.monotonic()
+            if budget:
+                checkpoint()
+                if budget.finalization_reserve_ms:
+                    budget.remaining()
+            try:
+                return await original_search(provider, *args, **kwargs)
+            except Exception as exc:
+                reason = getattr(getattr(exc, "reason", None), "value", None)
+                print(
+                    f"search failed after {time.monotonic() - began:.1f}s: {type(exc).__name__}"
+                    f" ({reason or 'no reason'}, http {getattr(exc, 'http_status', None)})"
+                )
+                if budget:
+                    raise budget.failed_search(exc) from None
+                raise
+            finally:
+                print(
+                    f"search #{observation.telemetry.search_calls} took "
+                    f"{time.monotonic() - began:.1f}s (t={time.monotonic() - started:.0f}s)",
+                    flush=True,
+                )
+                checkpoint()
+    
+        original_confirm = LiveDiscoveryAdapter._confirm_programs
+    
+        def counted_request(*args, **kwargs):
+            if budget:
+                budget._check_provider_stop()
+                budget.network_http_requests += 1
+            else:
+                observation.telemetry.http_fetches = (observation.telemetry.http_fetches or 0) + 1
+            checkpoint()
+            return original_request(*args, **kwargs)
+    
+        async def observed_confirm(adapter, selected, ranked, trace, profile):
+            queued = list(selected[PageCategory.PROGRAM_PAGE])
+            for _score, url in sorted(ranked[PageCategory.PROGRAM_PAGE], reverse=True):
+                if url not in queued:
+                    queued.append(url)
+            observation.ranked_urls = [HttpUrl(url) for url in queued]
+            checkpoint()
+            if budget is None:
+                await _jev_shadow(case_id, queued, profile)
+            return await original_confirm(adapter, selected, ranked, trace, profile)
+    
+        class ObservedRunner(canary.CanaryRunner):
+            def _make_fetcher(self):
+                fetcher = super()._make_fetcher()
+                fetchers.append(fetcher)
+                original = fetcher.get
+                requests = 0
+                network_reads = 0
+    
+                async def bounded(url, **kwargs):
+                    nonlocal requests, network_reads
+                    if budget:
+                        budget._check_provider_stop()
+                    # The budget bounds reads that reach a server. A page two
+                    # stages both need is served from the cache the second time,
+                    # and until 2026-09-23 that repeat still spent the budget: run
+                    # 20 ended Delft, Vienna and UBC in the funding stage with up
+                    # to a fifth of their 60 calls being cache hits.
+                    if documents_phase:
+                        # The documents stage has its own clock (D7); its reads
+                        # never spend the decision stage's budget.
+                        pass
+                    elif budget:
+                        budget.before_fetch()
+                        observation.telemetry.http_fetches = budget.fetcher_calls
+                        kwargs["use_cache"] = False
+                    elif network_reads &gt;= max_pages:
+                        raise RuntimeError("BENCHMARK_PAGE_BUDGET_EXHAUSTED")
+                    requests += 1
+                    began = time.monotonic()
+                    # Written before the read, so a read that never returns still
+                    # names itself in the log.
+                    print(f"get #{requests} start t={began - started:.0f}s {url[:120]}", flush=True)
+                    if budget and not documents_phase:
+                        checkpoint()
+                        if budget.finalization_reserve_ms:
+                            budget.remaining()
+                    result = await original(url, **kwargs)
+                    # One line per page read, so a case that runs out of wall
+                    # clock shows which reads took it: its own log is printed by
+                    # the benchmark when the budget ends the case.
+                    print(
+                        f"get #{requests} took {time.monotonic() - began:.1f}s "
+                        f"{getattr(result, 'outcome', '?')}",
+                        flush=True,
+                    )
+                    if documents_phase:
+                        observation.telemetry.document_reads = (
+                            observation.telemetry.document_reads or 0
+                        ) + 1
+                        return result
+                    if not getattr(result, "from_cache", False):
+                        network_reads += 1
+                    if result.ok and result.is_pdf and not result.from_cache:
+                        observation.telemetry.pdf_fetches = (observation.telemetry.pdf_fetches or 0) + 1
+                    checkpoint()
+                    return result
+    
+                fetcher.get = bounded
+                return fetcher
+    
+            async def run_to_decision(self):
+                try:
+                    return await super().run_to_decision()
+                finally:
+                    if not fenced_research_job:
+                        # Why a page produced nothing, in the runner's own vocabulary.
+                        # Read here rather than after the run, so a case killed by its
+                        # budget still records what it managed to read — which is
+                        # exactly the case whose zero needs explaining.
+                        observation.page_outcomes = [
+                            PageOutcome(
+                                category=record["category"],
+                                url=record["url"],
+                                page_type=record.get("page_type") or "",
+                                detail=record.get("detail") or "",
+                                characters=int(record["characters"])
+                                if record.get("characters")
+                                else None,
+                            )
+                            for record in canary.page_outcomes(self.run)
+                        ]
+                        runners.append(self)
+                        self.record_claims()
+                    else:
+                        runners.append(self)
+    
+            def _record_fenced_report(self, report) -&gt; None:
+                fenced_reports.append(report)
+                from types import SimpleNamespace
+    
+                protocol = report.get("job_protocol") or {}
+                observation.page_outcomes = [
+                    PageOutcome(
+                        **{
+                            **record,
+                            "characters": int(record["characters"])
+                            if record.get("characters")
+                            else None,
+                        }
+                    )
+                    for record in protocol.get("page_outcomes", [])
+                ]
+                self.record_claims(
+                    [
+                        SimpleNamespace(
+                            **{
+                                **record,
+                                "accessed_at": datetime.fromisoformat(record["accessed_at"])
+                                if record.get("accessed_at")
+                                else None,
+                            }
+                        )
+                        for record in protocol.get("claim_records", [])
+                    ]
+                )
+    
+            def record_claims(self, rows=None) -&gt; None:
+                if rows is None:
+                    rows = self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id)
+                for row in rows:
+                    if row.id in recorded_claims:
+                        continue
+                    recorded_claims.add(row.id)
+                    raw = row.payload
+                    raw_claims.append(raw)
+                    # With the owner-approved identity bindings (2026-09-23),
+                    # the same split the offline mapper makes: an award or a
+                    # document claim becomes the fields of the identity it is
+                    # bound to, and an unbound one stays under its raw key.
+                    mapped = normalize_subject_claims(row.claim_type, raw, identities)
+                    excerpt = raw.get("original_text_excerpt")
+                    for key, value, programme, degree in mapped:
+                        evidence = None
+                        if excerpt and str(row.source_url).startswith(("http://", "https://")):
+                            evidence = Evidence(
+                                url=row.source_url,
+                                excerpt=excerpt,
+                                scope=evidence_scope(
+                                    raw,
+                                    university=next(iter(self._candidates)).name
+                                    if self._candidates
+                                    else case_id,
+                                    programme=programme,
+                                    degree=degree,
+                                ),
+                                accessed_on=row.accessed_at.date(),
+                                source_type="official" if raw.get("official_domain") else "unknown",
+                            )
+                        predictions.append(Prediction(key=key, value=value, evidence=evidence))
+    
+        async def documents_stage() -&gt; None:
+            nonlocal documents_phase
+            if not (DOCUMENT_SECONDS and runners):
+                return
+            # D7: the documents stage, after the decision stage is measured and on
+            # its own clock, so the decision metrics stay comparable with runs
+            # that never collected documents. Every row is approved, as an
+            # applicant approving the whole shortlist would.
+            documents_phase = True
+            began = time.monotonic()
+            runner = runners[-1]
+            for row in runner.session.query(ProgramResultRow).filter(
+                ProgramResultRow.run_id == runner.run.id
+            ):
+                row.user_decision = UserDecision.APPROVED.value
+            runner.session.flush()
+            try:
+                await asyncio.wait_for(runner.collect_documents(), DOCUMENT_SECONDS)
+                observation.telemetry.document_stop = "completed"
+            except TimeoutError:
+                observation.telemetry.document_stop = "document_seconds_exhausted"
+            except Exception as exc:  # recorded, never raised: the decision stage stands
+                observation.telemetry.document_stop = f"{type(exc).__name__}: {exc}"[:200]
+            runner.record_claims()
+            observation.telemetry.document_seconds = time.monotonic() - began
+            print(
+                f"documents stage {observation.telemetry.document_stop} in "
+                f"{observation.telemetry.document_seconds:.1f}s, "
+                f"{observation.telemetry.document_reads or 0} reads",
+                flush=True,
+            )
+    
+        with (
+            patch.object(canary, "CanaryRunner", ObservedRunner),
+            patch.object(fetching, "_pinned_request", counted_request),
+            patch.object(ExaSearchProvider, "search", counted_for(ExaSearchProvider)),
+            patch.object(ExaMcpSearchProvider, "search", counted_for(ExaMcpSearchProvider)),
+            patch.object(TavilySearchProvider, "search", counted_for(TavilySearchProvider)),
+            patch.object(BraveSearchProvider, "search", counted_for(BraveSearchProvider)),
+            patch.object(SerperSearchProvider, "search", counted_for(SerperSearchProvider)),
+            patch.object(LiveDiscoveryAdapter, "_confirm_programs", observed_confirm),
+        ):
+            try:
+                active_seconds = budget.remaining() if budget else seconds
+&gt;               report = await asyncio.wait_for(
+                    canary.run_canary(
+                        None,
+                        False,
+                        catalogue_ids=[catalogue_id],
+                        university_read_budget=native,
+                        fenced_research_job=fenced_research_job,
+                        stop_file=stop_file,
+                    )
+                    if catalogue_id is not None
+                    else canary.run_canary(
+                        {**COHORT, **HELDOUT}[case_id],
+                        False,
+                        university_read_budget=native,
+                        fenced_research_job=fenced_research_job,
+                        stop_file=stop_file,
+                    ),
+                    active_seconds,
+                )
+
+../../local-round8/a-genuine-canary/proposed/evaluation/research/live.py:683: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/tasks.py:519: in wait_for
+    async with timeouts.timeout(timeout):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Timeout [expired]&gt;
+exc_type = &lt;class 'asyncio.exceptions.CancelledError'&gt;
+exc_val = CancelledError(), exc_tb = &lt;traceback object at 0x11395c340&gt;
+
+    async def __aexit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -&gt; Optional[bool]:
+        assert self._state in (_State.ENTERED, _State.EXPIRING)
+    
+        if self._timeout_handler is not None:
+            self._timeout_handler.cancel()
+            self._timeout_handler = None
+    
+        if self._state is _State.EXPIRING:
+            self._state = _State.EXPIRED
+    
+            if self._task.uncancel() &lt;= self._cancelling and exc_type is exceptions.CancelledError:
+                # Since there are no new cancel requests, we're
+                # handling this.
+&gt;               raise TimeoutError from exc_val
+E               TimeoutError
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/timeouts.py:115: TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+case = namespace(state=&lt;function case.&lt;locals&gt;.state at 0x10db1fc40&gt;, engines=[Engine(sqlite:////Users/wpalish/Documents/Code...es_act0'), entry={'name': 'Test University', 'country': 'Example', 'city': 'City', 'homepage': 'https://example.edu/'})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10dac1b50&gt;
+
+    def test_raw_failure_preserves_actual_timeout_and_committed_native_provenance(case, monkeypatch):
+        live, output = _capture_persistence_case(case, monkeypatch)
+        monkeypatch.setattr(rm.WebScholarshipAdapter, "find", _funding_exceeds_timeout)
+        original_write = Path.write_text
+    
+        def failed_raw(path, data, *args, **kwargs):
+            if path == output.with_suffix(".raw.json"):
+                raise OSError("synthetic raw persistence error")
+            return original_write(path, data, *args, **kwargs)
+    
+        monkeypatch.setattr(Path, "write_text", failed_raw)
+        with pytest.raises(TimeoutError):
+&gt;           _capture_with_native_job(live, output)
+
+../../local-round8/a-genuine-canary/revision2/old-candidate-control/test_canary_fenced_job.py:671: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../local-round8/a-genuine-canary/revision2/old-candidate-control/test_canary_fenced_job.py:608: in _capture_with_native_job
+    asyncio.run(
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+../../local-round8/a-genuine-canary/proposed/evaluation/research/live.py:717: in capture_one
+    output.with_suffix(".raw.json").write_text(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-genuine-canary/revision2/old-candidate-control/pytest-red1/test_raw_failure_preserves_act0/observed.raw.json')
+data = '{"canary": {"accessed_at": "2026-10-07T23:47:43.760773+00:00", "duration_seconds": 1.0, "run_error": "CancelledError"..."status": "VERIFIED_CURRENT", "extraction_method": "html_rule", "notes": ""}], "protocol_observation_available": true}'
+args = (), kwargs = {}
+
+    def failed_raw(path, data, *args, **kwargs):
+        if path == output.with_suffix(".raw.json"):
+&gt;           raise OSError("synthetic raw persistence error")
+E           OSError: synthetic raw persistence error
+
+../../local-round8/a-genuine-canary/revision2/old-candidate-control/test_canary_fenced_job.py:666: OSError</failure></testcase><testcase classname="local-round8.a-genuine-canary.revision2.old-candidate-control.test_canary_fenced_job" name="test_raw_failure_preserves_actual_typed_busy_with_readable_prior_state" time="0.173"><failure message="OSError: synthetic raw persistence error">case = namespace(state=&lt;function case.&lt;locals&gt;.state at 0x1138b4860&gt;, engines=[Engine(sqlite:////Users/wpalish/Documents/Code...es_act1'), entry={'name': 'Test University', 'country': 'Example', 'city': 'City', 'homepage': 'https://example.edu/'})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x113819370&gt;
+
+    def test_raw_failure_preserves_actual_typed_busy_with_readable_prior_state(case, monkeypatch):
+        live, output = _capture_persistence_case(case, monkeypatch)
+        blockers = []
+        original_adapter = rm.WebScholarshipAdapter
+        original_write = Path.write_text
+    
+        def locked_adapter(*args, **kwargs):
+            adapter = original_adapter(*args, **kwargs)
+            blocker = case.engines[-1].connect()
+            blocker.exec_driver_sql("BEGIN IMMEDIATE")
+            blockers.append(blocker)
+            return adapter
+    
+        def failed_raw(path, data, *args, **kwargs):
+            if path == output.with_suffix(".raw.json"):
+                raise OSError("synthetic raw persistence error")
+            return original_write(path, data, *args, **kwargs)
+    
+        monkeypatch.setattr(rm, "WebScholarshipAdapter", locked_adapter)
+        monkeypatch.setattr(Path, "write_text", failed_raw)
+        try:
+            with pytest.raises(UniversityReadStopped) as caught:
+&gt;               _capture_with_native_job(live, output, 120)
+
+../../local-round8/a-genuine-canary/revision2/old-candidate-control/test_canary_fenced_job.py:707: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../local-round8/a-genuine-canary/revision2/old-candidate-control/test_canary_fenced_job.py:608: in _capture_with_native_job
+    asyncio.run(
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+../../local-round8/a-genuine-canary/proposed/evaluation/research/live.py:744: in capture_one
+    output.with_suffix(".raw.json").write_text(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-genuine-canary/revision2/old-candidate-control/pytest-red1/test_raw_failure_preserves_act1/observed.raw.json')
+data = '{\n  "canary": {\n    "accessed_at": "2026-10-07T23:47:44.842357+00:00",\n    "duration_seconds": 0.1,\n    "run_erro...: 0.5,\n      "status": "VERIFIED_CURRENT",\n      "extraction_method": "html_rule",\n      "notes": ""\n    }\n  ]\n}'
+args = (), kwargs = {'encoding': 'utf-8'}
+
+    def failed_raw(path, data, *args, **kwargs):
+        if path == output.with_suffix(".raw.json"):
+&gt;           raise OSError("synthetic raw persistence error")
+E           OSError: synthetic raw persistence error
+
+../../local-round8/a-genuine-canary/revision2/old-candidate-control/test_canary_fenced_job.py:700: OSError</failure></testcase><testcase classname="local-round8.a-genuine-canary.revision2.old-candidate-control.test_canary_fenced_job" name="test_successful_job_raw_failure_is_failed_capture_with_honest_job_state" time="0.169"><failure message="OSError: synthetic raw persistence error">case = namespace(state=&lt;function case.&lt;locals&gt;.state at 0x1139974c0&gt;, engines=[Engine(sqlite:////Users/wpalish/Documents/Code...failur0'), entry={'name': 'Test University', 'country': 'Example', 'city': 'City', 'homepage': 'https://example.edu/'})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x1139d4080&gt;
+
+    def test_successful_job_raw_failure_is_failed_capture_with_honest_job_state(case, monkeypatch):
+        live, output = _capture_persistence_case(case, monkeypatch)
+        original_write = Path.write_text
+    
+        async def no_funding(*args, **kwargs):
+            return [], AdapterResult()
+    
+        def failed_raw(path, data, *args, **kwargs):
+            if path == output.with_suffix(".raw.json"):
+                raise OSError("synthetic raw persistence error")
+            return original_write(path, data, *args, **kwargs)
+    
+        monkeypatch.setattr(rm.WebScholarshipAdapter, "find", no_funding)
+        monkeypatch.setattr(Path, "write_text", failed_raw)
+        with pytest.raises(RuntimeError, match="^BENCHMARK_PROTOCOL_PERSISTENCE_FAILED$"):
+&gt;           _capture_with_native_job(live, output, 120)
+
+../../local-round8/a-genuine-canary/revision2/old-candidate-control/test_canary_fenced_job.py:742: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../local-round8/a-genuine-canary/revision2/old-candidate-control/test_canary_fenced_job.py:608: in _capture_with_native_job
+    asyncio.run(
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+../../local-round8/a-genuine-canary/proposed/evaluation/research/live.py:744: in capture_one
+    output.with_suffix(".raw.json").write_text(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-genuine-canary/revision2/old-candidate-control/pytest-red1/test_successful_job_raw_failur0/observed.raw.json')
+data = '{\n  "canary": {\n    "accessed_at": "2026-10-07T23:47:45.042104+00:00",\n    "duration_seconds": 0.1,\n    "run_erro...: 0.5,\n      "status": "VERIFIED_CURRENT",\n      "extraction_method": "html_rule",\n      "notes": ""\n    }\n  ]\n}'
+args = (), kwargs = {'encoding': 'utf-8'}
+
+    def failed_raw(path, data, *args, **kwargs):
+        if path == output.with_suffix(".raw.json"):
+&gt;           raise OSError("synthetic raw persistence error")
+E           OSError: synthetic raw persistence error
+
+../../local-round8/a-genuine-canary/revision2/old-candidate-control/test_canary_fenced_job.py:736: OSError</failure></testcase><testcase classname="local-round8.a-genuine-canary.revision2.old-candidate-control.test_canary_fenced_job" name="test_final_checkpoint_failure_preserves_timeout_without_false_durable_claim" time="1.016"><failure message="Failed: DID NOT RAISE TimeoutError">case = namespace(state=&lt;function case.&lt;locals&gt;.state at 0x1138b4b80&gt;, engines=[Engine(sqlite:////Users/wpalish/Documents/Code...ilure_0'), entry={'name': 'Test University', 'country': 'Example', 'city': 'City', 'homepage': 'https://example.edu/'})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x113892c60&gt;
+capsys = &lt;_pytest.capture.CaptureFixture object at 0x113890bc0&gt;
+
+    def test_final_checkpoint_failure_preserves_timeout_without_false_durable_claim(
+        case, monkeypatch, capsys
+    ):
+        live, output = _capture_persistence_case(case, monkeypatch)
+        monkeypatch.setattr(rm.WebScholarshipAdapter, "find", _funding_exceeds_timeout)
+        original_write = Path.write_text
+        raw_written = [False]
+    
+        def failed_checkpoint(path, data, *args, **kwargs):
+            if raw_written[0] and path == output.with_suffix(".pending"):
+                raise OSError("synthetic final checkpoint error")
+            written = original_write(path, data, *args, **kwargs)
+            if path == output.with_suffix(".raw.json"):
+                raw_written[0] = True
+            return written
+    
+        monkeypatch.setattr(Path, "write_text", failed_checkpoint)
+&gt;       with pytest.raises(TimeoutError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE TimeoutError
+
+../../local-round8/a-genuine-canary/revision2/old-candidate-control/test_canary_fenced_job.py:770: Failed</failure></testcase></testsuite></testsuites>
