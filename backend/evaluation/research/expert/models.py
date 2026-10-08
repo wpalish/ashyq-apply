@@ -13,7 +13,16 @@ from pathlib import Path
 from typing import Any, Literal, Self
 from urllib.parse import urlsplit
 
-from pydantic import BaseModel, ConfigDict, Field, HttpUrl, JsonValue, TypeAdapter, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    HttpUrl,
+    JsonValue,
+    TypeAdapter,
+    model_serializer,
+    model_validator,
+)
 
 QuestionID = Literal["Q0", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6"]
 QUESTIONS = ("Q0", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6")
@@ -196,7 +205,9 @@ class ExpertTrace(Strict):
     packet_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     baseline_pipeline_sha: str = Field(min_length=7)
     max_fetcher_calls: int = Field(ge=1)
-    max_elapsed_ms: int = Field(ge=1)
+    max_elapsed_ms: int | None = Field(ge=1)
+    timing_policy: Literal["legacy_active", "expert_wall_only"] = "legacy_active"
+    protective_wall_ms: int | None = Field(default=None, ge=1)
     max_search_queries: int | None = Field(default=None, ge=1)
     initial_fetcher_calls: int = Field(ge=0)
     initial_elapsed_ms: int = Field(ge=0)
@@ -208,10 +219,50 @@ class ExpertTrace(Strict):
     question_findings: list[QuestionFinding] | None = None
     review_status: Literal["unreviewed"] = "unreviewed"
 
+    @model_validator(mode="before")
+    @classmethod
+    def wall_raw_types(cls, value):
+        if isinstance(value, dict) and value.get("timing_policy") == "expert_wall_only":
+            for key in (
+                "max_fetcher_calls",
+                "max_search_queries",
+                "protective_wall_ms",
+                "initial_fetcher_calls",
+                "initial_elapsed_ms",
+                "initial_search_queries",
+            ):
+                if type(value.get(key)) is not int:
+                    raise ValueError("Independent raw counters must be exact integers")
+        return value
+
+    @model_serializer(mode="wrap")
+    def keep_legacy_fields(self, handler):
+        value = handler(self)
+        if self.timing_policy == "legacy_active":
+            value.pop("timing_policy", None)
+            value.pop("protective_wall_ms", None)
+        return value
+
     @model_validator(mode="after")
     def ordered_actions(self) -> Self:
+        if self.timing_policy == "legacy_active" and (
+            self.max_elapsed_ms is None or self.protective_wall_ms is not None
+        ):
+            raise ValueError("Legacy trace requires its active cap")
+        if self.timing_policy == "expert_wall_only" and (
+            self.max_elapsed_ms is not None
+            or self.protective_wall_ms != 900_000
+            or self.max_fetcher_calls != 60
+            or self.max_search_queries != 6
+        ):
+            raise ValueError("Wall-only trace requires null active cap and900s wall")
         if self.started_at.tzinfo is None or self.ended_at.tzinfo is None:
             raise ValueError("Trace times must include a timezone")
+        if (
+            self.timing_policy == "expert_wall_only"
+            and (self.ended_at - self.started_at).total_seconds() > 900
+        ):
+            raise ValueError("Expert trace exceeds protective wall")
         if self.ended_at < self.started_at:
             raise ValueError("Trace ends before it starts")
         if [action.step for action in self.actions] != list(range(1, len(self.actions) + 1)):
@@ -253,7 +304,10 @@ class ExpertTrace(Strict):
                 used_queries = action.search_queries_cumulative
             if action.policy_mode == "same_policy" and (
                 action.fetcher_calls_cumulative > self.max_fetcher_calls
-                or action.elapsed_ms_cumulative > self.max_elapsed_ms
+                or (
+                    self.max_elapsed_ms is not None
+                    and action.elapsed_ms_cumulative > self.max_elapsed_ms
+                )
             ):
                 raise ValueError("Same-policy action exceeds the bounded run budget")
             previous = action.at
@@ -681,6 +735,27 @@ def _controller_budget(
 ) -> None:
     from .controller import BLOCKED_HOSTS, STRICT_PROVIDERS, _allowed_url
 
+    policy = record.get("tool_policy") or {}
+    if not isinstance(policy, dict):
+        raise ValueError("Controller tool policy must be structured")
+    if policy.get("timing_policy", "legacy_active") != parsed.timing_policy:
+        raise ValueError("Raw timing policy differs from trace")
+    if parsed.timing_policy == "expert_wall_only" and (
+        policy.get("protective_wall_ms") != 900_000
+        or policy.get("thinking_in_tool_ms") is not False
+        or record.get("budget_origin") != "independent_full_budget"
+    ):
+        raise ValueError("Raw independent wall policy incomplete")
+    if parsed.timing_policy == "expert_wall_only":
+        wb = record.get("wall_elapsed_ms_before")
+        wa = record.get("wall_elapsed_ms_cumulative")
+        if (
+            type(wb) is not int
+            or type(wa) is not int
+            or not 0 <= wb <= wa <= 900_000
+            or wa - wb < record.get("elapsed_ms", 0)
+        ):
+            raise ValueError("Raw protective wall counter invalid")
     if "case_id" in record and record["case_id"] != parsed.case_id:
         raise ValueError("Controller log belongs to a different case")
     if comparison_mode is not None and record.get("budget_origin") != comparison_mode:
@@ -776,6 +851,13 @@ def validate_trace(
     if parsed.baseline_pipeline_sha != packet["baseline_pipeline_sha"]:
         raise ValueError("Wrong baseline pipeline")
     budget = packet["baseline_budget"]
+    if parsed.timing_policy != budget.get("timing_policy", "legacy_active"):
+        raise ValueError("Packet timing policy differs from trace")
+    if parsed.timing_policy == "expert_wall_only" and (
+        packet.get("comparison_mode") != "independent_full_budget"
+        or budget.get("protective_wall_ms") != 900_000
+    ):
+        raise ValueError("Independent packet wall policy incomplete")
     if (parsed.max_fetcher_calls, parsed.max_elapsed_ms) != (
         budget["max_fetcher_calls"],
         budget["max_elapsed_ms"],
@@ -808,6 +890,7 @@ def validate_trace(
             parsed.initial_elapsed_ms,
             parsed.initial_search_queries,
         )
+        previous_wall = 0
         for action in parsed.actions:
             path = (root / action.raw_log_path).resolve()
             if not path.is_relative_to(root):
@@ -824,6 +907,10 @@ def validate_trace(
                     action, record, calls, elapsed, queries
                 )
                 _controller_budget(parsed, action, record, packet.get("comparison_mode"))
+                if parsed.timing_policy == "expert_wall_only":
+                    if record["wall_elapsed_ms_before"] < previous_wall:
+                        raise ValueError("Protective wall counters decrease between actions")
+                    previous_wall = record["wall_elapsed_ms_cumulative"]
                 records[action.step] = record
                 source = _source_read(record)
                 if source is not None:

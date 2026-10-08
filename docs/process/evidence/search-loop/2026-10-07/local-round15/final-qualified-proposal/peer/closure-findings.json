@@ -1,0 +1,38 @@
+{
+  "decision": "QUALIFIED_ACCEPT_EXTERNAL_SOURCE_FOR_ROOT_INTEGRATION",
+  "remaining_material_findings": [],
+  "closures": [
+    {
+      "id": "B-R0-1",
+      "closed": "local_pilot.py113-130 re-resolves dispatched executable target/hash; native prepare control retargets Python symlink and rejects before dispatch"
+    },
+    {
+      "id": "B-R0-2",
+      "closed": "local_pilot.py1307-1388 rehashes every accepted selector original, parses successful original stream/file, reconstructs prior/new journal and complete accepted trace/citations; final20 mutates earlier selector and raw and observes rejection"
+    },
+    {
+      "id": "B-R0-3",
+      "closed": "models.py749-757 wall delta covers native action duration; validate_trace910-913 enforces inter-action monotonic wall; native final control rejects rehashed decreasing second wall"
+    },
+    {
+      "id": "B-R0-4",
+      "closed": "controller.py213-234 explicit summary60/6/null/900000/mode/thinking policy checked against resumed raw; native resume controls reject reset, contradictory summary and legacy cross-mode"
+    },
+    {
+      "id": "B-R0-5",
+      "closed": "models.py _controller_budget validates dict before metadata get; native final control retains ValueError on truthy malformed policy"
+    },
+    {
+      "id": "root-R7",
+      "closed": "selector.py run_owned_process kills own group and bounds communicate/wait cleanup by1s; same original TimeoutExpired or RuntimeError object preserved, partial streams and cleanup_incomplete recorded by strengthened native control"
+    },
+    {
+      "id": "root-neutral",
+      "closed": "local_pilot.py neutral_admission executes exactly2total probes A/B before algorithms; final verify rehashes originals/schema and reparses exact completed stream/file/runtime/source/model linkage; FakeIsolation/select route remains explicitly ineligible"
+    },
+    {
+      "id": "algorithm-port",
+      "closed": "pilot_admission.validate_algorithm retains default require_complete_job=True; collect_algorithm selects separate bounded False lane and checks physical captures/source/Job/counters/error/typed refusal despite exit0. AST-equivalence record is source evidence; real source-bound child/Job execution not performed here"
+    }
+  ]
+}

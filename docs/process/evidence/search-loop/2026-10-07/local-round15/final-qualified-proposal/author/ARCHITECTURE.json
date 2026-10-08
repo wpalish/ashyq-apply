@@ -1,0 +1,28 @@
+{
+  "created_utc": "2026-10-08T06:47:22.172259+00:00",
+  "modules_existing": [
+    "evaluation.research.live (genuineJob subprocess)",
+    "expert.blind_cli.Isolation + selector.select (isolated ephemeral turns)",
+    "expert.journal.AcceptedJournal + compact.expand_submission",
+    "expert.models.validate_trace (neutral quote/scope/raw validation)",
+    "expert.controller (real Fetcher/provider executor)"
+  ],
+  "proposed_files": [
+    "backend/evaluation/research/local_pilot.py (fresh prepare/execute orchestrator)",
+    "backend/evaluation/research/expert/controller.py (explicit opt-in wall-only expert timing; legacy unchanged)",
+    "backend/evaluation/research/expert/models.py (explicit timing-policy neutral trace binding)",
+    "backend/tests/test_local_pilot.py (<=20 offline scenarios)"
+  ],
+  "phases": [
+    "prepare explicit public original10 packet (no dataset/capture/gold reads), pin source/executable/provider/stop/inputs",
+    "execute only with matching owner grant and retainedSTOP hash, reserve attempt before every dispatch",
+    "sequential algorithm onecase genuineJob strict120/60/6, record/validate complete-or-honest-boundedpartial raw",
+    "two independent expert instances eachcase adaptive journal choose action\u2192one controller action\u2192savedview\u2192checkpoint/full-neutral-validate\u2192next selector",
+    "wholecycle seal all originals/receipts prior evaluator access; never invoke evaluator"
+  ],
+  "new_refusal": "one append-only common fresh gate before each subprocess/model/tool; stop all; reserve log first; fail closed malformed/unavailable output; oldSTOP never altered",
+  "expert_timing": "wall900s includes all stages; model elapsed separately logged; controller toolms cumulative diagnostic only, never feeds active120s cap; fixed transport timeout preserved",
+  "required_primitive_change": "strict controller currently max_ms<=120000; introduce explicit expert_wall_only policy without changing legacy default. Models must bind policy and nullable active cap; neutral validation still checks raw/source quotes,read/query counters,case/provider/domain/timing policy.",
+  "isolation": "separate public selector workspace per expert/case; deny repo/snapshot/cycleprivate/otherexpert/.codex-memory roots using native Isolation; prove allowed/denied harmless sentinels; no algorithm outcome in prompt; scoped command flags/tools disabled",
+  "unknown": "Prepared/offline test proof not model/provider availability or accepted runtime/score; liveapproval pending"
+}

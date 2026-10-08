@@ -1,0 +1,42 @@
+{
+  "executions": [
+    {
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/parity.py",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/parity-outputs/original"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/legacy-runtime/backend",
+      "environment": {
+        "HOME": "/Users/wpalish",
+        "PATH": "/usr/bin:/bin",
+        "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/legacy-runtime/backend",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "UNIMATCH_DEMO_MODE": "true",
+        "UNIMATCH_ENABLE_BROWSER_TIER": "false"
+      },
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/parity.py",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/parity-outputs/proposed"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend",
+      "environment": {
+        "HOME": "/Users/wpalish",
+        "PATH": "/usr/bin:/bin",
+        "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "UNIMATCH_DEMO_MODE": "true",
+        "UNIMATCH_ENABLE_BROWSER_TIER": "false"
+      },
+      "exit_code": 0
+    }
+  ],
+  "whole_legacy_json_bytes_equal": true,
+  "bytes": 3905,
+  "sha256": "ed1dba39ae7d7ff2ac086ae25ed8d85ba77d68ab7fe2eec8f337f494c3528c53",
+  "qualification": "same synthetic legacy fixture on original and final proposed ordinary source modules; no model/CLI/provider/SQL"
+}

@@ -1,0 +1,70 @@
+{
+ "at": "2026-01-01T00:00:00+00:00",
+ "budget_origin": "independent_full_budget",
+ "budgets": {
+  "max_calls": 60,
+  "max_ms": 120000,
+  "max_search_queries": 6
+ },
+ "case_id": "synthetic",
+ "charged_elapsed_ms": 0,
+ "elapsed_ms": 0,
+ "elapsed_ms_before": 0,
+ "elapsed_ms_cumulative": 0,
+ "executed": true,
+ "fetcher_calls_cumulative": 1,
+ "log_prefix": "synthetic",
+ "outcome_status": "success",
+ "phase": "actions",
+ "policy_mode": "same_policy",
+ "provider": "exa_mcp",
+ "request": {
+  "tool": "fetcher",
+  "url": "https://example.edu/admissions"
+ },
+ "response": {
+  "content_b64": "U3ludGhldGljIGxlZ2FjeSBhZG1pc3Npb25zIHNvdXJjZQ==",
+  "content_sha256": "650875db554400de3b454690cdd1bdd86c046e1d48eb50f33784b00fe5fb917f",
+  "content_type": "text/plain",
+  "error": "",
+  "fetch_tier": "http",
+  "fetched_at": "2026-01-01T00:00:00+00:00",
+  "final_url": "https://example.edu/admissions",
+  "from_cache": false,
+  "ok": true,
+  "outcome": "ok",
+  "outcome_status": "success",
+  "status_code": 200
+ },
+ "search_queries_cumulative": 0,
+ "stop_reason": null,
+ "tool_policy": {
+  "allowed": [
+   "fetcher (production Fetcher, robots respected, browser tier off)",
+   "search_provider"
+  ],
+  "allowed_search_providers": [
+   "exa",
+   "exa_mcp"
+  ],
+  "blocked_hosts": [
+   "github.com",
+   "githubusercontent.com",
+   "github.io",
+   "gitlab.com",
+   "bitbucket.org",
+   "sourcegraph.com",
+   "huggingface.co",
+   "kaggle.com"
+  ],
+  "budget_origin": "independent_full_budget",
+  "expert_tools": "none: the expert names actions; the controller executes and logs them",
+  "max_elapsed_ms": 120000,
+  "max_fetcher_calls": 60,
+  "max_search_queries": 6,
+  "official_domains": [
+   "example.edu"
+  ],
+  "strict_budget": true
+ }
+}

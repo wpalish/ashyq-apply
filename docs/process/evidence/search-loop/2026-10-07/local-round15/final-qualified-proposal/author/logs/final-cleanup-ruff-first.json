@@ -1,0 +1,86 @@
+[
+  {
+    "cell": null,
+    "code": "B010",
+    "end_location": {
+      "column": 67,
+      "row": 82
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/evaluation/research/expert/selector.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "exc.cleanup_incomplete = cleanup_incomplete",
+          "end_location": {
+            "column": 67,
+            "row": 82
+          },
+          "location": {
+            "column": 13,
+            "row": 82
+          }
+        }
+      ],
+      "message": "Replace `setattr` with assignment"
+    },
+    "location": {
+      "column": 13,
+      "row": 82
+    },
+    "message": "Do not call `setattr` with a constant attribute value. It is not any safer than normal property access.",
+    "noqa_row": 82,
+    "url": "https://docs.astral.sh/ruff/rules/set-attr-with-constant"
+  },
+  {
+    "cell": null,
+    "code": "B023",
+    "end_location": {
+      "column": 35,
+      "row": 546
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": null,
+    "location": {
+      "column": 27,
+      "row": 546
+    },
+    "message": "Function definition does not bind loop variable `original`",
+    "noqa_row": 546,
+    "url": "https://docs.astral.sh/ruff/rules/function-uses-loop-variable"
+  },
+  {
+    "cell": null,
+    "code": "B023",
+    "end_location": {
+      "column": 25,
+      "row": 548
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": null,
+    "location": {
+      "column": 20,
+      "row": 548
+    },
+    "message": "Function definition does not bind loop variable `stuck`",
+    "noqa_row": 548,
+    "url": "https://docs.astral.sh/ruff/rules/function-uses-loop-variable"
+  },
+  {
+    "cell": null,
+    "code": "B023",
+    "end_location": {
+      "column": 25,
+      "row": 557
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": null,
+    "location": {
+      "column": 20,
+      "row": 557
+    },
+    "message": "Function definition does not bind loop variable `stuck`",
+    "noqa_row": 557,
+    "url": "https://docs.astral.sh/ruff/rules/function-uses-loop-variable"
+  }
+]
