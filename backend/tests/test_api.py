@@ -1052,3 +1052,46 @@ class TestRerankAndShortlist:
         _, run = finished_run
         assert client.post("/api/runs/does-not-exist/rerank", json={}).status_code == 404
         assert client.get("/api/runs/does-not-exist/shortlist").status_code == 404
+
+
+class TestDocumentPreparationProgress:
+    def test_progress_survives_notes_rerank_recollection_and_export(self, client, finished_run):
+        profile, run = finished_run
+        base = f"/api/runs/{run['id']}"
+        row = client.get(base + "/results").json()[0]
+        url = base + f"/results/{row['id']}"
+        client.post(url + "/decision", json={"decision": "approved", "reason": "", "notes": ""})
+        client.post(base + "/collect-documents")
+        assert asyncio.run(drain_queue()) == 1
+        row = client.get(url).json()
+        groups = [
+            row["checklist"][key]
+            for key in [
+                "applicant_actions",
+                "school_actions",
+                "recommender_actions",
+                "certification_actions",
+            ]
+        ]
+        item = next(item for group in groups for item in group)
+        key = item["progress_id"]
+        mutation = url + "/documents/" + key
+        assert client.patch(mutation, json={"done": True}).json()["document_progress"] == {
+            key: True
+        }
+        assert client.patch(url + "/notes", json={"notes": "Keep this note"}).status_code == 200
+        assert client.post(base + "/rerank", json={}).status_code == 200
+        assert client.get(url).json()["document_progress"] == {key: True}
+        assert client.post(base + "/retry").status_code == 200
+        assert asyncio.run(drain_queue()) == 1
+        reread = client.get(url).json()
+        assert reread["document_progress"] == {key: True}
+        assert reread["user_notes"] == "Keep this note"
+        exported = client.get(f"/api/profiles/{profile['id']}/export").json()
+        assert any(r["document_progress"] == {key: True} for r in exported["results"])
+        assert client.patch(mutation, json={"done": False}).json()["document_progress"] == {}
+        assert client.patch(url + "/documents/unknown", json={"done": True}).status_code == 409
+        assert client.patch(mutation, json={"done": "true"}).status_code == 422
+        assert (
+            client.patch(mutation, json={"done": True, "claim_verified": True}).status_code == 422
+        )

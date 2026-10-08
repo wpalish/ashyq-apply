@@ -61,8 +61,7 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
               className="btn btn--primary"
               disabled={shortlisted === 0 || collecting}
               onClick={async () => {
-                await collectDocuments();
-                onCollect();
+                if (await collectDocuments()) onCollect();
               }}
               data-testid="collect-documents"
             >

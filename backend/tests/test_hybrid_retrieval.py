@@ -823,3 +823,27 @@ class TestRejectingKindsThatAreNotProgrammes:
             reject_irrelevant_kinds=True,
         )
         assert len(outcome.kept) == 1
+
+
+@pytest.mark.parametrize(
+    "text, expected",
+    [
+        ("BSc-Computer_Science/2027", ["bsc", "computer", "science", "2027"]),
+        ("информатика қазақша", ["информатика", "қазақша"]),
+        ("Ingénierie INGE\u0301NIERIE", ["ingénierie", "ingénierie"]),
+        ("Πληροφορική 计算机科学", ["πληροφορική", "计算机科学"]),
+        ("AI IT 学院 _ ---", []),
+    ],
+)
+def test_unicode_words_and_canonical_accents(text, expected):
+    assert tokenize(text) == expected
+
+
+def test_non_latin_snippet_can_rank_the_relevant_page_without_title_boosts():
+    outcome = run(
+        [
+            result("https://nu.edu.kz/programmes/z", "BSc Programme", "计算机科学", rank=2),
+            result("https://nu.edu.kz/programmes/a", "BSc Programme", "history", rank=3),
+        ]
+    )
+    assert rank_candidates(outcome, an_intent(field="计算机科学"))[0].url.endswith("/z")

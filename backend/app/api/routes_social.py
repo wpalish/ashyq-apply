@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import base64
 import binascii
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
@@ -746,7 +746,7 @@ def conversation_with(
 ) -> MessagePage:
     """The thread with one person, oldest first.
 
-    Reading it marks it read. That is a write on a GET, which is worth naming:
+    Only the delivered prefix is marked read. That is a write on a GET, which is worth naming:
     the alternative is a second request every screen has to remember to send,
     and a badge that lies whenever one forgets.
     """
@@ -766,11 +766,20 @@ def conversation_with(
     )
     page, next_cursor = _split(rows, limit, lambda row: (row.created_at, row.id))
 
-    if principal.user_id == conversation.lower_id:
-        conversation.lower_read_at = utcnow()
-    else:
-        conversation.higher_read_at = utcnow()
-    session.commit()
+    if page:
+        seen = ensure_utc(page[-1].created_at) or page[-1].created_at
+        # Read markers are timestamps, but paging also orders by id. If the
+        # next page starts in the same timestamp, do not mark its hidden rows
+        # read. The visible tied rows remain unread until that group is read.
+        if len(rows) > limit and rows[limit].created_at == page[-1].created_at:
+            seen -= timedelta(microseconds=1)
+        previous = ensure_utc(conversation.read_at_for(principal.user_id))
+        if previous is None or seen > previous:
+            if principal.user_id == conversation.lower_id:
+                conversation.lower_read_at = seen
+            else:
+                conversation.higher_read_at = seen
+            session.commit()
 
     return MessagePage(
         person=person,
@@ -784,6 +793,7 @@ def conversation_with(
             for message in page
         ],
         next_cursor=next_cursor,
+        latest_cursor=_encode_cursor(page[-1].created_at, page[-1].id) if page else cursor,
     )
 
 

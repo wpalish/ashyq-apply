@@ -6,7 +6,7 @@
  * decide which blanks are worth filling.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ApiError, api } from '@/api/client';
 import { CommaSeparatedInput } from '@/components/CommaSeparatedInput';
 import { Chip, Field, Notice, Panel } from '@/components/primitives';
@@ -49,18 +49,26 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
 
   const [conversionError, setConversionError] = useState<string | null>(null);
 
+  const mounted = useRef(true);
+  const latestDraft = useRef(profileDraft);
+  const transcriptVersion = useRef(0);
+  useEffect(() => { latestDraft.current = profileDraft; }, [profileDraft]);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
+
   const scaleLabel = String(get(profileDraft, ['academics', 'gpa', 'raw_scale_label']) ?? '');
 
   useEffect(() => {
     if (!scaleLabel) return;
-    api.conversionMethods(scaleLabel).then((r) => setMethods(r.methods)).catch(() => setMethods([]));
+    let cancelled = false;
+    api.conversionMethods(scaleLabel).then((r) => { if (!cancelled) setMethods(r.methods); }).catch(() => { if (!cancelled) setMethods([]); });
+    return () => { cancelled = true; };
   }, [scaleLabel]);
 
   useEffect(() => {
     if (!savedProfile || !dirty || loading) return;
     const timer = window.setTimeout(() => {
       setSaving(true);
-      void saveProfile().then(() => setSaved(true)).catch(() => setSaved(false)).finally(() => setSaving(false));
+      void saveProfile().then((accepted) => setSaved(accepted)).catch(() => setSaved(false)).finally(() => setSaving(false));
     }, 1500);
     return () => window.clearTimeout(timer);
   }, [savedProfile, dirty, loading, profileDraft, saveProfile]);
@@ -87,19 +95,22 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
 
   const readTranscript = async (file: File | undefined) => {
     if (!file) return;
+    const version = ++transcriptVersion.current;
     setTranscriptBusy(true);
     setSuggestions([]);
     try {
       const reading = await api.readTranscript(file);
+      if (!mounted.current || version !== transcriptVersion.current) return;
       setSuggestions(reading.suggestions);
       setTranscriptNote(reading.note);
     } catch (e) {
       // The draft is not touched on failure, for the same reason the grade
       // conversion leaves it alone: a refused read must not cost the applicant
       // what they have already typed.
+      if (!mounted.current || version !== transcriptVersion.current) return;
       setTranscriptNote(e instanceof ApiError ? e.message : 'That file could not be read.');
     } finally {
-      setTranscriptBusy(false);
+      if (mounted.current && version === transcriptVersion.current) setTranscriptBusy(false);
     }
   };
 
@@ -132,8 +143,10 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
     setConversionError(null);
     try {
       const converted = await api.previewConversion(gpa, key);
-      setProfileDraft((d) => setIn(d, ['academics', 'gpa'], converted));
+      if (!mounted.current || JSON.stringify(gpa) !== JSON.stringify(get(latestDraft.current, ['academics', 'gpa']))) return;
+      setProfileDraft((d) => JSON.stringify(get(d, ['academics', 'gpa'])) === JSON.stringify(gpa) ? setIn(d, ['academics', 'gpa'], converted) : d);
     } catch (e) {
+      if (!mounted.current) return;
       setConversionError(e instanceof ApiError ? e.message : 'The conversion could not be applied.');
     }
   };
@@ -630,8 +643,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             disabled={loading || saving}
             data-testid="save-profile"
             onClick={async () => {
-              await saveProfile();
-              setSaved(true);
+              if (await saveProfile()) setSaved(true);
             }}
           >
             {loading || saving ? 'Saving…' : 'Save profile'}

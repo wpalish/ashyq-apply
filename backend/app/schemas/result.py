@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 from datetime import date, datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_serializer
+from pydantic import BaseModel, ConfigDict, Field, model_serializer, model_validator
+from pydantic_core import to_jsonable_python
 
 from app.domain.claim_scope import ClaimScope
 from app.domain.enums import (
@@ -257,6 +260,7 @@ class RankingV2(Base):
 
 
 class DocumentItem(Base):
+    progress_id: str = ""
     name: str
     purpose: DocumentPurpose
     owner: DocumentOwner
@@ -283,6 +287,23 @@ class DocumentItem(Base):
     #: Phase 3 §9: "store source and scope for each required document".
     scope: ClaimScope | None = None
 
+    @staticmethod
+    def _identity(data: dict) -> str:
+        excluded = {"progress_id", "claim_ids", "source_url", "lead_time_days"}
+        specification = {key: value for key, value in data.items() if key not in excluded}
+        canonical = json.dumps(
+            to_jsonable_python(specification),
+            sort_keys=True,
+            ensure_ascii=False,
+            separators=(",", ":"),
+        )
+        return hashlib.sha256(canonical.encode()).hexdigest()
+
+    @model_validator(mode="after")
+    def _requirement_identity(self) -> DocumentItem:
+        self.progress_id = self.model_dump(mode="json")["progress_id"]
+        return self
+
     @model_serializer(mode="wrap")
     def _omit_unrecorded_scope(self, handler):
         """Leave ``scope`` out when nobody recorded one, as ``Claim`` does.
@@ -294,6 +315,8 @@ class DocumentItem(Base):
         data = handler(self)
         if isinstance(data, dict) and data.get("scope") is None:
             data.pop("scope", None)
+        if isinstance(data, dict):
+            data["progress_id"] = self._identity(data)
         return data
 
 
@@ -311,6 +334,20 @@ class DocumentChecklist(Base):
     unresolved: list[UnresolvedQuestion] = Field(default_factory=list)
     generated_at: datetime | None = None
     completeness: Literal["official", "partial", "unavailable"] = "partial"
+
+    def progress_ids(self) -> set[str]:
+        return {
+            item.model_dump(mode="json")["progress_id"]
+            for group in (
+                self.admission_documents,
+                self.scholarship_documents,
+                self.applicant_actions,
+                self.school_actions,
+                self.recommender_actions,
+                self.certification_actions,
+            )
+            for item in group
+        }
 
 
 class ProgramResult(Base):
@@ -397,6 +434,8 @@ class ProgramResult(Base):
     decided_at: datetime | None = None
 
     checklist: DocumentChecklist | None = None
+    # Applicant-reported preparation, never official verification.
+    document_progress: dict[str, bool] = Field(default_factory=dict)
 
 
 class DecisionIn(Base):

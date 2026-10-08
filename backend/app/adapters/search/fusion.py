@@ -160,14 +160,11 @@ def fuse(
     else:
         flat = list(streams)
 
-    scores: dict[str, float] = {}
     titles: dict[str, str] = {}
     found: dict[str, dict[Generator, int]] = {}
 
     for candidate in flat:
         url = canonical_url(candidate.url)
-        weight = table.get(candidate.generator, 1.0)
-        scores[url] = scores.get(url, 0.0) + weight / (RRF_K + candidate.rank)
         # First non-empty title wins; generators disagree about titles and the
         # earliest one is the best-ranked.
         if candidate.title and not titles.get(url):
@@ -181,7 +178,7 @@ def fuse(
         FusedCandidate(
             url=url,
             title=titles.get(url, ""),
-            score=round(score, 6),
+            score=round(sum(table.get(g, 1.0) / (RRF_K + r) for g, r in ranks.items()), 6),
             attributions=tuple(
                 Attribution(generator=g, rank=r)
                 for g, r in sorted(
@@ -189,7 +186,7 @@ def fuse(
                 )
             ),
         )
-        for url, score in scores.items()
+        for url, ranks in found.items()
     ]
     # Score, then agreement, then URL: a deterministic order a test can pin
     # and a reviewer can reproduce.

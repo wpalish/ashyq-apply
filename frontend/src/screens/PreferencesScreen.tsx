@@ -309,11 +309,11 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
                 onClick={async () => {
                   // No pages are fetched: everything the ranking reads is
                   // already stored on the rows from the run that finished.
-                  await rerank({
+                  const accepted = await rerank({
                     priorities,
                     weights: get(profileDraft, ['weights_override']) ? weights : undefined,
                   });
-                  setRecomputed(true);
+                  setRecomputed(accepted);
                 }}
               >Recompute the shortlist</button>
               {recomputed && <Chip tone="ok">Reordered — no pages were fetched</Chip>}
@@ -405,8 +405,7 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
                 disabled={demoMode === undefined || loading || (validation ? !validation.can_proceed : false)}
                 onClick={async () => {
                   if (demoMode === undefined) return;
-                  await startRun(demoMode);
-                  onStarted();
+                  if (await startRun(demoMode)) onStarted();
                 }}
               >
                 {loading ? 'Starting…' : 'Start research'}

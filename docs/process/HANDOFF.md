@@ -1785,6 +1785,14 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Product-completion next-action write-ahead (2026-10-09): deriveApplicationPlan helper/tests, Home/Approved next-action cards, Documents target result navigation, confirmed-deadline guards. Preparation completion stays self-reported; no inferred admission readiness or invented official deadlines. Delegated writers are confined to applicationPlan helper/tests and polling/Profile/Preferences regression tests; root retains all other source/Git. Complete case UI identity promotion, independent profile save acknowledgement, deletion reset, stale hydration/switch result revision checks before full source-bound local gate.
+
+Product-completion additional write-ahead: key DocumentsScreen by current case/run in App so pending ticks/errors do not cross applicant contexts; rerank callers show acknowledgement only on accepted boolean.
+
+### 2026-10-08 21:51 UTC — gpt-6-astra — product-completion write-ahead (continued)
+
+Before further source edits: finish inbox cursor paging and manual incoming refresh; keep drafts per recipient in screen memory; guard Feed reset/page responses and clear controlled filter fields. Add store generation/run-id guards to refresh, rerank, cancel/retry/recheck/collect/decision after case changes. Parent alone writes source; reviewers remain read-only. Persist document completion on tenant-owned result payload with explicit schema, stable requirement identity, server acknowledgement, recheck preservation, export/deletion coverage. All tests use isolated synthetic fixtures; no provider or model calls and no stopped pilot replay.
+
 **[product-completion] WRITE-AHEAD 2026-10-09:** (1) frontend/src/screens/MessagesScreen.tsx and components/social.tsx: key conversation by recipient, reject obsolete read responses, preserve a draft after rejected send/post/reply; new deferred-request regression tests. (2) backend result schema/routes/pipeline plus DocumentsScreen: separate applicant completion from evidence, stable item identity, tenant-owned persistent update; preserve completion on recollection, verify cross-tenant/cross-result denial and failure/reload. (3) search retrieval/fusion: Unicode words and one canonical URL vote per generator, offline counterexamples only. Root owns all source/Git; no unapproved live benchmark. Run targeted regressions, source-bound local frontend/core/full, isolated browser demo/auth check; update exact evidence before green commit and release review.
 
 
@@ -3717,6 +3725,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[product-completion] WIP checkpoint 2026-10-09:** focused frontend 71 + workflow4 and document-progress backend6 (including PostgreSQL two-session lock) passed. Initial targeted backend had one new-test failure caused by correct collection idempotency; corrected test uses full retry. Full current-source gate NOT RUN. Source changes remain uncommitted until this checkpoint; next actions helper and full validation pending.
+
 **[product-completion] Baseline 2026-10-09:** branch clean at main1b2a5541 before metadata. Historical full13/13 at eb81/tree3da applies to a different search branch, although its frontend source matched main before new edits. New-source gates NOT RUN. Preserve failed logs; never relabel old evidence as current.
 
 
@@ -4483,6 +4493,10 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+### 2026-10-08 21:51 UTC — product-completion pending contracts
+
+Social read markers advance only to the last delivered prefix, with timestamp ties left unread until delivered and a monotonic watermark. Messages cursor paging remains bounded per request and manual refresh resumes after last delivered cursor. Checklist progress will be an additive result payload/API contract (no database migration); only published current items may be ticked, self-reported completion is not official validation. Save before displaying success. Exact route/identity to be recorded after implementation and tests.
 
 - [expert-500] V4 evaluation only: `expert/representation.py` public exact-university/hash bound schemas and six-field minimal closure; literal `scholarship_exists` name or exact `subject/value` AWARD_KEYS/coverage wrapper with selected-context proof. Parent request/event hash binds processed-through source count; empty submit cannot process a new source. Existing private mapper reused only after seal with exact pinned bytes. `live.capture_one`/CLI opt-in `finalization_reserve_ms=1000` closes work119000ms on original120000ms clock; default0. No existing app/journal/citation/gold/registry contract changes.
 

@@ -178,6 +178,12 @@ class TestTenantIsolation:
         register(client, "result-stranger")
 
         assert client.get(f"/api/runs/{run['id']}/results/{result_id}").status_code == 404
+        assert (
+            client.patch(
+                f"/api/runs/{run['id']}/results/{result_id}/documents/unknown", json={"done": True}
+            ).status_code
+            == 404
+        )
         decision = client.post(
             f"/api/runs/{run['id']}/results/{result_id}/decision",
             json={"decision": "rejected", "reason": "not mine to reject"},

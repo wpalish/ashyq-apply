@@ -6,7 +6,7 @@
  * you keep your position in the list while you read an answer.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice, Panel } from '@/components/primitives';
 import { Byline, Composer, Post, Retract } from '@/components/social';
@@ -86,8 +86,10 @@ function Thread({
             setReplies((prev) => [...prev, created]);
             onCountChange(1);
             setError('');
+            return true;
           } catch (problem) {
             setError(problem instanceof ApiError ? problem.message : 'Could not post that reply.');
+            return false;
           } finally {
             setBusy(false);
           }
@@ -114,22 +116,31 @@ export function FeedScreen({
   const [error, setError] = useState('');
   const [openThread, setOpenThread] = useState<string | null>(null);
   const [posting, setPosting] = useState(false);
+  const [tag, setTag] = useState('');
+  const [city, setCity] = useState('');
+  const generation = useRef(0);
+  const mounted = useRef(true);
 
   const load = useCallback(async (active: FeedFilters, from?: string | null) => {
+    const request = ++generation.current;
     setLoading(true);
     try {
       const page = await api.feed(active, from);
-      setPosts((prev) => (from ? [...prev, ...page.items] : page.items));
+      if (!mounted.current || request !== generation.current) return;
+      setPosts((prev) => (from ? [...new Map([...prev, ...page.items].map((post) => [post.id, post])).values()] : page.items));
       setCursor(page.next_cursor);
       setError('');
     } catch (problem) {
-      setError(problem instanceof ApiError ? problem.message : 'Could not load the feed.');
+      if (mounted.current && request === generation.current) setError(problem instanceof ApiError ? problem.message : 'Could not load the feed.');
     } finally {
-      setLoading(false);
+      if (mounted.current && request === generation.current) setLoading(false);
     }
   }, []);
 
-  useEffect(() => { void load(filters); }, [load, filters]);
+  useEffect(() => {
+    mounted.current = true; void load(filters);
+    return () => { mounted.current = false; generation.current += 1; };
+  }, [load, filters]);
 
   const filtered = Object.values(filters).some(Boolean);
 
@@ -175,8 +186,10 @@ export function FeedScreen({
                 const created = await api.createPost(body);
                 setPosts((prev) => [created, ...prev]);
                 setError('');
+                return true;
               } catch (problem) {
                 setError(problem instanceof ApiError ? problem.message : 'Could not post that.');
+                return false;
               } finally {
                 setPosting(false);
               }
@@ -191,7 +204,8 @@ export function FeedScreen({
           <input
             id="feed-tag"
             placeholder="KBTU"
-            defaultValue={filters.tag ?? ''}
+            value={tag}
+            onChange={(event) => setTag(event.target.value)}
             onBlur={(event) => setFilters((f) => ({ ...f, tag: event.target.value.trim() }))}
           />
         </div>
@@ -200,7 +214,8 @@ export function FeedScreen({
           <input
             id="feed-city"
             placeholder="Astana"
-            defaultValue={filters.city ?? ''}
+            value={city}
+            onChange={(event) => setCity(event.target.value)}
             onBlur={(event) => setFilters((f) => ({ ...f, city: event.target.value.trim() }))}
           />
         </div>
@@ -219,7 +234,7 @@ export function FeedScreen({
           </select>
         </div>
         {filtered && (
-          <button className="btn btn--sm btn--ghost" type="button" onClick={() => setFilters({})}>
+          <button className="btn btn--sm btn--ghost" type="button" onClick={() => { setTag(''); setCity(''); setFilters({}); }}>
             {t('community.clearFilters')}
           </button>
         )}

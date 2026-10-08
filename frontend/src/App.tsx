@@ -101,7 +101,7 @@ const PRIMARY_NAV = [
 export default function App() {
   const {
     run, results, summary, error, clearError, capabilities,
-    cases, savedProfile, switchCase, newCase, dirty, hydrated,
+    cases, savedProfile, switchCase, newCase, dirty, hydrated, profileViewKey,
   } = useStore();
   const { t, locale, setLocale } = useTranslation();
   const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'home');
@@ -429,14 +429,14 @@ export default function App() {
               sidebar and the case switcher down with it. */}
           <ErrorBoundary label={`the ${screen} screen`} key={screen}>
           {screen === 'home' && <HomeScreen onNavigate={setScreen} />}
-          {screen === 'profile' && <ProfileScreen onNext={() => setScreen('preferences')} />}
+          {screen === 'profile' && <ProfileScreen key={profileViewKey} onNext={() => setScreen('preferences')} />}
           {screen === 'preferences' && <PreferencesScreen onStarted={() => setScreen('progress')} />}
           {screen === 'progress' && <ProgressScreen onDone={() => setScreen('shortlist')} />}
           {screen === 'shortlist' && <ShortlistScreen onStart={() => setScreen(savedProfile ? 'preferences' : 'profile')} onProgress={() => setScreen('progress')} />}
           {screen === 'funding' && <FundingScreen />}
           {screen === 'sources' && <SourcesScreen />}
           {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} />}
-          {screen === 'documents' && <DocumentsScreen />}
+          {screen === 'documents' && <DocumentsScreen key={run?.id ?? savedProfile?.id ?? 'none'} />}
           {screen === 'export' && <ExportScreen />}
           {screen === 'legal' && <LegalScreen />}
           {screen === 'settings' && <SettingsScreen theme={theme} setTheme={setTheme} locale={locale} setLocale={setLocale} onNavigate={setScreen} onSignedOut={() => window.location.reload()} />}
