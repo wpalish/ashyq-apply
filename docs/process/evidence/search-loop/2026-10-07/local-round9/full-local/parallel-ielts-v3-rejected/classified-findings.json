@@ -1,0 +1,1027 @@
+[
+  {
+    "case": "control_explicit",
+    "category": "passed_control",
+    "original_semantic_control_passed": true,
+    "source_snippet": "<h2>IELTS Academic</h2><p>Overall score 6.5 is required. Writing 6.0.</p>",
+    "body_sha256": "760586a8403d189ff51c1059be03f446f17c4dbe77bb0b207e8fd561657c1798",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": [
+      {
+        "claim_type": "ielts_min_overall",
+        "normalized_value": 6.5,
+        "original_text_excerpt": "IELTS Academic Overall score 6.5 is required. Writing 6.0.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_min_subscore",
+        "normalized_value": {
+          "writing": 6.0
+        },
+        "original_text_excerpt": "IELTS Academic Overall score 6.5 is required. Writing 6.0.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_accepted_types",
+        "normalized_value": [
+          "academic"
+        ],
+        "original_text_excerpt": "IELTS Academic Overall score 6.5 is required. Writing 6.0.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "case": "negated_required",
+    "category": "inherited_false_exam_requirement_or_fee",
+    "original_semantic_control_passed": false,
+    "source_snippet": "<h2>IELTS Academic</h2><p>Overall minimum 6.5 is not required.</p>",
+    "body_sha256": "d19541994f25ff0e069601e8eed0d3eba7b397b65c7530895aa98833ca1d1a4e",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": [
+      {
+        "claim_type": "ielts_min_overall",
+        "normalized_value": 6.5,
+        "original_text_excerpt": "IELTS Academic Overall minimum 6.5 is not required.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_accepted_types",
+        "normalized_value": [
+          "academic"
+        ],
+        "original_text_excerpt": "IELTS Academic Overall minimum 6.5 is not required.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "case": "negated_require_verb",
+    "category": "inherited_false_exam_requirement_or_fee",
+    "original_semantic_control_passed": false,
+    "source_snippet": "<h2>IELTS Academic</h2><p>We do not require an overall minimum 6.5.</p>",
+    "body_sha256": "393005b4b000ab7c22e221654ad3c9bc16ef3d66bef4b090563d2a0aae7894f3",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": [
+      {
+        "claim_type": "ielts_min_overall",
+        "normalized_value": 6.5,
+        "original_text_excerpt": "IELTS Academic We do not require an overall minimum 6.5.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_accepted_types",
+        "normalized_value": [
+          "academic"
+        ],
+        "original_text_excerpt": "IELTS Academic We do not require an overall minimum 6.5.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "case": "cannot_accept_reverse",
+    "category": "new_false_minimum",
+    "original_semantic_control_passed": false,
+    "source_snippet": "<h2>IELTS Academic</h2><p>We cannot accept IELTS Academic. Overall minimum 6.5.</p>",
+    "body_sha256": "a2d6e07e92499882801adaeb7e1af7382f2c341d6cc7f08f81717e93cef20a87",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": [
+      {
+        "claim_type": "ielts_min_overall",
+        "normalized_value": 6.5,
+        "original_text_excerpt": "IELTS Academic We cannot accept IELTS Academic. Overall minimum 6.5.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "case": "not_an_accepted_test",
+    "category": "new_false_minimum",
+    "original_semantic_control_passed": false,
+    "source_snippet": "<h2>IELTS Academic</h2><p>IELTS Academic is not an accepted test. Overall minimum 6.5.</p>",
+    "body_sha256": "8c6e64d8ccf84cffb2359f24b1dc64043991cfd8c4937aaf79ad5ddc02d75c56",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": [
+      {
+        "claim_type": "ielts_min_overall",
+        "normalized_value": 6.5,
+        "original_text_excerpt": "IELTS Academic IELTS Academic is not an accepted test. Overall minimum 6.5.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_accepted_types",
+        "normalized_value": [
+          "academic"
+        ],
+        "original_text_excerpt": "IELTS Academic IELTS Academic is not an accepted test. Overall minimum 6.5.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "case": "variant_parenthetical_refusal",
+    "category": "new_false_minimum",
+    "original_semantic_control_passed": false,
+    "source_snippet": "<h2>IELTS Academic</h2><p>IELTS Academic (including UKVI Academic) is not accepted. Overall minimum 6.5.</p>",
+    "body_sha256": "8bd5b5df5e477c64231ffeab75e4d8dc369895a93c8f593cea9e85cd66deab21",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": [
+      {
+        "claim_type": "ielts_min_overall",
+        "normalized_value": 6.5,
+        "original_text_excerpt": "IELTS Academic IELTS Academic (including UKVI Academic) is not accepted. Overall minimum 6.5.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_accepted_types",
+        "normalized_value": [
+          "academic",
+          "ukvi_academic"
+        ],
+        "original_text_excerpt": "IELTS Academic IELTS Academic (including UKVI Academic) is not accepted. Overall minimum 6.5.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "case": "other_exam_celpip",
+    "category": "inherited_false_exam_requirement_or_fee",
+    "original_semantic_control_passed": false,
+    "source_snippet": "<h2>IELTS Academic</h2><h3>CELPIP General</h3><p>Overall 7.0 is required for CELPIP General.</p>",
+    "body_sha256": "87195f14f385aa9197415f406051fc06d635909b800757c81a672fd8cbae64d5",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": [
+      {
+        "claim_type": "ielts_min_overall",
+        "normalized_value": 7.0,
+        "original_text_excerpt": "IELTS Academic CELPIP General Overall 7.0 is required for CELPIP General.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_accepted_types",
+        "normalized_value": [
+          "academic"
+        ],
+        "original_text_excerpt": "IELTS Academic CELPIP General Overall 7.0 is required for CELPIP General.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "case": "other_exam_full_toefl",
+    "category": "inherited_false_exam_requirement_or_fee",
+    "original_semantic_control_passed": false,
+    "source_snippet": "<h2>IELTS Academic</h2><h3>Test of English as a Foreign Language</h3><p>A writing minimum 6.0 applies to the Test of English as a Foreign Language.</p>",
+    "body_sha256": "2d333cd2800be6ca8f72273d3918164b30af8e40d69d0ecbcce7225b1c6eac23",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": [
+      {
+        "claim_type": "ielts_min_subscore",
+        "normalized_value": {
+          "writing": 6.0
+        },
+        "original_text_excerpt": "IELTS Academic Test of English as a Foreign Language A writing minimum 6.0 applies to the Test of English as a Foreign Language.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_accepted_types",
+        "normalized_value": [
+          "academic"
+        ],
+        "original_text_excerpt": "IELTS Academic Test of English as a Foreign Language A writing minimum 6.0 applies to the Test of English as a Foreign Language.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "case": "numeric_currency_nzd",
+    "category": "inherited_false_exam_requirement_or_fee",
+    "original_semantic_control_passed": false,
+    "source_snippet": "<h2>IELTS Academic</h2><h3>Processing charges</h3><p>Overall 6.50 NZD processing fee is payable.</p>",
+    "body_sha256": "51cc1a0e8dba79bd2fdd3bcf41a1ef6f267a8380fb4b3a5f3452179ab60066cc",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": [
+      {
+        "claim_type": "ielts_min_overall",
+        "normalized_value": 6.5,
+        "original_text_excerpt": "IELTS Academic Processing charges Overall 6.50 NZD processing fee is payable.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_accepted_types",
+        "normalized_value": [
+          "academic"
+        ],
+        "original_text_excerpt": "IELTS Academic Processing charges Overall 6.50 NZD processing fee is payable.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "case": "numeric_cents",
+    "category": "new_false_minimum",
+    "original_semantic_control_passed": false,
+    "source_snippet": "<p>IELTS Academic 6.5 cents processing fee is payable.</p>",
+    "body_sha256": "14bd84600241eef2bbc3645c5b539dd8a57710e8912559f7e370e6482bccb9ec",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": [
+      {
+        "claim_type": "ielts_min_overall",
+        "normalized_value": 6.5,
+        "original_text_excerpt": "IELTS Academic 6.5 cents processing fee is payable.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS statement",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_accepted_types",
+        "normalized_value": [
+          "academic"
+        ],
+        "original_text_excerpt": "IELTS Academic 6.5 cents processing fee is payable.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS statement",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "case": "numeric_unicode_negative",
+    "category": "passed_control",
+    "original_semantic_control_passed": true,
+    "source_snippet": "<p>IELTS Academic overall \u22126.5 is required.</p>",
+    "body_sha256": "eb91c9925942e743b976212a991b170f57f9499ac932f3faf63d6935c2d9637c",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": []
+  },
+  {
+    "case": "aria_heading_owned",
+    "category": "new_correct_minimum_loss",
+    "original_semantic_control_passed": false,
+    "source_snippet": "<div role=\"heading\" aria-level=\"2\">IELTS Academic</div><p>Overall score 6.5 is required.</p>",
+    "body_sha256": "7c7b1b6c25de86296e645c8c884f4728826f9e449831e324afc09c624244c0e1",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": []
+  },
+  {
+    "case": "aria_labelled_direct_text",
+    "category": "new_correct_minimum_loss",
+    "original_semantic_control_passed": false,
+    "source_snippet": "<h2 id=\"ielts\">IELTS Academic</h2><section aria-labelledby=\"ielts\">Overall score 6.5 is required.</section>",
+    "body_sha256": "915ab5f999038959f06b3444d03b97375f52d4faf43b43d9773a447ab8995ced",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": []
+  },
+  {
+    "case": "owned_direct_span",
+    "category": "new_correct_minimum_loss",
+    "original_semantic_control_passed": false,
+    "source_snippet": "<h2>IELTS Academic</h2><span>Overall score 6.5 is required.</span>",
+    "body_sha256": "a10adfdd5c5e09be583050ed7a043cb345043d5cfdd858d9ff8456d80e471070",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": []
+  },
+  {
+    "case": "section_direct_text",
+    "category": "new_correct_minimum_loss",
+    "original_semantic_control_passed": false,
+    "source_snippet": "<section><h2>IELTS Academic</h2>Overall score 6.5 is required.</section>",
+    "body_sha256": "89838ab010a8e4f0c73026130aaf04fe349e7af120ddd5d5c42368e7bce5dcc2",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": []
+  },
+  {
+    "case": "nested_div_break_positive",
+    "category": "passed_control",
+    "original_semantic_control_passed": true,
+    "source_snippet": "<h2>IELTS Academic</h2><div>Overall score 6.5 is required.<br>Writing 6.0.</div>",
+    "body_sha256": "02367a7a5d44e66ac4818985fbedffed7397ed107ac926ed1ca9d9728ec94eb4",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": [
+      {
+        "claim_type": "ielts_min_overall",
+        "normalized_value": 6.5,
+        "original_text_excerpt": "IELTS Academic Overall score 6.5 is required. Writing 6.0.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_min_subscore",
+        "normalized_value": {
+          "writing": 6.0
+        },
+        "original_text_excerpt": "IELTS Academic Overall score 6.5 is required. Writing 6.0.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_accepted_types",
+        "normalized_value": [
+          "academic"
+        ],
+        "original_text_excerpt": "IELTS Academic Overall score 6.5 is required. Writing 6.0.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "university_admissions",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "case": "role_chrome_negative",
+    "category": "passed_control",
+    "original_semantic_control_passed": true,
+    "source_snippet": "<h2>IELTS Academic</h2><div role=\"navigation\"><p>Overall score 9.0 is required.</p></div>",
+    "body_sha256": "143ced4ab9a7ef901e17748270ac612db33a3e42dc0217d42dad28b539d0dade",
+    "page_classes": [
+      "program_detail"
+    ],
+    "actual_ielts_claims": []
+  },
+  {
+    "case": "local_year_title_conflict",
+    "category": "valid_conservative_year_ambiguity_not_blocker",
+    "original_semantic_control_passed": false,
+    "source_snippet": "<h2>IELTS Academic</h2><p>For academic year 2024/25 admission, overall score 6.5 is required.</p>",
+    "body_sha256": "75c8f69148c1823e490a67c8efad7b01bae46fd3d6464ee9a74f19fb94006700",
+    "page_classes": [
+      "intake_specific_program"
+    ],
+    "actual_ielts_claims": [
+      {
+        "claim_type": "ielts_min_overall",
+        "normalized_value": 6.5,
+        "original_text_excerpt": "Bachelor admission requirements academic year 2027/28 IELTS Academic For academic year 2024/25 admission, overall score 6.5 is required.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements academic year 2027/28",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "ielts_accepted_types",
+        "normalized_value": [
+          "academic"
+        ],
+        "original_text_excerpt": "Bachelor admission requirements academic year 2027/28 IELTS Academic For academic year 2024/25 admission, overall score 6.5 is required.",
+        "source_url": "https://admissions.example.edu/admission-requirements",
+        "page_title": "Bachelor admission requirements academic year 2027/28",
+        "relevant_section": "IELTS Academic",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": null,
+        "accessed_at": "2026-10-08T00:00:00Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "case": "native_unknown_permission",
+    "category": "passed_control",
+    "original_semantic_control_passed": true,
+    "source_snippet": "IELTS Academic minimum 6.5 is required.",
+    "body_sha256": "a2eca7796e4aac525a57170ffa211864110577c3ff2bf80db191867f0e48bbf5",
+    "page_classes": [
+      "unknown"
+    ],
+    "actual_ielts_claims": []
+  }
+]

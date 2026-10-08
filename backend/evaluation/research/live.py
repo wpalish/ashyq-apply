@@ -27,6 +27,7 @@ import subprocess
 import sys
 import time
 from collections.abc import Callable
+from contextlib import nullcontext
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -500,6 +501,7 @@ async def capture_one(
     original_request = fetching._pinned_request
     # Every provider's search is counted, not only Exa's: runs 80-93 used
     # Serper and recorded search_calls=0 while six queries ran per case.
+    from app.adapters.search import exa_mcp as exa_mcp_module
     from app.adapters.search.brave import BraveSearchProvider
     from app.adapters.search.exa_mcp import ExaMcpSearchProvider
     from app.adapters.search.serper import SerperSearchProvider
@@ -758,6 +760,11 @@ async def capture_one(
         )
 
     with (
+        # Strict evaluation must observe the first refusal. The public MCP
+        # client can retry internally before counted_search sees its error.
+        # Scope these overrides to this capture and restore both on every exit.
+        patch.object(exa_mcp_module, "RATE_LIMIT_RETRY", False) if budget else nullcontext(),
+        patch.object(exa_mcp_module, "RETRY_429_ONCE", False) if budget else nullcontext(),
         patch.object(canary, "CanaryRunner", ObservedRunner),
         patch.object(fetching, "_pinned_request", counted_request),
         patch.object(ExaSearchProvider, "search", counted_for(ExaSearchProvider)),

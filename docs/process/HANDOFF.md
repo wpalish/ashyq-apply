@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current holder: gpt-6-astra,2026-10-08 00:31UTC, task/search-fenced-capture@f0c8fece.** Exact source full LOCAL13/13 completed and archived receipt4fb41d2e. No fresh live. New strict-capture internal provider retry defect independently confirmed; scoped repair planned before any new capture. A works external IELTSv4; B actual-provider mock controls. Goal ACTIVE.
+
 **Current holder: gpt-6-astra, task/search-fenced-capture, 2026-10-07 UTC.** Branch from clean predecessor41836a86/task/search-production-read-budget/Draft67 under §5 explicit exception. Prior goal turn PROGRESS: exact-source full13/13 proof pushed, Draft67 created/attached and budget ready-for-review. Current source unchanged. Parent reviews genuine Job protocol revision2; A external capture controls, B external IELTS revision3. First canary candidate rejected for omitted timeout raw-write time; IELTS v2 rejected on12/15 independent controls. No source promotion, live ON or launch.
 
 **Current holder: gpt-6-astra, 2026-10-07 23:35 UTC, task/search-production-read-budget.** Source `3b3a2fb8f914b61d83d734c6f416b9d402414f94` is pushed and exact-source full LOCAL passed 13/13. Source/test bytes stayed frozen. Archive full results, update the relay, then create the dependent Draft against task/search-programme-purpose. Two experts continue external genuine-Job capture and IELTS ownership proposals; neither has changed the repository. Goal ACTIVE; no quality/default/launch claim.
@@ -71,6 +73,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[search-fenced-capture] full13/13 PASS for f0c8; strict first-refusal repair pending.** Same4261 unique backend cases pass on SQLite and PostgreSQL, coverage95.25%, frontend232, demo79PASS/1skip, auth6, mypy383. App unchanged from budget3b3a2fb8. New live driver independently rejected:9 corrupt accepted/3 malformed crashes; not executed. First-refusal scoped repair and driver shape closure required before live.
 
 **[search-fenced-capture] actual-module integration PASS, full LOCAL pending.** Four harness/test files applied after sealed receipt3fd85544. Parent legacy forwarding/type-narrowing repairs keep previous assertions intact. Actual199PASS/0skip19.27s; Ruff/format PASS, mypy383 PASS. App/Fetcher/default/gold unchanged. Freeze source/test files while exact-source LOCAL full runs.
 
@@ -170,6 +174,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**2026-10-08 checkpoint f0c8fece:** Genuine Job harness source pushed; archive docs/process/evidence/search-loop/2026-10-07/local-round9/full-local/receipt.json SHA4fb41d2e486050a085b5c72846496b4f1a486317181292e667f8586bafddbaca,48selectedoriginals/4135257bytes. Full13/13,4261x2,95.25%,199focused; exact source/test freeze verified. IELTSv3 rejected8new semantic blockers; originals archived, not applied.
 
 **[search-fenced-capture] source checkpoint awaiting WIP commit:** genuine isolated enqueue/claim/Worker capture applied; parent199PASS/static PASS; full pending. Selected external624 + parent originals preserved at local-round9/fenced-capture-integration, receiptf3816e15f328a0841bd1c0238bc2e3161078a53fdbe8024adb006ece5a4807a0. Initial185PASS/14legacyRED and4mypy errors retained; repaired without weakening old assertions. Native defaultFalse; no fresh fact-quality metric.
 
@@ -1839,6 +1845,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[search-fenced-capture] exact write-ahead BEFORE CODE 2026-10-08 00:31UTC:** In backend/evaluation/research/live.py strict capture context patch Exa MCP RATE_LIMIT_RETRY=False and RETRY_429_ONCE=False, restoring existing values on every exit. Existing production provider module/defaults unchanged. Add normal-import actual-provider mocked-transport regressions to backend/tests/test_readguard_capture_protocol.py after independent B evidence; first refusal one tool request+sticky STOP, no subsequent reads/searches, restored flags and non-strict control. PLAN work/local-round9/root-capture-integration/strict-retry-PLAN.json. Freeze repaired source for new full LOCAL; f0c8 full is predecessor proof only. Separately repair external genuine-baseline controller typed/config/raw closure against B13 immutable negative controls; no execute until scoped retry repair+new full+controller review accepted. No retry/resume/new provider/default/gold/production actions.
 
 **Current next step:** commit/push WIP exact four harness/test files + focused evidence and handoff, then existing local runner `./local.sh --repo /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply check --suite full`. Keep source/tests frozen; no live before full protocol acceptance. After real full success archive original gates and open dependent Draft against task/search-production-read-budget/#67. Then independently accepted IELTS v3/new language-route quality work, fresh same-protocol pairs; all closed original cohorts stay immutable.
 
@@ -3842,6 +3850,10 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**2026-10-08 strict-retry preliminary:** scoped2flagsFalse source patch applied onlylive.py;66existingcapture/budget controlsPASS9.84s, Ruff fixed one import-order issue/formatPASS. Actual provider mockedtransport independent controls and new full are pending; WIP, no live. IELTSv4sealed166PASS outside repo, pendingpeerreview; notapplied.
+
+**2026-10-08 00:27UTC exact-source full:** f0c8fece0b59de3e964d20a1a4daf131e92c4ef8 snapshot3489f8fa072386f0ee4a74fb24bf6e502aea6a93490ba8840826c321b5e60dde,13/13 PASS,4261SQLite/4261PG unique identities equal,95.25%coverage,232frontend,79demoPASS/1skip,6auth,mypy383. Receipt4fb41d2e. New strict-retry change not yet applied/tested; no fresh search score.
+
 **2026-10-08 fenced focused gates:** actual-module199PASS/0skip19.27s; Ruff app/tests+two harness PASS, format355PASS; configured mypy app/tests/evaluation383PASS. Full LOCAL NOT YET RUN for changed harness/tests; predecessor budget full13/13 remains valid only for source3b3a2fb8. No live/provider/model calls.
 
 **Latest exact-source full LOCAL, 2026-10-07 23:30 UTC:** source3b3a2fb8, snapshotcb60da4d; 13/13 PASS in 14m57.673s. Ruff/format/mypy381 PASS; SQLite4211/2 warnings/95.15%, PostgreSQL4211/2 warnings; frontend232/type/lint/build; demo E2E79/1 skip; auth6; pip/npm audits0. Native focused134/0 skip,33 realPG. Isolated demo20 rows/counts identical, Groningenfirst, one migrationhead d8e412c6a901. Evidence local-round8/full-local/receipt.json. All997 captured code paths unchanged. Hosted CI NOT PERFORMED; Docker absent, containers NOT PERFORMED; production E2E NOT PERFORMED. No new live quality measurement. Earlier pending records below are historical snapshots.
@@ -4633,6 +4645,8 @@ next agent does not reopen it.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
+**2026-10-08 strict capture refusal:** strict_expert_budget scopes both Exa MCP retry flagsFalse for capture lifecycle, restoring prior values on every exit. App defaults unchanged; latest owner first-refusal rule overrides historical experimental retry inside strict measurements. Actualtransportregression/newfullpending.
+
 **Fenced local capture:** explicit BooleanOptionalAction native budget/job protocol flags; native requires genuine research Job, one isolated SQLite identity and no documents/recheck/check-seeds. New raw job_protocol records real status/claim/heartbeat/native ledger separately from outer counts; unavailable counters remain null. Partial new fenced canary exits2; legacy call/report preserved. Native moduleFalse. Typed original control survives artifact failure; successful Job can still have partial late capture under original strict6/60/120 clock.
 
 - 2026-10-07 23:06UTC [search-production-read-budget] internal Candidate.catalogue_id optional; control exceptions shared in app/pipeline/control.py (runner reexports original class identities). Off-default UNIVERSITY_READ_BUDGET; settings_snapshot namespace university_research_budget_v1 holds version1 per-real-research-Job.id episodes with per-stable-university committed pre-get reservations capped60. Recorded current-job ON survives source False/reaper retry; no legacy zero fabrication. Typed checkpoint_busy preserves state and defers to existing lease reaper. No migration, public API, provider, renderer/time/query/doc/recheck cap or production promotion.
@@ -4768,6 +4782,8 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 | 2026-09-09 | security audit | `security.py`: `SCRYPT_R`, `SCRYPT_P`, `_maxmem(n, r)`; `routes_metrics` compares bytes | scrypt cost schedule and the 500-on-non-ASCII bearer. |
 
 ## 9. Traps and lessons (things that cost a session; keep them)
+
+**2026-10-08 first-refusal trap:** ExaMcpSearchProvider.search internally retries RATE_LIMITED when RATE_LIMIT_RETRY=True even if RETRY_429_ONCE=False. Outer strict wrapper sees failure only after internal retry; latest owner no-retry rule requires scoped disabling of BOTH flags before provider call. Strict-only repair preserves app defaults; new independent addendum a599cc1c. Genuine driver13 controls revealed9accepted corrupt forms/3uncaught AttributeErrors; old prepared driver is rejected, do not execute.
 
 **2026-10-08 harness port:** external50 controls did not cover fourteen native legacy mock signatures. Preserve legacy call shape when no new Job option is active; do not loosen old assertions. Direct mypy script path alongside namespace imports causes duplicate module names; configured app/tests/evaluation checks transitive scripts correctly. Separate optional reporting/timeout values from previously narrow inferred variables. All original reds retained.
 

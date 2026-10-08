@@ -1,0 +1,98 @@
+{
+  "synthetic_not_actual_capture": true,
+  "no_main_or_network": true,
+  "controller_sha256": "e78703da603c758fc24c1a51f02fe67ca4c0df773f2df14b3fbb9cdfb808cce0",
+  "rows": [
+    {
+      "label": "well_shaped_synthetic_control",
+      "expected": "accept",
+      "actual": "accepted",
+      "errors": [],
+      "exception": null
+    },
+    {
+      "label": "fractional_fetcher_counter",
+      "expected": "reject",
+      "actual": "accepted",
+      "errors": [],
+      "exception": null
+    },
+    {
+      "label": "fractional_search_counter",
+      "expected": "reject",
+      "actual": "accepted",
+      "errors": [],
+      "exception": null
+    },
+    {
+      "label": "bool_claim_tokens",
+      "expected": "reject",
+      "actual": "accepted",
+      "errors": [],
+      "exception": null
+    },
+    {
+      "label": "false_strict_config_and_changed_caps",
+      "expected": "reject",
+      "actual": "accepted",
+      "errors": [],
+      "exception": null
+    },
+    {
+      "label": "physical_capture_budget_mismatch",
+      "expected": "reject",
+      "actual": "accepted",
+      "errors": [],
+      "exception": null
+    },
+    {
+      "label": "raw_terminal_error_mismatch",
+      "expected": "reject",
+      "actual": "accepted",
+      "errors": [],
+      "exception": null
+    },
+    {
+      "label": "raw_missing_institutions_and_claims",
+      "expected": "reject",
+      "actual": "accepted",
+      "errors": [],
+      "exception": null
+    },
+    {
+      "label": "explicit_429_reason_missing_failure",
+      "expected": "reject",
+      "actual": "accepted",
+      "errors": [],
+      "exception": null
+    },
+    {
+      "label": "missing_provider_failure_proof",
+      "expected": "reject",
+      "actual": "accepted",
+      "errors": [],
+      "exception": null
+    },
+    {
+      "label": "malformed_top_raw_array",
+      "expected": "reject",
+      "actual": "uncaught",
+      "errors": null,
+      "exception": "AttributeError"
+    },
+    {
+      "label": "malformed_raw_canary_array",
+      "expected": "reject",
+      "actual": "uncaught",
+      "errors": null,
+      "exception": "AttributeError"
+    },
+    {
+      "label": "malformed_telemetry_array",
+      "expected": "reject",
+      "actual": "uncaught",
+      "errors": null,
+      "exception": "AttributeError"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "status": "WRITEAHEAD_BOUNDED_V4_CONTRACT_NOT_PROTOTYPED",
+  "at_utc": "2026-10-08T00:12:28.785860+00:00",
+  "origins": {
+    "v3_manifest_sha256": "6c1b368f41ef349a796db8f5d96e5a016d4a964e5c5961114a790ca9ae01d990",
+    "v3_helper_sha256": "17ad707ef3851d671a13ab3f8b5cdce9f432402bae812491c9871e41ac111942",
+    "A_review_receipt_sha256": "68ff75c91d077f79e9b29b879aef1a397675f5039de9a08c248a65512244d457",
+    "A19_raw_sha256": "a10e861a5ff226fbbe86838a49115aa33259750e3ca43ac44beafb0801e2136f",
+    "B95_test_sources": {
+      "test_owned_ielts.py": "b12fedcba2075b4234f14c8595f30cad7d7c79f97f9e0219f7568f94fdec4363",
+      "test_parent15.py": "ca96ef3b6f6e581fc92c3826e2e319e5eb70b6abab7d1db1eccb54b8cfd2ca59",
+      "test_v3_boundaries.py": "b14ff91dbc33e7cb59664f95ec377ad011944d3f36b8e2a5ffa1d05821c68311",
+      "test_variant_decline.py": "98b16b410dcd90bbda1863eb9b18e85ec81004aeb235eb42658c01c9a511ebd6"
+    },
+    "root15_original": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-ielts-v2-review/original-controls.json",
+      "sha256": "89b799682e32710162d6501d6e9bab1aee77967d1e634c2b2acf3a1ec1c713ea"
+    }
+  },
+  "material_counts": {
+    "new_false_minima": 4,
+    "new_correct_minimum_losses": 4,
+    "inherited_semantic_reds": 5,
+    "valid_year_ambiguity_not_blocker": 1,
+    "passed": 5
+  },
+  "only_proposed_files": [
+    "app/adapters/requirements/ielts_sections.py",
+    "app/adapters/requirements/web_requirements.py",
+    "app/adapters/extraction.py"
+  ],
+  "contract": [
+    "IELTS_PROSE_SECTION_OWNERSHIP=False remains default; all OFF outputs byte/value-compatible with actual unchanged caller; table/PDF and native UNKNOWN/language-follow-table permissions unchanged. No classifier/programme/route/other-exam/cost/deadline changes.",
+    "Own IELTS label must be explicit in same statement or current semantic heading. h1..h6 and valid role=heading aria-level1..6 are equivalent owners; directly owned text/inline chunks in same region can be read. Existing chrome, sibling/region/equal-heading and listitem boundaries apply. Explicit aria-labelledby requires same legitimate region relation. Never flatten whole page to recover missing IELTS.",
+    "Bounded test subject/variant + refusal predicate handles accept-negation in forward/reverse/modal cannot/can not/may not/do not/is not an accepted forms and bounded parenthetical modifiers. Mandatory-score negation (not required/do not require) cannot assert minimum or derive accepted type from that number. Other explicit positive acceptance can remain separately truthful.",
+    "Known canonical variants Academic/UKVI Academic/General Training retain disjoint ownership; numeric refusal cannot be reassigned to an allowed variant. Mixed/unresolved variant or negation scope abstains; no text splicing. Scope can be conservative but must not falsepermit.",
+    "Numeric atom binds to explicit overall/score/minimum role or immediate IELTS field label, in band range and half-step. Fee/currency/cent units and fee tail are not bands; component-only role never becomes overall. Explicit other English test full names/acronyms stop IELTS ownership; qualification words do not become IELTS proof. No university-specific patterns.",
+    "IELTS scope year/intake/qualification from the local/ancestor statement or own title only; contradictory years stay None. No request-year/population/qualification manufacture. Quotes remain one contiguous verified source fragment within MAX_EXCERPT_CHARS; metadata restored after scoped read."
+  ],
+  "control_plan": [
+    "Reuse immutable A19 inputs through actual caller; retain raw initial14red counts. Explicitly classify old-title/local-year conflict as valid None rather than pretending a2024/25 coverage guarantee.",
+    "Run all author95 existing controls plus original root15 using own normal-current-app support API; preserve author test bytes and outputs, never execute mutable author replay output writers or snapshot path fallback. Forced-classifier diagnostic-only author cases labelled separately; no production gain inference.",
+    "Add narrow adversarial positive/negative pairs for modal/passive/parenthetical refusal versus distinct accepted variants; score negation versus honest accepted/waiver; role-heading and direct-text chunk boundaries versus sibling/chrome/other-exam leakage; component/fee role boundaries.",
+    "Compare complete old==OFF, and non-IELTS/page classes/table/PDF old==OFF==ON. Save every first red/log/source hash before any revision; no broad passing tests replacing red originals.",
+    "Normal actual app imports, immutable pinned proposed3 modules only. Deny HTTP/DNS/provider/model; one-page/cache-only mocked Fetcher transports, genuine WebRequirementsAdapter.verify; no live/default promotion. Peer B reviews sealed v4 before parent application."
+  ],
+  "no_repo_git_stop_classifier_gold_live_edits": true,
+  "HTTP_DNS_provider_model_calls": 0
+}

@@ -73,3 +73,6 @@ Fetch origin; run handoff_check; read this ledger, Claude relay journal and late
 ### 2026-10-08 00:06 UTC: genuine Job capture integrated, full pending
 
 Parent actual-module199PASS/0skip19.27s; Ruff/format/mypy383 PASS. Four harness/test files applied with legacy call-shape/type repairs; initial14reds retained. Archive receiptf3816e15f328a0841bd1c0238bc2e3161078a53fdbe8024adb006ece5a4807a0, 649 originals/4025053bytes. UNIVERSITY_READ_BUDGET=False; no source app/Fetcher/STOP/gold/live changes. IELTSv3 external95 controls pending independent review; v1/v2 rejected immutable; two experts active on v3 review and narrow language routing. Full local must pass before new live quality comparison; no launch/quality-rate claim.
+
+
+2026-10-08 00:31UTC: f0c8 full13/13,4261x2,95.25%,232frontend,79demo+6auth,1skip; receipt4fb41d2e. IELTSv3 rejected8NEWblockers; first-refusal internalExaretry independently confirmed, strict-only scoped repair pending; prepared genuine controller rejected9corrupt accepted/3malformed crashes,0live. A IELTSv4, B actualprovider mocks. GoalACTIVE.

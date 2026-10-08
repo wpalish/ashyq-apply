@@ -1,0 +1,51 @@
+{
+  "status": "READY_FOR_PARENT_REVIEW_NOT_APPLIED",
+  "default_flag": {
+    "IELTS_PROSE_SECTION_OWNERSHIP": false
+  },
+  "pytest": {
+    "passed": 95,
+    "seconds": 8.03,
+    "log": "pytest-sealed.log"
+  },
+  "parent_exact15": {
+    "red": {
+      "passed": 3,
+      "failed": 12
+    },
+    "final": {
+      "passed": 15,
+      "failed": 0
+    },
+    "classifier_overrides": 0
+  },
+  "added": {
+    "grammar_DOM": 10,
+    "variant": 2,
+    "final_failed": 0
+  },
+  "retained": {
+    "OFF_whole_value_canonical_byte_equal": 10,
+    "ON_nonIELTS_claim_equal": 10,
+    "classes_unchanged": 10,
+    "Toronto_UNKNOWN_still_blocked": true
+  },
+  "static": {
+    "ruff": "PASS",
+    "format3": "PASS",
+    "mypy3": "PASS",
+    "AST3": "PASS"
+  },
+  "modules_sha256": {
+    "proposed/app/adapters/extraction.py": "5f9cc4e514eb631cb54db2834c5583caade40a085f391fd0bcbcd0ff524a2672",
+    "proposed/app/adapters/requirements/web_requirements.py": "9745d74c436d5b7fda31a89081cc0dd709dafed5e38eade3e2c5e8018c7f69f4",
+    "proposed/app/adapters/requirements/ielts_sections.py": "17ad707ef3851d671a13ab3f8b5cdce9f432402bae812491c9871e41ac111942"
+  },
+  "report_sha256": "4a726302a8021d422822437bed8a6490bc096ef5398fb26df74cd51822eaedcd",
+  "own_external_calls": 0,
+  "source_repo_mutations": 0,
+  "classifier_permission_changed": false,
+  "scope_guarantee": "owned IELTS prose only",
+  "original_v2": "REJECTED_IMMUTABLE",
+  "unknown_routing": "DEFERRED_BEFORE_PROTOTYPE"
+}
