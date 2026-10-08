@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[search-explicit-rate-limit] Holder: nobody; ready-for-review (Draft PR #71), 2026-10-08 03:57 UTC.** https://github.com/wpalish/ashyq-apply/pull/71; OPEN/Draft/base task/search-retained-source-boundaries/head task/search-explicit-rate-limit@a48e8600575ba7d17cff3c3ace288a97ffa0f2ea verified, attached to current task. Rollup[] means no hosted checks, not PASS. Technical repair complete, root release metadata next; immutable source77a220a5/fullsnapshot e5774231/13of13/4312sameeachDB/95.26 retained. Boundaries931 originals ae1b1868 + final59 d7b4f8ac independently verified; source999/STOP65b5 unchanged. GlobalgoalACTIVE, round10UNSCORED/no accepted stable quality gain/production/launch. Next offline typed-control task under explicit §5 exception; no live restart.
+
 **[search-explicit-rate-limit] current GREEN checkpoint, 2026-10-08 03:53 UTC.** Holder gpt-6-astra; task/search-explicit-rate-limit. Exact app3/test3 on source77a220a5 freshly passed full13/13, snapshot e57742316919b9a2a70eff0d7219209c61f41a6feff4015af5af325c6f8a982f;4312 same unique cases eachDB/95.26%; native90 included eachDB. Independent final B276fc82e ACCEPT24PASS/0RED; original2classname-checkerRED preserved. Boundaries archiveae1b1868 (931 originals) independently accepted; finalclosure d7b4f8ac (59 originals/13,338,464bytes), all999 selected paths unchanged. Root final green commit/push/Draft successor70 and release next. STOP65b5 immutable; round10UNSCORED/no accepted quality gain/launch/production.
 
 **[search-explicit-rate-limit] current operational repair checkpoint, 2026-10-08 03:31 UTC.** Holder gpt-6-astra, branch task/search-explicit-rate-limit, pushed WIP77a220a55f70abfa7e2172cfd7785ee1633b5268. Exact accepted app3 and native test3 applied; only root import grouping repair follows sealed native proposal, with non-import AST/alias equality and independent B ACCEPT00476801. Other993 prefix-selected paths unchanged;999 includes research JSON. Fresh full20261008T032648Z-check-16f4d81b snapshot e57742316919b9a2a70eff0d7219209c61f41a6feff4015af5af325c6f8a982f: Ruff/format/mypy0, remaining steps pending. Firstfull032127 interrupted after3I001; never fullPASS or functionalFAIL. Expected90 native cases/4312 total eachDB must be confirmed from final JUnit, not assumed. A own isolated demo seed verified Groningen#1/UBC portfolio OUT_OF_BUDGET/singleAlembichead d8e412c6a901 on identical app3 in first frozen snapshot; initial wrong funding-field inspection RED preserved, corrected readonly controlPASS, synthetic outputs not university quality. Exact9-packet archive931physical originals/16,787,404bytes receiptae1b1868286570a76f2e6426dc307fc963d29ecb5b576dcd0501447e2b5a3dbd verified; counts include peer copies, not unique experiments. Archive/source/full independent verification pending; parent alone owns Git/source. GlobalSTOP65b5 unchanged, round10 UNSCORED, no accepted stable quality gain/launch/production. Current source differs from prior7c74; historical full4292/95.25 is not a gate for these changed bytes. Next complete fresh full, archive logs and qualified review, green checkpoint/attached Draft successor of70, then release exact baton.
@@ -95,6 +97,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[search-explicit-rate-limit] ready-for-review (Draft PR #71).** Technical acceptance complete; current Draft successor70 created/attached/verified. No app/test changes after77a220a5 frozen full; a48e8600 stores exact proofs. Final metadata release retains all gates. Parent releases baton; owner reviews/merges. Quality and launch are outstanding separate acceptance.
 
 **[search-explicit-rate-limit] technical criteria COMPLETE; Draft publication pending.** Actual429 or fixed typed RATE_LIMITED stops subsequent families/adapters after escaped failure; originalstatusNone/reason preserved; safe accurate discovery diagnostics. Public schema/config/defaults/budgets unchanged. Approved internalretryTrue still may dispatch2tools inside firstmetadatafailure; recoveredretry succeeds. No distributed/global first-response stop claimed. Exact source/native/full and independent review green; current task ready for review after metadata publication.
 
@@ -226,6 +230,10 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[search-explicit-rate-limit] done a48e8600575ba7d17cff3c3ace288a97ffa0f2ea — Draft #71 created/attached/verified.** Source77a220a5 exact app3/test3 green freshfull; a48 archives995newchangedmetadata/evidence paths (file counts not experiments). PR base/head actual verified; all999 selected source paths match final frozen map. Current full summary/JUnit originals retained with both prior Ruff/interruption and peer normalization RED history. Source gates unchanged by release metadata.
+
+**[search-explicit-rate-limit] green evidence a48e8600575ba7d17cff3c3ace288a97ffa0f2ea pushed, 2026-10-08 03:54 UTC.** Final59/59 archive SHA/size/originalbytes independently PASS (A ready0d8d5689/receipt9c1129f7),999 source paths and STOP unchanged. Final handoff checker exit0/docs-only diff exit0; raw original whitespace preserved. Draft creation next with exact reviewed finalbody.
 
 **[search-explicit-rate-limit] done source77a220a55f70abfa7e2172cfd7785ee1633b5268; evidence metadata commit next.** Applied independently accepted app3/native test3; root test import-only repair AST-equivalent;993 other selected paths unchanged. Full20261008T032648Z-check-16f4d81b complete13/13PASS. Final selected source manifest1c55186a; boundaries receiptae1b1868, finalclosure receiptd7b4f8ac. A archive audit ae5df1f4 and B final276fc82e accepted. All previous failed/interrupted/normalization proofs retained, no relabeling.
 
@@ -1760,6 +1768,8 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
+**Release metadata only:** HANDOFF/relay/ledger updated after green a48e8600; no dirty app/test, no unpushed source. Final commit/push will clear owned metadata before next task. Sibling dirty checkout untouched.
+
 **Current dirty files are owned final handoff/relay/ledger metadata and two new explicit-rate-limit evidence directories; no dirty app/test files beyond committed77a220a5.** Fresh full source selection unchanged. Parent alone owns Git; no sibling checkout changes.
 
 **2026-10-08 01:04 UTC:** only new final-full archive and this metadata are pending commit; executable source remains the clean tested `7c74a12d`. External validator repair and IELTS proposals are outside the repository and have not run live. Commit/push these selected originals with [skip ci], then create/attach the dependent Draft against #67.
@@ -1921,6 +1931,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**NEXT [search-control-propagation], offline only, explicit AGENTS§4 predecessor exception:** from clean pushed task/search-explicit-rate-limit/Draft71, create task/search-control-propagation; commit new baton/write-ahead BEFORE app changes. Pin exact current retrieval.py and typed control classes; reproduce read_cap/checkpoint_busy/RunCancelled/LeaseLost swallowed by entry-root Fetcher broadcatch (current line471) on actual source via finite mocks and independent negative review. Preserve asyncio.CancelledError propagation and ordinary unavailable HTTP/access hop behavior. Only then scoped external proposal + independent review + native regressions + fresh full before application acceptance. No retention/default/durable/schema/scoring bundled. Verify current canonical state first; no automated old live commands. STOP65b5 still forbids live/model/provider/retry/reset/switch/purchase/labels/incomplete scoring; goalACTIVE.
 
 **[search-explicit-rate-limit] finish current task exactly:** verify finalarchive/999 hashes, docs-only diff and scripts/handoff_check.py (redirect full output), commit/push Agent:gpt-6-astra/[skip ci], create Draft with base task/search-retained-source-boundaries/head task/search-explicit-rate-limit and final body root pr-body-final.md, attach/verify real head/base/Draft, record exact commit/PR and release Holder:nobody. Then separate [search-control-propagation] may branch from this clean pushed predecessor before merge under explicit AGENTS§4 exception: write new baton and plan before app edits, reproduce four swallowed typed controls at current retrieval.py entry-root broadcatch line471 on frozen current bytes with offline actual Fetcher negative controls, independent review before narrow proposal/application. Do not bundle retention/default/durable/scoring changes. LiveSTOP remains binding.
 
@@ -5426,3 +5438,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-08 02:00 UTC — gpt-6-astra: cbfb136b → search-retained-source-boundaries offline preparation; no live resumes or source apply.
 
 - 2026-10-08 02:11 UTC — gpt-6-astra: search-retained-source offline diagnostic archive723c39ca; all source/STOP unchanged, A lifecycle proposal and B exact peer review pending.
+
+- 2026-10-08 03:57 UTC | gpt-6-astra | source77a220a5 -> greena48e8600 -> Draft71/release metadata | typed rate-limit postescape cutoff; full13/13,4312same eachDB/95.26, native90 included; exact931+59 originals; STOP unchanged, UNSCORED/goalACTIVE. Next independent offline typed-control proof.
