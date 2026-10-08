@@ -1,0 +1,669 @@
+{
+  "same_cases_off_on": true,
+  "results": {
+    "off": {
+      "total": 52,
+      "passed": 37,
+      "failed": 15,
+      "errors": 0,
+      "skipped": 0,
+      "old_cases": 34,
+      "new_cases": 18,
+      "old_all_pass": true,
+      "network_receipts": [
+        {
+          "pid": 26256,
+          "network_or_listen_attempts": 0
+        },
+        {
+          "pid": 26261,
+          "network_or_listen_attempts": 0
+        }
+      ],
+      "cases": [
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"stage\":\"failed\"}",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"stage\":\"retryable_failed\"}",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"stage\":\"cancelled\",\"cancelled\":true}",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"stale\":true,\"job_status\":\"running\"}",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"job_status\":\"dead\"}",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > reviews the completed empty research instead of silently proposing a new run",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > opens existing partial checklists while keeping unresolved requirements visible",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > opens Plan when one of the chosen programmes still lacks a checklist",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > shows queued collection before offering existing checklists",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan actions > offers a direct Find route without selected programmes: empty research",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan actions > offers a direct Find route without selected programmes: undecided results",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan actions > opens Documents only when collection was accepted: true",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan actions > opens Documents only when collection was accepted: false",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Documents preserves findings before checklists arrive > shows confirmed dates and calendar export even when no checklist has been collected",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Documents preserves findings before checklists arrive > sends a saved programme without requirements to Plan",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Documents preserves findings before checklists arrive > keeps existing partial requirements visible during queued collection",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Documents preserves findings before checklists arrive > does not pretend a stale worker is still collecting",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan names the applicant choices > uses human group and row labels without calling an unknown programme an admission offer",
+          "status": "FAIL",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan names the applicant choices > keeps the original Undo semantics for approved",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan names the applicant choices > keeps the original Undo semantics for maybe",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan names the applicant choices > keeps the original Undo semantics for rejected",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan names the applicant choices > uses choice wording before collecting documents while keeping collection disabled",
+          "status": "FAIL",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "rejecting a programme > asks for a reason instead of silently sending an empty one",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "rejecting a programme > records the reason typed by the applicant",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "rejecting a programme > offers the common reasons as one click",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "rejecting a programme > keeps the reason optional: saying No with nothing typed still works",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "rejecting a programme > shows the stored reason on a row already rejected",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "rejecting a programme > does not ask for a reason when approving",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "filter labels > offers readable statuses, not raw enum tokens",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "filter labels > keeps the enum as the option value, so filtering still works",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "Find search > removes a saved approved programme instead of changing its decision silently",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "Find search > removes a saved maybe programme instead of changing its decision silently",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "Find search > filters by university, programme and country without changing the saved results",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "Find search > opens a source-backed result and compares only selected programmes",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "notes > saves a note without deciding the row",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "the v2 ranking on the shortlist > shows the match, what is confirmed, and the bucket",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "the v2 ranking on the shortlist > never presents the match as a probability",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "the v2 ranking on the shortlist > moves an unaffordable row out of the ranked table into its own section",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "the v2 ranking on the shortlist > keeps a row assessed before v2 in the ranked table",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > keeps a readable removal button outside collapsed Filters and shows filtered / total",
+          "status": "FAIL",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > removes only Search: Groningen and leaves the other active filters in place",
+          "status": "FAIL",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > removes only List: Saved and leaves the other active filters in place",
+          "status": "FAIL",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > removes only Country: Netherlands and leaves the other active filters in place",
+          "status": "FAIL",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > removes only Eligibility: Met and leaves the other active filters in place",
+          "status": "FAIL",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > removes only Funding: Full ride and leaves the other active filters in place",
+          "status": "FAIL",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > removes only Hide rejected and leaves the other active filters in place",
+          "status": "FAIL",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > clears all filters locally while preserving sort, compare, notes and unknown evidence",
+          "status": "FAIL",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > uses the same local reset from the no-match recovery action",
+          "status": "FAIL",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > does not describe whitespace-only search as an active filter",
+          "status": "FAIL",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > makes Priority list context removable without changing decisions",
+          "status": "FAIL",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > makes Saved list context removable without changing decisions",
+          "status": "FAIL",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > makes Exploring list context removable without changing decisions",
+          "status": "FAIL",
+          "new_control": true
+        }
+      ]
+    },
+    "on": {
+      "total": 52,
+      "passed": 52,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "old_cases": 34,
+      "new_cases": 18,
+      "old_all_pass": true,
+      "network_receipts": [
+        {
+          "pid": 26590,
+          "network_or_listen_attempts": 0
+        }
+      ],
+      "cases": [
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"stage\":\"failed\"}",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"stage\":\"retryable_failed\"}",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"stage\":\"cancelled\",\"cancelled\":true}",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"stale\":true,\"job_status\":\"running\"}",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"job_status\":\"dead\"}",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > reviews the completed empty research instead of silently proposing a new run",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > opens existing partial checklists while keeping unresolved requirements visible",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > opens Plan when one of the chosen programmes still lacks a checklist",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Home chooses the next step from the current run > shows queued collection before offering existing checklists",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan actions > offers a direct Find route without selected programmes: empty research",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan actions > offers a direct Find route without selected programmes: undecided results",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan actions > opens Documents only when collection was accepted: true",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan actions > opens Documents only when collection was accepted: false",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Documents preserves findings before checklists arrive > shows confirmed dates and calendar export even when no checklist has been collected",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Documents preserves findings before checklists arrive > sends a saved programme without requirements to Plan",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Documents preserves findings before checklists arrive > keeps existing partial requirements visible during queued collection",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Documents preserves findings before checklists arrive > does not pretend a stale worker is still collecting",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan names the applicant choices > uses human group and row labels without calling an unknown programme an admission offer",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan names the applicant choices > keeps the original Undo semantics for approved",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan names the applicant choices > keeps the original Undo semantics for maybe",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan names the applicant choices > keeps the original Undo semantics for rejected",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/JourneyScreens.test.tsx",
+          "name": "Plan names the applicant choices > uses choice wording before collecting documents while keeping collection disabled",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "rejecting a programme > asks for a reason instead of silently sending an empty one",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "rejecting a programme > records the reason typed by the applicant",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "rejecting a programme > offers the common reasons as one click",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "rejecting a programme > keeps the reason optional: saying No with nothing typed still works",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "rejecting a programme > shows the stored reason on a row already rejected",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "rejecting a programme > does not ask for a reason when approving",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "filter labels > offers readable statuses, not raw enum tokens",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "filter labels > keeps the enum as the option value, so filtering still works",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "Find search > removes a saved approved programme instead of changing its decision silently",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "Find search > removes a saved maybe programme instead of changing its decision silently",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "Find search > filters by university, programme and country without changing the saved results",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "Find search > opens a source-backed result and compares only selected programmes",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "notes > saves a note without deciding the row",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "the v2 ranking on the shortlist > shows the match, what is confirmed, and the bucket",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "the v2 ranking on the shortlist > never presents the match as a probability",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "the v2 ranking on the shortlist > moves an unaffordable row out of the ranked table into its own section",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "the v2 ranking on the shortlist > keeps a row assessed before v2 in the ranked table",
+          "status": "PASS",
+          "new_control": false
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > keeps a readable removal button outside collapsed Filters and shows filtered / total",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > removes only Search: Groningen and leaves the other active filters in place",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > removes only List: Saved and leaves the other active filters in place",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > removes only Country: Netherlands and leaves the other active filters in place",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > removes only Eligibility: Met and leaves the other active filters in place",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > removes only Funding: Full ride and leaves the other active filters in place",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > removes only Hide rejected and leaves the other active filters in place",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > clears all filters locally while preserving sort, compare, notes and unknown evidence",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > uses the same local reset from the no-match recovery action",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > does not describe whitespace-only search as an active filter",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > makes Priority list context removable without changing decisions",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > makes Saved list context removable without changing decisions",
+          "status": "PASS",
+          "new_control": true
+        },
+        {
+          "classname": "src/screens/ShortlistScreen.test.tsx",
+          "name": "visible active filters > makes Exploring list context removable without changing decisions",
+          "status": "PASS",
+          "new_control": true
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "findings": [
+    {
+      "id": "S1",
+      "kind": "confirmed_source_contract",
+      "finding": "Checklist snapshots, decisions/reasons/notes are server-persisted contracts; GET checklist comes from payload",
+      "sources": [
+        "backend/app/models/research.py:114",
+        "backend/app/api/routes_results.py:125",
+        "backend/app/api/routes_results.py:253",
+        "backend/app/pipeline/runner.py:1477"
+      ]
+    },
+    {
+      "id": "S2",
+      "kind": "confirmed_source_contract",
+      "finding": "All completion flags use global localStorage and result.id + name, no account/item/revision identity",
+      "sources": [
+        "frontend/src/screens/DocumentsScreen.tsx:24",
+        "frontend/src/screens/DocumentsScreen.tsx:192",
+        "frontend/src/screens/DocumentsScreen.tsx:219"
+      ]
+    },
+    {
+      "id": "S3",
+      "kind": "source_proven_structural_risk_not_runtime_reproduced",
+      "finding": "Same-name items can share completion; changed content under same result/name can inherit old mark",
+      "sources": [
+        "backend/app/adapters/documents/web_documents.py:764",
+        "backend/app/pipeline/runner.py:1590",
+        "frontend/src/screens/DocumentsScreen.tsx:219"
+      ]
+    },
+    {
+      "id": "S4",
+      "kind": "source_proven_structural_risk_not_runtime_reproduced",
+      "finding": "Shared browser storage is not account-private; logout does not clear docsDone; two-tab whole-map writes can overwrite",
+      "sources": [
+        "frontend/src/App.tsx:393",
+        "frontend/src/screens/DocumentsScreen.tsx:26",
+        "frontend/src/screens/DocumentsScreen.tsx:46"
+      ]
+    },
+    {
+      "id": "S5",
+      "kind": "confirmed_source_contract",
+      "finding": "Existing tenancy is organization scope; per-user marks require principal-derived actor key, not client user_id",
+      "sources": [
+        "backend/app/api/tenancy.py:12",
+        "backend/app/api/tenancy.py:27",
+        "backend/app/security.py:28"
+      ]
+    },
+    {
+      "id": "S6",
+      "kind": "confirmed_source_contract",
+      "finding": "No stable item/revision/completed field in DocumentItem/Checklist; generated_at is fresh generation time",
+      "sources": [
+        "backend/app/schemas/result.py:259",
+        "backend/app/schemas/result.py:300",
+        "backend/app/adapters/documents/web_documents.py:221"
+      ]
+    },
+    {
+      "id": "D1",
+      "kind": "future_design_not_implemented",
+      "finding": "One progress sidecar for existing checklist self-marks, principal/result/revision/item_ref, absolute done state plus stale-write guard",
+      "acceptance_status": "ALL_NOT_RUN"
+    }
+  ],
+  "execution": "Static source reads and stdlib hash/report packaging only; no app import or runtime validation",
+  "limitations": [
+    "No DB/API/migration/test/network/model/provider/CLI/auth operations",
+    "No user or applicant data inspected",
+    "No cross-device/session/transaction behaviour PASS",
+    "No entire planner or source patch"
+  ],
+  "lookup_history": [
+    "Initial guessed db/API subdirectory names did not exist; corrected using actual models/API file inventory. No product execution or source failure."
+  ]
+}

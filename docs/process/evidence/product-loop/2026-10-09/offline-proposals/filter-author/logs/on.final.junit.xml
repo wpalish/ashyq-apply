@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="52" failures="0" errors="0" time="1.962826875">
+    <testsuite name="src/screens/JourneyScreens.test.tsx" timestamp="2026-10-08T21:45:48.423Z" hostname="iMac-Aliser.local" tests="22" failures="0" errors="0" skipped="0" time="0.3679135">
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;stage&quot;:&quot;failed&quot;}" time="0.069625458">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;stage&quot;:&quot;retryable_failed&quot;}" time="0.011343875">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;stage&quot;:&quot;cancelled&quot;,&quot;cancelled&quot;:true}" time="0.008162625">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;stale&quot;:true,&quot;job_status&quot;:&quot;running&quot;}" time="0.008926041">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;job_status&quot;:&quot;dead&quot;}" time="0.006682458">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; reviews the completed empty research instead of silently proposing a new run" time="0.009363583">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens existing partial checklists while keeping unresolved requirements visible" time="0.008422125">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens Plan when one of the chosen programmes still lacks a checklist" time="0.007918166">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; shows queued collection before offering existing checklists" time="0.009672417">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan actions &gt; offers a direct Find route without selected programmes: empty research" time="0.016531792">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan actions &gt; offers a direct Find route without selected programmes: undecided results" time="0.008851583">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan actions &gt; opens Documents only when collection was accepted: true" time="0.131351">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan actions &gt; opens Documents only when collection was accepted: false" time="0.003662834">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Documents preserves findings before checklists arrive &gt; shows confirmed dates and calendar export even when no checklist has been collected" time="0.009254042">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Documents preserves findings before checklists arrive &gt; sends a saved programme without requirements to Plan" time="0.003366">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Documents preserves findings before checklists arrive &gt; keeps existing partial requirements visible during queued collection" time="0.007206791">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Documents preserves findings before checklists arrive &gt; does not pretend a stale worker is still collecting" time="0.003979542">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; uses human group and row labels without calling an unknown programme an admission offer" time="0.020094541">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; keeps the original Undo semantics for approved" time="0.005293042">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; keeps the original Undo semantics for maybe" time="0.007163292">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; keeps the original Undo semantics for rejected" time="0.004232333">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; uses choice wording before collecting documents while keeping collection disabled" time="0.00426375">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/ShortlistScreen.test.tsx" timestamp="2026-10-08T21:45:48.427Z" hostname="iMac-Aliser.local" tests="30" failures="0" errors="0" skipped="0" time="1.594913375">
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; asks for a reason instead of silently sending an empty one" time="0.056665709">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; records the reason typed by the applicant" time="0.024149375">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; offers the common reasons as one click" time="0.029681333">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; keeps the reason optional: saying No with nothing typed still works" time="0.024284958">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; shows the stored reason on a row already rejected" time="0.020478667">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; does not ask for a reason when approving" time="0.030379292">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="filter labels &gt; offers readable statuses, not raw enum tokens" time="0.02094825">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="filter labels &gt; keeps the enum as the option value, so filtering still works" time="0.011802084">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="Find search &gt; removes a saved approved programme instead of changing its decision silently" time="0.046973834">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="Find search &gt; removes a saved maybe programme instead of changing its decision silently" time="0.014030292">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="Find search &gt; filters by university, programme and country without changing the saved results" time="0.009705417">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="Find search &gt; opens a source-backed result and compares only selected programmes" time="0.029829625">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="notes &gt; saves a note without deciding the row" time="0.027420125">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="the v2 ranking on the shortlist &gt; shows the match, what is confirmed, and the bucket" time="0.013409958">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="the v2 ranking on the shortlist &gt; never presents the match as a probability" time="0.005349667">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="the v2 ranking on the shortlist &gt; moves an unaffordable row out of the ranked table into its own section" time="0.006043625">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="the v2 ranking on the shortlist &gt; keeps a row assessed before v2 in the ranked table" time="0.009622958">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; keeps a readable removal button outside collapsed Filters and shows filtered / total" time="0.046297">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only Search: Groningen and leaves the other active filters in place" time="0.08246825">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only List: Saved and leaves the other active filters in place" time="0.111502625">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only Country: Netherlands and leaves the other active filters in place" time="0.090773417">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only Eligibility: Met and leaves the other active filters in place" time="0.0942365">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only Funding: Full ride and leaves the other active filters in place" time="0.063055167">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only Hide rejected and leaves the other active filters in place" time="0.084628416">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; clears all filters locally while preserving sort, compare, notes and unknown evidence" time="0.51948675">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; uses the same local reset from the no-match recovery action" time="0.038653709">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; does not describe whitespace-only search as an active filter" time="0.012307708">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; makes Priority list context removable without changing decisions" time="0.021669167">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; makes Saved list context removable without changing decisions" time="0.02694725">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; makes Exploring list context removable without changing decisions" time="0.019429125">
+        </testcase>
+    </testsuite>
+</testsuites>

@@ -1,0 +1,132 @@
+{
+  "scope": "Owned frontend copies only; no primary source writes, server, build, full suite, auth, provider/model/university calls",
+  "node": {
+    "invoked": "/Users/wpalish/.local/bin/node",
+    "version": "v24.15.0"
+  },
+  "environment": {
+    "PATH": "/Users/wpalish/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+    "NODE_OPTIONS": "--require=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/b-filter-choice-proposal/support/deny-network.cjs",
+    "env_i": true
+  },
+  "dependencies": "Installed primary frontend packages linked under owned node_modules root. Vite cacheDir changed only in owned runtime config. No package install.",
+  "unit_arguments": [
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "src/screens/ShortlistScreen.test.tsx",
+    "src/screens/JourneyScreens.test.tsx",
+    "--reporter=default",
+    "--reporter=junit"
+  ],
+  "commands": [
+    {
+      "name": "off_initial",
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/b-filter-choice-proposal/runtime/off/frontend",
+      "exit": 1,
+      "session": 84374,
+      "log": "logs/off.log",
+      "junit": "logs/off.junit.xml",
+      "qualification": "15 expected new-interface failures, 37 pass, zero fixture errors"
+    },
+    {
+      "name": "on_initial",
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/b-filter-choice-proposal/runtime/on/frontend",
+      "exit": 0,
+      "session": 16660,
+      "log": "logs/on.log",
+      "junit": "logs/on.junit.xml"
+    },
+    {
+      "name": "typecheck_attempt1",
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/b-filter-choice-proposal/runtime/on/frontend",
+      "arguments": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "exit": 2,
+      "session": 78898,
+      "log": "logs/typecheck.attempt1.log",
+      "qualification": "Three test typing diagnostics preserved; see correction-history.json"
+    },
+    {
+      "name": "lint_initial",
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/b-filter-choice-proposal/runtime/on/frontend",
+      "arguments": [
+        "node_modules/eslint/bin/eslint.js",
+        "src/screens/ShortlistScreen.tsx",
+        "src/screens/ApprovedScreen.tsx",
+        "src/screens/ShortlistScreen.test.tsx",
+        "src/screens/JourneyScreens.test.tsx"
+      ],
+      "exit": 0,
+      "session": 86411,
+      "log": "logs/lint.log"
+    },
+    {
+      "name": "off_final",
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/b-filter-choice-proposal/runtime/off/frontend",
+      "exit": 1,
+      "session": 47972,
+      "log": "logs/off.final.log",
+      "junit": "logs/off.final.junit.xml",
+      "qualification": "Identical 52 identities; 15 expected new-interface failures; old34 pass; denied-transport receipts zero"
+    },
+    {
+      "name": "on_final",
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/b-filter-choice-proposal/runtime/on/frontend",
+      "exit": 0,
+      "session": 16380,
+      "log": "logs/on.final.log",
+      "junit": "logs/on.final.junit.xml",
+      "qualification": "52 pass; zero errors/skips; denied-transport receipts zero"
+    },
+    {
+      "name": "typecheck_final",
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/b-filter-choice-proposal/runtime/on/frontend",
+      "arguments": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "exit": 0,
+      "session": 55415,
+      "log": "logs/typecheck.final.log"
+    },
+    {
+      "name": "lint_final",
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/b-filter-choice-proposal/runtime/on/frontend",
+      "arguments": [
+        "node_modules/eslint/bin/eslint.js",
+        "src/screens/ShortlistScreen.tsx",
+        "src/screens/ApprovedScreen.tsx",
+        "src/screens/ShortlistScreen.test.tsx",
+        "src/screens/JourneyScreens.test.tsx"
+      ],
+      "exit": 0,
+      "session": 86696,
+      "log": "logs/lint.final.log"
+    },
+    {
+      "name": "static_original_test_bodies_and_native_expressions",
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/b-filter-choice-proposal",
+      "arguments": [
+        "support/check-compatibility.cjs"
+      ],
+      "exit": 0,
+      "log": "logs/compatibility.log"
+    }
+  ],
+  "not_run": [
+    "Dev/preview server",
+    "Browser/viewport/E2E",
+    "Frontend full test suite or build",
+    "Backend",
+    "Live/API/provider/model",
+    "Primary apply/commit"
+  ],
+  "packaging_history": [
+    {
+      "error": "SyntaxError: Non-UTF-8 code starting with byte 0xd1 in inline report generator before execution",
+      "impact": "Generator did not execute or write any file. Retained here; no app/test assertion failure."
+    }
+  ]
+}

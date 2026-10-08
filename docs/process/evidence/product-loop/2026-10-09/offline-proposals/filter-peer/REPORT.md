@@ -1,0 +1,17 @@
+# Independent peer review: Find filters and applicant choices
+
+**Qualified ACCEPT** of exact sealed B four files (ready 9fdba2fa…, patch 1bb6f0f…). No material correctness blocker found. Independent owned replay: **54 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, comprising B52 plus two independent controls. Socket/DNS/listen guard reports 0 attempts. This is local mocked unit/DOM proof, not visual/E2E, server persistence or full acceptance.
+
+Find clear/remove-one only affects query/tab/country/eligibility/funding/hideRejected (proposed ShortlistScreen.tsx:96–111). Native rows, decideRow and renderTable expressions are exact equal to original. Sorting, compare selection, notes, decisions and source-derived unknowns are not rewritten. Active filters are outside collapsed details (450–463), native type=button with descriptive aria-label; × is aria-hidden. Whitespace matches actual trim semantics. Showing N of M distinguishes filtered results from the already-held total; it does not claim total university coverage.
+
+Plan changes visible choice labels to Chosen by you / Considering / Ruled out (ApprovedScreen.tsx:44,62–65,86–88,143). The explicit sentence says these are user choices, not admission offers. Underlying enums, group membership, collection, unknown eligibility/funding/costs, notes and Undo arguments stay unchanged. Independent static parser verified 27 old test templates unchanged (16+11); all their expanded controls remain in the native replay.
+
+Independent extra controls exercise (1) an **unsaved** inline note draft plus compare/sort through remove-one and all-clear, including a transient no-match list, without a save/decision call or mutation of original results; (2) root current Documents empty-checklist CTA precedes a 24-date timeline in DOM and retains the same Plan route/calendar URL. Both pass.
+
+Root Documents reorder: source 0387aa4f… before vs pinned current reordered file. Exact empty Panel text/conditions/actions are equal; after removing that block the remaining source is equal ignoring whitespace. Only block order changed: it now precedes calendar. No claims or filtering/data semantics change. A DOM ordering assertion is **not** measurement of its screen position. Root's prior desktop/mobile screenshots established the old CTA-below-timeline issue; final browser appearance/reload remains root verification.
+
+Existing E2E journey.spec.ts:239 names the Plan group. Current root changed only the label expectation to Ruled out (1); rejection row, reason and reload assertions remain. This is a required exact expectation update for the intentional label change, not permission to skip/loosen E2E. Reviewer did not execute E2E.
+
+Remaining visual checks: chips/focus/clear-all at 390×844, long search strings and wrapping, and action visibility ahead of many dates. Existing row flex-wrap and descriptive buttons support the design; no browser geometry or accessibility audit PASS is inferred from jsdom. Baseline Find/no-results and ResultDetail approve-only copy are outside B's four-file proposal and unchanged.
+
+B39 selected plaintext originals rehashed before/after; four proposed runtime bytes match their sealed pins. STOP65b5 unchanged. Primary/Git source mutations by reviewer: 0; no install, port/server/full/DB/live/provider/model/auth/gold/scorer operations. Current primary may be integrated by root after the early acceptance message; this packet binds the exact external B bytes and owned combined runtime, not a claim that root primary was frozen throughout.
