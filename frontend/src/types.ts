@@ -309,6 +309,7 @@ export interface UnresolvedQuestion {
 }
 
 export interface DocumentItem {
+  progress_id?: string;
   name: string;
   purpose: 'admission' | 'scholarship' | 'both';
   owner: DocumentOwner;
@@ -398,6 +399,7 @@ export interface ProgramResult {
   user_notes: string;
   decided_at: string | null;
   checklist: DocumentChecklist | null;
+  document_progress?: Record<string, boolean>;
 }
 
 export interface StageView {
@@ -627,6 +629,7 @@ export interface MessagePage {
   person: PersonCard;
   items: MessageView[];
   next_cursor: string | null;
+  latest_cursor?: string | null;
 }
 
 export interface AuthorRef {

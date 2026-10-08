@@ -205,3 +205,17 @@ class TestTheCandidateTypesRefuseNonsense:
 
         assert fused.agreement == 2
         assert fused.best_rank == 1
+
+
+@pytest.mark.parametrize("ranks", [(9, 2), (2, 9), (2, 2, 2)])
+def test_duplicates_get_only_the_best_rank_vote(ranks):
+    duplicates = [
+        c(CS + ("#detail" if n else ""), Generator.SITEMAP, rank) for n, rank in enumerate(ranks)
+    ]
+    assert fuse(duplicates) == fuse([c(CS, Generator.SITEMAP, min(ranks))])
+
+
+def test_repeated_single_generator_cannot_displace_independent_agreement():
+    rows = [c(NEWS, Generator.SITEMAP, 5)] * 30
+    rows += [c(CS, Generator.WEB_SEARCH, 5), c(CS, Generator.CATALOGUE_WALKER, 5)]
+    assert fuse(rows)[0].url == CS

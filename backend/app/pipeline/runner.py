@@ -79,7 +79,7 @@ from app.models.base import ensure_utc
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState
 from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
 from app.schemas.profile import ApplicantProfileIn
-from app.schemas.result import CostBreakdown, ProgramResult, Tristate
+from app.schemas.result import CostBreakdown, DocumentChecklist, ProgramResult, Tristate
 
 log = logging.getLogger("unimatch.pipeline")
 
@@ -668,6 +668,7 @@ class ResearchRunner:
                 result.source_urls = sorted({c.source_url for c in all_claims})
                 result.last_verified = max((c.accessed_at for c in all_claims), default=None)
                 self._persist_result(result, all_claims, conflicts)
+                self._save()
                 self.run.programs_verified = len(seen_keys)
                 self.run.claims_recorded += len(all_claims)
                 # Programmes done and programmes expected, so the ratio on
@@ -731,6 +732,7 @@ class ResearchRunner:
                     ),
                 )
                 st.items_done = i + 1
+                self._save()
                 continue
 
             prog = CandidateProgram(
@@ -909,8 +911,8 @@ class ResearchRunner:
             self._update_result(row, result, extra_claims=claims, conflicts=conflicts)
             self.run.claims_recorded += len(claims)
             st.items_done = i + 1
-            if i % 4 == 0:
-                self._save()
+            # Release the result lock before the next network read.
+            self._save()
 
         self._record_diagnostics(errors)
         st.finish(f"Funding checked for {len(rows)} programmes.")
@@ -1133,6 +1135,7 @@ class ResearchRunner:
                         ),
                     )
                     st.items_done = i + 1
+                    self._save()
                     continue
                 prog = CandidateProgram(
                     name=result.program, field="", degree=result.degree, url=result.program_url
@@ -1276,7 +1279,16 @@ class ResearchRunner:
         )
         if existing is not None:
             result.id = existing.id
-            self._replace_evidence(existing.id)
+            preserve_documents = result.checklist is None and existing.checklist is not None
+            if preserve_documents:
+                previous = ProgramResult.model_validate(existing.payload)
+                result.claims.extend(
+                    claim
+                    for claim in previous.claims
+                    if claim.claim_type in DOCUMENT_CLAIM_TYPES
+                    and claim.status is not ClaimStatus.SUPERSEDED
+                )
+            self._replace_evidence(existing.id, preserve_documents=preserve_documents)
             self._update_result(existing, result, extra_claims=claims, conflicts=conflicts)
             return
 
@@ -1307,6 +1319,16 @@ class ResearchRunner:
     def _update_result(
         self, row: ProgramResultRow, result: ProgramResult, extra_claims=None, conflicts=None
     ) -> None:
+        with self.session.no_autoflush:
+            row = (
+                self.session.query(ProgramResultRow)
+                .filter(ProgramResultRow.id == row.id)
+                .populate_existing()
+                .with_for_update()
+                .one()
+            )
+        if result.checklist is None and row.checklist is not None:
+            result.checklist = DocumentChecklist.model_validate(row.checklist)
         result.id = row.id
         # The re-derived result knows nothing about the user: it is built from
         # pages, not from the database. Carrying the decision over is what makes
@@ -1327,7 +1349,7 @@ class ResearchRunner:
         if conflicts:
             self._store_conflicts(row.id, conflicts)
 
-    def _replace_evidence(self, result_id: str) -> None:
+    def _replace_evidence(self, result_id: str, *, preserve_documents: bool = False) -> None:
         """Drop the live evidence a previous attempt stored for this result.
 
         Re-running a stage re-reads the same pages, so keeping both copies
@@ -1336,10 +1358,15 @@ class ResearchRunner:
         of a reextract — and a retry of the pipeline must never destroy them,
         so only non-superseded rows are deleted here.
         """
-        self.session.query(ClaimRow).filter(
+        claims = self.session.query(ClaimRow).filter(
             ClaimRow.result_id == result_id,
             ClaimRow.status != ClaimStatus.SUPERSEDED.value,
-        ).delete(synchronize_session=False)
+        )
+        if preserve_documents:
+            claims = claims.filter(
+                ClaimRow.claim_type.notin_([kind.value for kind in DOCUMENT_CLAIM_TYPES])
+            )
+        claims.delete(synchronize_session=False)
         self.session.query(ConflictRow).filter(ConflictRow.result_id == result_id).delete(
             synchronize_session=False
         )
@@ -1737,7 +1764,13 @@ def store_result(row: ProgramResultRow, result: ProgramResult, *, ranking_versio
     One place decides which ranking the sort column carries, so a re-rank
     through the API and a fresh assessment can never disagree about it.
     """
+    allowed = result.checklist.progress_ids() if result.checklist else set()
+    previous = (row.payload or {}).get("document_progress", {})
+    result.document_progress = {
+        key: True for key, done in previous.items() if done and key in allowed
+    }
     row.payload = result.model_dump(mode="json")
+    row.checklist = result.checklist.model_dump(mode="json") if result.checklist else None
     ranking = result.ranking
     if ranking is not None and ranking_version >= 2:
         row.score_total = ranking.sort_key

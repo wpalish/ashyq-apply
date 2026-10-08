@@ -21,6 +21,7 @@ from __future__ import annotations
 import logging
 import math
 import re
+import unicodedata
 from collections.abc import Awaitable, Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from urllib.parse import urlsplit
@@ -91,7 +92,8 @@ log = logging.getLogger("unimatch.search.retrieval")
 
 def tokenize(text: str) -> list[str]:
     """Words of three or more characters, lowercased. Also splits URL slugs."""
-    return [w for w in re.split(r"[^0-9a-zЀ-ӿ]+", text.lower()) if len(w) >= 3]
+    normalized = unicodedata.normalize("NFC", text).lower()
+    return [w for w in re.findall(r"[^\W_]+", normalized) if len(w) >= 3]
 
 
 @dataclass(frozen=True, slots=True)

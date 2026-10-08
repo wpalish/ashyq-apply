@@ -6,7 +6,7 @@
  * sinks an application, not the form you can fill in on the last evening.
  */
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Chip, Empty, Notice, Panel } from '@/components/primitives';
 import { date, dateTime } from '@/lib/format';
 import { api } from '@/api/client';
@@ -20,32 +20,22 @@ const OWNER_LABEL: Record<string, string> = {
   third_party: 'A third party (translator, WES/ECE, notary)',
 };
 
-const DONE_KEY = 'ashyq.docsDone';
-
-function loadDone(): Record<string, boolean> {
-  try {
-    return JSON.parse(window.localStorage.getItem(DONE_KEY) ?? '{}');
-  } catch {
-    return {};
-  }
-}
-
-export function DocumentsScreen() {
-  const { results, run } = useStore();
+export function DocumentsScreen({ initialResultId = null }: { initialResultId?: string | null }) {
+  const { results, run, setDocumentProgress } = useStore();
   const withChecklists = results.filter((r) => r.checklist);
-  const [selected, setSelected] = useState<string>(withChecklists[0]?.id ?? '');
-  const [done, setDone] = useState<Record<string, boolean>>(loadDone);
+  const [selected, setSelected] = useState<string>(withChecklists.find((row) => row.id === initialResultId)?.id ?? withChecklists[0]?.id ?? '');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const inFlight = useRef(false);
 
-  const toggle = (key: string) => {
-    setDone((prev) => {
-      const next = { ...prev, [key]: !prev[key] };
-      try {
-        window.localStorage.setItem(DONE_KEY, JSON.stringify(next));
-      } catch {
-        /* progress ticks are a convenience; storage being unavailable is fine */
+  const toggle = async (resultId: string, progressId: string, value: boolean) => {
+    if (inFlight.current) return;
+    inFlight.current = true; setBusy(true); setError('');
+    try {
+      if (!await setDocumentProgress(resultId, progressId, value)) {
+        setError('Could not save your progress. Your previous marks are kept; try again.');
       }
-      return next;
-    });
+    } finally { inFlight.current = false; setBusy(false); }
   };
 
   const deadlines = useMemo(() => {
@@ -142,21 +132,25 @@ export function DocumentsScreen() {
               style={r.id === current.id ? { borderColor: 'var(--accent)', color: 'var(--accent)' } : undefined}
               onClick={() => setSelected(r.id)}
               data-testid={`doc-tab-${r.id}`}
+              aria-pressed={r.id === current.id}
             >
               {r.university}
             </button>
           ))}
         </div>
 
-        <ChecklistFor result={current} done={done} toggle={toggle} />
+        {error && <Notice kind="risk">{error}</Notice>}
+        <Notice kind="info">These marks record your preparation. They do not verify or submit documents.</Notice>
+        <ChecklistFor result={current} key={current.id} busy={busy} toggle={toggle} />
       </div>
     </>
   );
 }
 
 function ChecklistFor({
-  result, done, toggle,
-}: { result: ProgramResult; done: Record<string, boolean>; toggle: (k: string) => void }) {
+  result, busy, toggle,
+}: { result: ProgramResult; busy: boolean; toggle: (resultId: string, key: string, value: boolean) => Promise<void> }) {
+  const done = result.document_progress ?? {};
   const c = result.checklist!;
 
   // Longest lead time first, both between groups and inside them. What the
@@ -167,17 +161,30 @@ function ChecklistFor({
   const maxLead = (items: DocumentItem[]) =>
     items.reduce((n, d) => Math.max(n, d.lead_time_days ?? 0), 0);
 
-  const groups: [string, DocumentItem[]][] = (
+  const seen = new Set<string>();
+  const unique = (items: DocumentItem[]) => items.filter((item) => {
+    const key = item.progress_id ?? JSON.stringify(item);
+    if (seen.has(key)) return false; seen.add(key); return true;
+  });
+  const owned: [string, DocumentItem[]][] = (
     [
-      ['recommender', byLeadTime(c.recommender_actions)],
-      ['school', byLeadTime(c.school_actions)],
-      ['third_party', byLeadTime(c.certification_actions)],
-      ['applicant', byLeadTime(c.applicant_actions)],
+      ['recommender', byLeadTime(unique(c.recommender_actions))],
+      ['school', byLeadTime(unique(c.school_actions))],
+      ['third_party', byLeadTime(unique(c.certification_actions))],
+      ['applicant', byLeadTime(unique(c.applicant_actions))],
     ] as [string, DocumentItem[]][]
-  ).sort((a, b) => maxLead(b[1]) - maxLead(a[1]));
+  );
+  // Some older checklists contain only the purpose lists. Keep those real
+  // requirements visible, while counting duplicated owner projections once.
+  for (const item of unique([...(c.admission_documents ?? []), ...(c.scholarship_documents ?? [])])) {
+    const group = owned.find(([owner]) => owner === item.owner) ?? owned[3]!;
+    group[1].push(item);
+  }
+  const groups = owned.map(([owner, items]): [string, DocumentItem[]] => [owner, byLeadTime(items)])
+    .sort((a, b) => maxLead(b[1]) - maxLead(a[1]));
   const total = groups.reduce((n, [, items]) => n + items.length, 0);
   const completed = groups.reduce(
-    (n, [, items]) => n + items.filter((d) => done[`${result.id}::${d.name}`]).length, 0,
+    (n, [, items]) => n + items.filter((d) => done[d.progress_id ?? '']).length, 0,
   );
 
   return (
@@ -201,10 +208,10 @@ function ChecklistFor({
             <div key={owner} className="stack stack--tight" style={{ marginBottom: 'var(--space-5)' }}>
               <h3 style={{ fontSize: 'var(--text-base)' }}>{OWNER_LABEL[owner]}</h3>
               {items.map((d) => {
-                const key = `${result.id}::${d.name}`;
+                const key = d.progress_id ?? JSON.stringify(d);
                 return (
                   <label key={key} className={`doc ${done[key] ? 'doc--done' : ''}`}>
-                    <input type="checkbox" checked={Boolean(done[key])} onChange={() => toggle(key)} />
+                    <input type="checkbox" checked={Boolean(done[key])} disabled={busy || !d.progress_id} onChange={() => void toggle(result.id, key, !done[key])} />
                     <div>
                       <div className="doc__name">{d.name}</div>
                       <div className="doc__meta">

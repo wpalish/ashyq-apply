@@ -68,15 +68,69 @@ describe('polling', () => {
   });
 
   it('does not overlap requests when the server is slow', async () => {
-    let resolveIt: (v: RunView) => void = () => {};
-    const getRun = vi.spyOn(api, 'getRun').mockImplementation(() =>
-      new Promise<RunView>((resolve) => { resolveIt = resolve; }),
-    );
-    render(<StoreProvider><Probe /></StoreProvider>);
+    vi.useFakeTimers({ shouldAdvanceTime: false });
+    vi.spyOn(document, 'hidden', 'get').mockReturnValue(false);
+    let resolvePoll!: (v: RunView) => void;
+    const pendingPoll = new Promise<RunView>((resolve) => { resolvePoll = resolve; });
+    const getRun = vi.spyOn(api, 'getRun')
+      .mockResolvedValueOnce(RUNNING)
+      .mockReturnValueOnce(pendingPoll)
+      .mockResolvedValue(RUNNING);
+    let view!: ReturnType<typeof render>;
+    await act(async () => { view = render(<StoreProvider><Probe /></StoreProvider>); });
+    expect(screen.getByTestId('stage')).toHaveTextContent('program_verification');
+    expect(getRun).toHaveBeenCalledTimes(1);
+
+    await act(async () => { await vi.advanceTimersByTimeAsync(1200); });
+    expect(getRun).toHaveBeenCalledTimes(2);
 
     await act(async () => { await vi.advanceTimersByTimeAsync(5000); });
-    expect(getRun.mock.calls.length).toBe(1);
-    await act(async () => { resolveIt(RUNNING); });
+    expect(getRun).toHaveBeenCalledTimes(2);
+    await act(async () => { resolvePoll(RUNNING); });
+    await act(async () => { await vi.advanceTimersByTimeAsync(1200); });
+    expect(getRun).toHaveBeenCalledTimes(3);
+    view.unmount();
+  });
+
+  it('keeps one polling chain after visibility changes during a pending poll and stops on unmount', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: false });
+    const hidden = vi.spyOn(document, 'hidden', 'get').mockReturnValue(false);
+    let resolvePoll!: (v: RunView) => void;
+    const pendingPoll = new Promise<RunView>((resolve) => { resolvePoll = resolve; });
+    const getRun = vi.spyOn(api, 'getRun')
+      .mockResolvedValueOnce(RUNNING)
+      .mockReturnValueOnce(pendingPoll)
+      .mockResolvedValue(RUNNING);
+    let view!: ReturnType<typeof render>;
+    await act(async () => { view = render(<StoreProvider><Probe /></StoreProvider>); });
+    await act(async () => { await vi.advanceTimersByTimeAsync(1200); });
+    expect(getRun).toHaveBeenCalledTimes(2);
+
+    hidden.mockReturnValue(true);
+    act(() => document.dispatchEvent(new Event('visibilitychange')));
+    hidden.mockReturnValue(false);
+    await act(async () => {
+      document.dispatchEvent(new Event('visibilitychange'));
+      await vi.advanceTimersByTimeAsync(0);
+    });
+    expect(getRun).toHaveBeenCalledTimes(2);
+    await act(async () => { resolvePoll(RUNNING); });
+    await act(async () => { await vi.advanceTimersByTimeAsync(1200); });
+    expect(getRun).toHaveBeenCalledTimes(3);
+
+    let resolveAfterUnmount!: (v: RunView) => void;
+    const afterUnmount = new Promise<RunView>((resolve) => { resolveAfterUnmount = resolve; });
+    getRun.mockReturnValueOnce(afterUnmount);
+    await act(async () => { await vi.advanceTimersByTimeAsync(1200); });
+    expect(getRun).toHaveBeenCalledTimes(4);
+    const readsBeforeUnmount = vi.mocked(api.results).mock.calls.length;
+    view.unmount();
+    await act(async () => {
+      resolveAfterUnmount({ ...RUNNING, results_count: 1 });
+      await vi.advanceTimersByTimeAsync(10_000);
+    });
+    expect(getRun).toHaveBeenCalledTimes(4);
+    expect(api.results).toHaveBeenCalledTimes(readsBeforeUnmount);
   });
 
   it('pauses while the tab is hidden and answers at once on return', async () => {

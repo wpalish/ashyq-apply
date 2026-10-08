@@ -8,8 +8,8 @@
  * "has not said", and it is never quietly upgraded to a waitlist.
  */
 
-import { useState, type ReactNode } from 'react';
-import { Chip } from '@/components/primitives';
+import { useId, useRef, useState, type ReactNode } from 'react';
+import { Chip, Notice } from '@/components/primitives';
 import { ReportButton } from '@/components/moderation';
 import type { Tone } from '@/lib/format';
 // `t` rather than the hook: these are leaf components, and the screens above
@@ -263,15 +263,25 @@ export function PersonTile({
  * a surprise — the parse happens in front of you rather than on the server.
  */
 export function Composer({
-  placeholder, submitLabel, max = POST_MAX_CHARS, busy, onSubmit,
+  placeholder, submitLabel, max = POST_MAX_CHARS, busy, disabled = false, draft, onDraftChange, onSubmit,
 }: {
   placeholder: string;
   submitLabel: string;
   max?: number;
   busy?: boolean;
-  onSubmit: (body: string) => Promise<void>;
+  disabled?: boolean;
+  draft?: string;
+  onDraftChange?: (text: string) => void;
+  /** False means the server refused it; keep the applicant's exact draft. */
+  onSubmit: (body: string) => Promise<boolean | void>;
 }) {
-  const [text, setText] = useState('');
+  const [localText, setLocalText] = useState('');
+  const text = draft ?? localText;
+  const setText = (value: string) => { setLocalText(value); onDraftChange?.(value); };
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const inFlight = useRef(false);
+  const inputId = useId();
   const tags = Array.from(
     new Map(
       (text.match(/#[0-9A-Za-zЀ-ӿ_]{2,40}/g) ?? []).map((tag) => [
@@ -282,27 +292,39 @@ export function Composer({
   ).slice(0, 5);
 
   const left = max - text.trim().length;
-  const canSend = text.trim().length > 0 && left >= 0 && !busy;
+  const canSend = text.trim().length > 0 && left >= 0 && !busy && !submitting && !disabled;
 
   return (
     <form
       className="composer"
       onSubmit={async (event) => {
         event.preventDefault();
-        if (!canSend) return;
-        await onSubmit(text.trim());
-        setText('');
+        if (!canSend || inFlight.current) return;
+        inFlight.current = true;
+        setSubmitting(true);
+        setError('');
+        try {
+          if (await onSubmit(text.trim()) !== false) setText('');
+        } catch {
+          // A caller that throws is a rejection too, never an accepted send.
+          setError(t('community.draftKept'));
+        } finally {
+          inFlight.current = false;
+          setSubmitting(false);
+        }
       }}
     >
-      <label className="visually-hidden" htmlFor="composer-body">{placeholder}</label>
+      <label className="visually-hidden" htmlFor={inputId}>{placeholder}</label>
       <textarea
-        id="composer-body"
+        id={inputId}
         className="composer__input"
         rows={3}
         value={text}
         placeholder={placeholder}
+        disabled={Boolean(busy || submitting || disabled)}
         onChange={(event) => setText(event.target.value)}
       />
+      {error && <Notice kind="risk">{error}</Notice>}
       <div className="composer__foot">
         <div className="composer__tags">
           {tags.length > 0 && <span className="xs faint">{t('community.willBeTagged')}</span>}

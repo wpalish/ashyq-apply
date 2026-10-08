@@ -101,7 +101,7 @@ const PRIMARY_NAV = [
 export default function App() {
   const {
     run, results, summary, error, clearError, capabilities,
-    cases, savedProfile, switchCase, newCase, dirty, hydrated,
+    cases, savedProfile, switchCase, newCase, dirty, hydrated, profileViewKey,
   } = useStore();
   const { t, locale, setLocale } = useTranslation();
   const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'home');
@@ -121,6 +121,7 @@ export default function App() {
   const [personId, setPersonId] = useState<string | null>(null);
   const [messagingWith, setMessagingWith] = useState<string | null>(null);
   const [unread, setUnread] = useState(0);
+  const [documentResultId, setDocumentResultId] = useState<string | null>(null);
   const [theme, setTheme] = useState<Theme>(() => {
     try {
       return (window.localStorage.getItem(THEME_KEY) as Theme) ?? 'light';
@@ -428,15 +429,15 @@ export default function App() {
           {/* Scoped to the screen, so one broken screen cannot take the
               sidebar and the case switcher down with it. */}
           <ErrorBoundary label={`the ${screen} screen`} key={screen}>
-          {screen === 'home' && <HomeScreen onNavigate={setScreen} />}
-          {screen === 'profile' && <ProfileScreen onNext={() => setScreen('preferences')} />}
+          {screen === 'home' && <HomeScreen onNavigate={setScreen} onOpenDocuments={(id) => { setDocumentResultId(id); setScreen('documents'); }} />}
+          {screen === 'profile' && <ProfileScreen key={profileViewKey} onNext={() => setScreen('preferences')} />}
           {screen === 'preferences' && <PreferencesScreen onStarted={() => setScreen('progress')} />}
           {screen === 'progress' && <ProgressScreen onDone={() => setScreen('shortlist')} />}
           {screen === 'shortlist' && <ShortlistScreen onStart={() => setScreen(savedProfile ? 'preferences' : 'profile')} onProgress={() => setScreen('progress')} />}
           {screen === 'funding' && <FundingScreen />}
           {screen === 'sources' && <SourcesScreen />}
-          {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} />}
-          {screen === 'documents' && <DocumentsScreen />}
+          {screen === 'approved' && <ApprovedScreen onCollect={() => { setDocumentResultId(null); setScreen('documents'); }} onOpenDocuments={(id) => { setDocumentResultId(id); setScreen('documents'); }} />}
+          {screen === 'documents' && <DocumentsScreen key={`${run?.id ?? savedProfile?.id ?? 'none'}:${documentResultId ?? ''}`} initialResultId={documentResultId} />}
           {screen === 'export' && <ExportScreen />}
           {screen === 'legal' && <LegalScreen />}
           {screen === 'settings' && <SettingsScreen theme={theme} setTheme={setTheme} locale={locale} setLocale={setLocale} onNavigate={setScreen} onSignedOut={() => window.location.reload()} />}

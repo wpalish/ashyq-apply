@@ -1,12 +1,16 @@
 import { useStore } from '@/lib/store';
+import { deriveApplicationPlan } from '@/lib/applicationPlan';
+import { ApplicationNextAction } from '@/components/ApplicationNextAction';
 import type { ScreenId } from '@/App';
 
-type HomeScreenProps = { onNavigate: (screen: ScreenId) => void };
+type HomeScreenProps = { onNavigate: (screen: ScreenId) => void; onOpenDocuments: (resultId: string) => void };
 
 /** A single next step, selected only from real case/run state. */
-export function HomeScreen({ onNavigate }: HomeScreenProps) {
+export function HomeScreen({ onNavigate, onOpenDocuments }: HomeScreenProps) {
   const { savedProfile, run, results, summary, hydrated, capabilities } = useStore();
   const selected = results.filter((result) => result.user_decision === 'approved' || result.user_decision === 'maybe');
+  const plans = deriveApplicationPlan(results, new Date().toISOString().slice(0, 10));
+  const preparation = plans.find((plan) => plan.nextItem) ?? plans.find((plan) => plan.status !== 'review_submission') ?? plans[0];
   const active = run?.job_status === 'running' || run?.job_status === 'queued';
   const next: { title: string; detail: string; action: string; screen: ScreenId } = !savedProfile
     ? {
@@ -23,7 +27,7 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
       : results.length > 0 && selected.length > 0
         ? {
           title: 'Plan your next steps',
-          detail: 'Collect the document requirements for the programmes you selected.',
+          detail: preparation?.status === 'not_collected' ? 'Collect the document requirements for the programmes you selected.' : 'Continue your saved preparation and check any requirements that still need review.',
           action: 'Open plan', screen: 'approved',
         }
         : results.length > 0
@@ -61,6 +65,14 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
           {next.action} <span aria-hidden="true">→</span>
         </button>
       </section>
+
+      {!active && preparation && preparation.status !== 'not_collected' && (
+        <section className="home-next">
+          <div><h2>{preparation.university}</h2><p>{preparation.program}</p>
+            <ApplicationNextAction plan={preparation} onOpenDocuments={onOpenDocuments} />
+          </div>
+        </section>
+      )}
 
       <div className="home-overview" aria-label="Your current research">
         <div><strong>{results.length}</strong><span>Programmes found</span></div>

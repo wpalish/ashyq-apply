@@ -9,7 +9,7 @@ from datetime import UTC, date, datetime
 from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictBool
 from sqlalchemy.orm import Session
 
 from app.api.paywall import access_for_run, require_full_access
@@ -177,6 +177,61 @@ def get_result(
     return ProgramResult.model_validate(row.payload)
 
 
+class DocumentProgressIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    done: StrictBool
+
+
+def _locked_result(session: Session, run_id: str, result_id: str) -> ProgramResultRow:
+    row = (
+        session.query(ProgramResultRow)
+        .filter(ProgramResultRow.id == result_id, ProgramResultRow.run_id == run_id)
+        .populate_existing()
+        .with_for_update()
+        .first()
+    )
+    if row is None:
+        raise HTTPException(404, "Result not found")
+    return row
+
+
+@router.patch("/results/{result_id}/documents/{progress_id}", response_model=ProgramResult)
+def set_document_progress(
+    run_id: str,
+    result_id: str,
+    progress_id: str,
+    payload: DocumentProgressIn,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> ProgramResult:
+    require_full_access(session, run_id, principal)
+    row = _locked_result(session, run_id, result_id)
+    result = ProgramResult.model_validate(row.payload)
+    allowed = result.checklist.progress_ids() if result.checklist else set()
+    if progress_id not in allowed:
+        raise HTTPException(409, "This document requirement has changed; refresh the checklist.")
+    result.document_progress = {
+        key: True for key, done in result.document_progress.items() if done and key in allowed
+    }
+    if payload.done:
+        result.document_progress[progress_id] = True
+    else:
+        result.document_progress.pop(progress_id, None)
+    row.payload = result.model_dump(mode="json")
+    session.add(
+        AuditEvent(
+            organization_id=principal.organization_id,
+            actor=f"user:{principal.user_id[:8]}",
+            action="document_progress_recorded",
+            entity_type="result",
+            entity_id=result_id,
+            detail={"done": payload.done},
+        )
+    )
+    session.commit()
+    return result
+
+
 class RefreshOut(BaseModel):
     status: str
     pages: int
@@ -269,9 +324,7 @@ def set_decision(
     # The result id alone is not authority: resolve the run through the
     # principal's organization first, exactly as every read route does.
     owned_run(session, run_id, principal)
-    row = session.get(ProgramResultRow, result_id)
-    if row is None or row.run_id != run_id:
-        raise HTTPException(404, "Result not found")
+    row = _locked_result(session, run_id, result_id)
 
     result = ProgramResult.model_validate(row.payload)
     result.user_decision = decision.decision
@@ -318,9 +371,7 @@ def set_notes(
     started claiming it was decided the moment they typed a reminder in it.
     """
     owned_run(session, run_id, principal)
-    row = session.get(ProgramResultRow, result_id)
-    if row is None or row.run_id != run_id:
-        raise HTTPException(404, "Result not found")
+    row = _locked_result(session, run_id, result_id)
 
     result = ProgramResult.model_validate(row.payload)
     result.user_notes = payload.notes
@@ -563,7 +614,13 @@ def rerank(
         profile.weights_override = True
 
     gamma = payload.gamma if payload.gamma is not None else settings.ranking_gamma
-    rows = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run_id).all()
+    rows = (
+        session.query(ProgramResultRow)
+        .filter(ProgramResultRow.run_id == run_id)
+        .populate_existing()
+        .with_for_update()
+        .all()
+    )
     source = "priorities_roc"
     for row in rows:
         result = ProgramResult.model_validate(row.payload)

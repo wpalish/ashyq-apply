@@ -166,6 +166,8 @@ class MessagePage(BaseModel):
     person: PersonCard
     items: list[MessageView]
     next_cursor: str | None = None
+    # Last delivered position, also when there is no next page yet.
+    latest_cursor: str | None = None
 
 
 # --- Moderation ---------------------------------------------------------

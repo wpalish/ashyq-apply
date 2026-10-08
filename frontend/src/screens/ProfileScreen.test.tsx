@@ -6,12 +6,18 @@
  * refused conversion silently destroyed the applicant's grades.
  */
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ProfileScreen } from './ProfileScreen';
 import { ApiError, api } from '@/api/client';
 
 const GPA = { raw_value: 4.8, raw_scale_max: 5, raw_scale_label: 'KZ 5-point' };
+
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((accept) => { resolve = accept; });
+  return { promise, resolve };
+}
 
 let draft: Record<string, unknown>;
 const setProfileDraft = vi.fn((update: (d: unknown) => unknown) => {
@@ -84,6 +90,42 @@ describe('applying a grade conversion', () => {
 
     await waitFor(() => expect(api.previewConversion).toHaveBeenCalled());
     expect(validate).not.toHaveBeenCalled();
+  });
+
+  it('keeps a grade edited while its earlier conversion is still pending', async () => {
+    const converted = { ...GPA, converted_value: 3.9, method_source: 'documented' };
+    const pending = deferred<typeof converted>();
+    vi.spyOn(api, 'previewConversion').mockReturnValue(pending.promise);
+    const view = render(<ProfileScreen onNext={() => {}} />);
+    fireEvent.click(await screen.findByTestId('convert-kz5_to_us4'));
+    expect(api.previewConversion).toHaveBeenCalledWith(GPA, 'kz5_to_us4');
+
+    fireEvent.change(screen.getByLabelText('GPA / average'), { target: { value: '4.4' } });
+    view.rerender(<ProfileScreen onNext={() => {}} />);
+    setProfileDraft.mockClear();
+    await act(async () => { pending.resolve(converted); });
+
+    expect((draft.academics as { gpa: typeof GPA }).gpa).toEqual({ ...GPA, raw_value: 4.4 });
+    expect(setProfileDraft).not.toHaveBeenCalled();
+  });
+
+  it('cannot apply an unmounted applicant conversion to a new applicant with the same raw grade', async () => {
+    const converted = { ...GPA, converted_value: 3.9, method_source: 'documented' };
+    const pending = deferred<typeof converted>();
+    vi.spyOn(api, 'previewConversion').mockReturnValue(pending.promise);
+    const previous = render(<ProfileScreen onNext={() => {}} />);
+    fireEvent.click(await screen.findByTestId('convert-kz5_to_us4'));
+    previous.unmount();
+
+    // Equal GPA values do not mean these are the same applicant. A draft-only
+    // equality guard would accept the obsolete request into this new form.
+    draft = { academics: { gpa: { ...GPA } }, activities: [], achievements: [], display_name: 'New applicant' };
+    render(<ProfileScreen onNext={() => {}} />);
+    await act(async () => { pending.resolve(converted); });
+
+    expect((draft.academics as { gpa: typeof GPA }).gpa).toEqual(GPA);
+    expect(draft.display_name).toBe('New applicant');
+    expect(setProfileDraft).not.toHaveBeenCalled();
   });
 });
 

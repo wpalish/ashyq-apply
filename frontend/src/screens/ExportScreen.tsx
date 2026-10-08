@@ -21,6 +21,8 @@ export function ExportScreen() {
   const [exported, setExported] = useState<Record<string, unknown> | null>(null);
   const [deleted, setDeleted] = useState(false);
 
+  if (deleted) return <Notice kind="info">The applicant case and its research results have been deleted.</Notice>;
+
   if (!run) return <Empty title="Nothing to export yet">Start a research run first.</Empty>;
 
   const approved = results.filter((r) => r.user_decision === 'approved').length;
@@ -185,8 +187,7 @@ export function ExportScreen() {
                   className="btn btn--danger"
                   disabled={confirm !== CONFIRM_WORD || !savedProfile}
                   onClick={async () => {
-                    await deleteEverything();
-                    setDeleted(true);
+                    if (await deleteEverything()) setDeleted(true);
                   }}
                   data-testid="delete-everything"
                 >

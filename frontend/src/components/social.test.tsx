@@ -164,4 +164,41 @@ describe('Composer', () => {
     expect(onSubmit).toHaveBeenCalledWith('привет');
     expect(box).toHaveValue('');
   });
+
+  it('keeps the exact draft after a refused submission and clears only after acceptance', async () => {
+    const onSubmit = vi.fn().mockResolvedValueOnce(false).mockResolvedValueOnce(true);
+    render(<Composer placeholder="Message" submitLabel="Send" onSubmit={onSubmit} />);
+    const box = type('  My application question\nPlease help.  ');
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Send' })); });
+    expect(box).toHaveValue('  My application question\nPlease help.  ');
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Send' })); });
+    expect(box).toHaveValue('');
+  });
+
+  it('keeps a draft and shows an error when the caller rejects', async () => {
+    render(<Composer placeholder="Message" submitLabel="Send" onSubmit={vi.fn().mockRejectedValue(new Error('offline'))} />);
+    const box = type('Please keep this question');
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Send' })); });
+    expect(box).toHaveValue('Please keep this question');
+    expect(screen.getByText(/Your draft is kept/)).toBeInTheDocument();
+  });
+
+  it('submits only once even if the form is submitted twice before a render', async () => {
+    let accept!: () => void;
+    const onSubmit = vi.fn(() => new Promise<void>((resolve) => { accept = resolve; }));
+    render(<Composer placeholder="Message" submitLabel="Send" onSubmit={onSubmit} />);
+    const box = type('One question');
+    const form = box.closest('form')!;
+    await act(async () => { fireEvent.submit(form); fireEvent.submit(form); });
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(box).toBeDisabled();
+    await act(async () => { accept(); });
+    expect(box).toHaveValue('');
+  });
+
+  it('gives each composer its own accessible label', () => {
+    render(<><Composer placeholder="Post" submitLabel="Post" onSubmit={vi.fn()} /><Composer placeholder="Reply" submitLabel="Reply" onSubmit={vi.fn()} /></>);
+    expect(screen.getByLabelText('Post')).not.toBe(screen.getByLabelText('Reply'));
+    expect(screen.getByLabelText('Post').id).not.toBe(screen.getByLabelText('Reply').id);
+  });
 });

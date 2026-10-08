@@ -56,6 +56,9 @@ export interface Store {
    * store and concludes there are no results a moment before they arrive.
    */
   hydrated: boolean;
+  activeCaseKey: string | null;
+  /** Stable across first save; changes only when the applicant view changes. */
+  profileViewKey: string;
   loadDemoProfile: () => void;
   clearProfile: () => void;
   validation: ProfileValidationReport | null;
@@ -64,22 +67,23 @@ export interface Store {
   summary: ShortlistSummary | null;
   loading: boolean;
   error: string | null;
-  saveProfile: () => Promise<void>;
-  startRun: (demoMode: boolean, universityIds?: string[]) => Promise<void>;
+  saveProfile: () => Promise<boolean>;
+  startRun: (demoMode: boolean, universityIds?: string[]) => Promise<boolean>;
   cancelRun: () => Promise<void>;
   retryRun: (stage?: string) => Promise<void>;
   recheckNow: () => Promise<void>;
-  collectDocuments: () => Promise<void>;
+  collectDocuments: () => Promise<boolean>;
   /** Downloads through the client, so a 402 raises the paywall like any call. */
   exportShortlist: (fmt: 'csv' | 'json' | 'xlsx', decision?: string) => Promise<void>;
   decide: (resultId: string, decision: UserDecision, reason: string, notes: string) => Promise<void>;
+  setDocumentProgress: (resultId: string, progressId: string, done: boolean) => Promise<boolean>;
   saveNotes: (resultId: string, notes: string) => Promise<void>;
   refreshResults: () => Promise<void>;
   /** Re-order the finished run against changed priorities. Fetches no pages. */
-  rerank: (body: RerankIn) => Promise<void>;
+  rerank: (body: RerankIn) => Promise<boolean>;
   /** The balanced list, refreshed with the results. */
   shortlist: BalancedShortlist | null;
-  deleteEverything: () => Promise<void>;
+  deleteEverything: () => Promise<boolean>;
   clearError: () => void;
   /** Set when a gated route answered 402. Null when nothing is locked. */
   paywall: { profileId: string; priceKzt: number; casesLeft: number | null } | null;
@@ -179,7 +183,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [savedProfile, setSavedProfile] = useState<StoredProfile | null>(null);
   const [cases, setCases] = useState<ApplicantCase[]>([]);
   const [validation, setValidation] = useState<ProfileValidationReport | null>(null);
-  const [run, setRun] = useState<RunView | null>(null);
+  const [run, setRunState] = useState<RunView | null>(null);
+  const activeRun = useRef<RunView | null>(null);
+  const setRun = useCallback((value: RunView | null) => { activeRun.current = value; setRunState(value); }, []);
   const [results, setResults] = useState<ProgramResult[]>([]);
   const [shortlist, setShortlist] = useState<BalancedShortlist | null>(null);
   const [summary, setSummary] = useState<ShortlistSummary | null>(null);
@@ -197,11 +203,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   //: Key of a case that exists only in this browser until its first save. Null
   //: while no such case is open; a saved case is keyed by its profile id.
   const [localCaseKey, setLocalCaseKey] = useState<string | null>(null);
-  const pollRef = useRef<number | null>(null);
-  //: One request at a time: a slow answer used to overlap the next tick.
-  const inFlightRef = useRef(false);
-  const pollFailuresRef = useRef(0);
+  const [profileViewKey, setProfileViewKey] = useState('initial');
+
   const resultsCountRef = useRef(0);
+  const resultRevision = useRef(0);
+  const casesVersion = useRef(0);
   //: Monotonic generation for async case actions (initial hydration,
   //: switchCase, saveProfile, startRun). An action that started before a newer
   //: one must discard its answer whole - state, pointers and draft slots - or
@@ -212,6 +218,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   //: releases the `hydrated` gate once its own requests have settled.
   const hydrationPassRef = useRef(0);
   const activeCaseKey: string | null = savedProfile?.id ?? localCaseKey;
+
+  const guardRun = useCallback((id: string | undefined) => {
+    const generation = opGenRef.current;
+    return () => Boolean(id && activeRun.current?.id === id && generation === opGenRef.current);
+  }, []);
+  useEffect(() => () => { opGenRef.current += 1; activeRun.current = null; }, []);
 
   const fail = useCallback((e: unknown) => {
     // A 401 is not something the user can act on from this screen. AuthGate
@@ -239,8 +251,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    api.capabilities().then(setCapabilities).catch(fail);
-    api.cases().then(setCases).catch(fail);
+    let mounted = true;
+    const version = ++casesVersion.current;
+    api.capabilities().then((value) => { if (mounted) setCapabilities(value); }).catch((e) => { if (mounted) fail(e); });
+    api.cases().then((value) => { if (mounted && version === casesVersion.current) setCases(value); }).catch((e) => { if (mounted && version === casesVersion.current) fail(e); });
+    return () => { mounted = false; };
   }, [fail]);
 
   const dirty = baseline !== '' && JSON.stringify(profileDraft) !== baseline;
@@ -274,44 +289,75 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   // Validation follows the draft, debounced so typing does not flood the API.
   useEffect(() => {
+    let cancelled = false;
     const timer = window.setTimeout(() => {
-      api.validateProfile(profileDraft).then(setValidation).catch(() => setValidation(null));
+      api.validateProfile(profileDraft)
+        .then((report) => { if (!cancelled) setValidation(report); })
+        .catch(() => { if (!cancelled) setValidation(null); });
     }, 400);
-    return () => window.clearTimeout(timer);
+    return () => { cancelled = true; window.clearTimeout(timer); };
   }, [profileDraft]);
 
   const saveNotes = useCallback(async (resultId: string, notes: string) => {
-    if (!run) return;
+    const current = guardRun(run?.id);
+      if (!run || !current()) return;
     try {
       const updated = await api.saveNotes(run.id, resultId, notes);
-      setResults((rows) => rows.map((r) => (r.id === resultId ? updated : r)));
+      if (!current()) return;
+      resultRevision.current += 1;
+      setResults((rows) => rows.map((r) => (r.id === resultId ? { ...r, user_notes: updated.user_notes } : r)));
     } catch (e) {
-      fail(e);
+      if (current()) fail(e);
     }
-  }, [run, fail]);
+  }, [run, fail, guardRun]);
+
+  const setDocumentProgress = useCallback(async (resultId: string, progressId: string, done: boolean) => {
+    const current = guardRun(run?.id);
+    if (!run || !current()) return false;
+    try {
+      const updated = await api.setDocumentProgress(run.id, resultId, progressId, done);
+      if (!current()) return false;
+      resultRevision.current += 1;
+      setResults((rows) => rows.map((row) => row.id === resultId ? { ...row, document_progress: updated.document_progress } : row));
+      return true;
+    } catch (e) {
+      if (current()) fail(e);
+      return false;
+    }
+  }, [run, fail, guardRun]);
 
   const refreshResults = useCallback(async () => {
-    if (!run) return;
+    const current = guardRun(run?.id);
+      if (!run || !current()) return;
     try {
+      const revision = resultRevision.current;
       const [rows, sum] = await Promise.all([api.results(run.id), api.summary(run.id)]);
+      if (!current() || revision !== resultRevision.current) return;
       setResults(rows);
       setSummary(sum);
     } catch (e) {
-      fail(e);
+      if (current()) fail(e);
     }
-  }, [run, fail]);
+  }, [run, fail, guardRun]);
 
   const rerank = useCallback(
     async (body: RerankIn) => {
-      if (!run) return;
+      const current = guardRun(run?.id);
+      if (!run || !current()) return false;
       try {
         await api.rerank(run.id, body);
-        setResults(await api.results(run.id));
+        if (!current()) return false;
+        const revision = resultRevision.current;
+        const rows = await api.results(run.id);
+        if (!current() || revision !== resultRevision.current) return false;
+        setResults(rows);
+        return true;
       } catch (e) {
-        fail(e);
+        if (current()) fail(e);
+        return false;
       }
     },
-    [run, fail],
+    [run, fail, guardRun],
   );
 
   // Restore the active case and any in-flight run after a reload.
@@ -349,6 +395,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       profileLoaded = Promise.resolve().then(() => {
         if (stale()) return;
         setLocalCaseKey(profilePointer);
+        setProfileViewKey(profilePointer);
         const envelope = readDraftEnvelope(profilePointer);
         if (envelope) {
           setDraft(envelope.draft);
@@ -365,6 +412,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         .then((stored) => {
           if (stale()) return;
           setSavedProfile(stored);
+          setProfileViewKey(profilePointer);
           const fromServer = toDraft(stored);
           // The saved profile is the baseline; an unsaved draft is layered on
           // top of it and never written back into savedProfile. That ordering
@@ -402,8 +450,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           .then((stored) => {
             if (stale()) return;
             setRun(stored);
+            const revision = resultRevision.current;
             return api.results(stored.id).then((rows) => {
-              if (stale()) return;
+              if (stale() || revision !== resultRevision.current) return;
               setResults(rows);
             });
           })
@@ -449,50 +498,62 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!runId || !pollingActive) return;
     let stopped = false;
+    let timer: number | null = null;
+    let inFlight = false;
+    let failures = 0;
 
     const schedule = (delay: number) => {
       if (stopped) return;
-      pollRef.current = window.setTimeout(tick, delay);
+      if (timer !== null) window.clearTimeout(timer);
+      timer = window.setTimeout(tick, delay);
     };
 
     const tick = async () => {
+      if (stopped) return;
+      timer = null;
       // A hidden tab is not watching. Skipping the request rather than the
       // schedule means the loop resumes the moment it comes back.
-      if (document.hidden || inFlightRef.current) {
+      if (document.hidden || inFlight) {
         schedule(POLL_MS);
         return;
       }
-      inFlightRef.current = true;
+      inFlight = true;
+      const current = guardRun(runId);
       try {
         const next = await api.getRun(runId);
         if (stopped) return;
-        pollFailuresRef.current = 0;
+        if (!current()) { schedule(POLL_MS); return; }
+        failures = 0;
         setRun(next);
         const settled = ['awaiting_user_decision', 'completed', 'failed', 'cancelled']
           .includes(next.stage);
         if (next.results_count !== resultsCountRef.current || settled) {
+          const revision = resultRevision.current;
           const [rows, sum] = await Promise.all([api.results(next.id), api.summary(next.id)]);
           if (stopped) return;
+          if (!current() || revision !== resultRevision.current) { schedule(POLL_MS); return; }
           setResults(rows);
           setSummary(sum);
         }
         schedule(POLL_MS);
       } catch (e) {
-        pollFailuresRef.current += 1;
+        if (stopped) return;
+        if (!current()) { schedule(POLL_MS); return; }
+        failures += 1;
         // One dropped poll is not worth a banner; a run of them is. Backing
         // off also stops a dead backend being hammered every 1.2 seconds.
-        if (pollFailuresRef.current > 3) fail(e);
-        const step = Math.min(pollFailuresRef.current - 1, POLL_BACKOFF_MS.length - 1);
+        if (failures > 3) fail(e);
+        const step = Math.min(failures - 1, POLL_BACKOFF_MS.length - 1);
         schedule(POLL_BACKOFF_MS[step] ?? POLL_MS);
       } finally {
-        inFlightRef.current = false;
+        inFlight = false;
       }
     };
 
     const onVisible = () => {
       if (document.hidden) return;
       // Back in view: answer now rather than at the end of the current wait.
-      if (pollRef.current) window.clearTimeout(pollRef.current);
+      if (timer) window.clearTimeout(timer);
       schedule(0);
     };
 
@@ -501,10 +562,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     return () => {
       stopped = true;
       document.removeEventListener('visibilitychange', onVisible);
-      if (pollRef.current) window.clearTimeout(pollRef.current);
-      pollRef.current = null;
+      if (timer) window.clearTimeout(timer);
+      timer = null;
     };
-  }, [runId, pollingActive, fail]);
+  }, [runId, pollingActive, fail, guardRun, setRun]);
 
   // Pull the final results once the pipeline settles.
   useEffect(() => {
@@ -530,10 +591,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const saved = savedProfile
         ? await api.updateProfile(savedProfile.id, profileDraft)
         : await api.createProfile(profileDraft);
-      const nextCases = await api.cases();
-      if (gen !== opGenRef.current) return;
+      if (gen !== opGenRef.current) return false;
       setSavedProfile(saved);
-      setCases(nextCases);
+      const version = ++casesVersion.current;
+      void api.cases().then((nextCases) => {
+        if (gen === opGenRef.current && version === casesVersion.current) setCases(nextCases);
+      }).catch((e) => { if (gen === opGenRef.current) fail(e); });
       setLocalCaseKey(null);
       writePointer('profile', saved.id);
       const canonicalDraft = toDraft(saved);
@@ -543,9 +606,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setDraft((current) => JSON.stringify(current) === JSON.stringify(profileDraft) ? canonicalDraft : current);
       setDraftRestored(false);
       if (previousCaseKey !== null) clearDraftSlot(previousCaseKey);
+      return true;
     } catch (e) {
       if (gen === opGenRef.current) fail(e);
-      throw e;
+      return false;
     } finally {
       if (gen === opGenRef.current) setLoading(false);
     }
@@ -565,6 +629,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (gen !== opGenRef.current) return;
       const latest = runsForCase[0] ?? null;
       setSavedProfile(stored);
+      setProfileViewKey(profileId);
       setLocalCaseKey(null);
       const fromServer = toDraft(stored);
       setBaseline(JSON.stringify(fromServer));
@@ -579,11 +644,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         setDraftRestored(false);
       }
       setRun(latest);
+      setResults([]); setSummary(null); setShortlist(null);
+      setValidation(null); setPaywall(null);
       writePointer('profile', profileId);
       writePointer('run', latest?.id ?? null);
       if (latest) {
+        const revision = resultRevision.current;
         const [rows, sum] = await Promise.all([api.results(latest.id), api.summary(latest.id)]);
-        if (gen !== opGenRef.current) return;
+        if (gen !== opGenRef.current || revision !== resultRevision.current) return;
         setResults(rows);
         setSummary(sum);
       } else {
@@ -601,11 +669,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     // Invalidate an in-flight switch/save/run: the later user intent wins, and
     // a slow response must not land an old case on top of the fresh blank one.
     ++opGenRef.current;
+    setLoading(false);
+    setError(null);
+    setPaywall(null);
     // The new case exists only in this browser until its first save; its key
     // is local so its unsaved edits get their own draft slot (FE01).
     const localId = newLocalCaseKey();
     setSavedProfile(null);
     setLocalCaseKey(localId);
+    setProfileViewKey(localId);
     const blank = blankProfile();
     setDraft(blank);
     setBaseline(JSON.stringify(blank));
@@ -627,26 +699,29 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (!profile) {
         const previousCaseKey = localCaseKey;
         profile = await api.createProfile(profileDraft);
-        const nextCases = await api.cases();
-        if (gen !== opGenRef.current) return;
+        if (gen !== opGenRef.current) return false;
         setSavedProfile(profile);
-        setCases(nextCases);
+        const version = ++casesVersion.current;
+        void api.cases().then((nextCases) => {
+          if (gen === opGenRef.current && version === casesVersion.current) setCases(nextCases);
+        }).catch((e) => { if (gen === opGenRef.current) fail(e); });
         setLocalCaseKey(null);
         writePointer('profile', profile.id);
         if (previousCaseKey !== null) clearDraftSlot(previousCaseKey);
       } else {
         await api.updateProfile(profile.id, profileDraft);
-        if (gen !== opGenRef.current) return;
+        if (gen !== opGenRef.current) return false;
       }
       const requestKey = crypto.randomUUID();
       const started = universityIds
         ? await api.startRun(profile.id, demoMode, requestKey, universityIds)
         : await api.startRun(profile.id, demoMode, requestKey);
-      if (gen !== opGenRef.current) return;
+      if (gen !== opGenRef.current) return false;
       setRun(started);
       setResults([]);
       setSummary(null);
       writePointer('run', started.id);
+      return true;
     } catch (e) {
       // 409 means this applicant is already being researched. Joining that run
       // is what the user wanted; reporting an error would be pedantry.
@@ -656,87 +731,105 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (active) {
         try {
           const joined = await api.getRun(active);
-          if (gen !== opGenRef.current) return;
+          if (gen !== opGenRef.current) return false;
           setRun(joined);
           setResults([]);
           setSummary(null);
           writePointer('run', active);
-          return;
+          return true;
         } catch (joinError) {
           if (gen === opGenRef.current) fail(joinError);
-          return;
+          return false;
         }
       }
       if (gen === opGenRef.current) fail(e);
+      return false;
     } finally {
       if (gen === opGenRef.current) setLoading(false);
     }
   }, [profileDraft, savedProfile, localCaseKey, fail]);
 
   const cancelRun = useCallback(async () => {
-    if (!run) return;
+    const current = guardRun(run?.id);
+      if (!run || !current()) return;
     try {
-      setRun(await api.cancelRun(run.id));
+      const next = await api.cancelRun(run.id);
+      if (!current()) return;
+      setRun(next);
     } catch (e) {
-      fail(e);
+      if (current()) fail(e);
     }
-  }, [run, fail]);
+  }, [run, fail, guardRun, setRun]);
 
   const retryRun = useCallback(async (stage?: string) => {
-    if (!run) return;
+    const current = guardRun(run?.id);
+      if (!run || !current()) return;
     try {
       // Results are no longer wiped: the server upserts rows and keeps the
       // user's decisions, so clearing them here would only make a healthy
       // shortlist blink out of existence until the next poll.
-      setRun(await api.retryRun(run.id, stage));
+      const next = await api.retryRun(run.id, stage);
+      if (!current()) return;
+      setRun(next);
     } catch (e) {
-      fail(e);
+      if (current()) fail(e);
     }
-  }, [run, fail]);
+  }, [run, fail, guardRun, setRun]);
 
   const recheckNow = useCallback(async () => {
-    if (!run) return;
+    const current = guardRun(run?.id);
+      if (!run || !current()) return;
     try {
-      setRun(await api.recheckNow(run.id));
+      const next = await api.recheckNow(run.id);
+      if (!current()) return;
+      setRun(next);
     } catch (e) {
-      fail(e);
+      if (current()) fail(e);
     }
-  }, [run, fail]);
+  }, [run, fail, guardRun, setRun]);
 
   const collectDocuments = useCallback(async () => {
-    if (!run) return;
+    const current = guardRun(run?.id);
+      if (!run || !current()) return false;
     setError(null);
     try {
-      setRun(await api.collectDocuments(run.id));
+      const next = await api.collectDocuments(run.id);
+      if (!current()) return false;
+      setRun(next);
+      return true;
     } catch (e) {
-      fail(e);
+      if (current()) fail(e);
+      return false;
     }
-  }, [run, fail]);
+  }, [run, fail, guardRun, setRun]);
 
   const exportShortlist = useCallback(
     async (fmt: 'csv' | 'json' | 'xlsx', decision?: string) => {
-      if (!run) return;
+      const current = guardRun(run?.id);
+      if (!run || !current()) return;
       setError(null);
       try {
         await api.downloadExport(run.id, fmt, decision);
       } catch (e) {
-        fail(e);
+        if (current()) fail(e);
       }
     },
-    [run, fail],
+    [run, fail, guardRun],
   );
 
   // Takes the case rather than reading the paywall state, so the caller that
   // rendered the button and the action that spends the unit cannot disagree.
   const unlockFromSubscription = useCallback(
     async (profileId: string) => {
+      const generation = opGenRef.current;
       setError(null);
       try {
         await api.unlockFromSubscription(profileId);
+        if (generation !== opGenRef.current) return;
         setPaywall(null);
         await refreshResults();
       } catch (e) {
-        fail(e);
+        if (generation === opGenRef.current) fail(e);
       }
     },
     [fail, refreshResults],
@@ -744,16 +837,20 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const decide = useCallback(
     async (resultId: string, decision: UserDecision, reason: string, notes: string) => {
-      if (!run) return;
+      const current = guardRun(run?.id);
+      if (!run || !current()) return;
       try {
         const updated = await api.decide(run.id, resultId, decision, reason, notes);
-        setResults((rows) => rows.map((r) => (r.id === resultId ? updated : r)));
-        setSummary(await api.summary(run.id));
+        if (!current()) return;
+        resultRevision.current += 1;
+        setResults((rows) => rows.map((r) => (r.id === resultId ? { ...r, user_decision: updated.user_decision, user_decision_reason: updated.user_decision_reason, user_notes: updated.user_notes, decided_at: updated.decided_at } : r)));
+        const sum = await api.summary(run.id);
+        if (current()) setSummary(sum);
       } catch (e) {
-        fail(e);
+        if (current()) fail(e);
       }
     },
-    [run, fail],
+    [run, fail, guardRun],
   );
 
   // The balanced list is derived from the rows, so it follows them rather than
@@ -766,28 +863,38 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
     api.shortlist(run.id)
       .then((list) => { if (!cancelled) setShortlist(list); })
-      .catch(fail);
+      .catch((e) => { if (!cancelled) fail(e); });
     return () => { cancelled = true; };
   }, [run, results, fail]);
 
   const deleteEverything = useCallback(async () => {
-    if (!savedProfile) return;
+    if (!savedProfile) return false;
+    const generation = ++opGenRef.current;
+    const caseKey = savedProfile.id;
     try {
-      const caseKey = savedProfile.id;
       await api.deleteProfile(caseKey);
-      setSavedProfile(null);
-      setLocalCaseKey(null);
-      setRun(null);
-      setResults([]);
-      setSummary(null);
-      writePointer('run', null);
-      writePointer('profile', null);
       clearDraftSlot(caseKey);
-      setCases(await api.cases());
+      if (generation !== opGenRef.current) return false;
+      setSavedProfile(null); setLocalCaseKey(null); setRun(null);
+      setProfileViewKey(newLocalCaseKey());
+      const blank = blankProfile();
+      setDraft(blank); setBaseline(JSON.stringify(blank));
+      setDraftRestored(false); setRestored(false); setLoading(false);
+      setValidation(null); setPaywall(null); setError(null);
+      setResults([]); setSummary(null); setShortlist(null);
+      setCases((items) => items.filter((item) => item.profile_id !== caseKey));
+      writePointer('run', null); writePointer('profile', null);
+      const version = ++casesVersion.current;
+      // The deletion is confirmed even if reloading list metadata fails.
+      void api.cases().then((remaining) => {
+        if (generation === opGenRef.current && version === casesVersion.current) setCases(remaining);
+      }).catch((e) => { if (generation === opGenRef.current) fail(e); });
+      return true;
     } catch (e) {
-      fail(e);
+      if (generation === opGenRef.current) fail(e);
+      return false;
     }
-  }, [savedProfile, fail]);
+  }, [savedProfile, fail, setRun]);
 
   const loadDemoProfile = useCallback(() => {
     setDraft(structuredClone(DEFAULT_PROFILE) as Record<string, unknown>);
@@ -800,18 +907,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const value = useMemo<Store>(
     () => ({
       capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase, restored,
-      dirty, draftRestored, discardDraft, hydrated,
+      dirty, draftRestored, discardDraft, hydrated, activeCaseKey, profileViewKey,
       loadDemoProfile, clearProfile, validation, run, results,
       summary, loading, error, saveProfile, startRun, cancelRun, retryRun, recheckNow, collectDocuments,
-      exportShortlist, decide, saveNotes, refreshResults, rerank, shortlist, deleteEverything,
+      exportShortlist, decide, saveNotes, setDocumentProgress, refreshResults, rerank, shortlist, deleteEverything,
       clearError: () => setError(null),
       paywall, clearPaywall: () => setPaywall(null), unlockFromSubscription,
     }),
     [capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase,
-     restored, dirty, draftRestored, discardDraft, hydrated, loadDemoProfile,
+     restored, dirty, draftRestored, discardDraft, hydrated, activeCaseKey, profileViewKey, loadDemoProfile,
      clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
      cancelRun, retryRun, recheckNow, collectDocuments, exportShortlist, decide, saveNotes,
-     refreshResults, rerank, shortlist, deleteEverything, paywall, unlockFromSubscription],
+     refreshResults, rerank, shortlist, deleteEverything, paywall, unlockFromSubscription, setDocumentProgress],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

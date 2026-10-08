@@ -296,6 +296,11 @@ export const api = {
       body: JSON.stringify({ notes }),
     }),
 
+  setDocumentProgress: (runId: string, resultId: string, progressId: string, done: boolean) =>
+    request<ProgramResult>(`/api/runs/${runId}/results/${resultId}/documents/${progressId}`, {
+      method: 'PATCH', body: JSON.stringify({ done }),
+    }),
+
   // A deadline in a table is something to remember; in a calendar it reminds
   // you. Only confirmed dates become events.
   deadlinesUrl: (runId: string) => `/api/runs/${runId}/deadlines.ics`,

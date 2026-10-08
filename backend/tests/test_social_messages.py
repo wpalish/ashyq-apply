@@ -340,3 +340,58 @@ def _id_of(client: TestClient, display_name: str) -> str:
         if person["display_name"] == display_name:
             return person["user_id"]
     raise AssertionError(f"{display_name} is not in Discover")
+
+
+@pytest.mark.parametrize("tied", [False, True])
+def test_paging_marks_only_delivered_messages_and_refreshes_from_last_cursor(client, tied):
+    from datetime import UTC, datetime, timedelta
+
+    from app.db import SessionLocal
+    from app.models import DirectMessage
+
+    ainur = join_as(client, "ainur", dm_policy="anyone")
+    client.post("/api/auth/logout")
+    bolat = join_as(client, "bolat", dm_policy="anyone")
+    for n in range(3):
+        assert (
+            client.post(f"/api/social/messages/{ainur}", json={"body": f"Message {n}"}).status_code
+            == 201
+        )
+    with SessionLocal() as db:
+        rows = db.query(DirectMessage).order_by(DirectMessage.created_at, DirectMessage.id).all()
+        start = datetime(2026, 10, 8, tzinfo=UTC)
+        for n, row in enumerate(rows):
+            row.created_at = start if tied else start + timedelta(seconds=n)
+        db.commit()
+    client.post("/api/auth/logout")
+    sign_in(client, "ainur")
+    first = client.get(f"/api/social/messages/{bolat}?limit=2").json()
+    assert len(first["items"]) == 2
+    assert first["next_cursor"] and first["latest_cursor"]
+    unread = client.get("/api/social/messages/unread").json()["unread"]
+    assert unread == (3 if tied else 1)
+    last = client.get(
+        f"/api/social/messages/{bolat}", params={"cursor": first["next_cursor"]}
+    ).json()
+    assert len(last["items"]) == 1
+    assert last["next_cursor"] is None
+    assert client.get("/api/social/messages/unread").json()["unread"] == 0
+    assert (
+        client.get(
+            f"/api/social/messages/{bolat}", params={"cursor": last["latest_cursor"]}
+        ).json()["items"]
+        == []
+    )
+    # Reading an earlier page again must not move the read marker backwards.
+    client.get(f"/api/social/messages/{bolat}?limit=1")
+    assert client.get("/api/social/messages/unread").json()["unread"] == 0
+    client.post("/api/auth/logout")
+    sign_in(client, "bolat")
+    client.post(f"/api/social/messages/{ainur}", json={"body": "New incoming"})
+    client.post("/api/auth/logout")
+    sign_in(client, "ainur")
+    assert client.get("/api/social/messages/unread").json()["unread"] == 1
+    refresh = client.get(
+        f"/api/social/messages/{bolat}", params={"cursor": last["latest_cursor"]}
+    ).json()
+    assert [line["body"] for line in refresh["items"]] == ["New incoming"]

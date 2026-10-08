@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "time": "2026-10-08T23:22:52.002504+00:00",
+  "source_commit": "ed1ed591232a1b7bc71678c1a0cb2ff66734837d",
+  "frozen_tree_sha256": "b7942fea43d3e2dfec37560ab1aa2bf9353347053daac8d35e97f064730c325c",
+  "environment": "separate synthetic SQLite demo; existing verified frontend dist served via supported UNIMATCH_FRONTEND_DIR on127.0.0.1:18099",
+  "actions": [
+    "Select Demo Applicant (synthetic), open Plan",
+    "Open KU Leuven through its own next-action region; KU Leuven selected",
+    "Mark Academic reference prepared; acknowledgement shows1of5",
+    "Reload page; Groningen shows0of5 with reference unchecked",
+    "Select KU Leuven; its reference still checked,1of5",
+    "Return to Plan; KU Leuven next action changes to Secondary school diploma (certified copy), estimated21days; Groningen/Tokyo unchanged0of5"
+  ],
+  "limitations": [
+    "Native browser proof uses demo corpus, not live university evidence or production login",
+    "Programme tab selection resets on reload; persisted progress is programme-specific",
+    "Demo source links fixture:// are not opened as official web citations",
+    "Some UI text remains English under selected Russian preference; full RU/KK localization not completed"
+  ],
+  "artifacts": {
+    "03-unimatch-plan-full.jpg": "41b41be8371348c090c5e1725b0104d15ba063889f4e5a9506d2ca62a9ec2d35",
+    "04-unimatch-documents-reloaded.jpg": "a40f69b87e5a45462daec55dd149160456aa7e7423ea42f5770e1e1c5e47c4e9",
+    "05-unimatch-next-action.jpg": "f5a03eeeb861aa9b4c19eb44c70e6b66569b62993b8e131047e3eac682fa3f93",
+    "browser-reload-proof.txt": "2f5c668890f16b1a5a43948cbb313a35c0b99da44e74dc5c5bcefce01c91087b",
+    "browser-plan-after-progress.txt": "a840f632e69f388a66d535fab9da557c308375791346066e21b04372f1d7fd99"
+  }
+}
