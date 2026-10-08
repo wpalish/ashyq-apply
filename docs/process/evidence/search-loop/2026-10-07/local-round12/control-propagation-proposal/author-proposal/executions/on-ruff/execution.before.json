@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+    "-m",
+    "ruff",
+    "check",
+    "app/adapters/search/retrieval.py",
+    "tests/test_hybrid_retrieval.py",
+    "tests/test_search_layer_budget_fixes.py"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/replay/on/backend",
+  "environment_safe_flags": {
+    "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/replay/on/backend",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "UNIMATCH_DEMO_MODE": "true",
+    "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+    "UNIMATCH_SEARCH_PROVIDER": "none",
+    "UNIMATCH_DATABASE_URL": "sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-ruff/runtime/checks.db",
+    "UNIMATCH_CACHE_DIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-ruff/runtime/httpcache",
+    "UNIMATCH_EXPORT_DIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-ruff/runtime/exports",
+    "CONTROL_RUNTIME": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-ruff",
+    "SOURCE_ROOT": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/replay/on",
+    "CONTROL_OUTPUT_DIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-ruff",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1"
+  },
+  "read_only_safe_env_source": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py",
+  "safe_env_source_sha256": "4d5a09536e04c28ee5d93fa83b6281b0215b6b154c6f8516865578245ea90484"
+}

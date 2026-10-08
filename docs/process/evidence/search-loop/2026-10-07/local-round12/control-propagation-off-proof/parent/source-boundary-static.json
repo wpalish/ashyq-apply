@@ -1,0 +1,86 @@
+{
+  "status": "STATIC_GAP_CONFIRMED_EXECUTABLE_PROOF_PENDING",
+  "files": {
+    "backend/app/adapters/search/retrieval.py": {
+      "sha256": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+      "selected_lines": [
+        {
+          "line": 471,
+          "text": "            except Exception:"
+        }
+      ]
+    },
+    "backend/app/adapters/discovery/live_discovery.py": {
+      "sha256": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004",
+      "selected_lines": [
+        {
+          "line": 1117,
+          "text": "            except SearchError:"
+        },
+        {
+          "line": 1217,
+          "text": "        except (UniversityReadStopped, RunCancelled, LeaseLost):"
+        },
+        {
+          "line": 1431,
+          "text": "        except (UniversityReadStopped, RunCancelled, LeaseLost):"
+        },
+        {
+          "line": 1572,
+          "text": "        except SearchError as exc:"
+        },
+        {
+          "line": 1718,
+          "text": "            except SearchError as exc:"
+        }
+      ]
+    },
+    "backend/app/pipeline/control.py": {
+      "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd",
+      "selected_lines": [
+        {
+          "line": 4,
+          "text": "class RunCancelled(RuntimeError):"
+        },
+        {
+          "line": 8,
+          "text": "class LeaseLost(RuntimeError):"
+        },
+        {
+          "line": 12,
+          "text": "class UniversityReadStopped(RuntimeError):"
+        }
+      ]
+    },
+    "backend/app/jobs/worker.py": {
+      "sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+      "selected_lines": [
+        {
+          "line": 138,
+          "text": "        except LeaseLost as exc:"
+        },
+        {
+          "line": 144,
+          "text": "        except RunCancelled as exc:"
+        }
+      ]
+    },
+    "backend/tests/test_hybrid_retrieval.py": {
+      "sha256": "ff04b8e26c457ee9dc6f5195609174deeaf109fe1d34e8890f66f91c1d43bccd",
+      "selected_lines": [
+        {
+          "line": 386,
+          "text": "    async def test_a_reader_failure_drops_that_entry_point_rather_than_the_run(self):"
+        }
+      ]
+    }
+  },
+  "findings": [
+    "retrieval entry-root Exception catch covers all native RuntimeError-based control signals",
+    "existing LiveDiscovery sitemap/walker use native tuple reraises; both search callers only catch SearchError",
+    "native control module imports nothing; adding its import introduces no new module cycle",
+    "ordinary RuntimeError fetch-hop handling covered in pre-existing hybrid retrieval test",
+    "lease and explicit cancellation reach distinct Worker handlers only if propagated; this does not prove database durability"
+  ],
+  "STOP": "unchanged; no source/app/test/live actions"
+}

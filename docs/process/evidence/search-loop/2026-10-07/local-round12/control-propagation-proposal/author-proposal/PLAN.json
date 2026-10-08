@@ -1,0 +1,22 @@
+{
+  "created_utc": "2026-10-08T04:13:23.309442+00:00",
+  "task": "Narrow EXTERNAL control propagation proposal; not source application",
+  "source_change": "backend/app/adapters/search/retrieval.py: import native LeaseLost/RunCancelled/UniversityReadStopped; add except tuple: raise before current except Exception. No other native source change. asyncio.CancelledError remains natural BaseException propagation.",
+  "proposed_test_files": [
+    "backend/tests/test_hybrid_retrieval.py",
+    "backend/tests/test_search_layer_budget_fixes.py"
+  ],
+  "test_scope": "6signals (4original types + future UniversityReadStopped reason + asyncioCancelledError) direct native get-fence and both Live callers; prior identity query1, no second native get/future subjects/no selected mutation. Preserve all existing test bodies/expectations. Equality of ordinary complete outputs/dispatch for A11/B21 original controls; finite OFF/ON.",
+  "execution": "Copy current native modules/test dependencies into isolated replay source, apply only proposed retrieval/test files. Import normal app dependencies from that frozen copy (no shadow loader), use root local-runner safe_env read-only with own runtimeDB/cache, deny network/DNS; no primary.env. Run existing2test files, no full suite. Ruff --config actual backend/ruff.toml from actual backend cwd to keep first-party context.",
+  "requirements_file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/NATIVE_TEST_REQUIREMENTS.json",
+  "original_OFF_packet": "2ca715d6a86f26fa613a722127e54b6e385731693729f1cfba4b736620a6a1dd",
+  "B_OFF_packet": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-boundaries",
+  "no_actions": [
+    "no app/repo/Git/test originals edits",
+    "no provider/model/live/DNS/HTTP beyondMockTransport",
+    "no primaryDB/env or gold/scoring",
+    "no retention/default/retry/schema/Worker durability change",
+    "no STOP reset/retry/switch/purchase"
+  ],
+  "seal": "REPORT.md + ready-manifest.json using files dict rows sha256/bytes; actual exact commands/cwd and all original errors; copied source/dependency hashes pre/post."
+}

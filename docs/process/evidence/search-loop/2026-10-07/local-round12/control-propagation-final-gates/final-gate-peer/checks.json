@@ -1,0 +1,438 @@
+[
+  {
+    "check": "writeahead_input_pins",
+    "status": "PASS",
+    "detail": {}
+  },
+  {
+    "check": "terminal_full_summary",
+    "status": "PASS",
+    "detail": {
+      "status": "passed",
+      "suite": "full",
+      "started_at": "2026-10-08T04:33:57.110712+00:00",
+      "finished_at": "2026-10-08T04:49:04.281395+00:00"
+    }
+  },
+  {
+    "check": "thirteen_distinct_steps_exit0",
+    "status": "PASS",
+    "detail": [
+      {
+        "name": "ruff",
+        "exit_code": 0,
+        "seconds": 0.13
+      },
+      {
+        "name": "ruff-format",
+        "exit_code": 0,
+        "seconds": 0.04
+      },
+      {
+        "name": "mypy",
+        "exit_code": 0,
+        "seconds": 11.89
+      },
+      {
+        "name": "backend-sqlite",
+        "exit_code": 0,
+        "seconds": 452.76
+      },
+      {
+        "name": "frontend-typecheck",
+        "exit_code": 0,
+        "seconds": 3.09
+      },
+      {
+        "name": "frontend-lint",
+        "exit_code": 0,
+        "seconds": 1.35
+      },
+      {
+        "name": "frontend-tests",
+        "exit_code": 0,
+        "seconds": 4.32
+      },
+      {
+        "name": "frontend-build",
+        "exit_code": 0,
+        "seconds": 4.37
+      },
+      {
+        "name": "backend-postgresql",
+        "exit_code": 0,
+        "seconds": 326.25
+      },
+      {
+        "name": "e2e",
+        "exit_code": 0,
+        "seconds": 68.42
+      },
+      {
+        "name": "e2e-auth",
+        "exit_code": 0,
+        "seconds": 8.09
+      },
+      {
+        "name": "pip-audit",
+        "exit_code": 0,
+        "seconds": 13.53
+      },
+      {
+        "name": "npm-audit",
+        "exit_code": 0,
+        "seconds": 0.6
+      }
+    ]
+  },
+  {
+    "check": "physical_step_provenance",
+    "status": "PASS",
+    "detail": "All thirteen logs and working directories belong to this physical frozen run."
+  },
+  {
+    "check": "local_only_summary_scope",
+    "status": "PASS",
+    "detail": "No hosted/container/live capture is asserted by this package run."
+  },
+  {
+    "check": "frozen_source_manifest_identity",
+    "status": "PASS",
+    "detail": {
+      "manifest_sha256": "50b483a439dd19f3a872af8b1eca3caba2e4f70f3a1898470e0c42db977e5084",
+      "head": "d076e435cb1a6247f171ffb2411c6ab79a0ba857",
+      "tree_sha256": "d64864f76f0cf73cf0fa1b602ecf9ae9b2033b278bf4d877a5f68a9b949e68c0",
+      "source_status": ""
+    }
+  },
+  {
+    "check": "selected999_physical_current_manifest_root",
+    "status": "PASS",
+    "detail": {
+      "selected": 999,
+      "mismatches": {}
+    }
+  },
+  {
+    "check": "accepted_exact_three_source_test_bytes",
+    "status": "PASS",
+    "detail": {
+      "backend/app/adapters/search/retrieval.py": "4c76933f87b4bca50b5819821b31f1d44a47d8987269b25cf9e74afd5e59acee",
+      "backend/tests/test_hybrid_retrieval.py": "62ad38770ad87665fd2e2b24f1deae811571b4a7881e0fc6f4d51e2a32f779e2",
+      "backend/tests/test_search_layer_budget_fixes.py": "e6f7f0da4e941512839c25bcc1650fe1d0eb326f7022b352fceaa8d145b54e63"
+    }
+  },
+  {
+    "check": "prior_full_source_manifest_pin",
+    "status": "PASS",
+    "detail": "ec39dc311865d2cbfbff5f55c1ae85838a71bd24c6db482df268e6a282d6e8f8"
+  },
+  {
+    "check": "only_three_selected_delta_from4312_full",
+    "status": "PASS",
+    "detail": {
+      "missing": [],
+      "changed": [
+        "backend/app/adapters/search/retrieval.py",
+        "backend/tests/test_hybrid_retrieval.py",
+        "backend/tests/test_search_layer_budget_fixes.py"
+      ],
+      "unchanged": 996
+    }
+  },
+  {
+    "check": "baseline_xml_sha256",
+    "status": "PASS",
+    "detail": {
+      "backend-sqlite.xml": "093504056f5543bbfe5a6f627562adf9c3cb0a5278444aa5b6e6f35f4cb981e3",
+      "backend-postgresql.xml": "24ec8ca3b19911b4fb3776ffc1c1c22e6acdfafc8623e636a5461cdcfa29700e"
+    }
+  },
+  {
+    "check": "SQLite_4330_unique_no_bad",
+    "status": "PASS",
+    "detail": {
+      "case_count": 4330,
+      "unique_count": 4330,
+      "bad": []
+    }
+  },
+  {
+    "check": "SQLite_junit_declared_counts",
+    "status": "PASS",
+    "detail": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "4330",
+        "time": "450.467",
+        "timestamp": "2026-10-08T09:34:21.772120+05:00",
+        "hostname": "iMac-Aliser.local"
+      }
+    ]
+  },
+  {
+    "check": "PostgreSQL_4330_unique_no_bad",
+    "status": "PASS",
+    "detail": {
+      "case_count": 4330,
+      "unique_count": 4330,
+      "bad": []
+    }
+  },
+  {
+    "check": "PostgreSQL_junit_declared_counts",
+    "status": "PASS",
+    "detail": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "4330",
+        "time": "321.956",
+        "timestamp": "2026-10-08T09:42:08.211900+05:00",
+        "hostname": "iMac-Aliser.local"
+      }
+    ]
+  },
+  {
+    "check": "bothDB_exact_case_identity_sets",
+    "status": "PASS",
+    "detail": {
+      "SQLite_only": [],
+      "PostgreSQL_only": []
+    }
+  },
+  {
+    "check": "old4312_equal_and_all_retained",
+    "status": "PASS",
+    "detail": {
+      "old_count": 4312,
+      "missing": []
+    }
+  },
+  {
+    "check": "exact_eighteen_candidate_native_additions",
+    "status": "PASS",
+    "detail": [
+      [
+        "tests.test_hybrid_retrieval",
+        "test_native_entry_root_control_stops_before_second_get[async-cancelled]"
+      ],
+      [
+        "tests.test_hybrid_retrieval",
+        "test_native_entry_root_control_stops_before_second_get[checkpoint-busy]"
+      ],
+      [
+        "tests.test_hybrid_retrieval",
+        "test_native_entry_root_control_stops_before_second_get[future-read-reason]"
+      ],
+      [
+        "tests.test_hybrid_retrieval",
+        "test_native_entry_root_control_stops_before_second_get[lease-lost]"
+      ],
+      [
+        "tests.test_hybrid_retrieval",
+        "test_native_entry_root_control_stops_before_second_get[read-cap]"
+      ],
+      [
+        "tests.test_hybrid_retrieval",
+        "test_native_entry_root_control_stops_before_second_get[run-cancelled]"
+      ],
+      [
+        "tests.test_search_layer_budget_fixes",
+        "test_native_live_search_caller_preserves_get_control[async-cancelled-multi-field]"
+      ],
+      [
+        "tests.test_search_layer_budget_fixes",
+        "test_native_live_search_caller_preserves_get_control[async-cancelled-single-field]"
+      ],
+      [
+        "tests.test_search_layer_budget_fixes",
+        "test_native_live_search_caller_preserves_get_control[checkpoint-busy-multi-field]"
+      ],
+      [
+        "tests.test_search_layer_budget_fixes",
+        "test_native_live_search_caller_preserves_get_control[checkpoint-busy-single-field]"
+      ],
+      [
+        "tests.test_search_layer_budget_fixes",
+        "test_native_live_search_caller_preserves_get_control[future-read-reason-multi-field]"
+      ],
+      [
+        "tests.test_search_layer_budget_fixes",
+        "test_native_live_search_caller_preserves_get_control[future-read-reason-single-field]"
+      ],
+      [
+        "tests.test_search_layer_budget_fixes",
+        "test_native_live_search_caller_preserves_get_control[lease-lost-multi-field]"
+      ],
+      [
+        "tests.test_search_layer_budget_fixes",
+        "test_native_live_search_caller_preserves_get_control[lease-lost-single-field]"
+      ],
+      [
+        "tests.test_search_layer_budget_fixes",
+        "test_native_live_search_caller_preserves_get_control[read-cap-multi-field]"
+      ],
+      [
+        "tests.test_search_layer_budget_fixes",
+        "test_native_live_search_caller_preserves_get_control[read-cap-single-field]"
+      ],
+      [
+        "tests.test_search_layer_budget_fixes",
+        "test_native_live_search_caller_preserves_get_control[run-cancelled-multi-field]"
+      ],
+      [
+        "tests.test_search_layer_budget_fixes",
+        "test_native_live_search_caller_preserves_get_control[run-cancelled-single-field]"
+      ]
+    ]
+  },
+  {
+    "check": "native_twofiles99_old81_plus18",
+    "status": "PASS",
+    "detail": {
+      "focused_cases": 99,
+      "old_cases": 81,
+      "module_and_nested_class_counts": {
+        "tests.test_hybrid_retrieval.TestThePrefilterDropsWhatIsCheapToKnowIsWrong": 13,
+        "tests.test_hybrid_retrieval.TestTheDegreeLevelACatalogueActuallyWrites": 12,
+        "tests.test_hybrid_retrieval.TestTheNavigationHopIsCoverageNotReordering": 6,
+        "tests.test_hybrid_retrieval.TestTheRankingKeepsTheFieldBoundary": 7,
+        "tests.test_hybrid_retrieval.TestTheRemainingSignals": 3,
+        "tests.test_search_layer_budget_fixes": 27,
+        "tests.test_hybrid_retrieval.TestTheWholeRunIsBoundedAndReported": 6,
+        "tests.test_hybrid_retrieval.TestEveryCandidateRemembersWhichQueryFoundIt": 3,
+        "tests.test_hybrid_retrieval.TestTheRegistryKnowsWhichHostPublishesProgrammes": 5,
+        "tests.test_hybrid_retrieval.TestDiscoveryUsesSearchOnlyWhenOneIsConfigured": 6,
+        "tests.test_hybrid_retrieval": 6,
+        "tests.test_hybrid_retrieval.TestRejectingKindsThatAreNotProgrammes": 3,
+        "tests.test_hybrid_retrieval.TestChoosingWhichDoorToOpen": 2
+      }
+    }
+  },
+  {
+    "check": "backend_raw_counts_and_coverage",
+    "status": "PASS",
+    "detail": {
+      "SQLite_tail": "           106      0   100%\napp/security.py                                      121     14    88%\n----------------------------------------------------------------------\nTOTAL                                              15098    715    95%\n\nRequired test coverage of 92% reached. Total coverage: 95.26%\n4330 passed, 2 warnings in 450.56s (0:07:30)\n",
+      "PostgreSQL_tail": "n BeautifulSoup(markup, parser)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n4330 passed, 2 warnings in 323.50s (0:05:23)\n"
+    }
+  },
+  {
+    "check": "static_raw_success",
+    "status": "PASS",
+    "detail": {
+      "ruff": "All checks passed!",
+      "format": "383 files already formatted",
+      "mypy_final": "Success: no issues found in 383 source files",
+      "unchecked_body_notes": 64
+    }
+  },
+  {
+    "check": "frontend232_and28files_raw",
+    "status": "PASS",
+    "detail": "Actual Vitest final summary; stderr from negative UI controls is retained, not assumed empty."
+  },
+  {
+    "check": "frontend_type_lint_build_raw",
+    "status": "PASS",
+    "detail": "Terminal step exit0 plus actual command/output for all three."
+  },
+  {
+    "check": "demo_e2e79pass1skip_raw",
+    "status": "PASS",
+    "detail": "separators and saves complete lists (1.1s)\n\n  1 skipped\n  79 passed (1.1m)\n"
+  },
+  {
+    "check": "auth_e2e6pass_raw",
+    "status": "PASS",
+    "detail": "turns to sign-in, not an error banner (252ms)\n\n  6 passed (7.7s)\n"
+  },
+  {
+    "check": "dependency_audits_actual_raw",
+    "status": "PASS",
+    "detail": {
+      "pip": "No known vulnerabilities found",
+      "npm": "found 0 vulnerabilities"
+    }
+  },
+  {
+    "check": "prior_seed286_immutable_packet",
+    "status": "PASS",
+    "detail": {
+      "selected_files": 286,
+      "selected_bytes": 2894906,
+      "mismatches": []
+    }
+  },
+  {
+    "check": "prior_seed_app242_exact_final_binding",
+    "status": "PASS",
+    "detail": {
+      "app_files": 242,
+      "mismatches": {}
+    }
+  },
+  {
+    "check": "synthetic_demo_order_and_cost_bucket_raw",
+    "status": "PASS",
+    "detail": {
+      "heads": [
+        "d8e412c6a901"
+      ],
+      "database_revisions": [
+        "d8e412c6a901"
+      ],
+      "rows": 20,
+      "first": "University of Groningen",
+      "UBC": {
+        "university": "University of British Columbia",
+        "funding_classification": "FULL_TUITION",
+        "portfolio_bucket": "OUT_OF_BUDGET"
+      },
+      "run": {
+        "stage": "awaiting_user_decision",
+        "pages_checked": 98,
+        "pages_failed": 15,
+        "claims_recorded": 427
+      },
+      "all_undecided_no_approve": true,
+      "qualification": "Synthetic demo ordering; no live university or quality evidence."
+    }
+  },
+  {
+    "check": "raw_copies_exact_and_sources_pre_post",
+    "status": "PASS",
+    "detail": {
+      "original_paths": 31,
+      "copy_mismatches": []
+    }
+  },
+  {
+    "check": "selected999_source_pre_post_immutable",
+    "status": "PASS",
+    "detail": {
+      "selected": 999,
+      "changed": []
+    }
+  },
+  {
+    "check": "input_pins_post_immutable",
+    "status": "PASS",
+    "detail": "All original writeahead input pins still exact."
+  },
+  {
+    "check": "global_provider_STOP_pre_post_immutable",
+    "status": "PASS",
+    "detail": {
+      "before": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+      "after": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+      "no_resumed_live": true
+    }
+  }
+]

@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="15" skipped="0" tests="99" time="0.999" timestamp="2026-10-08T09:18:23.643090+05:00" hostname="iMac-Aliser.local"><testcase classname="tests.test_hybrid_retrieval.TestThePrefilterDropsWhatIsCheapToKnowIsWrong" name="test_a_non_http_scheme_never_reaches_a_fetch" time="0.604" /><testcase classname="tests.test_hybrid_retrieval.TestThePrefilterDropsWhatIsCheapToKnowIsWrong" name="test_another_institution_is_rejected_even_when_the_name_looks_right" time="0.011" /><testcase classname="tests.test_hybrid_retrieval.TestThePrefilterDropsWhatIsCheapToKnowIsWrong" name="test_a_subdomain_of_the_institution_is_kept" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestThePrefilterDropsWhatIsCheapToKnowIsWrong" name="test_news_events_jobs_and_media_are_rejected[https://nu.edu.kz/news/cs-wins]" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestThePrefilterDropsWhatIsCheapToKnowIsWrong" name="test_news_events_jobs_and_media_are_rejected[https://nu.edu.kz/events/open-day]" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestThePrefilterDropsWhatIsCheapToKnowIsWrong" name="test_news_events_jobs_and_media_are_rejected[https://nu.edu.kz/jobs/lecturer]" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestThePrefilterDropsWhatIsCheapToKnowIsWrong" name="test_news_events_jobs_and_media_are_rejected[https://nu.edu.kz/media/banner.png]" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestThePrefilterDropsWhatIsCheapToKnowIsWrong" name="test_the_wrong_degree_level_is_a_rejection_not_a_penalty" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestThePrefilterDropsWhatIsCheapToKnowIsWrong" name="test_a_page_that_names_no_level_survives" time="0.001" /><testcase classname="tests.test_hybrid_retrieval.TestThePrefilterDropsWhatIsCheapToKnowIsWrong" name="test_a_pdf_is_flagged_and_kept" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestThePrefilterDropsWhatIsCheapToKnowIsWrong" name="test_the_same_page_under_two_urls_is_kept_once" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestThePrefilterDropsWhatIsCheapToKnowIsWrong" name="test_the_best_ranked_copy_is_the_one_kept" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestThePrefilterDropsWhatIsCheapToKnowIsWrong" name="test_every_rejection_says_why" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheRankingKeepsTheFieldBoundary" name="test_the_requested_field_outranks_a_neighbouring_one" time="0.001" /><testcase classname="tests.test_hybrid_retrieval.TestTheRankingKeepsTheFieldBoundary" name="test_a_neighbour_is_kept_but_marked_as_one" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheRankingKeepsTheFieldBoundary" name="test_a_strong_alias_counts_as_the_field" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheRankingKeepsTheFieldBoundary" name="test_every_candidate_explains_its_own_score" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheRankingKeepsTheFieldBoundary" name="test_an_empty_prefilter_result_ranks_to_nothing" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheRankingKeepsTheFieldBoundary" name="test_ties_break_on_url_so_the_order_is_stable" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheRankingKeepsTheFieldBoundary" name="test_tokenize_splits_slugs_and_keeps_non_latin" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheWholeRunIsBoundedAndReported" name="test_it_finds_the_programme_page_and_says_how" time="0.001" /><testcase classname="tests.test_hybrid_retrieval.TestTheWholeRunIsBoundedAndReported" name="test_top_k_bounds_what_comes_back" time="0.003" /><testcase classname="tests.test_hybrid_retrieval.TestTheWholeRunIsBoundedAndReported" name="test_a_failing_query_is_reported_not_folded_into_a_smaller_result" time="0.001" /><testcase classname="tests.test_hybrid_retrieval.TestTheWholeRunIsBoundedAndReported" name="test_the_query_budget_is_respected" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheWholeRunIsBoundedAndReported" name="test_every_query_is_restricted_to_the_institution" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheWholeRunIsBoundedAndReported" name="test_top_k_below_one_is_refused" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheRemainingSignals" name="test_a_catalogue_path_is_a_positive_signal" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheRemainingSignals" name="test_a_pdf_scores_below_an_equivalent_html_page" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheRemainingSignals" name="test_bm25_scores_an_empty_document_as_zero_rather_than_dividing_by_it" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheNavigationHopIsCoverageNotReordering" name="test_the_hop_adds_pages_search_never_found" time="0.004" /><testcase classname="tests.test_hybrid_retrieval.TestTheNavigationHopIsCoverageNotReordering" name="test_a_hop_candidate_never_displaces_a_search_result" time="0.004" /><testcase classname="tests.test_hybrid_retrieval.TestTheNavigationHopIsCoverageNotReordering" name="test_coverage_is_additive_rather_than_competing_for_the_budget" time="0.002" /><testcase classname="tests.test_hybrid_retrieval.TestTheNavigationHopIsCoverageNotReordering" name="test_a_page_both_generators_found_keeps_its_place_and_gains_a_signal" time="0.001" /><testcase classname="tests.test_hybrid_retrieval.TestTheNavigationHopIsCoverageNotReordering" name="test_the_hop_is_off_unless_a_reader_is_supplied" time="0.001" /><testcase classname="tests.test_hybrid_retrieval.TestTheNavigationHopIsCoverageNotReordering" name="test_a_reader_failure_drops_that_entry_point_rather_than_the_run" time="0.001" /><testcase classname="tests.test_hybrid_retrieval.TestChoosingWhichDoorToOpen" name="test_a_host_naming_the_field_outranks_one_search_liked_more" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestChoosingWhichDoorToOpen" name="test_a_lab_or_repository_host_is_not_opened_at_all" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheDegreeLevelACatalogueActuallyWrites" name="test_bologna_cycle_numbering_is_read_as_a_degree_level[https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/-bachelor]" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheDegreeLevelACatalogueActuallyWrites" name="test_bologna_cycle_numbering_is_read_as_a_degree_level[https://informatorects.uw.edu.pl/en/programmes-all/IN/S2-INF-master]" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheDegreeLevelACatalogueActuallyWrites" name="test_bologna_cycle_numbering_is_read_as_a_degree_level[https://x.edu/studia/i-stopnia/informatyka-bachelor]" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheDegreeLevelACatalogueActuallyWrites" name="test_bologna_cycle_numbering_is_read_as_a_degree_level[https://x.edu/studia/ii-stopnia/informatyka-master]" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheDegreeLevelACatalogueActuallyWrites" name="test_bologna_cycle_numbering_is_read_as_a_degree_level[https://x.edu/programmes/first-cycle/cs-bachelor]" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheDegreeLevelACatalogueActuallyWrites" name="test_bologna_cycle_numbering_is_read_as_a_degree_level[https://x.edu/programmes/second-cycle/cs-master]" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheDegreeLevelACatalogueActuallyWrites" name="test_bologna_cycle_numbering_is_read_as_a_degree_level[https://x.edu/formations/licence/informatique-bachelor]" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheDegreeLevelACatalogueActuallyWrites" name="test_the_wrong_cycle_is_rejected_by_the_prefilter" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheDegreeLevelACatalogueActuallyWrites" name="test_the_right_cycle_survives" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheDegreeLevelACatalogueActuallyWrites" name="test_a_short_slug_inside_another_token_does_not_fire[https://x.edu/news/s1000-report]" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheDegreeLevelACatalogueActuallyWrites" name="test_a_short_slug_inside_another_token_does_not_fire[https://x.edu/rooms/s2000]" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheDegreeLevelACatalogueActuallyWrites" name="test_a_short_slug_inside_another_token_does_not_fire[https://x.edu/about/s1x]" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestEveryCandidateRemembersWhichQueryFoundIt" name="test_a_candidate_names_the_families_that_surfaced_it" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestEveryCandidateRemembersWhichQueryFoundIt" name="test_one_family_returning_a_url_twice_names_it_once" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestEveryCandidateRemembersWhichQueryFoundIt" name="test_a_hop_candidate_is_not_attributed_to_a_query" time="0.001" /><testcase classname="tests.test_hybrid_retrieval.TestTheRegistryKnowsWhichHostPublishesProgrammes" name="test_a_seed_host_is_recognised_and_a_sibling_campus_is_not" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheRegistryKnowsWhichHostPublishesProgrammes" name="test_www_is_ignored_on_both_sides" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheRegistryKnowsWhichHostPublishesProgrammes" name="test_an_unknown_institution_is_simply_not_a_seed_host" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheRegistryKnowsWhichHostPublishesProgrammes" name="test_the_seed_host_outranks_a_sibling_campus_with_the_same_words" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestTheRegistryKnowsWhichHostPublishesProgrammes" name="test_it_is_a_signal_and_never_a_rejection" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestDiscoveryUsesSearchOnlyWhenOneIsConfigured" name="test_no_provider_means_nothing_happens" time="0.003" /><testcase classname="tests.test_hybrid_retrieval.TestDiscoveryUsesSearchOnlyWhenOneIsConfigured" name="test_search_pages_are_appended_after_what_was_already_found" time="0.001" /><testcase classname="tests.test_hybrid_retrieval.TestDiscoveryUsesSearchOnlyWhenOneIsConfigured" name="test_a_provider_outage_degrades_the_run_rather_than_ending_it" time="0.001" /><testcase classname="tests.test_hybrid_retrieval.TestDiscoveryUsesSearchOnlyWhenOneIsConfigured" name="test_search_is_asked_for_the_institution_not_its_homepage_host" time="0.001" /><testcase classname="tests.test_hybrid_retrieval.TestDiscoveryUsesSearchOnlyWhenOneIsConfigured" name="test_er04_off_keeps_a_refused_host_in_its_rank" time="0.002" /><testcase classname="tests.test_hybrid_retrieval.TestDiscoveryUsesSearchOnlyWhenOneIsConfigured" name="test_er04_on_gives_the_slot_to_a_host_that_answered" time="0.001" /><testcase classname="tests.test_hybrid_retrieval.TestRejectingKindsThatAreNotProgrammes" name="test_by_default_an_irrelevant_kind_is_kept" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestRejectingKindsThatAreNotProgrammes" name="test_when_asked_it_is_dropped_with_its_reason" time="0.000" /><testcase classname="tests.test_hybrid_retrieval.TestRejectingKindsThatAreNotProgrammes" name="test_a_programme_page_is_never_dropped_by_this" time="0.000" /><testcase classname="tests.test_hybrid_retrieval" name="test_native_entry_root_control_stops_before_second_get[read-cap]" time="0.001"><failure message="Failed: DID NOT RAISE UniversityReadStopped">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-18/test_native_entry_root_control0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10d0f6e10&gt;
+signal = UniversityReadStopped('University read allowance refused: read_cap')
+
+    @pytest.mark.parametrize(
+        "signal",
+        [
+            pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+            pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+            pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+            pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+            pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+            pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+        ],
+    )
+    async def test_native_entry_root_control_stops_before_second_get(tmp_path, monkeypatch, signal):
+        """A real get-fence control is not an unreadable entry-root page."""
+        attempts = []
+        network = []
+    
+        def reserve():
+            attempts.append("before_get")
+            raise signal
+    
+        def deny_network(*args, **kwargs):
+            network.append("unexpected network")
+            raise AssertionError("native refused get must not reach the network")
+    
+        monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+        monkeypatch.setattr(socket.socket, "connect", deny_network)
+        monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+        requested = an_intent(domain="example.edu")
+        rows = [
+            ("https://cs.example.edu/programmes/cs", "Bachelor Computer Science", ""),
+            ("https://admissions.example.edu/programmes/cs", "Bachelor Computer Science", ""),
+        ]
+        provider = FakeSearchProvider({q.text: rows for q in queries_for(requested, budget=2)}, now=NOW)
+        fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+        queries = []
+    
+        async def read(url):
+            result = await fetcher.get(url)
+            return result.text if result.ok else ""
+    
+&gt;       with pytest.raises(type(signal)) as raised:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE UniversityReadStopped
+
+tests/test_hybrid_retrieval.py:872: Failed</failure></testcase><testcase classname="tests.test_hybrid_retrieval" name="test_native_entry_root_control_stops_before_second_get[checkpoint-busy]" time="0.001"><failure message="Failed: DID NOT RAISE UniversityReadStopped">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-18/test_native_entry_root_control1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10d0ce270&gt;
+signal = UniversityReadStopped('University read allowance refused: checkpoint_busy')
+
+    @pytest.mark.parametrize(
+        "signal",
+        [
+            pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+            pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+            pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+            pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+            pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+            pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+        ],
+    )
+    async def test_native_entry_root_control_stops_before_second_get(tmp_path, monkeypatch, signal):
+        """A real get-fence control is not an unreadable entry-root page."""
+        attempts = []
+        network = []
+    
+        def reserve():
+            attempts.append("before_get")
+            raise signal
+    
+        def deny_network(*args, **kwargs):
+            network.append("unexpected network")
+            raise AssertionError("native refused get must not reach the network")
+    
+        monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+        monkeypatch.setattr(socket.socket, "connect", deny_network)
+        monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+        requested = an_intent(domain="example.edu")
+        rows = [
+            ("https://cs.example.edu/programmes/cs", "Bachelor Computer Science", ""),
+            ("https://admissions.example.edu/programmes/cs", "Bachelor Computer Science", ""),
+        ]
+        provider = FakeSearchProvider({q.text: rows for q in queries_for(requested, budget=2)}, now=NOW)
+        fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+        queries = []
+    
+        async def read(url):
+            result = await fetcher.get(url)
+            return result.text if result.ok else ""
+    
+&gt;       with pytest.raises(type(signal)) as raised:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE UniversityReadStopped
+
+tests/test_hybrid_retrieval.py:872: Failed</failure></testcase><testcase classname="tests.test_hybrid_retrieval" name="test_native_entry_root_control_stops_before_second_get[run-cancelled]" time="0.001"><failure message="Failed: DID NOT RAISE RunCancelled">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-18/test_native_entry_root_control2')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10d178d70&gt;
+signal = RunCancelled('cancelled')
+
+    @pytest.mark.parametrize(
+        "signal",
+        [
+            pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+            pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+            pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+            pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+            pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+            pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+        ],
+    )
+    async def test_native_entry_root_control_stops_before_second_get(tmp_path, monkeypatch, signal):
+        """A real get-fence control is not an unreadable entry-root page."""
+        attempts = []
+        network = []
+    
+        def reserve():
+            attempts.append("before_get")
+            raise signal
+    
+        def deny_network(*args, **kwargs):
+            network.append("unexpected network")
+            raise AssertionError("native refused get must not reach the network")
+    
+        monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+        monkeypatch.setattr(socket.socket, "connect", deny_network)
+        monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+        requested = an_intent(domain="example.edu")
+        rows = [
+            ("https://cs.example.edu/programmes/cs", "Bachelor Computer Science", ""),
+            ("https://admissions.example.edu/programmes/cs", "Bachelor Computer Science", ""),
+        ]
+        provider = FakeSearchProvider({q.text: rows for q in queries_for(requested, budget=2)}, now=NOW)
+        fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+        queries = []
+    
+        async def read(url):
+            result = await fetcher.get(url)
+            return result.text if result.ok else ""
+    
+&gt;       with pytest.raises(type(signal)) as raised:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE RunCancelled
+
+tests/test_hybrid_retrieval.py:872: Failed</failure></testcase><testcase classname="tests.test_hybrid_retrieval" name="test_native_entry_root_control_stops_before_second_get[lease-lost]" time="0.001"><failure message="Failed: DID NOT RAISE LeaseLost">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-18/test_native_entry_root_control3')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10d1791f0&gt;
+signal = LeaseLost('stale lease')
+
+    @pytest.mark.parametrize(
+        "signal",
+        [
+            pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+            pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+            pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+            pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+            pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+            pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+        ],
+    )
+    async def test_native_entry_root_control_stops_before_second_get(tmp_path, monkeypatch, signal):
+        """A real get-fence control is not an unreadable entry-root page."""
+        attempts = []
+        network = []
+    
+        def reserve():
+            attempts.append("before_get")
+            raise signal
+    
+        def deny_network(*args, **kwargs):
+            network.append("unexpected network")
+            raise AssertionError("native refused get must not reach the network")
+    
+        monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+        monkeypatch.setattr(socket.socket, "connect", deny_network)
+        monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+        requested = an_intent(domain="example.edu")
+        rows = [
+            ("https://cs.example.edu/programmes/cs", "Bachelor Computer Science", ""),
+            ("https://admissions.example.edu/programmes/cs", "Bachelor Computer Science", ""),
+        ]
+        provider = FakeSearchProvider({q.text: rows for q in queries_for(requested, budget=2)}, now=NOW)
+        fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+        queries = []
+    
+        async def read(url):
+            result = await fetcher.get(url)
+            return result.text if result.ok else ""
+    
+&gt;       with pytest.raises(type(signal)) as raised:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE LeaseLost
+
+tests/test_hybrid_retrieval.py:872: Failed</failure></testcase><testcase classname="tests.test_hybrid_retrieval" name="test_native_entry_root_control_stops_before_second_get[future-read-reason]" time="0.001"><failure message="Failed: DID NOT RAISE UniversityReadStopped">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-18/test_native_entry_root_control4')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10d179c10&gt;
+signal = UniversityReadStopped('University read allowance refused: future_control_reason')
+
+    @pytest.mark.parametrize(
+        "signal",
+        [
+            pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+            pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+            pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+            pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+            pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+            pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+        ],
+    )
+    async def test_native_entry_root_control_stops_before_second_get(tmp_path, monkeypatch, signal):
+        """A real get-fence control is not an unreadable entry-root page."""
+        attempts = []
+        network = []
+    
+        def reserve():
+            attempts.append("before_get")
+            raise signal
+    
+        def deny_network(*args, **kwargs):
+            network.append("unexpected network")
+            raise AssertionError("native refused get must not reach the network")
+    
+        monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+        monkeypatch.setattr(socket.socket, "connect", deny_network)
+        monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+        requested = an_intent(domain="example.edu")
+        rows = [
+            ("https://cs.example.edu/programmes/cs", "Bachelor Computer Science", ""),
+            ("https://admissions.example.edu/programmes/cs", "Bachelor Computer Science", ""),
+        ]
+        provider = FakeSearchProvider({q.text: rows for q in queries_for(requested, budget=2)}, now=NOW)
+        fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+        queries = []
+    
+        async def read(url):
+            result = await fetcher.get(url)
+            return result.text if result.ok else ""
+    
+&gt;       with pytest.raises(type(signal)) as raised:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE UniversityReadStopped
+
+tests/test_hybrid_retrieval.py:872: Failed</failure></testcase><testcase classname="tests.test_hybrid_retrieval" name="test_native_entry_root_control_stops_before_second_get[async-cancelled]" time="0.001" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_search_is_not_run_when_every_programme_slot_is_full" time="0.000" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_search_still_runs_while_a_slot_is_free" time="0.005" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_the_provider_is_resolved_once_per_run_not_once_per_institution" time="0.000" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_a_deployment_without_a_provider_is_not_re_probed" time="0.000" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_a_rate_limit_stops_the_remaining_query_families" time="0.000" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_other_failures_do_not_stop_the_remaining_families" time="0.001" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_a_throttled_run_records_status_and_incomplete_rate_limit_stop" time="0.000" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_a_throttle_ends_a_multi_subject_run" time="0.000" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_the_provider_seam_is_still_the_only_way_in" time="0.000" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_explicit_rate_limit_charges_only_the_attempted_family[429-None]" time="0.000" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_explicit_rate_limit_charges_only_the_attempted_family[None-rate limited]" time="0.000" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_untyped_vendor_refusal_does_not_cut_query_families[None]" time="0.000" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_untyped_vendor_refusal_does_not_cut_query_families[rate limited]" time="0.000" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_typed_status_none_caller_retains_safe_diagnostic_and_exact_query_charge[fields0]" time="0.001" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_typed_status_none_caller_retains_safe_diagnostic_and_exact_query_charge[fields1]" time="0.000" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_native_live_search_caller_preserves_get_control[read-cap-single-field]" time="0.002"><failure message="AssertionError: assert ['before_get', 'before_get'] == ['before_get']&#10;  &#10;  Left contains one more item: 'before_get'&#10;  &#10;  Full diff:&#10;    [&#10;        'before_get',&#10;  +     'before_get',&#10;    ]">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-18/test_native_live_search_caller0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10d18b290&gt;
+multi = False
+signal = UniversityReadStopped('University read allowance refused: read_cap')
+
+    @pytest.mark.parametrize("multi", [False, True], ids=["single-field", "multi-field"])
+    @pytest.mark.parametrize(
+        "signal",
+        [
+            pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+            pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+            pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+            pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+            pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+            pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+        ],
+    )
+    async def test_native_live_search_caller_preserves_get_control(
+        tmp_path, monkeypatch, multi, signal
+    ):
+        """No downstream read/subject/report may follow a refused native get fence."""
+        attempts = []
+        network = []
+    
+        def reserve():
+            attempts.append("before_get")
+            raise signal
+    
+        def deny_network(*args, **kwargs):
+            network.append("unexpected network")
+            raise AssertionError("native refused get must not reach the network")
+    
+        monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+        monkeypatch.setattr(socket.socket, "connect", deny_network)
+        monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+        fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+        provider = CountingProvider()
+        under_test = LiveDiscoveryAdapter(fetcher, registry_path=MISSING_REGISTRY)
+        under_test._search_provider = provider
+        under_test._search_provider_resolved = True
+        trace = DiscoveryTrace(institution=NAME, domain=DOMAIN, search_queries_sent=1)
+        selected = selected_with(["https://www.rug.nl/bachelors/already-read"])
+        before = deepcopy(selected)
+        fields = (FIELD, "Mathematics", "Physics") if multi else (FIELD,)
+    
+        with pytest.raises(type(signal)) as raised:
+            await under_test._add_search_results(
+                {"name": NAME}, DOMAIN, selected, trace, profile(fields)
+            )
+    
+        assert raised.value is signal
+        assert getattr(raised.value, "reason", None) == getattr(signal, "reason", None)
+&gt;       assert attempts == ["before_get"]
+E       AssertionError: assert ['before_get', 'before_get'] == ['before_get']
+E         
+E         Left contains one more item: 'before_get'
+E         
+E         Full diff:
+E           [
+E               'before_get',
+E         +     'before_get',
+E           ]
+
+tests/test_search_layer_budget_fixes.py:415: AssertionError</failure></testcase><testcase classname="tests.test_search_layer_budget_fixes" name="test_native_live_search_caller_preserves_get_control[read-cap-multi-field]" time="0.002"><failure message="AssertionError: assert ['before_get'... 'before_get'] == ['before_get']&#10;  &#10;  Left contains 3 more items, first extra item: 'before_get'&#10;  &#10;  Full diff:&#10;    [&#10;        'before_get',&#10;  +     'before_get',&#10;  +     'before_get',&#10;  +     'before_get',&#10;    ]">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-18/test_native_live_search_caller1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10d1895e0&gt;
+multi = True
+signal = UniversityReadStopped('University read allowance refused: read_cap')
+
+    @pytest.mark.parametrize("multi", [False, True], ids=["single-field", "multi-field"])
+    @pytest.mark.parametrize(
+        "signal",
+        [
+            pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+            pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+            pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+            pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+            pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+            pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+        ],
+    )
+    async def test_native_live_search_caller_preserves_get_control(
+        tmp_path, monkeypatch, multi, signal
+    ):
+        """No downstream read/subject/report may follow a refused native get fence."""
+        attempts = []
+        network = []
+    
+        def reserve():
+            attempts.append("before_get")
+            raise signal
+    
+        def deny_network(*args, **kwargs):
+            network.append("unexpected network")
+            raise AssertionError("native refused get must not reach the network")
+    
+        monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+        monkeypatch.setattr(socket.socket, "connect", deny_network)
+        monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+        fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+        provider = CountingProvider()
+        under_test = LiveDiscoveryAdapter(fetcher, registry_path=MISSING_REGISTRY)
+        under_test._search_provider = provider
+        under_test._search_provider_resolved = True
+        trace = DiscoveryTrace(institution=NAME, domain=DOMAIN, search_queries_sent=1)
+        selected = selected_with(["https://www.rug.nl/bachelors/already-read"])
+        before = deepcopy(selected)
+        fields = (FIELD, "Mathematics", "Physics") if multi else (FIELD,)
+    
+        with pytest.raises(type(signal)) as raised:
+            await under_test._add_search_results(
+                {"name": NAME}, DOMAIN, selected, trace, profile(fields)
+            )
+    
+        assert raised.value is signal
+        assert getattr(raised.value, "reason", None) == getattr(signal, "reason", None)
+&gt;       assert attempts == ["before_get"]
+E       AssertionError: assert ['before_get'... 'before_get'] == ['before_get']
+E         
+E         Left contains 3 more items, first extra item: 'before_get'
+E         
+E         Full diff:
+E           [
+E               'before_get',
+E         +     'before_get',
+E         +     'before_get',
+E         +     'before_get',
+E           ]
+
+tests/test_search_layer_budget_fixes.py:415: AssertionError</failure></testcase><testcase classname="tests.test_search_layer_budget_fixes" name="test_native_live_search_caller_preserves_get_control[checkpoint-busy-single-field]" time="0.002"><failure message="AssertionError: assert ['before_get', 'before_get'] == ['before_get']&#10;  &#10;  Left contains one more item: 'before_get'&#10;  &#10;  Full diff:&#10;    [&#10;        'before_get',&#10;  +     'before_get',&#10;    ]">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-18/test_native_live_search_caller2')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10d2af6b0&gt;
+multi = False
+signal = UniversityReadStopped('University read allowance refused: checkpoint_busy')
+
+    @pytest.mark.parametrize("multi", [False, True], ids=["single-field", "multi-field"])
+    @pytest.mark.parametrize(
+        "signal",
+        [
+            pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+            pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+            pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+            pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+            pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+            pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+        ],
+    )
+    async def test_native_live_search_caller_preserves_get_control(
+        tmp_path, monkeypatch, multi, signal
+    ):
+        """No downstream read/subject/report may follow a refused native get fence."""
+        attempts = []
+        network = []
+    
+        def reserve():
+            attempts.append("before_get")
+            raise signal
+    
+        def deny_network(*args, **kwargs):
+            network.append("unexpected network")
+            raise AssertionError("native refused get must not reach the network")
+    
+        monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+        monkeypatch.setattr(socket.socket, "connect", deny_network)
+        monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+        fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+        provider = CountingProvider()
+        under_test = LiveDiscoveryAdapter(fetcher, registry_path=MISSING_REGISTRY)
+        under_test._search_provider = provider
+        under_test._search_provider_resolved = True
+        trace = DiscoveryTrace(institution=NAME, domain=DOMAIN, search_queries_sent=1)
+        selected = selected_with(["https://www.rug.nl/bachelors/already-read"])
+        before = deepcopy(selected)
+        fields = (FIELD, "Mathematics", "Physics") if multi else (FIELD,)
+    
+        with pytest.raises(type(signal)) as raised:
+            await under_test._add_search_results(
+                {"name": NAME}, DOMAIN, selected, trace, profile(fields)
+            )
+    
+        assert raised.value is signal
+        assert getattr(raised.value, "reason", None) == getattr(signal, "reason", None)
+&gt;       assert attempts == ["before_get"]
+E       AssertionError: assert ['before_get', 'before_get'] == ['before_get']
+E         
+E         Left contains one more item: 'before_get'
+E         
+E         Full diff:
+E           [
+E               'before_get',
+E         +     'before_get',
+E           ]
+
+tests/test_search_layer_budget_fixes.py:415: AssertionError</failure></testcase><testcase classname="tests.test_search_layer_budget_fixes" name="test_native_live_search_caller_preserves_get_control[checkpoint-busy-multi-field]" time="0.002"><failure message="AssertionError: assert ['before_get'... 'before_get'] == ['before_get']&#10;  &#10;  Left contains 3 more items, first extra item: 'before_get'&#10;  &#10;  Full diff:&#10;    [&#10;        'before_get',&#10;  +     'before_get',&#10;  +     'before_get',&#10;  +     'before_get',&#10;    ]">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-18/test_native_live_search_caller3')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10d2aee10&gt;
+multi = True
+signal = UniversityReadStopped('University read allowance refused: checkpoint_busy')
+
+    @pytest.mark.parametrize("multi", [False, True], ids=["single-field", "multi-field"])
+    @pytest.mark.parametrize(
+        "signal",
+        [
+            pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+            pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+            pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+            pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+            pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+            pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+        ],
+    )
+    async def test_native_live_search_caller_preserves_get_control(
+        tmp_path, monkeypatch, multi, signal
+    ):
+        """No downstream read/subject/report may follow a refused native get fence."""
+        attempts = []
+        network = []
+    
+        def reserve():
+            attempts.append("before_get")
+            raise signal
+    
+        def deny_network(*args, **kwargs):
+            network.append("unexpected network")
+            raise AssertionError("native refused get must not reach the network")
+    
+        monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+        monkeypatch.setattr(socket.socket, "connect", deny_network)
+        monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+        fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+        provider = CountingProvider()
+        under_test = LiveDiscoveryAdapter(fetcher, registry_path=MISSING_REGISTRY)
+        under_test._search_provider = provider
+        under_test._search_provider_resolved = True
+        trace = DiscoveryTrace(institution=NAME, domain=DOMAIN, search_queries_sent=1)
+        selected = selected_with(["https://www.rug.nl/bachelors/already-read"])
+        before = deepcopy(selected)
+        fields = (FIELD, "Mathematics", "Physics") if multi else (FIELD,)
+    
+        with pytest.raises(type(signal)) as raised:
+            await under_test._add_search_results(
+                {"name": NAME}, DOMAIN, selected, trace, profile(fields)
+            )
+    
+        assert raised.value is signal
+        assert getattr(raised.value, "reason", None) == getattr(signal, "reason", None)
+&gt;       assert attempts == ["before_get"]
+E       AssertionError: assert ['before_get'... 'before_get'] == ['before_get']
+E         
+E         Left contains 3 more items, first extra item: 'before_get'
+E         
+E         Full diff:
+E           [
+E               'before_get',
+E         +     'before_get',
+E         +     'before_get',
+E         +     'before_get',
+E           ]
+
+tests/test_search_layer_budget_fixes.py:415: AssertionError</failure></testcase><testcase classname="tests.test_search_layer_budget_fixes" name="test_native_live_search_caller_preserves_get_control[run-cancelled-single-field]" time="0.002"><failure message="AssertionError: assert ['before_get', 'before_get'] == ['before_get']&#10;  &#10;  Left contains one more item: 'before_get'&#10;  &#10;  Full diff:&#10;    [&#10;        'before_get',&#10;  +     'before_get',&#10;    ]">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-18/test_native_live_search_caller4')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10d2cc1a0&gt;
+multi = False, signal = RunCancelled('cancelled')
+
+    @pytest.mark.parametrize("multi", [False, True], ids=["single-field", "multi-field"])
+    @pytest.mark.parametrize(
+        "signal",
+        [
+            pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+            pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+            pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+            pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+            pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+            pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+        ],
+    )
+    async def test_native_live_search_caller_preserves_get_control(
+        tmp_path, monkeypatch, multi, signal
+    ):
+        """No downstream read/subject/report may follow a refused native get fence."""
+        attempts = []
+        network = []
+    
+        def reserve():
+            attempts.append("before_get")
+            raise signal
+    
+        def deny_network(*args, **kwargs):
+            network.append("unexpected network")
+            raise AssertionError("native refused get must not reach the network")
+    
+        monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+        monkeypatch.setattr(socket.socket, "connect", deny_network)
+        monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+        fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+        provider = CountingProvider()
+        under_test = LiveDiscoveryAdapter(fetcher, registry_path=MISSING_REGISTRY)
+        under_test._search_provider = provider
+        under_test._search_provider_resolved = True
+        trace = DiscoveryTrace(institution=NAME, domain=DOMAIN, search_queries_sent=1)
+        selected = selected_with(["https://www.rug.nl/bachelors/already-read"])
+        before = deepcopy(selected)
+        fields = (FIELD, "Mathematics", "Physics") if multi else (FIELD,)
+    
+        with pytest.raises(type(signal)) as raised:
+            await under_test._add_search_results(
+                {"name": NAME}, DOMAIN, selected, trace, profile(fields)
+            )
+    
+        assert raised.value is signal
+        assert getattr(raised.value, "reason", None) == getattr(signal, "reason", None)
+&gt;       assert attempts == ["before_get"]
+E       AssertionError: assert ['before_get', 'before_get'] == ['before_get']
+E         
+E         Left contains one more item: 'before_get'
+E         
+E         Full diff:
+E           [
+E               'before_get',
+E         +     'before_get',
+E           ]
+
+tests/test_search_layer_budget_fixes.py:415: AssertionError</failure></testcase><testcase classname="tests.test_search_layer_budget_fixes" name="test_native_live_search_caller_preserves_get_control[run-cancelled-multi-field]" time="0.002"><failure message="AssertionError: assert ['before_get'... 'before_get'] == ['before_get']&#10;  &#10;  Left contains 3 more items, first extra item: 'before_get'&#10;  &#10;  Full diff:&#10;    [&#10;        'before_get',&#10;  +     'before_get',&#10;  +     'before_get',&#10;  +     'before_get',&#10;    ]">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-18/test_native_live_search_caller5')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10d336990&gt;
+multi = True, signal = RunCancelled('cancelled')
+
+    @pytest.mark.parametrize("multi", [False, True], ids=["single-field", "multi-field"])
+    @pytest.mark.parametrize(
+        "signal",
+        [
+            pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+            pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+            pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+            pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+            pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+            pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+        ],
+    )
+    async def test_native_live_search_caller_preserves_get_control(
+        tmp_path, monkeypatch, multi, signal
+    ):
+        """No downstream read/subject/report may follow a refused native get fence."""
+        attempts = []
+        network = []
+    
+        def reserve():
+            attempts.append("before_get")
+            raise signal
+    
+        def deny_network(*args, **kwargs):
+            network.append("unexpected network")
+            raise AssertionError("native refused get must not reach the network")
+    
+        monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+        monkeypatch.setattr(socket.socket, "connect", deny_network)
+        monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+        fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+        provider = CountingProvider()
+        under_test = LiveDiscoveryAdapter(fetcher, registry_path=MISSING_REGISTRY)
+        under_test._search_provider = provider
+        under_test._search_provider_resolved = True
+        trace = DiscoveryTrace(institution=NAME, domain=DOMAIN, search_queries_sent=1)
+        selected = selected_with(["https://www.rug.nl/bachelors/already-read"])
+        before = deepcopy(selected)
+        fields = (FIELD, "Mathematics", "Physics") if multi else (FIELD,)
+    
+        with pytest.raises(type(signal)) as raised:
+            await under_test._add_search_results(
+                {"name": NAME}, DOMAIN, selected, trace, profile(fields)
+            )
+    
+        assert raised.value is signal
+        assert getattr(raised.value, "reason", None) == getattr(signal, "reason", None)
+&gt;       assert attempts == ["before_get"]
+E       AssertionError: assert ['before_get'... 'before_get'] == ['before_get']
+E         
+E         Left contains 3 more items, first extra item: 'before_get'
+E         
+E         Full diff:
+E           [
+E               'before_get',
+E         +     'before_get',
+E         +     'before_get',
+E         +     'before_get',
+E           ]
+
+tests/test_search_layer_budget_fixes.py:415: AssertionError</failure></testcase><testcase classname="tests.test_search_layer_budget_fixes" name="test_native_live_search_caller_preserves_get_control[lease-lost-single-field]" time="0.002"><failure message="AssertionError: assert ['before_get', 'before_get'] == ['before_get']&#10;  &#10;  Left contains one more item: 'before_get'&#10;  &#10;  Full diff:&#10;    [&#10;        'before_get',&#10;  +     'before_get',&#10;    ]">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-18/test_native_live_search_caller6')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10d336720&gt;
+multi = False, signal = LeaseLost('stale lease')
+
+    @pytest.mark.parametrize("multi", [False, True], ids=["single-field", "multi-field"])
+    @pytest.mark.parametrize(
+        "signal",
+        [
+            pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+            pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+            pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+            pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+            pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+            pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+        ],
+    )
+    async def test_native_live_search_caller_preserves_get_control(
+        tmp_path, monkeypatch, multi, signal
+    ):
+        """No downstream read/subject/report may follow a refused native get fence."""
+        attempts = []
+        network = []
+    
+        def reserve():
+            attempts.append("before_get")
+            raise signal
+    
+        def deny_network(*args, **kwargs):
+            network.append("unexpected network")
+            raise AssertionError("native refused get must not reach the network")
+    
+        monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+        monkeypatch.setattr(socket.socket, "connect", deny_network)
+        monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+        fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+        provider = CountingProvider()
+        under_test = LiveDiscoveryAdapter(fetcher, registry_path=MISSING_REGISTRY)
+        under_test._search_provider = provider
+        under_test._search_provider_resolved = True
+        trace = DiscoveryTrace(institution=NAME, domain=DOMAIN, search_queries_sent=1)
+        selected = selected_with(["https://www.rug.nl/bachelors/already-read"])
+        before = deepcopy(selected)
+        fields = (FIELD, "Mathematics", "Physics") if multi else (FIELD,)
+    
+        with pytest.raises(type(signal)) as raised:
+            await under_test._add_search_results(
+                {"name": NAME}, DOMAIN, selected, trace, profile(fields)
+            )
+    
+        assert raised.value is signal
+        assert getattr(raised.value, "reason", None) == getattr(signal, "reason", None)
+&gt;       assert attempts == ["before_get"]
+E       AssertionError: assert ['before_get', 'before_get'] == ['before_get']
+E         
+E         Left contains one more item: 'before_get'
+E         
+E         Full diff:
+E           [
+E               'before_get',
+E         +     'before_get',
+E           ]
+
+tests/test_search_layer_budget_fixes.py:415: AssertionError</failure></testcase><testcase classname="tests.test_search_layer_budget_fixes" name="test_native_live_search_caller_preserves_get_control[lease-lost-multi-field]" time="0.002"><failure message="AssertionError: assert ['before_get'... 'before_get'] == ['before_get']&#10;  &#10;  Left contains 3 more items, first extra item: 'before_get'&#10;  &#10;  Full diff:&#10;    [&#10;        'before_get',&#10;  +     'before_get',&#10;  +     'before_get',&#10;  +     'before_get',&#10;    ]">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-18/test_native_live_search_caller7')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10d2cfb60&gt;
+multi = True, signal = LeaseLost('stale lease')
+
+    @pytest.mark.parametrize("multi", [False, True], ids=["single-field", "multi-field"])
+    @pytest.mark.parametrize(
+        "signal",
+        [
+            pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+            pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+            pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+            pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+            pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+            pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+        ],
+    )
+    async def test_native_live_search_caller_preserves_get_control(
+        tmp_path, monkeypatch, multi, signal
+    ):
+        """No downstream read/subject/report may follow a refused native get fence."""
+        attempts = []
+        network = []
+    
+        def reserve():
+            attempts.append("before_get")
+            raise signal
+    
+        def deny_network(*args, **kwargs):
+            network.append("unexpected network")
+            raise AssertionError("native refused get must not reach the network")
+    
+        monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+        monkeypatch.setattr(socket.socket, "connect", deny_network)
+        monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+        fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+        provider = CountingProvider()
+        under_test = LiveDiscoveryAdapter(fetcher, registry_path=MISSING_REGISTRY)
+        under_test._search_provider = provider
+        under_test._search_provider_resolved = True
+        trace = DiscoveryTrace(institution=NAME, domain=DOMAIN, search_queries_sent=1)
+        selected = selected_with(["https://www.rug.nl/bachelors/already-read"])
+        before = deepcopy(selected)
+        fields = (FIELD, "Mathematics", "Physics") if multi else (FIELD,)
+    
+        with pytest.raises(type(signal)) as raised:
+            await under_test._add_search_results(
+                {"name": NAME}, DOMAIN, selected, trace, profile(fields)
+            )
+    
+        assert raised.value is signal
+        assert getattr(raised.value, "reason", None) == getattr(signal, "reason", None)
+&gt;       assert attempts == ["before_get"]
+E       AssertionError: assert ['before_get'... 'before_get'] == ['before_get']
+E         
+E         Left contains 3 more items, first extra item: 'before_get'
+E         
+E         Full diff:
+E           [
+E               'before_get',
+E         +     'before_get',
+E         +     'before_get',
+E         +     'before_get',
+E           ]
+
+tests/test_search_layer_budget_fixes.py:415: AssertionError</failure></testcase><testcase classname="tests.test_search_layer_budget_fixes" name="test_native_live_search_caller_preserves_get_control[future-read-reason-single-field]" time="0.002"><failure message="AssertionError: assert ['before_get', 'before_get'] == ['before_get']&#10;  &#10;  Left contains one more item: 'before_get'&#10;  &#10;  Full diff:&#10;    [&#10;        'before_get',&#10;  +     'before_get',&#10;    ]">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-18/test_native_live_search_caller8')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10d2cee10&gt;
+multi = False
+signal = UniversityReadStopped('University read allowance refused: future_control_reason')
+
+    @pytest.mark.parametrize("multi", [False, True], ids=["single-field", "multi-field"])
+    @pytest.mark.parametrize(
+        "signal",
+        [
+            pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+            pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+            pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+            pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+            pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+            pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+        ],
+    )
+    async def test_native_live_search_caller_preserves_get_control(
+        tmp_path, monkeypatch, multi, signal
+    ):
+        """No downstream read/subject/report may follow a refused native get fence."""
+        attempts = []
+        network = []
+    
+        def reserve():
+            attempts.append("before_get")
+            raise signal
+    
+        def deny_network(*args, **kwargs):
+            network.append("unexpected network")
+            raise AssertionError("native refused get must not reach the network")
+    
+        monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+        monkeypatch.setattr(socket.socket, "connect", deny_network)
+        monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+        fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+        provider = CountingProvider()
+        under_test = LiveDiscoveryAdapter(fetcher, registry_path=MISSING_REGISTRY)
+        under_test._search_provider = provider
+        under_test._search_provider_resolved = True
+        trace = DiscoveryTrace(institution=NAME, domain=DOMAIN, search_queries_sent=1)
+        selected = selected_with(["https://www.rug.nl/bachelors/already-read"])
+        before = deepcopy(selected)
+        fields = (FIELD, "Mathematics", "Physics") if multi else (FIELD,)
+    
+        with pytest.raises(type(signal)) as raised:
+            await under_test._add_search_results(
+                {"name": NAME}, DOMAIN, selected, trace, profile(fields)
+            )
+    
+        assert raised.value is signal
+        assert getattr(raised.value, "reason", None) == getattr(signal, "reason", None)
+&gt;       assert attempts == ["before_get"]
+E       AssertionError: assert ['before_get', 'before_get'] == ['before_get']
+E         
+E         Left contains one more item: 'before_get'
+E         
+E         Full diff:
+E           [
+E               'before_get',
+E         +     'before_get',
+E           ]
+
+tests/test_search_layer_budget_fixes.py:415: AssertionError</failure></testcase><testcase classname="tests.test_search_layer_budget_fixes" name="test_native_live_search_caller_preserves_get_control[future-read-reason-multi-field]" time="0.002"><failure message="AssertionError: assert ['before_get'... 'before_get'] == ['before_get']&#10;  &#10;  Left contains 3 more items, first extra item: 'before_get'&#10;  &#10;  Full diff:&#10;    [&#10;        'before_get',&#10;  +     'before_get',&#10;  +     'before_get',&#10;  +     'before_get',&#10;    ]">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-18/test_native_live_search_caller9')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10d34e600&gt;
+multi = True
+signal = UniversityReadStopped('University read allowance refused: future_control_reason')
+
+    @pytest.mark.parametrize("multi", [False, True], ids=["single-field", "multi-field"])
+    @pytest.mark.parametrize(
+        "signal",
+        [
+            pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+            pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+            pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+            pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+            pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+            pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+        ],
+    )
+    async def test_native_live_search_caller_preserves_get_control(
+        tmp_path, monkeypatch, multi, signal
+    ):
+        """No downstream read/subject/report may follow a refused native get fence."""
+        attempts = []
+        network = []
+    
+        def reserve():
+            attempts.append("before_get")
+            raise signal
+    
+        def deny_network(*args, **kwargs):
+            network.append("unexpected network")
+            raise AssertionError("native refused get must not reach the network")
+    
+        monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+        monkeypatch.setattr(socket.socket, "connect", deny_network)
+        monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+        fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+        provider = CountingProvider()
+        under_test = LiveDiscoveryAdapter(fetcher, registry_path=MISSING_REGISTRY)
+        under_test._search_provider = provider
+        under_test._search_provider_resolved = True
+        trace = DiscoveryTrace(institution=NAME, domain=DOMAIN, search_queries_sent=1)
+        selected = selected_with(["https://www.rug.nl/bachelors/already-read"])
+        before = deepcopy(selected)
+        fields = (FIELD, "Mathematics", "Physics") if multi else (FIELD,)
+    
+        with pytest.raises(type(signal)) as raised:
+            await under_test._add_search_results(
+                {"name": NAME}, DOMAIN, selected, trace, profile(fields)
+            )
+    
+        assert raised.value is signal
+        assert getattr(raised.value, "reason", None) == getattr(signal, "reason", None)
+&gt;       assert attempts == ["before_get"]
+E       AssertionError: assert ['before_get'... 'before_get'] == ['before_get']
+E         
+E         Left contains 3 more items, first extra item: 'before_get'
+E         
+E         Full diff:
+E           [
+E               'before_get',
+E         +     'before_get',
+E         +     'before_get',
+E         +     'before_get',
+E           ]
+
+tests/test_search_layer_budget_fixes.py:415: AssertionError</failure></testcase><testcase classname="tests.test_search_layer_budget_fixes" name="test_native_live_search_caller_preserves_get_control[async-cancelled-single-field]" time="0.002" /><testcase classname="tests.test_search_layer_budget_fixes" name="test_native_live_search_caller_preserves_get_control[async-cancelled-multi-field]" time="0.001" /></testsuite></testsuites>

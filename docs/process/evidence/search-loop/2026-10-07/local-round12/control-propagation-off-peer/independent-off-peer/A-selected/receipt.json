@@ -1,0 +1,36 @@
+{
+  "created_utc": "2026-10-08T04:09:15.785753+00:00",
+  "status": "CONFIRMED_OFF_DEFECT_NO_REPAIR_NO_APPLICATION",
+  "summary": {
+    "case_count": 11,
+    "PASS": 7,
+    "RED": 4,
+    "fixture_failures": 0,
+    "real_network_attempts": 0,
+    "qualification": "OFF defect proof only; actual native get fence with synthetic callback; no SQL/Worker/crash durability or launch-quality claim."
+  },
+  "accounting_assertions_PASS": 97,
+  "accounting_assertions_RED": 0,
+  "execution_exit_code": 1,
+  "red_cases": [
+    "read_cap",
+    "checkpoint_busy",
+    "run_cancelled",
+    "lease_lost"
+  ],
+  "CancelledError_same_original": true,
+  "source_originals": 13,
+  "source_copies_exact": true,
+  "source_pre_post_unchanged": true,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "actual_native_source": "backend/app/adapters/search/retrieval.py:469-472",
+  "retrieval_sha256": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+  "guard_sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf",
+  "control_sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd",
+  "limitations": [
+    "synthetic before_get callback, no SQL lease/Worker durability",
+    "one entry-root and one query per case, finite seam proof",
+    "no propagation repair proposed or applied",
+    "no live/model/provider/score or launch quality claim"
+  ]
+}

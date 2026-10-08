@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "<stdin>", line 11, in <module>
+TypeError: zip() takes no keyword arguments
+
+Original tool verification command used system python3 (3.9). It stopped before equality/JUnit receipts were written because zip(strict=True) requires Python3.10+. This is an external verifier/runtime error, not a native source/control failure. Preserve original exit1; run unchanged comparisons with the already-used installed backend .venv Python3.12.

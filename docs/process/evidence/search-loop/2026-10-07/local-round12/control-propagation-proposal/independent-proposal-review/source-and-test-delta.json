@@ -1,0 +1,17 @@
+{
+  "A_selected78_all_valid": true,
+  "A_selected_bytes": 684607,
+  "retrieval_exact_minimal_text_delta": true,
+  "existing_test_AST": {
+    "backend/tests/test_hybrid_retrieval.py": {
+      "all_existing_nonimport_module_statements_AST_equal": true,
+      "appended_function": "test_native_entry_root_control_stops_before_second_get"
+    },
+    "backend/tests/test_search_layer_budget_fixes.py": {
+      "all_existing_nonimport_module_statements_AST_equal": true,
+      "appended_function": "test_native_live_search_caller_preserves_get_control"
+    }
+  },
+  "source_manifest_sha256": "6776d1ccedabd3d668b167cd1d8184b2cd179e01989e73a778e6081c642589ab",
+  "report_qualification": "No source application; guard callbacks synthetic, pure control dependency."
+}

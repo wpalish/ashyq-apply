@@ -1,0 +1,28 @@
+{
+  "status": "EXACT3_PROPOSAL_PREFLIGHT_PASS_PEER_FINAL_PENDING_NO_APPLICATION",
+  "ready_sha256": "6776d1ccedabd3d668b167cd1d8184b2cd179e01989e73a778e6081c642589ab",
+  "patch_sha256": "630128bd48da6837ad22574159ac7715cea30cb8032ad6c5229df6a694c442a8",
+  "sources": {
+    "backend/app/adapters/search/retrieval.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/proposed/backend/app/adapters/search/retrieval.py",
+    "backend/tests/test_hybrid_retrieval.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/proposed/backend/tests/test_hybrid_retrieval.py",
+    "backend/tests/test_search_layer_budget_fixes.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/proposed/backend/tests/test_search_layer_budget_fixes.py"
+  },
+  "expected_after_sha256": {
+    "backend/app/adapters/search/retrieval.py": {
+      "sha256": "4c76933f87b4bca50b5819821b31f1d44a47d8987269b25cf9e74afd5e59acee",
+      "bytes": 21976
+    },
+    "backend/tests/test_hybrid_retrieval.py": {
+      "sha256": "62ad38770ad87665fd2e2b24f1deae811571b4a7881e0fc6f4d51e2a32f779e2",
+      "bytes": 35150
+    },
+    "backend/tests/test_search_layer_budget_fixes.py": {
+      "sha256": "e6f7f0da4e941512839c25bcc1650fe1d0eb326f7022b352fceaa8d145b54e63",
+      "bytes": 15815
+    }
+  },
+  "source_before_999_matched": 999,
+  "unchanged_other_selected_paths": 996,
+  "source_application": false,
+  "initial_fail_closed_preflight": "sourcehash matched both proposed and preserved prototype1-static-red retrieval copies; ambiguous selection rejected before any writes, now exact declared proposed prefix + hash checked"
+}

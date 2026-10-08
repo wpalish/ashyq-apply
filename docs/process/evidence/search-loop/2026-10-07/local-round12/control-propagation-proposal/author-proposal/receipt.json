@@ -1,0 +1,90 @@
+{
+  "created_utc": "2026-10-08T04:23:37.426330+00:00",
+  "status": "EXTERNAL_NARROW_PROPOSAL_READY_FOR_INDEPENDENT_REVIEW_NOT_APPLIED",
+  "sources": {
+    "backend/app/adapters/search/retrieval.py": {
+      "sha256": "4c76933f87b4bca50b5819821b31f1d44a47d8987269b25cf9e74afd5e59acee",
+      "bytes": 21976
+    },
+    "backend/tests/test_hybrid_retrieval.py": {
+      "sha256": "62ad38770ad87665fd2e2b24f1deae811571b4a7881e0fc6f4d51e2a32f779e2",
+      "bytes": 35150
+    },
+    "backend/tests/test_search_layer_budget_fixes.py": {
+      "sha256": "e6f7f0da4e941512839c25bcc1650fe1d0eb326f7022b352fceaa8d145b54e63",
+      "bytes": 15815
+    }
+  },
+  "patch_sha256": "630128bd48da6837ad22574159ac7715cea30cb8032ad6c5229df6a694c442a8",
+  "native_delta": "Only import3native classes + immediate bare re-raise tuple before unchanged Exception catch; all other native AST equal.",
+  "native_tests": {
+    "off": {
+      "executed": 99,
+      "passed": 84,
+      "failed": 15,
+      "skipped": 0,
+      "original81_allPASS": true,
+      "appended_controls": 18,
+      "new_control_failures": 15,
+      "network_attempts": 0,
+      "failures": [
+        "test_native_entry_root_control_stops_before_second_get[read-cap]",
+        "test_native_entry_root_control_stops_before_second_get[checkpoint-busy]",
+        "test_native_entry_root_control_stops_before_second_get[run-cancelled]",
+        "test_native_entry_root_control_stops_before_second_get[lease-lost]",
+        "test_native_entry_root_control_stops_before_second_get[future-read-reason]",
+        "test_native_live_search_caller_preserves_get_control[read-cap-single-field]",
+        "test_native_live_search_caller_preserves_get_control[read-cap-multi-field]",
+        "test_native_live_search_caller_preserves_get_control[checkpoint-busy-single-field]",
+        "test_native_live_search_caller_preserves_get_control[checkpoint-busy-multi-field]",
+        "test_native_live_search_caller_preserves_get_control[run-cancelled-single-field]",
+        "test_native_live_search_caller_preserves_get_control[run-cancelled-multi-field]",
+        "test_native_live_search_caller_preserves_get_control[lease-lost-single-field]",
+        "test_native_live_search_caller_preserves_get_control[lease-lost-multi-field]",
+        "test_native_live_search_caller_preserves_get_control[future-read-reason-single-field]",
+        "test_native_live_search_caller_preserves_get_control[future-read-reason-multi-field]"
+      ]
+    },
+    "on": {
+      "executed": 99,
+      "passed": 99,
+      "failed": 0,
+      "skipped": 0,
+      "original81_allPASS": true,
+      "appended_controls": 18,
+      "new_control_failures": 0,
+      "network_attempts": 0,
+      "failures": []
+    }
+  },
+  "external_A_replay": {
+    "ON": "11PASS/0RED",
+    "OFF": "7PASS/4RED"
+  },
+  "external_B_replay": {
+    "ON": "21PASS/0RED",
+    "OFF": "9PASS/12RED"
+  },
+  "ordinary_full_output_dispatch_equalities": 12,
+  "OFF_full_control_rows_exact_original": true,
+  "original81cases_pass_both_modes": true,
+  "existing_test_definition_AST_preserved": true,
+  "native_Ruff_actual_owned_backend_cwd": "PASS",
+  "native_format_actual_owned_backend_cwd": "PASS",
+  "source_dependency_files_unchanged": 163,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "real_network_attempts": 0,
+  "source_application": false,
+  "original_error_history": [
+    "prototype1 Ruff6errors:5Syntax from global local-import generation +1I001; nocontrols executed, preserved",
+    "compatibility verifier used systemPython3.9 zip(strict=True); preserved exit1, comparisons rerun using installed3.12 unchanged expectations"
+  ],
+  "qualifications": [
+    "Direct native get-fence callback is synthetic; no SQL/Job/Worker/crash durability proof",
+    "A reused raw description OFF-only in both modes; exact mode/source import hashes explicit, no raw rewriting",
+    "B ordinary flow mocks baseget as originalBscript; actual native AordinaryMockTransport controls separately confirm equality",
+    "81old+18new native cases and32 external repeatedscenarios are not unique university measurements",
+    "No provider/internal retry/default/guard/schema/retention/budget/field/intake/scoring changes",
+    "No .env/primaryDB/gold/live/provider/model/source/Git mutation; freshfull needed after parent application"
+  ]
+}

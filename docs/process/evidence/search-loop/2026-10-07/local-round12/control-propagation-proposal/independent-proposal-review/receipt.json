@@ -1,0 +1,65 @@
+{
+  "created_at": "2026-10-08T04:29:43.607865+00:00",
+  "status": "ACCEPT_EXACT_NARROW_SOURCE_AND_NATIVE_TEST_DELTA_NOT_APPLIED_FULL_GATE_PENDING",
+  "A_ready_sha256": "6776d1ccedabd3d668b167cd1d8184b2cd179e01989e73a778e6081c642589ab",
+  "A_receipt_sha256": "eb0f61a8ad7f1940a3e98ab1ea421095b509e824378b5aa2fba7a5fb9a04101c",
+  "A_patch_sha256": "630128bd48da6837ad22574159ac7715cea30cb8032ad6c5229df6a694c442a8",
+  "A_all_selected_verified": {
+    "files": 78,
+    "bytes": 684607
+  },
+  "exact_source_hashes": {
+    "backend/app/adapters/search/retrieval.py": {
+      "sha256": "4c76933f87b4bca50b5819821b31f1d44a47d8987269b25cf9e74afd5e59acee",
+      "bytes": 21976
+    },
+    "backend/tests/test_hybrid_retrieval.py": {
+      "sha256": "62ad38770ad87665fd2e2b24f1deae811571b4a7881e0fc6f4d51e2a32f779e2",
+      "bytes": 35150
+    },
+    "backend/tests/test_search_layer_budget_fixes.py": {
+      "sha256": "e6f7f0da4e941512839c25bcc1650fe1d0eb326f7022b352fceaa8d145b54e63",
+      "bytes": 15815
+    }
+  },
+  "source_delta": "Only3native signal imports +baretuple rethrow before Exception",
+  "test_existing_nonimport_AST_unchanged": true,
+  "own_fresh_boundaries": {
+    "OFF": {
+      "PASS": 9,
+      "RED": 12,
+      "rows_exact_original": true
+    },
+    "ON": {
+      "PASS": 21,
+      "RED": 0
+    },
+    "ordinary_full_output_equalities": 6,
+    "network_attempts": 0
+  },
+  "A_actual_native_ordinary_equalities": 6,
+  "A_JUnit_saved_evidence": {
+    "ON": {
+      "PASS": 99,
+      "RED": 0,
+      "skip": 0
+    },
+    "OFF": {
+      "PASS": 84,
+      "RED": 15,
+      "skip": 0
+    },
+    "old81_PASS_both": true,
+    "new_cases": 18
+  },
+  "no_B_full_or_native99_pytest_rerun": true,
+  "primary3_original_and_A78_pre_post_equal": true,
+  "STOP_pre_post_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "limitations": [
+    "Passed inner callertrace charges only; inherited outer seed trace replacement can drop persisted counters",
+    "Synthetic before_get callback; no SQL/Worker/crash durability proof",
+    "GuardFalse and persisted enabled decision intent preserved",
+    "No retention/default/deadline/quality/currentuniversity recall claim; fresh full remains root gate"
+  ],
+  "report_sha256": "5c7d2a7efd0a921dcaf98318d10844e6171ce22294a03ed474abc649c4921c0d"
+}

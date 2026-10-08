@@ -9,6 +9,9 @@ five more rephrasings of the same question.
 
 from __future__ import annotations
 
+import asyncio
+import socket
+from copy import deepcopy
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import ClassVar, cast
@@ -32,6 +35,8 @@ from app.adapters.search.base import (
 from app.adapters.search.intent import DiscoveryIntent
 from app.adapters.search.retrieval import discover_candidates
 from app.domain.enums import DegreeLevel
+from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+from app.pipeline.read_budget import BudgetedFetcher
 from app.schemas.profile import ApplicantProfileIn
 
 NAME = "University of Groningen"
@@ -358,3 +363,65 @@ async def test_typed_status_none_caller_retains_safe_diagnostic_and_exact_query_
     assert not any("quota" in line or "HTTP" in line for line in trace.search_limitations)
     assert selected[PageCategory.PROGRAM_PAGE] == []
     assert fetcher.read == []
+
+
+@pytest.mark.parametrize("multi", [False, True], ids=["single-field", "multi-field"])
+@pytest.mark.parametrize(
+    "signal",
+    [
+        pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+        pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+        pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+        pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+        pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+        pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+    ],
+)
+async def test_native_live_search_caller_preserves_get_control(
+    tmp_path, monkeypatch, multi, signal
+):
+    """No downstream read/subject/report may follow a refused native get fence."""
+    attempts = []
+    network = []
+
+    def reserve():
+        attempts.append("before_get")
+        raise signal
+
+    def deny_network(*args, **kwargs):
+        network.append("unexpected network")
+        raise AssertionError("native refused get must not reach the network")
+
+    monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+    monkeypatch.setattr(socket.socket, "connect", deny_network)
+    monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+    fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+    provider = CountingProvider()
+    under_test = LiveDiscoveryAdapter(fetcher, registry_path=MISSING_REGISTRY)
+    under_test._search_provider = provider
+    under_test._search_provider_resolved = True
+    trace = DiscoveryTrace(institution=NAME, domain=DOMAIN, search_queries_sent=1)
+    selected = selected_with(["https://www.rug.nl/bachelors/already-read"])
+    before = deepcopy(selected)
+    fields = (FIELD, "Mathematics", "Physics") if multi else (FIELD,)
+
+    with pytest.raises(type(signal)) as raised:
+        await under_test._add_search_results(
+            {"name": NAME}, DOMAIN, selected, trace, profile(fields)
+        )
+
+    assert raised.value is signal
+    assert getattr(raised.value, "reason", None) == getattr(signal, "reason", None)
+    assert attempts == ["before_get"]
+    expected_queries = 2 if multi else 5
+    assert len(provider.queries) == expected_queries
+    assert trace.search_queries_sent == 1 + expected_queries
+    assert all(
+        "mathematics" not in query.lower() and "physics" not in query.lower()
+        for query in provider.queries
+    )
+    assert selected == before
+    assert trace.errors == trace.search_failures == []
+    assert trace.field_sources == {}
+    assert network == []
+    assert all(count == 0 for count in fetcher.stats.values())

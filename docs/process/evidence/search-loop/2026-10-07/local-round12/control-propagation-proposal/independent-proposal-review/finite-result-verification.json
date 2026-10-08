@@ -1,0 +1,31 @@
+{
+  "own_OFF_exact_original_rows": true,
+  "own_ON": {
+    "PASS": 21,
+    "RED": 0
+  },
+  "own_ordinary_wholeoutput_equal": 6,
+  "A_actual_native_matching_navigation_and_ordinary_fullrows_equal": 6,
+  "native": {
+    "on": {
+      "total": 99,
+      "original": 81,
+      "new": 18,
+      "PASS": 99,
+      "RED": 0,
+      "skip": 0,
+      "all_original_PASS": true
+    },
+    "off": {
+      "total": 99,
+      "original": 81,
+      "new": 18,
+      "PASS": 84,
+      "RED": 15,
+      "skip": 0,
+      "all_original_PASS": true
+    }
+  },
+  "outer_limit": "Passed native caller trace counters only; outer Live discover(noncheckpoint) builds new trace and can discard inner counters. No end-to-end persisted accounting/durable partial/retention proof.",
+  "guard_limit": "Before_get callbacks synthetic; sourceFalse can honor persisted enabled current job episode; intent/flags unchanged."
+}
