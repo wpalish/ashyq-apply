@@ -51,3 +51,6 @@ run и согласованная Documents-подсказка для approved/m
 сбрасывается этой продуктовой задачей. Подробные критерии/источники/очередь:
 [PRODUCT_COMPLETION_PLAN](PRODUCT_COMPLETION_PLAN_2026-10-09.md),
 [HANDOFF](HANDOFF.md), [final acceptance](evidence/product-loop/2026-10-09/final-gates/ACCEPTANCE.json).
+
+Draft75: https://github.com/wpalish/ashyq-apply/pull/75 — OPEN/Draft, green7b0ee91d;
+owner review/merge pending, source749 frozen, hosted checks NOT RUN.
