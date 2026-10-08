@@ -1,0 +1,64 @@
+Browser tab: 1010110417, Title: "Unilight Portfolio", URL: "https://portfolio.unilight.asia/start".
+0 AXWebArea Unilight Portfolio, URL: portfolio.unilight.asia/start
+	1 container
+		2 container
+			3 text 1  / 4
+		4 link Description: Unilight Portfolio — на главную, Value: portfolio.unilight.asia/
+		5 container Язык / Тіл / Language
+			6 checkbox KZ, Value: 0
+			7 checkbox RU, Value: 1
+			8 checkbox EN, Value: 0
+		9 heading Давай знакомиться, Value: 1
+			10 text Давай знакомиться
+		11 text Пара вопросов о тебе — всё займёт около 3 минут.
+		12 text Все вопросы обязательны — так план получится точным.
+		13 container
+			14 text Имя и фамилия  *
+			15 text field (settable) Имя и фамилия *
+		16 container
+			17 text Пол
+			18 button Пол Девушка Не указывать Нужно только чтобы не предлагать программы для одних девушек или юношей.
+			19 button Девушка
+			20 button Не указывать
+			21 text Нужно только чтобы не предлагать программы для одних девушек или юношей.
+		22 container
+			23 text Дата рождения  *
+			24 date field (settable) Дата рождения *
+				25 container
+					26 stepper
+					27 stepper
+					28 stepper
+				29 pop up button Показать окно выбора даты Показать окно выбора даты
+		30 container
+			31 text Город  *
+			32 text field (settable) Город *
+		33 container
+			34 text Школа  *
+			35 text field (settable) Школа *
+		36 container
+			37 text Тип школы  *
+			38 pop up button (collapsed, settable) Тип школы *, Value: Выберите…, Secondary Actions: Expand
+				39 menu
+					40 (selected) Выберите…
+					41 НИШ
+					42 КТЛ / БИЛ
+					43 РФМШ
+					44 Гимназия / лицей
+					45 Обычная школа
+					46 Международная школа (IB / A-Level)
+					47 Другое
+		48 container
+			49 text Класс  *
+			50 pop up button (collapsed, settable) Класс *, Value: Выберите…, Secondary Actions: Expand
+				51 menu
+					52 (selected) Выберите…
+					53 7
+					54 8
+					55 9
+					56 10
+					57 11
+					58 12
+					59 Уже окончил(а) школу
+		60 button Продолжить
+
+The focused UI element is 15 text field (settable) Имя и фамилия *

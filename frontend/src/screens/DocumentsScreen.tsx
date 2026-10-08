@@ -106,6 +106,13 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
             </div>
           </Notice>
         )}
+        {!current && !busy && !needsAttention && (
+          <Panel>
+            <Empty title="No checklists yet">{chosen ? 'Collect official requirements for your selected programmes from Plan.' : 'Choose a programme in Find, then collect its official requirements from Plan.'}</Empty>
+            {onNavigate && <button className="btn btn--primary" type="button" onClick={() => onNavigate(chosen ? 'approved' : 'shortlist')}>{chosen ? 'Open plan' : 'Choose programmes'}</button>}
+          </Panel>
+        )}
+
         {results.length > 0 && <details className="documents-deadlines" open={!current}>
           <summary>Calendar and deadlines across your shortlist ({deadlines.length})</summary>
         <Panel
@@ -139,13 +146,6 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
           </div>
         </Panel>
         </details>}
-
-        {!current && !busy && !needsAttention && (
-          <Panel>
-            <Empty title="No checklists yet">{chosen ? 'Collect official requirements for your selected programmes from Plan.' : 'Choose a programme in Find, then collect its official requirements from Plan.'}</Empty>
-            {onNavigate && <button className="btn btn--primary" type="button" onClick={() => onNavigate(chosen ? 'approved' : 'shortlist')}>{chosen ? 'Open plan' : 'Choose programmes'}</button>}
-          </Panel>
-        )}
 
         {current && <div className="row">
           {withChecklists.map((r) => (

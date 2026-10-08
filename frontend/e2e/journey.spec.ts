@@ -236,7 +236,7 @@ test('rejection is remembered with the row kept', async () => {
   await expect(first).toContainText('Rejected: no funding');
 
   await page.evaluate(() => { window.location.hash = '#/approved'; });
-  await expect(page.getByText('Rejected (1)')).toBeVisible();
+  await expect(page.getByText('Ruled out (1)')).toBeVisible();
   await expect(page.getByText(name)).toBeVisible();
   await expect(page.getByText('no funding')).toBeVisible();
   await expect(page.getByText(/not proposed again unless something material changes/)).toBeVisible();

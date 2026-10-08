@@ -41,7 +41,7 @@ export function ApprovedScreen({ onCollect, onFind }: { onCollect: () => void; o
         <p className="screen__eyebrow">Your application journey</p>
         <h1 className="screen__title">A clearer plan. A brighter <span className="find-yellow">you.</span></h1>
         <p className="screen__lede">
-          Keep your chosen programmes together, check their deadlines and prepare what each one asks for.
+          Keep your chosen programmes together, check their deadlines and prepare what each one asks for. These are your choices, not admission offers.
         </p>
       </div>
 
@@ -59,9 +59,9 @@ export function ApprovedScreen({ onCollect, onFind }: { onCollect: () => void; o
         <Panel>
           <div className="row" style={{ justifyContent: 'space-between' }}>
             <div className="row">
-              <Chip tone="ok">{approved.length} approved</Chip>
-              <Chip tone="warn">{maybe.length} maybe</Chip>
-              <Chip tone="risk">{rejected.length} rejected</Chip>
+              <Chip tone="ok">{approved.length} chosen by you</Chip>
+              <Chip tone="warn">{maybe.length} considering</Chip>
+              <Chip tone="risk">{rejected.length} ruled out</Chip>
               <Chip>{results.length - shortlisted - rejected.length} undecided</Chip>
             </div>
             <button
@@ -77,14 +77,14 @@ export function ApprovedScreen({ onCollect, onFind }: { onCollect: () => void; o
           </div>
           {shortlisted === 0 && (
             <Notice kind="info">
-              <div>Approve or mark “maybe” on at least one programme in the shortlist first.</div>
+              <div>Choose or consider at least one programme in Find first.</div>
             </Notice>
           )}
         </Panel>
 
         {[
-          { label: 'Approved', rows: approved, tone: 'ok' as const },
-          { label: 'Maybe', rows: maybe, tone: 'warn' as const },
+          { label: 'Chosen by you', rows: approved, tone: 'ok' as const },
+          { label: 'Considering', rows: maybe, tone: 'warn' as const },
         ].map(({ label, rows, tone }) =>
           rows.length > 0 ? (
             <Panel key={label} title={`${label} (${rows.length})`}>
@@ -97,7 +97,7 @@ export function ApprovedScreen({ onCollect, onFind }: { onCollect: () => void; o
 
         {rejected.length > 0 && (
           <Panel
-            title={`Rejected (${rejected.length})`}
+            title={`Ruled out (${rejected.length})`}
             hint="Kept on purpose. These are not proposed again unless something material changes."
           >
             <div className="stack stack--tight">
@@ -140,7 +140,7 @@ function DecidedRow({
           <div className="small muted">{result.program} · {result.city}, {result.country}</div>
         </div>
         <div className="row row--tight">
-          <Chip tone={tone}>{result.user_decision}</Chip>
+          <Chip tone={tone}>{result.user_decision === 'approved' ? 'Chosen by you' : 'Considering'}</Chip>
           <button
             className="btn btn--sm"
             onClick={() => onChange(result.id, 'undecided', '', result.user_notes)}

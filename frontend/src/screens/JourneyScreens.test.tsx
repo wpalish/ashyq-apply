@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { HomeScreen } from './HomeScreen';
 import { ApprovedScreen } from './ApprovedScreen';
@@ -7,12 +7,13 @@ import type { ProgramResult, RunView } from '@/types';
 
 const navigate = vi.fn();
 const collectDocuments = vi.fn();
+const decide = vi.fn().mockResolvedValue(undefined);
 let results: ProgramResult[];
 let run: RunView | null;
 vi.mock('@/lib/store', () => ({
   useStore: () => ({ savedProfile: { id: 'profile-1' }, results, run,
     summary: null, hydrated: true, capabilities: { demo_mode: true },
-    collectDocuments, decide: vi.fn() }),
+    collectDocuments, decide }),
 }));
 
 function programme(overrides: Partial<ProgramResult> = {}): ProgramResult {
@@ -43,6 +44,7 @@ beforeEach(() => {
   results = [];
   run = null;
   navigate.mockClear();
+  decide.mockClear();
   collectDocuments.mockReset().mockResolvedValue(true);
   window.localStorage.clear();
 });
@@ -144,5 +146,47 @@ describe('Documents preserves findings before checklists arrive', () => {
     render(<DocumentsScreen onNavigate={navigate} />);
     expect(screen.getByText('Research needs attention.')).toBeInTheDocument();
     expect(screen.queryByText('Document collection is in progress.')).not.toBeInTheDocument();
+  });
+});
+
+
+describe('Plan names the applicant choices', () => {
+  it('uses human group and row labels without calling an unknown programme an admission offer', () => {
+    results = [
+      programme({ user_decision: 'approved', user_notes: 'Chosen note' }),
+      programme({ id: 'result-2', user_decision: 'maybe' }),
+      programme({ id: 'result-3', user_decision: 'rejected', user_decision_reason: 'Cost needs clarification' }),
+    ];
+    render(<ApprovedScreen onCollect={navigate} />);
+    for (const title of ['Chosen by you (1)', 'Considering (1)', 'Ruled out (1)']) expect(screen.getByRole('heading', { name: title })).toBeInTheDocument();
+    const chosen = within(screen.getByTestId('approved-result-1'));
+    expect(chosen.getByText('Chosen by you')).toBeInTheDocument();
+    expect(chosen.getByText('Pending')).toBeInTheDocument();
+    expect(chosen.getByText('Unknown')).toBeInTheDocument();
+    expect(chosen.getByText('remaining not computable')).toBeInTheDocument();
+    expect(chosen.getByText('Chosen note')).toBeInTheDocument();
+    expect(within(screen.getByTestId('approved-result-2')).getByText('Considering')).toBeInTheDocument();
+    expect(screen.getByText('Cost needs clarification')).toBeInTheDocument();
+    expect(screen.getByText(/These are your choices, not admission offers/)).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /Approved|Maybe|Rejected/ })).not.toBeInTheDocument();
+    expect(decide).not.toHaveBeenCalled();
+    expect(collectDocuments).not.toHaveBeenCalled();
+  });
+
+  it.each(['approved', 'maybe', 'rejected'] as const)('keeps the original Undo semantics for %s', (decision) => {
+    results = [programme({ user_decision: decision, user_notes: 'Keep this note', user_decision_reason: 'Existing reason' })];
+    render(<ApprovedScreen onCollect={navigate} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
+    expect(decide).toHaveBeenCalledExactlyOnceWith('result-1', 'undecided', '', 'Keep this note');
+    expect(collectDocuments).not.toHaveBeenCalled();
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it('uses choice wording before collecting documents while keeping collection disabled', () => {
+    results = [programme()];
+    render(<ApprovedScreen onCollect={navigate} />);
+    expect(screen.getByText('Choose or consider at least one programme in Find first.')).toBeInTheDocument();
+    expect(screen.getByTestId('collect-documents')).toBeDisabled();
+    expect(collectDocuments).not.toHaveBeenCalled();
   });
 });
