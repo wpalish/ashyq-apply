@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 from collections.abc import AsyncIterator, Callable
+from types import SimpleNamespace
 from typing import Any
 
 import httpx
@@ -692,3 +693,134 @@ async def test_queries_are_paced(make_provider, monkeypatch):
     await provider.search(query="first public query")
     await provider.search(query="second public query")
     assert len(slept) == 1 and 0 < slept[0] <= 1.5
+
+
+@pytest.fixture
+async def make_factory_provider(monkeypatch):
+    """Real factory and Exa methods; only its HTTP client transport is synthetic."""
+    from app import config
+    from app.adapters.search import get_search_provider
+
+    original_client = httpx.AsyncClient
+    clients: list[httpx.AsyncClient] = []
+    handler: list[Reply] = []
+
+    def client_factory(*args, **kwargs):
+        assert "transport" not in kwargs
+        client = original_client(*args, transport=httpx.MockTransport(handler[0]), **kwargs)
+        clients.append(client)
+        return client
+
+    monkeypatch.setattr(config, "get_settings", lambda: SimpleNamespace(search_provider="exa_mcp"))
+    monkeypatch.setattr(httpx, "AsyncClient", client_factory)
+
+    def make(server):
+        handler[:] = [server]
+        provider = get_search_provider()
+        assert type(provider.inner) is ExaMcpSearchProvider
+        return provider
+
+    yield make
+    for client in clients:
+        await client.aclose()
+    assert all(client.is_closed for client in clients)
+
+
+@pytest.mark.parametrize(
+    "metadata,retry,tools", [(True, True, 2), (True, False, 1), (False, True, 1)]
+)
+async def test_factory_suppresses_only_post_escape_explicit_refusal(
+    make_factory_provider, monkeypatch, metadata, retry, tools
+):
+    import app.adapters.search as search
+
+    assert module.RATE_LIMIT_RETRY is True
+    assert module.RETRY_429_ONCE is False
+    slept: list[float] = []
+
+    async def sleep(seconds: float) -> None:
+        slept.append(seconds)
+
+    monkeypatch.setattr(
+        module, "asyncio", SimpleNamespace(sleep=sleep, Lock=asyncio.Lock, timeout=asyncio.timeout)
+    )
+    monkeypatch.setattr(module, "RATE_LIMIT_RETRY", retry)
+    server = (
+        McpServer(result=RATE_LIMITED)
+        if metadata
+        else McpServer(overrides={"tools/call": lambda request: httpx.Response(429)})
+    )
+    first = make_factory_provider(server)
+    with pytest.raises(SearchUnavailable) as original:
+        await first.search(query="first public programme query")
+    assert original.value.http_status == (None if metadata else 429)
+    assert original.value.reason is (SearchFailureReason.RATE_LIMITED if metadata else None)
+    assert server.methods == ["initialize", "notifications/initialized"] + ["tools/call"] * tools
+    before = list(server.methods)
+    # The second factory instance is constructed after the original error escaped.
+    second = make_factory_provider(server)
+    for provider in (first, second):
+        with pytest.raises(SearchUnavailable) as local:
+            await provider.search(query="later public query")
+        assert local.value.http_status == original.value.http_status
+        assert local.value.reason is original.value.reason
+        assert "request was not sent" in str(local.value)
+        if metadata:
+            assert "429" not in str(local.value)
+        assert server.methods == before
+    assert slept == ([module.RATE_LIMIT_BACKOFF_SECONDS] if metadata and retry else [])
+    assert search._THROTTLED_UNTIL
+
+
+async def test_factory_does_not_latch_when_the_approved_native_retry_recovers(
+    make_factory_provider, monkeypatch
+):
+    import app.adapters.search as search
+
+    assert module.RATE_LIMIT_RETRY is True
+    slept: list[float] = []
+
+    async def sleep(seconds: float) -> None:
+        slept.append(seconds)
+
+    monkeypatch.setattr(
+        module, "asyncio", SimpleNamespace(sleep=sleep, Lock=asyncio.Lock, timeout=asyncio.timeout)
+    )
+    server = _FlakyServer()
+    first = make_factory_provider(server)
+    response = await first.search(query="first public programme query")
+    assert [row.url for row in response.results] == [row["url"] for row in ROWS]
+    assert server.queries == 2
+    assert search._THROTTLED_UNTIL == {}
+    assert getattr(search, "_THROTTLED_ORIGIN", {}) == {}
+    await first.search(query="later same adapter")
+    await make_factory_provider(server).search(query="new adapter")
+    assert server.queries == 4
+    assert server.methods == [
+        "initialize",
+        "notifications/initialized",
+        "tools/call",
+        "tools/call",
+        "tools/call",
+        "initialize",
+        "notifications/initialized",
+        "tools/call",
+    ]
+    assert slept == [module.RATE_LIMIT_BACKOFF_SECONDS]
+    assert search._THROTTLED_UNTIL == {}
+
+
+@pytest.mark.parametrize("value", [False, 1, "true"])
+async def test_factory_metadata_requires_boolean_true(make_factory_provider, value):
+    import app.adapters.search as search
+
+    result = tool_result(ROWS, structured=True)
+    result["_meta"] = {"ai.exa/rateLimited": value}
+    server = McpServer(result=result)
+    first = make_factory_provider(server)
+    await first.search(query="first public programme query")
+    await make_factory_provider(server).search(query="new adapter")
+    assert server.methods.count("tools/call") == 2
+    assert server.methods.count("initialize") == 2
+    assert search._THROTTLED_UNTIL == {}
+    assert getattr(search, "_THROTTLED_ORIGIN", {}) == {}

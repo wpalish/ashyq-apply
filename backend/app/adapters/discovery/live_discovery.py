@@ -1576,9 +1576,9 @@ class LiveDiscoveryAdapter:
         trace.search_failures.extend(report.failure_diagnostics)
         if report.throttled:
             trace.search_limitations.append(
-                f"Search at {entry['name']} stopped: {report.provider} answered "
-                "HTTP 429, so the remaining query families were not sent. This "
-                "is a quota stop, not a search that found nothing."
+                f"Search at {entry['name']} stopped: {report.provider} reported "
+                "a rate limit, so the remaining query families were not sent. "
+                "Discovery remains incomplete after this rate-limit stop."
             )
         pages = selected[PageCategory.PROGRAM_PAGE]
         if RECOVER_SEARCH_CANDIDATES:
@@ -1720,18 +1720,18 @@ class LiveDiscoveryAdapter:
                 continue
             reports.append((intent.field, report))
             trace.search_failures.extend(report.failure_diagnostics)
-            # Counted before a throttle stop: the queries sent before the 429
+            # Counted before a throttle stop: queries attempted before the rate limit
             # were spent, and leaving them out understated the run's cost.
             query_count += len(report.queries_run)
             failed_count += len(report.failed_queries)
             if report.throttled:
                 # One rate-limit answer ends the run's searching, not just this
                 # subject's: the remaining subjects would each re-send a query
-                # into a quota that has already refused.
+                # into an endpoint that has already reported a rate limit.
                 trace.search_limitations.append(
-                    f"Search at {entry['name']} stopped: {provider.name} answered "
-                    "HTTP 429, so the remaining subjects were not searched. This "
-                    "is a quota stop, not a search that found nothing."
+                    f"Search at {entry['name']} stopped: {provider.name} reported "
+                    "a rate limit, so the remaining subjects were not searched. "
+                    "Discovery remains incomplete after this rate-limit stop."
                 )
                 break
             for reason, count in report.rejection_counts.items():

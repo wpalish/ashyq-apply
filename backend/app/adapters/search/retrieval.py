@@ -31,6 +31,7 @@ from app.adapters.discovery.live_discovery import (
     looks_like_catalogue,
 )
 from app.adapters.page_classifier import PageType, classify_url
+from app.adapters.search import _is_explicit_rate_limit
 from app.adapters.search.base import (
     SearchProvider,
     SearchResult,
@@ -184,10 +185,9 @@ class RetrievalReport:
     #: opened pages and the cause was a refused connection, not an empty
     #: shortlist; two different facts deserve two counters.
     hop_entry_points_unreachable: int = 0
-    #: True when the provider answered with a rate limit. A 429 is an answer,
-    #: not a failure to ask again: the remaining query families are
-    #: rephrasings of the same question, and sending them spends the quota that
-    #: has already refused. The caller must stop rather than continue.
+    #: True on explicit HTTP 429 or the fixed typed RATE_LIMITED reason.
+    #: Remaining query families stay unattempted after this refusal; it does
+    #: not establish payment or quota exhaustion, or an empty search result.
     throttled: bool = False
     #: Safe provider/status messages for presentation; never vendor error text.
     failure_diagnostics: tuple[str, ...] = ()
@@ -369,7 +369,7 @@ async def discover_candidates(
 ) -> RetrievalReport:
     """Queries → provider → prefilter → ranking, bounded at every step.
 
-    A provider failure on one query does not abort the run: the other queries
+    A non-rate-limit provider failure does not abort the run: the other queries
     are still worth asking, and the failure is reported rather than folded into
     a smaller result set.
     """
@@ -397,7 +397,7 @@ async def discover_candidates(
     families: dict[str, list[str]] = {}
     #: Families attempted at the search seam, charged before the call. A
     #: wrapper may reject locally, so these do not prove vendor dispatch.
-    #: A 429 stops the loop; unattempted planned families remain uncharged.
+    #: An explicit rate limit stops the loop; unattempted families stay uncharged.
     sent: list[str] = []
     for query in queries:
         sent.append(query.family)
@@ -420,11 +420,10 @@ async def discover_candidates(
             failed.append(query.family)
             if diagnostic not in failures:
                 failures.append(diagnostic)
-            if exc.http_status == 429:
-                # The endpoint has said no for this window. Six rephrasings
-                # would be six more requests against a quota that already
-                # refused — the loop this project's own rules ban — so stop
-                # here and let the caller record the stop.
+            if _is_explicit_rate_limit(exc):
+                # An explicit rate limit ends this search. Unattempted
+                # rephrasings would ask the same refused endpoint again;
+                # leave them uncharged and let the caller record the stop.
                 throttled = True
                 break
             continue
