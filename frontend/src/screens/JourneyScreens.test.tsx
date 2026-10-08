@@ -34,7 +34,8 @@ const partialChecklist = {
   result_id: 'result-1', university: 'Example University', program: 'BSc Example',
   admission_documents: [], scholarship_documents: [], ordered_steps: [],
   applicant_actions: [], school_actions: [], recommender_actions: [], certification_actions: [],
-  unresolved: [{ question: 'Confirm the required translation', why_it_matters: 'The source list was incomplete.', blocking: true }],
+  unresolved: [{ topic: 'documents', university: 'Example University', program: 'BSc Example', suggested_contact: null,
+    question: 'Confirm the required translation', why_it_matters: 'The source list was incomplete.', blocking: true }],
   completeness: 'partial', generated_at: null,
 } as NonNullable<ProgramResult['checklist']>;
 
