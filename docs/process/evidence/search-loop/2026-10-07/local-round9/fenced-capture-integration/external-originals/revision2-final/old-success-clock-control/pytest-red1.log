@@ -1,0 +1,256 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_successful_job_late_persistence_is_partial_capture_on_original_clock[raw] _
+
+case = namespace(state=<function case.<locals>.state at 0x10a322520>, engines=[Engine(sqlite:////Users/wpalish/Documents/Code..._persi0'), entry={'name': 'Test University', 'country': 'Example', 'city': 'City', 'homepage': 'https://example.edu/'})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a264ec0>
+slow_stage = 'raw'
+
+    @pytest.mark.parametrize("slow_stage", ["raw", "output_checkpoint"])
+    def test_successful_job_late_persistence_is_partial_capture_on_original_clock(
+        case, monkeypatch, slow_stage
+    ):
+        live, output = _capture_persistence_case(case, monkeypatch)
+        original_clock = live.time.monotonic
+        offset = [0.0]
+        monkeypatch.setattr(live.time, "monotonic", lambda: original_clock() + offset[0])
+        original_write = Path.write_text
+        raw_written = [False]
+        delayed = []
+    
+        async def no_funding(*args, **kwargs):
+            return [], AdapterResult()
+    
+        def late_write(path, data, *args, **kwargs):
+            written = original_write(path, data, *args, **kwargs)
+            if path == output.with_suffix(".raw.json"):
+                raw_written[0] = True
+            if not delayed and (
+                (slow_stage == "raw" and path == output.with_suffix(".raw.json"))
+                or (
+                    slow_stage == "output_checkpoint"
+                    and raw_written[0]
+                    and path == output.with_suffix(".pending")
+                )
+            ):
+                delayed.append(path)
+                offset[0] += 3.0
+            return written
+    
+        monkeypatch.setattr(rm.WebScholarshipAdapter, "find", no_funding)
+        monkeypatch.setattr(Path, "write_text", late_write)
+        _capture_with_native_job(live, output)
+        observed = json.loads(output.read_text())
+        budget = json.loads(output.with_suffix(".budget.json").read_text())
+        protocol = json.loads(output.with_suffix(".raw.json").read_text())["canary"]["job_protocol"]
+        assert len(delayed) == 1 and budget["elapsed_ms"] >= 3000
+        assert observed["telemetry"]["latency_seconds"] >= 3
+>       assert observed["error"] == "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+E       AssertionError: assert None == 'BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED'
+
+../../local-round8/a-genuine-canary/revision2-final/old-success-clock-control/test_canary_fenced_job.py:873: AssertionError
+----------------------------- Captured stdout call -----------------------------
+get #1 start t=0s https://example.edu/discovery/0
+get #1 took 0.0s ok
+get #2 start t=0s https://example.edu/discovery/1
+get #2 took 0.0s ok
+get #3 start t=0s https://example.edu/discovery/2
+get #3 took 0.0s ok
+get #4 start t=0s https://example.edu/discovery/3
+get #4 took 0.0s ok
+get #5 start t=0s https://example.edu/discovery/4
+get #5 took 0.0s ok
+get #6 start t=0s https://example.edu/discovery/5
+get #6 took 0.0s ok
+get #7 start t=0s https://example.edu/discovery/6
+get #7 took 0.0s ok
+get #8 start t=0s https://example.edu/discovery/7
+get #8 took 0.0s ok
+get #9 start t=0s https://example.edu/discovery/8
+get #9 took 0.0s ok
+get #10 start t=0s https://example.edu/discovery/9
+get #10 took 0.0s ok
+get #11 start t=0s https://example.edu/discovery/10
+get #11 took 0.0s ok
+get #12 start t=0s https://example.edu/requirements/0
+get #12 took 0.0s ok
+get #13 start t=0s https://example.edu/requirements/1
+get #13 took 0.0s ok
+get #14 start t=0s https://example.edu/requirements/2
+get #14 took 0.0s ok
+get #15 start t=0s https://example.edu/requirements/3
+get #15 took 0.0s ok
+get #16 start t=0s https://example.edu/requirements/4
+get #16 took 0.0s ok
+get #17 start t=0s https://example.edu/requirements/5
+get #17 took 0.0s ok
+get #18 start t=0s https://example.edu/requirements/6
+get #18 took 0.0s ok
+get #19 start t=0s https://example.edu/requirements/7
+get #19 took 0.0s ok
+get #20 start t=0s https://example.edu/requirements/8
+get #20 took 0.0s ok
+get #21 start t=0s https://example.edu/requirements/9
+get #21 took 0.0s ok
+get #22 start t=0s https://example.edu/requirements/10
+get #22 took 0.0s ok
+get #23 start t=0s https://example.edu/requirements/11
+get #23 took 0.0s ok
+get #24 start t=0s https://example.edu/requirements/12
+get #24 took 0.0s ok
+get #25 start t=0s https://example.edu/requirements/13
+get #25 took 0.0s ok
+get #26 start t=0s https://example.edu/requirements/14
+get #26 took 0.0s ok
+get #27 start t=0s https://example.edu/requirements/15
+get #27 took 0.0s ok
+get #28 start t=0s https://example.edu/requirements/16
+get #28 took 0.0s ok
+get #29 start t=0s https://example.edu/requirements/17
+get #29 took 0.0s ok
+get #30 start t=0s https://example.edu/requirements/18
+get #30 took 0.0s ok
+get #31 start t=0s https://example.edu/requirements/19
+get #31 took 0.0s ok
+get #32 start t=0s https://example.edu/requirements/20
+get #32 took 0.0s ok
+get #33 start t=0s https://example.edu/requirements/21
+get #33 took 0.0s ok
+get #34 start t=0s https://example.edu/requirements/22
+get #34 took 0.0s ok
+get #35 start t=0s https://example.edu/requirements/23
+get #35 took 0.0s ok
+get #36 start t=0s https://example.edu/requirements/24
+get #36 took 0.0s ok
+_ test_successful_job_late_persistence_is_partial_capture_on_original_clock[output_checkpoint] _
+
+case = namespace(state=<function case.<locals>.state at 0x10a392200>, engines=[Engine(sqlite:////Users/wpalish/Documents/Code..._persi1'), entry={'name': 'Test University', 'country': 'Example', 'city': 'City', 'homepage': 'https://example.edu/'})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10abca390>
+slow_stage = 'output_checkpoint'
+
+    @pytest.mark.parametrize("slow_stage", ["raw", "output_checkpoint"])
+    def test_successful_job_late_persistence_is_partial_capture_on_original_clock(
+        case, monkeypatch, slow_stage
+    ):
+        live, output = _capture_persistence_case(case, monkeypatch)
+        original_clock = live.time.monotonic
+        offset = [0.0]
+        monkeypatch.setattr(live.time, "monotonic", lambda: original_clock() + offset[0])
+        original_write = Path.write_text
+        raw_written = [False]
+        delayed = []
+    
+        async def no_funding(*args, **kwargs):
+            return [], AdapterResult()
+    
+        def late_write(path, data, *args, **kwargs):
+            written = original_write(path, data, *args, **kwargs)
+            if path == output.with_suffix(".raw.json"):
+                raw_written[0] = True
+            if not delayed and (
+                (slow_stage == "raw" and path == output.with_suffix(".raw.json"))
+                or (
+                    slow_stage == "output_checkpoint"
+                    and raw_written[0]
+                    and path == output.with_suffix(".pending")
+                )
+            ):
+                delayed.append(path)
+                offset[0] += 3.0
+            return written
+    
+        monkeypatch.setattr(rm.WebScholarshipAdapter, "find", no_funding)
+        monkeypatch.setattr(Path, "write_text", late_write)
+        _capture_with_native_job(live, output)
+        observed = json.loads(output.read_text())
+        budget = json.loads(output.with_suffix(".budget.json").read_text())
+        protocol = json.loads(output.with_suffix(".raw.json").read_text())["canary"]["job_protocol"]
+        assert len(delayed) == 1 and budget["elapsed_ms"] >= 3000
+>       assert observed["telemetry"]["latency_seconds"] >= 3
+E       assert 0.1734025829937309 >= 3
+
+../../local-round8/a-genuine-canary/revision2-final/old-success-clock-control/test_canary_fenced_job.py:872: AssertionError
+----------------------------- Captured stdout call -----------------------------
+get #1 start t=0s https://example.edu/discovery/0
+get #1 took 0.0s ok
+get #2 start t=0s https://example.edu/discovery/1
+get #2 took 0.0s ok
+get #3 start t=0s https://example.edu/discovery/2
+get #3 took 0.0s ok
+get #4 start t=0s https://example.edu/discovery/3
+get #4 took 0.0s ok
+get #5 start t=0s https://example.edu/discovery/4
+get #5 took 0.0s ok
+get #6 start t=0s https://example.edu/discovery/5
+get #6 took 0.0s ok
+get #7 start t=0s https://example.edu/discovery/6
+get #7 took 0.0s ok
+get #8 start t=0s https://example.edu/discovery/7
+get #8 took 0.0s ok
+get #9 start t=0s https://example.edu/discovery/8
+get #9 took 0.0s ok
+get #10 start t=0s https://example.edu/discovery/9
+get #10 took 0.0s ok
+get #11 start t=0s https://example.edu/discovery/10
+get #11 took 0.0s ok
+get #12 start t=0s https://example.edu/requirements/0
+get #12 took 0.0s ok
+get #13 start t=0s https://example.edu/requirements/1
+get #13 took 0.0s ok
+get #14 start t=0s https://example.edu/requirements/2
+get #14 took 0.0s ok
+get #15 start t=0s https://example.edu/requirements/3
+get #15 took 0.0s ok
+get #16 start t=0s https://example.edu/requirements/4
+get #16 took 0.0s ok
+get #17 start t=0s https://example.edu/requirements/5
+get #17 took 0.0s ok
+get #18 start t=0s https://example.edu/requirements/6
+get #18 took 0.0s ok
+get #19 start t=0s https://example.edu/requirements/7
+get #19 took 0.0s ok
+get #20 start t=0s https://example.edu/requirements/8
+get #20 took 0.0s ok
+get #21 start t=0s https://example.edu/requirements/9
+get #21 took 0.0s ok
+get #22 start t=0s https://example.edu/requirements/10
+get #22 took 0.0s ok
+get #23 start t=0s https://example.edu/requirements/11
+get #23 took 0.0s ok
+get #24 start t=0s https://example.edu/requirements/12
+get #24 took 0.0s ok
+get #25 start t=0s https://example.edu/requirements/13
+get #25 took 0.0s ok
+get #26 start t=0s https://example.edu/requirements/14
+get #26 took 0.0s ok
+get #27 start t=0s https://example.edu/requirements/15
+get #27 took 0.0s ok
+get #28 start t=0s https://example.edu/requirements/16
+get #28 took 0.0s ok
+get #29 start t=0s https://example.edu/requirements/17
+get #29 took 0.0s ok
+get #30 start t=0s https://example.edu/requirements/18
+get #30 took 0.0s ok
+get #31 start t=0s https://example.edu/requirements/19
+get #31 took 0.0s ok
+get #32 start t=0s https://example.edu/requirements/20
+get #32 took 0.0s ok
+get #33 start t=0s https://example.edu/requirements/21
+get #33 took 0.0s ok
+get #34 start t=0s https://example.edu/requirements/22
+get #34 took 0.0s ok
+get #35 start t=0s https://example.edu/requirements/23
+get #35 took 0.0s ok
+get #36 start t=0s https://example.edu/requirements/24
+get #36 took 0.0s ok
+=============================== warnings summary ===============================
+local-round8/a-genuine-canary/revision2-final/old-success-clock-control/test_canary_fenced_job.py::test_successful_job_late_persistence_is_partial_capture_on_original_clock[raw]
+local-round8/a-genuine-canary/revision2-final/old-success-clock-control/test_canary_fenced_job.py::test_successful_job_late_persistence_is_partial_capture_on_original_clock[output_checkpoint]
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: DeprecationWarning: The default datetime adapter is deprecated as of Python 3.12; see the sqlite3 documentation for suggested replacement recipes
+    cursor.execute(statement, parameters)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../local-round8/a-genuine-canary/revision2-final/old-success-clock-control/test_canary_fenced_job.py::test_successful_job_late_persistence_is_partial_capture_on_original_clock[raw]
+FAILED ../../local-round8/a-genuine-canary/revision2-final/old-success-clock-control/test_canary_fenced_job.py::test_successful_job_late_persistence_is_partial_capture_on_original_clock[output_checkpoint]
+2 failed, 31 deselected, 2 warnings in 0.51s

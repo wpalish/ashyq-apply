@@ -1,0 +1,8 @@
+{
+  "passed": 46,
+  "failed": 2,
+  "source_redaction_assertions": "allpassed",
+  "failure": "test incorrectly called real retry Job pending; JobStore uses queued",
+  "change": "only expected actual queued enum, retain meaning of nojobcompletion and same nativeledger36",
+  "app_edits": false
+}

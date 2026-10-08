@@ -1,0 +1,12 @@
+--- pinned-c240-live
++++ observed-current-06e6-live
+@@ -501,8 +501,8 @@
+     original_request = fetching._pinned_request
+     # Every provider's search is counted, not only Exa's: runs 80-93 used
+     # Serper and recorded search_calls=0 while six queries ran per case.
++    from app.adapters.search import exa_mcp as exa_mcp_module
+     from app.adapters.search.brave import BraveSearchProvider
+-    from app.adapters.search import exa_mcp as exa_mcp_module
+     from app.adapters.search.exa_mcp import ExaMcpSearchProvider
+     from app.adapters.search.serper import SerperSearchProvider
+     from app.adapters.search.tavily import TavilySearchProvider

@@ -1,0 +1,32 @@
+{
+  "elapsed_ms": 4012,
+  "latency_seconds": 4.011521666077897,
+  "max_active_seconds": 1,
+  "source_work_deadline_ms": 1000,
+  "max_fetcher_calls": 60,
+  "max_search_queries": 6,
+  "fetcher_calls": 36,
+  "stop_reason": "wall_clock_budget_exhausted",
+  "claim_token": 1,
+  "lease_token": 1,
+  "job_status": "running",
+  "native_ledger": {
+    "version": 1,
+    "read_limit": 60,
+    "active_episode": "decision:797862e72ef24e55a75697d148f248b6",
+    "episodes": {
+      "decision:797862e72ef24e55a75697d148f248b6": {
+        "read_counts": {
+          "catalogue:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": 36
+        }
+      }
+    }
+  },
+  "heartbeat_done": [
+    true
+  ],
+  "prior_claim_count": 1,
+  "original_output_error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+  "injected_raw_write_seconds": 3.0,
+  "clock_reset": false
+}

@@ -1,0 +1,30 @@
+{
+  "kind": "prepared-only-genuine-job-canary-next-step",
+  "at_utc": "2026-10-07T23:10:46.543620+00:00",
+  "status": "NOT_IMPLEMENTED_NOT_EXECUTED",
+  "files": {
+    "backend/scripts/canary_discovery.py": "37f60bcfcafda9b33f87285141dedae8b66c65dd6b0518ed7457cfece404de70",
+    "backend/evaluation/research/live.py": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+    "backend/app/jobs/store.py": "fbf69acb386db032beb64bb9a59af9ee43f75730d0037124959714faec1264cc",
+    "backend/app/jobs/worker.py": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+    "backend/app/pipeline/read_budget.py": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf",
+    "backend/tests/test_canary_checks.py": "80b43f5ef1e070e7cde2c78572f055c45896a7e4cb4fd0db4f44c4a75756c2d5"
+  },
+  "prior_plan_receipt_sha256": "07208229e5e8e07e7b6e6f4dd0dfec753de1aa32cc18e53c9bf5d1ee0442b818",
+  "scope": "After budget source/native gates checkpoint: genuine enqueue/claimtoken1/Worker.execute on one synthetic local case; scoped session and runner binding; fresh read-only reporting after Workercleanup; explicit same fenced protocol in all four arms; no guarddefault/production/provider/gold changes",
+  "required_controls": [
+    "OFF full genuine Job success before ON capture",
+    "ON 60cap crossstage and same claimed Job provenance",
+    "explicitfalse overrides hostile moduleTrue",
+    "ON without fence preIO rejects",
+    "multiselector/docs/checkseeds preIO rejects",
+    "preSTOP noenqueue/nojob/nozerofakeledger",
+    "actualcancel and takeover preserve state",
+    "typedbusy original exception notmasked by observationSQL",
+    "actualheartbeat cleanup",
+    "wrapper attempts/native reservations reported separately",
+    "sourceclock begins before setup and never resets"
+  ],
+  "network_calls": 0,
+  "source_writes": 0
+}

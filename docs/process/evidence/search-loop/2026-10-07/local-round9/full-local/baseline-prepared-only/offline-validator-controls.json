@@ -1,0 +1,81 @@
+{
+  "status": "OFFLINE_VALIDATOR_CONTROLS_ONLY_NO_EXECUTION",
+  "controls": [
+    {
+      "name": "good_genuine_off",
+      "passed": true
+    },
+    {
+      "name": "overread",
+      "passed": true,
+      "reject_reasons": [
+        "missing/over-budget fetcher_calls",
+        "Fetcher counter mismatch"
+      ]
+    },
+    {
+      "name": "missingcounter",
+      "passed": true,
+      "reject_reasons": [
+        "missing/over-budget fetcher_calls",
+        "Fetcher counter mismatch"
+      ]
+    },
+    {
+      "name": "providerrefusal",
+      "passed": true,
+      "reject_reasons": [
+        "provider refusal"
+      ]
+    },
+    {
+      "name": "latewholeclock",
+      "passed": true,
+      "reject_reasons": [
+        "missing/over-budget elapsed_ms"
+      ]
+    },
+    {
+      "name": "artifactfailure",
+      "passed": true,
+      "reject_reasons": [
+        "artifact persistence failed"
+      ]
+    },
+    {
+      "name": "fakeledger",
+      "passed": true,
+      "reject_reasons": [
+        "OFF ledger fabricated"
+      ]
+    },
+    {
+      "name": "staletoken",
+      "passed": true,
+      "reject_reasons": [
+        "nonfresh claim token"
+      ]
+    },
+    {
+      "name": "unjoinedheartbeat",
+      "passed": true,
+      "reject_reasons": [
+        "heartbeat not joined"
+      ]
+    },
+    {
+      "name": "inprogress",
+      "passed": true,
+      "reject_reasons": [
+        "unfinished observation"
+      ]
+    },
+    {
+      "name": "honest_terminal_partial_running_job",
+      "passed": true
+    }
+  ],
+  "passed": 11,
+  "live_calls": 0,
+  "scope": "pure synthetic JSON validation; not a source/job/live proof"
+}

@@ -1,0 +1,21 @@
+{
+  "strict_expert_budget": true,
+  "provider": "exa_mcp",
+  "max_fetcher_calls": 60,
+  "max_search_queries": 6,
+  "max_active_seconds": 120,
+  "finalization_reserve_ms": 1000,
+  "source_work_deadline_ms": 119000,
+  "fetcher_calls": 0,
+  "search_queries": 1,
+  "blocked_search_queries": 1,
+  "network_http_requests": 0,
+  "elapsed_ms": 2,
+  "stop_reason": "provider_failure",
+  "provider_failure": {
+    "http_status": null,
+    "reason": "MCP tool error",
+    "error": "Search service unavailable (exa_mcp; MCP tool error)."
+  },
+  "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only"
+}

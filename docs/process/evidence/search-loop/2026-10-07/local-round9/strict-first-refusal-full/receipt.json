@@ -1,0 +1,148 @@
+{
+  "at_utc": "2026-10-08T00:56:23.275929+00:00",
+  "status": "EXACT_REPAIRED_SOURCE_FULL_LOCAL_PASS",
+  "source_head": "7c74a12d71bd00228014c11d194928d223e110be",
+  "source_tree_sha256": "19f349a0a242478e13f95e1905e8f41662a769b579833b004cafb03b73825c9a",
+  "started_at": "2026-10-08T00:40:40.611412+00:00",
+  "finished_at": "2026-10-08T00:55:49.382038+00:00",
+  "gates_passed": 13,
+  "gates_failed": 0,
+  "backend_unique_cases": 4292,
+  "backend_two_primary_mode_executions": 8584,
+  "coverage_percent_sqlite": 95.25,
+  "frontend_tests": 232,
+  "demo_e2e": {
+    "passed": 79,
+    "skipped": 1
+  },
+  "auth_e2e_passed": 6,
+  "mypy_files": 383,
+  "source_paths_verified_unchanged": 999,
+  "strict_first_refusal_mock_tests_added": 31,
+  "provider_source_unchanged": true,
+  "native_budget_default": false,
+  "live_provider_model_university_calls": 0,
+  "configured_secret_matches": 0,
+  "limits": [
+    "Canary deliberately uses isolated SQLite in both PRIMARY database suite modes",
+    "No PostgreSQL canary protocol support",
+    "Final metering envelope cannot time its own last byte",
+    "No live quality/gain/default/launch proof",
+    "No hosted workflows or fake checks",
+    "Containers/Docker and production E2E not performed",
+    "IELTSv4 independently rejected4newfalseminima+3newcorrectfactlosses; no apply",
+    "Runtime databases/cache/PGDATA/env/private Git/browser storage excluded"
+  ],
+  "files": {
+    "package/summary.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/summary.json",
+      "sha256": "3e5a993f9aceff5356b9da9f3a62f6ad11c4c01628c22a590406820c665d2a82",
+      "bytes": 1430117
+    },
+    "package/source-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/source-manifest.json",
+      "sha256": "a9150bbda8a08dacdaa54887fce4910433b4538d690b28f3cb2aa479ed341ff5",
+      "bytes": 1408411
+    },
+    "package/backend-sqlite.xml": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/backend-sqlite.xml",
+      "sha256": "2409633f62c66f063acf573bcc8c760f8e556e9e9ca1b9e34a19a8702ab35e5e",
+      "bytes": 643750
+    },
+    "package/backend-postgresql.xml": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/backend-postgresql.xml",
+      "sha256": "d985273a74540ba680badf0c4129f671dc5abb893159526f190681259f5724ea",
+      "bytes": 643749
+    },
+    "package/ruff.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    "package/ruff-format.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/ruff-format.log",
+      "sha256": "c08cb44deef3bd5e6aceb013d76f19020ed4f70d4eea0e35334c33d2a0dc94ff",
+      "bytes": 28
+    },
+    "package/mypy.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/mypy.log",
+      "sha256": "ae6a534fa7eb8b6bd7e79a52f1c8524456aa50554b551246e786f05467b6109a",
+      "bytes": 9373
+    },
+    "package/backend-sqlite.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/backend-sqlite.log",
+      "sha256": "8373567ab0e2dd5596a51f883415d5937697a608d3839f9ab3ae1b6747f3099c",
+      "bytes": 17137
+    },
+    "package/frontend-typecheck.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/frontend-typecheck.log",
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02",
+      "bytes": 53
+    },
+    "package/frontend-lint.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/frontend-lint.log",
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a",
+      "bytes": 65
+    },
+    "package/frontend-tests.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/frontend-tests.log",
+      "sha256": "94888d6ea8113b9c3065bb560bb7810988b772f1fdac70ec7de10a10b9821e1a",
+      "bytes": 20136
+    },
+    "package/frontend-build.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/frontend-build.log",
+      "sha256": "beb78dab026c50d70f141427e1b534078993814dcf2383ecbf285a3309ec23a8",
+      "bytes": 7315
+    },
+    "package/backend-postgresql.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/backend-postgresql.log",
+      "sha256": "209aa7e69845c2ed2ae9ffe3e5524ba4347c5869f5879baf4d722ff76a0a62b1",
+      "bytes": 5926
+    },
+    "package/e2e.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/e2e.log",
+      "sha256": "febbb1ea86e9506903364ad4e16baa277175029c2fb929c80b985cce515cec38",
+      "bytes": 172272
+    },
+    "package/e2e-auth.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/e2e-auth.log",
+      "sha256": "675829b8f15bcfd6a61a953f0e2c551d6e44453b104cf7862351d5c76b765d84",
+      "bytes": 16684
+    },
+    "package/pip-audit.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/pip-audit.log",
+      "sha256": "15950a68a7ed99c59779717acefdceb3f69cfd31bde67d2c954f2a3cea4d7955",
+      "bytes": 31
+    },
+    "package/npm-audit.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/npm-audit.log",
+      "sha256": "6d8c5c8f3d7684adb070417bd608d01ae90aa3dc26a65af03ffda4955f38d9a3",
+      "bytes": 24
+    },
+    "parent/finalize_retry_full.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/../local-round9/root-capture-integration/finalize_retry_full.py",
+      "sha256": "a421b582c549733918aa61d9ad30a2015e8735f75c53f7cf3f3217baf5d3e75d",
+      "bytes": 5038
+    },
+    "parallel-rejected-ielts-v4/MANIFEST.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-ielts-v4-review/MANIFEST.json",
+      "sha256": "b3ccb628e431cf04af884b3a12a34de549023aae70b115d3a8c07c92f140e79f",
+      "bytes": 1724
+    },
+    "parallel-rejected-ielts-v4/review.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-ielts-v4-review/review.ru.md",
+      "sha256": "24c8943e6d225d135854abe00b443b94224fef8eb8440116088385fb941e49b2",
+      "bytes": 6009
+    },
+    "parallel-rejected-ielts-v4/receipt.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-ielts-v4-review/receipt.json",
+      "sha256": "67fd5b6c6a3870c2ce1aee0842b49b0e2ee939872528ed2cdfad1929bc287e18",
+      "bytes": 809
+    },
+    "parallel-rejected-ielts-v4/independent-controls.offline.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-ielts-v4-review/independent-controls.offline.json",
+      "sha256": "aa81578b0eb3289eb5211e69893b5801f857a46e2b4e898a6f80edf80a2792ae",
+      "bytes": 160587
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "accessed_at": "2026-10-07T23:47:12.363211+00:00",
+  "duration_seconds": 0.1,
+  "run_error": "UniversityReadStopped: checkpoint_busy",
+  "batch": [
+    "Test University"
+  ],
+  "institutions": [],
+  "totals": {
+    "institutions": 1,
+    "reached": null,
+    "blocked": null,
+    "program_pages_found": null,
+    "scholarship_pages_found": null,
+    "claims": null,
+    "false_positives": null,
+    "catalogs_walked": null,
+    "walker_programs_confirmed": null,
+    "source_pages_recorded": null,
+    "fetch_tiers": {},
+    "recall": {
+      "program": {
+        "numerator": null,
+        "denominator": 1,
+        "target": 0.7
+      },
+      "category": {
+        "numerator": null,
+        "denominator": 3,
+        "target": 0.8666666666666667
+      }
+    }
+  },
+  "job_protocol": {
+    "kind": "genuine-research-job",
+    "sqlite_case_database": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-genuine-canary/revision2/pytest-attempt1/test_original_typed_busy_not_m0/canary-7mfqr7g7/canary.db",
+    "started": true,
+    "native_ledger": null,
+    "native_enabled": true,
+    "worker_id": "iMac-Aliser.local:22323",
+    "observation_available": false,
+    "control_error": "UniversityReadStopped: checkpoint_busy",
+    "run_id": "824faf1cd01a450195fdc2d05723330e",
+    "job_id": "cb0e341b11834c6dbbf17ea8e75d4ba6",
+    "claim_token": 1,
+    "control_type": "UniversityReadStopped",
+    "control_reason": "checkpoint_busy",
+    "heartbeat_tasks": 1,
+    "heartbeat_done": [
+      true
+    ],
+    "heartbeat_cancelled": [
+      true
+    ],
+    "worker_jobs_done": 0,
+    "worker_jobs_failed": 1,
+    "observation_error": "OperationalError"
+  }
+}

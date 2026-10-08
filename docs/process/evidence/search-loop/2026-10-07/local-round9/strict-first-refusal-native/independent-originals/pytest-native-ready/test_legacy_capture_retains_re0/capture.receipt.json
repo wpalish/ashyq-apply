@@ -1,0 +1,65 @@
+{
+  "server_calls": [
+    {
+      "method": "initialize",
+      "id": 1
+    },
+    {
+      "method": "notifications/initialized",
+      "id": null
+    },
+    {
+      "method": "tools/call",
+      "id": 2
+    },
+    {
+      "method": "tools/call",
+      "id": 3
+    }
+  ],
+  "failed_phase_calls": 2,
+  "caught": [],
+  "escaped": null,
+  "flags_before": [
+    true,
+    true
+  ],
+  "flags_during": [
+    [
+      true,
+      true
+    ]
+  ],
+  "flags_after": [
+    true,
+    true
+  ],
+  "sticky_stop": null,
+  "budget": null,
+  "observation": {
+    "case_id": "groningen",
+    "programme_urls": [],
+    "ranked_urls": null,
+    "predictions": [],
+    "telemetry": {
+      "http_fetches": 0,
+      "browser_fetches": 0,
+      "pdf_fetches": 0,
+      "search_calls": 1,
+      "model_input_tokens": 0,
+      "jev_input_tokens": 0,
+      "latency_seconds": 0.0006459169089794159,
+      "cost_usd": null,
+      "human_review_required": null,
+      "document_reads": null,
+      "document_seconds": null,
+      "document_stop": null
+    },
+    "page_outcomes": [],
+    "error": null
+  },
+  "orchestration": "SYNTHETIC_NO_UNIVERSITY_NO_JOB",
+  "actual_provider_search_unmodified": true,
+  "strict": false,
+  "initialized": false
+}

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.359" timestamp="2026-10-08T04:50:44.726959+05:00" hostname="iMac-Aliser.local"><testcase classname="local-round8.a-genuine-canary.revision2.pre-provenance-control.test_canary_fenced_job" name="test_capture_outer_attempts_and_native_ledger_are_independent" time="0.259"><failure message="KeyError: 'control_message'">case = namespace(state=&lt;function case.&lt;locals&gt;.state at 0x10e3168e0&gt;, engines=[Engine(sqlite:////Users/wpalish/Documents/Code...pts_an0'), entry={'name': 'Test University', 'country': 'Example', 'city': 'City', 'homepage': 'https://example.edu/'})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10e264860&gt;
+
+    def test_capture_outer_attempts_and_native_ledger_are_independent(case, monkeypatch):
+        from app import config
+        from evaluation.research import live
+    
+        monkeypatch.setattr(
+            config,
+            "get_settings",
+            lambda: SimpleNamespace(
+                search_provider="exa", enable_browser_tier=False, respect_robots=True
+            ),
+        )
+        bindings = case.root / "bindings.json"
+        bindings.write_text('{"version":"synthetic","bindings":[]}')
+        monkeypatch.setattr(live, "REVIEWED_BINDINGS", bindings)
+        output = case.root / "observed.json"
+        asyncio.run(
+            live.capture_one(
+                ID,
+                output,
+                60,
+                120,
+                strict_expert_budget=True,
+                catalogue_id=ID,
+                university_read_budget=True,
+                fenced_research_job=True,
+            )
+        )
+        budget = json.loads(output.with_suffix(".budget.json").read_text())
+        raw = json.loads(output.with_suffix(".raw.json").read_text())
+        assert budget["fetcher_calls"] == 60 and len(case.transport) == 60
+        assert native_count(raw["canary"]["job_protocol"]) == {"catalogue:" + ID: 60}
+        assert budget["stop_reason"] == "page_budget_exhausted"
+        assert (
+            raw["canary"]["job_protocol"]["control_type"] == "RuntimeError"
+        )  # outer limit precedes native attempt61
+&gt;       assert raw["canary"]["job_protocol"]["control_message"] == "BENCHMARK_PAGE_BUDGET_EXHAUSTED"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'control_message'
+
+../../local-round8/a-genuine-canary/revision2/pre-provenance-control/test_canary_fenced_job.py:417: KeyError</failure></testcase></testsuite></testsuites>

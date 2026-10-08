@@ -1,5 +1,7 @@
 # Claude search relay — 7 October 2026
 
+**Current source task: task/search-fenced-capture** from clean41836a86/#67, write-aheadbef78ace pushed. Actual harness source unchanged pending A final revision2 pins and parent review. Independent IELTS v2 f5ee8caa rejected before application: parent15 controls3PASS/12RED,21selected originals archived in local-round9/rejected-ielts-v2. Revision3 and narrower language routing remain external/deferred. Prior goal turn PROGRESS:13/13 exact-source full proof plus Draft67. Goal ACTIVE; no fresh live/default/launch.
+
 **Reviewable budget checkpoint:** Draft [#67](https://github.com/wpalish/ashyq-apply/pull/67) created and attached, base task/search-programme-purpose/#66; metadata/evidence8614a91f and exact-source3b3a2fb8. OPEN/Draft and branch/base verified; check rollup[] is not a CI pass. This bounded task is ready-for-review. Next genuine-Job capture branch is explicitly permitted in HANDOFF §5.
 
 **Latest verified checkpoint — 2026-10-07 23:35 UTC:** source `3b3a2fb8f914b61d83d734c6f416b9d402414f94`, branch task/search-production-read-budget. Native durable-read guard and typed Worker busy recovery are now integrated, source default False. Ordinary-import controls: 134 pass/0 skip, including 33 real PostgreSQL cases and full unmodified Worker dispatch on both DBs. Exact-source full LOCAL `20261007T231517Z-check-039fc4a1` passed 13/13 in 14m57.673s: 4211 unique backend cases on each DB mode, 95.15% coverage, frontend232, demo E2E79/1skip, auth6, dependency audits0. This is8422 backend executions, not unique cases. All997 captured code paths remained unchanged. Isolated demo20 rows/counts are identical to predecessor, Groningenfirst, one Alembichead d8e412c6a901; old UBC vocabulary caveat unchanged. Final proof archived in local-round8/full-local; native original attempts in local-round8/native-integration. Hosted CI, containers and production E2E not performed. Fresh quality rates remain unmeasured.
@@ -198,3 +200,21 @@ Round2 source `d669fd2`: SI-1 проверяет точное официальн
 Первый off1 завершён с пятью измеренными исходами внутри6/60/120000. AUT штатно исчерпал117000мс работы с источниками (117007мс), checkpoint сохранён, process_errorNone. Полный canary raw отсутствует и не восстанавливался; cache/observation/budget/log сохранены. Внешний launcher ошибочно счёл этот ожидаемый ограниченный исход протокольной ошибкой. Старый закрытый manifest неизменяем. Controller-v2 проверен на настоящем AUT и13 испорченных вариантах. После docs-only checkpoint новый resume manifest сохраняет off1 и запускает только оставшиеся on1/on2/off2; фактический Git head каждого варианта указан, исполняемые файлы совпадают. Не считать ограниченный AUT успешным чтением программы.
 
 Два следующих подтверждённых offline дефекта: (1) production identity query теряется из общего счётчика, planners тратят ещё6; (2) production ResearchRunner не имеет общего guard60чтений/120секунд на вуз, хотя строгий evaluation harness имеет. Эксперты проверили реальные production методы с mock сетью; это не утверждение о превышении в текущих реальных прогонах. Родитель последовательно исправляет guard gaps после завершения замороженного SI-1 сравнения. Подписи gold/Groningen, изменение defaults, owner merge и принятие published logged-in path не подменяются автоматическими тестами.
+
+
+### 2026-10-08 00:06 UTC: genuine Job capture integrated, full pending
+
+Parent actual-module199PASS/0skip19.27s; Ruff/format/mypy383 PASS. Four harness/test files applied with legacy call-shape/type repairs; initial14reds retained. Archive receiptf3816e15f328a0841bd1c0238bc2e3161078a53fdbe8024adb006ece5a4807a0, 649 originals/4025053bytes. UNIVERSITY_READ_BUDGET=False; no source app/Fetcher/STOP/gold/live changes. IELTSv3 external95 controls pending independent review; v1/v2 rejected immutable; two experts active on v3 review and narrow language routing. Full local must pass before new live quality comparison; no launch/quality-rate claim.
+
+
+2026-10-08 00:31UTC: f0c8 full13/13,4261x2,95.25%,232frontend,79demo+6auth,1skip; receipt4fb41d2e. IELTSv3 rejected8NEWblockers; first-refusal internalExaretry independently confirmed, strict-only scoped repair pending; prepared genuine controller rejected9corrupt accepted/3malformed crashes,0live. A IELTSv4, B actualprovider mocks. GoalACTIVE.
+
+
+### 2026-10-08 01:07 UTC: final capture protocol gates complete
+
+Final executable source `7c74a12d71bd00228014c11d194928d223e110be` passed the authorized local full runner: 13/13 steps in 15m09s, 4292 unique backend cases in both SQLite and PostgreSQL, 95.25% coverage, frontend232, demo79 PASS/1skip, auth6, mypy383, dependency audits0. All999 executable source paths stayed unchanged. Archive `local-round9/strict-first-refusal-full/receipt.json` SHA `c8017ad9825b00e7d0a464a9f8f2a741ca6d6639b15f3dc6f8267100cdefdfd2`:22 selected originals /4,549,257bytes. Native budget remainsFalse, app/provider unchanged, no fresh live/quality/default/production proof.
+
+Independent external validator review rejected18 distinct corrupt inputs (24 lane assertions), while134 strict controls pass and partial lane88/89 with3 explicit policy results; repair provenance/counter/cause/shape consistency before fresh round10 execution. IELTSv4 rejected4 new false minima+3 new correct-fact losses; v5 external225 author controlsPASS awaiting independent review. Existing baseline413 reads/58queries/0refusals and125predictions remains UNSCORED.
+
+
+2026-10-08 01:16UTC: Draft #68 https://github.com/wpalish/ashyq-apply/pull/68 OPEN/Draft against#67, head1d559434, created and attached. Capture ready-for-review; next task/search-genuine-baseline explicit predecessor exception. External driver a56e6f03 two-agent review pending, IELTSv5 external229PASS peer pending; no fresh live.

@@ -1,0 +1,67 @@
+{
+  "verdict": "REJECTED_MATERIAL_NEW_FALSE_MINIMA_AND_CORRECT_DOM_LOSSES",
+  "plan_sha256": "567cf05c8bf605001b919c0b1bc78817428e796e4680ef9125f1413cc1ddc9e8",
+  "proposal_manifest_sha256": "6c1b368f41ef349a796db8f5d96e5a016d4a964e5c5961114a790ca9ae01d990",
+  "proposal_helper_sha256": "17ad707ef3851d671a13ab3f8b5cdce9f432402bae812491c9871e41ac111942",
+  "verified_manifest_entries": 83,
+  "actual_control_count": 19,
+  "original_control_counts": {
+    "passed": 5,
+    "failed": 14
+  },
+  "qualified_findings": {
+    "new_false_minima": 4,
+    "new_correct_minimum_losses": 4,
+    "inherited_false_behaviors": 5,
+    "acceptable_conservative_year_ambiguity": 1,
+    "passed": 5
+  },
+  "classifier_overrides": 0,
+  "legacy_actual_equals_OFF_pairs": 18,
+  "controls_json_sha256": "a10e861a5ff226fbbe86838a49115aa33259750e3ca43ac44beafb0801e2136f",
+  "controls_log_sha256": "9dfcbadd009e4b2e199b40a1089206b93874384291a134d91e94a7711824e2ae",
+  "controls_script_sha256": "1853028da2d103df0ea1a0eca2b4b64ae076cfdc3588f6decebc1cd216ac5da2",
+  "classified_findings_sha256": "dd98729538696b7ead4dc419f6b39399d4af9d8fb994505e47722912841cc476",
+  "report_sha256": "2d789103b52b940be96c7be99402c34718297fb7400c415547ce3bae80383311",
+  "normal_dependencies": [
+    {
+      "name": "app.adapters.page_classifier",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/page_classifier.py",
+      "sha256": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c"
+    },
+    {
+      "name": "app.adapters.html_parse",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/html_parse.py",
+      "sha256": "62f9c0c30c4b88ad1b7d23907f9019204e424891d361608d92aaac9551ac5d81"
+    },
+    {
+      "name": "app.adapters.requirements.section_scope",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/requirements/section_scope.py",
+      "sha256": "8b2c8da32b7595f95aab817d97b90f7900aca93bab21060499a39ecfc83a2f79"
+    },
+    {
+      "name": "app.adapters.scope_reader",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/scope_reader.py",
+      "sha256": "169136aadc489f886f362a4bd703b4968933939257af1dd2e7867a26c2ff0304"
+    },
+    {
+      "name": "app.adapters.document_ir",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/document_ir.py",
+      "sha256": "c8c3f15da74f8f891f4f79fd8bfd52e937b57898edfdc3ac1a59e7d44bce9f0f"
+    },
+    {
+      "name": "app.domain.claim_verifier",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/domain/claim_verifier.py",
+      "sha256": "7c33bada893a2e3c98fbd68e67d84ff9e8bf587a04c13088dfc904fc3219f249"
+    },
+    {
+      "name": "app.adapters.fetching",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/fetching.py",
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895"
+    }
+  ],
+  "network_provider_model_calls": 0,
+  "repo_proposal_source_git_stop_edits": 0,
+  "source_stop_sha256": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+  "first_abort_retained": "controls.original.log and review_controls.attempt1.py; detail count equality was too strong, page classes are invariant"
+}

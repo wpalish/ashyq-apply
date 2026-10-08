@@ -1,0 +1,13 @@
+{
+  "status": "WRITEAHEAD_REVISION2",
+  "at_utc": "2026-10-07T23:42:56.487811+00:00",
+  "parent_candidate_receipt_sha256": "8222d4eb8db63f47086384841e9aad48e910fd24358d19d0411deb3da70bc66a",
+  "accepted_defect": "Fenced timeout raw write occurs after final checkpoint, omitting its work from final elapsed envelope",
+  "changes": [
+    "Move fenced timeout raw persistence before final checkpoint only; sourceclock/caps unchanged",
+    "Record artifact persistence failure in optional audit envelope and preserve actual original source/control exception, failclosed on successful-source artifact failure",
+    "Two regression controls actual raw write advancesclock and raw failure preserves original TimeoutError/typedbusy"
+  ],
+  "source_writes": false,
+  "network_provider_model_calls": 0
+}

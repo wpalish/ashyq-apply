@@ -43,8 +43,11 @@ import re
 import sys
 import tempfile
 from collections import Counter
+from contextlib import contextmanager
+from copy import deepcopy
 from datetime import UTC, datetime
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -68,6 +71,9 @@ from app.domain.enums import (
     PipelineStage,
     SourceSpecificity,
 )
+from app.jobs import worker as worker_module
+from app.jobs.store import JobStore, worker_identity
+from app.models import Job
 from app.models.applicant import ApplicantProfileRow
 from app.models.auth import Organization
 from app.models.base import Base
@@ -78,6 +84,7 @@ from app.models.research import (
 )
 from app.models.source_page import SourcePage
 from app.models.university import University
+from app.pipeline import read_budget
 from app.pipeline.runner import ResearchRunner
 from app.pipeline.state import RunState
 from app.schemas.profile import (
@@ -104,6 +111,12 @@ DEADLINE_CLAIMS = {"application_deadline", "scholarship_deadline"}
 CANARY_CATEGORIES = ("admissions", "costs", "scholarships")
 PROGRAM_RECALL_TARGET = 0.7
 CATEGORY_RECALL_TARGET = 26 / 30
+
+# Fixed harness diagnostics are safe provenance. Arbitrary exception strings
+# can contain SQL parameters or secrets and are deliberately not copied.
+_SAFE_CAPTURE_CONTROL_MESSAGES = frozenset(
+    {"BENCHMARK_PAGE_BUDGET_EXHAUSTED", "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"}
+)
 
 
 def canary_profile() -> ApplicantProfileIn:
@@ -394,12 +407,162 @@ def recall_metrics(rows: list[dict]) -> dict[str, dict[str, float | int]]:
     }
 
 
+def validate_job_protocol(only, batch, catalogue_ids, native, fenced, *, check_seeds=False):
+    if native and not fenced:
+        raise ValueError("University read budget requires a genuine fenced research Job")
+    if not fenced:
+        return
+    if check_seeds:
+        raise ValueError("Fenced research protocol does not cover check-seeds")
+    groups = int(bool(only)) + int(bool(batch)) + int(bool(catalogue_ids))
+    if groups != 1 or (batch and len(batch) != 1) or (catalogue_ids and len(catalogue_ids) != 1):
+        raise ValueError("Fenced research requires exactly one explicit identity selector")
+
+
 async def run_canary(
+    only,
+    verbose,
+    batch=None,
+    *,
+    catalogue_ids=None,
+    university_read_budget=None,
+    fenced_research_job=False,
+    stop_file=None,
+):
+    native = (
+        read_budget.UNIVERSITY_READ_BUDGET
+        if university_read_budget is None
+        else university_read_budget
+    )
+    validate_job_protocol(only, batch, catalogue_ids, native, fenced_research_job)
+    if fenced_research_job and stop_file is not None and stop_file.exists():
+        raise ValueError("PROVIDER_STOP_BEFORE_JOB")
+    with patch.object(read_budget, "UNIVERSITY_READ_BUDGET", native):
+        return await _run_canary(
+            only,
+            verbose,
+            batch,
+            catalogue_ids=catalogue_ids,
+            university_read_budget=native,
+            fenced_research_job=fenced_research_job,
+            stop_file=stop_file,
+        )
+
+
+async def _execute_fenced_job(engine, run_id, settings):
+    """Real production dispatch; factories bind only this isolated SQLite run."""
+    if engine.dialect.name != "sqlite" or not engine.url.database:
+        raise ValueError("Genuine canary requires its isolated SQLite case database")
+    factory = sessionmaker(bind=engine)
+    owner = worker_identity()
+    protocol = {
+        "kind": "genuine-research-job",
+        "sqlite_case_database": engine.url.database,
+        "started": False,
+        "native_ledger": None,
+        "native_enabled": read_budget.UNIVERSITY_READ_BUDGET,
+        "worker_id": owner,
+        "observation_available": False,
+        "control_error": None,
+        "control_message": None,
+    }
+    runners = []
+    with factory() as session:
+        created = JobStore(session).enqueue(
+            "research", run_id=run_id, idempotency_key="canary:" + run_id
+        )
+        session.commit()
+    with factory() as session:
+        store = JobStore(session, worker_id=owner, lease_seconds=settings.job_lease_seconds)
+        job = store.claim(worker_id=owner)
+        if not created.created or job is None or job.id != created.job_id or job.attempts != 1:
+            raise ValueError("Genuine canary could not claim its fresh research Job")
+        protocol.update(started=True, run_id=run_id, job_id=job.id, claim_token=job.attempts)
+        session.commit()
+
+    @contextmanager
+    def scoped_session():
+        with factory() as session:
+            try:
+                yield session
+                session.commit()
+            except BaseException:
+                session.rollback()
+                raise
+
+    class JobRunner(CanaryRunner):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            runners.append(self)
+
+        async def run_to_decision(self):
+            try:
+                return await super().run_to_decision()
+            except BaseException as exc:
+                self._canary_original_control = exc
+                reason = getattr(exc, "reason", None)
+                message = exc.args[0] if len(exc.args) == 1 else None
+                message = (
+                    message
+                    if type(exc) in (RuntimeError, TimeoutError)
+                    and isinstance(message, str)
+                    and message in _SAFE_CAPTURE_CONTROL_MESSAGES
+                    else None
+                )
+                protocol.update(
+                    control_type=type(exc).__name__,
+                    control_reason=reason,
+                    control_message=message,
+                    control_error=type(exc).__name__
+                    + (": " + (reason or message) if reason or message else ""),
+                )
+                raise
+
+    worker = worker_module.Worker(settings, worker_id=owner)
+    escaped = None
+    tasks = []
+    loop = asyncio.get_running_loop()
+    create = loop.create_task
+
+    def tracked(coro, *args, **kwargs):
+        task = create(coro, *args, **kwargs)
+        if getattr(getattr(coro, "cr_code", None), "co_name", None) == "_beat":
+            tasks.append(task)
+        return task
+
+    with (
+        patch.object(worker_module, "session_scope", scoped_session),
+        patch.object(worker_module, "ResearchRunner", JobRunner),
+    ):
+        loop.create_task = tracked
+        try:
+            await worker.execute(created.job_id)
+        except BaseException as exc:
+            escaped = exc
+        finally:
+            loop.create_task = create
+            # Worker already cancels its heartbeat in finally; observe and join
+            # just those tasks without a new source-work clock or immediate retry.
+            await asyncio.gather(*tasks, return_exceptions=True)
+            protocol.update(
+                heartbeat_tasks=len(tasks),
+                heartbeat_done=[t.done() for t in tasks],
+                heartbeat_cancelled=[t.cancelled() for t in tasks],
+                worker_jobs_done=worker.jobs_done,
+                worker_jobs_failed=worker.jobs_failed,
+            )
+    return (runners[0] if runners else None), protocol, escaped
+
+
+async def _run_canary(
     only: str | None,
     verbose: bool,
     batch: list[str] | None = None,
     *,
     catalogue_ids: list[str] | None = None,
+    university_read_budget: bool | None = None,
+    fenced_research_job: bool = False,
+    stop_file: Path | None = None,
 ) -> dict:
     if catalogue_ids is not None and (only or batch):
         raise ValueError("Catalogue ids cannot be combined with registry selectors")
@@ -422,6 +585,11 @@ async def run_canary(
             session.close()
             engine.dispose()
             raise
+
+    if fenced_research_job and len(registry) != 1:
+        session.close()
+        engine.dispose()
+        raise ValueError("Fenced selector must resolve to exactly one university")
 
     settings = Settings(
         cache_dir=workdir / "cache",
@@ -463,6 +631,115 @@ async def run_canary(
     session.flush()
 
     started = datetime.now(UTC)
+    if fenced_research_job:
+        run_id = run.id
+        session.commit()
+        session.close()
+        try:
+            runner, protocol, escaped = await _execute_fenced_job(engine, run_id, settings)
+        except BaseException:
+            engine.dispose()
+            raise
+        error = protocol.get("control_error") or ""
+        try:
+            with sessionmaker(bind=engine)() as reporting:
+                reported_run = reporting.get(ResearchRun, run_id)
+                job = reporting.get(Job, protocol["job_id"])
+                if reported_run is None or job is None or runner is None:
+                    raise ValueError("Genuine Job/run/runner provenance unavailable")
+                run = reported_run
+                report = _gather_report(
+                    reporting, run, registry, runner, started, datetime.now(UTC), error, verbose
+                )
+                run_errors = list(run.errors or [])
+                terminal_type = protocol.get("control_type")
+                if (
+                    run.stage == PipelineStage.FAILED.value
+                    and terminal_type
+                    and run_errors
+                    and run_errors[-1].startswith(terminal_type + ": ")
+                ):
+                    # The production runner stores the terminal exception's
+                    # arbitrary string. Keep its type/fixed safe cause in the
+                    # new protocol envelope without copying SQL parameters.
+                    protocol["terminal_run_error_payload_redacted"] = run_errors[-1] != error
+                    run_errors[-1] = error
+                protocol.update(
+                    job_status=job.status,
+                    lease_token=job.attempts,
+                    recorded_worker_id=job.worker_id,
+                    native_ledger=deepcopy(
+                        (run.settings_snapshot or {}).get(read_budget.LEDGER_KEY)
+                    ),
+                    page_outcomes=page_outcomes(run),
+                    run_unknowns=list(run.unknowns or []),
+                    run_errors=run_errors,
+                    claim_records=[
+                        {
+                            "id": c.id,
+                            "claim_type": c.claim_type,
+                            "source_url": c.source_url,
+                            "accessed_at": c.accessed_at.isoformat() if c.accessed_at else None,
+                            "payload": c.payload,
+                        }
+                        for c in reporting.query(ClaimRow).filter(ClaimRow.run_id == run_id)
+                    ],
+                    observation_available=True,
+                )
+        except Exception as observation_error:
+            # Observation may itself be contended. Preserve the original control
+            # reason without a writer/retry or a fabricated zero native ledger.
+            protocol.update(
+                observation_available=False,
+                observation_error=type(observation_error).__name__,
+                native_ledger=None,
+            )
+            report = {
+                "accessed_at": started.isoformat(),
+                "duration_seconds": round((datetime.now(UTC) - started).total_seconds(), 1),
+                "run_error": error or "PROTOCOL_OBSERVATION_UNAVAILABLE",
+                "batch": [e["name"] for e in registry],
+                "institutions": [],
+                "totals": {
+                    "institutions": len(registry),
+                    "reached": None,
+                    "blocked": None,
+                    "program_pages_found": None,
+                    "scholarship_pages_found": None,
+                    "claims": None,
+                    "false_positives": None,
+                    "catalogs_walked": None,
+                    "walker_programs_confirmed": None,
+                    "source_pages_recorded": None,
+                    "fetch_tiers": {},
+                    "recall": {
+                        "program": {
+                            "numerator": None,
+                            "denominator": len(registry),
+                            "target": PROGRAM_RECALL_TARGET,
+                        },
+                        "category": {
+                            "numerator": None,
+                            "denominator": len(registry) * len(CANARY_CATEGORIES),
+                            "target": CATEGORY_RECALL_TARGET,
+                        },
+                    },
+                },
+            }
+        finally:
+            engine.dispose()
+        report["job_protocol"] = protocol
+        hook = getattr(runner, "_record_fenced_report", None)
+        if hook is not None:
+            try:
+                hook(report)
+            except Exception as mapping_error:
+                protocol["mapping_error"] = type(mapping_error).__name__
+                report["run_error"] = error or "PROTOCOL_MAPPING_UNAVAILABLE"
+        if escaped is not None:
+            raise escaped
+        return report
+
     runner = CanaryRunner(session, run, profile, settings)
     error = ""
     try:
@@ -474,8 +751,12 @@ async def run_canary(
 
             traceback.print_exc()
     finished = datetime.now(UTC)
+    report = _gather_report(session, run, registry, runner, started, finished, error, verbose)
+    session.close()
+    return report
 
-    # --- gather --------------------------------------------------------
+
+def _gather_report(session, run, registry, runner, started, finished, error, verbose):
     results = {
         r.university: ProgramResult.model_validate(r.payload)
         for r in session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id)
@@ -582,7 +863,6 @@ async def run_canary(
 
     source_pages_recorded = session.query(SourcePage).count()
     fetch_tiers = dict(run.fetch_tiers or {})
-    session.close()
     totals_outcomes: Counter = Counter()
     totals_types: Counter = Counter()
     for reported in rows:
@@ -706,6 +986,14 @@ async def main() -> int:
         action="store_true",
         help="only verify that the registry's manual seeds still resolve",
     )
+    parser.add_argument(
+        "--university-read-budget",
+        action=argparse.BooleanOptionalAction,
+        default=read_budget.UNIVERSITY_READ_BUDGET,
+    )
+    parser.add_argument(
+        "--fenced-research-job", action=argparse.BooleanOptionalAction, default=False
+    )
     args = parser.parse_args()
 
     if args.only and args.batch:
@@ -713,12 +1001,31 @@ async def main() -> int:
     if args.catalogue_id and (args.only or args.batch or args.check_seeds):
         parser.error("--catalogue-id cannot be combined with registry/seed selectors")
 
+    try:
+        validate_job_protocol(
+            args.only,
+            [x.strip() for x in args.batch.split(",")] if args.batch else None,
+            args.catalogue_id,
+            args.university_read_budget,
+            args.fenced_research_job,
+            check_seeds=args.check_seeds,
+        )
+    except ValueError as exc:
+        parser.error(str(exc))
+
     if args.check_seeds:
         return await check_seeds()
 
     print("Live canary — real network, real sites, robots.txt respected.", flush=True)
     batch = [item.strip() for item in args.batch.split(",")] if args.batch else None
-    report = await run_canary(args.only, args.verbose, batch=batch, catalogue_ids=args.catalogue_id)
+    report = await run_canary(
+        args.only,
+        args.verbose,
+        batch=batch,
+        catalogue_ids=args.catalogue_id,
+        university_read_budget=args.university_read_budget,
+        fenced_research_job=args.fenced_research_job,
+    )
 
     print()
     print(markdown_table(report))
@@ -767,6 +1074,8 @@ async def main() -> int:
         (args.out / f"canary-{stamp}.md").write_text(markdown_report(report))
         print(f"\nwrote {args.out}/canary-{stamp}.json")
 
+    if args.fenced_research_job and report["run_error"]:
+        return 2  # Genuine protocol partial/control outcome; no success exit invented.
     return 1 if totals["false_positives"] else 0
 
 

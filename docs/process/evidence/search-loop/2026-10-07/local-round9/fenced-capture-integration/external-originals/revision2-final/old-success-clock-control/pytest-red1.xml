@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="0.507" timestamp="2026-10-08T04:57:12.752127+05:00" hostname="iMac-Aliser.local"><testcase classname="local-round8.a-genuine-canary.revision2-final.old-success-clock-control.test_canary_fenced_job" name="test_successful_job_late_persistence_is_partial_capture_on_original_clock[raw]" time="0.225"><failure message="AssertionError: assert None == 'BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED'">case = namespace(state=&lt;function case.&lt;locals&gt;.state at 0x10a322520&gt;, engines=[Engine(sqlite:////Users/wpalish/Documents/Code..._persi0'), entry={'name': 'Test University', 'country': 'Example', 'city': 'City', 'homepage': 'https://example.edu/'})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10a264ec0&gt;
+slow_stage = 'raw'
+
+    @pytest.mark.parametrize("slow_stage", ["raw", "output_checkpoint"])
+    def test_successful_job_late_persistence_is_partial_capture_on_original_clock(
+        case, monkeypatch, slow_stage
+    ):
+        live, output = _capture_persistence_case(case, monkeypatch)
+        original_clock = live.time.monotonic
+        offset = [0.0]
+        monkeypatch.setattr(live.time, "monotonic", lambda: original_clock() + offset[0])
+        original_write = Path.write_text
+        raw_written = [False]
+        delayed = []
+    
+        async def no_funding(*args, **kwargs):
+            return [], AdapterResult()
+    
+        def late_write(path, data, *args, **kwargs):
+            written = original_write(path, data, *args, **kwargs)
+            if path == output.with_suffix(".raw.json"):
+                raw_written[0] = True
+            if not delayed and (
+                (slow_stage == "raw" and path == output.with_suffix(".raw.json"))
+                or (
+                    slow_stage == "output_checkpoint"
+                    and raw_written[0]
+                    and path == output.with_suffix(".pending")
+                )
+            ):
+                delayed.append(path)
+                offset[0] += 3.0
+            return written
+    
+        monkeypatch.setattr(rm.WebScholarshipAdapter, "find", no_funding)
+        monkeypatch.setattr(Path, "write_text", late_write)
+        _capture_with_native_job(live, output)
+        observed = json.loads(output.read_text())
+        budget = json.loads(output.with_suffix(".budget.json").read_text())
+        protocol = json.loads(output.with_suffix(".raw.json").read_text())["canary"]["job_protocol"]
+        assert len(delayed) == 1 and budget["elapsed_ms"] &gt;= 3000
+        assert observed["telemetry"]["latency_seconds"] &gt;= 3
+&gt;       assert observed["error"] == "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+E       AssertionError: assert None == 'BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED'
+
+../../local-round8/a-genuine-canary/revision2-final/old-success-clock-control/test_canary_fenced_job.py:873: AssertionError</failure></testcase><testcase classname="local-round8.a-genuine-canary.revision2-final.old-success-clock-control.test_canary_fenced_job" name="test_successful_job_late_persistence_is_partial_capture_on_original_clock[output_checkpoint]" time="0.175"><failure message="assert 0.1734025829937309 &gt;= 3">case = namespace(state=&lt;function case.&lt;locals&gt;.state at 0x10a392200&gt;, engines=[Engine(sqlite:////Users/wpalish/Documents/Code..._persi1'), entry={'name': 'Test University', 'country': 'Example', 'city': 'City', 'homepage': 'https://example.edu/'})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10abca390&gt;
+slow_stage = 'output_checkpoint'
+
+    @pytest.mark.parametrize("slow_stage", ["raw", "output_checkpoint"])
+    def test_successful_job_late_persistence_is_partial_capture_on_original_clock(
+        case, monkeypatch, slow_stage
+    ):
+        live, output = _capture_persistence_case(case, monkeypatch)
+        original_clock = live.time.monotonic
+        offset = [0.0]
+        monkeypatch.setattr(live.time, "monotonic", lambda: original_clock() + offset[0])
+        original_write = Path.write_text
+        raw_written = [False]
+        delayed = []
+    
+        async def no_funding(*args, **kwargs):
+            return [], AdapterResult()
+    
+        def late_write(path, data, *args, **kwargs):
+            written = original_write(path, data, *args, **kwargs)
+            if path == output.with_suffix(".raw.json"):
+                raw_written[0] = True
+            if not delayed and (
+                (slow_stage == "raw" and path == output.with_suffix(".raw.json"))
+                or (
+                    slow_stage == "output_checkpoint"
+                    and raw_written[0]
+                    and path == output.with_suffix(".pending")
+                )
+            ):
+                delayed.append(path)
+                offset[0] += 3.0
+            return written
+    
+        monkeypatch.setattr(rm.WebScholarshipAdapter, "find", no_funding)
+        monkeypatch.setattr(Path, "write_text", late_write)
+        _capture_with_native_job(live, output)
+        observed = json.loads(output.read_text())
+        budget = json.loads(output.with_suffix(".budget.json").read_text())
+        protocol = json.loads(output.with_suffix(".raw.json").read_text())["canary"]["job_protocol"]
+        assert len(delayed) == 1 and budget["elapsed_ms"] &gt;= 3000
+&gt;       assert observed["telemetry"]["latency_seconds"] &gt;= 3
+E       assert 0.1734025829937309 &gt;= 3
+
+../../local-round8/a-genuine-canary/revision2-final/old-success-clock-control/test_canary_fenced_job.py:872: AssertionError</failure></testcase></testsuite></testsuites>

@@ -27,6 +27,7 @@ import subprocess
 import sys
 import time
 from collections.abc import Callable
+from contextlib import nullcontext
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -95,6 +96,7 @@ class _ExpertBudget:
     provider_failure: dict[str, Any] | None = None
     stop_file: Path | None = None
     case_id: str | None = None
+    protocol_persistence_error: dict[str, Any] | None = None
 
     @property
     def source_work_deadline_ms(self) -> int:
@@ -215,6 +217,11 @@ class _ExpertBudget:
             "stop_reason": self.stop_reason,
             "provider_failure": self.provider_failure,
             "active_time_basis": self.active_time_basis,
+            **(
+                {"protocol_persistence_error": self.protocol_persistence_error}
+                if self.protocol_persistence_error is not None
+                else {}
+            ),
         }
 
 
@@ -278,8 +285,21 @@ async def capture_one(
     finalization_reserve_ms: int = 0,
     catalogue_id: str | None = None,
     stop_file: Path | None = None,
+    university_read_budget: bool | None = None,
+    fenced_research_job: bool = False,
 ) -> None:
     entered = time.monotonic()
+    from app.pipeline import read_budget
+
+    native = (
+        read_budget.UNIVERSITY_READ_BUDGET
+        if university_read_budget is None
+        else university_read_budget
+    )
+    if native and not fenced_research_job:
+        raise ValueError("University read budget requires a genuine fenced research Job")
+    if fenced_research_job and (DOCUMENT_SECONDS or not case_id):
+        raise ValueError("Fenced protocol requires one identity and excludes documents")
     if type(finalization_reserve_ms) is not int or finalization_reserve_ms < 0:
         raise ValueError("Finalization reserve must be a nonnegative integer in milliseconds")
     if finalization_reserve_ms and not strict_expert_budget:
@@ -347,6 +367,7 @@ async def capture_one(
     fetchers: list[Any] = []
     #: D7: the runner, kept for the documents stage that follows the decision.
     runners: list[Any] = []
+    fenced_reports: list[dict[str, Any]] = []
     recorded_claims: set[str] = set()
     documents_phase = False
 
@@ -377,10 +398,110 @@ async def capture_one(
             # clock. This final metering envelope never opens a new work budget.
             budget_checkpoint()
 
+    def protocol_control(original_control=None):
+        if original_control is None and runners:
+            return getattr(runners[-1], "_canary_original_control", None)
+        return original_control
+
+    def protocol_persistence_failed(stage, persistence_error, report, original_control=None):
+        original_control = protocol_control(original_control)
+        protocol = (report or {}).get("job_protocol") or {}
+        audit = {
+            "stage": stage,
+            "error_type": type(persistence_error).__name__,
+            "original_error": observation.error,
+            "original_control_type": type(original_control).__name__ if original_control else None,
+            "job_protocol": {
+                key: protocol.get(key)
+                for key in (
+                    "started",
+                    "run_id",
+                    "job_id",
+                    "claim_token",
+                    "lease_token",
+                    "job_status",
+                    "worker_id",
+                    "native_enabled",
+                    "native_ledger",
+                    "observation_available",
+                    "heartbeat_done",
+                )
+            },
+        }
+        if budget:
+            budget.protocol_persistence_error = audit
+        observation.error = observation.error or "BENCHMARK_PROTOCOL_PERSISTENCE_FAILED"
+        print(
+            "PROTOCOL_PERSISTENCE_FAILED "
+            + type(persistence_error).__name__
+            + " original="
+            + (observation.error or "none"),
+            flush=True,
+        )
+        if stage != "checkpoint":
+            try:
+                final_checkpoint()
+            except Exception as checkpoint_error:
+                # No durable output promise under filesystem failure. Preserve
+                # the original control, without a retry of the failed raw write.
+                print("PROTOCOL_CHECKPOINT_FAILED " + type(checkpoint_error).__name__, flush=True)
+        if original_control is not None:
+            raise original_control from None
+        raise RuntimeError("BENCHMARK_PROTOCOL_PERSISTENCE_FAILED") from None
+
+    def write_fenced_raw(report, original_control=None):
+        try:
+            output.with_suffix(".raw.json").write_text(
+                json.dumps(
+                    {
+                        "canary": report,
+                        "claims": raw_claims,
+                        "protocol_observation_available": report is not None,
+                    }
+                ),
+                encoding="utf-8",
+            )
+        except Exception as persistence_error:
+            protocol_persistence_failed("raw", persistence_error, report, original_control)
+
+    def final_fenced_checkpoint(report, original_control=None):
+        def mark_clock_expiry():
+            if (
+                budget
+                and budget.clock() - budget.started >= budget.seconds
+                and observation.error is None
+            ):
+                observation.error = "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+                budget.stop_reason = budget.stop_reason or "wall_clock_budget_exhausted"
+                return True
+            return False
+
+        try:
+            # Persistence spends the original full case clock. A completed
+            # production Job can still yield a late/partial measured capture.
+            mark_clock_expiry()
+            final_checkpoint()
+            if mark_clock_expiry():
+                # The first output checkpoint itself may cross the deadline.
+                # Persist that diagnostic without opening another work budget.
+                final_checkpoint()
+        except Exception as persistence_error:
+            protocol_persistence_failed("checkpoint", persistence_error, report, original_control)
+
     checkpoint()
+    if fenced_research_job and budget and stop_file is not None and stop_file.exists():
+        budget.stop_reason = "external_provider_failure"
+        observation.error = "BENCHMARK_PROVIDER_FAILURE"
+        stopped_report = {
+            "job_protocol": {"started": False, "native_enabled": native, "native_ledger": None}
+        }
+        write_fenced_raw(stopped_report)
+        final_fenced_checkpoint(stopped_report)
+        return
     original_request = fetching._pinned_request
     # Every provider's search is counted, not only Exa's: runs 80-93 used
     # Serper and recorded search_calls=0 while six queries ran per case.
+    from app.adapters.search import exa_mcp as exa_mcp_module
     from app.adapters.search.brave import BraveSearchProvider
     from app.adapters.search.exa_mcp import ExaMcpSearchProvider
     from app.adapters.search.serper import SerperSearchProvider
@@ -520,25 +641,62 @@ async def capture_one(
             try:
                 return await super().run_to_decision()
             finally:
-                # Why a page produced nothing, in the runner's own vocabulary.
-                # Read here rather than after the run, so a case killed by its
-                # budget still records what it managed to read — which is
-                # exactly the case whose zero needs explaining.
-                observation.page_outcomes = [
-                    PageOutcome(
-                        category=record["category"],
-                        url=record["url"],
-                        page_type=record.get("page_type") or "",
-                        detail=record.get("detail") or "",
-                        characters=int(record["characters"]) if record.get("characters") else None,
-                    )
-                    for record in canary.page_outcomes(self.run)
-                ]
-                runners.append(self)
-                self.record_claims()
+                if not fenced_research_job:
+                    # Why a page produced nothing, in the runner's own vocabulary.
+                    # Read here rather than after the run, so a case killed by its
+                    # budget still records what it managed to read — which is
+                    # exactly the case whose zero needs explaining.
+                    observation.page_outcomes = [
+                        PageOutcome(
+                            category=record["category"],
+                            url=record["url"],
+                            page_type=record.get("page_type") or "",
+                            detail=record.get("detail") or "",
+                            characters=int(record["characters"])
+                            if record.get("characters")
+                            else None,
+                        )
+                        for record in canary.page_outcomes(self.run)
+                    ]
+                    runners.append(self)
+                    self.record_claims()
+                else:
+                    runners.append(self)
 
-        def record_claims(self) -> None:
-            for row in self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id):
+        def _record_fenced_report(self, report) -> None:
+            fenced_reports.append(report)
+            from types import SimpleNamespace
+
+            protocol = report.get("job_protocol") or {}
+            observation.page_outcomes = [
+                PageOutcome(
+                    **{
+                        **record,
+                        "characters": int(record["characters"])
+                        if record.get("characters")
+                        else None,
+                    }
+                )
+                for record in protocol.get("page_outcomes", [])
+            ]
+            self.record_claims(
+                [
+                    SimpleNamespace(
+                        **{
+                            **record,
+                            "accessed_at": datetime.fromisoformat(record["accessed_at"])
+                            if record.get("accessed_at")
+                            else None,
+                        }
+                    )
+                    for record in protocol.get("claim_records", [])
+                ]
+            )
+
+        def record_claims(self, rows=None) -> None:
+            if rows is None:
+                rows = self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id)
+            for row in rows:
                 if row.id in recorded_claims:
                     continue
                 recorded_claims.add(row.id)
@@ -602,6 +760,11 @@ async def capture_one(
         )
 
     with (
+        # Strict evaluation must observe the first refusal. The public MCP
+        # client can retry internally before counted_search sees its error.
+        # Scope these overrides to this capture and restore both on every exit.
+        patch.object(exa_mcp_module, "RATE_LIMIT_RETRY", False) if budget else nullcontext(),
+        patch.object(exa_mcp_module, "RETRY_429_ONCE", False) if budget else nullcontext(),
         patch.object(canary, "CanaryRunner", ObservedRunner),
         patch.object(fetching, "_pinned_request", counted_request),
         patch.object(ExaSearchProvider, "search", counted_for(ExaSearchProvider)),
@@ -613,13 +776,33 @@ async def capture_one(
     ):
         try:
             active_seconds = budget.remaining() if budget else seconds
+            # Preserve the legacy call shape unless a Job option changes it.
+            # Explicit False still overrides a hostile True module default.
+            job_options: dict[str, Any] = {}
+            if fenced_research_job:
+                job_options.update(
+                    university_read_budget=native,
+                    fenced_research_job=True,
+                    stop_file=stop_file,
+                )
+            elif native != read_budget.UNIVERSITY_READ_BUDGET:
+                job_options["university_read_budget"] = native
             report = await asyncio.wait_for(
-                canary.run_canary(None, False, catalogue_ids=[catalogue_id])
+                canary.run_canary(
+                    None,
+                    False,
+                    catalogue_ids=[catalogue_id],
+                    **job_options,
+                )
                 if catalogue_id is not None
-                else canary.run_canary({**COHORT, **HELDOUT}[case_id], False),
+                else canary.run_canary(
+                    {**COHORT, **HELDOUT}[case_id],
+                    False,
+                    **job_options,
+                ),
                 active_seconds,
             )
-        except TimeoutError:
+        except TimeoutError as timeout_control:
             # The child stops itself just short of the parent's kill, so the
             # claims already filed are kept: run_to_decision's finally reads
             # them on cancellation, which a killed process never reaches.
@@ -632,7 +815,12 @@ async def capture_one(
                     if budget.finalization_reserve_ms
                     else "wall_clock_budget_exhausted"
                 )
-            final_checkpoint()
+            if fenced_research_job:
+                partial_report = fenced_reports[-1] if fenced_reports else None
+                write_fenced_raw(partial_report, timeout_control)
+                final_fenced_checkpoint(partial_report, timeout_control)
+            else:
+                final_checkpoint()
             # D7: a decision stage that ran out of clock still filed rows; the
             # documents stage has its own clock and reads them. Run 37351314325:
             # Groningen's documents were measured in one repetition of two.
@@ -646,17 +834,21 @@ async def capture_one(
     observation.error = report["run_error"] or None
     if budget and (budget.provider_failure or budget.stop_reason == "external_provider_failure"):
         observation.error = "BENCHMARK_PROVIDER_FAILURE"
-    if budget is None or not budget.finalization_reserve_ms:
+    if not fenced_research_job and (budget is None or not budget.finalization_reserve_ms):
         checkpoint()
     await documents_stage()
-    # Preserve raw output for mapping/adjudication; do not invent unsupported counters.
-    output.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
-    output.with_suffix(".raw.json").write_text(
-        json.dumps({"canary": report, "claims": raw_claims}, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
-    if budget and budget.finalization_reserve_ms:
-        final_checkpoint()
+    # Preserve raw output for mapping/adjudication; no unsupported counters.
+    if fenced_research_job:
+        write_fenced_raw(report)
+        final_fenced_checkpoint(report)
+    else:
+        output.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
+        output.with_suffix(".raw.json").write_text(
+            json.dumps({"canary": report, "claims": raw_claims}, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+        if budget and budget.finalization_reserve_ms:
+            final_checkpoint()
 
 
 def main() -> None:
@@ -666,6 +858,7 @@ def main() -> None:
     from app.adapters.search import KNOWN_SEARCH_PROVIDERS
     from app.adapters.search import intent as search_intent
     from app.config import Settings, get_settings
+    from app.pipeline import read_budget
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live", action="store_true", required=True)
@@ -855,8 +1048,26 @@ def main() -> None:
         default=web_scholarships.TARGET_AWARD_SEARCH,
         help="experiment: target award policies instead of generic scholarship indices",
     )
+    parser.add_argument(
+        "--university-read-budget",
+        action=argparse.BooleanOptionalAction,
+        default=read_budget.UNIVERSITY_READ_BUDGET,
+    )
+    parser.add_argument(
+        "--fenced-research-job", action=argparse.BooleanOptionalAction, default=False
+    )
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
+    if args.university_read_budget and not args.fenced_research_job:
+        parser.error("University read budget requires a genuine fenced research Job")
+    if args.fenced_research_job and (
+        args.with_documents
+        or not (args.case or args.catalogue_id)
+        or (args.catalogue_id and len(args.catalogue_id) != 1)
+    ):
+        parser.error(
+            "Fenced protocol requires one explicit case/catalogue identity and excludes documents"
+        )
     if args.stop_file is not None and not args.strict_expert_budget:
         parser.error("--stop-file requires --strict-expert-budget")
     if args.child and args.catalogue_id is not None and len(args.catalogue_id) != 1:
@@ -1015,6 +1226,13 @@ def main() -> None:
                 strict_arguments: dict[str, Any] = (
                     {"strict_expert_budget": True} if args.strict_expert_budget else {}
                 )
+                if args.fenced_research_job:
+                    strict_arguments.update(
+                        university_read_budget=args.university_read_budget,
+                        fenced_research_job=True,
+                    )
+                elif args.university_read_budget != read_budget.UNIVERSITY_READ_BUDGET:
+                    strict_arguments["university_read_budget"] = args.university_read_budget
                 if args.finalization_reserve_ms is not None:
                     strict_arguments["finalization_reserve_ms"] = finalization_reserve_ms
                 if args.catalogue_id is not None:
@@ -1051,6 +1269,14 @@ def main() -> None:
                 config={
                     "strict_expert_budget": True,
                     "search_provider": search_provider,
+                    "university_read_budget": args.university_read_budget,
+                    "fenced_research_job": args.fenced_research_job,
+                    "research_job_protocol": "genuine-research-job"
+                    if args.fenced_research_job
+                    else "legacy-direct-unfenced",
+                    "native_ledger_counts": "committed guarded Fetcher.get reservations; separate from outer attempts and hostname audit"
+                    if args.fenced_research_job
+                    else None,
                     "site_branding_identity": args.site_branding_identity,
                     "subject_phrase_match": args.subject_phrase_match,
                     "programme_identity_before_funding": args.programme_identity_before_funding,
@@ -1112,6 +1338,12 @@ def main() -> None:
                             else []
                         ),
                         *(["--search-provider", search_provider] if args.search_provider else []),
+                        "--university-read-budget"
+                        if args.university_read_budget
+                        else "--no-university-read-budget",
+                        "--fenced-research-job"
+                        if args.fenced_research_job
+                        else "--no-fenced-research-job",
                         *(["--search-first"] if args.search_first else []),
                         *(["--site-branding-identity"] if args.site_branding_identity else []),
                         *(["--skip-refused-hosts"] if args.skip_refused_hosts else []),
@@ -1242,6 +1474,14 @@ def main() -> None:
                 "max_fetcher_calls_per_case": args.max_pages,
                 "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
                 "search_before_navigation": args.search_first,
+                "university_read_budget": args.university_read_budget,
+                "fenced_research_job": args.fenced_research_job,
+                "research_job_protocol": "genuine-research-job"
+                if args.fenced_research_job
+                else "legacy-direct-unfenced",
+                "native_ledger_counts": "committed guarded Fetcher.get reservations; separate from outer attempts and hostname audit"
+                if args.fenced_research_job
+                else None,
                 "site_branding_identity": args.site_branding_identity,
                 "subject_phrase_match": args.subject_phrase_match,
                 "programme_identity_before_funding": args.programme_identity_before_funding,

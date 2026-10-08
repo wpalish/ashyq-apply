@@ -1,0 +1,75 @@
+{
+  "kind": "external_genuine_research_job_prototype_writeahead",
+  "status": "PLAN_BEFORE_PROTOTYPE",
+  "at_utc": "2026-10-07T23:16:40.848660+00:00",
+  "owner_paths": [
+    "proposed/scripts/canary_discovery.py",
+    "proposed/evaluation/research/live.py",
+    "proposed/tests/test_canary_fenced_job.py",
+    "proposed/tests/test_readguard_capture_protocol.py"
+  ],
+  "source_inputs": {
+    "canary": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/scripts/canary_discovery.py",
+      "sha256": "37f60bcfcafda9b33f87285141dedae8b66c65dd6b0518ed7457cfece404de70"
+    },
+    "live": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+      "sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df"
+    },
+    "worker": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/jobs/worker.py",
+      "sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df"
+    },
+    "runner": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py",
+      "sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c"
+    },
+    "store": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/jobs/store.py",
+      "sha256": "fbf69acb386db032beb64bb9a59af9ee43f75730d0037124959714faec1264cc"
+    },
+    "read_budget": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/read_budget.py",
+      "sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf"
+    },
+    "control": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/control.py",
+      "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd"
+    },
+    "root_plan": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/root-next-canary/PLAN.json",
+      "sha256": "3ee204001c510cd4bd38810a55b9c26c9d4d8dfbf3160cb03deda8f5d3d1cb04"
+    },
+    "prior_receipt": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_a-canary-job-protocol-plan/receipt.json",
+      "sha256": "07208229e5e8e07e7b6e6f4dd0dfec753de1aa32cc18e53c9bf5d1ee0442b818"
+    },
+    "stop": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-STOP.json",
+      "sha256": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad"
+    }
+  },
+  "repository_writes": false,
+  "network_provider_model_calls": 0,
+  "approach": [
+    "Two future source files only; existing direct defaultFalse output branch preserved",
+    "Canary owns explicit protocol preflight and real enqueue/claimtoken1\u2192unmodified Worker.execute/_dispatch; only scoped worker.session_scope+worker.ResearchRunner binding to CanaryRunner",
+    "Observe runner failures into in-memory protocol original typed exception; fresh reporting Session after worker close; observation failures partial and never mask original busy",
+    "Native ledger provenance separate from outer strict attempts / hostname audit; same fenced path OFF/ON/ON/OFF, off has no invented zero native ledger",
+    "Scope runtime native module bool with restoration incl explicitFalse/sourceTrue; validate ONrequiresfence, one resolved identity and reject documents/checkseeds/no selectors before I/O",
+    "Live CLI forwards explicit both BooleanOptional flags to child; ordinary/preSTOP Capture.config effective flags; enter outer clock stays at start of capture and setup spends it",
+    "Only external proposal module execution; imports all app classes normally from actual frozen repo; no provider/model/HTTP/DNS and synthetic transport control fixtures"
+  ],
+  "controls": [
+    "Legacy direct full snapshot",
+    "Fenced OFF actual success and no native fakeledger",
+    "Fenced ON crossstage61 with60 admission and priorfacts",
+    "RecordedON samejob provenance plus sourceFalse explicitoverride",
+    "Actual cancel/takeover/typedbusy preserve and heartbeatcleanup",
+    "Fresh reporting contention partial originalbusy remains",
+    "Invalid combos preIO noenqueue, preSTOP nojob/nofakeledger",
+    "Evaluation omission/explicitlastchoice/childforwarding and both config envelopes",
+    "Outerattempt60 nativeadmission60 are distinct; noclockreset"
+  ]
+}
