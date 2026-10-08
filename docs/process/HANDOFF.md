@@ -74,6 +74,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**[search-fenced-capture] strict-refusal focused PASS; repaired exactfull pending.** Existingprotocol testfile+31actualprovider controls integrated;154focusedPASS10.04s thenparent import-order-only correction/final48PASS2.37s;Ruff/format/mypy383PASS. Full f0c8 remains predecessor only. Freeze fourharness/test files while repairedexactfull runs. Independentdriverclosure external pending, no freshlive.
+
 **[search-fenced-capture] full13/13 PASS for f0c8; strict first-refusal repair pending.** Same4261 unique backend cases pass on SQLite and PostgreSQL, coverage95.25%, frontend232, demo79PASS/1skip, auth6, mypy383. App unchanged from budget3b3a2fb8. New live driver independently rejected:9 corrupt accepted/3 malformed crashes; not executed. First-refusal scoped repair and driver shape closure required before live.
 
 **[search-fenced-capture] actual-module integration PASS, full LOCAL pending.** Four harness/test files applied after sealed receipt3fd85544. Parent legacy forwarding/type-narrowing repairs keep previous assertions intact. Actual199PASS/0skip19.27s; Ruff/format PASS, mypy383 PASS. App/Fetcher/default/gold unchanged. Freeze source/test files while exact-source LOCAL full runs.
@@ -1845,6 +1847,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[search-fenced-capture] NEXT exactfull:** commit/push WIP[skipci] scopedretry source+normaltests+selectedoriginals now; execute authorized local-runner --repo currentcheckout check --suite full on clean pushedHEAD. No source/test mutations duringsnapshot; working appbytes unchangedbudget3b3a. Root repairs externalcontroller while A malformed/partialcontrols and BIELTSv4 peerreview; sourceharness snapshotusedonlyafterfullPASS.
+
+**[search-fenced-capture] exact write-ahead BEFORE TEST TRANSFER 2026-10-08 00:40UTC:** Verified B sealb4ca93bd/provider33b2ba41/livesource06e63d52. Replace only existing backend/tests/test_readguard_capture_protocol.py with proposed521ea9d2; old17testbody remains verbatim,31actual MockTransport controls added, no provider.search/_search_once/_post replacement. Independent35external/48combinedPASS includes4historical retry behaviors; actual31newtests +17legacy only. Parent run focused capture+MCP/budget and configured Ruff/format/mypy; if green WIPcommit/push, freeze source/test then exactfullLOCAL. No network/sourceprovider/default changes.
 
 **[search-fenced-capture] exact write-ahead BEFORE CODE 2026-10-08 00:31UTC:** In backend/evaluation/research/live.py strict capture context patch Exa MCP RATE_LIMIT_RETRY=False and RETRY_429_ONCE=False, restoring existing values on every exit. Existing production provider module/defaults unchanged. Add normal-import actual-provider mocked-transport regressions to backend/tests/test_readguard_capture_protocol.py after independent B evidence; first refusal one tool request+sticky STOP, no subsequent reads/searches, restored flags and non-strict control. PLAN work/local-round9/root-capture-integration/strict-retry-PLAN.json. Freeze repaired source for new full LOCAL; f0c8 full is predecessor proof only. Separately repair external genuine-baseline controller typed/config/raw closure against B13 immutable negative controls; no execute until scoped retry repair+new full+controller review accepted. No retry/resume/new provider/default/gold/production actions.
 
@@ -3850,6 +3856,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**2026-10-08 scopedretry focused final:**154PASS0skip10.04s includesactualprovider;parentformat-only1importfix then48existingprotocolPASS2.37s;Ruff/app/tests/evaluationPASS,format383PASS,mypy383PASS. FullnewsourceNOTYETRUN;expected4292unique cases based31newtests, counts must be read actualXML not assumed.
+
 **2026-10-08 strict-retry preliminary:** scoped2flagsFalse source patch applied onlylive.py;66existingcapture/budget controlsPASS9.84s, Ruff fixed one import-order issue/formatPASS. Actual provider mockedtransport independent controls and new full are pending; WIP, no live. IELTSv4sealed166PASS outside repo, pendingpeerreview; notapplied.
 
 **2026-10-08 00:27UTC exact-source full:** f0c8fece0b59de3e964d20a1a4daf131e92c4ef8 snapshot3489f8fa072386f0ee4a74fb24bf6e502aea6a93490ba8840826c321b5e60dde,13/13 PASS,4261SQLite/4261PG unique identities equal,95.25%coverage,232frontend,79demoPASS/1skip,6auth,mypy383. Receipt4fb41d2e. New strict-retry change not yet applied/tested; no fresh search score.
@@ -4782,6 +4790,8 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 | 2026-09-09 | security audit | `security.py`: `SCRYPT_R`, `SCRYPT_P`, `_maxmem(n, r)`; `routes_metrics` compares bytes | scrypt cost schedule and the 500-on-non-ASCII bearer. |
 
 ## 9. Traps and lessons (things that cost a session; keep them)
+
+**2026-10-08 provider mock count:** Cold successful MCP initialization adds2handshakeRPCs; first failed search is1tools/call and no retry (3totalMockTransport);warm1total;initialize-refusal1total; subsequentcapturessameSTOP0calls. MockorchestrationnotnewgenuineJobproof; existinggenuineSQLtestscoverJob separately. Parent Ruff usesconfiguredbackend andneeded1importorderrepair on proposedtest, originalchildproof unchanged.
 
 **2026-10-08 first-refusal trap:** ExaMcpSearchProvider.search internally retries RATE_LIMITED when RATE_LIMIT_RETRY=True even if RETRY_429_ONCE=False. Outer strict wrapper sees failure only after internal retry; latest owner no-retry rule requires scoped disabling of BOTH flags before provider call. Strict-only repair preserves app defaults; new independent addendum a599cc1c. Genuine driver13 controls revealed9accepted corrupt forms/3uncaught AttributeErrors; old prepared driver is rejected, do not execute.
 

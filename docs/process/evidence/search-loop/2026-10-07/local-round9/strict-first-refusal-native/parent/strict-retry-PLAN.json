@@ -1,0 +1,13 @@
+{
+  "status": "WRITE_AHEAD_BEFORE_SOURCE_CHANGE",
+  "source_before": "f0c8fece0b59de3e964d20a1a4daf131e92c4ef8",
+  "verified_full_receipt": "4fb41d2e486050a085b5c72846496b4f1a486317181292e667f8586bafddbaca",
+  "problem": "RATE_LIMIT_RETRY=True performs an internal _search_once retry before the strict outer wrapper can save the first provider refusal",
+  "owner_rule": "Latest local-runner request section7: first provider/model/auth/quota refusal globally stops live; no retry",
+  "scope": ["backend/evaluation/research/live.py", "backend/tests/test_readguard_capture_protocol.py"],
+  "change": "Patch both Exa MCP retry flags False only inside strict capture context; restore original flags on every exit; do not change production provider defaults",
+  "controls": "Actual normally imported ExaMcpSearchProvider with mocked transport; retain old red, verify one vendor tool request, sticky global STOP, no following provider/source action, restored flags; non-strict legacy retains previous behavior",
+  "required": ["Independent B controls", "Focused existing capture/provider controls", "Ruff/format/mypy", "new exact-source full LOCAL after source change", "typed controller envelope repair and independent malformed controls before live"],
+  "network_calls": 0,
+  "no_default_gold_provider_stop_production_change": true
+}
