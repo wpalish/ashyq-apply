@@ -5,18 +5,21 @@ only when every one is green. Status is
 recorded honestly: `PASS` means verified by a command whose output is shown in
 the release report, not "implemented".
 
-**Current verdict: NOT DEPLOYED externally.** The local container stack was
-verified against real Docker on 2026-09-06, so gate 22 now passes. What is left
-needs a person, not another phase: an external deployment, a lawyer for the
-privacy policy and terms (gate 87), and a live ApiPay account before payments
-can be switched on (gate 94).
+**External deployment has not been verified by this checklist.** The local
+container stack was verified against real Docker on 2026-09-06, so gate 22
+passes on that historical run; the Docker daemon was unavailable for a repeat
+run on 2026-09-23. Legal review of the privacy policy and terms (gate 87) and a
+live ApiPay account before enabling payments (gate 94) remain open.
 
-**CI on `main` is red, and has been since 2026-09-04.** One end-to-end test —
-`e2e/profile-persistence.spec.ts:26`, where `getByText('Saved')` matches two
-elements — fails on every push, first on desktop and now on mobile, and it stops
-`npm run e2e:auth` from running at all. Backend on both databases, lint, types,
-build, `pip-audit`, `npm audit` and `docker compose build` are green on the same
-commit. Gate 2 is PARTIAL until that test is fixed.
+**CI on `main@07de4d9` is green.** [Release-gates run 35651855310](https://github.com/wpalish/ashyq-apply/actions/runs/35651855310)
+passed on 2026-09-21: backend on SQLite and PostgreSQL, frontend typecheck,
+lint, unit tests, build, ordinary and authenticated Playwright E2E, dependency
+audits, and `docker compose build`. This supersedes the 2026-09-04 red E2E
+snapshot; a successful image build is not an external deployment smoke.
+The checked-in `fly.toml` sets production mode but supplies no PostgreSQL URL,
+SMTP sender/host, or HTTPS public base URL. These may be external deployment
+secrets/settings; without them the runtime validation refuses to start. A live
+deployment and its configuration still need verification.
 
 **`docs/FIX_PLAN.md` is finished.** Phases 0–6 are done, including the optional
 sixth; gates 36–92 below record what each fix is held to. Two audit findings
@@ -29,7 +32,7 @@ Phase 6; gates 93-96 record what they are held to.
 | # | Gate | Status | Evidence / what is missing |
 |---|---|---|---|
 | 1 | Existing 240 + 39 + 42 tests kept or replaced by stricter ones | **PASS** | 1110 + 164 + 74 (desktop and mobile) + 6 auth E2E, measured on `2be6b55`. Nothing removed; Phase 1 added 14, Phase 2 added 65, Phase 3 added 50, and Phase 5 added 21 backend (metrics, dead jobs) and 8 frontend (the needs-attention line, the legal page) |
-| 2 | All new unit / integration / E2E / security tests green | **PARTIAL** | `pytest` 1110 passed on `2be6b55` — in CI on both databases (coverage 92.86%, floor 92) and again locally on Windows/SQLite, same count. `vitest` 164 passed. **`playwright` is red: 70 passed, 1 failed, 1 skipped of 74**, and `e2e:auth` never runs because the suite exits first. Historical note from the previous update: `pytest` 818 passed, **including the PostgreSQL branch** — `pgserver` does provision a cluster on this machine after all, so the 25 tests recorded as unrunnable here now run and pass (`test_jobs.py` and `test_social_models.py`, 50 tests, no skips). `vitest` 137, `playwright` 67 passed / 1 skipped (desktop + mobile). The authenticated E2E config was not re-run here: it starts its own dev server and port 5173 was held by another process on this machine |
+| 2 | All new unit / integration / E2E / security tests green | **PASS** | [Release-gates run 35651855310](https://github.com/wpalish/ashyq-apply/actions/runs/35651855310) succeeded on exact `main@07de4d9`: backend SQLite and PostgreSQL jobs, frontend unit/build/ordinary E2E/auth E2E, and security/container job. The older `2be6b55` counts and `Saved` assertion failure were a historical snapshot and are superseded by this run. |
 | 3 | ruff, mypy, TypeScript, ESLint, production build clean | **PASS** | all clean; build 74.0 kB JS gzip |
 | 4 | PostgreSQL migrations work on fresh and upgraded databases | **PASS** | Alembic. Verified fresh, downgrade to base, re-upgrade, re-apply as a no-op, on PostgreSQL 16.2 and SQLite. `create_all()` removed from the production path; startup refuses a mismatched revision |
 | 5 | Worker survives a crash restart | **PASS** | `scripts/crash_test.py` SIGKILLs a real worker after 12 results are written; a second worker recovers the job and finishes with no duplicates. Stable over 3 runs. **PostgreSQL-backed queue, not Redis — see ADR 0001** |
@@ -49,7 +52,7 @@ Phase 6; gates 93-96 record what they are held to.
 | 19 | Approve / reject / maybe and document collection work | **PASS** | Covered by E2E |
 | 20 | CSV / JSON / XLSX exports carry provenance and data origin | **PASS** | 38 columns incl. source links, last-verified, data origin |
 | 21 | Accessibility audit passed | **PASS** | axe WCAG A/AA scans every reachable workflow screen on desktop and mobile; focused keyboard/progress/table/overflow checks also pass |
-| 22 | Docker Compose brings up a production-like stack | **PASS** | Run for real on 2026-09-06 against Docker Desktop 4.89.0 / Engine 29.7.2 under WSL2: images built, migrations exited 0, postgres/api/web healthy, and registration plus a demo research run through nginx on :8080 returned 20 results at `awaiting_user_decision`. Two defects the run itself found are fixed in `docker-compose.yml`: the `/app/data` tmpfs was root-owned so the API died creating its cache directory, and the worker inherited an HTTP healthcheck for a port it does not serve. Evidence: `docs/DOCKER_VERIFICATION.md`. CI additionally runs `docker compose build` on every push. Earlier finding, kept: one real defect fixed: the read-only `api` had no writable `/app/data`, and `ensure_dirs()` runs at import, so the container would have died with EROFS before serving a request. The audit's other two compose findings did not reproduce — the worker's `worker-cache:/app/data` matches `BACKEND_ROOT` for the image compose builds, and `backend/Dockerfile` already carries a `curl` HEALTHCHECK. `scripts/verify_compose.sh` drives the whole stack to a finished demo run. **WRITTEN, NOT RUN: Docker is not installed on this machine.** Requires a user checkpoint |
+| 22 | Docker Compose brings up a production-like stack | **PASS** | Run for real on 2026-09-06 against Docker Desktop 4.89.0 / Engine 29.7.2 under WSL2: images built, migrations exited 0, postgres/api/web healthy, and registration plus a demo research run through nginx on :8080 returned 20 results at `awaiting_user_decision`. Two defects the run itself found are fixed in `docker-compose.yml`: the `/app/data` tmpfs was root-owned so the API died creating its cache directory, and the worker inherited an HTTP healthcheck for a port it does not serve. Evidence: `docs/DOCKER_VERIFICATION.md`. CI additionally runs `docker compose build` on every push. Earlier finding, kept: one real defect fixed: the read-only `api` had no writable `/app/data`, and `ensure_dirs()` runs at import, so the container would have died with EROFS before serving a request. The audit's other two compose findings did not reproduce — the worker's `worker-cache:/app/data` matches `BACKEND_ROOT` for the image compose builds, and `backend/Dockerfile` already carries a `curl` HEALTHCHECK. `scripts/verify_compose.sh` drives the whole stack to a finished demo run. **Latest recorded full-stack smoke: 2026-09-06.** On 2026-09-23 Docker client 29.7.2 was present, but its daemon was unavailable, so this audit could not repeat the local Compose smoke. |
 | 23 | Backup / restore and crash recovery verified | **PASS** | Real SIGKILL recovery plus a PostgreSQL `pg_dump`/`pg_restore` scratch-database drill: 12 tables and a synthetic probe restored identically |
 | 24 | Documentation matches actual behaviour | **PASS** | Three README overstatements corrected; status banner added |
 | 25 | No TODO / FIXME in a production path | **PASS** | `grep -rn "TODO\|FIXME" backend/app frontend/src` → none |
@@ -168,20 +171,20 @@ release gate document.
 
 ## Summary
 
-Counted on `2be6b55`, over gates 1-96.
+Originally counted on `2be6b55`, over gates 1-96; gate 2 was refreshed against
+`main@07de4d9` on 2026-09-23.
 
-- **PASS:** 91
-- **PARTIAL:** 3 — gate 2 (one red end-to-end test on `main`), gate 87 (the
-  privacy policy and terms are drafts no lawyer has read), gate 92 (the product
+- **PASS:** 92
+- **PARTIAL:** 2 — gate 87 (the privacy policy and terms are drafts no lawyer
+  has read), gate 92 (the product
   vocabulary is deliberately untranslated pending human review)
 - **FAIL:** 0
 - **BLOCKED:** 2 — gate 29 (the release tag waits on the rest) and gate 94 (a
   real payment needs a merchant account)
 
-Gate 22 moved from FAIL to PASS on work: the stack was actually run, and running
-it found two defects that no amount of reading the file would have shown. Gate 2
-moved the other way, from PASS to PARTIAL, on evidence: the end-to-end suite has
-been red on `main` since 2026-09-04 and the summary said nothing about it.
+Gate 22 moved from FAIL to PASS when the stack was actually run and exposed two
+defects. Gate 2 is PASS again on current `main`; its earlier red snapshot is
+preserved in Git history.
 
 ## Order of work remaining
 
@@ -198,9 +201,8 @@ been red on `main` since 2026-09-04 and the summary said nothing about it.
 2. ~~**P2** — auth, organizations, cases, tenant isolation~~ **done**
 3. ~~**P3** — SSRF suite, headers, rate limiting, threat model~~ **done**
 4. ~~**P4** — full onboarding forms~~ **done**
-5. **Fix the red end-to-end test** — `e2e/profile-persistence.spec.ts`, two
-   elements reading "Saved". Nothing else can be called green while `main` is
-   red, and `e2e:auth` has not run since 2026-09-04 (gate 2)
+5. ~~**Fix the red end-to-end test**~~ **done** — ordinary and authenticated
+   E2E passed in release-gates run 35651855310 (gate 2)
 6. **P5–P6** — improve programme-page classifier recall and deepen funding/document extraction
 7. ~~**P7** — run the container stack~~ **done** (gate 22). An external
    deployment is still outstanding and needs the owner
