@@ -1,0 +1,48 @@
+{
+  "repo": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+  "destination": "docs/process/evidence/search-loop/2026-10-07/local-round13/stopped-trace-final-closure",
+  "source_manifest": "source-after-999.json",
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "status": "FRESH_FULL13_OF13_INDEPENDENT41_PASS_EXACT_SOURCE_READY_GREEN_NOT_QUALITY_NEXT_RISK_DEFERRED",
+  "packets": [
+    {
+      "folder": "local-round13/b-stopped-trace-final-review",
+      "manifest": "ready-manifest.json",
+      "sha256": "8cad84cdd718981c57860fa1f5a8f249d4c1893ca875969b81934f1f2fba99f4",
+      "label": "independent-final"
+    },
+    {
+      "folder": "local-round13/a-normal-alias-report-preparation",
+      "manifest": "ready-manifest.json",
+      "sha256": "fc0bda8ec8924a8640be6e7352e1bc00d759d87fc750585bf72c6e22f3d3f333",
+      "label": "conditional-deferred-preparation"
+    }
+  ],
+  "parent_files": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/final-full-verification.json",
+      "name": "final-full-verification.json",
+      "sha256": "5957d31cc1c09facbd37cd0f4284c1e0a5b4f9c6756e06623fcd1e092732b50a"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/full-originals-manifest.json",
+      "name": "full-originals-manifest.json",
+      "sha256": "9949352c80a889b82f6d92f4a9430d61c6639011e2adb7c78c8cf35ea68d185b"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/source-after-999.json",
+      "name": "source-after-999.json",
+      "sha256": "30808fcb536f6757d668afea60716f4a61ac13caa326fa72a080f5a5a2f13771"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/seed-primary-binding.json",
+      "name": "seed-primary-binding.json",
+      "sha256": "b22ac75b97df7dc5e17bfb3b0f3072e091919a52bc377796424486923ad34522"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/source-integration.json",
+      "name": "source-integration.json",
+      "sha256": "745bc8dbbc8603a6ee9b1a6bfca8e38d2674f7ed2e4d51bd4f9c6b7d69759376"
+    }
+  ]
+}

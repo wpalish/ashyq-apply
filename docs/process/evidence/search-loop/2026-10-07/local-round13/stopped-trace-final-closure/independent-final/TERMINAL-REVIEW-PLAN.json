@@ -1,0 +1,26 @@
+{
+  "time": "2026-10-08T05:55:41.712509+00:00",
+  "status": "TERMINAL_EVIDENCE_REVIEW_AUTHORIZED_NOT_YET_SEALED",
+  "parent_session_terminal": {
+    "session_id": 17835,
+    "exit_code": 0
+  },
+  "input_pins": {
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T053629Z-check-6693acd5/summary.json": "7de7d5e456b2f241a2a4cf6622e99da1fab9ed40d6beac441c9b47fc34aeb799",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T053629Z-check-6693acd5/source-manifest.json": "0ef04ff7a09aaffc49d27fd6596dc6543bbbd0ec65027e05bbde098937fad689",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/source-after-999.json": "30808fcb536f6757d668afea60716f4a61ac13caa326fa72a080f5a5a2f13771",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/final-full-verification.json": "5957d31cc1c09facbd37cd0f4284c1e0a5b4f9c6756e06623fcd1e092732b50a",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/full-originals-manifest.json": "9949352c80a889b82f6d92f4a9430d61c6639011e2adb7c78c8cf35ea68d185b",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/search-loop/2026-10-07/local-round13/stopped-trace-full-raw/receipt.json": "5858ad9cc1d461e1b36a16ecaedc622410fa42a984e7b253c2d4c3af6ef31c3c"
+  },
+  "archive_expected_receipt_sha256": "5858ad9cc1d461e1b36a16ecaedc622410fa42a984e7b253c2d4c3af6ef31c3c",
+  "native_denominator_clarification": {
+    "historical_PLAN_wording": "native test_live_discovery final250 incorrectly named a single file",
+    "actual_author_three_selected_files": 250,
+    "actual_full_three_files": 251,
+    "actual_single_test_live_discovery": 151,
+    "previous_PLAN_is_immutable": true,
+    "principle": "Validate actual IDs; author250 eachDB plus original PGimport1, exact19 additions. This is checker-label correction, not source/test failure."
+  },
+  "scope": "One finite stdlib saved-evidence verifier; no app/tests/imports/run/scorer/network. Validate raw17 plus root archive25 originals/member hashes and source999/seed242/STOP once."
+}

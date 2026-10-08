@@ -1,0 +1,41 @@
+{
+  "time": "2026-10-08T05:57:29.630933+00:00",
+  "status": "CONDITIONAL_NAME_ONLY_JOIN_RISK; B19_ACTUAL_CANARY_REACHABILITY_NOT_PROVEN",
+  "before": {
+    "source999_primary_frozen_saved_equal": true,
+    "frozen_tree_sha256": "75497406d33bb8c4fe3015d44b13e20786d8cf9a74d4e6138c16d3341164d446",
+    "source_after_map_sha256": "30808fcb536f6757d668afea60716f4a61ac13caa326fa72a080f5a5a2f13771",
+    "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d"
+  },
+  "after": {
+    "source999_primary_frozen_saved_equal": true,
+    "frozen_tree_sha256": "75497406d33bb8c4fe3015d44b13e20786d8cf9a74d4e6138c16d3341164d446",
+    "source_after_map_sha256": "30808fcb536f6757d668afea60716f4a61ac13caa326fa72a080f5a5a2f13771",
+    "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d"
+  },
+  "confirmed_source_facts": [
+    "select_catalogue_entries emits University.name/id/domain; it does not use registry_entry.name.",
+    "Normal Catalogue enrichment emits entry.name as Candidate.name and trace institution; catalogue_id preserves uni.id.",
+    "Runner ProgramResult university follows Candidate.name; persisted university_id is dedupe.university_key, not imported32hex catalogue_id.",
+    "Canary gathers Candidate/Trace/Result by exact registry display name, with no catalogue_id fallback.",
+    "Fresh canary DB imports curated registry before seed records; first curated identity creates University.name from the same entry.name.",
+    "Native identity probe returns uni.name, so new homepage branding alone cannot create this normal alias mismatch.",
+    "Importer reuses canonical identity keys, retains existing University.name and replaces registry_entry; conditional key collisions or prior imported-name history permit display-name differences.",
+    "Curated registry key uniqueness is not checked in its importer loop; seed snapshot uniqueness validation is separate.",
+    "Name joins lack country/id discrimination; result and trace dicts are last-wins while Candidate lookup is first-match. No actual current collision is established."
+  ],
+  "saved_B19_qualification": "The synthetic helper attaches a foreign registry name directly and uses id offline-0. This cannot serve as an actual32hex selected canary identity or establish its fresh-import binding.",
+  "unproven": [
+    "Occurrence of duplicate canonical identity keys in current curated registry",
+    "Actual selected canary name mismatch under current approved inputs",
+    "Any current report/capture loss, genuine Worker outcome or scored quality direction"
+  ],
+  "not_executed": [
+    "app imports or tests",
+    "_gather_report",
+    "recall_metrics",
+    "scorer/gold",
+    "SQL/Git/full/live/provider/model"
+  ],
+  "next_evidence_only_requirement": "If a separate next task is authorized, first establish an approved identity-only binding or controlled native fresh-import fixture that actually creates a display-name mismatch. This preflight proposes no source repair."
+}

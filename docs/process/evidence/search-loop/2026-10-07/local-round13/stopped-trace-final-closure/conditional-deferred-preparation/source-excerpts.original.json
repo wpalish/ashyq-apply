@@ -1,0 +1,186 @@
+[
+  {
+    "file": "backend/scripts/canary_discovery.py",
+    "source_sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+    "start_line": 365,
+    "end_line": 388,
+    "excerpt": "def select_catalogue_entries(session: Session, ids: list[str]) -> list[dict]:\n    \"\"\"Explicit imported identities only; never export seed facts or research routes.\"\"\"\n    if not ids or len(set(ids)) != len(ids):\n        raise ValueError(\"Catalogue selection must be nonempty and have no duplicate ids\")\n    entries = []\n    for university_id in ids:\n        if not re.fullmatch(r\"[0-9a-f]{32}\", university_id):\n            raise ValueError(\"Catalogue selection requires stable 32-character ids\")\n        university = session.get(University, university_id)\n        if university is None or not university.domain:\n            raise ValueError(\"Catalogue id is unknown or has no public domain hint\")\n        entries.append(\n            {\n                \"id\": university.id,\n                \"name\": university.name,\n                \"country\": university.country,\n                \"homepage\": f\"https://{university.domain}/\",\n                \"identity_status\": university.domain_status,\n            }\n        )\n    return entries\n\n\ndef recall_metrics(rows: list[dict]) -> dict[str, dict[str, float | int]]:\n",
+    "excerpt_sha256": "d4768a1827064254f7dad03753ce11d0644d85d8a01417c33cf965a2e179b4d5"
+  },
+  {
+    "file": "backend/scripts/canary_discovery.py",
+    "source_sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+    "start_line": 567,
+    "end_line": 585,
+    "excerpt": "    if catalogue_ids is not None and (only or batch):\n        raise ValueError(\"Catalogue ids cannot be combined with registry selectors\")\n    registry = json.loads(REGISTRY_PATH.read_text())\n    selectors = batch or ([only] if only else None)\n    registry = select_registry_entries(registry, selectors)\n\n    profile = canary_profile()\n    workdir = Path(tempfile.mkdtemp(prefix=\"canary-\"))\n\n    # A throwaway database. The canary never touches the project's own data.\n    engine = create_engine(f\"sqlite:///{workdir / 'canary.db'}\")\n    Base.metadata.create_all(engine)\n    session = sessionmaker(bind=engine)()\n    import_catalogue(session)\n    if catalogue_ids is not None:\n        try:\n            registry = select_catalogue_entries(session, catalogue_ids)\n        except ValueError:\n            session.close()\n",
+    "excerpt_sha256": "1ee1c69d113fd41dd919b26a156b7c094d4fdb6b3f61eddfde7144fdf3fa6f69"
+  },
+  {
+    "file": "backend/scripts/canary_discovery.py",
+    "source_sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+    "start_line": 622,
+    "end_line": 629,
+    "excerpt": "        demo_mode=False,\n        stage_state=RunState.load(None).dump(),\n        candidate_limit=len(registry),\n        verify_limit=len(registry),\n        university_ids=[\n            e.get(\"id\") or stable_id(identity_key(e[\"name\"], e[\"country\"])) for e in registry\n        ],\n    )\n",
+    "excerpt_sha256": "78d4b3b14903ea15f0f8433cdec313d15e0de720e2513f70fbed8f55b8e61cb5"
+  },
+  {
+    "file": "backend/scripts/canary_discovery.py",
+    "source_sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+    "start_line": 759,
+    "end_line": 763,
+    "excerpt": "def _gather_report(session, run, registry, runner, started, finished, error, verbose):\n    results = {\n        r.university: ProgramResult.model_validate(r.payload)\n        for r in session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id)\n    }\n",
+    "excerpt_sha256": "cfc6caf5dbcb2d094e5308702dbbff26722302ffd9d65f1cfd1497406a4b84b8"
+  },
+  {
+    "file": "backend/scripts/canary_discovery.py",
+    "source_sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+    "start_line": 775,
+    "end_line": 781,
+    "excerpt": "        )\n    result_ids = {\n        r.university: r.id\n        for r in session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id)\n    }\n\n    traces = {t.institution: t for adapter in runner.discovery_instances for t in adapter.traces}\n",
+    "excerpt_sha256": "f152a7b4a383ec03093d8ffbb18e8166cce3b30207d71c4b5dd7b74a275b18ae"
+  },
+  {
+    "file": "backend/scripts/canary_discovery.py",
+    "source_sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+    "start_line": 790,
+    "end_line": 815,
+    "excerpt": "    for entry in registry:\n        name = entry[\"name\"]\n        domain = registrable_domain(entry[\"homepage\"])\n        outcomes = runner.audit.by_domain.get(domain, Counter())\n        blocked = outcomes.get(FetchOutcome.ROBOTS_DISALLOWED.value, 0)\n        checked = sum(outcomes.values())\n        failed = (\n            checked\n            - outcomes.get(FetchOutcome.OK.value, 0)\n            - outcomes.get(FetchOutcome.CACHED.value, 0)\n        )\n\n        candidate = next((c for c in runner._candidates if c.name == name), None)\n        trace = traces.get(name)\n        result = results.get(name)\n        claims = claims_by_result.get(result_ids.get(name, \"\"), [])\n        page_records = records_by_domain.get(domain, [])\n        outcome_counts = Counter(record[\"category\"] for record in page_records)\n        type_counts = Counter(\n            record[\"page_type\"] for record in page_records if record[\"page_type\"] != \"unclassified\"\n        )\n\n        row_out = {\n            \"catalogue_id\": entry.get(\"id\"),\n            \"institution\": name,\n            \"country\": entry[\"country\"],\n",
+    "excerpt_sha256": "41e5d945994301d1ccbc43e8914863ef21149b6505c8b14df1039f59ee1e7944"
+  },
+  {
+    "file": "backend/scripts/canary_discovery.py",
+    "source_sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+    "start_line": 832,
+    "end_line": 836,
+    "excerpt": "            \"discovery_trace\": trace.as_dict() if trace else None,\n            \"programs\": [p.url for p in candidate.programs] if candidate else [],\n            \"program_page_found\": bool(candidate and candidate.programs),\n            \"scholarship_page_found\": bool(candidate and candidate.scholarships_url),\n            \"discovery_notes\": candidate.notes if candidate else \"no candidate produced\",\n",
+    "excerpt_sha256": "d39cfc5050e47fef7d4384a030f4a57c7eff146affad52ca67c3f7649863f467"
+  },
+  {
+    "file": "backend/app/catalogue/importer.py",
+    "source_sha256": "dffd239d62f22157c6bf6cd4698b151703737e1738fadeedc88d24deb54d8202",
+    "start_line": 46,
+    "end_line": 55,
+    "excerpt": "    base = re.sub(r\"\\s*\\([^()]+\\)\\s*$\", \"\", value).strip()\n    return NAME_ALIASES.get(normalize(base), base)\n\n\ndef identity_key(name: str, country: str) -> str:\n    return f\"{normalize(country_name(country))}::{normalize(canonical_name(name))}\"\n\n\ndef stable_id(key: str) -> str:\n    return hashlib.sha256(key.encode()).hexdigest()[:32]\n",
+    "excerpt_sha256": "ed264285e7c905135bda232ac0553c7598a3011de78310bea6669a18613eb63b"
+  },
+  {
+    "file": "backend/app/catalogue/importer.py",
+    "source_sha256": "dffd239d62f22157c6bf6cd4698b151703737e1738fadeedc88d24deb54d8202",
+    "start_line": 146,
+    "end_line": 174,
+    "excerpt": "\ndef import_catalogue(session: Session, document: dict | None = None) -> dict[str, int]:\n    document = document if document is not None else json.loads(SEED_PATH.read_text())\n    rows = validate_snapshot(document)  # Validate everything before touching the database.\n    version = f\"{document['generated_on']}/{document['schema_version']}\"\n    if session.get_bind().dialect.name == \"postgresql\":\n        session.execute(text(\"SELECT pg_advisory_xact_lock(829004500)\"))\n    elif not session.in_transaction():\n        session.execute(text(\"BEGIN IMMEDIATE\"))\n    existing = {u.identity_key: u for u in session.scalars(select(University))}\n    registry = json.loads(REGISTRY_PATH.read_text())\n    for entry in registry:\n        key = identity_key(entry[\"name\"], entry[\"country\"])\n        uni = existing.get(key)\n        if uni is None:\n            uni = University(\n                id=stable_id(key),\n                identity_key=key,\n                name=entry[\"name\"],\n                country=country_name(entry[\"country\"]),\n                city=entry.get(\"city\", \"\"),\n                aliases=[],\n            )\n            session.add(uni)\n            existing[key] = uni\n        uni.registry_entry = entry\n        uni.domain = public_domain(urlsplit(entry[\"homepage\"]).hostname)\n        uni.domain_status = \"curated\"\n    known = {\n",
+    "excerpt_sha256": "188b1d8f35ff56f666cc4c09bb4eff6fa72aa2fdf92e400f7c5a6fe1babc0de1"
+  },
+  {
+    "file": "backend/app/catalogue/importer.py",
+    "source_sha256": "dffd239d62f22157c6bf6cd4698b151703737e1738fadeedc88d24deb54d8202",
+    "start_line": 179,
+    "end_line": 199,
+    "excerpt": "    for row in rows:\n        key = identity_key(row[\"name\"], row[\"country\"])\n        uni = existing.get(key)\n        if uni is None:\n            domain = seed_domain(row)\n            uni = University(\n                id=stable_id(key),\n                identity_key=key,\n                name=canonical_name(row[\"name\"]),\n                country=country_name(row[\"country\"]),\n                city=row.get(\"city\") or \"\",\n                aliases=[],\n                domain=domain,\n                domain_status=\"seed\" if domain else \"unknown\",\n            )\n            session.add(uni)\n            existing[key] = uni\n        aliases = {uni.name, row[\"name\"], *(uni.aliases or [])}\n        suffix = re.search(r\"\\(([^()]+)\\)$\", row[\"name\"])\n        if suffix:\n            aliases.add(suffix[1])\n",
+    "excerpt_sha256": "f4a635cdfcab782b48bcbd20e6550bbea210f89d92263292ce89e4ea4290bc9f"
+  },
+  {
+    "file": "backend/app/catalogue/discovery.py",
+    "source_sha256": "bc07cdaf263349931dbb7abb3d987897480711ecb4b19420ce5f2e5df70eda12",
+    "start_line": 100,
+    "end_line": 114,
+    "excerpt": "        for index, uni in enumerate(rows):\n            trace = DiscoveryTrace(institution=uni.name, domain=uni.domain or \"\")\n            candidate = Candidate(\n                name=uni.name,\n                catalogue_id=uni.id,\n                country=uni.country,\n                city=uni.city,\n                discovery_source=f\"local-catalogue:{uni.id}\",\n                notes=\"Institution candidate; programme, cost and requirements need research.\",\n            )\n            if index < self.live_limit:\n                try:\n                    with self.research_scope(candidate) if self.research_scope else nullcontext():\n                        candidate, trace = await asyncio.wait_for(\n                            self._enrich(uni, profile, candidate, trace), timeout=300\n",
+    "excerpt_sha256": "1456dfc38a4ba0a2e0bbd40cd72361dfe5a5e0007b0358ebe4f2cd17bbdd3be5"
+  },
+  {
+    "file": "backend/app/catalogue/discovery.py",
+    "source_sha256": "bc07cdaf263349931dbb7abb3d987897480711ecb4b19420ce5f2e5df70eda12",
+    "start_line": 150,
+    "end_line": 178,
+    "excerpt": "            return candidate, trace\n        inner = DiscoveryTrace(\n            institution=entry[\"name\"],\n            domain=trace.domain,\n            search_queries_sent=trace.search_queries_sent,\n        )\n        try:\n            enriched, discovered = await self._discover_one(\n                entry, profile, search_queries_used=trace.search_queries_sent, trace=inner\n            )\n        except UniversityReadStopped as stopped:\n            if stopped.reason != \"checkpoint_busy\":\n                inner.search_failures[:0] = trace.search_failures\n                inner.search_limitations[:0] = trace.search_limitations\n                for observed in fields(trace):\n                    # The stopped seed owns the exported report's institution key.\n                    if observed.name != \"institution\":\n                        setattr(trace, observed.name, getattr(inner, observed.name))\n            raise\n        discovered.search_failures[:0] = trace.search_failures\n        discovered.search_limitations[:0] = trace.search_limitations\n        enriched.catalogue_id = uni.id\n        enriched.discovery_source = f\"local-catalogue:{uni.id}; {enriched.discovery_source}\"\n        return enriched, discovered\n\n    async def _identify_site(self, uni: University, trace: DiscoveryTrace) -> dict | None:\n        record = (uni.seed_snapshot or {}).get(\"record\", {})\n        hints = [f\"https://{uni.domain}/\" if uni.domain else None, record.get(\"official_site\")]\n        urls = list(dict.fromkeys(url for url in hints if url))\n",
+    "excerpt_sha256": "3c431bcd562d3a3b9ec07b62eeda5e0bcde12044b97c2597a63482fae24b8774"
+  },
+  {
+    "file": "backend/app/catalogue/discovery.py",
+    "source_sha256": "bc07cdaf263349931dbb7abb3d987897480711ecb4b19420ce5f2e5df70eda12",
+    "start_line": 297,
+    "end_line": 300,
+    "excerpt": "        uni.domain = domain\n        uni.domain_status = \"site_identity_checked\"\n        self.session.flush()\n        return {\"name\": uni.name, \"country\": uni.country, \"city\": uni.city, \"homepage\": final}\n",
+    "excerpt_sha256": "c37d3b08f9a1db00ee391003d99a0c0849d80663e9290d08e62ed37182b896e9"
+  },
+  {
+    "file": "backend/app/adapters/discovery/live_discovery.py",
+    "source_sha256": "57cfdab71d29e261c6ca18652ba69c4b018954780eab8d00f62f9f55c26ee093",
+    "start_line": 1156,
+    "end_line": 1185,
+    "excerpt": "        self,\n        entry: dict,\n        profile: ApplicantProfileIn,\n        *,\n        search_queries_used: int = 0,\n        trace: DiscoveryTrace | None = None,\n    ) -> tuple[Candidate, DiscoveryTrace]:\n        domain = urlparse(entry[\"homepage\"]).netloc\n        if trace is None:\n            trace = DiscoveryTrace(institution=entry[\"name\"], domain=domain)\n        trace.domain = domain\n        trace.search_queries_sent = max(trace.search_queries_sent, search_queries_used)\n\n        candidate = Candidate(\n            name=entry[\"name\"],\n            country=entry[\"country\"],\n            city=entry.get(\"city\", \"\"),\n            domain=domain,\n            attributes=entry.get(\"attributes\", {}),\n            rankings=[RankingEntry(**r) for r in entry.get(\"rankings\", [])],\n            discovery_source=f\"{self.name} -> {entry['homepage']}\",\n        )\n\n        # 1. Manual seeds. A human has verified which page is which. This says\n        #    where to look; it is not itself evidence of anything on the page.\n        seeds = {k: v for k, v in (entry.get(\"seeds\") or {}).items() if v}\n        trace.manual_seeds = dict(seeds)\n        selected: dict[str, list[str]] = {c: [] for c in PageCategory.ALL}\n        for category, url in seeds.items():\n            if category not in selected:\n",
+    "excerpt_sha256": "9b0dd6538f3e94d6f4f44941b92b7fc72012a078102848139bad84adc7c79a0f"
+  },
+  {
+    "file": "backend/app/pipeline/runner.py",
+    "source_sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+    "start_line": 185,
+    "end_line": 201,
+    "excerpt": "    ) -> FixtureDiscoveryAdapter | LiveDiscoveryAdapter:\n        \"\"\"Build discovery with source-page recording only on the live path.\"\"\"\n        if self.demo:\n            return FixtureDiscoveryAdapter(fetcher)\n        return CatalogueDiscoveryAdapter(\n            fetcher,\n            session=self.session,\n            university_ids=self.run.university_ids,\n            live_limit=self.verify_limit,\n            page_recorder=lambda **fields: SourcePage.record(self.session, **fields),\n            research_scope=self._university_read_scope if self._read_guard_enabled else None,\n        )\n\n    def _audit(self, action: str, entity_type: str, entity_id: str, **detail) -> None:\n        self.session.add(\n            AuditEvent(\n                organization_id=self.run.profile.organization_id,\n",
+    "excerpt_sha256": "19fdb66d50d4a11a1ec65630a609070e8a0193b82e006b28ecb46260b21fc2a3"
+  },
+  {
+    "file": "backend/app/pipeline/runner.py",
+    "source_sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+    "start_line": 748,
+    "end_line": 753,
+    "excerpt": "\n        adapter = self._make_discovery_adapter(fetcher)\n        self._candidates = await adapter.discover(self.profile, self.candidate_limit)\n        if isinstance(adapter, LiveDiscoveryAdapter):\n            failures = dict.fromkeys(\n                message for trace in adapter.traces for message in trace.search_failures\n",
+    "excerpt_sha256": "50e6aca8b40bbae9c7891d0b6e965ff773240a1982ac0271e48286e5a5fb0bb0"
+  },
+  {
+    "file": "backend/app/pipeline/runner.py",
+    "source_sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+    "start_line": 834,
+    "end_line": 843,
+    "excerpt": "                result = ProgramResult(\n                    id=new_id(),\n                    run_id=self.run.id,\n                    university=cand.name,\n                    university_id=dedupe.university_key(cand.name, cand.country),\n                    country=cand.country,\n                    city=cand.city,\n                    program=prog.name,\n                    program_url=prog.url,\n                    degree=prog.degree,\n",
+    "excerpt_sha256": "0d81b6da1e64adb420c68dfdbbe1b2cd1374ba6946a8ec7af10bfc1b751b5a79"
+  },
+  {
+    "file": "backend/app/pipeline/runner.py",
+    "source_sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+    "start_line": 1607,
+    "end_line": 1615,
+    "excerpt": "        row = ProgramResultRow(\n            id=new_id(),\n            run_id=self.run.id,\n            dedupe_key=dedupe_key,\n            university=result.university,\n            university_key=result.university_id,\n            country=result.country,\n            program=result.program,\n            eligibility=result.eligibility.value,\n",
+    "excerpt_sha256": "48f216111e85d119044006e6e34c0d122201aab8242d6d68fd40d29cd2633c11"
+  },
+  {
+    "file": "backend/app/adapters/base.py",
+    "source_sha256": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46",
+    "start_line": 28,
+    "end_line": 47,
+    "excerpt": "class Candidate:\n    \"\"\"A university found during discovery, before anything is verified.\"\"\"\n\n    name: str\n    country: str\n    city: str\n    domain: str = \"\"\n    programs: list[CandidateProgram] = field(default_factory=list)\n    rankings: list[RankingEntry] = field(default_factory=list)\n    admissions_url: str | None = None\n    costs_url: str | None = None\n    scholarships_url: str | None = None\n    attributes: dict[str, str] = field(default_factory=dict)\n    discovery_source: str = \"\"\n    notes: str = \"\"\n    #: Search-seam attempts charged to this institution, including local\n    #: wrapper refusals; this budget ledger does not prove HTTP dispatch.\n    search_queries_used: int = 0\n    #: Stable imported identity for internal university-wide source-work scope.\n    catalogue_id: str | None = None\n",
+    "excerpt_sha256": "367694092e86e5a3568301958193401aea10f9305e93c777568575c92f1e7c5f"
+  },
+  {
+    "file": "backend/app/domain/dedupe.py",
+    "source_sha256": "b4a986c899077e7975e994fa0bde2ca159cd50cdd77bc72bf50ec0e2f7acd226",
+    "start_line": 37,
+    "end_line": 48,
+    "excerpt": "def normalize(text: str) -> str:\n    text = unicodedata.normalize(\"NFKD\", text or \"\")\n    text = \"\".join(ch for ch in text if not unicodedata.combining(ch))\n    text = _PUNCT.sub(\" \", text.lower())\n    return _WS.sub(\" \", text).strip()\n\n\ndef university_key(name: str, country: str = \"\") -> str:\n    tokens = [t for t in normalize(name).split() if t not in _NOISE]\n    if not tokens:\n        tokens = normalize(name).split()\n    return f\"{normalize(country)}::{'-'.join(sorted(set(tokens)))}\"\n",
+    "excerpt_sha256": "3f931a652d5bbe1b76d5d32b7aaf921114745797b7b32523aa661bb8773cfc9d"
+  },
+  {
+    "file": "backend/app/models/university.py",
+    "source_sha256": "51cc33b2b6af3e33145cbaba7a6dc0b48db7d28c2b04fd1450ce1771b0e98ea6",
+    "start_line": 13,
+    "end_line": 27,
+    "excerpt": "class University(TimestampedBase):\n    __tablename__ = \"universities\"\n\n    identity_key: Mapped[str] = mapped_column(String(400), unique=True)\n    name: Mapped[str] = mapped_column(String(300))\n    country: Mapped[str] = mapped_column(String(100), index=True)\n    city: Mapped[str] = mapped_column(String(200), default=\"\")\n    aliases: Mapped[list] = mapped_column(JSON, default=list)\n    domain: Mapped[str | None] = mapped_column(String(253), nullable=True)\n    domain_status: Mapped[str] = mapped_column(String(40), default=\"unknown\")\n    # Only the existing curated registry may populate this field.\n    registry_entry: Mapped[dict | None] = mapped_column(JSON, nullable=True)\n    # Points to the most recently imported seed, without deleting its history.\n    seed_snapshot: Mapped[dict | None] = mapped_column(JSON, nullable=True)\n    seed_version: Mapped[str | None] = mapped_column(String(80), nullable=True)\n",
+    "excerpt_sha256": "86ee518aa623b09ec23a274ac0a1b8233688c75c21f39aee796f20858abe59aa"
+  },
+  {
+    "file": "backend/app/schemas/result.py",
+    "source_sha256": "f4eab02362d8bcdcec72bc1f16e2636f7abe7c0844b72b18bb4eac94f3927974",
+    "start_line": 316,
+    "end_line": 329,
+    "excerpt": "class ProgramResult(Base):\n    \"\"\"One row of the shortlist table.\"\"\"\n\n    id: str\n    run_id: str\n\n    university: str\n    university_id: str\n    country: str\n    city: str\n    program: str\n    program_url: str | None = None\n    degree: DegreeLevel\n    intake: str\n",
+    "excerpt_sha256": "d1521eb7977b7b9738b9d1db60630dc7f4d5d4c78f92abc3a2c4f7d0a4597680"
+  },
+  {
+    "file": "backend/tests/test_live_discovery.py",
+    "source_sha256": "aef28ed47c9f8f2ee84d878c405ba442a2c89340464a3695b20567317c39863e",
+    "start_line": 2122,
+    "end_line": 2143,
+    "excerpt": "        registry = dict(entry)\n        if mode == \"timeout\":\n            registry[\"seeds\"] = {\"program_page\": entry[\"homepage\"] + \"bachelors/computer-science\"}\n        if prime:\n            registry[\"name\"] = \"Registry Alias University\"\n            host = entry[\"homepage\"].split(\"/\")[2]\n            intent = DiscoveryIntent(\n                registry[\"name\"], host, DegreeLevel.BACHELOR, \"Computer Science\"\n            )\n            for query in queries_for(intent, budget=6):\n                query_map[query.text] = [\n                    (\n                        entry[\"homepage\"] + \"bachelors/computer-science\",\n                        \"Bachelor Computer Science\",\n                        \"\",\n                    )\n                ]\n        rows.append(\n            SimpleNamespace(\n                id=f\"offline-{index}\",\n                name=entry[\"name\"],\n                country=entry[\"country\"],\n",
+    "excerpt_sha256": "3e275f3def475873ef0b0f820d8ddb0f2ab75e04d64b3b21e0e2ee388b891c04"
+  }
+]

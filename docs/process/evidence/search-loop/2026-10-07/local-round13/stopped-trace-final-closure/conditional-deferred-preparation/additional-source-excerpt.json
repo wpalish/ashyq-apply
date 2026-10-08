@@ -1,0 +1,9 @@
+{
+  "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_live_discovery.py",
+  "source_sha256": "aef28ed47c9f8f2ee84d878c405ba442a2c89340464a3695b20567317c39863e",
+  "start_line": 2139,
+  "end_line": 2154,
+  "excerpt": "        rows.append(\n            SimpleNamespace(\n                id=f\"offline-{index}\",\n                name=entry[\"name\"],\n                country=entry[\"country\"],\n                city=entry[\"city\"],\n                domain=\"\"\n                if mode.startswith(\"identity-\")\n                else registrable_domain(entry[\"homepage\"].split(\"/\")[2])\n                if prime\n                else entry[\"homepage\"].split(\"/\")[2],\n                registry_entry=None if mode.startswith(\"identity-\") else registry,\n                aliases=[],\n                seed_snapshot={},\n            )\n        )\n",
+  "excerpt_sha256": "4b7c7275cb2955e6247580c75896fd7d91982b1d9f2975d07be48f28fb6e98ca",
+  "qualification": "Supplementary source-only fixture owner/registry binding excerpt; no import/test/rerun"
+}

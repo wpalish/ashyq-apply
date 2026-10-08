@@ -6,6 +6,12 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[search-stopped-trace-accounting] GREEN exact-source closure 2026-10-08T06:06:16.002436+00:00.** Root sourcecommitab273163d73f3fc6af78b7ebbee47d6863044aa3/snapshot75497406d33bb8c4fe3015d44b13e20786d8cf9a74d4e6138c16d3341164d446 completed freshfull20261008T053629Z-check-6693acd5, terminal0/13of13 in931.367808s.4349sameuniqueeachDB; old4330+exact19 preserved,95.27%coverage,32warnings(30syntheticparser+baseline2); frontend232/demo79+1viewportskip/auth6/audits0. Ownedseed242 exactprimary/frozen binding;20rows/Gron#1/UBCportfolioOUT_OF_BUDGET/head d8e412c6a901. A integration015431 verifies999/source3/other996/archive271; B final8cad84cd ACCEPT41PASS0RED corroborates full/JUnit/17raw/seed242/STOP. Fullraw archive25receipt5858ad9c +finalclosure74receiptad3f999536644802b925c698bcb2002fc2dc4fddb64df8dd6035145926c65ffb, copiesnotexperiments. Root remainingmetadata/evidence greencommitpush, then Draftsuccessor72/base task/search-control-propagation/mandatoryattach/verifyhead+release. No extra full rerun: selected999 unchanged. GlobalgoalACTIVE, liveSTOP65b5/collectionUNSCORED/no quality/production/launch claim.
+
+
+**[search-stopped-trace-accounting] fresh frozen full RUNNING 2026-10-08 05:36UTC.** WIP ab273163d73f3fc6af78b7ebbee47d6863044aa3 pushed; run20261008T053629Z-check-6693acd5 snapshot75497406d33bb8c4fe3015d44b13e20786d8cf9a74d4e6138c16d3341164d446. All999primary=frozen=source-after map bind; expected4349old4330+19 remains unconfirmed until actualbothJUnit. Session17835 rootowned; Ruff/checkformatexit0, othersteps pending. Freezeapp/test/evaluation/frontendselected paths; metadata/evidence only. A integration/archive andB savedfinalraw review assigned; no fullPASS/qualityclaim. STOP65b5 preserved.
+
+
 **[search-stopped-trace-accounting] exact source APPLIED 2026-10-08 05:35UTC.** Root applied accepted Live57cfdab7/Cataloguebc07cdaf/testaef28ed4 only; other996source paths unchanged, source-after999 file30808fcb; oldtest exactprefix preserved. Owned syntheticseed242hashes now match actualprimary;4commands0/20rows/Groningen#1/UBCportfolioOUT_OF_BUDGET/head d8e412c6a901. Primary freshfull NOT_RUN yet; WIPcheckpoint [skipci] before frozenfull. Proposed250PASS andpeer102assertions are external finite checks, not changedsource full gates. STOP65b5/qualityUNSCORED/defaultFalse unchanged.
 
 
@@ -125,6 +131,9 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[search-stopped-trace-accounting] GREEN exact-source closure 2026-10-08T06:06:16.002436+00:00.** Root sourcecommitab273163d73f3fc6af78b7ebbee47d6863044aa3/snapshot75497406d33bb8c4fe3015d44b13e20786d8cf9a74d4e6138c16d3341164d446 completed freshfull20261008T053629Z-check-6693acd5, terminal0/13of13 in931.367808s.4349sameuniqueeachDB; old4330+exact19 preserved,95.27%coverage,32warnings(30syntheticparser+baseline2); frontend232/demo79+1viewportskip/auth6/audits0. Ownedseed242 exactprimary/frozen binding;20rows/Gron#1/UBCportfolioOUT_OF_BUDGET/head d8e412c6a901. A integration015431 verifies999/source3/other996/archive271; B final8cad84cd ACCEPT41PASS0RED corroborates full/JUnit/17raw/seed242/STOP. Fullraw archive25receipt5858ad9c +finalclosure74receiptad3f999536644802b925c698bcb2002fc2dc4fddb64df8dd6035145926c65ffb, copiesnotexperiments. Root remainingmetadata/evidence greencommitpush, then Draftsuccessor72/base task/search-control-propagation/mandatoryattach/verifyhead+release. No extra full rerun: selected999 unchanged. GlobalgoalACTIVE, liveSTOP65b5/collectionUNSCORED/no quality/production/launch claim.
+
 
 **[search-stopped-trace-accounting] Holder gpt-6-astra since 2026-10-08T05:00:16.582638+00:00; new task from clean pushedf2a6d95a/Draft72 under explicit §5 predecessor exception.** Previous goal turn PROGRESS: actual nativecontrol repair, freshfull13/13/4330sameeachDB/95.26, originals archived, Draft72 attached and release cleanpushed. New finite offline task fixes source-proven loss of six search seamqueryattempts/innerdiagnostics after noncheckpoint readstop, not a proven >6overrun/qualitygain. B8e4a OFF24/Aca33peer9 native2route22 observations preverified; source999/full d076/d648/STOP65b5 unchanged, app/test writesNOT_APPLIED. Before proposal/application preserve exactOFF packets; A audits private signatures/ordinary/cancel/checkpoint/identityprefix semantics, B prepares narrowly bounded actualsource trace/accounting lifecycle and native regression proposal externally. Preserve honest seed/unknown contract, no _apply on unwind or partial source/Claims, no mutable shared state leaking across university/run, no exception-class coupling to adapters, no duplicate identitydiagnostic prefixes; queryattempts notvendorHTTP count. Independent review and exactrootwriteahead before appcode, then nativefull+seed bindings/greenDraft successor72/release. No live/provider/model/auth/gold/scorer/reset/substitution/purchase/defaultpromotion/merge/deploy; goalACTIVE.
 
@@ -271,6 +280,9 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[search-stopped-trace-accounting] GREEN exact-source closure 2026-10-08T06:06:16.002436+00:00.** Root sourcecommitab273163d73f3fc6af78b7ebbee47d6863044aa3/snapshot75497406d33bb8c4fe3015d44b13e20786d8cf9a74d4e6138c16d3341164d446 completed freshfull20261008T053629Z-check-6693acd5, terminal0/13of13 in931.367808s.4349sameuniqueeachDB; old4330+exact19 preserved,95.27%coverage,32warnings(30syntheticparser+baseline2); frontend232/demo79+1viewportskip/auth6/audits0. Ownedseed242 exactprimary/frozen binding;20rows/Gron#1/UBCportfolioOUT_OF_BUDGET/head d8e412c6a901. A integration015431 verifies999/source3/other996/archive271; B final8cad84cd ACCEPT41PASS0RED corroborates full/JUnit/17raw/seed242/STOP. Fullraw archive25receipt5858ad9c +finalclosure74receiptad3f999536644802b925c698bcb2002fc2dc4fddb64df8dd6035145926c65ffb, copiesnotexperiments. Root remainingmetadata/evidence greencommitpush, then Draftsuccessor72/base task/search-control-propagation/mandatoryattach/verifyhead+release. No extra full rerun: selected999 unchanged. GlobalgoalACTIVE, liveSTOP65b5/collectionUNSCORED/no quality/production/launch claim.
+
 
 **[search-stopped-trace-accounting] confirmed OFF archived, 2026-10-08 05:02UTC.** ExactB8e4a/Aca33 proof/peer archived39 originals/826289bytes receipt6d229a83a362a98dd3c604ab777143562c95ef0a369c9f6871b28b56a9bdcefb; all999 source/STOP unchanged.22nativefactpattern checks across2routes, manualread56→60 / mockqueries6→export0; stats4/walker1 survive, missingdomain blocks topicsearch, noSQL/overrun/qualityclaim. Acompat andBexternalproposal underway; no primaryapp/testwrites. Rootnotes ordinary _enrich identity prefixes must remain once and current budgetFalse tests untouched. Trace metadata never makes candidate verifiable.
 
@@ -1982,6 +1994,15 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[search-stopped-trace-accounting] GREEN exact-source closure 2026-10-08T06:06:16.002436+00:00.** Root sourcecommitab273163d73f3fc6af78b7ebbee47d6863044aa3/snapshot75497406d33bb8c4fe3015d44b13e20786d8cf9a74d4e6138c16d3341164d446 completed freshfull20261008T053629Z-check-6693acd5, terminal0/13of13 in931.367808s.4349sameuniqueeachDB; old4330+exact19 preserved,95.27%coverage,32warnings(30syntheticparser+baseline2); frontend232/demo79+1viewportskip/auth6/audits0. Ownedseed242 exactprimary/frozen binding;20rows/Gron#1/UBCportfolioOUT_OF_BUDGET/head d8e412c6a901. A integration015431 verifies999/source3/other996/archive271; B final8cad84cd ACCEPT41PASS0RED corroborates full/JUnit/17raw/seed242/STOP. Fullraw archive25receipt5858ad9c +finalclosure74receiptad3f999536644802b925c698bcb2002fc2dc4fddb64df8dd6035145926c65ffb, copiesnotexperiments. Root remainingmetadata/evidence greencommitpush, then Draftsuccessor72/base task/search-control-propagation/mandatoryattach/verifyhead+release. No extra full rerun: selected999 unchanged. GlobalgoalACTIVE, liveSTOP65b5/collectionUNSCORED/no quality/production/launch claim.
+
+
+**[search-stopped-trace-accounting] next-task preparation only, 2026-10-08 05:49UTC:** A may make a finite stdlib/static audit of normal successful registry-alias Catalogue output versus native canary registry/name joins. Current source `_gather_report` indexes trace/candidate/results by name, while sealed ordinary alias fixture retains Registry Alias University; actual catalogue canary reachability still UNCONFIRMED. No call/import of `_gather_report`, recall_metrics, scorer/gold/model/provider/SQL, no new source/tests or behavior proposal until actual source path confirmed; queued separate task only after current full/green/Draft/release. Root current3files frozen, globalSTOP unchanged.
+
+
+**[search-stopped-trace-accounting] fresh frozen full RUNNING 2026-10-08 05:36UTC.** WIP ab273163d73f3fc6af78b7ebbee47d6863044aa3 pushed; run20261008T053629Z-check-6693acd5 snapshot75497406d33bb8c4fe3015d44b13e20786d8cf9a74d4e6138c16d3341164d446. All999primary=frozen=source-after map bind; expected4349old4330+19 remains unconfirmed until actualbothJUnit. Session17835 rootowned; Ruff/checkformatexit0, othersteps pending. Freezeapp/test/evaluation/frontendselected paths; metadata/evidence only. A integration/archive andB savedfinalraw review assigned; no fullPASS/qualityclaim. STOP65b5 preserved.
+
 
 **[search-stopped-trace-accounting] exact source APPLIED 2026-10-08 05:35UTC.** Root applied accepted Live57cfdab7/Cataloguebc07cdaf/testaef28ed4 only; other996source paths unchanged, source-after999 file30808fcb; oldtest exactprefix preserved. Owned syntheticseed242hashes now match actualprimary;4commands0/20rows/Groningen#1/UBCportfolioOUT_OF_BUDGET/head d8e412c6a901. Primary freshfull NOT_RUN yet; WIPcheckpoint [skipci] before frozenfull. Proposed250PASS andpeer102assertions are external finite checks, not changedsource full gates. STOP65b5/qualityUNSCORED/defaultFalse unchanged.
 
@@ -4076,6 +4097,12 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[search-stopped-trace-accounting] GREEN exact-source closure 2026-10-08T06:06:16.002436+00:00.** Root sourcecommitab273163d73f3fc6af78b7ebbee47d6863044aa3/snapshot75497406d33bb8c4fe3015d44b13e20786d8cf9a74d4e6138c16d3341164d446 completed freshfull20261008T053629Z-check-6693acd5, terminal0/13of13 in931.367808s.4349sameuniqueeachDB; old4330+exact19 preserved,95.27%coverage,32warnings(30syntheticparser+baseline2); frontend232/demo79+1viewportskip/auth6/audits0. Ownedseed242 exactprimary/frozen binding;20rows/Gron#1/UBCportfolioOUT_OF_BUDGET/head d8e412c6a901. A integration015431 verifies999/source3/other996/archive271; B final8cad84cd ACCEPT41PASS0RED corroborates full/JUnit/17raw/seed242/STOP. Fullraw archive25receipt5858ad9c +finalclosure74receiptad3f999536644802b925c698bcb2002fc2dc4fddb64df8dd6035145926c65ffb, copiesnotexperiments. Root remainingmetadata/evidence greencommitpush, then Draftsuccessor72/base task/search-control-propagation/mandatoryattach/verifyhead+release. No extra full rerun: selected999 unchanged. GlobalgoalACTIVE, liveSTOP65b5/collectionUNSCORED/no quality/production/launch claim.
+
+
+**[search-stopped-trace-accounting] fresh frozen full RUNNING 2026-10-08 05:36UTC.** WIP ab273163d73f3fc6af78b7ebbee47d6863044aa3 pushed; run20261008T053629Z-check-6693acd5 snapshot75497406d33bb8c4fe3015d44b13e20786d8cf9a74d4e6138c16d3341164d446. All999primary=frozen=source-after map bind; expected4349old4330+19 remains unconfirmed until actualbothJUnit. Session17835 rootowned; Ruff/checkformatexit0, othersteps pending. Freezeapp/test/evaluation/frontendselected paths; metadata/evidence only. A integration/archive andB savedfinalraw review assigned; no fullPASS/qualityclaim. STOP65b5 preserved.
+
+
 **[search-stopped-trace-accounting] exact source APPLIED 2026-10-08 05:35UTC.** Root applied accepted Live57cfdab7/Cataloguebc07cdaf/testaef28ed4 only; other996source paths unchanged, source-after999 file30808fcb; oldtest exactprefix preserved. Owned syntheticseed242hashes now match actualprimary;4commands0/20rows/Groningen#1/UBCportfolioOUT_OF_BUDGET/head d8e412c6a901. Primary freshfull NOT_RUN yet; WIPcheckpoint [skipci] before frozenfull. Proposed250PASS andpeer102assertions are external finite checks, not changedsource full gates. STOP65b5/qualityUNSCORED/defaultFalse unchanged.
 
 
@@ -4634,6 +4661,9 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+**Current next-step boundary:** owner attachment§7 retains global liveSTOP after ExaMCP explicit rate limited/HTTPstatusNone. No fresh quality/labels/scorer/live may resume without separate owner authorization. A normalalias source preflightfc0b archived as CONDITIONAL risk, actualcurrentcanary mismatch NOT_PROVEN; it does not justify a code fix or new matrix. No sourcefixqueued from this hypothetical. Next after current Draft/release: prepare concrete fresh pilot admission/owner decision; old collection staysUNSCORED, heldout150 forbidden.
+
+
 **[search-stopped-trace-accounting] exact primary application WRITEAHEAD 2026-10-08T05:35:33.935817+00:00.** A sealc9c6ba02 qualified ACCEPT exactLive57cfdab7/Cataloguebc07cdaf/testaef28ed4; independent11native+1mock cases102assertionsPASS vsOFF97PASS5expectedRED,9wholeoutputs/12telemetry equal. Root firstarchives A95 originals against source-before999, then applies EXACT3files from B proposed after preflight all999/STOP/oldprefix. Other996 selectedsource paths remain unchanged; no fixture/source adjustment authorized beyond acceptedbytes. Generate source-after999 and integrationreceipt, bind ownedseed242 to primary, WIPcheckpoint push[skipci], fresh full via pinnedrun_local161 --repo thischeckout --suite full. Expected4349=old4330+19 must be confirmed from bothJUnit; old d076/d648full becomes historicalbaseline ONLY. No live/provider/model/gold/scorer/reset/default/merge/deploy/SQL/quality claim.
 
 
@@ -4945,6 +4975,9 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+**[search-stopped-trace-accounting] appliedab273:** optional private caller-owned DiscoveryTrace argument only; curated trace created before scope entry, catalogue retains separate inner trace and transfers metadata on noncheckpoint readstop. Seed semantic programme facts remain unknown; complete returnedtrace/alias semantics unchanged. No public schema/default/limits/Fetcher/SQL/migration change.
+
 
 **[search-stopped-trace-accounting] planned private-only signature:** `_discover_one(..., search_queries_used=0, trace:DiscoveryTrace|None=None)` accepts a fresh caller-owned trace; default direct call remains compatible. No public schema/default/flags/budget/Fetcher/SQL/migration changes. Seed semantic facts still unknown on stop; inner metadata copied only for noncheckpoint UniversityReadStopped.
 
