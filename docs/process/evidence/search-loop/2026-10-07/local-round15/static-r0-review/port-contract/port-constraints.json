@@ -1,0 +1,74 @@
+{
+  "decision": "STATIC_CONSTRAINTS_READY_ACTUAL_PORT_NOT_REVIEWED",
+  "constraints": [
+    {
+      "id": "explicit_context",
+      "required": "Pure validate gets explicit source context/full verified metadata/identity map rather than PLAN/FULL/OWN filesystem globals; hashes checked outside on actual source-bound files",
+      "source": "driver:13-21,123-127,201",
+      "risk": "Porting old body without globals breaks import or validates obsolete full snapshot"
+    },
+    {
+      "id": "canonical_case_profile",
+      "required": "Controller owns exact ordered original10 public registry selectors/domains/request scope; per-case actual child argv source-profile/executed case proof tied to raw.batch/institution/observation/capture. Preserve legacy native aliases/subdomain behavior explicitly, no fuzzy semantic case substitution",
+      "source": "driver:94-101,128,142; live:44-55,790-802; canary:122-150,568-573",
+      "risk": "Old body only nonempty raw identity/batch; case_id/cohort alone are not proof of executed profile"
+    },
+    {
+      "id": "fresh_source",
+      "required": "Bind actual pipeline HEAD and tested current snapshot/file map, harness/mapping hashes; independent fresh executable pins; no old fixed7c74 or old full globals",
+      "source": "driver:31-51,123-127",
+      "risk": "Docs/source transitions or new module can leave old preflight irrelevant"
+    },
+    {
+      "id": "all_four_physical",
+      "required": "One physical capture/observation/budget/raw per case; hash before/after; whole capture obs equality and budget equality with exactly3 parent fields; reject malformed/missing/ambiguous artifacts",
+      "source": "driver:76-120,140-141,175-181,351-369",
+      "risk": "Validated detached dicts/exit0 are not original physical capture provenance"
+    },
+    {
+      "id": "clock_counter_exact",
+      "required": "Retain raw type-first nonbool counters and nonfinite/huge-int guards; 120/60/6,119000 source-work,1000 reserve,135 parent envelope; includes setup/cleanup/persistence basis; http_fetches=Fetcher invocations not HTTP requests",
+      "source": "driver:65-75,133-139,165-184; live:291,319-348",
+      "risk": "Schema coercion or reused expert900 policy makes cap verification untrue"
+    },
+    {
+      "id": "fresh_job",
+      "required": "GenuineJob/token1 nativeOFF ledgerNone, heartbeat joined, recorded owner/state/worker counts, raw control error/messages/unknowns; do not turn terminal capture into succeededJob",
+      "source": "driver:144-164,244-286",
+      "risk": "Bounded partial is only source observation protocol evidence"
+    },
+    {
+      "id": "partial_lane",
+      "required": "Default require_complete_job=True; explicit False only keeps bounded recognized original cause+state pairs and all mandatory raw; late elapsed>120000 or provider refusal inadmissible; capture_kind called only after no validate errors",
+      "source": "driver:258-300",
+      "risk": "Partial kind is a description, not admission validator or complete job proof"
+    },
+    {
+      "id": "vendor_gate_exit0",
+      "required": "First shared refusal gate checked before/after child and from physical provider_failure/stop reason even childexit0. Keep typedreason/statusNone. Missing/malformed protocol closes collection, not fake failure-free success",
+      "source": "driver:321-350,361-364; live:161-201,835-836,1423-1433",
+      "risk": "validate returning error alone does not create global sticky gate for later expert/source work"
+    },
+    {
+      "id": "claim_mapping",
+      "required": "Raw claims equal native ClaimRow payloads; preserve rowid/order/type/source/access timestamp provenance, native Claim schema, normalize_subject_claims+evidence_scope, excerpt<=600 and source-owned year/intake; exact all nonempty prediction/page mappings and HttpUrl ordered canonical URLs",
+      "source": "driver:194-243,287-292; live:696-728; mapping:44-85,168-270",
+      "risk": "Blanket empty prediction acceptance or alternate mapping silently loses real facts; unknown source scope must not be requested year"
+    },
+    {
+      "id": "namespace_not_gold",
+      "required": "IdentityMap is exact sourceURL+literal subject output namespace, not expected answers/adjudication; use original immutable controller-only map pinned as metadata, retain unknown fallback. Keep expert isolation roots denying it and labels; no scorer/gold/dataset reads for validation",
+      "source": "identities:1-53; mapping:168-270; live:352,705-709",
+      "risk": "Empty invented map changes native keys; namespace validation does not claim evidence correctness/support/quality"
+    },
+    {
+      "id": "finite_compat",
+      "required": "Port current positive nonempty Claim outputs and ordinary completed/partial/error/canonicalURL cases; do not regenerate original expectations. New root source-binding cases supplement current behavior with honest classification",
+      "source": "driver:55-60,113-120,194-293",
+      "risk": "Normal import/control success must be demonstrated after A seal; current static review cannot bless mutable proposal"
+    }
+  ],
+  "no_driver_or_app_imports": true,
+  "no_outputs_namespace_labels_gold_scorer_read": true,
+  "no_network_model_CLI_SQL": true
+}
