@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[search-control-propagation] Holder gpt-6-astra since 2026-10-08T04:00:30.623652+00:00; task/search-control-propagation from clean pushed1679ea7cb9b3edd38084908a02248e780e615c94/Draft71 under explicit §5 predecessor exception.** Previous goal turn PROGRESS: narrow rate-limit repair green full13/13/4312sameeachDB/95.26,931+59 originals verified, Draft71 created/attached and release pushed. Source remains77a/e577 selected999; no new app/test writes. Root takes new baton, A finite current-source defect proof, B independent ordinary-negative/caller review. STOP65b5 unchanged; no live/model/provider/gold/score/reset/switch/purchase/merge/deploy. GoalACTIVE.
+
 **[search-explicit-rate-limit] Holder: nobody; ready-for-review (Draft PR #71), 2026-10-08 03:57 UTC.** https://github.com/wpalish/ashyq-apply/pull/71; OPEN/Draft/base task/search-retained-source-boundaries/head task/search-explicit-rate-limit@a48e8600575ba7d17cff3c3ace288a97ffa0f2ea verified, attached to current task. Rollup[] means no hosted checks, not PASS. Technical repair complete, root release metadata next; immutable source77a220a5/fullsnapshot e5774231/13of13/4312sameeachDB/95.26 retained. Boundaries931 originals ae1b1868 + final59 d7b4f8ac independently verified; source999/STOP65b5 unchanged. GlobalgoalACTIVE, round10UNSCORED/no accepted stable quality gain/production/launch. Next offline typed-control task under explicit §5 exception; no live restart.
 
 **[search-explicit-rate-limit] current GREEN checkpoint, 2026-10-08 03:53 UTC.** Holder gpt-6-astra; task/search-explicit-rate-limit. Exact app3/test3 on source77a220a5 freshly passed full13/13, snapshot e57742316919b9a2a70eff0d7219209c61f41a6feff4015af5af325c6f8a982f;4312 same unique cases eachDB/95.26%; native90 included eachDB. Independent final B276fc82e ACCEPT24PASS/0RED; original2classname-checkerRED preserved. Boundaries archiveae1b1868 (931 originals) independently accepted; finalclosure d7b4f8ac (59 originals/13,338,464bytes), all999 selected paths unchanged. Root final green commit/push/Draft successor70 and release next. STOP65b5 immutable; round10UNSCORED/no accepted quality gain/launch/production.
@@ -97,6 +99,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[search-control-propagation] IN_PROGRESS, offline defect confirmation before application.** Entry-root Fetcher broadcatch in retrieval.py currently catches Exception; determine actual effects of native UniversityReadStopped(read_cap/checkpoint_busy), RunCancelled and LeaseLost. Preserve object/reason identity and base asyncio cancellation; preserve normal site unavailability and navigation results/budget accounting. Independent actual-source negative review required. No retention/durable/default/schema/ranking/quality policy change bundled.
 
 **[search-explicit-rate-limit] ready-for-review (Draft PR #71).** Technical acceptance complete; current Draft successor70 created/attached/verified. No app/test changes after77a220a5 frozen full; a48e8600 stores exact proofs. Final metadata release retains all gates. Parent releases baton; owner reviews/merges. Quality and launch are outstanding separate acceptance.
 
@@ -230,6 +234,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**Prior task closed:** source77a220a5, green evidencea48e8600, release1679ea7c/Draft71. New task only readonly source pins PLAN.json in work/local-round12/root-control-propagation; no implemented new app behavior. Carried full gates validate unchanged source only.
 
 **[search-explicit-rate-limit] done a48e8600575ba7d17cff3c3ace288a97ffa0f2ea — Draft #71 created/attached/verified.** Source77a220a5 exact app3/test3 green freshfull; a48 archives995newchangedmetadata/evidence paths (file counts not experiments). PR base/head actual verified; all999 selected source paths match final frozen map. Current full summary/JUnit originals retained with both prior Ruff/interruption and peer normalization RED history. Source gates unchanged by release metadata.
 
@@ -1931,6 +1937,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**WRITE-AHEAD before any source edits:** root pins current retrieval/control/read-budget/runner/worker/callers; A runs finite own-folder OFF proof using current native modules and actual BudgetedFetcher guard, zero realnetwork, preserving exceptions and call accounting; B independently confirms source implications and ordinary RuntimeError/timeout/HTTPaccess/empty/success negative controls. Seal exact files/results/hashes including any fixture mistakes; do not reuse prior fourRED as currentproof. Require independent review and explicit new integration plan before narrow actual-source proposal/test application. Potential code is retrieval.py import native control classes + immediate re-raise before existing ordinary catch, only if proof supports; no source writes currentlyauthorized until review. Then exact native regressions, fresh full, isolated seed/singlehead if pipeline touched; Agent/[skipci] every checkpoint. Keep all STOP/owner limits. Task may branch from Draft71 before merge under recorded exception.
 
 **NEXT [search-control-propagation], offline only, explicit AGENTS§4 predecessor exception:** from clean pushed task/search-explicit-rate-limit/Draft71, create task/search-control-propagation; commit new baton/write-ahead BEFORE app changes. Pin exact current retrieval.py and typed control classes; reproduce read_cap/checkpoint_busy/RunCancelled/LeaseLost swallowed by entry-root Fetcher broadcatch (current line471) on actual source via finite mocks and independent negative review. Preserve asyncio.CancelledError propagation and ordinary unavailable HTTP/access hop behavior. Only then scoped external proposal + independent review + native regressions + fresh full before application acceptance. No retention/default/durable/schema/scoring bundled. Verify current canonical state first; no automated old live commands. STOP65b5 still forbids live/model/provider/retry/reset/switch/purchase/labels/incomplete scoring; goalACTIVE.
 
@@ -3992,6 +4000,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**Baseline carried unchanged:** last freshfull20261008T032648Z-check-16f4d81b source77a/e57713/13PASS,4312sameuniqueeachDB/95.26; source999 pins verified. New task tests NOT_RUN, codeNOT_APPLIED. No new live/quality score; providers globallySTOPPED.
+
 **LATEST full20261008T032648Z-check-16f4d81b: statuspassed,13/13 distinct steps exit0 in916.657718s.** Ruff/format/mypyPASS (383files); SQLite4312passed2warnings/95.26%; PostgreSQL4312passed2warnings/same unique identities; native90eachDB incl4312 nofailure/error/skip; frontend232/type/lint/buildPASS; demo79PASS1SKIP/auth6PASS; pip-audit no known/npm0vulnerabilities. Own synthetic seed Groningen#1/UBC portfolio OUT_OF_BUDGET; singleAlembichead d8e412c6a901 on identicalapp3 in earlier snapshot. Containers/hostedCI/publishedproduction NOT_RUN. First full032127 Ruff3I001/interrupted remains historicalUNKNOWN; old B24check22PASS2schemaRED preserved, corrected ownership24PASS0RED.
 
 **[search-explicit-rate-limit] current integration is WIP, before fresh full retry.** Run20261008T032127Z-check-dded4751 on ebd083a5+six changed files: Ruff exit1 (3 I001 test import-grouping errors), format0, mypy0; SQLite interrupted exit130 by parent after known Ruff failure; all remaining full steps NOT_RUN. No functional failure or partial quality score is inferred. Original summary/logs and verified owned-PID interruption retained. Parent repaired ONLY import grouping in test3 from repository backend cwd: Ruff fix exit0; module non-import AST and import-alias sets identical. App3 stay exact acceptedA/B bytes. New test hashes b0e53700/a037d3f4/e8ff78ba, source-after-isort-999 manifest preserves993 unchanged paths; new full and90 native JUnit cases still PENDING. Previous13/13/4292unique eachDB/95.25% is historical prior7c74 proof only. WIP source checkpoint may be pushed with Agent trailer/[skip ci] before the fresh full to respect45-minute relay preservation; no green source acceptance yet.
@@ -5440,3 +5450,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-08 02:11 UTC — gpt-6-astra: search-retained-source offline diagnostic archive723c39ca; all source/STOP unchanged, A lifecycle proposal and B exact peer review pending.
 
 - 2026-10-08 03:57 UTC | gpt-6-astra | source77a220a5 -> greena48e8600 -> Draft71/release metadata | typed rate-limit postescape cutoff; full13/13,4312same eachDB/95.26, native90 included; exact931+59 originals; STOP unchanged, UNSCORED/goalACTIVE. Next independent offline typed-control proof.
+
+- 2026-10-08T04:00:30.623652+00:00 | gpt-6-astra | release1679/Draft71 -> task/search-control-propagation baton | Previous goal turn PROGRESS; new finite OFF defect/ordinary negatives before source edit. STOP65b5 immutable.
