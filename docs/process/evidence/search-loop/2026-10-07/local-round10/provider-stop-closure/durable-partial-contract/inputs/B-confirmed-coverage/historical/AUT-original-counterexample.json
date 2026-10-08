@@ -1,0 +1,377 @@
+{
+  "source_json_sha256": "9b3d867a589eefbdbee12eb5df6f3c68fa9177dba4ac620bdf19d976a797d6ba",
+  "cases": [
+    {
+      "case": "AUT_saved_wrong_major_precedes_correct_major",
+      "evidence_type": "synthetic catalogue composition; real saved detail bodies where specified",
+      "subject_phrase_match": false,
+      "programme_identity_before_funding": false,
+      "fields": [
+        "computer science"
+      ],
+      "synthetic_catalogue_html": "<html><head><title>Bachelor programmes</title></head><body><main><h1>Bachelor programmes</h1><p>Choose a programme.</p><a href=\"https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences\">Data Science Major - Computer and Information Sciences - AUT</a><a href=\"https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences\">Computer Science - Computer and Information Sciences - AUT</a></main></body></html>",
+      "off_on_on_off": [
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://www.aut.ac.nz/bachelors/catalogue",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "walk": {
+            "catalogue_url": "https://www.aut.ac.nz/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Data Science Major - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Computer Science - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "confirmed_subjects": {
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences": "Data Science Major - Bachelor of Computer and Information Sciences",
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences": "Computer Science Major - Bachelor of Computer and Information Sciences"
+            },
+            "outcomes": [
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ],
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://www.aut.ac.nz/bachelors/catalogue",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "walk": {
+            "catalogue_url": "https://www.aut.ac.nz/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Data Science Major - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Computer Science - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "confirmed_subjects": {
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences": "Data Science Major - Bachelor of Computer and Information Sciences"
+            },
+            "outcomes": [
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://www.aut.ac.nz/bachelors/catalogue",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "walk": {
+            "catalogue_url": "https://www.aut.ac.nz/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Data Science Major - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Computer Science - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "confirmed_subjects": {
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences": "Data Science Major - Bachelor of Computer and Information Sciences"
+            },
+            "outcomes": [
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://www.aut.ac.nz/bachelors/catalogue",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "walk": {
+            "catalogue_url": "https://www.aut.ac.nz/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Data Science Major - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Computer Science - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "confirmed_subjects": {
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences": "Data Science Major - Bachelor of Computer and Information Sciences",
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences": "Computer Science Major - Bachelor of Computer and Information Sciences"
+            },
+            "outcomes": [
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ],
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "case": "AUT_precise_subject_experiment_opt_in",
+      "evidence_type": "synthetic catalogue composition; real saved detail bodies where specified",
+      "subject_phrase_match": true,
+      "programme_identity_before_funding": false,
+      "fields": [
+        "computer science"
+      ],
+      "synthetic_catalogue_html": "<html><head><title>Bachelor programmes</title></head><body><main><h1>Bachelor programmes</h1><p>Choose a programme.</p><a href=\"https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences\">Data Science Major - Computer and Information Sciences - AUT</a><a href=\"https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences\">Computer Science - Computer and Information Sciences - AUT</a></main></body></html>",
+      "off_on_on_off": [
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://www.aut.ac.nz/bachelors/catalogue",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "walk": {
+            "catalogue_url": "https://www.aut.ac.nz/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Computer Science - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Data Science Major - Computer and Information Sciences - AUT",
+                "score": 25,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "confirmed_subjects": {
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences": "Computer Science Major - Bachelor of Computer and Information Sciences"
+            },
+            "outcomes": [
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ],
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "reads_as_program_detail"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://www.aut.ac.nz/bachelors/catalogue",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "walk": {
+            "catalogue_url": "https://www.aut.ac.nz/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Computer Science - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Data Science Major - Computer and Information Sciences - AUT",
+                "score": 25,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "confirmed_subjects": {
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences": "Computer Science Major - Bachelor of Computer and Information Sciences"
+            },
+            "outcomes": [
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": true,
+          "reads": [
+            "https://www.aut.ac.nz/bachelors/catalogue",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "walk": {
+            "catalogue_url": "https://www.aut.ac.nz/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Computer Science - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Data Science Major - Computer and Information Sciences - AUT",
+                "score": 25,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "confirmed_subjects": {
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences": "Computer Science Major - Bachelor of Computer and Information Sciences"
+            },
+            "outcomes": [
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ]
+            ]
+          }
+        },
+        {
+          "inner_stop": false,
+          "reads": [
+            "https://www.aut.ac.nz/bachelors/catalogue",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+            "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+          ],
+          "walk": {
+            "catalogue_url": "https://www.aut.ac.nz/bachelors/catalogue",
+            "candidates": [
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Computer Science - Computer and Information Sciences - AUT",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "label": "Data Science Major - Computer and Information Sciences - AUT",
+                "score": 25,
+                "source": "html"
+              }
+            ],
+            "confirmed": [
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences"
+            ],
+            "confirmed_subjects": {
+              "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences": "Computer Science Major - Bachelor of Computer and Information Sciences"
+            },
+            "outcomes": [
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+                "program_detail"
+              ],
+              [
+                "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+                "reads_as_program_detail"
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "classifications": {
+    "data-science": {
+      "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+      "page": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'Data Science Major - Bachelor of Computer and Information Sciences' at bachelor level"
+        ],
+        "title": "Data Science Major - Computer and Information Sciences - AUT",
+        "subject": "Data Science Major - Bachelor of Computer and Information Sciences",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "profile_rejection": null
+    },
+    "computer-science": {
+      "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+      "page": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'Computer Science Major - Bachelor of Computer and Information Sciences' at bachelor level"
+        ],
+        "title": "Computer Science - Computer and Information Sciences - AUT",
+        "subject": "Computer Science Major - Bachelor of Computer and Information Sciences",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "profile_rejection": null
+    }
+  }
+}

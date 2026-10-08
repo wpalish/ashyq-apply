@@ -1,0 +1,1377 @@
+"""Turning fetched pages into claims.
+
+Extraction is rule-based and conservative: a pattern either matches and yields
+a claim carrying the sentence it came from, or it yields nothing. There is no
+"best guess" branch. Everything produced here keeps the excerpt that justifies
+it, so a user can check the machine's reading against the page.
+"""
+
+from __future__ import annotations
+
+import io
+import re
+from collections.abc import Iterable, Sequence
+from dataclasses import replace
+from datetime import UTC, date, datetime
+from typing import Final, cast
+from urllib.parse import urlparse
+
+from app.adapters.html_parse import parse_html
+from app.adapters.scope_reader import intake_from_start, population_named
+from app.domain.claim_scope import ClaimScope
+from app.domain.claim_verifier import (
+    OFFICIAL_PUBLIC_TLDS,
+    RejectReason,
+    VerificationInput,
+    registrable_domain,
+    states_a_requirement_without_settling_it,
+    url_matches_domains,
+    verify_claim,
+)
+from app.domain.enums import ClaimStatus, ClaimType, SourceSpecificity
+from app.schemas.claim import Claim
+
+EXCERPT_RADIUS = 160
+
+_WS = re.compile(r"[ \t ]+")
+_BLANKS = re.compile(r"\n{3,}")
+
+
+def html_to_text(html: str) -> str:
+    """Readable text with script/style/nav removed, structure preserved."""
+    soup = parse_html(html)
+    for tag in soup(["script", "style", "noscript", "svg", "iframe"]):
+        tag.decompose()
+    for tag in soup.find_all(["nav", "footer", "header"]):
+        # Keep short nav-ish blocks: deadlines often live in a sidebar.
+        if len(tag.get_text(strip=True)) > 800:
+            tag.decompose()
+    text = soup.get_text("\n")
+    text = _WS.sub(" ", text)
+    return _BLANKS.sub("\n\n", text).strip()
+
+
+def readable_text(html: str) -> str:
+    """Page text with the site's navigation removed.
+
+    Extractors and excerpts must work from the page's own content. Reading the
+    whole document made evidence quotes read "Activate high contrast To main
+    content Students & Education Programmes...", and put every degree word in
+    the global menu into the page's apparent vocabulary.
+    """
+    from app.adapters.page_classifier import content_for_reading
+
+    soup = parse_html(html)
+    return html_to_text(str(content_for_reading(soup)))
+
+
+def html_title(html: str) -> str:
+    soup = parse_html(html)
+    if soup.title and soup.title.string:
+        return soup.title.string.strip()[:200]
+    h1 = soup.find("h1")
+    return h1.get_text(strip=True)[:200] if h1 else ""
+
+
+def pdf_to_text(data: bytes, max_pages: int = 40) -> str:
+    """Extract text from an official handbook or fee schedule."""
+    try:
+        from pypdf import PdfReader
+    except ImportError:  # pragma: no cover
+        return ""
+    try:
+        reader = PdfReader(io.BytesIO(data))
+        pages = reader.pages[:max_pages]
+        return _BLANKS.sub("\n\n", "\n".join((p.extract_text() or "") for p in pages)).strip()
+    except Exception:  # pragma: no cover - malformed PDFs are common
+        return ""
+
+
+def for_matching(text: str) -> str:
+    """Newlines to spaces, character-for-character.
+
+    Requirement sentences routinely wrap mid-clause ("IELTS Academic score with
+    an\noverall band of 6.5"). Patterns use ``[^.\n]`` to stay inside one
+    sentence, which would otherwise break on the wrap. Replacing newlines with
+    spaces keeps every offset identical, so excerpts still line up with the
+    original text.
+    """
+    return text.replace("\n", " ").replace("\r", " ")
+
+
+def excerpt_around(text: str, start: int, end: int, radius: int = EXCERPT_RADIUS) -> str:
+    lo = max(0, start - radius)
+    hi = min(len(text), end + radius)
+    snippet = text[lo:hi].strip().replace("\n", " ")
+    return _WS.sub(" ", snippet)
+
+
+def is_official_domain(url: str, university_domains: Iterable[str] = ()) -> bool:
+    """True when this URL is served by the university or an official TLD.
+
+    Only the URL's host decides — the registrable domain of the host is
+    compared against the university's domains, never the raw URL string. The
+    old substring test accepted ``https://attacker.example/?u=narxoz.kz``
+    and ``https://narxoz.kz.attacker.example/`` as official sources; a
+    university's name inside a query parameter or a hostile subdomain is a
+    spoof, not a source.
+    """
+    if url_matches_domains(url, university_domains):
+        return True
+    registrable = registrable_domain(urlparse(url).hostname or "")
+    return any(
+        registrable == tld or registrable.endswith(f".{tld}") for tld in OFFICIAL_PUBLIC_TLDS
+    )
+
+
+def verification_domains(url: str, domain: str | None) -> tuple[str, ...]:
+    """The domains a claim's page must belong to, for the verifier.
+
+    Empty for a ``fixture://`` page, which is official by construction and has
+    no host to check, and when the candidate names no domain.
+    """
+    if not domain or url.startswith("fixture://"):
+        return ()
+    return (domain,)
+
+
+class ClaimBuilder:
+    """Accumulates claims that share one page's provenance.
+
+    The optional verification context (``page_text``, ``page_type``,
+    ``allowed_domains``) feeds ``app.domain.claim_verifier``: each added claim
+    is checked against the evidence it arrived with, and only checks whose
+    context is present are evaluated — a builder without page text never
+    rejects for verbatim-ness, one without allowed domains never rejects on
+    domain, and so on. A rejected claim is recorded in ``rejected`` as
+    ``(claim_type, excerpt, reason)`` and never becomes a Claim; ``add``
+    returns None for it.
+    """
+
+    def __init__(
+        self,
+        *,
+        source_url: str,
+        page_title: str = "",
+        specificity: SourceSpecificity = SourceSpecificity.UNKNOWN,
+        program: str | None = None,
+        intake: str | None = None,
+        academic_year: str | None = None,
+        official_domain: bool = False,
+        extraction_method: str = "html_rule",
+        accessed_at: datetime | None = None,
+        scope: ClaimScope | None = None,
+        page_text: str | None = None,
+        page_type: str | None = None,
+        allowed_domains: Sequence[str] = (),
+    ) -> None:
+        self.meta: dict[str, object] = {
+            "source_url": source_url,
+            "page_title": page_title,
+            "source_specificity": specificity,
+            "program": program,
+            "intake": intake,
+            "academic_year": academic_year,
+            "official_domain": official_domain,
+            "extraction_method": extraction_method,
+            "accessed_at": accessed_at or datetime.now(UTC),
+            # Deliberately whatever the caller passed, ``None`` included: a
+            # builder that was given no scope records that nobody read one,
+            # which is not the same claim as "the page stated nothing".
+            "scope": scope,
+        }
+        self.claims: list[Claim] = []
+        #: TY-1: the year the applicant asked for, apart from the page's own.
+        self.requested_academic_year: str | None = None
+        self.rejected: list[tuple[ClaimType, str, RejectReason]] = []
+        # Verification context, deliberately outside meta: these feed the
+        # verifier only, and a Claim's persisted fields must not change.
+        self.page_text = page_text
+        self.page_type = page_type
+        self.allowed_domains: tuple[str, ...] = tuple(allowed_domains)
+
+    def add(
+        self,
+        claim_type: ClaimType,
+        value: object,
+        excerpt: str,
+        *,
+        confidence: float = 0.8,
+        section: str = "",
+        status: ClaimStatus | None = None,
+        notes: str = "",
+        subject_key: str | None = None,
+        population: str | None = None,
+        intake: str | None = None,
+        degree: str | None = None,
+        programme: str | None = None,
+        qualification: str | None = None,
+        academic_year: str | None = None,
+    ) -> Claim | None:
+        verdict = verify_claim(
+            VerificationInput(
+                claim_type=claim_type,
+                value=value,
+                excerpt=excerpt,
+                page_text=self.page_text,
+                source_url=cast("str", self.meta["source_url"]),
+                page_type=self.page_type,
+                official_domain=bool(self.meta["official_domain"]),
+                allowed_domains=self.allowed_domains,
+                today=cast("datetime", self.meta["accessed_at"]).date(),
+            )
+        )
+        if not verdict.accepted:
+            # A rejected verdict always carries its reason (verify_claim's contract).
+            self.rejected.append((claim_type, excerpt, cast("RejectReason", verdict.reason)))
+            return None
+        # Only an official page can produce a "current" claim; anything else
+        # stays unverified until a human or a better source confirms it.
+        default_status = (
+            ClaimStatus.VERIFIED_CURRENT
+            if self.meta["official_domain"]
+            and self.meta["source_specificity"]
+            in (
+                SourceSpecificity.PROGRAM_INTAKE,
+                SourceSpecificity.PROGRAM,
+                SourceSpecificity.UNIVERSITY_ADMISSIONS,
+                SourceSpecificity.SCHOLARSHIP_ADMINISTRATOR,
+                SourceSpecificity.GOVERNMENT,
+                SourceSpecificity.APPLICATION_PORTAL,
+            )
+            else ClaimStatus.UNVERIFIED
+        )
+        # Phase 3 §10: conditional wording is grounds for escalation, not for a
+        # settled requirement. The claim keeps its value and its excerpt — it
+        # is still evidence — but it stops being something that can eliminate
+        # a university on its own, and it says which word unsettled it.
+        hedge = states_a_requirement_without_settling_it(excerpt, value)
+        if hedge and (status or default_status) is ClaimStatus.VERIFIED_CURRENT:
+            default_status = ClaimStatus.NEEDS_OFFICIAL_CLARIFICATION
+            status = None
+            notes = (
+                f"{notes} " if notes else ""
+            ) + f"The page states this conditionally ({hedge!r}); it is not settled."
+
+        meta = dict(self.meta)
+        row_scope = {
+            k: v
+            for k, v in (
+                ("population", population),
+                ("intake", intake),
+                ("degree", degree),
+                ("programme", programme),
+                ("qualification", qualification),
+                ("academic_year", academic_year),
+            )
+            if v
+        }
+        if row_scope:
+            # One row of a table can say who and when it is for when the page as
+            # a whole cannot: "non-EU/EEA students 01 May 2027 01 September
+            # 2027" beside two other rows. Only those dimensions change; the
+            # rest is still the page's.
+            page_scope = cast("ClaimScope | None", meta["scope"]) or ClaimScope()
+            meta["scope"] = replace(page_scope, **row_scope)
+        claim = Claim(
+            claim_type=claim_type,
+            normalized_value=value,
+            original_text_excerpt=excerpt,
+            relevant_section=section,
+            confidence=confidence,
+            status=status or default_status,
+            notes=notes,
+            subject_key=subject_key,
+            **meta,  # type: ignore[arg-type]
+        )
+        self.claims.append(claim)
+        return claim
+
+
+# --- Requirement patterns -------------------------------------------------
+
+_IELTS_OVERALL = re.compile(
+    r"IELTS[^.\n]{0,80}?(?:overall|minimum|score of|band)[^.\n]{0,30}?(\d(?:\.\d)?)"
+    r"|(?:overall|minimum)[^.\n]{0,30}?IELTS[^.\n]{0,30}?(\d(?:\.\d)?)"
+    # "IELTS 6.5 overall (or equivalent)": many pages state the keyword after
+    # the band. The keyword must follow the number directly, so "IELTS 6.5 in
+    # each component" stays a subscore statement, not an overall band.
+    r"|IELTS[^\d.\n]{0,20}?(\d(?:\.\d)?)\s*(?:overall|band)"
+    # UBC's table: "International English Language Testing System (Academic)
+    # 6.5, with no part less than 6.0". The spelled-out name carries the band
+    # directly, and the per-part floor that follows is what makes 6.5 the
+    # overall one rather than any number near a test name.
+    r"|International English Language Testing System\s*(?:\(?academic\)?)?\s*:?\s*"
+    r"(\d(?:\.\d)?)(?=,?\s*(?:with\s+)?no\s+(?:part|band|section|component|sub-?score))",
+    re.IGNORECASE,
+)
+_IELTS_SUB = re.compile(
+    # "part" is the certified corpus' own word for UBC: "no part less than
+    # 6.0". Missing it dropped the per-section minimum while keeping the
+    # overall band — which the phase guide calls the single most common error
+    # in this work, because 7.0 overall with 6.0 writing fails a 6.5 per-band
+    # rule and the applicant is told they qualify.
+    r"(?:no\s+(?:individual\s+)?(?:sub-?)?(?:score|band|component|section|part)\s+"
+    r"(?:below|less\s+than|lower\s+than)|minimum\s+(?:of\s+)?(\d(?:\.\d)?)\s+in\s+each)"
+    r"\s*(\d(?:\.\d)?)?",
+    re.IGNORECASE,
+)
+#: "Overall 6, Writing 6,speaking 6" — NTU's certified wording, where each
+#: section carries its own minimum. The bands are read as a map, because a
+#: single floor cannot say that writing is 6 while reading is 6.5, and
+#: flattening them to the lowest would be converting a value silently.
+#: One sentence that mentions IELTS, so a bare "Writing 6" elsewhere on the
+#: page cannot become a band. A full stop ends the sentence only when it is
+#: not a decimal point: "[^.]" alone stopped at the 7 of "overall 7.0" and
+#: lost every band stated after it.
+_IELTS_SENTENCE = re.compile(
+    r"(?:[^.\n]|\.(?=\d))*\bIELTS\b(?:[^.\n]|\.(?=\d))*",
+    re.IGNORECASE,
+)
+_IELTS_NAMED_BAND = re.compile(
+    # A band never runs on into another digit: "Reading: 60" is a PTE score,
+    # and reading its first digit as IELTS 6.0 is exactly what UBC's table,
+    # with no full stop between the two tests, produced.
+    r"\b(listening|reading|writing|speaking)\b\s*[:\-–]?\s*(\d(?:\.\d)?)(?![\d.])",
+    re.IGNORECASE,
+)
+#: Where another test's statement begins, the IELTS one has ended.
+_OTHER_TEST = re.compile(
+    r"\b(?:PTE|Pearson|TOEFL|Duolingo|Cambridge|CAEL|CELPIP|Michigan)\b", re.IGNORECASE
+)
+
+_TOEFL = re.compile(r"TOEFL[^.\n]{0,90}?(\d{2,3})", re.IGNORECASE)
+_DUOLINGO = re.compile(r"Duolingo[^.\n]{0,90}?(\d{2,3})", re.IGNORECASE)
+_GPA = re.compile(
+    r"(?:minimum|at least|GPA of|grade point average of)[^.\n]{0,40}?(\d(?:\.\d{1,2})?)\s*"
+    r"(?:/|out of|on a[n]?\s*)\s*(\d(?:\.\d)?)\s*(?:scale|point)?",
+    re.IGNORECASE,
+)
+_SAT_OPTIONAL = re.compile(
+    r"(test[- ]optional|test[- ]blind|SAT[^.\n]{0,40}(?:not required|optional))", re.IGNORECASE
+)
+_SAT_MIN = re.compile(
+    r"SAT[^.\n]{0,60}?(?:minimum|at least|score of)[^.\n]{0,20}?(\d{3,4})"
+    # The number first: "1250 for redesigned SAT" is the certified corpus'
+    # wording for NTU, and read as nothing at all. _IELTS_OVERALL already
+    # carries a reversed alternative for the same reason. A preposition is
+    # required between the two, because a bare "number ... SAT" window read
+    # "Room 1250 is where the SAT is sat" and "1250 EUR with their SAT
+    # booking" as scores — the forward form has always demanded a qualifier
+    # and the reverse must demand one too.
+    r"|(\d{3,4})\s*(?:or\s+(?:above|higher|better)\s*)?"
+    r"(?:for|on|in)\s+(?:the\s+)?(?:redesigned\s+|new\s+|old\s+)?SAT\b",
+    re.IGNORECASE,
+)
+_SUPERSCORE = re.compile(r"(superscor\w+)", re.IGNORECASE)
+#: A currency marker must sit directly beside the number. Bare digits are never
+#: read as money, which keeps years and scores out of the cost table.
+_MONEY = re.compile(
+    # A country-prefixed dollar is not a US dollar: "S$6,500" is Singapore's
+    # (NTU's living allowance) and was read as USD while the prefix was absent.
+    r"(?:(US\$|S\$|HK\$|C\$|CA\$|A\$|AU\$|NZ\$|USD|EUR|€|GBP|£|CAD|AUD|CHF|SEK|NOK|DKK|SGD"
+    r"|HKD|NZD|KRW|JPY|KZT|₸|\$)\s*)"
+    r"([\d]{1,3}(?:[,\s]\d{3})+|\d{2,7})(?:\.(\d{2}))?"
+    r"|([\d]{1,3}(?:[,\s]\d{3})+|\d{2,7})\s*(EUR|USD|GBP|CHF|SEK|NOK|DKK|AUD|CAD|SGD|HKD|NZD|KRW|JPY|KZT|₸)",
+    re.IGNORECASE,
+)
+_PERCENT_TUITION = re.compile(r"(\d{1,3})\s*%\s*(?:of\s+)?(?:the\s+)?tuition", re.IGNORECASE)
+_DEADLINE = re.compile(
+    r"(?:deadline|closes?|apply by|applications? close|due)[^.\n]{0,60}?"
+    r"(\d{1,2}\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}"
+    r"|(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}"
+    r"|\d{4}-\d{2}-\d{2})",
+    re.IGNORECASE,
+)
+_MONTH_NAMES = (
+    "January|February|March|April|May|June|July|August|September|October|November|December"
+)
+_A_DATE = (
+    rf"\d{{1,2}}\s+(?:{_MONTH_NAMES})\s+\d{{4}}"
+    rf"|(?:{_MONTH_NAMES})\s+\d{{1,2}},?\s+\d{{4}}"
+    r"|\d{4}-\d{2}-\d{2}"
+)
+#: A window between two dates: "15 October 2026 - 19 March 2027", "… to …".
+_DATE_RANGE = re.compile(
+    rf"({_A_DATE})\s*(?:[-–—]|to|until)\s*({_A_DATE})",
+    re.IGNORECASE,
+)
+#: One row of a deadline table that names its population: Groningen's
+#: "non-EU/EEA students 01 May 2027 01 September 2027". The lookbehind keeps
+#: the "EU/EEA" inside "non-EU/EEA" from reading as a second row.
+_POPULATION_NAME = r"(?<![\w/-])(non[-\s]?EU(?:\s*/\s*EEA)?|EU\s*/\s*EEA)"
+_POPULATION_WORD = re.compile(_POPULATION_NAME, re.IGNORECASE)
+_POPULATION_ROW = re.compile(
+    _POPULATION_NAME + r"(?:\s+(?:students|applicants|nationals|citizens))?\s*[:\-–]?\s*"
+    rf"({_A_DATE})(?:\s+({_A_DATE}))?",
+    re.IGNORECASE,
+)
+_DEADLINE_WORD = re.compile(r"\bdeadlines?\b", re.IGNORECASE)
+#: "Application period 2 March to 4 May 2026": the deadline is the period's
+#: end. The start often omits its year, so only the end must be a full date.
+_APPLICATION_PERIOD = re.compile(
+    rf"application period\s*:?\s*\d{{1,2}}\s+(?:{_MONTH_NAMES})(?:\s+\d{{4}})?"
+    rf"\s*(?:to|until|[–-])\s*({_A_DATE})",
+    re.IGNORECASE,
+)
+#: Plan rule DL-2 (error analysis 2026-10-05). On by default since 2026-10-05
+#: (owner: "Да"): three paired runs on exa_mcp, zero stable losses; NTU's
+#: deadline is right with its qualification wherever the page is reached,
+#: and the first readers never find it.
+#: Three forms the readers above never match, each found on a cohort page:
+#: abbreviated months (Aalto "Application period: 7 Jan 2027 – 22 Jan 2027"),
+#: a date that comes before its label (UBC "January 15, 2027 (11:59 p.m. PST)
+#: Applications due"), and a window table whose catch-all row is the one an
+#: unlisted qualification falls under (NTU "All other international
+#: qualifications not listed below ... 15 Oct 2026 - 20 Jan 2027").
+DEADLINE_V2 = True
+_MONTH_ABBREVIATIONS = r"Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept|Sep|Oct|Nov|Dec"
+_ANY_MONTH = rf"(?:{_MONTH_NAMES}|(?:{_MONTH_ABBREVIATIONS})\.?)(?![a-z])"
+_A_DATE_V2 = (
+    rf"\d{{1,2}}\s+{_ANY_MONTH}\s+\d{{4}}"
+    rf"|{_ANY_MONTH}\s+\d{{1,2}},?\s+\d{{4}}"
+    r"|\d{4}-\d{2}-\d{2}"
+)
+_DATE_RANGE_V2 = re.compile(
+    rf"({_A_DATE_V2})\s*(?:[-–—]|to|until)\s*({_A_DATE_V2})",
+    re.IGNORECASE,
+)
+_DEADLINE_V2 = re.compile(
+    rf"(?:deadline|closes?|apply by|applications? close|due)[^.\n]{{0,60}}?({_A_DATE_V2})",
+    re.IGNORECASE,
+)
+_APPLICATION_PERIOD_V2 = re.compile(
+    rf"application period\s*:?\s*\d{{1,2}}\s+{_ANY_MONTH}(?:\s+\d{{4}})?"
+    rf"\s*(?:to|until|[–-])\s*({_A_DATE_V2})",
+    re.IGNORECASE,
+)
+#: The label right after the date says it is the application deadline; a
+#: scholarship or award deadline written the same way names itself instead.
+_DATE_FIRST_DEADLINE = re.compile(
+    rf"({_A_DATE_V2})\s*(?:\([^)]{{0,40}}\))?\s*"
+    r"(?:applications?\s+(?:are\s+)?due|deadline\s+to\s+apply)([^.\n]{0,120})",
+    re.IGNORECASE,
+)
+_CATCH_ALL_WINDOW = re.compile(
+    r"(all other (?:international )?qualifications(?: not listed(?: below)?)?)"
+    rf"[^\n]{{0,240}}?({_A_DATE_V2})\s*(?:[-–—]|to|until)\s*({_A_DATE_V2})",
+    re.IGNORECASE,
+)
+_SESSION_START = re.compile(rf"\(\s*({_MONTH_NAMES})\s+(\d{{4}})", re.IGNORECASE)
+
+#: Other date columns a deadline table carries beside the deadline itself.
+_OTHER_DATE_COLUMN = re.compile(
+    r"\b(?:start(?:\s+(?:course|date|of\s+(?:studies|programme)))?|begins?|commencement)\b",
+    re.IGNORECASE,
+)
+#: An explicit list. A catch-all like [A-Z]{2,4}T matched the word "SAT" in a
+#: sentence about standardised tests and reported it as the deadline's timezone.
+#: Inventing a timezone is worse than reporting none.
+_TZ = re.compile(
+    r"\b(UTC|GMT|BST|WET|WEST|CET|CEST|EET|EEST|MSK|"
+    r"AST|EST|EDT|CST|CDT|MST|MDT|PST|PDT|AKST|HST|"
+    r"AEST|AEDT|ACST|ACDT|AWST|NZST|NZDT|"
+    r"IST|SGT|HKT|JST|KST|ICT|PKT|GST|SAST|BRT|ART|CLT)\b"
+)
+
+_CURRENCY_SYMBOLS = {
+    "$": "USD",
+    "us$": "USD",
+    "usd": "USD",
+    "€": "EUR",
+    "eur": "EUR",
+    "£": "GBP",
+    "gbp": "GBP",
+    "cad": "CAD",
+    "aud": "AUD",
+    "chf": "CHF",
+    "sek": "SEK",
+    "nok": "NOK",
+    "dkk": "DKK",
+    "sgd": "SGD",
+    "s$": "SGD",
+    "hk$": "HKD",
+    "hkd": "HKD",
+    "c$": "CAD",
+    "ca$": "CAD",
+    "a$": "AUD",
+    "au$": "AUD",
+    "nz$": "NZD",
+    "nzd": "NZD",
+    "krw": "KRW",
+    "jpy": "JPY",
+    "kzt": "KZT",
+    "₸": "KZT",
+}
+_MONTHS = {
+    m: i
+    for i, m in enumerate(
+        [
+            "january",
+            "february",
+            "march",
+            "april",
+            "may",
+            "june",
+            "july",
+            "august",
+            "september",
+            "october",
+            "november",
+            "december",
+        ],
+        1,
+    )
+}
+
+
+#: Euro amounts written the continental way: a dot groups thousands and a comma
+#: marks cents (Groningen "€ 20.563", Delft "€ 18.750,00"). Without this rule
+#: "€ 20.563" reads as 20.56 euros, a tuition fee below the floor.
+EURO_GROUPING = False
+_EURO_GROUPED = re.compile(
+    r"(?:€|EUR)\s*(\d{1,3}(?:\.\d{3})+)(?:,(\d{2}))?(?![\d.,]\d)"
+    r"|(\d{1,3}(?:\.\d{3})+)(?:,(\d{2}))?\s*(?:€|EUR)\b",
+    re.IGNORECASE,
+)
+
+
+def _euro_grouped(m: re.Match[str]) -> tuple[float, str]:
+    whole, cents = (m.group(1), m.group(2)) if m.group(1) else (m.group(3), m.group(4))
+    return float(whole.replace(".", "")) + (float(cents) / 100 if cents else 0.0), "EUR"
+
+
+def _money_search(text: str) -> re.Match[str] | None:
+    """The first money marker, a grouped euro amount included when the rule is on."""
+    m = _MONEY.search(text)
+    grouped = _EURO_GROUPED.search(text) if EURO_GROUPING else None
+    if grouped is not None and (m is None or grouped.start() <= m.start()):
+        return grouped
+    return m
+
+
+def parse_money(text: str) -> tuple[float, str] | None:
+    m = _MONEY.search(text)
+    if EURO_GROUPING:
+        grouped = _EURO_GROUPED.search(text)
+        if grouped is not None and (m is None or grouped.start() <= m.start()):
+            return _euro_grouped(grouped)
+    if not m:
+        return None
+    if m.group(2):
+        raw, cur = m.group(2), (m.group(1) or "").lower()
+    else:
+        raw, cur = m.group(4), (m.group(5) or "").lower()
+    if not raw:
+        return None
+    amount = float(re.sub(r"[,\s]", "", raw))
+    if m.group(3):
+        amount += float(m.group(3)) / 100
+    return amount, _CURRENCY_SYMBOLS.get(cur, "USD")
+
+
+def parse_deadline(text: str) -> date | None:
+    m = _DEADLINE.search(text)
+    if not m:
+        return None
+    return parse_date_string(m.group(1))
+
+
+def parse_date_string(raw: str) -> date | None:
+    raw = raw.strip().rstrip(".")
+    for fmt in ("%d %B %Y", "%B %d, %Y", "%B %d %Y", "%Y-%m-%d", "%d %b %Y", "%b %d, %Y"):
+        try:
+            return datetime.strptime(raw, fmt).date()
+        except ValueError:
+            continue
+    m = re.match(r"(\d{1,2})\s+(\w+)\s+(\d{4})", raw)
+    if m and m.group(2).lower() in _MONTHS:
+        return date(int(m.group(3)), _MONTHS[m.group(2).lower()], int(m.group(1)))
+    return None
+
+
+def parse_timezone(text: str) -> str | None:
+    m = _TZ.search(text)
+    return m.group(1) if m else None
+
+
+def _keep(found: list[Claim], claim: Claim | None) -> None:
+    """Append the claim unless the builder's verifier rejected it.
+
+    A rejected claim stays recorded in ``builder.rejected`` with its reason;
+    it never reaches the result list.
+    """
+    if claim is not None:
+        found.append(claim)
+
+
+def _named_bands(text: str) -> tuple[int, int, dict[str, float]] | None:
+    """Per-section IELTS minimums, when the page names the sections itself.
+
+    Anchored to a sentence that mentions IELTS: "Writing 6" on its own is a
+    grade, a room number or a column of something else. Returns the span to
+    quote and the bands, or nothing.
+    """
+    for sentence in _IELTS_SENTENCE.finditer(text):
+        body = sentence.group(0)
+        named = re.search(r"\bIELTS\b", body, re.IGNORECASE)
+        other = _OTHER_TEST.search(body, named.end()) if named else None
+        if other:
+            body = body[: other.start()]
+        bands = {
+            match.group(1).lower(): float(match.group(2))
+            for match in _IELTS_NAMED_BAND.finditer(body)
+            if 4.0 <= float(match.group(2)) <= 9.0
+        }
+        if bands:
+            return sentence.start(), sentence.end(), bands
+    return None
+
+
+def _population_deadlines(text: str) -> list[tuple[str, str, int, int, str | None]]:
+    """One deadline per population row of a deadline table, or none at all.
+
+    Returns ``(population, iso_date, start, end, intake)`` only when the table names at
+    least two populations: a single row is not a table, and the page-level
+    reading already covers it. The date taken from each row is the one in the
+    column the header calls the deadline — "Type of student | Deadline | Start
+    course" puts it first, and a header that lists the start first puts it
+    second. A header that cannot be read that way yields nothing rather than
+    a start date presented as a deadline.
+    """
+    header = _DEADLINE_WORD.search(text)
+    if header is None:
+        return []
+    rows = [
+        m for m in _POPULATION_ROW.finditer(text, header.end()) if m.start() - header.end() < 600
+    ]
+    if not rows:
+        return []
+    zone = text[max(0, header.start() - 80) : rows[0].start()]
+    # The header cell nearest the rows, not a "Deadlines" title above them:
+    # "Deadlines — Start of studies | Deadline" puts the deadline second.
+    cells = list(_DEADLINE_WORD.finditer(zone))
+    if not cells:
+        return []
+    deadline_at = cells[-1]
+    heading = cells[-2].end() if len(cells) > 1 else 0
+    column = sum(
+        1 for m in _OTHER_DATE_COLUMN.finditer(zone) if heading <= m.start() < deadline_at.start()
+    )
+    if column > 1:
+        return []
+    # A single start column beside the deadline ("Deadline | Start course") is
+    # the programme's own start date, stated per row; the owner's decision of
+    # 2026-09-23 reads a September–November start as that row's fall intake.
+    starts = [m for m in _OTHER_DATE_COLUMN.finditer(zone) if m.start() >= heading]
+    out: list[tuple[str, str, int, int, str | None]] = []
+    seen: set[str] = set()
+    for row in rows:
+        population = population_named(row.group(1))
+        raw = row.group(2) if column == 0 else row.group(3)
+        parsed = parse_date_string(raw) if raw else None
+        if population is None or parsed is None or population in seen:
+            continue
+        seen.add(population)
+        intake = None
+        if len(starts) == 1:
+            start_raw = row.group(3) if column == 0 else row.group(2)
+            started = parse_date_string(start_raw) if start_raw else None
+            if started is not None:
+                intake = intake_from_start(started.strftime("%B"), str(started.year))
+        out.append((population, parsed.isoformat(), row.start(), row.end(), intake))
+    return out if len(out) >= 2 else []
+
+
+def _deadline_v2(text: str) -> tuple[str, int, int, str | None, str | None] | None:
+    """The page's application deadline under rule DL-2: ``(raw date, start,
+    end, qualification, intake)``, or ``None`` when the page does not say
+    which date applies.
+
+    A date labelled "Applications due" wins. Otherwise a single window ends
+    on the deadline; several windows that end on different dates name a
+    deadline only through their catch-all row, recorded with that row's own
+    words as the qualification it is for.
+    """
+    due = _DATE_FIRST_DEADLINE.search(text)
+    if due:
+        session = _SESSION_START.search(due.group(2))
+        intake = intake_from_start(session.group(1), session.group(2)) if session else None
+        return due.group(1), due.start(), due.end(), None, intake
+    # A catch-all row says whom its window is for even when it is the only
+    # window read: NTU's run on 2026-10-05 dated the right day with no
+    # qualification because the page's other rows did not reach the reader.
+    catch_all = _CATCH_ALL_WINDOW.search(text)
+    if catch_all is not None:
+        return catch_all.group(3), catch_all.start(), catch_all.end(), catch_all.group(1), None
+    windows = list(_DATE_RANGE_V2.finditer(text))
+    if len({m.group(2) for m in windows}) > 1:
+        return None
+    match = _DEADLINE_V2.search(text) or _APPLICATION_PERIOD_V2.search(text)
+    if match is None:
+        return None
+    opened = _DATE_RANGE_V2.match(text, match.start(1))
+    raw = opened.group(2) if opened is not None else match.group(1)
+    return raw, match.start(), match.end(), None, None
+
+
+def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
+    """Pull admission requirements out of readable page text."""
+    found: list[Claim] = []
+    text = for_matching(text)
+
+    for m in _IELTS_OVERALL.finditer(text):
+        raw = m.group(1) or m.group(2) or m.group(3) or m.group(4)
+        if raw is None:
+            continue
+        value = float(raw)
+        if not 4.0 <= value <= 9.0:
+            continue
+        _keep(
+            found,
+            builder.add(
+                ClaimType.IELTS_MIN_OVERALL,
+                value,
+                excerpt_around(text, m.start(), m.end()),
+                section="English language requirements",
+            ),
+        )
+        break
+
+    # Sections named one by one beat a single floor, because they say more:
+    # "Writing 6, Speaking 6" is not the same statement as "no band below 6".
+    named = _named_bands(text)
+    if named:
+        start, end, bands = named
+        _keep(
+            found,
+            builder.add(
+                ClaimType.IELTS_MIN_SUBSCORE,
+                bands,
+                excerpt_around(text, start, end),
+                section="English language requirements",
+            ),
+        )
+    else:
+        for m in _IELTS_SUB.finditer(text):
+            raw = m.group(1) or m.group(2)
+            if raw is None:
+                continue
+            value = float(raw)
+            if 4.0 <= value <= 9.0:
+                _keep(
+                    found,
+                    builder.add(
+                        ClaimType.IELTS_MIN_SUBSCORE,
+                        value,
+                        excerpt_around(text, m.start(), m.end()),
+                        section="English language requirements",
+                    ),
+                )
+                break
+
+    toefl = _TOEFL.search(text)
+    if toefl and 40 <= int(toefl.group(1)) <= 120:
+        _keep(
+            found,
+            builder.add(
+                ClaimType.TOEFL_MIN_TOTAL,
+                int(toefl.group(1)),
+                excerpt_around(text, toefl.start(), toefl.end()),
+            ),
+        )
+
+    duolingo = _DUOLINGO.search(text)
+    if duolingo and 60 <= int(duolingo.group(1)) <= 160:
+        _keep(
+            found,
+            builder.add(
+                ClaimType.DUOLINGO_MIN,
+                int(duolingo.group(1)),
+                excerpt_around(text, duolingo.start(), duolingo.end()),
+            ),
+        )
+
+    gpa = _GPA.search(text)
+    if gpa:
+        value, scale = float(gpa.group(1)), float(gpa.group(2))
+        # The scale must bound the value, or we have matched two unrelated numbers.
+        if 0 < value <= scale <= 100:
+            ex = excerpt_around(text, gpa.start(), gpa.end())
+            _keep(found, builder.add(ClaimType.MIN_GPA, value, ex))
+            _keep(found, builder.add(ClaimType.GPA_SCALE, scale, ex))
+
+    optional = _SAT_OPTIONAL.search(text)
+    if optional:
+        _keep(
+            found,
+            builder.add(
+                ClaimType.SAT_POLICY,
+                optional.group(1),
+                excerpt_around(text, optional.start(), optional.end()),
+            ),
+        )
+    else:
+        sat_min = _SAT_MIN.search(text)
+        # Either alternative may carry the number: "SAT ... 1250" or
+        # "1250 ... SAT". Whichever group matched is the score.
+        score = next((g for g in (sat_min.groups() if sat_min else ()) if g), None)
+        if sat_min and score and 400 <= int(score) <= 1600:
+            _keep(
+                found,
+                builder.add(
+                    ClaimType.SAT_MIN_TOTAL,
+                    int(score),
+                    excerpt_around(text, sat_min.start(), sat_min.end()),
+                ),
+            )
+
+    superscore = _SUPERSCORE.search(text)
+    if superscore:
+        _keep(
+            found,
+            builder.add(
+                ClaimType.SUPERSCORE_POLICY,
+                superscore.group(1),
+                excerpt_around(text, superscore.start(), superscore.end()),
+            ),
+        )
+
+    rows = _population_deadlines(text)
+    for population, iso, start, end, intake in rows:
+        _keep(
+            found,
+            builder.add(
+                ClaimType.ADMISSION_DEADLINE,
+                iso,
+                excerpt_around(text, start, end),
+                notes="timezone: not stated on page",
+                subject_key=population,
+                population=population,
+                intake=intake,
+            ),
+        )
+    if DEADLINE_V2 and not rows:
+        read = _deadline_v2(text)
+        parsed = parse_date_string(read[0]) if read else None
+        if read and parsed:
+            _raw, start, end, qualification, intake = read
+            ex = excerpt_around(text, start, end)
+            _keep(
+                found,
+                builder.add(
+                    ClaimType.ADMISSION_DEADLINE,
+                    parsed.isoformat(),
+                    ex,
+                    notes=f"timezone: {parse_timezone(ex) or 'not stated on page'}",
+                    qualification=qualification,
+                    intake=intake,
+                ),
+            )
+    deadline_match = (
+        None
+        if rows or DEADLINE_V2
+        else (_DEADLINE.search(text) or _APPLICATION_PERIOD.search(text))
+    )
+    deadline_raw = deadline_match.group(1) if deadline_match else None
+    if deadline_match:
+        # A date that opens a range is a window start, never the deadline
+        # (NTU: "Online application 15 October 2026 - 19 March 2027" was read
+        # as a 15 October deadline, paired run 37234751647). The window's end
+        # is the deadline; when the page states several windows that end on
+        # different dates — one per qualification — none is claimed, because
+        # nothing here says which one applies to the applicant.
+        windows = {m.group(2) for m in _DATE_RANGE.finditer(text)}
+        opened = _DATE_RANGE.match(text, deadline_match.start(1))
+        if len(windows) > 1:
+            deadline_raw = None
+        elif opened is not None:
+            deadline_raw = opened.group(2)
+    if deadline_match and deadline_raw:
+        deadline = parse_date_string(deadline_raw)
+        if deadline:
+            ex = excerpt_around(text, deadline_match.start(), deadline_match.end())
+            _keep(
+                found,
+                builder.add(
+                    ClaimType.ADMISSION_DEADLINE,
+                    deadline.isoformat(),
+                    ex,
+                    notes=f"timezone: {parse_timezone(ex) or 'not stated on page'}",
+                ),
+            )
+
+    for pattern, ctype in (
+        (r"portfolio", ClaimType.PORTFOLIO_REQUIRED),
+        (r"interview", ClaimType.INTERVIEW_REQUIRED),
+        (r"entrance (?:exam|examination|test)", ClaimType.ENTRANCE_EXAM_REQUIRED),
+        (
+            r"(?:WES|ECE|credential evaluation|course-by-course evaluation)",
+            ClaimType.CREDENTIAL_EVALUATION_REQUIRED,
+        ),
+    ):
+        requirement = re.search(
+            rf"{pattern}[^.\n]{{0,60}}(?:required|must|mandatory)"
+            rf"|(?:required|must submit)[^.\n]{{0,40}}{pattern}",
+            text,
+            re.IGNORECASE,
+        )
+        if requirement:
+            _keep(
+                found,
+                builder.add(
+                    ctype,
+                    True,
+                    excerpt_around(text, requirement.start(), requirement.end()),
+                    confidence=0.7,
+                ),
+            )
+
+    _keep(found, extract_admission_route(text, builder))
+    for claim in extract_intake_terms(text, builder):
+        _keep(found, claim)
+    return found
+
+
+_MONTH_SEASON = {
+    "august": "fall",
+    "september": "fall",
+    "october": "fall",
+    "january": "spring",
+    "february": "spring",
+    "march": "spring",
+}
+#: "Students beginning their studies in September 2027", "Program start Fall
+#: 2027", "applying for September 2027 admission". A start cue must sit next to
+#: the term; a deadline, a graduation or a fee sentence is never an intake.
+_TERM = (
+    r"(?:(?P<season>fall|autumn|spring)\s+(?P<sy>20\d\d)"
+    r"|(?P<month>august|september|october|january|february|march)\s+(?:\d{1,2},?\s+)?(?P<my>20\d\d))"
+)
+_START_CUE = (
+    r"(?:begin(?:s|ning)?|start(?:s|ing)?|commenc\w*|entering|entry|intake|enrol\w*|"
+    r"admission|program(?:me)?\s+start)"
+)
+_INTAKE_CUE_FIRST = re.compile(rf"\b{_START_CUE}\b[^.\n]{{0,60}}?\b{_TERM}\b", re.I)
+_INTAKE_TERM_FIRST = re.compile(rf"\b{_TERM}\s+(?:intake|entry|start)\b", re.I)
+_NOT_AN_INTAKE = re.compile(
+    r"deadline|due\b|apply by|closes?\b|graduat|convocation|tuition|fee", re.I
+)
+
+#: The text just before a date that ends a range: "... to 19 March 2026".
+_ENDS_A_RANGE = re.compile(r"(?:\bto|\buntil|\btill|[-–—])\s*(?:\d{1,2}\s+)?$", re.I)
+
+
+def extract_intake_terms(text: str, builder: ClaimBuilder) -> list[Claim]:
+    """Each intake term a page states as a start ("fall 2027"), once each.
+
+    V2-30A's INTAKE_TERM had no reader. Only a stated start counts: a date
+    beside "deadline" or "graduation" is a different fact, and a month is
+    mapped to a season only where the mapping is unambiguous for an academic
+    start (August-October fall, January-March spring).
+    """
+    flat = for_matching(text)
+    out: list[Claim] = []
+    seen: set[str] = set()
+    matches = sorted(
+        [*_INTAKE_CUE_FIRST.finditer(flat), *_INTAKE_TERM_FIRST.finditer(flat)],
+        key=lambda m: m.start(),
+    )
+    for m in matches:
+        start, end = _sentence_bounds(text, m.start(), m.end())
+        sentence = flat[start:end].strip()
+        if _NOT_AN_INTAKE.search(sentence):
+            continue
+        if m.group("month") and re.search(r"\d", flat[m.start("month") : m.start("my")]):
+            # "Beginning January 21, 2026, TOEFL score reports ..." (Groningen):
+            # a day names an event; a term of study is a month or a season.
+            continue
+        term_at = m.start("season") if m.group("season") else m.start("month")
+        if _ENDS_A_RANGE.search(flat[max(0, term_at - 24) : term_at]):
+            # "Online Application ... to 19 March 2026" closes a window; the
+            # end of an application period is not the start of study (NTU).
+            continue
+        season = (
+            m.group("season") or _MONTH_SEASON.get((m.group("month") or "").lower(), "")
+        ).lower()
+        season = "fall" if season == "autumn" else season
+        year = m.group("sy") or m.group("my")
+        if not season or not year:
+            continue
+        value = f"{season} {year}"
+        if value in seen:
+            continue
+        seen.add(value)
+        claim = builder.add(ClaimType.INTAKE_TERM, value, sentence, confidence=0.7)
+        if claim is not None:
+            out.append(claim)
+    return out
+
+
+#: "Admitted without a declared major; the major is chosen later" (V2-30A
+#: ADMISSION_ROUTE). The KAIST blind trace of 2026-09-27 found it stated in
+#: Korean on a department page; nothing read it. Two shapes, both explicit:
+#: admission *without* a major, or a major chosen at a stated later point.
+#: "Students may change their major" is neither and must not match.
+_UNDECLARED_ADMISSION = re.compile(
+    r"(?:"
+    r"무학과로?\s*입학"
+    r"|전공\s*(?:선택|결정)\s*없이[^.。]{0,40}입학"
+    r"|admit\w*\s+(?:as\s+)?(?:an?\s+)?(?:undeclared|undecided)"
+    r"|admit\w*[^.]{0,40}\bwithout\s+(?:a\s+)?(?:declared\s+|chosen\s+)?major"
+    r"|(?:enter|enrol+|join)\w*[^.]{0,40}\bwithout\s+(?:a\s+)?(?:declared\s+)?major"
+    r")",
+    re.I,
+)
+_LATER_MAJOR_CHOICE = re.compile(
+    r"(?:"
+    r"\d\s*학기\s*(?:때|에|부터)?[^.。]{0,30}전공[^.。]{0,20}선택"
+    r"|(?:choose|select|declare)\w*\s+(?:a|their|your)\s+major\s+"
+    r"(?:at\s+the\s+end\s+of|after|in)\s+(?:the|their|your)\s+"
+    r"(?:first|second|1st|2nd)\s+(?:year|semester)"
+    r")",
+    re.I,
+)
+
+
+def extract_admission_route(text: str, builder: ClaimBuilder) -> Claim | None:
+    """Undergraduates admitted without a declared major, choosing one later.
+
+    One claim per page, quoted from the page's own sentence(s). The value is
+    the corpus vocabulary ``undeclared_then_major_selection``; anything less
+    explicit than admission-without-major or a dated later choice is left
+    UNKNOWN rather than guessed.
+    """
+    flat = for_matching(text)
+    admitted = _UNDECLARED_ADMISSION.search(flat)
+    later = _LATER_MAJOR_CHOICE.search(flat)
+    if admitted is None and later is None:
+        return None
+    first = admitted or later
+    assert first is not None
+    # Bounds on the original text, where a line break still separates a menu
+    # item from the sentence; offsets are identical to ``flat``'s.
+    start, end = _sentence_bounds(text, first.start(), first.end())
+    if admitted is not None and later is not None and later.start() >= end:
+        # The dated choice usually follows in the next sentence; quote both.
+        _, later_end = _sentence_bounds(text, later.start(), later.end())
+        if later_end - start <= 400:
+            end = later_end
+    excerpt = flat[start:end].strip()
+    return builder.add(
+        ClaimType.ADMISSION_ROUTE,
+        "undeclared_then_major_selection",
+        excerpt,
+        confidence=0.75 if admitted is not None else 0.65,
+    )
+
+
+_SENTENCE_END = re.compile(r"[.。!?]|\n|\s{2,}")
+
+
+def _sentence_bounds(text: str, start: int, end: int, limit: int = 200) -> tuple[int, int]:
+    """The sentence around ``start:end``: back to the previous full stop or
+    blank run, forward to the next, never more than ``limit`` either way. A
+    page with no punctuation between its menu and its text (KAIST) would
+    otherwise quote the whole menu."""
+    lo = max(0, start - limit)
+    before = list(_SENTENCE_END.finditer(text, lo, start))
+    s = before[-1].end() if before else lo
+    after = _SENTENCE_END.search(text, end, min(len(text), end + limit))
+    e = after.end() if after else min(len(text), end + limit)
+    return s, e
+
+
+#: A tuition under this amount is a misread window, never a real figure: the
+#: 120-character label window routinely swallows a nearby "$50 application
+#: fee", and no university charges under $100 a year. The floor applies to
+#: TUITION (and the same-window TOTAL_COST_OF_ATTENDANCE); small legitimate
+#: numbers keep flowing for the other cost lines and for the application fee
+#: itself, which is read by its own extractor.
+TUITION_FLOOR_AMOUNT: Final = 100.0
+
+_FLOOR_AT_TUITION: Final[frozenset[ClaimType]] = frozenset(
+    {ClaimType.TUITION, ClaimType.TOTAL_COST_OF_ATTENDANCE}
+)
+
+
+#: An academic year as fee tables print it: 2027-2028, 2027/28, 2027–28.
+_ACADEMIC_YEAR = re.compile(r"\b(20\d{2})\s*[-/–]\s*(?:20)?(\d{2})\b")
+
+
+#: Plan rule TY-1: a fee table row that prints its academic year ("non-EU/EEA
+#: 2027-2028 € 19800") records that year in the claim's scope. Without it the
+#: page-wide scope carries no year and a right fee for the right year is
+#: scored wrong-scope (Groningen, runs of 2026-10-05). On by default with AY-1
+#: since 2026-10-05 (owner: "да").
+TUITION_ROW_YEAR = True
+
+
+def _year_key(text: str) -> str | None:
+    m = _ACADEMIC_YEAR.search(text or "")
+    return f"{m.group(1)}/{m.group(2)}" if m else None
+
+
+def _population_amounts(
+    text: str, label: str, academic_year: str | None = None
+) -> list[tuple[str, float, str, int, int]]:
+    """One fee per population row of a fee table, or none at all.
+
+    ``(population, amount, currency, start, end)`` — only when the table after
+    ``label`` names at least two populations, each followed by its own amount
+    before the next one begins. The statutory EU/EEA fee and the institutional
+    non-EU/EEA fee are different numbers on one page, and the first-match
+    reading quoted whichever came first to everybody.
+
+    The label must stand as a word, not inside a link slug: Groningen's
+    programme page says ``…/application-enrolment-tuition-fees/…`` in two
+    links before its "Tuition fees" table, and the first-match header read the
+    link and missed the table (expert trace, 2026-10-04). Every standalone
+    occurrence is tried until one yields a table. When a population has one
+    row per academic year, the row for ``academic_year`` is kept if present.
+    """
+    want = _year_key(academic_year or "")
+    for header in re.finditer(rf"(?<![\w/-]){label}(?![\w/-])", text, re.IGNORECASE):
+        names = [
+            m
+            for m in _POPULATION_WORD.finditer(text, header.end())
+            if m.start() - header.end() < 600
+        ]
+        rows: dict[str, tuple[str, float, str, int, int]] = {}
+        for i, name in enumerate(names):
+            stop = names[i + 1].start() if i + 1 < len(names) else len(text)
+            segment = text[name.end() : min(stop, name.end() + 120)]
+            money = _money_search(segment)
+            population = population_named(name.group(0))
+            parsed = parse_money(segment[money.start() :]) if money else None
+            if money is None or parsed is None or population is None:
+                continue
+            amount, currency = parsed
+            if amount < TUITION_FLOOR_AMOUNT:
+                continue
+            row = (population, amount, currency, name.start(), name.end() + money.end())
+            if population not in rows or (
+                want is not None and _year_key(segment[: money.start()]) == want
+            ):
+                rows[population] = row
+        if len(rows) >= 2:
+            return list(rows.values())
+    return []
+
+
+#: Plan rule DF-1: a fee table whose columns are academic years and whose rows
+#: are named tariffs (TU Delft, 2026-10-06: "2026/2027 2027/2028 Institutional
+#: rate BSc € 19.906 MSc € 25.633 BSc € 20.563 MSc € 26.479"). Only the tariff
+#: names below are read, each to the population the institution's own page
+#: defines it for; any other row name is left alone. The column must be the
+#: year asked for; no year, no claim. On by default since 2026-10-06 (owner:
+#: "да"; run claude-df1-paired-2: Delft tuition a stable gain, zero losses).
+FEE_YEAR_COLUMNS = True
+_TARIFF_POPULATION = {
+    "statutory rate": "EU/EEA",
+    "institutional rate": "non-EU/EEA",
+}
+_YEAR_HEADER = re.compile(r"((?:20\d{2}\s*/\s*20\d{2}\s+){2,})")
+_TARIFF_CELL = re.compile(
+    r"(?:BSc\s*(?P<bsc>€\s*\d{1,3}(?:[.,]\d{3})+)\s*MSc\s*€\s*\d{1,3}(?:[.,]\d{3})+"
+    r"|(?P<single>€\s*\d{1,3}(?:[.,]\d{3})+))\s*"
+)
+
+
+def _euro_amount(raw: str) -> float:
+    digits = re.sub(r"[^\d.,]", "", raw)
+    return float(re.sub(r"[.,]", "", digits))
+
+
+def _year_column_fees(
+    text: str, want: str | None
+) -> list[tuple[str, float, str | None, str, int, int]]:
+    """``(population, amount, degree, year, start, end)`` per tariff row."""
+    if not want:
+        return []
+    rows = []
+    for header in _YEAR_HEADER.finditer(text):
+        years = [_year_key(y) for y in re.findall(r"20\d{2}\s*/\s*20\d{2}", header.group(1))]
+        if want not in years:
+            continue
+        column = years.index(want)
+        rest = text[header.end() :]
+        label = re.match(r"(statutory rate|institutional rate)\s*", rest, re.I)
+        if label is None:
+            continue
+        position = label.end()
+        cells = []
+        for _ in years:
+            cell = _TARIFF_CELL.match(rest, position)
+            if cell is None:
+                break
+            cells.append(cell)
+            position = cell.end()
+        if len(cells) != len(years):
+            continue
+        cell = cells[column]
+        raw = cell.group("bsc") or cell.group("single")
+        rows.append(
+            (
+                _TARIFF_POPULATION[label.group(1).lower()],
+                _euro_amount(raw),
+                "bachelor" if cell.group("bsc") else None,
+                want,
+                header.start(),
+                header.end() + position,
+            )
+        )
+    return rows
+
+
+def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
+    """Pull cost figures out of a fees page."""
+    found: list[Claim] = []
+    text = for_matching(text)
+    if FEE_YEAR_COLUMNS:
+        want = _year_key(
+            cast("str", builder.requested_academic_year or builder.meta.get("academic_year") or "")
+        )
+        for population, amount, degree, year, start, end in _year_column_fees(text, want):
+            _keep(
+                found,
+                builder.add(
+                    ClaimType.TUITION,
+                    {"amount": amount, "currency": "EUR"},
+                    excerpt_around(text, start, end),
+                    section="Fees and costs",
+                    subject_key=population,
+                    population=population,
+                    degree=degree,
+                    academic_year=year,
+                ),
+            )
+    patterns = (
+        (ClaimType.TUITION, r"(?:tuition|tuition fee|programme fee|course fee)"),
+        (ClaimType.HOUSING_COST, r"(?:housing|accommodation|residence|room)"),
+        (ClaimType.MEALS_COST, r"(?:meal plan|meals|board|food)"),
+        (ClaimType.HEALTH_INSURANCE_COST, r"(?:health insurance|medical insurance)"),
+        (ClaimType.BOOKS_COST, r"(?:books|books and supplies|study materials)"),
+        (
+            ClaimType.MANDATORY_FEES,
+            r"(?:mandatory fees|student fees|university fees|administrative fee)",
+        ),
+        (
+            ClaimType.TOTAL_COST_OF_ATTENDANCE,
+            r"(?:total cost of attendance|estimated total cost|total estimated cost)",
+        ),
+    )
+    for ctype, label in patterns:
+        if ctype is ClaimType.TUITION:
+            rows = _population_amounts(
+                text,
+                label,
+                cast(
+                    "str | None",
+                    (TUITION_ROW_YEAR and builder.requested_academic_year)
+                    or builder.meta.get("academic_year"),
+                ),
+            )
+            for population, amount, currency, start, end in rows:
+                _keep(
+                    found,
+                    builder.add(
+                        ctype,
+                        {"amount": amount, "currency": currency},
+                        excerpt_around(text, start, end),
+                        section="Fees and costs",
+                        subject_key=population,
+                        population=population,
+                        academic_year=_year_key(text[start:end]) if TUITION_ROW_YEAR else None,
+                    ),
+                )
+            if rows:
+                continue
+        m = re.search(rf"{label}[^.\n]{{0,120}}", text, re.IGNORECASE)
+        if not m:
+            continue
+        parsed = parse_money(m.group(0))
+        if parsed is None:
+            continue
+        amount, currency = parsed
+        if ctype in _FLOOR_AT_TUITION and amount < TUITION_FLOOR_AMOUNT:
+            continue
+        _keep(
+            found,
+            builder.add(
+                ctype,
+                {"amount": amount, "currency": currency},
+                excerpt_around(text, m.start(), m.end()),
+                section="Fees and costs",
+            ),
+        )
+    return found
+
+
+#: A faculty named the way universities name them; anything else under a
+#: "Faculty" label (a person, a staff list) is not the programme's faculty.
+_FACULTY_VALUE = re.compile(
+    r"^(?:the\s+)?(?:School|Faculty|College|Department|Division|Institute)\s+of\s+\S.{0,78}$", re.I
+)
+_FACULTY_LABEL = re.compile(r"^(?:faculty|school|offering\s+(?:faculty|school))\s*:?\s*(.*)$", re.I)
+
+
+def extract_programme_faculty(text: str, builder: ClaimBuilder) -> Claim | None:
+    """See :func:`_read_faculty`; the claim names the programme the page confirmed.
+
+    A faculty belongs to the programme whose existence the same page confirmed,
+    not to the name the pipeline searched for: run 36460381447 recorded HKU's
+    faculty against "Computing And Data Science", master, and scored it wrong.
+    """
+    confirmed = next(
+        (
+            c.normalized_value
+            for c in reversed(builder.claims)
+            if c.claim_type is ClaimType.PROGRAM_EXISTS and isinstance(c.normalized_value, dict)
+        ),
+        None,
+    )
+    if confirmed is None:
+        return None
+    title, level = confirmed.get("program"), confirmed.get("degree")
+    saved = builder.meta.get("program")
+    if title:
+        builder.meta["program"] = title
+    try:
+        return _read_faculty(
+            text, builder, degree=str(level) if level else None, programme=title or None
+        )
+    finally:
+        builder.meta["program"] = saved
+
+
+def _read_faculty(
+    text: str, builder: ClaimBuilder, *, degree: str | None, programme: str | None = None
+) -> Claim | None:
+    """The faculty a programme page states in a labelled field ("FACULTY" / value).
+
+    Only a label on its own line (or "Faculty: X") counts, and only when the
+    page states exactly one such value: a listing that names several faculties
+    says nothing about which one teaches the requested programme.
+    """
+    lines = [line.strip() for line in text.splitlines()]
+    values: list[str] = []
+    for i, line in enumerate(lines):
+        label = _FACULTY_LABEL.match(line)
+        if label is None:
+            continue
+        value = label.group(1).strip()
+        if not value:
+            value = next((nxt for nxt in lines[i + 1 : i + 3] if nxt), "")
+        if _FACULTY_VALUE.match(value) and value not in values:
+            values.append(value)
+    if len(values) != 1:
+        return None
+    return builder.add(
+        ClaimType.PROGRAM_FACULTY,
+        values[0],
+        values[0],
+        confidence=0.8,
+        degree=degree,
+        programme=programme,
+    )

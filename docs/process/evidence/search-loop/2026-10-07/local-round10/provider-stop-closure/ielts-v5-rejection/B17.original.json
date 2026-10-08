@@ -1,0 +1,127 @@
+[
+  {
+    "case": "currently_not_accepted",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS Academic is currently not accepted. Overall minimum 6.5.</p>",
+    "expected": {}
+  },
+  {
+    "case": "not_currently_accept",
+    "inner": "<h2>IELTS Academic</h2><p>We do not currently accept IELTS Academic. Overall minimum 6.5.</p>",
+    "expected": {}
+  },
+  {
+    "case": "test_results_decline",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS Academic test results are not accepted. Overall minimum 6.5.</p>",
+    "expected": {}
+  },
+  {
+    "case": "currently_cannot_accept",
+    "inner": "<h2>IELTS Academic</h2><p>We cannot currently accept IELTS Academic. Overall minimum 6.5.</p>",
+    "expected": {}
+  },
+  {
+    "case": "currently_accepted_positive",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS Academic is currently accepted. Overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  },
+  {
+    "case": "article_minimum_positive",
+    "inner": "<h2>IELTS Academic</h2><p>A minimum score of 6.5 is required.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  },
+  {
+    "case": "candidate_score_positive",
+    "inner": "<h2>IELTS Academic</h2><p>Candidates must achieve a minimum score of 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  },
+  {
+    "case": "own_inline_article_positive",
+    "inner": "<p>IELTS Academic requires a minimum score of 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  },
+  {
+    "case": "incidental_academic_programmes",
+    "inner": "<h2>IELTS</h2><p>For academic programmes, IELTS General Training is accepted with an overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "general_training"
+      ]
+    }
+  },
+  {
+    "case": "genuine_general_training_positive",
+    "inner": "<h2>IELTS General Training</h2><p>Overall minimum 6.5 is required.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "general_training"
+      ]
+    }
+  },
+  {
+    "case": "aria_label_from_chrome_heading",
+    "inner": "<h2 id=\"exam\" class=\"menu-title\">IELTS Academic</h2><section aria-labelledby=\"exam\"><p>Overall minimum 6.5.</p></section>",
+    "expected": {}
+  },
+  {
+    "case": "aria_label_from_valid_heading",
+    "inner": "<h2 id=\"exam\">IELTS Academic</h2><section aria-labelledby=\"exam\"><p>Overall minimum 6.5.</p></section>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  },
+  {
+    "case": "full_wrong_scale_atom",
+    "inner": "<h2>IELTS Academic</h2><p>Overall minimum 6.5/100 is required.</p>",
+    "expected": {}
+  },
+  {
+    "case": "invalid_sixty_atom",
+    "inner": "<h2>IELTS Academic</h2><p>Overall minimum 60.</p>",
+    "expected": {}
+  },
+  {
+    "case": "invalid_negative_writing_atom",
+    "inner": "<h2>IELTS Academic</h2><p>Overall minimum 6.5, writing-6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  },
+  {
+    "case": "other_exam_sibling_control",
+    "inner": "<h2>IELTS Academic</h2><h2>CAEL</h2><p>Overall minimum 60.</p>",
+    "expected": {}
+  },
+  {
+    "case": "no_IELTS_ownership_control",
+    "inner": "<h2>Grade requirements</h2><p>Academic programmes overall minimum 6.5.</p>",
+    "expected": {}
+  }
+]

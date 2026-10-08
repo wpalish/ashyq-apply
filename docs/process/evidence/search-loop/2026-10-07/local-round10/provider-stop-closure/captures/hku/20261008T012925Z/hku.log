@@ -1,0 +1,67 @@
+search provider: exa_mcp
+get #1 start t=0s https://www.hku.hk/robots.txt
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/source/backend/app/adapters/html_parse.py:20: MarkupResemblesLocatorWarning: The input looks more like a filename than markup. You may want to open this file and pass the filehandle into Beautiful Soup.
+  return BeautifulSoup(markup, parser)
+get #1 took 1.0s ok
+get #2 start t=1s https://www.hku.hk/sitemap-index.xml
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T004040Z-check-bc90e5dc/source/backend/app/adapters/html_parse.py:20: XMLParsedAsHTMLWarning: It looks like you're parsing an XML document using an HTML parser. If this really is an HTML document (maybe it's XHTML?), you can ignore or filter this warning. If it's XML, you should know that using an XML parser will be more reliable. To parse this document as XML, make sure you have the lxml package installed, and pass the keyword argument `features="xml"` into the BeautifulSoup constructor.
+  return BeautifulSoup(markup, parser)
+get #2 took 2.1s ok
+get #3 start t=3s https://www.hku.hk/sitemap.en-sitemap.xml
+get #3 took 1.5s ok
+get #4 start t=5s https://www.hku.hk/sitemap.tc-sitemap.xml
+get #4 took 1.0s ok
+get #5 start t=6s https://www.hku.hk/sitemap.sc-sitemap.xml
+get #5 took 2.0s ok
+get #6 start t=8s https://www.hku.hk/sitemap.tc-news-events-sitemap.xml
+get #6 took 1.4s ok
+get #7 start t=9s https://www.hku.hk/sitemap.en-news-events-sitemap.xml
+get #7 took 1.5s ok
+get #8 start t=11s https://www.hku.hk/sitemap.sc-news-events-sitemap.xml
+get #8 took 1.5s ok
+get #9 start t=12s https://www.hku.hk/sitemap.xml
+get #9 took 1.5s ok
+get #10 start t=14s https://admissions.hku.hk/programmes
+get #10 took 0.8s robots_disallowed
+get #11 start t=15s https://www.hku.hk/
+get #11 took 0.3s ok
+get #12 start t=15s https://admissions.hku.hk/programmes
+get #12 took 0.0s robots_disallowed
+search #1 took 1.9s (t=17s)
+search #2 took 2.0s (t=19s)
+search #3 took 11.5s (t=30s)
+search #4 took 5.7s (t=36s)
+search #5 took 2.1s (t=38s)
+search #6 took 2.2s (t=40s)
+get #13 start t=40s https://www.cs.hku.hk/
+get #13 took 4.4s ok
+get #14 start t=45s https://admissions.hku.hk/
+get #14 took 0.0s robots_disallowed
+get #15 start t=45s https://www.admissions.hku.hk/
+get #15 took 0.8s robots_disallowed
+get #16 start t=46s https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science
+get #16 took 0.0s robots_disallowed
+get #17 start t=46s https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science-delta
+get #17 took 0.0s robots_disallowed
+get #18 start t=46s https://www.admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science
+get #18 took 0.0s robots_disallowed
+get #19 start t=46s https://www.admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science-delta
+get #19 took 0.0s robots_disallowed
+get #20 start t=46s https://www.cds.hku.hk/prospective-students/undergraduate
+get #20 took 4.3s ok
+get #21 start t=50s https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta
+get #21 took 2.9s ok
+get #22 start t=53s https://cdqa.hku.hk/doc/PLO2012/SCDS/PLO_BEng_CompSc_25-26_0325.pdf
+get #22 took 3.5s ok
+get #23 start t=57s https://master.cds.hku.hk/msccs
+get #23 took 3.4s ok
+get #24 start t=60s https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta
+get #24 took 2.6s ok
+get #25 start t=63s https://admissions.hku.hk/
+get #25 took 0.0s robots_disallowed
+get #26 start t=63s https://admissions.hku.hk/fees-and-scholarships/fees
+get #26 took 0.0s robots_disallowed
+get #27 start t=63s https://admissions.hku.hk/fees-and-scholarships/scholarships
+get #27 took 0.0s robots_disallowed
+get #28 start t=63s https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta
+get #28 took 2.8s ok
