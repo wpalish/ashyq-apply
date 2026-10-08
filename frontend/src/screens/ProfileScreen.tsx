@@ -33,6 +33,21 @@ const SEVERITY_LABEL: Record<string, string> = {
   low: 'Minor effect',
 };
 const PROFILE_STEPS = ['Personal details', 'Academic background', 'Tests & scores', 'Activities & achievements', 'Review'] as const;
+/** Each step's question (concept «Пропуск»: one question a screen). */
+const STEP_TITLES = [
+  'Tell us about yourself',
+  'Your school results',
+  'Your tests and scores',
+  'What you have done',
+  'Check and continue',
+] as const;
+const STEP_LEDES = [
+  'Where you live and study now, and what and when you want to study next. It all stays editable.',
+  'Your grades as your school reports them. Nothing is converted without a published method.',
+  'Only the tests you have taken or booked. A missing score is a question, never a zero.',
+  'Activities and awards, in your own words. They are kept with your profile, not scored.',
+  'What is still missing, and what each gap would change.',
+] as const;
 
 export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const {
@@ -156,17 +171,25 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
 
   return (
     <>
-      <div className="screen__head">
-        <p className="screen__eyebrow">CREATE YOUR PROFILE · {String(step).padStart(2, '0')} / 05</p>
-        <h1 className="screen__title">Tell us about <span className="find-yellow">yourself.</span></h1>
-        <p className="screen__lede">
-          A few simple details help us find the right matches for you. Your information stays editable.
-        </p>
-      </div>
-
+      {/* Five bars, one per step: the ones behind are ink, this one too. */}
       <nav className="profile-steps" aria-label="Profile steps">
-        {PROFILE_STEPS.map((name, index) => <button key={name} type="button" aria-current={step === index + 1 ? 'step' : undefined} onClick={() => setStep(index + 1)}><span>{index + 1}</span>{name}</button>)}
+        {PROFILE_STEPS.map((name, index) => (
+          <button
+            key={name}
+            type="button"
+            className={index + 1 < step ? 'is-done' : undefined}
+            aria-current={step === index + 1 ? 'step' : undefined}
+            onClick={() => setStep(index + 1)}
+          >
+            <span className="visually-hidden">Step {index + 1}: </span><span className="profile-steps__name">{name}</span>
+          </button>
+        ))}
       </nav>
+      <header className="step-head">
+        <p className="step-head__step">Step {step} of {PROFILE_STEPS.length} · {PROFILE_STEPS[step - 1]}</p>
+        <h1 className="step-head__title">{STEP_TITLES[step - 1]}</h1>
+        <p className="step-head__lede">{STEP_LEDES[step - 1]}</p>
+      </header>
 
       <div className="stack stack--loose">
         {draftRestored && (
@@ -624,7 +647,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         </div>
 
         <div className="profile-step-actions">
-          {step > 1 && <button className="btn" type="button" onClick={() => setStep(step - 1)}>← Back</button>}
+          {step > 1 && <button className="btn profile-back" type="button" onClick={() => setStep(step - 1)}>Back</button>}
           <button
             className="btn"
             disabled={loading || saving}
@@ -638,8 +661,8 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </button>
           {saved && !dirty && !saving && <Chip tone="ok">Saved</Chip>}
           {dirty && !saving && <span className="xs muted">Unsaved changes stay on this device</span>}
-          <button className="btn btn--primary" onClick={() => step < PROFILE_STEPS.length ? setStep(step + 1) : onNext()} data-testid="to-preferences">
-            {step < PROFILE_STEPS.length ? 'Continue →' : 'Continue to preferences →'}
+          <button className="btn btn--primary profile-next" onClick={() => step < PROFILE_STEPS.length ? setStep(step + 1) : onNext()} data-testid="to-preferences">
+            {step < PROFILE_STEPS.length ? `Next: ${(PROFILE_STEPS[step] ?? '').toLowerCase()}` : 'Next: where to study'} <span aria-hidden="true">→</span>
           </button>
         </div>
       </div>

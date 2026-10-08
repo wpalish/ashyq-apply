@@ -104,7 +104,7 @@ describe('public routes', () => {
   it('shows a public landing before authentication', async () => {
     window.location.hash = '#/welcome';
     renderGate();
-    expect(screen.getByRole('heading', { name: /Find a university/ })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: /Where can you study/ })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Sign in' })).toHaveAttribute('href', '#/sign-in');
   });
 
@@ -112,5 +112,18 @@ describe('public routes', () => {
     window.location.hash = '#/legal';
     renderGate();
     expect(screen.getByTestId('legal-draft')).toHaveTextContent('not reviewed by a lawyer');
+  });
+});
+
+describe('the password hint', () => {
+  it('counts a new password towards the minimum', async () => {
+    renderGate();
+    fireEvent.click(await screen.findByRole('tab', { name: 'Create account' }));
+    const hint = screen.getByTestId('password-count');
+    expect(hint).toHaveTextContent('At least 12 characters.');
+    fireEvent.change(screen.getByTestId('auth-password'), { target: { value: 'seven77' } });
+    expect(hint).toHaveTextContent('At least 12 characters · 7 so far.');
+    fireEvent.change(screen.getByTestId('auth-password'), { target: { value: 'twelve-chars' } });
+    expect(hint).toHaveTextContent('long enough');
   });
 });

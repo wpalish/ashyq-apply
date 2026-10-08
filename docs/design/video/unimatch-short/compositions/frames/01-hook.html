@@ -1,0 +1,88 @@
+<template>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+@font-face{font-family:"Inter";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Inter-400.woff2") format("woff2");}@font-face{font-family:"Inter";font-weight:500;font-style:normal;font-display:block;src:url("assets/fonts/Inter-500.woff2") format("woff2");}@font-face{font-family:"Inter";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Inter-600.woff2") format("woff2");}@font-face{font-family:"Inter";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Inter-700.woff2") format("woff2");}@font-face{font-family:"Inter";font-weight:800;font-style:normal;font-display:block;src:url("assets/fonts/Inter-800.woff2") format("woff2");}
+#root { position: absolute; inset: 0; overflow: hidden; font-family: "Inter"; -webkit-font-smoothing: antialiased; }
+#f01-bg { position: absolute; inset: 0; background: #101014; }
+#f01-stage { position: absolute; inset: 0; }
+#f01-cam { position: absolute; inset: 0; transform-origin: 50% 40%; }
+.f01-abs { position: absolute; }
+.f01-kicker { position: absolute; left: 64px; margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+.f01-display { position: absolute; left: 64px; right: 64px; margin: 0; display: grid; justify-items: start; font-weight: 800; letter-spacing: -0.045em; line-height: 0.95; }
+.f01-line { display: block; }
+
+.f01-tab { position: absolute; display: flex; align-items: center; gap: 18px; height: 98px; padding: 0 30px; box-sizing: border-box; min-width: 520px; border-radius: 24px 24px 6px 6px; background: #22222C; border-top: 4px solid; color: #D6D6DF; font-size: 33px; font-weight: 600; white-space: nowrap; box-shadow: 0 18px 36px rgba(0,0,0,0.45); }
+.f01-tab i { flex: none; width: 22px; height: 22px; border-radius: 50%; }
+.f01-tab span { flex: 1; }
+.f01-tab em { font-style: normal; color: #6E6E7C; font-size: 30px; }
+.f01-ch { display: none; }
+.f01-caret { display: inline-block; width: 9px; height: 0.82em; margin-left: 6px; background: #D2BE8C; vertical-align: -0.06em; opacity: 0; }
+#f01-q2a, #f01-q2b { transform-origin: 0% 50%; }
+#f01-pile { transform-origin: 50% 100%; }
+
+</style>
+<div id="root" data-composition-id="01-hook" data-width="1080" data-height="1920">
+  <div id="f01-bg" class="clip" data-start="0" data-duration="3" data-track-index="0"></div>
+  <div id="f01-stage" class="clip" data-start="0" data-duration="3" data-track-index="1">
+    <div id="f01-cam">
+      <div id="f01-pile" data-layout-allow-overlap class="f01-abs" style="left:0;top:0;width:1080px;height:800px">
+        <div class="f01-tab" id="f01-tab0" style="left:60px;top:660px;border-top-color:#9DBAD3"><i style="background:#9DBAD3"></i><span data-layout-allow-overlap>Tuition fees 2027/28 (PDF)</span><em data-layout-allow-overlap>×</em></div>
+        <div class="f01-tab" id="f01-tab1" style="left:360px;top:590px;border-top-color:#BCA9D0"><i style="background:#BCA9D0"></i><span data-layout-allow-overlap>Scholarships — who can apply</span><em data-layout-allow-overlap>×</em></div>
+        <div class="f01-tab" id="f01-tab2" style="left:110px;top:515px;border-top-color:#D9A1A1"><i style="background:#D9A1A1"></i><span data-layout-allow-overlap>Admission requirements</span><em data-layout-allow-overlap>×</em></div>
+        <div class="f01-tab" id="f01-tab3" style="left:450px;top:440px;border-top-color:#93C7BE"><i style="background:#93C7BE"></i><span data-layout-allow-overlap>Cost of living</span><em data-layout-allow-overlap>×</em></div>
+        <div class="f01-tab" id="f01-tab4" style="left:40px;top:365px;border-top-color:#D2BE8C"><i style="background:#D2BE8C"></i><span data-layout-allow-overlap>Application deadlines</span><em data-layout-allow-overlap>×</em></div>
+        <div class="f01-tab" id="f01-tab5" style="left:260px;top:290px;border-top-color:#CFA3B0"><i style="background:#CFA3B0"></i><span data-layout-allow-overlap>Recognition of foreign diplomas</span><em data-layout-allow-overlap>×</em></div>
+        <div class="f01-tab" id="f01-tab6" style="left:90px;top:215px;border-top-color:#B9C79A"><i style="background:#B9C79A"></i><span data-layout-allow-overlap>Fees for non-EU students</span><em data-layout-allow-overlap>×</em></div>
+        <div class="f01-tab" id="f01-tab7" style="left:500px;top:140px;border-top-color:#9DBAD3"><i style="background:#9DBAD3"></i><span data-layout-allow-overlap>Grant FAQ</span><em data-layout-allow-overlap>×</em></div>
+      </div>
+      <p class="f01-kicker" id="f01-kick" style="top:850px;color:#D2BE8C">Study abroad</p>
+      <div class="f01-display" id="f01-q1" style="top:905px;font-size:130px;color:#F3F2EF"><span class="f01-line"><span class="f01-ch" id="f01-c1-0">w</span><span class="f01-ch" id="f01-c1-1">h</span><span class="f01-ch" id="f01-c1-2">e</span><span class="f01-ch" id="f01-c1-3">r</span><span class="f01-ch" id="f01-c1-4">e</span><span class="f01-ch" id="f01-c1-5">&nbsp;</span><span class="f01-ch" id="f01-c1-6">c</span><span class="f01-ch" id="f01-c1-7">a</span><span class="f01-ch" id="f01-c1-8">n</span><span class="f01-ch" id="f01-c1-9">&nbsp;</span><span class="f01-ch" id="f01-c1-10">i</span><span class="f01-caret" id="f01-caret1"></span></span><span class="f01-line"><span class="f01-ch" id="f01-c2-0">s</span><span class="f01-ch" id="f01-c2-1">t</span><span class="f01-ch" id="f01-c2-2">u</span><span class="f01-ch" id="f01-c2-3">d</span><span class="f01-ch" id="f01-c2-4">y</span><span class="f01-caret" id="f01-caret2"></span></span></div>
+      <div class="f01-display" id="f01-q2" style="top:1180px;font-size:130px;color:#F3F2EF"><span class="f01-line" id="f01-q2a">— and what will</span><span class="f01-line" id="f01-q2b">it <span style="color:#D2BE8C">cost?</span></span></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const tl = gsap.timeline({ paused: true });
+  const D = 3;
+  tl.fromTo("#f01-cam", { scale: 1 }, { scale: 1.04, duration: D, ease: "none" }, 0);
+  tl.set("#f01-c1-0", { display: "inline" }, 0.050);
+  tl.set("#f01-c1-1", { display: "inline" }, 0.102);
+  tl.set("#f01-c1-2", { display: "inline" }, 0.154);
+  tl.set("#f01-c1-3", { display: "inline" }, 0.206);
+  tl.set("#f01-c1-4", { display: "inline" }, 0.258);
+  tl.set("#f01-c1-5", { display: "inline" }, 0.310);
+  tl.set("#f01-c1-6", { display: "inline" }, 0.362);
+  tl.set("#f01-c1-7", { display: "inline" }, 0.414);
+  tl.set("#f01-c1-8", { display: "inline" }, 0.466);
+  tl.set("#f01-c1-9", { display: "inline" }, 0.518);
+  tl.set("#f01-c1-10", { display: "inline" }, 0.570);
+  tl.set("#f01-c2-0", { display: "inline" }, 0.700);
+  tl.set("#f01-c2-1", { display: "inline" }, 0.756);
+  tl.set("#f01-c2-2", { display: "inline" }, 0.812);
+  tl.set("#f01-c2-3", { display: "inline" }, 0.868);
+  tl.set("#f01-c2-4", { display: "inline" }, 0.924);
+  tl.set("#f01-caret1", { opacity: 1 }, 0.0);
+  tl.set("#f01-caret1", { opacity: 0 }, 0.68);
+  tl.set("#f01-caret2", { opacity: 1 }, 0.68);
+  tl.set("#f01-caret2", { opacity: 0 }, 1.25);
+  tl.set("#f01-caret2", { opacity: 1 }, 1.5);
+  tl.set("#f01-caret2", { opacity: 0 }, 1.75);
+  tl.set("#f01-caret2", { opacity: 1 }, 2.0);
+  tl.fromTo("#f01-kick", { y: 16, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.4, ease: "power3.out" }, 0.0);
+  tl.fromTo("#f01-tab0", { y: -260, rotation: -12, opacity: 0 }, { y: 0, rotation: -4, opacity: 1, duration: 0.42, ease: "power3.out" }, 1.000);
+  tl.fromTo("#f01-tab1", { y: -260, rotation: 9, opacity: 0 }, { y: 0, rotation: 3, opacity: 1, duration: 0.42, ease: "power3.out" }, 1.125);
+  tl.fromTo("#f01-tab2", { y: -260, rotation: 18, opacity: 0 }, { y: 0, rotation: 6, opacity: 1, duration: 0.42, ease: "power3.out" }, 1.250);
+  tl.fromTo("#f01-tab3", { y: -260, rotation: -15, opacity: 0 }, { y: 0, rotation: -5, opacity: 1, duration: 0.42, ease: "power3.out" }, 1.375);
+  tl.fromTo("#f01-tab4", { y: -260, rotation: 6, opacity: 0 }, { y: 0, rotation: 2, opacity: 1, duration: 0.42, ease: "power3.out" }, 1.500);
+  tl.fromTo("#f01-tab5", { y: -260, rotation: -9, opacity: 0 }, { y: 0, rotation: -3, opacity: 1, duration: 0.42, ease: "power3.out" }, 1.625);
+  tl.fromTo("#f01-tab6", { y: -260, rotation: 15, opacity: 0 }, { y: 0, rotation: 5, opacity: 1, duration: 0.42, ease: "power3.out" }, 1.750);
+  tl.fromTo("#f01-tab7", { y: -260, rotation: -6, opacity: 0 }, { y: 0, rotation: -2, opacity: 1, duration: 0.42, ease: "power3.out" }, 1.875);
+  tl.fromTo("#f01-pile", { scale: 1, y: 0 }, { scale: 0.94, y: 18, duration: 1.0, ease: "power2.in" }, 2.0);
+  tl.fromTo("#f01-q2a", { scale: 1.18, opacity: 0, filter: "blur(10px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "expo.out" }, 2.0);
+  tl.fromTo("#f01-q2b", { scale: 1.18, opacity: 0, filter: "blur(10px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "expo.out" }, 2.25);
+
+  window.__timelines["01-hook"] = tl;
+})();
+</script>
+</template>

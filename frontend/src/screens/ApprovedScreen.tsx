@@ -1,27 +1,35 @@
 /**
- * Screen 07 — Approved universities.
+ * Screen 07 — the plan: deadlines and decisions.
  *
- * The decision ledger. Rejected rows stay visible with their reason, because
- * "why did I rule this out in March" is a real question in October.
+ * The departures board first - the nearest deadline among the kept and
+ * "maybe" programmes, then every one after it - and the decision ledger
+ * under it. Rejected rows stay visible with their reason, because "why did I
+ * rule this out in March" is a real question in October.
  */
 
+import { useMemo, useState } from 'react';
+import { DeadlineBoard } from '@/components/DeadlineBoard';
+import { passColours, preferredCountries } from '@/lib/passColour';
 import { Chip, Empty, Notice, Panel, StatusChip } from '@/components/primitives';
+import { planDeadlines } from '@/lib/deadlines';
+import { doneKey, nextToStart, useDocsDone } from '@/lib/docs';
 import { date, eligibilityTone, fundingClassTone, money } from '@/lib/format';
 import { useStore } from '@/lib/store';
 import type { ProgramResult, UserDecision } from '@/types';
 
 export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
-  const { results, run, collectDocuments, decide } = useStore();
+  const { results, run, collectDocuments, decide, savedProfile } = useStore();
+  const passes = useMemo(
+    () => passColours(results.map((r) => r.country), preferredCountries(savedProfile)),
+    [results, savedProfile],
+  );
+  const [done, toggle] = useDocsDone();
 
   const group = (d: UserDecision) => results.filter((r) => r.user_decision === d);
   const approved = group('approved');
   const maybe = group('maybe');
   const rejected = group('rejected');
   const shortlisted = approved.length + maybe.length;
-  const today = new Date().toISOString().slice(0, 10);
-  const nextDeadline = [...approved, ...maybe]
-    .filter((result) => result.admission_deadline && result.admission_deadline >= today)
-    .sort((a, b) => (a.admission_deadline ?? '').localeCompare(b.admission_deadline ?? ''))[0];
   // A queued job counts as collecting: the worker has not claimed it yet, but
   // the request has been made and the button must not invite a second one.
   const collecting =
@@ -29,26 +37,34 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
     (run?.stage === 'document_collection' && run.job_running);
 
   if (results.length === 0) return <Empty title="No results yet">Run the research first.</Empty>;
+  const planned = planDeadlines(results);
+  const datedCount = planned.filter((p) => p.day !== null).length;
 
   return (
     <>
-      <div className="screen__head">
-        <p className="screen__eyebrow">Your application journey</p>
-        <h1 className="screen__title">A clearer plan. A brighter <span className="find-yellow">you.</span></h1>
-        <p className="screen__lede">
-          Keep your chosen programmes together, check their deadlines and prepare what each one asks for.
+      <header className="plan-head">
+        <h1 className="plan-title">Plan</h1>
+        <p className="plan-sub">
+          {approved.length} kept programme{approved.length === 1 ? '' : 's'}
+          {maybe.length > 0 && <> · {maybe.length} maybe</>}
+          {' · '}{datedCount} date{datedCount === 1 ? '' : 's'}
         </p>
-      </div>
+      </header>
 
       <div className="stack stack--loose">
-        <section className="plan-hero" aria-label="Your next step">
-          <div>
-            <span className="home-eyebrow">NEXT STEP</span>
-            <h2>{shortlisted === 0 ? 'Choose a programme to plan for.' : nextDeadline ? `Next deadline: ${nextDeadline.university}` : 'Prepare your application documents.'}</h2>
-            <p>{nextDeadline?.admission_deadline ? `${date(nextDeadline.admission_deadline)} · ${nextDeadline.program}` : shortlisted === 0 ? 'Save a promising result from Find to begin.' : 'No future admission deadline has been confirmed for these programmes.'}</p>
-          </div>
-          <div className="plan-hero__count"><strong>{shortlisted}</strong><span>programmes in your plan</span></div>
-        </section>
+        <ThisWeek
+          results={results}
+          done={done}
+          shortlisted={shortlisted}
+          collecting={Boolean(collecting)}
+          onCollect={async () => { await collectDocuments(); onCollect(); }}
+          onOpen={onCollect}
+        />
+
+        <DeadlineBoard planned={planned} done={done} colourOf={(c) => passes.get(c)} />
+
+        <NextToStart results={results} done={done} toggle={toggle} />
+
         <Panel>
           <div className="row" style={{ justifyContent: 'space-between' }}>
             <div className="row">
@@ -66,7 +82,7 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
               }}
               data-testid="collect-documents"
             >
-              {collecting ? 'Collecting…' : `Collect documents for ${shortlisted} programmes`}
+              {collecting ? 'Collecting…' : `Collect documents for ${shortlisted} programme${shortlisted === 1 ? '' : 's'}`}
             </button>
           </div>
           {shortlisted === 0 && (
@@ -159,5 +175,132 @@ function DecidedRow({
       </div>
       {result.user_notes && <p className="xs faint" style={{ marginTop: 8 }}>{result.user_notes}</p>}
     </div>
+  );
+}
+
+/**
+ * Concept L's "this week", made useful on any day: the documents with the
+ * earliest start dates across the kept list, ticked here or on the documents
+ * screen alike. The ones due to start within seven days say so.
+ */
+function NextToStart({
+  results, done, toggle,
+}: {
+  results: ProgramResult[];
+  done: Record<string, boolean>;
+  toggle: (key: string) => void;
+}) {
+  // A document ticked here stays in place, struck through, until the next
+  // visit: vanishing on the tick left no way to undo a slip from this list.
+  const [tickedHere, setTickedHere] = useState<Set<string>>(() => new Set());
+  const kept = results.filter((r) => r.user_decision === 'approved' || r.user_decision === 'maybe');
+  if (kept.length === 0) return null;
+  const collected = kept.some((r) => r.checklist);
+  const settled = Object.fromEntries(Object.entries(done).filter(([key]) => !tickedHere.has(key)));
+  const tasks = nextToStart(results, settled);
+  const shown = tasks.slice(0, 3);
+  return (
+    <Panel title="Next to start" hint="From your document lists: each one's due date minus the time it takes.">
+      <div data-testid="next-to-start">
+        {!collected ? (
+          <p className="small muted">Collect documents for what you keep, and the first ones to start appear here.</p>
+        ) : shown.length === 0 ? (
+          <p className="small muted">Nothing left to start on the dates that are known.</p>
+        ) : (
+          <>
+            <ul className="next-docs">
+              {shown.map(({ result, item, timing }) => {
+                const key = doneKey(result, item);
+                const soon = timing.late || timing.daysToStart <= 7;
+                return (
+                  <li key={key} className={`next-docs__item${done[key] ? ' is-done' : ''}`}>
+                    <input
+                      type="checkbox"
+                      checked={Boolean(done[key])}
+                      onChange={() => {
+                        toggle(key);
+                        setTickedHere((prev) => new Set(prev).add(key));
+                      }}
+                      aria-label={`${item.name}, ${result.university}: ready`}
+                    />
+                    <span>
+                      <span className="next-docs__name">{item.name}</span>
+                      <span className="next-docs__where"> · {result.university} · due {date(timing.due)}</span>
+                    </span>
+                    <span className={`next-docs__when${soon ? ' next-docs__when--soon' : ''}`}>
+                      {timing.late ? 'start now' : timing.daysToStart <= 7 ? `this week · by ${date(timing.start)}` : `by ${date(timing.start)}`}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+            {tasks.length > shown.length && (
+              <p className="xs muted" style={{ marginTop: 'var(--space-2)' }}>
+                and {tasks.length - shown.length} more on the documents screen
+              </p>
+            )}
+          </>
+        )}
+      </div>
+    </Panel>
+  );
+}
+
+/**
+ * The plan's black card (concept «Пропуск»): what to do this week. Before
+ * the document lists exist it asks for them; after, it names the documents
+ * whose start date falls within seven days - each one's due date minus the
+ * time it takes, from the lists - and opens the documents screen.
+ */
+function ThisWeek({
+  results, done, shortlisted, collecting, onCollect, onOpen,
+}: {
+  results: ProgramResult[];
+  done: Record<string, boolean>;
+  shortlisted: number;
+  collecting: boolean;
+  onCollect: () => void;
+  onOpen: () => void;
+}) {
+  const kept = results.filter((r) => r.user_decision === 'approved' || r.user_decision === 'maybe');
+  const collected = kept.some((r) => r.checklist);
+  const tasks = collected ? nextToStart(results, done) : [];
+  const week = tasks.filter(({ timing }) => timing.late || timing.daysToStart <= 7);
+  const names = [...new Set(week.map(({ item }) => item.name))];
+
+  let title: string;
+  let detail: string;
+  let action: { label: string; run: () => void; disabled?: boolean } | null;
+  if (shortlisted === 0) {
+    title = 'Keep a programme to start a plan';
+    detail = 'Its deadlines and the documents it asks for appear here.';
+    action = null;
+  } else if (!collected) {
+    title = `Collect the document lists for ${shortlisted} programme${shortlisted === 1 ? '' : 's'}`;
+    detail = 'The slowest step, so it runs only on what you keep.';
+    action = { label: collecting ? 'Collecting…' : 'Collect', run: onCollect, disabled: collecting };
+  } else if (names.length > 0) {
+    title = `${names.length} document${names.length === 1 ? '' : 's'} to start`;
+    detail = names.slice(0, 3).join(' · ') + (names.length > 3 ? ` · and ${names.length - 3} more` : '');
+    action = { label: 'Open', run: onOpen };
+  } else {
+    const next = tasks[0];
+    title = 'Nothing to start this week';
+    detail = next ? `Next: ${next.item.name}, by ${date(next.timing.start)}` : 'Every document with a known date is ready.';
+    action = { label: 'Open', run: onOpen };
+  }
+  return (
+    <section className="week" aria-labelledby="week-title" data-testid="this-week">
+      <div>
+        <p className="week__kicker">This week</p>
+        <h2 className="week__title" id="week-title">{title}</h2>
+        <p className="week__detail">{detail}</p>
+      </div>
+      {action && (
+        <button type="button" className="week__action" onClick={action.run} disabled={action.disabled} data-testid="this-week-action">
+          {action.label}
+        </button>
+      )}
+    </section>
   );
 }

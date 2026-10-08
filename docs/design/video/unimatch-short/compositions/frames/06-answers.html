@@ -1,0 +1,67 @@
+<template>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+@font-face{font-family:"Inter";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Inter-400.woff2") format("woff2");}@font-face{font-family:"Inter";font-weight:500;font-style:normal;font-display:block;src:url("assets/fonts/Inter-500.woff2") format("woff2");}@font-face{font-family:"Inter";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Inter-600.woff2") format("woff2");}@font-face{font-family:"Inter";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Inter-700.woff2") format("woff2");}@font-face{font-family:"Inter";font-weight:800;font-style:normal;font-display:block;src:url("assets/fonts/Inter-800.woff2") format("woff2");}
+#root { position: absolute; inset: 0; overflow: hidden; font-family: "Inter"; -webkit-font-smoothing: antialiased; }
+#f06-bg { position: absolute; inset: 0; background: #101014; }
+#f06-stage { position: absolute; inset: 0; }
+#f06-cam { position: absolute; inset: 0; transform-origin: 50% 40%; }
+.f06-abs { position: absolute; }
+.f06-kicker { position: absolute; left: 64px; margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+.f06-display { position: absolute; left: 64px; right: 64px; margin: 0; display: grid; justify-items: start; font-weight: 800; letter-spacing: -0.045em; line-height: 0.95; }
+.f06-line { display: block; }
+
+.f06-row { position: absolute; left: 64px; right: 64px; transform-origin: 0% 50%; }
+.f06-label { margin: 0; font-size: 108px; font-weight: 800; letter-spacing: -0.045em; line-height: 1; color: #F3F2EF; }
+.f06-meta { display: flex; align-items: center; gap: 24px; margin-top: 22px; }
+.f06-chip { padding: 12px 30px; border-radius: 999px; font-size: 38px; font-weight: 700; }
+.f06-note { font-size: 35px; font-weight: 500; color: #A9A9B6; }
+.f06-hair { position: absolute; left: 64px; width: 952px; height: 2px; background: #2C2C36; transform-origin: 0% 50%; }
+
+</style>
+<div id="root" data-composition-id="06-answers" data-width="1080" data-height="1920">
+  <div id="f06-bg" class="clip" data-start="0" data-duration="4" data-track-index="0"></div>
+  <div id="f06-stage" class="clip" data-start="0" data-duration="4" data-track-index="1">
+    <div id="f06-cam">
+      <p class="f06-kicker" id="f06-kick" style="top:250px;color:#D2BE8C">Requirements · profile · money</p>
+      <div class="f06-row" id="f06-row0" style="top:340px">
+        <p class="f06-label">requirements</p>
+        <div class="f06-meta"><span class="f06-chip" style="background:#FFF3DB;color:#8A5A00">Pending</span><span class="f06-note">waiting on minimum GPA</span></div>
+      </div>
+      <div class="f06-row" id="f06-row1" style="top:602px">
+        <p class="f06-label">your profile</p>
+        <div class="f06-meta"><span class="f06-chip" style="background:#E7F0FA;color:#1D4F91">Stronger</span><span class="f06-note">above the minimums</span></div>
+      </div>
+      <div class="f06-hair" id="f06-hair1" style="top:580px"></div>
+      <div class="f06-row" id="f06-row2" style="top:864px">
+        <p class="f06-label">money</p>
+        <div class="f06-meta"><span class="f06-chip" style="background:#E7F0FA;color:#1D4F91">Competitive</span><span class="f06-note">Talent Grant, if awarded</span></div>
+      </div>
+      <div class="f06-hair" id="f06-hair2" style="top:842px"></div>
+      <div class="f06-display" style="top:1150px;font-size:148px;color:#F3F2EF">
+        <span class="f06-line" id="f06-c1">answers,</span>
+        <span class="f06-line" id="f06-c2" style="color:#D2BE8C">not odds.</span>
+      </div>
+      <p class="f06-abs" id="f06-note" style="left:64px;top:1470px;margin:0;font-size:35px;font-weight:600;color:#A9A9B6">three separate answers — never one score</p>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const tl = gsap.timeline({ paused: true });
+  const D = 4;
+  tl.fromTo("#f06-cam", { scale: 1 }, { scale: 1.04, duration: D, ease: "none" }, 0);
+  tl.fromTo("#f06-kick", { y: 14, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.4, ease: "power3.out" }, 0.05);
+  tl.fromTo("#f06-row0", { scale: 1.22, opacity: 0, filter: "blur(10px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.42, ease: "expo.out" }, 0.15);
+  tl.fromTo("#f06-row1", { scale: 1.22, opacity: 0, filter: "blur(10px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.42, ease: "expo.out" }, 1.15);
+  tl.fromTo("#f06-row2", { scale: 1.22, opacity: 0, filter: "blur(10px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.42, ease: "expo.out" }, 2.15);
+  tl.fromTo("#f06-hair1", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 1.05);
+  tl.fromTo("#f06-hair2", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 2.05);
+  tl.fromTo("#f06-c1", { y: 40, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.5, ease: "power3.out" }, 3.0);
+  tl.fromTo("#f06-c2", { y: 40, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.5, ease: "power3.out" }, 3.2);
+  tl.fromTo("#f06-note", { y: 14, opacity: 0, filter: "blur(6px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "power3.out" }, 3.45);
+
+  window.__timelines["06-answers"] = tl;
+})();
+</script>
+</template>

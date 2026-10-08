@@ -6,8 +6,9 @@
  * ineligible, that a zero gap is refused when the figures are not comparable.
  */
 
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import { expandRow, newSession, openShortlist, rowFor, shot, waitForResults } from './helpers';
+import { goTo, expandRow, newSession, openShortlist, rowFor, shot, waitForResults } from './helpers';
 
 test.describe.configure({ mode: 'serial' });
 
@@ -48,7 +49,7 @@ test('preferences screen exposes the scoring weights and warns about live mode',
   await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(0).click();
   await page.getByTestId('load-demo-profile').click();
   await page.evaluate(() => { window.location.hash = '#/preferences'; });
-  await expect(page.getByRole('heading', { name: /Shape your perfect match/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Where would you study?' })).toBeVisible();
   await expect(page.getByText('It is not a probability of admission')).toBeVisible();
 
   await page.getByTestId('demo-toggle').uncheck();
@@ -58,14 +59,15 @@ test('preferences screen exposes the scoring weights and warns about live mode',
 });
 
 test('research runs to completion and reports what it could not read', async () => {
-  await page.evaluate(() => { window.location.hash = '#/preferences'; });
+  await goTo(page, 'preferences');
   await page.getByTestId('start-research').click();
 
   await expect(page.getByTestId('stage-list')).toBeVisible();
   await page.screenshot({ path: shot('03-progress-running.png'), fullPage: true });
 
   await waitForResults(page);
-  await expect(page.getByRole('heading', { name: 'Your opportunities are ready.' })).toBeVisible();
+  // The night reveal names what the run found (the redesign's results moment).
+  await expect(page.getByRole('heading', { name: /\d+ programmes? in \d+ countr(y|ies)/ })).toBeVisible();
   // Unreadable pages are surfaced, not swallowed.
   await expect(page.getByText(/Pages that could not be read/)).toBeVisible();
   await page.screenshot({ path: shot('04-progress-complete.png'), fullPage: true });
@@ -134,9 +136,12 @@ test('an incomparable zero is refused rather than shown as nothing to pay', asyn
   await expect(toronto).toContainText('not computable');
 
   await expandRow(page, 'University of Toronto');
+  // Refused twice now: in the money summary on top of the programme, and in
+  // its costs tab. Neither may turn the incomparable figures into a zero.
+  await expect(page.getByTestId('money-unknown')).toContainText('Not computed.');
   await page.getByTestId('tab-costs').click();
-  await expect(page.getByText('Not computed.')).toBeVisible();
-  await expect(page.getByText(/not directly comparable/)).toBeVisible();
+  await expect(page.getByText('Not computed.')).toHaveCount(2);
+  await expect(page.getByText(/not directly comparable/).first()).toBeVisible();
 });
 
 test('a per-section IELTS minimum is enforced independently of the overall band', async () => {
@@ -166,7 +171,7 @@ test('missing scholarship data reads as unknown, not as no funding', async () =>
 
 test('conflicting official sources are shown with a drafted question', async () => {
   await openShortlist(page);
-  await page.evaluate(() => { window.location.hash = '#/sources'; });
+  await goTo(page, 'sources');
 
   await expect(page.getByRole('heading', { name: /See the proof behind every match/ })).toBeVisible();
   await expect(page.getByTestId('conflict-list')).toContainText('minimum overall IELTS band');
@@ -179,7 +184,7 @@ test('conflicting official sources are shown with a drafted question', async () 
 
 test('funding comparison hatches what it cannot compare', async () => {
   await openShortlist(page);
-  await page.evaluate(() => { window.location.hash = '#/funding'; });
+  await goTo(page, 'funding');
 
   await expect(page.getByRole('heading', { name: 'What you would actually pay' })).toBeVisible();
   await expect(page.locator('.fund-bar__unknown').first()).toBeVisible();
@@ -195,7 +200,7 @@ test('approve, collect documents, and export', async () => {
   await rows.nth(1).locator('.decision-btn--approve').click();
   await expect(rows.nth(0).locator('.decision-btn--approve')).toHaveAttribute('aria-pressed', 'true');
 
-  await page.evaluate(() => { window.location.hash = '#/approved'; });
+  await goTo(page, 'approved');
   await expect(page.getByText('2 approved')).toBeVisible();
   await page.screenshot({ path: shot('10-approved.png'), fullPage: true });
 
@@ -207,8 +212,12 @@ test('approve, collect documents, and export', async () => {
   // Lead-time ordering puts the referee first, because that is what sinks applications.
   await expect(page.locator('.doc').first()).toContainText(/reference|transcript|diploma|statement/i);
   await page.screenshot({ path: shot('11-documents.png'), fullPage: true });
+  // The documents screen was never scanned: it is reachable only after a collection.
+  const scan = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+  const serious = scan.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+  expect(serious, serious.map((v) => `${v.id} (${v.nodes.length})`).join(', ')).toEqual([]);
 
-  await page.evaluate(() => { window.location.hash = '#/export'; });
+  await goTo(page, 'export');
   await expect(page.getByRole('heading', { name: 'Take it with you, or erase it' })).toBeVisible();
   const download = page.waitForEvent('download');
   await page.getByTestId('export-csv').click();
@@ -235,7 +244,7 @@ test('rejection is remembered with the row kept', async () => {
   await expect(first).toHaveClass(/is-rejected/);
   await expect(first).toContainText('Rejected: no funding');
 
-  await page.evaluate(() => { window.location.hash = '#/approved'; });
+  await goTo(page, 'approved');
   await expect(page.getByText('Rejected (1)')).toBeVisible();
   await expect(page.getByText(name)).toBeVisible();
   await expect(page.getByText('no funding')).toBeVisible();
@@ -243,7 +252,7 @@ test('rejection is remembered with the row kept', async () => {
 
   // And it survives a reload: the reason lives on the server, not in the tab.
   await page.reload();
-  await page.evaluate(() => { window.location.hash = '#/approved'; });
+  await goTo(page, 'approved');
   await expect(page.getByText('no funding')).toBeVisible();
 });
 
@@ -251,12 +260,12 @@ test('screens have addresses: back, forward, reload and a gated link', async () 
   await openShortlist(page);
   await expect(page).toHaveURL(/#\/shortlist$/);
 
-  await page.evaluate(() => { window.location.hash = '#/funding'; });
+  await goTo(page, 'funding');
   await expect(page).toHaveURL(/#\/funding$/);
 
   await page.goBack();
   await expect(page).toHaveURL(/#\/shortlist$/);
-  await expect(page.getByRole('heading', { name: /Find your best matches/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Find', exact: true })).toBeVisible();
 
   await page.goForward();
   await expect(page).toHaveURL(/#\/funding$/);

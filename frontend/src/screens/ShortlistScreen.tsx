@@ -1,17 +1,31 @@
 /**
  * Screen 04 — University shortlist.
  *
- * A compact table with an expandable detail row, deliberately not one card per
- * university: the whole point is comparing thirty rows on the same axes.
- * Eligibility, admissions fit and funding are three separate columns because
- * they are three separate judgements and collapsing them would hide which one
- * is the problem.
+ * Two views of the same rows. Cards are the default («Горизонт»): the price a
+ * year after grants as the headline, and requirements, profile and money as
+ * three separate lines with their reasons - a student reads one programme at a
+ * time. The table is one tap away for comparing thirty rows on the same axes,
+ * with the match, what is confirmed and the bucket (brief §267). Eligibility,
+ * admissions fit and funding stay three separate judgements in both, because
+ * collapsing them would hide which one is the problem.
  */
 
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
+import { BudgetLadder, ceilingFrom } from '@/components/BudgetLadder';
+import { CompareView } from '@/components/CompareView';
+import { REGION_LABEL, REGION_ORDER, regionCounts, regionOf, type Region } from '@/lib/regions';
+import { Globe } from '@/components/Globe';
+import { REGION_VIEW, centroidOf, defaultView, homeOf, markersFor } from '@/lib/globe';
+import { ResultCard } from '@/components/ResultCard';
+import { LadderStrip, bandsOf, type Band } from '@/components/LadderStrip';
+import { ProgrammeSheet, intakeWords } from '@/components/ProgrammeSheet';
+import { useMedia, WIDE } from '@/lib/useMedia';
+import { Faders, MagnifyingGlass } from '@phosphor-icons/react';
 import { ResultDetail } from '@/components/ResultDetail';
-import { ComparePanel } from '@/components/ComparePanel';
+import { LazyShareSheet } from '@/components/LazyShareSheet';
+import { Triage } from '@/components/Triage';
 import { UniversityCatalogue } from '@/components/UniversityCatalogue';
+import { passColours, preferredCountries } from '@/lib/passColour';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, STATUS_LABEL, admissionsFitTone, bucketTone, date, eligibilityTone,
@@ -38,15 +52,111 @@ const SET_ASIDE_HINT: Record<string, string> = {
 //: stays available because these will never cover every case.
 const REJECTION_REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
 
-export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void; onProgress?: () => void }) {
-  const { results, summary, shortlist, decide, saveNotes } = useStore();
+type AnswerTab = 'all' | 'kept' | 'maybe' | 'undecided';
+const TABS: { id: AnswerTab; label: string; decision?: UserDecision }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'kept', label: 'Kept', decision: 'approved' },
+  { id: 'maybe', label: 'Maybe', decision: 'maybe' },
+  { id: 'undecided', label: 'To decide', decision: 'undecided' },
+];
+
+const SORT_LABEL: Record<SortKey, string> = {
+  key: 'Match, discounted by what is unverified',
+  fit: 'Match with your priorities',
+  coverage: 'Most confirmed',
+  gap: 'Smallest remaining cost',
+  deadline: 'Earliest deadline',
+  university: 'University name',
+};
+
+type View = 'cards' | 'table';
+const VIEW_KEY = 'ashyq.shortlistView';
+const COMPARE_KEY = 'ashyq.compare';
+/** Three columns is what a phone can hold side by side and still be read. */
+const COMPARE_MAX = 3;
+
+function storedCompare(): string[] {
+  try {
+    const raw = JSON.parse(window.localStorage.getItem(COMPARE_KEY) ?? '[]');
+    return Array.isArray(raw) ? raw.filter((id): id is string => typeof id === 'string').slice(0, COMPARE_MAX) : [];
+  } catch {
+    return [];
+  }
+}
+
+function storedView(): View {
+  try {
+    return window.localStorage.getItem(VIEW_KEY) === 'table' ? 'table' : 'cards';
+  } catch {
+    return 'cards';
+  }
+}
+
+/** "computer science · Netherlands, Germany +3 · up to 6,000 USD a year" */
+function searchSummary(profile: unknown): string | null {
+  const p = profile as {
+    context?: { intended_fields?: string[] };
+    preferences?: { preferred_countries?: string[] };
+    funding?: { max_annual_budget?: number | null; budget_currency?: string };
+  } | null | undefined;
+  if (!p) return null;
+  const fields = p.context?.intended_fields ?? [];
+  const countries = p.preferences?.preferred_countries ?? [];
+  const where = countries.length === 0
+    ? 'anywhere'
+    : countries.length <= 2 ? countries.join(', ') : `${countries.slice(0, 2).join(', ')} +${countries.length - 2}`;
+  const budget = typeof p.funding?.max_annual_budget === 'number'
+    ? `up to ${p.funding.max_annual_budget.toLocaleString('en-US')} ${p.funding.budget_currency ?? 'USD'} a year`
+    : 'no budget set';
+  return [fields.join(', ') || 'any subject', where, budget].join(' · ');
+}
+
+export function ShortlistScreen({ onEditSearch, onStart, onProgress, decideOnArrival, onArrived }: {
+  onEditSearch?: () => void;
+  /** Home asked to decide one at a time: open straight into it. */
+  decideOnArrival?: boolean;
+  onArrived?: () => void;
+  /** The local catalogue can start a research run or open the one running. */
+  onStart?: () => void;
+  onProgress?: () => void;
+} = {}) {
+  const { results, summary, shortlist, decide, saveNotes, savedProfile, capabilities } = useStore();
+  const rate = capabilities?.currency
+    ? { date: capabilities.currency.rate_date, source: capabilities.currency.rate_source }
+    : null;
+  const [view, setViewState] = useState<View>(storedView);
+  const setView = (next: View) => {
+    setViewState(next);
+    // A row opened in the table is not a programme opened on the cards: on a
+    // phone that would turn the whole screen into it unasked.
+    setExpanded(null);
+    try {
+      window.localStorage.setItem(VIEW_KEY, next);
+    } catch {
+      /* the choice still holds on this screen */
+    }
+  };
   const [expanded, setExpanded] = useState<string | null>(null);
-  const [cardExpanded, setCardExpanded] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>('key');
+  // Find's search box and answer tabs (Unimatch's, with the concept's tabs):
+  // both only narrow what is shown; the saved results are untouched.
   const [query, setQuery] = useState('');
-  const [tab, setTab] = useState<'all' | 'priority' | 'saved' | 'exploring'>('all');
-  const [compareIds, setCompareIds] = useState<string[]>([]);
+  const [tab, setTab] = useState<AnswerTab>('all');
+  // A band of the budget strip, the phone's search field, and the panel that
+  // holds every other way to narrow the list (concept: folded until wanted).
+  const [band, setBand] = useState<Band | null>(null);
+  const [searching, setSearching] = useState(false);
+  const [more, setMore] = useState(false);
+  const wide = useMedia(WIDE);
   const [country, setCountry] = useState('');
+  const [region, setRegionState] = useState<Region | ''>('');
+  // A cluster tapped on the globe: where to look, and how close. A region
+  // chip starts from that region's own view again.
+  const [globeCloser, setGlobeCloser] = useState<{ lat: number; lon: number; zoom: number } | null>(null);
+  const setRegion = (next: Region | '') => {
+    setRegionState(next);
+    setGlobeCloser(null);
+  };
   const [eligibility, setEligibility] = useState('');
   const [funding, setFunding] = useState('');
   const [hideRejected, setHideRejected] = useState(false);
@@ -54,20 +164,51 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
   const [noteText, setNoteText] = useState('');
   const [rejectFor, setRejectFor] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState('');
+  const [triageTotal, setTriageTotal] = useState<number | null>(null);
+  // Home's "Decide one at a time" lands here: open the first undecided
+  // programme at once, and only once.
+  useEffect(() => {
+    if (!decideOnArrival) return;
+    onArrived?.();
+    const waiting = results.filter((r) => r.user_decision === 'undecided').length;
+    if (waiting > 0) setTriageTotal(waiting);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [decideOnArrival]);
+  // The programme a story card is being made for (concept Q).
+  const [shareFor, setShareFor] = useState<string | null>(null);
+  const [compareIds, setCompareIds] = useState<string[]>(storedCompare);
+  const [comparing, setComparing] = useState(false);
+  const saveCompare = (next: string[]) => {
+    setCompareIds(next);
+    try {
+      window.localStorage.setItem(COMPARE_KEY, JSON.stringify(next));
+    } catch {
+      /* the picks still hold on this screen */
+    }
+  };
 
   const countries = useMemo(
     () => Array.from(new Set(results.map((r) => r.country))).sort(),
     [results],
   );
+  // Each country's pass colour: the applicant's picks first, then the rest in
+  // the order the results list them, so a colour stays put while filtering.
+  const passes = useMemo(
+    () => passColours(results.map((r) => r.country), preferredCountries(savedProfile)),
+    [results, savedProfile],
+  );
 
+  const ceiling = ceilingFrom(savedProfile);
+  const bands = useMemo(() => (ceiling ? bandsOf(results, ceiling) : null), [results, ceiling?.amount, ceiling?.currency]); // eslint-disable-line react-hooks/exhaustive-deps
   const rows = useMemo(() => {
+    const needle = query.trim().toLocaleLowerCase();
+    const tabDecision = TABS.find((t) => t.id === tab)?.decision;
     const filtered = results.filter(
       (r) =>
-        (!query.trim() || `${r.university} ${r.program} ${r.country} ${r.city}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase())) &&
-        (tab === 'all' ||
-          (tab === 'priority' && r.ranking?.bucket === 'WELL_PLACED') ||
-          (tab === 'saved' && (r.user_decision === 'approved' || r.user_decision === 'maybe')) ||
-          (tab === 'exploring' && r.user_decision === 'undecided')) &&
+        (!region || regionOf(r.country) === region) &&
+        (!band || bands?.get(r.id) === band) &&
+        (!needle || `${r.university} ${r.program} ${r.country} ${r.city}`.toLocaleLowerCase().includes(needle)) &&
+        (tabDecision === undefined || r.user_decision === tabDecision) &&
         (!country || r.country === country) &&
         (!eligibility || r.eligibility === eligibility) &&
         (!funding || r.best_funding_classification === funding) &&
@@ -87,11 +228,14 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
       const key = (r: ProgramResult) => r.ranking?.sort_key ?? r.preference_score?.total ?? 0;
       return key(b) - key(a) || a.id.localeCompare(b.id);
     });
-  }, [results, query, tab, country, eligibility, funding, hideRejected, sort]);
+  }, [results, query, tab, region, country, eligibility, funding, hideRejected, sort, band, bands]);
 
   // A row with no ranking is one assessed under v1; it still belongs in the
   // list rather than in a set-aside section it was never scored for.
   const ranked = rows.filter((r) => !r.ranking || RANKED.includes(r.ranking.bucket));
+  const home = homeOf(savedProfile);
+  const globe = useMemo(() => markersFor(rows), [rows]);
+  const globeZoom = globeCloser?.zoom ?? (region && REGION_VIEW[region] ? REGION_VIEW[region].zoom : 1);
 
   if (results.length === 0) {
     return (
@@ -100,6 +244,79 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
         <div className="find-empty"><Empty title="No results yet">Start research to find programmes supported by available sources.</Empty>{onStart && <button className="btn btn--primary" type="button" onClick={onStart}>Start research →</button>}</div>
         <UniversityCatalogue onStart={onStart} onProgress={onProgress} />
       </div>
+    );
+  }
+
+  const undecided = rows.filter((r) => r.user_decision === 'undecided');
+
+  /** Open a row's detail from the ladder, wherever the row sits. */
+  const openRow = (id: string) => {
+    setExpanded(id);
+    window.setTimeout(() => {
+      const el = document.querySelector(`[data-testid="row-${id}"], [data-testid="card-${id}"]`);
+      // A set-aside row lives in a collapsed section; open it first.
+      const section = el?.closest('details');
+      if (section && !section.open) section.open = true;
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 0);
+  };
+
+  // Picks from an older run whose rows are gone simply drop out.
+  const picked = compareIds
+    .map((id) => results.find((r) => r.id === id))
+    .filter((r): r is ProgramResult => Boolean(r));
+  const toggleCompare = (id: string) => {
+    const ids = picked.map((r) => r.id);
+    if (ids.includes(id)) saveCompare(ids.filter((other) => other !== id));
+    else if (ids.length < COMPARE_MAX) saveCompare([...ids, id]);
+  };
+
+  const closeCompare = () => {
+    setComparing(false);
+    setTimeout(() => document.querySelector<HTMLElement>('[data-testid="compare-go"]')?.focus(), 0);
+  };
+
+  if (comparing && picked.length >= 2) {
+    return (
+      <>
+        <h1 className="visually-hidden">The shortlist, compared row by row</h1>
+        <CompareView
+          programmes={picked}
+          onRemove={(id) => {
+            toggleCompare(id);
+            // One programme is not a comparison: back to the list, and a
+            // later pick does not reopen this view without being asked.
+            if (picked.length - 1 < 2) closeCompare();
+          }}
+          onClose={closeCompare}
+        />
+      </>
+    );
+  }
+
+  if (triageTotal !== null) {
+    return (
+      <>
+        {/* The card is the screen here, as in the concept: the heading stays
+            for assistive technology, and the answers stay above the fold. */}
+        <h1 className="visually-hidden">The shortlist, one programme at a time</h1>
+        <Triage
+          queue={undecided}
+          total={triageTotal}
+          decide={decide}
+          home={home?.city ?? null}
+          colourOf={(c) => passes.get(c)}
+          intake={intakeWords(savedProfile)}
+          onClose={() => {
+            setTriageTotal(null);
+            // Back where the person started; the title when nothing is left to decide.
+            setTimeout(() => {
+              const start = document.querySelector<HTMLElement>('[data-testid="triage-start"]');
+              (start ?? document.getElementById('shortlist-title'))?.focus();
+            }, 0);
+          }}
+        />
+      </>
     );
   }
 
@@ -116,6 +333,167 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
     setRejectFor(null);
     return decide(r.id, next, '', r.user_notes);
   };
+
+  /** Yes / Maybe / No, the reason and the note: one set of controls for the
+   *  table row and the card, so both views decide the same way. */
+  // The table's column is narrow: there the last answer reads "No".
+  const renderDecision = (r: ProgramResult, short = false) => (
+    <>
+      <div className="decision-group" role="group" aria-label={`Decision for ${r.university}`}>
+        <button
+          className="decision-btn decision-btn--approve"
+          aria-pressed={r.user_decision === 'approved'}
+          onClick={() => decideRow(r, 'approved')}
+          data-testid={`approve-${r.id}`}
+        >Keep</button>
+        <button
+          className="decision-btn decision-btn--maybe"
+          aria-pressed={r.user_decision === 'maybe'}
+          onClick={() => decideRow(r, 'maybe')}
+          data-testid={`maybe-${r.id}`}
+        >Maybe</button>
+        <button
+          className="decision-btn decision-btn--reject"
+          aria-pressed={r.user_decision === 'rejected'}
+          onClick={() => decideRow(r, 'rejected')}
+          data-testid={`reject-${r.id}`}
+        >{short ? 'No' : 'Not for me'}</button>
+      </div>
+      {rejectFor === r.id && (
+        <div
+          className="stack stack--tight"
+          style={{ marginTop: 6, minWidth: '13rem' }}
+          data-testid={`reject-reason-${r.id}`}
+        >
+          <label className="xs muted" htmlFor={`reject-input-${r.id}`}>
+            Why not this one? (optional — it is kept with the row)
+          </label>
+          <div className="row row--tight" style={{ flexWrap: 'wrap' }}>
+            {REJECTION_REASONS.map((preset) => (
+              <button
+                key={preset}
+                type="button"
+                className="btn btn--sm btn--ghost xs"
+                onClick={() => setRejectReason(preset)}
+                data-testid={`reject-chip-${preset.replace(/\s+/g, '-')}-${r.id}`}
+              >{preset}</button>
+            ))}
+          </div>
+          <input
+            id={`reject-input-${r.id}`}
+            value={rejectReason}
+            onChange={(e) => setRejectReason(e.target.value)}
+            placeholder="cost, deadline, fit…"
+            data-testid={`reject-input-${r.id}`}
+          />
+          <div className="row row--tight">
+            <button
+              className="btn btn--sm"
+              onClick={async () => {
+                await decide(r.id, 'rejected', rejectReason, r.user_notes);
+                setRejectFor(null);
+              }}
+              data-testid={`reject-save-${r.id}`}
+            >Save rejection</button>
+            <button
+              className="btn btn--sm btn--ghost"
+              onClick={() => setRejectFor(null)}
+              data-testid={`reject-cancel-${r.id}`}
+            >Cancel</button>
+          </div>
+        </div>
+      )}
+      {r.user_decision === 'rejected' && r.user_decision_reason && rejectFor !== r.id && (
+        <p className="xs faint" style={{ margin: '4px 0 0', maxWidth: '12rem' }}>
+          Rejected: {r.user_decision_reason}
+        </p>
+      )}
+      <div>
+        <button
+          className="btn btn--sm btn--ghost xs"
+          onClick={() => {
+            setNoteFor(noteFor === r.id ? null : r.id);
+            setNoteText(r.user_notes);
+          }}
+        >
+          {r.user_notes ? 'Edit note' : 'Add note'}
+        </button>
+      </div>
+      {noteFor === r.id && (
+        <div className="stack stack--tight" style={{ marginTop: 6, minWidth: '13rem' }}>
+          <textarea
+            rows={2}
+            value={noteText}
+            onChange={(e) => setNoteText(e.target.value)}
+            placeholder="Why this one?"
+            data-testid={`note-input-${r.id}`}
+          />
+          <button
+            className="btn btn--sm"
+            onClick={async () => {
+              await saveNotes(r.id, noteText);
+              setNoteFor(null);
+            }}
+            data-testid={`note-save-${r.id}`}
+          >Save note</button>
+        </div>
+      )}
+      {r.user_notes && noteFor !== r.id && (
+        <p className="xs faint" style={{ margin: '4px 0 0', maxWidth: '12rem' }}>
+          {r.user_notes}
+        </p>
+      )}
+    </>
+  );
+
+  /** Add to the comparison, or take out again; three at most. */
+  const compareButton = (r: ProgramResult) => {
+    const on = picked.some((p) => p.id === r.id);
+    const full = !on && picked.length >= COMPARE_MAX;
+    return (
+      <button
+        type="button"
+        className="btn btn--sm rcard__compare"
+        aria-pressed={on}
+        disabled={full}
+        title={full ? `Compare at most ${COMPARE_MAX} at a time` : undefined}
+        onClick={() => toggleCompare(r.id)}
+        data-testid={`compare-${r.id}`}
+      >
+        {on ? 'In comparison' : 'Compare'}
+      </button>
+    );
+  };
+
+  const renderCard = (r: ProgramResult) => (
+    <ResultCard
+      key={r.id}
+      result={r}
+      pass={passes.get(r.country)}
+      open={expanded === r.id}
+      compact={wide}
+      onToggle={() => setExpanded(expanded === r.id ? null : r.id)}
+      actions={(
+        <>
+          <button
+            type="button"
+            className="btn btn--sm rcard__open"
+            onClick={() => setExpanded(r.id)}
+            aria-label={`Open ${r.city || r.university}`}
+            data-testid={`card-more-${r.id}`}
+          >Open</button>
+          <button
+            type="button"
+            className="btn btn--sm rcard__keep"
+            aria-pressed={r.user_decision === 'approved'}
+            onClick={() => decideRow(r, 'approved')}
+            data-testid={`keep-${r.id}`}
+          >{r.user_decision === 'approved' ? 'Kept' : 'Keep'}</button>
+          {compareButton(r)}
+        </>
+      )}
+    />
+  );
 
   const renderTable = (
     tableRows: ProgramResult[],
@@ -235,116 +613,11 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                             )}
                           </td>
                         )}
-                        <td data-label="Decision">
-                          <div className="decision-group" role="group" aria-label={`Decision for ${r.university}`}>
-                            <button
-                              className="decision-btn decision-btn--approve"
-                              aria-pressed={r.user_decision === 'approved'}
-                              onClick={() => decideRow(r, 'approved')}
-                              data-testid={`approve-${r.id}`}
-                            >Yes</button>
-                            <button
-                              className="decision-btn decision-btn--maybe"
-                              aria-pressed={r.user_decision === 'maybe'}
-                              onClick={() => decideRow(r, 'maybe')}
-                              data-testid={`maybe-${r.id}`}
-                            >Maybe</button>
-                            <button
-                              className="decision-btn decision-btn--reject"
-                              aria-pressed={r.user_decision === 'rejected'}
-                              onClick={() => decideRow(r, 'rejected')}
-                              data-testid={`reject-${r.id}`}
-                            >No</button>
-                          </div>
-                          {rejectFor === r.id && (
-                            <div
-                              className="stack stack--tight"
-                              style={{ marginTop: 6, minWidth: '13rem' }}
-                              data-testid={`reject-reason-${r.id}`}
-                            >
-                              <label className="xs muted" htmlFor={`reject-input-${r.id}`}>
-                                Why not this one? (optional — it is kept with the row)
-                              </label>
-                              <div className="row row--tight" style={{ flexWrap: 'wrap' }}>
-                                {REJECTION_REASONS.map((preset) => (
-                                  <button
-                                    key={preset}
-                                    type="button"
-                                    className="btn btn--sm btn--ghost xs"
-                                    onClick={() => setRejectReason(preset)}
-                                    data-testid={`reject-chip-${preset.replace(/\s+/g, '-')}-${r.id}`}
-                                  >{preset}</button>
-                                ))}
-                              </div>
-                              <input
-                                id={`reject-input-${r.id}`}
-                                value={rejectReason}
-                                onChange={(e) => setRejectReason(e.target.value)}
-                                placeholder="cost, deadline, fit…"
-                                data-testid={`reject-input-${r.id}`}
-                              />
-                              <div className="row row--tight">
-                                <button
-                                  className="btn btn--sm"
-                                  onClick={async () => {
-                                    await decide(r.id, 'rejected', rejectReason, r.user_notes);
-                                    setRejectFor(null);
-                                  }}
-                                  data-testid={`reject-save-${r.id}`}
-                                >Save rejection</button>
-                                <button
-                                  className="btn btn--sm btn--ghost"
-                                  onClick={() => setRejectFor(null)}
-                                  data-testid={`reject-cancel-${r.id}`}
-                                >Cancel</button>
-                              </div>
-                            </div>
-                          )}
-                          {r.user_decision === 'rejected' && r.user_decision_reason && rejectFor !== r.id && (
-                            <p className="xs faint" style={{ margin: '4px 0 0', maxWidth: '12rem' }}>
-                              Rejected: {r.user_decision_reason}
-                            </p>
-                          )}
-                          <div>
-                            <button
-                              className="btn btn--sm btn--ghost xs"
-                              onClick={() => {
-                                setNoteFor(noteFor === r.id ? null : r.id);
-                                setNoteText(r.user_notes);
-                              }}
-                            >
-                              {r.user_notes ? 'Edit note' : 'Add note'}
-                            </button>
-                          </div>
-                          {noteFor === r.id && (
-                            <div className="stack stack--tight" style={{ marginTop: 6, minWidth: '13rem' }}>
-                              <textarea
-                                rows={2}
-                                value={noteText}
-                                onChange={(e) => setNoteText(e.target.value)}
-                                placeholder="Why this one?"
-                                data-testid={`note-input-${r.id}`}
-                              />
-                              <button
-                                className="btn btn--sm"
-                                onClick={async () => {
-                                  await saveNotes(r.id, noteText);
-                                  setNoteFor(null);
-                                }}
-                                data-testid={`note-save-${r.id}`}
-                              >Save note</button>
-                            </div>
-                          )}
-                          {r.user_notes && noteFor !== r.id && (
-                            <p className="xs faint" style={{ margin: '4px 0 0', maxWidth: '12rem' }}>
-                              {r.user_notes}
-                            </p>
-                          )}
-                        </td>
+                        <td data-label="Decision">{renderDecision(r, true)}</td>
                       </tr>
                       {open && (
                         <tr className="detail-row">
-                          <td colSpan={showBucket ? 10 : 9}><ResultDetail result={r} /></td>
+                          <td colSpan={showBucket ? 10 : 9}><ResultDetail result={r} rate={rate} home={home} onShare={() => setShareFor(r.id)} /></td>
                         </tr>
                       )}
                     </Fragment>
@@ -355,42 +628,241 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
           </div>
   );
 
+  // An opened programme on the cards view: the whole screen on a phone, a
+  // panel beside the list on a desk.
+  const opened = view === 'cards' && expanded ? results.find((r) => r.id === expanded) ?? null : null;
+  const closeSheet = () => {
+    const id = expanded;
+    setExpanded(null);
+    setTimeout(() => document.querySelector<HTMLElement>(`[data-testid="card-open-${id}"]`)?.focus(), 0);
+  };
+  const shareSheet = shareFor && (
+    <LazyShareSheet
+      results={results}
+      result={results.find((r) => r.id === shareFor) ?? null}
+      profile={savedProfile}
+      demo={Boolean(summary?.demo_data)}
+      onClose={() => setShareFor(null)}
+    />
+  );
+  const sheet = opened && (
+    <ProgrammeSheet
+      result={opened}
+      colour={passes.get(opened.country)}
+      side={wide}
+      intake={intakeWords(savedProfile)}
+      home={home?.city ?? null}
+      onClose={closeSheet}
+      actions={(
+        <>
+          {renderDecision(opened)}
+          {compareButton(opened)}
+          <button type="button" className="btn btn--sm" onClick={() => setShareFor(opened.id)} data-testid={`share-${opened.id}`}>
+            Share as a story
+          </button>
+        </>
+      )}
+    >
+      <ResultDetail result={opened} rate={rate} bare />
+    </ProgrammeSheet>
+  );
+
+  if (opened && !wide) {
+    return (
+      <>
+        <h1 className="visually-hidden">Find: {opened.city || opened.university}</h1>
+        {sheet}
+        {shareSheet}
+      </>
+    );
+  }
+
+  const narrowed = [region, country, eligibility, funding].filter(Boolean).length + (hideRejected ? 1 : 0);
+
   return (
-    <div className="find-page">
-      <details className="catalogue-expand"><summary>Explore more universities from the local catalogue</summary><UniversityCatalogue onStart={onStart} onProgress={onProgress} /></details>
-      <div className="find-hero">
-        <div className="screen__head">
-          <p className="screen__eyebrow">GLOBAL OPPORTUNITIES. REAL MATCHES.</p>
-          <h1 className="screen__title">Find your best <span className="find-yellow">matches.</span></h1>
-          <p className="screen__lede">
-            Explore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.
+    <div className={`find${opened ? ' find--with-sheet' : ''}`}>
+      <header className="find-head">
+        <div className="find-head__text">
+          <h1 className="find-title" id="shortlist-title" tabIndex={-1}>Find</h1>
+          <p className="find-sub">
+            {results.length} programme{results.length === 1 ? '' : 's'} in {countries.length} countr{countries.length === 1 ? 'y' : 'ies'}
           </p>
         </div>
-        <img src="/brand/unimatch-journey.png" alt="Unimatch mascot exploring a mountain landscape" />
+        <div className="find-head__tools">
+          <label className={`find-search${searching || query ? ' is-open' : ''}`}>
+            <MagnifyingGlass size={18} aria-hidden="true" />
+            <span className="visually-hidden">Search universities, programmes or countries</span>
+            <input
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search universities, cities…"
+              data-testid="find-search"
+            />
+          </label>
+          <button
+            type="button"
+            className="find-round find-round--search"
+            aria-expanded={searching || Boolean(query)}
+            onClick={() => {
+              setSearching(!searching);
+              setTimeout(() => document.querySelector<HTMLInputElement>('[data-testid="find-search"]')?.focus(), 0);
+            }}
+            data-testid="find-search-toggle"
+          >
+            <MagnifyingGlass size={19} aria-hidden="true" />
+            <span className="visually-hidden">Search</span>
+          </button>
+          <button
+            type="button"
+            className="find-round find-filters"
+            aria-expanded={more}
+            onClick={() => setMore(!more)}
+            data-testid="find-filters"
+          >
+            <Faders size={19} aria-hidden="true" />
+            <span className="find-filters__label">Filters</span>
+            {narrowed > 0 && <span className="find-filters__n">{narrowed}</span>}
+          </button>
+        </div>
+      </header>
+
+      {ceiling && <LadderStrip results={results} ceiling={ceiling} band={band} onBand={setBand} />}
+
+      <div className="find-bar">
+        <div className="find-tabs" role="group" aria-label="Show">
+          {TABS.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              aria-pressed={tab === t.id}
+              onClick={() => setTab(t.id)}
+              data-testid={`find-tab-${t.id}`}
+            >
+              {t.label} <span className="find-tabs__n">{t.decision ? results.filter((r) => r.user_decision === t.decision).length : results.length}</span>
+            </button>
+          ))}
+        </div>
+        {undecided.length > 0 && (
+          <button
+            type="button"
+            className="btn btn--primary find-decide"
+            onClick={() => setTriageTotal(undecided.length)}
+            data-testid="triage-start"
+          >
+            Decide one at a time <span aria-hidden="true">→</span>
+          </button>
+        )}
       </div>
 
-      <div className="stack stack--loose">
-        {summary?.demo_data && (
-          <Notice kind="demo">
-            <div>
-              <strong>Demo data.</strong> These figures come from a bundled synthetic corpus, not
-              from real university pages. Every source below is a <code>fixture://</code> address.
-            </div>
-          </Notice>
+      {summary?.demo_data && (
+        <p className="find-demo" data-testid="find-demo">
+          <strong>Demo data.</strong> Figures from a bundled synthetic corpus; every source is a <code>fixture://</code> address.
+        </p>
+      )}
+
+      {more && (
+        <section className="find-more" aria-label="More ways to narrow the list" data-testid="find-more">
+          {searchSummary(savedProfile) && (
+          <button
+            type="button"
+            className="search-pill"
+            onClick={onEditSearch}
+            disabled={!onEditSearch}
+            data-testid="search-pill"
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+              <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2.2" />
+              <path d="m15.5 15.5 5 5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+            </svg>
+            <span className="search-pill__text">{searchSummary(savedProfile)}</span>
+          </button>
+        )}
+          <div className="find-more__row">
+            <div className="segmented" role="group" aria-label="View">
+            <button
+              type="button"
+              aria-pressed={view === 'cards'}
+              onClick={() => setView('cards')}
+              data-testid="view-cards"
+            >Cards</button>
+            <button
+              type="button"
+              aria-pressed={view === 'table'}
+              onClick={() => setView('table')}
+              data-testid="view-table"
+            >Table</button>
+          </div>
+          </div>
+          {/* Concept 07's region chips: counted from every result, so a chip
+            never promises programmes the list will not show. */}
+        <div className="region-chips" role="group" aria-label="Region" data-testid="region-chips">
+          <button type="button" aria-pressed={region === ''} onClick={() => setRegion('')} data-testid="region-all">
+            All <span className="region-chips__n">{results.length}</span>
+          </button>
+          {regionCounts(results).map(({ region: r, count }) => (
+            <button
+              key={r}
+              type="button"
+              aria-pressed={region === r}
+              disabled={count === 0}
+              onClick={() => setRegion(region === r ? '' : r)}
+              data-testid={`region-${r}`}
+            >
+              {REGION_LABEL[r]} <span className="region-chips__n">{count}</span>
+            </button>
+          ))}
+        </div>
+
+        {view === 'cards' && (
+          <div className="shortlist-globe">
+            {globeCloser && (
+              <button type="button" className="btn btn--sm shortlist-globe__out" onClick={() => setGlobeCloser(null)} data-testid="globe-out">
+                {/* With a region chosen, going back out stops at the region. */}
+                {region && REGION_VIEW[region] ? `All of ${REGION_LABEL[region]}` : 'Whole globe'}
+              </button>
+            )}
+            <Globe
+              layout="band"
+              tone="day"
+              height={230}
+              markers={globe.markers}
+              home={home}
+              focus={globeCloser ?? (region && REGION_VIEW[region] ? REGION_VIEW[region] : defaultView(home))}
+              zoom={globeZoom}
+              onCluster={(members) => {
+                const lat = members.reduce((n, m) => n + m.lat, 0) / members.length;
+                const lon = members.reduce((n, m) => n + m.lon, 0) / members.length;
+                setGlobeCloser({ lat, lon, zoom: Math.min(12, globeZoom * 2.4) });
+              }}
+              onEdge={(members) => {
+                // One city: bring it round at this zoom. A region's worth:
+                // that region's own view, as its chip above would give.
+                const only = members.length === 1 ? members[0] : undefined;
+                const groups = new Set(members.map((m) => m.group));
+                const key = groups.size === 1
+                  ? REGION_ORDER.find((r) => REGION_LABEL[r] === members[0]?.group)
+                  : undefined;
+                const whole = key ? REGION_VIEW[key] : undefined;
+                if (only) setGlobeCloser({ lat: only.lat, lon: only.lon, zoom: globeZoom });
+                else if (whole) setGlobeCloser({ ...whole });
+                else setGlobeCloser({ ...centroidOf(members), zoom: 1 });
+              }}
+              routes={false}
+              selected={expanded}
+              onSelect={openRow}
+              caption={`A globe with ${globe.markers.length} of the ${rows.length} programmes shown at their cities.`}
+              testId="shortlist-globe"
+            />
+            {globe.unplaced > 0 && (
+              <p className="shortlist-globe__note" data-testid="globe-unplaced">
+                {globe.unplaced} programme{globe.unplaced === 1 ? ' is' : 's are'} not on the globe: the city is not in its table yet.
+              </p>
+            )}
+          </div>
         )}
 
-        <div className="find-toolbar">
-          <label className="find-search"><span className="visually-hidden">Search universities, programmes or countries</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search universities, programmes or countries…" /></label>
-          <button type="button" className="btn" onClick={() => document.getElementById('find-filters')?.toggleAttribute('open')}>Filters</button>
-          <button type="button" className="btn btn--dark" disabled={compareIds.length === 0} onClick={() => document.getElementById('find-compare')?.scrollIntoView({ behavior: 'smooth' })}>Compare ({compareIds.length})</button>
-        </div>
-        <div className="find-tabs" role="tablist" aria-label="Match list">
-          {(['all', 'priority', 'saved', 'exploring'] as const).map((value) => <button key={value} type="button" role="tab" aria-selected={tab === value} onClick={() => setTab(value)}>{value.charAt(0).toUpperCase() + value.slice(1)}</button>)}
-        </div>
-
-        <details id="find-filters" className="find-filters">
-          <summary>Filter and sort results</summary>
-        <Panel sunken>
+          {ceiling && <BudgetLadder results={rows} ceiling={ceiling} onOpen={openRow} />}
           <div className="filters">
             <Field label="Country" htmlFor="f-country">
               <select id="f-country" value={country} onChange={(e) => setCountry(e.target.value)}>
@@ -417,12 +889,9 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
             </Field>
             <Field label="Sort by" htmlFor="f-sort">
               <select id="f-sort" value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
-                <option value="key">Match, discounted by what is unverified</option>
-                <option value="fit">Match with your priorities</option>
-                <option value="coverage">Most confirmed</option>
-                <option value="gap">Smallest remaining cost</option>
-                <option value="deadline">Earliest deadline</option>
-                <option value="university">University name</option>
+                {(Object.keys(SORT_LABEL) as SortKey[]).map((key) => (
+                  <option key={key} value={key}>{SORT_LABEL[key]}</option>
+                ))}
               </select>
             </Field>
             <label className="row row--tight small" style={{ paddingBottom: 6 }}>
@@ -430,55 +899,22 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
               Hide rejected
             </label>
           </div>
-        </Panel>
-        </details>
+        </section>
+      )}
 
-        <div className="find-results" aria-live="polite">
-          <p className="find-results__count">{rows.length} result{rows.length === 1 ? '' : 's'} from this research run</p>
-          {rows.length === 0 && <div className="find-empty"><Empty title="Nothing matches these filters yet.">Try another search or clear the filters.</Empty><button type="button" className="btn" onClick={() => { setQuery(''); setTab('all'); setCountry(''); setEligibility(''); setFunding(''); setHideRejected(false); }}>Clear filters</button></div>}
-          {rows.map((result) => {
-            const open = cardExpanded === result.id;
-            const selected = compareIds.includes(result.id);
-            const gap = result.funding_gap;
-            return (
-              <article className="find-card" key={result.id} data-testid={`card-${result.id}`}>
-                <div className="find-card__body">
-                  <span className="find-card__eyebrow">{result.country} · {result.city}</span>
-                  <h2>{result.university}</h2>
-                  <p>{result.program}</p>
-                  <div className="find-card__signals">
-                    {result.ranking && <Chip tone={bucketTone[result.ranking.bucket]}>{STATUS_LABEL[result.ranking.bucket] ?? humanize(result.ranking.bucket)}</Chip>}
-                    <StatusChip status={result.eligibility} tone={eligibilityTone[result.eligibility]} />
-                    <StatusChip status={result.best_funding_classification} tone={fundingClassTone[result.best_funding_classification]} />
-                  </div>
-                  <div className="find-card__facts">
-                    <span><small>Remaining / year</small><strong>{gap?.computable && gap.gap ? money({ ...gap.gap, academic_year: null }) : 'Not enough comparable data'}</strong></span>
-                    <span><small>Deadline</small><strong>{result.admission_deadline ? date(result.admission_deadline) : 'Not confirmed'}</strong></span>
-                  </div>
-                  {(result.conflicts.length > 0 || result.unresolved.length > 0) && <p className="find-card__caution">{result.conflicts.length} conflict{result.conflicts.length === 1 ? '' : 's'} · {result.unresolved.length} open question{result.unresolved.length === 1 ? '' : 's'}</p>}
-                </div>
-                <div className="find-card__actions">
-                  <button type="button" className="btn btn--dark" onClick={() => setCardExpanded(open ? null : result.id)} aria-expanded={open} data-testid={`card-expand-${result.id}`}>{open ? 'Hide details' : 'View details'}</button>
-                  <button type="button" className="btn" onClick={() => decideRow(result, 'maybe')} aria-pressed={result.user_decision === 'maybe' || result.user_decision === 'approved'}>{result.user_decision === 'maybe' || result.user_decision === 'approved' ? 'Saved' : 'Save'}</button>
-                  <button type="button" className="btn" onClick={() => setCompareIds((current) => selected ? current.filter((id) => id !== result.id) : current.length < 3 ? [...current, result.id] : current)} aria-pressed={selected} disabled={!selected && compareIds.length >= 3}>{selected ? 'Remove' : 'Compare'}</button>
-                </div>
-                {open && <div className="find-card__detail"><ResultDetail result={result} /></div>}
-              </article>
-            );
-          })}
-        </div>
-
-        {compareIds.length > 0 && (
-          <ComparePanel
-            results={compareIds.map((id) => results.find((item) => item.id === id)).filter((item): item is ProgramResult => Boolean(item))}
-            onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
-            onClear={() => setCompareIds([])}
-          />
+      <div className="stack stack--loose find-list">
+        {rows.length === 0 && (
+          <div className="find-empty" data-testid="find-empty">
+            <Empty title="Nothing matches these filters yet.">Try another search or clear the filters.</Empty>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => { setQuery(''); setTab('all'); setRegion(''); setCountry(''); setEligibility(''); setFunding(''); setHideRejected(false); }}
+            >Clear filters</button>
+          </div>
         )}
 
-        <details className="find-advanced">
-          <summary>Detailed evidence table</summary>
-        {shortlist && shortlist.chosen.length > 0 && (
+        {view === 'table' && shortlist && shortlist.chosen.length > 0 && (
           <Panel
             title="A balanced shortlist"
             hint="Filled to quota before the ranking speaks: a top ten of ten ambitious options is a list nobody can act on."
@@ -501,7 +937,39 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
           </Panel>
         )}
 
-        {ranked.length > 0 ? (
+        {view === 'cards' ? (
+          <>
+            {ranked.length > 0 ? (
+              <div className="rcards" data-testid="shortlist-cards">{ranked.map(renderCard)}</div>
+            ) : (
+              <Notice kind="info">
+                <div>
+                  Nothing here is both affordable and verified enough to rank. Every option is in a
+                  section below, with the reason it is there.
+                </div>
+              </Notice>
+            )}
+            {SET_ASIDE.map((bucket) => {
+              const setAside = rows.filter((r) => r.ranking?.bucket === bucket);
+              if (setAside.length === 0) return null;
+              return (
+                <details key={bucket} className="stack" data-testid={`cards-${bucket}`}>
+                  <summary className="small">
+                    {STATUS_LABEL[bucket] ?? humanize(bucket)} ({setAside.length})
+                  </summary>
+                  <p className="xs muted">{SET_ASIDE_HINT[bucket]}</p>
+                  <div className="rcards">{setAside.map(renderCard)}</div>
+                </details>
+              );
+            })}
+            <p className="xs faint">
+              Showing {rows.length} of {results.length}. The table view adds the match with your
+              priorities, how much of it is confirmed, and the bucket.
+            </p>
+          </>
+        ) : null}
+
+        {view === 'table' && (ranked.length > 0 ? (
           renderTable(
             ranked,
             'shortlist-table',
@@ -516,15 +984,15 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
               section below, with the reason it is there.
             </div>
           </Notice>
-        )}
+        ))}
 
-        <p className="xs faint">
+        {view === 'table' && <p className="xs faint">
           Showing {ranked.length} of {results.length} ranked rows. <strong>Match</strong> is how well
           a place fits the priorities you stated, on confirmed data — not a probability of admission.
           The <strong>Confirmed</strong> percentage is how much of that judgement rests on data we could verify.
-        </p>
+        </p>}
 
-        {SET_ASIDE.map((bucket) => {
+        {view === 'table' && SET_ASIDE.map((bucket) => {
           const setAside = rows.filter((r) => r.ranking?.bucket === bucket);
           if (setAside.length === 0) return null;
           return (
@@ -543,14 +1011,58 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
             </details>
           );
         })}
+
+        {view === 'table' && (
+          <p className="xs faint">
+            Showing {rows.length} of {results.length}. Rejected rows are kept with their reason so the
+            same programme is not proposed again without new information.
+          </p>
+        )}
+
+        {picked.length > 0 && (
+          <div className="compare-tray" data-testid="compare-tray" role="region" aria-label="Comparison">
+            <span className="compare-tray__label">Compare</span>
+            <span className="compare-tray__count">{picked.length} picked</span>
+            <ul className="compare-tray__picks">
+              {picked.map((r) => (
+                <li key={r.id}>
+                  <span className="compare-tray__name">{r.university}</span>
+                  <span className="compare-tray__price">
+                    {r.funding_gap?.computable && r.funding_gap.gap
+                      ? money({ ...r.funding_gap.gap, academic_year: null })
+                      : 'not computed'}
+                  </span>
+                  <button
+                    type="button"
+                    className="compare-tray__remove"
+                    onClick={() => toggleCompare(r.id)}
+                    aria-label={`Remove ${r.university} from the comparison`}
+                  >×</button>
+                </li>
+              ))}
+            </ul>
+            <button
+              type="button"
+              className="btn btn--dark compare-tray__go"
+              disabled={picked.length < 2}
+              title={picked.length < 2 ? 'Pick one more programme' : undefined}
+              onClick={() => setComparing(true)}
+              data-testid="compare-go"
+            >
+              {picked.length < 2 ? 'Pick one more' : `Compare ${picked.length} row by row`}
+            </button>
+          </div>
+        )}
+
+        {/* Unimatch's local catalogue: universities beyond this run, read from the
+            bundled list, with a way to start research on them. */}
+        <details className="catalogue-expand" data-testid="catalogue-expand">
+          <summary>Explore more universities from the local catalogue</summary>
+          <UniversityCatalogue onStart={onStart} onProgress={onProgress} />
         </details>
-
-
-        <p className="xs faint">
-          Showing {rows.length} of {results.length}. Rejected rows are kept with their reason so the
-          same programme is not proposed again without new information.
-        </p>
       </div>
+      {sheet}
+      {shareSheet}
     </div>
   );
 }

@@ -2,7 +2,10 @@ import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { ApiError, api } from '@/api/client';
 import type { AuthStatus } from '@/types';
 import { PublicLanding } from '@/components/PublicLanding';
+import { Logo } from '@/components/Logo';
 import { LegalScreen } from '@/screens/LegalScreen';
+
+const MIN_PASSWORD = 12;
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<AuthStatus | null>(null);
@@ -42,7 +45,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   if (route.startsWith('#/legal')) {
     return (
       <div className="public-legal">
-        <header><a className="landing__brand" href={status?.authenticated ? '#/home' : '#/welcome'}><img src="/brand/unimatch-mark.png" alt="" /> Unimatch</a><a href={status?.authenticated ? '#/home' : '#/welcome'}>Back</a></header>
+        <header><a className="landing__brand" href={status?.authenticated ? '#/home' : '#/welcome'}><Logo /></a><a href={status?.authenticated ? '#/home' : '#/welcome'}>Back</a></header>
         <main><LegalScreen /></main>
       </div>
     );
@@ -171,7 +174,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
         </div>
       <form className="panel auth-card stack" onSubmit={submit}>
         <div>
-          <a className="landing__brand" href="#/welcome"><img src="/brand/unimatch-mark.png" alt="" /> Unimatch</a>
+          <a className="landing__brand" href="#/welcome"><Logo /></a>
           <div className="auth-tabs" role="tablist" aria-label="Account">
             <button type="button" role="tab" aria-selected={mode === 'login'} onClick={() => setMode('login')}>Sign in</button>
             {status.registration_enabled && <button type="button" role="tab" aria-selected={mode === 'register'} onClick={() => setMode('register')}>Create account</button>}
@@ -201,9 +204,17 @@ export function AuthGate({ children }: { children: ReactNode }) {
         <label className="field">
           <span className="field__label">Password</span>
           <input data-testid="auth-password" type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                 minLength={mode === 'register' ? 12 : undefined} required value={password}
+                 minLength={mode === 'register' ? MIN_PASSWORD : undefined} required value={password}
                  onChange={(e) => setPassword(e.target.value)} />
-          {mode === 'register' && <span className="field__hint">At least 12 characters.</span>}
+          {mode === 'register' && (
+            <span className="field__hint" data-testid="password-count">
+              At least {MIN_PASSWORD} characters
+              {password.length > 0 && (password.length < MIN_PASSWORD
+                ? ` · ${password.length} so far`
+                : ' · long enough')}
+              .
+            </span>
+          )}
         </label>
         {!passwordResetEnabled && (
           <div className="notice small">

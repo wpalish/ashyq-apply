@@ -1,59 +1,98 @@
 /*
- * Design tokens.
+ * Design tokens — Unimatch, palette E «Чернила» (docs/design/redesign-concepts.md §31–§33).
  *
- * Unimatch: clear navy typography, warm cream surfaces and a restrained
- * yellow orbit accent. Semantic evidence colours retain their own meaning.
+ * Ink on warm paper for work; the action is an ink pill, not a colour. Colour
+ * belongs to the countries: each programme's pass is filled with its
+ * country's deep, muted hue and carries white text (5.7–9.6:1), and the
+ * night moments draw routes in light tints of the same hues. Inter carries
+ * every Kazakh letter (Ә Ғ Қ Ң Ө Ұ Ү Һ) and the tenge sign.
+ *
+ * Status colours keep one meaning each and follow the tones in
+ * src/lib/format.ts (ok, info, warn, risk, neutral); they are never used as a
+ * country's colour, so a pass is never read as a verdict.
  */
 
 :root {
   color-scheme: light;
 
-  /* --- surfaces: warm paper, layered rather than shadowed --- */
-  --paper:            #FAF8F3;
-  --surface:          oklch(100% 0 0);
-  --surface-sunken:   #F5F3EE;
+  /* --- surfaces --- */
+  --paper:            #F3F2EF;   /* cloud 50 */
+  --surface:          #FFFFFF;
+  --surface-sunken:   #EBE9E4;   /* cloud 100 */
   --surface-raised:   #FFFFFF;
-  --surface-inverted: #0B132C;
+  --surface-inverted: #111114;   /* navy 900 */
 
-  --ink:              #0B132C;
-  --ink-muted:        #566789;
-  --ink-faint:        #4F5B6C;
+  --ink:              #111114;   /* navy 900 */
+  --ink-muted:        #5E5E6A;   /* slate 600: 5.1:1 on white */
+  --ink-faint:        #5E5E6A;
   --ink-inverted:     #FFFFFF;
 
-  --rule:             #E7EAF0;
-  --rule-strong:      #D3DCE9;
+  --rule:             #E3E1DC;   /* cloud 150 */
+  --rule-strong:      #C9C6BF;   /* slate 300 */
 
-  /* Yellow marks a primary action; evidence statuses use separate tokens. */
-  --accent:           #F7C948;
-  --accent-text:      #895400;
-  --accent-hover:     #EAB934;
-  --accent-soft:      #FFF4D5;
-  --accent-border:    #F7D97F;
+  /* --- the action is an ink pill (the token keeps its old name, --sun) --- */
+  --sun:              #111114;
+  --sun-hover:        #2C2C33;
+  --sun-ink:          #FFFFFF;
+  --route:            #3E5C76;
+  --night:            #101014;   /* navy 950 */
+  --night-surface:    #1C1C22;
+  --night-line:       #2C2C36;
+  --night-ink:        #FFFFFF;
+  --night-muted:      #A9A9B6;
+  /* the highlight on night panels, where the ink action would vanish */
+  --glow:             #E8E2D0;
+  /* status words on the night board, in both appearances */
+  --night-ok:         #93C7BE;
+  --night-act:        #D2BE8C;
+  --night-ask:        #9DBAD3;
+  --night-passed:     #D9A1A1;
+  --flap:             #1C1C22;
+  --kicker:           #5E5E6A;   /* labels above titles: amber 700 */
+
+  /* --- accent: links and focus (slate blue, 6.9:1 on white) --- */
+  --accent:           #3E5C76;   /* teal 700: 5.7:1 on white */
+  --accent-hover:     #2F4A61;
+  --accent-soft:      #E6ECF2;
+  --accent-border:    #9DBAD3;
+  --accent-text:      #5E5E6A;   /* Unimatch's label colour; same as --kicker */
+
+  /* --- passes: one deep colour per country, white text; tints for night routes --- */
+  --pass-1: #3E5C76;  --pass-tint-1: #9DBAD3;   /* slate blue */
+  --pass-2: #5E4B6E;  --pass-tint-2: #BCA9D0;   /* plum */
+  --pass-3: #7A3B3B;  --pass-tint-3: #D9A1A1;   /* oxblood */
+  --pass-4: #3F6F6A;  --pass-tint-4: #93C7BE;   /* teal */
+  --pass-5: #6B5A2E;  --pass-tint-5: #D2BE8C;   /* ochre */
+  --pass-6: #44497F;  --pass-tint-6: #A9ADE0;   /* indigo */
+  --pass-7: #55623A;  --pass-tint-7: #B9C79A;   /* moss */
+  --pass-8: #6E4A55;  --pass-tint-8: #CFA3B0;   /* rose-brown */
+  --pass-ink: #FFFFFF;
+  --radius-pass: 24px;
 
   /* --- semantic status: each maps to one product meaning --- */
-  --ok:               oklch(40% 0.115 152);   /* MET, FULL_RIDE_CONFIRMED */
-  --ok-soft:          oklch(94.5% 0.038 152);
-  --ok-border:        oklch(80% 0.070 152);
+  --ok:               #177A4C;   /* MET, STRONGER_FIT, FULL_RIDE_CONFIRMED */
+  --ok-soft:          #E4F5EC;
+  --ok-border:        #A9DCC0;
 
-  --info:             oklch(40% 0.115 245);   /* FULL_TUITION, PLAUSIBLE */
-  --info-soft:        oklch(94.5% 0.035 245);
-  --info-border:      oklch(80% 0.062 245);
+  --info:             #1D4F91;   /* PLAUSIBLE_FIT, FULL_TUITION, LARGE_GRANT */
+  --info-soft:        #E7F0FA;
+  --info-border:      #B5CCEA;
 
-  --warn:             oklch(39% 0.125 72);    /* PENDING, LARGE_GRANT */
-  --warn-soft:        oklch(95% 0.045 72);
-  --warn-border:      oklch(82% 0.080 72);
+  --warn:             #8A5A00;   /* PENDING, AMBITIOUS, PARTIAL */
+  --warn-soft:        #FFF3DB;
+  --warn-border:      #F0D08E;
 
-  --risk:             oklch(42% 0.165 27);    /* GAP, NOT_ELIGIBLE, passed */
-  --risk-soft:        oklch(95% 0.040 27);
-  --risk-border:      oklch(82% 0.075 27);
+  --risk:             #B42318;   /* GAP, NOT_ELIGIBLE, passed */
+  --risk-soft:        #FDECEA;
+  --risk-border:      #F2B8B0;
 
-  --unknown:          oklch(42% 0.008 265);   /* UNKNOWN, INSUFFICIENT_DATA */
-  --unknown-soft:     oklch(94% 0.005 265);
-  --unknown-border:   oklch(84% 0.006 265);
+  --unknown:          #5A6578;   /* UNKNOWN, INSUFFICIENT_DATA: dashed edge */
+  --unknown-soft:     #FFFFFF;
+  --unknown-border:   #9AA4B2;
 
-  --demo:             oklch(40% 0.115 320);   /* synthetic-fixture marker */
-  --demo-soft:        oklch(95% 0.035 320);
-  --demo-border:      oklch(83% 0.070 320);
+  --demo:             #7B3F9E;   /* synthetic-fixture marker */
+  --demo-soft:        #F4ECF9;
+  --demo-border:      #D7BEE8;
 
   /* --- type --- */
   --font-display: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -65,14 +104,13 @@
   --text-base: 1rem;
   --text-md:   1.125rem;
   --text-lg:   clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
-  --text-xl:   clamp(1.8rem, 1.5rem + 1.2vw, 2.5rem);
-  --text-display: clamp(2.3rem, 1.5rem + 3vw, 4rem);
+  --text-xl:   clamp(1.6rem, 1.3rem + 1.2vw, 2.125rem);
+  --text-display: clamp(1.9rem, 1.4rem + 2.4vw, 3rem);
 
-  --leading-tight: 1.15;
+  --leading-tight: 1.1;
   --leading-snug: 1.35;
-  --leading-normal: 1.6;
+  --leading-normal: 1.55;
 
-  /* --- rhythm: deliberately uneven, not one padding everywhere --- */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -82,129 +120,141 @@
   --space-7: 3rem;
   --space-8: clamp(3rem, 2rem + 4vw, 5.5rem);
 
+  /* key 8 · field 14 · card 22 · pill */
   --radius-sm: 8px;
-  --radius: 12px;
-  --radius-lg: 20px;
+  --radius: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
 
-  --shadow-sm: 0 1px 2px oklch(23% 0.018 265 / 0.06);
-  --shadow: 0 2px 6px oklch(23% 0.018 265 / 0.08), 0 1px 2px oklch(23% 0.018 265 / 0.05);
-  --shadow-lg: 0 12px 32px oklch(23% 0.018 265 / 0.13), 0 2px 8px oklch(23% 0.018 265 / 0.07);
+  --shadow-sm: 0 1px 2px rgba(17, 17, 20, 0.06);
+  --shadow: 0 6px 18px rgba(17, 17, 20, 0.10);
+  --shadow-lg: 0 16px 40px rgba(17, 17, 20, 0.14);
 
   --duration-fast: 120ms;
   --duration-normal: 220ms;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
+  --page-width: 76rem;
   --sidebar-width: 13rem;
   --measure: 68ch;
 }
 
-:root[data-theme='dark'],
-:root:not([data-theme='light']) {
-  /* Default follows the system; an explicit choice wins via data-theme. */
-}
-
+/* The night palette doubles as the dark appearance. Default follows the
+   system; an explicit choice wins via data-theme. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
 
-    --paper:            oklch(17.5% 0.018 265);
-    --surface:          oklch(21% 0.020 265);
-    --surface-sunken:   oklch(14.5% 0.016 265);
-    --surface-raised:   oklch(25% 0.022 265);
-    --surface-inverted: oklch(93% 0.008 85);
+    --paper:            #101014;
+    --surface:          #1A1A20;
+    --surface-sunken:   #141418;
+    --surface-raised:   #22222A;
+    --surface-inverted: #F3F2EF;
 
-    --ink:              oklch(93% 0.010 85);
-    --ink-muted:        oklch(74% 0.012 265);
-    --ink-faint:        oklch(72% 0.012 265);
-    --ink-inverted:     oklch(18% 0.018 265);
+    --ink:              #F2F2F4;
+    --ink-muted:        #A9A9B6;
+    --ink-faint:        #A9A9B6;
+    --ink-inverted:     #111114;
 
-    --rule:             oklch(30% 0.018 265);
-    --rule-strong:      oklch(40% 0.020 265);
+    --rule:             #2C2C36;
+    --rule-strong:      #3C3C48;
 
-    --accent:           #F7C948;
-    --accent-text:      #F7C948;
-    --accent-hover:     #EAB934;
-    --accent-soft:      #4A3B1C;
-    --accent-border:    #806824;
+    --sun:              #F2F2F4;
+    --sun-hover:        #FFFFFF;
+    --sun-ink:          #111114;
+    --route:            #9DBAD3;
+    --kicker:           #A9A9B6;
+    --accent-text:      #CFCFD8;
 
-    --ok:               oklch(78% 0.120 152);
-    --ok-soft:          oklch(27% 0.050 152);
-    --ok-border:        oklch(42% 0.070 152);
+    --accent:           #9DBAD3;
+    --accent-hover:     #BFD3E5;
+    --accent-soft:      #1E2A36;
+    --accent-border:    #3E5C76;
 
-    --info:             oklch(78% 0.100 245);
-    --info-soft:        oklch(27% 0.045 245);
-    --info-border:      oklch(42% 0.065 245);
+    --ok:               #6BE3A4;
+    --ok-soft:          #12352A;
+    --ok-border:        #245C44;
 
-    --warn:             oklch(81% 0.115 78);
-    --warn-soft:        oklch(29% 0.055 70);
-    --warn-border:      oklch(45% 0.080 72);
+    --info:             #9CC2FF;
+    --info-soft:        #182C4D;
+    --info-border:      #2F4F80;
 
-    --risk:             oklch(74% 0.140 27);
-    --risk-soft:        oklch(28% 0.060 27);
-    --risk-border:      oklch(45% 0.090 27);
+    --warn:             #FFD27A;
+    --warn-soft:        #3A2C0E;
+    --warn-border:      #6B5213;
 
-    --unknown:          oklch(70% 0.008 265);
-    --unknown-soft:     oklch(26% 0.010 265);
-    --unknown-border:   oklch(38% 0.010 265);
+    --risk:             #FF9C8F;
+    --risk-soft:        #3D1A18;
+    --risk-border:      #6E2E28;
 
-    --demo:             oklch(80% 0.105 320);
-    --demo-soft:        oklch(28% 0.055 320);
-    --demo-border:      oklch(45% 0.080 320);
+    --unknown:          #A7B1C2;
+    --unknown-soft:     #16263F;
+    --unknown-border:   #54698F;
 
-    --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.30);
-    --shadow: 0 2px 8px oklch(0% 0 0 / 0.38), 0 1px 2px oklch(0% 0 0 / 0.25);
-    --shadow-lg: 0 14px 38px oklch(0% 0 0 / 0.48), 0 2px 8px oklch(0% 0 0 / 0.30);
+    --demo:             #D9B3F0;
+    --demo-soft:        #2E1E3D;
+    --demo-border:      #5A3D75;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30);
+    --shadow: 0 6px 18px rgba(0, 0, 0, 0.38);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.48);
   }
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
 
-  --paper:            oklch(17.5% 0.018 265);
-  --surface:          oklch(21% 0.020 265);
-  --surface-sunken:   oklch(14.5% 0.016 265);
-  --surface-raised:   oklch(25% 0.022 265);
-  --surface-inverted: oklch(93% 0.008 85);
+  --paper:            #101014;
+  --surface:          #1A1A20;
+  --surface-sunken:   #141418;
+  --surface-raised:   #22222A;
+  --surface-inverted: #F3F2EF;
 
-  --ink:              oklch(93% 0.010 85);
-  --ink-muted:        oklch(74% 0.012 265);
-  --ink-faint:        oklch(72% 0.012 265);
-  --ink-inverted:     oklch(18% 0.018 265);
+  --ink:              #F2F2F4;
+  --ink-muted:        #A9A9B6;
+  --ink-faint:        #A9A9B6;
+  --ink-inverted:     #111114;
 
-  --rule:             oklch(30% 0.018 265);
-  --rule-strong:      oklch(40% 0.020 265);
+  --rule:             #2C2C36;
+  --rule-strong:      #3C3C48;
 
-  --accent:           #F7C948;
-  --accent-text:      #F7C948;
-  --accent-hover:     #EAB934;
-  --accent-soft:      #4A3B1C;
-  --accent-border:    #806824;
+  --sun:              #F2F2F4;
+    --sun-hover:        #FFFFFF;
+    --sun-ink:          #111114;
+  --route:            #9DBAD3;
+  --kicker:           #A9A9B6;
+  --accent-text:      #CFCFD8;
 
-  --ok:               oklch(78% 0.120 152);
-  --ok-soft:          oklch(27% 0.050 152);
-  --ok-border:        oklch(42% 0.070 152);
+  --accent:           #9DBAD3;
+  --accent-hover:     #BFD3E5;
+  --accent-soft:      #1E2A36;
+  --accent-border:    #3E5C76;
 
-  --info:             oklch(78% 0.100 245);
-  --info-soft:        oklch(27% 0.045 245);
-  --info-border:      oklch(42% 0.065 245);
+  --ok:               #6BE3A4;
+  --ok-soft:          #12352A;
+  --ok-border:        #245C44;
 
-  --warn:             oklch(81% 0.115 78);
-  --warn-soft:        oklch(29% 0.055 70);
-  --warn-border:      oklch(45% 0.080 72);
+  --info:             #9CC2FF;
+  --info-soft:        #182C4D;
+  --info-border:      #2F4F80;
 
-  --risk:             oklch(74% 0.140 27);
-  --risk-soft:        oklch(28% 0.060 27);
-  --risk-border:      oklch(45% 0.090 27);
+  --warn:             #FFD27A;
+  --warn-soft:        #3A2C0E;
+  --warn-border:      #6B5213;
 
-  --unknown:          oklch(70% 0.008 265);
-  --unknown-soft:     oklch(26% 0.010 265);
-  --unknown-border:   oklch(38% 0.010 265);
+  --risk:             #FF9C8F;
+  --risk-soft:        #3D1A18;
+  --risk-border:      #6E2E28;
 
-  --demo:             oklch(80% 0.105 320);
-  --demo-soft:        oklch(28% 0.055 320);
-  --demo-border:      oklch(45% 0.080 320);
+  --unknown:          #A7B1C2;
+  --unknown-soft:     #16263F;
+  --unknown-border:   #54698F;
 
-  --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.30);
-  --shadow: 0 2px 8px oklch(0% 0 0 / 0.38), 0 1px 2px oklch(0% 0 0 / 0.25);
-  --shadow-lg: 0 14px 38px oklch(0% 0 0 / 0.48), 0 2px 8px oklch(0% 0 0 / 0.30);
+  --demo:             #D9B3F0;
+  --demo-soft:        #2E1E3D;
+  --demo-border:      #5A3D75;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30);
+  --shadow: 0 6px 18px rgba(0, 0, 0, 0.38);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.48);
 }

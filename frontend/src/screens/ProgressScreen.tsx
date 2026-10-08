@@ -3,11 +3,25 @@
  *
  * There is never an unexplained spinner here: each stage names what it is
  * doing, how far it has got, and every page it failed to read.
+ *
+ * While the research runs, the top of the screen is round 7's night moment:
+ * the stage in words, how far it has got, four counters, and what has been
+ * found so far that is worth knowing - a requirement that rules a programme
+ * out, a cost and an award from different years, a site that did not answer.
+ * When it finishes, the same list stays under "How the research went".
  */
 
-import { useEffect, useState } from 'react';
+import { useMedia, WIDE } from '@/lib/useMedia';
+import { CountryLegend } from '@/components/CountryLegend';
+import { passColours, preferredCountries } from '@/lib/passColour';
+import { useEffect, useMemo, useState } from 'react';
 import { api } from '@/api/client';
+import { ceilingFrom, groupByBudget } from '@/components/BudgetLadder';
 import { Chip, Loading, Notice, Panel, Stat } from '@/components/primitives';
+import { Globe } from '@/components/Globe';
+import { LazyShareSheet } from '@/components/LazyShareSheet';
+import { findingTotals, findingsSoFar, type Finding } from '@/lib/findings';
+import { defaultView, homeOf, markersFor } from '@/lib/globe';
 import { dateTime } from '@/lib/format';
 import { useStore } from '@/lib/store';
 
@@ -33,11 +47,30 @@ function errorCategory(message: string): string {
   return 'Page could not be interpreted';
 }
 
+function FoundList({ findings, more }: { findings: Finding[]; more: number }) {
+  return (
+    <>
+      <ul className="found__list" data-testid="found-list">
+        {findings.map((f) => (
+          <li key={`${f.kind}-${f.where}-${f.text}`} className={`found__item found__item--${f.kind}`}>
+            <span className="found__label">{f.label}</span>
+            <span className="found__where">{f.where}</span>
+            <span className="found__text">{f.text}</span>
+          </li>
+        ))}
+      </ul>
+      {more > 0 && <p className="found__more">and {more} more like these in the results</p>}
+    </>
+  );
+}
+
 export function ProgressScreen({ onDone }: { onDone: () => void }) {
-  const { run, cancelRun, retryRun, recheckNow, results } = useStore();
+  const { run, cancelRun, retryRun, recheckNow, results, savedProfile } = useStore();
+  const wide = useMedia(WIDE);
   // Work the queue gave up on after exhausting its attempts. It is asked for
   // here, before the early return, because a hook cannot live behind one.
   const [deadJobs, setDeadJobs] = useState(0);
+  const [sharing, setSharing] = useState(false);
   const runStage = run?.stage;
 
   useEffect(() => {
@@ -49,6 +82,19 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
         // line simply does not exist, and its absence must not break progress.
       });
   }, [runStage]);
+
+  // Memoised, and above the early return: this screen re-renders on every
+  // poll, and a new marker list would redraw the globe each time.
+  // Each country's pass colour (lib/passColour): its routes take its tint.
+  const passes = useMemo(
+    () => passColours(results.map((r) => r.country), preferredCountries(savedProfile)),
+    [results, savedProfile],
+  );
+  const globe = useMemo(() => {
+    const placed = markersFor(results);
+    const country = new Map(results.map((r) => [r.id, r.country]));
+    return { ...placed, markers: placed.markers.map((m) => ({ ...m, slot: passes.get(country.get(m.id) ?? '')?.slot })) };
+  }, [results, passes]);
 
   if (!run) {
     return (
@@ -79,22 +125,134 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
   // silently reclassified.
   const unknowns = run.unknowns ?? [];
 
+  // The reveal: what the run found, counted from the results themselves. A
+  // count is only shown when the data can say it - the budget tile needs a
+  // budget, and none of them is a chance of anything.
+  const revealed = finished && results.length > 0;
+  const home = homeOf(savedProfile);
+  const running = !finished && !failed && !cancelled;
+  const findings = findingsSoFar(run.errors, results, 2, run.pages_failed);
+  const moreFindings = findingTotals(run.errors, results, run.pages_failed) - findings.length;
+  const runningStage = run.stages.find((s) => s.status === 'running');
+  const percent = Math.round(run.progress * 100);
+  const countries = new Set(results.map((r) => r.country)).size;
+  const met = results.filter((r) => r.eligibility === 'MET').length;
+  const livingGrant = results.filter((r) => r.best_funding_classification === 'FULL_RIDE_CONFIRMED').length;
+  const ceiling = ceilingFrom(savedProfile);
+  const withinBudget = ceiling ? groupByBudget(results, ceiling).within.length : null;
+
   return (
     <>
-      <div className="screen__head">
-        <p className="screen__eyebrow">Unimatch research</p>
-        <h1 className="screen__title">
-          {failed ? 'Research needs attention.' : cancelled ? 'Research cancelled.' : finished ? 'Your opportunities are ready.' : 'We’re researching your opportunities.'}
-        </h1>
-        <p className="screen__lede">{STAGE_LABELS[run.stage] ?? run.stage.replace(/_/g, ' ')}. We show what the official pages confirm and keep missing facts open.</p>
-      </div>
+      {revealed ? (
+        <section className="reveal reveal--globe" aria-labelledby="reveal-title" data-testid="results-reveal">
+          <p className="reveal__kicker">Research complete</p>
+          <h1 className="reveal__title" id="reveal-title">
+            {results.length} programme{results.length === 1 ? '' : 's'} in {countries} countr{countries === 1 ? 'y' : 'ies'}
+          </h1>
+          {/* Concept r11's three counts first; the grant count closes the row. */}
+          <dl className="reveal__tiles">
+            <div className="reveal__tile">
+              <dt>meet every published requirement checked so far</dt>
+              <dd>{met}</dd>
+            </div>
+            {withinBudget !== null && ceiling ? (
+              <div className="reveal__tile">
+                <dt>left to pay within {ceiling.amount.toLocaleString('en-US')} {ceiling.currency} a year, if awarded</dt>
+                <dd>{withinBudget}</dd>
+              </div>
+            ) : (
+              <div className="reveal__tile">
+                <dt>official pages read</dt>
+                <dd>{run.pages_checked}</dd>
+              </div>
+            )}
+            <div className="reveal__tile">
+              <dt>facts, each with a link to its page</dt>
+              <dd>{run.claims_recorded}</dd>
+            </div>
+            <div className="reveal__tile">
+              <dt>have a published grant for tuition and living</dt>
+              <dd>{livingGrant}</dd>
+            </div>
+          </dl>
+          <CountryLegend results={results} passes={passes} shown={4} />
+          {/* Concept N's reveal: the routes from home to every programme found,
+              each in its country's tint. */}
+          <Globe
+            layout="horizon"
+            tone="night"
+            height={wide ? 240 : 300}
+            markers={globe.markers}
+            home={home}
+            focus={defaultView(home)}
+            routes
+            plain
+            nameHome
+            caption={`A globe with ${globe.markers.length} of ${results.length} programmes at their cities${home ? `, routes from ${home.city}` : ''}.`}
+            testId="reveal-globe"
+          />
+          <div className="reveal__actions">
+            <button className="btn btn--primary reveal__cta" onClick={onDone} data-testid="to-shortlist">
+              See your {results.length} pass{results.length === 1 ? '' : 'es'} <span aria-hidden="true">→</span>
+            </button>
+            {/* Concept Q: the map of the search, as a story card. */}
+            <button className="btn reveal__share" onClick={() => setSharing(true)} data-testid="share-map">
+              Share my map
+            </button>
+          </div>
+          <p className="reveal__note">
+            Prices after grants, sources with dates, deadlines and documents are in the results.
+            Grants are mostly competitive, and admission is decided by the university.
+          </p>
+          {sharing && (
+            <LazyShareSheet results={results} profile={savedProfile} demo={run.demo_mode} onClose={() => setSharing(false)} />
+          )}
+        </section>
+      ) : running ? (
+        <section className="reveal reveal--running" aria-labelledby="running-title" data-testid="research-running">
+          <p className="reveal__kicker">Research running</p>
+          <h1 className="reveal__title reveal__title--stage" id="running-title">
+            {STAGE_LABELS[run.stage] ?? run.stage.replace(/_/g, ' ')}
+          </h1>
+          <div className="reveal__progress">
+            <div className="meter meter--night" role="progressbar" aria-valuenow={percent}
+                 aria-valuemin={0} aria-valuemax={100} aria-label="Research progress">
+              <div className="meter__fill" style={{ width: `${Math.max(3, percent)}%` }} />
+            </div>
+            <span>
+              {runningStage && runningStage.items_total > 0
+                ? `${runningStage.items_done} of ${runningStage.items_total} in this stage · `
+                : ''}
+              {percent}% of stages complete
+            </span>
+          </div>
+          <dl className="reveal__tiles reveal__tiles--four">
+            <div className="reveal__tile"><dt>programmes checked</dt><dd>{run.programs_verified}</dd></div>
+            <div className="reveal__tile"><dt>official pages read</dt><dd>{run.pages_checked}</dd></div>
+            <div className="reveal__tile"><dt>facts recorded, each with its page</dt><dd>{run.claims_recorded}</dd></div>
+            <div className="reveal__tile"><dt>pages that could not be read</dt><dd>{run.pages_failed}</dd></div>
+          </dl>
+          <div className="found">
+            <h2 className="found__title">Found so far</h2>
+            {findings.length > 0
+              ? <FoundList findings={findings} more={moreFindings} />
+              : <p className="found__none">Nothing to flag yet. Requirements and money are compared once the pages are read.</p>}
+          </div>
+        </section>
+      ) : (
+        <div className="screen__head">
+          <p className="screen__eyebrow">Match · Research</p>
+          <h1 className="screen__title">
+            {failed ? 'Research failed' : cancelled ? 'Research cancelled' : finished ? 'Research complete' : 'Researching'}
+          </h1>
+          <p className="screen__lede">{STAGE_LABELS[run.stage] ?? run.stage.replace(/_/g, ' ')}</p>
+        </div>
+      )}
+
+      {revealed && <h2 className="reveal__how">How the research went</h2>}
 
       <div className="stack stack--loose">
-        <div className="research-hero">
-          <div className="research-hero__copy">
-            <span className="home-eyebrow">{run.demo_mode ? 'SYNTHETIC DEMO RESEARCH' : 'REAL INFORMATION · BRIGHTER CHOICES'}</span>
-            <strong>{Math.round(run.progress * 100)}%</strong>
-            <p>{finished ? 'Your research has finished.' : failed || cancelled ? 'You can review what was saved.' : 'Research in progress'}</p>
+        {!running && <div className="stack stack--tight">
           <div className="meter" role="progressbar" aria-valuenow={Math.round(run.progress * 100)}
                aria-valuemin={0} aria-valuemax={100} aria-label="Research progress">
             <div className="meter__fill" style={{ width: `${Math.max(3, run.progress * 100)}%` }} />
@@ -106,9 +264,7 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
               {run.finished_at && ` · finished ${dateTime(run.finished_at)}`}
             </span>
           </div>
-          </div>
-          <img src="/brand/unimatch-journey.png" alt="Unimatch mascot looking towards a mountain landscape" />
-        </div>
+        </div>}
 
         {abandoned && (
           <Notice kind="risk">
@@ -155,17 +311,26 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
           </Notice>
         )}
 
-        <details className="research-metrics">
-          <summary>Research activity and page counts</summary>
-        <div className="statband">
-          <Stat value={run.candidates_found} label="Candidates found" />
-          <Stat value={run.programs_verified} label="Programmes checked" />
-          <Stat value={run.pages_checked} label="Official pages read" />
-          <Stat value={run.pages_failed} label="Pages unreadable" />
-          <Stat value={run.claims_recorded} label="Claims recorded" />
-          <Stat value={results.length} label="Results ready" />
-        </div>
-        </details>
+        {/* While the research runs, the night panel above carries the counters;
+            once it has finished they settle back onto the page. */}
+        {!running && (
+          <div className="statband">
+            <Stat value={run.candidates_found} label="Candidates found" />
+            <Stat value={run.programs_verified} label="Programmes checked" />
+            <Stat value={run.pages_checked} label="Official pages read" />
+            <Stat value={run.pages_failed} label="Pages unreadable" />
+            <Stat value={run.claims_recorded} label="Claims recorded" />
+            <Stat value={results.length} label="Results ready" />
+          </div>
+        )}
+
+        {!running && findings.length > 0 && (
+          <Panel title="Found along the way" hint="Read off the results and the pages, so none of it is a guess.">
+            <div className="found found--day">
+              <FoundList findings={findings} more={moreFindings} />
+            </div>
+          </Panel>
+        )}
 
         {finished && (
           <p className="small muted">
@@ -304,11 +469,7 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
               Re-run everything
             </button>
           )}
-          {finished && results.length > 0 && (
-            <button className="btn btn--primary" onClick={onDone} data-testid="to-shortlist">
-              View {results.length} results →
-            </button>
-          )}
+
         </div>
       </div>
     </>

@@ -29,6 +29,7 @@ import { HomeScreen } from '@/screens/HomeScreen';
 import { SettingsScreen } from '@/screens/SettingsScreen';
 import { BillingScreen } from '@/screens/BillingScreen';
 import { Chip } from '@/components/primitives';
+import { Logo } from '@/components/Logo';
 import { api } from '@/api/client';
 import { LOCALES, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
 import { useTranslation } from '@/lib/useTranslation';
@@ -98,6 +99,20 @@ const PRIMARY_NAV = [
   { id: 'feed', label: 'Community', icon: UsersThree },
 ] as const;
 
+/** The avatar's letter: the applicant's initial, or a plus before there is one. */
+function initialOf(name: string | undefined): string {
+  const letter = name?.trim().charAt(0);
+  return letter ? letter.toUpperCase() : '+';
+}
+
+/** "Fall 2027 · Bachelor", from whatever the saved profile holds. */
+function intakeOf(profile: { [key: string]: unknown }): string {
+  const c = (profile.context ?? {}) as { intake_term?: unknown; intake_year?: unknown; level?: unknown };
+  const cap = (v: unknown) => (typeof v === 'string' && v ? v.charAt(0).toUpperCase() + v.slice(1) : '');
+  const when = [cap(c.intake_term), typeof c.intake_year === 'number' ? String(c.intake_year) : ''].filter(Boolean).join(' ');
+  return [when, cap(c.level)].filter(Boolean).join(' · ') || 'Profile saved';
+}
+
 export default function App() {
   const {
     run, results, summary, error, clearError, capabilities,
@@ -107,6 +122,8 @@ export default function App() {
   const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'home');
   const [role, setRole] = useState<string | null>(null);
   const [redirected, setRedirected] = useState<string | null>(null);
+  /** Home's "Decide one at a time": Find opens straight into deciding. */
+  const [decideOnArrival, setDecideOnArrival] = useState(false);
   /** Ask before throwing away typing the applicant has not saved. */
   const confirmDiscard = () =>
     !dirty ||
@@ -114,6 +131,28 @@ export default function App() {
       'You have unsaved changes to this profile. Leaving now discards them. '
       + 'Save first, or continue and lose them?',
     );
+  /** The applicant's menu closes on a choice, a click elsewhere, or Escape. */
+  const accountRef = useRef<HTMLDetailsElement>(null);
+  const closeAccount = () => { if (accountRef.current) accountRef.current.open = false; };
+  useEffect(() => {
+    const away = (event: Event) => {
+      const menu = accountRef.current;
+      if (menu?.open && !menu.contains(event.target as Node)) menu.open = false;
+    };
+    const escape = (event: KeyboardEvent) => {
+      const menu = accountRef.current;
+      if (event.key === 'Escape' && menu?.open) {
+        menu.open = false;
+        menu.querySelector('summary')?.focus();
+      }
+    };
+    document.addEventListener('pointerdown', away);
+    document.addEventListener('keydown', escape);
+    return () => {
+      document.removeEventListener('pointerdown', away);
+      document.removeEventListener('keydown', escape);
+    };
+  }, []);
   // Who I am in the community, and whose profile is open. The community has no
   // gates, so this is the only navigation state it needs.
   const [me, setMe] = useState<PersonCard | null>(null);
@@ -284,8 +323,7 @@ export default function App() {
     <div className="app">
       <aside className="sidebar">
         <div className="brand">
-          <img className="brand__icon" src="/brand/unimatch-mark.png" alt="" />
-          <span className="brand__mark">Unimatch</span>
+          <Logo className="brand__logo" />
         </div>
 
         <nav className="nav" aria-label="Main navigation">
@@ -304,95 +342,102 @@ export default function App() {
             </button>
           ))}
         </nav>
-
-        <div className="sidebar__footer">
-          <p>Same students.<br /><strong>Bigger horizons.</strong></p>
-          <details className="sidebar__settings">
-            <summary>Preferences</summary>
-          <div className="field">
-            <label className="field__label xs" htmlFor="theme">{t('appearance.label')}</label>
-            <select
-              id="theme"
-              value={theme}
-              onChange={(e) => setTheme(e.target.value as Theme)}
-            >
-              <option value="system">{t('appearance.system')}</option>
-              <option value="light">{t('appearance.light')}</option>
-              <option value="dark">{t('appearance.dark')}</option>
-            </select>
-          </div>
-          <div className="field">
-            <label className="field__label xs" htmlFor="locale">{t('language.label')}</label>
-            {/* Russian and Kazakh are partial on purpose: a string whose terms
-                are still under review stays in English rather than being
-                machine-translated. See docs/i18n/GLOSSARY.md. */}
-            <select
-              id="locale"
-              data-testid="locale"
-              value={locale}
-              onChange={(e) => setLocale(e.target.value as Locale)}
-            >
-              {LOCALES.map((option) => (
-                <option key={option.id} value={option.id}>{option.label}</option>
-              ))}
-            </select>
-          </div>
-          <p className="xs faint" style={{ margin: 0 }}>
-            {t('brand.disclaimer')}
-          </p>
-          </details>
-        </div>
       </aside>
 
       <div className="main">
+        {/* One row, as in the concept: the mark, the data's provenance, and
+            the applicant. Everything about the case and the account lives in
+            the applicant's menu; on a desk the same header is the card at the
+            foot of the sidebar. */}
         <header className="topbar">
-          <span className="topbar__brand"><img src="/brand/unimatch-mark.png" alt="" />Unimatch</span>
+          <span className="topbar__brand"><Logo /></span>
           <Chip tone={capabilities?.demo_mode ? 'demo' : 'accent'}>
             {capabilities ? (capabilities.demo_mode ? 'Demo data' : 'Live sources') : 'connecting…'}
           </Chip>
-          <details className="journey-menu">
-            <summary>Explore</summary>
-            <div className="journey-menu__list">
-              {SCREENS.filter((item) => item.id !== 'moderation' || role === 'moderator').map((item) => (
-                <button key={item.id} type="button" onClick={() => setScreen(item.id)} disabled={Boolean(gate[item.id])}>
-                  {t(item.label)}
-                </button>
-              ))}
+          <details className="account" ref={accountRef}>
+            <summary aria-label={`Applicant and account: ${savedProfile?.display_name ?? 'no applicant yet'}`}>
+              <span className="account__avatar" aria-hidden="true">{initialOf(savedProfile?.display_name)}</span>
+              <span className="account__who" aria-hidden="true">
+                <strong>{savedProfile?.display_name ?? 'No applicant yet'}</strong>
+                <span>{savedProfile ? intakeOf(savedProfile) : 'Start with a profile'}</span>
+              </span>
+            </summary>
+            <div className="account__menu">
+              <label className="account__case" htmlFor="case-switcher">
+                <span>Applicant</span>
+                <select
+                  id="case-switcher"
+                  value={savedProfile?.id ?? ''}
+                  onChange={(event) => {
+                    // Switching case replaces the form. Unsaved edits are the
+                    // applicant's typing, so they are never discarded silently.
+                    if (!confirmDiscard()) {
+                      event.target.value = savedProfile?.id ?? '';
+                      return;
+                    }
+                    closeAccount();
+                    if (event.target.value) void switchCase(event.target.value);
+                    else newCase();
+                  }}
+                >
+                  <option value="">{t('topbar.newApplicant')}</option>
+                  {cases.map((item) => (
+                    <option key={item.id} value={item.profile_id}>
+                      {item.display_name} · {item.run_count} run{item.run_count === 1 ? '' : 's'}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button className="btn btn--sm topbar__new-case" type="button" onClick={() => {
+                if (!confirmDiscard()) return;
+                closeAccount(); newCase(); setScreen('profile');
+              }}>{t('topbar.newCase')}</button>
+
+              <p className="account__label">Explore</p>
+              <div className="journey-menu__list">
+                {SCREENS.filter((item) => item.id !== 'moderation' || role === 'moderator').map((item) => (
+                  <button key={item.id} type="button" onClick={() => { closeAccount(); setScreen(item.id); }} disabled={Boolean(gate[item.id])}>
+                    {t(item.label)}
+                  </button>
+                ))}
+              </div>
+
+              <div className="account__prefs">
+                <div className="field">
+                  <label className="field__label xs" htmlFor="theme">{t('appearance.label')}</label>
+                  <select id="theme" value={theme} onChange={(e) => setTheme(e.target.value as Theme)}>
+                    <option value="system">{t('appearance.system')}</option>
+                    <option value="light">{t('appearance.light')}</option>
+                    <option value="dark">{t('appearance.dark')}</option>
+                  </select>
+                </div>
+                <div className="field">
+                  <label className="field__label xs" htmlFor="locale">{t('language.label')}</label>
+                  {/* Russian and Kazakh are partial on purpose: a string whose terms
+                      are still under review stays in English rather than being
+                      machine-translated. See docs/i18n/GLOSSARY.md. */}
+                  <select
+                    id="locale"
+                    data-testid="locale"
+                    value={locale}
+                    onChange={(e) => setLocale(e.target.value as Locale)}
+                  >
+                    {LOCALES.map((option) => (
+                      <option key={option.id} value={option.id}>{option.label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="account__actions">
+                <button className="btn btn--sm btn--ghost topbar__settings" type="button" onClick={() => { closeAccount(); setScreen('settings'); }}>Settings</button>
+                <button className="btn btn--sm btn--ghost topbar__signout" data-testid="sign-out" type="button" onClick={async () => {
+                  await api.logout(); window.location.reload();
+                }}>{t('topbar.signOut')}</button>
+              </div>
+              <p className="xs faint account__note">{t('brand.disclaimer')}</p>
             </div>
           </details>
-          <div className="topbar__spacer" />
-          <label className="row row--tight xs muted topbar__case" htmlFor="case-switcher">
-            Applicant
-            <select
-              id="case-switcher"
-              value={savedProfile?.id ?? ''}
-              onChange={(event) => {
-                // Switching case replaces the form. Unsaved edits are the
-                // applicant's typing, so they are never discarded silently.
-                if (!confirmDiscard()) {
-                  event.target.value = savedProfile?.id ?? '';
-                  return;
-                }
-                if (event.target.value) void switchCase(event.target.value);
-                else newCase();
-              }}
-            >
-              <option value="">{t('topbar.newApplicant')}</option>
-              {cases.map((item) => (
-                <option key={item.id} value={item.profile_id}>
-                  {item.display_name} · {item.run_count} run{item.run_count === 1 ? '' : 's'}
-                </option>
-              ))}
-            </select>
-          </label>
-          <button className="btn btn--sm topbar__new-case" type="button" onClick={() => {
-            if (!confirmDiscard()) return;
-            newCase(); setScreen('profile');
-          }}>{t('topbar.newCase')}</button>
-          <button className="btn btn--sm btn--ghost topbar__settings" type="button" onClick={() => setScreen('settings')}>Settings</button>
-          <button className="btn btn--sm btn--ghost topbar__signout" data-testid="sign-out" type="button" onClick={async () => {
-            await api.logout(); window.location.reload();
-          }}>{t('topbar.signOut')}</button>
         </header>
 
         {redirected && (
@@ -428,11 +473,11 @@ export default function App() {
           {/* Scoped to the screen, so one broken screen cannot take the
               sidebar and the case switcher down with it. */}
           <ErrorBoundary label={`the ${screen} screen`} key={screen}>
-          {screen === 'home' && <HomeScreen onNavigate={setScreen} />}
+          {screen === 'home' && <HomeScreen onNavigate={setScreen} onDecide={() => { setDecideOnArrival(true); setScreen('shortlist'); }} />}
           {screen === 'profile' && <ProfileScreen onNext={() => setScreen('preferences')} />}
           {screen === 'preferences' && <PreferencesScreen onStarted={() => setScreen('progress')} />}
           {screen === 'progress' && <ProgressScreen onDone={() => setScreen('shortlist')} />}
-          {screen === 'shortlist' && <ShortlistScreen onStart={() => setScreen(savedProfile ? 'preferences' : 'profile')} onProgress={() => setScreen('progress')} />}
+          {screen === 'shortlist' && <ShortlistScreen decideOnArrival={decideOnArrival} onArrived={() => setDecideOnArrival(false)} onEditSearch={() => setScreen('preferences')} onStart={() => setScreen(savedProfile ? 'preferences' : 'profile')} onProgress={() => setScreen('progress')} />}
           {screen === 'funding' && <FundingScreen />}
           {screen === 'sources' && <SourcesScreen />}
           {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} />}

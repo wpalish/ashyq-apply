@@ -1,4 +1,4 @@
-import { expect, test, type Browser, type Page } from '@playwright/test';
+import { expect, test, type Browser, type Locator, type Page } from '@playwright/test';
 
 const SHOT_ROOT = '../docs/screenshots';
 
@@ -44,6 +44,37 @@ export async function waitForResults(page: Page, timeout = 120_000): Promise<voi
   await expect(page.getByTestId('to-shortlist')).toBeVisible({ timeout });
 }
 
+/**
+ * Let finite animations and transitions end before a check reads colours.
+ *
+ * Axe samples the page at one instant: a navigation pill fading out of its
+ * open state is, for a frame, grey text on grey, and CI once caught exactly
+ * that frame. Infinite ones (the globe's pulse) never finish, so they are
+ * left alone.
+ */
+export async function settle(page: Page): Promise<void> {
+  await page.evaluate(() => Promise.all(document.getAnimations()
+    .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity)
+    .map((a) => a.finished.catch(() => undefined))));
+}
+
+/** The five areas the shell keeps in its main navigation (Unimatch's). */
+const PRIMARY = new Set(['home', 'shortlist', 'approved', 'documents', 'feed']);
+
+/**
+ * Open a screen: a main area through its navigation button, the rest through
+ * its address, the way the shell's Explore menu and links reach them.
+ */
+export async function goTo(page: Page, screen: string): Promise<void> {
+  const item = page.getByTestId(`nav-${screen}`);
+  if (PRIMARY.has(screen) && (await item.isVisible().catch(() => false))) {
+    await item.click();
+    return;
+  }
+  await page.evaluate((id) => { window.location.hash = `#/${id}`; }, screen);
+}
+
+/** The demo applicant's profile, then a research run from the preferences. */
 export async function runDemoResearch(page: Page): Promise<void> {
   await page.goto('/#/profile');
   await page.getByTestId('load-demo-profile').click();
@@ -54,10 +85,14 @@ export async function runDemoResearch(page: Page): Promise<void> {
 }
 
 export async function openShortlist(page: Page): Promise<void> {
-  await page.goto('/#/shortlist');
-  await expect(page.locator('.find-card').first()).toBeVisible();
-  const advanced = page.locator('.find-advanced');
-  if (!(await advanced.evaluate((element: HTMLDetailsElement) => element.open))) await advanced.locator('summary').first().click();
+  await goTo(page, 'shortlist');
+  await closePass(page);
+  // Cards are the default view; the journeys assert on the table's rows, so
+  // they choose it the way a person would, with the view switch - which sits
+  // with the other ways to narrow the list, behind Filters.
+  await openFilters(page);
+  const table = page.getByTestId('view-table');
+  if ((await table.getAttribute('aria-pressed')) !== 'true') await table.click();
   await expect(page.getByTestId('shortlist-table')).toBeVisible();
 
   // Out-of-budget, needs-clarification and excluded rows sit in sections that
@@ -84,11 +119,46 @@ export function rowFor(page: Page, name: string) {
 export async function expandRow(page: Page, name: string) {
   const row = rowFor(page, name);
   await expect(row).toBeVisible();
-  if ((page.viewportSize()?.width ?? 0) <= 700) {
-    const card = page.locator('.find-card').filter({ has: page.getByRole('heading', { name, exact: true }) }).first();
-    await card.getByRole('button', { name: 'View details' }).click();
-    return row;
-  }
   await row.getByRole('button', { name, exact: true }).click();
+  // Bring the opened programme to the top, as a person scrolls to read it. On
+  // a phone the tab bar is fixed along the bottom edge, and Playwright counts
+  // a control under it as "in view" - then waits forever to click it.
+  await row.evaluate((element) => element.scrollIntoView({ block: 'start' }));
   return row;
+}
+
+/** Find's Filters panel: the view switch, regions, the globe and the filters. */
+export async function openFilters(page: Page): Promise<void> {
+  const toggle = page.getByTestId('find-filters');
+  if ((await toggle.getAttribute('aria-expanded')) !== 'true') await toggle.click();
+  await expect(page.getByTestId('find-more')).toBeVisible();
+}
+
+/** Find's passes, as a person first sees them: cards, with Filters folded. */
+export async function showCards(page: Page): Promise<void> {
+  await goTo(page, 'shortlist');
+  await closePass(page);
+  await openFilters(page);
+  await page.getByTestId('view-cards').click();
+  await page.getByTestId('find-filters').click();
+  await expect(page.getByTestId('find-more')).toHaveCount(0);
+}
+
+/** Close an opened programme, if one is open. */
+export async function closePass(page: Page): Promise<void> {
+  const close = page.getByTestId('sheet-close');
+  if (await close.isVisible().catch(() => false)) await close.click();
+}
+
+/** Open a programme's pass from the cards, wherever its card sits. */
+export async function openPass(page: Page, name: string): Promise<{ id: string; sheet: Locator }> {
+  await closePass(page);
+  const card = page.locator('main article[data-testid^="card-"]').filter({ hasText: name }).first();
+  const id = (await card.getAttribute('data-testid'))!.replace('card-', '');
+  // A set-aside programme sits in a section that is closed by default.
+  await card.evaluate((el) => { const section = el.closest('details'); if (section) section.open = true; });
+  await page.getByTestId(`card-open-${id}`).click();
+  const sheet = page.getByTestId(`sheet-${id}`);
+  await expect(sheet).toBeVisible();
+  return { id, sheet };
 }
