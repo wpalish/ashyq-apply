@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**[product-completion] Holder: gpt-6-astra since 2026-10-08T21:36:56.926877+00:00, branch task/product-completion from origin/main@1b2a554129f5744eb297848472f1c8fe8c7fde26.** The owner explicitly reprioritized completion of the whole Unimatch product and authorized several parallel subagents on 2026-10-09. Parent is the only source writer in this isolated worktree; three read-only subagents cover search components, product gaps and release readiness. Concurrent x20 task/product-journey-next-steps work is preserved and not edited. The old search pilot remains CLOSED_UNSCORED; STOP65b5 is not a new-cycle grant. No provider calls, label reads, purchases or production changes in this step.
+**[product-completion] Holder: gpt-6-astra since 2026-10-08T21:36:56.926877+00:00, branch task/product-completion from origin/main@1b2a554129f5744eb297848472f1c8fe8c7fde26.** The owner explicitly reprioritized completion of the whole Unimatch product and authorized several parallel subagents on 2026-10-09. Root owns Git and integration. Three subagents audited search, product gaps and release readiness; two later received bounded helper/regression-test write scopes recorded in §5. All delegated source edits are now stopped and included in the verified snapshot. Concurrent x20 task/product-journey-next-steps work is preserved and not edited. The old search pilot remains CLOSED_UNSCORED; STOP65b5 is not a new-cycle grant. No provider calls, label reads, purchases or production changes in this step.
 
 
 **claude-opus-5, search improvement plan, 2026-10-05 (owner: "Начинай выполнение по плану"):** eval-driven loop. Done and merged: ER-08/09/10 on by default (PR #52, #53), ER-08 within the per-institution query budget, `python -m evaluation.research.scorecard` (per-label outcomes, stable gains/losses, core questions, budget; scorer judgement shared via `metrics.adjudicate`, outputs byte-identical), `docs/process/SEARCH_DEFINITION_OF_DONE.md`, `backend/evaluation/research/ERROR_ANALYSIS_2026-10-05.md` (46 misses: ACCESS-from-runner 17, OTHER_PAGE 10, EXTRACTOR 9, STALE_SOURCE 6, REPRESENTATION 3, IDENTITY 1; the 11 "wrong" claims are scope/representation, no invented fact; 13 document labels are unmeasurable because the benchmark stops before the post-approval document stage). On this branch: corpus **draft8** (unsigned, 74/220 known; core-question labels + moved sources; owner must review `REVIEW_DRAFT8.md`), rule **DL-2** `DEADLINE_V2` (off; abbreviated months, date-first "Applications due", catch-all qualification window: Aalto 2027-01-22, UBC 2027-01-15, NTU 2027-01-20 on live pages), rule **BL-1** `SHARED_QUERY_BUDGET` (off; scholarship query inside the six). Paired runs pending for both. Owner decisions open: scorer treatment of claims explicitly about another population/programme, academic-year spelling, corpus vocabulary vs product enums, measuring ACCESS from the production network, document stage in the benchmark, signing draft8. No extractor produces country-credential claims; that is a larger task (owner: model-based extraction?).
@@ -58,6 +58,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[product-completion] Current release state 2026-10-09: source gate GREEN (13/13), preparing draft review PR and separate synthetic browser proof.** New next-action plan on Home/Plan and persistent documents are included. Whole-product production readiness and live search score remain unverified.
 
 **[product-completion] New owner priority: complete and verify real applicant workflows.** First reproduce and fix stale conversation responses and lost drafts, then persist document progress by tenant and result, and repair proven Unicode/duplicate-source retrieval defects offline. Compare current public Unilight screens and primary open-source components; use existing Unimatch UI, deterministic ranking and official-source/Fetcher contracts. Product ready means verified end-to-end behavior, not a test-count claim. Historical task records below retain their original acceptance boundaries.
 
@@ -1784,6 +1786,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[product-completion] Current next step:** commit/push the verified code and open/attach a draft PR against main while the separate browser preview waits for the local runner lock; finish synthetic browser proof of programme-specific navigation/progress after reload, record hash/URL/proof and release the baton. Do not restart CLOSED_UNSCORED captures or change production settings.
+
+Product-completion gate repair write-ahead: first full snapshot37194b31 failed one golden-byte test plus TypeScript spread of unknown in App.profile-promotion test. Capture proved only20 new empty document_progress fields, zero removed lines, reconstructed prior SHA d1403ce2 exactly. Update test_freshness_regressions golden with this narrow additive proof and a regression retaining old SHA after removing ONLY empty progress maps; fix typed test spread. Preserve first failed full logs (PostgreSQL stopped after failure found) and run a fresh full snapshot.
 
 Product-completion next-action write-ahead (2026-10-09): deriveApplicationPlan helper/tests, Home/Approved next-action cards, Documents target result navigation, confirmed-deadline guards. Preparation completion stays self-reported; no inferred admission readiness or invented official deadlines. Delegated writers are confined to applicationPlan helper/tests and polling/Profile/Preferences regression tests; root retains all other source/Git. Complete case UI identity promotion, independent profile save acknowledgement, deletion reset, stale hydration/switch result revision checks before full source-bound local gate.
 
@@ -3725,6 +3731,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[product-completion] 2026-10-09 full local gate PASS 13/13:** run `20261008T224844Z-check-d32372f9`, frozen tree `b7942fea43d3e2dfec37560ab1aa2bf9353347053daac8d35e97f064730c325c`, source HEAD `fcbd6b3e3caf8d488db2120f77f477d71b0c5906` plus the recorded dirty snapshot. Ruff/format/mypy PASS (366 files); SQLite 3629 PASS, coverage94.91%; PostgreSQL3629 PASS; frontend typecheck/lint/307 tests/build PASS; demo E2E79 PASS and1 desktop skip of phone-only navigation; auth E2E6 PASS; pip/npm audits0 known vulnerabilities. No GitHub Actions, Docker or live capture started. Seed acceptance Groningen#1, UBC ranking OUT_OF_BUDGET; one Alembic head `d8e412c6a901`. First full run `20261008T223437Z-check-de0329d7` failed additive golden drift plus unknown TypeScript spread in new test; its partial PostgreSQL was stopped, E2E/audits NOT RUN. Both failure logs and the narrow20-additions/0-deletions golden proof are preserved. Current repeat passed; no coverage lowering, broadened mask or test disable. Receipt: `docs/process/evidence/product-completion-2026-10-09/`. Later metadata edits do not change verified runtime bytes.
+
 **[product-completion] WIP checkpoint 2026-10-09:** focused frontend 71 + workflow4 and document-progress backend6 (including PostgreSQL two-session lock) passed. Initial targeted backend had one new-test failure caused by correct collection idempotency; corrected test uses full retry. Full current-source gate NOT RUN. Source changes remain uncommitted until this checkpoint; next actions helper and full validation pending.
 
 **[product-completion] Baseline 2026-10-09:** branch clean at main1b2a5541 before metadata. Historical full13/13 at eb81/tree3da applies to a different search branch, although its frontend source matched main before new edits. New-source gates NOT RUN. Preserve failed logs; never relabel old evidence as current.
@@ -4493,6 +4501,15 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+### 2026-10-09 — product-completion verified additive contracts
+
+- `DocumentItem.progress_id` is computed from the requirement spec (including purpose, owner, scope, dependencies, deadline and content constraints), excluding provenance URLs/claim IDs and estimated lead time. `ProgramResult.document_progress: dict[str,bool]` is sparse self-reported preparation only. No DB migration; Alembic head remains `d8e412c6a901`.
+- `PATCH /api/runs/{run_id}/results/{result_id}/documents/{progress_id}` takes strict boolean completion, rejects extra fields, requires full access and tenant-owned run/result, returns fresh result; unknown/changed current ID →409. `populate_existing` plus row lock protects concurrent updates; untick removes the entry and obsolete identities are pruned. Notes/rerank/retry preserve preparation, checklist absence in refreshed collection preserves old checklist/doc claims. Export includes progress. No imported localStorage marks.
+- MessagePage adds `latest_cursor` for bounded manual refresh. Read watermarks advance only through delivered prefix and remain monotonic, including timestamp ties. Failed/throwing composer actions retain drafts and accepted submission returns boolean.
+- Store async operations bind generation and run identity; bulk result reads also bind mutation revision. Save profile creation acknowledges the saved ID before independent cases metadata lookup; stable `profileViewKey` survives local→server save and changes on actual switch/new/delete. Caller navigation/success requires accepted boolean.
+- Pure `deriveApplicationPlan` deduplicates current requirements, resolves unambiguous dependencies, chooses an unblocked next document and returns preparation/review states. Official admission date requires current matching scoped evidence; preparation marks never alter evidence, eligibility or submission. App passes a target result ID to DocumentsScreen; destination selection is session UI state, server progress persists across reload.
+- Retrieval tokenization normalizes Unicode; RRF gives each generator one best-rank vote per canonical URL. Scores, frozen labels, live budget and Fetcher policy remain unchanged. Offline counterexamples only; no live recall score is implied.
 
 ### 2026-10-08 21:51 UTC — product-completion pending contracts
 

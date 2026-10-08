@@ -28,3 +28,17 @@ it('does not lose or invent marks on failure, or import another user browser mar
   await waitFor(() => expect(screen.getAllByRole('checkbox')[0]).toBeEnabled());
   expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
 });
+it('opens the specific programme requested by the plan instead of the first checklist', () => {
+  rows = [...rows, { ...rows[0]!, id: 'second', university: 'Second university', program: 'Engineering' }];
+  render(<DocumentsScreen initialResultId="second" />);
+  expect(screen.getByTestId('doc-tab-second')).toHaveAttribute('aria-pressed', 'true');
+  expect(screen.getByRole('heading', { name: 'Second university — Engineering' })).toBeInTheDocument();
+  expect(screen.getByTestId('doc-tab-result')).toHaveAttribute('aria-pressed', 'false');
+});
+it('shows real purpose-list requirements even when legacy owner projections are empty', () => {
+  const checklist = rows[0]!.checklist!;
+  rows = [{ ...rows[0]!, checklist: { ...checklist, admission_documents: checklist.applicant_actions, applicant_actions: [], recommender_actions: [] } }];
+  render(<DocumentsScreen />);
+  expect(screen.getByRole('checkbox')).toBeInTheDocument();
+  expect(screen.getByText('Reference')).toBeInTheDocument();
+});

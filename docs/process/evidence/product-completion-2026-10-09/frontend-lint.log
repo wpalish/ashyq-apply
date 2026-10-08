@@ -1,0 +1,12 @@
+
+> unimatch-frontend@0.1.0 lint
+> eslint src e2e --ext .ts,.tsx
+
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T224844Z-check-d32372f9/source/frontend/src/lib/store.tsx
+  471:6  warning  React Hook useEffect has a missing dependency: 'setRun'. Either include it or remove the dependency array    react-hooks/exhaustive-deps
+  666:6  warning  React Hook useCallback has a missing dependency: 'setRun'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  691:6  warning  React Hook useCallback has a missing dependency: 'setRun'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  750:6  warning  React Hook useCallback has a missing dependency: 'setRun'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+✖ 4 problems (0 errors, 4 warnings)

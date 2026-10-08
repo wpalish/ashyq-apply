@@ -8,9 +8,11 @@
 import { Chip, Empty, Notice, Panel, StatusChip } from '@/components/primitives';
 import { date, eligibilityTone, fundingClassTone, money } from '@/lib/format';
 import { useStore } from '@/lib/store';
+import { deriveApplicationPlan, type ProgrammePlan } from '@/lib/applicationPlan';
+import { ApplicationNextAction } from '@/components/ApplicationNextAction';
 import type { ProgramResult, UserDecision } from '@/types';
 
-export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
+export function ApprovedScreen({ onCollect, onOpenDocuments }: { onCollect: () => void; onOpenDocuments: (resultId: string) => void }) {
   const { results, run, collectDocuments, decide } = useStore();
 
   const group = (d: UserDecision) => results.filter((r) => r.user_decision === d);
@@ -19,9 +21,10 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
   const rejected = group('rejected');
   const shortlisted = approved.length + maybe.length;
   const today = new Date().toISOString().slice(0, 10);
-  const nextDeadline = [...approved, ...maybe]
-    .filter((result) => result.admission_deadline && result.admission_deadline >= today)
-    .sort((a, b) => (a.admission_deadline ?? '').localeCompare(b.admission_deadline ?? ''))[0];
+  const plans = deriveApplicationPlan(results, today);
+  const plansByResult = new Map(plans.map((plan) => [plan.resultId, plan]));
+  const nextDeadline = plans.filter((plan) => plan.confirmedAdmissionDeadline)
+    .sort((a, b) => a.confirmedAdmissionDeadline!.localeCompare(b.confirmedAdmissionDeadline!))[0];
   // A queued job counts as collecting: the worker has not claimed it yet, but
   // the request has been made and the button must not invite a second one.
   const collecting =
@@ -45,7 +48,7 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
           <div>
             <span className="home-eyebrow">NEXT STEP</span>
             <h2>{shortlisted === 0 ? 'Choose a programme to plan for.' : nextDeadline ? `Next deadline: ${nextDeadline.university}` : 'Prepare your application documents.'}</h2>
-            <p>{nextDeadline?.admission_deadline ? `${date(nextDeadline.admission_deadline)} · ${nextDeadline.program}` : shortlisted === 0 ? 'Save a promising result from Find to begin.' : 'No future admission deadline has been confirmed for these programmes.'}</p>
+            <p>{nextDeadline?.confirmedAdmissionDeadline ? `${date(nextDeadline.confirmedAdmissionDeadline)} · ${nextDeadline.program}` : shortlisted === 0 ? 'Save a promising result from Find to begin.' : 'No future admission deadline has been confirmed for these programmes.'}</p>
           </div>
           <div className="plan-hero__count"><strong>{shortlisted}</strong><span>programmes in your plan</span></div>
         </section>
@@ -82,7 +85,7 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
           rows.length > 0 ? (
             <Panel key={label} title={`${label} (${rows.length})`}>
               <div className="stack stack--tight">
-                {rows.map((r) => <DecidedRow key={r.id} result={r} tone={tone} onChange={decide} />)}
+                {rows.map((r) => <DecidedRow key={r.id} result={r} tone={tone} onChange={decide} plan={plansByResult.get(r.id)!} onOpenDocuments={onOpenDocuments} />)}
               </div>
             </Panel>
           ) : null,
@@ -118,9 +121,11 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
 }
 
 function DecidedRow({
-  result, tone, onChange,
+  result, tone, onChange, plan, onOpenDocuments,
 }: {
   result: ProgramResult;
+  plan: ProgrammePlan;
+  onOpenDocuments: (resultId: string) => void;
   tone: 'ok' | 'warn';
   onChange: (id: string, d: UserDecision, reason: string, notes: string) => Promise<void>;
 }) {
@@ -152,10 +157,11 @@ function DecidedRow({
           remaining {g?.computable && g.gap ? money(g.gap) : 'not computable'}
         </span>
         <span className="num xs muted">
-          deadline {result.admission_deadline ? date(result.admission_deadline) : 'not found'}
+          confirmed deadline {plan.confirmedAdmissionDeadline ? date(plan.confirmedAdmissionDeadline) : 'not confirmed'}
         </span>
-        {result.checklist && <Chip tone="accent">checklist ready</Chip>}
+        {result.checklist && <Chip tone="accent">requirements collected</Chip>}
       </div>
+      <ApplicationNextAction plan={plan} onOpenDocuments={onOpenDocuments} />
       {result.user_notes && <p className="xs faint" style={{ marginTop: 8 }}>{result.user_notes}</p>}
     </div>
   );

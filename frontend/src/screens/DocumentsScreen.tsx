@@ -20,10 +20,10 @@ const OWNER_LABEL: Record<string, string> = {
   third_party: 'A third party (translator, WES/ECE, notary)',
 };
 
-export function DocumentsScreen() {
+export function DocumentsScreen({ initialResultId = null }: { initialResultId?: string | null }) {
   const { results, run, setDocumentProgress } = useStore();
   const withChecklists = results.filter((r) => r.checklist);
-  const [selected, setSelected] = useState<string>(withChecklists[0]?.id ?? '');
+  const [selected, setSelected] = useState<string>(withChecklists.find((row) => row.id === initialResultId)?.id ?? withChecklists[0]?.id ?? '');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const inFlight = useRef(false);
@@ -132,6 +132,7 @@ export function DocumentsScreen() {
               style={r.id === current.id ? { borderColor: 'var(--accent)', color: 'var(--accent)' } : undefined}
               onClick={() => setSelected(r.id)}
               data-testid={`doc-tab-${r.id}`}
+              aria-pressed={r.id === current.id}
             >
               {r.university}
             </button>
@@ -165,14 +166,22 @@ function ChecklistFor({
     const key = item.progress_id ?? JSON.stringify(item);
     if (seen.has(key)) return false; seen.add(key); return true;
   });
-  const groups: [string, DocumentItem[]][] = (
+  const owned: [string, DocumentItem[]][] = (
     [
       ['recommender', byLeadTime(unique(c.recommender_actions))],
       ['school', byLeadTime(unique(c.school_actions))],
       ['third_party', byLeadTime(unique(c.certification_actions))],
       ['applicant', byLeadTime(unique(c.applicant_actions))],
     ] as [string, DocumentItem[]][]
-  ).sort((a, b) => maxLead(b[1]) - maxLead(a[1]));
+  );
+  // Some older checklists contain only the purpose lists. Keep those real
+  // requirements visible, while counting duplicated owner projections once.
+  for (const item of unique([...(c.admission_documents ?? []), ...(c.scholarship_documents ?? [])])) {
+    const group = owned.find(([owner]) => owner === item.owner) ?? owned[3]!;
+    group[1].push(item);
+  }
+  const groups = owned.map(([owner, items]): [string, DocumentItem[]] => [owner, byLeadTime(items)])
+    .sort((a, b) => maxLead(b[1]) - maxLead(a[1]));
   const total = groups.reduce((n, [, items]) => n + items.length, 0);
   const completed = groups.reduce(
     (n, [, items]) => n + items.filter((d) => done[d.progress_id ?? '']).length, 0,

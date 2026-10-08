@@ -6,7 +6,7 @@
  * historical benchmark into a claim about the run someone is about to start.
  */
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PreferencesScreen } from './PreferencesScreen';
 import type { Capabilities } from '@/types';
@@ -30,7 +30,7 @@ const startRun = vi.fn();
 beforeEach(() => {
   capabilities = CAPABILITIES;
   startRun.mockReset();
-  startRun.mockResolvedValue(undefined);
+  startRun.mockResolvedValue(true);
 });
 
 vi.mock('@/lib/store', () => ({
@@ -90,6 +90,19 @@ describe('the deployment research mode', () => {
 
     expect(startRun).toHaveBeenCalledWith(false);
     await waitFor(() => expect(onStarted).toHaveBeenCalledOnce());
+  });
+
+  it('stays on preferences when the research start was not accepted', async () => {
+    capabilities = { ...CAPABILITIES, demo_mode: false };
+    startRun.mockResolvedValue(false);
+    const onStarted = vi.fn();
+    render(<PreferencesScreen onStarted={onStarted} />);
+
+    await act(async () => { fireEvent.click(screen.getByTestId('start-research')); });
+
+    expect(startRun).toHaveBeenCalledWith(false);
+    expect(onStarted).not.toHaveBeenCalled();
+    expect(screen.getByTestId('start-research')).toBeVisible();
   });
 
   it('keeps demo research as the default on a demo server', () => {

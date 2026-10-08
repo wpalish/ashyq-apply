@@ -591,7 +591,16 @@ class TestSupersededExcluded:
 #: says so. No eligibility, bucket, rank, check or other value moved; the demo
 #: order from seed_demo.py is unchanged. Previous value:
 #: 7e8d18cbe086e05c68427d3840c89f35acbf0bb54dd1de5e8d6eb509030f897e
-GOLDEN_DEMO_SHA256 = "d1403ce29ee2e0f710a034b78afe222cc42b40059a6730a60fa5041490333c53"
+#: Re-captured for persistent applicant document preparation (2026-10-09).
+#: Frozen-clock canonical dumps prove exactly 20 added lines, zero removed:
+#: each result gains only ``"document_progress": {}``. Removing just this
+#: empty map reconstructs the prior SHA byte-for-byte. No existing value,
+#: claim, check, ranking or bucket changed. The narrow additive proof remains
+#: executable below; the full current dump is still byte-pinned.
+PRIOR_DOCUMENT_PROGRESS_GOLDEN_SHA256 = (
+    "d1403ce29ee2e0f710a034b78afe222cc42b40059a6730a60fa5041490333c53"
+)
+GOLDEN_DEMO_SHA256 = "20fe83e5cd36750ee46c46e9acd8f3ffc6be344ecefc19d1f5a7b240283bcdfa"
 
 #: The golden was captured with the real clock on 2026-09-07, and the baseline
 #: payload embeds that date: ``requirement_checks[*].applicant_value`` and
@@ -743,6 +752,23 @@ class TestDemoRunIsByteIdentical:
     def test_the_demo_produces_results(self, demo_session):
         session, run_id = demo_session
         assert _canonical_demo_dump(session, run_id).count('"university"') >= 1
+
+    def test_document_progress_is_the_only_addition_to_the_prior_demo_payload(self, demo_session):
+        session, run_id = demo_session
+        payloads = json.loads(_canonical_demo_dump(session, run_id))
+        assert len(payloads) == 20
+        assert all(payload["document_progress"] == {} for payload in payloads)
+        previous = json.dumps(
+            [
+                {key: value for key, value in payload.items() if key != "document_progress"}
+                for payload in payloads
+            ],
+            sort_keys=True,
+            indent=1,
+        )
+        assert hashlib.sha256(previous.encode("utf-8")).hexdigest() == (
+            PRIOR_DOCUMENT_PROGRESS_GOLDEN_SHA256
+        )
 
     def test_the_demo_pipeline_payload_is_byte_identical_to_baseline(self, demo_session):
         session, run_id = demo_session

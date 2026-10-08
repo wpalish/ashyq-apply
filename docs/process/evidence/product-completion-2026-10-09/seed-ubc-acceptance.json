@@ -1,0 +1,123 @@
+{
+  "university": "University of British Columbia",
+  "ranking": {
+    "fit": 0.4134785744649786,
+    "coverage": 0.9388888888888889,
+    "sort_key": 0.40064535322214034,
+    "gamma": 0.5,
+    "axes": [
+      {
+        "axis": "academic_fit",
+        "value": 0.8974358974358974,
+        "state": "known",
+        "weight": 0.145,
+        "reason": "All published requirements are met, on average 15% above the minimums.",
+        "evidence_claim_ids": [
+          "fixture://u-british-columbia/program-0.html"
+        ]
+      },
+      {
+        "axis": "funding_fit",
+        "value": 1.0,
+        "state": "known",
+        "weight": 0.2041666666666667,
+        "reason": "Funding fit is confirmed opportunity.",
+        "evidence_claim_ids": [
+          "fixture://u-british-columbia/scholarship-0.html"
+        ]
+      },
+      {
+        "axis": "affordability",
+        "value": 0.02,
+        "state": "known",
+        "weight": 0.2041666666666667,
+        "reason": "The remaining 21,471 a year is 3.6 times the stated ceiling of 6,000.",
+        "evidence_claim_ids": []
+      },
+      {
+        "axis": "country",
+        "value": 1.0,
+        "state": "known",
+        "weight": 0.15833333333333333,
+        "reason": "Canada is a preferred country.",
+        "evidence_claim_ids": []
+      },
+      {
+        "axis": "programme_standing",
+        "value": 1.0,
+        "state": "known",
+        "weight": 0.09666666666666668,
+        "reason": "Ranked 38, inside the requested top 300.",
+        "evidence_claim_ids": []
+      },
+      {
+        "axis": "city",
+        "value": 0.75,
+        "state": "known",
+        "weight": 0.051388888888888894,
+        "reason": "large against a preference for medium: 1 step apart.",
+        "evidence_claim_ids": []
+      },
+      {
+        "axis": "climate",
+        "value": 1.0,
+        "state": "known",
+        "weight": 0.051388888888888894,
+        "reason": "temperate matches the stated preference.",
+        "evidence_claim_ids": []
+      },
+      {
+        "axis": "university_size",
+        "value": 1.0,
+        "state": "known",
+        "weight": 0.009259259259259259,
+        "reason": "large matches the stated preference.",
+        "evidence_claim_ids": []
+      },
+      {
+        "axis": "campus",
+        "value": 1.0,
+        "state": "known",
+        "weight": 0.009259259259259259,
+        "reason": "campus matches the stated preference.",
+        "evidence_claim_ids": []
+      },
+      {
+        "axis": "workload",
+        "value": 1.0,
+        "state": "known",
+        "weight": 0.009259259259259259,
+        "reason": "demanding matches the stated preference.",
+        "evidence_claim_ids": []
+      },
+      {
+        "axis": "career",
+        "value": null,
+        "state": "unknown",
+        "weight": 0.030555555555555558,
+        "reason": "No official careers information was found.",
+        "evidence_claim_ids": []
+      },
+      {
+        "axis": "post_study_work",
+        "value": null,
+        "state": "unknown",
+        "weight": 0.030555555555555558,
+        "reason": "Post-study work rules were not confirmed in months.",
+        "evidence_claim_ids": []
+      }
+    ],
+    "unknown_axes": [
+      "career",
+      "post_study_work"
+    ],
+    "not_applicable_axes": [],
+    "knocked_out_by": [],
+    "bucket": "OUT_OF_BUDGET",
+    "bucket_reason": "The remaining cost is 3.6 times the stated ceiling, past the 1.5 times this applicant said they could stretch to.",
+    "weights_source": "priorities_roc",
+    "version": "2",
+    "disclaimer": "How well this matches your stated priorities, on confirmed data. Not a probability of admission."
+  },
+  "hard_filter_failures": []
+}
