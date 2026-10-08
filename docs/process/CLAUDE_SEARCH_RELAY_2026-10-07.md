@@ -1,3 +1,73 @@
+# Product round closed at Draft #75 — 2026-10-08T22:44:21.232380+00:00
+
+**[product-journey-next-steps] Holder: nobody
+ready-for-review (Draft PR #75), 2026-10-08T22:44:21.232380+00:00.** https://github.com/wpalish/ashyq-apply/pull/75 OPEN/Draft/base task/search-local-pilot-orchestrator/head7b0ee91d verified and attached. Green7b0ee91d preserves tested source749/14pins; qualified13-stage composite7+4+2 accepted by A4e7b73ac,282unit/4369sameeachDB/SQLite95.27/demo79+1skip/auth6. First full FAILED12/13 and originals unchanged. Release metadata follows; cloud rollup[] means NOT_RUN. Containers/production/accepted search quality NOT_RUN; STOP65b5 unchanged. Exact next authorized bounded task: from this clean pushed predecessor create task/product-research-recovery under §5 exception, first take/writeahead baton; inspect ShortlistScreen stopped/empty state and ResultDetail Documents hint against existing approved/maybe contract; saved-source proposal and peer before apply, current appropriate local checks and synthetic viewport/reload, dependent Draft then release. No auto-retry/new research/model/provider/user DB/heldout/default/merge/deploy.
+
+Claude: all11 improvements/14paths and finalgates are on origin; read current
+HANDOFF and PRODUCT_PROGRESS_2026-10-09.md first. Source749 is tested; metadata
+release does not change those bytes. Next Find recovery, then versioned server
+marks; no unaccepted private competitor/login/superiority/quality claim.
+
+History below is retained, not the current verdict.
+
+# Продуктовый раунд принят — 2026-10-08T22:41:39.479463+00:00
+
+**[product-journey-next-steps] QUALIFIED_COMPOSITE_ACCEPT, 2026-10-08T22:41:39.479463+00:00.** Tested source74928d730a5d0a7bb94f82ed2d1cb3478bbb1034; exact14 frontend/test pins and940 backend files preserved. A sealed4e7b73ac/d7208f1c independently accepts7 unchanged-input stages from firstfull9a79/05eade16 +4 fresh frontend stages749/504461ad +2 fresh sequential E2E749/8737e461. Actual SQLite4369unique/95.27%, same4369IDs PostgreSQL,32warnings each; frontend282 (+50 vs232), demo79PASS/1unchangedviewportskip/0fail/notrun, auth6PASS; style/types/build/audits0. This is qualified13stage acceptance, NOT a single13/13full. OriginalfullFAILED12/13 and23originals incl6failed traces/screenshots remain immutable; metadata only after source749. Canonical final-gates/ACCEPTANCE.json and final-composite-peer/READY (8originals461976B plus ready), first-full-peer unchanged. Docker unavailable/containers NOT_RUN; hosted required checks/production/accepted fresh quality NOT_RUN. Root holds baton for final green checkpoint/Draft/release only. All owned ports stopped; STOP65b5 unchanged.
+
+Для следующего инженера: прочитать актуальные HANDOFF §1/2/5/6 и
+PRODUCT_COMPLETION_PLAN_2026-10-09.md.11behavior fixes в14paths уже реализованы,
+282frontend (+50),4369sameeachDB/SQLite95.27%,79demo+1skip/6auth приняты как
+composite, не один full. Draft/green/release оформляются далее; не повторять
+пройденные проверки без новых изменений. Главная очередь Find recovery →
+versioned personal server marks. Никакого newquality/production claim.
+Свежая закрытая часть Unilight заблокирована согласием; историческое
+прохождение8Oct отдельно. Синтетическая программа не доказывает applicability.
+Оригинал STOP65b5 и закрытые UNSCORED неизменны; новый research grant и точный
+expert selector-model всё ещё не получены. Подробные цифры PRODUCT_PROGRESS.
+
+История ниже сохранена и не является текущим verdict.
+
+# Текущая передача продуктовой работы — 2026-10-08T22:20:35.143030+00:00
+
+Владелец поручил подробно сравнить Unilight и несколько сервисов и максимально
+улучшить пользу/удобство ASHYQ Apply. Рабочая ветка task/product-journey-next-steps;
+root держит baton. Тестируемый source9a79bff7, frozen snapshot05eade16.
+
+Реализованы11 связанных улучшений маршрута выбора/подготовки в14 frontend/test
+путях. Полный список и план — PRODUCT_COMPLETION_PLAN_2026-10-09.md. Изучены
+Unilight, BigFuture, UCAS, Common App, MyStudyLife. Свежие публичные Unilight6demo/
+7FAQ отделены от истории и нового consent gate; private raw исключён из origin.
+Сравнительных результатов пользователей нет; сохранён proposed6-task protocol.
+
+Текущий full20261008T220925Z-check-75e57309, root session39421 ещё идёт.
+Уже PASS8стадий:4369SQLite/32warnings/95.27%,282frontend/30files,386mypy,
+style/typecheck/lint/build. PostgreSQL, demo/auth и audits ещё PENDING.
+Не дублировать full/E2E/ports и не менять app/test frozen bytes. Предыдущий
+core d6/8of8/255frontend имеет отдельные оригиналы, не заменяет финальный full.
+
+Owned synthetic desktop/mobile/reload/Compare проверены; preview остановлен,
+viewport reset. Compare17/19/20 accepted,16/18 имеют явную квалификацию;
+same-browser marks не являются cloud sync. Native91focused и независимые
+A11/B52/A54 перекрываются — не складывать как уникальные проверки.
+
+После terminal full: root сохранит original logs/HEAD/SHA и peer closure,
+обновит HANDOFF §6, откроет attached Draft against task/search-local-pilot-orchestrator
+и освободит baton. Следующий небольшой раунд — Find recovery и Documents hint
+для approved/maybe, затем отдельные versioned personal preparation marks.
+
+Immutable provider STOP65b5 сохраняется. Университетские живые вызовы/старые
+UNSCORED не возобновлялись; fresh-cycle grant и exact expert selector-model всё
+ещё не получены. Принятое качество и опубликованный signed-in journey остаются
+условиями запуска. Локальные проверки не являются hosted required checks.
+
+# Product relay — owner scope expanded 9 October 2026
+
+Root holds baton for task/product-journey-next-steps from predecessor863a9c64, pushed WIP d6a727aa. New direct owner request: finish project, compare Unilight and several other sites for usefulness/convenience. PRODUCT_COMPLETION_PLAN_2026-10-09.md defines the bounded product queue; latest exact source/gates in HANDOFF. Current seven UI/source-action repairs have focused64PASS/typecheck/lint PASS, independent static ACCEPT11pins; approved core20261008T213601Z-check-3c842d79 RUNNING, full NOT RUN. No claim that tests prove search quality, superiority or launch. Two first parameterized test fixture failures and initial typecheck errors retained locally; fixture-only repairs applied. Core source freezes until completion; root only primary/Git writer. External product-round2 proposal must be independently reviewed before any application.
+
+Fresh public Unilight6demo/7FAQ and BigFuture/UCAS/CommonApp/MyStudyLife first-party docs comparison; internal UniLight consent gate not accepted, old pf walkthrough separately historical. Synthetic preview belongs to product-round1 and is stopped before runner E2E. Production/auth/users/provider STOP65b5/oldUNSCORED/gold/heldout unchanged; original dirty checkout not touched. Pending livegrant and actual selector-model not answered by this new product request. Heartbeatunimatch now continues useful authorized product tasks while respecting research STOP. Full outcome, exactSHA, Draft/attachment and release still required for current task.
+
+---
+
 **[search-local-pilot-orchestrator] Baton released, Draft74 ready for review, 2026-10-08 09:18 UTC.** https://github.com/wpalish/ashyq-apply/pull/74 OPEN/Draft/base task/search-stopped-trace-accounting/head task/search-local-pilot-orchestrator@96c83ef6 verified/attached; release metadata follows. Tested sourceeb81/tree3da/full13of13/4369sameeachDB/95.27%, ownedseed4of4/265exact and Bfinalb7f7ce1a accepted; finalarchive66fcdf. All1002 source paths and STOP65b5 unchanged. FirstfullFAILED retained. Technical work complete; product goal incomplete, awaiting existing human fresh-cycle answer plus actual selector-model binding. No further speculative code/full runs. After inputs only: fresh source-bound prepare/grant/runtime admission then approved Groningen/original10; global first-refusal stop, old UNSCORED frozen, no labels/scoring before eligible seal, no heldout/default/merge/deploy.
 
 **[search-local-pilot-orchestrator] Current technical full GREEN, 2026-10-08 09:08 UTC.** Tested source eb81c127c8a2a5154dd0d6f7ac115d8dc4464288 / snapshot3da2152c711107623edd78f1e9f2cf41c36a58415df1bdc90494d63a0fc2ef84 / run20261008T085213Z-check-97246db0:13of13PASS in923.976190s, same4369unique eachDB (old4349+20), SQLite95.27%,32warnings eachDB, mypy386/frontend232/demo79+1skip/auth6/audits0. Corrected synthetic seed4of4/265exactinputs/20rows/Groningen#1/UBCportfolioOUT_OF_BUDGET/head d8e412c6a901; no network. Firstfull schemaFAIL preserved; only models/test repair, old schema fixture/test untouched. Root17rawmanifest82e4dd6f; corrected seed50c7043d. Final saved-only peer/archive/Draft pending; root holds baton. Technical protocol is tested, actual native OS/model/provider/genuineJob admission and accepted quality remain NOTEXECUTED. Owner fresh-cycle grant after retainedSTOP65b5 and explicit selector model binding still missing. Do not revive old UNSCORED, read labels, switch provider/model, purchase access, change defaults, merge or deploy. Next: finish saved evidence/PR/release, then await required owner input; no hypothetical further offline patches.

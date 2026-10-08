@@ -1,0 +1,43 @@
+{
+  "task": "Saved-only qualified composite closure",
+  "first_full": "20261008T220925Z-check-75e57309 FAILED12/13 remains immutable",
+  "repaired_head": "74928d730a5d0a7bb94f82ed2d1cb3478bbb1034",
+  "carry7": [
+    "ruff",
+    "ruff-format",
+    "mypy",
+    "backend-sqlite",
+    "backend-postgresql",
+    "pip-audit",
+    "npm-audit"
+  ],
+  "fresh4": [
+    "frontend-typecheck",
+    "frontend-lint",
+    "frontend-tests",
+    "frontend-build"
+  ],
+  "fresh2": [
+    "e2e",
+    "e2e-auth"
+  ],
+  "admission": "Parent explicitly authorizes composite evidence, never one full13/13",
+  "review_steps": [
+    "Confirm exact literal repair and other13 source pins",
+    "Compare genuine frozen manifests and stage-input maps",
+    "Wait parent saved terminal frontend/e2e summaries",
+    "Verify all commands/exits/logs and carried original JUnit/count qualifications",
+    "Seal disjoint final report/receipt"
+  ],
+  "prohibited": [
+    "tests",
+    "runtime",
+    "ports",
+    "imports",
+    "SQL",
+    "Git",
+    "network",
+    "gold/scorer semantic reads",
+    "primary/old packet edits"
+  ]
+}

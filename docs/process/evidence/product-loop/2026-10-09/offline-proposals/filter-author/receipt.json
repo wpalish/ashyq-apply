@@ -1,0 +1,71 @@
+{
+  "status": "READY_FOR_REVIEW_NOT_APPLIED",
+  "date": "2026-10-09",
+  "scope": "Two screen copies, additions in two existing test copies; no CSS/backend changes",
+  "proposed_files": {
+    "frontend/src/screens/ApprovedScreen.tsx": {
+      "sha256": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f",
+      "bytes": 7815
+    },
+    "frontend/src/screens/JourneyScreens.test.tsx": {
+      "sha256": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10",
+      "bytes": 9931
+    },
+    "frontend/src/screens/ShortlistScreen.test.tsx": {
+      "sha256": "8470b4a3d3f03d7f02c8e83b4c23c1fb830e3741fa3769bb035529943a79d27c",
+      "bytes": 16863
+    },
+    "frontend/src/screens/ShortlistScreen.tsx": {
+      "sha256": "06df80e4708e983fcc267398f2d8c24a11cd9fce8a210f1948e9fba62ba62ddc",
+      "bytes": 32385
+    }
+  },
+  "base_file_manifest": "base-source.json",
+  "patch": {
+    "sha256": "1bb6f0f0474153ab2551cdf80622bbaed71db0076ec925931ddcc9b8a53af31d",
+    "bytes": 18835
+  },
+  "report": {
+    "sha256": "85cf5c1b2bb004a3db7a3dffed4c61aa63351fcb4e2df276559ef7e691eb9a8e",
+    "bytes": 4739
+  },
+  "focused": {
+    "off": {
+      "passed": 37,
+      "expected_new_interface_red": 15,
+      "errors": 0,
+      "skip": 0
+    },
+    "on": {
+      "passed": 52,
+      "failed": 0,
+      "errors": 0,
+      "skip": 0
+    },
+    "old_expanded": 34,
+    "new_expanded": 18,
+    "new_undo_baseline_green": 3
+  },
+  "static": {
+    "typecheck": 0,
+    "selected_eslint": 0,
+    "old_test_body_equality": true,
+    "native_rows_decideRow_renderTable_equality": true
+  },
+  "source_unchanged": {
+    "frontend_selected": 97,
+    "selected_base_dependencies": true,
+    "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d"
+  },
+  "limitations": [
+    "Focused mocked unit logic only",
+    "No browser, E2E, full suite or production verification",
+    "No search/data accuracy or user-metric claim",
+    "No primary application or Git mutation"
+  ],
+  "histories": [
+    "Initial expected OFF failures and initial ON PASS preserved",
+    "Initial TypeScript fixture typing failure and final repairs preserved",
+    "Report generator encoding parse error retained in execution.json"
+  ]
+}

@@ -1,0 +1,346 @@
+--- a/frontend/src/screens/ApprovedScreen.tsx
++++ b/frontend/src/screens/ApprovedScreen.tsx
+@@ -41,7 +41,7 @@
+         <p className="screen__eyebrow">Your application journey</p>
+         <h1 className="screen__title">A clearer plan. A brighter <span className="find-yellow">you.</span></h1>
+         <p className="screen__lede">
+-          Keep your chosen programmes together, check their deadlines and prepare what each one asks for.
++          Keep your chosen programmes together, check their deadlines and prepare what each one asks for. These are your choices, not admission offers.
+         </p>
+       </div>
+ 
+@@ -59,9 +59,9 @@
+         <Panel>
+           <div className="row" style={{ justifyContent: 'space-between' }}>
+             <div className="row">
+-              <Chip tone="ok">{approved.length} approved</Chip>
+-              <Chip tone="warn">{maybe.length} maybe</Chip>
+-              <Chip tone="risk">{rejected.length} rejected</Chip>
++              <Chip tone="ok">{approved.length} chosen by you</Chip>
++              <Chip tone="warn">{maybe.length} considering</Chip>
++              <Chip tone="risk">{rejected.length} ruled out</Chip>
+               <Chip>{results.length - shortlisted - rejected.length} undecided</Chip>
+             </div>
+             <button
+@@ -77,14 +77,14 @@
+           </div>
+           {shortlisted === 0 && (
+             <Notice kind="info">
+-              <div>Approve or mark “maybe” on at least one programme in the shortlist first.</div>
++              <div>Choose or consider at least one programme in Find first.</div>
+             </Notice>
+           )}
+         </Panel>
+ 
+         {[
+-          { label: 'Approved', rows: approved, tone: 'ok' as const },
+-          { label: 'Maybe', rows: maybe, tone: 'warn' as const },
++          { label: 'Chosen by you', rows: approved, tone: 'ok' as const },
++          { label: 'Considering', rows: maybe, tone: 'warn' as const },
+         ].map(({ label, rows, tone }) =>
+           rows.length > 0 ? (
+             <Panel key={label} title={`${label} (${rows.length})`}>
+@@ -97,7 +97,7 @@
+ 
+         {rejected.length > 0 && (
+           <Panel
+-            title={`Rejected (${rejected.length})`}
++            title={`Ruled out (${rejected.length})`}
+             hint="Kept on purpose. These are not proposed again unless something material changes."
+           >
+             <div className="stack stack--tight">
+@@ -140,7 +140,7 @@
+           <div className="small muted">{result.program} · {result.city}, {result.country}</div>
+         </div>
+         <div className="row row--tight">
+-          <Chip tone={tone}>{result.user_decision}</Chip>
++          <Chip tone={tone}>{result.user_decision === 'approved' ? 'Chosen by you' : 'Considering'}</Chip>
+           <button
+             className="btn btn--sm"
+             onClick={() => onChange(result.id, 'undecided', '', result.user_notes)}
+--- a/frontend/src/screens/JourneyScreens.test.tsx
++++ b/frontend/src/screens/JourneyScreens.test.tsx
+@@ -1,4 +1,4 @@
+-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
++import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+ import { beforeEach, describe, expect, it, vi } from 'vitest';
+ import { HomeScreen } from './HomeScreen';
+ import { ApprovedScreen } from './ApprovedScreen';
+@@ -7,12 +7,13 @@
+ 
+ const navigate = vi.fn();
+ const collectDocuments = vi.fn();
++const decide = vi.fn().mockResolvedValue(undefined);
+ let results: ProgramResult[];
+ let run: RunView | null;
+ vi.mock('@/lib/store', () => ({
+   useStore: () => ({ savedProfile: { id: 'profile-1' }, results, run,
+     summary: null, hydrated: true, capabilities: { demo_mode: true },
+-    collectDocuments, decide: vi.fn() }),
++    collectDocuments, decide }),
+ }));
+ 
+ function programme(overrides: Partial<ProgramResult> = {}): ProgramResult {
+@@ -43,6 +44,7 @@
+   results = [];
+   run = null;
+   navigate.mockClear();
++  decide.mockClear();
+   collectDocuments.mockReset().mockResolvedValue(true);
+   window.localStorage.clear();
+ });
+@@ -146,3 +148,45 @@
+     expect(screen.queryByText('Document collection is in progress.')).not.toBeInTheDocument();
+   });
+ });
++
++
++describe('Plan names the applicant choices', () => {
++  it('uses human group and row labels without calling an unknown programme an admission offer', () => {
++    results = [
++      programme({ user_decision: 'approved', user_notes: 'Chosen note' }),
++      programme({ id: 'result-2', user_decision: 'maybe' }),
++      programme({ id: 'result-3', user_decision: 'rejected', user_decision_reason: 'Cost needs clarification' }),
++    ];
++    render(<ApprovedScreen onCollect={navigate} />);
++    for (const title of ['Chosen by you (1)', 'Considering (1)', 'Ruled out (1)']) expect(screen.getByRole('heading', { name: title })).toBeInTheDocument();
++    const chosen = within(screen.getByTestId('approved-result-1'));
++    expect(chosen.getByText('Chosen by you')).toBeInTheDocument();
++    expect(chosen.getByText('Pending')).toBeInTheDocument();
++    expect(chosen.getByText('Unknown')).toBeInTheDocument();
++    expect(chosen.getByText('remaining not computable')).toBeInTheDocument();
++    expect(chosen.getByText('Chosen note')).toBeInTheDocument();
++    expect(within(screen.getByTestId('approved-result-2')).getByText('Considering')).toBeInTheDocument();
++    expect(screen.getByText('Cost needs clarification')).toBeInTheDocument();
++    expect(screen.getByText(/These are your choices, not admission offers/)).toBeInTheDocument();
++    expect(screen.queryByRole('heading', { name: /Approved|Maybe|Rejected/ })).not.toBeInTheDocument();
++    expect(decide).not.toHaveBeenCalled();
++    expect(collectDocuments).not.toHaveBeenCalled();
++  });
++
++  it.each(['approved', 'maybe', 'rejected'] as const)('keeps the original Undo semantics for %s', (decision) => {
++    results = [programme({ user_decision: decision, user_notes: 'Keep this note', user_decision_reason: 'Existing reason' })];
++    render(<ApprovedScreen onCollect={navigate} />);
++    fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
++    expect(decide).toHaveBeenCalledExactlyOnceWith('result-1', 'undecided', '', 'Keep this note');
++    expect(collectDocuments).not.toHaveBeenCalled();
++    expect(navigate).not.toHaveBeenCalled();
++  });
++
++  it('uses choice wording before collecting documents while keeping collection disabled', () => {
++    results = [programme()];
++    render(<ApprovedScreen onCollect={navigate} />);
++    expect(screen.getByText('Choose or consider at least one programme in Find first.')).toBeInTheDocument();
++    expect(screen.getByTestId('collect-documents')).toBeDisabled();
++    expect(collectDocuments).not.toHaveBeenCalled();
++  });
++});
+--- a/frontend/src/screens/ShortlistScreen.test.tsx
++++ b/frontend/src/screens/ShortlistScreen.test.tsx
+@@ -13,17 +13,26 @@
+ 
+ const decide = vi.fn().mockResolvedValue(undefined);
+ const saveNotes = vi.fn().mockResolvedValue(undefined);
++const rerank = vi.fn();
++const startRun = vi.fn();
++const collectDocuments = vi.fn();
++const refreshResults = vi.fn();
++const { universities } = vi.hoisted(() => ({
++  universities: vi.fn().mockResolvedValue({ items: [], countries: [], total: 0, catalogue_total: 0, seed_count: 0 }),
++}));
++vi.mock('@/api/client', () => ({ api: { universities } }));
+ 
+ vi.mock('@/lib/store', () => ({
+-  useStore: () => ({ results: [row], summary, shortlist: null, decide, saveNotes }),
++  useStore: () => ({ results: [row, ...additionalRows], summary, shortlist: null, decide, saveNotes, rerank, startRun, collectDocuments, refreshResults }),
+ }));
+ 
+ let row: ProgramResult;
++let additionalRows: ProgramResult[];
+ // The filters are built from the summary the API returns, not from the rows.
+ const summary = {
+   total: 1,
+   by_eligibility: { MET: 1, NEEDS_OFFICIAL_CLARIFICATION: 2 },
+-  by_funding: { FULL_RIDE_CONFIRMED: 1 },
++  by_funding: { FULL_RIDE_CONFIRMED: 1, UNKNOWN: 1 },
+   by_decision: { undecided: 1 },
+   with_conflicts: 0,
+   with_open_questions: 0,
+@@ -62,6 +71,8 @@
+ beforeEach(() => {
+   decide.mockClear();
+   saveNotes.mockClear();
++  for (const action of [rerank, startRun, collectDocuments, refreshResults, universities]) action.mockClear();
++  additionalRows = [];
+   row = makeRow();
+ });
+ 
+@@ -234,3 +245,118 @@
+     expect(screen.getByTestId('shortlist-table')).toBeInTheDocument();
+   });
+ });
++
++
++describe('visible active filters', () => {
++  const search = () => screen.getByPlaceholderText('Search universities, programmes or countries…');
++  const labels = ['Search: Groningen', 'List: Saved', 'Country: Netherlands', 'Eligibility: Met', 'Funding: Full ride', 'Hide rejected'];
++
++  function twoResults() {
++    row = makeRow({ user_decision: 'maybe', best_funding_classification: 'FULL_RIDE_CONFIRMED' });
++    additionalRows = [makeRow({ id: 'result-2', university: 'Canadian Example', country: 'Canada', user_decision: 'rejected' })];
++  }
++
++  function applyFilters() {
++    fireEvent.change(search(), { target: { value: 'Groningen' } });
++    fireEvent.click(screen.getByRole('tab', { name: 'Saved' }));
++    fireEvent.change(screen.getByLabelText('Country'), { target: { value: 'Netherlands' } });
++    fireEvent.change(screen.getByLabelText('Eligibility'), { target: { value: 'MET' } });
++    fireEvent.change(screen.getByLabelText('Funding'), { target: { value: 'FULL_RIDE_CONFIRMED' } });
++    fireEvent.click(screen.getByLabelText('Hide rejected'));
++  }
++
++  it('keeps a readable removal button outside collapsed Filters and shows filtered / total', () => {
++    twoResults();
++    render(<ShortlistScreen />);
++    fireEvent.change(screen.getByLabelText('Country'), { target: { value: 'Netherlands' } });
++    const chip = screen.getByRole('button', { name: 'Remove filter: Country: Netherlands' });
++    expect(chip.closest('details')).toBeNull();
++    expect(document.getElementById('find-filters')).not.toHaveAttribute('open');
++    expect(screen.getByText('Showing 1 of 2 results from this research run')).toBeInTheDocument();
++    expect(screen.queryByTestId('card-result-2')).not.toBeInTheDocument();
++  });
++
++  it.each(labels)('removes only %s and leaves the other active filters in place', (removed) => {
++    twoResults();
++    render(<ShortlistScreen />);
++    applyFilters();
++    fireEvent.click(screen.getByRole('button', { name: `Remove filter: ${removed}` }));
++    for (const label of labels) {
++      if (label === removed) expect(screen.queryByRole('button', { name: `Remove filter: ${label}` })).not.toBeInTheDocument();
++      else expect(screen.getByRole('button', { name: `Remove filter: ${label}` })).toBeInTheDocument();
++    }
++    expect(search()).toHaveValue(removed === 'Search: Groningen' ? '' : 'Groningen');
++    expect(screen.getByRole('tab', { name: removed === 'List: Saved' ? 'All' : 'Saved' })).toHaveAttribute('aria-selected', 'true');
++    expect(screen.getByLabelText('Country')).toHaveValue(removed === 'Country: Netherlands' ? '' : 'Netherlands');
++    expect(screen.getByLabelText('Eligibility')).toHaveValue(removed === 'Eligibility: Met' ? '' : 'MET');
++    expect(screen.getByLabelText('Funding')).toHaveValue(removed === 'Funding: Full ride' ? '' : 'FULL_RIDE_CONFIRMED');
++    expect(screen.getByLabelText('Hide rejected')).toHaveProperty('checked', removed !== 'Hide rejected');
++    expect(decide).not.toHaveBeenCalled();
++    expect(saveNotes).not.toHaveBeenCalled();
++  });
++
++  it('clears all filters locally while preserving sort, compare, notes and unknown evidence', async () => {
++    twoResults();
++    row.user_notes = 'Keep my shortlist note';
++    additionalRows.push(makeRow({ id: 'result-3', university: 'Unknown Example', country: 'Canada', eligibility: 'NEEDS_OFFICIAL_CLARIFICATION', best_funding_classification: 'UNKNOWN' }));
++    const original = JSON.stringify([row, ...additionalRows]);
++    render(<ShortlistScreen />);
++    fireEvent.click(within(screen.getByTestId('card-result-1')).getByRole('button', { name: 'Compare' }));
++    fireEvent.change(screen.getByLabelText('Sort by'), { target: { value: 'university' } });
++    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
++    applyFilters();
++    fireEvent.change(search(), { target: { value: 'No such programme' } });
++    expect(screen.getByText('Showing 0 of 3 results from this research run')).toBeInTheDocument();
++    fireEvent.click(screen.getByRole('button', { name: 'Clear all filters' }));
++    expect(screen.getByText('Showing 3 of 3 results from this research run')).toBeInTheDocument();
++    expect(screen.queryByRole('group', { name: 'Active filters' })).not.toBeInTheDocument();
++    expect(search()).toHaveValue('');
++    for (const field of ['Country', 'Eligibility', 'Funding']) expect(screen.getByLabelText(field)).toHaveValue('');
++    expect(screen.getByLabelText('Hide rejected')).not.toBeChecked();
++    expect(screen.getByRole('tab', { name: 'All' })).toHaveAttribute('aria-selected', 'true');
++    expect(screen.getByLabelText('Sort by')).toHaveValue('university');
++    expect(screen.getByRole('button', { name: 'Compare (1)' })).toBeEnabled();
++    expect(screen.getByRole('region', { name: 'Compare selected programmes' })).toHaveTextContent('University of Groningen');
++    const unknown = within(screen.getByTestId('card-result-3'));
++    expect(unknown.getByText('Unverified')).toBeInTheDocument();
++    expect(unknown.getByText('Unknown')).toBeInTheDocument();
++    expect(unknown.getByText('Not enough comparable data')).toBeInTheDocument();
++    expect(unknown.getByText('Not confirmed')).toBeInTheDocument();
++    expect(JSON.stringify([row, ...additionalRows])).toBe(original);
++    await new Promise((resolve) => setTimeout(resolve, 250));
++    expect(universities).toHaveBeenCalledOnce(); // Existing catalogue mount only, no new load on clearing.
++    for (const action of [decide, saveNotes, rerank, startRun, collectDocuments, refreshResults]) expect(action).not.toHaveBeenCalled();
++  });
++
++  it('uses the same local reset from the no-match recovery action', () => {
++    twoResults();
++    render(<ShortlistScreen />);
++    applyFilters();
++    fireEvent.change(search(), { target: { value: 'No such programme' } });
++    fireEvent.click(screen.getByRole('button', { name: 'Clear filters' }));
++    expect(screen.getByText('Showing 2 of 2 results from this research run')).toBeInTheDocument();
++    expect(screen.queryByRole('group', { name: 'Active filters' })).not.toBeInTheDocument();
++    expect(decide).not.toHaveBeenCalled();
++    expect(saveNotes).not.toHaveBeenCalled();
++  });
++
++  it('does not describe whitespace-only search as an active filter', () => {
++    twoResults();
++    render(<ShortlistScreen />);
++    fireEvent.change(search(), { target: { value: '   ' } });
++    expect(screen.getByText('Showing 2 of 2 results from this research run')).toBeInTheDocument();
++    expect(screen.queryByRole('group', { name: 'Active filters' })).not.toBeInTheDocument();
++  });
++
++  it.each(['Priority', 'Saved', 'Exploring'])('makes %s list context removable without changing decisions', (label) => {
++    twoResults();
++    const decisions = [row.user_decision, additionalRows[0]!.user_decision];
++    render(<ShortlistScreen />);
++    fireEvent.click(screen.getByRole('tab', { name: label }));
++    fireEvent.click(screen.getByRole('button', { name: `Remove filter: List: ${label}` }));
++    expect(screen.getByRole('tab', { name: 'All' })).toHaveAttribute('aria-selected', 'true');
++    expect(screen.getByText('Showing 2 of 2 results from this research run')).toBeInTheDocument();
++    expect([row.user_decision, additionalRows[0]!.user_decision]).toEqual(decisions);
++    expect(decide).not.toHaveBeenCalled();
++  });
++});
+--- a/frontend/src/screens/ShortlistScreen.tsx
++++ b/frontend/src/screens/ShortlistScreen.tsx
+@@ -92,6 +92,23 @@
+   // A row with no ranking is one assessed under v1; it still belongs in the
+   // list rather than in a set-aside section it was never scored for.
+   const ranked = rows.filter((r) => !r.ranking || RANKED.includes(r.ranking.bucket));
++
++  const clearFilters = () => {
++    setQuery('');
++    setTab('all');
++    setCountry('');
++    setEligibility('');
++    setFunding('');
++    setHideRejected(false);
++  };
++  const activeFilters = [
++    ...(query.trim() ? [{ label: `Search: ${query.trim()}`, clear: () => setQuery('') }] : []),
++    ...(tab !== 'all' ? [{ label: `List: ${tab.charAt(0).toUpperCase() + tab.slice(1)}`, clear: () => setTab('all') }] : []),
++    ...(country ? [{ label: `Country: ${country}`, clear: () => setCountry('') }] : []),
++    ...(eligibility ? [{ label: `Eligibility: ${STATUS_LABEL[eligibility] ?? humanize(eligibility)}`, clear: () => setEligibility('') }] : []),
++    ...(funding ? [{ label: `Funding: ${STATUS_LABEL[funding] ?? humanize(funding)}`, clear: () => setFunding('') }] : []),
++    ...(hideRejected ? [{ label: 'Hide rejected', clear: () => setHideRejected(false) }] : []),
++  ];
+ 
+   if (results.length === 0) {
+     return (
+@@ -433,9 +450,21 @@
+         </Panel>
+         </details>
+ 
++        {activeFilters.length > 0 && (
++          <div className="row row--tight" role="group" aria-label="Active filters">
++            <span className="small muted">Active filters</span>
++            {activeFilters.map((filter) => (
++              <button key={filter.label} type="button" className="btn btn--sm" onClick={filter.clear} aria-label={`Remove filter: ${filter.label}`}>
++                {filter.label} <span aria-hidden="true">×</span>
++              </button>
++            ))}
++            <button type="button" className="btn btn--sm" onClick={clearFilters}>Clear all filters</button>
++          </div>
++        )}
++
+         <div className="find-results" aria-live="polite">
+-          <p className="find-results__count">{rows.length} result{rows.length === 1 ? '' : 's'} from this research run</p>
+-          {rows.length === 0 && <div className="find-empty"><Empty title="Nothing matches these filters yet.">Try another search or clear the filters.</Empty><button type="button" className="btn" onClick={() => { setQuery(''); setTab('all'); setCountry(''); setEligibility(''); setFunding(''); setHideRejected(false); }}>Clear filters</button></div>}
++          <p className="find-results__count">Showing {rows.length} of {results.length} result{results.length === 1 ? '' : 's'} from this research run</p>
++          {rows.length === 0 && <div className="find-empty"><Empty title="Nothing matches these filters yet.">Try another search or clear the filters.</Empty><button type="button" className="btn" onClick={clearFilters}>Clear filters</button></div>}
+           {rows.map((result) => {
+             const open = cardExpanded === result.id;
+             const selected = compareIds.includes(result.id);

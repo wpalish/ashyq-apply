@@ -7,6 +7,7 @@
  */
 
 import { act, render, screen, waitFor } from '@testing-library/react';
+import { useState } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { StoreProvider, blankProfile, toDraft, useStore } from './store';
 import { DEFAULT_PROFILE } from './defaultProfile';
@@ -315,6 +316,45 @@ describe('starting research twice', () => {
 
     expect(startRun).toHaveBeenCalledWith(REAL_PROFILE.id, true, expect.any(String));
     expect(startRun.mock.calls[0]?.[2]).toBeTruthy();
+  });
+});
+
+describe('document collection acknowledgement', () => {
+  function CollectProbe() {
+    const { collectDocuments, run, error } = useStore();
+    const [accepted, setAccepted] = useState<boolean | null>(null);
+    return <>
+      <span data-testid="collection-run">{run?.id ?? 'none'}</span>
+      <span data-testid="collection-error">{error ?? ''}</span>
+      <span data-testid="collection-accepted">{String(accepted)}</span>
+      <button onClick={async () => setAccepted(await collectDocuments())}>collect</button>
+    </>;
+  }
+
+  it.each([true, false])('reports the actual API acknowledgement: %s', async (accepted) => {
+    const run = { id: 'run-1', stage: 'awaiting_user_decision', job_running: false } as RunView;
+    window.sessionStorage.setItem('ashyq.activeRun', run.id);
+    vi.spyOn(api, 'getRun').mockResolvedValue(run);
+    vi.spyOn(api, 'results').mockResolvedValue([]);
+    vi.spyOn(api, 'summary').mockResolvedValue({} as never);
+    vi.spyOn(api, 'shortlist').mockResolvedValue({} as never);
+    const request = vi.spyOn(api, 'collectDocuments');
+    if (accepted) request.mockResolvedValue({ ...run, stage: 'document_collection' });
+    else request.mockRejectedValue(new ApiError(503, 'Collection service unavailable'));
+    render(<StoreProvider><CollectProbe /></StoreProvider>);
+    await waitFor(() => expect(screen.getByTestId('collection-run')).toHaveTextContent(run.id));
+    await act(async () => screen.getByText('collect').click());
+    expect(screen.getByTestId('collection-accepted')).toHaveTextContent(String(accepted));
+    expect(request).toHaveBeenCalledWith(run.id);
+    if (!accepted) expect(screen.getByTestId('collection-error')).toHaveTextContent('Collection service unavailable');
+  });
+
+  it('does not claim success or call the API without a run', async () => {
+    const request = vi.spyOn(api, 'collectDocuments');
+    render(<StoreProvider><CollectProbe /></StoreProvider>);
+    await act(async () => screen.getByText('collect').click());
+    expect(screen.getByTestId('collection-accepted')).toHaveTextContent('false');
+    expect(request).not.toHaveBeenCalled();
   });
 });
 

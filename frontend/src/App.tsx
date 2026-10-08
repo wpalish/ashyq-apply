@@ -434,9 +434,9 @@ export default function App() {
           {screen === 'progress' && <ProgressScreen onDone={() => setScreen('shortlist')} />}
           {screen === 'shortlist' && <ShortlistScreen onStart={() => setScreen(savedProfile ? 'preferences' : 'profile')} onProgress={() => setScreen('progress')} />}
           {screen === 'funding' && <FundingScreen />}
-          {screen === 'sources' && <SourcesScreen />}
-          {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} />}
-          {screen === 'documents' && <DocumentsScreen />}
+          {screen === 'sources' && <SourcesScreen onProgress={() => setScreen('progress')} />}
+          {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} onFind={() => setScreen('shortlist')} />}
+          {screen === 'documents' && <DocumentsScreen onNavigate={setScreen} />}
           {screen === 'export' && <ExportScreen />}
           {screen === 'legal' && <LegalScreen />}
           {screen === 'settings' && <SettingsScreen theme={theme} setTheme={setTheme} locale={locale} setLocale={setLocale} onNavigate={setScreen} onSignedOut={() => window.location.reload()} />}

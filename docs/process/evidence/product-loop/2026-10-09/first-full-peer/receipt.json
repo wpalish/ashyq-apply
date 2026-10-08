@@ -1,0 +1,59 @@
+{
+  "decision": "FIRST_FULL_FAILED_REVALIDATION_REQUIRED",
+  "source_head": "9a79bff7ff327a693a5829d37f9b6acede62d6c7",
+  "source_tree_sha256": "05eade16eaf671d3d4651bec4b61dfd49f1b4804b3e98c98db1f830a77c688ea",
+  "first_full_summary_sha256": "fcb05b9b180488dbd99e0edd3cd0e41501e583e2877787cf772c41a8d3cb8f03",
+  "steps": 13,
+  "passed_steps": 12,
+  "failed_steps": [
+    "e2e"
+  ],
+  "source14_initial_current_frozen_map_verified": true,
+  "current14_postcheck_mismatches": [
+    "frontend/e2e/journey.spec.ts"
+  ],
+  "backend940_postcheck_mismatches": [],
+  "backend_predecessor_head": "863a9c64be3de217faf8f0cc460bf6746cc083c2",
+  "backend940_equal": true,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "STOP_equal": true,
+  "backend_test_ids": {
+    "unique_sqlite": 4369,
+    "unique_postgres": 4369,
+    "same_between_DB_and_prior_core": true
+  },
+  "frontend_passed": 282,
+  "frontend_files": 30,
+  "demo": {
+    "passed": 71,
+    "failed": 2,
+    "skipped": 1,
+    "did_not_run": 6,
+    "evidence": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/e2e.log"
+  },
+  "auth": {
+    "passed": 6,
+    "evidence": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/e2e-auth.log"
+  },
+  "coverage": {
+    "sqlite": 95.27,
+    "postgres": null
+  },
+  "repair": "literal-only old approved label -> chosen by you",
+  "revalidation": "Fresh full required by actual lint/typecheck/build input boundaries. Never relabel original full13/13.",
+  "reviewer_actions": {
+    "tests": 0,
+    "app_imports": 0,
+    "runtime": 0,
+    "ports": 0,
+    "Git": 0,
+    "network": 0,
+    "source_edits": 0
+  },
+  "completion_claims": {
+    "product": false,
+    "search": false,
+    "live": false,
+    "hosted": false
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "status": "SEALED_READY_FOR_INDEPENDENT_REVIEW_NOT_APPLIED",
+  "sealed_at": "2026-10-08T21:57:02.551435+00:00",
+  "packet_root": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round3/c-compare-preparation-proposal/sealed-packet",
+  "manifest": "packet-pins.json",
+  "manifest_sha256": "d440d5f31e4fbddc8161c6f563d713c1d0b3d87824c1bbb40ff66762a6578e68",
+  "application_file": "proposed/frontend/src/components/ComparePanel.tsx",
+  "application_sha256": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab",
+  "test_file": "proposed/frontend/src/components/ComparePanel.preparation.test.tsx",
+  "test_sha256": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3",
+  "patch_file": "proposal.patch",
+  "patch_sha256": "bd372c709c3dc1faafe9855ba2d285afd315382a607abe959249111c0cbce371",
+  "baseline_compare_sha256": "17f4b18fb86506b439500575dadaa5689d9be466308fd183f7b27fe8ea9ebad1",
+  "checks": {
+    "targeted_red": "9 failed / 9",
+    "targeted_green": "9 passed / 9",
+    "isolated_typecheck": "PASS",
+    "targeted_lint": "PASS",
+    "full": "NOT RUN",
+    "browser": "NOT RUN",
+    "live": "NOT RUN",
+    "network_or_listen_attempts_real_checks": 0,
+    "source_files_unchanged": 8
+  },
+  "adoption_authorized_here": false
+}

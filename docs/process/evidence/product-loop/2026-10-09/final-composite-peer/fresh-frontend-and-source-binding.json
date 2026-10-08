@@ -1,0 +1,127 @@
+{
+  "fresh_frontend_summary": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/summary.json",
+    "sha256": "3551c8e91b70971a41e6292e8b689b833ef45f6acf44ac9d50d02db0feaa0db5",
+    "bytes": 2140276
+  },
+  "fresh_frontend_status": "passed",
+  "fresh_frontend_suite": "frontend",
+  "fresh_frontend_steps": [
+    {
+      "name": "frontend-typecheck",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/frontend-typecheck.log",
+      "exit_code": 0,
+      "seconds": 3.72
+    },
+    {
+      "name": "frontend-lint",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/frontend-lint.log",
+      "exit_code": 0,
+      "seconds": 1.48
+    },
+    {
+      "name": "frontend-tests",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "--run"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/frontend-tests.log",
+      "exit_code": 0,
+      "seconds": 5.55
+    },
+    {
+      "name": "frontend-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/frontend-build.log",
+      "exit_code": 0,
+      "seconds": 6.28
+    }
+  ],
+  "log_pins": {
+    "frontend-typecheck": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/frontend-typecheck.log",
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02",
+      "bytes": 53
+    },
+    "frontend-lint": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/frontend-lint.log",
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a",
+      "bytes": 65
+    },
+    "frontend-tests": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/frontend-tests.log",
+      "sha256": "c5ee7f8bb51ea623a5a9dbda05607c3ffd474e62af73a6cbe87e68a6c1efd6aa",
+      "bytes": 20136
+    },
+    "frontend-build": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/frontend-build.log",
+      "sha256": "438dcacd50a8fea4c586632941a95bd03d14944d32a3f061a35b6377df5ebbe9",
+      "bytes": 7315
+    }
+  },
+  "source_bindings": {
+    "fresh_frontend": {
+      "head": "74928d730a5d0a7bb94f82ed2d1cb3478bbb1034",
+      "tree": "504461ad033a386e7b93df6d701fc29a12c73aa2ca1a9098aeabeeff77ea026e",
+      "status": "",
+      "manifest": {
+        "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/source-manifest.json",
+        "sha256": "0da84f9feafe73ff1ddf73644dc4aec61a3827b9374cd9b9351e1937d7f1ffbe",
+        "bytes": 2117642
+      },
+      "backend940_map_equal": true,
+      "frontend_except_journey_equal": true,
+      "changed_non_documentary": [
+        "frontend/e2e/journey.spec.ts"
+      ],
+      "added_non_documentary": [],
+      "removed_non_documentary": [],
+      "changed_documentary_count": 4,
+      "added_documentary_count": 55,
+      "removed_documentary_count": 0,
+      "native_tree_recipe_matches": true
+    },
+    "fresh_e2e": {
+      "head": "74928d730a5d0a7bb94f82ed2d1cb3478bbb1034",
+      "tree": "8737e461b2b0e25c8faed0e4f4a4d6611891271bbd7d55f26090f74ca7812b1b",
+      "status": "A  docs/process/evidence/product-loop/2026-10-09/first-full-failure/e2e-artifacts/test-results/journey-approve-collect-documents-and-export-desktop-chromium/error-context.md\nA  docs/process/evidence/product-loop/2026-10-09/first-full-failure/e2e-artifacts/test-results/journey-approve-collect-documents-and-export-desktop-chromium/test-failed-1.png\nA  docs/process/evidence/product-loop/2026-10-09/first-full-failure/e2e-artifacts/test-results/journey-approve-collect-documents-and-export-desktop-chromium/trace.zip\nA  docs/process/evidence/product-loop/2026-10-09/first-full-failure/e2e-artifacts/test-results/journey-approve-collect-documents-and-export-mobile/error-context.md\nA  docs/process/evidence/product-loop/2026-10-09/first-full-failure/e2e-artifacts/test-results/journey-approve-collect-documents-and-export-mobile/test-failed-1.png\nA  docs/process/evidence/product-loop/2026-10-09/first-full-failure/e2e-artifacts/test-results/journey-approve-collect-documents-and-export-mobile/trace.zip",
+      "manifest": {
+        "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223250Z-check-55181e66/source-manifest.json",
+        "sha256": "1f029be3beed3b29d2782920660f5cc7e5081f3e333f7ed4b5892d0950d509a0",
+        "bytes": 2120082
+      },
+      "backend940_map_equal": true,
+      "frontend_except_journey_equal": true,
+      "changed_non_documentary": [
+        "frontend/e2e/journey.spec.ts"
+      ],
+      "added_non_documentary": [],
+      "removed_non_documentary": [],
+      "changed_documentary_count": 4,
+      "added_documentary_count": 61,
+      "removed_documentary_count": 0,
+      "native_tree_recipe_matches": true
+    }
+  },
+  "qualification": "No private/gold content inspected; documentary deltas classified by path only. No app import/test/runtime."
+}

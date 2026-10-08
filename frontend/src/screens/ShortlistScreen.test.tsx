@@ -13,17 +13,26 @@ import type { ProgramResult } from '@/types';
 
 const decide = vi.fn().mockResolvedValue(undefined);
 const saveNotes = vi.fn().mockResolvedValue(undefined);
+const rerank = vi.fn();
+const startRun = vi.fn();
+const collectDocuments = vi.fn();
+const refreshResults = vi.fn();
+const { universities } = vi.hoisted(() => ({
+  universities: vi.fn().mockResolvedValue({ items: [], countries: [], total: 0, catalogue_total: 0, seed_count: 0 }),
+}));
+vi.mock('@/api/client', () => ({ api: { universities } }));
 
 vi.mock('@/lib/store', () => ({
-  useStore: () => ({ results: [row], summary, shortlist: null, decide, saveNotes }),
+  useStore: () => ({ results: [row, ...additionalRows], summary, shortlist: null, decide, saveNotes, rerank, startRun, collectDocuments, refreshResults }),
 }));
 
 let row: ProgramResult;
+let additionalRows: ProgramResult[];
 // The filters are built from the summary the API returns, not from the rows.
 const summary = {
   total: 1,
   by_eligibility: { MET: 1, NEEDS_OFFICIAL_CLARIFICATION: 2 },
-  by_funding: { FULL_RIDE_CONFIRMED: 1 },
+  by_funding: { FULL_RIDE_CONFIRMED: 1, UNKNOWN: 1 },
   by_decision: { undecided: 1 },
   with_conflicts: 0,
   with_open_questions: 0,
@@ -62,6 +71,8 @@ function makeRow(overrides: Partial<ProgramResult> = {}): ProgramResult {
 beforeEach(() => {
   decide.mockClear();
   saveNotes.mockClear();
+  for (const action of [rerank, startRun, collectDocuments, refreshResults, universities]) action.mockClear();
+  additionalRows = [];
   row = makeRow();
 });
 
@@ -141,6 +152,13 @@ describe('filter labels', () => {
 });
 
 describe('Find search', () => {
+  it.each(['approved', 'maybe'] as const)('removes a saved %s programme instead of changing its decision silently', async (decision) => {
+    row = makeRow({ user_decision: decision, user_notes: 'Keep this note' });
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByRole('button', { name: /^Saved$/ }));
+    await waitFor(() => expect(decide).toHaveBeenCalledWith(row.id, 'undecided', '', 'Keep this note'));
+  });
+
   it('filters by university, programme and country without changing the saved results', () => {
     render(<ShortlistScreen />);
     const search = screen.getByPlaceholderText('Search universities, programmes or countries…');
@@ -225,5 +243,120 @@ describe('the v2 ranking on the shortlist', () => {
   it('keeps a row assessed before v2 in the ranked table', () => {
     render(<ShortlistScreen />);
     expect(screen.getByTestId('shortlist-table')).toBeInTheDocument();
+  });
+});
+
+
+describe('visible active filters', () => {
+  const search = () => screen.getByPlaceholderText('Search universities, programmes or countries…');
+  const labels = ['Search: Groningen', 'List: Saved', 'Country: Netherlands', 'Eligibility: Met', 'Funding: Full ride', 'Hide rejected'];
+
+  function twoResults() {
+    row = makeRow({ user_decision: 'maybe', best_funding_classification: 'FULL_RIDE_CONFIRMED' });
+    additionalRows = [makeRow({ id: 'result-2', university: 'Canadian Example', country: 'Canada', user_decision: 'rejected' })];
+  }
+
+  function applyFilters() {
+    fireEvent.change(search(), { target: { value: 'Groningen' } });
+    fireEvent.click(screen.getByRole('tab', { name: 'Saved' }));
+    fireEvent.change(screen.getByLabelText('Country'), { target: { value: 'Netherlands' } });
+    fireEvent.change(screen.getByLabelText('Eligibility'), { target: { value: 'MET' } });
+    fireEvent.change(screen.getByLabelText('Funding'), { target: { value: 'FULL_RIDE_CONFIRMED' } });
+    fireEvent.click(screen.getByLabelText('Hide rejected'));
+  }
+
+  it('keeps a readable removal button outside collapsed Filters and shows filtered / total', () => {
+    twoResults();
+    render(<ShortlistScreen />);
+    fireEvent.change(screen.getByLabelText('Country'), { target: { value: 'Netherlands' } });
+    const chip = screen.getByRole('button', { name: 'Remove filter: Country: Netherlands' });
+    expect(chip.closest('details')).toBeNull();
+    expect(document.getElementById('find-filters')).not.toHaveAttribute('open');
+    expect(screen.getByText('Showing 1 of 2 results from this research run')).toBeInTheDocument();
+    expect(screen.queryByTestId('card-result-2')).not.toBeInTheDocument();
+  });
+
+  it.each(labels)('removes only %s and leaves the other active filters in place', (removed) => {
+    twoResults();
+    render(<ShortlistScreen />);
+    applyFilters();
+    fireEvent.click(screen.getByRole('button', { name: `Remove filter: ${removed}` }));
+    for (const label of labels) {
+      if (label === removed) expect(screen.queryByRole('button', { name: `Remove filter: ${label}` })).not.toBeInTheDocument();
+      else expect(screen.getByRole('button', { name: `Remove filter: ${label}` })).toBeInTheDocument();
+    }
+    expect(search()).toHaveValue(removed === 'Search: Groningen' ? '' : 'Groningen');
+    expect(screen.getByRole('tab', { name: removed === 'List: Saved' ? 'All' : 'Saved' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByLabelText('Country')).toHaveValue(removed === 'Country: Netherlands' ? '' : 'Netherlands');
+    expect(screen.getByLabelText('Eligibility')).toHaveValue(removed === 'Eligibility: Met' ? '' : 'MET');
+    expect(screen.getByLabelText('Funding')).toHaveValue(removed === 'Funding: Full ride' ? '' : 'FULL_RIDE_CONFIRMED');
+    expect(screen.getByLabelText('Hide rejected')).toHaveProperty('checked', removed !== 'Hide rejected');
+    expect(decide).not.toHaveBeenCalled();
+    expect(saveNotes).not.toHaveBeenCalled();
+  });
+
+  it('clears all filters locally while preserving sort, compare, notes and unknown evidence', async () => {
+    twoResults();
+    row.user_notes = 'Keep my shortlist note';
+    additionalRows.push(makeRow({ id: 'result-3', university: 'Unknown Example', country: 'Canada', eligibility: 'NEEDS_OFFICIAL_CLARIFICATION', best_funding_classification: 'UNKNOWN' }));
+    const original = JSON.stringify([row, ...additionalRows]);
+    render(<ShortlistScreen />);
+    fireEvent.click(within(screen.getByTestId('card-result-1')).getByRole('button', { name: 'Compare' }));
+    fireEvent.change(screen.getByLabelText('Sort by'), { target: { value: 'university' } });
+    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
+    applyFilters();
+    fireEvent.change(search(), { target: { value: 'No such programme' } });
+    expect(screen.getByText('Showing 0 of 3 results from this research run')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Clear all filters' }));
+    expect(screen.getByText('Showing 3 of 3 results from this research run')).toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: 'Active filters' })).not.toBeInTheDocument();
+    expect(search()).toHaveValue('');
+    for (const field of ['Country', 'Eligibility', 'Funding']) expect(screen.getByLabelText(field)).toHaveValue('');
+    expect(screen.getByLabelText('Hide rejected')).not.toBeChecked();
+    expect(screen.getByRole('tab', { name: 'All' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByLabelText('Sort by')).toHaveValue('university');
+    expect(screen.getByRole('button', { name: 'Compare (1)' })).toBeEnabled();
+    expect(screen.getByRole('region', { name: 'Compare selected programmes' })).toHaveTextContent('University of Groningen');
+    const unknown = within(screen.getByTestId('card-result-3'));
+    expect(unknown.getByText('Unverified')).toBeInTheDocument();
+    expect(unknown.getByText('Unknown')).toBeInTheDocument();
+    expect(unknown.getByText('Not enough comparable data')).toBeInTheDocument();
+    expect(unknown.getByText('Not confirmed')).toBeInTheDocument();
+    expect(JSON.stringify([row, ...additionalRows])).toBe(original);
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    expect(universities).toHaveBeenCalledOnce(); // Existing catalogue mount only, no new load on clearing.
+    for (const action of [decide, saveNotes, rerank, startRun, collectDocuments, refreshResults]) expect(action).not.toHaveBeenCalled();
+  });
+
+  it('uses the same local reset from the no-match recovery action', () => {
+    twoResults();
+    render(<ShortlistScreen />);
+    applyFilters();
+    fireEvent.change(search(), { target: { value: 'No such programme' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Clear filters' }));
+    expect(screen.getByText('Showing 2 of 2 results from this research run')).toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: 'Active filters' })).not.toBeInTheDocument();
+    expect(decide).not.toHaveBeenCalled();
+    expect(saveNotes).not.toHaveBeenCalled();
+  });
+
+  it('does not describe whitespace-only search as an active filter', () => {
+    twoResults();
+    render(<ShortlistScreen />);
+    fireEvent.change(search(), { target: { value: '   ' } });
+    expect(screen.getByText('Showing 2 of 2 results from this research run')).toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: 'Active filters' })).not.toBeInTheDocument();
+  });
+
+  it.each(['Priority', 'Saved', 'Exploring'])('makes %s list context removable without changing decisions', (label) => {
+    twoResults();
+    const decisions = [row.user_decision, additionalRows[0]!.user_decision];
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByRole('tab', { name: label }));
+    fireEvent.click(screen.getByRole('button', { name: `Remove filter: List: ${label}` }));
+    expect(screen.getByRole('tab', { name: 'All' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByText('Showing 2 of 2 results from this research run')).toBeInTheDocument();
+    expect([row.user_decision, additionalRows[0]!.user_decision]).toEqual(decisions);
+    expect(decide).not.toHaveBeenCalled();
   });
 });

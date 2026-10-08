@@ -196,7 +196,7 @@ test('approve, collect documents, and export', async () => {
   await expect(rows.nth(0).locator('.decision-btn--approve')).toHaveAttribute('aria-pressed', 'true');
 
   await page.evaluate(() => { window.location.hash = '#/approved'; });
-  await expect(page.getByText('2 approved')).toBeVisible();
+  await expect(page.getByText('2 chosen by you')).toBeVisible();
   await page.screenshot({ path: shot('10-approved.png'), fullPage: true });
 
   await page.getByTestId('collect-documents').click();
@@ -236,7 +236,7 @@ test('rejection is remembered with the row kept', async () => {
   await expect(first).toContainText('Rejected: no funding');
 
   await page.evaluate(() => { window.location.hash = '#/approved'; });
-  await expect(page.getByText('Rejected (1)')).toBeVisible();
+  await expect(page.getByText('Ruled out (1)')).toBeVisible();
   await expect(page.getByText(name)).toBeVisible();
   await expect(page.getByText('no funding')).toBeVisible();
   await expect(page.getByText(/not proposed again unless something material changes/)).toBeVisible();

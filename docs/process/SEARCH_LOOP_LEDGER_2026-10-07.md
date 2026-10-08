@@ -1,3 +1,36 @@
+# Product round closed at Draft #75 — 2026-10-08T22:44:21.232380+00:00
+
+**[product-journey-next-steps] Holder: nobody
+ready-for-review (Draft PR #75), 2026-10-08T22:44:21.232380+00:00.** https://github.com/wpalish/ashyq-apply/pull/75 OPEN/Draft/base task/search-local-pilot-orchestrator/head7b0ee91d verified and attached. Green7b0ee91d preserves tested source749/14pins; qualified13-stage composite7+4+2 accepted by A4e7b73ac,282unit/4369sameeachDB/SQLite95.27/demo79+1skip/auth6. First full FAILED12/13 and originals unchanged. Release metadata follows; cloud rollup[] means NOT_RUN. Containers/production/accepted search quality NOT_RUN; STOP65b5 unchanged. Exact next authorized bounded task: from this clean pushed predecessor create task/product-research-recovery under §5 exception, first take/writeahead baton; inspect ShortlistScreen stopped/empty state and ResultDetail Documents hint against existing approved/maybe contract; saved-source proposal and peer before apply, current appropriate local checks and synthetic viewport/reload, dependent Draft then release. No auto-retry/new research/model/provider/user DB/heldout/default/merge/deploy.
+
+Claude: all11 improvements/14paths and finalgates are on origin; read current
+HANDOFF and PRODUCT_PROGRESS_2026-10-09.md first. Source749 is tested; metadata
+release does not change those bytes. Next Find recovery, then versioned server
+marks; no unaccepted private competitor/login/superiority/quality claim.
+
+History below is retained, not the current verdict.
+
+# Продуктовый раунд принят — 2026-10-08T22:41:39.479463+00:00
+
+**[product-journey-next-steps] QUALIFIED_COMPOSITE_ACCEPT, 2026-10-08T22:41:39.479463+00:00.** Tested source74928d730a5d0a7bb94f82ed2d1cb3478bbb1034; exact14 frontend/test pins and940 backend files preserved. A sealed4e7b73ac/d7208f1c independently accepts7 unchanged-input stages from firstfull9a79/05eade16 +4 fresh frontend stages749/504461ad +2 fresh sequential E2E749/8737e461. Actual SQLite4369unique/95.27%, same4369IDs PostgreSQL,32warnings each; frontend282 (+50 vs232), demo79PASS/1unchangedviewportskip/0fail/notrun, auth6PASS; style/types/build/audits0. This is qualified13stage acceptance, NOT a single13/13full. OriginalfullFAILED12/13 and23originals incl6failed traces/screenshots remain immutable; metadata only after source749. Canonical final-gates/ACCEPTANCE.json and final-composite-peer/READY (8originals461976B plus ready), first-full-peer unchanged. Docker unavailable/containers NOT_RUN; hosted required checks/production/accepted fresh quality NOT_RUN. Root holds baton for final green checkpoint/Draft/release only. All owned ports stopped; STOP65b5 unchanged.
+
+Для следующего инженера: прочитать актуальные HANDOFF §1/2/5/6 и
+PRODUCT_COMPLETION_PLAN_2026-10-09.md.11behavior fixes в14paths уже реализованы,
+282frontend (+50),4369sameeachDB/SQLite95.27%,79demo+1skip/6auth приняты как
+composite, не один full. Draft/green/release оформляются далее; не повторять
+пройденные проверки без новых изменений. Главная очередь Find recovery →
+versioned personal server marks. Никакого newquality/production claim.
+Свежая закрытая часть Unilight заблокирована согласием; историческое
+прохождение8Oct отдельно. Синтетическая программа не доказывает applicability.
+Оригинал STOP65b5 и закрытые UNSCORED неизменны; новый research grant и точный
+expert selector-model всё ещё не получены. Подробные цифры PRODUCT_PROGRESS.
+
+История ниже сохранена и не является текущим verdict.
+
+## Продуктовый раунд 9 октября — текущий full PENDING
+
+11улучшений/14paths source9a79/frozen05eade16, SQLite4369/95.27% и frontend282 уже PASS; final13stage ещё идёт. Public5product comparison, synthetic viewport/reload и sealed6-task usability protocol — технический/продуктовый результат, не новый university quality score. Next Find recovery, затем server marks; STOP65b5 и owner research grant pending. История ниже сохраняется.
+
 **[search-local-pilot-orchestrator] Finite prototype review checkpoint 2026-10-08T07:48:49.199733+00:00.** Root still holds baton, base metadata bd5fad18. Immutable r0fivefile manifest5c252dfd is NOT_ACCEPTED: root11 grouped static findings and Bfive peer findings (overlap in finalstream linkage), actual clock/resume/source/identity/neutral-admission defects sent to author. B peer8d5c7036 and portfe9ed9e9 sealed; before/after current source/STOP unchanged. Canonical archive local-round15/static-r0-review:25 selected plaintext copies/217954bytes, receipt e3eb7ea1ded71c3b00ac870d99989ca84f95c0321bc50ae43c8aa21e9b2586c0; copies not experiments. Author working copy ran20 native injected controls before external formatter tooling failure; final restored/formatted exactproof/peer is STILL_PENDING, not primary evidence. Primary source999 unchanged and no executable application. Next exactstep: receive6file qualified finalproposal and retained error/diff originals; B normal-import finalproof/legacydump/stream-chain/rawclock/source/receipt review in ownisolated socketguard; root verify exactbytes + HANDOFF writeahead; only then apply/WIPpush and freshfull/ownedseed. No new app/Fetcher/domain/SQL/default/public user flow changes are proposed. Runtime ownergrant PENDING, STOP65b5 immutable, no provider/model/CLI/help/labels/scorer/purchase/substitution/oldrun/heldout/default/merge/deploy.
 
 **[search-local-pilot-orchestrator] Design checkpoint 2026-10-08 07:10UTC; root continues prototype task.** B independent current-contract proof12PASS/0RED, no network/CLI/SQL/scoring; exact11 originals/40772bytes and12 sourcepins verified by root. Canonical archive local-round15/design-contract contains14 selected plaintext copies/45424bytes, receipt7a0e5c5adc605f95c1dfc16c0bd695628936cc372d94384351560be14e8e3463; copies are not experiments. A full external implementation remains unfinished/unreviewed; no primary executable bytes applied. Root acceptance archived: complete route, preserved legacy serialization, explicit expert_wall_only60/6 with900s protective wall, independent clock and all-dispatch first-refusal gate. Potential neutral pilot_admission.py port requires full current-source/case/Job provenance review; no olddriver execution. Next: receive immutable ready source/test proposal, independent exact-byte peer, root writeahead, then apply only qualified bytes and freshfull/ownedseed. Existing ab273/full7549/4349/95.27/13of13 carry solely by999source byte equality. Root still holds baton; owner livegrant PENDING, STOP65b5 immutable, no labels/scorer/default/merge/deploy.

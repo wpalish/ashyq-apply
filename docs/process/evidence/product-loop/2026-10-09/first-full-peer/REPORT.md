@@ -1,0 +1,13 @@
+# Saved-only final closure: first full FAILED
+
+**Qualified result: original full FAILED, 12/13.** Demo E2E is the only failed stage: the desktop and mobile copies stop at `journey.spec.ts:199`, expecting the old `2 approved` label. Narrow literal repair to `2 chosen by you` is appropriate with all downstream collection/documents/export assertions retained. Since frontend lint/typecheck/build also consume `e2e`, this review requires fresh full for a single final `13/13` claim. The original failure stays immutable; no repaired run was executed by this reviewer.
+
+The original full head is `9a79bff7ff327a693a5829d37f9b6acede62d6c7`, tree `05eade16eaf671d3d4651bec4b61dfd49f1b4804b3e98c98db1f830a77c688ea`. All 14 frontend/test write-ahead paths match that full's physical snapshot, its map and the initial current-source check. All 940 backend files match saved predecessor `863a9c64be3de217faf8f0cc460bf6746cc083c2`, physical full and current source. Metadata records HANDOFF modified during collection; source pins are separate.
+
+Saved JUnit confirms 4369 distinct backend test IDs for SQLite and PostgreSQL, exact same IDs as saved core, zero failures/errors/skips. SQLite log reports 95.27% coverage and 32 warnings; PG reports 32 warnings and has no coverage measurement. Frontend log reports 282 passes across 30 files. The intentional unchanged ErrorBoundary throw remains in raw stderr and is not classified as a failed test. Demo E2E reports 71 passed, two failed, one skipped and six not run; auth E2E reports six passed. Local security audits exit0. No Docker/container or GitHub acceptance is implied.
+
+C2 means two proposed files and C9 native controls; A11=C9+2. B52 is included in A54=B52+2. Root91 is a five-file focused execution: C9+B52+30 Sources/store cases. Copies and overlapping runs are not added as unique experiments.
+
+STOP `65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d` is unchanged. Native source-selection exclusions hold with zero selected path violations; this does not inspect private runtime data or attest dependency contents. Expected root-owned synthetic UI endpoint was `http://127.0.0.1:5173/#/shortlist`, provider none/auth false, closed before full. Root viewport/screenshot qualifications remain separate; no browser replay was performed here.
+
+This peer performed only saved JSON/JUnit/log parsing, static source-input review and opaque hashes. No app imports, tests, runtime, ports, SQL, Git, network, provider/model, gold/scorer semantic reads or primary edits. Product/search completion and admissions applicability remain unclaimed. Pending repair/revalidation is documented in `REVALIDATION.md`.

@@ -1,0 +1,812 @@
+- complementary:
+  - navigation "Main navigation":
+    - button "Home":
+      - generic: Home
+    - button "Find":
+      - generic: Find
+    - button "Plan":
+      - generic: Plan
+    - button "Documents":
+      - generic: Documents
+    - button "Community":
+      - generic: Community
+- banner:
+  - generic: Unimatch
+  - generic: Demo data
+  - generic "Explore⌄"
+  - text: Applicant
+  - combobox "Applicant":
+    - option "New applicant"
+    - option "Demo Applicant (synthetic) · 1 run" [selected]
+  - button "New case"
+  - button "Settings"
+- main:
+  - generic "Explore more universities from the local catalogue"
+  - option "All countries" [selected]
+  - option "Europe"
+  - option "Asia"
+  - option "North America"
+  - option "South America"
+  - option "Oceania"
+  - option "Africa"
+  - option "Argentina"
+  - option "Australia"
+  - option "Austria"
+  - option "Belgium"
+  - option "Brazil"
+  - option "Brunei Darussalam"
+  - option "Canada"
+  - option "Chile"
+  - option "China"
+  - option "Colombia"
+  - option "Costa Rica"
+  - option "Czechia"
+  - option "Denmark"
+  - option "Egypt"
+  - option "Estonia"
+  - option "Finland"
+  - option "France"
+  - option "Germany"
+  - option "Greece"
+  - option "Hong Kong"
+  - option "India"
+  - option "Indonesia"
+  - option "Iran"
+  - option "Ireland"
+  - option "Israel"
+  - option "Italy"
+  - option "Japan"
+  - option "Jordan"
+  - option "Kazakhstan"
+  - option "Lebanon"
+  - option "Lithuania"
+  - option "Luxembourg"
+  - option "Macao"
+  - option "Malaysia"
+  - option "Mexico"
+  - option "Netherlands"
+  - option "New Zealand"
+  - option "Norway"
+  - option "Oman"
+  - option "Pakistan"
+  - option "Peru"
+  - option "Philippines"
+  - option "Poland"
+  - option "Portugal"
+  - option "Qatar"
+  - option "Russia"
+  - option "Saudi Arabia"
+  - option "Singapore"
+  - option "South Africa"
+  - option "South Korea"
+  - option "Spain"
+  - option "Sweden"
+  - option "Switzerland"
+  - option "Taiwan"
+  - option "Thailand"
+  - option "Turkey"
+  - option "United Arab Emirates"
+  - option "United Kingdom"
+  - option "United States"
+  - option "Uzbekistan"
+  - paragraph: GLOBAL OPPORTUNITIES. REAL MATCHES.
+  - heading "Find your best matches." [level=1]
+  - paragraph: Explore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.
+  - img "Unimatch mascot exploring a mountain landscape"
+  - note:
+    - strong: Demo data.
+    - text: These figures come from a bundled synthetic corpus, not from real university pages. Every source below is a
+    - code: fixture://
+    - text: address.
+  - generic: Search universities, programmes or countries
+  - textbox "Search universities, programmes or countries":
+    - /placeholder: Search universities, programmes or countries…
+  - button "Filters"
+  - button "Compare (2)"
+  - tablist "Match list":
+    - tab "All" [selected]
+    - tab "Priority"
+    - tab "Saved"
+    - tab "Exploring"
+  - generic "Filter and sort results"
+  - option "All (20)" [selected]
+  - option "Australia"
+  - option "Austria"
+  - option "Belgium"
+  - option "Canada"
+  - option "Finland"
+  - option "Germany"
+  - option "Ireland"
+  - option "Japan"
+  - option "Netherlands"
+  - option "Norway"
+  - option "Poland"
+  - option "Singapore"
+  - option "Switzerland"
+  - option "United Kingdom"
+  - option "United States"
+  - option "Any" [selected]
+  - option "Pending (3)"
+  - option "Met (9)"
+  - option "Unverified (5)"
+  - option "Gap (3)"
+  - option "Any" [selected]
+  - option "Full ride (3)"
+  - option "Full tuition (6)"
+  - option "Unknown (6)"
+  - option "Need-based (1)"
+  - option "Partial (4)"
+  - option "Match, discounted by what is unverified" [selected]
+  - option "Match with your priorities"
+  - option "Most confirmed"
+  - option "Smallest remaining cost"
+  - option "Earliest deadline"
+  - option "University name"
+  - paragraph: Showing 20 of 20 results from this research run
+  - article:
+    - generic: Netherlands · Groningen
+    - heading "University of Groningen" [level=2]
+    - paragraph: BSc Computing Science
+    - generic: Plausible
+    - generic "Nothing is failing, but something is still outstanding — a test, a document, or a profile field.": Pending
+    - generic "An official source confirms tuition, mandatory fees, housing and meals (or a living stipend) are covered.": Full ride
+    - generic: Remaining / year
+    - strong: 1 848 USD
+    - generic: Deadline
+    - strong: 01 мая 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Saved" [pressed]
+    - button "Remove" [pressed]
+  - article:
+    - generic: Belgium · Leuven
+    - heading "KU Leuven" [level=2]
+    - paragraph: BSc Informatics
+    - generic: Plausible
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+    - generic: Remaining / year
+    - strong: 7 554 USD
+    - generic: Deadline
+    - strong: 01 мар. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Remove" [pressed]
+  - article:
+    - generic: Japan · Tokyo
+    - heading "University of Tokyo" [level=2]
+    - paragraph: PEAK Environmental Sciences (Computing track)
+    - generic: Plausible
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+    - generic: Remaining / year
+    - strong: 1 986 USD
+    - generic: Deadline
+    - strong: 01 дек. 2026 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Canada · Toronto
+    - heading "University of Toronto" [level=2]
+    - paragraph: HBSc Computer Science
+    - generic: Plausible
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "An official source confirms tuition, mandatory fees, housing and meals (or a living stipend) are covered.": Full ride
+    - generic: Remaining / year
+    - strong: Not enough comparable data
+    - generic: Deadline
+    - strong: 15 янв. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Canada · Montreal
+    - heading "McGill University" [level=2]
+    - paragraph: computer science (bachelor)
+    - generic: Needs clarification
+    - generic "The published requirement could not be verified against an official source.": Unverified
+    - generic "Not enough official information to classify.": Unknown
+    - generic: Remaining / year
+    - strong: Not enough comparable data
+    - generic: Deadline
+    - strong: Not confirmed
+    - paragraph: 0 conflicts · 4 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Netherlands · Amsterdam
+    - heading "University of Amsterdam" [level=2]
+    - paragraph: computer science (bachelor)
+    - generic: Needs clarification
+    - generic "The published requirement could not be verified against an official source.": Unverified
+    - generic "Not enough official information to classify.": Unknown
+    - generic: Remaining / year
+    - strong: Not enough comparable data
+    - generic: Deadline
+    - strong: Not confirmed
+    - paragraph: 0 conflicts · 4 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Netherlands · Eindhoven
+    - heading "Eindhoven University of Technology" [level=2]
+    - paragraph: computer science (bachelor)
+    - generic: Needs clarification
+    - generic "The published requirement could not be verified against an official source.": Unverified
+    - generic "Not enough official information to classify.": Unknown
+    - generic: Remaining / year
+    - strong: Not enough comparable data
+    - generic: Deadline
+    - strong: Not confirmed
+    - paragraph: 0 conflicts · 4 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Austria · Vienna
+    - heading "University of Vienna" [level=2]
+    - paragraph: BSc Computer Science
+    - generic: Ambitious
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "Not enough official information to classify.": Unknown
+    - generic: Remaining / year
+    - strong: Not enough comparable data
+    - generic: Deadline
+    - strong: 05 сент. 2027 г.
+    - paragraph: 0 conflicts · 3 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Singapore · Singapore
+    - heading "National University of Singapore" [level=2]
+    - paragraph: Bachelor of Computing (Computer Science)
+    - generic: Ambitious
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "Depends on a financial-need assessment that has not been filed, so it cannot be sized.": Need-based
+    - generic: Remaining / year
+    - strong: Not enough comparable data
+    - generic: Deadline
+    - strong: 21 февр. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Finland · Espoo
+    - heading "Aalto University" [level=2]
+    - paragraph: BSc Computer Science
+    - generic: Out of budget
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+    - generic: Remaining / year
+    - strong: 11 859 USD est.
+    - generic: Deadline
+    - strong: 09 янв. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Canada · Vancouver
+    - heading "University of British Columbia" [level=2]
+    - paragraph: BSc Computer Science
+    - generic: Out of budget
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+    - generic: Remaining / year
+    - strong: 21 471 USD
+    - generic: Deadline
+    - strong: 15 янв. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Norway · Oslo
+    - heading "University of Oslo" [level=2]
+    - paragraph: BSc Informatics
+    - generic: Needs clarification
+    - generic "The published requirement could not be verified against an official source.": Unverified
+    - generic "Not enough official information to classify.": Unknown
+    - generic: Remaining / year
+    - strong: Not enough comparable data
+    - generic: Deadline
+    - strong: Not confirmed
+    - paragraph: 0 conflicts · 3 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: United States · Tempe
+    - heading "Arizona State University" [level=2]
+    - paragraph: BS Computer Science
+    - generic: Out of budget
+    - generic "Nothing is failing, but something is still outstanding — a test, a document, or a profile field.": Pending
+    - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+    - generic: Remaining / year
+    - strong: 19 400 USD
+    - generic: Deadline
+    - strong: 01 февр. 2027 г.
+    - paragraph: 0 conflicts · 3 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Germany · Munich
+    - heading "Technical University of Munich" [level=2]
+    - paragraph: BSc Informatics
+    - generic: Out of budget
+    - generic "Nothing is failing, but something is still outstanding — a test, a document, or a profile field.": Pending
+    - generic "Covers a limited share of the total cost.": Partial
+    - generic: Remaining / year
+    - strong: 18 663 USD
+    - generic: Deadline
+    - strong: 15 янв. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: United Kingdom · Edinburgh
+    - heading "University of Edinburgh" [level=2]
+    - paragraph: computer science (bachelor)
+    - generic: Needs clarification
+    - generic "The published requirement could not be verified against an official source.": Unverified
+    - generic "Not enough official information to classify.": Unknown
+    - generic: Remaining / year
+    - strong: Not enough comparable data
+    - generic: Deadline
+    - strong: Not confirmed
+    - paragraph: 0 conflicts · 4 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Ireland · Dublin
+    - heading "Trinity College Dublin" [level=2]
+    - paragraph: BA (Mod) Computer Science
+    - generic: Out of budget
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "Covers a limited share of the total cost.": Partial
+    - generic: Remaining / year
+    - strong: 41 793 USD
+    - generic: Deadline
+    - strong: 01 февр. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Poland · Warsaw
+    - heading "University of Warsaw" [level=2]
+    - paragraph: BSc Computer Science
+    - generic: Out of budget
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "Covers a limited share of the total cost.": Partial
+    - generic: Remaining / year
+    - strong: 9 239 USD
+    - generic: Deadline
+    - strong: 05 июл. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Australia · Melbourne
+    - heading "University of Melbourne" [level=2]
+    - paragraph: Bachelor of Science (Computing and Software Systems)
+    - generic: Excluded
+    - generic "At least one published requirement is currently not met.": Gap
+    - generic "Covers a limited share of the total cost.": Partial
+    - generic: Remaining / year
+    - strong: 46 267 USD
+    - generic: Deadline
+    - strong: Not confirmed
+    - paragraph: 0 conflicts · 3 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Netherlands · Delft
+    - heading "Delft University of Technology" [level=2]
+    - paragraph: BSc Computer Science and Engineering
+    - generic: Excluded
+    - generic "At least one published requirement is currently not met.": Gap
+    - generic "An official source confirms tuition, mandatory fees, housing and meals (or a living stipend) are covered.": Full ride
+    - generic: Remaining / year
+    - strong: 2 446 USD
+    - generic: Deadline
+    - strong: 15 янв. 2027 г.
+    - paragraph: 1 conflict · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Switzerland · Lausanne
+    - heading "EPFL" [level=2]
+    - paragraph: BSc Computer Science
+    - generic: Excluded
+    - generic "At least one published requirement is currently not met.": Gap
+    - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+    - generic: Remaining / year
+    - strong: 8 386 USD
+    - generic: Deadline
+    - strong: 15 янв. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - region "Compare selected programmes":
+    - generic: COMPARE WITH CLARITY
+    - heading "Different strengths. A clearer choice." [level=2]
+    - button "Clear"
+    - paragraph: Compare what the sources actually support. A match score describes your stated preferences, not your chance of admission.
+    - article:
+      - generic: Netherlands
+      - heading "University of Groningen" [level=3]
+      - paragraph: BSc Computing Science
+      - term: Eligibility
+      - definition:
+        - generic "Nothing is failing, but something is still outstanding — a test, a document, or a profile field.": Pending
+      - term: Admissions fit
+      - definition:
+        - generic "Scores sit clearly above the published minimums. Selection is still competitive.": Stronger
+      - term: Funding
+      - definition:
+        - generic "An official source confirms tuition, mandatory fees, housing and meals (or a living stipend) are covered.": Full ride
+      - term: Remaining per year
+      - definition: 1 848 USD · 2026/27
+      - term: Deadline
+      - definition: 01 мая 2027 г.
+      - term: Preference fit
+      - definition: Plausible
+      - term: Evidence coverage
+      - definition: 94%
+      - region "University of Groningen preparation evidence":
+        - heading "Preparation evidence" [level=4]
+        - term: Requested intake
+        - definition: fall 2027
+        - term: Document list
+        - definition: Read from official pages
+        - term: Required items recorded
+        - definition: "Admission: 5 · Scholarship: 0"
+        - paragraph: Reading sources does not confirm that your documents are prepared. The requested intake does not confirm which intake the document sources cover.
+        - generic "Required items, owners & sources"
+        - heading "Admission" [level=5]
+        - list:
+          - strong: Secondary school diploma (certified copy)
+          - paragraph: Your school
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+          - strong: Passport identity page (copy)
+          - paragraph: You
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+          - strong: Personal statement
+          - paragraph: You
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+          - strong: Academic reference
+          - paragraph: Your referee
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+          - strong: Curriculum vitae
+          - paragraph: You
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+      - generic: 2 to clarify
+      - code: fixture://u-groningen/program-0.html
+      - generic: demo fixture
+      - button "View details"
+      - button "Remove"
+      - generic "Why this fit?"
+    - article:
+      - generic: Belgium
+      - heading "KU Leuven" [level=3]
+      - paragraph: BSc Informatics
+      - term: Eligibility
+      - definition:
+        - generic "Every published requirement that could be checked is satisfied.": Met
+      - term: Admissions fit
+      - definition:
+        - generic "Scores sit clearly above the published minimums. Selection is still competitive.": Stronger
+      - term: Funding
+      - definition:
+        - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+      - term: Remaining per year
+      - definition: 7 554 USD · 2026/27
+      - term: Deadline
+      - definition: 01 мар. 2027 г.
+      - term: Preference fit
+      - definition: Plausible
+      - term: Evidence coverage
+      - definition: 94%
+      - region "KU Leuven preparation evidence":
+        - heading "Preparation evidence" [level=4]
+        - term: Requested intake
+        - definition: fall 2027
+        - term: Document list
+        - definition: Not collected
+        - term: Required items recorded
+        - definition: No required items recorded
+        - paragraph: Reading sources does not confirm that your documents are prepared. The requested intake does not confirm which intake the document sources cover.
+      - generic: 2 to clarify
+      - code: fixture://ku-leuven/program-0.html
+      - generic: demo fixture
+      - button "View details" [expanded]
+      - button "Remove"
+      - generic "Why this fit?"
+    - generic: PROGRAMME DETAILS · Belgium
+    - heading "KU Leuven" [level=2]
+    - paragraph: BSc Informatics
+    - paragraph: Leuven, Belgium · Bachelor
+    - code: fixture://ku-leuven/program-0.html
+    - generic: demo fixture
+    - generic: YOUR ASSESSMENT
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - paragraph: Eligibility is separate from admissions fit. Neither is a probability of admission.
+    - generic: Funding
+    - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+    - generic: Remaining per year
+    - strong: 7 554 USD · 2026/27
+    - generic: Deadline
+    - strong: 01 мар. 2027 г.
+    - generic: Evidence
+    - strong: 0 conflicts · 2 open questions
+    - tablist "KU Leuven details":
+      - tab "Requirements"
+      - tab "Funding"
+      - tab "Costs"
+      - tab "Documents"
+      - tab "Why this order"
+      - tab "Sources & evidence" [selected]
+    - heading "Open questions" [level=3]
+    - generic: open
+    - strong: How many hours a week may an international student work while studying in Belgium?
+    - paragraph: The profile says work during study is necessary, and no official statement of the limit was found.
+    - generic: open
+    - strong: Which groups at KU Leuven work on machine learning?
+    - paragraph: The profile lists machine learning as a research interest. The pages read do not mention it, which is not the same as it being absent.
+    - heading "Evidence (33 claims)" [level=3]
+    - generic: last verified 09 окт. 2026 г., 02:29 · 83% of decision-grade fields verified
+    - generic: program_exists
+    - generic: "program: BSc Informatics, degree: bachelor, language: —, matched_because: page subject 'BSc Informatics' is a narrower name for the same subject"
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: program_intake
+    - generic: “BSc Informatics KU Leuven, Leuven, Belgium. Entry for the fall 2027 intake. Entry requirements English language requirements Applicants must hold an IELTS Academic certificate”
+    - code: fixture://ku-leuven/program-0.html
+    - generic: demo fixture
+    - generic: ielts_min_overall
+    - generic: "6.5"
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: program_intake
+    - generic: "“BSc Informatics KU Leuven, Leuven, Belgium. Entry for the fall 2027 intake. Entry requirements English language requirements Applicants must hold an IELTS Academic certificate with an overall band of 6.5, with no individual component below 6.0. IELTS General Training is not accepted. Certificates must have been issued within the last two years. TOEFL iBT: a min”"
+    - code: fixture://ku-leuven/program-0.html
+    - generic: demo fixture
+    - generic: ielts_min_subscore
+    - generic: "6"
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: program_intake
+    - generic: "“for the fall 2027 intake. Entry requirements English language requirements Applicants must hold an IELTS Academic certificate with an overall band of 6.5, with no individual component below 6.0. IELTS General Training is not accepted. Certificates must have been issued within the last two years. TOEFL iBT: a minimum total score of 94 is accepted as an”"
+    - code: fixture://ku-leuven/program-0.html
+    - generic: demo fixture
+    - generic: toefl_min_total
+    - generic: "94"
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: program_intake
+    - generic: "“rall band of 6.5, with no individual component below 6.0. IELTS General Training is not accepted. Certificates must have been issued within the last two years. TOEFL iBT: a minimum total score of 94 is accepted as an alternative. Key dates The application deadline for the fall 2027 intake is 1 March 2027 at 23:59 CET. Late applications are not considered.”"
+    - code: fixture://ku-leuven/program-0.html
+    - generic: demo fixture
+    - generic: admission_deadline
+    - generic: 2027-03-01
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: program_intake
+    - generic: "“. Certificates must have been issued within the last two years. TOEFL iBT: a minimum total score of 94 is accepted as an alternative. Key dates The application deadline for the fall 2027 intake is 1 March 2027 at 23:59 CET. Late applications are not considered. Documents Certified copy of the secondary school diploma and full transcript (PDF, max 10 MB) Official Engl”"
+    - code: fixture://ku-leuven/program-0.html
+    - generic: demo fixture
+    - generic: intake_term
+    - generic: fall 2027
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: program_intake
+    - generic: “Entry for the fall 2027 intake.”
+    - code: fixture://ku-leuven/program-0.html
+    - generic: demo fixture
+    - generic: ielts_accepted_types
+    - generic: academic
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: program_intake
+    - generic: “Entry requirements English language requirements Applicants must hold an IELTS Academic certificate with an overall band of 6.”
+    - code: fixture://ku-leuven/program-0.html
+    - generic: demo fixture
+    - generic: application_fee
+    - generic: 100 USD
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: program_intake
+    - generic: “An application fee of USD 100 applies. Fee waivers are available on request for applicants demonstrating financial hardship.”
+    - code: fixture://ku-leuven/program-0.html
+    - generic: demo fixture
+    - generic: fee_waiver_available
+    - generic: "yes"
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: program_intake
+    - generic: “An application fee of USD 100 applies. Fee waivers are available on request for applicants demonstrating financial hardship.”
+    - code: fixture://ku-leuven/program-0.html
+    - generic: demo fixture
+    - generic: ielts_min_overall
+    - generic: "6.5"
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: university_admissions
+    - generic: “International admissions - KU Leuven General entry information for applicants holding a non-domestic qualification. English language Applicants must have an IELTS Academic score with an overall band of 6.5. Credential recognition Qualifications are assessed against the national framework. Applicants holding a qualification from outside the country may be asked to”
+    - code: fixture://ku-leuven/admissions.html
+    - generic: demo fixture
+    - generic: admission_deadline
+    - generic: 2027-03-01
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: university_admissions
+    - generic: “tions are assessed against the national framework. Applicants holding a qualification from outside the country may be asked to provide a credential evaluation. Deadlines Applications close 1 March 2027 (CET).”
+    - code: fixture://ku-leuven/admissions.html
+    - generic: demo fixture
+    - generic: ielts_accepted_types
+    - generic: academic
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: university_admissions
+    - generic: “English language Applicants must have an IELTS Academic score with an overall band of 6.”
+    - code: fixture://ku-leuven/admissions.html
+    - generic: demo fixture
+    - generic: tuition
+    - generic: 6,800 EUR
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: university_admissions
+    - generic: "“Cost of attendance 2026/27 Estimated annual costs for an international student at KU Leuven. Tuition fee (non-domestic) for 2026/27: EUR 6,800 per year. Mandatory university fees for 2026/27: EUR 250 per year. Housing / accommodation for 2026/27: EUR 6,600 per year. Meal plan for 2026/27: EUR 3,300 per year. I”"
+    - code: fixture://ku-leuven/costs.html
+    - generic: demo fixture
+    - generic: housing_cost
+    - generic: 6,600 EUR
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: university_admissions
+    - generic: "“for an international student at KU Leuven. Tuition fee (non-domestic) for 2026/27: EUR 6,800 per year. Mandatory university fees for 2026/27: EUR 250 per year. Housing / accommodation for 2026/27: EUR 6,600 per year. Meal plan for 2026/27: EUR 3,300 per year. Item Amount per year Tuition fee (non-domestic) EUR 6,800 Mandatory university fees EUR 250 Housing / accommodation”"
+    - code: fixture://ku-leuven/costs.html
+    - generic: demo fixture
+    - generic: meals_cost
+    - generic: 3,300 EUR
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: university_admissions
+    - generic: "“on-domestic) for 2026/27: EUR 6,800 per year. Mandatory university fees for 2026/27: EUR 250 per year. Housing / accommodation for 2026/27: EUR 6,600 per year. Meal plan for 2026/27: EUR 3,300 per year. Item Amount per year Tuition fee (non-domestic) EUR 6,800 Mandatory university fees EUR 250 Housing / accommodation EUR 6,600 Meal plan EUR 3,300 Estimated to”"
+    - code: fixture://ku-leuven/costs.html
+    - generic: demo fixture
+    - generic: mandatory_fees
+    - generic: 250 EUR
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: university_admissions
+    - generic: "“t of attendance 2026/27 Estimated annual costs for an international student at KU Leuven. Tuition fee (non-domestic) for 2026/27: EUR 6,800 per year. Mandatory university fees for 2026/27: EUR 250 per year. Housing / accommodation for 2026/27: EUR 6,600 per year. Meal plan for 2026/27: EUR 3,300 per year. Item Amount per year Tuition fee (non-domestic) EUR 6,800”"
+    - code: fixture://ku-leuven/costs.html
+    - generic: demo fixture
+    - generic: total_cost_of_attendance
+    - generic: 16,950 EUR
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: university_admissions
+    - generic: “300 per year. Item Amount per year Tuition fee (non-domestic) EUR 6,800 Mandatory university fees EUR 250 Housing / accommodation EUR 6,600 Meal plan EUR 3,300 Estimated total cost EUR 16,950 Figures are indicative and are reviewed annually.”
+    - code: fixture://ku-leuven/costs.html
+    - generic: demo fixture
+    - generic: scholarship_exists
+    - generic: Flemish Community Tuition Grant
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: scholarship_administrator
+    - generic: “Flemish Community Tuition Grant Open to students holding EEA or Swiss nationality.”
+    - code: fixture://ku-leuven/scholarship-0.html
+    - generic: demo fixture
+    - generic: scholarship_amount
+    - generic: 6,800 EUR
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: scholarship_administrator
+    - generic: “The award is worth EUR 6,800 per year for 2026/27.”
+    - code: fixture://ku-leuven/scholarship-0.html
+    - generic: demo fixture
+    - generic: scholarship_coverage
+    - generic: "tuition: yes"
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: scholarship_administrator
+    - generic: “Cost Status Tuition Covered”
+    - code: fixture://ku-leuven/scholarship-0.html
+    - generic: demo fixture
+    - generic: scholarship_citizenship_restriction
+    - generic: European Economic Area, Switzerland
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: scholarship_administrator
+    - generic: “re not eligible. Value The award is worth EUR 6,800 per year for 2026/27. What the award covers Cost Status Tuition Covered Eligibility This award is open only to citizens of European Economic Area, Switzerland. Applicants of other nationalities are not eligible. How to apply A separate scholarship”
+    - code: fixture://ku-leuven/scholarship-0.html
+    - generic: demo fixture
+    - generic: scholarship_application_mode
+    - generic: separate
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: scholarship_administrator
+    - generic: “How to apply”
+    - code: fixture://ku-leuven/scholarship-0.html
+    - generic: demo fixture
+    - generic: scholarship_renewable
+    - generic: "no"
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: scholarship_administrator
+    - generic: “This is a one-time award and is not renewable.”
+    - code: fixture://ku-leuven/scholarship-0.html
+    - generic: demo fixture
+    - generic: scholarship_stackable
+    - generic: "no"
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: scholarship_administrator
+    - generic: “This award may not be combined with other university scholarships.”
+    - code: fixture://ku-leuven/scholarship-0.html
+    - generic: demo fixture
+    - generic: scholarship_exists
+    - generic: Science@Leuven Scholarship
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: scholarship_administrator
+    - generic: “Science@Leuven Scholarship A contribution towards tuition and living costs for excellent international students.”
+    - code: fixture://ku-leuven/scholarship-1.html
+    - generic: demo fixture
+    - generic: scholarship_amount
+    - generic: 10,000 EUR
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: scholarship_administrator
+    - generic: “The award is worth EUR 10,000 per year for 2026/27.”
+    - code: fixture://ku-leuven/scholarship-1.html
+    - generic: demo fixture
+    - generic: scholarship_coverage
+    - generic: "tuition: yes, mandatory_fees: partial"
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: scholarship_administrator
+    - generic: “Cost Status Tuition Covered Mandatory fees Partially covered”
+    - code: fixture://ku-leuven/scholarship-1.html
+    - generic: demo fixture
+    - generic: scholarship_international_eligible
+    - generic: "yes"
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: scholarship_administrator
+    - generic: “What the award covers Cost Status Tuition Covered Mandatory fees Partially covered Eligibility International students of any nationality are eligible to apply.”
+    - code: fixture://ku-leuven/scholarship-1.html
+    - generic: demo fixture
+    - generic: scholarship_application_mode
+    - generic: separate
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: scholarship_administrator
+    - generic: “How to apply”
+    - code: fixture://ku-leuven/scholarship-1.html
+    - generic: demo fixture
+    - generic: scholarship_deadline
+    - generic: 2027-02-01
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: scholarship_administrator
+    - generic: “The scholarship deadline is 1 February 2027. This is earlier than the admission deadline.”
+    - code: fixture://ku-leuven/scholarship-1.html
+    - generic: demo fixture
+    - generic: scholarship_duration_years
+    - generic: "2"
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: scholarship_administrator
+    - generic: “500 words). The scholarship deadline is 1 February 2027. This is earlier than the admission deadline. Duration and renewal The award is renewable for up to 2 years of study. Renewal conditions apply. This award may not be combined with other university scholarships.”
+    - code: fixture://ku-leuven/scholarship-1.html
+    - generic: demo fixture
+    - generic: scholarship_renewable
+    - generic: "yes"
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: scholarship_administrator
+    - generic: “The award is renewable for up to 2 years of study. Renewal conditions apply.”
+    - code: fixture://ku-leuven/scholarship-1.html
+    - generic: demo fixture
+    - generic: scholarship_stackable
+    - generic: "no"
+    - generic "Read from an official page within its freshness window.": Verified
+    - generic: scholarship_administrator
+    - generic: “This award may not be combined with other university scholarships.”
+    - code: fixture://ku-leuven/scholarship-1.html
+    - generic: demo fixture
+  - generic "Detailed evidence table"
+  - text: Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Bucket Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Bucket Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Bucket Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Bucket Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Bucket Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Bucket Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision
+  - paragraph: Showing 20 of 20. Rejected rows are kept with their reason so the same programme is not proposed again without new information.

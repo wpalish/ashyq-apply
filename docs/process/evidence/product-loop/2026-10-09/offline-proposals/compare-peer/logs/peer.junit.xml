@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="11" failures="0" errors="0" time="0.194207333">
+    <testsuite name="src/components/ComparePanel.peer.test.tsx" timestamp="2026-10-08T21:59:45.394Z" hostname="iMac-Aliser.local" tests="2" failures="0" errors="0" skipped="0" time="0.07098675">
+        <testcase classname="src/components/ComparePanel.peer.test.tsx" name="Independent Compare peer controls &gt; routes by exact ID when both compared programmes have the same university and programme label" time="0.058414417">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.peer.test.tsx" name="Independent Compare peer controls &gt; keeps a both-purpose record in its two named lists without summing repeated owner projections or claiming readiness" time="0.011511542">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/ComparePanel.preparation.test.tsx" timestamp="2026-10-08T21:59:45.395Z" hostname="iMac-Aliser.local" tests="9" failures="0" errors="0" skipped="0" time="0.123220583">
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; keeps requested intakes attached to each selected programme and distinguishes a missing list" time="0.041751291">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; distinguishes successful source reading, partial reading and an unavailable collection attempt" time="0.020299083">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; counts only saved required items in the two lists, without counting owner views again" time="0.00516375">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; uses the stored document source and marks a missing source instead of borrowing a programme URL" time="0.004787375">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; keeps unsafe sources non-clickable and does not invent an owner when a stored role is missing" time="0.005739166">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; shows saved checklist unknowns and treats blank intake as unknown" time="0.005130208">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; does not show another result’s checklist in Compare or the existing Documents detail" time="0.013379417">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; opens the chosen result and its saved evidence, switches results and closes a removed result" time="0.01996275">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; can toggle details closed without persisting any preparation state" time="0.005829875">
+        </testcase>
+    </testsuite>
+</testsuites>

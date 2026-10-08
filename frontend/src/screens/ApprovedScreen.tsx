@@ -10,7 +10,7 @@ import { date, eligibilityTone, fundingClassTone, money } from '@/lib/format';
 import { useStore } from '@/lib/store';
 import type { ProgramResult, UserDecision } from '@/types';
 
-export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
+export function ApprovedScreen({ onCollect, onFind }: { onCollect: () => void; onFind?: () => void }) {
   const { results, run, collectDocuments, decide } = useStore();
 
   const group = (d: UserDecision) => results.filter((r) => r.user_decision === d);
@@ -28,7 +28,12 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
     run?.job_status === 'queued' || run?.job_status === 'running' ||
     (run?.stage === 'document_collection' && run.job_running);
 
-  if (results.length === 0) return <Empty title="No results yet">Run the research first.</Empty>;
+  if (results.length === 0) return (
+    <Panel title="Your application plan">
+      <Empty title="No programmes in your plan yet">Choose programmes from Find to begin your plan.</Empty>
+      {onFind && <button className="btn btn--primary" type="button" onClick={onFind}>Explore programmes</button>}
+    </Panel>
+  );
 
   return (
     <>
@@ -36,7 +41,7 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
         <p className="screen__eyebrow">Your application journey</p>
         <h1 className="screen__title">A clearer plan. A brighter <span className="find-yellow">you.</span></h1>
         <p className="screen__lede">
-          Keep your chosen programmes together, check their deadlines and prepare what each one asks for.
+          Keep your chosen programmes together, check their deadlines and prepare what each one asks for. These are your choices, not admission offers.
         </p>
       </div>
 
@@ -46,23 +51,24 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
             <span className="home-eyebrow">NEXT STEP</span>
             <h2>{shortlisted === 0 ? 'Choose a programme to plan for.' : nextDeadline ? `Next deadline: ${nextDeadline.university}` : 'Prepare your application documents.'}</h2>
             <p>{nextDeadline?.admission_deadline ? `${date(nextDeadline.admission_deadline)} · ${nextDeadline.program}` : shortlisted === 0 ? 'Save a promising result from Find to begin.' : 'No future admission deadline has been confirmed for these programmes.'}</p>
+            {shortlisted === 0 && onFind && <button className="btn btn--primary" type="button" onClick={onFind}>Choose programmes</button>}
+            {[...approved, ...maybe].some((result) => result.checklist) && <button className="btn" type="button" onClick={onCollect}>Open collected checklists</button>}
           </div>
           <div className="plan-hero__count"><strong>{shortlisted}</strong><span>programmes in your plan</span></div>
         </section>
         <Panel>
           <div className="row" style={{ justifyContent: 'space-between' }}>
             <div className="row">
-              <Chip tone="ok">{approved.length} approved</Chip>
-              <Chip tone="warn">{maybe.length} maybe</Chip>
-              <Chip tone="risk">{rejected.length} rejected</Chip>
+              <Chip tone="ok">{approved.length} chosen by you</Chip>
+              <Chip tone="warn">{maybe.length} considering</Chip>
+              <Chip tone="risk">{rejected.length} ruled out</Chip>
               <Chip>{results.length - shortlisted - rejected.length} undecided</Chip>
             </div>
             <button
               className="btn btn--primary"
               disabled={shortlisted === 0 || collecting}
               onClick={async () => {
-                await collectDocuments();
-                onCollect();
+                if (await collectDocuments()) onCollect();
               }}
               data-testid="collect-documents"
             >
@@ -71,14 +77,14 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
           </div>
           {shortlisted === 0 && (
             <Notice kind="info">
-              <div>Approve or mark “maybe” on at least one programme in the shortlist first.</div>
+              <div>Choose or consider at least one programme in Find first.</div>
             </Notice>
           )}
         </Panel>
 
         {[
-          { label: 'Approved', rows: approved, tone: 'ok' as const },
-          { label: 'Maybe', rows: maybe, tone: 'warn' as const },
+          { label: 'Chosen by you', rows: approved, tone: 'ok' as const },
+          { label: 'Considering', rows: maybe, tone: 'warn' as const },
         ].map(({ label, rows, tone }) =>
           rows.length > 0 ? (
             <Panel key={label} title={`${label} (${rows.length})`}>
@@ -91,7 +97,7 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
 
         {rejected.length > 0 && (
           <Panel
-            title={`Rejected (${rejected.length})`}
+            title={`Ruled out (${rejected.length})`}
             hint="Kept on purpose. These are not proposed again unless something material changes."
           >
             <div className="stack stack--tight">
@@ -134,7 +140,7 @@ function DecidedRow({
           <div className="small muted">{result.program} · {result.city}, {result.country}</div>
         </div>
         <div className="row row--tight">
-          <Chip tone={tone}>{result.user_decision}</Chip>
+          <Chip tone={tone}>{result.user_decision === 'approved' ? 'Chosen by you' : 'Considering'}</Chip>
           <button
             className="btn btn--sm"
             onClick={() => onChange(result.id, 'undecided', '', result.user_notes)}

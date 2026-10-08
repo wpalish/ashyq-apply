@@ -1,0 +1,188 @@
+{
+  "status": "SEALED_OFFLINE_PROPOSAL_NOT_APPLIED",
+  "sealed_at": "2026-10-08T21:56:40.391003+00:00",
+  "source_anchor_supplied_at_dispatch": "d6a727aa",
+  "later_root_reported_checkpoint": "45bcc99a",
+  "compare_source_sha256": "17f4b18fb86506b439500575dadaa5689d9be466308fd183f7b27fe8ea9ebad1",
+  "proposed_files": [
+    "proposed/frontend/src/components/ComparePanel.preparation.test.tsx",
+    "proposed/frontend/src/components/ComparePanel.tsx"
+  ],
+  "files": [
+    {
+      "path": "REPORT.md",
+      "sha256": "1f64238969bdbeb4f7a533f7a3f696257bf3a0cc3131f039c1416b07f62dfca1",
+      "bytes": 12177
+    },
+    {
+      "path": "contract-evidence.json",
+      "sha256": "28c8767eab94a2467272fb523f46f69791d8bc55d14ef5d96110531413497df9",
+      "bytes": 33926
+    },
+    {
+      "path": "logs/checks.fixture-total.json",
+      "sha256": "f9abd47d3abab315219fa2d44fee5a8655460764ffe3c080cb171fab3572b7be",
+      "bytes": 1356
+    },
+    {
+      "path": "logs/checks.initial.json",
+      "sha256": "92d8e8c0e94d01c3b9cab57c10c7f151976e101961331841f2ed2e2127e69386",
+      "bytes": 719
+    },
+    {
+      "path": "logs/checks.json",
+      "sha256": "c54740728370a7bae1244bb2f207c150415631d2af3b368364b37d7a1e6f42d2",
+      "bytes": 1356
+    },
+    {
+      "path": "logs/green-final-network/network-29376.json",
+      "sha256": "bca854d2ceb47b0a6638dc462a8dcbf88ff695e338da1bb64a227fbac31c2609",
+      "bytes": 45
+    },
+    {
+      "path": "logs/green-final-network/network-29414.json",
+      "sha256": "df7f2995308049f533c1c73236134fff7f60c42cf114c3ecaa63aa5ce1527607",
+      "bytes": 45
+    },
+    {
+      "path": "logs/green-final-network/network-29573.json",
+      "sha256": "c2eaa3f89638ae832cd8d6d55adbc0e8abb77b74cc6401d0d8678b481ec33d97",
+      "bytes": 45
+    },
+    {
+      "path": "logs/green-final.log",
+      "sha256": "c8cf1d59d57f60bbcbde498446229910b26cd48383bd39cf94222bb01e2862a6",
+      "bytes": 1891
+    },
+    {
+      "path": "logs/green-network/network-29150.json",
+      "sha256": "258bb14807cddae412826ef32bcca5275ef9e548e8c681b3d375d5b7712d0700",
+      "bytes": 45
+    },
+    {
+      "path": "logs/green.log",
+      "sha256": "b3d10375210cb5a048e303781522120145789e7d306e73c08d10b4a9b1911497",
+      "bytes": 1892
+    },
+    {
+      "path": "logs/guard-network/network-28997.json",
+      "sha256": "0c0869394ed8058ca0b6ae36d93ee2a21fcfb3843048f8b84044a746ec99e0aa",
+      "bytes": 45
+    },
+    {
+      "path": "logs/lint-network/network-29244.json",
+      "sha256": "da3848e9f7de2ed184fc0e10e012ed4906a0039081bf1ab0bb1fff71d803d7f9",
+      "bytes": 45
+    },
+    {
+      "path": "logs/lint-network/network-29378.json",
+      "sha256": "71526befc72bd0736a813e5d0aea20709d68fd0b2c24a7a8acd59f1a81319ac6",
+      "bytes": 45
+    },
+    {
+      "path": "logs/lint-network/network-29416.json",
+      "sha256": "e3833d83218701601a73e88ae605da6de81bef40821e84f837d117d5f4ac675b",
+      "bytes": 45
+    },
+    {
+      "path": "logs/lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "logs/red-final-network/network-29570.json",
+      "sha256": "6169f344d8c4027fd56dcde26da83b87579549e3458b5cf2d6bfda70376cc59a",
+      "bytes": 45
+    },
+    {
+      "path": "logs/red-final.log",
+      "sha256": "c87cffbd4163c46a8c457efb7fe2fa3324845986f7c855a8f03949c7c70e8089",
+      "bytes": 83307
+    },
+    {
+      "path": "logs/red-network/network-29042.json",
+      "sha256": "1285788cfdd6a45460e1f9b88ac30a857a6cfe15f85938a1596cc614250f7b9c",
+      "bytes": 45
+    },
+    {
+      "path": "logs/red-network/network-29043.json",
+      "sha256": "4bf4e06f0bc18b006140c16095dd0f6d5fa72a9e0de094258c665cee1a7dc7ef",
+      "bytes": 45
+    },
+    {
+      "path": "logs/red.log",
+      "sha256": "552bb652bfa1d83aba06ce8be928e6d00bbe7216486390e7c9601f01f1d78ce4",
+      "bytes": 83287
+    },
+    {
+      "path": "logs/typecheck-network/network-29243.json",
+      "sha256": "387704d0983c0544aafd69f49ab66d337ac7b31d759e81e8e05fc51502003519",
+      "bytes": 45
+    },
+    {
+      "path": "logs/typecheck-network/network-29377.json",
+      "sha256": "2c6d282178bce3f67c6ded76de99198b93445c3f1771df53042018ba1cfe3230",
+      "bytes": 45
+    },
+    {
+      "path": "logs/typecheck-network/network-29415.json",
+      "sha256": "84ba3bceb6464de57a6c2a177d188bd3268438ef26f5282668ee4b587e5e0568",
+      "bytes": 45
+    },
+    {
+      "path": "logs/typecheck.fixture-total.log",
+      "sha256": "d4c51c8cd62a6479db60072060bafd2a0bdd21d2bd5cd91b70d9bd2b948d4dbc",
+      "bytes": 180
+    },
+    {
+      "path": "logs/typecheck.initial.log",
+      "sha256": "3060fbf3bb958d32e2f699daeb07bc14276d211920adbae11240173c833a5e6f",
+      "bytes": 164
+    },
+    {
+      "path": "logs/typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "network-summary.json",
+      "sha256": "c5d4073e29fcf212297e51a45eaae49949904b7af0e9872ef9bedd9b828b8eab",
+      "bytes": 2505
+    },
+    {
+      "path": "original/ComparePanel.tsx",
+      "sha256": "17f4b18fb86506b439500575dadaa5689d9be466308fd183f7b27fe8ea9ebad1",
+      "bytes": 3133
+    },
+    {
+      "path": "proposal.patch",
+      "sha256": "bd372c709c3dc1faafe9855ba2d285afd315382a607abe959249111c0cbce371",
+      "bytes": 17742
+    },
+    {
+      "path": "proposed/frontend/src/components/ComparePanel.preparation.test.tsx",
+      "sha256": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3",
+      "bytes": 11288
+    },
+    {
+      "path": "proposed/frontend/src/components/ComparePanel.tsx",
+      "sha256": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab",
+      "bytes": 7369
+    },
+    {
+      "path": "source-integrity.json",
+      "sha256": "22b0352f65fa32c48db112575cce149649cc512dc66e59dead17b791103c8b4c",
+      "bytes": 2687
+    },
+    {
+      "path": "source-snapshot.json",
+      "sha256": "eaddd46498b80255e7e26674e72331c75aed288530e99d098a30adf430e5583d",
+      "bytes": 1722
+    },
+    {
+      "path": "support/deny-network.cjs",
+      "sha256": "21ac17909cedd12d3bc81ee4f7da5c2a059e6a315cc48545ad93a9291caae354",
+      "bytes": 794
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "A11": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round3/a-compare-review/logs/peer.junit.xml",
+    "sha256": "ac6d7e541362da2d0b24b795b52922cd48fabf78eb2e4fec4a0e6a02d8ab01b9",
+    "bytes": 3314,
+    "cases": 11,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0,
+    "classes": {
+      "src/components/ComparePanel.peer.test.tsx": 2,
+      "src/components/ComparePanel.preparation.test.tsx": 9
+    }
+  },
+  "A54": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/a-filter-choice-review/logs/peer.junit.xml",
+    "sha256": "cf9b11ecec6812c749c2ec20bd585d88bdf7b8e9ff2d20b51b6da832b2faf7cb",
+    "bytes": 12275,
+    "cases": 54,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0,
+    "classes": {
+      "src/screens/FilterChoicePeer.test.tsx": 2,
+      "src/screens/JourneyScreens.test.tsx": 22,
+      "src/screens/ShortlistScreen.test.tsx": 30
+    }
+  },
+  "B52": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/b-filter-choice-proposal/logs/on.final.junit.xml",
+    "sha256": "191447b08a31a9927f786029325976eec25a592f6c7f79925e26a840dfd61390",
+    "bytes": 11665,
+    "cases": 52,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0,
+    "classes": {
+      "src/screens/JourneyScreens.test.tsx": 22,
+      "src/screens/ShortlistScreen.test.tsx": 30
+    }
+  },
+  "C2": {
+    "meaning": "Two proposed files, not two tests",
+    "proposed_paths": [
+      "proposed/frontend/src/components/ComparePanel.preparation.test.tsx",
+      "proposed/frontend/src/components/ComparePanel.tsx"
+    ],
+    "native_cases": 9
+  },
+  "root91": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round3/frontend-integrated-focused.log",
+    "sha256": "fdf78dc9f1fbd0593bac9389ee100487f020d2da0f56129ba40b9a957fec732e",
+    "files": 5,
+    "passed": 91,
+    "scope": "focused current primary run; not full suite",
+    "composition": "C9+B52+30 current Sources/store cases",
+    "qualification": "A11 includes C9+2 independent controls; A54 includes B52+2. These overlapping re-executions and file copies are not separate unique experiments."
+  }
+}

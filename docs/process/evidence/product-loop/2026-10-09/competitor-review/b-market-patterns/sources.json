@@ -1,0 +1,56 @@
+{
+  "research_date": "2026-10-09 Asia/Almaty",
+  "retrieval_recorded_utc": "2026-10-08T21:34:14.186585+00:00",
+  "source_policy": "Official primary pages only; fresh queries restricted to product domains then directopens; no university domain opened",
+  "feature_claim_vs_behavior": "All competitor workflow features here are first-party documentation claims; only document content was observed. No logged-in or interactive behavior tested.",
+  "sources": [
+    {
+      "product": "BigFuture/College Board",
+      "url": "https://bigfuture.collegeboard.org/plan-for-college/get-started/how-to-start-college-planning",
+      "title": "How To Get Started with College Planning",
+      "read": "fresh official web.open; readable93lines",
+      "evidence": "Guide describes filtering by location/major/campus and retaining a college list. Public documentation only.",
+      "limits": "Dynamic college-search directopen returns JavaScript requirement; interactive filters/save/persistence not exercised."
+    },
+    {
+      "product": "UCAS Hub",
+      "url": "https://www.ucas.com/discover/create-your-ucas-hub-today",
+      "title": "Create your UCAS Hub today",
+      "read": "fresh official web.open; readable208lines",
+      "evidence": "Guide separates exploration/favourites from registering and completing application, offers subject-based exploration.",
+      "limits": "No Hub account or actual application. UK service scope must not be treated as universal admissions rule."
+    },
+    {
+      "product": "Common App",
+      "url": "https://www.commonapp.org/apply/first-year-students/",
+      "title": "Application guide for first-year students",
+      "read": "fresh official web.open; readable213lines",
+      "evidence": "Public guide distinguishes gathering materials, support roles and individual testing/writing requirements; exposes requirements grid.",
+      "limits": "No applicant/recommender account, requirements PDF or individual institution inspected."
+    },
+    {
+      "product": "Common App",
+      "url": "https://www.commonapp.org/apply/fy-toolkit/",
+      "title": "First-year toolkit",
+      "read": "fresh official web.open; readable270lines",
+      "evidence": "Public resources grouped by preparing application, writing and working with recommenders.",
+      "limits": "Resources are design references, not imported admissions facts."
+    },
+    {
+      "product": "MyStudyLife",
+      "url": "https://mystudylife.com/tour/",
+      "title": "MyStudyLife Features",
+      "read": "fresh official web.open; readable495lines",
+      "evidence": "Official tour describes incomplete tasks due soon, task types/progress, revision attached to exams, reminders and sync.",
+      "limits": "Feature claims not tested; no registration/reminder/sync or outcome verification. Assignment-tracker guide directopen timed out; home/tour are successful authoritative substitutes."
+    },
+    {
+      "product": "MyStudyLife",
+      "url": "https://mystudylife.com/",
+      "title": "MyStudyLife official homepage",
+      "read": "fresh official web.open; readable416lines",
+      "evidence": "Official homepage describes combined planner/calendar and week overview.",
+      "limits": "Marketing ratings, AI claims and grade improvements not used as proof."
+    }
+  ]
+}

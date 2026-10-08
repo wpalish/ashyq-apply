@@ -93,6 +93,23 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
   // list rather than in a set-aside section it was never scored for.
   const ranked = rows.filter((r) => !r.ranking || RANKED.includes(r.ranking.bucket));
 
+  const clearFilters = () => {
+    setQuery('');
+    setTab('all');
+    setCountry('');
+    setEligibility('');
+    setFunding('');
+    setHideRejected(false);
+  };
+  const activeFilters = [
+    ...(query.trim() ? [{ label: `Search: ${query.trim()}`, clear: () => setQuery('') }] : []),
+    ...(tab !== 'all' ? [{ label: `List: ${tab.charAt(0).toUpperCase() + tab.slice(1)}`, clear: () => setTab('all') }] : []),
+    ...(country ? [{ label: `Country: ${country}`, clear: () => setCountry('') }] : []),
+    ...(eligibility ? [{ label: `Eligibility: ${STATUS_LABEL[eligibility] ?? humanize(eligibility)}`, clear: () => setEligibility('') }] : []),
+    ...(funding ? [{ label: `Funding: ${STATUS_LABEL[funding] ?? humanize(funding)}`, clear: () => setFunding('') }] : []),
+    ...(hideRejected ? [{ label: 'Hide rejected', clear: () => setHideRejected(false) }] : []),
+  ];
+
   if (results.length === 0) {
     return (
       <div className="find-page">
@@ -433,9 +450,21 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
         </Panel>
         </details>
 
+        {activeFilters.length > 0 && (
+          <div className="row row--tight" role="group" aria-label="Active filters">
+            <span className="small muted">Active filters</span>
+            {activeFilters.map((filter) => (
+              <button key={filter.label} type="button" className="btn btn--sm" onClick={filter.clear} aria-label={`Remove filter: ${filter.label}`}>
+                {filter.label} <span aria-hidden="true">×</span>
+              </button>
+            ))}
+            <button type="button" className="btn btn--sm" onClick={clearFilters}>Clear all filters</button>
+          </div>
+        )}
+
         <div className="find-results" aria-live="polite">
-          <p className="find-results__count">{rows.length} result{rows.length === 1 ? '' : 's'} from this research run</p>
-          {rows.length === 0 && <div className="find-empty"><Empty title="Nothing matches these filters yet.">Try another search or clear the filters.</Empty><button type="button" className="btn" onClick={() => { setQuery(''); setTab('all'); setCountry(''); setEligibility(''); setFunding(''); setHideRejected(false); }}>Clear filters</button></div>}
+          <p className="find-results__count">Showing {rows.length} of {results.length} result{results.length === 1 ? '' : 's'} from this research run</p>
+          {rows.length === 0 && <div className="find-empty"><Empty title="Nothing matches these filters yet.">Try another search or clear the filters.</Empty><button type="button" className="btn" onClick={clearFilters}>Clear filters</button></div>}
           {rows.map((result) => {
             const open = cardExpanded === result.id;
             const selected = compareIds.includes(result.id);
@@ -459,7 +488,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                 </div>
                 <div className="find-card__actions">
                   <button type="button" className="btn btn--dark" onClick={() => setCardExpanded(open ? null : result.id)} aria-expanded={open} data-testid={`card-expand-${result.id}`}>{open ? 'Hide details' : 'View details'}</button>
-                  <button type="button" className="btn" onClick={() => decideRow(result, 'maybe')} aria-pressed={result.user_decision === 'maybe' || result.user_decision === 'approved'}>{result.user_decision === 'maybe' || result.user_decision === 'approved' ? 'Saved' : 'Save'}</button>
+                  <button type="button" className="btn" onClick={() => decideRow(result, result.user_decision === 'approved' ? 'approved' : 'maybe')} aria-pressed={result.user_decision === 'maybe' || result.user_decision === 'approved'} title={result.user_decision === 'maybe' || result.user_decision === 'approved' ? 'Remove from your plan' : 'Save to your plan'}>{result.user_decision === 'maybe' || result.user_decision === 'approved' ? 'Saved' : 'Save'}</button>
                   <button type="button" className="btn" onClick={() => setCompareIds((current) => selected ? current.filter((id) => id !== result.id) : current.length < 3 ? [...current, result.id] : current)} aria-pressed={selected} disabled={!selected && compareIds.length >= 3}>{selected ? 'Remove' : 'Compare'}</button>
                 </div>
                 {open && <div className="find-card__detail"><ResultDetail result={result} /></div>}

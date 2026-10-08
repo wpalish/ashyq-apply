@@ -1,0 +1,65 @@
+- complementary:
+  - generic: Unimatch
+  - navigation "Main navigation":
+    - button "Home":
+      - generic: Home
+    - button "Find 20":
+      - generic: Find
+      - generic: "20"
+    - button "Plan 1":
+      - generic: Plan
+      - generic: "1"
+    - button "Documents 1":
+      - generic: Documents
+      - generic: "1"
+    - button "Community":
+      - generic: Community
+  - paragraph:
+    - text: Same students.
+    - strong: Bigger horizons.
+  - generic "Preferences"
+  - option "Match system"
+  - option "Light" [selected]
+  - option "Dark"
+  - option "English" [selected]
+  - option "Русский"
+  - option "Қазақша"
+- banner:
+  - generic: Demo data
+  - generic "Explore⌄"
+  - text: Applicant
+  - combobox "Applicant":
+    - option "New applicant"
+    - option "Demo Applicant (synthetic) · 1 run" [selected]
+  - button "New case"
+  - button "Settings"
+  - button "Sign out"
+- main:
+  - paragraph: Documents & deadlines
+  - heading "Prepare with confidence." [level=1]
+  - paragraph: Ordered by lead time, not by deadline. The items at the top depend on other people, so they are the ones that need starting first.
+  - generic "Calendar and deadlines across your shortlist (24)"
+  - button "University of Groningen"
+  - heading "University of Groningen — BSc Computing Science" [level=2]
+  - generic: from official pages
+  - paragraph: 1 of 5 items ticked off. Generated 09 окт. 2026 г., 02:56.
+  - heading "Your referee" [level=3]
+  - checkbox "Academic reference for admission · allow ~30 days" [checked]
+  - generic: Academic reference
+  - generic: for admission · allow ~30 days
+  - heading "Your school" [level=3]
+  - checkbox "Secondary school diploma (certified copy) for admission · allow ~21 days · max 10 MB · PDF · certified translation required · notarisation required"
+  - generic: Secondary school diploma (certified copy)
+  - generic: for admission · allow ~21 days · max 10 MB · PDF · certified translation required · notarisation required
+  - heading "You" [level=3]
+  - checkbox "Personal statement for admission · allow ~14 days · max 650 words"
+  - generic: Personal statement
+  - generic: for admission · allow ~14 days · max 650 words
+  - checkbox "Curriculum vitae for admission · allow ~5 days · max 2 pages"
+  - generic: Curriculum vitae
+  - generic: for admission · allow ~5 days · max 2 pages
+  - checkbox "Passport identity page (copy) for admission · allow ~1 day"
+  - generic: Passport identity page (copy)
+  - generic: for admission · allow ~1 day
+  - note:
+    - generic: Unimatch prepares this list. It does not upload documents, submit an application, sign anything on your behalf, or pay a fee. Those steps stay with you.

@@ -1,0 +1,214 @@
+{
+  "status": "PROPOSED_NOT_EXECUTED",
+  "mode": "saved-only strategy design",
+  "versions": {
+    "ours": "9a79bff7 supplied by root; no Git read",
+    "comparator": null
+  },
+  "current_comparative_baseline": null,
+  "observed_participants": null,
+  "results": null,
+  "effect_size": null,
+  "stages": [
+    {
+      "id": "0",
+      "name": "pre-registration, access/capability inventory, equivalent case packets",
+      "executed": false
+    },
+    {
+      "id": "1a",
+      "name": "controlled synthetic comprehension",
+      "executed": false,
+      "claim_scope": "prototype understanding only"
+    },
+    {
+      "id": "1b",
+      "name": "native disposable-data workflow",
+      "executed": false,
+      "requires": "separate access/side-effect authorization and comparable packet support"
+    },
+    {
+      "id": "2",
+      "name": "counterbalanced real-user comparison",
+      "executed": false,
+      "requires": "working comparable versions and separately authorized session access"
+    }
+  ],
+  "planned_sample": {
+    "total": 16,
+    "age_min": 18,
+    "country": "Kazakhstan",
+    "desktop": 8,
+    "mobile": 8,
+    "purpose": "formative descriptive study; no representative superiority claim",
+    "recruited": false
+  },
+  "language": "RU",
+  "case_definition": {
+    "citizenship_country": "Kazakhstan",
+    "population": "international/nonresident",
+    "degree": "bachelor",
+    "programme": "Computer Science",
+    "intake": "stated in each synthetic packet",
+    "budget": "amount + currency + academic_year, synthetic",
+    "case_ids": [
+      "A",
+      "B"
+    ],
+    "equivalence": "same programme count and scope/cost/aid/language/document/role/date/state traps; different values to limit memorization",
+    "real_university_claims_created_here": false,
+    "research_gold_accessed": false
+  },
+  "task_cards": [
+    {
+      "id": "T1",
+      "task": "Select three programmes within the stated budget, or explicitly state insufficient comparable evidence",
+      "proposed_cap_seconds": 360,
+      "critical_risk_categories": [
+        "scope",
+        "financial"
+      ],
+      "outcome": null,
+      "elapsed_seconds": null,
+      "errors": null,
+      "help": null
+    },
+    {
+      "id": "T2",
+      "task": "Find the language requirement evidence and identify missing exam information",
+      "proposed_cap_seconds": 240,
+      "critical_risk_categories": [
+        "scope",
+        "IELTS"
+      ],
+      "outcome": null,
+      "elapsed_seconds": null,
+      "errors": null,
+      "help": null
+    },
+    {
+      "id": "T3",
+      "task": "Explain comparable annual cost and funding status for two options",
+      "proposed_cap_seconds": 240,
+      "critical_risk_categories": [
+        "financial"
+      ],
+      "outcome": null,
+      "elapsed_seconds": null,
+      "errors": null,
+      "help": null
+    },
+    {
+      "id": "T4",
+      "task": "Identify next document action, output, owner, and known due date or clarification question",
+      "proposed_cap_seconds": 240,
+      "critical_risk_categories": [
+        "roles",
+        "documents",
+        "dates"
+      ],
+      "outcome": null,
+      "elapsed_seconds": null,
+      "errors": null,
+      "help": null
+    },
+    {
+      "id": "T5",
+      "task": "Remove one active constraint while retaining other constraints, decisions, notes, comparison",
+      "proposed_cap_seconds": 180,
+      "critical_risk_categories": [
+        "state_loss",
+        "wrong_result"
+      ],
+      "outcome": null,
+      "elapsed_seconds": null,
+      "errors": null,
+      "help": null
+    },
+    {
+      "id": "T6",
+      "task": "Save choice and note, return after reload and recover next action",
+      "proposed_cap_seconds": 300,
+      "critical_risk_categories": [
+        "persistence",
+        "wrong_case",
+        "owner_isolation"
+      ],
+      "outcome": null,
+      "elapsed_seconds": null,
+      "errors": null,
+      "help": null
+    }
+  ],
+  "counterbalance": {
+    "per_device": {
+      "X_A_then_Y_B": 2,
+      "X_B_then_Y_A": 2,
+      "Y_A_then_X_B": 2,
+      "Y_B_then_X_A": 2
+    },
+    "assignment": "pre-register before sessions",
+    "moderator": "same script and practice task, no navigation hints unless recorded as help"
+  },
+  "outcome_codes": [
+    "correct",
+    "partial",
+    "failed",
+    "blocked_access",
+    "not_comparable",
+    "interrupted"
+  ],
+  "help_codes": {
+    "H0": "none",
+    "H1": "instruction repeated",
+    "H2": "concept hint",
+    "H3": "direct action instruction"
+  },
+  "record_fields": [
+    "completion",
+    "elapsed_seconds",
+    "censored_timeout",
+    "critical_errors",
+    "noncritical_errors",
+    "help_requests",
+    "max_help_level",
+    "before_after_persistence_fields",
+    "understanding",
+    "confidence_1_5",
+    "ease_1_5",
+    "access_state",
+    "evidence_reference"
+  ],
+  "time_rules": {
+    "onboarding": "separate timing including consent/access when participant authorized",
+    "task_start": "after task card read",
+    "task_end": "final answer or cap",
+    "timeout": "retain cap time and censored flag",
+    "external_issue": "retain interrupted row and reason"
+  },
+  "comparison_rules": [
+    "Report task denominator and access/data/feature coverage separately",
+    "Do not turn blocked auth or an untested feature into a comparator defect",
+    "Require comparable facts and feasibility before task time comparison",
+    "Retain failures and assisted completions; do not silently exclude hard cases",
+    "Correctness and critical errors before speed/help preference",
+    "Claim only the tested task/version/sample, not universal best product"
+  ],
+  "not_authorized_by_this_document": [
+    "new network",
+    "account creation",
+    "terms acceptance",
+    "trial activation",
+    "purchase",
+    "mentor message",
+    "message to people",
+    "real application submission",
+    "university provider resume",
+    "research gold/heldout access"
+  ],
+  "data_artifacts": {
+    "observations": "observations-template.csv (header only)",
+    "sources": "read-source-pins.json",
+    "coverage": "coverage-boundaries.json"
+  }
+}

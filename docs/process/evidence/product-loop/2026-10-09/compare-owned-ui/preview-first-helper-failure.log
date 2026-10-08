@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round1/preview.py", line 42, in <module>
+    assert seed.is_relative_to(Path(__file__).resolve().parent)
+AssertionError
+
+Root local preview helper only admitted its first folder, rejecting the later owned synthetic clone. No API/Vite child or app source was changed. Repair admits only two exact owned seed paths with synthetic/provider-none process receipts. This is a local helper failure, not an app/provider refusal.

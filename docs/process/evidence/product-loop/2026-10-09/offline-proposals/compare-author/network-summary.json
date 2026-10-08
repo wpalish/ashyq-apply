@@ -1,0 +1,118 @@
+{
+  "guard_self_test_blocked_before_access": true,
+  "real_checks_recorded_attempts": 0,
+  "phases": [
+    {
+      "phase": "green-final-network",
+      "recorded_processes": 3,
+      "network_or_listen_attempts": 0,
+      "entries": [
+        {
+          "pid": 29376,
+          "network_or_listen_attempts": 0
+        },
+        {
+          "pid": 29414,
+          "network_or_listen_attempts": 0
+        },
+        {
+          "pid": 29573,
+          "network_or_listen_attempts": 0
+        }
+      ],
+      "self_test": false
+    },
+    {
+      "phase": "green-network",
+      "recorded_processes": 1,
+      "network_or_listen_attempts": 0,
+      "entries": [
+        {
+          "pid": 29150,
+          "network_or_listen_attempts": 0
+        }
+      ],
+      "self_test": false
+    },
+    {
+      "phase": "guard-network",
+      "recorded_processes": 1,
+      "network_or_listen_attempts": 3,
+      "entries": [
+        {
+          "pid": 28997,
+          "network_or_listen_attempts": 3
+        }
+      ],
+      "self_test": true
+    },
+    {
+      "phase": "lint-network",
+      "recorded_processes": 3,
+      "network_or_listen_attempts": 0,
+      "entries": [
+        {
+          "pid": 29244,
+          "network_or_listen_attempts": 0
+        },
+        {
+          "pid": 29378,
+          "network_or_listen_attempts": 0
+        },
+        {
+          "pid": 29416,
+          "network_or_listen_attempts": 0
+        }
+      ],
+      "self_test": false
+    },
+    {
+      "phase": "red-final-network",
+      "recorded_processes": 1,
+      "network_or_listen_attempts": 0,
+      "entries": [
+        {
+          "pid": 29570,
+          "network_or_listen_attempts": 0
+        }
+      ],
+      "self_test": false
+    },
+    {
+      "phase": "red-network",
+      "recorded_processes": 2,
+      "network_or_listen_attempts": 0,
+      "entries": [
+        {
+          "pid": 29042,
+          "network_or_listen_attempts": 0
+        },
+        {
+          "pid": 29043,
+          "network_or_listen_attempts": 0
+        }
+      ],
+      "self_test": false
+    },
+    {
+      "phase": "typecheck-network",
+      "recorded_processes": 3,
+      "network_or_listen_attempts": 0,
+      "entries": [
+        {
+          "pid": 29243,
+          "network_or_listen_attempts": 0
+        },
+        {
+          "pid": 29377,
+          "network_or_listen_attempts": 0
+        },
+        {
+          "pid": 29415,
+          "network_or_listen_attempts": 0
+        }
+      ],
+      "self_test": false
+    }
+  ]
+}

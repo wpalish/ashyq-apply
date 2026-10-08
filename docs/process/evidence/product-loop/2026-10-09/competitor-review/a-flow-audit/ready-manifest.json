@@ -1,0 +1,49 @@
+{
+  "status": "READ_ONLY_AUDIT_READY_WITH_CONCURRENT_SOURCE_QUALIFICATION",
+  "files": {
+    "PLAN.json": {
+      "sha256": "bdf1387a6e6d6ed633b7415455a3b42a47810ef566fcbefe7331d873ecbd42a1",
+      "bytes": 793
+    },
+    "REPORT.md": {
+      "sha256": "616f91c3f3cb73ed2a04c8ea397f700c72d78479e1749b0843983cc2b9d0a0e0",
+      "bytes": 6477
+    },
+    "REVIEW-UPDATE.md": {
+      "sha256": "c6e1dbbfdd092e1447bafb9b846f74ea8fc879032c3d9fd3cb0b187d947210a6",
+      "bytes": 2072
+    },
+    "findings.json": {
+      "sha256": "9a9beaa40d21947ba971139c42b94bbbab8c8e47d1e71fca822aeb8dd7666d32",
+      "bytes": 10272
+    },
+    "initial-seal-check.stderr.txt": {
+      "sha256": "865b67d2fb291d91ba1db9f12295d4474de6bd38bf62ca0d239b37a9909ab08f",
+      "bytes": 271
+    },
+    "review-update.json": {
+      "sha256": "e70a59be7b2b9450a5a6b4da92f29315d9b9b301a8a9fe64755ead69802f211b",
+      "bytes": 1354
+    },
+    "source-check.json": {
+      "sha256": "05269127aa722d7198de89d33b711313d2e5b3b43c039f5447b01ef693b32193",
+      "bytes": 409
+    },
+    "source-pins-reread.json": {
+      "sha256": "47da810c934733a440d6c116929e2b55ed4521840b218861bc07c020a9b732b0",
+      "bytes": 2207
+    },
+    "source-pins.json": {
+      "sha256": "30af7b4bc3b050651cd8084856d9576e713bbbae80f49e1d6db178d5bb89cbd1",
+      "bytes": 1815
+    }
+  },
+  "file_count": 9,
+  "total_bytes": 25670,
+  "primary_edits": 0,
+  "git_actions": 0,
+  "network_provider_model_calls": 0,
+  "runtime_tests": "NOT RUN",
+  "read_first": "REVIEW-UPDATE.md",
+  "original_findings": "REPORT.md"
+}
