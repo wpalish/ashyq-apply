@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="10" skipped="0" tests="17" time="0.227" timestamp="2026-10-08T05:51:43.906434+05:00" hostname="iMac-Aliser.local"><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[currently_not_accepted]" time="0.022"><failure message="AssertionError: assert {'ielts_min_o... ['academic']} == {}&#10;  &#10;  Left contains 2 more items:&#10;  {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}&#10;  Use -v to get more diff">case = {'case': 'currently_not_accepted', 'inner': '&lt;h2&gt;IELTS Academic&lt;/h2&gt;&lt;p&gt;IELTS Academic is currently not accepted. Overall minimum 6.5.&lt;/p&gt;', 'expected': {}}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['case'])
+    def test_exact_peer17_original_control(case):
+        body = '&lt;html&gt;&lt;head&gt;&lt;title&gt;Bachelor admission requirements&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;main&gt;&lt;h1&gt;Bachelor admission requirements&lt;/h1&gt;' + case['inner'] + '&lt;/main&gt;&lt;/body&gt;&lt;/html&gt;'
+        outputs = [asyncio.run(replay.read('https://admissions.example.edu/admission-requirements', body, domain='example.edu', **kw)) for kw in ({'old': True}, {'on': False}, {'on': True})]
+        values = {c['claim_type']: c['normalized_value'] for c in outputs[2]['claims'] if c['claim_type'].startswith('ielts_')}
+        RESULTS.append({**case, 'body': body, 'old': outputs[0], 'off': outputs[1], 'on': outputs[2], 'observed': values, 'passed': values == case['expected']})
+        (replay.BASE / (__import__('os').environ.get('REVIEW_ATTEMPT', 'v4-unknown') + '.B17.json')).write_text(json.dumps(RESULTS, ensure_ascii=False, indent=2) + '\n')
+        assert outputs[0] == outputs[1]
+        assert all(o['page_type'] != 'unknown' for o in outputs[2]['page_outcomes'])
+        assert [o['page_type'] for o in outputs[0]['page_outcomes']] == [o['page_type'] for o in outputs[2]['page_outcomes']]
+        assert len(outputs[2]['fetcher_calls']) == 1
+        for c in outputs[2]['claims']:
+            assert is_verbatim_excerpt(c['original_text_excerpt'], replay.readable_text(body))
+&gt;       assert values == case['expected']
+E       AssertionError: assert {'ielts_min_o... ['academic']} == {}
+E         
+E         Left contains 2 more items:
+E         {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}
+E         Use -v to get more diff
+
+work/local-round9/a-ielts-v5-proposal/tests/test_b17.py:27: AssertionError</failure></testcase><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[not_currently_accept]" time="0.019"><failure message="AssertionError: assert {'ielts_min_o... ['academic']} == {}&#10;  &#10;  Left contains 2 more items:&#10;  {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}&#10;  Use -v to get more diff">case = {'case': 'not_currently_accept', 'inner': '&lt;h2&gt;IELTS Academic&lt;/h2&gt;&lt;p&gt;We do not currently accept IELTS Academic. Overall minimum 6.5.&lt;/p&gt;', 'expected': {}}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['case'])
+    def test_exact_peer17_original_control(case):
+        body = '&lt;html&gt;&lt;head&gt;&lt;title&gt;Bachelor admission requirements&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;main&gt;&lt;h1&gt;Bachelor admission requirements&lt;/h1&gt;' + case['inner'] + '&lt;/main&gt;&lt;/body&gt;&lt;/html&gt;'
+        outputs = [asyncio.run(replay.read('https://admissions.example.edu/admission-requirements', body, domain='example.edu', **kw)) for kw in ({'old': True}, {'on': False}, {'on': True})]
+        values = {c['claim_type']: c['normalized_value'] for c in outputs[2]['claims'] if c['claim_type'].startswith('ielts_')}
+        RESULTS.append({**case, 'body': body, 'old': outputs[0], 'off': outputs[1], 'on': outputs[2], 'observed': values, 'passed': values == case['expected']})
+        (replay.BASE / (__import__('os').environ.get('REVIEW_ATTEMPT', 'v4-unknown') + '.B17.json')).write_text(json.dumps(RESULTS, ensure_ascii=False, indent=2) + '\n')
+        assert outputs[0] == outputs[1]
+        assert all(o['page_type'] != 'unknown' for o in outputs[2]['page_outcomes'])
+        assert [o['page_type'] for o in outputs[0]['page_outcomes']] == [o['page_type'] for o in outputs[2]['page_outcomes']]
+        assert len(outputs[2]['fetcher_calls']) == 1
+        for c in outputs[2]['claims']:
+            assert is_verbatim_excerpt(c['original_text_excerpt'], replay.readable_text(body))
+&gt;       assert values == case['expected']
+E       AssertionError: assert {'ielts_min_o... ['academic']} == {}
+E         
+E         Left contains 2 more items:
+E         {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}
+E         Use -v to get more diff
+
+work/local-round9/a-ielts-v5-proposal/tests/test_b17.py:27: AssertionError</failure></testcase><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[test_results_decline]" time="0.008"><failure message="AssertionError: assert {'ielts_min_o... ['academic']} == {}&#10;  &#10;  Left contains 2 more items:&#10;  {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}&#10;  Use -v to get more diff">case = {'case': 'test_results_decline', 'inner': '&lt;h2&gt;IELTS Academic&lt;/h2&gt;&lt;p&gt;IELTS Academic test results are not accepted. Overall minimum 6.5.&lt;/p&gt;', 'expected': {}}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['case'])
+    def test_exact_peer17_original_control(case):
+        body = '&lt;html&gt;&lt;head&gt;&lt;title&gt;Bachelor admission requirements&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;main&gt;&lt;h1&gt;Bachelor admission requirements&lt;/h1&gt;' + case['inner'] + '&lt;/main&gt;&lt;/body&gt;&lt;/html&gt;'
+        outputs = [asyncio.run(replay.read('https://admissions.example.edu/admission-requirements', body, domain='example.edu', **kw)) for kw in ({'old': True}, {'on': False}, {'on': True})]
+        values = {c['claim_type']: c['normalized_value'] for c in outputs[2]['claims'] if c['claim_type'].startswith('ielts_')}
+        RESULTS.append({**case, 'body': body, 'old': outputs[0], 'off': outputs[1], 'on': outputs[2], 'observed': values, 'passed': values == case['expected']})
+        (replay.BASE / (__import__('os').environ.get('REVIEW_ATTEMPT', 'v4-unknown') + '.B17.json')).write_text(json.dumps(RESULTS, ensure_ascii=False, indent=2) + '\n')
+        assert outputs[0] == outputs[1]
+        assert all(o['page_type'] != 'unknown' for o in outputs[2]['page_outcomes'])
+        assert [o['page_type'] for o in outputs[0]['page_outcomes']] == [o['page_type'] for o in outputs[2]['page_outcomes']]
+        assert len(outputs[2]['fetcher_calls']) == 1
+        for c in outputs[2]['claims']:
+            assert is_verbatim_excerpt(c['original_text_excerpt'], replay.readable_text(body))
+&gt;       assert values == case['expected']
+E       AssertionError: assert {'ielts_min_o... ['academic']} == {}
+E         
+E         Left contains 2 more items:
+E         {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}
+E         Use -v to get more diff
+
+work/local-round9/a-ielts-v5-proposal/tests/test_b17.py:27: AssertionError</failure></testcase><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[currently_cannot_accept]" time="0.008"><failure message="AssertionError: assert {'ielts_min_o... ['academic']} == {}&#10;  &#10;  Left contains 2 more items:&#10;  {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}&#10;  Use -v to get more diff">case = {'case': 'currently_cannot_accept', 'inner': '&lt;h2&gt;IELTS Academic&lt;/h2&gt;&lt;p&gt;We cannot currently accept IELTS Academic. Overall minimum 6.5.&lt;/p&gt;', 'expected': {}}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['case'])
+    def test_exact_peer17_original_control(case):
+        body = '&lt;html&gt;&lt;head&gt;&lt;title&gt;Bachelor admission requirements&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;main&gt;&lt;h1&gt;Bachelor admission requirements&lt;/h1&gt;' + case['inner'] + '&lt;/main&gt;&lt;/body&gt;&lt;/html&gt;'
+        outputs = [asyncio.run(replay.read('https://admissions.example.edu/admission-requirements', body, domain='example.edu', **kw)) for kw in ({'old': True}, {'on': False}, {'on': True})]
+        values = {c['claim_type']: c['normalized_value'] for c in outputs[2]['claims'] if c['claim_type'].startswith('ielts_')}
+        RESULTS.append({**case, 'body': body, 'old': outputs[0], 'off': outputs[1], 'on': outputs[2], 'observed': values, 'passed': values == case['expected']})
+        (replay.BASE / (__import__('os').environ.get('REVIEW_ATTEMPT', 'v4-unknown') + '.B17.json')).write_text(json.dumps(RESULTS, ensure_ascii=False, indent=2) + '\n')
+        assert outputs[0] == outputs[1]
+        assert all(o['page_type'] != 'unknown' for o in outputs[2]['page_outcomes'])
+        assert [o['page_type'] for o in outputs[0]['page_outcomes']] == [o['page_type'] for o in outputs[2]['page_outcomes']]
+        assert len(outputs[2]['fetcher_calls']) == 1
+        for c in outputs[2]['claims']:
+            assert is_verbatim_excerpt(c['original_text_excerpt'], replay.readable_text(body))
+&gt;       assert values == case['expected']
+E       AssertionError: assert {'ielts_min_o... ['academic']} == {}
+E         
+E         Left contains 2 more items:
+E         {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}
+E         Use -v to get more diff
+
+work/local-round9/a-ielts-v5-proposal/tests/test_b17.py:27: AssertionError</failure></testcase><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[currently_accepted_positive]" time="0.008" /><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[article_minimum_positive]" time="0.007"><failure message="AssertionError: assert {} == {'ielts_min_o... ['academic']}&#10;  &#10;  Right contains 2 more items:&#10;  {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}&#10;  Use -v to get more diff">case = {'case': 'article_minimum_positive', 'inner': '&lt;h2&gt;IELTS Academic&lt;/h2&gt;&lt;p&gt;A minimum score of 6.5 is required.&lt;/p&gt;', 'expected': {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']}}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['case'])
+    def test_exact_peer17_original_control(case):
+        body = '&lt;html&gt;&lt;head&gt;&lt;title&gt;Bachelor admission requirements&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;main&gt;&lt;h1&gt;Bachelor admission requirements&lt;/h1&gt;' + case['inner'] + '&lt;/main&gt;&lt;/body&gt;&lt;/html&gt;'
+        outputs = [asyncio.run(replay.read('https://admissions.example.edu/admission-requirements', body, domain='example.edu', **kw)) for kw in ({'old': True}, {'on': False}, {'on': True})]
+        values = {c['claim_type']: c['normalized_value'] for c in outputs[2]['claims'] if c['claim_type'].startswith('ielts_')}
+        RESULTS.append({**case, 'body': body, 'old': outputs[0], 'off': outputs[1], 'on': outputs[2], 'observed': values, 'passed': values == case['expected']})
+        (replay.BASE / (__import__('os').environ.get('REVIEW_ATTEMPT', 'v4-unknown') + '.B17.json')).write_text(json.dumps(RESULTS, ensure_ascii=False, indent=2) + '\n')
+        assert outputs[0] == outputs[1]
+        assert all(o['page_type'] != 'unknown' for o in outputs[2]['page_outcomes'])
+        assert [o['page_type'] for o in outputs[0]['page_outcomes']] == [o['page_type'] for o in outputs[2]['page_outcomes']]
+        assert len(outputs[2]['fetcher_calls']) == 1
+        for c in outputs[2]['claims']:
+            assert is_verbatim_excerpt(c['original_text_excerpt'], replay.readable_text(body))
+&gt;       assert values == case['expected']
+E       AssertionError: assert {} == {'ielts_min_o... ['academic']}
+E         
+E         Right contains 2 more items:
+E         {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}
+E         Use -v to get more diff
+
+work/local-round9/a-ielts-v5-proposal/tests/test_b17.py:27: AssertionError</failure></testcase><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[candidate_score_positive]" time="0.008"><failure message="AssertionError: assert {} == {'ielts_min_o... ['academic']}&#10;  &#10;  Right contains 2 more items:&#10;  {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}&#10;  Use -v to get more diff">case = {'case': 'candidate_score_positive', 'inner': '&lt;h2&gt;IELTS Academic&lt;/h2&gt;&lt;p&gt;Candidates must achieve a minimum score of 6.5.&lt;/p&gt;', 'expected': {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']}}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['case'])
+    def test_exact_peer17_original_control(case):
+        body = '&lt;html&gt;&lt;head&gt;&lt;title&gt;Bachelor admission requirements&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;main&gt;&lt;h1&gt;Bachelor admission requirements&lt;/h1&gt;' + case['inner'] + '&lt;/main&gt;&lt;/body&gt;&lt;/html&gt;'
+        outputs = [asyncio.run(replay.read('https://admissions.example.edu/admission-requirements', body, domain='example.edu', **kw)) for kw in ({'old': True}, {'on': False}, {'on': True})]
+        values = {c['claim_type']: c['normalized_value'] for c in outputs[2]['claims'] if c['claim_type'].startswith('ielts_')}
+        RESULTS.append({**case, 'body': body, 'old': outputs[0], 'off': outputs[1], 'on': outputs[2], 'observed': values, 'passed': values == case['expected']})
+        (replay.BASE / (__import__('os').environ.get('REVIEW_ATTEMPT', 'v4-unknown') + '.B17.json')).write_text(json.dumps(RESULTS, ensure_ascii=False, indent=2) + '\n')
+        assert outputs[0] == outputs[1]
+        assert all(o['page_type'] != 'unknown' for o in outputs[2]['page_outcomes'])
+        assert [o['page_type'] for o in outputs[0]['page_outcomes']] == [o['page_type'] for o in outputs[2]['page_outcomes']]
+        assert len(outputs[2]['fetcher_calls']) == 1
+        for c in outputs[2]['claims']:
+            assert is_verbatim_excerpt(c['original_text_excerpt'], replay.readable_text(body))
+&gt;       assert values == case['expected']
+E       AssertionError: assert {} == {'ielts_min_o... ['academic']}
+E         
+E         Right contains 2 more items:
+E         {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}
+E         Use -v to get more diff
+
+work/local-round9/a-ielts-v5-proposal/tests/test_b17.py:27: AssertionError</failure></testcase><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[own_inline_article_positive]" time="0.007"><failure message="AssertionError: assert {} == {'ielts_min_o... ['academic']}&#10;  &#10;  Right contains 2 more items:&#10;  {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}&#10;  Use -v to get more diff">case = {'case': 'own_inline_article_positive', 'inner': '&lt;p&gt;IELTS Academic requires a minimum score of 6.5.&lt;/p&gt;', 'expected': {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']}}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['case'])
+    def test_exact_peer17_original_control(case):
+        body = '&lt;html&gt;&lt;head&gt;&lt;title&gt;Bachelor admission requirements&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;main&gt;&lt;h1&gt;Bachelor admission requirements&lt;/h1&gt;' + case['inner'] + '&lt;/main&gt;&lt;/body&gt;&lt;/html&gt;'
+        outputs = [asyncio.run(replay.read('https://admissions.example.edu/admission-requirements', body, domain='example.edu', **kw)) for kw in ({'old': True}, {'on': False}, {'on': True})]
+        values = {c['claim_type']: c['normalized_value'] for c in outputs[2]['claims'] if c['claim_type'].startswith('ielts_')}
+        RESULTS.append({**case, 'body': body, 'old': outputs[0], 'off': outputs[1], 'on': outputs[2], 'observed': values, 'passed': values == case['expected']})
+        (replay.BASE / (__import__('os').environ.get('REVIEW_ATTEMPT', 'v4-unknown') + '.B17.json')).write_text(json.dumps(RESULTS, ensure_ascii=False, indent=2) + '\n')
+        assert outputs[0] == outputs[1]
+        assert all(o['page_type'] != 'unknown' for o in outputs[2]['page_outcomes'])
+        assert [o['page_type'] for o in outputs[0]['page_outcomes']] == [o['page_type'] for o in outputs[2]['page_outcomes']]
+        assert len(outputs[2]['fetcher_calls']) == 1
+        for c in outputs[2]['claims']:
+            assert is_verbatim_excerpt(c['original_text_excerpt'], replay.readable_text(body))
+&gt;       assert values == case['expected']
+E       AssertionError: assert {} == {'ielts_min_o... ['academic']}
+E         
+E         Right contains 2 more items:
+E         {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}
+E         Use -v to get more diff
+
+work/local-round9/a-ielts-v5-proposal/tests/test_b17.py:27: AssertionError</failure></testcase><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[incidental_academic_programmes]" time="0.009"><failure message="AssertionError: assert {'ielts_min_o...al_training']} == {'ielts_min_o...al_training']}&#10;  &#10;  Omitting 1 identical items, use -vv to show&#10;  Differing items:&#10;  {'ielts_accepted_types': ['academic', 'general_training']} != {'ielts_accepted_types': ['general_training']}&#10;  Use -v to get more diff">case = {'case': 'incidental_academic_programmes', 'inner': '&lt;h2&gt;IELTS&lt;/h2&gt;&lt;p&gt;For academic programmes, IELTS General Training ...ith an overall minimum 6.5.&lt;/p&gt;', 'expected': {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['general_training']}}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['case'])
+    def test_exact_peer17_original_control(case):
+        body = '&lt;html&gt;&lt;head&gt;&lt;title&gt;Bachelor admission requirements&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;main&gt;&lt;h1&gt;Bachelor admission requirements&lt;/h1&gt;' + case['inner'] + '&lt;/main&gt;&lt;/body&gt;&lt;/html&gt;'
+        outputs = [asyncio.run(replay.read('https://admissions.example.edu/admission-requirements', body, domain='example.edu', **kw)) for kw in ({'old': True}, {'on': False}, {'on': True})]
+        values = {c['claim_type']: c['normalized_value'] for c in outputs[2]['claims'] if c['claim_type'].startswith('ielts_')}
+        RESULTS.append({**case, 'body': body, 'old': outputs[0], 'off': outputs[1], 'on': outputs[2], 'observed': values, 'passed': values == case['expected']})
+        (replay.BASE / (__import__('os').environ.get('REVIEW_ATTEMPT', 'v4-unknown') + '.B17.json')).write_text(json.dumps(RESULTS, ensure_ascii=False, indent=2) + '\n')
+        assert outputs[0] == outputs[1]
+        assert all(o['page_type'] != 'unknown' for o in outputs[2]['page_outcomes'])
+        assert [o['page_type'] for o in outputs[0]['page_outcomes']] == [o['page_type'] for o in outputs[2]['page_outcomes']]
+        assert len(outputs[2]['fetcher_calls']) == 1
+        for c in outputs[2]['claims']:
+            assert is_verbatim_excerpt(c['original_text_excerpt'], replay.readable_text(body))
+&gt;       assert values == case['expected']
+E       AssertionError: assert {'ielts_min_o...al_training']} == {'ielts_min_o...al_training']}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'ielts_accepted_types': ['academic', 'general_training']} != {'ielts_accepted_types': ['general_training']}
+E         Use -v to get more diff
+
+work/local-round9/a-ielts-v5-proposal/tests/test_b17.py:27: AssertionError</failure></testcase><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[genuine_general_training_positive]" time="0.008" /><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[aria_label_from_chrome_heading]" time="0.009"><failure message="AssertionError: assert {'ielts_min_o... ['academic']} == {}&#10;  &#10;  Left contains 2 more items:&#10;  {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}&#10;  Use -v to get more diff">case = {'case': 'aria_label_from_chrome_heading', 'inner': '&lt;h2 id="exam" class="menu-title"&gt;IELTS Academic&lt;/h2&gt;&lt;section aria-labelledby="exam"&gt;&lt;p&gt;Overall minimum 6.5.&lt;/p&gt;&lt;/section&gt;', 'expected': {}}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['case'])
+    def test_exact_peer17_original_control(case):
+        body = '&lt;html&gt;&lt;head&gt;&lt;title&gt;Bachelor admission requirements&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;main&gt;&lt;h1&gt;Bachelor admission requirements&lt;/h1&gt;' + case['inner'] + '&lt;/main&gt;&lt;/body&gt;&lt;/html&gt;'
+        outputs = [asyncio.run(replay.read('https://admissions.example.edu/admission-requirements', body, domain='example.edu', **kw)) for kw in ({'old': True}, {'on': False}, {'on': True})]
+        values = {c['claim_type']: c['normalized_value'] for c in outputs[2]['claims'] if c['claim_type'].startswith('ielts_')}
+        RESULTS.append({**case, 'body': body, 'old': outputs[0], 'off': outputs[1], 'on': outputs[2], 'observed': values, 'passed': values == case['expected']})
+        (replay.BASE / (__import__('os').environ.get('REVIEW_ATTEMPT', 'v4-unknown') + '.B17.json')).write_text(json.dumps(RESULTS, ensure_ascii=False, indent=2) + '\n')
+        assert outputs[0] == outputs[1]
+        assert all(o['page_type'] != 'unknown' for o in outputs[2]['page_outcomes'])
+        assert [o['page_type'] for o in outputs[0]['page_outcomes']] == [o['page_type'] for o in outputs[2]['page_outcomes']]
+        assert len(outputs[2]['fetcher_calls']) == 1
+        for c in outputs[2]['claims']:
+            assert is_verbatim_excerpt(c['original_text_excerpt'], replay.readable_text(body))
+&gt;       assert values == case['expected']
+E       AssertionError: assert {'ielts_min_o... ['academic']} == {}
+E         
+E         Left contains 2 more items:
+E         {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}
+E         Use -v to get more diff
+
+work/local-round9/a-ielts-v5-proposal/tests/test_b17.py:27: AssertionError</failure></testcase><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[aria_label_from_valid_heading]" time="0.009" /><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[full_wrong_scale_atom]" time="0.008"><failure message="AssertionError: assert {'ielts_min_o... ['academic']} == {}&#10;  &#10;  Left contains 2 more items:&#10;  {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}&#10;  Use -v to get more diff">case = {'case': 'full_wrong_scale_atom', 'inner': '&lt;h2&gt;IELTS Academic&lt;/h2&gt;&lt;p&gt;Overall minimum 6.5/100 is required.&lt;/p&gt;', 'expected': {}}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['case'])
+    def test_exact_peer17_original_control(case):
+        body = '&lt;html&gt;&lt;head&gt;&lt;title&gt;Bachelor admission requirements&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;main&gt;&lt;h1&gt;Bachelor admission requirements&lt;/h1&gt;' + case['inner'] + '&lt;/main&gt;&lt;/body&gt;&lt;/html&gt;'
+        outputs = [asyncio.run(replay.read('https://admissions.example.edu/admission-requirements', body, domain='example.edu', **kw)) for kw in ({'old': True}, {'on': False}, {'on': True})]
+        values = {c['claim_type']: c['normalized_value'] for c in outputs[2]['claims'] if c['claim_type'].startswith('ielts_')}
+        RESULTS.append({**case, 'body': body, 'old': outputs[0], 'off': outputs[1], 'on': outputs[2], 'observed': values, 'passed': values == case['expected']})
+        (replay.BASE / (__import__('os').environ.get('REVIEW_ATTEMPT', 'v4-unknown') + '.B17.json')).write_text(json.dumps(RESULTS, ensure_ascii=False, indent=2) + '\n')
+        assert outputs[0] == outputs[1]
+        assert all(o['page_type'] != 'unknown' for o in outputs[2]['page_outcomes'])
+        assert [o['page_type'] for o in outputs[0]['page_outcomes']] == [o['page_type'] for o in outputs[2]['page_outcomes']]
+        assert len(outputs[2]['fetcher_calls']) == 1
+        for c in outputs[2]['claims']:
+            assert is_verbatim_excerpt(c['original_text_excerpt'], replay.readable_text(body))
+&gt;       assert values == case['expected']
+E       AssertionError: assert {'ielts_min_o... ['academic']} == {}
+E         
+E         Left contains 2 more items:
+E         {'ielts_accepted_types': ['academic'], 'ielts_min_overall': 6.5}
+E         Use -v to get more diff
+
+work/local-round9/a-ielts-v5-proposal/tests/test_b17.py:27: AssertionError</failure></testcase><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[invalid_sixty_atom]" time="0.007" /><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[invalid_negative_writing_atom]" time="0.009" /><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[other_exam_sibling_control]" time="0.008" /><testcase classname="work.local-round9.a-ielts-v5-proposal.tests.test_b17" name="test_exact_peer17_original_control[no_IELTS_ownership_control]" time="0.008" /></testsuite></testsuites>

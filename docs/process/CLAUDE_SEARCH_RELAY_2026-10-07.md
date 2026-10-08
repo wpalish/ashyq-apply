@@ -210,11 +210,14 @@ Parent actual-module199PASS/0skip19.27s; Ruff/format/mypy383 PASS. Four harness/
 2026-10-08 00:31UTC: f0c8 full13/13,4261x2,95.25%,232frontend,79demo+6auth,1skip; receipt4fb41d2e. IELTSv3 rejected8NEWblockers; first-refusal internalExaretry independently confirmed, strict-only scoped repair pending; prepared genuine controller rejected9corrupt accepted/3malformed crashes,0live. A IELTSv4, B actualprovider mocks. GoalACTIVE.
 
 
-### 2026-10-08 01:07 UTC: final capture protocol gates complete
+### 2026-10-08 01:04 UTC: final capture protocol gates complete
 
 Final executable source `7c74a12d71bd00228014c11d194928d223e110be` passed the authorized local full runner: 13/13 steps in 15m09s, 4292 unique backend cases in both SQLite and PostgreSQL, 95.25% coverage, frontend232, demo79 PASS/1skip, auth6, mypy383, dependency audits0. All999 executable source paths stayed unchanged. Archive `local-round9/strict-first-refusal-full/receipt.json` SHA `c8017ad9825b00e7d0a464a9f8f2a741ca6d6639b15f3dc6f8267100cdefdfd2`:22 selected originals /4,549,257bytes. Native budget remainsFalse, app/provider unchanged, no fresh live/quality/default/production proof.
 
 Independent external validator review rejected18 distinct corrupt inputs (24 lane assertions), while134 strict controls pass and partial lane88/89 with3 explicit policy results; repair provenance/counter/cause/shape consistency before fresh round10 execution. IELTSv4 rejected4 new false minima+3 new correct-fact losses; v5 external225 author controlsPASS awaiting independent review. Existing baseline413 reads/58queries/0refusals and125predictions remains UNSCORED.
 
 
-2026-10-08 01:16UTC: Draft #68 https://github.com/wpalish/ashyq-apply/pull/68 OPEN/Draft against#67, head1d559434, created and attached. Capture ready-for-review; next task/search-genuine-baseline explicit predecessor exception. External driver a56e6f03 two-agent review pending, IELTSv5 external229PASS peer pending; no fresh live.
+2026-10-08 01:06UTC: Draft #68 https://github.com/wpalish/ashyq-apply/pull/68 OPEN/Draft against#67, head1d559434, created and attached. Capture ready-for-review; next task/search-genuine-baseline explicit predecessor exception. External driver a56e6f03 two-agent review pending, IELTSv5 external229PASS peer pending; no fresh live.
+
+
+**[search-genuine-baseline] READY FOR FRESH LOCAL EXECUTION, 2026-10-08 01:16UTC.** New round10 PLAN SHA `031ba703f3fa41079bb59650322af8505d32eb6bd4094ebdb538f42fb8b7e078`, controller4fa670fb, package4d5a0953, source7c74/full19f349 pinned. A manifestcd010e6e accepted scoped contract (qualified old no-ops); B manifest171fe86d314/314 PASS. Root transfer18/18 and read-only preflight999 unchanged/STOP absent. Prepared archive receipt SHA `be347f2d63bdef8b99c3300d50c2304452d85086959c7cf025dc5b27acc9b671`, 161 selected files/16273289 bytes. Next exact command is PLAN.execution_command with --execute after this preparation is committed/pushed. Original10 sequential6/60/120/119+1/nativeFalse, first refusal globally stops. No live has started at this checkpoint. All partial Jobs/missing facts remain explicit and in denominator. No old attempt resume, quality/default/purchase/launch inference.

@@ -1,0 +1,80 @@
+{
+  "A134": {
+    "controls": 134,
+    "definite_lane_assertions": 134,
+    "pass": 132,
+    "red": 2,
+    "policy": 0,
+    "exceptions": 0,
+    "capture_kind_checks": 0,
+    "capture_kind_red": 0,
+    "input_mutation": 0
+  },
+  "A46": {
+    "controls": 46,
+    "definite_lane_assertions": 89,
+    "pass": 89,
+    "red": 0,
+    "policy": 3,
+    "exceptions": 0,
+    "capture_kind_checks": 11,
+    "capture_kind_red": 0,
+    "input_mutation": 0
+  },
+  "B140": {
+    "controls": 140,
+    "definite_lane_assertions": 280,
+    "pass": 280,
+    "red": 0,
+    "policy": 0,
+    "exceptions": 0,
+    "capture_kind_checks": 1,
+    "capture_kind_red": 0,
+    "input_mutation": 0
+  },
+  "B18_original_red_subset": {
+    "controls": 18,
+    "definite_lane_assertions": 36,
+    "pass": 36,
+    "red": 0,
+    "policy": 0,
+    "exceptions": 0,
+    "capture_kind_checks": 0,
+    "capture_kind_red": 0,
+    "input_mutation": 0
+  },
+  "B5": {
+    "controls": 5,
+    "definite_lane_assertions": 10,
+    "pass": 10,
+    "red": 0,
+    "policy": 0,
+    "exceptions": 0,
+    "capture_kind_checks": 5,
+    "capture_kind_red": 0,
+    "input_mutation": 0
+  },
+  "B3URL": {
+    "controls": 3,
+    "definite_lane_assertions": 6,
+    "pass": 6,
+    "red": 0,
+    "policy": 0,
+    "exceptions": 0,
+    "capture_kind_checks": 3,
+    "capture_kind_red": 0,
+    "input_mutation": 0
+  },
+  "own6URL": {
+    "controls": 6,
+    "definite_lane_assertions": 12,
+    "pass": 12,
+    "red": 0,
+    "policy": 0,
+    "exceptions": 0,
+    "capture_kind_checks": 1,
+    "capture_kind_red": 0,
+    "input_mutation": 0
+  }
+}
+REDS={"A134": ["nested_list_raw_claims", "nested_list_raw_canary_job_protocol_claim_records"], "A46": [], "B140": [], "B18_original_red_subset": [], "B5": [], "B3URL": [], "own6URL": []}

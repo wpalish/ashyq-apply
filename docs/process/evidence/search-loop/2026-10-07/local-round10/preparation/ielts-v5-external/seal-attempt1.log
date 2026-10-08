@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/a-ielts-v5-proposal/seal_v5.py", line 22, in <module>
+    assert sha(p)==pin,(name,'manifest',sha(p))
+           ^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/a-ielts-v5-proposal/seal_v5.py", line 13, in <lambda>
+    sha=lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+                                 ^^^^^^^^^^^^^^
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-ielts-v4-review/ready-manifest.json'

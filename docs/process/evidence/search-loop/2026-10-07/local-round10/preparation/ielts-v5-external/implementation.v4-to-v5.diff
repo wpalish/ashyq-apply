@@ -1,0 +1,221 @@
+--- v4/ielts_sections.py
++++ v5/ielts_sections.py
+@@ -34,6 +34,16 @@
+     r"(?:\s+(?:test|module|version))?\))?"
+     r"(?:\s+(?:test|module|version))?"
+ )
++# Variant identity belongs to an IELTS label, never to a nearby adjective
++# naming academic programmes or applicants. A UKVI qualifier immediately
++# after the Academic label is the same recognized examination variant.
++_EXAM_VARIANTS = re.compile(
++    r"(?:\bIELTS\b|\bInternational English Language Testing System\b)"
++    r"(?:\s*\(\s*|\s+)(?P<variant>UKVI\s+Academic|Academic|General\s+Training)\b"
++    r"(?:\s+(?:test|module|version))?(?:\s*\))?"
++    r"(?P<ukvi>\s+(?:for\s+)?UKVI\b)?",
++    re.I,
++)
+ _COMPONENT_TAIL = (
+     r"(?!\s+(?:(?:in|for)\s+)?(?:each|every)\s+(?:individual\s+)?(?:component|band|section|part)\b)"
+ )
+@@ -56,6 +66,26 @@
+     r"(?:\s+of)?(?:\s+(?:is|at\s+least))?\s*[:=]?\s*" + _NUMBER + _NON_SCORE_UNIT + _COMPONENT_TAIL,
+     re.I,
+ )
++
++_OWNED_SCORE = re.compile(
++    r"(?:^(?:an?\s+)?|\b(?:must\s+(?:achieve|obtain|have)"
++    r"|(?:is|are)\s+required\s+to\s+(?:achieve|obtain|have))\s+(?:an?\s+)?)"
++    r"(?:minimum(?:\s+(?:band(?:\s+score)?|score))?|(?:band\s+)?score)"
++    r"(?:\s+of)?(?:\s+(?:is|at\s+least))?\s*[:=]?\s*" + _NUMBER + _NON_SCORE_UNIT + _COMPONENT_TAIL,
++    re.I,
++)
++_REQUIRED_SCORE = re.compile(
++    _EXAM_LABEL + r"\s+(?:requires?|needs?)\s+(?:an?\s+)?"
++    r"(?:minimum(?:\s+(?:band(?:\s+score)?|score))?|(?:band\s+)?score)"
++    r"(?:\s+of)?\s*[:=]?\s*" + _NUMBER + _NON_SCORE_UNIT + _COMPONENT_TAIL,
++    re.I,
++)
++_NON_BAND_HEAD = re.compile(r"\b(?:GPA|grade(?:[- ]point)?|fee|cost|price)\s*[:=]?\s*$", re.I)
++_SCALE = re.compile(
++    r"^\s*/\s*(\d+(?:\.\d+)?)(?!\w|\s*[.,]\s*\d|[-−+–—]\s*\d)" + _NON_SCORE_UNIT + r"(?!\s*/)",
++    re.I,
++)
++
+ _EXAM_BAND = re.compile(
+     _EXAM_LABEL + r"\s*[:=]?\s+" + _NUMBER + _NON_SCORE_UNIT + _COMPONENT_TAIL,
+     re.I,
+@@ -80,14 +110,36 @@
+ )
+ _DECLINE_SUBJECT = (
+     r"(?:\bIELTS\b|\bInternational English Language Testing System\b)"
+-    r"(?:\s*\(?\s*(?P<variant>UKVI\s+Academic|Academic|General\s+Training)(?:\s*\))?)?"
+-    r"(?:\s+(?:test|module|version|scores?|results?|certificates?))?"
++    r"(?:\s*\(?\s*(?P<variant>UKVI\s+Academic|Academic|General\s+Training)"
++    r"(?:\s+(?:test|module|version))?(?:\s+(?:scores?|results?|certificates?))?(?:\s*\))?)?"
++    r"(?:\s+(?:test|module|version))?(?:\s+(?:scores?|results?|certificates?))?"
+     r"(?:\s*\([^()]{1,100}\)|\s*,[^;,.!?]{1,100},)?"
+ )
++# Only neutral temporal adverbs may intervene within a refusal predicate;
++# they never let the parser jump across another clause or exam subject.
++_NEUTRAL_ADVERB = r"(?:(?:currently|presently|now)\s+)?"
+ _REFUSED = (
+-    r"(?:no\s+longer(?:\s+be)?\s+accepted|not(?:\s+currently)?\s+(?:an?\s+)?accepted"
+-    r"|(?:will|would|shall|should|must|may|might|can|could)\s+(?:not|no\s+longer)\s+be\s+accepted"
+-    r"|cannot\s+be\s+accepted|(?:isn['’]t|aren['’]t|(?:won['’]t|can['’]t)\s+be)\s+(?:currently\s+)?accepted)"
++    _NEUTRAL_ADVERB
++    + r"(?:no\s+longer(?:\s+be)?\s+accepted|not\s+"
++    + _NEUTRAL_ADVERB
++    + r"(?:an?\s+)?accepted"
++    + r"|(?:will|would|shall|should|must|may|might|can|could)\s+"
++    + _NEUTRAL_ADVERB
++    + r"(?:not|no\s+longer)\s+"
++    + _NEUTRAL_ADVERB
++    + r"be\s+"
++    + _NEUTRAL_ADVERB
++    + r"accepted|cannot\s+"
++    + _NEUTRAL_ADVERB
++    + r"be\s+"
++    + _NEUTRAL_ADVERB
++    + r"accepted|(?:isn['’]t|aren['’]t)\s+"
++    + _NEUTRAL_ADVERB
++    + r"accepted|(?:won['’]t|can['’]t)\s+"
++    + _NEUTRAL_ADVERB
++    + r"be\s+"
++    + _NEUTRAL_ADVERB
++    + r"accepted)"
+ )
+ _DECLINE = re.compile(
+     _DECLINE_SUBJECT + r"(?:\s+(?:(?:minimum|score(?:\s+of)?)\s+)?"
+@@ -95,11 +147,16 @@
+     r"\s+(?:(?:is|are)\s+)?" + _REFUSED + r"\b",
+     re.I,
+ )
+-_NEGATIVE_MODAL = r"(?:cannot|can['’]t|won['’]t|(?:do|does|did|would|could|should|must)n['’]t|(?:do|does|did|will|would|can|could|may|might|must|shall|should)\s+not)"
++_NEGATIVE_MODAL = (
++    r"(?:cannot|can['’]t|won['’]t|(?:do|does|did|would|could|should|must)n['’]t"
++    r"|(?:do|does|did|will|would|can|could|may|might|must|shall|should)\s+"
++    + _NEUTRAL_ADVERB
++    + r"not)"
++)
+ _DECLINE_REVERSE = re.compile(
+     r"\b"
+     + _NEGATIVE_MODAL
+-    + r"\s+accept(?:\s+the)?\s+"
++    + r"\s+(?:(?:currently|presently|now)\s+)?accept(?:\s+the)?\s+"
+     + _DECLINE_SUBJECT
+     + r"(?:\s+(?:(?:minimum|score(?:\s+of)?)\s+)?(?P<refused_number>[-+]?\d+(?:\.\d+)?))?"
+     + r"(?=\s*(?:[.;,:!?]|$|\b(?:because|for|as|due)\b))",
+@@ -109,12 +166,22 @@
+ _NEGATIVE_REQUIRE_HEAD = re.compile(
+     r"\b(?:"
+     + _NEGATIVE_MODAL
+-    + r"\s+require(?:\s+(?:an?|the))?|no(?:\s+minimum(?:\s+(?:band(?:\s+score)?|score))?)?)\s*$",
++    + r"\s+(?:(?:currently|presently|now)\s+)?(?:require|need)(?:\s+(?:an?|the))?"
++    # Overlapping score patterns must not rescue a shorter role after the
++    # negated full role: "do not require an overall minimum score 6.5".
++    + r"(?:\s+(?:overall|minimum|band|score))*|no(?:\s+(?:overall|minimum|band|score))*)\s*$",
+     re.I,
+ )
+ _UNREQUIRED = (
+-    r"(?:(?:is|are)\s+not|" + _NEGATIVE_MODAL + r"\s+be|isn['’]t|aren['’]t|not)"
+-    r"(?:\s+currently)?\s+(?:a\s+)?(?:required|mandatory|necessary)\b"
++    r"(?:(?:is|are)\s+"
++    + _NEUTRAL_ADVERB
++    + r"not\s+|"
++    + _NEGATIVE_MODAL
++    + r"\s+"
++    + _NEUTRAL_ADVERB
++    + r"be\s+|(?:isn['’]t|aren['’]t)\s+|not\s+)"
++    + _NEUTRAL_ADVERB
++    + r"(?:a\s+)?(?:required|mandatory|necessary)\b"
+ )
+ _NEGATIVE_REQUIRE_TAIL = re.compile(r"^\s+" + _UNREQUIRED, re.I)
+ _TEST_NOT_REQUIRED = re.compile(
+@@ -130,8 +197,15 @@
+ 
+ 
+ def _usable_score(match: re.Match[str], text: str) -> bool:
++    tail = text[match.end() :]
++    scale = _SCALE.match(tail)
++    unsupported_scale = tail.lstrip().startswith("/") and (
++        scale is None or float(scale.group(1)) != 9
++    )
+     return not (
+-        re.match(r"^\s+\d", text[match.end() :])
++        unsupported_scale
++        or _NON_BAND_HEAD.search(text[: match.start()])
++        or re.match(r"^\s+\d", text[match.end() :])
+         or _NON_BAND_TAIL.search(text[match.end() :])
+         or _NEGATIVE_REQUIRE_HEAD.search(text[: match.start()])
+         or _NEGATIVE_REQUIRE_TAIL.search(text[match.end() :])
+@@ -273,7 +347,9 @@
+                     label_level = _heading_level(heading)
+                     if label_level is None:
+                         continue
+-                    if any(_chrome(a) for a in heading.parents if isinstance(a, Tag)):
++                    if _chrome(heading) or any(
++                        _chrome(a) for a in heading.parents if isinstance(a, Tag)
++                    ):
+                         continue
+                     heading_region = next(
+                         (a for a in heading.parents if isinstance(a, Tag) and _region(a)), None
+@@ -467,7 +543,14 @@
+             overall_matches = sorted(
+                 (
+                     m
+-                    for pattern in (_OVERALL, _POSTFIX_OVERALL, _DIRECT_SCORE, _EXAM_BAND)
++                    for pattern in (
++                        _OVERALL,
++                        _POSTFIX_OVERALL,
++                        _DIRECT_SCORE,
++                        _REQUIRED_SCORE,
++                        _EXAM_BAND,
++                        *([_OWNED_SCORE] if owner else []),
++                    )
+                     for m in pattern.finditer(text)
+                     if mandatory and _usable_score(m, text)
+                 ),
+@@ -512,29 +595,25 @@
+                     for pattern in (_DECLINE, _DECLINE_REVERSE)
+                     for m in pattern.finditer(label)
+                 }
++                named_variants = {
++                    _variant(m.group("variant")) for m in _EXAM_VARIANTS.finditer(label)
++                }
++                if any(m.group("ukvi") for m in _EXAM_VARIANTS.finditer(label)):
++                    named_variants.add("ukvi_academic")
+                 types = []
+-                if (
+-                    "academic" not in refused_variants
+-                    and re.search(r"\bacademic\b", label, re.I)
+-                    and not re.search(
+-                        r"academic\s+(?:is\s+)?not\s+accepted|not\s+accept\w*[^;.]{0,30}academic",
+-                        label,
+-                        re.I,
+-                    )
+-                ):
++                if {
++                    "academic",
++                    "ukvi_academic",
++                } & named_variants and "academic" not in refused_variants:
+                     types.append("academic")
+-                    if "ukvi_academic" not in refused_variants and re.search(
+-                        r"\bukvi\b", label, re.I
++                    if (
++                        "ukvi_academic" in named_variants
++                        and "ukvi_academic" not in refused_variants
+                     ):
+                         types.append("ukvi_academic")
+                 if (
+-                    "general_training" not in refused_variants
+-                    and re.search(r"\bgeneral\s+training\b", label, re.I)
+-                    and not re.search(
+-                        r"general\s+training\s+(?:is\s+)?not\s+accepted|not\s+accept\w*[^;.]{0,30}general\s+training",
+-                        label,
+-                        re.I,
+-                    )
++                    "general_training" in named_variants
++                    and "general_training" not in refused_variants
+                 ):
+                     types.append("general_training")
+                 minimum_here = mandatory and (
