@@ -1,0 +1,1335 @@
+{
+  "imports": {
+    "Fetcher": {
+      "module": "app.adapters.fetching",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/fetching.py"
+    },
+    "BudgetedFetcher": {
+      "module": "app.pipeline.read_budget",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/read_budget.py"
+    },
+    "FakeSearchProvider": {
+      "module": "app.adapters.search.fake",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/fake.py"
+    },
+    "DiscoveryIntent": {
+      "module": "app.adapters.search.intent",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/intent.py"
+    },
+    "discover_candidates": {
+      "module": "app.adapters.search.retrieval",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/retrieval.py"
+    },
+    "UniversityReadStopped": {
+      "module": "app.pipeline.control",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/control.py"
+    },
+    "RunCancelled": {
+      "module": "app.pipeline.control",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/control.py"
+    },
+    "LeaseLost": {
+      "module": "app.pipeline.control",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/control.py"
+    }
+  },
+  "cases": [
+    {
+      "case": "read_cap",
+      "status": "RED",
+      "contract": "propagate original typed signal",
+      "original_exception": {
+        "class": "UniversityReadStopped",
+        "module": "app.pipeline.control",
+        "reason": "read_cap",
+        "message": "University read allowance refused: read_cap"
+      },
+      "escaped_exception": null,
+      "escaped_same_original_object": false,
+      "report_returned": true,
+      "report": {
+        "candidates": [
+          {
+            "url": "https://example.edu/programmes/computer-science",
+            "title": "Bachelor Computer Science",
+            "score": 7.2329,
+            "provider": "fake",
+            "signals": [
+              "strong_alias_in_title",
+              "degree_in_title",
+              "top_ranked_by_provider"
+            ],
+            "is_pdf": false,
+            "found_by": [
+              "field_and_degree"
+            ]
+          }
+        ],
+        "queries_run": [
+          "field_and_degree"
+        ],
+        "provider": "fake",
+        "ontology_version": "2026-09-30.1",
+        "rejection_counts": {},
+        "failed_queries": [],
+        "hop_entry_points": [],
+        "hop_candidates": 0,
+        "hop_entry_points_unreachable": 1,
+        "throttled": false,
+        "failure_diagnostics": []
+      },
+      "query_seam_attempts": 1,
+      "synthetic_provider_calls": [
+        [
+          "site:example.edu \"Computer Science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_requests": [
+        "https://example.edu/"
+      ],
+      "before_get_events": [
+        {
+          "attempt": 1,
+          "read_count_before": 60,
+          "reserved": false,
+          "raised_original_object": true,
+          "raised": {
+            "class": "UniversityReadStopped",
+            "module": "app.pipeline.control",
+            "reason": "read_cap",
+            "message": "University read allowance refused: read_cap"
+          }
+        }
+      ],
+      "synthetic_read_count_before": 60,
+      "synthetic_read_count_after": 60,
+      "synthetic_read_admissions": 0,
+      "native_fetch_results": [],
+      "native_fetcher_stats": {
+        "ok": 0,
+        "refused_privacy": 0,
+        "cached": 0,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "mock_http_exchanges": [],
+      "synthetic_dns_resolutions": [],
+      "denied_real_network_attempts": [],
+      "accounting_checks": {
+        "one_query_attempt": true,
+        "one_provider_call": true,
+        "one_native_get_entry": true,
+        "no_real_network_attempt": true,
+        "methods_unmodified": true,
+        "guard_refusal_zero_io": true,
+        "query_report_kept_attempt": true,
+        "search_hint_not_erased": true,
+        "unavailable_hop_recorded": true
+      }
+    },
+    {
+      "case": "checkpoint_busy",
+      "status": "RED",
+      "contract": "propagate original typed signal",
+      "original_exception": {
+        "class": "UniversityReadStopped",
+        "module": "app.pipeline.control",
+        "reason": "checkpoint_busy",
+        "message": "University read allowance refused: checkpoint_busy"
+      },
+      "escaped_exception": null,
+      "escaped_same_original_object": false,
+      "report_returned": true,
+      "report": {
+        "candidates": [
+          {
+            "url": "https://example.edu/programmes/computer-science",
+            "title": "Bachelor Computer Science",
+            "score": 7.2329,
+            "provider": "fake",
+            "signals": [
+              "strong_alias_in_title",
+              "degree_in_title",
+              "top_ranked_by_provider"
+            ],
+            "is_pdf": false,
+            "found_by": [
+              "field_and_degree"
+            ]
+          }
+        ],
+        "queries_run": [
+          "field_and_degree"
+        ],
+        "provider": "fake",
+        "ontology_version": "2026-09-30.1",
+        "rejection_counts": {},
+        "failed_queries": [],
+        "hop_entry_points": [],
+        "hop_candidates": 0,
+        "hop_entry_points_unreachable": 1,
+        "throttled": false,
+        "failure_diagnostics": []
+      },
+      "query_seam_attempts": 1,
+      "synthetic_provider_calls": [
+        [
+          "site:example.edu \"Computer Science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_requests": [
+        "https://example.edu/"
+      ],
+      "before_get_events": [
+        {
+          "attempt": 1,
+          "read_count_before": 17,
+          "reserved": false,
+          "raised_original_object": true,
+          "raised": {
+            "class": "UniversityReadStopped",
+            "module": "app.pipeline.control",
+            "reason": "checkpoint_busy",
+            "message": "University read allowance refused: checkpoint_busy"
+          }
+        }
+      ],
+      "synthetic_read_count_before": 17,
+      "synthetic_read_count_after": 17,
+      "synthetic_read_admissions": 0,
+      "native_fetch_results": [],
+      "native_fetcher_stats": {
+        "ok": 0,
+        "refused_privacy": 0,
+        "cached": 0,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "mock_http_exchanges": [],
+      "synthetic_dns_resolutions": [],
+      "denied_real_network_attempts": [],
+      "accounting_checks": {
+        "one_query_attempt": true,
+        "one_provider_call": true,
+        "one_native_get_entry": true,
+        "no_real_network_attempt": true,
+        "methods_unmodified": true,
+        "guard_refusal_zero_io": true,
+        "query_report_kept_attempt": true,
+        "search_hint_not_erased": true,
+        "unavailable_hop_recorded": true
+      }
+    },
+    {
+      "case": "run_cancelled",
+      "status": "RED",
+      "contract": "propagate original typed signal",
+      "original_exception": {
+        "class": "RunCancelled",
+        "module": "app.pipeline.control",
+        "reason": null,
+        "message": "synthetic cancellation"
+      },
+      "escaped_exception": null,
+      "escaped_same_original_object": false,
+      "report_returned": true,
+      "report": {
+        "candidates": [
+          {
+            "url": "https://example.edu/programmes/computer-science",
+            "title": "Bachelor Computer Science",
+            "score": 7.2329,
+            "provider": "fake",
+            "signals": [
+              "strong_alias_in_title",
+              "degree_in_title",
+              "top_ranked_by_provider"
+            ],
+            "is_pdf": false,
+            "found_by": [
+              "field_and_degree"
+            ]
+          }
+        ],
+        "queries_run": [
+          "field_and_degree"
+        ],
+        "provider": "fake",
+        "ontology_version": "2026-09-30.1",
+        "rejection_counts": {},
+        "failed_queries": [],
+        "hop_entry_points": [],
+        "hop_candidates": 0,
+        "hop_entry_points_unreachable": 1,
+        "throttled": false,
+        "failure_diagnostics": []
+      },
+      "query_seam_attempts": 1,
+      "synthetic_provider_calls": [
+        [
+          "site:example.edu \"Computer Science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_requests": [
+        "https://example.edu/"
+      ],
+      "before_get_events": [
+        {
+          "attempt": 1,
+          "read_count_before": 17,
+          "reserved": false,
+          "raised_original_object": true,
+          "raised": {
+            "class": "RunCancelled",
+            "module": "app.pipeline.control",
+            "reason": null,
+            "message": "synthetic cancellation"
+          }
+        }
+      ],
+      "synthetic_read_count_before": 17,
+      "synthetic_read_count_after": 17,
+      "synthetic_read_admissions": 0,
+      "native_fetch_results": [],
+      "native_fetcher_stats": {
+        "ok": 0,
+        "refused_privacy": 0,
+        "cached": 0,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "mock_http_exchanges": [],
+      "synthetic_dns_resolutions": [],
+      "denied_real_network_attempts": [],
+      "accounting_checks": {
+        "one_query_attempt": true,
+        "one_provider_call": true,
+        "one_native_get_entry": true,
+        "no_real_network_attempt": true,
+        "methods_unmodified": true,
+        "guard_refusal_zero_io": true,
+        "query_report_kept_attempt": true,
+        "search_hint_not_erased": true,
+        "unavailable_hop_recorded": true
+      }
+    },
+    {
+      "case": "lease_lost",
+      "status": "RED",
+      "contract": "propagate original typed signal",
+      "original_exception": {
+        "class": "LeaseLost",
+        "module": "app.pipeline.control",
+        "reason": null,
+        "message": "synthetic stale ownership"
+      },
+      "escaped_exception": null,
+      "escaped_same_original_object": false,
+      "report_returned": true,
+      "report": {
+        "candidates": [
+          {
+            "url": "https://example.edu/programmes/computer-science",
+            "title": "Bachelor Computer Science",
+            "score": 7.2329,
+            "provider": "fake",
+            "signals": [
+              "strong_alias_in_title",
+              "degree_in_title",
+              "top_ranked_by_provider"
+            ],
+            "is_pdf": false,
+            "found_by": [
+              "field_and_degree"
+            ]
+          }
+        ],
+        "queries_run": [
+          "field_and_degree"
+        ],
+        "provider": "fake",
+        "ontology_version": "2026-09-30.1",
+        "rejection_counts": {},
+        "failed_queries": [],
+        "hop_entry_points": [],
+        "hop_candidates": 0,
+        "hop_entry_points_unreachable": 1,
+        "throttled": false,
+        "failure_diagnostics": []
+      },
+      "query_seam_attempts": 1,
+      "synthetic_provider_calls": [
+        [
+          "site:example.edu \"Computer Science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_requests": [
+        "https://example.edu/"
+      ],
+      "before_get_events": [
+        {
+          "attempt": 1,
+          "read_count_before": 17,
+          "reserved": false,
+          "raised_original_object": true,
+          "raised": {
+            "class": "LeaseLost",
+            "module": "app.pipeline.control",
+            "reason": null,
+            "message": "synthetic stale ownership"
+          }
+        }
+      ],
+      "synthetic_read_count_before": 17,
+      "synthetic_read_count_after": 17,
+      "synthetic_read_admissions": 0,
+      "native_fetch_results": [],
+      "native_fetcher_stats": {
+        "ok": 0,
+        "refused_privacy": 0,
+        "cached": 0,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "mock_http_exchanges": [],
+      "synthetic_dns_resolutions": [],
+      "denied_real_network_attempts": [],
+      "accounting_checks": {
+        "one_query_attempt": true,
+        "one_provider_call": true,
+        "one_native_get_entry": true,
+        "no_real_network_attempt": true,
+        "methods_unmodified": true,
+        "guard_refusal_zero_io": true,
+        "query_report_kept_attempt": true,
+        "search_hint_not_erased": true,
+        "unavailable_hop_recorded": true
+      }
+    },
+    {
+      "case": "async_cancelled",
+      "status": "PASS",
+      "contract": "propagate original typed signal",
+      "original_exception": {
+        "class": "CancelledError",
+        "module": "asyncio.exceptions",
+        "reason": null,
+        "message": "synthetic task cancellation"
+      },
+      "escaped_exception": {
+        "class": "CancelledError",
+        "module": "asyncio.exceptions",
+        "reason": null,
+        "message": "synthetic task cancellation"
+      },
+      "escaped_same_original_object": true,
+      "report_returned": false,
+      "report": null,
+      "query_seam_attempts": 1,
+      "synthetic_provider_calls": [
+        [
+          "site:example.edu \"Computer Science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_requests": [
+        "https://example.edu/"
+      ],
+      "before_get_events": [
+        {
+          "attempt": 1,
+          "read_count_before": 17,
+          "reserved": false,
+          "raised_original_object": true,
+          "raised": {
+            "class": "CancelledError",
+            "module": "asyncio.exceptions",
+            "reason": null,
+            "message": "synthetic task cancellation"
+          }
+        }
+      ],
+      "synthetic_read_count_before": 17,
+      "synthetic_read_count_after": 17,
+      "synthetic_read_admissions": 0,
+      "native_fetch_results": [],
+      "native_fetcher_stats": {
+        "ok": 0,
+        "refused_privacy": 0,
+        "cached": 0,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "mock_http_exchanges": [],
+      "synthetic_dns_resolutions": [],
+      "denied_real_network_attempts": [],
+      "accounting_checks": {
+        "one_query_attempt": true,
+        "one_provider_call": true,
+        "one_native_get_entry": true,
+        "no_real_network_attempt": true,
+        "methods_unmodified": true,
+        "guard_refusal_zero_io": true
+      }
+    },
+    {
+      "case": "ordinary_runtime_control_text",
+      "status": "PASS",
+      "contract": "contain ordinary unavailability / retain normal navigation",
+      "original_exception": {
+        "class": "RuntimeError",
+        "module": "builtins",
+        "reason": null,
+        "message": "University read allowance refused: read_cap"
+      },
+      "escaped_exception": null,
+      "escaped_same_original_object": false,
+      "report_returned": true,
+      "report": {
+        "candidates": [
+          {
+            "url": "https://example.edu/programmes/computer-science",
+            "title": "Bachelor Computer Science",
+            "score": 7.2329,
+            "provider": "fake",
+            "signals": [
+              "strong_alias_in_title",
+              "degree_in_title",
+              "top_ranked_by_provider"
+            ],
+            "is_pdf": false,
+            "found_by": [
+              "field_and_degree"
+            ]
+          }
+        ],
+        "queries_run": [
+          "field_and_degree"
+        ],
+        "provider": "fake",
+        "ontology_version": "2026-09-30.1",
+        "rejection_counts": {},
+        "failed_queries": [],
+        "hop_entry_points": [],
+        "hop_candidates": 0,
+        "hop_entry_points_unreachable": 1,
+        "throttled": false,
+        "failure_diagnostics": []
+      },
+      "query_seam_attempts": 1,
+      "synthetic_provider_calls": [
+        [
+          "site:example.edu \"Computer Science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_requests": [
+        "https://example.edu/"
+      ],
+      "before_get_events": [
+        {
+          "attempt": 1,
+          "read_count_before": 17,
+          "reserved": false,
+          "raised_original_object": true,
+          "raised": {
+            "class": "RuntimeError",
+            "module": "builtins",
+            "reason": null,
+            "message": "University read allowance refused: read_cap"
+          }
+        }
+      ],
+      "synthetic_read_count_before": 17,
+      "synthetic_read_count_after": 17,
+      "synthetic_read_admissions": 0,
+      "native_fetch_results": [],
+      "native_fetcher_stats": {
+        "ok": 0,
+        "refused_privacy": 0,
+        "cached": 0,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "mock_http_exchanges": [],
+      "synthetic_dns_resolutions": [],
+      "denied_real_network_attempts": [],
+      "accounting_checks": {
+        "one_query_attempt": true,
+        "one_provider_call": true,
+        "one_native_get_entry": true,
+        "no_real_network_attempt": true,
+        "methods_unmodified": true,
+        "guard_refusal_zero_io": true,
+        "query_report_kept_attempt": true,
+        "search_hint_not_erased": true,
+        "unavailable_hop_recorded": true
+      }
+    },
+    {
+      "case": "empty_html",
+      "status": "PASS",
+      "contract": "contain ordinary unavailability / retain normal navigation",
+      "original_exception": null,
+      "escaped_exception": null,
+      "escaped_same_original_object": null,
+      "report_returned": true,
+      "report": {
+        "candidates": [
+          {
+            "url": "https://example.edu/programmes/computer-science",
+            "title": "Bachelor Computer Science",
+            "score": 7.2329,
+            "provider": "fake",
+            "signals": [
+              "strong_alias_in_title",
+              "degree_in_title",
+              "top_ranked_by_provider"
+            ],
+            "is_pdf": false,
+            "found_by": [
+              "field_and_degree"
+            ]
+          }
+        ],
+        "queries_run": [
+          "field_and_degree"
+        ],
+        "provider": "fake",
+        "ontology_version": "2026-09-30.1",
+        "rejection_counts": {},
+        "failed_queries": [],
+        "hop_entry_points": [],
+        "hop_candidates": 0,
+        "hop_entry_points_unreachable": 1,
+        "throttled": false,
+        "failure_diagnostics": []
+      },
+      "query_seam_attempts": 1,
+      "synthetic_provider_calls": [
+        [
+          "site:example.edu \"Computer Science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_requests": [
+        "https://example.edu/"
+      ],
+      "before_get_events": [
+        {
+          "attempt": 1,
+          "read_count_before": 0,
+          "reserved": true,
+          "raised_original_object": false,
+          "raised": null,
+          "read_count_after": 1
+        }
+      ],
+      "synthetic_read_count_before": 0,
+      "synthetic_read_count_after": 1,
+      "synthetic_read_admissions": 1,
+      "native_fetch_results": [
+        {
+          "url": "https://example.edu/",
+          "outcome": "ok",
+          "status_code": 200,
+          "error": "",
+          "text_length": 0,
+          "final_url": "https://example.edu/"
+        }
+      ],
+      "native_fetcher_stats": {
+        "ok": 1,
+        "refused_privacy": 0,
+        "cached": 0,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "mock_http_exchanges": [
+        {
+          "method": "GET",
+          "host_header": "example.edu",
+          "pinned_host": "93.184.216.34",
+          "path": "/robots.txt"
+        },
+        {
+          "method": "GET",
+          "host_header": "example.edu",
+          "pinned_host": "93.184.216.34",
+          "path": "/"
+        }
+      ],
+      "synthetic_dns_resolutions": [
+        {
+          "host": "example.edu",
+          "port": 443
+        },
+        {
+          "host": "example.edu",
+          "port": 443
+        },
+        {
+          "host": "example.edu",
+          "port": 443
+        }
+      ],
+      "denied_real_network_attempts": [],
+      "accounting_checks": {
+        "one_query_attempt": true,
+        "one_provider_call": true,
+        "one_native_get_entry": true,
+        "no_real_network_attempt": true,
+        "methods_unmodified": true,
+        "one_native_read_admitted": true,
+        "query_report_kept_attempt": true,
+        "search_hint_not_erased": true,
+        "unavailable_hop_recorded": true
+      }
+    },
+    {
+      "case": "transport",
+      "status": "PASS",
+      "contract": "contain ordinary unavailability / retain normal navigation",
+      "original_exception": null,
+      "escaped_exception": null,
+      "escaped_same_original_object": null,
+      "report_returned": true,
+      "report": {
+        "candidates": [
+          {
+            "url": "https://example.edu/programmes/computer-science",
+            "title": "Bachelor Computer Science",
+            "score": 7.2329,
+            "provider": "fake",
+            "signals": [
+              "strong_alias_in_title",
+              "degree_in_title",
+              "top_ranked_by_provider"
+            ],
+            "is_pdf": false,
+            "found_by": [
+              "field_and_degree"
+            ]
+          }
+        ],
+        "queries_run": [
+          "field_and_degree"
+        ],
+        "provider": "fake",
+        "ontology_version": "2026-09-30.1",
+        "rejection_counts": {},
+        "failed_queries": [],
+        "hop_entry_points": [],
+        "hop_candidates": 0,
+        "hop_entry_points_unreachable": 1,
+        "throttled": false,
+        "failure_diagnostics": []
+      },
+      "query_seam_attempts": 1,
+      "synthetic_provider_calls": [
+        [
+          "site:example.edu \"Computer Science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_requests": [
+        "https://example.edu/"
+      ],
+      "before_get_events": [
+        {
+          "attempt": 1,
+          "read_count_before": 0,
+          "reserved": true,
+          "raised_original_object": false,
+          "raised": null,
+          "read_count_after": 1
+        }
+      ],
+      "synthetic_read_count_before": 0,
+      "synthetic_read_count_after": 1,
+      "synthetic_read_admissions": 1,
+      "native_fetch_results": [
+        {
+          "url": "https://example.edu/",
+          "outcome": "network_unavailable",
+          "status_code": null,
+          "error": "synthetic transport unavailable",
+          "text_length": 0,
+          "final_url": ""
+        }
+      ],
+      "native_fetcher_stats": {
+        "ok": 0,
+        "refused_privacy": 0,
+        "cached": 0,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 1,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "mock_http_exchanges": [
+        {
+          "method": "GET",
+          "host_header": "example.edu",
+          "pinned_host": "93.184.216.34",
+          "path": "/robots.txt"
+        },
+        {
+          "method": "GET",
+          "host_header": "example.edu",
+          "pinned_host": "93.184.216.34",
+          "path": "/"
+        },
+        {
+          "method": "GET",
+          "host_header": "example.edu",
+          "pinned_host": "93.184.216.34",
+          "path": "/"
+        },
+        {
+          "method": "GET",
+          "host_header": "example.edu",
+          "pinned_host": "93.184.216.34",
+          "path": "/"
+        }
+      ],
+      "synthetic_dns_resolutions": [
+        {
+          "host": "example.edu",
+          "port": 443
+        },
+        {
+          "host": "example.edu",
+          "port": 443
+        },
+        {
+          "host": "example.edu",
+          "port": 443
+        },
+        {
+          "host": "example.edu",
+          "port": 443
+        },
+        {
+          "host": "example.edu",
+          "port": 443
+        }
+      ],
+      "denied_real_network_attempts": [],
+      "accounting_checks": {
+        "one_query_attempt": true,
+        "one_provider_call": true,
+        "one_native_get_entry": true,
+        "no_real_network_attempt": true,
+        "methods_unmodified": true,
+        "one_native_read_admitted": true,
+        "query_report_kept_attempt": true,
+        "search_hint_not_erased": true,
+        "unavailable_hop_recorded": true
+      }
+    },
+    {
+      "case": "access_403",
+      "status": "PASS",
+      "contract": "contain ordinary unavailability / retain normal navigation",
+      "original_exception": null,
+      "escaped_exception": null,
+      "escaped_same_original_object": null,
+      "report_returned": true,
+      "report": {
+        "candidates": [
+          {
+            "url": "https://example.edu/programmes/computer-science",
+            "title": "Bachelor Computer Science",
+            "score": 7.2329,
+            "provider": "fake",
+            "signals": [
+              "strong_alias_in_title",
+              "degree_in_title",
+              "top_ranked_by_provider"
+            ],
+            "is_pdf": false,
+            "found_by": [
+              "field_and_degree"
+            ]
+          }
+        ],
+        "queries_run": [
+          "field_and_degree"
+        ],
+        "provider": "fake",
+        "ontology_version": "2026-09-30.1",
+        "rejection_counts": {},
+        "failed_queries": [],
+        "hop_entry_points": [],
+        "hop_candidates": 0,
+        "hop_entry_points_unreachable": 1,
+        "throttled": false,
+        "failure_diagnostics": []
+      },
+      "query_seam_attempts": 1,
+      "synthetic_provider_calls": [
+        [
+          "site:example.edu \"Computer Science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_requests": [
+        "https://example.edu/"
+      ],
+      "before_get_events": [
+        {
+          "attempt": 1,
+          "read_count_before": 0,
+          "reserved": true,
+          "raised_original_object": false,
+          "raised": null,
+          "read_count_after": 1
+        }
+      ],
+      "synthetic_read_count_before": 0,
+      "synthetic_read_count_after": 1,
+      "synthetic_read_admissions": 1,
+      "native_fetch_results": [
+        {
+          "url": "https://example.edu/",
+          "outcome": "http_error",
+          "status_code": 403,
+          "error": "HTTP 403",
+          "text_length": 0,
+          "final_url": "https://example.edu/"
+        }
+      ],
+      "native_fetcher_stats": {
+        "ok": 0,
+        "refused_privacy": 0,
+        "cached": 0,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 1,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "mock_http_exchanges": [
+        {
+          "method": "GET",
+          "host_header": "example.edu",
+          "pinned_host": "93.184.216.34",
+          "path": "/robots.txt"
+        },
+        {
+          "method": "GET",
+          "host_header": "example.edu",
+          "pinned_host": "93.184.216.34",
+          "path": "/"
+        }
+      ],
+      "synthetic_dns_resolutions": [
+        {
+          "host": "example.edu",
+          "port": 443
+        },
+        {
+          "host": "example.edu",
+          "port": 443
+        },
+        {
+          "host": "example.edu",
+          "port": 443
+        }
+      ],
+      "denied_real_network_attempts": [],
+      "accounting_checks": {
+        "one_query_attempt": true,
+        "one_provider_call": true,
+        "one_native_get_entry": true,
+        "no_real_network_attempt": true,
+        "methods_unmodified": true,
+        "one_native_read_admitted": true,
+        "query_report_kept_attempt": true,
+        "search_hint_not_erased": true,
+        "unavailable_hop_recorded": true
+      }
+    },
+    {
+      "case": "timeout",
+      "status": "PASS",
+      "contract": "contain ordinary unavailability / retain normal navigation",
+      "original_exception": null,
+      "escaped_exception": null,
+      "escaped_same_original_object": null,
+      "report_returned": true,
+      "report": {
+        "candidates": [
+          {
+            "url": "https://example.edu/programmes/computer-science",
+            "title": "Bachelor Computer Science",
+            "score": 7.2329,
+            "provider": "fake",
+            "signals": [
+              "strong_alias_in_title",
+              "degree_in_title",
+              "top_ranked_by_provider"
+            ],
+            "is_pdf": false,
+            "found_by": [
+              "field_and_degree"
+            ]
+          }
+        ],
+        "queries_run": [
+          "field_and_degree"
+        ],
+        "provider": "fake",
+        "ontology_version": "2026-09-30.1",
+        "rejection_counts": {},
+        "failed_queries": [],
+        "hop_entry_points": [],
+        "hop_candidates": 0,
+        "hop_entry_points_unreachable": 1,
+        "throttled": false,
+        "failure_diagnostics": []
+      },
+      "query_seam_attempts": 1,
+      "synthetic_provider_calls": [
+        [
+          "site:example.edu \"Computer Science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_requests": [
+        "https://example.edu/"
+      ],
+      "before_get_events": [
+        {
+          "attempt": 1,
+          "read_count_before": 0,
+          "reserved": true,
+          "raised_original_object": false,
+          "raised": null,
+          "read_count_after": 1
+        }
+      ],
+      "synthetic_read_count_before": 0,
+      "synthetic_read_count_after": 1,
+      "synthetic_read_admissions": 1,
+      "native_fetch_results": [
+        {
+          "url": "https://example.edu/",
+          "outcome": "timeout",
+          "status_code": null,
+          "error": "synthetic read timeout",
+          "text_length": 0,
+          "final_url": ""
+        }
+      ],
+      "native_fetcher_stats": {
+        "ok": 0,
+        "refused_privacy": 0,
+        "cached": 0,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 1,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "mock_http_exchanges": [
+        {
+          "method": "GET",
+          "host_header": "example.edu",
+          "pinned_host": "93.184.216.34",
+          "path": "/robots.txt"
+        },
+        {
+          "method": "GET",
+          "host_header": "example.edu",
+          "pinned_host": "93.184.216.34",
+          "path": "/"
+        },
+        {
+          "method": "GET",
+          "host_header": "example.edu",
+          "pinned_host": "93.184.216.34",
+          "path": "/"
+        },
+        {
+          "method": "GET",
+          "host_header": "example.edu",
+          "pinned_host": "93.184.216.34",
+          "path": "/"
+        }
+      ],
+      "synthetic_dns_resolutions": [
+        {
+          "host": "example.edu",
+          "port": 443
+        },
+        {
+          "host": "example.edu",
+          "port": 443
+        },
+        {
+          "host": "example.edu",
+          "port": 443
+        },
+        {
+          "host": "example.edu",
+          "port": 443
+        },
+        {
+          "host": "example.edu",
+          "port": 443
+        }
+      ],
+      "denied_real_network_attempts": [],
+      "accounting_checks": {
+        "one_query_attempt": true,
+        "one_provider_call": true,
+        "one_native_get_entry": true,
+        "no_real_network_attempt": true,
+        "methods_unmodified": true,
+        "one_native_read_admitted": true,
+        "query_report_kept_attempt": true,
+        "search_hint_not_erased": true,
+        "unavailable_hop_recorded": true
+      }
+    },
+    {
+      "case": "normal_html",
+      "status": "PASS",
+      "contract": "contain ordinary unavailability / retain normal navigation",
+      "original_exception": null,
+      "escaped_exception": null,
+      "escaped_same_original_object": null,
+      "report_returned": true,
+      "report": {
+        "candidates": [
+          {
+            "url": "https://example.edu/programmes/computer-science",
+            "title": "Bachelor Computer Science",
+            "score": 7.2329,
+            "provider": "fake",
+            "signals": [
+              "strong_alias_in_title",
+              "degree_in_title",
+              "top_ranked_by_provider"
+            ],
+            "is_pdf": false,
+            "found_by": [
+              "field_and_degree"
+            ]
+          },
+          {
+            "url": "https://example.edu/programmes/bsc-computer-science",
+            "title": "Bachelor Computer Science",
+            "score": 0.0,
+            "provider": "navigation",
+            "signals": [
+              "found_by_navigation_hop"
+            ],
+            "is_pdf": false,
+            "found_by": []
+          }
+        ],
+        "queries_run": [
+          "field_and_degree"
+        ],
+        "provider": "fake",
+        "ontology_version": "2026-09-30.1",
+        "rejection_counts": {},
+        "failed_queries": [],
+        "hop_entry_points": [
+          "https://example.edu/"
+        ],
+        "hop_candidates": 1,
+        "hop_entry_points_unreachable": 0,
+        "throttled": false,
+        "failure_diagnostics": []
+      },
+      "query_seam_attempts": 1,
+      "synthetic_provider_calls": [
+        [
+          "site:example.edu \"Computer Science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_requests": [
+        "https://example.edu/"
+      ],
+      "before_get_events": [
+        {
+          "attempt": 1,
+          "read_count_before": 0,
+          "reserved": true,
+          "raised_original_object": false,
+          "raised": null,
+          "read_count_after": 1
+        }
+      ],
+      "synthetic_read_count_before": 0,
+      "synthetic_read_count_after": 1,
+      "synthetic_read_admissions": 1,
+      "native_fetch_results": [
+        {
+          "url": "https://example.edu/",
+          "outcome": "ok",
+          "status_code": 200,
+          "error": "",
+          "text_length": 98,
+          "final_url": "https://example.edu/"
+        }
+      ],
+      "native_fetcher_stats": {
+        "ok": 1,
+        "refused_privacy": 0,
+        "cached": 0,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "mock_http_exchanges": [
+        {
+          "method": "GET",
+          "host_header": "example.edu",
+          "pinned_host": "93.184.216.34",
+          "path": "/robots.txt"
+        },
+        {
+          "method": "GET",
+          "host_header": "example.edu",
+          "pinned_host": "93.184.216.34",
+          "path": "/"
+        }
+      ],
+      "synthetic_dns_resolutions": [
+        {
+          "host": "example.edu",
+          "port": 443
+        },
+        {
+          "host": "example.edu",
+          "port": 443
+        },
+        {
+          "host": "example.edu",
+          "port": 443
+        }
+      ],
+      "denied_real_network_attempts": [],
+      "accounting_checks": {
+        "one_query_attempt": true,
+        "one_provider_call": true,
+        "one_native_get_entry": true,
+        "no_real_network_attempt": true,
+        "methods_unmodified": true,
+        "one_native_read_admitted": true,
+        "query_report_kept_attempt": true,
+        "search_hint_not_erased": true,
+        "normal_hop_opened": true,
+        "navigation_added": true
+      }
+    }
+  ],
+  "summary": {
+    "case_count": 11,
+    "PASS": 7,
+    "RED": 4,
+    "fixture_failures": 0,
+    "real_network_attempts": 0,
+    "qualification": "OFF defect proof only; actual native get fence with synthetic callback; no SQL/Worker/crash durability or launch-quality claim."
+  }
+}

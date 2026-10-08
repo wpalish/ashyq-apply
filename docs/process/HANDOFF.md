@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[search-control-propagation] confirmed OFF defect checkpoint 2026-10-08 04:13 UTC.** Parent holder gpt-6-astra/task/search-control-propagation; baseline baton dec1ae0d. A2ca native11=7PASS4materialRED/97accountingPASS; B initialbd73 native21=9PASS12RED across retrieval/single/multi, async controls preserved; B final73a382ec independently qualified ACCEPT-defect. Four native signals lost at entry-root catch; no bypass of cap60/SQL/Worker guarantee. Source999/STOP65b5 unchanged. Archived56originals/1,067,366bytes receipt160d2d9a plus33/456,786bytes peer79fe1bd5; peer copies not unique experiments. A shortened execution-command field preserved; separate exact issuedargv clarification retained. Source repair NOT_APPLIED; A external minimalproposal/native tests underway, B exactproposal review then root integration/new full required. All live remainsSTOPPED, cohortUNSCORED, goalACTIVE.
+
 **[search-control-propagation] Holder gpt-6-astra since 2026-10-08T04:00:30.623652+00:00; task/search-control-propagation from clean pushed1679ea7cb9b3edd38084908a02248e780e615c94/Draft71 under explicit §5 predecessor exception.** Previous goal turn PROGRESS: narrow rate-limit repair green full13/13/4312sameeachDB/95.26,931+59 originals verified, Draft71 created/attached and release pushed. Source remains77a/e577 selected999; no new app/test writes. Root takes new baton, A finite current-source defect proof, B independent ordinary-negative/caller review. STOP65b5 unchanged; no live/model/provider/gold/score/reset/switch/purchase/merge/deploy. GoalACTIVE.
 
 **[search-explicit-rate-limit] Holder: nobody; ready-for-review (Draft PR #71), 2026-10-08 03:57 UTC.** https://github.com/wpalish/ashyq-apply/pull/71; OPEN/Draft/base task/search-retained-source-boundaries/head task/search-explicit-rate-limit@a48e8600575ba7d17cff3c3ace288a97ffa0f2ea verified, attached to current task. Rollup[] means no hosted checks, not PASS. Technical repair complete, root release metadata next; immutable source77a220a5/fullsnapshot e5774231/13of13/4312sameeachDB/95.26 retained. Boundaries931 originals ae1b1868 + final59 d7b4f8ac independently verified; source999/STOP65b5 unchanged. GlobalgoalACTIVE, round10UNSCORED/no accepted stable quality gain/production/launch. Next offline typed-control task under explicit §5 exception; no live restart.
@@ -99,6 +101,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[search-control-propagation] confirmed OFF defect checkpoint 2026-10-08 04:13 UTC.** Parent holder gpt-6-astra/task/search-control-propagation; baseline baton dec1ae0d. A2ca native11=7PASS4materialRED/97accountingPASS; B initialbd73 native21=9PASS12RED across retrieval/single/multi, async controls preserved; B final73a382ec independently qualified ACCEPT-defect. Four native signals lost at entry-root catch; no bypass of cap60/SQL/Worker guarantee. Source999/STOP65b5 unchanged. Archived56originals/1,067,366bytes receipt160d2d9a plus33/456,786bytes peer79fe1bd5; peer copies not unique experiments. A shortened execution-command field preserved; separate exact issuedargv clarification retained. Source repair NOT_APPLIED; A external minimalproposal/native tests underway, B exactproposal review then root integration/new full required. All live remainsSTOPPED, cohortUNSCORED, goalACTIVE.
 
 **[search-control-propagation] IN_PROGRESS, offline defect confirmation before application.** Entry-root Fetcher broadcatch in retrieval.py currently catches Exception; determine actual effects of native UniversityReadStopped(read_cap/checkpoint_busy), RunCancelled and LeaseLost. Preserve object/reason identity and base asyncio cancellation; preserve normal site unavailability and navigation results/budget accounting. Independent actual-source negative review required. No retention/durable/default/schema/ranking/quality policy change bundled.
 
@@ -234,6 +238,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[search-control-propagation] confirmed OFF defect checkpoint 2026-10-08 04:13 UTC.** Parent holder gpt-6-astra/task/search-control-propagation; baseline baton dec1ae0d. A2ca native11=7PASS4materialRED/97accountingPASS; B initialbd73 native21=9PASS12RED across retrieval/single/multi, async controls preserved; B final73a382ec independently qualified ACCEPT-defect. Four native signals lost at entry-root catch; no bypass of cap60/SQL/Worker guarantee. Source999/STOP65b5 unchanged. Archived56originals/1,067,366bytes receipt160d2d9a plus33/456,786bytes peer79fe1bd5; peer copies not unique experiments. A shortened execution-command field preserved; separate exact issuedargv clarification retained. Source repair NOT_APPLIED; A external minimalproposal/native tests underway, B exactproposal review then root integration/new full required. All live remainsSTOPPED, cohortUNSCORED, goalACTIVE.
 
 **Prior task closed:** source77a220a5, green evidencea48e8600, release1679ea7c/Draft71. New task only readonly source pins PLAN.json in work/local-round12/root-control-propagation; no implemented new app behavior. Carried full gates validate unchanged source only.
 
@@ -1937,6 +1943,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[search-control-propagation] final OFF peer archive/write-ahead:** exact B73a382ec qualified ACCEPT of native control-loss defect, verified30selected originals incl A raw/copies and exact absolute command clarification. Preserve A sealed2ca original relative-command metadata unchanged, never relabel unknown SQL durability. Archive separate control-propagation-off-peer after allSHA/source999/STOP preflight. Root then WIP evidence checkpoint; external A minimalproposal/native regressions still pending. No primary app/test edits before independent exactproposal review/new integration plan.
+
+**[search-control-propagation] OFF evidence archive write-ahead before repo writes.** A current2ca715d6 native11=7PASS4materialRED/97accountingPASS; B initialbd73bc7e native21=9PASS12RED confirms both callers and unchanged cancellation/normals. Root verified exact selected hashes/sizes and actual source. Archive both immutable packets + root pins/preflights into new local-round12/control-propagation-off-proof, preserve A original execution relative-command metadata inconsistency and B qualification; separate clarification/peer final pending. Guard-refusal I/O0/count60 unchanged, no cap bypass/SQL/Worker durability/quality proof. A prepares only external minimal re-raise/native-regression proposal; root integration waits independent exactproposal ACCEPT and new write-ahead. Source999/STOP unchanged.
 
 **WRITE-AHEAD before any source edits:** root pins current retrieval/control/read-budget/runner/worker/callers; A runs finite own-folder OFF proof using current native modules and actual BudgetedFetcher guard, zero realnetwork, preserving exceptions and call accounting; B independently confirms source implications and ordinary RuntimeError/timeout/HTTPaccess/empty/success negative controls. Seal exact files/results/hashes including any fixture mistakes; do not reuse prior fourRED as currentproof. Require independent review and explicit new integration plan before narrow actual-source proposal/test application. Potential code is retrieval.py import native control classes + immediate re-raise before existing ordinary catch, only if proof supports; no source writes currentlyauthorized until review. Then exact native regressions, fresh full, isolated seed/singlehead if pipeline touched; Agent/[skipci] every checkpoint. Keep all STOP/owner limits. Task may branch from Draft71 before merge under recorded exception.
 
@@ -3999,6 +4009,8 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**Current OFF signal proof RED is documented, source fix/test integration PENDING.** A fourmaterialRED/B12routeRED as above; WIP checkpoint preserves evidence, not repaired or quality-accepted source. Last full source77a/e57713/13/4312/95.26 remains unchanged-code baseline only.
 
 **Baseline carried unchanged:** last freshfull20261008T032648Z-check-16f4d81b source77a/e57713/13PASS,4312sameuniqueeachDB/95.26; source999 pins verified. New task tests NOT_RUN, codeNOT_APPLIED. No new live/quality score; providers globallySTOPPED.
 

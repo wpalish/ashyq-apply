@@ -1,0 +1,63 @@
+{
+  "status": "ACCEPT_CONFIRMED_OFF_INNER_CONTROL_DEFECT_NOT_REPAIR_ACCEPTANCE",
+  "A_selected_files": 24,
+  "A_selected_bytes": 428170,
+  "A_cases": {
+    "total": 11,
+    "PASS": 7,
+    "material_RED": 4,
+    "accounting_PASS": 97,
+    "fixture_errors": 0,
+    "real_network_attempts": 0
+  },
+  "B_initial_cases": {
+    "total": 21,
+    "pass": 9,
+    "red": 12,
+    "network_attempts": 0
+  },
+  "verified_native_import_paths": {
+    "Fetcher": {
+      "module": "app.adapters.fetching",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/fetching.py"
+    },
+    "BudgetedFetcher": {
+      "module": "app.pipeline.read_budget",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/read_budget.py"
+    },
+    "FakeSearchProvider": {
+      "module": "app.adapters.search.fake",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/fake.py"
+    },
+    "DiscoveryIntent": {
+      "module": "app.adapters.search.intent",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/intent.py"
+    },
+    "discover_candidates": {
+      "module": "app.adapters.search.retrieval",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/retrieval.py"
+    },
+    "UniversityReadStopped": {
+      "module": "app.pipeline.control",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/control.py"
+    },
+    "RunCancelled": {
+      "module": "app.pipeline.control",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/control.py"
+    },
+    "LeaseLost": {
+      "module": "app.pipeline.control",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/control.py"
+    }
+  },
+  "source13_actual_before_after_current_equal": true,
+  "STOP_unchanged": true,
+  "original_proof_script_sha256": "36b19fc064f1cf36e6d53119eeeb966da2c039275ef3e7f6e6a5e9870a2ed6b2",
+  "limitations": [
+    "Synthetic reservation callback; no SQL fence/lease/Worker/crash durability claim",
+    "A actual get/client/MockTransport methods and retry/robots retained; B ordinary base_get mocked, separate evidence",
+    "Read_cap not bypassed: count60 remains60 with zero refused I/O; lost control only",
+    "A display execution command uses relative executable inconsistent with its own cwd; absolute executable is correct; clarification requested, originals preserved",
+    "No patch or source acceptance/quality/default promotion"
+  ]
+}

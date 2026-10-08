@@ -1,0 +1,8 @@
+{
+  "command": "env -i PATH=/usr/bin:/bin:/usr/sbin:/sbin PYTHONDONTWRITEBYTECODE=1 UNIMATCH_DEMO_MODE=true UNIMATCH_ENABLE_BROWSER_TIER=false backend/.venv/bin/python proof.py > attempt1.stdout.log 2> attempt1.stderr.log",
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-off-proof",
+  "executable": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+  "script_sha256": "36b19fc064f1cf36e6d53119eeeb966da2c039275ef3e7f6e6a5e9870a2ed6b2",
+  "schema": "native imports only; no external shadow package; no .env or settings load requested; own client MockTransport",
+  "initial_session_id": 31191
+}

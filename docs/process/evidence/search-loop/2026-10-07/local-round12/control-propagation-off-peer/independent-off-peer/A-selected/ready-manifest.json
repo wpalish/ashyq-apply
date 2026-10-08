@@ -1,0 +1,133 @@
+{
+  "status": "CONFIRMED_OFF_DEFECT_NO_REPAIR_NO_APPLICATION",
+  "file_sha256": [
+    {
+      "path": "HANDOFF-current-step.txt",
+      "sha256": "9a0bb417383813c15fe4ee903522aa17587c00a63bed3da42ef695ba3a3dfb04",
+      "size_bytes": 2005
+    },
+    {
+      "path": "PLAN.json",
+      "sha256": "a3d2e75599270b02860b78e5fe05b882b0f4e28707e4e11e2962c984c47301e2",
+      "size_bytes": 2230
+    },
+    {
+      "path": "REPORT.md",
+      "sha256": "06bf794dd4d2fa183f1784fb8b06b55134099065803d5878da2389724b8f5c24",
+      "size_bytes": 3105
+    },
+    {
+      "path": "attempt1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "attempt1.stdout.log",
+      "sha256": "fb041d93f848a482ac40f0da0fdefe64546eaf11b5c7686e7680c2fed27aaf84",
+      "size_bytes": 2292
+    },
+    {
+      "path": "execution.json",
+      "sha256": "9652131cd18247b0afbc2b4396d8de6531af53f9e4efa0688bf49da07a4ad6c6",
+      "size_bytes": 684
+    },
+    {
+      "path": "originals/backend/app/adapters/discovery/live_discovery.py",
+      "sha256": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004",
+      "size_bytes": 96441
+    },
+    {
+      "path": "originals/backend/app/adapters/fetching.py",
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "size_bytes": 47727
+    },
+    {
+      "path": "originals/backend/app/adapters/network_policy.py",
+      "sha256": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f",
+      "size_bytes": 6338
+    },
+    {
+      "path": "originals/backend/app/adapters/search/__init__.py",
+      "sha256": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+      "size_bytes": 6341
+    },
+    {
+      "path": "originals/backend/app/adapters/search/base.py",
+      "sha256": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+      "size_bytes": 6736
+    },
+    {
+      "path": "originals/backend/app/adapters/search/fake.py",
+      "sha256": "45546397ab73cfcafd4e418ad78159acced0570f593deaa83fbe17a4146982dc",
+      "size_bytes": 3328
+    },
+    {
+      "path": "originals/backend/app/adapters/search/intent.py",
+      "sha256": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+      "size_bytes": 12990
+    },
+    {
+      "path": "originals/backend/app/adapters/search/retrieval.py",
+      "sha256": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+      "size_bytes": 21805
+    },
+    {
+      "path": "originals/backend/app/jobs/worker.py",
+      "sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+      "size_bytes": 21474
+    },
+    {
+      "path": "originals/backend/app/pipeline/control.py",
+      "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd",
+      "size_bytes": 520
+    },
+    {
+      "path": "originals/backend/app/pipeline/read_budget.py",
+      "sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf",
+      "size_bytes": 4349
+    },
+    {
+      "path": "originals/backend/app/pipeline/runner.py",
+      "sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "size_bytes": 97639
+    },
+    {
+      "path": "originals/backend/tests/test_hybrid_retrieval.py",
+      "sha256": "ff04b8e26c457ee9dc6f5195609174deeaf109fe1d34e8890f66f91c1d43bccd",
+      "size_bytes": 32699
+    },
+    {
+      "path": "outcomes.attempt1.original.json",
+      "sha256": "7f58364d41f3eda4bc1b1ab39804dd928bcd9f2ca18b618ebdf6b0f9530b061c",
+      "size_bytes": 37584
+    },
+    {
+      "path": "proof.py",
+      "sha256": "36b19fc064f1cf36e6d53119eeeb966da2c039275ef3e7f6e6a5e9870a2ed6b2",
+      "size_bytes": 12576
+    },
+    {
+      "path": "receipt.json",
+      "sha256": "0ab84201887c63f36bbeb39cb8e4c0bedcfd516f0309ac43011940111099e459",
+      "size_bytes": 1421
+    },
+    {
+      "path": "source-after.json",
+      "sha256": "ba08ad63857f1927bdc45c1775f7d40ef44925e39c0ccb7db7cd9ecb971e1913",
+      "size_bytes": 2969
+    },
+    {
+      "path": "source-before.json",
+      "sha256": "8691cc75e9f1f7de2beeb9a40d19a60872e44a54c9d353d37843edf72a472c0a",
+      "size_bytes": 4917
+    }
+  ],
+  "selected_files": 24,
+  "selected_bytes": 428170,
+  "excluded": [
+    "runtime cache/body metadata; no DB/pyc/env"
+  ],
+  "receipt_sha256": "0ab84201887c63f36bbeb39cb8e4c0bedcfd516f0309ac43011940111099e459",
+  "source_method_overrides": false,
+  "real_network_attempts": 0
+}

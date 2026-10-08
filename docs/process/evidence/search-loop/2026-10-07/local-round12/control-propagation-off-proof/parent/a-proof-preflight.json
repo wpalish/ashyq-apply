@@ -1,0 +1,27 @@
+{
+  "status": "VERIFIED_OFF_DEFECT_PACKET",
+  "manifest_sha256": "2ca715d6a86f26fa613a722127e54b6e385731693729f1cfba4b736620a6a1dd",
+  "files_key": "file_sha256",
+  "row_type": "list",
+  "byte_count_key": "size_bytes",
+  "selected_files": 24,
+  "summary": {
+    "case_count": 11,
+    "PASS": 7,
+    "RED": 4,
+    "fixture_failures": 0,
+    "real_network_attempts": 0,
+    "qualification": "OFF defect proof only; actual native get fence with synthetic callback; no SQL/Worker/crash durability or launch-quality claim."
+  },
+  "qualification": [
+    "four material typed propagations fail, not cap bypass",
+    "actual native Fetcher methods unchanged; callback synthetic and MockTransport HTTP owner seam",
+    "native matching navigation exercised; ordinary Fetcher 3attempt transport/timeout policy unchanged",
+    "source/STOP unchanged; no SQL/Worker durability/quality proof"
+  ],
+  "initial_schema_failures": [
+    "AttributeError list has no attribute items",
+    "KeyError bytes: actual field size_bytes"
+  ],
+  "failure_scope": "root preflight field lookups, before repository evidence/application writes; originals/expectations unchanged"
+}

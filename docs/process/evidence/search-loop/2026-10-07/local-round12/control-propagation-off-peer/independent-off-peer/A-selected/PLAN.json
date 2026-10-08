@@ -1,0 +1,33 @@
+{
+  "created_utc": "2026-10-08T04:05:57.857695+00:00",
+  "task": "OFF evidence only: current native retrieval entry-root control propagation",
+  "root_plan": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/PLAN.json",
+  "scope": "Actual discover_candidates -> own production-equivalent read closure -> native BudgetedFetcher.get -> native before_get. Native Fetcher get/_get/_request methods remain untouched. FakeSearchProvider and httpx.MockTransport only; fresh process, synthetic DNS, socket/real HTTP denied.",
+  "controls": [
+    "UniversityReadStopped(read_cap)",
+    "UniversityReadStopped(checkpoint_busy)",
+    "RunCancelled",
+    "LeaseLost",
+    "asyncio.CancelledError",
+    "ordinary RuntimeError with control-looking text",
+    "empty native HTML",
+    "native transport failure",
+    "native HTTP403 access failure",
+    "native timeout",
+    "normal native HTML with navigation"
+  ],
+  "expectation": "The first four real controls must escape as the original exception object. CancelledError must escape unchanged. Ordinary failures remain unavailable hops; normal navigation stays additive. Record material REDs without repair.",
+  "accounting": "Record query attempts/provider calls, before_get attempts and synthetic admissions separately, original exception type/reason/identity, report queries/hop/candidates, native Fetcher stats, Mock HTTP exchanges vs actual denied socket/DNS attempts. Synthetic callback is not a durable SQL reservation, lease proof or Worker test.",
+  "limits": "query_budget=1, top_k=10, hop_entry_points=1 for every case; native Fetcher retry count/defaults unchanged, delay_seconds=0 only for isolated tests; robots enabled; no renderer; own cache only.",
+  "no_actions": [
+    "no repair/proposal",
+    "no app/repo/Git writes",
+    "no source method override",
+    "no primary DB/.env",
+    "no provider/model/university live",
+    "no labels/gold/scorer",
+    "no STOP reset/retry/substitution/purchase",
+    "no other agents"
+  ],
+  "seal": "PLAN precedes executable test. Preserve all initial fixture/test failures, raw logs, exact source copied before/after hashes and imports paths. Compact report plus immutable ready-manifest."
+}

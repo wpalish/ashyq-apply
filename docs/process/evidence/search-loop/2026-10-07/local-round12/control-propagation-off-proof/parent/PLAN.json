@@ -1,0 +1,19 @@
+{
+  "time": "2026-10-08T04:00:30.623652+00:00",
+  "task": "search-control-propagation",
+  "previous_goal_turn": "PROGRESS: actual source repair full13/13, exact evidence archived and Draft71 attached, release1679 clean pushed",
+  "base_head": "1679ea7cb9b3edd38084908a02248e780e615c94",
+  "branch": "task/search-control-propagation",
+  "source_hashes": {
+    "backend/app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+    "backend/app/adapters/discovery/live_discovery.py": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004",
+    "backend/app/pipeline/control.py": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd",
+    "backend/app/pipeline/read_budget.py": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf",
+    "backend/app/pipeline/runner.py": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+    "backend/app/jobs/worker.py": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df"
+  },
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "scope": "finite offline actual retrieval/Fetcher typed control propagation; preserve ordinary unavailable access, existing retry/defaults and all caps; independently review before source proposal/application",
+  "source_application": "NOT_APPLIED",
+  "live": "STOPPED_UNSCORED"
+}
