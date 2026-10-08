@@ -1,0 +1,282 @@
+[
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+    "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "start": 73,
+    "end": 77,
+    "text": "STRICT_MAX_FETCHER_CALLS = 60\nSTRICT_MAX_SEARCH_QUERIES = 6\nSTRICT_MAX_SECONDS = 120\nSTRICT_PROCESS_RESERVE_SECONDS = 15\nSTRICT_PROVIDERS = frozenset({\"exa\", \"exa_mcp\"})"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+    "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "start": 128,
+    "end": 159,
+    "text": "    def before_fetch(self) -> None:\n        self.remaining()\n        self._check_provider_stop()\n        if self.fetcher_calls >= self.max_fetcher_calls:\n            self.stop_reason = self.stop_reason or \"page_budget_exhausted\"\n            raise RuntimeError(\"BENCHMARK_PAGE_BUDGET_EXHAUSTED\")\n        self.fetcher_calls += 1\n\n    def before_search(self, provider_name: str) -> None:\n        from app.adapters.search.base import SearchUnavailable\n\n        self.remaining()\n        if provider_name != self.provider_name or provider_name not in STRICT_PROVIDERS:\n            raise SearchUnavailable(\"Strict capture refused a different provider identity\")\n        self._check_provider_stop(search=True)\n        if self.search_queries >= self.max_search_queries:\n            self.blocked_search_queries += 1\n            self.stop_reason = self.stop_reason or \"search_budget_exhausted\"\n            raise SearchUnavailable(\"Strict capture search query budget exhausted\")\n        self.search_queries += 1\n\n    def _check_provider_stop(self, *, search: bool = False) -> None:\n        from app.adapters.search.base import SearchUnavailable\n\n        if self.provider_failure or (self.stop_file is not None and self.stop_file.exists()):\n            self.stop_reason = self.stop_reason or \"external_provider_failure\"\n            if search:\n                self.blocked_search_queries += 1\n            raise SearchUnavailable(\n                \"Strict capture stopped after provider failure\",\n                http_status=(self.provider_failure or {}).get(\"http_status\"),\n            )"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+    "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "start": 169,
+    "end": 201,
+    "text": "        status = getattr(exc, \"http_status\", None)\n        if type(status) is not int or not 100 <= status <= 599:\n            status = getattr(getattr(exc, \"response\", None), \"status_code\", None)\n        if type(status) is not int or not 100 <= status <= 599:\n            status = None\n        reason = getattr(exc, \"reason\", None)\n        reason = reason if isinstance(reason, SearchFailureReason) else None\n        sanitized = SearchUnavailable(\n            \"Configured search provider unavailable\", http_status=status, reason=reason\n        )\n        self.provider_failure = self.provider_failure or {\n            \"http_status\": status,\n            \"reason\": reason.value if reason else None,\n            \"error\": search_failure_diagnostic(self.provider_name, sanitized),\n        }\n        self.stop_reason = self.stop_reason or (\"http_429\" if status == 429 else \"provider_failure\")\n        if self.stop_file is not None:\n            self.stop_file.parent.mkdir(parents=True, exist_ok=True)\n            try:\n                with self.stop_file.open(\"x\", encoding=\"utf-8\") as out:\n                    json.dump(\n                        {\n                            \"case_id\": self.case_id,\n                            \"provider\": self.provider_name,\n                            \"http_status\": self.provider_failure[\"http_status\"],\n                            \"failure_reason\": self.provider_failure[\"reason\"],\n                            \"time\": datetime.now(UTC).isoformat(),\n                        },\n                        out,\n                    )\n            except FileExistsError:\n                pass\n        return sanitized"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+    "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "start": 278,
+    "end": 308,
+    "text": "async def capture_one(\n    case_id: str,\n    output: Path,\n    max_pages: int,\n    seconds: float | None = None,\n    *,\n    strict_expert_budget: bool = False,\n    finalization_reserve_ms: int = 0,\n    catalogue_id: str | None = None,\n    stop_file: Path | None = None,\n    university_read_budget: bool | None = None,\n    fenced_research_job: bool = False,\n) -> None:\n    entered = time.monotonic()\n    from app.pipeline import read_budget\n\n    native = (\n        read_budget.UNIVERSITY_READ_BUDGET\n        if university_read_budget is None\n        else university_read_budget\n    )\n    if native and not fenced_research_job:\n        raise ValueError(\"University read budget requires a genuine fenced research Job\")\n    if fenced_research_job and (DOCUMENT_SECONDS or not case_id):\n        raise ValueError(\"Fenced protocol requires one identity and excludes documents\")\n    if type(finalization_reserve_ms) is not int or finalization_reserve_ms < 0:\n        raise ValueError(\"Finalization reserve must be a nonnegative integer in milliseconds\")\n    if finalization_reserve_ms and not strict_expert_budget:\n        raise ValueError(\"Finalization reserve requires strict expert budget mode\")\n    if stop_file is not None and not strict_expert_budget:\n        raise ValueError(\"Shared stop file requires strict expert budget mode\")"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+    "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "start": 323,
+    "end": 338,
+    "text": "        seconds = STRICT_MAX_SECONDS if seconds is None else seconds\n        if (\n            type(max_pages) is not int\n            or not 1 <= max_pages <= STRICT_MAX_FETCHER_CALLS\n            or not 0 < seconds <= STRICT_MAX_SECONDS\n        ):\n            raise ValueError(\n                \"Strict capture budget must be at most 60 Fetcher calls and 120 active seconds\"\n            )\n        if finalization_reserve_ms >= seconds * 1000:\n            raise ValueError(\"Finalization reserve must be less than the full case clock\")\n        settings = get_settings()\n        if settings.search_provider not in STRICT_PROVIDERS:\n            raise ValueError(\"Strict live capture requires configured exa or exa_mcp\")\n        if settings.enable_browser_tier or not settings.respect_robots:\n            raise ValueError(\"Strict live capture requires browser tier off and robots respected\")"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+    "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "start": 525,
+    "end": 549,
+    "text": "    async def counted_search(original_search, provider, *args, **kwargs):\n        # Each search call is counted and timed into this case's own log: a\n        # case that runs out of wall clock after two fetches spent the time\n        # somewhere, and search is the first place to look.\n        if budget:\n            budget.before_search(getattr(provider, \"name\", \"\"))\n            observation.telemetry.search_calls = budget.search_queries\n        else:\n            observation.telemetry.search_calls = (observation.telemetry.search_calls or 0) + 1\n        began = time.monotonic()\n        if budget:\n            checkpoint()\n            if budget.finalization_reserve_ms:\n                budget.remaining()\n        try:\n            return await original_search(provider, *args, **kwargs)\n        except Exception as exc:\n            reason = getattr(getattr(exc, \"reason\", None), \"value\", None)\n            print(\n                f\"search failed after {time.monotonic() - began:.1f}s: {type(exc).__name__}\"\n                f\" ({reason or 'no reason'}, http {getattr(exc, 'http_status', None)})\"\n            )\n            if budget:\n                raise budget.failed_search(exc) from None\n            raise"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+    "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "start": 569,
+    "end": 578,
+    "text": "    async def observed_confirm(adapter, selected, ranked, trace, profile):\n        queued = list(selected[PageCategory.PROGRAM_PAGE])\n        for _score, url in sorted(ranked[PageCategory.PROGRAM_PAGE], reverse=True):\n            if url not in queued:\n                queued.append(url)\n        observation.ranked_urls = [HttpUrl(url) for url in queued]\n        checkpoint()\n        if budget is None:\n            await _jev_shadow(case_id, queued, profile)\n        return await original_confirm(adapter, selected, ranked, trace, profile)"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+    "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "start": 762,
+    "end": 789,
+    "text": "    with (\n        # Strict evaluation must observe the first refusal. The public MCP\n        # client can retry internally before counted_search sees its error.\n        # Scope these overrides to this capture and restore both on every exit.\n        patch.object(exa_mcp_module, \"RATE_LIMIT_RETRY\", False) if budget else nullcontext(),\n        patch.object(exa_mcp_module, \"RETRY_429_ONCE\", False) if budget else nullcontext(),\n        patch.object(canary, \"CanaryRunner\", ObservedRunner),\n        patch.object(fetching, \"_pinned_request\", counted_request),\n        patch.object(ExaSearchProvider, \"search\", counted_for(ExaSearchProvider)),\n        patch.object(ExaMcpSearchProvider, \"search\", counted_for(ExaMcpSearchProvider)),\n        patch.object(TavilySearchProvider, \"search\", counted_for(TavilySearchProvider)),\n        patch.object(BraveSearchProvider, \"search\", counted_for(BraveSearchProvider)),\n        patch.object(SerperSearchProvider, \"search\", counted_for(SerperSearchProvider)),\n        patch.object(LiveDiscoveryAdapter, \"_confirm_programs\", observed_confirm),\n    ):\n        try:\n            active_seconds = budget.remaining() if budget else seconds\n            # Preserve the legacy call shape unless a Job option changes it.\n            # Explicit False still overrides a hostile True module default.\n            job_options: dict[str, Any] = {}\n            if fenced_research_job:\n                job_options.update(\n                    university_read_budget=native,\n                    fenced_research_job=True,\n                    stop_file=stop_file,\n                )\n            elif native != read_budget.UNIVERSITY_READ_BUDGET:\n                job_options[\"university_read_budget\"] = native"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+    "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "start": 863,
+    "end": 884,
+    "text": "    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument(\"--live\", action=\"store_true\", required=True)\n    parser.add_argument(\"--out\", type=Path, required=True)\n    selection = parser.add_mutually_exclusive_group()\n    selection.add_argument(\"--case\", choices=[*COHORT, *HELDOUT])\n    selection.add_argument(\n        \"--catalogue-id\", action=\"append\", help=\"opt-in imported identity id; repeat for a batch\"\n    )\n    parser.add_argument(\"--stop-file\", type=Path, help=\"strict batch shared refusal stop sentinel\")\n    parser.add_argument(\"--seconds-per-case\", type=int, default=120)\n    parser.add_argument(\"--max-pages\", type=int, default=None)\n    parser.add_argument(\n        \"--strict-expert-budget\",\n        action=\"store_true\",\n        help=\"evaluation only: cold 60 get / 6 query / 120 active second caps; stop batch on provider failure\",\n    )\n    parser.add_argument(\n        \"--finalization-reserve-ms\",\n        type=int,\n        default=None,\n        help=\"strict evaluation only: reserve case-clock milliseconds for cancellation/output cleanup (V4:1000)\",\n    )"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+    "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "start": 1051,
+    "end": 1074,
+    "text": "    parser.add_argument(\n        \"--university-read-budget\",\n        action=argparse.BooleanOptionalAction,\n        default=read_budget.UNIVERSITY_READ_BUDGET,\n    )\n    parser.add_argument(\n        \"--fenced-research-job\", action=argparse.BooleanOptionalAction, default=False\n    )\n    parser.add_argument(\"--child\", action=\"store_true\", help=argparse.SUPPRESS)\n    args = parser.parse_args()\n    if args.university_read_budget and not args.fenced_research_job:\n        parser.error(\"University read budget requires a genuine fenced research Job\")\n    if args.fenced_research_job and (\n        args.with_documents\n        or not (args.case or args.catalogue_id)\n        or (args.catalogue_id and len(args.catalogue_id) != 1)\n    ):\n        parser.error(\n            \"Fenced protocol requires one explicit case/catalogue identity and excludes documents\"\n        )\n    if args.stop_file is not None and not args.strict_expert_budget:\n        parser.error(\"--stop-file requires --strict-expert-budget\")\n    if args.child and args.catalogue_id is not None and len(args.catalogue_id) != 1:\n        parser.error(\"A child capture requires exactly one catalogue id\")"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+    "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "start": 1262,
+    "end": 1265,
+    "text": "    for case_index, case_id in enumerate(planned_cases):\n        if args.stop_file is not None and args.stop_file.exists():\n            batch_stop_reason = \"external_provider_failure\"\n            stopped_capture = Capture("
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+    "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "start": 1329,
+    "end": 1346,
+    "text": "                        *([\"--strict-expert-budget\"] if args.strict_expert_budget else []),\n                        *(\n                            [\"--stop-file\", str(args.stop_file)]\n                            if args.stop_file is not None\n                            else []\n                        ),\n                        *(\n                            [\"--finalization-reserve-ms\", str(finalization_reserve_ms)]\n                            if args.finalization_reserve_ms is not None\n                            else []\n                        ),\n                        *([\"--search-provider\", search_provider] if args.search_provider else []),\n                        \"--university-read-budget\"\n                        if args.university_read_budget\n                        else \"--no-university-read-budget\",\n                        \"--fenced-research-job\"\n                        if args.fenced_research_job\n                        else \"--no-fenced-research-job\","
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+    "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "start": 1392,
+    "end": 1405,
+    "text": "                    env=environment,\n                    stdout=log,\n                    stderr=log,\n                    timeout=(\n                        args.seconds_per_case + STRICT_PROCESS_RESERVE_SECONDS\n                        if args.strict_expert_budget\n                        else args.seconds_per_case\n                    )\n                    + args.with_documents,\n                    check=False,\n                )\n                error = f\"PROCESS_EXIT_{completed.returncode}\" if completed.returncode else None\n            except subprocess.TimeoutExpired:\n                error = \"BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED\""
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+    "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "start": 1422,
+    "end": 1438,
+    "text": "        if args.strict_expert_budget:\n            budget_output = output.with_suffix(\".budget.json\")\n            if budget_output.exists():\n                case_budgets[case_id] = json.loads(budget_output.read_text(encoding=\"utf-8\"))\n                if case_budgets[case_id].get(\"stop_reason\") == \"http_429\":\n                    batch_stop_reason = \"http_429\"\n                elif case_budgets[case_id].get(\"provider_failure\"):\n                    batch_stop_reason = \"provider_failure\"\n                elif case_budgets[case_id].get(\"stop_reason\") == \"external_provider_failure\":\n                    batch_stop_reason = \"external_provider_failure\"\n            else:\n                batch_stop_reason = \"capture_unavailable\"\n            case_budgets.setdefault(case_id, {}).update(\n                parent_process_elapsed_seconds=process_elapsed_seconds,\n                process_error=error,\n                active_checkpoint_available=budget_output.exists(),\n            )"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+    "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "start": 1443,
+    "end": 1458,
+    "text": "                \"page_budget_counts\": \"every Fetcher.get invocation; cache hits consume a call\",\n                \"cold_fetcher_reads\": True,\n                \"child_active_seconds\": args.seconds_per_case,\n                \"finalization_reserve_ms\": finalization_reserve_ms,\n                \"source_work_deadline_ms\": args.seconds_per_case * 1000 - finalization_reserve_ms,\n                \"active_time_basis\": _ExpertBudget(\n                    args.max_pages,\n                    args.seconds_per_case,\n                    search_provider,\n                    0.0,\n                    finalization_reserve_ms=finalization_reserve_ms,\n                ).active_time_basis,\n                \"parent_process_reserve_seconds\": STRICT_PROCESS_RESERVE_SECONDS,\n                \"parent_process_timeout_seconds\": args.seconds_per_case\n                + STRICT_PROCESS_RESERVE_SECONDS,\n                \"case_budgets\": case_budgets,"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+    "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "start": 1511,
+    "end": 1518,
+    "text": "        print(f\"{case_id}: {observation.error or 'complete'}\", flush=True)\n        if batch_stop_reason:\n            print(\n                f\"Capture stopped ({batch_stop_reason}); remaining cases were not attempted.\",\n                flush=True,\n            )\n            break\n    print(directory / \"capture.json\", flush=True)"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/scripts/canary_discovery.py",
+    "sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+    "start": 388,
+    "end": 407,
+    "text": "def recall_metrics(rows: list[dict]) -> dict[str, dict[str, float | int]]:\n    \"\"\"Publish recall as honest numerators and denominators, never a slogan.\"\"\"\n    program_numerator = sum(bool(row.get(\"program_page_found\")) for row in rows)\n    category_numerator = sum(\n        bool((row.get(\"discovered\") or {}).get(category))\n        for row in rows\n        for category in CANARY_CATEGORIES\n    )\n    return {\n        \"program\": {\n            \"numerator\": program_numerator,\n            \"denominator\": len(rows),\n            \"target\": PROGRAM_RECALL_TARGET,\n        },\n        \"category\": {\n            \"numerator\": category_numerator,\n            \"denominator\": len(rows) * len(CANARY_CATEGORIES),\n            \"target\": CATEGORY_RECALL_TARGET,\n        },\n    }"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/scripts/canary_discovery.py",
+    "sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+    "start": 410,
+    "end": 440,
+    "text": "def validate_job_protocol(only, batch, catalogue_ids, native, fenced, *, check_seeds=False):\n    if native and not fenced:\n        raise ValueError(\"University read budget requires a genuine fenced research Job\")\n    if not fenced:\n        return\n    if check_seeds:\n        raise ValueError(\"Fenced research protocol does not cover check-seeds\")\n    groups = int(bool(only)) + int(bool(batch)) + int(bool(catalogue_ids))\n    if groups != 1 or (batch and len(batch) != 1) or (catalogue_ids and len(catalogue_ids) != 1):\n        raise ValueError(\"Fenced research requires exactly one explicit identity selector\")\n\n\nasync def run_canary(\n    only,\n    verbose,\n    batch=None,\n    *,\n    catalogue_ids=None,\n    university_read_budget=None,\n    fenced_research_job=False,\n    stop_file=None,\n):\n    native = (\n        read_budget.UNIVERSITY_READ_BUDGET\n        if university_read_budget is None\n        else university_read_budget\n    )\n    validate_job_protocol(only, batch, catalogue_ids, native, fenced_research_job)\n    if fenced_research_job and stop_file is not None and stop_file.exists():\n        raise ValueError(\"PROVIDER_STOP_BEFORE_JOB\")\n    with patch.object(read_budget, \"UNIVERSITY_READ_BUDGET\", native):"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/scripts/canary_discovery.py",
+    "sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+    "start": 452,
+    "end": 481,
+    "text": "async def _execute_fenced_job(engine, run_id, settings):\n    \"\"\"Real production dispatch; factories bind only this isolated SQLite run.\"\"\"\n    if engine.dialect.name != \"sqlite\" or not engine.url.database:\n        raise ValueError(\"Genuine canary requires its isolated SQLite case database\")\n    factory = sessionmaker(bind=engine)\n    owner = worker_identity()\n    protocol = {\n        \"kind\": \"genuine-research-job\",\n        \"sqlite_case_database\": engine.url.database,\n        \"started\": False,\n        \"native_ledger\": None,\n        \"native_enabled\": read_budget.UNIVERSITY_READ_BUDGET,\n        \"worker_id\": owner,\n        \"observation_available\": False,\n        \"control_error\": None,\n        \"control_message\": None,\n    }\n    runners = []\n    with factory() as session:\n        created = JobStore(session).enqueue(\n            \"research\", run_id=run_id, idempotency_key=\"canary:\" + run_id\n        )\n        session.commit()\n    with factory() as session:\n        store = JobStore(session, worker_id=owner, lease_seconds=settings.job_lease_seconds)\n        job = store.claim(worker_id=owner)\n        if not created.created or job is None or job.id != created.job_id or job.attempts != 1:\n            raise ValueError(\"Genuine canary could not claim its fresh research Job\")\n        protocol.update(started=True, run_id=run_id, job_id=job.id, claim_token=job.attempts)\n        session.commit()"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/scripts/canary_discovery.py",
+    "sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+    "start": 533,
+    "end": 547,
+    "text": "    with (\n        patch.object(worker_module, \"session_scope\", scoped_session),\n        patch.object(worker_module, \"ResearchRunner\", JobRunner),\n    ):\n        loop.create_task = tracked\n        try:\n            await worker.execute(created.job_id)\n        except BaseException as exc:\n            escaped = exc\n        finally:\n            loop.create_task = create\n            # Worker already cancels its heartbeat in finally; observe and join\n            # just those tasks without a new source-work clock or immediate retry.\n            await asyncio.gather(*tasks, return_exceptions=True)\n            protocol.update("
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/scripts/canary_discovery.py",
+    "sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+    "start": 648,
+    "end": 653,
+    "text": "                if reported_run is None or job is None or runner is None:\n                    raise ValueError(\"Genuine Job/run/runner provenance unavailable\")\n                run = reported_run\n                report = _gather_report(\n                    reporting, run, registry, runner, started, datetime.now(UTC), error, verbose\n                )"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/scripts/canary_discovery.py",
+    "sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+    "start": 751,
+    "end": 755,
+    "text": "\n            traceback.print_exc()\n    finished = datetime.now(UTC)\n    report = _gather_report(session, run, registry, runner, started, finished, error, verbose)\n    session.close()"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/scripts/canary_discovery.py",
+    "sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+    "start": 868,
+    "end": 874,
+    "text": "    for reported in rows:\n        totals_outcomes.update(reported[\"page_outcomes\"])\n        totals_types.update(reported[\"page_types\"])\n    recall = recall_metrics(rows)\n    return {\n        \"accessed_at\": started.isoformat(),\n        \"duration_seconds\": round((finished - started).total_seconds(), 1),"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/expert/controller.py",
+    "sha256": "5c081ac3ec25950bccdedf9a6e63c424e37fded2c48bbd6ed60fc23c434284cc",
+    "start": 53,
+    "end": 56,
+    "text": "STRICT_PROVIDERS = frozenset({\"exa\", \"exa_mcp\"})\nSTRICT_MAX_CALLS = 60\nSTRICT_MAX_MS = 120_000\nSTRICT_MAX_SEARCH_QUERIES = 6"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/expert/controller.py",
+    "sha256": "5c081ac3ec25950bccdedf9a6e63c424e37fded2c48bbd6ed60fc23c434284cc",
+    "start": 148,
+    "end": 176,
+    "text": "@contextmanager\ndef _reserve_log(logs_dir: Path, name: str, record: dict[str, Any]) -> Iterator[BinaryIO]:\n    \"\"\"Reserve before I/O; interrupted calls leave an explicitly incomplete log.\"\"\"\n    if Path(name).name != name or not _SAFE_FILENAME.fullmatch(name):\n        raise ValueError(\"Raw log name must be a safe filename\")\n    logs_dir.mkdir(parents=True, exist_ok=True)\n    with (logs_dir / name).open(\"xb\") as output:\n        output.write(json.dumps({**record, \"outcome\": \"pending\"}).encode(\"utf-8\"))\n        output.flush()\n        yield output\n\n\ndef _write_log(\n    logs_dir: Path,\n    name: str,\n    record: dict[str, Any],\n    *,\n    output: BinaryIO | None = None,\n) -> tuple[str, str]:\n    \"\"\"Complete only this action's reserved file, never replace an existing log.\"\"\"\n    data = json.dumps(record, ensure_ascii=False, sort_keys=True, indent=1).encode(\"utf-8\")\n    if output is None:\n        with _reserve_log(logs_dir, name, record) as reserved:\n            return _write_log(logs_dir, name, record, output=reserved)\n    output.seek(0)\n    output.truncate()\n    output.write(data)\n    output.flush()\n    return name, hashlib.sha256(data).hexdigest()"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/expert/controller.py",
+    "sha256": "5c081ac3ec25950bccdedf9a6e63c424e37fded2c48bbd6ed60fc23c434284cc",
+    "start": 179,
+    "end": 205,
+    "text": "def _existing_state(\n    plan: dict[str, Any],\n    logs_dir: Path,\n    prefix: str,\n    provider_name: str,\n    strict: bool,\n    budget_origin: str,\n    action_deadline_ms: int | None,\n) -> tuple[int, dict[str, Any]]:\n    \"\"\"Locate the next log and reject counter resets or changed resume bytes.\"\"\"\n    pattern = re.compile(re.escape(prefix) + r\"-(\\d+)\\.json\\Z\")\n    expected: dict[str, str] = {}\n    resume = plan.get(\"resume_summary\")\n    if resume is not None:\n        if not isinstance(resume, dict) or resume.get(\"case_id\") != plan[\"case_id\"]:\n            raise ValueError(\"Resume summary belongs to a different case\")\n        if resume.get(\"provider\") != provider_name:\n            raise ValueError(\"Resume summary belongs to a different provider\")\n        expected.update(resume.get(\"raw_logs\", {}))\n        for entry in resume.get(\"replay\", []) + resume.get(\"actions\", []):\n            expected[entry[\"raw_log_path\"]] = entry[\"raw_log_sha256\"]\n        if strict:\n            # Earlier summaries lack the explicit field; their recorded names\n            # still bind the prefix. Never verify one run's bytes but rebuild\n            # budget/429 state from a different, empty filename namespace.\n            if resume.get(\"log_prefix\", prefix) != prefix or any(\n                not isinstance(name, str) or not pattern.fullmatch(name) for name in expected"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/expert/controller.py",
+    "sha256": "5c081ac3ec25950bccdedf9a6e63c424e37fded2c48bbd6ed60fc23c434284cc",
+    "start": 377,
+    "end": 394,
+    "text": "    strict = plan.get(\"strict_budget\", False)\n    if type(strict) is not bool:\n        raise ValueError(\"strict_budget must be a boolean\")\n    if strict and provider_name not in STRICT_PROVIDERS:\n        raise ValueError(\"Strict expert runs require configured exa or exa_mcp\")\n    if plan.get(\"provider\", provider_name) != provider_name:\n        raise ValueError(\"Plan provider differs from the configured provider\")\n    max_calls, max_ms = _integer(plan, \"max_calls\"), _integer(plan, \"max_ms\")\n    max_queries = _integer(plan, \"max_search_queries\", STRICT_MAX_SEARCH_QUERIES)\n    if max_calls < 1 or max_ms < 1 or max_queries < 1:\n        raise ValueError(\"Run budgets must be positive\")\n    action_deadline_ms = _action_deadline(plan, max_ms)\n    if strict and (\n        max_calls > STRICT_MAX_CALLS\n        or max_ms > STRICT_MAX_MS\n        or max_queries > STRICT_MAX_SEARCH_QUERIES\n    ):\n        raise ValueError(\"Strict run budget exceeds 60 Fetcher calls, 120 seconds or six queries\")"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/expert/controller.py",
+    "sha256": "5c081ac3ec25950bccdedf9a6e63c424e37fded2c48bbd6ed60fc23c434284cc",
+    "start": 408,
+    "end": 435,
+    "text": "    domains = plan.get(\"official_domains\", [])\n    if not isinstance(domains, list) or any(not isinstance(d, str) for d in domains):\n        raise ValueError(\"official_domains must be a list of hostnames\")\n    official_domains = tuple(_domain(d) for d in domains)\n    if strict and not official_domains:\n        raise ValueError(\"Strict expert runs require independently resolved official_domains\")\n    if any(blocked(\"https://\" + d) for d in official_domains):\n        raise ValueError(\"Official domains cannot include a blocked repository host\")\n    number, state = _existing_state(\n        plan, logs_dir, prefix, provider_name, strict, origin, action_deadline_ms\n    )\n    initial = {\n        key: _integer(plan, key, int(state.get(record_key, 0)))\n        for key, record_key in (\n            (\"start_calls\", \"fetcher_calls_cumulative\"),\n            (\"start_ms\", \"elapsed_ms_cumulative\"),\n            (\"start_search_queries\", \"search_queries_cumulative\"),\n        )\n    }\n    if strict and any(\n        initial[key] < int(state.get(record_key, 0))\n        for key, record_key in (\n            (\"start_calls\", \"fetcher_calls_cumulative\"),\n            (\"start_ms\", \"elapsed_ms_cumulative\"),\n            (\"start_search_queries\", \"search_queries_cumulative\"),\n        )\n    ):\n        raise ValueError(\"Resume counters cannot decrease\")"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/expert/controller.py",
+    "sha256": "5c081ac3ec25950bccdedf9a6e63c424e37fded2c48bbd6ed60fc23c434284cc",
+    "start": 642,
+    "end": 654,
+    "text": "                    except Exception as exc:\n                        record[\"response\"] = _failure(\n                            exc, provider_name=provider_name if tool == \"search_provider\" else None\n                        )\n                        if tool == \"search_provider\" and record[\"response\"][\"http_status\"] == 429:\n                            stop_reason = \"http_429\"\n                    elapsed = max(0, math.ceil((monotonic() - began) * 1000))\n                    record[\"outcome_status\"] = record[\"response\"][\"outcome_status\"]\n                if strict:\n                    elapsed_total = max(\n                        ledger.ms + elapsed,\n                        initial[\"start_ms\"] + math.ceil((monotonic() - run_began) * 1000),\n                        deadline_floor,"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/expert/controller.py",
+    "sha256": "5c081ac3ec25950bccdedf9a6e63c424e37fded2c48bbd6ed60fc23c434284cc",
+    "start": 708,
+    "end": 738,
+    "text": "async def run(plan_path: Path, logs_dir: Path, cache_dir: Path) -> dict[str, Any]:\n    \"\"\"Use the configured provider, cold Fetcher reads in strict mode, no fallback.\"\"\"\n    from app.adapters.fetching import Fetcher\n    from app.adapters.search import SearchProviderNotConfigured, get_search_provider\n    from app.config import get_settings\n\n    settings = get_settings()\n    plan = json.loads(plan_path.read_text(encoding=\"utf-8\"))\n    strict = plan.get(\"strict_budget\", False)\n    if strict and settings.search_provider not in STRICT_PROVIDERS:\n        raise ValueError(\"Strict expert runs require configured exa or exa_mcp\")\n    try:\n        provider = get_search_provider()\n        search = provider.search\n        provider_name = settings.search_provider\n        if strict and provider.name != provider_name:\n            raise ValueError(\"Configured provider identity mismatch\")\n    except SearchProviderNotConfigured:\n        search, provider_name = None, \"none\"\n    async with Fetcher(\n        cache_dir,\n        delay_seconds=settings.fetch_delay_seconds,\n        respect_robots=True if strict else settings.respect_robots,\n        timeout=settings.fetch_timeout_seconds,\n        contact=settings.fetch_contact,\n    ) as fetcher:\n\n        async def get(url: str) -> Any:\n            return await fetcher.get(url, use_cache=not strict)\n\n        return await execute(plan, logs_dir, get=get, search=search, provider_name=provider_name)"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/expert/controller.py",
+    "sha256": "5c081ac3ec25950bccdedf9a6e63c424e37fded2c48bbd6ed60fc23c434284cc",
+    "start": 915,
+    "end": 925,
+    "text": "def main(argv: Sequence[str] | None = None) -> None:\n    import argparse\n\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument(\"--plan\", type=Path, required=True)\n    parser.add_argument(\"--logs-dir\", type=Path, required=True)\n    parser.add_argument(\"--cache-dir\", type=Path, required=True)\n    parser.add_argument(\"--summary\", type=Path, required=True)\n    args = parser.parse_args(argv)\n    summary = asyncio.run(run(args.plan, args.logs_dir, args.cache_dir))\n    args.summary.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding=\"utf-8\")"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/exa_mcp.py",
+    "sha256": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "start": 32,
+    "end": 42,
+    "text": "#: Plan rule SR-1: one retry after a short pause when the keyless Exa MCP\n#: reports its rate limit. The limit is brief; the next query in the same\n#: run usually succeeds. On by default since 2026-10-06 (owner: \"Да\"; run\n#: claude-sr1-paired-1: rate-limit failures 8 -> 4, zero losses).\nRATE_LIMIT_RETRY = True\nRATE_LIMIT_BACKOFF_SECONDS = 2.0\n#: Plan rule SR-2: one retry, after a longer pause, when the keyless endpoint\n#: answers HTTP 429. Run claude-ts2-paired-1 named the failures that broke NTU\n#: (7 of 8 were 429, the rest a timeout); one polite retry is not the loop\n#: of rephrasings the 429 stop in retrieval.py guards against. Owner: \"1 + 2\".\nRETRY_429_ONCE = False"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py",
+    "sha256": "161f5f0df441465fee4ce03e4df406ff9389f0a0462b3541a77bb891cc2c20ac",
+    "start": 56,
+    "end": 70,
+    "text": "def provider_stop_receipt(config: dict[str, object]) -> dict[str, object] | None:\n    \"\"\"Read the retained refusal; never clear or rewrite the original STOP.\"\"\"\n    selected = config.get(\"live_stop_receipt\")\n    if not selected:\n        return None\n    path = Path(str(selected))\n    raw = path.read_bytes()\n    original = json.loads(raw)\n    if not isinstance(original, dict) or not original.get(\"failure_reason\"):\n        raise RuntimeError(\"The configured provider STOP receipt is invalid\")\n    return {\n        \"path\": str(path),\n        \"sha256\": hashlib.sha256(raw).hexdigest(),\n        \"original\": original,\n    }"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py",
+    "sha256": "161f5f0df441465fee4ce03e4df406ff9389f0a0462b3541a77bb891cc2c20ac",
+    "start": 145,
+    "end": 161,
+    "text": "def safe_env(node_bin: Path, run_dir: Path) -> dict[str, str]:\n    env = {\n        k: v for k, v in os.environ.items()\n        if not k.startswith(\"UNIMATCH_\") and k not in REDACT_ENV\n    }\n    env[\"PATH\"] = str(node_bin) + os.pathsep + env.get(\"PATH\", \"\")\n    env.update({\n        \"CI\": \"true\",\n        \"PYTHONUNBUFFERED\": \"1\",\n        \"UNIMATCH_ENVIRONMENT\": \"development\",\n        \"UNIMATCH_DATABASE_URL\": f\"sqlite:///{run_dir / 'runtime' / 'checks.db'}\",\n        \"UNIMATCH_PGDATA\": str(run_dir / \"runtime\" / \"pgdata\"),\n        \"UNIMATCH_CACHE_DIR\": str(run_dir / \"runtime\" / \"httpcache\"),\n        \"UNIMATCH_EXPORT_DIR\": str(run_dir / \"runtime\" / \"exports\"),\n    })\n    (run_dir / \"runtime\").mkdir(exist_ok=True)\n    return env"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py",
+    "sha256": "161f5f0df441465fee4ce03e4df406ff9389f0a0462b3541a77bb891cc2c20ac",
+    "start": 331,
+    "end": 343,
+    "text": "            if args.command == \"live\":\n                if not args.provider or not args.case:\n                    raise RuntimeError(\"live requires an explicit provider and one pilot case\")\n                stop = provider_stop_receipt(config)\n                run.summary[\"retained_provider_stop\"] = stop\n                acknowledged = bool(stop and args.resume_stop_sha256 == stop[\"sha256\"])\n                run.summary[\"owner_stop_acknowledgement_recorded\"] = acknowledged\n                if args.resume_stop_sha256 and not acknowledged:\n                    raise RuntimeError(\"The resume acknowledgement does not match the retained STOP\")\n                if args.execute and stop and not acknowledged:\n                    run.finish(\"blocked_provider_stop\")\n                    print(\"Live dispatch blocked by the retained provider STOP. Explicit owner authorization for a fresh single-case run is required.\", flush=True)\n                    return 2"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py",
+    "sha256": "161f5f0df441465fee4ce03e4df406ff9389f0a0462b3541a77bb891cc2c20ac",
+    "start": 399,
+    "end": 428,
+    "text": "            command = [\n                str(backend_python), \"-m\", \"evaluation.research.live\", \"--live\",\n                \"--case\", args.case, \"--seconds-per-case\", \"120\", \"--max-pages\", \"60\",\n                \"--search-provider\", args.provider, \"--shared-query-budget\",\n                \"--out\", str(run_dir / \"capture\"),\n            ]\n            if args.provider in (\"exa\", \"exa_mcp\"):\n                command.append(\"--strict-expert-budget\")\n            run.summary[\"live_plan\"] = {\n                \"command\": command, \"provider\": args.provider, \"case\": args.case,\n                \"seconds\": 120, \"page_reads\": 60, \"shared_search_budget\": 6,\n                \"strict_action_ledger\": args.provider in (\"exa\", \"exa_mcp\"),\n                \"comparison_eligible\": False,\n                \"network_location\": \"local computer\", \"expert_evaluation\": False,\n                \"no_automatic_scoring\": True,\n                \"blocked_by_retained_stop\": bool(stop and not acknowledged),\n            }\n            if not args.execute:\n                write_json(run_dir / \"live-plan.json\", run.summary[\"live_plan\"])\n                run.finish(\"prepared_not_executed\")\n                return 0\n            key = PROVIDER_KEYS.get(args.provider)\n            if key and not os.environ.get(key):\n                raise RuntimeError(f\"Set {key} in the process environment; no key file is read or printed\")\n            key_names = [key] if key else []\n            live_env = {name: os.environ[name] for name in key_names}\n            run.summary[\"live_network_capture_started\"] = True\n            code = run.step(\"live-capture\", command, root / \"backend\", live_env)\n            run.finish(\"capture_finished_unscored\" if code == 0 else \"capture_failed_unscored\")\n            return code"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/genuine-baseline/execute_baseline.py",
+    "sha256": "4fa670fb54d6f62c296b68e682c2f46417cf02ba0daf75deb69f329be32f269b",
+    "start": 31,
+    "end": 51,
+    "text": "def preflight():\n    full = json.loads((FULL / \"summary.json\").read_text())\n    assert full[\"status\"] == \"passed\" and len(full[\"steps\"]) == 13\n    assert all(step[\"exit_code\"] == 0 for step in full[\"steps\"])\n    source = full[\"source\"]\n    assert source[\"source_head\"] == PLAN[\"source_head\"]\n    assert source[\"source_tree_sha256\"] == PLAN[\"source_tree_sha256\"]\n    assert source[\"source_status\"] == \"\"\n    assert PLAN[\"protocol\"].get(\"strict_provider_first_refusal\") is True\n    assert source[\"files\"][\"backend/evaluation/research/live.py\"] == PLAN[\"strict_retry_harness_sha256\"]\n    snapshot = Path(source[\"snapshot\"])\n    checked = 0\n    for name, digest in source[\"files\"].items():\n        if name.startswith((\"backend/app/\", \"backend/tests/\", \"backend/evaluation/\", \"backend/scripts/\", \"frontend/\")):\n            assert sha(REPO / name) == digest and sha(snapshot / name) == digest, name\n            checked += 1\n    historical = PLAN[\"historical_stop\"]\n    assert sha(Path(historical[\"path\"])) == historical[\"sha256\"]\n    assert not STOP.exists(), \"Global provider STOP already exists\"\n    assert \"UNIVERSITY_READ_BUDGET = False\" in (snapshot / \"backend/app/pipeline/read_budget.py\").read_text()\n    assert not (snapshot / \"backend/.env\").exists()"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/genuine-baseline/execute_baseline.py",
+    "sha256": "4fa670fb54d6f62c296b68e682c2f46417cf02ba0daf75deb69f329be32f269b",
+    "start": 304,
+    "end": 318,
+    "text": "    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument(\"--execute\", action=\"store_true\")\n    args = parser.parse_args()\n    if not args.execute:\n        print(\"PREPARED_ONLY_NO_LIVE \" + str(OWN / \"PLAN.json\"))\n        return 0\n    assert not (OWN / \"execution-receipt.json\").exists(), \"This exact cohort attempt cannot be resumed/retried\"\n    source, snapshot, checked = preflight()\n    spec = importlib.util.spec_from_file_location(\"authorized_local_runner\", PACKAGE / \"run_local.py\")\n    runner = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(runner)\n    env = runner.safe_env(PACKAGE / \"tools/node-v22.23.3-darwin-arm64/bin\", OWN)\n    env.update(UNIMATCH_DEMO_MODE=\"false\", UNIMATCH_ENABLE_BROWSER_TIER=\"false\", UNIMATCH_RESPECT_ROBOTS=\"true\", UNIMATCH_SEARCH_PROVIDER=\"exa_mcp\", UNIMATCH_FETCH_CONTACT=\"https://github.com/wpalish/ashyq-apply\", PYTHONDONTWRITEBYTECODE=\"1\")\n    execution = {\"status\": \"RUNNING_UNSCORED\", \"source_head\": PLAN[\"source_head\"], \"source_tree_sha256\": PLAN[\"source_tree_sha256\"], \"source_paths_verified\": checked, \"plan_sha256\": sha(OWN / \"PLAN.json\"), \"controller_sha256\": sha(Path(__file__)), \"package_sha256\": sha(PACKAGE / \"run_local.py\"), \"attempted\": [], \"remaining\": PLAN[\"cases\"], \"validation_errors\": {}, \"capture_kinds\": {}, \"network_location\": \"local Mac\", \"expert_pilot\": False}\n    write(\"execution-receipt.json\", execution)"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/genuine-baseline/execute_baseline.py",
+    "sha256": "4fa670fb54d6f62c296b68e682c2f46417cf02ba0daf75deb69f329be32f269b",
+    "start": 321,
+    "end": 346,
+    "text": "    for case in PLAN[\"cases\"]:\n        if STOP.exists():\n            execution[\"status\"] = \"GLOBAL_PROVIDER_STOP_UNSCORED\"\n            break\n        try:\n            # Revalidate the exact snapshot, current source and STOP before\n            # every child. No same-cohort source drift or automatic resume.\n            preflight()\n        except Exception as exc:\n            execution[\"status\"] = \"GLOBAL_PROVIDER_STOP_UNSCORED\" if STOP.exists() else \"PREFLIGHT_CHANGED_UNSCORED\"\n            execution[\"validation_errors\"][case] = [\"preflight \" + type(exc).__name__]\n            break\n        directory = OWN / case\n        command = [str(snapshot / \"backend/.venv/bin/python\"), \"-m\", \"evaluation.research.live\", \"--live\", \"--case\", case, \"--search-provider\", \"exa_mcp\", \"--strict-expert-budget\", \"--shared-query-budget\", \"--fenced-research-job\", \"--no-university-read-budget\", \"--seconds-per-case\", \"120\", \"--max-pages\", \"60\", \"--finalization-reserve-ms\", \"1000\", \"--stop-file\", str(STOP), \"--out\", str(directory)]\n        execution[\"attempted\"].append(case)\n        execution[\"remaining\"] = [c for c in PLAN[\"cases\"] if c not in execution[\"attempted\"]]\n        write(\"execution-receipt.json\", execution)\n        try:\n            code = run.step(case, command, snapshot / \"backend\")\n        except Exception as exc:\n            execution[\"status\"] = \"CAPTURE_PROCESS_FAILED_UNSCORED\"\n            execution[\"validation_errors\"][case] = [\"process \" + type(exc).__name__]\n            break\n        if STOP.exists():\n            execution[\"status\"] = \"GLOBAL_PROVIDER_STOP_UNSCORED\"\n            break"
+  },
+  {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/genuine-baseline/execute_baseline.py",
+    "sha256": "4fa670fb54d6f62c296b68e682c2f46417cf02ba0daf75deb69f329be32f269b",
+    "start": 351,
+    "end": 365,
+    "text": "        captures = list(directory.glob(\"*/capture.json\"))\n        if len(captures) != 1:\n            errors = [\"missing/ambiguous capture\"]\n        else:\n            folder = captures[0].parent\n            try:\n                capture = json.loads(captures[0].read_text())\n                observed = json.loads((folder / (case + \".json\")).read_text())\n                budget = json.loads((folder / (case + \".budget.json\")).read_text())\n                raw = json.loads((folder / (case + \".raw.json\")).read_text())\n                if type(budget) is dict and (budget.get(\"provider_failure\") is not None or budget.get(\"stop_reason\") in (\"http_429\", \"provider_failure\", \"external_provider_failure\")):\n                    execution[\"status\"] = \"GLOBAL_PROVIDER_STOP_UNSCORED\"\n                    execution[\"validation_errors\"][case] = [\"recorded provider refusal; no further child\"]\n                    break\n                errors = validate(case, capture, observed, budget, raw, require_complete_job=False)"
+  }
+]

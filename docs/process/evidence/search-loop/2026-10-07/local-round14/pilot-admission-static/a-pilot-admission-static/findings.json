@@ -1,0 +1,144 @@
+{
+  "verdict": "NOT_ADMITTED_FOR_FRESH_ORIGINAL10_PILOT",
+  "owner_approval": "PENDING",
+  "original10": [
+    "groningen",
+    "delft",
+    "aalto",
+    "vienna",
+    "warsaw",
+    "ubc",
+    "toronto",
+    "hku",
+    "ntu",
+    "kaist"
+  ],
+  "findings": [
+    {
+      "id": "AUTH",
+      "status": "NOT_ADMITTED",
+      "evidence": [
+        "resume plan status/basis",
+        "run_local331–343"
+      ],
+      "finding": "Fresh owner approval remains pending; acknowledgement SHA is old STOP authority check, not authorization inferred by software."
+    },
+    {
+      "id": "SMOKE",
+      "status": "SUPPORTED_AS_SMOKE_ONLY",
+      "evidence": [
+        "run_local399–428",
+        "live73–77,762–789"
+      ],
+      "finding": "Prepared current run_local live flags give strict shared6/60/120 and disable MCP internal retries in strict capture. It is legacy direct/unfenced, comparison_eligibleFalse; cannot count as genuineJob original10/expert pilot."
+    },
+    {
+      "id": "NEW_STOP_HANDOFF",
+      "status": "MISSING_ADMISSION_CONTRACT",
+      "evidence": [
+        "config selected live_stop_receipt",
+        "run_local399–428",
+        "live179–201,1422–1438,1511–1518"
+      ],
+      "finding": "Smoke omits stop-file. First refusal is retained in child budget.provider_failure and parent Capture batch_stop_reason, and blocks current case/batch; runner only records child exit. No shared fresh sentinel/promotion/read-before-next algorithm/expert dispatch exists in prepared route. Exit0 can mean preserved refusal, not provider success. Old STOP copy remains65b5.",
+      "next_action": "Pin fresh-cycle handoff contract/controller: preserve old STOP, extract new refusal before any later dispatch, persist shared fresh complete refusal, fail closed if output/budget unavailable. Approval does not supply this artifact."
+    },
+    {
+      "id": "OLD_CONTROLLER",
+      "status": "REUSE_REJECTED",
+      "evidence": [
+        "old driver31–51,304–318",
+        "old PLAN source/caps/protocol"
+      ],
+      "finding": "Old closed controller pins7c74/19f349/oldharness, requires STOP absent and execution-receipt absent; all incompatible with current source and closed attempt. Do not clear/reset, edit its artifacts or replay."
+    },
+    {
+      "id": "GENUINE_JOB",
+      "status": "ENGINE_ENTRY_EXISTS_CONTROLLER_MISSING",
+      "evidence": [
+        "live1051–1074",
+        "canary410–481,533–547"
+      ],
+      "finding": "Current evaluation CLI can run one explicit --case per genuine isolated SQLite enqueue→claim token1→unmocked Worker dispatch. Full-cohort omitted-selector command plus fenced flag is invalid. Native durable guard ON is not required by original protocol: explicit --no-university-read-budget retains moduleFalse, strict outer meter remains separate.",
+      "next_action": "Fresh source-bound sequential original10 controller using exact current snapshot and one case per child; preserve native/outer counters separately and validate terminal raw/job/heartbeat provenance before continuing."
+    },
+    {
+      "id": "EXPERT",
+      "status": "WRAPPER_AND_ISOLATION_NOT_ADMITTED",
+      "evidence": [
+        "expert controller53–56,148–205,377–435,642–654,708–738,915–925",
+        "old A wrapper1–16,39–72,87–96"
+      ],
+      "finding": "Current controller entry supports strict60read/6query/120000 cumulative tool ms, independent_full_budget and verified raw resume floors. CLI has no shared stop-file or900s guard. Catch only makesHTTP429sticky; generic first-failure/shared cycle latch belongs to an unpinned outer wrapper. Unlike strict live, controller does not override default MCP RATE_LIMIT_RETRYTrue. Old A wrapper usesDalian/Nagoya/exa/olddevelopmentSTOP and retained wall starts, not original10/exa_mcp/fresh cycle. Two blind experts require fresh separate workspaces/plans/evidence and action-level orchestration, not merely invoking core CLI.",
+      "next_action": "Pin two independent action wrappers/manifests with shared fresh gate and900s protective wall deadline, no algorithm outputs/labels; explicitly specify120000 cumulative tool ms outside thinking and strict MCP first-refusal/internal-retry treatment."
+    },
+    {
+      "id": "METRICS_NAME",
+      "status": "NO_CORPUS_ACCESS_PROVEN",
+      "evidence": [
+        "canary local helpers213–407",
+        "canary651,754,871",
+        "live569–578"
+      ],
+      "finding": "Initial suspicion resolved: recall_metrics and false_positives are local output diagnostics, not reviewed-corpus scoring. Do not use this function name as blocker or claim scored acceptance."
+    }
+  ],
+  "future_engine_command_template_NOT_EXECUTED": [
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T053629Z-check-6693acd5/source/backend/.venv/bin/python",
+    "-m",
+    "evaluation.research.live",
+    "--live",
+    "--case",
+    "<one-of-original10>",
+    "--search-provider",
+    "exa_mcp",
+    "--strict-expert-budget",
+    "--shared-query-budget",
+    "--fenced-research-job",
+    "--no-university-read-budget",
+    "--seconds-per-case",
+    "120",
+    "--max-pages",
+    "60",
+    "--finalization-reserve-ms",
+    "1000",
+    "--stop-file",
+    "<fresh-shared-cycle-STOP>",
+    "--out",
+    "<fresh-owned-case-output>"
+  ],
+  "command_cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T053629Z-check-6693acd5/source/backend",
+  "expert_core_command_template_NOT_EXECUTED": [
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T053629Z-check-6693acd5/source/backend/.venv/bin/python",
+    "-m",
+    "evaluation.research.expert.controller",
+    "--plan",
+    "<fresh-expert-case-action-plan.json>",
+    "--logs-dir",
+    "<same-expert-case-raw-dir>",
+    "--cache-dir",
+    "<fresh-expert-case-cache-dir>",
+    "--summary",
+    "<fresh-summary.json>"
+  ],
+  "limits": {
+    "algorithm_full_ms": 120000,
+    "source_work_ms_with_1000_reserve": 119000,
+    "process_kill_allowance_ms": 135000,
+    "process_reserve_is_not_accepted_active_time": true,
+    "read_attempts_including_cache": 60,
+    "provider_search_seams": 6,
+    "expert_tool_ms": 120000,
+    "expert_protective_wall_ms": 900000,
+    "expert_thinking_not_tool_ms": true
+  },
+  "mandatory_fresh_artifacts": [
+    "owner fresh-cycle authorization bound to exact oldSTOP/source/cohort/provider",
+    "current ten-case source/mapper/harness/identity-binding metadata and fresh output namespace",
+    "fresh global refusal handoff gate covering smoke and every algorithm/expert action",
+    "fresh controller with immutable attempted/unrun action ledger and bounded terminal validation",
+    "two independent expert route/wrapper/workspace assignments with official domain resolution and evidence provenance"
+  ],
+  "forbidden_actions_performed": 0,
+  "execution": "stdlib file reads/AST only; no imports from app/evaluation; no actual commands dispatched"
+}

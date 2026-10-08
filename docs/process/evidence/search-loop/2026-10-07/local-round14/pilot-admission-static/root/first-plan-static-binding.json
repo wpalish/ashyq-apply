@@ -1,0 +1,47 @@
+{
+  "created_at": "2026-10-08T06:29:52.502443+00:00",
+  "status": "STATIC_SINGLE_CASE_PLAN_CONSISTENT_EXPERT_PILOT_NOT_ADMITTED",
+  "method": "stdlib AST/text/hash only; no application imports or runtime dispatch",
+  "source_head": "09559f36ce27ad946e581738f01618b368e01c90",
+  "pins": {
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py": "161f5f0df441465fee4ce03e4df406ff9389f0a0462b3541a77bb891cc2c20ac",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/config.json": "04bad0ba3aafbb77448d4ad6d82c9b0b641e8b4f1f597b6a653151a1ff79066d",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/LIVE_RESUME_PLAN_AFTER_STOP_2026-10-08.json": "ddb4b3c1c34c5607e7f659fe7d1c978811c314828749ce4610dbde017ecb8a06",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/CURRENT_STATE/provider-STOP.original.json": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d"
+  },
+  "prepared_first_command_options_supported": {
+    "--repo": 300,
+    "--provider": 303,
+    "--case": 304,
+    "--execute": 305,
+    "--resume-stop-sha256": 306
+  },
+  "first_case": "groningen",
+  "provider": "exa_mcp",
+  "owner_authorization": "PENDING_NOT_RECEIVED",
+  "first_case_comparison_eligible": false,
+  "first_case_expert_evaluation": false,
+  "automatic_scoring": false,
+  "algorithm_limits": {
+    "seconds": 120,
+    "reads": 60,
+    "queries": 6
+  },
+  "no_live_execution": true,
+  "observed_boundary": {
+    "runner_has_stop_file_argument": false,
+    "runner_spawn_is_genuineJob": false,
+    "new_shared_first_refusal_gate": "NOT_ESTABLISHED_BY_PREPARED_RUNNER_COMMAND"
+  },
+  "expert_admission": "Independent source audits pending; do not run old controller, original10 historical driver, expert process, labels or scorer",
+  "quality": "UNKNOWN; old incomplete collection UNSCORED unchanged",
+  "previous_goal_turn": "PROGRESS: exact source repair, full gates, archive and Draft73 completed; subsequent progress report/handoff updated",
+  "not_performed": [
+    "live/provider/model CLI",
+    "app imports",
+    "gold/labels/scorer",
+    "SQL",
+    "tests",
+    "merge/deployment"
+  ]
+}

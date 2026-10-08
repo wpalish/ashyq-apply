@@ -1,0 +1,78 @@
+{
+  "status": "NOT_ADMITTED_STATIC_PREPARATION_ONLY",
+  "findings": [
+    {
+      "id": "E1",
+      "severity": "ADMISSION_BLOCKER",
+      "status": "CONFIRMED_STATIC",
+      "finding": "Ordinary collaboration experts share the repository/filesystem and possess tools/history; they are not the OS-isolated tool-free selectors required by expert500. Neither fork_turns=none nor per-university folders establishes deny access or measured selector streams.",
+      "source": [
+        "backend/evaluation/research/expert/README.md:68-76",
+        "docs/process/EXPERT500_PHASE0_2026-10-04.md:63-78",
+        "backend/evaluation/research/expert/blind_cli.py:1-11,23-58,137-179"
+      ]
+    },
+    {
+      "id": "E2",
+      "severity": "ADMISSION_BLOCKER",
+      "status": "CONFIRMED_STATIC",
+      "finding": "expert.controller strict route records/stops only HTTP429, has no shared stop-file CLI, permits Fetcher after that search-only stop, and directly uses provider.search. It does not provide current owner first refusal global cutoff for statusNone typed RATE_LIMITED, other auth/quota/provider failures, or model refusals; retryflags remain native defaults. This is separate from current app process throttle and stronger strict live capture.",
+      "source": [
+        "backend/evaluation/research/expert/controller.py:280-282,444-448,530-531,642-647,708-738,915-929",
+        "backend/app/adapters/search/exa_mcp.py:32-42,243-255",
+        "backend/evaluation/research/live.py:149-201,762-774"
+      ],
+      "legacy_invariant": "test_expert_controller_guard.py:88-120 explicitly continues a TRANSPORT failure and charges6attempts; a future opt-in first-refusal pilot contract must preserve/qualify legacy behavior, not silently rewrite it."
+    },
+    {
+      "id": "E3",
+      "severity": "ADMISSION_BLOCKER",
+      "status": "CONFIRMED_STATIC_CONTRACT_MISMATCH",
+      "finding": "Owner allowance for new independent expert:60reads/6queries, thinking excluded,900s protective wall. Algorithm same_policy stays120s/60/6. Existing controller STRICT_MAX_MS120000 and frozen journalV4 selector-inclusive120000clock do not express the new independent expert clock; frozen900second occurrence bounds GitHub poll, not local selector episode. Do not raise STRICT_MAX_MS to900000 or present independent exploration as baseline intervention.",
+      "source": [
+        "backend/evaluation/research/expert/controller.py:4-18,53-56,384-401",
+        "backend/evaluation/research/expert/selector.py:45-74",
+        "backend/evaluation/research/expert/data/protocol.2026-10-04/v4/unimatch-expert500-journal-pilot-v4.py.txt:48-51,280-288,375-386,784-801",
+        "backend/evaluation/research/expert/data/protocol.2026-10-04/v4/unimatch-expert500-pilot-v1-frozen.py.txt:75-88"
+      ],
+      "owner_instruction": "Parent trusted steering clarified independent thinking-excluded60/6 +900protective, not an equal120second intervention."
+    },
+    {
+      "id": "E4",
+      "severity": "ADMISSION_BLOCKER",
+      "status": "CONFIRMED_STATIC_ROUTE_MISSING_CURRENT_PROOF",
+      "finding": "blind_cli/selector/journal/controller are reusable enforcement primitives, not a current admitted batch. Package __main__ offers prepare/prepare-catalogue/split/validate/diagnose only; controller CLI executes a plan, not a selector loop. Frozen parent .py.txt imports /tmp legacy and dispatches gh benchmark workflows. A new pinned local external orchestrator/control route with current STOP and clock contract is required; unchanged prepared local checks do not by themselves provide it.",
+      "source": [
+        "backend/evaluation/research/expert/__main__.py:27-61",
+        "backend/evaluation/research/expert/controller.py:915-929",
+        "backend/evaluation/research/expert/data/protocol.2026-10-04/v4/unimatch-expert500-journal-pilot-v4.py.txt:41-44,818-821",
+        "backend/evaluation/research/expert/data/protocol.2026-10-04/v4/unimatch-expert500-pilot-v1-frozen.py.txt:49-95"
+      ]
+    },
+    {
+      "id": "E5",
+      "severity": "PREFLIGHT_NOT_RUN",
+      "status": "CONFIRMED_METADATA_AND_UNKNOWN_RUNTIME",
+      "finding": "Installed PATH CLI metadata0.147.0 differs from frozen parent bundled exactpath. V2 documented0.147 model unsupported and bundled0.159.2. Current bundled binary exists and is hash-pinned, but current CLI version/support of ignore config/rules, featuredisable, schema/model and authenticated completed streams unknown; neither file existence nor current native subagent model names proves that route.",
+      "source": [
+        "backend/evaluation/research/expert/blind_cli.py:79-135",
+        "backend/evaluation/research/expert/data/protocol.2026-10-04/v4/unimatch-expert500-journal-pilot-v4.py.txt:46-47,256",
+        "docs/process/EXPERT500_PHASE1_PROTOCOL_V2_2026-10-04.md:23-35"
+      ],
+      "required": "Fresh exact-executable harmless OS sentinel allow/deny proof + two completed real tool-free neutral bound schema/closing probes after explicit owner approval; no university I/O."
+    },
+    {
+      "id": "E6",
+      "severity": "PENDING_OWNER_APPROVAL",
+      "status": "CONFIRMED_CURRENT_STOP",
+      "finding": "Global provider STOP65b5 remains sticky; source full technical acceptance does not authorize its reset or a fresh pilot. Existing already-unscored closures cannot become fresh/admitted receipts by source tagging, counter reset or old preflight reuse.",
+      "source": [
+        "PLAN.json:STOP",
+        "docs/process/EXPERT500_PHASE1_PROTOCOL_V4_2026-10-04.md:59-74"
+      ],
+      "required": "Owner explicit fresh-cycle admission, immutable old closure, source/route preflight, separate declared expert clock/comparison contract. No execution in current task."
+    }
+  ],
+  "new_source_or_test_proposal": null,
+  "source_or_model_runtime_PASS_inferred": false
+}

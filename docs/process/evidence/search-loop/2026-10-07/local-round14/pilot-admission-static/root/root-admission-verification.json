@@ -1,0 +1,31 @@
+{
+  "time": "2026-10-08T06:40:23.234798+00:00",
+  "status": "STATIC_ADMISSION_EVIDENCE_VERIFIED",
+  "reviews": [
+    {
+      "name": "a-pilot-admission-static",
+      "ready_sha256": "8b850ce8494c72df795889d90cd7477ec613a274261f1990f9b8fe266d72fb3e",
+      "receipt_sha256": "0ff19afd72883a985380e1a28ef23d07629aa8370ca781637e361bb3596fb732",
+      "selected_files": 13,
+      "selected_bytes": 104296,
+      "current_source_pins_equal": 10
+    },
+    {
+      "name": "b-expert-admission-static",
+      "ready_sha256": "ae2c8c9f499f6b8ec95788d723715ab82a1c3b7a8761c78dd35456099f5306cd",
+      "receipt_sha256": "8c699d0bd07d670a2a3c6c9f7c9f4e9debac900567f0873b0a429b49011907cd",
+      "selected_files": 11,
+      "selected_bytes": 48214,
+      "current_source_pins_equal": 28
+    }
+  ],
+  "primary_source_paths_equal": 999,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "owner_authorization": "PENDING",
+  "fresh_expert_pilot": "NOT_ADMITTED",
+  "clock_qualification": "algorithm120s/60/6 unchanged; independent expert60/6 thinking excluded,900s protective wall only; no added120s expert source cap adopted",
+  "quality": "UNKNOWN; old collection permanentlyUNSCORED",
+  "native_metrics_suspicion": "withdrawn on pure source call graph",
+  "tests_or_live_actions": 0,
+  "current_metadata_head": "370907d403ed8b25bd0f36a4ef5487e0b98df9f7"
+}
