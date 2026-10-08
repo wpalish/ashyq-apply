@@ -1,0 +1,69 @@
+{
+  "sealed_utc": "2026-10-08T03:15:22.340601+00:00",
+  "status": "NATIVE_TEST_PROPOSAL_READY_FOR_PEER_NOT_APPLIED",
+  "plan_sha256": "1ce6816a99f73b8516c89fc3560bd07501cdb041b500172c5a3967f465a3e624",
+  "source_ready_sha256": "133b86aae460d6f475f482809419a56733330adf74bb08a90d489e61ca1be9ae",
+  "source_proposal_sha256": {
+    "app/adapters/search/__init__.py": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+    "app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+    "app/adapters/discovery/live_discovery.py": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004"
+  },
+  "patch_sha256": "dd857c88ac45f41ee24c78ed2384882839659f6d3cf6d9abfbf13eb2c2c8c197",
+  "proposed_test_sha256": {
+    "tests/test_search_throttle_latch.py": "93c18b13acd64df5fb77e0fba0052e01a06ce1c1174ce7cbcc3de5a9ca2a5dd0",
+    "tests/test_search_layer_budget_fixes.py": "6a26fe2bf1728e3c3defb0be46a29056bb8274c2c6bd5ef12fa2c4bdcd2ff386",
+    "tests/test_exa_mcp.py": "f0368bd1d02e4ff99120f3ab8e23cf85fcc23e39d9f72c6504de8ebd55abf596"
+  },
+  "imports_manifest_sha256": "66235c9688b4ecac318512a735accd2a425dedf1d394a0e911e2ae08fcba621d",
+  "focused_OFF": {
+    "passed": 78,
+    "failed": 12,
+    "skipped": 0,
+    "error": 0
+  },
+  "focused_ON": {
+    "passed": 90,
+    "failed": 0,
+    "skipped": 0,
+    "error": 0
+  },
+  "collected": 90,
+  "test_distribution": {
+    "existing_expanded_controls": 70,
+    "new_parameterized_controls": 20,
+    "total": 90
+  },
+  "off_failed_nodes": [
+    "test_typed_status_none_is_shared_without_status_or_message_invention",
+    "test_typed_origin_uses_one_deadline_with_a_ticking_clock",
+    "test_exact_typed_cooldown_expiry_and_provider_isolation",
+    "test_stale_origin_does_not_relabel_a_deliberately_injected_legacy_float",
+    "test_reset_clears_actual_typed_origin_before_a_new_query",
+    "test_a_throttled_run_records_status_and_incomplete_rate_limit_stop",
+    "test_a_throttle_ends_a_multi_subject_run",
+    "test_explicit_rate_limit_charges_only_the_attempted_family[None-rate limited]",
+    "test_typed_status_none_caller_retains_safe_diagnostic_and_exact_query_charge[fields0]",
+    "test_typed_status_none_caller_retains_safe_diagnostic_and_exact_query_charge[fields1]",
+    "test_factory_suppresses_only_post_escape_explicit_refusal[True-True-2]",
+    "test_factory_suppresses_only_post_escape_explicit_refusal[True-False-1]"
+  ],
+  "original_failures_preserved": true,
+  "packaging_count_correction": "Initial mental count69/21 failedtheJUnitclassificationassert; immutableJUnitshows70/20. Originalseal/report preserved; no testcaseorresult changed.",
+  "static": {
+    "Ruff": "All checks passed!",
+    "mypy": "work/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_exa_mcp.py:155: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\nwork/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_exa_mcp.py:468: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\nwork/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_exa_mcp.py:485: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\nwork/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_exa_mcp.py:542: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\nwork/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_exa_mcp.py:683: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\nwork/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_exa_mcp.py:704: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\nwork/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_exa_mcp.py:705: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\nwork/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_exa_mcp.py:738: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\nwork/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_exa_mcp.py:780: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\nwork/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_search_layer_budget_fixes.py:304: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\nwork/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_search_layer_budget_fixes.py:326: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\nSuccess: no issues found in 3 source files",
+    "mypy_qualification": "Configured check passes3testfiles; notes explicitly retain untyped-function-body checking limits.",
+    "initial_lint": "3 safe import-sort errors preserved, all safelyfixed before first focused replay."
+  },
+  "qualifications": [
+    "Only3testcopies are in the proposed patch; externalconftest/sourcecopies/loaders are reproducibility evidence, not proposedrepochanges.",
+    "Shared factory/nativeMCP methods run with real JSONRPC HTTP MockTransport; no search/search_once/post methodoverride.",
+    "Source-default RATE_LIMIT_RETRY=True2tools beforeescapedfailure preserved; explicitisolatedFalse1tool; postescape0extraHTTP; recoverednative retry doesnotlatch.",
+    "Same ordinary child testresetcontract as repositoryconftest; primaryprocess throttle/STOP untouched.",
+    "CurrentOFF baseline12RED are expected semantic failures including2known429 generic-message relocation assertions, not12newindependentproductiondefects.",
+    "Lowlevel scriptedproviders testlatch/query accounting, notnativeExa I/O; nativefactoryintegration separatelypreserved.",
+    "No budgets,guard,API,timeout,retrydefault,wholefullsuite,gold/scoring/live/provider/model/remoteDB touched.",
+    "Root integration and B peer stillrequired; original source/test files and sealedsource133b unchanged."
+  ],
+  "actual_network_model_provider_app_Git_STOP_mutations": 0
+}

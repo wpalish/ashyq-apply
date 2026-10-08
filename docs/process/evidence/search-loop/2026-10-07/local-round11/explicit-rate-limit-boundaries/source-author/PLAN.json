@@ -1,0 +1,46 @@
+{
+  "created_utc": "2026-10-08T02:50:10.574858+00:00",
+  "task": "External narrow native explicit rate-limit latch/retrieval/caller repair",
+  "status": "WRITEAHEAD_BEFORE_PROPOSAL_CODE",
+  "source_files": [
+    "app/adapters/search/__init__.py",
+    "app/adapters/search/retrieval.py",
+    "app/adapters/discovery/live_discovery.py"
+  ],
+  "source_sha256": {
+    "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/discovery/live_discovery.py": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f"
+  },
+  "parent_authorization": "task/search-explicit-rate-limit@31259c5c; parent owns app/Git integration after B peer",
+  "scope": [
+    "explicit status429 OR identity-equal fixedenum RATE_LIMITED",
+    "preserve original statusNone/reason in later local exceptions, no arbitrary vendor text",
+    "shared process THROTTLED_UNTIL float map compatibility + paired private stamped reason/status metadata",
+    "retrieval stops remaining unattempted families on same predicate; existing report.throttled semantic broadens to explicit rate-limited stop without schema shape change",
+    "two current discovery caller messages use accurate generic rate-limit wording",
+    "original ExaMCP methods/approved native retry/SP/timeout/budgets untouched",
+    "OFF=frozen original native modules; ON=external proposed3modules, not a new unapproved retry flag",
+    "actual ExaMCP+MockTransport factory/retrieval/single+multi native callers; denied realtransport/realDNS/socket; fresh child process percase",
+    "whole normal outputs compared OFF/ON, intentional explicit refusal/accurate diagnostic differences preserved; query-seam/native HTTP counts separate"
+  ],
+  "private_state_design": "Keep _THROTTLED_UNTIL dict[str,float]. Add a provider-keyed private tuple(until,status,reason) origin record; use only if its deadline matches current until. Legacy manually-set until with no matching origin retains old429/None behavior. Existing reset_search_throttle clears both only when intentionally invoked; no primary reset in preparation.",
+  "finite_controls": [
+    "metadataTrue None typed reason same/new adapter stop; HTTP429 comparator",
+    "default approved retryTrue2tools vs isolatedFalse1tool perfirst failed native search; no laterfamilies",
+    "success/transport/timeout/metaFalse/nonboolean metadata/arbitrary tool rate-limit text unaffected",
+    "expiry via fakeclock/freshchild, providername isolation and legacy manual throttle float compatibility",
+    "accurate charges/candidates/reports and single/multi discovery diagnostics",
+    "normal outputs/native errors OFF/ON equality; intentional fixeddifferences separately"
+  ],
+  "forbidden": [
+    "repo/app/base/schema/API/sourceflag/retry/timeout/budget/retention/broadcatch/scopehelper edits",
+    "Git/HANDOFF/primarySTOP/throttle reset/source app mutation",
+    "network/model/provider/live/realDNS/gold/labels/scoring/purchases/installs",
+    "source_search/search_once/post method replacement in claimed integrationcontrols"
+  ]
+}

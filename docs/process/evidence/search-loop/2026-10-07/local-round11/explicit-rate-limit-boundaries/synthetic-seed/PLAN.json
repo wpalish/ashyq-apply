@@ -1,0 +1,45 @@
+{
+  "created_utc": "2026-10-08T03:23:33.156186+00:00",
+  "status": "WRITEAHEAD_BEFORE_ISOLATED_COMMANDS",
+  "owner_task": "finite demo-seed +single Alembic head verification on same frozen fullLOCALsource",
+  "fullLOCAL_run": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032127Z-check-dded4751",
+  "source_tree_sha256": "5f75d14eb0b26e523fb5dcd4c5d2719515572d89d124544b36e2e89b5da3424b",
+  "source_manifest_sha256": "cbbf9287d2f7122885f64018f75b9e7a2d6fdffc00a13f7c74bb72fe67edcb52",
+  "source_head": "ebd083a59932cc3b10f4f38c2dd1077728d57eee",
+  "source_branch": "task/search-explicit-rate-limit",
+  "snapshot": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032127Z-check-dded4751/source",
+  "root_after_999_sha256": "3152eff17a40f7ebda6e8390e5eea5a38244432c067b4dddc2aeed60061a5aea",
+  "root_after_999_files_verified": 999,
+  "execution_source_sha256": {
+    "backend/seed_demo.py": "508a12c92a6e8ca6df1e77e5bd3593cb0b48b3dfe33bf6fd28e2e46ed4c190f9",
+    "backend/alembic.ini": "cebcf7b1206c7ddf6ce85d5c89aead12b73343c828a77310e19299bba942a562",
+    "backend/migrations/env.py": "4c18ead0737f65c637fd0c515830c1ec870472835613ad71efc7de35b2083995",
+    "backend/app/db.py": "e3fcdebae0e284e9a2ac7e1ef539c58054d4f12210d9683511b99dcb826bc319",
+    "backend/app/config.py": "ee8bf0ecbd105941733da95283836844e1bee97c56db7ce59677aed33ab56539",
+    "backend/app/pipeline/runner.py": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c"
+  },
+  "safe_env_module": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py",
+  "safe_env_module_sha256": "4d5a09536e04c28ee5d93fa83b6281b0215b6b154c6f8516865578245ea90484",
+  "commands": [
+    "python guarded_child.py heads -> actual Alembic CLI heads",
+    "python guarded_child.py migrate -> actual isolatedSQLite upgrade head if needed",
+    "python guarded_child.py seed -> actual seed_demo.py withoutapprove",
+    "python guarded_child.py inspect -> ownSQLite result/head verification only"
+  ],
+  "runtime": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-seed-verification/runtime",
+  "environment": [
+    "local_runner.safe_env importsread-only; explicit demoTrue/browserFalse/searchnone",
+    "ownSQLite seed.db,owncache/exportpaths; CWDownruntime/no.env; actualsourcebackend imports",
+    "safeenv strips existingUNIMATCH/knownsecretenv; neverprint fullenvironment or keys"
+  ],
+  "expected": [
+    "exactly1Alembichead; ownDBrevisionmatches",
+    "syntheticdemo Groningen#1; UBC OUT_OF_BUDGET; noapprove/documents",
+    "source999/frozenpackage pinnedbeforeafter; socket/DNS/HTTP/provider/model0"
+  ],
+  "forbidden": [
+    "primaryrepo.env/userDB/fullsuitechecks.db/remoteDB",
+    "Git/app/source/test/snapshot/package/install/STOP/reset/live/provider/model/network/scoring/heldoutgoldchanges"
+  ],
+  "qualification": "syntheticdemo rank/budget check only, notmeasuredlivequality orlaunchacceptance; no wholefullgates rerun"
+}

@@ -1,0 +1,26 @@
+{
+  "time": "2026-10-08T03:17:11.618272+00:00",
+  "status": "PARENT_STATIC_REVIEW_ACCEPT_SOURCE_PEER_ACCEPT_NATIVE_TEST_PEER_PENDING",
+  "original_head": "ebd083a59932cc3b10f4f38c2dd1077728d57eee",
+  "original_selected_paths": 999,
+  "target_sha256": {
+    "backend/app/adapters/search/__init__.py": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+    "backend/app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+    "backend/app/adapters/discovery/live_discovery.py": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004",
+    "backend/tests/test_search_throttle_latch.py": "93c18b13acd64df5fb77e0fba0052e01a06ce1c1174ce7cbcc3de5a9ca2a5dd0",
+    "backend/tests/test_search_layer_budget_fixes.py": "6a26fe2bf1728e3c3defb0be46a29056bb8274c2c6bd5ef12fa2c4bdcd2ff386",
+    "backend/tests/test_exa_mcp.py": "f0368bd1d02e4ff99120f3ab8e23cf85fcc23e39d9f72c6504de8ebd55abf596"
+  },
+  "packets": {
+    "a-explicit-rate-limit-proposal": "133b86aae460d6f475f482809419a56733330adf74bb08a90d489e61ca1be9ae",
+    "b-explicit-rate-limit-proposal-review": "3df6d9a003dfc3c1a36cfef29958c254c6b90f5db714646e8c77727db2218c08",
+    "a-explicit-rate-limit-native-tests": "a1bb4ea0e3cc80f9429f08db59b14953e6b58252858b416dc2c02709bec5b8e5"
+  },
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "limitations": [
+    "Only6 existing source/test files; native typed-rate stop after escaped failure, not before approved internal retry.",
+    "No public API/schema/budget/quality flag or original Exa client change.",
+    "Full and native repository tests still required; external replay/import conftest is never copied.",
+    "No live vendor/model/labels/scoring/STOP reset/merge/deploy."
+  ]
+}

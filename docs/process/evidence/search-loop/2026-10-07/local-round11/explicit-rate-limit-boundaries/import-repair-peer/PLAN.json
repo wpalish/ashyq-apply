@@ -1,0 +1,17 @@
+{
+  "status": "WRITEAHEAD_READONLY_IMPORT_ONLY_REPAIR_REVIEW",
+  "expected_test_sha256": {
+    "tests/test_exa_mcp.py": "b0e53700afc97c458508d45e5404566bd730af0de1a4a355210c5d1f5b85fd6a",
+    "tests/test_search_layer_budget_fixes.py": "a037d3f48bff9da00879f289379e87938b1db58e903a373ec863f73a78ccf321",
+    "tests/test_search_throttle_latch.py": "e8ff78ba31ab5d0e037343153b8ae09b43d3fb583bd8abb1ff64ef815bebf101"
+  },
+  "source_peer_manifest": "3df6d9a003dfc3c1a36cfef29958c254c6b90f5db714646e8c77727db2218c08",
+  "native_test_peer_manifest": "5f7ae7fe72ad262cb305c402d6af8794d0a53045611ad1e3589b571c0f24a54d",
+  "first_snapshot_peer_manifest": "612a905cfb3c551001df63bed38feb662e202822f1d450ff2aa0a061b677affc",
+  "inputs": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/native-import-fix/import-only.patch": "3aea150b1132da90120275e67fc677a1ea460f987d3ce35a9a92e4c4cad9a095",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/native-import-fix/receipt.json": "e40f85a332c8aa44c223c1f9355b5eb172b230b426c85fa8b38dd6bb1219a416",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/source-after-isort-999.json": "1c55186a6626b9f393601439c44b8e1e8e3f12f8fb9d498e0fb40613faa803d7"
+  },
+  "scope": "AST nonimport bodies and exact import aliases unchanged; test90 identities unchanged; currentapp3/999hash metadata alignment; no tests/imports/execution."
+}

@@ -1,0 +1,157 @@
+{
+  "mode": "http429",
+  "counts": {
+    "PASS": 6,
+    "RED": 0,
+    "total": 6
+  },
+  "checks": [
+    {
+      "case": "original_reason_status_preserved",
+      "status": "PASS"
+    },
+    {
+      "case": "second_factory_genuinely_after_refusal",
+      "status": "PASS"
+    },
+    {
+      "case": "new_factory_process_stop_suppresses_ALL_HTTP",
+      "status": "PASS"
+    },
+    {
+      "case": "explicit_refusal_latch_recorded",
+      "status": "PASS"
+    },
+    {
+      "case": "original_search_methods_unchanged",
+      "status": "PASS"
+    },
+    {
+      "case": "all_mock_clients_closed",
+      "status": "PASS"
+    }
+  ],
+  "first_query_actual_Mock_HTTP_count": 3,
+  "new_factory_created_after_HTTP_count": 3,
+  "all_actual_Mock_HTTP_count": 3,
+  "method_counts": {
+    "initialize": 1,
+    "notifications/initialized": 1,
+    "tools/call": 1
+  },
+  "errors": [
+    {
+      "type": "SearchUnavailable",
+      "reason": null,
+      "http_status": 429,
+      "message": "Exa MCP answered 429"
+    },
+    {
+      "type": "SearchUnavailable",
+      "reason": null,
+      "http_status": 429,
+      "message": "exa_mcp refused an earlier request with HTTP 429; this request was not sent"
+    }
+  ],
+  "mock_HTTP_original_events": [
+    {
+      "method": "initialize",
+      "request_id": 1,
+      "payload": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "initialize",
+        "params": {
+          "protocolVersion": "2025-03-26",
+          "capabilities": {},
+          "clientInfo": {
+            "name": "ashyq-apply",
+            "version": "1"
+          }
+        }
+      },
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa",
+      "session_header": null,
+      "status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": {
+          "protocolVersion": "2025-03-26",
+          "capabilities": {},
+          "serverInfo": {
+            "name": "offline-synthetic-mcp",
+            "version": "1"
+          }
+        }
+      }
+    },
+    {
+      "method": "notifications/initialized",
+      "request_id": null,
+      "payload": {
+        "jsonrpc": "2.0",
+        "method": "notifications/initialized"
+      },
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa",
+      "session_header": "synthetic-session",
+      "status": 202,
+      "response": null
+    },
+    {
+      "method": "tools/call",
+      "request_id": 2,
+      "payload": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "tools/call",
+        "params": {
+          "name": "web_search_advanced_exa",
+          "arguments": {
+            "query": "Public university CS first",
+            "numResults": 10,
+            "type": "auto",
+            "enableHighlights": true,
+            "highlightsMaxCharacters": 1000,
+            "textMaxCharacters": 1,
+            "includeDomains": [
+              "example.edu"
+            ]
+          }
+        }
+      },
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa",
+      "session_header": "synthetic-session",
+      "status": 429,
+      "response": {
+        "error": "synthetic refusal"
+      }
+    }
+  ],
+  "process_latch": {
+    "exa_mcp": 400.0
+  },
+  "sleeps": [],
+  "source_sha256_before": {
+    "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f",
+    "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "tests/test_exa_mcp.py": "8e2b0f6dd0e7c1fbb00ab39cfb653b9cfc6bf6cdf31eddd113b0a2c0f1e0b2db",
+    "tests/test_search_throttle_latch.py": "b599450b25c28fab0c2dcc6b9d2891f4e59845e6de3ccc02b628c0eb0eb6ad96"
+  },
+  "source_sha256_after": {
+    "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f",
+    "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "tests/test_exa_mcp.py": "8e2b0f6dd0e7c1fbb00ab39cfb653b9cfc6bf6cdf31eddd113b0a2c0f1e0b2db",
+    "tests/test_search_throttle_latch.py": "b599450b25c28fab0c2dcc6b9d2891f4e59845e6de3ccc02b628c0eb0eb6ad96"
+  },
+  "real_calls_or_source_changes": 0,
+  "reset_called": false
+}

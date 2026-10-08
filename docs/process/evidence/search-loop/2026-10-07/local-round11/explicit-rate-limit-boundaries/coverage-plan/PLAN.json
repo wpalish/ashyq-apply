@@ -1,0 +1,24 @@
+{
+  "status": "WRITEAHEAD_READONLY_COVERAGE_PREPARATION_NO_PROTOTYPE",
+  "scope": "Existing native tests reuse and finite missing typedrefusal/stamp/expiry/querycharge/callerdiagnostic cases; source integration root-owned.",
+  "source_pins": {
+    "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/discovery/live_discovery.py": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+    "tests/test_search_throttle_latch.py": "b599450b25c28fab0c2dcc6b9d2891f4e59845e6de3ccc02b628c0eb0eb6ad96",
+    "tests/test_exa_mcp.py": "8e2b0f6dd0e7c1fbb00ab39cfb653b9cfc6bf6cdf31eddd113b0a2c0f1e0b2db",
+    "tests/test_hybrid_retrieval.py": "ff04b8e26c457ee9dc6f5195609174deeaf109fe1d34e8890f66f91c1d43bccd",
+    "tests/test_discovery_intent.py": "54c7257038497c1d4c4af9635806bc762a02db387de8e94c8b8ad7c6a1df7ed7",
+    "tests/test_search_layer_budget_fixes.py": "45ee64c0e93538e5c13d61be654ab0480d4a441a3ba98e00003d9a93a9b4fcde",
+    "tests/test_live_discovery.py": "106fd265d2f80a165384e751bc2fcbd79fcfb45e64a5645ece3864351befe368"
+  },
+  "A_proposal_manifest": null,
+  "prior_B_OFF_proof_manifest": "bd0f4467c64a8f3189e7e29ec3890e84e4e09ec103ec503eeeddd46886bc9e7a",
+  "forbidden": [
+    "No app/source/newtest/prototype/live/provider/model/STOP/primaryreset/scoring/labels/Git mutations",
+    "No mutable proposal import or design approval"
+  ],
+  "note": "No actual tests/test_search_retrieval.py in current source; discover_candidates coverage lives in hybrid_retrieval/discovery_intent/search_layer_budget_fixes. First preparation exec used not-yet-created cwd and failed before any process/file writes."
+}

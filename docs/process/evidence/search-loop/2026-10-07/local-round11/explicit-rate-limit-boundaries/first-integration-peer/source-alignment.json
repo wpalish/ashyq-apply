@@ -1,0 +1,45 @@
+{
+  "status": "CURRENT_SIX_AND_FROZEN_999_HASH_ALIGNMENT_CONFIRMED_GATE_RUNNING",
+  "expected_six": {
+    "backend/app/adapters/search/__init__.py": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+    "backend/app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+    "backend/app/adapters/discovery/live_discovery.py": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004",
+    "backend/tests/test_search_throttle_latch.py": "93c18b13acd64df5fb77e0fba0052e01a06ce1c1174ce7cbcc3de5a9ca2a5dd0",
+    "backend/tests/test_search_layer_budget_fixes.py": "6a26fe2bf1728e3c3defb0be46a29056bb8274c2c6bd5ef12fa2c4bdcd2ff386",
+    "backend/tests/test_exa_mcp.py": "f0368bd1d02e4ff99120f3ab8e23cf85fcc23e39d9f72c6504de8ebd55abf596"
+  },
+  "current_six": {
+    "backend/app/adapters/search/__init__.py": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+    "backend/app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+    "backend/app/adapters/discovery/live_discovery.py": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004",
+    "backend/tests/test_search_throttle_latch.py": "93c18b13acd64df5fb77e0fba0052e01a06ce1c1174ce7cbcc3de5a9ca2a5dd0",
+    "backend/tests/test_search_layer_budget_fixes.py": "6a26fe2bf1728e3c3defb0be46a29056bb8274c2c6bd5ef12fa2c4bdcd2ff386",
+    "backend/tests/test_exa_mcp.py": "f0368bd1d02e4ff99120f3ab8e23cf85fcc23e39d9f72c6504de8ebd55abf596"
+  },
+  "snapshot_six": {
+    "backend/app/adapters/search/__init__.py": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+    "backend/app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+    "backend/app/adapters/discovery/live_discovery.py": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004",
+    "backend/tests/test_search_throttle_latch.py": "93c18b13acd64df5fb77e0fba0052e01a06ce1c1174ce7cbcc3de5a9ca2a5dd0",
+    "backend/tests/test_search_layer_budget_fixes.py": "6a26fe2bf1728e3c3defb0be46a29056bb8274c2c6bd5ef12fa2c4bdcd2ff386",
+    "backend/tests/test_exa_mcp.py": "f0368bd1d02e4ff99120f3ab8e23cf85fcc23e39d9f72c6504de8ebd55abf596"
+  },
+  "original_999": 999,
+  "unchanged_993": 993,
+  "changed_exact_six": [
+    "backend/app/adapters/discovery/live_discovery.py",
+    "backend/app/adapters/search/__init__.py",
+    "backend/app/adapters/search/retrieval.py",
+    "backend/tests/test_exa_mcp.py",
+    "backend/tests/test_search_layer_budget_fixes.py",
+    "backend/tests/test_search_throttle_latch.py"
+  ],
+  "runner_999_metadata_match": true,
+  "runner_manifest_total_recorded_files": 7671,
+  "runner_source_tree_sha256": "5f75d14eb0b26e523fb5dcd4c5d2719515572d89d124544b36e2e89b5da3424b",
+  "root_before_sha256": "f0ef8c5d87d398a1e13f4f6a79ffde612e853d8788d94f3a28b6137fb931a463",
+  "root_after_sha256": "3152eff17a40f7ebda6e8390e5eea5a38244432c067b4dddc2aeed60061a5aea",
+  "runner_source_manifest_sha256": "cbbf9287d2f7122885f64018f75b9e7a2d6fdffc00a13f7c74bb72fe67edcb52",
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "method": "Six source/test bytes directly hashed; other993 compared saved recorded path/hash metadata only. No semantic corpus/label bodies opened. No claim all7671 independently rehashed."
+}

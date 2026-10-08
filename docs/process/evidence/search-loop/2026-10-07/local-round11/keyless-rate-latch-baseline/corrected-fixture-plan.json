@@ -1,0 +1,7 @@
+{
+  "purpose": "Correct only synthetic benign-meta fixture selector; preserve initial erroneous factory-meta-false RED and all core defect expectations unchanged",
+  "initial_test_sha256": "ebdda35dd60ed264e848f47b53a983ddb8ef28f9142e3cda424a7f9175db8b24",
+  "corrected_test_sha256": "c81b6a9147db49df8c67c56f9b913700d9f456a0e802a4ece09dfd760a972de6",
+  "scenario": "factory-meta-false-corrected",
+  "expected": "No quota latch/extra retry; actual metaFalse SearchResponse success"
+}

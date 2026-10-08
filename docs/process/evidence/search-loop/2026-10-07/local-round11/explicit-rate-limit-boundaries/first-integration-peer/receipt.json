@@ -1,0 +1,25 @@
+{
+  "verdict": "SOURCE_ALIGNMENT_CONFIRMED_FIRST_FULL_STATIC_REPAIR_REQUIRED_FUNCTIONAL_UNKNOWN",
+  "source_alignment_sha256": "3970d2d315c72302fe8ed2a07fc12c6cf793fa21ef4f1f25b48ac89cdba4b1bc",
+  "first_full_qualification_sha256": "501e2527bdb8ef82535de1b52bf19897063262b2e3b4451ad2cc4aa34c0d85b1",
+  "report_sha256": "ec22981ab4de3b82d09e3eaa267e4debda14c018861c50d7879ba8a7ace8aaa6",
+  "app3_test3_exact_in_first_snapshot": true,
+  "remaining993_same_savedmetadata": true,
+  "source_selected999_aligned": true,
+  "native90_alignment": "PENDING_NO_JUNIT",
+  "full_unique_backend4312": "PENDING_NO_JUNIT",
+  "firstfullPASS": false,
+  "functional_result": "UNKNOWN_INTERRUPTED",
+  "repo_ruff_I001": 3,
+  "B_app_imports": 0,
+  "B_tests_executed": 0,
+  "B_process_control": 0,
+  "B_network_calls": 0,
+  "STOP_mutations": 0,
+  "limits": [
+    "Original source alignment only, no full gate completion",
+    "External Ruff discovery differs from repository cwd",
+    "Root import-only repair review separate",
+    "Corpus paths/hash metadata only, no labels/body reads"
+  ]
+}

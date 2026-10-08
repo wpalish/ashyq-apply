@@ -1,0 +1,24 @@
+{
+  "events": [
+    {
+      "type": "AssertionError",
+      "phase": "Beforeplancreation",
+      "reason": "Parent treehash initially treated as manifestfilehash",
+      "writes": false,
+      "qualified_correctly": "treee577 vsmanifestec39"
+    },
+    {
+      "type": "SyntaxError",
+      "phase": "Read-only compact inspection command",
+      "writes": false,
+      "app_or_tests_executed": false
+    },
+    {
+      "type": "identity_comparison_RED2",
+      "preserved": "terminal-validation.json",
+      "corrective_writeahead": "CLASSNAME-NORMALIZATION-PLAN.json",
+      "expectations_names_params_changed": false
+    }
+  ],
+  "none_are_product_test_failures": true
+}

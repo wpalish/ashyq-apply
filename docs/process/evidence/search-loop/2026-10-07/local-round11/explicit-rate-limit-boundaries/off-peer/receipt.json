@@ -1,0 +1,49 @@
+{
+  "verdict": "CONFIRMED_NATIVE_OFF_TWO_SEAM_DEFECT_PROOF_ONLY",
+  "A_ready_manifest_sha256": "4da306202513a298c28fd6b188c634cf9a1f283286964b755d84289ecd28db91",
+  "A_selected_files_verified": 49,
+  "A_selected_bytes_verified": 338279,
+  "source_dependencies_matched_before_after": 8,
+  "own_finite_scenarios": 5,
+  "own_assertions": {
+    "total": 28,
+    "PASS": 16,
+    "RED": 12
+  },
+  "own_statuses_equal_author": true,
+  "distinct_defects": 2,
+  "A_all_executed": {
+    "total": 75,
+    "PASS": 62,
+    "RED": 13
+  },
+  "A_qualified": {
+    "total": 70,
+    "PASS": 58,
+    "RED": 12
+  },
+  "selector_original_fixture": {
+    "total": 5,
+    "PASS": 4,
+    "RED": 1,
+    "preserved": true
+  },
+  "corrected_fresh_selector": {
+    "total": 5,
+    "PASS": 5,
+    "RED": 0
+  },
+  "original_status": null,
+  "original_reason": "rate limited",
+  "source_default_RATE_LIMIT_RETRY": true,
+  "escaped_tools_native_retry": 2,
+  "escaped_tools_scoped_false": 1,
+  "query_seam_equals_HTTP_dispatch": false,
+  "global_firstresponse_stop_claim": false,
+  "HTTP429_transport_timeout_success_comparators": "verified author raw; not rerun by B",
+  "actual_client_factory_retrieval_methods_unchanged": true,
+  "source_design_or_proposal_accepted": false,
+  "network_model_provider_real_calls": 0,
+  "source_git_stop_reset_label_score_mutations": 0,
+  "fresh_processes_only": true
+}
