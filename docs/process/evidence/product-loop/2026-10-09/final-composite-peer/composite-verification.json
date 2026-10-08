@@ -1,0 +1,642 @@
+{
+  "decision": "QUALIFIED_COMPOSITE_13_STAGE_ACCEPTANCE",
+  "not_single_full_PASS": true,
+  "original_full_status": "failed",
+  "original_full_step_exits": {
+    "ruff": 0,
+    "ruff-format": 0,
+    "mypy": 0,
+    "backend-sqlite": 0,
+    "frontend-typecheck": 0,
+    "frontend-lint": 0,
+    "frontend-tests": 0,
+    "frontend-build": 0,
+    "backend-postgresql": 0,
+    "e2e": 1,
+    "e2e-auth": 0,
+    "pip-audit": 0,
+    "npm-audit": 0
+  },
+  "runs": {
+    "original_full": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309",
+      "head": "9a79bff7ff327a693a5829d37f9b6acede62d6c7",
+      "source_status": "M docs/process/HANDOFF.md",
+      "tree": "05eade16eaf671d3d4651bec4b61dfd49f1b4804b3e98c98db1f830a77c688ea",
+      "summary_pin": {
+        "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/summary.json",
+        "sha256": "fcb05b9b180488dbd99e0edd3cd0e41501e583e2877787cf772c41a8d3cb8f03",
+        "bytes": 2137302
+      },
+      "manifest_pin": {
+        "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source-manifest.json",
+        "sha256": "87ff1bba864c437c14642522df4e87d98fd773d6e6ca0a23da8f320c8285dc17",
+        "bytes": 2108784
+      },
+      "status": "failed",
+      "suite": "full"
+    },
+    "fresh_frontend": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a",
+      "head": "74928d730a5d0a7bb94f82ed2d1cb3478bbb1034",
+      "source_status": "",
+      "tree": "504461ad033a386e7b93df6d701fc29a12c73aa2ca1a9098aeabeeff77ea026e",
+      "summary_pin": {
+        "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/summary.json",
+        "sha256": "3551c8e91b70971a41e6292e8b689b833ef45f6acf44ac9d50d02db0feaa0db5",
+        "bytes": 2140276
+      },
+      "manifest_pin": {
+        "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/source-manifest.json",
+        "sha256": "0da84f9feafe73ff1ddf73644dc4aec61a3827b9374cd9b9351e1937d7f1ffbe",
+        "bytes": 2117642
+      },
+      "status": "passed",
+      "suite": "frontend"
+    },
+    "fresh_e2e": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223250Z-check-55181e66",
+      "head": "74928d730a5d0a7bb94f82ed2d1cb3478bbb1034",
+      "source_status": "A  docs/process/evidence/product-loop/2026-10-09/first-full-failure/e2e-artifacts/test-results/journey-approve-collect-documents-and-export-desktop-chromium/error-context.md\nA  docs/process/evidence/product-loop/2026-10-09/first-full-failure/e2e-artifacts/test-results/journey-approve-collect-documents-and-export-desktop-chromium/test-failed-1.png\nA  docs/process/evidence/product-loop/2026-10-09/first-full-failure/e2e-artifacts/test-results/journey-approve-collect-documents-and-export-desktop-chromium/trace.zip\nA  docs/process/evidence/product-loop/2026-10-09/first-full-failure/e2e-artifacts/test-results/journey-approve-collect-documents-and-export-mobile/error-context.md\nA  docs/process/evidence/product-loop/2026-10-09/first-full-failure/e2e-artifacts/test-results/journey-approve-collect-documents-and-export-mobile/test-failed-1.png\nA  docs/process/evidence/product-loop/2026-10-09/first-full-failure/e2e-artifacts/test-results/journey-approve-collect-documents-and-export-mobile/trace.zip",
+      "tree": "8737e461b2b0e25c8faed0e4f4a4d6611891271bbd7d55f26090f74ca7812b1b",
+      "summary_pin": {
+        "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223250Z-check-55181e66/summary.json",
+        "sha256": "696704ca7d69e488db428fb7ab18a696eaf737bd945b68b336ac2f3c921d55ab",
+        "bytes": 2141707
+      },
+      "manifest_pin": {
+        "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223250Z-check-55181e66/source-manifest.json",
+        "sha256": "1f029be3beed3b29d2782920660f5cc7e5081f3e333f7ed4b5892d0950d509a0",
+        "bytes": 2120082
+      },
+      "status": "passed",
+      "suite": "e2e"
+    }
+  },
+  "14_current_fresh_rows": {
+    "frontend/e2e/journey.spec.ts": {
+      "expected": "1ce58de26b37247892b1b7c10abe45640bc64a32c25d7e27b9bd8b4e467a1077",
+      "current": "1ce58de26b37247892b1b7c10abe45640bc64a32c25d7e27b9bd8b4e467a1077",
+      "fresh_frontend": {
+        "map": "1ce58de26b37247892b1b7c10abe45640bc64a32c25d7e27b9bd8b4e467a1077",
+        "physical": "1ce58de26b37247892b1b7c10abe45640bc64a32c25d7e27b9bd8b4e467a1077"
+      },
+      "fresh_e2e": {
+        "map": "1ce58de26b37247892b1b7c10abe45640bc64a32c25d7e27b9bd8b4e467a1077",
+        "physical": "1ce58de26b37247892b1b7c10abe45640bc64a32c25d7e27b9bd8b4e467a1077"
+      }
+    },
+    "frontend/src/App.tsx": {
+      "expected": "3f422fbbe105f3ddaa90b3a501c638c65f5a3aa4506fa9af6ed3c230c4eb9530",
+      "current": "3f422fbbe105f3ddaa90b3a501c638c65f5a3aa4506fa9af6ed3c230c4eb9530",
+      "fresh_frontend": {
+        "map": "3f422fbbe105f3ddaa90b3a501c638c65f5a3aa4506fa9af6ed3c230c4eb9530",
+        "physical": "3f422fbbe105f3ddaa90b3a501c638c65f5a3aa4506fa9af6ed3c230c4eb9530"
+      },
+      "fresh_e2e": {
+        "map": "3f422fbbe105f3ddaa90b3a501c638c65f5a3aa4506fa9af6ed3c230c4eb9530",
+        "physical": "3f422fbbe105f3ddaa90b3a501c638c65f5a3aa4506fa9af6ed3c230c4eb9530"
+      }
+    },
+    "frontend/src/components/ComparePanel.preparation.test.tsx": {
+      "expected": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3",
+      "current": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3",
+      "fresh_frontend": {
+        "map": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3",
+        "physical": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3"
+      },
+      "fresh_e2e": {
+        "map": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3",
+        "physical": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3"
+      }
+    },
+    "frontend/src/components/ComparePanel.tsx": {
+      "expected": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab",
+      "current": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab",
+      "fresh_frontend": {
+        "map": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab",
+        "physical": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab"
+      },
+      "fresh_e2e": {
+        "map": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab",
+        "physical": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab"
+      }
+    },
+    "frontend/src/lib/store.test.tsx": {
+      "expected": "196a66c47426ed28ef49701133afd8d23fcaf84b014a6695524c7202e4c8c251",
+      "current": "196a66c47426ed28ef49701133afd8d23fcaf84b014a6695524c7202e4c8c251",
+      "fresh_frontend": {
+        "map": "196a66c47426ed28ef49701133afd8d23fcaf84b014a6695524c7202e4c8c251",
+        "physical": "196a66c47426ed28ef49701133afd8d23fcaf84b014a6695524c7202e4c8c251"
+      },
+      "fresh_e2e": {
+        "map": "196a66c47426ed28ef49701133afd8d23fcaf84b014a6695524c7202e4c8c251",
+        "physical": "196a66c47426ed28ef49701133afd8d23fcaf84b014a6695524c7202e4c8c251"
+      }
+    },
+    "frontend/src/lib/store.tsx": {
+      "expected": "a6e26f45d44ca13980db7929b8b7340b9ccff3303499848b291ac833477879ee",
+      "current": "a6e26f45d44ca13980db7929b8b7340b9ccff3303499848b291ac833477879ee",
+      "fresh_frontend": {
+        "map": "a6e26f45d44ca13980db7929b8b7340b9ccff3303499848b291ac833477879ee",
+        "physical": "a6e26f45d44ca13980db7929b8b7340b9ccff3303499848b291ac833477879ee"
+      },
+      "fresh_e2e": {
+        "map": "a6e26f45d44ca13980db7929b8b7340b9ccff3303499848b291ac833477879ee",
+        "physical": "a6e26f45d44ca13980db7929b8b7340b9ccff3303499848b291ac833477879ee"
+      }
+    },
+    "frontend/src/screens/ApprovedScreen.tsx": {
+      "expected": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f",
+      "current": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f",
+      "fresh_frontend": {
+        "map": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f",
+        "physical": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f"
+      },
+      "fresh_e2e": {
+        "map": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f",
+        "physical": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f"
+      }
+    },
+    "frontend/src/screens/DocumentsScreen.tsx": {
+      "expected": "61a5521c68efe468bd37cec438d28af9fdec7ddd6c44a99d110758184274b8ef",
+      "current": "61a5521c68efe468bd37cec438d28af9fdec7ddd6c44a99d110758184274b8ef",
+      "fresh_frontend": {
+        "map": "61a5521c68efe468bd37cec438d28af9fdec7ddd6c44a99d110758184274b8ef",
+        "physical": "61a5521c68efe468bd37cec438d28af9fdec7ddd6c44a99d110758184274b8ef"
+      },
+      "fresh_e2e": {
+        "map": "61a5521c68efe468bd37cec438d28af9fdec7ddd6c44a99d110758184274b8ef",
+        "physical": "61a5521c68efe468bd37cec438d28af9fdec7ddd6c44a99d110758184274b8ef"
+      }
+    },
+    "frontend/src/screens/HomeScreen.tsx": {
+      "expected": "cd9c7f024efa05fc4651dd4c870e7fa24dd58d11e5f96acd9c159246f47ec705",
+      "current": "cd9c7f024efa05fc4651dd4c870e7fa24dd58d11e5f96acd9c159246f47ec705",
+      "fresh_frontend": {
+        "map": "cd9c7f024efa05fc4651dd4c870e7fa24dd58d11e5f96acd9c159246f47ec705",
+        "physical": "cd9c7f024efa05fc4651dd4c870e7fa24dd58d11e5f96acd9c159246f47ec705"
+      },
+      "fresh_e2e": {
+        "map": "cd9c7f024efa05fc4651dd4c870e7fa24dd58d11e5f96acd9c159246f47ec705",
+        "physical": "cd9c7f024efa05fc4651dd4c870e7fa24dd58d11e5f96acd9c159246f47ec705"
+      }
+    },
+    "frontend/src/screens/JourneyScreens.test.tsx": {
+      "expected": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10",
+      "current": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10",
+      "fresh_frontend": {
+        "map": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10",
+        "physical": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10"
+      },
+      "fresh_e2e": {
+        "map": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10",
+        "physical": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10"
+      }
+    },
+    "frontend/src/screens/ShortlistScreen.test.tsx": {
+      "expected": "8470b4a3d3f03d7f02c8e83b4c23c1fb830e3741fa3769bb035529943a79d27c",
+      "current": "8470b4a3d3f03d7f02c8e83b4c23c1fb830e3741fa3769bb035529943a79d27c",
+      "fresh_frontend": {
+        "map": "8470b4a3d3f03d7f02c8e83b4c23c1fb830e3741fa3769bb035529943a79d27c",
+        "physical": "8470b4a3d3f03d7f02c8e83b4c23c1fb830e3741fa3769bb035529943a79d27c"
+      },
+      "fresh_e2e": {
+        "map": "8470b4a3d3f03d7f02c8e83b4c23c1fb830e3741fa3769bb035529943a79d27c",
+        "physical": "8470b4a3d3f03d7f02c8e83b4c23c1fb830e3741fa3769bb035529943a79d27c"
+      }
+    },
+    "frontend/src/screens/ShortlistScreen.tsx": {
+      "expected": "06df80e4708e983fcc267398f2d8c24a11cd9fce8a210f1948e9fba62ba62ddc",
+      "current": "06df80e4708e983fcc267398f2d8c24a11cd9fce8a210f1948e9fba62ba62ddc",
+      "fresh_frontend": {
+        "map": "06df80e4708e983fcc267398f2d8c24a11cd9fce8a210f1948e9fba62ba62ddc",
+        "physical": "06df80e4708e983fcc267398f2d8c24a11cd9fce8a210f1948e9fba62ba62ddc"
+      },
+      "fresh_e2e": {
+        "map": "06df80e4708e983fcc267398f2d8c24a11cd9fce8a210f1948e9fba62ba62ddc",
+        "physical": "06df80e4708e983fcc267398f2d8c24a11cd9fce8a210f1948e9fba62ba62ddc"
+      }
+    },
+    "frontend/src/screens/SourcesScreen.test.tsx": {
+      "expected": "22979529306067765e486485259958971e3527787e58f632dc123845a1f0465d",
+      "current": "22979529306067765e486485259958971e3527787e58f632dc123845a1f0465d",
+      "fresh_frontend": {
+        "map": "22979529306067765e486485259958971e3527787e58f632dc123845a1f0465d",
+        "physical": "22979529306067765e486485259958971e3527787e58f632dc123845a1f0465d"
+      },
+      "fresh_e2e": {
+        "map": "22979529306067765e486485259958971e3527787e58f632dc123845a1f0465d",
+        "physical": "22979529306067765e486485259958971e3527787e58f632dc123845a1f0465d"
+      }
+    },
+    "frontend/src/screens/SourcesScreen.tsx": {
+      "expected": "38a90401e14af4618ab4b74e35abde72241734344f17029c990025f86d9b215b",
+      "current": "38a90401e14af4618ab4b74e35abde72241734344f17029c990025f86d9b215b",
+      "fresh_frontend": {
+        "map": "38a90401e14af4618ab4b74e35abde72241734344f17029c990025f86d9b215b",
+        "physical": "38a90401e14af4618ab4b74e35abde72241734344f17029c990025f86d9b215b"
+      },
+      "fresh_e2e": {
+        "map": "38a90401e14af4618ab4b74e35abde72241734344f17029c990025f86d9b215b",
+        "physical": "38a90401e14af4618ab4b74e35abde72241734344f17029c990025f86d9b215b"
+      }
+    }
+  },
+  "all14_current_frozen_map_equal": true,
+  "backend940_physical_equal": true,
+  "backend_count": 940,
+  "carry_transitive_package_config_inputs": {
+    "frontend/src/types.ts": {
+      "original": "84d3b8bbc87b92243fc910e5eb993a774620c41754a2a192a389c82ca3a2e688",
+      "current": "84d3b8bbc87b92243fc910e5eb993a774620c41754a2a192a389c82ca3a2e688",
+      "fresh_frontend": {
+        "map": "84d3b8bbc87b92243fc910e5eb993a774620c41754a2a192a389c82ca3a2e688",
+        "physical": "84d3b8bbc87b92243fc910e5eb993a774620c41754a2a192a389c82ca3a2e688"
+      },
+      "fresh_e2e": {
+        "map": "84d3b8bbc87b92243fc910e5eb993a774620c41754a2a192a389c82ca3a2e688",
+        "physical": "84d3b8bbc87b92243fc910e5eb993a774620c41754a2a192a389c82ca3a2e688"
+      }
+    },
+    "frontend/src/lib/format.ts": {
+      "original": "4da558009d726878bfb82f331ba08994a0a2db00b989ce2bb3e91947f7ecb0a9",
+      "current": "4da558009d726878bfb82f331ba08994a0a2db00b989ce2bb3e91947f7ecb0a9",
+      "fresh_frontend": {
+        "map": "4da558009d726878bfb82f331ba08994a0a2db00b989ce2bb3e91947f7ecb0a9",
+        "physical": "4da558009d726878bfb82f331ba08994a0a2db00b989ce2bb3e91947f7ecb0a9"
+      },
+      "fresh_e2e": {
+        "map": "4da558009d726878bfb82f331ba08994a0a2db00b989ce2bb3e91947f7ecb0a9",
+        "physical": "4da558009d726878bfb82f331ba08994a0a2db00b989ce2bb3e91947f7ecb0a9"
+      }
+    },
+    "frontend/src/components/social.tsx": {
+      "original": "67901a348cb406cd4527079cda758392a21fe55b4fdc34b025e0804c6013462b",
+      "current": "67901a348cb406cd4527079cda758392a21fe55b4fdc34b025e0804c6013462b",
+      "fresh_frontend": {
+        "map": "67901a348cb406cd4527079cda758392a21fe55b4fdc34b025e0804c6013462b",
+        "physical": "67901a348cb406cd4527079cda758392a21fe55b4fdc34b025e0804c6013462b"
+      },
+      "fresh_e2e": {
+        "map": "67901a348cb406cd4527079cda758392a21fe55b4fdc34b025e0804c6013462b",
+        "physical": "67901a348cb406cd4527079cda758392a21fe55b4fdc34b025e0804c6013462b"
+      }
+    },
+    ".github/workflows/benchmark-capture.yml": {
+      "original": "a8f11bd24d6bd010456a984715ea8c1c5a67bba6ac2be121d4307a8503c221c5",
+      "current": "a8f11bd24d6bd010456a984715ea8c1c5a67bba6ac2be121d4307a8503c221c5",
+      "fresh_frontend": {
+        "map": "a8f11bd24d6bd010456a984715ea8c1c5a67bba6ac2be121d4307a8503c221c5",
+        "physical": "a8f11bd24d6bd010456a984715ea8c1c5a67bba6ac2be121d4307a8503c221c5"
+      },
+      "fresh_e2e": {
+        "map": "a8f11bd24d6bd010456a984715ea8c1c5a67bba6ac2be121d4307a8503c221c5",
+        "physical": "a8f11bd24d6bd010456a984715ea8c1c5a67bba6ac2be121d4307a8503c221c5"
+      }
+    },
+    "frontend/package.json": {
+      "original": "acfd1b9933e026c9ef1cff0ec82f7c62bfa5581f60fb6518f8cff606ebfe07cb",
+      "current": "acfd1b9933e026c9ef1cff0ec82f7c62bfa5581f60fb6518f8cff606ebfe07cb",
+      "fresh_frontend": {
+        "map": "acfd1b9933e026c9ef1cff0ec82f7c62bfa5581f60fb6518f8cff606ebfe07cb",
+        "physical": "acfd1b9933e026c9ef1cff0ec82f7c62bfa5581f60fb6518f8cff606ebfe07cb"
+      },
+      "fresh_e2e": {
+        "map": "acfd1b9933e026c9ef1cff0ec82f7c62bfa5581f60fb6518f8cff606ebfe07cb",
+        "physical": "acfd1b9933e026c9ef1cff0ec82f7c62bfa5581f60fb6518f8cff606ebfe07cb"
+      }
+    },
+    "frontend/package-lock.json": {
+      "original": "15eb46e2d3191e58719553bfbfb23a78c21f2fddd8c5f1bd9596d8e4f1ebc51e",
+      "current": "15eb46e2d3191e58719553bfbfb23a78c21f2fddd8c5f1bd9596d8e4f1ebc51e",
+      "fresh_frontend": {
+        "map": "15eb46e2d3191e58719553bfbfb23a78c21f2fddd8c5f1bd9596d8e4f1ebc51e",
+        "physical": "15eb46e2d3191e58719553bfbfb23a78c21f2fddd8c5f1bd9596d8e4f1ebc51e"
+      },
+      "fresh_e2e": {
+        "map": "15eb46e2d3191e58719553bfbfb23a78c21f2fddd8c5f1bd9596d8e4f1ebc51e",
+        "physical": "15eb46e2d3191e58719553bfbfb23a78c21f2fddd8c5f1bd9596d8e4f1ebc51e"
+      }
+    },
+    "backend/requirements.txt": {
+      "original": "4d98978db7324e2a4529fdae5a51130375fb6e5417b2324d42a5b04d69601267",
+      "current": "4d98978db7324e2a4529fdae5a51130375fb6e5417b2324d42a5b04d69601267",
+      "fresh_frontend": {
+        "map": "4d98978db7324e2a4529fdae5a51130375fb6e5417b2324d42a5b04d69601267",
+        "physical": "4d98978db7324e2a4529fdae5a51130375fb6e5417b2324d42a5b04d69601267"
+      },
+      "fresh_e2e": {
+        "map": "4d98978db7324e2a4529fdae5a51130375fb6e5417b2324d42a5b04d69601267",
+        "physical": "4d98978db7324e2a4529fdae5a51130375fb6e5417b2324d42a5b04d69601267"
+      }
+    },
+    "backend/requirements-dev.txt": {
+      "original": "85814cfe94af7cf668284c455de6354d641b6b82480e3e3c435df507bc887a17",
+      "current": "85814cfe94af7cf668284c455de6354d641b6b82480e3e3c435df507bc887a17",
+      "fresh_frontend": {
+        "map": "85814cfe94af7cf668284c455de6354d641b6b82480e3e3c435df507bc887a17",
+        "physical": "85814cfe94af7cf668284c455de6354d641b6b82480e3e3c435df507bc887a17"
+      },
+      "fresh_e2e": {
+        "map": "85814cfe94af7cf668284c455de6354d641b6b82480e3e3c435df507bc887a17",
+        "physical": "85814cfe94af7cf668284c455de6354d641b6b82480e3e3c435df507bc887a17"
+      }
+    },
+    "frontend/tsconfig.json": {
+      "original": "c75c4ef570cb9f38c3201446f6ac49f8d315e3e4949554af84a57f3df37ec928",
+      "current": "c75c4ef570cb9f38c3201446f6ac49f8d315e3e4949554af84a57f3df37ec928",
+      "fresh_frontend": {
+        "map": "c75c4ef570cb9f38c3201446f6ac49f8d315e3e4949554af84a57f3df37ec928",
+        "physical": "c75c4ef570cb9f38c3201446f6ac49f8d315e3e4949554af84a57f3df37ec928"
+      },
+      "fresh_e2e": {
+        "map": "c75c4ef570cb9f38c3201446f6ac49f8d315e3e4949554af84a57f3df37ec928",
+        "physical": "c75c4ef570cb9f38c3201446f6ac49f8d315e3e4949554af84a57f3df37ec928"
+      }
+    },
+    "frontend/vite.config.ts": {
+      "original": "6fd68f295ff50360ea553acd7a44872360d6fb61ec4a52564a37fe34026ce773",
+      "current": "6fd68f295ff50360ea553acd7a44872360d6fb61ec4a52564a37fe34026ce773",
+      "fresh_frontend": {
+        "map": "6fd68f295ff50360ea553acd7a44872360d6fb61ec4a52564a37fe34026ce773",
+        "physical": "6fd68f295ff50360ea553acd7a44872360d6fb61ec4a52564a37fe34026ce773"
+      },
+      "fresh_e2e": {
+        "map": "6fd68f295ff50360ea553acd7a44872360d6fb61ec4a52564a37fe34026ce773",
+        "physical": "6fd68f295ff50360ea553acd7a44872360d6fb61ec4a52564a37fe34026ce773"
+      }
+    },
+    "frontend/playwright.config.ts": {
+      "original": "f37cc93a48b1f6bc07bfa85ba0c4dbdab0b0d598187118f619d41d712460662e",
+      "current": "f37cc93a48b1f6bc07bfa85ba0c4dbdab0b0d598187118f619d41d712460662e",
+      "fresh_frontend": {
+        "map": "f37cc93a48b1f6bc07bfa85ba0c4dbdab0b0d598187118f619d41d712460662e",
+        "physical": "f37cc93a48b1f6bc07bfa85ba0c4dbdab0b0d598187118f619d41d712460662e"
+      },
+      "fresh_e2e": {
+        "map": "f37cc93a48b1f6bc07bfa85ba0c4dbdab0b0d598187118f619d41d712460662e",
+        "physical": "f37cc93a48b1f6bc07bfa85ba0c4dbdab0b0d598187118f619d41d712460662e"
+      }
+    },
+    "frontend/playwright.auth.config.ts": {
+      "original": "28285161128135fa434c888510807a38e24b7c8da5f5a2173757f115a92c07b7",
+      "current": "28285161128135fa434c888510807a38e24b7c8da5f5a2173757f115a92c07b7",
+      "fresh_frontend": {
+        "map": "28285161128135fa434c888510807a38e24b7c8da5f5a2173757f115a92c07b7",
+        "physical": "28285161128135fa434c888510807a38e24b7c8da5f5a2173757f115a92c07b7"
+      },
+      "fresh_e2e": {
+        "map": "28285161128135fa434c888510807a38e24b7c8da5f5a2173757f115a92c07b7",
+        "physical": "28285161128135fa434c888510807a38e24b7c8da5f5a2173757f115a92c07b7"
+      }
+    }
+  },
+  "transitive_inputs_equal": true,
+  "private_exclusion_violations": {
+    "original_full": [],
+    "fresh_frontend": [],
+    "fresh_e2e": []
+  },
+  "STOP_pin": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "STOP_equal": true,
+  "stages": [
+    {
+      "name": "ruff",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source/backend/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/ruff.log",
+      "exit_code": 0,
+      "seconds": 0.2,
+      "evidence_source": "original full failed12/13, unchanged input carry"
+    },
+    {
+      "name": "ruff-format",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source/backend/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/ruff-format.log",
+      "exit_code": 0,
+      "seconds": 0.05,
+      "evidence_source": "original full failed12/13, unchanged input carry"
+    },
+    {
+      "name": "mypy",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source/backend/.venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/mypy.log",
+      "exit_code": 0,
+      "seconds": 14.17,
+      "evidence_source": "original full failed12/13, unchanged input carry"
+    },
+    {
+      "name": "backend-sqlite",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "--cov=app",
+        "--cov-fail-under=92",
+        "--junitxml=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/backend-sqlite.xml"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/backend-sqlite.log",
+      "exit_code": 0,
+      "seconds": 515.23,
+      "evidence_source": "original full failed12/13, unchanged input carry"
+    },
+    {
+      "name": "backend-postgresql",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source/backend/.venv/bin/python",
+        "scripts/pg.py",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "--junitxml=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/backend-postgresql.xml"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/backend-postgresql.log",
+      "exit_code": 0,
+      "seconds": 397.63,
+      "evidence_source": "original full failed12/13, unchanged input carry"
+    },
+    {
+      "name": "pip-audit",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source/backend/.venv/bin/python",
+        "-m",
+        "pip_audit",
+        "-r",
+        "requirements.txt"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/pip-audit.log",
+      "exit_code": 0,
+      "seconds": 14.6,
+      "evidence_source": "original full failed12/13, unchanged input carry"
+    },
+    {
+      "name": "npm-audit",
+      "command": [
+        "npm",
+        "audit",
+        "--audit-level=high"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/npm-audit.log",
+      "exit_code": 0,
+      "seconds": 0.66,
+      "evidence_source": "original full failed12/13, unchanged input carry"
+    },
+    {
+      "name": "frontend-typecheck",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/frontend-typecheck.log",
+      "exit_code": 0,
+      "seconds": 3.72,
+      "evidence_source": "fresh_frontend"
+    },
+    {
+      "name": "frontend-lint",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/frontend-lint.log",
+      "exit_code": 0,
+      "seconds": 1.48,
+      "evidence_source": "fresh_frontend"
+    },
+    {
+      "name": "frontend-tests",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "--run"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/frontend-tests.log",
+      "exit_code": 0,
+      "seconds": 5.55,
+      "evidence_source": "fresh_frontend"
+    },
+    {
+      "name": "frontend-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/frontend-build.log",
+      "exit_code": 0,
+      "seconds": 6.28,
+      "evidence_source": "fresh_frontend"
+    },
+    {
+      "name": "e2e",
+      "command": [
+        "npm",
+        "run",
+        "e2e"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223250Z-check-55181e66/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223250Z-check-55181e66/e2e.log",
+      "exit_code": 0,
+      "seconds": 82.02,
+      "evidence_source": "fresh_e2e"
+    },
+    {
+      "name": "e2e-auth",
+      "command": [
+        "npm",
+        "run",
+        "e2e:auth"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223250Z-check-55181e66/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223250Z-check-55181e66/e2e-auth.log",
+      "exit_code": 0,
+      "seconds": 8.67,
+      "evidence_source": "fresh_e2e"
+    }
+  ],
+  "all13_zero": true,
+  "stage_sources": {
+    "carry": 7,
+    "fresh_frontend": 4,
+    "fresh_e2e": 2
+  },
+  "fresh_log_pins": {
+    "fresh_frontend": {
+      "frontend-typecheck": {
+        "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/frontend-typecheck.log",
+        "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02",
+        "bytes": 53
+      },
+      "frontend-lint": {
+        "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/frontend-lint.log",
+        "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a",
+        "bytes": 65
+      },
+      "frontend-tests": {
+        "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/frontend-tests.log",
+        "sha256": "c5ee7f8bb51ea623a5a9dbda05607c3ffd474e62af73a6cbe87e68a6c1efd6aa",
+        "bytes": 20136
+      },
+      "frontend-build": {
+        "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223113Z-check-8cd53d9a/frontend-build.log",
+        "sha256": "438dcacd50a8fea4c586632941a95bd03d14944d32a3f061a35b6377df5ebbe9",
+        "bytes": 7315
+      }
+    },
+    "fresh_e2e": {
+      "e2e": {
+        "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223250Z-check-55181e66/e2e.log",
+        "sha256": "6882885d0d52879d3d483f2b3be8454a73524835a1f0872826fb575058755bf8",
+        "bytes": 173256
+      },
+      "e2e-auth": {
+        "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T223250Z-check-55181e66/e2e-auth.log",
+        "sha256": "0c6dad829f0aef73b3f85ec9fb1443d933348a483c3ae415fc5a579d6a899722",
+        "bytes": 16684
+      }
+    }
+  },
+  "reviewer_activity": "stdlib saved artifacts and opaque hash metadata only; no tests/app imports/runtime/ports/Git/network"
+}

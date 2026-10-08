@@ -1,0 +1,58 @@
+{
+  "status": "SEALED_QUALIFIED_FIRST_FULL_FAILED",
+  "files": {
+    "PLAN.json": {
+      "sha256": "80b2c243da710f5c5cbeb6e25dd77cdc2ad8aebec944c8b856f2da49c6971ae5",
+      "bytes": 794
+    },
+    "REPORT.md": {
+      "sha256": "8d5eacb34cdc0669c49e0d2f3850abc1c26c20ae588b32050076299b3d3fb8dc",
+      "bytes": 2667
+    },
+    "REPORT.pending.md": {
+      "sha256": "68379a89f38363241f221259c2a5ef0a79ea0c6a8cad4e488796c1c0e1c5318f",
+      "bytes": 2207
+    },
+    "REVALIDATION.md": {
+      "sha256": "27092611c8a0c237e74aa6c6418d2b13838d4cd09cfbe3a3362c9ac0ab349fd8",
+      "bytes": 1250
+    },
+    "backend-byte-map.json": {
+      "sha256": "874d82c23da0d5bf8890951964c946b85c0c836ff8122f3bf949f8dd51938ee3",
+      "bytes": 320302
+    },
+    "count-qualification.json": {
+      "sha256": "33dbcf337db33db1aec6af16eb8df29d4d2fb1451e0d159c04190b8e597d6f0f",
+      "bytes": 2151
+    },
+    "expected-evidence.json": {
+      "sha256": "ac0ba8f5ff2429191c2456b60573777fa4841187ac1574551c7835e51a63f958",
+      "bytes": 498
+    },
+    "first-full-terminal.json": {
+      "sha256": "c891cce05be6aa3892159f079291797ded9b1d2c9b8247c1f055effdff1dad4c",
+      "bytes": 14726
+    },
+    "private-exclusion.json": {
+      "sha256": "14a4273439230ebed414f6b719c860067faa818aeff28db9c8047cb835e20718",
+      "bytes": 777
+    },
+    "receipt.json": {
+      "sha256": "b5db6b87790493d895f4f5de148acf4506c0d0dfd73c7b2d78a3fc52f4138b5d",
+      "bytes": 1897
+    },
+    "repair-revalidation-review.json": {
+      "sha256": "0f240ca3a62157f9ae81905f78ea2b8148c413da9b78fa15e3b31e367e907c7e",
+      "bytes": 2894
+    },
+    "static-verification.json": {
+      "sha256": "12749875622d3028483db141529f4edef2e2699adbb2b34a33360d786983ffc6",
+      "bytes": 8320
+    }
+  },
+  "selected_files": 12,
+  "physical_selected_bytes": 358483,
+  "not_unique_experiments": true,
+  "original_full_preserved": true,
+  "scope": "saved-only source/full closure; fresh repair revalidation remains open"
+}

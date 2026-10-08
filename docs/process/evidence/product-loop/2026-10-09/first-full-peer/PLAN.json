@@ -1,0 +1,25 @@
+{
+  "task": "saved-only final source/full closure peer",
+  "expected_head": "9a79bff7",
+  "expected_predecessor": "863a9c64",
+  "root_full_session": 39421,
+  "steps": [
+    "Verify 14 frozen pins and current/frozen source maps",
+    "Compare backend byte map to saved predecessor manifest",
+    "Verify immutable STOP and private exclusion using metadata only",
+    "After parent supplies terminal summary, derive required full statuses and unique test counts from saved logs/JUnit",
+    "Seal small qualified report and standard files manifest"
+  ],
+  "prohibited": [
+    "tests",
+    "runtime",
+    "ports",
+    "app imports",
+    "SQL",
+    "Git",
+    "network",
+    "gold or scorer semantic reads",
+    "primary or old packet writes"
+  ],
+  "status": "prepared; terminal summary pending"
+}

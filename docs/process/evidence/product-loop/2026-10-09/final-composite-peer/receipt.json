@@ -1,0 +1,67 @@
+{
+  "decision": "QUALIFIED_COMPOSITE_ACCEPT",
+  "single_full13PASS": false,
+  "original_full_preserved_failed": true,
+  "original_full_summary_sha256": "fcb05b9b180488dbd99e0edd3cd0e41501e583e2877787cf772c41a8d3cb8f03",
+  "source_checkpoint": "74928d730a5d0a7bb94f82ed2d1cb3478bbb1034",
+  "composite": {
+    "carried": 7,
+    "fresh_frontend": 4,
+    "fresh_e2e": 2,
+    "all_exit_zero": true
+  },
+  "source14_current_frozen_map_equal": true,
+  "backend940_physical_equal": true,
+  "backend940_predecessor": "863a9c64be3de217faf8f0cc460bf6746cc083c2",
+  "transitive_package_config_equal": true,
+  "only_non_documentary_delta": "journey.spec.ts exact literal199",
+  "source_head_status_origin": "saved genuine source manifests and parent checkpoint, no reviewer Git query",
+  "STOP_pin": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "private_map_violation_count": 0,
+  "results": {
+    "backend_unique_sqlite": 4369,
+    "backend_unique_postgresql": 4369,
+    "sameIDs": true,
+    "coverage_sqlite": 95.27,
+    "coverage_postgresql": null,
+    "fresh_frontend": 282,
+    "fresh_frontend_files": 30,
+    "fresh_demo": {
+      "passed": 79,
+      "skipped": 1,
+      "failed": 0,
+      "notrun": 0
+    },
+    "fresh_auth": {
+      "passed": 6,
+      "failed": 0
+    }
+  },
+  "first_packet_preserved_mismatches": [],
+  "reviewer_execution": {
+    "tests": 0,
+    "imports": 0,
+    "runtime": 0,
+    "ports": 0,
+    "SQL": 0,
+    "Git": 0,
+    "network": 0,
+    "primary_edits": 0
+  },
+  "completion_claims": {
+    "product": false,
+    "search": false,
+    "live": false,
+    "hosted": false
+  },
+  "unknowns": [
+    "No broad product/search launch readiness inference",
+    "No admissions/intake/campus applicability inferred",
+    "No independent replay of root viewport/a11y evidence",
+    "Dependency runtime contents not independently re-executed or inspected"
+  ]
+}

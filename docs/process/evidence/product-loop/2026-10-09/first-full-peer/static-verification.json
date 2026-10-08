@@ -1,0 +1,157 @@
+{
+  "status": "static verified; full terminal pending",
+  "pins": {
+    "writeahead": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round3/full-writeahead-pins.json",
+      "sha256": "2f955b656d5ca9ea4f00c493933c84b5f750af19dd4978a2dbc6575e9d45f6ec",
+      "bytes": 1709
+    },
+    "full_binding": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round3/full-source-binding.json",
+      "sha256": "1e740f4f7ac4b6a9dcd91ee0a8c3a90729dc250fd2db9bab1cb92d085223923c",
+      "bytes": 3517
+    },
+    "full_manifest": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source-manifest.json",
+      "sha256": "87ff1bba864c437c14642522df4e87d98fd773d6e6ca0a23da8f320c8285dc17",
+      "bytes": 2108784
+    },
+    "predecessor_manifest": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round1/preview-before/source-manifest.json",
+      "sha256": "1537e460cd5e1265dd8cfbceaad373d6ccd24f6f4a3cd152f0e7275b5650e235",
+      "bytes": 2067673
+    },
+    "STOP": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+      "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+      "bytes": 142
+    }
+  },
+  "run": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309",
+  "snapshot": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/source",
+  "source_head": "9a79bff7ff327a693a5829d37f9b6acede62d6c7",
+  "source_status": "M docs/process/HANDOFF.md",
+  "source_tree_sha256": "05eade16eaf671d3d4651bec4b61dfd49f1b4804b3e98c98db1f830a77c688ea",
+  "tree_recipe_matches": true,
+  "writeahead_count": 14,
+  "writeahead_rows": [
+    {
+      "path": "frontend/e2e/journey.spec.ts",
+      "expected": "16324e2deae1b5d20601e52b4a0efb09cbaa843e8c4cea3ca2f4ed26ac184198",
+      "current": "16324e2deae1b5d20601e52b4a0efb09cbaa843e8c4cea3ca2f4ed26ac184198",
+      "frozen": "16324e2deae1b5d20601e52b4a0efb09cbaa843e8c4cea3ca2f4ed26ac184198",
+      "manifest": "16324e2deae1b5d20601e52b4a0efb09cbaa843e8c4cea3ca2f4ed26ac184198"
+    },
+    {
+      "path": "frontend/src/App.tsx",
+      "expected": "3f422fbbe105f3ddaa90b3a501c638c65f5a3aa4506fa9af6ed3c230c4eb9530",
+      "current": "3f422fbbe105f3ddaa90b3a501c638c65f5a3aa4506fa9af6ed3c230c4eb9530",
+      "frozen": "3f422fbbe105f3ddaa90b3a501c638c65f5a3aa4506fa9af6ed3c230c4eb9530",
+      "manifest": "3f422fbbe105f3ddaa90b3a501c638c65f5a3aa4506fa9af6ed3c230c4eb9530"
+    },
+    {
+      "path": "frontend/src/components/ComparePanel.preparation.test.tsx",
+      "expected": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3",
+      "current": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3",
+      "frozen": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3",
+      "manifest": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3"
+    },
+    {
+      "path": "frontend/src/components/ComparePanel.tsx",
+      "expected": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab",
+      "current": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab",
+      "frozen": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab",
+      "manifest": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab"
+    },
+    {
+      "path": "frontend/src/lib/store.test.tsx",
+      "expected": "196a66c47426ed28ef49701133afd8d23fcaf84b014a6695524c7202e4c8c251",
+      "current": "196a66c47426ed28ef49701133afd8d23fcaf84b014a6695524c7202e4c8c251",
+      "frozen": "196a66c47426ed28ef49701133afd8d23fcaf84b014a6695524c7202e4c8c251",
+      "manifest": "196a66c47426ed28ef49701133afd8d23fcaf84b014a6695524c7202e4c8c251"
+    },
+    {
+      "path": "frontend/src/lib/store.tsx",
+      "expected": "a6e26f45d44ca13980db7929b8b7340b9ccff3303499848b291ac833477879ee",
+      "current": "a6e26f45d44ca13980db7929b8b7340b9ccff3303499848b291ac833477879ee",
+      "frozen": "a6e26f45d44ca13980db7929b8b7340b9ccff3303499848b291ac833477879ee",
+      "manifest": "a6e26f45d44ca13980db7929b8b7340b9ccff3303499848b291ac833477879ee"
+    },
+    {
+      "path": "frontend/src/screens/ApprovedScreen.tsx",
+      "expected": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f",
+      "current": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f",
+      "frozen": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f",
+      "manifest": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f"
+    },
+    {
+      "path": "frontend/src/screens/DocumentsScreen.tsx",
+      "expected": "61a5521c68efe468bd37cec438d28af9fdec7ddd6c44a99d110758184274b8ef",
+      "current": "61a5521c68efe468bd37cec438d28af9fdec7ddd6c44a99d110758184274b8ef",
+      "frozen": "61a5521c68efe468bd37cec438d28af9fdec7ddd6c44a99d110758184274b8ef",
+      "manifest": "61a5521c68efe468bd37cec438d28af9fdec7ddd6c44a99d110758184274b8ef"
+    },
+    {
+      "path": "frontend/src/screens/HomeScreen.tsx",
+      "expected": "cd9c7f024efa05fc4651dd4c870e7fa24dd58d11e5f96acd9c159246f47ec705",
+      "current": "cd9c7f024efa05fc4651dd4c870e7fa24dd58d11e5f96acd9c159246f47ec705",
+      "frozen": "cd9c7f024efa05fc4651dd4c870e7fa24dd58d11e5f96acd9c159246f47ec705",
+      "manifest": "cd9c7f024efa05fc4651dd4c870e7fa24dd58d11e5f96acd9c159246f47ec705"
+    },
+    {
+      "path": "frontend/src/screens/JourneyScreens.test.tsx",
+      "expected": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10",
+      "current": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10",
+      "frozen": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10",
+      "manifest": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10"
+    },
+    {
+      "path": "frontend/src/screens/ShortlistScreen.test.tsx",
+      "expected": "8470b4a3d3f03d7f02c8e83b4c23c1fb830e3741fa3769bb035529943a79d27c",
+      "current": "8470b4a3d3f03d7f02c8e83b4c23c1fb830e3741fa3769bb035529943a79d27c",
+      "frozen": "8470b4a3d3f03d7f02c8e83b4c23c1fb830e3741fa3769bb035529943a79d27c",
+      "manifest": "8470b4a3d3f03d7f02c8e83b4c23c1fb830e3741fa3769bb035529943a79d27c"
+    },
+    {
+      "path": "frontend/src/screens/ShortlistScreen.tsx",
+      "expected": "06df80e4708e983fcc267398f2d8c24a11cd9fce8a210f1948e9fba62ba62ddc",
+      "current": "06df80e4708e983fcc267398f2d8c24a11cd9fce8a210f1948e9fba62ba62ddc",
+      "frozen": "06df80e4708e983fcc267398f2d8c24a11cd9fce8a210f1948e9fba62ba62ddc",
+      "manifest": "06df80e4708e983fcc267398f2d8c24a11cd9fce8a210f1948e9fba62ba62ddc"
+    },
+    {
+      "path": "frontend/src/screens/SourcesScreen.test.tsx",
+      "expected": "22979529306067765e486485259958971e3527787e58f632dc123845a1f0465d",
+      "current": "22979529306067765e486485259958971e3527787e58f632dc123845a1f0465d",
+      "frozen": "22979529306067765e486485259958971e3527787e58f632dc123845a1f0465d",
+      "manifest": "22979529306067765e486485259958971e3527787e58f632dc123845a1f0465d"
+    },
+    {
+      "path": "frontend/src/screens/SourcesScreen.tsx",
+      "expected": "38a90401e14af4618ab4b74e35abde72241734344f17029c990025f86d9b215b",
+      "current": "38a90401e14af4618ab4b74e35abde72241734344f17029c990025f86d9b215b",
+      "frozen": "38a90401e14af4618ab4b74e35abde72241734344f17029c990025f86d9b215b",
+      "manifest": "38a90401e14af4618ab4b74e35abde72241734344f17029c990025f86d9b215b"
+    }
+  ],
+  "four_way_pin_equality": true,
+  "backend_count": 940,
+  "predecessor_backend_count": 940,
+  "predecessor_head": "863a9c64be3de217faf8f0cc460bf6746cc083c2",
+  "backend_manifest_equal": true,
+  "backend_current_and_frozen_equal": true,
+  "backend_added": [],
+  "backend_removed": [],
+  "backend_changed": [],
+  "STOP_matches": true,
+  "private_sensitive_path_check": {
+    "selected_suspect_paths": [],
+    "excluded_count": 3,
+    "excluded_paths": [
+      ".env.example",
+      "backend/.env.example",
+      "backend/data/.gitkeep"
+    ]
+  },
+  "qualification": "Opaque hashes only for backend/corpus; no app imports, tests, runtime, SQL, Git, network or gold/scorer semantic reads."
+}
