@@ -1,0 +1,72 @@
+{
+  "status": "CONFIRMED_NATIVE_CONTRACT_FAILURE_FOR_TYPED_COHORT_HYPOTHESIS_NOT_RULE_REGRESSION",
+  "mapping": {
+    "university": "Aalto University",
+    "faculty": null,
+    "programme": null,
+    "degree": "bachelor",
+    "intake": null,
+    "academic_year": null,
+    "population": null,
+    "nationality": null,
+    "residency": null,
+    "qualification": null
+  },
+  "unsupported": [
+    "effective_cohort",
+    "period",
+    "study_field"
+  ],
+  "constructor_errors_original": {
+    "ClaimScope": {
+      "type": "TypeError",
+      "message": "ClaimScope.__init__() got an unexpected keyword argument 'effective_cohort'"
+    },
+    "RequestedScope": {
+      "type": "TypeError",
+      "message": "RequestedScope.__init__() got an unexpected keyword argument 'effective_cohort'"
+    },
+    "Money": {
+      "type": "ValidationError",
+      "message": "2 validation errors for Money\neffective_cohort\n  Extra inputs are not permitted [type=extra_forbidden, input_value='rights to study beginnin... or after 1 August 2025', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/extra_forbidden\nperiod\n  Extra inputs are not permitted [type=extra_forbidden, input_value='per academic year', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/extra_forbidden"
+    }
+  },
+  "arbitrary_dict_control": {
+    "claim_type": "tuition",
+    "normalized_value": {
+      "amount": 12000,
+      "currency": "EUR",
+      "effective_cohort": "rights to study beginning on or after 1 August 2025",
+      "study_field": "Field of Technology",
+      "period": "per academic year"
+    },
+    "original_text_excerpt": "Bachelor's programmes\n\nTuition fees for rights to study beginning on or after 1 August 2025\n\nField of Business\n\n\u20ac12 000 per academic year\n\nFields of Art and Architecture\n\n\u20ac15 000 per academic year\n\nField of Technology\n\n\u20ac12 000 per academic year",
+    "source_url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+    "page_title": "Scholarships and Tuition Fees | Aalto University",
+    "relevant_section": "",
+    "official_domain": true,
+    "program": null,
+    "subject_key": "Field of Technology",
+    "intake": null,
+    "academic_year": null,
+    "accessed_at": "2026-10-08T01:22:06.103172Z",
+    "scope": {
+      "university": null,
+      "faculty": null,
+      "programme": null,
+      "degree": "bachelor",
+      "intake": null,
+      "academic_year": null,
+      "population": null,
+      "nationality": null,
+      "residency": null,
+      "qualification": null
+    },
+    "source_specificity": "university_admissions",
+    "confidence": 0.8,
+    "status": "VERIFIED_CURRENT",
+    "extraction_method": "html_rule",
+    "notes": "DIAGNOSTIC CONTRACT CONTROL ONLY; not proposal output"
+  },
+  "warning": "Diagnostic control only; proposed reader emits0claims"
+}
