@@ -69,7 +69,8 @@ export interface Store {
   cancelRun: () => Promise<void>;
   retryRun: (stage?: string) => Promise<void>;
   recheckNow: () => Promise<void>;
-  collectDocuments: () => Promise<void>;
+  /** True only when the server accepted document collection for this run. */
+  collectDocuments: () => Promise<boolean>;
   /** Downloads through the client, so a 402 raises the paywall like any call. */
   exportShortlist: (fmt: 'csv' | 'json' | 'xlsx', decision?: string) => Promise<void>;
   decide: (resultId: string, decision: UserDecision, reason: string, notes: string) => Promise<void>;
@@ -704,12 +705,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [run, fail]);
 
   const collectDocuments = useCallback(async () => {
-    if (!run) return;
+    if (!run) return false;
     setError(null);
     try {
       setRun(await api.collectDocuments(run.id));
+      return true;
     } catch (e) {
       fail(e);
+      return false;
     }
   }, [run, fail]);
 

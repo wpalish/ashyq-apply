@@ -12,6 +12,7 @@ import { date, dateTime } from '@/lib/format';
 import { api } from '@/api/client';
 import { useStore } from '@/lib/store';
 import type { DocumentItem, ProgramResult } from '@/types';
+import type { ScreenId } from '@/App';
 
 const OWNER_LABEL: Record<string, string> = {
   applicant: 'You',
@@ -30,9 +31,14 @@ function loadDone(): Record<string, boolean> {
   }
 }
 
-export function DocumentsScreen() {
+export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId) => void }) {
   const { results, run } = useStore();
   const withChecklists = results.filter((r) => r.checklist);
+  const chosen = results.some((r) => r.user_decision === 'approved' || r.user_decision === 'maybe');
+  const needsAttention = run && (run.stale || run.cancelled
+    || ['failed', 'retryable_failed', 'cancelled'].includes(run.stage)
+    || ['failed', 'dead', 'cancelled'].includes(run.job_status ?? ''));
+  const busy = !needsAttention && (run?.job_running || run?.job_status === 'queued' || run?.job_status === 'running');
   const [selected, setSelected] = useState<string>(withChecklists[0]?.id ?? '');
   const [done, setDone] = useState<Record<string, boolean>>(loadDone);
 
@@ -77,16 +83,7 @@ export function DocumentsScreen() {
     return items.sort((a, b) => a.when.localeCompare(b.when));
   }, [results]);
 
-  if (withChecklists.length === 0) {
-    return (
-      <div className="find-page">
-        <div className="screen__head"><p className="screen__eyebrow">DOCUMENTS & DEADLINES</p><h1 className="screen__title">Prepare with <span className="find-yellow">confidence.</span></h1><p className="screen__lede">Your document checklist appears after you save programmes in Plan and collect their official requirements.</p></div>
-        <div className="find-empty"><Empty title="No checklists yet">Choose a programme in Find, then collect documents from Plan.</Empty></div>
-      </div>
-    );
-  }
-
-  const current = withChecklists.find((r) => r.id === selected) ?? withChecklists[0]!;
+  const current = withChecklists.find((r) => r.id === selected) ?? withChecklists[0];
 
   return (
     <>
@@ -100,7 +97,16 @@ export function DocumentsScreen() {
       </div>
 
       <div className="stack stack--loose">
-        <details className="documents-deadlines">
+        {(busy || needsAttention) && (
+          <Notice kind={needsAttention ? 'warn' : 'info'}>
+            <div role="status">
+              <strong>{needsAttention ? 'Research needs attention.' : run?.stage === 'document_collection' ? 'Document collection is in progress.' : 'Research is in progress.'}</strong>
+              {' '}{needsAttention ? 'Review the stopped stage and source limitations. Existing findings remain available below.' : 'New requirements will appear here when collection finishes. Existing findings remain available below.'}
+              {onNavigate && <button className="btn btn--sm" type="button" onClick={() => onNavigate('progress')}>View research progress</button>}
+            </div>
+          </Notice>
+        )}
+        {results.length > 0 && <details className="documents-deadlines" open={!current}>
           <summary>Calendar and deadlines across your shortlist ({deadlines.length})</summary>
         <Panel
           title="Every deadline across your shortlist"
@@ -132,9 +138,16 @@ export function DocumentsScreen() {
             {deadlines.length === 0 && <p className="muted small">No dated deadlines were found.</p>}
           </div>
         </Panel>
-        </details>
+        </details>}
 
-        <div className="row">
+        {!current && !busy && !needsAttention && (
+          <Panel>
+            <Empty title="No checklists yet">{chosen ? 'Collect official requirements for your selected programmes from Plan.' : 'Choose a programme in Find, then collect its official requirements from Plan.'}</Empty>
+            {onNavigate && <button className="btn btn--primary" type="button" onClick={() => onNavigate(chosen ? 'approved' : 'shortlist')}>{chosen ? 'Open plan' : 'Choose programmes'}</button>}
+          </Panel>
+        )}
+
+        {current && <div className="row">
           {withChecklists.map((r) => (
             <button
               key={r.id}
@@ -146,9 +159,9 @@ export function DocumentsScreen() {
               {r.university}
             </button>
           ))}
-        </div>
+        </div>}
 
-        <ChecklistFor result={current} done={done} toggle={toggle} />
+        {current && <ChecklistFor result={current} done={done} toggle={toggle} />}
       </div>
     </>
   );

@@ -141,6 +141,13 @@ describe('filter labels', () => {
 });
 
 describe('Find search', () => {
+  it.each(['approved', 'maybe'] as const)('removes a saved %s programme instead of changing its decision silently', async (decision) => {
+    row = makeRow({ user_decision: decision, user_notes: 'Keep this note' });
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByRole('button', { name: /^Saved$/ }));
+    await waitFor(() => expect(decide).toHaveBeenCalledWith(row.id, 'undecided', '', 'Keep this note'));
+  });
+
   it('filters by university, programme and country without changing the saved results', () => {
     render(<ShortlistScreen />);
     const search = screen.getByPlaceholderText('Search universities, programmes or countries…');

@@ -7,19 +7,36 @@ type HomeScreenProps = { onNavigate: (screen: ScreenId) => void };
 export function HomeScreen({ onNavigate }: HomeScreenProps) {
   const { savedProfile, run, results, summary, hydrated, capabilities } = useStore();
   const selected = results.filter((result) => result.user_decision === 'approved' || result.user_decision === 'maybe');
-  const active = run?.job_status === 'running' || run?.job_status === 'queued';
+  const needsAttention = run && (run.stale || run.cancelled
+    || ['failed', 'retryable_failed', 'cancelled'].includes(run.stage)
+    || ['failed', 'dead', 'cancelled'].includes(run.job_status ?? ''));
+  const active = run?.job_status === 'running' || run?.job_status === 'queued' || run?.job_running;
+  const emptyResearch = run && ['awaiting_user_decision', 'completed'].includes(run.stage) && !results.length;
+  const documentsReady = selected.length > 0 && selected.every((result) => result.checklist);
   const next: { title: string; detail: string; action: string; screen: ScreenId } = !savedProfile
     ? {
       title: 'Build your profile',
       detail: 'Tell us what you want to study so your research starts with your own goals.',
       action: 'Create profile', screen: 'profile',
     }
-    : active
+    : needsAttention || emptyResearch
+      ? {
+        title: needsAttention ? 'Your research needs attention' : 'Review your research findings',
+        detail: 'Review where the research stopped and what remains unknown before choosing your next step.',
+        action: 'Review research', screen: 'progress',
+      }
+      : active
       ? {
         title: 'Your research is in progress',
         detail: 'Follow what has been checked and see any source limitations as they appear.',
         action: 'View progress', screen: 'progress',
       }
+      : documentsReady
+        ? {
+          title: 'Work through your document checklists',
+          detail: 'Review the requirements and unresolved questions for your selected programmes. A collected checklist does not mean an application is ready.',
+          action: 'Open documents', screen: 'documents',
+        }
       : results.length > 0 && selected.length > 0
         ? {
           title: 'Plan your next steps',

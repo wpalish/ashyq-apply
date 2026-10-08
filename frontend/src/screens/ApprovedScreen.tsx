@@ -10,7 +10,7 @@ import { date, eligibilityTone, fundingClassTone, money } from '@/lib/format';
 import { useStore } from '@/lib/store';
 import type { ProgramResult, UserDecision } from '@/types';
 
-export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
+export function ApprovedScreen({ onCollect, onFind }: { onCollect: () => void; onFind?: () => void }) {
   const { results, run, collectDocuments, decide } = useStore();
 
   const group = (d: UserDecision) => results.filter((r) => r.user_decision === d);
@@ -28,7 +28,12 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
     run?.job_status === 'queued' || run?.job_status === 'running' ||
     (run?.stage === 'document_collection' && run.job_running);
 
-  if (results.length === 0) return <Empty title="No results yet">Run the research first.</Empty>;
+  if (results.length === 0) return (
+    <Panel title="Your application plan">
+      <Empty title="No programmes in your plan yet">Choose programmes from Find to begin your plan.</Empty>
+      {onFind && <button className="btn btn--primary" type="button" onClick={onFind}>Explore programmes</button>}
+    </Panel>
+  );
 
   return (
     <>
@@ -46,6 +51,8 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
             <span className="home-eyebrow">NEXT STEP</span>
             <h2>{shortlisted === 0 ? 'Choose a programme to plan for.' : nextDeadline ? `Next deadline: ${nextDeadline.university}` : 'Prepare your application documents.'}</h2>
             <p>{nextDeadline?.admission_deadline ? `${date(nextDeadline.admission_deadline)} · ${nextDeadline.program}` : shortlisted === 0 ? 'Save a promising result from Find to begin.' : 'No future admission deadline has been confirmed for these programmes.'}</p>
+            {shortlisted === 0 && onFind && <button className="btn btn--primary" type="button" onClick={onFind}>Choose programmes</button>}
+            {[...approved, ...maybe].some((result) => result.checklist) && <button className="btn" type="button" onClick={onCollect}>Open collected checklists</button>}
           </div>
           <div className="plan-hero__count"><strong>{shortlisted}</strong><span>programmes in your plan</span></div>
         </section>
@@ -61,8 +68,7 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
               className="btn btn--primary"
               disabled={shortlisted === 0 || collecting}
               onClick={async () => {
-                await collectDocuments();
-                onCollect();
+                if (await collectDocuments()) onCollect();
               }}
               data-testid="collect-documents"
             >
