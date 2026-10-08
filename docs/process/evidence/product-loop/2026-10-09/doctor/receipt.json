@@ -1,0 +1,45 @@
+{
+  "status": "passed",
+  "docker_available": false,
+  "steps": 5,
+  "copies": [
+    {
+      "name": "summary.json",
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T212616Z-doctor-44e68ff2/summary.json",
+      "bytes": 3439,
+      "sha256": "6a24a2eada235b78a32ad18ed848c05e17ec5a79a24413e58551ae567a2df5ae"
+    },
+    {
+      "name": "python-version.log",
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T212616Z-doctor-44e68ff2/python-version.log",
+      "bytes": 54,
+      "sha256": "6527559fcf77fc2a86c598da6287ce756d90eae6f3123ee1dc2752c844cd5c49"
+    },
+    {
+      "name": "node-version.log",
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T212616Z-doctor-44e68ff2/node-version.log",
+      "bytes": 9,
+      "sha256": "33e26f35db6e57ce0c486ddc815fe966867e4f649e418eaf323f75f4720eb8e9"
+    },
+    {
+      "name": "python-dependencies.log",
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T212616Z-doctor-44e68ff2/python-dependencies.log",
+      "bytes": 12,
+      "sha256": "4bc7d8955099251297c28c2f8e44e7b787e60d3ef5f01a70fb979a248a5b4719"
+    },
+    {
+      "name": "node-dependencies.log",
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T212616Z-doctor-44e68ff2/node-dependencies.log",
+      "bytes": 867,
+      "sha256": "b6716d72e63ffa0ab3ba5a65094b95aa00863366af85bfcb46ae8ec3ba3a3795"
+    },
+    {
+      "name": "chromium-installed.log",
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T212616Z-doctor-44e68ff2/chromium-installed.log",
+      "bytes": 146,
+      "sha256": "a0bcc98fcaed838bb172a3bed05c9e6750d93df620b774b4cb48e726670db0de"
+    }
+  ],
+  "source_metadata": "Doctor has no source-manifest.json; original source metadata stays within summary.json. Core/full use frozen snapshot originals.",
+  "first_archive_attempt": "Requested nonexistent doctor source-manifest.json after summary copy; FileNotFoundError. No original overwrite or executable change. Corrected finite archive copies summary and5actual step logs."
+}

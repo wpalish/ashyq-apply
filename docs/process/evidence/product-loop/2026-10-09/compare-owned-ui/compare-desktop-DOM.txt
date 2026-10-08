@@ -1,0 +1,641 @@
+- complementary:
+  - generic: Unimatch
+  - navigation "Main navigation":
+    - button "Home":
+      - generic: Home
+    - button "Find 20":
+      - generic: Find
+      - generic: "20"
+    - button "Plan 1":
+      - generic: Plan
+      - generic: "1"
+    - button "Documents 1":
+      - generic: Documents
+      - generic: "1"
+    - button "Community":
+      - generic: Community
+  - paragraph:
+    - text: Same students.
+    - strong: Bigger horizons.
+  - generic "Preferences"
+  - option "Match system"
+  - option "Light" [selected]
+  - option "Dark"
+  - option "English" [selected]
+  - option "Русский"
+  - option "Қазақша"
+- banner:
+  - generic: Demo data
+  - generic "Explore⌄"
+  - text: Applicant
+  - combobox "Applicant":
+    - option "New applicant"
+    - option "Demo Applicant (synthetic) · 1 run" [selected]
+  - button "New case"
+  - button "Settings"
+  - button "Sign out"
+- main:
+  - generic "Explore more universities from the local catalogue"
+  - option "All countries" [selected]
+  - option "Europe"
+  - option "Asia"
+  - option "North America"
+  - option "South America"
+  - option "Oceania"
+  - option "Africa"
+  - option "Argentina"
+  - option "Australia"
+  - option "Austria"
+  - option "Belgium"
+  - option "Brazil"
+  - option "Brunei Darussalam"
+  - option "Canada"
+  - option "Chile"
+  - option "China"
+  - option "Colombia"
+  - option "Costa Rica"
+  - option "Czechia"
+  - option "Denmark"
+  - option "Egypt"
+  - option "Estonia"
+  - option "Finland"
+  - option "France"
+  - option "Germany"
+  - option "Greece"
+  - option "Hong Kong"
+  - option "India"
+  - option "Indonesia"
+  - option "Iran"
+  - option "Ireland"
+  - option "Israel"
+  - option "Italy"
+  - option "Japan"
+  - option "Jordan"
+  - option "Kazakhstan"
+  - option "Lebanon"
+  - option "Lithuania"
+  - option "Luxembourg"
+  - option "Macao"
+  - option "Malaysia"
+  - option "Mexico"
+  - option "Netherlands"
+  - option "New Zealand"
+  - option "Norway"
+  - option "Oman"
+  - option "Pakistan"
+  - option "Peru"
+  - option "Philippines"
+  - option "Poland"
+  - option "Portugal"
+  - option "Qatar"
+  - option "Russia"
+  - option "Saudi Arabia"
+  - option "Singapore"
+  - option "South Africa"
+  - option "South Korea"
+  - option "Spain"
+  - option "Sweden"
+  - option "Switzerland"
+  - option "Taiwan"
+  - option "Thailand"
+  - option "Turkey"
+  - option "United Arab Emirates"
+  - option "United Kingdom"
+  - option "United States"
+  - option "Uzbekistan"
+  - paragraph: GLOBAL OPPORTUNITIES. REAL MATCHES.
+  - heading "Find your best matches." [level=1]
+  - paragraph: Explore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.
+  - img "Unimatch mascot exploring a mountain landscape"
+  - note:
+    - strong: Demo data.
+    - text: These figures come from a bundled synthetic corpus, not from real university pages. Every source below is a
+    - code: fixture://
+    - text: address.
+  - generic: Search universities, programmes or countries
+  - textbox "Search universities, programmes or countries":
+    - /placeholder: Search universities, programmes or countries…
+  - button "Filters"
+  - button "Compare (2)"
+  - tablist "Match list":
+    - tab "All" [selected]
+    - tab "Priority"
+    - tab "Saved"
+    - tab "Exploring"
+  - generic "Filter and sort results"
+  - option "All (20)" [selected]
+  - option "Australia"
+  - option "Austria"
+  - option "Belgium"
+  - option "Canada"
+  - option "Finland"
+  - option "Germany"
+  - option "Ireland"
+  - option "Japan"
+  - option "Netherlands"
+  - option "Norway"
+  - option "Poland"
+  - option "Singapore"
+  - option "Switzerland"
+  - option "United Kingdom"
+  - option "United States"
+  - option "Any" [selected]
+  - option "Pending (3)"
+  - option "Met (9)"
+  - option "Unverified (5)"
+  - option "Gap (3)"
+  - option "Any" [selected]
+  - option "Full ride (3)"
+  - option "Full tuition (6)"
+  - option "Unknown (6)"
+  - option "Need-based (1)"
+  - option "Partial (4)"
+  - option "Match, discounted by what is unverified" [selected]
+  - option "Match with your priorities"
+  - option "Most confirmed"
+  - option "Smallest remaining cost"
+  - option "Earliest deadline"
+  - option "University name"
+  - paragraph: Showing 20 of 20 results from this research run
+  - article:
+    - generic: Netherlands · Groningen
+    - heading "University of Groningen" [level=2]
+    - paragraph: BSc Computing Science
+    - generic: Plausible
+    - generic "Nothing is failing, but something is still outstanding — a test, a document, or a profile field.": Pending
+    - generic "An official source confirms tuition, mandatory fees, housing and meals (or a living stipend) are covered.": Full ride
+    - generic: Remaining / year
+    - strong: 1 848 USD
+    - generic: Deadline
+    - strong: 01 мая 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Saved" [pressed]
+    - button "Remove" [pressed]
+  - article:
+    - generic: Belgium · Leuven
+    - heading "KU Leuven" [level=2]
+    - paragraph: BSc Informatics
+    - generic: Plausible
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+    - generic: Remaining / year
+    - strong: 7 554 USD
+    - generic: Deadline
+    - strong: 01 мар. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Remove" [pressed]
+  - article:
+    - generic: Japan · Tokyo
+    - heading "University of Tokyo" [level=2]
+    - paragraph: PEAK Environmental Sciences (Computing track)
+    - generic: Plausible
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+    - generic: Remaining / year
+    - strong: 1 986 USD
+    - generic: Deadline
+    - strong: 01 дек. 2026 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Canada · Toronto
+    - heading "University of Toronto" [level=2]
+    - paragraph: HBSc Computer Science
+    - generic: Plausible
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "An official source confirms tuition, mandatory fees, housing and meals (or a living stipend) are covered.": Full ride
+    - generic: Remaining / year
+    - strong: Not enough comparable data
+    - generic: Deadline
+    - strong: 15 янв. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Canada · Montreal
+    - heading "McGill University" [level=2]
+    - paragraph: computer science (bachelor)
+    - generic: Needs clarification
+    - generic "The published requirement could not be verified against an official source.": Unverified
+    - generic "Not enough official information to classify.": Unknown
+    - generic: Remaining / year
+    - strong: Not enough comparable data
+    - generic: Deadline
+    - strong: Not confirmed
+    - paragraph: 0 conflicts · 4 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Netherlands · Amsterdam
+    - heading "University of Amsterdam" [level=2]
+    - paragraph: computer science (bachelor)
+    - generic: Needs clarification
+    - generic "The published requirement could not be verified against an official source.": Unverified
+    - generic "Not enough official information to classify.": Unknown
+    - generic: Remaining / year
+    - strong: Not enough comparable data
+    - generic: Deadline
+    - strong: Not confirmed
+    - paragraph: 0 conflicts · 4 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Netherlands · Eindhoven
+    - heading "Eindhoven University of Technology" [level=2]
+    - paragraph: computer science (bachelor)
+    - generic: Needs clarification
+    - generic "The published requirement could not be verified against an official source.": Unverified
+    - generic "Not enough official information to classify.": Unknown
+    - generic: Remaining / year
+    - strong: Not enough comparable data
+    - generic: Deadline
+    - strong: Not confirmed
+    - paragraph: 0 conflicts · 4 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Austria · Vienna
+    - heading "University of Vienna" [level=2]
+    - paragraph: BSc Computer Science
+    - generic: Ambitious
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "Not enough official information to classify.": Unknown
+    - generic: Remaining / year
+    - strong: Not enough comparable data
+    - generic: Deadline
+    - strong: 05 сент. 2027 г.
+    - paragraph: 0 conflicts · 3 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Singapore · Singapore
+    - heading "National University of Singapore" [level=2]
+    - paragraph: Bachelor of Computing (Computer Science)
+    - generic: Ambitious
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "Depends on a financial-need assessment that has not been filed, so it cannot be sized.": Need-based
+    - generic: Remaining / year
+    - strong: Not enough comparable data
+    - generic: Deadline
+    - strong: 21 февр. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Finland · Espoo
+    - heading "Aalto University" [level=2]
+    - paragraph: BSc Computer Science
+    - generic: Out of budget
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+    - generic: Remaining / year
+    - strong: 11 859 USD est.
+    - generic: Deadline
+    - strong: 09 янв. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Canada · Vancouver
+    - heading "University of British Columbia" [level=2]
+    - paragraph: BSc Computer Science
+    - generic: Out of budget
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+    - generic: Remaining / year
+    - strong: 21 471 USD
+    - generic: Deadline
+    - strong: 15 янв. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Norway · Oslo
+    - heading "University of Oslo" [level=2]
+    - paragraph: BSc Informatics
+    - generic: Needs clarification
+    - generic "The published requirement could not be verified against an official source.": Unverified
+    - generic "Not enough official information to classify.": Unknown
+    - generic: Remaining / year
+    - strong: Not enough comparable data
+    - generic: Deadline
+    - strong: Not confirmed
+    - paragraph: 0 conflicts · 3 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: United States · Tempe
+    - heading "Arizona State University" [level=2]
+    - paragraph: BS Computer Science
+    - generic: Out of budget
+    - generic "Nothing is failing, but something is still outstanding — a test, a document, or a profile field.": Pending
+    - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+    - generic: Remaining / year
+    - strong: 19 400 USD
+    - generic: Deadline
+    - strong: 01 февр. 2027 г.
+    - paragraph: 0 conflicts · 3 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Germany · Munich
+    - heading "Technical University of Munich" [level=2]
+    - paragraph: BSc Informatics
+    - generic: Out of budget
+    - generic "Nothing is failing, but something is still outstanding — a test, a document, or a profile field.": Pending
+    - generic "Covers a limited share of the total cost.": Partial
+    - generic: Remaining / year
+    - strong: 18 663 USD
+    - generic: Deadline
+    - strong: 15 янв. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: United Kingdom · Edinburgh
+    - heading "University of Edinburgh" [level=2]
+    - paragraph: computer science (bachelor)
+    - generic: Needs clarification
+    - generic "The published requirement could not be verified against an official source.": Unverified
+    - generic "Not enough official information to classify.": Unknown
+    - generic: Remaining / year
+    - strong: Not enough comparable data
+    - generic: Deadline
+    - strong: Not confirmed
+    - paragraph: 0 conflicts · 4 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Ireland · Dublin
+    - heading "Trinity College Dublin" [level=2]
+    - paragraph: BA (Mod) Computer Science
+    - generic: Out of budget
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "Covers a limited share of the total cost.": Partial
+    - generic: Remaining / year
+    - strong: 41 793 USD
+    - generic: Deadline
+    - strong: 01 февр. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Poland · Warsaw
+    - heading "University of Warsaw" [level=2]
+    - paragraph: BSc Computer Science
+    - generic: Out of budget
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - generic "Covers a limited share of the total cost.": Partial
+    - generic: Remaining / year
+    - strong: 9 239 USD
+    - generic: Deadline
+    - strong: 05 июл. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Australia · Melbourne
+    - heading "University of Melbourne" [level=2]
+    - paragraph: Bachelor of Science (Computing and Software Systems)
+    - generic: Excluded
+    - generic "At least one published requirement is currently not met.": Gap
+    - generic "Covers a limited share of the total cost.": Partial
+    - generic: Remaining / year
+    - strong: 46 267 USD
+    - generic: Deadline
+    - strong: Not confirmed
+    - paragraph: 0 conflicts · 3 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Netherlands · Delft
+    - heading "Delft University of Technology" [level=2]
+    - paragraph: BSc Computer Science and Engineering
+    - generic: Excluded
+    - generic "At least one published requirement is currently not met.": Gap
+    - generic "An official source confirms tuition, mandatory fees, housing and meals (or a living stipend) are covered.": Full ride
+    - generic: Remaining / year
+    - strong: 2 446 USD
+    - generic: Deadline
+    - strong: 15 янв. 2027 г.
+    - paragraph: 1 conflict · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - article:
+    - generic: Switzerland · Lausanne
+    - heading "EPFL" [level=2]
+    - paragraph: BSc Computer Science
+    - generic: Excluded
+    - generic "At least one published requirement is currently not met.": Gap
+    - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+    - generic: Remaining / year
+    - strong: 8 386 USD
+    - generic: Deadline
+    - strong: 15 янв. 2027 г.
+    - paragraph: 0 conflicts · 2 open questions
+    - button "View details"
+    - button "Save"
+    - button "Compare"
+  - region "Compare selected programmes":
+    - generic: COMPARE WITH CLARITY
+    - heading "Different strengths. A clearer choice." [level=2]
+    - button "Clear"
+    - paragraph: Compare what the sources actually support. A match score describes your stated preferences, not your chance of admission.
+    - article:
+      - generic: Netherlands
+      - heading "University of Groningen" [level=3]
+      - paragraph: BSc Computing Science
+      - term: Eligibility
+      - definition:
+        - generic "Nothing is failing, but something is still outstanding — a test, a document, or a profile field.": Pending
+      - term: Admissions fit
+      - definition:
+        - generic "Scores sit clearly above the published minimums. Selection is still competitive.": Stronger
+      - term: Funding
+      - definition:
+        - generic "An official source confirms tuition, mandatory fees, housing and meals (or a living stipend) are covered.": Full ride
+      - term: Remaining per year
+      - definition: 1 848 USD · 2026/27
+      - term: Deadline
+      - definition: 01 мая 2027 г.
+      - term: Preference fit
+      - definition: Plausible
+      - term: Evidence coverage
+      - definition: 94%
+      - region "University of Groningen preparation evidence":
+        - heading "Preparation evidence" [level=4]
+        - term: Requested intake
+        - definition: fall 2027
+        - term: Document list
+        - definition: Read from official pages
+        - term: Required items recorded
+        - definition: "Admission: 5 · Scholarship: 0"
+        - paragraph: Reading sources does not confirm that your documents are prepared. The requested intake does not confirm which intake the document sources cover.
+        - generic "Required items, owners & sources"
+        - heading "Admission" [level=5]
+        - list:
+          - strong: Secondary school diploma (certified copy)
+          - paragraph: Your school
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+          - strong: Passport identity page (copy)
+          - paragraph: You
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+          - strong: Personal statement
+          - paragraph: You
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+          - strong: Academic reference
+          - paragraph: Your referee
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+          - strong: Curriculum vitae
+          - paragraph: You
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+      - generic: 2 to clarify
+      - code: fixture://u-groningen/program-0.html
+      - generic: demo fixture
+      - button "View details"
+      - button "Remove"
+      - generic "Why this fit?"
+    - article:
+      - generic: Belgium
+      - heading "KU Leuven" [level=3]
+      - paragraph: BSc Informatics
+      - term: Eligibility
+      - definition:
+        - generic "Every published requirement that could be checked is satisfied.": Met
+      - term: Admissions fit
+      - definition:
+        - generic "Scores sit clearly above the published minimums. Selection is still competitive.": Stronger
+      - term: Funding
+      - definition:
+        - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+      - term: Remaining per year
+      - definition: 7 554 USD · 2026/27
+      - term: Deadline
+      - definition: 01 мар. 2027 г.
+      - term: Preference fit
+      - definition: Plausible
+      - term: Evidence coverage
+      - definition: 94%
+      - region "KU Leuven preparation evidence":
+        - heading "Preparation evidence" [level=4]
+        - term: Requested intake
+        - definition: fall 2027
+        - term: Document list
+        - definition: Not collected
+        - term: Required items recorded
+        - definition: No required items recorded
+        - paragraph: Reading sources does not confirm that your documents are prepared. The requested intake does not confirm which intake the document sources cover.
+      - generic: 2 to clarify
+      - code: fixture://ku-leuven/program-0.html
+      - generic: demo fixture
+      - button "View details" [expanded] [active]
+      - button "Remove"
+      - generic "Why this fit?"
+    - generic: PROGRAMME DETAILS · Belgium
+    - heading "KU Leuven" [level=2]
+    - paragraph: BSc Informatics
+    - paragraph: Leuven, Belgium · Bachelor
+    - code: fixture://ku-leuven/program-0.html
+    - generic: demo fixture
+    - generic: YOUR ASSESSMENT
+    - generic "Every published requirement that could be checked is satisfied.": Met
+    - paragraph: Eligibility is separate from admissions fit. Neither is a probability of admission.
+    - generic: Funding
+    - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+    - generic: Remaining per year
+    - strong: 7 554 USD · 2026/27
+    - generic: Deadline
+    - strong: 01 мар. 2027 г.
+    - generic: Evidence
+    - strong: 0 conflicts · 2 open questions
+    - tablist "KU Leuven details":
+      - tab "Requirements" [selected]
+      - tab "Funding"
+      - tab "Costs"
+      - tab "Documents"
+      - tab "Why this order"
+      - tab "Sources & evidence"
+    - term: Admission deadline
+    - definition:
+      - generic "Every published requirement that could be checked is satisfied.": Met
+      - text: published
+      - strong: 2027-03-01
+      - generic: you 2026-10-08
+      - paragraph: Applications close 2027-03-01.
+      - paragraph: published for degree bachelor, intake Fall 2027
+    - term: Accepted IELTS test type
+    - definition:
+      - generic "Every published requirement that could be checked is satisfied.": Met
+      - text: published
+      - strong: academic
+      - generic: you academic
+      - paragraph: The programme accepts academic; the applicant holds academic.
+    - term: IELTS overall
+    - definition:
+      - generic "Every published requirement that could be checked is satisfied.": Met
+      - text: published
+      - strong: "6.5"
+      - generic: you 7
+      - paragraph: Published minimum 6.5; applicant 7.
+      - paragraph: published for degree bachelor, intake Fall 2027
+    - term: IELTS listening
+    - definition:
+      - generic "Every published requirement that could be checked is satisfied.": Met
+      - text: published
+      - strong: "6"
+      - generic: you 7.5
+      - paragraph: Published minimum 6; applicant 7.5.
+      - paragraph: published for degree bachelor, intake Fall 2027
+    - term: IELTS reading
+    - definition:
+      - generic "Every published requirement that could be checked is satisfied.": Met
+      - text: published
+      - strong: "6"
+      - generic: you 7.5
+      - paragraph: Published minimum 6; applicant 7.5.
+      - paragraph: published for degree bachelor, intake Fall 2027
+    - term: IELTS writing
+    - definition:
+      - generic "Every published requirement that could be checked is satisfied.": Met
+      - text: published
+      - strong: "6"
+      - generic: you 6
+      - paragraph: Published minimum 6; applicant 6.
+      - paragraph: published for degree bachelor, intake Fall 2027
+    - term: IELTS speaking
+    - definition:
+      - generic "Every published requirement that could be checked is satisfied.": Met
+      - text: published
+      - strong: "6"
+      - generic: you 7
+      - paragraph: Published minimum 6; applicant 7.
+      - paragraph: published for degree bachelor, intake Fall 2027
+    - generic: "Deadline: 01 мар. 2027 г. (CET)"
+  - generic "Detailed evidence table"
+  - paragraph: Showing 20 of 20. Rejected rows are kept with their reason so the same programme is not proposed again without new information.

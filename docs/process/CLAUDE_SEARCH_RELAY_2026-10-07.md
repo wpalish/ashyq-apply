@@ -1,3 +1,36 @@
+# Текущая передача продуктовой работы — 2026-10-08T22:20:35.143030+00:00
+
+Владелец поручил подробно сравнить Unilight и несколько сервисов и максимально
+улучшить пользу/удобство ASHYQ Apply. Рабочая ветка task/product-journey-next-steps;
+root держит baton. Тестируемый source9a79bff7, frozen snapshot05eade16.
+
+Реализованы11 связанных улучшений маршрута выбора/подготовки в14 frontend/test
+путях. Полный список и план — PRODUCT_COMPLETION_PLAN_2026-10-09.md. Изучены
+Unilight, BigFuture, UCAS, Common App, MyStudyLife. Свежие публичные Unilight6demo/
+7FAQ отделены от истории и нового consent gate; private raw исключён из origin.
+Сравнительных результатов пользователей нет; сохранён proposed6-task protocol.
+
+Текущий full20261008T220925Z-check-75e57309, root session39421 ещё идёт.
+Уже PASS8стадий:4369SQLite/32warnings/95.27%,282frontend/30files,386mypy,
+style/typecheck/lint/build. PostgreSQL, demo/auth и audits ещё PENDING.
+Не дублировать full/E2E/ports и не менять app/test frozen bytes. Предыдущий
+core d6/8of8/255frontend имеет отдельные оригиналы, не заменяет финальный full.
+
+Owned synthetic desktop/mobile/reload/Compare проверены; preview остановлен,
+viewport reset. Compare17/19/20 accepted,16/18 имеют явную квалификацию;
+same-browser marks не являются cloud sync. Native91focused и независимые
+A11/B52/A54 перекрываются — не складывать как уникальные проверки.
+
+После terminal full: root сохранит original logs/HEAD/SHA и peer closure,
+обновит HANDOFF §6, откроет attached Draft against task/search-local-pilot-orchestrator
+и освободит baton. Следующий небольшой раунд — Find recovery и Documents hint
+для approved/maybe, затем отдельные versioned personal preparation marks.
+
+Immutable provider STOP65b5 сохраняется. Университетские живые вызовы/старые
+UNSCORED не возобновлялись; fresh-cycle grant и exact expert selector-model всё
+ещё не получены. Принятое качество и опубликованный signed-in journey остаются
+условиями запуска. Локальные проверки не являются hosted required checks.
+
 # Product relay — owner scope expanded 9 October 2026
 
 Root holds baton for task/product-journey-next-steps from predecessor863a9c64, pushed WIP d6a727aa. New direct owner request: finish project, compare Unilight and several other sites for usefulness/convenience. PRODUCT_COMPLETION_PLAN_2026-10-09.md defines the bounded product queue; latest exact source/gates in HANDOFF. Current seven UI/source-action repairs have focused64PASS/typecheck/lint PASS, independent static ACCEPT11pins; approved core20261008T213601Z-check-3c842d79 RUNNING, full NOT RUN. No claim that tests prove search quality, superiority or launch. Two first parameterized test fixture failures and initial typecheck errors retained locally; fixture-only repairs applied. Core source freezes until completion; root only primary/Git writer. External product-round2 proposal must be independently reviewed before any application.
