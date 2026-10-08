@@ -1,0 +1,34 @@
+{
+  "argv": [
+    "/Users/wpalish/.local/bin/node",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/a-recovery-review/runtime/frontend/node_modules/vitest/vitest.mjs",
+    "run",
+    "src/screens/ShortlistScreen.test.tsx",
+    "src/components/ResultDetail.scope.test.tsx",
+    "src/screens/RecoveryPeer.test.tsx",
+    "--maxWorkers=1",
+    "--reporter=default",
+    "--reporter=junit",
+    "--outputFile=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/a-recovery-review/logs/peer.junit.xml"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/a-recovery-review/runtime/frontend",
+  "environment": {
+    "PATH": "/Users/wpalish/.local/bin:/usr/bin:/bin",
+    "TMPDIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/a-recovery-review/runtime/tmp",
+    "XDG_CACHE_HOME": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/a-recovery-review/runtime/cache",
+    "CI": "1",
+    "NODE_OPTIONS": "--require=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/a-recovery-review/support/deny-network.cjs",
+    "REVIEW_NETWORK_LOG_DIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/a-recovery-review/logs/network"
+  },
+  "node": {
+    "lexical": "/Users/wpalish/.local/bin/node",
+    "resolved": "/Users/wpalish/.hermes/node/bin/node",
+    "sha256": "2e3f1286a7eb3736346ed1803e458a0ff909e2b2d5bc746144dcb76970e9b99d"
+  },
+  "start_utc": "2026-10-08T22:56:26.861589+00:00",
+  "elapsed_seconds": 7.985273957999999,
+  "returncode": 0,
+  "stdout": "logs/peer.stdout.txt",
+  "stderr": "logs/peer.stderr.txt",
+  "source_strategy": "ordinary owned frontend/src copy with exact B4; Vite cache only changed to owned path; native component imports, no shadow modules"
+}

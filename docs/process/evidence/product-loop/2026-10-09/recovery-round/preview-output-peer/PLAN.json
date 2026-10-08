@@ -1,0 +1,16 @@
+{
+  "created_at": "2026-10-08T23:33:51.861706+00:00",
+  "task": "Finite saved-only correlation of generated E2E screenshots and preview source guard failure",
+  "inputs": [
+    "work/product-round5/preview-first-source-mismatch.json",
+    "saved full source-manifest",
+    "native current frontend E2E screenshot emitters and saved logs"
+  ],
+  "limits": "<=5plaintext total; no execution/import/ports/DB/tests/jobs/provider/network/Git; no source/manifest changes",
+  "steps": [
+    "Verify saved mismatch and manifest pins",
+    "Correlate each of38 paths to native emitters/log run",
+    "Opaque-hash every other manifest physical source path",
+    "Seal qualified output-exception review, without runtime/UI acceptance"
+  ]
+}

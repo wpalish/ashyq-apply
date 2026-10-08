@@ -1,0 +1,59 @@
+{
+  "created_at": "2026-10-08T23:40:14.765275+00:00",
+  "producer": "Root read-only native Git; no agent Git command",
+  "repository": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+  "predecessor": "312c81ae147c914f5d2045d4a3910300001ac03e",
+  "tested_source": "c7ece3c0a057a4fe6a8b8b5e43c3b17c8338cbd4",
+  "current_head": "f687eaf3eeb4f3963e697680dbbd13aeaacb6774",
+  "scope_command": [
+    "git",
+    "-C",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+    "diff",
+    "--name-only",
+    "312c81ae147c914f5d2045d4a3910300001ac03e",
+    "c7ece3c0a057a4fe6a8b8b5e43c3b17c8338cbd4",
+    "--",
+    "frontend",
+    "backend"
+  ],
+  "exact_source_paths": [
+    "frontend/src/components/ResultDetail.scope.test.tsx",
+    "frontend/src/components/ResultDetail.tsx",
+    "frontend/src/screens/ShortlistScreen.test.tsx",
+    "frontend/src/screens/ShortlistScreen.tsx"
+  ],
+  "four_blob_hashes": {
+    "frontend/src/components/ResultDetail.scope.test.tsx": {
+      "predecessor_git_blob_sha256": "2ad138eff4d8077e57ff973e03908ba20c79c940b7706b266084552dbe37ca89",
+      "tested_git_blob_sha256": "5df2df5ace1b7f6fdf3c149faacb6516eafee391792741e99574b3ce2a00de6b",
+      "current_sha256": "5df2df5ace1b7f6fdf3c149faacb6516eafee391792741e99574b3ce2a00de6b",
+      "before_bytes": 4646,
+      "after_bytes": 6602
+    },
+    "frontend/src/components/ResultDetail.tsx": {
+      "predecessor_git_blob_sha256": "b4d07ffc2c80933a5dacf35ae6f988829572a465e99d27a9f0ffa3414047f92d",
+      "tested_git_blob_sha256": "932d1b6f4b446d484e249f5511596958b6c653ee338a20698241b06a7913433e",
+      "current_sha256": "932d1b6f4b446d484e249f5511596958b6c653ee338a20698241b06a7913433e",
+      "before_bytes": 23709,
+      "after_bytes": 23706
+    },
+    "frontend/src/screens/ShortlistScreen.test.tsx": {
+      "predecessor_git_blob_sha256": "8470b4a3d3f03d7f02c8e83b4c23c1fb830e3741fa3769bb035529943a79d27c",
+      "tested_git_blob_sha256": "15bed9737a272a27d5498baf8dc0f6c8e219a99652a4d466d96945b571c52bd6",
+      "current_sha256": "15bed9737a272a27d5498baf8dc0f6c8e219a99652a4d466d96945b571c52bd6",
+      "before_bytes": 16863,
+      "after_bytes": 26010
+    },
+    "frontend/src/screens/ShortlistScreen.tsx": {
+      "predecessor_git_blob_sha256": "06df80e4708e983fcc267398f2d8c24a11cd9fce8a210f1948e9fba62ba62ddc",
+      "tested_git_blob_sha256": "6d06c0b9dee3abaccac74f91f73612dea42670da93278f13d061df0724467f62",
+      "current_sha256": "6d06c0b9dee3abaccac74f91f73612dea42670da93278f13d061df0724467f62",
+      "before_bytes": 32385,
+      "after_bytes": 33547
+    }
+  },
+  "backend_diff_empty": true,
+  "protected_config_dependency_workflow_diff_empty": true,
+  "qualification": "Direct312\u2192testedc7 source scope and4 blob hashes; current metadata-only HEAD differs. No data/label contents opened or app/API calls."
+}

@@ -39,7 +39,7 @@ const SET_ASIDE_HINT: Record<string, string> = {
 const REJECTION_REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
 
 export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void; onProgress?: () => void }) {
-  const { results, summary, shortlist, decide, saveNotes } = useStore();
+  const { run, results, summary, shortlist, decide, saveNotes } = useStore();
   const [expanded, setExpanded] = useState<string | null>(null);
   const [cardExpanded, setCardExpanded] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>('key');
@@ -110,11 +110,29 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
     ...(hideRejected ? [{ label: 'Hide rejected', clear: () => setHideRejected(false) }] : []),
   ];
 
+  const needsAttention = run && (run.stale || run.cancelled
+    || ['failed', 'retryable_failed', 'cancelled'].includes(run.stage)
+    || ['failed', 'dead', 'cancelled'].includes(run.job_status ?? ''));
+  const active = run?.job_status === 'running' || run?.job_status === 'queued' || run?.job_running;
+  const researchNotice = run && (needsAttention || active || results.length === 0) ? (
+    <Notice kind={needsAttention ? 'warn' : 'info'}>
+      <div>
+        <strong>{needsAttention ? 'Research needs attention.' : active ? 'Research is in progress.' : 'Review your research findings.'}</strong>
+        <p className="small">
+          {results.length > 0
+            ? 'Existing findings remain available. Review progress and source limitations before choosing your next step.'
+            : 'No results have been returned for this run. Review progress and source limitations; this does not establish that no programmes match.'}
+        </p>
+        {onProgress && <button className="btn" type="button" onClick={onProgress}>View research progress</button>}
+      </div>
+    </Notice>
+  ) : null;
+
   if (results.length === 0) {
     return (
       <div className="find-page">
         <div className="screen__head"><p className="screen__eyebrow">FIND YOUR PATH</p><h1 className="screen__title">Find your best <span className="find-yellow">matches.</span></h1><p className="screen__lede">Research begins with your profile and preferences.</p></div>
-        <div className="find-empty"><Empty title="No results yet">Start research to find programmes supported by available sources.</Empty>{onStart && <button className="btn btn--primary" type="button" onClick={onStart}>Start research →</button>}</div>
+        <div className="find-empty">{run ? researchNotice : <><Empty title="No results yet">Start research to find programmes supported by available sources.</Empty>{onStart && <button className="btn btn--primary" type="button" onClick={onStart}>Start research →</button>}</>}</div>
         <UniversityCatalogue onStart={onStart} onProgress={onProgress} />
       </div>
     );
@@ -387,6 +405,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
       </div>
 
       <div className="stack stack--loose">
+        {researchNotice}
         {summary?.demo_data && (
           <Notice kind="demo">
             <div>

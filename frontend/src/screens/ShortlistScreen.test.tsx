@@ -9,7 +9,7 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ShortlistScreen } from './ShortlistScreen';
-import type { ProgramResult } from '@/types';
+import type { ProgramResult, RunView } from '@/types';
 
 const decide = vi.fn().mockResolvedValue(undefined);
 const saveNotes = vi.fn().mockResolvedValue(undefined);
@@ -23,11 +23,13 @@ const { universities } = vi.hoisted(() => ({
 vi.mock('@/api/client', () => ({ api: { universities } }));
 
 vi.mock('@/lib/store', () => ({
-  useStore: () => ({ results: [row, ...additionalRows], summary, shortlist: null, decide, saveNotes, rerank, startRun, collectDocuments, refreshResults }),
+  useStore: () => ({ run, results: resultOverride ?? [row, ...additionalRows], summary, shortlist: null, decide, saveNotes, rerank, startRun, collectDocuments, refreshResults }),
 }));
 
 let row: ProgramResult;
 let additionalRows: ProgramResult[];
+let run: RunView | null;
+let resultOverride: ProgramResult[] | null;
 // The filters are built from the summary the API returns, not from the rows.
 const summary = {
   total: 1,
@@ -73,6 +75,8 @@ beforeEach(() => {
   saveNotes.mockClear();
   for (const action of [rerank, startRun, collectDocuments, refreshResults, universities]) action.mockClear();
   additionalRows = [];
+  run = null;
+  resultOverride = null;
   row = makeRow();
 });
 
@@ -358,5 +362,157 @@ describe('visible active filters', () => {
     expect(screen.getByText('Showing 2 of 2 results from this research run')).toBeInTheDocument();
     expect([row.user_decision, additionalRows[0]!.user_decision]).toEqual(decisions);
     expect(decide).not.toHaveBeenCalled();
+  });
+});
+
+
+describe('research recovery in Find', () => {
+  function makeRun(overrides: Partial<RunView> = {}): RunView {
+    return {
+      id: 'run-1', profile_id: 'profile-1', stage: 'assessment', demo_mode: false,
+      cancelled: false, progress: 0.5, candidates_found: 1, programs_verified: 0,
+      pages_checked: 1, pages_failed: 0, claims_recorded: 0, results_count: 0,
+      decided_count: 0, stages: [], errors: [], retry_urls: [], settings: {},
+      created_at: '2026-10-09T00:00:00Z', started_at: null, finished_at: null,
+      job_running: false, job_error: '', job_id: 'job-1', job_status: null,
+      job_attempts: 1, candidate_limit: 10, verify_limit: 10, fetch_tiers: {},
+      stale: false, worker_id: null, heartbeat_at: null, recovery_count: 0,
+      ...overrides,
+    };
+  }
+
+  function expectNoResearchMutation() {
+    for (const action of [decide, saveNotes, rerank, startRun, collectDocuments, refreshResults]) {
+      expect(action).not.toHaveBeenCalled();
+    }
+  }
+
+  it.each([
+    ['failed stage', { stage: 'failed' }],
+    ['retryable stage', { stage: 'retryable_failed' }],
+    ['cancelled stage', { stage: 'cancelled' }],
+    ['cancelled flag despite a running job', { cancelled: true, job_status: 'running' }],
+    ['stale despite a running job', { stale: true, job_running: true }],
+    ['dead job', { job_status: 'dead' }],
+    ['failed job', { job_status: 'failed' }],
+    ['cancelled job', { job_status: 'cancelled' }],
+  ] satisfies [string, Partial<RunView>][])('opens Progress for empty %s without starting work', async (_label, state) => {
+    resultOverride = [];
+    run = makeRun(state);
+    const onStart = vi.fn();
+    const onProgress = vi.fn();
+    render(<ShortlistScreen onStart={onStart} onProgress={onProgress} />);
+    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
+    expect(screen.getByText('Research needs attention.')).toBeInTheDocument();
+    expect(screen.getByText(/does not establish that no programmes match/)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Start research/ })).not.toBeInTheDocument();
+    expect(onProgress).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: 'View research progress' }));
+    expect(onProgress).toHaveBeenCalledOnce();
+    expect(onStart).not.toHaveBeenCalled();
+    expectNoResearchMutation();
+  });
+
+  it.each(['awaiting_user_decision', 'completed'] as const)('reviews an empty %s run without claiming absence', async (stage) => {
+    resultOverride = [];
+    run = makeRun({ stage, job_status: 'succeeded' });
+    const onStart = vi.fn();
+    const onProgress = vi.fn();
+    render(<ShortlistScreen onStart={onStart} onProgress={onProgress} />);
+    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
+    expect(screen.getByText('Review your research findings.')).toBeInTheDocument();
+    expect(screen.getByText(/does not establish that no programmes match/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'View research progress' }));
+    expect(onProgress).toHaveBeenCalledOnce();
+    expect(onStart).not.toHaveBeenCalled();
+    expectNoResearchMutation();
+  });
+
+  it.each(['queued', 'running'] as const)('shows progress for an empty %s job instead of a second start', async (job_status) => {
+    resultOverride = [];
+    run = makeRun({ job_status });
+    const onStart = vi.fn();
+    const onProgress = vi.fn();
+    render(<ShortlistScreen onStart={onStart} onProgress={onProgress} />);
+    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
+    expect(screen.getByText('Research is in progress.')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Start research/ })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'View research progress' }));
+    expect(onProgress).toHaveBeenCalledOnce();
+    expect(onStart).not.toHaveBeenCalled();
+    expectNoResearchMutation();
+  });
+
+  it('shows an honest empty-run notice without an inert callback button', async () => {
+    resultOverride = [];
+    run = makeRun({ stale: true });
+    render(<ShortlistScreen />);
+    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
+    expect(screen.getByText('Research needs attention.')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'View research progress' })).not.toBeInTheDocument();
+    expectNoResearchMutation();
+  });
+
+  it('keeps the existing Start route only when no run exists', async () => {
+    resultOverride = [];
+    const onStart = vi.fn();
+    render(<ShortlistScreen onStart={onStart} onProgress={vi.fn()} />);
+    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
+    expect(screen.getByText('No results yet')).toBeInTheDocument();
+    expect(onStart).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: /Start research/ }));
+    expect(onStart).toHaveBeenCalledOnce();
+    expectNoResearchMutation();
+  });
+
+  it('retains partial rows, filters, compare, unsaved notes and unknowns when the run stops', async () => {
+    row = makeRow({ user_decision: 'maybe', user_notes: 'Saved note', eligibility: 'NEEDS_OFFICIAL_CLARIFICATION', best_funding_classification: 'UNKNOWN' });
+    additionalRows = [makeRow({ id: 'result-2', university: 'Canadian Example', country: 'Canada' })];
+    const original = JSON.stringify([row, ...additionalRows]);
+    run = makeRun({ job_status: 'running', results_count: 2 });
+    const onProgress = vi.fn();
+    const { rerender } = render(<ShortlistScreen onProgress={onProgress} />);
+    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
+    expect(screen.getByText('Research is in progress.')).toBeInTheDocument();
+    fireEvent.click(within(screen.getByTestId('card-result-1')).getByRole('button', { name: 'Compare' }));
+    fireEvent.change(screen.getByLabelText('Sort by'), { target: { value: 'university' } });
+    fireEvent.change(screen.getByPlaceholderText('Search universities, programmes or countries…'), { target: { value: 'Groningen' } });
+    fireEvent.click(screen.getByRole('tab', { name: 'Saved' }));
+    fireEvent.change(screen.getByLabelText('Country'), { target: { value: 'Netherlands' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Edit note' }));
+    fireEvent.change(screen.getByTestId('note-input-result-1'), { target: { value: 'Unsaved housing question' } });
+    run = makeRun({ stage: 'retryable_failed', job_status: 'failed', results_count: 2 });
+    rerender(<ShortlistScreen onProgress={onProgress} />);
+    expect(screen.getByText('Research needs attention.')).toBeInTheDocument();
+    expect(screen.getByTestId('card-result-1')).toBeInTheDocument();
+    expect(screen.queryByTestId('card-result-2')).not.toBeInTheDocument();
+    expect(screen.getByText('Showing 1 of 2 results from this research run')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Search universities, programmes or countries…')).toHaveValue('Groningen');
+    expect(screen.getByRole('tab', { name: 'Saved' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByLabelText('Country')).toHaveValue('Netherlands');
+    expect(screen.getByLabelText('Sort by')).toHaveValue('university');
+    expect(screen.getByRole('button', { name: 'Remove filter: Country: Netherlands' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Compare (1)' })).toBeEnabled();
+    expect(screen.getByRole('region', { name: 'Compare selected programmes' })).toHaveTextContent('University of Groningen');
+    expect(screen.getByTestId('note-input-result-1')).toHaveValue('Unsaved housing question');
+    expect(within(screen.getByTestId('card-result-1')).getByText('Unverified')).toBeInTheDocument();
+    expect(within(screen.getByTestId('card-result-1')).getByText('Unknown')).toBeInTheDocument();
+    expect(JSON.stringify([row, ...additionalRows])).toBe(original);
+    fireEvent.click(screen.getByRole('button', { name: 'View research progress' }));
+    expect(onProgress).toHaveBeenCalledOnce();
+    expect(universities).toHaveBeenCalledOnce();
+    expectNoResearchMutation();
+  });
+
+  it('does not turn locally filtered-zero rows into a stopped or empty research run', async () => {
+    run = makeRun({ stage: 'completed', job_status: 'succeeded', results_count: 1 });
+    render(<ShortlistScreen onProgress={vi.fn()} />);
+    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
+    expect(screen.queryByText('Research needs attention.')).not.toBeInTheDocument();
+    fireEvent.change(screen.getByPlaceholderText('Search universities, programmes or countries…'), { target: { value: 'No local match' } });
+    expect(screen.getByText('Showing 0 of 1 result from this research run')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Clear filters' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'View research progress' })).not.toBeInTheDocument();
+    expectNoResearchMutation();
   });
 });

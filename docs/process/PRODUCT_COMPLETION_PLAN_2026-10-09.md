@@ -31,7 +31,7 @@
 доказательство эффективности. Источники конкурентов не заменяют официальные
 университетские страницы для фактов нашего алгоритма.
 
-## Выполняемый первый раунд
+## Первый раунд завершён локально
 
 Ветка `task/product-journey-next-steps`, явный predecessor — Draft #74.
 Корректность исходных чисел и решений пользователя остаётся приоритетом.
@@ -76,13 +76,45 @@ hosted required checks и production NOT RUN.
 [принятие](evidence/product-loop/2026-10-09/final-gates/ACCEPTANCE.json),
 [независимый review](evidence/product-loop/2026-10-09/final-composite-peer/REPORT.md).
 
+## Второй раунд завершён локально
+
+[Draft #77](https://github.com/wpalish/ashyq-apply/pull/77) против `task/product-journey-next-steps`, tested source `c7ece3c0` от clean predecessor
+`312c81ae` / Draft #75. Find сохраняет найденные строки при остановке и предлагает
+явный переход к Progress; пустой результат объясняет неизвестность. Documents
+направляет и Chosen by you, и Considering в Plan по существующему контракту.
+Итого 13 улучшений в 16 уникальных frontend/test путях; текущий increment —
+4 существующих файла и 19 новых meaningful frontend cases.
+
+Свежие doctor 5/5, core 8/8 и один full 13/13 прошли: frontend 301, SQLite 4369
+с coverage 95.28%, те же 4369 ID PostgreSQL, demo 79 PASS + 1 прежний viewport-skip,
+auth 6 PASS, dependency audits без известных vulnerabilities. Независимые native
+A efab8f76 и finite UI/cleanup A dbc9244b приняли сохранённые доказательства.
+Пять synthetic критериев desktop/phone390/reload выполнены C872aba86; owned preview
+и вкладка закрыты, ports5173/8099 свободны. Completed stage_state сохранён в
+cancelled fixture: это доказательство маршрута/видимости, не настоящей midrun
+Worker остановки. Phone использует обычную вертикальную прокрутку.
+
+Оригинальный manifest/initial full SHA7d2 сохранены; E2E регенерировал exact38PNG,
+остальные10255 declared paths точны. Первый preview guard отказ сохранён; отдельный
+helper принимает только этот hash-bound output delta. Текущий физический whole-tree
+не объявляется равным initial SHA. Никаких app/test изменений для preview не было.
+[Точное принятие](evidence/product-loop/2026-10-09/recovery-round/ACCEPTANCE.json)
+и [актуальные цифры](PRODUCT_PROGRESS_2026-10-09.md).
+
+Следующий отдельный этап — личные серверные отметки подготовки. B7b528036 и
+A78236ea7 приняли только DESIGN_ONLY / NOT_SOURCE_READY: native user/case/result
+ownership и entitlement, полная версия checklist, itemrefs до UI sort, atomic CAS,
+защита late responses/logout, requester-only export/erase. Старые не scoped
+localStorage ticks автоматически не импортируются. Реализация, migration-runtime,
+cross-device/auth/isolation/concurrency проверки ещё не выполнены.
+
 ## Последующие небольшие раунды
 
 | Приоритет | Изменение | Условие принятия |
 |---|---|---|
 | Принято локально | Активные фильтры над Find, понятные статусы выбора в Plan | Снятие одного фильтра не меняет остальные/решения/заметки; Clear действительно возвращает все; Chosen by you не читается как оффер; unknown сохраняется |
 | Принято локально | Матрица подготовки в Compare | Различает официальную/частичную/несобранную/недоступную документацию, роли школы и рекомендателя, сроки; работает переход к нужной программе/источнику; отсутствие данных не означает «не требуется» |
-| Затем | Find при пустом/частичном остановленном run и согласованная подсказка выбора в ResultDetail | Видна остановка и рабочий путь к Progress; approved и maybe оба допускают сбор документов согласно существующему контракту |
+| Принято локально | Find при пустом/частичном остановленном run и согласованная подсказка выбора в ResultDetail | Видна остановка и рабочий путь к Progress; approved и maybe оба допускают сбор документов согласно существующему контракту |
 | Отдельный этап | Долговечные задачи и отметки готовности по user/case/programme | Сохранение/повторный вход/другое устройство и изоляция владельцев проверены; версия требований учитывается; done не превращается в admissions-ready |
 | Отдельный этап | Очередь действий с расчётным start-by и официальным due date | Неизвестные даты не придуманы; рекомендательное начало подписано отдельно; предыдущий intake не выдаётся за текущий |
 
@@ -96,7 +128,7 @@ hosted required checks и production NOT RUN.
    программе/набору/категории и почему бюджет вычислен или остаётся неизвестным.
    Используем существующие Costs / Requirements / Sources, не вводим новый score.
 2. При остановке и неизвестности есть конкретное действие с объяснением,
-   почему вопрос важен. Ближайший небольшой increment — Find → Progress и
+   почему вопрос важен. Реализован отдельный increment Find → Progress и
    согласованная Documents-подсказка для approved и maybe, без автоповтора.
 3. Подтверждённо сохранённые самоотметки подготовки восстанавливаются на другом
    устройстве и не переходят к новой версии требований автоматически. Это отдельный

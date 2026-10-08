@@ -1,0 +1,49 @@
+{
+  "created_at": "2026-10-08T22:53:08.843308+00:00",
+  "status": "READY_FOR_INDEPENDENT_REVIEW_NOT_APPLIED",
+  "source_paths": {
+    "frontend/src/screens/ShortlistScreen.test.tsx": {
+      "sha256": "15bed9737a272a27d5498baf8dc0f6c8e219a99652a4d466d96945b571c52bd6",
+      "bytes": 26010
+    },
+    "frontend/src/screens/ShortlistScreen.tsx": {
+      "sha256": "6d06c0b9dee3abaccac74f91f73612dea42670da93278f13d061df0724467f62",
+      "bytes": 33547
+    },
+    "frontend/src/components/ResultDetail.scope.test.tsx": {
+      "sha256": "5df2df5ace1b7f6fdf3c149faacb6516eafee391792741e99574b3ce2a00de6b",
+      "bytes": 6602
+    },
+    "frontend/src/components/ResultDetail.tsx": {
+      "sha256": "932d1b6f4b446d484e249f5511596958b6c653ee338a20698241b06a7913433e",
+      "bytes": 23706
+    }
+  },
+  "selected_plaintext_before_receipt": {
+    "files": 41,
+    "bytes": 935839
+  },
+  "validation": {
+    "on_pass": 54,
+    "off_pass": 38,
+    "off_expected_red": 16,
+    "old_cases": 35,
+    "new_cases": 19,
+    "fixture_errors_final": 0,
+    "skip": 0,
+    "typecheck_exit": 0,
+    "selected_lint_exit": 0,
+    "old_templates_unchanged": 27,
+    "network_or_listen_or_DNS_attempts": 0,
+    "primary_frontend_hashes_unchanged": 98,
+    "STOP_unchanged": true
+  },
+  "history": "Initial new singular expectation failure retained unchanged; see correction-history.json",
+  "not_run": [
+    "Primary apply",
+    "Native core/full",
+    "Browser/reload/E2E",
+    "Backend/SQL/API/auth",
+    "Live/provider/model/quality/production"
+  ]
+}

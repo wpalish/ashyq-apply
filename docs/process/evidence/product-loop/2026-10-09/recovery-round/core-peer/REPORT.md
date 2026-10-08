@@ -1,0 +1,11 @@
+# Saved-only own core verification
+
+**Own core `20261008T230542Z-check-07efc2be` is PASSED8/8**, every recorded exit0. Saved source head is `c7ece3c0a057a4fe6a8b8b5e43c3b17c8338cbd4`, tree `0a0497a352655630d11985ecbe577fcc1413c8a7e8a27cc4cb9523c2fca0db23`; summary source object equals the source manifest and the native sorted-map digest recipe matches. Metadata records only HANDOFF modified at collection.
+
+Actual saved SQLite output reports **4369 passed, 32 warnings, 497.15s**, **95.28% coverage** (not predecessor95.27). JUnit has 4369 distinct IDs, zero failure/error/skip and exactly the previous accepted 4369 identities. Frontend reports **301 passed across 30 files**, including the 19 new recovery cases; this is not 301+54+56 unique experiments. Expected ErrorBoundary render-exploded stderr is retained in the original log. Mypy checks 386 source files. Frontend typecheck/lint/build and Ruff/format exit0. Core includes no PostgreSQL, E2E/auth, dependency audit, container, hosted CI or production acceptance.
+
+All **16 applied pins** match current files, the physical core snapshot and its map. The expected full snapshot `20261008T231450Z-check-c4cb266b` is present with the same head and all16 physical pins; its whole-tree digest `7d2aac5dd661b438445f72d1b4dbb4ad50a80ab06f46ce8835b6cc971cc552eb` differs only because HANDOFF metadata changed. **Full is pending; no full stage/terminal success is asserted.**
+
+Proposed archive allowlist contains exactly **11 originals / 5,013,720 bytes**: summary, source manifest, SQLite JUnit and eight stage logs. Copy every listed file by exact SHA/size; exclude runtime checks.db, source/dependency snapshots, caches/env/private files and unrelated checkout runs. Original copies are not independent experiments. Source-selection predicate violations are zero; STOP65b5 and all30 prior A selected files remain unchanged.
+
+This peer only parsed saved JSON/JUnit/logs and hashed source/artifact bytes. No app import, checks/test execution, browser/preview/ports, SQL/Git/network/provider/model, heldout/gold/scorer semantic read or primary edit. Root owns the running full and future viewport evidence. Await their actual saved outputs before final closure; no product/search completion claim.

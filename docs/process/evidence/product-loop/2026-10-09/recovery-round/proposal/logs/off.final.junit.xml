@@ -1,0 +1,5095 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="54" failures="16" errors="0" time="4.740601125">
+    <testsuite name="src/components/ResultDetail.scope.test.tsx" timestamp="2026-10-08T22:51:03.294Z" hostname="iMac-Aliser.local" tests="8" failures="2" errors="0" skipped="0" time="0.107489166">
+        <testcase classname="src/components/ResultDetail.scope.test.tsx" name="a requirement check &gt; shows the scope the page published it under" time="0.023427958">
+        </testcase>
+        <testcase classname="src/components/ResultDetail.scope.test.tsx" name="a requirement check &gt; says nothing when the page did not say" time="0.004044208">
+        </testcase>
+        <testcase classname="src/components/ResultDetail.scope.test.tsx" name="an award &gt; says when an admission offer must come first" time="0.011244458">
+        </testcase>
+        <testcase classname="src/components/ResultDetail.scope.test.tsx" name="an award &gt; says when it is decided on financial need" time="0.004753917">
+        </testcase>
+        <testcase classname="src/components/ResultDetail.scope.test.tsx" name="an award &gt; stays quiet when the award page did not say" time="0.007804542">
+        </testcase>
+        <testcase classname="src/components/ResultDetail.scope.test.tsx" name="Documents for saved programmes &gt; explains collection in Plan for approved without asking for another approval" time="0.008481875">
+            <failure message="Unable to find an element with the text: /Documents are collected for programmes marked “Chosen by you” or “Considering” in Plan/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;detail&quot;[39m
+      [33mdata-testid[39m=[32m&quot;detail-result-1&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;header[39m
+        [33mclass[39m=[32m&quot;programme-hero&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;home-eyebrow&quot;[39m
+          [36m&gt;[39m
+            [0mPROGRAMME DETAILS · [0m
+            [0mNetherlands[0m
+          [36m&lt;/span&gt;[39m
+          [36m&lt;h2&gt;[39m
+            [0mDelft University of Technology[0m
+          [36m&lt;/h2&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;programme-hero__programme&quot;[39m
+          [36m&gt;[39m
+            [0mBSc Computer Science[0m
+          [36m&lt;/p&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;programme-hero__place&quot;[39m
+          [36m&gt;[39m
+            [0mDelft[0m
+            [0m, [0m
+            [0mNetherlands[0m
+            [0m · Bachelor[0m
+          [36m&lt;/p&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;programme-hero__status&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;home-eyebrow&quot;[39m
+          [36m&gt;[39m
+            [0mYOUR ASSESSMENT[0m
+          [36m&lt;/span&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip chip--warn &quot;[39m
+            [33mtitle[39m=[32m&quot;Nothing is failing, but something is still outstanding — a test, a document, or a profile field.&quot;[39m
+          [36m&gt;[39m
+            [0mPending[0m
+          [36m&lt;/span&gt;[39m
+          [36m&lt;p&gt;[39m
+            [0mEligibility is separate from admissions fit. Neither is a probability of admission.[0m
+          [36m&lt;/p&gt;[39m
+        [36m&lt;/div&gt;[39m
+      [36m&lt;/header&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;programme-facts&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;span&gt;[39m
+            [0mFunding[0m
+          [36m&lt;/span&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip  &quot;[39m
+            [33mtitle[39m=[32m&quot;Not enough official information to classify.&quot;[39m
+          [36m&gt;[39m
+            [0mUnknown[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;span&gt;[39m
+            [0mRemaining per year[0m
+          [36m&lt;/span&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mNot enough comparable data[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;span&gt;[39m
+            [0mDeadline[0m
+          [36m&lt;/span&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mNot confirmed[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;span&gt;[39m
+            [0mEvidence[0m
+          [36m&lt;/span&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0m0[0m
+            [0m conflict[0m
+            [0ms[0m
+            [0m · [0m
+            [0m0[0m
+            [0m open question[0m
+            [0ms[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33maria-label[39m=[32m&quot;Delft University of Technology details&quot;[39m
+        [33mclass[39m=[32m&quot;tabs&quot;[39m
+        [33mrole[39m=[32m&quot;tablist&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;button[39m
+          [33maria-selected[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;tab&quot;[39m
+          [33mdata-testid[39m=[32m&quot;tab-requirements&quot;[39m
+          [33mrole[39m=[32m&quot;tab&quot;[39m
+        [36m&gt;[39m
+          [0mRequirements[0m
+        [36m&lt;/button&gt;[39m
+        [36m&lt;button[39m
+          [33maria-selected[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;tab&quot;[39m
+          [33mdata-testid[39m=[32m&quot;tab-funding&quot;[39m
+          [33mrole[39m=[32m&quot;tab&quot;[39m
+        [36m&gt;[39m
+          [0mFunding[0m
+        [36m&lt;/button&gt;[39m
+        [36m&lt;button[39m
+          [33maria-selected[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;tab&quot;[39m
+          [33mdata-testid[39m=[32m&quot;tab-costs&quot;[39m
+          [33mrole[39m=[32m&quot;tab&quot;[39m
+        [36m&gt;[39m
+          [0mCosts[0m
+        [36m&lt;/button&gt;[39m
+        [36m&lt;button[39m
+          [33maria-selected[39m=[32m&quot;true&quot;[39m
+          [33mclass[39m=[32m&quot;tab&quot;[39m
+          [33mdata-testid[39m=[32m&quot;tab-documents&quot;[39m
+          [33mrole[39m=[32m&quot;tab&quot;[39m
+        [36m&gt;[39m
+          [0mDocuments[0m
+        [36m&lt;/button&gt;[39m
+        [36m&lt;button[39m
+          [33maria-selected[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;tab&quot;[39m
+          [33mdata-testid[39m=[32m&quot;tab-score&quot;[39m
+          [33mrole[39m=[32m&quot;tab&quot;[39m
+        [36m&gt;[39m
+          [0mWhy this order[0m
+        [36m&lt;/button&gt;[39m
+        [36m&lt;button[39m
+          [33maria-selected[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;tab&quot;[39m
+          [33mdata-testid[39m=[32m&quot;tab-sources&quot;[39m
+          [33mrole[39m=[32m&quot;tab&quot;[39m
+        [36m&gt;[39m
+          [0mSources &amp; evidence[0m
+        [36m&lt;/button&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;notice notice--info&quot;[39m
+        [33mrole[39m=[32m&quot;note&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div&gt;[39m
+          [0mDocuments are collected only for programmes you approve — it is the expensive step, so it runs on your shortlist rather than on all [0m
+          [0mcandidates. Approve this row, then run “Collect documents”.[0m
+        [36m&lt;/div&gt;[39m
+      [36m&lt;/div&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element with the text: /Documents are collected for programmes marked “Chosen by you” or “Considering” in Plan/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;detail&quot;
+      data-testid=&quot;detail-result-1&quot;
+    &gt;
+      &lt;header
+        class=&quot;programme-hero&quot;
+      &gt;
+        &lt;div&gt;
+          &lt;span
+            class=&quot;home-eyebrow&quot;
+          &gt;
+            PROGRAMME DETAILS · 
+            Netherlands
+          &lt;/span&gt;
+          &lt;h2&gt;
+            Delft University of Technology
+          &lt;/h2&gt;
+          &lt;p
+            class=&quot;programme-hero__programme&quot;
+          &gt;
+            BSc Computer Science
+          &lt;/p&gt;
+          &lt;p
+            class=&quot;programme-hero__place&quot;
+          &gt;
+            Delft
+            , 
+            Netherlands
+             · Bachelor
+          &lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div
+          class=&quot;programme-hero__status&quot;
+        &gt;
+          &lt;span
+            class=&quot;home-eyebrow&quot;
+          &gt;
+            YOUR ASSESSMENT
+          &lt;/span&gt;
+          &lt;span
+            class=&quot;chip chip--warn &quot;
+            title=&quot;Nothing is failing, but something is still outstanding — a test, a document, or a profile field.&quot;
+          &gt;
+            Pending
+          &lt;/span&gt;
+          &lt;p&gt;
+            Eligibility is separate from admissions fit. Neither is a probability of admission.
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/header&gt;
+      &lt;div
+        class=&quot;programme-facts&quot;
+      &gt;
+        &lt;div&gt;
+          &lt;span&gt;
+            Funding
+          &lt;/span&gt;
+          &lt;span
+            class=&quot;chip  &quot;
+            title=&quot;Not enough official information to classify.&quot;
+          &gt;
+            Unknown
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;span&gt;
+            Remaining per year
+          &lt;/span&gt;
+          &lt;strong&gt;
+            Not enough comparable data
+          &lt;/strong&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;span&gt;
+            Deadline
+          &lt;/span&gt;
+          &lt;strong&gt;
+            Not confirmed
+          &lt;/strong&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;span&gt;
+            Evidence
+          &lt;/span&gt;
+          &lt;strong&gt;
+            0
+             conflict
+            s
+             · 
+            0
+             open question
+            s
+          &lt;/strong&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        aria-label=&quot;Delft University of Technology details&quot;
+        class=&quot;tabs&quot;
+        role=&quot;tablist&quot;
+      &gt;
+        &lt;button
+          aria-selected=&quot;false&quot;
+          class=&quot;tab&quot;
+          data-testid=&quot;tab-requirements&quot;
+          role=&quot;tab&quot;
+        &gt;
+          Requirements
+        &lt;/button&gt;
+        &lt;button
+          aria-selected=&quot;false&quot;
+          class=&quot;tab&quot;
+          data-testid=&quot;tab-funding&quot;
+          role=&quot;tab&quot;
+        &gt;
+          Funding
+        &lt;/button&gt;
+        &lt;button
+          aria-selected=&quot;false&quot;
+          class=&quot;tab&quot;
+          data-testid=&quot;tab-costs&quot;
+          role=&quot;tab&quot;
+        &gt;
+          Costs
+        &lt;/button&gt;
+        &lt;button
+          aria-selected=&quot;true&quot;
+          class=&quot;tab&quot;
+          data-testid=&quot;tab-documents&quot;
+          role=&quot;tab&quot;
+        &gt;
+          Documents
+        &lt;/button&gt;
+        &lt;button
+          aria-selected=&quot;false&quot;
+          class=&quot;tab&quot;
+          data-testid=&quot;tab-score&quot;
+          role=&quot;tab&quot;
+        &gt;
+          Why this order
+        &lt;/button&gt;
+        &lt;button
+          aria-selected=&quot;false&quot;
+          class=&quot;tab&quot;
+          data-testid=&quot;tab-sources&quot;
+          role=&quot;tab&quot;
+        &gt;
+          Sources &amp; evidence
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;notice notice--info&quot;
+        role=&quot;note&quot;
+      &gt;
+        &lt;div&gt;
+          Documents are collected only for programmes you approve — it is the expensive step, so it runs on your shortlist rather than on all 
+          candidates. Approve this row, then run “Collect documents”.
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/ResultDetail.scope.test.tsx:174:19
+            </failure>
+        </testcase>
+        <testcase classname="src/components/ResultDetail.scope.test.tsx" name="Documents for saved programmes &gt; explains collection in Plan for maybe without asking for another approval" time="0.004354208">
+            <failure message="Unable to find an element with the text: /Documents are collected for programmes marked “Chosen by you” or “Considering” in Plan/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;detail&quot;[39m
+      [33mdata-testid[39m=[32m&quot;detail-result-1&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;header[39m
+        [33mclass[39m=[32m&quot;programme-hero&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;home-eyebrow&quot;[39m
+          [36m&gt;[39m
+            [0mPROGRAMME DETAILS · [0m
+            [0mNetherlands[0m
+          [36m&lt;/span&gt;[39m
+          [36m&lt;h2&gt;[39m
+            [0mDelft University of Technology[0m
+          [36m&lt;/h2&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;programme-hero__programme&quot;[39m
+          [36m&gt;[39m
+            [0mBSc Computer Science[0m
+          [36m&lt;/p&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;programme-hero__place&quot;[39m
+          [36m&gt;[39m
+            [0mDelft[0m
+            [0m, [0m
+            [0mNetherlands[0m
+            [0m · Bachelor[0m
+          [36m&lt;/p&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;programme-hero__status&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;home-eyebrow&quot;[39m
+          [36m&gt;[39m
+            [0mYOUR ASSESSMENT[0m
+          [36m&lt;/span&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip chip--warn &quot;[39m
+            [33mtitle[39m=[32m&quot;Nothing is failing, but something is still outstanding — a test, a document, or a profile field.&quot;[39m
+          [36m&gt;[39m
+            [0mPending[0m
+          [36m&lt;/span&gt;[39m
+          [36m&lt;p&gt;[39m
+            [0mEligibility is separate from admissions fit. Neither is a probability of admission.[0m
+          [36m&lt;/p&gt;[39m
+        [36m&lt;/div&gt;[39m
+      [36m&lt;/header&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;programme-facts&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;span&gt;[39m
+            [0mFunding[0m
+          [36m&lt;/span&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip  &quot;[39m
+            [33mtitle[39m=[32m&quot;Not enough official information to classify.&quot;[39m
+          [36m&gt;[39m
+            [0mUnknown[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;span&gt;[39m
+            [0mRemaining per year[0m
+          [36m&lt;/span&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mNot enough comparable data[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;span&gt;[39m
+            [0mDeadline[0m
+          [36m&lt;/span&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mNot confirmed[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;span&gt;[39m
+            [0mEvidence[0m
+          [36m&lt;/span&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0m0[0m
+            [0m conflict[0m
+            [0ms[0m
+            [0m · [0m
+            [0m0[0m
+            [0m open question[0m
+            [0ms[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33maria-label[39m=[32m&quot;Delft University of Technology details&quot;[39m
+        [33mclass[39m=[32m&quot;tabs&quot;[39m
+        [33mrole[39m=[32m&quot;tablist&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;button[39m
+          [33maria-selected[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;tab&quot;[39m
+          [33mdata-testid[39m=[32m&quot;tab-requirements&quot;[39m
+          [33mrole[39m=[32m&quot;tab&quot;[39m
+        [36m&gt;[39m
+          [0mRequirements[0m
+        [36m&lt;/button&gt;[39m
+        [36m&lt;button[39m
+          [33maria-selected[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;tab&quot;[39m
+          [33mdata-testid[39m=[32m&quot;tab-funding&quot;[39m
+          [33mrole[39m=[32m&quot;tab&quot;[39m
+        [36m&gt;[39m
+          [0mFunding[0m
+        [36m&lt;/button&gt;[39m
+        [36m&lt;button[39m
+          [33maria-selected[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;tab&quot;[39m
+          [33mdata-testid[39m=[32m&quot;tab-costs&quot;[39m
+          [33mrole[39m=[32m&quot;tab&quot;[39m
+        [36m&gt;[39m
+          [0mCosts[0m
+        [36m&lt;/button&gt;[39m
+        [36m&lt;button[39m
+          [33maria-selected[39m=[32m&quot;true&quot;[39m
+          [33mclass[39m=[32m&quot;tab&quot;[39m
+          [33mdata-testid[39m=[32m&quot;tab-documents&quot;[39m
+          [33mrole[39m=[32m&quot;tab&quot;[39m
+        [36m&gt;[39m
+          [0mDocuments[0m
+        [36m&lt;/button&gt;[39m
+        [36m&lt;button[39m
+          [33maria-selected[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;tab&quot;[39m
+          [33mdata-testid[39m=[32m&quot;tab-score&quot;[39m
+          [33mrole[39m=[32m&quot;tab&quot;[39m
+        [36m&gt;[39m
+          [0mWhy this order[0m
+        [36m&lt;/button&gt;[39m
+        [36m&lt;button[39m
+          [33maria-selected[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;tab&quot;[39m
+          [33mdata-testid[39m=[32m&quot;tab-sources&quot;[39m
+          [33mrole[39m=[32m&quot;tab&quot;[39m
+        [36m&gt;[39m
+          [0mSources &amp; evidence[0m
+        [36m&lt;/button&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;notice notice--info&quot;[39m
+        [33mrole[39m=[32m&quot;note&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div&gt;[39m
+          [0mDocuments are collected only for programmes you approve — it is the expensive step, so it runs on your shortlist rather than on all [0m
+          [0mcandidates. Approve this row, then run “Collect documents”.[0m
+        [36m&lt;/div&gt;[39m
+      [36m&lt;/div&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element with the text: /Documents are collected for programmes marked “Chosen by you” or “Considering” in Plan/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;detail&quot;
+      data-testid=&quot;detail-result-1&quot;
+    &gt;
+      &lt;header
+        class=&quot;programme-hero&quot;
+      &gt;
+        &lt;div&gt;
+          &lt;span
+            class=&quot;home-eyebrow&quot;
+          &gt;
+            PROGRAMME DETAILS · 
+            Netherlands
+          &lt;/span&gt;
+          &lt;h2&gt;
+            Delft University of Technology
+          &lt;/h2&gt;
+          &lt;p
+            class=&quot;programme-hero__programme&quot;
+          &gt;
+            BSc Computer Science
+          &lt;/p&gt;
+          &lt;p
+            class=&quot;programme-hero__place&quot;
+          &gt;
+            Delft
+            , 
+            Netherlands
+             · Bachelor
+          &lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div
+          class=&quot;programme-hero__status&quot;
+        &gt;
+          &lt;span
+            class=&quot;home-eyebrow&quot;
+          &gt;
+            YOUR ASSESSMENT
+          &lt;/span&gt;
+          &lt;span
+            class=&quot;chip chip--warn &quot;
+            title=&quot;Nothing is failing, but something is still outstanding — a test, a document, or a profile field.&quot;
+          &gt;
+            Pending
+          &lt;/span&gt;
+          &lt;p&gt;
+            Eligibility is separate from admissions fit. Neither is a probability of admission.
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/header&gt;
+      &lt;div
+        class=&quot;programme-facts&quot;
+      &gt;
+        &lt;div&gt;
+          &lt;span&gt;
+            Funding
+          &lt;/span&gt;
+          &lt;span
+            class=&quot;chip  &quot;
+            title=&quot;Not enough official information to classify.&quot;
+          &gt;
+            Unknown
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;span&gt;
+            Remaining per year
+          &lt;/span&gt;
+          &lt;strong&gt;
+            Not enough comparable data
+          &lt;/strong&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;span&gt;
+            Deadline
+          &lt;/span&gt;
+          &lt;strong&gt;
+            Not confirmed
+          &lt;/strong&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;span&gt;
+            Evidence
+          &lt;/span&gt;
+          &lt;strong&gt;
+            0
+             conflict
+            s
+             · 
+            0
+             open question
+            s
+          &lt;/strong&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        aria-label=&quot;Delft University of Technology details&quot;
+        class=&quot;tabs&quot;
+        role=&quot;tablist&quot;
+      &gt;
+        &lt;button
+          aria-selected=&quot;false&quot;
+          class=&quot;tab&quot;
+          data-testid=&quot;tab-requirements&quot;
+          role=&quot;tab&quot;
+        &gt;
+          Requirements
+        &lt;/button&gt;
+        &lt;button
+          aria-selected=&quot;false&quot;
+          class=&quot;tab&quot;
+          data-testid=&quot;tab-funding&quot;
+          role=&quot;tab&quot;
+        &gt;
+          Funding
+        &lt;/button&gt;
+        &lt;button
+          aria-selected=&quot;false&quot;
+          class=&quot;tab&quot;
+          data-testid=&quot;tab-costs&quot;
+          role=&quot;tab&quot;
+        &gt;
+          Costs
+        &lt;/button&gt;
+        &lt;button
+          aria-selected=&quot;true&quot;
+          class=&quot;tab&quot;
+          data-testid=&quot;tab-documents&quot;
+          role=&quot;tab&quot;
+        &gt;
+          Documents
+        &lt;/button&gt;
+        &lt;button
+          aria-selected=&quot;false&quot;
+          class=&quot;tab&quot;
+          data-testid=&quot;tab-score&quot;
+          role=&quot;tab&quot;
+        &gt;
+          Why this order
+        &lt;/button&gt;
+        &lt;button
+          aria-selected=&quot;false&quot;
+          class=&quot;tab&quot;
+          data-testid=&quot;tab-sources&quot;
+          role=&quot;tab&quot;
+        &gt;
+          Sources &amp; evidence
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;notice notice--info&quot;
+        role=&quot;note&quot;
+      &gt;
+        &lt;div&gt;
+          Documents are collected only for programmes you approve — it is the expensive step, so it runs on your shortlist rather than on all 
+          candidates. Approve this row, then run “Collect documents”.
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/ResultDetail.scope.test.tsx:174:19
+            </failure>
+        </testcase>
+        <testcase classname="src/components/ResultDetail.scope.test.tsx" name="Documents for saved programmes &gt; continues to show the returned checklist rather than the no-checklist hint" time="0.041661667">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/ShortlistScreen.test.tsx" timestamp="2026-10-08T22:51:03.296Z" hostname="iMac-Aliser.local" tests="46" failures="14" errors="0" skipped="0" time="4.633111959">
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; asks for a reason instead of silently sending an empty one" time="0.047591208">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; records the reason typed by the applicant" time="0.028690125">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; offers the common reasons as one click" time="0.035605791">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; keeps the reason optional: saying No with nothing typed still works" time="0.015888667">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; shows the stored reason on a row already rejected" time="0.017265416">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; does not ask for a reason when approving" time="0.011654375">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="filter labels &gt; offers readable statuses, not raw enum tokens" time="0.01009">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="filter labels &gt; keeps the enum as the option value, so filtering still works" time="0.008556042">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="Find search &gt; removes a saved approved programme instead of changing its decision silently" time="0.0389345">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="Find search &gt; removes a saved maybe programme instead of changing its decision silently" time="0.014628375">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="Find search &gt; filters by university, programme and country without changing the saved results" time="0.010372833">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="Find search &gt; opens a source-backed result and compares only selected programmes" time="0.025819792">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="notes &gt; saves a note without deciding the row" time="0.017488959">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="the v2 ranking on the shortlist &gt; shows the match, what is confirmed, and the bucket" time="0.015589083">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="the v2 ranking on the shortlist &gt; never presents the match as a probability" time="0.007758584">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="the v2 ranking on the shortlist &gt; moves an unaffordable row out of the ranked table into its own section" time="0.006787625">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="the v2 ranking on the shortlist &gt; keeps a row assessed before v2 in the ranked table" time="0.006044666">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; keeps a readable removal button outside collapsed Filters and shows filtered / total" time="0.032544959">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only Search: Groningen and leaves the other active filters in place" time="0.065365417">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only List: Saved and leaves the other active filters in place" time="0.06225">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only Country: Netherlands and leaves the other active filters in place" time="0.058621209">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only Eligibility: Met and leaves the other active filters in place" time="0.051349417">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only Funding: Full ride and leaves the other active filters in place" time="0.057397417">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only Hide rejected and leaves the other active filters in place" time="0.047180709">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; clears all filters locally while preserving sort, compare, notes and unknown evidence" time="0.522310458">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; uses the same local reset from the no-match recovery action" time="0.02632325">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; does not describe whitespace-only search as an active filter" time="0.009008667">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; makes Priority list context removable without changing decisions" time="0.019523459">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; makes Saved list context removable without changing decisions" time="0.029305292">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; makes Exploring list context removable without changing decisions" time="0.013971375">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; opens Progress for empty failed stage without starting work" time="0.210251583">
+            <failure message="Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;find-page&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;screen__head&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+        [36m&gt;[39m
+          [0mFIND YOUR PATH[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;h1[39m
+          [33mclass[39m=[32m&quot;screen__title&quot;[39m
+        [36m&gt;[39m
+          [0mFind your best [0m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;find-yellow&quot;[39m
+          [36m&gt;[39m
+            [0mmatches.[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/h1&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__lede&quot;[39m
+        [36m&gt;[39m
+          [0mResearch begins with your profile and preferences.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;find-empty&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;empty&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;empty__title&quot;[39m
+          [36m&gt;[39m
+            [0mNo results yet[0m
+          [36m&lt;/p&gt;[39m
+          [0mStart research to find programmes supported by available sources.[0m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;button[39m
+          [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+          [33mtype[39m=[32m&quot;button&quot;[39m
+        [36m&gt;[39m
+          [0mStart research →[0m
+        [36m&lt;/button&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;section[39m
+        [33maria-label[39m=[32m&quot;University catalogue&quot;[39m
+        [33mclass[39m=[32m&quot;university-catalogue&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-heading&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;p[39m
+              [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+            [36m&gt;[39m
+              [0mEXPLORE UNIVERSITIES[0m
+            [36m&lt;/p&gt;[39m
+            [36m&lt;h2&gt;[39m
+              [0mFind a place to begin.[0m
+            [36m&lt;/h2&gt;[39m
+            [36m&lt;p&gt;[39m
+              [0mBrowse [0m
+              [0m0[0m
+              [0m universities, even when live research is unavailable. Select up to 5 to check against your profile.[0m
+            [36m&lt;/p&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip&quot;[39m
+          [36m&gt;[39m
+            [0m0[0m
+            [0m imported universities[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-tools&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mUniversity, city or country[0m
+            [36m&lt;input[39m
+              [33mplaceholder[39m=[32m&quot;Try MIT, Canada or Groningen&quot;[39m
+              [33mtype[39m=[32m&quot;search&quot;[39m
+              [33mvalue[39m=[32m&quot;&quot;[39m
+            [36m/&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mCountry or region[0m
+            [36m&lt;select&gt;[39m
+              [36m&lt;option[39m
+                [33mvalue[39m=[32m&quot;&quot;[39m
+              [36m&gt;[39m
+                [0mAll countries[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mEurope[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAsia[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mNorth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mSouth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mOceania[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAfrica[0m
+              [36m&lt;/option&gt;[39m
+            [36m&lt;/select&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;button[39m
+            [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+            [33mtype[39m=[32m&quot;button&quot;[39m
+          [36m&gt;[39m
+            [0mComplete profile to research[0m
+          [36m&lt;/button&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;catalogue-note&quot;[39m
+        [36m&gt;[39m
+          [0mThese are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;p[39m
+          [33mrole[39m=[32m&quot;status&quot;[39m
+        [36m&gt;[39m
+          [0m0 universities found[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;div[39m
+          [33maria-busy[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;catalogue-grid&quot;[39m
+        [36m/&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mNo universities match these filters. Try another country or name.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/section&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;find-page&quot;
+    &gt;
+      &lt;div
+        class=&quot;screen__head&quot;
+      &gt;
+        &lt;p
+          class=&quot;screen__eyebrow&quot;
+        &gt;
+          FIND YOUR PATH
+        &lt;/p&gt;
+        &lt;h1
+          class=&quot;screen__title&quot;
+        &gt;
+          Find your best 
+          &lt;span
+            class=&quot;find-yellow&quot;
+          &gt;
+            matches.
+          &lt;/span&gt;
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;screen__lede&quot;
+        &gt;
+          Research begins with your profile and preferences.
+        &lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;find-empty&quot;
+      &gt;
+        &lt;div
+          class=&quot;empty&quot;
+        &gt;
+          &lt;p
+            class=&quot;empty__title&quot;
+          &gt;
+            No results yet
+          &lt;/p&gt;
+          Start research to find programmes supported by available sources.
+        &lt;/div&gt;
+        &lt;button
+          class=&quot;btn btn--primary&quot;
+          type=&quot;button&quot;
+        &gt;
+          Start research →
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;section
+        aria-label=&quot;University catalogue&quot;
+        class=&quot;university-catalogue&quot;
+      &gt;
+        &lt;div
+          class=&quot;catalogue-heading&quot;
+        &gt;
+          &lt;div&gt;
+            &lt;p
+              class=&quot;screen__eyebrow&quot;
+            &gt;
+              EXPLORE UNIVERSITIES
+            &lt;/p&gt;
+            &lt;h2&gt;
+              Find a place to begin.
+            &lt;/h2&gt;
+            &lt;p&gt;
+              Browse 
+              0
+               universities, even when live research is unavailable. Select up to 5 to check against your profile.
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;span
+            class=&quot;chip&quot;
+          &gt;
+            0
+             imported universities
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div
+          class=&quot;catalogue-tools&quot;
+        &gt;
+          &lt;label&gt;
+            University, city or country
+            &lt;input
+              placeholder=&quot;Try MIT, Canada or Groningen&quot;
+              type=&quot;search&quot;
+              value=&quot;&quot;
+            /&gt;
+          &lt;/label&gt;
+          &lt;label&gt;
+            Country or region
+            &lt;select&gt;
+              &lt;option
+                value=&quot;&quot;
+              &gt;
+                All countries
+              &lt;/option&gt;
+              &lt;option&gt;
+                Europe
+              &lt;/option&gt;
+              &lt;option&gt;
+                Asia
+              &lt;/option&gt;
+              &lt;option&gt;
+                North America
+              &lt;/option&gt;
+              &lt;option&gt;
+                South America
+              &lt;/option&gt;
+              &lt;option&gt;
+                Oceania
+              &lt;/option&gt;
+              &lt;option&gt;
+                Africa
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/label&gt;
+          &lt;button
+            class=&quot;btn btn--primary&quot;
+            type=&quot;button&quot;
+          &gt;
+            Complete profile to research
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;p
+          class=&quot;catalogue-note&quot;
+        &gt;
+          These are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.
+        &lt;/p&gt;
+        &lt;p
+          role=&quot;status&quot;
+        &gt;
+          0 universities found
+        &lt;/p&gt;
+        &lt;div
+          aria-busy=&quot;false&quot;
+          class=&quot;catalogue-grid&quot;
+        /&gt;
+        &lt;p&gt;
+          No universities match these filters. Try another country or name.
+        &lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/ShortlistScreen.test.tsx:406:19
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; opens Progress for empty retryable stage without starting work" time="0.204684291">
+            <failure message="Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;find-page&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;screen__head&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+        [36m&gt;[39m
+          [0mFIND YOUR PATH[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;h1[39m
+          [33mclass[39m=[32m&quot;screen__title&quot;[39m
+        [36m&gt;[39m
+          [0mFind your best [0m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;find-yellow&quot;[39m
+          [36m&gt;[39m
+            [0mmatches.[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/h1&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__lede&quot;[39m
+        [36m&gt;[39m
+          [0mResearch begins with your profile and preferences.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;find-empty&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;empty&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;empty__title&quot;[39m
+          [36m&gt;[39m
+            [0mNo results yet[0m
+          [36m&lt;/p&gt;[39m
+          [0mStart research to find programmes supported by available sources.[0m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;button[39m
+          [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+          [33mtype[39m=[32m&quot;button&quot;[39m
+        [36m&gt;[39m
+          [0mStart research →[0m
+        [36m&lt;/button&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;section[39m
+        [33maria-label[39m=[32m&quot;University catalogue&quot;[39m
+        [33mclass[39m=[32m&quot;university-catalogue&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-heading&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;p[39m
+              [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+            [36m&gt;[39m
+              [0mEXPLORE UNIVERSITIES[0m
+            [36m&lt;/p&gt;[39m
+            [36m&lt;h2&gt;[39m
+              [0mFind a place to begin.[0m
+            [36m&lt;/h2&gt;[39m
+            [36m&lt;p&gt;[39m
+              [0mBrowse [0m
+              [0m0[0m
+              [0m universities, even when live research is unavailable. Select up to 5 to check against your profile.[0m
+            [36m&lt;/p&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip&quot;[39m
+          [36m&gt;[39m
+            [0m0[0m
+            [0m imported universities[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-tools&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mUniversity, city or country[0m
+            [36m&lt;input[39m
+              [33mplaceholder[39m=[32m&quot;Try MIT, Canada or Groningen&quot;[39m
+              [33mtype[39m=[32m&quot;search&quot;[39m
+              [33mvalue[39m=[32m&quot;&quot;[39m
+            [36m/&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mCountry or region[0m
+            [36m&lt;select&gt;[39m
+              [36m&lt;option[39m
+                [33mvalue[39m=[32m&quot;&quot;[39m
+              [36m&gt;[39m
+                [0mAll countries[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mEurope[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAsia[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mNorth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mSouth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mOceania[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAfrica[0m
+              [36m&lt;/option&gt;[39m
+            [36m&lt;/select&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;button[39m
+            [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+            [33mtype[39m=[32m&quot;button&quot;[39m
+          [36m&gt;[39m
+            [0mComplete profile to research[0m
+          [36m&lt;/button&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;catalogue-note&quot;[39m
+        [36m&gt;[39m
+          [0mThese are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;p[39m
+          [33mrole[39m=[32m&quot;status&quot;[39m
+        [36m&gt;[39m
+          [0m0 universities found[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;div[39m
+          [33maria-busy[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;catalogue-grid&quot;[39m
+        [36m/&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mNo universities match these filters. Try another country or name.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/section&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;find-page&quot;
+    &gt;
+      &lt;div
+        class=&quot;screen__head&quot;
+      &gt;
+        &lt;p
+          class=&quot;screen__eyebrow&quot;
+        &gt;
+          FIND YOUR PATH
+        &lt;/p&gt;
+        &lt;h1
+          class=&quot;screen__title&quot;
+        &gt;
+          Find your best 
+          &lt;span
+            class=&quot;find-yellow&quot;
+          &gt;
+            matches.
+          &lt;/span&gt;
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;screen__lede&quot;
+        &gt;
+          Research begins with your profile and preferences.
+        &lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;find-empty&quot;
+      &gt;
+        &lt;div
+          class=&quot;empty&quot;
+        &gt;
+          &lt;p
+            class=&quot;empty__title&quot;
+          &gt;
+            No results yet
+          &lt;/p&gt;
+          Start research to find programmes supported by available sources.
+        &lt;/div&gt;
+        &lt;button
+          class=&quot;btn btn--primary&quot;
+          type=&quot;button&quot;
+        &gt;
+          Start research →
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;section
+        aria-label=&quot;University catalogue&quot;
+        class=&quot;university-catalogue&quot;
+      &gt;
+        &lt;div
+          class=&quot;catalogue-heading&quot;
+        &gt;
+          &lt;div&gt;
+            &lt;p
+              class=&quot;screen__eyebrow&quot;
+            &gt;
+              EXPLORE UNIVERSITIES
+            &lt;/p&gt;
+            &lt;h2&gt;
+              Find a place to begin.
+            &lt;/h2&gt;
+            &lt;p&gt;
+              Browse 
+              0
+               universities, even when live research is unavailable. Select up to 5 to check against your profile.
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;span
+            class=&quot;chip&quot;
+          &gt;
+            0
+             imported universities
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div
+          class=&quot;catalogue-tools&quot;
+        &gt;
+          &lt;label&gt;
+            University, city or country
+            &lt;input
+              placeholder=&quot;Try MIT, Canada or Groningen&quot;
+              type=&quot;search&quot;
+              value=&quot;&quot;
+            /&gt;
+          &lt;/label&gt;
+          &lt;label&gt;
+            Country or region
+            &lt;select&gt;
+              &lt;option
+                value=&quot;&quot;
+              &gt;
+                All countries
+              &lt;/option&gt;
+              &lt;option&gt;
+                Europe
+              &lt;/option&gt;
+              &lt;option&gt;
+                Asia
+              &lt;/option&gt;
+              &lt;option&gt;
+                North America
+              &lt;/option&gt;
+              &lt;option&gt;
+                South America
+              &lt;/option&gt;
+              &lt;option&gt;
+                Oceania
+              &lt;/option&gt;
+              &lt;option&gt;
+                Africa
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/label&gt;
+          &lt;button
+            class=&quot;btn btn--primary&quot;
+            type=&quot;button&quot;
+          &gt;
+            Complete profile to research
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;p
+          class=&quot;catalogue-note&quot;
+        &gt;
+          These are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.
+        &lt;/p&gt;
+        &lt;p
+          role=&quot;status&quot;
+        &gt;
+          0 universities found
+        &lt;/p&gt;
+        &lt;div
+          aria-busy=&quot;false&quot;
+          class=&quot;catalogue-grid&quot;
+        /&gt;
+        &lt;p&gt;
+          No universities match these filters. Try another country or name.
+        &lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/ShortlistScreen.test.tsx:406:19
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; opens Progress for empty cancelled stage without starting work" time="0.205457667">
+            <failure message="Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;find-page&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;screen__head&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+        [36m&gt;[39m
+          [0mFIND YOUR PATH[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;h1[39m
+          [33mclass[39m=[32m&quot;screen__title&quot;[39m
+        [36m&gt;[39m
+          [0mFind your best [0m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;find-yellow&quot;[39m
+          [36m&gt;[39m
+            [0mmatches.[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/h1&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__lede&quot;[39m
+        [36m&gt;[39m
+          [0mResearch begins with your profile and preferences.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;find-empty&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;empty&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;empty__title&quot;[39m
+          [36m&gt;[39m
+            [0mNo results yet[0m
+          [36m&lt;/p&gt;[39m
+          [0mStart research to find programmes supported by available sources.[0m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;button[39m
+          [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+          [33mtype[39m=[32m&quot;button&quot;[39m
+        [36m&gt;[39m
+          [0mStart research →[0m
+        [36m&lt;/button&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;section[39m
+        [33maria-label[39m=[32m&quot;University catalogue&quot;[39m
+        [33mclass[39m=[32m&quot;university-catalogue&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-heading&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;p[39m
+              [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+            [36m&gt;[39m
+              [0mEXPLORE UNIVERSITIES[0m
+            [36m&lt;/p&gt;[39m
+            [36m&lt;h2&gt;[39m
+              [0mFind a place to begin.[0m
+            [36m&lt;/h2&gt;[39m
+            [36m&lt;p&gt;[39m
+              [0mBrowse [0m
+              [0m0[0m
+              [0m universities, even when live research is unavailable. Select up to 5 to check against your profile.[0m
+            [36m&lt;/p&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip&quot;[39m
+          [36m&gt;[39m
+            [0m0[0m
+            [0m imported universities[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-tools&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mUniversity, city or country[0m
+            [36m&lt;input[39m
+              [33mplaceholder[39m=[32m&quot;Try MIT, Canada or Groningen&quot;[39m
+              [33mtype[39m=[32m&quot;search&quot;[39m
+              [33mvalue[39m=[32m&quot;&quot;[39m
+            [36m/&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mCountry or region[0m
+            [36m&lt;select&gt;[39m
+              [36m&lt;option[39m
+                [33mvalue[39m=[32m&quot;&quot;[39m
+              [36m&gt;[39m
+                [0mAll countries[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mEurope[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAsia[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mNorth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mSouth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mOceania[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAfrica[0m
+              [36m&lt;/option&gt;[39m
+            [36m&lt;/select&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;button[39m
+            [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+            [33mtype[39m=[32m&quot;button&quot;[39m
+          [36m&gt;[39m
+            [0mComplete profile to research[0m
+          [36m&lt;/button&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;catalogue-note&quot;[39m
+        [36m&gt;[39m
+          [0mThese are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;p[39m
+          [33mrole[39m=[32m&quot;status&quot;[39m
+        [36m&gt;[39m
+          [0m0 universities found[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;div[39m
+          [33maria-busy[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;catalogue-grid&quot;[39m
+        [36m/&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mNo universities match these filters. Try another country or name.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/section&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;find-page&quot;
+    &gt;
+      &lt;div
+        class=&quot;screen__head&quot;
+      &gt;
+        &lt;p
+          class=&quot;screen__eyebrow&quot;
+        &gt;
+          FIND YOUR PATH
+        &lt;/p&gt;
+        &lt;h1
+          class=&quot;screen__title&quot;
+        &gt;
+          Find your best 
+          &lt;span
+            class=&quot;find-yellow&quot;
+          &gt;
+            matches.
+          &lt;/span&gt;
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;screen__lede&quot;
+        &gt;
+          Research begins with your profile and preferences.
+        &lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;find-empty&quot;
+      &gt;
+        &lt;div
+          class=&quot;empty&quot;
+        &gt;
+          &lt;p
+            class=&quot;empty__title&quot;
+          &gt;
+            No results yet
+          &lt;/p&gt;
+          Start research to find programmes supported by available sources.
+        &lt;/div&gt;
+        &lt;button
+          class=&quot;btn btn--primary&quot;
+          type=&quot;button&quot;
+        &gt;
+          Start research →
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;section
+        aria-label=&quot;University catalogue&quot;
+        class=&quot;university-catalogue&quot;
+      &gt;
+        &lt;div
+          class=&quot;catalogue-heading&quot;
+        &gt;
+          &lt;div&gt;
+            &lt;p
+              class=&quot;screen__eyebrow&quot;
+            &gt;
+              EXPLORE UNIVERSITIES
+            &lt;/p&gt;
+            &lt;h2&gt;
+              Find a place to begin.
+            &lt;/h2&gt;
+            &lt;p&gt;
+              Browse 
+              0
+               universities, even when live research is unavailable. Select up to 5 to check against your profile.
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;span
+            class=&quot;chip&quot;
+          &gt;
+            0
+             imported universities
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div
+          class=&quot;catalogue-tools&quot;
+        &gt;
+          &lt;label&gt;
+            University, city or country
+            &lt;input
+              placeholder=&quot;Try MIT, Canada or Groningen&quot;
+              type=&quot;search&quot;
+              value=&quot;&quot;
+            /&gt;
+          &lt;/label&gt;
+          &lt;label&gt;
+            Country or region
+            &lt;select&gt;
+              &lt;option
+                value=&quot;&quot;
+              &gt;
+                All countries
+              &lt;/option&gt;
+              &lt;option&gt;
+                Europe
+              &lt;/option&gt;
+              &lt;option&gt;
+                Asia
+              &lt;/option&gt;
+              &lt;option&gt;
+                North America
+              &lt;/option&gt;
+              &lt;option&gt;
+                South America
+              &lt;/option&gt;
+              &lt;option&gt;
+                Oceania
+              &lt;/option&gt;
+              &lt;option&gt;
+                Africa
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/label&gt;
+          &lt;button
+            class=&quot;btn btn--primary&quot;
+            type=&quot;button&quot;
+          &gt;
+            Complete profile to research
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;p
+          class=&quot;catalogue-note&quot;
+        &gt;
+          These are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.
+        &lt;/p&gt;
+        &lt;p
+          role=&quot;status&quot;
+        &gt;
+          0 universities found
+        &lt;/p&gt;
+        &lt;div
+          aria-busy=&quot;false&quot;
+          class=&quot;catalogue-grid&quot;
+        /&gt;
+        &lt;p&gt;
+          No universities match these filters. Try another country or name.
+        &lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/ShortlistScreen.test.tsx:406:19
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; opens Progress for empty cancelled flag despite a running job without starting work" time="0.205231958">
+            <failure message="Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;find-page&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;screen__head&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+        [36m&gt;[39m
+          [0mFIND YOUR PATH[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;h1[39m
+          [33mclass[39m=[32m&quot;screen__title&quot;[39m
+        [36m&gt;[39m
+          [0mFind your best [0m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;find-yellow&quot;[39m
+          [36m&gt;[39m
+            [0mmatches.[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/h1&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__lede&quot;[39m
+        [36m&gt;[39m
+          [0mResearch begins with your profile and preferences.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;find-empty&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;empty&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;empty__title&quot;[39m
+          [36m&gt;[39m
+            [0mNo results yet[0m
+          [36m&lt;/p&gt;[39m
+          [0mStart research to find programmes supported by available sources.[0m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;button[39m
+          [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+          [33mtype[39m=[32m&quot;button&quot;[39m
+        [36m&gt;[39m
+          [0mStart research →[0m
+        [36m&lt;/button&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;section[39m
+        [33maria-label[39m=[32m&quot;University catalogue&quot;[39m
+        [33mclass[39m=[32m&quot;university-catalogue&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-heading&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;p[39m
+              [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+            [36m&gt;[39m
+              [0mEXPLORE UNIVERSITIES[0m
+            [36m&lt;/p&gt;[39m
+            [36m&lt;h2&gt;[39m
+              [0mFind a place to begin.[0m
+            [36m&lt;/h2&gt;[39m
+            [36m&lt;p&gt;[39m
+              [0mBrowse [0m
+              [0m0[0m
+              [0m universities, even when live research is unavailable. Select up to 5 to check against your profile.[0m
+            [36m&lt;/p&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip&quot;[39m
+          [36m&gt;[39m
+            [0m0[0m
+            [0m imported universities[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-tools&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mUniversity, city or country[0m
+            [36m&lt;input[39m
+              [33mplaceholder[39m=[32m&quot;Try MIT, Canada or Groningen&quot;[39m
+              [33mtype[39m=[32m&quot;search&quot;[39m
+              [33mvalue[39m=[32m&quot;&quot;[39m
+            [36m/&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mCountry or region[0m
+            [36m&lt;select&gt;[39m
+              [36m&lt;option[39m
+                [33mvalue[39m=[32m&quot;&quot;[39m
+              [36m&gt;[39m
+                [0mAll countries[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mEurope[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAsia[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mNorth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mSouth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mOceania[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAfrica[0m
+              [36m&lt;/option&gt;[39m
+            [36m&lt;/select&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;button[39m
+            [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+            [33mtype[39m=[32m&quot;button&quot;[39m
+          [36m&gt;[39m
+            [0mComplete profile to research[0m
+          [36m&lt;/button&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;catalogue-note&quot;[39m
+        [36m&gt;[39m
+          [0mThese are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;p[39m
+          [33mrole[39m=[32m&quot;status&quot;[39m
+        [36m&gt;[39m
+          [0m0 universities found[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;div[39m
+          [33maria-busy[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;catalogue-grid&quot;[39m
+        [36m/&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mNo universities match these filters. Try another country or name.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/section&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;find-page&quot;
+    &gt;
+      &lt;div
+        class=&quot;screen__head&quot;
+      &gt;
+        &lt;p
+          class=&quot;screen__eyebrow&quot;
+        &gt;
+          FIND YOUR PATH
+        &lt;/p&gt;
+        &lt;h1
+          class=&quot;screen__title&quot;
+        &gt;
+          Find your best 
+          &lt;span
+            class=&quot;find-yellow&quot;
+          &gt;
+            matches.
+          &lt;/span&gt;
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;screen__lede&quot;
+        &gt;
+          Research begins with your profile and preferences.
+        &lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;find-empty&quot;
+      &gt;
+        &lt;div
+          class=&quot;empty&quot;
+        &gt;
+          &lt;p
+            class=&quot;empty__title&quot;
+          &gt;
+            No results yet
+          &lt;/p&gt;
+          Start research to find programmes supported by available sources.
+        &lt;/div&gt;
+        &lt;button
+          class=&quot;btn btn--primary&quot;
+          type=&quot;button&quot;
+        &gt;
+          Start research →
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;section
+        aria-label=&quot;University catalogue&quot;
+        class=&quot;university-catalogue&quot;
+      &gt;
+        &lt;div
+          class=&quot;catalogue-heading&quot;
+        &gt;
+          &lt;div&gt;
+            &lt;p
+              class=&quot;screen__eyebrow&quot;
+            &gt;
+              EXPLORE UNIVERSITIES
+            &lt;/p&gt;
+            &lt;h2&gt;
+              Find a place to begin.
+            &lt;/h2&gt;
+            &lt;p&gt;
+              Browse 
+              0
+               universities, even when live research is unavailable. Select up to 5 to check against your profile.
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;span
+            class=&quot;chip&quot;
+          &gt;
+            0
+             imported universities
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div
+          class=&quot;catalogue-tools&quot;
+        &gt;
+          &lt;label&gt;
+            University, city or country
+            &lt;input
+              placeholder=&quot;Try MIT, Canada or Groningen&quot;
+              type=&quot;search&quot;
+              value=&quot;&quot;
+            /&gt;
+          &lt;/label&gt;
+          &lt;label&gt;
+            Country or region
+            &lt;select&gt;
+              &lt;option
+                value=&quot;&quot;
+              &gt;
+                All countries
+              &lt;/option&gt;
+              &lt;option&gt;
+                Europe
+              &lt;/option&gt;
+              &lt;option&gt;
+                Asia
+              &lt;/option&gt;
+              &lt;option&gt;
+                North America
+              &lt;/option&gt;
+              &lt;option&gt;
+                South America
+              &lt;/option&gt;
+              &lt;option&gt;
+                Oceania
+              &lt;/option&gt;
+              &lt;option&gt;
+                Africa
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/label&gt;
+          &lt;button
+            class=&quot;btn btn--primary&quot;
+            type=&quot;button&quot;
+          &gt;
+            Complete profile to research
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;p
+          class=&quot;catalogue-note&quot;
+        &gt;
+          These are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.
+        &lt;/p&gt;
+        &lt;p
+          role=&quot;status&quot;
+        &gt;
+          0 universities found
+        &lt;/p&gt;
+        &lt;div
+          aria-busy=&quot;false&quot;
+          class=&quot;catalogue-grid&quot;
+        /&gt;
+        &lt;p&gt;
+          No universities match these filters. Try another country or name.
+        &lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/ShortlistScreen.test.tsx:406:19
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; opens Progress for empty stale despite a running job without starting work" time="0.204939791">
+            <failure message="Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;find-page&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;screen__head&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+        [36m&gt;[39m
+          [0mFIND YOUR PATH[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;h1[39m
+          [33mclass[39m=[32m&quot;screen__title&quot;[39m
+        [36m&gt;[39m
+          [0mFind your best [0m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;find-yellow&quot;[39m
+          [36m&gt;[39m
+            [0mmatches.[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/h1&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__lede&quot;[39m
+        [36m&gt;[39m
+          [0mResearch begins with your profile and preferences.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;find-empty&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;empty&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;empty__title&quot;[39m
+          [36m&gt;[39m
+            [0mNo results yet[0m
+          [36m&lt;/p&gt;[39m
+          [0mStart research to find programmes supported by available sources.[0m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;button[39m
+          [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+          [33mtype[39m=[32m&quot;button&quot;[39m
+        [36m&gt;[39m
+          [0mStart research →[0m
+        [36m&lt;/button&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;section[39m
+        [33maria-label[39m=[32m&quot;University catalogue&quot;[39m
+        [33mclass[39m=[32m&quot;university-catalogue&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-heading&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;p[39m
+              [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+            [36m&gt;[39m
+              [0mEXPLORE UNIVERSITIES[0m
+            [36m&lt;/p&gt;[39m
+            [36m&lt;h2&gt;[39m
+              [0mFind a place to begin.[0m
+            [36m&lt;/h2&gt;[39m
+            [36m&lt;p&gt;[39m
+              [0mBrowse [0m
+              [0m0[0m
+              [0m universities, even when live research is unavailable. Select up to 5 to check against your profile.[0m
+            [36m&lt;/p&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip&quot;[39m
+          [36m&gt;[39m
+            [0m0[0m
+            [0m imported universities[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-tools&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mUniversity, city or country[0m
+            [36m&lt;input[39m
+              [33mplaceholder[39m=[32m&quot;Try MIT, Canada or Groningen&quot;[39m
+              [33mtype[39m=[32m&quot;search&quot;[39m
+              [33mvalue[39m=[32m&quot;&quot;[39m
+            [36m/&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mCountry or region[0m
+            [36m&lt;select&gt;[39m
+              [36m&lt;option[39m
+                [33mvalue[39m=[32m&quot;&quot;[39m
+              [36m&gt;[39m
+                [0mAll countries[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mEurope[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAsia[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mNorth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mSouth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mOceania[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAfrica[0m
+              [36m&lt;/option&gt;[39m
+            [36m&lt;/select&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;button[39m
+            [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+            [33mtype[39m=[32m&quot;button&quot;[39m
+          [36m&gt;[39m
+            [0mComplete profile to research[0m
+          [36m&lt;/button&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;catalogue-note&quot;[39m
+        [36m&gt;[39m
+          [0mThese are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;p[39m
+          [33mrole[39m=[32m&quot;status&quot;[39m
+        [36m&gt;[39m
+          [0m0 universities found[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;div[39m
+          [33maria-busy[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;catalogue-grid&quot;[39m
+        [36m/&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mNo universities match these filters. Try another country or name.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/section&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;find-page&quot;
+    &gt;
+      &lt;div
+        class=&quot;screen__head&quot;
+      &gt;
+        &lt;p
+          class=&quot;screen__eyebrow&quot;
+        &gt;
+          FIND YOUR PATH
+        &lt;/p&gt;
+        &lt;h1
+          class=&quot;screen__title&quot;
+        &gt;
+          Find your best 
+          &lt;span
+            class=&quot;find-yellow&quot;
+          &gt;
+            matches.
+          &lt;/span&gt;
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;screen__lede&quot;
+        &gt;
+          Research begins with your profile and preferences.
+        &lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;find-empty&quot;
+      &gt;
+        &lt;div
+          class=&quot;empty&quot;
+        &gt;
+          &lt;p
+            class=&quot;empty__title&quot;
+          &gt;
+            No results yet
+          &lt;/p&gt;
+          Start research to find programmes supported by available sources.
+        &lt;/div&gt;
+        &lt;button
+          class=&quot;btn btn--primary&quot;
+          type=&quot;button&quot;
+        &gt;
+          Start research →
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;section
+        aria-label=&quot;University catalogue&quot;
+        class=&quot;university-catalogue&quot;
+      &gt;
+        &lt;div
+          class=&quot;catalogue-heading&quot;
+        &gt;
+          &lt;div&gt;
+            &lt;p
+              class=&quot;screen__eyebrow&quot;
+            &gt;
+              EXPLORE UNIVERSITIES
+            &lt;/p&gt;
+            &lt;h2&gt;
+              Find a place to begin.
+            &lt;/h2&gt;
+            &lt;p&gt;
+              Browse 
+              0
+               universities, even when live research is unavailable. Select up to 5 to check against your profile.
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;span
+            class=&quot;chip&quot;
+          &gt;
+            0
+             imported universities
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div
+          class=&quot;catalogue-tools&quot;
+        &gt;
+          &lt;label&gt;
+            University, city or country
+            &lt;input
+              placeholder=&quot;Try MIT, Canada or Groningen&quot;
+              type=&quot;search&quot;
+              value=&quot;&quot;
+            /&gt;
+          &lt;/label&gt;
+          &lt;label&gt;
+            Country or region
+            &lt;select&gt;
+              &lt;option
+                value=&quot;&quot;
+              &gt;
+                All countries
+              &lt;/option&gt;
+              &lt;option&gt;
+                Europe
+              &lt;/option&gt;
+              &lt;option&gt;
+                Asia
+              &lt;/option&gt;
+              &lt;option&gt;
+                North America
+              &lt;/option&gt;
+              &lt;option&gt;
+                South America
+              &lt;/option&gt;
+              &lt;option&gt;
+                Oceania
+              &lt;/option&gt;
+              &lt;option&gt;
+                Africa
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/label&gt;
+          &lt;button
+            class=&quot;btn btn--primary&quot;
+            type=&quot;button&quot;
+          &gt;
+            Complete profile to research
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;p
+          class=&quot;catalogue-note&quot;
+        &gt;
+          These are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.
+        &lt;/p&gt;
+        &lt;p
+          role=&quot;status&quot;
+        &gt;
+          0 universities found
+        &lt;/p&gt;
+        &lt;div
+          aria-busy=&quot;false&quot;
+          class=&quot;catalogue-grid&quot;
+        /&gt;
+        &lt;p&gt;
+          No universities match these filters. Try another country or name.
+        &lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/ShortlistScreen.test.tsx:406:19
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; opens Progress for empty dead job without starting work" time="0.205291792">
+            <failure message="Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;find-page&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;screen__head&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+        [36m&gt;[39m
+          [0mFIND YOUR PATH[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;h1[39m
+          [33mclass[39m=[32m&quot;screen__title&quot;[39m
+        [36m&gt;[39m
+          [0mFind your best [0m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;find-yellow&quot;[39m
+          [36m&gt;[39m
+            [0mmatches.[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/h1&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__lede&quot;[39m
+        [36m&gt;[39m
+          [0mResearch begins with your profile and preferences.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;find-empty&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;empty&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;empty__title&quot;[39m
+          [36m&gt;[39m
+            [0mNo results yet[0m
+          [36m&lt;/p&gt;[39m
+          [0mStart research to find programmes supported by available sources.[0m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;button[39m
+          [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+          [33mtype[39m=[32m&quot;button&quot;[39m
+        [36m&gt;[39m
+          [0mStart research →[0m
+        [36m&lt;/button&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;section[39m
+        [33maria-label[39m=[32m&quot;University catalogue&quot;[39m
+        [33mclass[39m=[32m&quot;university-catalogue&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-heading&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;p[39m
+              [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+            [36m&gt;[39m
+              [0mEXPLORE UNIVERSITIES[0m
+            [36m&lt;/p&gt;[39m
+            [36m&lt;h2&gt;[39m
+              [0mFind a place to begin.[0m
+            [36m&lt;/h2&gt;[39m
+            [36m&lt;p&gt;[39m
+              [0mBrowse [0m
+              [0m0[0m
+              [0m universities, even when live research is unavailable. Select up to 5 to check against your profile.[0m
+            [36m&lt;/p&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip&quot;[39m
+          [36m&gt;[39m
+            [0m0[0m
+            [0m imported universities[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-tools&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mUniversity, city or country[0m
+            [36m&lt;input[39m
+              [33mplaceholder[39m=[32m&quot;Try MIT, Canada or Groningen&quot;[39m
+              [33mtype[39m=[32m&quot;search&quot;[39m
+              [33mvalue[39m=[32m&quot;&quot;[39m
+            [36m/&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mCountry or region[0m
+            [36m&lt;select&gt;[39m
+              [36m&lt;option[39m
+                [33mvalue[39m=[32m&quot;&quot;[39m
+              [36m&gt;[39m
+                [0mAll countries[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mEurope[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAsia[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mNorth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mSouth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mOceania[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAfrica[0m
+              [36m&lt;/option&gt;[39m
+            [36m&lt;/select&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;button[39m
+            [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+            [33mtype[39m=[32m&quot;button&quot;[39m
+          [36m&gt;[39m
+            [0mComplete profile to research[0m
+          [36m&lt;/button&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;catalogue-note&quot;[39m
+        [36m&gt;[39m
+          [0mThese are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;p[39m
+          [33mrole[39m=[32m&quot;status&quot;[39m
+        [36m&gt;[39m
+          [0m0 universities found[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;div[39m
+          [33maria-busy[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;catalogue-grid&quot;[39m
+        [36m/&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mNo universities match these filters. Try another country or name.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/section&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;find-page&quot;
+    &gt;
+      &lt;div
+        class=&quot;screen__head&quot;
+      &gt;
+        &lt;p
+          class=&quot;screen__eyebrow&quot;
+        &gt;
+          FIND YOUR PATH
+        &lt;/p&gt;
+        &lt;h1
+          class=&quot;screen__title&quot;
+        &gt;
+          Find your best 
+          &lt;span
+            class=&quot;find-yellow&quot;
+          &gt;
+            matches.
+          &lt;/span&gt;
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;screen__lede&quot;
+        &gt;
+          Research begins with your profile and preferences.
+        &lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;find-empty&quot;
+      &gt;
+        &lt;div
+          class=&quot;empty&quot;
+        &gt;
+          &lt;p
+            class=&quot;empty__title&quot;
+          &gt;
+            No results yet
+          &lt;/p&gt;
+          Start research to find programmes supported by available sources.
+        &lt;/div&gt;
+        &lt;button
+          class=&quot;btn btn--primary&quot;
+          type=&quot;button&quot;
+        &gt;
+          Start research →
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;section
+        aria-label=&quot;University catalogue&quot;
+        class=&quot;university-catalogue&quot;
+      &gt;
+        &lt;div
+          class=&quot;catalogue-heading&quot;
+        &gt;
+          &lt;div&gt;
+            &lt;p
+              class=&quot;screen__eyebrow&quot;
+            &gt;
+              EXPLORE UNIVERSITIES
+            &lt;/p&gt;
+            &lt;h2&gt;
+              Find a place to begin.
+            &lt;/h2&gt;
+            &lt;p&gt;
+              Browse 
+              0
+               universities, even when live research is unavailable. Select up to 5 to check against your profile.
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;span
+            class=&quot;chip&quot;
+          &gt;
+            0
+             imported universities
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div
+          class=&quot;catalogue-tools&quot;
+        &gt;
+          &lt;label&gt;
+            University, city or country
+            &lt;input
+              placeholder=&quot;Try MIT, Canada or Groningen&quot;
+              type=&quot;search&quot;
+              value=&quot;&quot;
+            /&gt;
+          &lt;/label&gt;
+          &lt;label&gt;
+            Country or region
+            &lt;select&gt;
+              &lt;option
+                value=&quot;&quot;
+              &gt;
+                All countries
+              &lt;/option&gt;
+              &lt;option&gt;
+                Europe
+              &lt;/option&gt;
+              &lt;option&gt;
+                Asia
+              &lt;/option&gt;
+              &lt;option&gt;
+                North America
+              &lt;/option&gt;
+              &lt;option&gt;
+                South America
+              &lt;/option&gt;
+              &lt;option&gt;
+                Oceania
+              &lt;/option&gt;
+              &lt;option&gt;
+                Africa
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/label&gt;
+          &lt;button
+            class=&quot;btn btn--primary&quot;
+            type=&quot;button&quot;
+          &gt;
+            Complete profile to research
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;p
+          class=&quot;catalogue-note&quot;
+        &gt;
+          These are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.
+        &lt;/p&gt;
+        &lt;p
+          role=&quot;status&quot;
+        &gt;
+          0 universities found
+        &lt;/p&gt;
+        &lt;div
+          aria-busy=&quot;false&quot;
+          class=&quot;catalogue-grid&quot;
+        /&gt;
+        &lt;p&gt;
+          No universities match these filters. Try another country or name.
+        &lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/ShortlistScreen.test.tsx:406:19
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; opens Progress for empty failed job without starting work" time="0.205773625">
+            <failure message="Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;find-page&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;screen__head&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+        [36m&gt;[39m
+          [0mFIND YOUR PATH[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;h1[39m
+          [33mclass[39m=[32m&quot;screen__title&quot;[39m
+        [36m&gt;[39m
+          [0mFind your best [0m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;find-yellow&quot;[39m
+          [36m&gt;[39m
+            [0mmatches.[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/h1&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__lede&quot;[39m
+        [36m&gt;[39m
+          [0mResearch begins with your profile and preferences.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;find-empty&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;empty&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;empty__title&quot;[39m
+          [36m&gt;[39m
+            [0mNo results yet[0m
+          [36m&lt;/p&gt;[39m
+          [0mStart research to find programmes supported by available sources.[0m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;button[39m
+          [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+          [33mtype[39m=[32m&quot;button&quot;[39m
+        [36m&gt;[39m
+          [0mStart research →[0m
+        [36m&lt;/button&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;section[39m
+        [33maria-label[39m=[32m&quot;University catalogue&quot;[39m
+        [33mclass[39m=[32m&quot;university-catalogue&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-heading&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;p[39m
+              [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+            [36m&gt;[39m
+              [0mEXPLORE UNIVERSITIES[0m
+            [36m&lt;/p&gt;[39m
+            [36m&lt;h2&gt;[39m
+              [0mFind a place to begin.[0m
+            [36m&lt;/h2&gt;[39m
+            [36m&lt;p&gt;[39m
+              [0mBrowse [0m
+              [0m0[0m
+              [0m universities, even when live research is unavailable. Select up to 5 to check against your profile.[0m
+            [36m&lt;/p&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip&quot;[39m
+          [36m&gt;[39m
+            [0m0[0m
+            [0m imported universities[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-tools&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mUniversity, city or country[0m
+            [36m&lt;input[39m
+              [33mplaceholder[39m=[32m&quot;Try MIT, Canada or Groningen&quot;[39m
+              [33mtype[39m=[32m&quot;search&quot;[39m
+              [33mvalue[39m=[32m&quot;&quot;[39m
+            [36m/&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mCountry or region[0m
+            [36m&lt;select&gt;[39m
+              [36m&lt;option[39m
+                [33mvalue[39m=[32m&quot;&quot;[39m
+              [36m&gt;[39m
+                [0mAll countries[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mEurope[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAsia[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mNorth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mSouth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mOceania[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAfrica[0m
+              [36m&lt;/option&gt;[39m
+            [36m&lt;/select&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;button[39m
+            [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+            [33mtype[39m=[32m&quot;button&quot;[39m
+          [36m&gt;[39m
+            [0mComplete profile to research[0m
+          [36m&lt;/button&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;catalogue-note&quot;[39m
+        [36m&gt;[39m
+          [0mThese are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;p[39m
+          [33mrole[39m=[32m&quot;status&quot;[39m
+        [36m&gt;[39m
+          [0m0 universities found[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;div[39m
+          [33maria-busy[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;catalogue-grid&quot;[39m
+        [36m/&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mNo universities match these filters. Try another country or name.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/section&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;find-page&quot;
+    &gt;
+      &lt;div
+        class=&quot;screen__head&quot;
+      &gt;
+        &lt;p
+          class=&quot;screen__eyebrow&quot;
+        &gt;
+          FIND YOUR PATH
+        &lt;/p&gt;
+        &lt;h1
+          class=&quot;screen__title&quot;
+        &gt;
+          Find your best 
+          &lt;span
+            class=&quot;find-yellow&quot;
+          &gt;
+            matches.
+          &lt;/span&gt;
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;screen__lede&quot;
+        &gt;
+          Research begins with your profile and preferences.
+        &lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;find-empty&quot;
+      &gt;
+        &lt;div
+          class=&quot;empty&quot;
+        &gt;
+          &lt;p
+            class=&quot;empty__title&quot;
+          &gt;
+            No results yet
+          &lt;/p&gt;
+          Start research to find programmes supported by available sources.
+        &lt;/div&gt;
+        &lt;button
+          class=&quot;btn btn--primary&quot;
+          type=&quot;button&quot;
+        &gt;
+          Start research →
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;section
+        aria-label=&quot;University catalogue&quot;
+        class=&quot;university-catalogue&quot;
+      &gt;
+        &lt;div
+          class=&quot;catalogue-heading&quot;
+        &gt;
+          &lt;div&gt;
+            &lt;p
+              class=&quot;screen__eyebrow&quot;
+            &gt;
+              EXPLORE UNIVERSITIES
+            &lt;/p&gt;
+            &lt;h2&gt;
+              Find a place to begin.
+            &lt;/h2&gt;
+            &lt;p&gt;
+              Browse 
+              0
+               universities, even when live research is unavailable. Select up to 5 to check against your profile.
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;span
+            class=&quot;chip&quot;
+          &gt;
+            0
+             imported universities
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div
+          class=&quot;catalogue-tools&quot;
+        &gt;
+          &lt;label&gt;
+            University, city or country
+            &lt;input
+              placeholder=&quot;Try MIT, Canada or Groningen&quot;
+              type=&quot;search&quot;
+              value=&quot;&quot;
+            /&gt;
+          &lt;/label&gt;
+          &lt;label&gt;
+            Country or region
+            &lt;select&gt;
+              &lt;option
+                value=&quot;&quot;
+              &gt;
+                All countries
+              &lt;/option&gt;
+              &lt;option&gt;
+                Europe
+              &lt;/option&gt;
+              &lt;option&gt;
+                Asia
+              &lt;/option&gt;
+              &lt;option&gt;
+                North America
+              &lt;/option&gt;
+              &lt;option&gt;
+                South America
+              &lt;/option&gt;
+              &lt;option&gt;
+                Oceania
+              &lt;/option&gt;
+              &lt;option&gt;
+                Africa
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/label&gt;
+          &lt;button
+            class=&quot;btn btn--primary&quot;
+            type=&quot;button&quot;
+          &gt;
+            Complete profile to research
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;p
+          class=&quot;catalogue-note&quot;
+        &gt;
+          These are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.
+        &lt;/p&gt;
+        &lt;p
+          role=&quot;status&quot;
+        &gt;
+          0 universities found
+        &lt;/p&gt;
+        &lt;div
+          aria-busy=&quot;false&quot;
+          class=&quot;catalogue-grid&quot;
+        /&gt;
+        &lt;p&gt;
+          No universities match these filters. Try another country or name.
+        &lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/ShortlistScreen.test.tsx:406:19
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; opens Progress for empty cancelled job without starting work" time="0.203962709">
+            <failure message="Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;find-page&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;screen__head&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+        [36m&gt;[39m
+          [0mFIND YOUR PATH[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;h1[39m
+          [33mclass[39m=[32m&quot;screen__title&quot;[39m
+        [36m&gt;[39m
+          [0mFind your best [0m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;find-yellow&quot;[39m
+          [36m&gt;[39m
+            [0mmatches.[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/h1&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__lede&quot;[39m
+        [36m&gt;[39m
+          [0mResearch begins with your profile and preferences.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;find-empty&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;empty&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;empty__title&quot;[39m
+          [36m&gt;[39m
+            [0mNo results yet[0m
+          [36m&lt;/p&gt;[39m
+          [0mStart research to find programmes supported by available sources.[0m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;button[39m
+          [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+          [33mtype[39m=[32m&quot;button&quot;[39m
+        [36m&gt;[39m
+          [0mStart research →[0m
+        [36m&lt;/button&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;section[39m
+        [33maria-label[39m=[32m&quot;University catalogue&quot;[39m
+        [33mclass[39m=[32m&quot;university-catalogue&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-heading&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;p[39m
+              [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+            [36m&gt;[39m
+              [0mEXPLORE UNIVERSITIES[0m
+            [36m&lt;/p&gt;[39m
+            [36m&lt;h2&gt;[39m
+              [0mFind a place to begin.[0m
+            [36m&lt;/h2&gt;[39m
+            [36m&lt;p&gt;[39m
+              [0mBrowse [0m
+              [0m0[0m
+              [0m universities, even when live research is unavailable. Select up to 5 to check against your profile.[0m
+            [36m&lt;/p&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip&quot;[39m
+          [36m&gt;[39m
+            [0m0[0m
+            [0m imported universities[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-tools&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mUniversity, city or country[0m
+            [36m&lt;input[39m
+              [33mplaceholder[39m=[32m&quot;Try MIT, Canada or Groningen&quot;[39m
+              [33mtype[39m=[32m&quot;search&quot;[39m
+              [33mvalue[39m=[32m&quot;&quot;[39m
+            [36m/&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mCountry or region[0m
+            [36m&lt;select&gt;[39m
+              [36m&lt;option[39m
+                [33mvalue[39m=[32m&quot;&quot;[39m
+              [36m&gt;[39m
+                [0mAll countries[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mEurope[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAsia[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mNorth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mSouth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mOceania[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAfrica[0m
+              [36m&lt;/option&gt;[39m
+            [36m&lt;/select&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;button[39m
+            [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+            [33mtype[39m=[32m&quot;button&quot;[39m
+          [36m&gt;[39m
+            [0mComplete profile to research[0m
+          [36m&lt;/button&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;catalogue-note&quot;[39m
+        [36m&gt;[39m
+          [0mThese are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;p[39m
+          [33mrole[39m=[32m&quot;status&quot;[39m
+        [36m&gt;[39m
+          [0m0 universities found[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;div[39m
+          [33maria-busy[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;catalogue-grid&quot;[39m
+        [36m/&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mNo universities match these filters. Try another country or name.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/section&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;find-page&quot;
+    &gt;
+      &lt;div
+        class=&quot;screen__head&quot;
+      &gt;
+        &lt;p
+          class=&quot;screen__eyebrow&quot;
+        &gt;
+          FIND YOUR PATH
+        &lt;/p&gt;
+        &lt;h1
+          class=&quot;screen__title&quot;
+        &gt;
+          Find your best 
+          &lt;span
+            class=&quot;find-yellow&quot;
+          &gt;
+            matches.
+          &lt;/span&gt;
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;screen__lede&quot;
+        &gt;
+          Research begins with your profile and preferences.
+        &lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;find-empty&quot;
+      &gt;
+        &lt;div
+          class=&quot;empty&quot;
+        &gt;
+          &lt;p
+            class=&quot;empty__title&quot;
+          &gt;
+            No results yet
+          &lt;/p&gt;
+          Start research to find programmes supported by available sources.
+        &lt;/div&gt;
+        &lt;button
+          class=&quot;btn btn--primary&quot;
+          type=&quot;button&quot;
+        &gt;
+          Start research →
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;section
+        aria-label=&quot;University catalogue&quot;
+        class=&quot;university-catalogue&quot;
+      &gt;
+        &lt;div
+          class=&quot;catalogue-heading&quot;
+        &gt;
+          &lt;div&gt;
+            &lt;p
+              class=&quot;screen__eyebrow&quot;
+            &gt;
+              EXPLORE UNIVERSITIES
+            &lt;/p&gt;
+            &lt;h2&gt;
+              Find a place to begin.
+            &lt;/h2&gt;
+            &lt;p&gt;
+              Browse 
+              0
+               universities, even when live research is unavailable. Select up to 5 to check against your profile.
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;span
+            class=&quot;chip&quot;
+          &gt;
+            0
+             imported universities
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div
+          class=&quot;catalogue-tools&quot;
+        &gt;
+          &lt;label&gt;
+            University, city or country
+            &lt;input
+              placeholder=&quot;Try MIT, Canada or Groningen&quot;
+              type=&quot;search&quot;
+              value=&quot;&quot;
+            /&gt;
+          &lt;/label&gt;
+          &lt;label&gt;
+            Country or region
+            &lt;select&gt;
+              &lt;option
+                value=&quot;&quot;
+              &gt;
+                All countries
+              &lt;/option&gt;
+              &lt;option&gt;
+                Europe
+              &lt;/option&gt;
+              &lt;option&gt;
+                Asia
+              &lt;/option&gt;
+              &lt;option&gt;
+                North America
+              &lt;/option&gt;
+              &lt;option&gt;
+                South America
+              &lt;/option&gt;
+              &lt;option&gt;
+                Oceania
+              &lt;/option&gt;
+              &lt;option&gt;
+                Africa
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/label&gt;
+          &lt;button
+            class=&quot;btn btn--primary&quot;
+            type=&quot;button&quot;
+          &gt;
+            Complete profile to research
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;p
+          class=&quot;catalogue-note&quot;
+        &gt;
+          These are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.
+        &lt;/p&gt;
+        &lt;p
+          role=&quot;status&quot;
+        &gt;
+          0 universities found
+        &lt;/p&gt;
+        &lt;div
+          aria-busy=&quot;false&quot;
+          class=&quot;catalogue-grid&quot;
+        /&gt;
+        &lt;p&gt;
+          No universities match these filters. Try another country or name.
+        &lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/ShortlistScreen.test.tsx:406:19
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; reviews an empty awaiting_user_decision run without claiming absence" time="0.214548166">
+            <failure message="Unable to find an element with the text: Review your research findings.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;find-page&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;screen__head&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+        [36m&gt;[39m
+          [0mFIND YOUR PATH[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;h1[39m
+          [33mclass[39m=[32m&quot;screen__title&quot;[39m
+        [36m&gt;[39m
+          [0mFind your best [0m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;find-yellow&quot;[39m
+          [36m&gt;[39m
+            [0mmatches.[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/h1&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__lede&quot;[39m
+        [36m&gt;[39m
+          [0mResearch begins with your profile and preferences.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;find-empty&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;empty&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;empty__title&quot;[39m
+          [36m&gt;[39m
+            [0mNo results yet[0m
+          [36m&lt;/p&gt;[39m
+          [0mStart research to find programmes supported by available sources.[0m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;button[39m
+          [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+          [33mtype[39m=[32m&quot;button&quot;[39m
+        [36m&gt;[39m
+          [0mStart research →[0m
+        [36m&lt;/button&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;section[39m
+        [33maria-label[39m=[32m&quot;University catalogue&quot;[39m
+        [33mclass[39m=[32m&quot;university-catalogue&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-heading&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;p[39m
+              [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+            [36m&gt;[39m
+              [0mEXPLORE UNIVERSITIES[0m
+            [36m&lt;/p&gt;[39m
+            [36m&lt;h2&gt;[39m
+              [0mFind a place to begin.[0m
+            [36m&lt;/h2&gt;[39m
+            [36m&lt;p&gt;[39m
+              [0mBrowse [0m
+              [0m0[0m
+              [0m universities, even when live research is unavailable. Select up to 5 to check against your profile.[0m
+            [36m&lt;/p&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip&quot;[39m
+          [36m&gt;[39m
+            [0m0[0m
+            [0m imported universities[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-tools&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mUniversity, city or country[0m
+            [36m&lt;input[39m
+              [33mplaceholder[39m=[32m&quot;Try MIT, Canada or Groningen&quot;[39m
+              [33mtype[39m=[32m&quot;search&quot;[39m
+              [33mvalue[39m=[32m&quot;&quot;[39m
+            [36m/&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mCountry or region[0m
+            [36m&lt;select&gt;[39m
+              [36m&lt;option[39m
+                [33mvalue[39m=[32m&quot;&quot;[39m
+              [36m&gt;[39m
+                [0mAll countries[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mEurope[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAsia[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mNorth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mSouth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mOceania[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAfrica[0m
+              [36m&lt;/option&gt;[39m
+            [36m&lt;/select&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;button[39m
+            [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+            [33mtype[39m=[32m&quot;button&quot;[39m
+          [36m&gt;[39m
+            [0mComplete profile to research[0m
+          [36m&lt;/button&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;catalogue-note&quot;[39m
+        [36m&gt;[39m
+          [0mThese are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;p[39m
+          [33mrole[39m=[32m&quot;status&quot;[39m
+        [36m&gt;[39m
+          [0m0 universities found[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;div[39m
+          [33maria-busy[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;catalogue-grid&quot;[39m
+        [36m/&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mNo universities match these filters. Try another country or name.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/section&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element with the text: Review your research findings.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;find-page&quot;
+    &gt;
+      &lt;div
+        class=&quot;screen__head&quot;
+      &gt;
+        &lt;p
+          class=&quot;screen__eyebrow&quot;
+        &gt;
+          FIND YOUR PATH
+        &lt;/p&gt;
+        &lt;h1
+          class=&quot;screen__title&quot;
+        &gt;
+          Find your best 
+          &lt;span
+            class=&quot;find-yellow&quot;
+          &gt;
+            matches.
+          &lt;/span&gt;
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;screen__lede&quot;
+        &gt;
+          Research begins with your profile and preferences.
+        &lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;find-empty&quot;
+      &gt;
+        &lt;div
+          class=&quot;empty&quot;
+        &gt;
+          &lt;p
+            class=&quot;empty__title&quot;
+          &gt;
+            No results yet
+          &lt;/p&gt;
+          Start research to find programmes supported by available sources.
+        &lt;/div&gt;
+        &lt;button
+          class=&quot;btn btn--primary&quot;
+          type=&quot;button&quot;
+        &gt;
+          Start research →
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;section
+        aria-label=&quot;University catalogue&quot;
+        class=&quot;university-catalogue&quot;
+      &gt;
+        &lt;div
+          class=&quot;catalogue-heading&quot;
+        &gt;
+          &lt;div&gt;
+            &lt;p
+              class=&quot;screen__eyebrow&quot;
+            &gt;
+              EXPLORE UNIVERSITIES
+            &lt;/p&gt;
+            &lt;h2&gt;
+              Find a place to begin.
+            &lt;/h2&gt;
+            &lt;p&gt;
+              Browse 
+              0
+               universities, even when live research is unavailable. Select up to 5 to check against your profile.
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;span
+            class=&quot;chip&quot;
+          &gt;
+            0
+             imported universities
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div
+          class=&quot;catalogue-tools&quot;
+        &gt;
+          &lt;label&gt;
+            University, city or country
+            &lt;input
+              placeholder=&quot;Try MIT, Canada or Groningen&quot;
+              type=&quot;search&quot;
+              value=&quot;&quot;
+            /&gt;
+          &lt;/label&gt;
+          &lt;label&gt;
+            Country or region
+            &lt;select&gt;
+              &lt;option
+                value=&quot;&quot;
+              &gt;
+                All countries
+              &lt;/option&gt;
+              &lt;option&gt;
+                Europe
+              &lt;/option&gt;
+              &lt;option&gt;
+                Asia
+              &lt;/option&gt;
+              &lt;option&gt;
+                North America
+              &lt;/option&gt;
+              &lt;option&gt;
+                South America
+              &lt;/option&gt;
+              &lt;option&gt;
+                Oceania
+              &lt;/option&gt;
+              &lt;option&gt;
+                Africa
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/label&gt;
+          &lt;button
+            class=&quot;btn btn--primary&quot;
+            type=&quot;button&quot;
+          &gt;
+            Complete profile to research
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;p
+          class=&quot;catalogue-note&quot;
+        &gt;
+          These are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.
+        &lt;/p&gt;
+        &lt;p
+          role=&quot;status&quot;
+        &gt;
+          0 universities found
+        &lt;/p&gt;
+        &lt;div
+          aria-busy=&quot;false&quot;
+          class=&quot;catalogue-grid&quot;
+        /&gt;
+        &lt;p&gt;
+          No universities match these filters. Try another country or name.
+        &lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/ShortlistScreen.test.tsx:423:19
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; reviews an empty completed run without claiming absence" time="0.205824708">
+            <failure message="Unable to find an element with the text: Review your research findings.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;find-page&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;screen__head&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+        [36m&gt;[39m
+          [0mFIND YOUR PATH[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;h1[39m
+          [33mclass[39m=[32m&quot;screen__title&quot;[39m
+        [36m&gt;[39m
+          [0mFind your best [0m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;find-yellow&quot;[39m
+          [36m&gt;[39m
+            [0mmatches.[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/h1&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__lede&quot;[39m
+        [36m&gt;[39m
+          [0mResearch begins with your profile and preferences.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;find-empty&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;empty&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;empty__title&quot;[39m
+          [36m&gt;[39m
+            [0mNo results yet[0m
+          [36m&lt;/p&gt;[39m
+          [0mStart research to find programmes supported by available sources.[0m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;button[39m
+          [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+          [33mtype[39m=[32m&quot;button&quot;[39m
+        [36m&gt;[39m
+          [0mStart research →[0m
+        [36m&lt;/button&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;section[39m
+        [33maria-label[39m=[32m&quot;University catalogue&quot;[39m
+        [33mclass[39m=[32m&quot;university-catalogue&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-heading&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;p[39m
+              [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+            [36m&gt;[39m
+              [0mEXPLORE UNIVERSITIES[0m
+            [36m&lt;/p&gt;[39m
+            [36m&lt;h2&gt;[39m
+              [0mFind a place to begin.[0m
+            [36m&lt;/h2&gt;[39m
+            [36m&lt;p&gt;[39m
+              [0mBrowse [0m
+              [0m0[0m
+              [0m universities, even when live research is unavailable. Select up to 5 to check against your profile.[0m
+            [36m&lt;/p&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip&quot;[39m
+          [36m&gt;[39m
+            [0m0[0m
+            [0m imported universities[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-tools&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mUniversity, city or country[0m
+            [36m&lt;input[39m
+              [33mplaceholder[39m=[32m&quot;Try MIT, Canada or Groningen&quot;[39m
+              [33mtype[39m=[32m&quot;search&quot;[39m
+              [33mvalue[39m=[32m&quot;&quot;[39m
+            [36m/&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mCountry or region[0m
+            [36m&lt;select&gt;[39m
+              [36m&lt;option[39m
+                [33mvalue[39m=[32m&quot;&quot;[39m
+              [36m&gt;[39m
+                [0mAll countries[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mEurope[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAsia[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mNorth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mSouth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mOceania[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAfrica[0m
+              [36m&lt;/option&gt;[39m
+            [36m&lt;/select&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;button[39m
+            [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+            [33mtype[39m=[32m&quot;button&quot;[39m
+          [36m&gt;[39m
+            [0mComplete profile to research[0m
+          [36m&lt;/button&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;catalogue-note&quot;[39m
+        [36m&gt;[39m
+          [0mThese are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;p[39m
+          [33mrole[39m=[32m&quot;status&quot;[39m
+        [36m&gt;[39m
+          [0m0 universities found[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;div[39m
+          [33maria-busy[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;catalogue-grid&quot;[39m
+        [36m/&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mNo universities match these filters. Try another country or name.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/section&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element with the text: Review your research findings.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;find-page&quot;
+    &gt;
+      &lt;div
+        class=&quot;screen__head&quot;
+      &gt;
+        &lt;p
+          class=&quot;screen__eyebrow&quot;
+        &gt;
+          FIND YOUR PATH
+        &lt;/p&gt;
+        &lt;h1
+          class=&quot;screen__title&quot;
+        &gt;
+          Find your best 
+          &lt;span
+            class=&quot;find-yellow&quot;
+          &gt;
+            matches.
+          &lt;/span&gt;
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;screen__lede&quot;
+        &gt;
+          Research begins with your profile and preferences.
+        &lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;find-empty&quot;
+      &gt;
+        &lt;div
+          class=&quot;empty&quot;
+        &gt;
+          &lt;p
+            class=&quot;empty__title&quot;
+          &gt;
+            No results yet
+          &lt;/p&gt;
+          Start research to find programmes supported by available sources.
+        &lt;/div&gt;
+        &lt;button
+          class=&quot;btn btn--primary&quot;
+          type=&quot;button&quot;
+        &gt;
+          Start research →
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;section
+        aria-label=&quot;University catalogue&quot;
+        class=&quot;university-catalogue&quot;
+      &gt;
+        &lt;div
+          class=&quot;catalogue-heading&quot;
+        &gt;
+          &lt;div&gt;
+            &lt;p
+              class=&quot;screen__eyebrow&quot;
+            &gt;
+              EXPLORE UNIVERSITIES
+            &lt;/p&gt;
+            &lt;h2&gt;
+              Find a place to begin.
+            &lt;/h2&gt;
+            &lt;p&gt;
+              Browse 
+              0
+               universities, even when live research is unavailable. Select up to 5 to check against your profile.
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;span
+            class=&quot;chip&quot;
+          &gt;
+            0
+             imported universities
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div
+          class=&quot;catalogue-tools&quot;
+        &gt;
+          &lt;label&gt;
+            University, city or country
+            &lt;input
+              placeholder=&quot;Try MIT, Canada or Groningen&quot;
+              type=&quot;search&quot;
+              value=&quot;&quot;
+            /&gt;
+          &lt;/label&gt;
+          &lt;label&gt;
+            Country or region
+            &lt;select&gt;
+              &lt;option
+                value=&quot;&quot;
+              &gt;
+                All countries
+              &lt;/option&gt;
+              &lt;option&gt;
+                Europe
+              &lt;/option&gt;
+              &lt;option&gt;
+                Asia
+              &lt;/option&gt;
+              &lt;option&gt;
+                North America
+              &lt;/option&gt;
+              &lt;option&gt;
+                South America
+              &lt;/option&gt;
+              &lt;option&gt;
+                Oceania
+              &lt;/option&gt;
+              &lt;option&gt;
+                Africa
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/label&gt;
+          &lt;button
+            class=&quot;btn btn--primary&quot;
+            type=&quot;button&quot;
+          &gt;
+            Complete profile to research
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;p
+          class=&quot;catalogue-note&quot;
+        &gt;
+          These are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.
+        &lt;/p&gt;
+        &lt;p
+          role=&quot;status&quot;
+        &gt;
+          0 universities found
+        &lt;/p&gt;
+        &lt;div
+          aria-busy=&quot;false&quot;
+          class=&quot;catalogue-grid&quot;
+        /&gt;
+        &lt;p&gt;
+          No universities match these filters. Try another country or name.
+        &lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/ShortlistScreen.test.tsx:423:19
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; shows progress for an empty queued job instead of a second start" time="0.209356792">
+            <failure message="Unable to find an element with the text: Research is in progress.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;find-page&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;screen__head&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+        [36m&gt;[39m
+          [0mFIND YOUR PATH[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;h1[39m
+          [33mclass[39m=[32m&quot;screen__title&quot;[39m
+        [36m&gt;[39m
+          [0mFind your best [0m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;find-yellow&quot;[39m
+          [36m&gt;[39m
+            [0mmatches.[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/h1&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__lede&quot;[39m
+        [36m&gt;[39m
+          [0mResearch begins with your profile and preferences.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;find-empty&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;empty&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;empty__title&quot;[39m
+          [36m&gt;[39m
+            [0mNo results yet[0m
+          [36m&lt;/p&gt;[39m
+          [0mStart research to find programmes supported by available sources.[0m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;button[39m
+          [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+          [33mtype[39m=[32m&quot;button&quot;[39m
+        [36m&gt;[39m
+          [0mStart research →[0m
+        [36m&lt;/button&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;section[39m
+        [33maria-label[39m=[32m&quot;University catalogue&quot;[39m
+        [33mclass[39m=[32m&quot;university-catalogue&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-heading&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;p[39m
+              [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+            [36m&gt;[39m
+              [0mEXPLORE UNIVERSITIES[0m
+            [36m&lt;/p&gt;[39m
+            [36m&lt;h2&gt;[39m
+              [0mFind a place to begin.[0m
+            [36m&lt;/h2&gt;[39m
+            [36m&lt;p&gt;[39m
+              [0mBrowse [0m
+              [0m0[0m
+              [0m universities, even when live research is unavailable. Select up to 5 to check against your profile.[0m
+            [36m&lt;/p&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip&quot;[39m
+          [36m&gt;[39m
+            [0m0[0m
+            [0m imported universities[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-tools&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mUniversity, city or country[0m
+            [36m&lt;input[39m
+              [33mplaceholder[39m=[32m&quot;Try MIT, Canada or Groningen&quot;[39m
+              [33mtype[39m=[32m&quot;search&quot;[39m
+              [33mvalue[39m=[32m&quot;&quot;[39m
+            [36m/&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mCountry or region[0m
+            [36m&lt;select&gt;[39m
+              [36m&lt;option[39m
+                [33mvalue[39m=[32m&quot;&quot;[39m
+              [36m&gt;[39m
+                [0mAll countries[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mEurope[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAsia[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mNorth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mSouth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mOceania[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAfrica[0m
+              [36m&lt;/option&gt;[39m
+            [36m&lt;/select&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;button[39m
+            [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+            [33mtype[39m=[32m&quot;button&quot;[39m
+          [36m&gt;[39m
+            [0mComplete profile to research[0m
+          [36m&lt;/button&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;catalogue-note&quot;[39m
+        [36m&gt;[39m
+          [0mThese are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;p[39m
+          [33mrole[39m=[32m&quot;status&quot;[39m
+        [36m&gt;[39m
+          [0m0 universities found[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;div[39m
+          [33maria-busy[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;catalogue-grid&quot;[39m
+        [36m/&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mNo universities match these filters. Try another country or name.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/section&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element with the text: Research is in progress.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;find-page&quot;
+    &gt;
+      &lt;div
+        class=&quot;screen__head&quot;
+      &gt;
+        &lt;p
+          class=&quot;screen__eyebrow&quot;
+        &gt;
+          FIND YOUR PATH
+        &lt;/p&gt;
+        &lt;h1
+          class=&quot;screen__title&quot;
+        &gt;
+          Find your best 
+          &lt;span
+            class=&quot;find-yellow&quot;
+          &gt;
+            matches.
+          &lt;/span&gt;
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;screen__lede&quot;
+        &gt;
+          Research begins with your profile and preferences.
+        &lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;find-empty&quot;
+      &gt;
+        &lt;div
+          class=&quot;empty&quot;
+        &gt;
+          &lt;p
+            class=&quot;empty__title&quot;
+          &gt;
+            No results yet
+          &lt;/p&gt;
+          Start research to find programmes supported by available sources.
+        &lt;/div&gt;
+        &lt;button
+          class=&quot;btn btn--primary&quot;
+          type=&quot;button&quot;
+        &gt;
+          Start research →
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;section
+        aria-label=&quot;University catalogue&quot;
+        class=&quot;university-catalogue&quot;
+      &gt;
+        &lt;div
+          class=&quot;catalogue-heading&quot;
+        &gt;
+          &lt;div&gt;
+            &lt;p
+              class=&quot;screen__eyebrow&quot;
+            &gt;
+              EXPLORE UNIVERSITIES
+            &lt;/p&gt;
+            &lt;h2&gt;
+              Find a place to begin.
+            &lt;/h2&gt;
+            &lt;p&gt;
+              Browse 
+              0
+               universities, even when live research is unavailable. Select up to 5 to check against your profile.
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;span
+            class=&quot;chip&quot;
+          &gt;
+            0
+             imported universities
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div
+          class=&quot;catalogue-tools&quot;
+        &gt;
+          &lt;label&gt;
+            University, city or country
+            &lt;input
+              placeholder=&quot;Try MIT, Canada or Groningen&quot;
+              type=&quot;search&quot;
+              value=&quot;&quot;
+            /&gt;
+          &lt;/label&gt;
+          &lt;label&gt;
+            Country or region
+            &lt;select&gt;
+              &lt;option
+                value=&quot;&quot;
+              &gt;
+                All countries
+              &lt;/option&gt;
+              &lt;option&gt;
+                Europe
+              &lt;/option&gt;
+              &lt;option&gt;
+                Asia
+              &lt;/option&gt;
+              &lt;option&gt;
+                North America
+              &lt;/option&gt;
+              &lt;option&gt;
+                South America
+              &lt;/option&gt;
+              &lt;option&gt;
+                Oceania
+              &lt;/option&gt;
+              &lt;option&gt;
+                Africa
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/label&gt;
+          &lt;button
+            class=&quot;btn btn--primary&quot;
+            type=&quot;button&quot;
+          &gt;
+            Complete profile to research
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;p
+          class=&quot;catalogue-note&quot;
+        &gt;
+          These are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.
+        &lt;/p&gt;
+        &lt;p
+          role=&quot;status&quot;
+        &gt;
+          0 universities found
+        &lt;/p&gt;
+        &lt;div
+          aria-busy=&quot;false&quot;
+          class=&quot;catalogue-grid&quot;
+        /&gt;
+        &lt;p&gt;
+          No universities match these filters. Try another country or name.
+        &lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/ShortlistScreen.test.tsx:438:19
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; shows progress for an empty running job instead of a second start" time="0.206123084">
+            <failure message="Unable to find an element with the text: Research is in progress.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;find-page&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;screen__head&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+        [36m&gt;[39m
+          [0mFIND YOUR PATH[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;h1[39m
+          [33mclass[39m=[32m&quot;screen__title&quot;[39m
+        [36m&gt;[39m
+          [0mFind your best [0m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;find-yellow&quot;[39m
+          [36m&gt;[39m
+            [0mmatches.[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/h1&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__lede&quot;[39m
+        [36m&gt;[39m
+          [0mResearch begins with your profile and preferences.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;find-empty&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;empty&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;empty__title&quot;[39m
+          [36m&gt;[39m
+            [0mNo results yet[0m
+          [36m&lt;/p&gt;[39m
+          [0mStart research to find programmes supported by available sources.[0m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;button[39m
+          [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+          [33mtype[39m=[32m&quot;button&quot;[39m
+        [36m&gt;[39m
+          [0mStart research →[0m
+        [36m&lt;/button&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;section[39m
+        [33maria-label[39m=[32m&quot;University catalogue&quot;[39m
+        [33mclass[39m=[32m&quot;university-catalogue&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-heading&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;p[39m
+              [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+            [36m&gt;[39m
+              [0mEXPLORE UNIVERSITIES[0m
+            [36m&lt;/p&gt;[39m
+            [36m&lt;h2&gt;[39m
+              [0mFind a place to begin.[0m
+            [36m&lt;/h2&gt;[39m
+            [36m&lt;p&gt;[39m
+              [0mBrowse [0m
+              [0m0[0m
+              [0m universities, even when live research is unavailable. Select up to 5 to check against your profile.[0m
+            [36m&lt;/p&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip&quot;[39m
+          [36m&gt;[39m
+            [0m0[0m
+            [0m imported universities[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-tools&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mUniversity, city or country[0m
+            [36m&lt;input[39m
+              [33mplaceholder[39m=[32m&quot;Try MIT, Canada or Groningen&quot;[39m
+              [33mtype[39m=[32m&quot;search&quot;[39m
+              [33mvalue[39m=[32m&quot;&quot;[39m
+            [36m/&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mCountry or region[0m
+            [36m&lt;select&gt;[39m
+              [36m&lt;option[39m
+                [33mvalue[39m=[32m&quot;&quot;[39m
+              [36m&gt;[39m
+                [0mAll countries[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mEurope[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAsia[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mNorth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mSouth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mOceania[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAfrica[0m
+              [36m&lt;/option&gt;[39m
+            [36m&lt;/select&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;button[39m
+            [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+            [33mtype[39m=[32m&quot;button&quot;[39m
+          [36m&gt;[39m
+            [0mComplete profile to research[0m
+          [36m&lt;/button&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;catalogue-note&quot;[39m
+        [36m&gt;[39m
+          [0mThese are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;p[39m
+          [33mrole[39m=[32m&quot;status&quot;[39m
+        [36m&gt;[39m
+          [0m0 universities found[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;div[39m
+          [33maria-busy[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;catalogue-grid&quot;[39m
+        [36m/&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mNo universities match these filters. Try another country or name.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/section&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element with the text: Research is in progress.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;find-page&quot;
+    &gt;
+      &lt;div
+        class=&quot;screen__head&quot;
+      &gt;
+        &lt;p
+          class=&quot;screen__eyebrow&quot;
+        &gt;
+          FIND YOUR PATH
+        &lt;/p&gt;
+        &lt;h1
+          class=&quot;screen__title&quot;
+        &gt;
+          Find your best 
+          &lt;span
+            class=&quot;find-yellow&quot;
+          &gt;
+            matches.
+          &lt;/span&gt;
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;screen__lede&quot;
+        &gt;
+          Research begins with your profile and preferences.
+        &lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;find-empty&quot;
+      &gt;
+        &lt;div
+          class=&quot;empty&quot;
+        &gt;
+          &lt;p
+            class=&quot;empty__title&quot;
+          &gt;
+            No results yet
+          &lt;/p&gt;
+          Start research to find programmes supported by available sources.
+        &lt;/div&gt;
+        &lt;button
+          class=&quot;btn btn--primary&quot;
+          type=&quot;button&quot;
+        &gt;
+          Start research →
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;section
+        aria-label=&quot;University catalogue&quot;
+        class=&quot;university-catalogue&quot;
+      &gt;
+        &lt;div
+          class=&quot;catalogue-heading&quot;
+        &gt;
+          &lt;div&gt;
+            &lt;p
+              class=&quot;screen__eyebrow&quot;
+            &gt;
+              EXPLORE UNIVERSITIES
+            &lt;/p&gt;
+            &lt;h2&gt;
+              Find a place to begin.
+            &lt;/h2&gt;
+            &lt;p&gt;
+              Browse 
+              0
+               universities, even when live research is unavailable. Select up to 5 to check against your profile.
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;span
+            class=&quot;chip&quot;
+          &gt;
+            0
+             imported universities
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div
+          class=&quot;catalogue-tools&quot;
+        &gt;
+          &lt;label&gt;
+            University, city or country
+            &lt;input
+              placeholder=&quot;Try MIT, Canada or Groningen&quot;
+              type=&quot;search&quot;
+              value=&quot;&quot;
+            /&gt;
+          &lt;/label&gt;
+          &lt;label&gt;
+            Country or region
+            &lt;select&gt;
+              &lt;option
+                value=&quot;&quot;
+              &gt;
+                All countries
+              &lt;/option&gt;
+              &lt;option&gt;
+                Europe
+              &lt;/option&gt;
+              &lt;option&gt;
+                Asia
+              &lt;/option&gt;
+              &lt;option&gt;
+                North America
+              &lt;/option&gt;
+              &lt;option&gt;
+                South America
+              &lt;/option&gt;
+              &lt;option&gt;
+                Oceania
+              &lt;/option&gt;
+              &lt;option&gt;
+                Africa
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/label&gt;
+          &lt;button
+            class=&quot;btn btn--primary&quot;
+            type=&quot;button&quot;
+          &gt;
+            Complete profile to research
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;p
+          class=&quot;catalogue-note&quot;
+        &gt;
+          These are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.
+        &lt;/p&gt;
+        &lt;p
+          role=&quot;status&quot;
+        &gt;
+          0 universities found
+        &lt;/p&gt;
+        &lt;div
+          aria-busy=&quot;false&quot;
+          class=&quot;catalogue-grid&quot;
+        /&gt;
+        &lt;p&gt;
+          No universities match these filters. Try another country or name.
+        &lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/ShortlistScreen.test.tsx:438:19
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; shows an honest empty-run notice without an inert callback button" time="0.202742833">
+            <failure message="Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;find-page&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;screen__head&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+        [36m&gt;[39m
+          [0mFIND YOUR PATH[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;h1[39m
+          [33mclass[39m=[32m&quot;screen__title&quot;[39m
+        [36m&gt;[39m
+          [0mFind your best [0m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;find-yellow&quot;[39m
+          [36m&gt;[39m
+            [0mmatches.[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/h1&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;screen__lede&quot;[39m
+        [36m&gt;[39m
+          [0mResearch begins with your profile and preferences.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;find-empty&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;empty&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;empty__title&quot;[39m
+          [36m&gt;[39m
+            [0mNo results yet[0m
+          [36m&lt;/p&gt;[39m
+          [0mStart research to find programmes supported by available sources.[0m
+        [36m&lt;/div&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;section[39m
+        [33maria-label[39m=[32m&quot;University catalogue&quot;[39m
+        [33mclass[39m=[32m&quot;university-catalogue&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-heading&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;p[39m
+              [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+            [36m&gt;[39m
+              [0mEXPLORE UNIVERSITIES[0m
+            [36m&lt;/p&gt;[39m
+            [36m&lt;h2&gt;[39m
+              [0mFind a place to begin.[0m
+            [36m&lt;/h2&gt;[39m
+            [36m&lt;p&gt;[39m
+              [0mBrowse [0m
+              [0m0[0m
+              [0m universities, even when live research is unavailable. Select up to 5 to check against your profile.[0m
+            [36m&lt;/p&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;chip&quot;[39m
+          [36m&gt;[39m
+            [0m0[0m
+            [0m imported universities[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;catalogue-tools&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mUniversity, city or country[0m
+            [36m&lt;input[39m
+              [33mplaceholder[39m=[32m&quot;Try MIT, Canada or Groningen&quot;[39m
+              [33mtype[39m=[32m&quot;search&quot;[39m
+              [33mvalue[39m=[32m&quot;&quot;[39m
+            [36m/&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;label&gt;[39m
+            [0mCountry or region[0m
+            [36m&lt;select&gt;[39m
+              [36m&lt;option[39m
+                [33mvalue[39m=[32m&quot;&quot;[39m
+              [36m&gt;[39m
+                [0mAll countries[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mEurope[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAsia[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mNorth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mSouth America[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mOceania[0m
+              [36m&lt;/option&gt;[39m
+              [36m&lt;option&gt;[39m
+                [0mAfrica[0m
+              [36m&lt;/option&gt;[39m
+            [36m&lt;/select&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;button[39m
+            [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+            [33mtype[39m=[32m&quot;button&quot;[39m
+          [36m&gt;[39m
+            [0mComplete profile to research[0m
+          [36m&lt;/button&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;p[39m
+          [33mclass[39m=[32m&quot;catalogue-note&quot;[39m
+        [36m&gt;[39m
+          [0mThese are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;p[39m
+          [33mrole[39m=[32m&quot;status&quot;[39m
+        [36m&gt;[39m
+          [0m0 universities found[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;div[39m
+          [33maria-busy[39m=[32m&quot;false&quot;[39m
+          [33mclass[39m=[32m&quot;catalogue-grid&quot;[39m
+        [36m/&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mNo universities match these filters. Try another country or name.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/section&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element with the text: Research needs attention.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;find-page&quot;
+    &gt;
+      &lt;div
+        class=&quot;screen__head&quot;
+      &gt;
+        &lt;p
+          class=&quot;screen__eyebrow&quot;
+        &gt;
+          FIND YOUR PATH
+        &lt;/p&gt;
+        &lt;h1
+          class=&quot;screen__title&quot;
+        &gt;
+          Find your best 
+          &lt;span
+            class=&quot;find-yellow&quot;
+          &gt;
+            matches.
+          &lt;/span&gt;
+        &lt;/h1&gt;
+        &lt;p
+          class=&quot;screen__lede&quot;
+        &gt;
+          Research begins with your profile and preferences.
+        &lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;find-empty&quot;
+      &gt;
+        &lt;div
+          class=&quot;empty&quot;
+        &gt;
+          &lt;p
+            class=&quot;empty__title&quot;
+          &gt;
+            No results yet
+          &lt;/p&gt;
+          Start research to find programmes supported by available sources.
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;section
+        aria-label=&quot;University catalogue&quot;
+        class=&quot;university-catalogue&quot;
+      &gt;
+        &lt;div
+          class=&quot;catalogue-heading&quot;
+        &gt;
+          &lt;div&gt;
+            &lt;p
+              class=&quot;screen__eyebrow&quot;
+            &gt;
+              EXPLORE UNIVERSITIES
+            &lt;/p&gt;
+            &lt;h2&gt;
+              Find a place to begin.
+            &lt;/h2&gt;
+            &lt;p&gt;
+              Browse 
+              0
+               universities, even when live research is unavailable. Select up to 5 to check against your profile.
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;span
+            class=&quot;chip&quot;
+          &gt;
+            0
+             imported universities
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div
+          class=&quot;catalogue-tools&quot;
+        &gt;
+          &lt;label&gt;
+            University, city or country
+            &lt;input
+              placeholder=&quot;Try MIT, Canada or Groningen&quot;
+              type=&quot;search&quot;
+              value=&quot;&quot;
+            /&gt;
+          &lt;/label&gt;
+          &lt;label&gt;
+            Country or region
+            &lt;select&gt;
+              &lt;option
+                value=&quot;&quot;
+              &gt;
+                All countries
+              &lt;/option&gt;
+              &lt;option&gt;
+                Europe
+              &lt;/option&gt;
+              &lt;option&gt;
+                Asia
+              &lt;/option&gt;
+              &lt;option&gt;
+                North America
+              &lt;/option&gt;
+              &lt;option&gt;
+                South America
+              &lt;/option&gt;
+              &lt;option&gt;
+                Oceania
+              &lt;/option&gt;
+              &lt;option&gt;
+                Africa
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/label&gt;
+          &lt;button
+            class=&quot;btn btn--primary&quot;
+            type=&quot;button&quot;
+          &gt;
+            Complete profile to research
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;p
+          class=&quot;catalogue-note&quot;
+        &gt;
+          These are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.
+        &lt;/p&gt;
+        &lt;p
+          role=&quot;status&quot;
+        &gt;
+          0 universities found
+        &lt;/p&gt;
+        &lt;div
+          aria-busy=&quot;false&quot;
+          class=&quot;catalogue-grid&quot;
+        /&gt;
+        &lt;p&gt;
+          No universities match these filters. Try another country or name.
+        &lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/ShortlistScreen.test.tsx:451:19
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; keeps the existing Start route only when no run exists" time="0.206702375">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; retains partial rows, filters, compare, unsaved notes and unknowns when the run stops" time="0.211590291">
+            <failure message="Unable to find an element with the text: Research is in progress.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;find-page&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;details[39m
+        [33mclass[39m=[32m&quot;catalogue-expand&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;summary&gt;[39m
+          [0mExplore more universities from the local catalogue[0m
+        [36m&lt;/summary&gt;[39m
+        [36m&lt;section[39m
+          [33maria-label[39m=[32m&quot;University catalogue&quot;[39m
+          [33mclass[39m=[32m&quot;university-catalogue&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;div[39m
+            [33mclass[39m=[32m&quot;catalogue-heading&quot;[39m
+          [36m&gt;[39m
+            [36m&lt;div&gt;[39m
+              [36m&lt;p[39m
+                [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+              [36m&gt;[39m
+                [0mEXPLORE UNIVERSITIES[0m
+              [36m&lt;/p&gt;[39m
+              [36m&lt;h2&gt;[39m
+                [0mFind a place to begin.[0m
+              [36m&lt;/h2&gt;[39m
+              [36m&lt;p&gt;[39m
+                [0mBrowse [0m
+                [0m0[0m
+                [0m universities, even when live research is unavailable. Select up to 5 to check against your profile.[0m
+              [36m&lt;/p&gt;[39m
+            [36m&lt;/div&gt;[39m
+            [36m&lt;span[39m
+              [33mclass[39m=[32m&quot;chip&quot;[39m
+            [36m&gt;[39m
+              [0m0[0m
+              [0m imported universities[0m
+            [36m&lt;/span&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;div[39m
+            [33mclass[39m=[32m&quot;catalogue-tools&quot;[39m
+          [36m&gt;[39m
+            [36m&lt;label&gt;[39m
+              [0mUniversity, city or country[0m
+              [36m&lt;input[39m
+                [33mplaceholder[39m=[32m&quot;Try MIT, Canada or Groningen&quot;[39m
+                [33mtype[39m=[32m&quot;search&quot;[39m
+                [33mvalue[39m=[32m&quot;&quot;[39m
+              [36m/&gt;[39m
+            [36m&lt;/label&gt;[39m
+            [36m&lt;label&gt;[39m
+              [0mCountry or region[0m
+              [36m&lt;select&gt;[39m
+                [36m&lt;option[39m
+                  [33mvalue[39m=[32m&quot;&quot;[39m
+                [36m&gt;[39m
+                  [0mAll countries[0m
+                [36m&lt;/option&gt;[39m
+                [36m&lt;option&gt;[39m
+                  [0mEurope[0m
+                [36m&lt;/option&gt;[39m
+                [36m&lt;option&gt;[39m
+                  [0mAsia[0m
+                [36m&lt;/option&gt;[39m
+                [36m&lt;option&gt;[39m
+                  [0mNorth America[0m
+                [36m&lt;/option&gt;[39m
+                [36m&lt;option&gt;[39m
+                  [0mSouth America[0m
+                [36m&lt;/option&gt;[39m
+                [36m&lt;option&gt;[39m
+                  [0mOceania[0m
+                [36m&lt;/option&gt;[39m
+                [36m&lt;option&gt;[39m
+                  [0mAfrica[0m
+                [36m&lt;/option&gt;[39m
+              [36m&lt;/select&gt;[39m
+            [36m&lt;/label&gt;[39m
+            [36m&lt;button[39m
+              [33mclass[39m=[32m&quot;btn btn--primary&quot;[39m
+              [33mtype[39m=[32m&quot;button&quot;[39m
+            [36m&gt;[39m
+              [0mComplete profile to research[0m
+            [36m&lt;/button&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;catalogue-note&quot;[39m
+          [36m&gt;[39m
+            [0mThese are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.[0m
+          [36m&lt;/p&gt;[39m
+          [36m&lt;p[39m
+            [33mrole[39m=[32m&quot;status&quot;[39m
+          [36m&gt;[39m
+            [0m0 universities found[0m
+          [36m&lt;/p&gt;[39m
+          [36m&lt;div[39m
+            [33maria-busy[39m=[32m&quot;false&quot;[39m
+            [33mclass[39m=[32m&quot;catalogue-grid&quot;[39m
+          [36m/&gt;[39m
+          [36m&lt;p&gt;[39m
+            [0mNo universities match these filters. Try another country or name.[0m
+          [36m&lt;/p&gt;[39m
+        [36m&lt;/section&gt;[39m
+      [36m&lt;/details&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;find-hero&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;screen__head&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;screen__eyebrow&quot;[39m
+          [36m&gt;[39m
+            [0mGLOBAL OPPORTUNITIES. REAL MATCHES.[0m
+          [36m&lt;/p&gt;[39m
+          [36m&lt;h1[39m
+            [33mclass[39m=[32m&quot;screen__title&quot;[39m
+          [36m&gt;[39m
+            [0mFind your best [0m
+            [36m&lt;span[39m
+              [33mclass[39m=[32m&quot;find-yellow&quot;[39m
+            [36m&gt;[39m
+              [0mmatches.[0m
+            [36m&lt;/span&gt;[39m
+          [36m&lt;/h1&gt;[39m
+          [36m&lt;p[39m
+            [33mclass[39m=[32m&quot;screen__lede&quot;[39m
+          [36m&gt;[39m
+            [0mExplore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.[0m
+          [36m&lt;/p&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;img[39m
+          [33malt[39m=[32m&quot;Unimatch mascot exploring a mountain landscape&quot;[39m
+          [33msrc[39m=[32m&quot;/brand/unimatch-journey.png&quot;[39m
+        [36m/&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;stack stack--loose&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;notice notice--demo&quot;[39m
+          [33mrole[39m=[32m&quot;note&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;strong&gt;[39m
+              [0mDemo data.[0m
+            [36m&lt;/strong&gt;[39m
+            [0m These figures come from a bundled synthetic corpus, not from real university pages. Every source below is a [0m
+            [36m&lt;code&gt;[39m
+              [0mfixture://[0m
+            [36m&lt;/code&gt;[39m
+            [0m address.[0m
+          [36m&lt;/div&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;find-toolbar&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;label[39m
+            [33mclass[39m=[32m&quot;find-search&quot;[39m
+          [36m&gt;[39m
+            [36m&lt;span[39m
+              [33mclass[39m=[32m&quot;visually-hidden&quot;[39m
+            [36m&gt;[39m
+              [0mSearch universities, programmes or countries[0m
+            [36m&lt;/span&gt;[39m
+            [36m&lt;input[39m
+              [33mplaceholder[39m=[32m&quot;Search universities, programmes or countries…&quot;[39m
+              [33mvalue[39m=[32m&quot;&quot;[39m
+            [36m/&gt;[39m
+          [36m&lt;/label&gt;[39m
+          [36m&lt;button[39m
+            [33mclass[39m=[32m&quot;btn&quot;[39m
+            [33mtype[39m=[32m&quot;button&quot;[39m
+          [36m&gt;[39m
+            [0mFilters[0m
+          [36m&lt;/button&gt;[39m
+          [36m&lt;button[39m
+            [33mclass[39m=[32m&quot;btn btn--dark&quot;[39m
+            [33mdisabled[39m=[32m&quot;&quot;[39m
+            [33mtype[39m=[32m&quot;button&quot;[39m
+          [36m&gt;[39m
+            [0mCompare ([0m
+            [0m0[0m
+            [0m)[0m
+          [36m&lt;/button&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div[39m
+    ..." type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element with the text: Research is in progress.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;find-page&quot;
+    &gt;
+      &lt;details
+        class=&quot;catalogue-expand&quot;
+      &gt;
+        &lt;summary&gt;
+          Explore more universities from the local catalogue
+        &lt;/summary&gt;
+        &lt;section
+          aria-label=&quot;University catalogue&quot;
+          class=&quot;university-catalogue&quot;
+        &gt;
+          &lt;div
+            class=&quot;catalogue-heading&quot;
+          &gt;
+            &lt;div&gt;
+              &lt;p
+                class=&quot;screen__eyebrow&quot;
+              &gt;
+                EXPLORE UNIVERSITIES
+              &lt;/p&gt;
+              &lt;h2&gt;
+                Find a place to begin.
+              &lt;/h2&gt;
+              &lt;p&gt;
+                Browse 
+                0
+                 universities, even when live research is unavailable. Select up to 5 to check against your profile.
+              &lt;/p&gt;
+            &lt;/div&gt;
+            &lt;span
+              class=&quot;chip&quot;
+            &gt;
+              0
+               imported universities
+            &lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div
+            class=&quot;catalogue-tools&quot;
+          &gt;
+            &lt;label&gt;
+              University, city or country
+              &lt;input
+                placeholder=&quot;Try MIT, Canada or Groningen&quot;
+                type=&quot;search&quot;
+                value=&quot;&quot;
+              /&gt;
+            &lt;/label&gt;
+            &lt;label&gt;
+              Country or region
+              &lt;select&gt;
+                &lt;option
+                  value=&quot;&quot;
+                &gt;
+                  All countries
+                &lt;/option&gt;
+                &lt;option&gt;
+                  Europe
+                &lt;/option&gt;
+                &lt;option&gt;
+                  Asia
+                &lt;/option&gt;
+                &lt;option&gt;
+                  North America
+                &lt;/option&gt;
+                &lt;option&gt;
+                  South America
+                &lt;/option&gt;
+                &lt;option&gt;
+                  Oceania
+                &lt;/option&gt;
+                &lt;option&gt;
+                  Africa
+                &lt;/option&gt;
+              &lt;/select&gt;
+            &lt;/label&gt;
+            &lt;button
+              class=&quot;btn btn--primary&quot;
+              type=&quot;button&quot;
+            &gt;
+              Complete profile to research
+            &lt;/button&gt;
+          &lt;/div&gt;
+          &lt;p
+            class=&quot;catalogue-note&quot;
+          &gt;
+            These are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.
+          &lt;/p&gt;
+          &lt;p
+            role=&quot;status&quot;
+          &gt;
+            0 universities found
+          &lt;/p&gt;
+          &lt;div
+            aria-busy=&quot;false&quot;
+            class=&quot;catalogue-grid&quot;
+          /&gt;
+          &lt;p&gt;
+            No universities match these filters. Try another country or name.
+          &lt;/p&gt;
+        &lt;/section&gt;
+      &lt;/details&gt;
+      &lt;div
+        class=&quot;find-hero&quot;
+      &gt;
+        &lt;div
+          class=&quot;screen__head&quot;
+        &gt;
+          &lt;p
+            class=&quot;screen__eyebrow&quot;
+          &gt;
+            GLOBAL OPPORTUNITIES. REAL MATCHES.
+          &lt;/p&gt;
+          &lt;h1
+            class=&quot;screen__title&quot;
+          &gt;
+            Find your best 
+            &lt;span
+              class=&quot;find-yellow&quot;
+            &gt;
+              matches.
+            &lt;/span&gt;
+          &lt;/h1&gt;
+          &lt;p
+            class=&quot;screen__lede&quot;
+          &gt;
+            Explore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.
+          &lt;/p&gt;
+        &lt;/div&gt;
+        &lt;img
+          alt=&quot;Unimatch mascot exploring a mountain landscape&quot;
+          src=&quot;/brand/unimatch-journey.png&quot;
+        /&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;stack stack--loose&quot;
+      &gt;
+        &lt;div
+          class=&quot;notice notice--demo&quot;
+          role=&quot;note&quot;
+        &gt;
+          &lt;div&gt;
+            &lt;strong&gt;
+              Demo data.
+            &lt;/strong&gt;
+             These figures come from a bundled synthetic corpus, not from real university pages. Every source below is a 
+            &lt;code&gt;
+              fixture://
+            &lt;/code&gt;
+             address.
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div
+          class=&quot;find-toolbar&quot;
+        &gt;
+          &lt;label
+            class=&quot;find-search&quot;
+          &gt;
+            &lt;span
+              class=&quot;visually-hidden&quot;
+            &gt;
+              Search universities, programmes or countries
+            &lt;/span&gt;
+            &lt;input
+              placeholder=&quot;Search universities, programmes or countries…&quot;
+              value=&quot;&quot;
+            /&gt;
+          &lt;/label&gt;
+          &lt;button
+            class=&quot;btn&quot;
+            type=&quot;button&quot;
+          &gt;
+            Filters
+          &lt;/button&gt;
+          &lt;button
+            class=&quot;btn btn--dark&quot;
+            disabled=&quot;&quot;
+            type=&quot;button&quot;
+          &gt;
+            Compare (
+            0
+            )
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;div
+    ...
+ ❯ Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/ShortlistScreen.test.tsx:476:19
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; does not turn locally filtered-zero rows into a stopped or empty research run" time="0.21412175">
+        </testcase>
+    </testsuite>
+</testsuites>
