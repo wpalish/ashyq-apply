@@ -1,0 +1,59 @@
+{
+  "status": "READY_FOR_INDEPENDENT_PEER_NOT_APPLIED",
+  "created_at": "2026-10-08T05:21:42.388472+00:00",
+  "plan_sha256": "d635ede4a4832b507f579a698096c2db065589428d01e009d0b0103ab6d7306b",
+  "source_manifest_sha256": "a0a0b2e3c2a62b41eccbf877fbe097f68f4f0a2042ac4d0e75c5a7bd5e3081d0",
+  "patch_sha256": "4e6b0e3d0dea7016dff9fd8ee05a47f22fd9c092c60bc10e077c08b3691d5751",
+  "proposed": {
+    "backend/app/adapters/discovery/live_discovery.py": {
+      "sha256": "57cfdab71d29e261c6ca18652ba69c4b018954780eab8d00f62f9f55c26ee093",
+      "bytes": 96687
+    },
+    "backend/app/catalogue/discovery.py": {
+      "sha256": "bc07cdaf263349931dbb7abb3d987897480711ecb4b19420ce5f2e5df70eda12",
+      "bytes": 13296
+    },
+    "backend/tests/test_live_discovery.py": {
+      "sha256": "aef28ed47c9f8f2ee84d878c405ba442a2c89340464a3695b20567317c39863e",
+      "bytes": 107669
+    }
+  },
+  "native_on": {
+    "PASS": 250,
+    "RED": 0,
+    "ERROR": 0,
+    "SKIP": 0,
+    "deselected": 1,
+    "warnings": 31
+  },
+  "native_off": {
+    "PASS": 243,
+    "expected_new_RED": 7,
+    "ERROR": 0,
+    "SKIP": 0,
+    "deselected": 1,
+    "warnings": 31
+  },
+  "original231_PASS_both": true,
+  "new_native19": true,
+  "ordinary_and_control_whole_output_equalities": 12,
+  "all19_dispatch_accounting_equalities": true,
+  "static": {
+    "ruff": "PASS",
+    "format": "PASS",
+    "configured_mypy": "PASS"
+  },
+  "primary_dependency814_pre_post_equal": true,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "first_native_attempt": "180PASS/70 setupERROR preserved (69 missing runtime parent;1 missing owned migrations); no functional candidate claim",
+  "second_attempt": "245PASS/4fixtureRED preserved (2 DNS guard interference; timeout nth-get and robots-vs-get count fixture assertions)",
+  "final_transports": "Native get methods/robots/site/page gates intact; socket deny +synthetic allowlisted DNS +MockTransport; FakeSearchProvider seam only; no real provider/model/university calls",
+  "contract": "Optional private caller-owned trace; fresh per university before scope. Catalogue separate inner trace publishes only on noncheckpoint native stop, identity diagnostic prefix once, stopped owner name preserved, seed ledger set spent. No _apply on unwind, no flags/default/schema/caps/client changes.",
+  "limits": [
+    "Native discovery exported trace.as_dict +Candidate, no canary/scorer/gather_report or SQL/Worker report",
+    "Simulated reserve callback, not SQL fence; no >6 vendor HTTP proof",
+    "Repeated adapter counts are per discovery invocation; not persistent query durability across Job retry",
+    "Configured mypy has untyped-body notes; 31 native parser/deprecation warnings retained",
+    "Session sink only for native identity observation, no DB proof"
+  ]
+}

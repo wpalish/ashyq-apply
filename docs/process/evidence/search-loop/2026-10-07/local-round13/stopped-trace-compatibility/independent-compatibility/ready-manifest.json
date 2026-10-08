@@ -1,0 +1,88 @@
+{
+  "status": "SEALED_PREFLIGHT_ONLY",
+  "files": {
+    "PLAN.json": {
+      "sha256": "9581e9493729e8093ea6ac295411cd17f0fc93edefb2a0acc11bc427c8e2e9d3",
+      "bytes": 2466
+    },
+    "REPORT.md": {
+      "sha256": "a74cd582ccab667259b4c1489e9207288eb2013be2b2f46d9a5a221a5cad0014",
+      "bytes": 3483
+    },
+    "attempt1.stderr.log": {
+      "sha256": "5ce82e7aeb16d9904f31ae727b2eb2a926e9a5099ea6ff2c9da13362c6dd94bb",
+      "bytes": 517
+    },
+    "attempt1.stdout.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "attempt2.stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "attempt2.stdout.log": {
+      "sha256": "0d244f4f78867cf3a14f7f7a3938e91a6917bfda0d8deb92684db8c271321f1d",
+      "bytes": 167
+    },
+    "audit.py": {
+      "sha256": "c0184eff833761a085025e0cd7edacdf21f7143433bbaa6fd59642f57f63339c",
+      "bytes": 7090
+    },
+    "execution.attempt1.json": {
+      "sha256": "9c2d7294703877f99aa92964b461eb86c12b99af5e74b840afc64ac490066a66",
+      "bytes": 785
+    },
+    "execution.attempt2.json": {
+      "sha256": "b804b3100eb4232b0287fd17f64e4a80f5104ebe00be0b6406344d0ff00feffb",
+      "bytes": 595
+    },
+    "history/audit.attempt1.original.py": {
+      "sha256": "ebc8430a536759bfc6560af3a10b0979bb051f3feebd8f8d5c801016feca3176",
+      "bytes": 7090
+    },
+    "input-origins.json": {
+      "sha256": "ceda46ae01f72ebd6c15847d8c810192980f89d600405014caa0ee0238c718e3",
+      "bytes": 1228
+    },
+    "inputs/1-root-stopped-trace-accounting-PLAN.json": {
+      "sha256": "d94aece9e219cec706a99952d9624d7b401a266554c371591d2c24a9344e433b",
+      "bytes": 845
+    },
+    "inputs/2-root-stopped-trace-accounting-source-before-999.json": {
+      "sha256": "3e66216452290baa7a415f24ab31f6650ffa8c9f0f7592ae0b53922b0024d9dd",
+      "bytes": 130332
+    },
+    "inputs/3-b-outer-trace-preparation-ready-manifest.json": {
+      "sha256": "8e4a13b345aea6e00b05ec944124f8a349a7f144f18a4c5137a41399d53ac51f",
+      "bytes": 4118
+    },
+    "inputs/4-a-outer-off-review-ready-manifest.json": {
+      "sha256": "ca33f2c00cf886505ba709d1144043610cab1719354a7c088eb75f628ea90a67",
+      "bytes": 1673
+    },
+    "inventory.original.json": {
+      "sha256": "1b984132b7109cd83f7317e2fbc5603114f0039dac6386e5b3134698ad7de05d",
+      "bytes": 5794
+    },
+    "peer-control-contract.json": {
+      "sha256": "5d20f8a3f90bef0ee99e48b94fc3f5658fa0a0727112dcf533f6d1125e65ac8a",
+      "bytes": 2443
+    },
+    "receipt.json": {
+      "sha256": "aae4f1c0b96b0a1bd217b8a5d1e55d3fecd9dd2c400e9b9193babd40b9a910c3",
+      "bytes": 2548
+    },
+    "source-excerpts.original.json": {
+      "sha256": "f153882d8957d0d2ef79897ca32892d7774904af79676ac505c7c7c2b7436fa3",
+      "bytes": 36021
+    }
+  },
+  "selected_files": 19,
+  "selected_bytes": 207195,
+  "receipt_sha256": "aae4f1c0b96b0a1bd217b8a5d1e55d3fecd9dd2c400e9b9193babd40b9a910c3",
+  "excluded": [
+    "No .env/DB/pyc/raw university/gold payloads",
+    "No current app/test source copied beyond native code excerpts"
+  ]
+}

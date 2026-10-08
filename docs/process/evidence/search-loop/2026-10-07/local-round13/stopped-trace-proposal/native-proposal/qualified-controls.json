@@ -1,0 +1,4083 @@
+{
+  "native": {
+    "on": [
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[www.rug.nl-rug.nl]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[rug.nl-rug.nl]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[studieren.univie.ac.at-univie.ac.at]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[admissions.hku.hk-hku.hk]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[admissions.nu.edu.kz-nu.edu.kz]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[www.ntu.edu.sg-ntu.edu.sg]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[admission.kaist.ac.kr-kaist.ac.kr]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[you.ubc.ca-ubc.ca]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[en.uw.edu.pl-uw.edu.pl]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_off_domain_urls_are_recognised[https://www.rug.nl/education-www.rug.nl-True]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_off_domain_urls_are_recognised[https://rug.nl/education-www.rug.nl-True]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_off_domain_urls_are_recognised[https://studieren.univie.ac.at/x-www.univie.ac.at-True]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_off_domain_urls_are_recognised[https://evil.example.com/rug.nl-www.rug.nl-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_off_domain_urls_are_recognised[https://www.tudelft.nl/x-www.rug.nl-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_off_domain_urls_are_recognised[https://other.ac.at/x-www.univie.ac.at-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_equivalent_urls_normalise_to_one_form[https://WWW.RUG.NL/Education/-https://www.rug.nl/Education]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_equivalent_urls_normalise_to_one_form[https://www.rug.nl/education#section-https://www.rug.nl/education]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_equivalent_urls_normalise_to_one_form[https://www.rug.nl/education?utm_source=x-https://www.rug.nl/education]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_equivalent_urls_normalise_to_one_form[https://www.rug.nl/education?fbclid=abc-https://www.rug.nl/education]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_equivalent_urls_normalise_to_one_form[https://www.rug.nl:443/education-https://www.rug.nl/education]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_equivalent_urls_normalise_to_one_form[https://www.rug.nl//education//cs-https://www.rug.nl/education/cs]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_equivalent_urls_normalise_to_one_form[https://www.rug.nl/-https://www.rug.nl/]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_meaningful_query_parameters_are_kept"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_query_order_does_not_create_a_second_url"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/en/education/programmes/bachelors/computer-science-program_page]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/en/bachelordiploma-programmes/computer-science-bachelor-program_page]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/bsc-computer-science-program_page]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/en/education/programmes/bachelors-program_catalog]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/en/degree-programmes-program_catalog]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/education/degree-programmes-1st-2nd-and-long-cycle-programmes-program_catalog]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/admission-and-application-admissions]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/entry_requirements-admissions]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/tuition-fees-costs]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/cost-of-attendance-costs]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/scholarships-scholarships]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/financial_aid-scholarships]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/required-documents-documents]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/news/2026/something]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/events/open-day]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/vacancies/professor]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/alumni/donate]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/privacy]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/assets/style.css]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/brochure.pdf.zip]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/library/search]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/about/degree-ceremony-photos]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/programme-news]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/bachelor-open-day]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/onlinebachelorweek]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/student-for-a-day]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/campus-tour]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/online-university-tour]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/webklassen]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/research/zernike/a-group/bsc-msc-project-guidelines]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/research/institutes/group/msc-and-bsc-projects]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/en/programmes/elec-student-newsletters]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/sv/program/elec-nyhetsbrev-for-studerande]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/programmes/bachelors/cs-information-session]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/en/degree-programmes-True]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/applying-ubc/how-to-apply/degrees-programs/-True]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/studies/programmes-True]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/about/degree-ceremony-photos-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/programme-news-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/news/2026/new-programme-launched-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/en/education/programmes/bachelors/computer-science-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_a_funding_page_is_never_a_programme[https://uni.edu/admissions/undergraduate/scholarships/detail/sci-award]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_a_funding_page_is_never_a_programme[https://uni.edu/en/education/programmes/bachelors/funding/award]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_a_funding_page_is_never_a_programme[https://uni.edu/study/financial-aid/undergraduate-grants]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_the_applicants_subject_outranks_an_unrelated_programme"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_a_programme_at_the_wrong_level_is_penalised"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapParsing",
+          "test_robots_sitemap_directives_are_read"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapParsing",
+          "test_robots_without_a_sitemap_yields_none"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapParsing",
+          "test_a_urlset_yields_pages"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapParsing",
+          "test_a_sitemap_index_yields_children"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapParsing",
+          "test_malformed_xml_does_not_raise"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapParsing",
+          "test_a_plain_text_sitemap_is_accepted"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapParsing",
+          "test_a_gzipped_sitemap_is_decompressed"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapParsing",
+          "test_a_corrupt_gzip_yields_empty_text_rather_than_raising"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_it_follows_a_sitemap_index_into_its_children"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_failed_sitemap_reads_consume_the_document_budget"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_oversized_map_stops_bulk_traversal_before_slow_siblings"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_nested_indexes_are_followed_but_bounded"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_a_self_referencing_index_terminates"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_off_domain_urls_in_a_sitemap_are_dropped"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_duplicate_and_equivalent_urls_are_deduplicated"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_conventional_locations_are_tried_when_robots_names_none"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_no_sitemap_at_all_is_recorded_not_raised"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_a_robots_refusal_is_recorded_and_not_worked_around"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_manual_seeds_are_used_and_recorded_with_provenance"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_a_manual_seed_is_not_itself_evidence"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_an_off_domain_manual_seed_is_rejected"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_a_manual_seed_wins_over_a_discovered_page"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_sitemap_discovery_finds_a_programme_page"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_the_wrong_degree_level_is_not_offered_first"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_fetched_programmes_must_match_requested_level_and_subject"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_a_candidate_that_reads_as_an_event_is_dropped"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_a_rejected_candidate_lets_the_next_one_through"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_an_unreadable_candidate_is_reported_not_promoted"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_a_catalogue_alone_does_not_become_a_programme"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_the_number_of_pages_per_category_is_bounded"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_navigation_is_used_only_when_sitemaps_yield_nothing"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_navigation_keeps_the_strongest_leads_not_the_first"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_navigation_is_not_used_when_a_programme_page_was_found"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_navigation_runs_when_only_a_catalogue_was_found"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_a_catalogue_link_is_followed_by_its_wording"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_link_text_matching_needs_the_whole_subject"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_link_text_matching_only_applies_on_a_catalogue"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_a_large_sitemap_does_not_crowd_out_the_programmes"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_an_unreachable_site_is_reported_not_raised"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_excluded_countries_are_not_proposed"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_the_trace_serialises_for_the_canary_report"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestShippedRegistry",
+          "test_it_covers_at_least_ten_institutions_in_several_countries"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestShippedRegistry",
+          "test_every_seed_is_on_its_own_institutions_domain"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestShippedRegistry",
+          "test_every_seed_category_is_one_discovery_understands"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestShippedRegistry",
+          "test_every_seed_is_an_absolute_https_url"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_security_deep_catalog_json_never_raises"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_security_catalog_json_labels_are_bounded"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r1_walker_extracts_scored_links"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r2_each_link_fetched_with_outcome"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r3_profile_predicate_reused"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r4_off_domain_never_fetched"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r5_js_json_payload_yields_programs"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r6_js_unrelated_json_falls_through"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r7_js_silent_shell_is_recorded_not_fatal"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r8_source_pages_rows_recorded"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r9_top_n_budget"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r10_no_catalog_byte_identical"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r10_demo_invariant"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_justified_green_titled_js_shell_is_a_catalogue"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestTheWalkerUsesOnePredicate",
+          "test_the_walker_asks_the_same_question_as_the_confirm_stage"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSearchBeforeNavigation",
+          "test_on_search_first_skips_the_navigation_fallback"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSearchBeforeNavigation",
+          "test_off_navigation_runs_first_and_search_once_after"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_stopped_native_discovery_exports_spent_queries[curated]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_stopped_native_discovery_exports_spent_queries[catalogue]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_scope_entry_stop_exports_only_unobserved_seed[curated]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_scope_entry_stop_exports_only_unobserved_seed[catalogue]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[curated-busy]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[catalogue-busy]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[curated-async]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[curated-cancel]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[catalogue-lease]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_future_read_reason_preserves_observed_trace"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_trace_lifecycle_ordinary_completion_and_timeout[curated-success]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-success]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-timeout]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_native_identity_query_count_survives_before_inner_entry[identity-stop]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_native_identity_query_count_survives_before_inner_entry[identity-missing]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_catalogue_stopped_trace_keeps_owner_and_prefix_once"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_next_scope_stop_does_not_reuse_previous_university_trace"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_repeated_discovery_does_not_reset_or_mutate_prior_owned_trace"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_completed_alias_subdomain_keeps_legacy_identity_and_prefix"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_import_is_idempotent_and_preserves_curated_identity"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_the_university_named_exactly_comes_first[Columbia University]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_the_university_named_exactly_comes_first[University College Dublin]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_the_university_named_exactly_comes_first[Durham University]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_the_university_named_exactly_comes_first[Korea University]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_the_university_named_exactly_comes_first[Northwestern University]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_every_seed_name_finds_its_own_university_first"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_an_empty_query_keeps_the_previous_order"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_seed_history_does_not_overwrite_live_identity_or_roll_back"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_import_is_atomic[duplicate]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_import_is_atomic[count]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_import_is_atomic[schema]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_import_is_atomic[private]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_import_is_atomic[price]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_import_is_atomic[refresh]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_import_is_atomic[url]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_conflicting_domains_remain_unknown"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_local_filters_preference_and_unknown_prices"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_catalogue_api_filters_and_returns_only_preliminary_facts"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_selected_run_persists_ids_and_forces_live"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_selected_run_is_rejected[ids0-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_selected_run_is_rejected[ids1-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_selected_run_is_rejected[ids2-True]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_provider_outage_keeps_candidates_without_inventing_programmes"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_identity_checks_page_preserves_proof_and_is_idempotent"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_wrong_homepage_cannot_authorize_domain[<title>University directory</title>-]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_wrong_homepage_cannot_authorize_domain[<h1>Massachusetts Institute of Technology</h1>-https://evil.edu/]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_live_budget_and_timeout_leave_local_candidates"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_offline_selected_run_finishes_with_honest_unknowns"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_every_seed_country_has_a_region"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_acronym_identity_needs_matching_host_and_university_heading"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_can_corroborate_a_hinted_identity_only_when_enabled[California Institute of Technology-<title>Home - www.caltech.edu</title><h1>Caltech Homepage</h1><meta property=\"og:site_name\" content=\"California Institute of Technology\">-California Institute of Technology-homepage_og_site_name]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_can_corroborate_a_hinted_identity_only_when_enabled[University of Witwatersrand-<title>Home - Wits University</title><h1>Straight From the Gram</h1><footer><p>Copyright \\xa9 2026 - University of the Witwatersrand, Johannesburg.</p></footer>-Copyright \\xa9 2026 - University of the Witwatersrand, Johannesburg.-homepage_copyright_owner]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_extra_branding_cannot_authorize_an_unrelated_host[https://directory.edu/-]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_extra_branding_cannot_authorize_an_unrelated_host[https://mit.edu/-https://directory.edu/]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<main>Example University</main>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<footer><p>We partner with Example University</p></footer>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<footer><p>Copyright 2026 Directory Ltd; Example University partner</p></footer>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<footer><p>Copyright 2026 Example University Foundation</p></footer>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<footer><p>Copyright 2026 Example University, Foundation</p></footer>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<footer><p>Copyright 2026 Example University, Inc.</p></footer>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<footer><p>Copyright 2026 Example University, Johannesburg, Foundation</p></footer>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<footer><p>Copyright 2026 Example Universityshire</p></footer>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<p>Copyright 2026 Example University</p>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<meta property=\"og:site_name\" content=\"News about Example University\">]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<meta property=\"og:site_name\" content=\"Example College\">]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<meta property=\"og:site_name\" content=\"EU\">]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_branding_preserves_a_recorded_parenthetical_identity_qualifier[<meta property=\"og:site_name\" content=\"Example University\">]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_branding_preserves_a_recorded_parenthetical_identity_qualifier[<footer><p>Copyright 2026 Example University</p></footer>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_searched_identity_and_real_programme_planner_share_budget[0-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_searched_identity_and_real_programme_planner_share_budget[0-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_searched_identity_and_real_programme_planner_share_budget[1-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_searched_identity_and_real_programme_planner_share_budget[1-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_searched_identity_and_real_programme_planner_share_budget[6-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_searched_identity_and_real_programme_planner_share_budget[6-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-0-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-0-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-1-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-1-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-6-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-6-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-0-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-0-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-1-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-1-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-6-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-6-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[0-unknown]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[0-error]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[0-factory_error]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[1-unknown]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[1-error]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[1-factory_error]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[6-unknown]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[6-error]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[6-factory_error]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_direct_planner_honours_remaining_count_and_zero_is_safe[0-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_direct_planner_honours_remaining_count_and_zero_is_safe[0-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_direct_planner_honours_remaining_count_and_zero_is_safe[1-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_direct_planner_honours_remaining_count_and_zero_is_safe[1-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_direct_planner_honours_remaining_count_and_zero_is_safe[6-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_direct_planner_honours_remaining_count_and_zero_is_safe[6-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_direct_multifield_zero_budget_does_not_dispatch"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_candidate_ledger_does_not_get_reset_by_fresh_identity_trace"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_strict_evaluation_guard_never_receives_seventh_attempt[single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_strict_evaluation_guard_never_receives_seventh_attempt[multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_local_identity_rejection_is_attempt_telemetry_not_http_dispatch"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_real_429_latch_blocks_second_vendor_dispatch_and_counts_only_attempts"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[0-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[0-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[1-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[1-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[6-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[6-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_escaping_search_error_after_dispatch_keeps_every_attempt[SearchError-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_escaping_search_error_after_dispatch_keeps_every_attempt[SearchError-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_escaping_search_error_after_dispatch_keeps_every_attempt[SearchProviderNotConfigured-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_escaping_search_error_after_dispatch_keeps_every_attempt[SearchProviderNotConfigured-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_cancellation_records_in_memory_attempt_without_durability_claim"
+        ],
+        "new": false,
+        "bad": []
+      }
+    ],
+    "off": [
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[www.rug.nl-rug.nl]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[rug.nl-rug.nl]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[studieren.univie.ac.at-univie.ac.at]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[admissions.hku.hk-hku.hk]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[admissions.nu.edu.kz-nu.edu.kz]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[www.ntu.edu.sg-ntu.edu.sg]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[admission.kaist.ac.kr-kaist.ac.kr]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[you.ubc.ca-ubc.ca]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_multipart_suffixes_are_handled[en.uw.edu.pl-uw.edu.pl]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_off_domain_urls_are_recognised[https://www.rug.nl/education-www.rug.nl-True]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_off_domain_urls_are_recognised[https://rug.nl/education-www.rug.nl-True]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_off_domain_urls_are_recognised[https://studieren.univie.ac.at/x-www.univie.ac.at-True]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_off_domain_urls_are_recognised[https://evil.example.com/rug.nl-www.rug.nl-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_off_domain_urls_are_recognised[https://www.tudelft.nl/x-www.rug.nl-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestRegistrableDomain",
+          "test_off_domain_urls_are_recognised[https://other.ac.at/x-www.univie.ac.at-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_equivalent_urls_normalise_to_one_form[https://WWW.RUG.NL/Education/-https://www.rug.nl/Education]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_equivalent_urls_normalise_to_one_form[https://www.rug.nl/education#section-https://www.rug.nl/education]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_equivalent_urls_normalise_to_one_form[https://www.rug.nl/education?utm_source=x-https://www.rug.nl/education]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_equivalent_urls_normalise_to_one_form[https://www.rug.nl/education?fbclid=abc-https://www.rug.nl/education]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_equivalent_urls_normalise_to_one_form[https://www.rug.nl:443/education-https://www.rug.nl/education]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_equivalent_urls_normalise_to_one_form[https://www.rug.nl//education//cs-https://www.rug.nl/education/cs]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_equivalent_urls_normalise_to_one_form[https://www.rug.nl/-https://www.rug.nl/]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_meaningful_query_parameters_are_kept"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCanonicalUrl",
+          "test_query_order_does_not_create_a_second_url"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/en/education/programmes/bachelors/computer-science-program_page]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/en/bachelordiploma-programmes/computer-science-bachelor-program_page]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/bsc-computer-science-program_page]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/en/education/programmes/bachelors-program_catalog]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/en/degree-programmes-program_catalog]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/education/degree-programmes-1st-2nd-and-long-cycle-programmes-program_catalog]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/admission-and-application-admissions]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/entry_requirements-admissions]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/tuition-fees-costs]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/cost-of-attendance-costs]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/scholarships-scholarships]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/financial_aid-scholarships]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_urls_are_filed_under_the_right_category[https://uni.edu/required-documents-documents]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/news/2026/something]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/events/open-day]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/vacancies/professor]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/alumni/donate]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/privacy]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/assets/style.css]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/brochure.pdf.zip]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/library/search]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/about/degree-ceremony-photos]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/programme-news]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/bachelor-open-day]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/onlinebachelorweek]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/student-for-a-day]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/campus-tour]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/online-university-tour]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/webklassen]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/research/zernike/a-group/bsc-msc-project-guidelines]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/research/institutes/group/msc-and-bsc-projects]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/en/programmes/elec-student-newsletters]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/sv/program/elec-nyhetsbrev-for-studerande]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_irrelevant_urls_score_nothing[https://uni.edu/programmes/bachelors/cs-information-session]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/en/degree-programmes-True]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/applying-ubc/how-to-apply/degrees-programs/-True]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/studies/programmes-True]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/about/degree-ceremony-photos-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/programme-news-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/news/2026/new-programme-launched-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/en/education/programmes/bachelors/computer-science-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_a_funding_page_is_never_a_programme[https://uni.edu/admissions/undergraduate/scholarships/detail/sci-award]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_a_funding_page_is_never_a_programme[https://uni.edu/en/education/programmes/bachelors/funding/award]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_a_funding_page_is_never_a_programme[https://uni.edu/study/financial-aid/undergraduate-grants]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_the_applicants_subject_outranks_an_unrelated_programme"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestUrlCategorisation",
+          "test_a_programme_at_the_wrong_level_is_penalised"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapParsing",
+          "test_robots_sitemap_directives_are_read"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapParsing",
+          "test_robots_without_a_sitemap_yields_none"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapParsing",
+          "test_a_urlset_yields_pages"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapParsing",
+          "test_a_sitemap_index_yields_children"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapParsing",
+          "test_malformed_xml_does_not_raise"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapParsing",
+          "test_a_plain_text_sitemap_is_accepted"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapParsing",
+          "test_a_gzipped_sitemap_is_decompressed"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapParsing",
+          "test_a_corrupt_gzip_yields_empty_text_rather_than_raising"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_it_follows_a_sitemap_index_into_its_children"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_failed_sitemap_reads_consume_the_document_budget"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_oversized_map_stops_bulk_traversal_before_slow_siblings"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_nested_indexes_are_followed_but_bounded"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_a_self_referencing_index_terminates"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_off_domain_urls_in_a_sitemap_are_dropped"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_duplicate_and_equivalent_urls_are_deduplicated"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_conventional_locations_are_tried_when_robots_names_none"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_no_sitemap_at_all_is_recorded_not_raised"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSitemapReader",
+          "test_a_robots_refusal_is_recorded_and_not_worked_around"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_manual_seeds_are_used_and_recorded_with_provenance"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_a_manual_seed_is_not_itself_evidence"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_an_off_domain_manual_seed_is_rejected"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_a_manual_seed_wins_over_a_discovered_page"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_sitemap_discovery_finds_a_programme_page"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_the_wrong_degree_level_is_not_offered_first"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_fetched_programmes_must_match_requested_level_and_subject"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_a_candidate_that_reads_as_an_event_is_dropped"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_a_rejected_candidate_lets_the_next_one_through"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_an_unreadable_candidate_is_reported_not_promoted"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_a_catalogue_alone_does_not_become_a_programme"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_the_number_of_pages_per_category_is_bounded"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_navigation_is_used_only_when_sitemaps_yield_nothing"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_navigation_keeps_the_strongest_leads_not_the_first"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_navigation_is_not_used_when_a_programme_page_was_found"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_navigation_runs_when_only_a_catalogue_was_found"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_a_catalogue_link_is_followed_by_its_wording"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_link_text_matching_needs_the_whole_subject"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_link_text_matching_only_applies_on_a_catalogue"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_a_large_sitemap_does_not_crowd_out_the_programmes"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_an_unreachable_site_is_reported_not_raised"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_excluded_countries_are_not_proposed"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestAdapter",
+          "test_the_trace_serialises_for_the_canary_report"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestShippedRegistry",
+          "test_it_covers_at_least_ten_institutions_in_several_countries"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestShippedRegistry",
+          "test_every_seed_is_on_its_own_institutions_domain"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestShippedRegistry",
+          "test_every_seed_category_is_one_discovery_understands"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestShippedRegistry",
+          "test_every_seed_is_an_absolute_https_url"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_security_deep_catalog_json_never_raises"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_security_catalog_json_labels_are_bounded"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r1_walker_extracts_scored_links"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r2_each_link_fetched_with_outcome"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r3_profile_predicate_reused"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r4_off_domain_never_fetched"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r5_js_json_payload_yields_programs"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r6_js_unrelated_json_falls_through"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r7_js_silent_shell_is_recorded_not_fatal"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r8_source_pages_rows_recorded"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r9_top_n_budget"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r10_no_catalog_byte_identical"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_r10_demo_invariant"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestCatalogWalkerContract",
+          "test_justified_green_titled_js_shell_is_a_catalogue"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestTheWalkerUsesOnePredicate",
+          "test_the_walker_asks_the_same_question_as_the_confirm_stage"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSearchBeforeNavigation",
+          "test_on_search_first_skips_the_navigation_fallback"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery.TestSearchBeforeNavigation",
+          "test_off_navigation_runs_first_and_search_once_after"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_stopped_native_discovery_exports_spent_queries[curated]"
+        ],
+        "new": true,
+        "bad": [
+          "failure"
+        ]
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_stopped_native_discovery_exports_spent_queries[catalogue]"
+        ],
+        "new": true,
+        "bad": [
+          "failure"
+        ]
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_scope_entry_stop_exports_only_unobserved_seed[curated]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_scope_entry_stop_exports_only_unobserved_seed[catalogue]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[curated-busy]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[catalogue-busy]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[curated-async]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[curated-cancel]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[catalogue-lease]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_future_read_reason_preserves_observed_trace"
+        ],
+        "new": true,
+        "bad": [
+          "failure"
+        ]
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_trace_lifecycle_ordinary_completion_and_timeout[curated-success]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-success]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-timeout]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_native_identity_query_count_survives_before_inner_entry[identity-stop]"
+        ],
+        "new": true,
+        "bad": [
+          "failure"
+        ]
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_native_identity_query_count_survives_before_inner_entry[identity-missing]"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_catalogue_stopped_trace_keeps_owner_and_prefix_once"
+        ],
+        "new": true,
+        "bad": [
+          "failure"
+        ]
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_next_scope_stop_does_not_reuse_previous_university_trace"
+        ],
+        "new": true,
+        "bad": [
+          "failure"
+        ]
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_repeated_discovery_does_not_reset_or_mutate_prior_owned_trace"
+        ],
+        "new": true,
+        "bad": [
+          "failure"
+        ]
+      },
+      {
+        "identity": [
+          "tests.test_live_discovery",
+          "test_completed_alias_subdomain_keeps_legacy_identity_and_prefix"
+        ],
+        "new": true,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_import_is_idempotent_and_preserves_curated_identity"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_the_university_named_exactly_comes_first[Columbia University]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_the_university_named_exactly_comes_first[University College Dublin]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_the_university_named_exactly_comes_first[Durham University]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_the_university_named_exactly_comes_first[Korea University]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_the_university_named_exactly_comes_first[Northwestern University]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_every_seed_name_finds_its_own_university_first"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_an_empty_query_keeps_the_previous_order"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_seed_history_does_not_overwrite_live_identity_or_roll_back"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_import_is_atomic[duplicate]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_import_is_atomic[count]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_import_is_atomic[schema]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_import_is_atomic[private]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_import_is_atomic[price]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_import_is_atomic[refresh]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_import_is_atomic[url]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_conflicting_domains_remain_unknown"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_local_filters_preference_and_unknown_prices"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_catalogue_api_filters_and_returns_only_preliminary_facts"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_selected_run_persists_ids_and_forces_live"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_selected_run_is_rejected[ids0-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_selected_run_is_rejected[ids1-False]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_invalid_selected_run_is_rejected[ids2-True]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_provider_outage_keeps_candidates_without_inventing_programmes"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_identity_checks_page_preserves_proof_and_is_idempotent"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_wrong_homepage_cannot_authorize_domain[<title>University directory</title>-]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_wrong_homepage_cannot_authorize_domain[<h1>Massachusetts Institute of Technology</h1>-https://evil.edu/]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_live_budget_and_timeout_leave_local_candidates"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_offline_selected_run_finishes_with_honest_unknowns"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_every_seed_country_has_a_region"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_acronym_identity_needs_matching_host_and_university_heading"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_can_corroborate_a_hinted_identity_only_when_enabled[California Institute of Technology-<title>Home - www.caltech.edu</title><h1>Caltech Homepage</h1><meta property=\"og:site_name\" content=\"California Institute of Technology\">-California Institute of Technology-homepage_og_site_name]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_can_corroborate_a_hinted_identity_only_when_enabled[University of Witwatersrand-<title>Home - Wits University</title><h1>Straight From the Gram</h1><footer><p>Copyright \\xa9 2026 - University of the Witwatersrand, Johannesburg.</p></footer>-Copyright \\xa9 2026 - University of the Witwatersrand, Johannesburg.-homepage_copyright_owner]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_extra_branding_cannot_authorize_an_unrelated_host[https://directory.edu/-]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_extra_branding_cannot_authorize_an_unrelated_host[https://mit.edu/-https://directory.edu/]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<main>Example University</main>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<footer><p>We partner with Example University</p></footer>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<footer><p>Copyright 2026 Directory Ltd; Example University partner</p></footer>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<footer><p>Copyright 2026 Example University Foundation</p></footer>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<footer><p>Copyright 2026 Example University, Foundation</p></footer>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<footer><p>Copyright 2026 Example University, Inc.</p></footer>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<footer><p>Copyright 2026 Example University, Johannesburg, Foundation</p></footer>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<footer><p>Copyright 2026 Example Universityshire</p></footer>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<p>Copyright 2026 Example University</p>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<meta property=\"og:site_name\" content=\"News about Example University\">]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<meta property=\"og:site_name\" content=\"Example College\">]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_site_branding_rejects_mentions_and_different_entities[<meta property=\"og:site_name\" content=\"EU\">]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_branding_preserves_a_recorded_parenthetical_identity_qualifier[<meta property=\"og:site_name\" content=\"Example University\">]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_university_catalogue",
+          "test_branding_preserves_a_recorded_parenthetical_identity_qualifier[<footer><p>Copyright 2026 Example University</p></footer>]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_searched_identity_and_real_programme_planner_share_budget[0-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_searched_identity_and_real_programme_planner_share_budget[0-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_searched_identity_and_real_programme_planner_share_budget[1-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_searched_identity_and_real_programme_planner_share_budget[1-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_searched_identity_and_real_programme_planner_share_budget[6-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_searched_identity_and_real_programme_planner_share_budget[6-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-0-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-0-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-1-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-1-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-6-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-6-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-0-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-0-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-1-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-1-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-6-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-6-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[0-unknown]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[0-error]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[0-factory_error]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[1-unknown]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[1-error]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[1-factory_error]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[6-unknown]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[6-error]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_identity_early_return_preserves_attempt_or_factory_failure[6-factory_error]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_direct_planner_honours_remaining_count_and_zero_is_safe[0-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_direct_planner_honours_remaining_count_and_zero_is_safe[0-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_direct_planner_honours_remaining_count_and_zero_is_safe[1-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_direct_planner_honours_remaining_count_and_zero_is_safe[1-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_direct_planner_honours_remaining_count_and_zero_is_safe[6-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_direct_planner_honours_remaining_count_and_zero_is_safe[6-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_direct_multifield_zero_budget_does_not_dispatch"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_candidate_ledger_does_not_get_reset_by_fresh_identity_trace"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_strict_evaluation_guard_never_receives_seventh_attempt[single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_strict_evaluation_guard_never_receives_seventh_attempt[multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_local_identity_rejection_is_attempt_telemetry_not_http_dispatch"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_real_429_latch_blocks_second_vendor_dispatch_and_counts_only_attempts"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[0-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[0-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[1-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[1-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[6-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[6-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_escaping_search_error_after_dispatch_keeps_every_attempt[SearchError-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_escaping_search_error_after_dispatch_keeps_every_attempt[SearchError-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_escaping_search_error_after_dispatch_keeps_every_attempt[SearchProviderNotConfigured-single]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_escaping_search_error_after_dispatch_keeps_every_attempt[SearchProviderNotConfigured-multi]"
+        ],
+        "new": false,
+        "bad": []
+      },
+      {
+        "identity": [
+          "tests.test_identity_query_ledger",
+          "test_cancellation_records_in_memory_attempt_without_durability_claim"
+        ],
+        "new": false,
+        "bad": []
+      }
+    ],
+    "on_PASS": 250,
+    "off_PASS": 243,
+    "off_expected_RED": 7,
+    "original_selected": 231,
+    "new_cases": 19,
+    "NOT_RUN": [
+      "tests.test_university_catalogue::test_real_postgres_catalogue_import: unrelated PG external fixture; original test preserved for root full"
+    ]
+  },
+  "whole_outputs_equal": [
+    "curated-enter",
+    "catalogue-enter",
+    "curated-busy",
+    "catalogue-busy",
+    "curated-async",
+    "curated-cancel",
+    "catalogue-lease",
+    "curated-success",
+    "catalogue-success",
+    "catalogue-timeout",
+    "identity-missing",
+    "catalogue-normal-alias-subdomain"
+  ],
+  "changed_only_typed_stop_rows": [
+    "curated-cap",
+    "catalogue-cap",
+    "future-reason",
+    "identity-stop",
+    "catalogue-prefix-max-alias",
+    "two-institutions",
+    "repeated-adapter"
+  ],
+  "all_dispatch_accounting_equal": [
+    "curated-cap",
+    "catalogue-cap",
+    "curated-enter",
+    "catalogue-enter",
+    "curated-busy",
+    "catalogue-busy",
+    "curated-async",
+    "curated-cancel",
+    "catalogue-lease",
+    "future-reason",
+    "curated-success",
+    "catalogue-success",
+    "catalogue-timeout",
+    "identity-stop",
+    "identity-missing",
+    "catalogue-prefix-max-alias",
+    "catalogue-normal-alias-subdomain",
+    "two-institutions",
+    "repeated-adapter"
+  ],
+  "stopped_candidate_only_changed_field": "search_queries_used; no programme/domain/claims application",
+  "old_test_text_exact_prefix": true,
+  "limits": [
+    "Native discovery exported trace.as_dict +Candidate, no canary/scorer/gather_report or SQL/Worker report",
+    "Simulated reserve callback, not SQL fence; no >6 vendor HTTP proof",
+    "Repeated adapter counts are per discovery invocation; not persistent query durability across Job retry",
+    "Configured mypy has untyped-body notes; 31 native parser/deprecation warnings retained",
+    "Session sink only for native identity observation, no DB proof"
+  ]
+}

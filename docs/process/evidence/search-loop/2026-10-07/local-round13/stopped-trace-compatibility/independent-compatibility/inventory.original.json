@@ -1,0 +1,148 @@
+{
+  "time": "2026-10-08T05:07:22.268248+00:00",
+  "audit": "stdlib AST inventory only; no application methods or tests executed",
+  "before": {
+    "source_map": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/source-before-999.json",
+    "source_map_sha256": "3e66216452290baa7a415f24ab31f6650ffa8c9f0f7592ae0b53922b0024d9dd",
+    "selected_source_count": 999,
+    "previous_map_equal": true,
+    "physical_mismatches": [],
+    "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d"
+  },
+  "definitions": [
+    {
+      "file": "backend/app/adapters/discovery/live_discovery.py",
+      "line": 1154,
+      "end_line": 1273,
+      "scope": "LiveDiscoveryAdapter._discover_one",
+      "signature": "self, entry: dict, profile: ApplicantProfileIn, *, search_queries_used: int=0",
+      "accepts_kwargs": false,
+      "source_sha256": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004"
+    }
+  ],
+  "calls": [
+    {
+      "file": "backend/app/adapters/discovery/live_discovery.py",
+      "line": 1141,
+      "call": "self._discover_one(entry, profile)",
+      "source_sha256": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004"
+    },
+    {
+      "file": "backend/app/catalogue/discovery.py",
+      "line": 149,
+      "call": "self._discover_one(entry, profile, search_queries_used=trace.search_queries_sent)",
+      "source_sha256": "650ecf1750afe7072cdb8fe71de5fa1c4d238c0666c4776fa0227a986436319c"
+    },
+    {
+      "file": "backend/tests/test_production_readguard.py",
+      "line": 596,
+      "call": "adapter._discover_one(entry, context.profile)",
+      "source_sha256": "4f24781e3de408e198dcc1e46fe5c79d692028545c08561dff8a41b207884015"
+    }
+  ],
+  "monkeypatches": [
+    {
+      "file": "backend/tests/test_canary_fenced_job.py",
+      "line": 119,
+      "end_line": 123,
+      "scope": "case.discovered",
+      "signature": "adapter, entry, profile, **kwargs",
+      "accepts_kwargs": true,
+      "source_sha256": "0336048d8729b107218c1b825330329717d6f65f30abfe33be970ae8fc36f9c5",
+      "monkeypatch_line": 173,
+      "target": "catalogue.CatalogueDiscoveryAdapter",
+      "mock": "discovered"
+    },
+    {
+      "file": "backend/tests/test_production_readguard.py",
+      "line": 292,
+      "end_line": 295,
+      "scope": "test_real_catalogue_discovery_61_is_local_unknown.deep",
+      "signature": "adapter, entry, profile, **kwargs",
+      "accepts_kwargs": true,
+      "source_sha256": "4f24781e3de408e198dcc1e46fe5c79d692028545c08561dff8a41b207884015",
+      "monkeypatch_line": 297,
+      "target": "catalogue.CatalogueDiscoveryAdapter",
+      "mock": "deep"
+    },
+    {
+      "file": "backend/tests/test_production_readguard.py",
+      "line": 417,
+      "end_line": 420,
+      "scope": "test_real_run_to_decision_shared_61_stops_funding_and_preserves_programme.discovered",
+      "signature": "adapter, entry, profile, **kwargs",
+      "accepts_kwargs": true,
+      "source_sha256": "4f24781e3de408e198dcc1e46fe5c79d692028545c08561dff8a41b207884015",
+      "monkeypatch_line": 438,
+      "target": "catalogue.CatalogueDiscoveryAdapter",
+      "mock": "discovered"
+    },
+    {
+      "file": "backend/tests/test_production_readguard.py",
+      "line": 617,
+      "end_line": 622,
+      "scope": "test_curated_fallback_real_discovery_loop_has_stable_scope.deep",
+      "signature": "adapter, entry, profile, **kwargs",
+      "accepts_kwargs": true,
+      "source_sha256": "4f24781e3de408e198dcc1e46fe5c79d692028545c08561dff8a41b207884015",
+      "monkeypatch_line": 624,
+      "target": "LiveDiscoveryAdapter",
+      "mock": "deep"
+    },
+    {
+      "file": "backend/tests/test_readguard_revision_controls.py",
+      "line": 440,
+      "end_line": 443,
+      "scope": "test_previous_episode_cannot_prove_untracked_current_job_intent_or_fake_zero.discovered",
+      "signature": "adapter, entry, profile, **kwargs",
+      "accepts_kwargs": true,
+      "source_sha256": "560cd18354395aacb6fa3b29ecebbd24217943fdbc401181fea92709c9c7307c",
+      "monkeypatch_line": 457,
+      "target": "controls.catalogue.CatalogueDiscoveryAdapter",
+      "mock": "discovered"
+    },
+    {
+      "file": "backend/tests/test_worker_checkpoint_busy.py",
+      "line": 474,
+      "end_line": 478,
+      "scope": "test_actual_worker_dispatch_full_decision_shared_61_completes_with_partial_evidence.discovered",
+      "signature": "adapter, entry, profile, **kwargs",
+      "accepts_kwargs": true,
+      "source_sha256": "bf2ee2c698b0d46c8dfedf5027d5777a129be1799c18822354918958fc3f8480",
+      "monkeypatch_line": 500,
+      "target": "catalogue.CatalogueDiscoveryAdapter",
+      "mock": "discovered"
+    }
+  ],
+  "direct_subclasses": [
+    {
+      "file": "backend/app/catalogue/discovery.py",
+      "line": 69,
+      "class": "CatalogueDiscoveryAdapter",
+      "bases": [
+        "LiveDiscoveryAdapter"
+      ],
+      "overrides_discover_one": false
+    }
+  ],
+  "signature_findings": {
+    "native_definition_count": 1,
+    "native_and_test_call_count": 3,
+    "existing_monkeypatch_count": 6,
+    "all_existing_mocks_accept_kwargs": true,
+    "no_existing_subclass_override": true
+  },
+  "after": {
+    "source_map": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/source-before-999.json",
+    "source_map_sha256": "3e66216452290baa7a415f24ab31f6650ffa8c9f0f7592ae0b53922b0024d9dd",
+    "selected_source_count": 999,
+    "previous_map_equal": true,
+    "physical_mismatches": [],
+    "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d"
+  },
+  "exclusions": [
+    "Not an SQL/fence proof",
+    "No provider/Fetcher/test execution",
+    "No claim of finite peer coverage before immutable proposal arrives"
+  ]
+}

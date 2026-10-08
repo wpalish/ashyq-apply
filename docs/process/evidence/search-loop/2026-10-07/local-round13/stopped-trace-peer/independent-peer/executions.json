@@ -1,0 +1,85 @@
+{
+  "native_controls": [
+    {
+      "argv": [
+        "env",
+        "-i",
+        "PATH=/usr/bin:/bin:/usr/sbin:/sbin",
+        "PYTHONDONTWRITEBYTECODE=1",
+        "PYTHONPATH=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review/runtime/on/backend",
+        "UNIMATCH_DEMO_MODE=true",
+        "UNIMATCH_ENABLE_BROWSER_TIER=false",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review/peer_native.py",
+        "on"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review/runtime/on/backend",
+      "stdout": "peer.on.attempt1.stdout.log",
+      "stderr": "peer.on.attempt1.stderr.log",
+      "tool_chunk_id": "8d751b",
+      "exit_code": 1,
+      "script_sha256": "eb69a63310dbb3e092ecf012309a95488ce0a01487b5c99abb208a0a20eb1ec0",
+      "qualification": "Author fixture city omission, no final result/count"
+    },
+    {
+      "argv": [
+        "env",
+        "-i",
+        "PATH=/usr/bin:/bin:/usr/sbin:/sbin",
+        "PYTHONDONTWRITEBYTECODE=1",
+        "PYTHONPATH=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review/runtime/on/backend",
+        "UNIMATCH_DEMO_MODE=true",
+        "UNIMATCH_ENABLE_BROWSER_TIER=false",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review/peer_native.py",
+        "on",
+        "attempt2"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review/runtime/on/backend",
+      "stdout": "peer.on.attempt2.stdout.log",
+      "stderr": "peer.on.attempt2.stderr.log",
+      "tool_chunk_id": "2b7ad1",
+      "exit_code": 0,
+      "script_sha256": "9165e1104cec24b402db14af17e685c67b7104a0113a731a3434a81c4bbe4a54",
+      "qualification": "Exact copied proposal final control PASS"
+    },
+    {
+      "argv": [
+        "env",
+        "-i",
+        "PATH=/usr/bin:/bin:/usr/sbin:/sbin",
+        "PYTHONDONTWRITEBYTECODE=1",
+        "PYTHONPATH=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review/runtime/off/backend",
+        "UNIMATCH_DEMO_MODE=true",
+        "UNIMATCH_ENABLE_BROWSER_TIER=false",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review/peer_native.py",
+        "off",
+        "attempt2"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review/runtime/off/backend",
+      "stdout": "peer.off.attempt2.stdout.log",
+      "stderr": "peer.off.attempt2.stderr.log",
+      "tool_chunk_id": "ed6dcd",
+      "exit_code": 1,
+      "script_sha256": "9165e1104cec24b402db14af17e685c67b7104a0113a731a3434a81c4bbe4a54",
+      "qualification": "Original source five expected accounting diagnostics RED"
+    }
+  ],
+  "static": {
+    "argv": [
+      "env",
+      "-i",
+      "PATH=/usr/bin:/bin:/usr/sbin:/sbin",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+      "static_review.py"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review",
+    "stdout": "static.attempt1.stdout.log",
+    "stderr": "static.attempt1.stderr.log",
+    "tool_chunk_id": "59da8d",
+    "exit_code": 0
+  },
+  "no_author_sealed_writer_executed": true
+}

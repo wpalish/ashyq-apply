@@ -1,0 +1,24 @@
+{
+  "raw_pass": 245,
+  "raw_fail": 4,
+  "deselected": 1,
+  "failures": [
+    {
+      "case": "test_r5_js_json_payload_yields_programs",
+      "message": "AssertionError: the payload's CS programme must be fetched even though /p/N matches no pattern\nassert set() == {'https://uni.edu/p/42'}\n  \n  Extra items in the right set:\n  'https://uni.edu/p/42'\n  Use -v to get more diff"
+    },
+    {
+      "case": "test_r6_js_unrelated_json_falls_through",
+      "message": "AssertionError: the HTML fallback must drive, and the unrelated JSON must invent nothing\nassert [] == ['https://uni...uter-science']\n  \n  Right contains one more item: 'https://uni.edu/study/bsc-computer-science'\n  Use -v to get more diff"
+    },
+    {
+      "case": "test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-timeout]",
+      "message": "assert 6 == 0"
+    },
+    {
+      "case": "test_native_identity_query_count_survives_before_inner_entry[identity-stop]",
+      "message": "AssertionError: assert (2 == 2 and 2 == 1)\n +  where 2 = len([{'institution': 'Example University', 'before': 59, 'admitted': True}, {'institution': 'Example University', 'before': 60, 'admitted': False, 'exchanges_at_stop': 2}])\n +    where [{'institution': 'Example University', 'before': 59, 'admitted': True}, {'institution': 'Example University', 'before': 60, 'admitted': False, 'exchanges_at_stop': 2}] = namespace(adapter=<tests.test_live_discovery._stopped_trace_case.<locals>.PrimedCatalogue object at 0x10a6b5460>, capt...alse, kept_by_link_text=[], walker={'catalogs_walked': 0, 'candidates': [], 'programs_confirmed': 0, 'outcomes': []})]).events\n +  and   2 = len([{'host': 'example.edu', 'path': '/robots.txt'}, {'host': 'example.edu', 'path': '/'}])\n +    where [{'host': 'example.edu', 'path': '/robots.txt'}, {'host': 'example.edu', 'path': '/'}] = namespace(adapter=<tests.test_live_discovery._stopped_trace_case.<locals>.PrimedCatalogue object at 0x10a6b5460>, capt...alse, kept_by_link_text=[], walker={'catalogs_walked': 0, 'candidates': [], 'programs_confirmed': 0, 'outcomes': []})]).exchanges"
+    }
+  ],
+  "changes": "External deny-DNS guard interfered with 2 original mocked-browser cases; allow ONLY uni.edu via synthetic public-IP DNS. New ordinary-timeout fixture targeted fourth get but real confirm is third: change callback threshold to2, same expected unknown unchanged. New identity get had 2 HTTP exchanges (robots +homepage); replace erroneous1 HTTP expectation with exact path sequence. No app source changes or old assertion changes."
+}

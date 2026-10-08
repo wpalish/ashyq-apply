@@ -1,0 +1,65 @@
+{
+  "runtime": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+  "environment": "env -i PATH=/usr/bin:/bin:/usr/sbin:/sbin PYTHONDONTWRITEBYTECODE=1 UNIMATCH_DEMO_MODE=true UNIMATCH_ENABLE_BROWSER_TIER=false UNIMATCH_SEARCH_PROVIDER=none; PYTHONPATH=<owned mode/backend>",
+  "native_command_template": [
+    "python",
+    "-m",
+    "pytest",
+    "-q",
+    "-o",
+    "addopts=",
+    "tests/test_live_discovery.py",
+    "tests/test_university_catalogue.py",
+    "tests/test_identity_query_ledger.py",
+    "-k",
+    "not real_postgres_catalogue_import",
+    "--basetemp=<owned/runtime/mode-final>",
+    "--junitxml=<owned/native.mode.final.xml>"
+  ],
+  "whole_output_command_template": [
+    "python",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay_compare_final.py",
+    "<off|on>"
+  ],
+  "native_final": [
+    {
+      "mode": "on",
+      "start_chunk": "fc55c3",
+      "session": 24461,
+      "completion_chunk": "9a50f6",
+      "exit_code": 0
+    },
+    {
+      "mode": "off",
+      "start_chunk": "6e387e",
+      "session": 51040,
+      "completion_chunk": "f2894d",
+      "exit_code": 1,
+      "expected": "seven new original-source defects"
+    }
+  ],
+  "whole_output_final": [
+    {
+      "mode": "on",
+      "chunk": "1401ae",
+      "exit_code": 0
+    },
+    {
+      "mode": "off",
+      "chunk": "6cef23",
+      "exit_code": 0
+    }
+  ],
+  "static": {
+    "chunk": "ddb6bc",
+    "exit_code": 0,
+    "commands": [
+      "ruff check app/adapters/discovery/live_discovery.py app/catalogue/discovery.py tests/test_live_discovery.py",
+      "ruff format --check same3",
+      "mypy same3"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/on/backend"
+  },
+  "source_method_substitution": "none for native wrappers/discovery/get/provider search; native tests control only fixture source selection, identity factory, DNS and MockTransport",
+  "history": "all previous fixture/static/candidate errors and raw logs immutable; no retry of external calls"
+}

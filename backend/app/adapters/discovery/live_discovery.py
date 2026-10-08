@@ -1136,14 +1136,15 @@ class LiveDiscoveryAdapter:
             seed = Candidate(
                 name=entry["name"], country=entry["country"], city=entry.get("city", "")
             )
+            trace = DiscoveryTrace(institution=seed.name, domain="")
             try:
                 with self.research_scope(seed) if self.research_scope else nullcontext():
-                    candidate, trace = await self._discover_one(entry, profile)
+                    candidate, trace = await self._discover_one(entry, profile, trace=trace)
             except UniversityReadStopped as stopped:
                 if stopped.reason == "checkpoint_busy":
                     raise
                 candidate = seed
-                trace = DiscoveryTrace(institution=seed.name, domain="")
+                candidate.search_queries_used = trace.search_queries_sent
                 trace.search_limitations.append(
                     f"Remaining research remains unknown: university read allowance unavailable ({stopped.reason})."
                 )
@@ -1152,12 +1153,18 @@ class LiveDiscoveryAdapter:
         return out
 
     async def _discover_one(
-        self, entry: dict, profile: ApplicantProfileIn, *, search_queries_used: int = 0
+        self,
+        entry: dict,
+        profile: ApplicantProfileIn,
+        *,
+        search_queries_used: int = 0,
+        trace: DiscoveryTrace | None = None,
     ) -> tuple[Candidate, DiscoveryTrace]:
         domain = urlparse(entry["homepage"]).netloc
-        trace = DiscoveryTrace(
-            institution=entry["name"], domain=domain, search_queries_sent=search_queries_used
-        )
+        if trace is None:
+            trace = DiscoveryTrace(institution=entry["name"], domain=domain)
+        trace.domain = domain
+        trace.search_queries_sent = max(trace.search_queries_sent, search_queries_used)
 
         candidate = Candidate(
             name=entry["name"],

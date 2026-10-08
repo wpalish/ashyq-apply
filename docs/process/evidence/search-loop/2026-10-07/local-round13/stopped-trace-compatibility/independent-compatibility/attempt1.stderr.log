@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-compatibility/audit.py", line 99, in <module>
+    audit()
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-compatibility/audit.py", line 74, in audit
+    assert len(defs) == 1 and len(patches) == 7 and all(r['accepts_kwargs'] for r in patches)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

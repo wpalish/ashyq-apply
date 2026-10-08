@@ -1,0 +1,2775 @@
+{
+  "mode": "off",
+  "rows": {
+    "curated-cap": {
+      "captured": [
+        {
+          "candidates": [
+            {
+              "name": "Example University",
+              "country": "Example",
+              "city": "City",
+              "domain": "",
+              "programs": [],
+              "rankings": [],
+              "admissions_url": null,
+              "costs_url": null,
+              "scholarships_url": null,
+              "attributes": {},
+              "discovery_source": "",
+              "notes": "",
+              "search_queries_used": 0,
+              "catalogue_id": null
+            }
+          ],
+          "traces": [
+            {
+              "institution": "Example University",
+              "domain": "",
+              "sitemaps_declared": [],
+              "sitemaps_read": [],
+              "sitemap_urls_seen": 0,
+              "sitemap_urls_kept": 0,
+              "manual_seeds": {},
+              "selected": {},
+              "rejected_sample": [],
+              "rejected_total": 0,
+              "errors": [],
+              "search_failures": [],
+              "search_limitations": [
+                "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+              ],
+              "field_sources": {},
+              "search_coverage": {},
+              "search_queries_attempted": 0,
+              "used_navigation_fallback": false,
+              "kept_by_link_text": [],
+              "walker": {
+                "catalogs_walked": 0,
+                "candidates": [],
+                "programs_confirmed": 0,
+                "outcomes": []
+              }
+            }
+          ]
+        }
+      ],
+      "exception": null,
+      "provider_calls": [
+        [
+          "site:example.edu \"computer science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "Example University bachelor undergraduate first cycle computer science programme",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu programmes \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu courses \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu undergraduate \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu admissions bachelor",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_reservations": [
+        {
+          "institution": "Example University",
+          "before": 56,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 57,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 58,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 59,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 60,
+          "admitted": false,
+          "exchanges_at_stop": 4
+        }
+      ],
+      "read_counts": {
+        "Example University": 60
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/sitemap.xml"
+        },
+        {
+          "host": "example.edu",
+          "path": "/"
+        }
+      ],
+      "fetcher_stats": {
+        "ok": 3,
+        "refused_privacy": 0,
+        "cached": 1,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 4,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": [
+        {
+          "url": "https://example.edu/",
+          "category": "catalog-walker",
+          "page_type": "",
+          "detail": "js_no_program_list",
+          "readable_chars": 0
+        }
+      ]
+    },
+    "catalogue-cap": {
+      "captured": [
+        {
+          "candidates": [
+            {
+              "name": "Example University",
+              "country": "Example",
+              "city": "City",
+              "domain": "",
+              "programs": [],
+              "rankings": [],
+              "admissions_url": null,
+              "costs_url": null,
+              "scholarships_url": null,
+              "attributes": {},
+              "discovery_source": "local-catalogue:offline-0",
+              "notes": "Institution candidate; programme, cost and requirements need research.",
+              "search_queries_used": 0,
+              "catalogue_id": "offline-0"
+            }
+          ],
+          "traces": [
+            {
+              "institution": "Example University",
+              "domain": "example.edu",
+              "sitemaps_declared": [],
+              "sitemaps_read": [],
+              "sitemap_urls_seen": 0,
+              "sitemap_urls_kept": 0,
+              "manual_seeds": {},
+              "selected": {},
+              "rejected_sample": [],
+              "rejected_total": 0,
+              "errors": [],
+              "search_failures": [],
+              "search_limitations": [
+                "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+              ],
+              "field_sources": {},
+              "search_coverage": {},
+              "search_queries_attempted": 0,
+              "used_navigation_fallback": false,
+              "kept_by_link_text": [],
+              "walker": {
+                "catalogs_walked": 0,
+                "candidates": [],
+                "programs_confirmed": 0,
+                "outcomes": []
+              }
+            }
+          ]
+        }
+      ],
+      "exception": null,
+      "provider_calls": [
+        [
+          "site:example.edu \"computer science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "Example University bachelor undergraduate first cycle computer science programme",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu programmes \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu courses \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu undergraduate \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu admissions bachelor",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_reservations": [
+        {
+          "institution": "Example University",
+          "before": 56,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 57,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 58,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 59,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 60,
+          "admitted": false,
+          "exchanges_at_stop": 4
+        }
+      ],
+      "read_counts": {
+        "Example University": 60
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/sitemap.xml"
+        },
+        {
+          "host": "example.edu",
+          "path": "/"
+        }
+      ],
+      "fetcher_stats": {
+        "ok": 3,
+        "refused_privacy": 0,
+        "cached": 1,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 4,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": [
+        {
+          "url": "https://example.edu/",
+          "category": "catalog-walker",
+          "page_type": "",
+          "detail": "js_no_program_list",
+          "readable_chars": 0
+        }
+      ]
+    },
+    "curated-enter": {
+      "captured": [
+        {
+          "candidates": [
+            {
+              "name": "Example University",
+              "country": "Example",
+              "city": "City",
+              "domain": "",
+              "programs": [],
+              "rankings": [],
+              "admissions_url": null,
+              "costs_url": null,
+              "scholarships_url": null,
+              "attributes": {},
+              "discovery_source": "",
+              "notes": "",
+              "search_queries_used": 0,
+              "catalogue_id": null
+            }
+          ],
+          "traces": [
+            {
+              "institution": "Example University",
+              "domain": "",
+              "sitemaps_declared": [],
+              "sitemaps_read": [],
+              "sitemap_urls_seen": 0,
+              "sitemap_urls_kept": 0,
+              "manual_seeds": {},
+              "selected": {},
+              "rejected_sample": [],
+              "rejected_total": 0,
+              "errors": [],
+              "search_failures": [],
+              "search_limitations": [
+                "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+              ],
+              "field_sources": {},
+              "search_coverage": {},
+              "search_queries_attempted": 0,
+              "used_navigation_fallback": false,
+              "kept_by_link_text": [],
+              "walker": {
+                "catalogs_walked": 0,
+                "candidates": [],
+                "programs_confirmed": 0,
+                "outcomes": []
+              }
+            }
+          ]
+        }
+      ],
+      "exception": null,
+      "provider_calls": [],
+      "get_reservations": [],
+      "read_counts": {
+        "Example University": 0
+      },
+      "mock_HTTP_exchanges": [],
+      "fetcher_stats": {
+        "ok": 0,
+        "refused_privacy": 0,
+        "cached": 0,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 0,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": []
+    },
+    "catalogue-enter": {
+      "captured": [
+        {
+          "candidates": [
+            {
+              "name": "Example University",
+              "country": "Example",
+              "city": "City",
+              "domain": "",
+              "programs": [],
+              "rankings": [],
+              "admissions_url": null,
+              "costs_url": null,
+              "scholarships_url": null,
+              "attributes": {},
+              "discovery_source": "local-catalogue:offline-0",
+              "notes": "Institution candidate; programme, cost and requirements need research.",
+              "search_queries_used": 0,
+              "catalogue_id": "offline-0"
+            }
+          ],
+          "traces": [
+            {
+              "institution": "Example University",
+              "domain": "example.edu",
+              "sitemaps_declared": [],
+              "sitemaps_read": [],
+              "sitemap_urls_seen": 0,
+              "sitemap_urls_kept": 0,
+              "manual_seeds": {},
+              "selected": {},
+              "rejected_sample": [],
+              "rejected_total": 0,
+              "errors": [],
+              "search_failures": [],
+              "search_limitations": [
+                "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+              ],
+              "field_sources": {},
+              "search_coverage": {},
+              "search_queries_attempted": 0,
+              "used_navigation_fallback": false,
+              "kept_by_link_text": [],
+              "walker": {
+                "catalogs_walked": 0,
+                "candidates": [],
+                "programs_confirmed": 0,
+                "outcomes": []
+              }
+            }
+          ]
+        }
+      ],
+      "exception": null,
+      "provider_calls": [],
+      "get_reservations": [],
+      "read_counts": {
+        "Example University": 0
+      },
+      "mock_HTTP_exchanges": [],
+      "fetcher_stats": {
+        "ok": 0,
+        "refused_privacy": 0,
+        "cached": 0,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 0,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": []
+    },
+    "curated-busy": {
+      "captured": [],
+      "exception": {
+        "type": "UniversityReadStopped",
+        "reason": "checkpoint_busy",
+        "same_original_object": true
+      },
+      "provider_calls": [
+        [
+          "site:example.edu \"computer science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "Example University bachelor undergraduate first cycle computer science programme",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu programmes \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu courses \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu undergraduate \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu admissions bachelor",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_reservations": [
+        {
+          "institution": "Example University",
+          "before": 56,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 57,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 58,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 59,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 60,
+          "admitted": false,
+          "exchanges_at_stop": 4
+        }
+      ],
+      "read_counts": {
+        "Example University": 60
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/sitemap.xml"
+        },
+        {
+          "host": "example.edu",
+          "path": "/"
+        }
+      ],
+      "fetcher_stats": {
+        "ok": 3,
+        "refused_privacy": 0,
+        "cached": 1,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 4,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": [
+        {
+          "url": "https://example.edu/",
+          "category": "catalog-walker",
+          "page_type": "",
+          "detail": "js_no_program_list",
+          "readable_chars": 0
+        }
+      ]
+    },
+    "catalogue-busy": {
+      "captured": [],
+      "exception": {
+        "type": "UniversityReadStopped",
+        "reason": "checkpoint_busy",
+        "same_original_object": true
+      },
+      "provider_calls": [
+        [
+          "site:example.edu \"computer science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "Example University bachelor undergraduate first cycle computer science programme",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu programmes \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu courses \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu undergraduate \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu admissions bachelor",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_reservations": [
+        {
+          "institution": "Example University",
+          "before": 56,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 57,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 58,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 59,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 60,
+          "admitted": false,
+          "exchanges_at_stop": 4
+        }
+      ],
+      "read_counts": {
+        "Example University": 60
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/sitemap.xml"
+        },
+        {
+          "host": "example.edu",
+          "path": "/"
+        }
+      ],
+      "fetcher_stats": {
+        "ok": 3,
+        "refused_privacy": 0,
+        "cached": 1,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 4,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": [
+        {
+          "url": "https://example.edu/",
+          "category": "catalog-walker",
+          "page_type": "",
+          "detail": "js_no_program_list",
+          "readable_chars": 0
+        }
+      ]
+    },
+    "curated-async": {
+      "captured": [],
+      "exception": {
+        "type": "CancelledError",
+        "reason": null,
+        "same_original_object": true
+      },
+      "provider_calls": [
+        [
+          "site:example.edu \"computer science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "Example University bachelor undergraduate first cycle computer science programme",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu programmes \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu courses \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu undergraduate \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu admissions bachelor",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_reservations": [
+        {
+          "institution": "Example University",
+          "before": 56,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 57,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 58,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 59,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 60,
+          "admitted": false,
+          "exchanges_at_stop": 4
+        }
+      ],
+      "read_counts": {
+        "Example University": 60
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/sitemap.xml"
+        },
+        {
+          "host": "example.edu",
+          "path": "/"
+        }
+      ],
+      "fetcher_stats": {
+        "ok": 3,
+        "refused_privacy": 0,
+        "cached": 1,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 4,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": [
+        {
+          "url": "https://example.edu/",
+          "category": "catalog-walker",
+          "page_type": "",
+          "detail": "js_no_program_list",
+          "readable_chars": 0
+        }
+      ]
+    },
+    "curated-cancel": {
+      "captured": [],
+      "exception": {
+        "type": "RunCancelled",
+        "reason": null,
+        "same_original_object": true
+      },
+      "provider_calls": [
+        [
+          "site:example.edu \"computer science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "Example University bachelor undergraduate first cycle computer science programme",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu programmes \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu courses \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu undergraduate \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu admissions bachelor",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_reservations": [
+        {
+          "institution": "Example University",
+          "before": 56,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 57,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 58,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 59,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 60,
+          "admitted": false,
+          "exchanges_at_stop": 4
+        }
+      ],
+      "read_counts": {
+        "Example University": 60
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/sitemap.xml"
+        },
+        {
+          "host": "example.edu",
+          "path": "/"
+        }
+      ],
+      "fetcher_stats": {
+        "ok": 3,
+        "refused_privacy": 0,
+        "cached": 1,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 4,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": [
+        {
+          "url": "https://example.edu/",
+          "category": "catalog-walker",
+          "page_type": "",
+          "detail": "js_no_program_list",
+          "readable_chars": 0
+        }
+      ]
+    },
+    "catalogue-lease": {
+      "captured": [],
+      "exception": {
+        "type": "LeaseLost",
+        "reason": null,
+        "same_original_object": true
+      },
+      "provider_calls": [
+        [
+          "site:example.edu \"computer science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "Example University bachelor undergraduate first cycle computer science programme",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu programmes \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu courses \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu undergraduate \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu admissions bachelor",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_reservations": [
+        {
+          "institution": "Example University",
+          "before": 56,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 57,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 58,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 59,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 60,
+          "admitted": false,
+          "exchanges_at_stop": 4
+        }
+      ],
+      "read_counts": {
+        "Example University": 60
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/sitemap.xml"
+        },
+        {
+          "host": "example.edu",
+          "path": "/"
+        }
+      ],
+      "fetcher_stats": {
+        "ok": 3,
+        "refused_privacy": 0,
+        "cached": 1,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 4,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": [
+        {
+          "url": "https://example.edu/",
+          "category": "catalog-walker",
+          "page_type": "",
+          "detail": "js_no_program_list",
+          "readable_chars": 0
+        }
+      ]
+    },
+    "future-reason": {
+      "captured": [
+        {
+          "candidates": [
+            {
+              "name": "Example University",
+              "country": "Example",
+              "city": "City",
+              "domain": "",
+              "programs": [],
+              "rankings": [],
+              "admissions_url": null,
+              "costs_url": null,
+              "scholarships_url": null,
+              "attributes": {},
+              "discovery_source": "",
+              "notes": "",
+              "search_queries_used": 0,
+              "catalogue_id": null
+            }
+          ],
+          "traces": [
+            {
+              "institution": "Example University",
+              "domain": "",
+              "sitemaps_declared": [],
+              "sitemaps_read": [],
+              "sitemap_urls_seen": 0,
+              "sitemap_urls_kept": 0,
+              "manual_seeds": {},
+              "selected": {},
+              "rejected_sample": [],
+              "rejected_total": 0,
+              "errors": [],
+              "search_failures": [],
+              "search_limitations": [
+                "Remaining research remains unknown: university read allowance unavailable (future_native_reason)."
+              ],
+              "field_sources": {},
+              "search_coverage": {},
+              "search_queries_attempted": 0,
+              "used_navigation_fallback": false,
+              "kept_by_link_text": [],
+              "walker": {
+                "catalogs_walked": 0,
+                "candidates": [],
+                "programs_confirmed": 0,
+                "outcomes": []
+              }
+            }
+          ]
+        }
+      ],
+      "exception": null,
+      "provider_calls": [
+        [
+          "site:example.edu \"computer science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "Example University bachelor undergraduate first cycle computer science programme",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu programmes \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu courses \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu undergraduate \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu admissions bachelor",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_reservations": [
+        {
+          "institution": "Example University",
+          "before": 56,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 57,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 58,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 59,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 60,
+          "admitted": false,
+          "exchanges_at_stop": 4
+        }
+      ],
+      "read_counts": {
+        "Example University": 60
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/sitemap.xml"
+        },
+        {
+          "host": "example.edu",
+          "path": "/"
+        }
+      ],
+      "fetcher_stats": {
+        "ok": 3,
+        "refused_privacy": 0,
+        "cached": 1,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 4,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": [
+        {
+          "url": "https://example.edu/",
+          "category": "catalog-walker",
+          "page_type": "",
+          "detail": "js_no_program_list",
+          "readable_chars": 0
+        }
+      ]
+    },
+    "curated-success": {
+      "captured": [
+        {
+          "candidates": [
+            {
+              "name": "Example University",
+              "country": "Example",
+              "city": "City",
+              "domain": "example.edu",
+              "programs": [
+                {
+                  "name": "Computer Science",
+                  "field": "computer science",
+                  "degree": "bachelor",
+                  "url": "https://example.edu/bachelors/computer-science"
+                }
+              ],
+              "rankings": [],
+              "admissions_url": null,
+              "costs_url": null,
+              "scholarships_url": null,
+              "attributes": {},
+              "discovery_source": "live-sitemap-discovery -> https://example.edu/",
+              "notes": "Sitemap-first discovery found: program_page. Not found: program_catalog, admissions, costs, scholarships, documents.",
+              "search_queries_used": 6,
+              "catalogue_id": null
+            }
+          ],
+          "traces": [
+            {
+              "institution": "Example University",
+              "domain": "example.edu",
+              "sitemaps_declared": [
+                "https://example.edu/sitemap.xml"
+              ],
+              "sitemaps_read": [
+                "https://example.edu/sitemap.xml"
+              ],
+              "sitemap_urls_seen": 0,
+              "sitemap_urls_kept": 0,
+              "manual_seeds": {},
+              "selected": {
+                "program_page": [
+                  "https://example.edu/bachelors/computer-science"
+                ]
+              },
+              "rejected_sample": [],
+              "rejected_total": 0,
+              "errors": [
+                "search identity recovery: checked 1, confirmed 1",
+                "search identity recovery via fake; queries 6, failed 0, rejected {'duplicate': 5}"
+              ],
+              "search_failures": [],
+              "search_limitations": [],
+              "field_sources": {},
+              "search_coverage": {},
+              "search_queries_attempted": 6,
+              "used_navigation_fallback": true,
+              "kept_by_link_text": [],
+              "walker": {
+                "catalogs_walked": 1,
+                "candidates": [],
+                "programs_confirmed": 0,
+                "outcomes": [
+                  {
+                    "url": "https://example.edu/",
+                    "outcome": "js_no_program_list"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "exception": null,
+      "provider_calls": [
+        [
+          "site:example.edu \"computer science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "Example University bachelor undergraduate first cycle computer science programme",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu programmes \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu courses \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu undergraduate \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu admissions bachelor",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_reservations": [
+        {
+          "institution": "Example University",
+          "before": 0,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 1,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 2,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 3,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 4,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 5,
+          "admitted": true
+        }
+      ],
+      "read_counts": {
+        "Example University": 6
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/sitemap.xml"
+        },
+        {
+          "host": "example.edu",
+          "path": "/"
+        },
+        {
+          "host": "example.edu",
+          "path": "/bachelors/computer-science"
+        }
+      ],
+      "fetcher_stats": {
+        "ok": 4,
+        "refused_privacy": 0,
+        "cached": 2,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 6,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": [
+        {
+          "url": "https://example.edu/",
+          "category": "catalog-walker",
+          "page_type": "",
+          "detail": "js_no_program_list",
+          "readable_chars": 0
+        }
+      ]
+    },
+    "catalogue-success": {
+      "captured": [
+        {
+          "candidates": [
+            {
+              "name": "Example University",
+              "country": "Example",
+              "city": "City",
+              "domain": "example.edu",
+              "programs": [
+                {
+                  "name": "Computer Science",
+                  "field": "computer science",
+                  "degree": "bachelor",
+                  "url": "https://example.edu/bachelors/computer-science"
+                }
+              ],
+              "rankings": [],
+              "admissions_url": null,
+              "costs_url": null,
+              "scholarships_url": null,
+              "attributes": {},
+              "discovery_source": "local-catalogue:offline-0; local-catalogue-with-live-enrichment -> https://example.edu/",
+              "notes": "Sitemap-first discovery found: program_page. Not found: program_catalog, admissions, costs, scholarships, documents.",
+              "search_queries_used": 6,
+              "catalogue_id": "offline-0"
+            }
+          ],
+          "traces": [
+            {
+              "institution": "Example University",
+              "domain": "example.edu",
+              "sitemaps_declared": [
+                "https://example.edu/sitemap.xml"
+              ],
+              "sitemaps_read": [
+                "https://example.edu/sitemap.xml"
+              ],
+              "sitemap_urls_seen": 0,
+              "sitemap_urls_kept": 0,
+              "manual_seeds": {},
+              "selected": {
+                "program_page": [
+                  "https://example.edu/bachelors/computer-science"
+                ]
+              },
+              "rejected_sample": [],
+              "rejected_total": 0,
+              "errors": [
+                "search identity recovery: checked 1, confirmed 1",
+                "search identity recovery via fake; queries 6, failed 0, rejected {'duplicate': 5}"
+              ],
+              "search_failures": [],
+              "search_limitations": [],
+              "field_sources": {},
+              "search_coverage": {},
+              "search_queries_attempted": 6,
+              "used_navigation_fallback": true,
+              "kept_by_link_text": [],
+              "walker": {
+                "catalogs_walked": 1,
+                "candidates": [],
+                "programs_confirmed": 0,
+                "outcomes": [
+                  {
+                    "url": "https://example.edu/",
+                    "outcome": "js_no_program_list"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "exception": null,
+      "provider_calls": [
+        [
+          "site:example.edu \"computer science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "Example University bachelor undergraduate first cycle computer science programme",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu programmes \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu courses \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu undergraduate \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu admissions bachelor",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_reservations": [
+        {
+          "institution": "Example University",
+          "before": 0,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 1,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 2,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 3,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 4,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 5,
+          "admitted": true
+        }
+      ],
+      "read_counts": {
+        "Example University": 6
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/sitemap.xml"
+        },
+        {
+          "host": "example.edu",
+          "path": "/"
+        },
+        {
+          "host": "example.edu",
+          "path": "/bachelors/computer-science"
+        }
+      ],
+      "fetcher_stats": {
+        "ok": 4,
+        "refused_privacy": 0,
+        "cached": 2,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 6,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": [
+        {
+          "url": "https://example.edu/",
+          "category": "catalog-walker",
+          "page_type": "",
+          "detail": "js_no_program_list",
+          "readable_chars": 0
+        }
+      ]
+    },
+    "catalogue-timeout": {
+      "captured": [
+        {
+          "candidates": [
+            {
+              "name": "Example University",
+              "country": "Example",
+              "city": "City",
+              "domain": "",
+              "programs": [],
+              "rankings": [],
+              "admissions_url": null,
+              "costs_url": null,
+              "scholarships_url": null,
+              "attributes": {},
+              "discovery_source": "local-catalogue:offline-0",
+              "notes": "Institution candidate; programme, cost and requirements need research.",
+              "search_queries_used": 0,
+              "catalogue_id": "offline-0"
+            }
+          ],
+          "traces": [
+            {
+              "institution": "Example University",
+              "domain": "example.edu",
+              "sitemaps_declared": [],
+              "sitemaps_read": [],
+              "sitemap_urls_seen": 0,
+              "sitemap_urls_kept": 0,
+              "manual_seeds": {},
+              "selected": {},
+              "rejected_sample": [],
+              "rejected_total": 0,
+              "errors": [
+                "Live discovery time limit reached; local university candidate retained."
+              ],
+              "search_failures": [],
+              "search_limitations": [
+                "Live discovery time limit reached; local university candidate retained."
+              ],
+              "field_sources": {},
+              "search_coverage": {},
+              "search_queries_attempted": 0,
+              "used_navigation_fallback": false,
+              "kept_by_link_text": [],
+              "walker": {
+                "catalogs_walked": 0,
+                "candidates": [],
+                "programs_confirmed": 0,
+                "outcomes": []
+              }
+            }
+          ]
+        }
+      ],
+      "exception": null,
+      "provider_calls": [],
+      "get_reservations": [
+        {
+          "institution": "Example University",
+          "before": 0,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 1,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 2,
+          "admitted": false,
+          "exchanges_at_stop": 3
+        }
+      ],
+      "read_counts": {
+        "Example University": 2
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/sitemap.xml"
+        }
+      ],
+      "fetcher_stats": {
+        "ok": 2,
+        "refused_privacy": 0,
+        "cached": 0,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 2,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": []
+    },
+    "identity-stop": {
+      "captured": [
+        {
+          "candidates": [
+            {
+              "name": "Example University",
+              "country": "Example",
+              "city": "City",
+              "domain": "",
+              "programs": [],
+              "rankings": [],
+              "admissions_url": null,
+              "costs_url": null,
+              "scholarships_url": null,
+              "attributes": {},
+              "discovery_source": "local-catalogue:offline-0",
+              "notes": "Institution candidate; programme, cost and requirements need research.",
+              "search_queries_used": 0,
+              "catalogue_id": "offline-0"
+            }
+          ],
+          "traces": [
+            {
+              "institution": "Example University",
+              "domain": "",
+              "sitemaps_declared": [],
+              "sitemaps_read": [],
+              "sitemap_urls_seen": 0,
+              "sitemap_urls_kept": 0,
+              "manual_seeds": {},
+              "selected": {},
+              "rejected_sample": [],
+              "rejected_total": 0,
+              "errors": [],
+              "search_failures": [],
+              "search_limitations": [
+                "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+              ],
+              "field_sources": {},
+              "search_coverage": {},
+              "search_queries_attempted": 1,
+              "used_navigation_fallback": false,
+              "kept_by_link_text": [],
+              "walker": {
+                "catalogs_walked": 0,
+                "candidates": [],
+                "programs_confirmed": 0,
+                "outcomes": []
+              }
+            }
+          ]
+        }
+      ],
+      "exception": null,
+      "provider_calls": [
+        [
+          "\"Example University\" \"Example\" official university website",
+          [],
+          3
+        ]
+      ],
+      "get_reservations": [
+        {
+          "institution": "Example University",
+          "before": 59,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 60,
+          "admitted": false,
+          "exchanges_at_stop": 2
+        }
+      ],
+      "read_counts": {
+        "Example University": 60
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/"
+        }
+      ],
+      "fetcher_stats": {
+        "ok": 1,
+        "refused_privacy": 0,
+        "cached": 0,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 1,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": []
+    },
+    "identity-missing": {
+      "captured": [
+        {
+          "candidates": [
+            {
+              "name": "Example University",
+              "country": "Example",
+              "city": "City",
+              "domain": "",
+              "programs": [],
+              "rankings": [],
+              "admissions_url": null,
+              "costs_url": null,
+              "scholarships_url": null,
+              "attributes": {},
+              "discovery_source": "local-catalogue:offline-0",
+              "notes": "Institution candidate; programme, cost and requirements need research.",
+              "search_queries_used": 1,
+              "catalogue_id": "offline-0"
+            }
+          ],
+          "traces": [
+            {
+              "institution": "Example University",
+              "domain": "",
+              "sitemaps_declared": [],
+              "sitemaps_read": [],
+              "sitemap_urls_seen": 0,
+              "sitemap_urls_kept": 0,
+              "manual_seeds": {},
+              "selected": {},
+              "rejected_sample": [],
+              "rejected_total": 0,
+              "errors": [],
+              "search_failures": [],
+              "search_limitations": [
+                "Official website identity not established for Example University; candidate retained without verified programme facts."
+              ],
+              "field_sources": {},
+              "search_coverage": {},
+              "search_queries_attempted": 1,
+              "used_navigation_fallback": false,
+              "kept_by_link_text": [],
+              "walker": {
+                "catalogs_walked": 0,
+                "candidates": [],
+                "programs_confirmed": 0,
+                "outcomes": []
+              }
+            }
+          ]
+        }
+      ],
+      "exception": null,
+      "provider_calls": [
+        [
+          "\"Example University\" \"Example\" official university website",
+          [],
+          3
+        ]
+      ],
+      "get_reservations": [],
+      "read_counts": {
+        "Example University": 0
+      },
+      "mock_HTTP_exchanges": [],
+      "fetcher_stats": {
+        "ok": 0,
+        "refused_privacy": 0,
+        "cached": 0,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 0,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": []
+    },
+    "catalogue-prefix-max-alias": {
+      "captured": [
+        {
+          "candidates": [
+            {
+              "name": "Example University",
+              "country": "Example",
+              "city": "City",
+              "domain": "",
+              "programs": [],
+              "rankings": [],
+              "admissions_url": null,
+              "costs_url": null,
+              "scholarships_url": null,
+              "attributes": {},
+              "discovery_source": "local-catalogue:offline-0",
+              "notes": "Institution candidate; programme, cost and requirements need research.",
+              "search_queries_used": 4,
+              "catalogue_id": "offline-0"
+            }
+          ],
+          "traces": [
+            {
+              "institution": "Example University",
+              "domain": "example.edu",
+              "sitemaps_declared": [],
+              "sitemaps_read": [],
+              "sitemap_urls_seen": 0,
+              "sitemap_urls_kept": 0,
+              "manual_seeds": {},
+              "selected": {},
+              "rejected_sample": [],
+              "rejected_total": 0,
+              "errors": [],
+              "search_failures": [
+                "Earlier identity diagnostic"
+              ],
+              "search_limitations": [
+                "Earlier identity limitation",
+                "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+              ],
+              "field_sources": {},
+              "search_coverage": {},
+              "search_queries_attempted": 4,
+              "used_navigation_fallback": false,
+              "kept_by_link_text": [],
+              "walker": {
+                "catalogs_walked": 0,
+                "candidates": [],
+                "programs_confirmed": 0,
+                "outcomes": []
+              }
+            }
+          ]
+        }
+      ],
+      "exception": null,
+      "provider_calls": [
+        [
+          "site:example.edu \"computer science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "Registry Alias University bachelor undergraduate first cycle computer science programme",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_reservations": [
+        {
+          "institution": "Example University",
+          "before": 56,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 57,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 58,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 59,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 60,
+          "admitted": false,
+          "exchanges_at_stop": 4
+        }
+      ],
+      "read_counts": {
+        "Example University": 60
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/sitemap.xml"
+        },
+        {
+          "host": "example.edu",
+          "path": "/"
+        }
+      ],
+      "fetcher_stats": {
+        "ok": 3,
+        "refused_privacy": 0,
+        "cached": 1,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 4,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": [
+        {
+          "url": "https://example.edu/",
+          "category": "catalog-walker",
+          "page_type": "",
+          "detail": "js_no_program_list",
+          "readable_chars": 0
+        }
+      ]
+    },
+    "two-institutions": {
+      "captured": [
+        {
+          "candidates": [
+            {
+              "name": "Example University",
+              "country": "Example",
+              "city": "City",
+              "domain": "",
+              "programs": [],
+              "rankings": [],
+              "admissions_url": null,
+              "costs_url": null,
+              "scholarships_url": null,
+              "attributes": {},
+              "discovery_source": "local-catalogue:offline-0",
+              "notes": "Institution candidate; programme, cost and requirements need research.",
+              "search_queries_used": 0,
+              "catalogue_id": "offline-0"
+            },
+            {
+              "name": "Second University",
+              "country": "Example",
+              "city": "City",
+              "domain": "",
+              "programs": [],
+              "rankings": [],
+              "admissions_url": null,
+              "costs_url": null,
+              "scholarships_url": null,
+              "attributes": {},
+              "discovery_source": "local-catalogue:offline-1",
+              "notes": "Institution candidate; programme, cost and requirements need research.",
+              "search_queries_used": 0,
+              "catalogue_id": "offline-1"
+            }
+          ],
+          "traces": [
+            {
+              "institution": "Example University",
+              "domain": "example.edu",
+              "sitemaps_declared": [],
+              "sitemaps_read": [],
+              "sitemap_urls_seen": 0,
+              "sitemap_urls_kept": 0,
+              "manual_seeds": {},
+              "selected": {},
+              "rejected_sample": [],
+              "rejected_total": 0,
+              "errors": [],
+              "search_failures": [],
+              "search_limitations": [
+                "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+              ],
+              "field_sources": {},
+              "search_coverage": {},
+              "search_queries_attempted": 0,
+              "used_navigation_fallback": false,
+              "kept_by_link_text": [],
+              "walker": {
+                "catalogs_walked": 0,
+                "candidates": [],
+                "programs_confirmed": 0,
+                "outcomes": []
+              }
+            },
+            {
+              "institution": "Second University",
+              "domain": "second.edu",
+              "sitemaps_declared": [],
+              "sitemaps_read": [],
+              "sitemap_urls_seen": 0,
+              "sitemap_urls_kept": 0,
+              "manual_seeds": {},
+              "selected": {},
+              "rejected_sample": [],
+              "rejected_total": 0,
+              "errors": [],
+              "search_failures": [],
+              "search_limitations": [
+                "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+              ],
+              "field_sources": {},
+              "search_coverage": {},
+              "search_queries_attempted": 0,
+              "used_navigation_fallback": false,
+              "kept_by_link_text": [],
+              "walker": {
+                "catalogs_walked": 0,
+                "candidates": [],
+                "programs_confirmed": 0,
+                "outcomes": []
+              }
+            }
+          ]
+        }
+      ],
+      "exception": null,
+      "provider_calls": [
+        [
+          "site:example.edu \"computer science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "Example University bachelor undergraduate first cycle computer science programme",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu programmes \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu courses \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu undergraduate \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu admissions bachelor",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_reservations": [
+        {
+          "institution": "Example University",
+          "before": 56,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 57,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 58,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 59,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 60,
+          "admitted": false,
+          "exchanges_at_stop": 4
+        }
+      ],
+      "read_counts": {
+        "Example University": 60,
+        "Second University": 56
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/sitemap.xml"
+        },
+        {
+          "host": "example.edu",
+          "path": "/"
+        }
+      ],
+      "fetcher_stats": {
+        "ok": 3,
+        "refused_privacy": 0,
+        "cached": 1,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 4,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": [
+        {
+          "url": "https://example.edu/",
+          "category": "catalog-walker",
+          "page_type": "",
+          "detail": "js_no_program_list",
+          "readable_chars": 0
+        }
+      ]
+    },
+    "repeated-adapter": {
+      "captured": [
+        {
+          "candidates": [
+            {
+              "name": "Example University",
+              "country": "Example",
+              "city": "City",
+              "domain": "",
+              "programs": [],
+              "rankings": [],
+              "admissions_url": null,
+              "costs_url": null,
+              "scholarships_url": null,
+              "attributes": {},
+              "discovery_source": "",
+              "notes": "",
+              "search_queries_used": 0,
+              "catalogue_id": null
+            }
+          ],
+          "traces": [
+            {
+              "institution": "Example University",
+              "domain": "",
+              "sitemaps_declared": [],
+              "sitemaps_read": [],
+              "sitemap_urls_seen": 0,
+              "sitemap_urls_kept": 0,
+              "manual_seeds": {},
+              "selected": {},
+              "rejected_sample": [],
+              "rejected_total": 0,
+              "errors": [],
+              "search_failures": [],
+              "search_limitations": [
+                "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+              ],
+              "field_sources": {},
+              "search_coverage": {},
+              "search_queries_attempted": 0,
+              "used_navigation_fallback": false,
+              "kept_by_link_text": [],
+              "walker": {
+                "catalogs_walked": 0,
+                "candidates": [],
+                "programs_confirmed": 0,
+                "outcomes": []
+              }
+            }
+          ]
+        },
+        {
+          "candidates": [
+            {
+              "name": "Example University",
+              "country": "Example",
+              "city": "City",
+              "domain": "",
+              "programs": [],
+              "rankings": [],
+              "admissions_url": null,
+              "costs_url": null,
+              "scholarships_url": null,
+              "attributes": {},
+              "discovery_source": "",
+              "notes": "",
+              "search_queries_used": 0,
+              "catalogue_id": null
+            }
+          ],
+          "traces": [
+            {
+              "institution": "Example University",
+              "domain": "",
+              "sitemaps_declared": [],
+              "sitemaps_read": [],
+              "sitemap_urls_seen": 0,
+              "sitemap_urls_kept": 0,
+              "manual_seeds": {},
+              "selected": {},
+              "rejected_sample": [],
+              "rejected_total": 0,
+              "errors": [],
+              "search_failures": [],
+              "search_limitations": [
+                "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+              ],
+              "field_sources": {},
+              "search_coverage": {},
+              "search_queries_attempted": 0,
+              "used_navigation_fallback": false,
+              "kept_by_link_text": [],
+              "walker": {
+                "catalogs_walked": 0,
+                "candidates": [],
+                "programs_confirmed": 0,
+                "outcomes": []
+              }
+            }
+          ]
+        }
+      ],
+      "exception": null,
+      "provider_calls": [
+        [
+          "site:example.edu \"computer science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "Example University bachelor undergraduate first cycle computer science programme",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu programmes \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu courses \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu undergraduate \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu admissions bachelor",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu \"computer science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "Example University bachelor undergraduate first cycle computer science programme",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu programmes \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu courses \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu undergraduate \"computer science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu admissions bachelor",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "get_reservations": [
+        {
+          "institution": "Example University",
+          "before": 56,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 57,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 58,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 59,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 60,
+          "admitted": false,
+          "exchanges_at_stop": 4
+        },
+        {
+          "institution": "Example University",
+          "before": 56,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 57,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 58,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 59,
+          "admitted": true
+        },
+        {
+          "institution": "Example University",
+          "before": 60,
+          "admitted": false,
+          "exchanges_at_stop": 4
+        }
+      ],
+      "read_counts": {
+        "Example University": 60
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/robots.txt"
+        },
+        {
+          "host": "example.edu",
+          "path": "/sitemap.xml"
+        },
+        {
+          "host": "example.edu",
+          "path": "/"
+        }
+      ],
+      "fetcher_stats": {
+        "ok": 3,
+        "refused_privacy": 0,
+        "cached": 5,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 8,
+        "browser": 0,
+        "pdf": 0
+      },
+      "separate_walker_outcomes": [
+        {
+          "url": "https://example.edu/",
+          "category": "catalog-walker",
+          "page_type": "",
+          "detail": "js_no_program_list",
+          "readable_chars": 0
+        }
+      ]
+    }
+  },
+  "native_method_imports": [
+    {
+      "module": "app.adapters.discovery.live_discovery",
+      "method": "LiveDiscoveryAdapter.discover",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/off/backend/app/adapters/discovery/live_discovery.py"
+    },
+    {
+      "module": "app.adapters.discovery.live_discovery",
+      "method": "LiveDiscoveryAdapter._discover_one",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/off/backend/app/adapters/discovery/live_discovery.py"
+    },
+    {
+      "module": "app.catalogue.discovery",
+      "method": "CatalogueDiscoveryAdapter.discover",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/off/backend/app/catalogue/discovery.py"
+    },
+    {
+      "module": "app.catalogue.discovery",
+      "method": "CatalogueDiscoveryAdapter._enrich",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/off/backend/app/catalogue/discovery.py"
+    },
+    {
+      "module": "app.pipeline.read_budget",
+      "method": "BudgetedFetcher.get",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/off/backend/app/pipeline/read_budget.py"
+    },
+    {
+      "module": "app.adapters.fetching",
+      "method": "Fetcher.get",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/off/backend/app/adapters/fetching.py"
+    },
+    {
+      "module": "app.adapters.fetching",
+      "method": "Fetcher._get",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/off/backend/app/adapters/fetching.py"
+    },
+    {
+      "module": "app.adapters.search.fake",
+      "method": "FakeSearchProvider.search",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/off/backend/app/adapters/search/fake.py"
+    }
+  ],
+  "source_pre_post_sha256": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/off/backend/app/catalogue/discovery.py": "650ecf1750afe7072cdb8fe71de5fa1c4d238c0666c4776fa0227a986436319c",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/off/backend/app/adapters/discovery/live_discovery.py": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/off/backend/app/adapters/search/fake.py": "45546397ab73cfcafd4e418ad78159acced0570f593deaa83fbe17a4146982dc",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/off/backend/app/pipeline/read_budget.py": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/off/backend/app/adapters/fetching.py": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895"
+  },
+  "real_network": "denied by sockets; only explicitly synthetic DNS + MockTransport",
+  "qualification": "Native discovery report input, not canary/scorer or persisted Runner/Job/SQL; charged FakeSearchProvider seam attempts not vendor HTTP."
+}

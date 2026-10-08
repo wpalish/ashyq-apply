@@ -1,0 +1,2372 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="70" failures="0" skipped="0" tests="250" time="9.411" timestamp="2026-10-08T10:11:00.930005+05:00" hostname="iMac-Aliser.local"><testcase classname="tests.test_live_discovery.TestRegistrableDomain" name="test_multipart_suffixes_are_handled[www.rug.nl-rug.nl]" time="0.453" /><testcase classname="tests.test_live_discovery.TestRegistrableDomain" name="test_multipart_suffixes_are_handled[rug.nl-rug.nl]" time="0.000" /><testcase classname="tests.test_live_discovery.TestRegistrableDomain" name="test_multipart_suffixes_are_handled[studieren.univie.ac.at-univie.ac.at]" time="0.000" /><testcase classname="tests.test_live_discovery.TestRegistrableDomain" name="test_multipart_suffixes_are_handled[admissions.hku.hk-hku.hk]" time="0.000" /><testcase classname="tests.test_live_discovery.TestRegistrableDomain" name="test_multipart_suffixes_are_handled[admissions.nu.edu.kz-nu.edu.kz]" time="0.000" /><testcase classname="tests.test_live_discovery.TestRegistrableDomain" name="test_multipart_suffixes_are_handled[www.ntu.edu.sg-ntu.edu.sg]" time="0.000" /><testcase classname="tests.test_live_discovery.TestRegistrableDomain" name="test_multipart_suffixes_are_handled[admission.kaist.ac.kr-kaist.ac.kr]" time="0.000" /><testcase classname="tests.test_live_discovery.TestRegistrableDomain" name="test_multipart_suffixes_are_handled[you.ubc.ca-ubc.ca]" time="0.000" /><testcase classname="tests.test_live_discovery.TestRegistrableDomain" name="test_multipart_suffixes_are_handled[en.uw.edu.pl-uw.edu.pl]" time="0.000" /><testcase classname="tests.test_live_discovery.TestRegistrableDomain" name="test_off_domain_urls_are_recognised[https://www.rug.nl/education-www.rug.nl-True]" time="0.000" /><testcase classname="tests.test_live_discovery.TestRegistrableDomain" name="test_off_domain_urls_are_recognised[https://rug.nl/education-www.rug.nl-True]" time="0.000" /><testcase classname="tests.test_live_discovery.TestRegistrableDomain" name="test_off_domain_urls_are_recognised[https://studieren.univie.ac.at/x-www.univie.ac.at-True]" time="0.000" /><testcase classname="tests.test_live_discovery.TestRegistrableDomain" name="test_off_domain_urls_are_recognised[https://evil.example.com/rug.nl-www.rug.nl-False]" time="0.000" /><testcase classname="tests.test_live_discovery.TestRegistrableDomain" name="test_off_domain_urls_are_recognised[https://www.tudelft.nl/x-www.rug.nl-False]" time="0.000" /><testcase classname="tests.test_live_discovery.TestRegistrableDomain" name="test_off_domain_urls_are_recognised[https://other.ac.at/x-www.univie.ac.at-False]" time="0.000" /><testcase classname="tests.test_live_discovery.TestCanonicalUrl" name="test_equivalent_urls_normalise_to_one_form[https://WWW.RUG.NL/Education/-https://www.rug.nl/Education]" time="0.000" /><testcase classname="tests.test_live_discovery.TestCanonicalUrl" name="test_equivalent_urls_normalise_to_one_form[https://www.rug.nl/education#section-https://www.rug.nl/education]" time="0.000" /><testcase classname="tests.test_live_discovery.TestCanonicalUrl" name="test_equivalent_urls_normalise_to_one_form[https://www.rug.nl/education?utm_source=x-https://www.rug.nl/education]" time="0.000" /><testcase classname="tests.test_live_discovery.TestCanonicalUrl" name="test_equivalent_urls_normalise_to_one_form[https://www.rug.nl/education?fbclid=abc-https://www.rug.nl/education]" time="0.000" /><testcase classname="tests.test_live_discovery.TestCanonicalUrl" name="test_equivalent_urls_normalise_to_one_form[https://www.rug.nl:443/education-https://www.rug.nl/education]" time="0.000" /><testcase classname="tests.test_live_discovery.TestCanonicalUrl" name="test_equivalent_urls_normalise_to_one_form[https://www.rug.nl//education//cs-https://www.rug.nl/education/cs]" time="0.000" /><testcase classname="tests.test_live_discovery.TestCanonicalUrl" name="test_equivalent_urls_normalise_to_one_form[https://www.rug.nl/-https://www.rug.nl/]" time="0.000" /><testcase classname="tests.test_live_discovery.TestCanonicalUrl" name="test_meaningful_query_parameters_are_kept" time="0.000" /><testcase classname="tests.test_live_discovery.TestCanonicalUrl" name="test_query_order_does_not_create_a_second_url" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_urls_are_filed_under_the_right_category[https://uni.edu/en/education/programmes/bachelors/computer-science-program_page]" time="0.001" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_urls_are_filed_under_the_right_category[https://uni.edu/en/bachelordiploma-programmes/computer-science-bachelor-program_page]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_urls_are_filed_under_the_right_category[https://uni.edu/bsc-computer-science-program_page]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_urls_are_filed_under_the_right_category[https://uni.edu/en/education/programmes/bachelors-program_catalog]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_urls_are_filed_under_the_right_category[https://uni.edu/en/degree-programmes-program_catalog]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_urls_are_filed_under_the_right_category[https://uni.edu/education/degree-programmes-1st-2nd-and-long-cycle-programmes-program_catalog]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_urls_are_filed_under_the_right_category[https://uni.edu/admission-and-application-admissions]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_urls_are_filed_under_the_right_category[https://uni.edu/entry_requirements-admissions]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_urls_are_filed_under_the_right_category[https://uni.edu/tuition-fees-costs]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_urls_are_filed_under_the_right_category[https://uni.edu/cost-of-attendance-costs]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_urls_are_filed_under_the_right_category[https://uni.edu/scholarships-scholarships]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_urls_are_filed_under_the_right_category[https://uni.edu/financial_aid-scholarships]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_urls_are_filed_under_the_right_category[https://uni.edu/required-documents-documents]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/news/2026/something]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/events/open-day]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/vacancies/professor]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/alumni/donate]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/privacy]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/assets/style.css]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/brochure.pdf.zip]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/library/search]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/about/degree-ceremony-photos]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/programme-news]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/bachelor-open-day]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/onlinebachelorweek]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/student-for-a-day]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/campus-tour]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/online-university-tour]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/education/bachelor/webklassen]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/research/zernike/a-group/bsc-msc-project-guidelines]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/research/institutes/group/msc-and-bsc-projects]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/en/programmes/elec-student-newsletters]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/sv/program/elec-nyhetsbrev-for-studerande]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_irrelevant_urls_score_nothing[https://uni.edu/programmes/bachelors/cs-information-session]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/en/degree-programmes-True]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/applying-ubc/how-to-apply/degrees-programs/-True]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/studies/programmes-True]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/about/degree-ceremony-photos-False]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/programme-news-False]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/news/2026/new-programme-launched-False]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_whether_a_page_lists_programmes_is_asked_separately[https://uni.edu/en/education/programmes/bachelors/computer-science-False]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_a_funding_page_is_never_a_programme[https://uni.edu/admissions/undergraduate/scholarships/detail/sci-award]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_a_funding_page_is_never_a_programme[https://uni.edu/en/education/programmes/bachelors/funding/award]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_a_funding_page_is_never_a_programme[https://uni.edu/study/financial-aid/undergraduate-grants]" time="0.000" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_the_applicants_subject_outranks_an_unrelated_programme" time="0.001" /><testcase classname="tests.test_live_discovery.TestUrlCategorisation" name="test_a_programme_at_the_wrong_level_is_penalised" time="0.001" /><testcase classname="tests.test_live_discovery.TestSitemapParsing" name="test_robots_sitemap_directives_are_read" time="0.000" /><testcase classname="tests.test_live_discovery.TestSitemapParsing" name="test_robots_without_a_sitemap_yields_none" time="0.000" /><testcase classname="tests.test_live_discovery.TestSitemapParsing" name="test_a_urlset_yields_pages" time="0.001" /><testcase classname="tests.test_live_discovery.TestSitemapParsing" name="test_a_sitemap_index_yields_children" time="0.000" /><testcase classname="tests.test_live_discovery.TestSitemapParsing" name="test_malformed_xml_does_not_raise" time="0.000" /><testcase classname="tests.test_live_discovery.TestSitemapParsing" name="test_a_plain_text_sitemap_is_accepted" time="0.000" /><testcase classname="tests.test_live_discovery.TestSitemapParsing" name="test_a_gzipped_sitemap_is_decompressed" time="0.000" /><testcase classname="tests.test_live_discovery.TestSitemapParsing" name="test_a_corrupt_gzip_yields_empty_text_rather_than_raising" time="0.000" /><testcase classname="tests.test_live_discovery.TestSitemapReader" name="test_it_follows_a_sitemap_index_into_its_children" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_it_follows_a_sitemap_index_into_its_children&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestSitemapReader" name="test_failed_sitemap_reads_consume_the_document_budget" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_failed_sitemap_reads_consume_the_document_budget&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestSitemapReader" name="test_oversized_map_stops_bulk_traversal_before_slow_siblings" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_oversized_map_stops_bulk_traversal_before_slow_siblings&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestSitemapReader" name="test_nested_indexes_are_followed_but_bounded" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_nested_indexes_are_followed_but_bounded&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestSitemapReader" name="test_a_self_referencing_index_terminates" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_a_self_referencing_index_terminates&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestSitemapReader" name="test_off_domain_urls_in_a_sitemap_are_dropped" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_off_domain_urls_in_a_sitemap_are_dropped&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestSitemapReader" name="test_duplicate_and_equivalent_urls_are_deduplicated" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_duplicate_and_equivalent_urls_are_deduplicated&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestSitemapReader" name="test_conventional_locations_are_tried_when_robots_names_none" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_conventional_locations_are_tried_when_robots_names_none&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestSitemapReader" name="test_no_sitemap_at_all_is_recorded_not_raised" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_no_sitemap_at_all_is_recorded_not_raised&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestSitemapReader" name="test_a_robots_refusal_is_recorded_and_not_worked_around" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_a_robots_refusal_is_recorded_and_not_worked_around&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_manual_seeds_are_used_and_recorded_with_provenance" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_manual_seeds_are_used_and_recorded_with_provenance&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_a_manual_seed_is_not_itself_evidence" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_a_manual_seed_is_not_itself_evidence&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_an_off_domain_manual_seed_is_rejected" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_an_off_domain_manual_seed_is_rejected&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_a_manual_seed_wins_over_a_discovered_page" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_a_manual_seed_wins_over_a_discovered_page&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_sitemap_discovery_finds_a_programme_page" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_sitemap_discovery_finds_a_programme_page&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_the_wrong_degree_level_is_not_offered_first" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_the_wrong_degree_level_is_not_offered_first&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_fetched_programmes_must_match_requested_level_and_subject" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_fetched_programmes_must_match_requested_level_and_subject&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_a_candidate_that_reads_as_an_event_is_dropped" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_a_candidate_that_reads_as_an_event_is_dropped&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_a_rejected_candidate_lets_the_next_one_through" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_a_rejected_candidate_lets_the_next_one_through&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_an_unreadable_candidate_is_reported_not_promoted" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_an_unreadable_candidate_is_reported_not_promoted&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_a_catalogue_alone_does_not_become_a_programme" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_a_catalogue_alone_does_not_become_a_programme&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_the_number_of_pages_per_category_is_bounded" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_the_number_of_pages_per_category_is_bounded&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_navigation_is_used_only_when_sitemaps_yield_nothing" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_navigation_is_used_only_when_sitemaps_yield_nothing&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_navigation_keeps_the_strongest_leads_not_the_first" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_navigation_keeps_the_strongest_leads_not_the_first&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_navigation_is_not_used_when_a_programme_page_was_found" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_navigation_is_not_used_when_a_programme_page_was_found&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_navigation_runs_when_only_a_catalogue_was_found" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_navigation_runs_when_only_a_catalogue_was_found&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_a_catalogue_link_is_followed_by_its_wording" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_a_catalogue_link_is_followed_by_its_wording&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_link_text_matching_needs_the_whole_subject" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_link_text_matching_needs_the_whole_subject&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_link_text_matching_only_applies_on_a_catalogue" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_link_text_matching_only_applies_on_a_catalogue&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_a_large_sitemap_does_not_crowd_out_the_programmes" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_a_large_sitemap_does_not_crowd_out_the_programmes&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_an_unreachable_site_is_reported_not_raised" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_an_unreachable_site_is_reported_not_raised&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_excluded_countries_are_not_proposed" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_excluded_countries_are_not_proposed&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestAdapter" name="test_the_trace_serialises_for_the_canary_report" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_the_trace_serialises_for_the_canary_report&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestShippedRegistry" name="test_it_covers_at_least_ten_institutions_in_several_countries" time="0.000" /><testcase classname="tests.test_live_discovery.TestShippedRegistry" name="test_every_seed_is_on_its_own_institutions_domain" time="0.001" /><testcase classname="tests.test_live_discovery.TestShippedRegistry" name="test_every_seed_category_is_one_discovery_understands" time="0.000" /><testcase classname="tests.test_live_discovery.TestShippedRegistry" name="test_every_seed_is_an_absolute_https_url" time="0.000" /><testcase classname="tests.test_live_discovery.TestCatalogWalkerContract" name="test_security_deep_catalog_json_never_raises" time="0.000" /><testcase classname="tests.test_live_discovery.TestCatalogWalkerContract" name="test_security_catalog_json_labels_are_bounded" time="0.004" /><testcase classname="tests.test_live_discovery.TestCatalogWalkerContract" name="test_r1_walker_extracts_scored_links" time="0.002" /><testcase classname="tests.test_live_discovery.TestCatalogWalkerContract" name="test_r2_each_link_fetched_with_outcome" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_r2_each_link_fetched_with_outcome&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestCatalogWalkerContract" name="test_r3_profile_predicate_reused" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_r3_profile_predicate_reused&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestCatalogWalkerContract" name="test_r4_off_domain_never_fetched" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_r4_off_domain_never_fetched&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestCatalogWalkerContract" name="test_r5_js_json_payload_yields_programs" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_r5_js_json_payload_yields_programs&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestCatalogWalkerContract" name="test_r6_js_unrelated_json_falls_through" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_r6_js_unrelated_json_falls_through&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestCatalogWalkerContract" name="test_r7_js_silent_shell_is_recorded_not_fatal" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_r7_js_silent_shell_is_recorded_not_fatal&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestCatalogWalkerContract" name="test_r8_source_pages_rows_recorded" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_r8_source_pages_rows_recorded&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestCatalogWalkerContract" name="test_r9_top_n_budget" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_r9_top_n_budget&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestCatalogWalkerContract" name="test_r10_no_catalog_byte_identical" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_r10_no_catalog_byte_identical&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestCatalogWalkerContract" name="test_r10_demo_invariant" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_r10_demo_invariant&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestCatalogWalkerContract" name="test_justified_green_titled_js_shell_is_a_catalogue" time="0.003" /><testcase classname="tests.test_live_discovery.TestTheWalkerUsesOnePredicate" name="test_the_walker_asks_the_same_question_as_the_confirm_stage" time="0.000" /><testcase classname="tests.test_live_discovery.TestSearchBeforeNavigation" name="test_on_search_first_skips_the_navigation_fallback" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_on_search_first_skips_the_navigation_fallback&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery.TestSearchBeforeNavigation" name="test_off_navigation_runs_first_and_search_once_after" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_off_navigation_runs_first_and_search_once_after&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_stopped_native_discovery_exports_spent_queries[curated]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_stopped_native_discovery_exports_spent_queries[curated]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_stopped_native_discovery_exports_spent_queries[catalogue]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_stopped_native_discovery_exports_spent_queries[catalogue]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_scope_entry_stop_exports_only_unobserved_seed[curated]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_scope_entry_stop_exports_only_unobserved_seed[curated]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_scope_entry_stop_exports_only_unobserved_seed[catalogue]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_scope_entry_stop_exports_only_unobserved_seed[catalogue]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_stopped_accounting_keeps_propagating_controls[curated-busy]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_stopped_accounting_keeps_propagating_controls[curated-busy]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_stopped_accounting_keeps_propagating_controls[catalogue-busy]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_stopped_accounting_keeps_propagating_controls[catalogue-busy]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_stopped_accounting_keeps_propagating_controls[curated-async]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_stopped_accounting_keeps_propagating_controls[curated-async]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_stopped_accounting_keeps_propagating_controls[curated-cancel]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_stopped_accounting_keeps_propagating_controls[curated-cancel]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_stopped_accounting_keeps_propagating_controls[catalogue-lease]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_stopped_accounting_keeps_propagating_controls[catalogue-lease]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_future_read_reason_preserves_observed_trace" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_future_read_reason_preserves_observed_trace&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_trace_lifecycle_ordinary_completion_and_timeout[curated-success]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_trace_lifecycle_ordinary_completion_and_timeout[curated-success]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-success]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-success]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-timeout]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-timeout]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_native_identity_query_count_survives_before_inner_entry[identity-stop]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_native_identity_query_count_survives_before_inner_entry[identity-stop]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_native_identity_query_count_survives_before_inner_entry[identity-missing]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_native_identity_query_count_survives_before_inner_entry[identity-missing]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_catalogue_stopped_trace_keeps_owner_and_prefix_once" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_catalogue_stopped_trace_keeps_owner_and_prefix_once&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_next_scope_stop_does_not_reuse_previous_university_trace" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_next_scope_stop_does_not_reuse_previous_university_trace&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_live_discovery" name="test_repeated_discovery_does_not_reset_or_mutate_prior_owned_trace" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_repeated_discovery_does_not_reset_or_mutate_prior_owned_trace&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_university_catalogue" name="test_import_is_idempotent_and_preserves_curated_identity" time="0.197" /><testcase classname="tests.test_university_catalogue" name="test_the_university_named_exactly_comes_first[Columbia University]" time="0.083" /><testcase classname="tests.test_university_catalogue" name="test_the_university_named_exactly_comes_first[University College Dublin]" time="0.082" /><testcase classname="tests.test_university_catalogue" name="test_the_university_named_exactly_comes_first[Durham University]" time="0.084" /><testcase classname="tests.test_university_catalogue" name="test_the_university_named_exactly_comes_first[Korea University]" time="0.110" /><testcase classname="tests.test_university_catalogue" name="test_the_university_named_exactly_comes_first[Northwestern University]" time="0.082" /><testcase classname="tests.test_university_catalogue" name="test_every_seed_name_finds_its_own_university_first" time="3.694" /><testcase classname="tests.test_university_catalogue" name="test_an_empty_query_keeps_the_previous_order" time="0.086" /><testcase classname="tests.test_university_catalogue" name="test_seed_history_does_not_overwrite_live_identity_or_roll_back" time="0.206" /><testcase classname="tests.test_university_catalogue" name="test_invalid_import_is_atomic[duplicate]" time="0.083" /><testcase classname="tests.test_university_catalogue" name="test_invalid_import_is_atomic[count]" time="0.080" /><testcase classname="tests.test_university_catalogue" name="test_invalid_import_is_atomic[schema]" time="0.079" /><testcase classname="tests.test_university_catalogue" name="test_invalid_import_is_atomic[private]" time="0.078" /><testcase classname="tests.test_university_catalogue" name="test_invalid_import_is_atomic[price]" time="0.079" /><testcase classname="tests.test_university_catalogue" name="test_invalid_import_is_atomic[refresh]" time="0.107" /><testcase classname="tests.test_university_catalogue" name="test_invalid_import_is_atomic[url]" time="0.079" /><testcase classname="tests.test_university_catalogue" name="test_conflicting_domains_remain_unknown" time="0.009" /><testcase classname="tests.test_university_catalogue" name="test_local_filters_preference_and_unknown_prices" time="0.126" /><testcase classname="tests.test_university_catalogue" name="test_catalogue_api_filters_and_returns_only_preliminary_facts" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">fixturedef = &lt;FixtureDef argname='tmp_path' scope='function' baseid=''&gt;
+request = &lt;SubRequest 'tmp_path' for &lt;Function test_catalogue_api_filters_and_returns_only_preliminary_facts&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        if (
+            fixturedef.argname == "event_loop_policy"
+            and fixturedef.func.__module__ != __name__
+        ):
+            warnings.warn(
+                PytestDeprecationWarning(_EVENT_LOOP_POLICY_FIXTURE_DEPRECATION_WARNING),
+            )
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+                return (yield)
+            if not _is_coroutine_or_asyncgen(fixturedef.func):
+&gt;               return (yield)
+                        ^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_university_catalogue" name="test_selected_run_persists_ids_and_forces_live" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">fixturedef = &lt;FixtureDef argname='tmp_path' scope='function' baseid=''&gt;
+request = &lt;SubRequest 'tmp_path' for &lt;Function test_selected_run_persists_ids_and_forces_live&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        if (
+            fixturedef.argname == "event_loop_policy"
+            and fixturedef.func.__module__ != __name__
+        ):
+            warnings.warn(
+                PytestDeprecationWarning(_EVENT_LOOP_POLICY_FIXTURE_DEPRECATION_WARNING),
+            )
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+                return (yield)
+            if not _is_coroutine_or_asyncgen(fixturedef.func):
+&gt;               return (yield)
+                        ^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_university_catalogue" name="test_invalid_selected_run_is_rejected[ids0-False]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">fixturedef = &lt;FixtureDef argname='tmp_path' scope='function' baseid=''&gt;
+request = &lt;SubRequest 'tmp_path' for &lt;Function test_invalid_selected_run_is_rejected[ids0-False]&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        if (
+            fixturedef.argname == "event_loop_policy"
+            and fixturedef.func.__module__ != __name__
+        ):
+            warnings.warn(
+                PytestDeprecationWarning(_EVENT_LOOP_POLICY_FIXTURE_DEPRECATION_WARNING),
+            )
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+                return (yield)
+            if not _is_coroutine_or_asyncgen(fixturedef.func):
+&gt;               return (yield)
+                        ^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_university_catalogue" name="test_invalid_selected_run_is_rejected[ids1-False]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">fixturedef = &lt;FixtureDef argname='tmp_path' scope='function' baseid=''&gt;
+request = &lt;SubRequest 'tmp_path' for &lt;Function test_invalid_selected_run_is_rejected[ids1-False]&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        if (
+            fixturedef.argname == "event_loop_policy"
+            and fixturedef.func.__module__ != __name__
+        ):
+            warnings.warn(
+                PytestDeprecationWarning(_EVENT_LOOP_POLICY_FIXTURE_DEPRECATION_WARNING),
+            )
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+                return (yield)
+            if not _is_coroutine_or_asyncgen(fixturedef.func):
+&gt;               return (yield)
+                        ^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_university_catalogue" name="test_invalid_selected_run_is_rejected[ids2-True]" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">fixturedef = &lt;FixtureDef argname='tmp_path' scope='function' baseid=''&gt;
+request = &lt;SubRequest 'tmp_path' for &lt;Function test_invalid_selected_run_is_rejected[ids2-True]&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        if (
+            fixturedef.argname == "event_loop_policy"
+            and fixturedef.func.__module__ != __name__
+        ):
+            warnings.warn(
+                PytestDeprecationWarning(_EVENT_LOOP_POLICY_FIXTURE_DEPRECATION_WARNING),
+            )
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+                return (yield)
+            if not _is_coroutine_or_asyncgen(fixturedef.func):
+&gt;               return (yield)
+                        ^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_university_catalogue" name="test_provider_outage_keeps_candidates_without_inventing_programmes" time="0.113" /><testcase classname="tests.test_university_catalogue" name="test_identity_checks_page_preserves_proof_and_is_idempotent" time="0.087" /><testcase classname="tests.test_university_catalogue" name="test_wrong_homepage_cannot_authorize_domain[&lt;title&gt;University directory&lt;/title&gt;-]" time="0.085" /><testcase classname="tests.test_university_catalogue" name="test_wrong_homepage_cannot_authorize_domain[&lt;h1&gt;Massachusetts Institute of Technology&lt;/h1&gt;-https://evil.edu/]" time="0.083" /><testcase classname="tests.test_university_catalogue" name="test_live_budget_and_timeout_leave_local_candidates" time="0.111" /><testcase classname="tests.test_university_catalogue" name="test_real_postgres_catalogue_import" time="0.628"><error message="failed on setup with &quot;alembic.util.exc.CommandError: Path doesn't exist: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/on/backend/migrations'.  Please use the 'init' command to create a new scripts folder.&quot;">fixturedef = &lt;FixtureDef argname='pg_engine' scope='function' baseid='tests'&gt;
+request = &lt;SubRequest 'pg_engine' for &lt;Function test_real_postgres_catalogue_import&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        if (
+            fixturedef.argname == "event_loop_policy"
+            and fixturedef.func.__module__ != __name__
+        ):
+            warnings.warn(
+                PytestDeprecationWarning(_EVENT_LOOP_POLICY_FIXTURE_DEPRECATION_WARNING),
+            )
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+                return (yield)
+            if not _is_coroutine_or_asyncgen(fixturedef.func):
+&gt;               return (yield)
+                        ^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/conftest.py:80: in pg_engine
+    migrate_to_head(url)
+app/db.py:93: in migrate_to_head
+    command.upgrade(_alembic_config(url or _settings.database_url), "head")
+../../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/alembic/command.py:386: in upgrade
+    script = ScriptDirectory.from_config(config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/alembic/script/base.py:229: in from_config
+    return ScriptDirectory(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;alembic.script.base.ScriptDirectory object at 0x10f75baa0&gt;
+dir = '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/on/backend/migrations'
+file_template = '%(rev)s_%(slug)s', truncate_slug_length = None
+version_locations = None, sourceless = False, output_encoding = 'utf-8'
+timezone = None
+hook_config = {'here': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/on/backend'}
+recursive_version_locations = False
+messaging_opts = immutabledict({'quiet': False})
+
+    def __init__(
+        self,
+        dir: str,  # noqa
+        file_template: str = _default_file_template,
+        truncate_slug_length: Optional[int] = 40,
+        version_locations: Optional[List[str]] = None,
+        sourceless: bool = False,
+        output_encoding: str = "utf-8",
+        timezone: Optional[str] = None,
+        hook_config: Optional[Mapping[str, str]] = None,
+        recursive_version_locations: bool = False,
+        messaging_opts: MessagingOptions = cast(
+            "MessagingOptions", util.EMPTY_DICT
+        ),
+    ) -&gt; None:
+        self.dir = dir
+        self.file_template = file_template
+        self.version_locations = version_locations
+        self.truncate_slug_length = truncate_slug_length or 40
+        self.sourceless = sourceless
+        self.output_encoding = output_encoding
+        self.revision_map = revision.RevisionMap(self._load_revisions)
+        self.timezone = timezone
+        self.hook_config = hook_config
+        self.recursive_version_locations = recursive_version_locations
+        self.messaging_opts = messaging_opts
+    
+        if not os.access(dir, os.F_OK):
+&gt;           raise util.CommandError(
+                "Path doesn't exist: %r.  Please use "
+                "the 'init' command to create a new "
+                "scripts folder." % os.path.abspath(dir)
+            )
+E           alembic.util.exc.CommandError: Path doesn't exist: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/on/backend/migrations'.  Please use the 'init' command to create a new scripts folder.
+
+../../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/alembic/script/base.py:106: CommandError</error></testcase><testcase classname="tests.test_university_catalogue" name="test_offline_selected_run_finishes_with_honest_unknowns" time="0.078"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'&quot;">self = &lt;Coroutine test_offline_selected_run_finishes_with_honest_unknowns&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../../../2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'
+
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1311: FileNotFoundError</error></testcase><testcase classname="tests.test_university_catalogue" name="test_every_seed_country_has_a_region" time="0.114" /><testcase classname="tests.test_university_catalogue" name="test_acronym_identity_needs_matching_host_and_university_heading" time="0.081" /><testcase classname="tests.test_university_catalogue" name="test_site_branding_can_corroborate_a_hinted_identity_only_when_enabled[California Institute of Technology-&lt;title&gt;Home - www.caltech.edu&lt;/title&gt;&lt;h1&gt;Caltech Homepage&lt;/h1&gt;&lt;meta property=&quot;og:site_name&quot; content=&quot;California Institute of Technology&quot;&gt;-California Institute of Technology-homepage_og_site_name]" time="0.085" /><testcase classname="tests.test_university_catalogue" name="test_site_branding_can_corroborate_a_hinted_identity_only_when_enabled[University of Witwatersrand-&lt;title&gt;Home - Wits University&lt;/title&gt;&lt;h1&gt;Straight From the Gram&lt;/h1&gt;&lt;footer&gt;&lt;p&gt;Copyright \xa9 2026 - University of the Witwatersrand, Johannesburg.&lt;/p&gt;&lt;/footer&gt;-Copyright \xa9 2026 - University of the Witwatersrand, Johannesburg.-homepage_copyright_owner]" time="0.087" /><testcase classname="tests.test_university_catalogue" name="test_extra_branding_cannot_authorize_an_unrelated_host[https://directory.edu/-]" time="0.082" /><testcase classname="tests.test_university_catalogue" name="test_extra_branding_cannot_authorize_an_unrelated_host[https://mit.edu/-https://directory.edu/]" time="0.117" /><testcase classname="tests.test_university_catalogue" name="test_site_branding_rejects_mentions_and_different_entities[&lt;main&gt;Example University&lt;/main&gt;]" time="0.000" /><testcase classname="tests.test_university_catalogue" name="test_site_branding_rejects_mentions_and_different_entities[&lt;footer&gt;&lt;p&gt;We partner with Example University&lt;/p&gt;&lt;/footer&gt;]" time="0.000" /><testcase classname="tests.test_university_catalogue" name="test_site_branding_rejects_mentions_and_different_entities[&lt;footer&gt;&lt;p&gt;Copyright 2026 Directory Ltd; Example University partner&lt;/p&gt;&lt;/footer&gt;]" time="0.000" /><testcase classname="tests.test_university_catalogue" name="test_site_branding_rejects_mentions_and_different_entities[&lt;footer&gt;&lt;p&gt;Copyright 2026 Example University Foundation&lt;/p&gt;&lt;/footer&gt;]" time="0.000" /><testcase classname="tests.test_university_catalogue" name="test_site_branding_rejects_mentions_and_different_entities[&lt;footer&gt;&lt;p&gt;Copyright 2026 Example University, Foundation&lt;/p&gt;&lt;/footer&gt;]" time="0.000" /><testcase classname="tests.test_university_catalogue" name="test_site_branding_rejects_mentions_and_different_entities[&lt;footer&gt;&lt;p&gt;Copyright 2026 Example University, Inc.&lt;/p&gt;&lt;/footer&gt;]" time="0.000" /><testcase classname="tests.test_university_catalogue" name="test_site_branding_rejects_mentions_and_different_entities[&lt;footer&gt;&lt;p&gt;Copyright 2026 Example University, Johannesburg, Foundation&lt;/p&gt;&lt;/footer&gt;]" time="0.000" /><testcase classname="tests.test_university_catalogue" name="test_site_branding_rejects_mentions_and_different_entities[&lt;footer&gt;&lt;p&gt;Copyright 2026 Example Universityshire&lt;/p&gt;&lt;/footer&gt;]" time="0.000" /><testcase classname="tests.test_university_catalogue" name="test_site_branding_rejects_mentions_and_different_entities[&lt;p&gt;Copyright 2026 Example University&lt;/p&gt;]" time="0.000" /><testcase classname="tests.test_university_catalogue" name="test_site_branding_rejects_mentions_and_different_entities[&lt;meta property=&quot;og:site_name&quot; content=&quot;News about Example University&quot;&gt;]" time="0.000" /><testcase classname="tests.test_university_catalogue" name="test_site_branding_rejects_mentions_and_different_entities[&lt;meta property=&quot;og:site_name&quot; content=&quot;Example College&quot;&gt;]" time="0.000" /><testcase classname="tests.test_university_catalogue" name="test_site_branding_rejects_mentions_and_different_entities[&lt;meta property=&quot;og:site_name&quot; content=&quot;EU&quot;&gt;]" time="0.000" /><testcase classname="tests.test_university_catalogue" name="test_branding_preserves_a_recorded_parenthetical_identity_qualifier[&lt;meta property=&quot;og:site_name&quot; content=&quot;Example University&quot;&gt;]" time="0.084" /><testcase classname="tests.test_university_catalogue" name="test_branding_preserves_a_recorded_parenthetical_identity_qualifier[&lt;footer&gt;&lt;p&gt;Copyright 2026 Example University&lt;/p&gt;&lt;/footer&gt;]" time="0.084" /><testcase classname="tests.test_identity_query_ledger" name="test_searched_identity_and_real_programme_planner_share_budget[0-single]" time="0.010" /><testcase classname="tests.test_identity_query_ledger" name="test_searched_identity_and_real_programme_planner_share_budget[0-multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_searched_identity_and_real_programme_planner_share_budget[1-single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_searched_identity_and_real_programme_planner_share_budget[1-multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_searched_identity_and_real_programme_planner_share_budget[6-single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_searched_identity_and_real_programme_planner_share_budget[6-multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-0-single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-0-multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-1-single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-1-multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-6-single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-6-multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-0-single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-0-multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-1-single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-1-multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-6-single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-6-multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_identity_early_return_preserves_attempt_or_factory_failure[0-unknown]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_identity_early_return_preserves_attempt_or_factory_failure[0-error]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_identity_early_return_preserves_attempt_or_factory_failure[0-factory_error]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_identity_early_return_preserves_attempt_or_factory_failure[1-unknown]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_identity_early_return_preserves_attempt_or_factory_failure[1-error]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_identity_early_return_preserves_attempt_or_factory_failure[1-factory_error]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_identity_early_return_preserves_attempt_or_factory_failure[6-unknown]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_identity_early_return_preserves_attempt_or_factory_failure[6-error]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_identity_early_return_preserves_attempt_or_factory_failure[6-factory_error]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_direct_planner_honours_remaining_count_and_zero_is_safe[0-single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_direct_planner_honours_remaining_count_and_zero_is_safe[0-multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_direct_planner_honours_remaining_count_and_zero_is_safe[1-single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_direct_planner_honours_remaining_count_and_zero_is_safe[1-multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_direct_planner_honours_remaining_count_and_zero_is_safe[6-single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_direct_planner_honours_remaining_count_and_zero_is_safe[6-multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_direct_multifield_zero_budget_does_not_dispatch" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_candidate_ledger_does_not_get_reset_by_fresh_identity_trace" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_strict_evaluation_guard_never_receives_seventh_attempt[single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_strict_evaluation_guard_never_receives_seventh_attempt[multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_local_identity_rejection_is_attempt_telemetry_not_http_dispatch" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_real_429_latch_blocks_second_vendor_dispatch_and_counts_only_attempts" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[0-single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[0-multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[1-single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[1-multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[6-single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[6-multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_escaping_search_error_after_dispatch_keeps_every_attempt[SearchError-single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_escaping_search_error_after_dispatch_keeps_every_attempt[SearchError-multi]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_escaping_search_error_after_dispatch_keeps_every_attempt[SearchProviderNotConfigured-single]" time="0.001" /><testcase classname="tests.test_identity_query_ledger" name="test_escaping_search_error_after_dispatch_keeps_every_attempt[SearchProviderNotConfigured-multi]" time="0.002" /><testcase classname="tests.test_identity_query_ledger" name="test_cancellation_records_in_memory_attempt_without_durability_claim" time="0.154" /></testsuite></testsuites>

@@ -1,0 +1,4 @@
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review/runtime/off/backend/app/adapters/html_parse.py:20: MarkupResemblesLocatorWarning: The input looks more like a filename than markup. You may want to open this file and pass the filehandle into Beautiful Soup.
+  return BeautifulSoup(markup, parser)
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review/runtime/off/backend/app/adapters/html_parse.py:20: XMLParsedAsHTMLWarning: It looks like you're parsing an XML document using an HTML parser. If this really is an HTML document (maybe it's XHTML?), you can ignore or filter this warning. If it's XML, you should know that using an XML parser will be more reliable. To parse this document as XML, make sure you have the lxml package installed, and pass the keyword argument `features="xml"` into the BeautifulSoup constructor.
+  return BeautifulSoup(markup, parser)

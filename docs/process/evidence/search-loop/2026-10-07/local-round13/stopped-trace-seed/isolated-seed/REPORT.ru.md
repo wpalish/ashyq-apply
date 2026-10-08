@@ -1,0 +1,7 @@
+PASS: четыре native команды изолированного seed завершились exit 0; приложение загружено из candidate с точными proposed Live57cfdab7 и Cataloguebc07cdaf. Все остальные 240 app files совпадают с current primary; полный app map — 242, candidate source map — 265. Current primary265/app242 и candidate265 неизменны pre/post.
+
+Read-only own DB подтверждает 20 undecided rows; Groningen #1; UBC portfolio bucket OUT_OF_BUDGET при отдельном funding FULL_TUITION. Один Alembic head d8e412c6a901 совпадает с DB revision. Native seed не запускался с approve. Safe_env current module161f5f0d pin проверен; demo=True, browser=False, provider=None, autoMigrate=False. Перед app imports запрещены socket connect/connect_ex/create_connection и DNS; все четыре children сообщили network attempts 0. DB/cache/export находятся только в own runtime.
+
+STOP65b5 неизменен. Primary source/Git/.env/STOP не менялись; live/provider/model/gold/scorer/full replay отсутствуют. Первоначальный pre-import old safe_env hashguard reject сохранён: прошлый package4d pin больше не соответствует current161, до него не выполнялись imports/children/copy; новый PLAN pinning current helper составлен после read-only safe_env/main guard inspection.
+
+Это synthetic seed behavior compatibility, не launch/quality или полный gate. Точные242 hashes позволяют root позднее связать seed с applied final app; такой primary binding пока не заявляется. Archive включает только plaintext scripts/maps/logs/receipts; candidate app/PDF и runtime DB/cache исключены.
