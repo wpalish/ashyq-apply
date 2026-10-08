@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current holder: nobody; [search-fenced-capture] ready-for-review, dependent Draft creation next, 2026-10-08 01:07 UTC.** Final executable source `7c74a12d71bd00228014c11d194928d223e110be` passed exact full LOCAL 13/13; archive receipt `c8017ad9`. Genuine Job capture and strict first-provider-refusal controls are complete. No new live capture. External baseline validator remains rejected on 18 distinct corrupt inputs; A IELTS v5 remains external pending peer review. Goal ACTIVE. Next task may explicitly branch from this unmerged predecessor as recorded in §5.
+
 **Current holder: gpt-6-astra,2026-10-08 00:31UTC, task/search-fenced-capture@f0c8fece.** Exact source full LOCAL13/13 completed and archived receipt4fb41d2e. No fresh live. New strict-capture internal provider retry defect independently confirmed; scoped repair planned before any new capture. A works external IELTSv4; B actual-provider mock controls. Goal ACTIVE.
 
 **Current holder: gpt-6-astra, task/search-fenced-capture, 2026-10-07 UTC.** Branch from clean predecessor41836a86/task/search-production-read-budget/Draft67 under §5 explicit exception. Prior goal turn PROGRESS: exact-source full13/13 proof pushed, Draft67 created/attached and budget ready-for-review. Current source unchanged. Parent reviews genuine Job protocol revision2; A external capture controls, B external IELTS revision3. First canary candidate rejected for omitted timeout raw-write time; IELTS v2 rejected on12/15 independent controls. No source promotion, live ON or launch.
@@ -73,6 +75,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[search-fenced-capture] ready-for-review; exact-source full LOCAL PASS.** Source `7c74a12d`, snapshot `19f349a0a242478e13f95e1905e8f41662a769b579833b004cafb03b73825c9a`, run `20261008T004040Z-check-bc90e5dc`: 13/13 steps PASS, 4292 unique backend cases on SQLite and the same 4292 on PostgreSQL, coverage 95.25%, frontend 232, demo 79 PASS/1 skip, auth 6, mypy 383, dependency audits zero known vulnerabilities. App/provider source unchanged; native guard remains False. Only the genuine Job canary and strict capture retry scope changed. This is protocol/reliability proof, not a fresh quality or launch score.
 
 **[search-fenced-capture] strict-refusal focused PASS; repaired exactfull pending.** Existingprotocol testfile+31actualprovider controls integrated;154focusedPASS10.04s thenparent import-order-only correction/final48PASS2.37s;Ruff/format/mypy383PASS. Full f0c8 remains predecessor only. Freeze fourharness/test files while repairedexactfull runs. Independentdriverclosure external pending, no freshlive.
 
@@ -176,6 +180,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[search-fenced-capture] final source `7c74a12d` green, 2026-10-08.** Four harness/test paths are pinned in exact full source manifest. Added 31 normal-import actual-provider MockTransport controls; combined protocol file 48 PASS, focused capture/provider/budget subset 154 PASS. Both MCP internal retry switches are scoped False only while a strict budget exists and restored on every exit. Provider module/defaults unchanged. Full receipt `docs/process/evidence/search-loop/2026-10-07/local-round9/strict-first-refusal-full/receipt.json` SHA `c8017ad9825b00e7d0a464a9f8f2a741ca6d6639b15f3dc6f8267100cdefdfd2`, 22 selected originals / 4,549,257 bytes; previous originals remain immutable.
 
 **2026-10-08 checkpoint f0c8fece:** Genuine Job harness source pushed; archive docs/process/evidence/search-loop/2026-10-07/local-round9/full-local/receipt.json SHA4fb41d2e486050a085b5c72846496b4f1a486317181292e667f8586bafddbaca,48selectedoriginals/4135257bytes. Full13/13,4261x2,95.25%,199focused; exact source/test freeze verified. IELTSv3 rejected8new semantic blockers; originals archived, not applied.
 
@@ -1690,6 +1696,8 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
+**2026-10-08 01:07 UTC:** only new final-full archive and this metadata are pending commit; executable source remains the clean tested `7c74a12d`. External validator repair and IELTS proposals are outside the repository and have not run live. Commit/push these selected originals with [skip ci], then create/attach the dependent Draft against #67.
+
 **Newest search-loop Round6:** source5472a833 and archive pushed; only this PR metadata/HANDOFF checkpoint pending commit. Budget candidate external, no app budget edits. Previous historical entries below are not current dirty state.
 
 **Current conditional-award step:** no uncommitted source/test changes; five implementation paths are published in6e81eb7, PR#34. This checkpoint changes only release metadata, preserving the tested481-file source freeze. Root owns cloud/build/merge/deployment; both source peers returned ownership. Final selected-head cloud checks and final image are pending. Actual SMTP and capacity answers remain external dependencies; original dated negative live scores are retained.
@@ -1847,6 +1855,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**NEXT after final-full archive:** create and attach dependent Draft `task/search-fenced-capture` against `task/search-production-read-budget`/#67. Then explicitly branch `task/search-genuine-baseline` from this clean predecessor (unmerged-predecessor exception; no merge). Before external controller repair, preserve rejected SHA `788f8a2e`, B manifest `e0459780` and all 18 distinct corrupt/24 lane RED. Repair only `work/local-round9/genuine-baseline/execute_baseline.py`: typed Job/cause/owner/counter coherence; mandatory raw batch/totals/institution; actual ClaimRow provenance/schema and pure mapping/prediction consistency; raw page-outcome equality. Run normal-import-only independent reviews, including a legitimate nonempty claim positive. No main/preflight/network in reviews. Only after accepted driver prepare a fresh round10 PLAN on exact full `7c74a12d`/snapshot `19f349a0`, immutable old attempt, same original10 sequential, 6/60/120, 119s source guard +1s finalization, native False/documents False and global first-refusal STOP. Main may preserve admissible bounded partial Jobs explicitly; missing/unknown facts remain in the full cohort denominator.
 
 **[search-fenced-capture] NEXT exactfull:** commit/push WIP[skipci] scopedretry source+normaltests+selectedoriginals now; execute authorized local-runner --repo currentcheckout check --suite full on clean pushedHEAD. No source/test mutations duringsnapshot; working appbytes unchangedbudget3b3a. Root repairs externalcontroller while A malformed/partialcontrols and BIELTSv4 peerreview; sourceharness snapshotusedonlyafterfullPASS.
 
@@ -3856,6 +3866,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**Final repaired exact-source gates, 2026-10-08 00:55:49 UTC:** authorized local runner `check --suite full`, source `7c74a12d`, snapshot `19f349a0`: all 13 steps exit 0. Backend SQLite 4292 PASS/2 warnings, PostgreSQL same 4292 PASS/2 warnings; SQLite coverage 95.25%; mypy 383; frontend types/lint/232 tests/build PASS; demo E2E 79 PASS/1 skip, auth E2E 6 PASS; pip/npm audit 0 known vulnerabilities. 999 executable source paths verified unchanged. Run duration 15m08.77s. Canaries deliberately use isolated SQLite even in PostgreSQL-primary whole suite. No containers/Docker, hosted CI, production E2E, new quality score or native-default promotion. Predecessor f0c8 full is historical.
+
 **2026-10-08 scopedretry focused final:**154PASS0skip10.04s includesactualprovider;parentformat-only1importfix then48existingprotocolPASS2.37s;Ruff/app/tests/evaluationPASS,format383PASS,mypy383PASS. FullnewsourceNOTYETRUN;expected4292unique cases based31newtests, counts must be read actualXML not assumed.
 
 **2026-10-08 strict-retry preliminary:** scoped2flagsFalse source patch applied onlylive.py;66existingcapture/budget controlsPASS9.84s, Ruff fixed one import-order issue/formatPASS. Actual provider mockedtransport independent controls and new full are pending; WIP, no live. IELTSv4sealed166PASS outside repo, pendingpeerreview; notapplied.
@@ -4362,6 +4374,8 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+**Current external review blockers, 2026-10-08:** validator `788f8a2e` rejected: B 140 fresh inputs ×2 lanes =256 PASS/24 RED (18 distinct corrupt inputs), zero uncaught exceptions. A 134 strict controls PASS; separate partial controls 88/89 PASS plus 3 explicit policy results. IELTS v4 rejected on 4 new false minima and 3 new correct-fact losses; inherited faults separately recorded. V5 author reports 225 controls PASS, peer review pending; no IELTS source/default applied. No owner answer needed to continue these authorized repairs.
+
 **2026-10-07 [search-loop] external blocker:** all eight hosted CI jobs on 9330929 were refused before steps for recent account payments or spending limit. Raw GitHub annotations are preserved; the alternative causes are not disambiguated. Sticky global live STOP stays set. Local source work continues; new source pushes deliberately skip hosted CI and cannot count as release checks. No purchase, retry, substitution, limit change or reset performed. Owner merge, signed gold, default promotions and fresh published-user acceptance remain pending.
 
 **[search-relay] 2026-10-07:** G-1/G-2 remain unsigned. Do not apply a gold change until the owner approves concrete verified evidence. Continuing engineering is authorized by the new request. No purchase authorized. Current local full gates pass (3619 backend /94.86%,232 frontend); exact-head cloud checks remain pending at this written checkpoint. G-1 proposed delta and current official HTML are retained; asynchronous signature request is pending. Historical Claude numbers remain evidence for their original captures only.
@@ -4653,6 +4667,8 @@ next agent does not reopen it.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
+**2026-10-08 capture reliability closure:** no new public/application schema. Strict capture temporarily disables both existing MCP internal retry switches; production defaults/source remain unchanged. Normal-mode caller assertions remain intact. Exact full source `7c74a12d` closes the pending gate. External validator distinguishes completed Job captures from admissible bounded partial Job captures; no capture collection status asserts all Jobs succeeded, source-end phase timestamp, precision or launch readiness.
+
 **2026-10-08 strict capture refusal:** strict_expert_budget scopes both Exa MCP retry flagsFalse for capture lifecycle, restoring prior values on every exit. App defaults unchanged; latest owner first-refusal rule overrides historical experimental retry inside strict measurements. Actualtransportregression/newfullpending.
 
 **Fenced local capture:** explicit BooleanOptionalAction native budget/job protocol flags; native requires genuine research Job, one isolated SQLite identity and no documents/recheck/check-seeds. New raw job_protocol records real status/claim/heartbeat/native ledger separately from outer counts; unavailable counters remain null. Partial new fenced canary exits2; legacy call/report preserved. Native moduleFalse. Typed original control survives artifact failure; successful Job can still have partial late capture under original strict6/60/120 clock.
@@ -4790,6 +4806,8 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 | 2026-09-09 | security audit | `security.py`: `SCRYPT_R`, `SCRYPT_P`, `_maxmem(n, r)`; `routes_metrics` compares bytes | scrypt cost schedule and the 500-on-non-ASCII bearer. |
 
 ## 9. Traps and lessons (things that cost a session; keep them)
+
+**2026-10-08:** do not reuse original round9 PLAN for live: it pins f0c8 and lacks the required strict-first-refusal fields. Prepare a fresh attempt after driver peer acceptance using repaired full7c74/snapshot19f349a0. Do not treat 8584 backend executions as unique tests: 4292 identities run in two primary DB modes. Mock transport proof is not a provider/university request. IELTS v4 author166 PASS did not prevent 7 new peer semantic blockers; preserve reds and require ordinary-caller review.
 
 **2026-10-08 provider mock count:** Cold successful MCP initialization adds2handshakeRPCs; first failed search is1tools/call and no retry (3totalMockTransport);warm1total;initialize-refusal1total; subsequentcapturessameSTOP0calls. MockorchestrationnotnewgenuineJobproof; existinggenuineSQLtestscoverJob separately. Parent Ruff usesconfiguredbackend andneeded1importorderrepair on proposedtest, originalchildproof unchanged.
 
@@ -5226,3 +5244,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 **2026-10-07 23:00UTC takeover gpt-6-astra:**7c0f8938→task/search-production-read-budget, explicit owner-directedloop, source plannedabove beforeapplication.
 
 **2026-10-07 23:39 UTC gpt-6-astra checkpoint:** source3b3a2fb8 → metadata/evidence8614a91f, fullLOCAL13/13, native134/33realPG, dependent Draft67 created/attached/verified. Goal ACTIVE; two external next proposals; next genuine-Job capture after exact pin/review. No merge/default/launch.
+
+- 2026-10-08 01:07 UTC — gpt-6-astra: source7c74 exact full13/13 completed; final22 originals archived, fenced capture ready for dependent Draft; external driver remains rejected and IELTSv5 pending peer; no fresh live.
