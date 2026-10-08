@@ -78,7 +78,7 @@ hosted required checks и production NOT RUN.
 
 ## Второй раунд завершён локально
 
-Ветка `task/product-research-recovery`, tested source `c7ece3c0` от clean predecessor
+[Draft #77](https://github.com/wpalish/ashyq-apply/pull/77) против `task/product-journey-next-steps`, tested source `c7ece3c0` от clean predecessor
 `312c81ae` / Draft #75. Find сохраняет найденные строки при остановке и предлагает
 явный переход к Progress; пустой результат объясняет неизвестность. Documents
 направляет и Chosen by you, и Considering в Plan по существующему контракту.

@@ -6,6 +6,22 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[product-research-recovery] Holder: nobody; ready-for-review (Draft PR #77) — 2026-10-08T23:56:16.437948+00:00**.
+https://github.com/wpalish/ashyq-apply/pull/77 OPEN/Draft, base task/product-journey-next-steps,
+head f494c706fc9a07938ffa31b5126d03bd0dc05bd9 verified and attached. Green f494c706
+preserves tested c7ece3c0/16 source pins; source unchanged by release metadata.
+Doctor5/core8/full13 passed, frontend301, SQLite4369/95.28%, same4369IDs PostgreSQL,
+demo79+1unchangedskip/auth6; native efab8f76 and finite5syntheticUI/cleanup dbc9244b accepted.
+Own preview/tabs closed; ports5173/8099 free; STOP65b5 unchanged.
+Cloud rollup[] means NOT_RUN, not PASS. Containers, production and accepted fresh quality NOT_RUN.
+Exact next: separate task/product-personal-preparation-marks from this clean pushed predecessor
+under §5 successor exception; first baton/writeahead and sealed DESIGN_ONLY plan/review,
+then native contract/source proposal/peer and meaningful local migration/auth/device/isolation
+checks. No automatic live/provider/old-controller/heldout/default/merge/deploy.
+
+**Earlier records — historical, not current state:**
+
+
 **[product-research-recovery] Qualified native/full and finite UI closure — 2026-10-08T23:54:09.963068+00:00**. Tested source c7ece3c0, metadata checkpoint f687eaf3; exact16 source pins preserved. Doctor5/5, core8/8, fresh full13/13 (initialSHA7d2aac5d): frontend301/30files, SQLite4369/32warnings/95.28%, same4369IDs PostgreSQL/32warnings, demo79PASS+1unchanged viewport skip, auth6PASS, audits0. Native Aefab8f76 and UI/cleanup Adbc9244b ACCEPT with synthetic qualifications. C872aba86 five JPEG/AX/geometry/action criteria; owned root preview exit0/groups61616+61617 cleaned, owned browser closed/reset, ports5173/8099 free, original seed unchanged. Cancelled fixture retains completed stage_state100; no actual midrun Worker or real-university accuracy claim. Initial manifest unchanged, exact38 generated PNG deltas qualified, allother10255 declared paths unchanged. No source/API/backend/migration/dependency changes after testedc7. STOP65b5 unchanged; containers/hosted checks/production/accepted quality NOT_RUN. Root now closes green metadata/Draft against75/attach/release; do not duplicate runner/preview. History below remains historical.
 
 Holder: gpt-6-astra; branch task/product-research-recovery. Final reviewable closure only.
@@ -200,6 +216,23 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+Status: **ready-for-review (Draft PR #77)**. Corrected final acceptance SHA dcfd19b2398c9c3a60bc58818991224097485a631641c1b99b425d01773f4b5e; final document peer accepted after file-count unit correction. Local bounded acceptance complete, owner review/merge pending.
+**[product-research-recovery] Holder: nobody; ready-for-review (Draft PR #77) — 2026-10-08T23:56:16.437948+00:00**.
+https://github.com/wpalish/ashyq-apply/pull/77 OPEN/Draft, base task/product-journey-next-steps,
+head f494c706fc9a07938ffa31b5126d03bd0dc05bd9 verified and attached. Green f494c706
+preserves tested c7ece3c0/16 source pins; source unchanged by release metadata.
+Doctor5/core8/full13 passed, frontend301, SQLite4369/95.28%, same4369IDs PostgreSQL,
+demo79+1unchangedskip/auth6; native efab8f76 and finite5syntheticUI/cleanup dbc9244b accepted.
+Own preview/tabs closed; ports5173/8099 free; STOP65b5 unchanged.
+Cloud rollup[] means NOT_RUN, not PASS. Containers, production and accepted fresh quality NOT_RUN.
+Exact next: separate task/product-personal-preparation-marks from this clean pushed predecessor
+under §5 successor exception; first baton/writeahead and sealed DESIGN_ONLY plan/review,
+then native contract/source proposal/peer and meaningful local migration/auth/device/isolation
+checks. No automatic live/provider/old-controller/heldout/default/merge/deploy.
+
+**Earlier records — historical, not current state:**
+
+
 **[product-research-recovery] Qualified native/full and finite UI closure — 2026-10-08T23:54:09.963068+00:00**. Tested source c7ece3c0, metadata checkpoint f687eaf3; exact16 source pins preserved. Doctor5/5, core8/8, fresh full13/13 (initialSHA7d2aac5d): frontend301/30files, SQLite4369/32warnings/95.28%, same4369IDs PostgreSQL/32warnings, demo79PASS+1unchanged viewport skip, auth6PASS, audits0. Native Aefab8f76 and UI/cleanup Adbc9244b ACCEPT with synthetic qualifications. C872aba86 five JPEG/AX/geometry/action criteria; owned root preview exit0/groups61616+61617 cleaned, owned browser closed/reset, ports5173/8099 free, original seed unchanged. Cancelled fixture retains completed stage_state100; no actual midrun Worker or real-university accuracy claim. Initial manifest unchanged, exact38 generated PNG deltas qualified, allother10255 declared paths unchanged. No source/API/backend/migration/dependency changes after testedc7. STOP65b5 unchanged; containers/hosted checks/production/accepted quality NOT_RUN. Root now closes green metadata/Draft against75/attach/release; do not duplicate runner/preview. History below remains historical.
 
 Status: local acceptance complete; dependent Draft creation pending.
@@ -382,6 +415,11 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+- [product-research-recovery] f494c706 green closure: final acceptance f8feb201, native efab8f76, finite UI/cleanup dbc9244b, all selected originals archived. Draft77 created, attached, OPEN/Draft/base/head verified. Release metadata follows; testedc7 unchanged.
+
+**Earlier records — historical, not current state:**
+
 
 - [product-research-recovery] c7ece3c0 applies exactly4 independently reviewed frontend/test paths; f687eaf3 archives native green checkpoint. Native Aefab8f76 and finite UI/cleanup Adbc9244b seals accepted; green evidence commit follows. First Draft75 composite and failed-original history retained.
 
@@ -1949,6 +1987,11 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
+Current: only this release metadata awaits commit/push; application/tests clean and no owned runtime active. Earlier active process entries are historical.
+
+**Earlier records — historical, not current state:**
+
+
 Current: metadata/evidence only awaiting green commit/push/Draft/release. No app/test dirty bytes or active own preview. Historical active-run entries below do not describe current processes.
 
 **Earlier records — historical, not current state:**
@@ -2126,6 +2169,24 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[product-research-recovery] Holder: nobody; ready-for-review (Draft PR #77) — 2026-10-08T23:56:16.437948+00:00**.
+https://github.com/wpalish/ashyq-apply/pull/77 OPEN/Draft, base task/product-journey-next-steps,
+head f494c706fc9a07938ffa31b5126d03bd0dc05bd9 verified and attached. Green f494c706
+preserves tested c7ece3c0/16 source pins; source unchanged by release metadata.
+Doctor5/core8/full13 passed, frontend301, SQLite4369/95.28%, same4369IDs PostgreSQL,
+demo79+1unchangedskip/auth6; native efab8f76 and finite5syntheticUI/cleanup dbc9244b accepted.
+Own preview/tabs closed; ports5173/8099 free; STOP65b5 unchanged.
+Cloud rollup[] means NOT_RUN, not PASS. Containers, production and accepted fresh quality NOT_RUN.
+Exact next: separate task/product-personal-preparation-marks from this clean pushed predecessor
+under §5 successor exception; first baton/writeahead and sealed DESIGN_ONLY plan/review,
+then native contract/source proposal/peer and meaningful local migration/auth/device/isolation
+checks. No automatic live/provider/old-controller/heldout/default/merge/deploy.
+
+For the successor, actual runtime alembic heads must be one before/after a new migration; saved static19 head d8e412c6a901 is not that runtime proof. Do not claim cross-device marks until auth/device/reload/logout/two-user/case/CAS/erase controls and current local gates pass.
+
+**Earlier records — historical, not current state:**
+
 
 **[product-research-recovery] Qualified native/full and finite UI closure — 2026-10-08T23:54:09.963068+00:00**. Tested source c7ece3c0, metadata checkpoint f687eaf3; exact16 source pins preserved. Doctor5/5, core8/8, fresh full13/13 (initialSHA7d2aac5d): frontend301/30files, SQLite4369/32warnings/95.28%, same4369IDs PostgreSQL/32warnings, demo79PASS+1unchanged viewport skip, auth6PASS, audits0. Native Aefab8f76 and UI/cleanup Adbc9244b ACCEPT with synthetic qualifications. C872aba86 five JPEG/AX/geometry/action criteria; owned root preview exit0/groups61616+61617 cleaned, owned browser closed/reset, ports5173/8099 free, original seed unchanged. Cancelled fixture retains completed stage_state100; no actual midrun Worker or real-university accuracy claim. Initial manifest unchanged, exact38 generated PNG deltas qualified, allother10255 declared paths unchanged. No source/API/backend/migration/dependency changes after testedc7. STOP65b5 unchanged; containers/hosted checks/production/accepted quality NOT_RUN. Root now closes green metadata/Draft against75/attach/release; do not duplicate runner/preview. History below remains historical.
 
@@ -4934,6 +4995,11 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+Product recovery local acceptance complete; Draft77/75 await owner review/merge. Fresh university quality remains blocked by unanswered new-cycle grant and exact expert CLI selector-model after immutable STOP65b5. Comparative usability results0; private fresh Unilight flow consent-gated. Product work does not reset these boundaries.
+
+**Earlier records — historical, not current state:**
+
+
 - [search-local-pilot-orchestrator/2026-10-08] Safe finite implementation, current full and ownseed are complete. Fresh university/model actions still await the existing unanswered explicit new-cycle request after STOP65b5 plus actual expert CLI selector-model binding. Chat-holder gpt-6-astra is not proof of that runtime choice. This input gap has recurred across goal turns; after Draft/release no meaningful further offline patch is justified by current evidence. Old UNSCORED remains frozen; no automatic retry/reset/substitution/labels/scorer/heldout/default/merge/deploy.
 
 **[search-stopped-trace-accounting/admission] Holder: nobody; static admission complete, existing Draft73 ready for review.** Current metadata baton370907d4; closure commit follows. Root independently verified A8b850ce8(13 originals)/Bae2c8c9f(11), all current pinned files and source999/STOP65b5. Archive local-round14/pilot-admission-static has30selected plaintext originals/167498bytes, receiptaaa1e51efe94b37691ef2218f97d33c0679f7e77dceaac3239392181fbeb47eb (copies not tests/experiments). Fullab273/7549/4349/95.27/13of13 carried only because source999 unchanged; no new full/tests/live/app imports/SQL/model/labels/scorer. Fresh full pilot NOT_ADMITTED: olddriver source mismatch/closed; smoke lacks cross-dispatch new-refusal promotion; shared agents not blind; legacy expert clock/controller policy and exact CLI/runtime proof insufficient. Native recall_metrics suspicion WITHDRAWN after pure call-graph proof. Root preserves algorithm120s/60/6; independent expert60/6 thinking excluded/900s protective wall only; no extra120s expert tool cap adopted. Owner fresh-cycle answer still pending; old collection permanentlyUNSCORED; goalACTIVE, no quality/default/merge/deployment claim.
@@ -5415,6 +5481,8 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 | 2026-09-09 | security audit | `security.py`: `SCRYPT_R`, `SCRYPT_P`, `_maxmem(n, r)`; `routes_metrics` compares bytes | scrypt cost schedule and the 500-on-non-ASCII bearer. |
 
 ## 9. Traps and lessons (things that cost a session; keep them)
+
+Final doc peer corrected a unit:10255 counts unchanged file paths/entries, not bytes. Current acceptance uses unchanged_other_declared_paths_count; priorf8feb201/pending versions stay in Git/history and separate correction receipt. Content equality remains verified; no tests/source change.
 
 Raw AX originals retain four trailing-space rows in two Progress .ax.txt captures; staged diff --check reports them. Preserve sealed capture bytes; source/authored documentation whitespace checked separately. This is archive fidelity, not a native test failure.
 
@@ -5931,3 +5999,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-08T23:38:47.762229+00:00: [product-research-recovery] c7 source retained; native13green evidence checkpoint, ownedCviewport/finalpeer/Draft pending; no new executable changes.
 
 - 2026-10-08T23:54:09.963068+00:00: gpt-6-astra [product-research-recovery] testedc7 → metadataf687 → qualified native13/finiteUI5 final green closure; dependent Draft/attach/release next; no executable changes.
+
+- 2026-10-08T23:56:16.437948+00:00: gpt-6-astra [product-research-recovery] f687eaf3 → greenf494c706/Draft77 → release metadata; Holder:nobody. Next separate personal-marks task from clean predecessor; sourcec7 unchanged.

@@ -44,7 +44,7 @@ own preview, C закрыл собственную вкладку и восст�
 свободны, исходная synthetic seed не изменена.
 
 Полный initial manifest сохранён. Native E2E регенерировал38 PNG внутри snapshot:
-24journey/12responsive+theme/2auth; остальные10,255 declared bytes точны. Первый
+24journey/12responsive+theme/2auth; остальные 10,255 declared file paths имеют точные прежние байты. Первый
 preview guard остановился до lock/DB/ports, отказ и complete mismatch inventory
 сохранены. Отдельный helper учитывает только exact before/after delta3f645d11,
 не переписывает manifest и не утверждает равенство нынешнего физического дерева
@@ -81,7 +81,9 @@ localStorage ticks. B7b528036/A78236ea7 приняли только DESIGN_ONLY,
 Для запуска остаются принятая свежая оценка поиска, публикация и полный
 проверенный вошедший пользовательский путь. STOP65b5 не сбрасывается этой
 продуктовой задачей; livegrant и точный expert selector-model остаются pending.
-Draft75 и зависимый Draft текущего раунда (создание следующим шагом) — code review, не publication. Подробные материалы:
+[Draft #75](https://github.com/wpalish/ashyq-apply/pull/75) и [Draft #77](https://github.com/wpalish/ashyq-apply/pull/77) — code review, не publication. Подробные материалы:
 [PRODUCT_COMPLETION_PLAN](PRODUCT_COMPLETION_PLAN_2026-10-09.md),
 [HANDOFF](HANDOFF.md), [native proof](evidence/product-loop/2026-10-09/recovery-round/final-native-peer/REPORT.md),
 [UI proof](evidence/product-loop/2026-10-09/recovery-round/owned-ui/REPORT.md).
+
+Green metadata `f494c706`, Draft #77 verified OPEN/Draft/base product predecessor/attached; release changes only metadata.
