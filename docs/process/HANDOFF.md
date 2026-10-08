@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current holder: gpt-6-astra, 2026-10-08 01:22 UTC, task/search-genuine-baseline from clean329f7c84/Draft68.** Goal ACTIVE. Task is a fresh genuine-Job original10 baseline plus honest offline scoring; app/harness/source remain frozen at tested7c74 snapshot19f349. A/B independent driver review pending, external IELTSv5 pending. No live yet.
+
 **Current holder: nobody; [search-fenced-capture] ready-for-review (Draft PR #68), 2026-10-08 01:16 UTC.** https://github.com/wpalish/ashyq-apply/pull/68, base task/search-production-read-budget/#67, pushed metadata1d559434 and executable7c74a12d. Draft attached; OPEN/Draft/head/base verified, cloud rollup[] is not a pass. Goal ACTIVE; next task branches from this predecessor under §5.
 
 **Current holder: nobody; [search-fenced-capture] ready-for-review, dependent Draft creation next, 2026-10-08 01:07 UTC.** Final executable source `7c74a12d71bd00228014c11d194928d223e110be` passed exact full LOCAL 13/13; archive receipt `c8017ad9`. Genuine Job capture and strict first-provider-refusal controls are complete. No new live capture. External baseline validator remains rejected on 18 distinct corrupt inputs; A IELTS v5 remains external pending peer review. Goal ACTIVE. Next task may explicitly branch from this unmerged predecessor as recorded in §5.
@@ -77,6 +79,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[search-genuine-baseline] in progress.** Fresh external round10 folder/PLAN prepared without execution; source7c74 exact full13/13 remains valid for unchanged999 executable paths. Validator source a56e6f03 under two independent reviews. The old round9 PLAN/controller was never executed and remains immutable. No quality/default/launch claim.
 
 **[search-fenced-capture] ready-for-review (Draft PR #68).** Final source7c74 exact full13/13 PASS; selected originals committed/pushed1d559434. Review/merge belongs to the owner. No new live, native flagFalse, no quality/default/launch claim.
 
@@ -1861,6 +1865,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[search-genuine-baseline] exact write-ahead, 2026-10-08 01:22UTC:** new folder work/local-round10/genuine-baseline pins source7c74/snapshot19f349 and same strict harness06e63d52. It contains driver a56e6f03 identical to repaired external source but acceptance is PENDING. After both peer receipts: check new PLAN+source hash transfer, ordinary validate positives, read-only preflight, absence of shared new STOP, current999 source paths and historicalSTOP unchanged; record exact command and PLAN/controller/package pins. Commit/push preparation [skip ci] before invoking --execute. Use pinned snapshot interpreter, package safe_env/Run, same original10 sequential6/60/120/119+1/135process/nativeFalse/browserFalse/documentsFalse and first refusal globalSTOP. Preserve every original/capture_kind; no same-cohort resume/retry or arbitrary suppression of partial/overrun. Only after collection complete score the separately pinned existing reviewed datasets with real denominator/adjudication limits. No app/test source writes during capture.
 
 **Next explicit branch exception, 2026-10-08 01:16 UTC:** fenced task ready-for-review in Draft68 with full exactsource PASS. Create task/search-genuine-baseline from clean task/search-fenced-capture@current metadata; predecessor remains unmerged. Task is fresh same-original10 capture and honest offline scoring; no app/test/harness changes. Driver a56e6f03 is frozen outside repo for A/B independent review. Fresh PLAN must pin tested source7c74/snapshot19f349 and new strict retry flags; oldround9 not execute. Live only after review accepted and STOP/source preflight. [skip ci] local route; no hosted workflow, defaults, merge or production changes.
 
@@ -5256,3 +5262,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-08 01:07 UTC — gpt-6-astra: source7c74 exact full13/13 completed; final22 originals archived, fenced capture ready for dependent Draft; external driver remains rejected and IELTSv5 pending peer; no fresh live.
 
 - 2026-10-08 01:16 UTC — gpt-6-astra: final fenced task released ready-for-review Draft68, full13/13 source7c74; next fresh baseline branch exception recorded.
+
+- 2026-10-08 01:22UTC — gpt-6-astra takes [search-genuine-baseline] from329f7c84; fresh round10 preparation only, independent reviews pending.
