@@ -1,0 +1,55 @@
+{
+  "verdict": "ACCEPT_QUALIFIED_DEFERRED_EVIDENCE_NOT_SOURCE_READY",
+  "A_ready_manifest_sha256": "cad69de34ebe61e5d27266f940183ac5465db35c47eb6e65aa935a495492e795",
+  "A_selected_files_verified": 90,
+  "A_selected_bytes_verified": 6287965,
+  "native_dependencies_matched": 11,
+  "A_final_four_command_prepost_pins_verified": true,
+  "own_native_boundary": {
+    "PASS": 10,
+    "RED": 4,
+    "total": 14
+  },
+  "own_ownership": {
+    "total": 2,
+    "PASS": 2,
+    "RED": 0
+  },
+  "own_extra_entry_counter": {
+    "total": 3,
+    "PASS": 3,
+    "RED": 0
+  },
+  "own_aggregate": {
+    "total": 19,
+    "PASS": 15,
+    "RED": 4,
+    "RED_all_inherited": true
+  },
+  "A_aggregate_inspected": {
+    "total": 107,
+    "PASS": 100,
+    "RED": 7
+  },
+  "Worker_results_inspected": {
+    "total": 16,
+    "PASS": 16,
+    "rerun_by_B": false,
+    "SQL_backend": "SQLite",
+    "normal_fence": true,
+    "concurrent_lease_or_PG_proof": false,
+    "native_count": 60,
+    "ClaimRow": 0,
+    "both_job_status": "succeeded_processed_unknown"
+  },
+  "whole_output_equality_qualified": 38,
+  "missing_body_equality_excluded": 4,
+  "source_application_accepted": false,
+  "current_gain_proven": false,
+  "default_promoted": false,
+  "original_provider_exception_restored": false,
+  "crash_cancel_durable_ack": false,
+  "source_net_model_stop_label_score_git_actions": 0,
+  "mutable_or_sealed_originals_modified": false,
+  "prior_B_initial_manifest": "2289b327cfdfaf1714fbec683eeed31d39c662b18b68c1626250d8731cd170c0"
+}

@@ -1,0 +1,47 @@
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/catalog_walker.proposed.py:27:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+25 |   """
+26 |
+27 | / from __future__ import annotations
+28 | |
+29 | | import json
+30 | | import logging
+31 | | import re
+32 | | import unicodedata
+33 | | from collections import Counter
+34 | | from collections.abc import Callable
+35 | | from dataclasses import dataclass, field
+36 | | from urllib.parse import urljoin, urlparse
+37 | |
+38 | | from app.adapters.browser import BrowserFetcher
+39 | | from app.adapters.discovery.live_discovery import (
+40 | |     _DEGREE_SLUGS,
+41 | |     _URL_EXCLUSIONS,
+42 | |     MAX_LINKS_SCANNED,
+43 | |     canonical_url,
+44 | |     looks_like_catalogue,
+45 | |     matches_degree,
+46 | |     matches_field,
+47 | |     matches_field_text,
+48 | |     names_other_degree_level,
+49 | |     profile_rejects,
+50 | |     registrable_domain,
+51 | |     same_institution,
+52 | | )
+53 | | from app.adapters.fetching import Fetcher, FetchResult, same_source_site
+54 | | from app.adapters.search.ontology import canonical_field
+55 | | from app.adapters.html_parse import parse_html
+56 | | from app.adapters.page_classifier import (
+57 | |     PageClassification,
+58 | |     PageType,
+59 | |     classify_page,
+60 | | )
+61 | | from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+   | |_______________________________________________________________________________^ I001
+62 |
+63 |   log = logging.getLogger("unimatch.discovery.walker")
+   |
+   = help: Organize imports
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.

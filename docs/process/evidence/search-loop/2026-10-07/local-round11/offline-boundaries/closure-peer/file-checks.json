@@ -1,0 +1,2328 @@
+{
+  "selected_file_checks": [
+    {
+      "file": "provider-STOP.original.json",
+      "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+      "bytes": 142,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/PLAN.json",
+      "sha256": "031ba703f3fa41079bb59650322af8505d32eb6bd4094ebdb538f42fb8b7e078",
+      "bytes": 4613,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/PLAN.prepared-before-url.original.json",
+      "sha256": "8023d8d0e2d67c0db0b8903e94afa440d4424540795d99dd72273108fe43d278",
+      "bytes": 3603,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/aalto.log",
+      "sha256": "a7378640b9fd8f5dc2da3d53f2fd13eb3fc9fe67e75ad33c1937e931a4da1a1e",
+      "bytes": 159,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/controller-execution.log",
+      "sha256": "9b270f23b502350b9eeceb59185c4edb5ebddbb843317a47491924fd84f236ce",
+      "bytes": 1459,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/delft.log",
+      "sha256": "a83fd45a8801bc5b700792e54cd8d1813bd007232a8b8540c022f13d04b2c40d",
+      "bytes": 159,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/execute_baseline.prepared-before-url.original.py",
+      "sha256": "a56e6f034a733356724263cfc01968b88f91a454689cf335116ea66e45d4466e",
+      "bytes": 27942,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/execute_baseline.py",
+      "sha256": "4fa670fb54d6f62c296b68e682c2f46417cf02ba0daf75deb69f329be32f269b",
+      "bytes": 28181,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/execution-receipt.json",
+      "sha256": "79bd43a2c1058a9997aa7c63a912acb58d4ced6c107b3f24dd55dab28c34f5df",
+      "bytes": 1169,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/groningen.log",
+      "sha256": "41c6dcdd612b1deaab5d73d78c9a881432d565bdd5b9742475bca9dbdb5fe8df",
+      "bytes": 196,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/hku.log",
+      "sha256": "225a391f24dace13ac75084c3c9ed579b89f0105f5f2c2e4792ecbc9c314b900",
+      "bytes": 155,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/kaist.log",
+      "sha256": "a81a6b883acfa65a9007d872ab22042ee1ae0c3e2ffef5778a0c4f4baff1466e",
+      "bytes": 249,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/ntu.log",
+      "sha256": "c20a08ec564b3de63bdbebe11ac7311b4d4da1241334a262b0c94beea05399f3",
+      "bytes": 155,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/preflight-before-execution.json",
+      "sha256": "43b6f3102b40274a99ad397118c7342f3ee5bf3c84620ea3f4bb324a1c5c3247",
+      "bytes": 828,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/preflight-ready.json",
+      "sha256": "d404897ca39ce96a251ecbf9e91e9ad512415316c370be3337f1efc77c0043b3",
+      "bytes": 660,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/score-after-collection-PLAN.json",
+      "sha256": "e84857fce4bd757966c6752d6f0a354d1bb3c7afe4bc84c1f8702e9138cbba66",
+      "bytes": 1192,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/score-boundary-repair-PLAN.json",
+      "sha256": "22ef31a188d73a1dcc370be79df7a92c6be59ac56eb1bd2761e64174d635646f",
+      "bytes": 592,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/score-pins.json",
+      "sha256": "d86e57d1ad7fd6b0af8e8f10a2334de8feae7c5e6c665da0055dfc34f20704dd",
+      "bytes": 643,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/score_after_collection.original.py",
+      "sha256": "faf201cdf72ccf7c91a07b1c51e38bb36387c3c4730e908cb509fdeb6274cdf5",
+      "bytes": 3551,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/score_after_collection.py",
+      "sha256": "7d183e1781b458d3ec5c4cd130963ff59547116c5440d43aa636c7098d4814a9",
+      "bytes": 5349,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/summary.json",
+      "sha256": "779ac264fef3aba57e01780412a145268b09c815fa3d17d6a713f3b8e3262adb",
+      "bytes": 1435397,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/toronto.log",
+      "sha256": "335c9bff6006ea9910fb191cdbcb4ebf218ec52950aca21562a20846e9b22cd9",
+      "bytes": 200,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/transfer-smoke.json",
+      "sha256": "e294df41d55c581bce4d7b39352e964f80722178e30f41a7504b99fb21a58604",
+      "bytes": 4077,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/ubc.log",
+      "sha256": "74ea5c5b965ab2610c90b0a3810097508d05546f9ac7454c4c676b643e4ce985",
+      "bytes": 184,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/vienna.log",
+      "sha256": "083c68b1901d86f2db1f0550bdfc5503bbd2fcd130fb2caf75b9de7f8c13bb51",
+      "bytes": 161,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "controller/warsaw.log",
+      "sha256": "1e2757aac212f3768c8b8d17ee9ae75a696414919a035cbe78d172b700810983",
+      "bytes": 161,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/groningen/20261008T011702Z/capture.json",
+      "sha256": "b61dac43218ce0fd7ac6dea54f7918025c9afaae7cfc829235bc664515e5b46d",
+      "bytes": 3718,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/groningen/20261008T011702Z/groningen.budget.json",
+      "sha256": "194976fc17039741fe99bfe3b796f0b3d4f1d9a19e5db32e53224ed1d168257f",
+      "bytes": 639,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/groningen/20261008T011702Z/groningen.json",
+      "sha256": "05ee1dfb2f73edecdbce7dc4d1b88d754b1e18fbadc6cbe19a2aa216420755d8",
+      "bytes": 525,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/groningen/20261008T011702Z/groningen.log",
+      "sha256": "2bd7222ca93a0e09f9c4ecba7c13659e08689ea9d513f895a48986bd174482be",
+      "bytes": 3620,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/groningen/20261008T011702Z/groningen.raw.json",
+      "sha256": "eaa0cf1dad328397132c5b5cf3fb195027622c034c301bd99fc51564b28e302b",
+      "bytes": 2466,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/delft/20261008T011902Z/capture.json",
+      "sha256": "c909503e792bdd1b1cad24d8bbcb17a99e981c779231c3acb86449b440f12c5b",
+      "bytes": 32935,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/delft/20261008T011902Z/delft.budget.json",
+      "sha256": "d91caeee437149d1718ba237422ce062b51b778ca519d8eae7b3417a14680eff",
+      "bytes": 610,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/delft/20261008T011902Z/delft.json",
+      "sha256": "75b975dd9c39c46692a752ad44b8e68f831e4c704214e95b00bb6ccc35a0fc17",
+      "bytes": 27372,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/delft/20261008T011902Z/delft.log",
+      "sha256": "bec1ea9aa2936d98de8e9a099357a38f9c23c7dddd9bf0f9aeab0187cd53df48",
+      "bytes": 6442,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/delft/20261008T011902Z/delft.raw.json",
+      "sha256": "045c6813f98fc8bdc6c1839f4ba2c8ea4f6f4a89bb240e765bb5ea1be5c15fa0",
+      "bytes": 92647,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/aalto/20261008T012020Z/aalto.budget.json",
+      "sha256": "2b6e29bdab1f364d04413255e39ab8749177367f9588600f1bfff347de7ee309",
+      "bytes": 611,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/aalto/20261008T012020Z/aalto.json",
+      "sha256": "0896f8078d7ed33806aeb5694338de4f04bedb9886c8479d7286b797299a3e78",
+      "bytes": 6163,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/aalto/20261008T012020Z/aalto.log",
+      "sha256": "af72aded7435f197e23553c6604f483d04dc2130a0a63188b8a214deb4c6e188",
+      "bytes": 6508,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/aalto/20261008T012020Z/aalto.raw.json",
+      "sha256": "e11e4afe6dbfddb2b87feb9ec7b6e161c573b45aaad712fc629145a138f257e2",
+      "bytes": 62458,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/aalto/20261008T012020Z/capture.json",
+      "sha256": "8a3f859f90bf2f0fa7057b98155c251bfca5ae59d9178365613501be97e08c3b",
+      "bytes": 9731,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/vienna/20261008T012211Z/capture.json",
+      "sha256": "05cd58fbef4ccaa1967e2e582750b44bcdad3a526f9e582807d2fd617be1f8da",
+      "bytes": 8226,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/vienna/20261008T012211Z/vienna.budget.json",
+      "sha256": "a02b2d5e663ec0b1d7edc898aff7d6291e442786d102c296a79dced5e07c99e0",
+      "bytes": 610,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/vienna/20261008T012211Z/vienna.json",
+      "sha256": "c8d5f835723a532106d15c6210e0cfdc6f95e8084ff998665a2952ce4cb7eb57",
+      "bytes": 4663,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/vienna/20261008T012211Z/vienna.log",
+      "sha256": "0b612c109e475dda0e24a866f21125d15829a72fffebc2cc5f25f9f87bd98f88",
+      "bytes": 4447,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/vienna/20261008T012211Z/vienna.raw.json",
+      "sha256": "d568ebb13cdc33605f907ac12a20fb13aa0c647d7bacce5f8adbe419090e86b5",
+      "bytes": 83087,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/warsaw/20261008T012349Z/capture.json",
+      "sha256": "15c27c8c47346ba32edb444119d15a27eb856017bdd73b963905a6e3ae13be9f",
+      "bytes": 10775,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/warsaw/20261008T012349Z/warsaw.budget.json",
+      "sha256": "d99314efe56eee52b3d28c7a1e4d8322cb9e905058d5bd3f4b90a7376c55dabd",
+      "bytes": 611,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/warsaw/20261008T012349Z/warsaw.json",
+      "sha256": "5d8be17afead9321dd745ed835edada89528279f82065834bde95c144b83c651",
+      "bytes": 6990,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/warsaw/20261008T012349Z/warsaw.log",
+      "sha256": "69bf67c7bc225f1936d26307b770b6845f29ef4d0923452e5116713d81f07781",
+      "bytes": 4377,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/warsaw/20261008T012349Z/warsaw.raw.json",
+      "sha256": "0f82aaf56ac0aa5470b1a3419f3319664ed1a3233031cf51a10e846a77d78edb",
+      "bytes": 38935,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/ubc/20261008T012546Z/capture.json",
+      "sha256": "87e8c131d983a1a89842913632ca03b290da4aa16a39867b4e466267e4ba3e52",
+      "bytes": 3689,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/ubc/20261008T012546Z/ubc.budget.json",
+      "sha256": "d2ad755b61b509328916b55b7f3ab01b89b2f54a6e102f4af482c38a5ad91c92",
+      "bytes": 639,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/ubc/20261008T012546Z/ubc.json",
+      "sha256": "311363e79c92bc401ac139efb5d8a5ab9033569eae742609507d0c9ce2a58d9e",
+      "bytes": 520,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/ubc/20261008T012546Z/ubc.log",
+      "sha256": "8c8d4cab7ff57d44461ca5acb2b9b11367ce814d8ac7e0b091c9003bc2ca796b",
+      "bytes": 4484,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/ubc/20261008T012546Z/ubc.raw.json",
+      "sha256": "aa252c2ca2dda85f0611a8df73cd34233f9c3c0cd35a3de327bfc2d327f2298e",
+      "bytes": 53198,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/toronto/20261008T012746Z/capture.json",
+      "sha256": "9de933782ff2017dba2c8bdff8c50e2dce9eac141eaeb3229f877770cd23fce4",
+      "bytes": 7278,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/toronto/20261008T012746Z/toronto.budget.json",
+      "sha256": "3393b9b76c02a6e949cb1c9df5e59f06e0e16b41887d949cfaf5331cfea1e6d3",
+      "bytes": 629,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/toronto/20261008T012746Z/toronto.json",
+      "sha256": "cd93f2b5ef447bea32e80153cc7c140dbe70fdea6ea40adfd891c2bc017f6736",
+      "bytes": 3824,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/toronto/20261008T012746Z/toronto.log",
+      "sha256": "f5a91f622241409f8a08883a8ba29b2a940704cb611890f9d77ee889d583a9cc",
+      "bytes": 10501,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/toronto/20261008T012746Z/toronto.raw.json",
+      "sha256": "b25f5ebac42e6cc09bec6b99acc809362e773df751426988a7ce74b454573e20",
+      "bytes": 39251,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/hku/20261008T012925Z/capture.json",
+      "sha256": "968f0940c29129d7490780673e4dfa6be5eeb189a95a7bd81ccc0c6f0fcdd566",
+      "bytes": 5568,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/hku/20261008T012925Z/hku.budget.json",
+      "sha256": "d2d9b1188527008469e9e6fbc0c6db2e71e823ffd6d7e998437ff4418ab5366e",
+      "bytes": 610,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/hku/20261008T012925Z/hku.json",
+      "sha256": "2e244743b7c537774bf9f8fe0f9177d827479fb9b7135150ff49f89133fc80bf",
+      "bytes": 2277,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/hku/20261008T012925Z/hku.log",
+      "sha256": "34ce91336afd8e70a216f45957bbc620f02789bf9796ab527796d9c866855de1",
+      "bytes": 4007,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/hku/20261008T012925Z/hku.raw.json",
+      "sha256": "0ced60c7878744a13a9180891296955b084ea4f8c788d3be4cc4f75c5f23bcda",
+      "bytes": 12635,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/ntu/20261008T013032Z/capture.json",
+      "sha256": "7a6832ae1824d9b6c60a0a512795110b95ab1359bdf36db35a6662b1c1cd8536",
+      "bytes": 149858,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/ntu/20261008T013032Z/ntu.budget.json",
+      "sha256": "b5c2ebf61b43cd4b04c0ceb16c785259572d25aec49d0ac32ed32500fe020bee",
+      "bytes": 611,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/ntu/20261008T013032Z/ntu.json",
+      "sha256": "080314be6fec7ef43656cf4c570fea7248b6c41e1825bbf41c7670b8a8638fd6",
+      "bytes": 135365,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/ntu/20261008T013032Z/ntu.log",
+      "sha256": "c47041c61ba130460f65055478cb0543350ed48489f0fae262ab0bd642c78a0b",
+      "bytes": 8269,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/ntu/20261008T013032Z/ntu.raw.json",
+      "sha256": "f00b1657c36eaacd175b668eee1f38eb45a1faae37dc1182e28004d317fbb88e",
+      "bytes": 342091,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/kaist/20261008T013229Z/capture.json",
+      "sha256": "5bb64be94a728b3f0644a4ac727a434c029b27d196cefdf806728eabdc6574c7",
+      "bytes": 3888,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/kaist/20261008T013229Z/kaist.budget.json",
+      "sha256": "cb2c3fad714e11753182d57f1c7be52be72d00c0417e10d3becc94396ec758e7",
+      "bytes": 747,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/kaist/20261008T013229Z/kaist.json",
+      "sha256": "c8b5ba995599938f7c49d974adfdedfc166dc8ed4e3ac7fa6206966b3eaed641",
+      "bytes": 558,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/kaist/20261008T013229Z/kaist.log",
+      "sha256": "74ecdf4b450b1f1b180fc30824432f236651683db97880d244f71ec2a1c6edbd",
+      "bytes": 9152,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "captures/kaist/20261008T013229Z/kaist.raw.json",
+      "sha256": "4654d39264c8910ff8cfd2be6de4891236e92631ec0e7cbfe668988b8bcbc621",
+      "bytes": 2371,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-original/MANIFEST.original.json",
+      "sha256": "45776ec37031a03025c53c99f275dcb9bca45436b0af53204d79ee4025be003d",
+      "bytes": 1074,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-original/PLAN.json.original",
+      "sha256": "031ba703f3fa41079bb59650322af8505d32eb6bd4094ebdb538f42fb8b7e078",
+      "bytes": 4613,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-original/PLAN.peer.json",
+      "sha256": "7d15f5e2615c10944cb3e10db51f80cc684afc92ee3afab5dcf927f088874430",
+      "bytes": 1718,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-original/code-pins.checked.json",
+      "sha256": "c3d9cf69d1aaba5ea6d3762a263dd2e16bf3a0f3c99bce442af6eb24886dc030",
+      "bytes": 1070,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-original/execute_baseline.py.original",
+      "sha256": "4fa670fb54d6f62c296b68e682c2f46417cf02ba0daf75deb69f329be32f269b",
+      "bytes": 28181,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-original/historical-cause-contract.json",
+      "sha256": "f78d2b567dbed4ff3148023bd650853ee05dd3c391b65d84cf13fca418f2e1c5",
+      "bytes": 3461,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-original/receipt.original.json",
+      "sha256": "7441a53fb47bf8e9bc7fb24f0f6c775c2ec562b5386353dbb73470a5ba0390db",
+      "bytes": 668,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-original/review.original.ru.md",
+      "sha256": "39ebad157a2881d72ea43fef9833e83401d5418416fc63799e36eef608efe7ac",
+      "bytes": 5306,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-original/score-pins.json.original",
+      "sha256": "d86e57d1ad7fd6b0af8e8f10a2334de8feae7c5e6c665da0055dfc34f20704dd",
+      "bytes": 643,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-original/score_after_collection.py.original",
+      "sha256": "faf201cdf72ccf7c91a07b1c51e38bb36387c3c4730e908cb509fdeb6274cdf5",
+      "bytes": 3551,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-final/MANIFEST.json",
+      "sha256": "b2c130579509933d4f0fda02e051a894d916c11600b5306e8e5d62d3296ccc87",
+      "bytes": 759,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-final/PLAN.peer.json",
+      "sha256": "cb45e228b4783054f8c5a80ebb8fe883f4ba125bd7f5a28c3379f8950049e951",
+      "bytes": 1522,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-final/receipt.json",
+      "sha256": "1f379d6a8d06e6d3fce6a9163149e4acfe173dc18873887dfebdce010e9420dc",
+      "bytes": 553,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-final/repair-writeahead.original.json",
+      "sha256": "22ef31a188d73a1dcc370be79df7a92c6be59ac56eb1bd2761e64174d635646f",
+      "bytes": 592,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-final/review.ru.md",
+      "sha256": "76081e21bbaac7642c14d5f53922136f3d722902d33dccb128146cc0a8e93887",
+      "bytes": 3237,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-final/score_after_collection.repaired.original.py",
+      "sha256": "7d183e1781b458d3ec5c4cd130963ff59547116c5440d43aa636c7098d4814a9",
+      "bytes": 5349,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "score-review-final/static-checks.original.json",
+      "sha256": "4aea6babe6fc0d403ad25ca2891ed38b0f6d6c6aa7d3cb000053903984062ae1",
+      "bytes": 1149,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/MANIFEST.json",
+      "sha256": "5354adf55a8a2b7b837e3a4c1a2041adce9dd2d4a6eaa30048082d3ae040dbc1",
+      "bytes": 6004,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/A19.original.json",
+      "sha256": "a10e861a5ff226fbbe86838a49115aa33259750e3ca43ac44beafb0801e2136f",
+      "bytes": 185609,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/B17.original.json",
+      "sha256": "5609131efe606eeae0b6cc85523d1370ead4c2affb1f107f3510f0e82253d224",
+      "bytes": 3637,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/PLAN.json",
+      "sha256": "e6c20f38c1f847e1a6bd3048863200de65788ff37bae701cb4acda14617ad465",
+      "bytes": 2955,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/PLAN.peer.json",
+      "sha256": "b46dd44c4af11f5728ee6d2a11f0be219c82380261bc3a9917f54087852733dd",
+      "bytes": 1190,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/b-v5-native-peer2.B17.json",
+      "sha256": "6c4f5e92e494e0beeffe7fe8bf41cda9b4695bcc8b6ba6ea1feadb4fcc617c61",
+      "bytes": 143562,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/b-v5-native-peer2.additional.json",
+      "sha256": "14bcae4954ef2cd69d6da16076d60fe471590aca402bb17386ca82f0ff779292",
+      "bytes": 119559,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/b-v5-native-peer2.controls.json",
+      "sha256": "1f76e747d382c170c00976fee54c8d4311c65bf20370c43a13d48613ad757a31",
+      "bytes": 239234,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/b-v5-native-peer2.modal.json",
+      "sha256": "caaf4ea90a84f4f80d77e68421611509607832637a66e9ffe69284e239d600c6",
+      "bytes": 40475,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/b-v5-native-peer2.v5adverb.json",
+      "sha256": "ed108136611d589bdd61a6929fa6bd6abca38023ff643d5675c55f2af674f079",
+      "bytes": 95033,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/b-v5-native-peer2.v5controls.json",
+      "sha256": "7baa02037b0e93440b130a57d861172ce33410303e3dd11e99bc89952de0f12b",
+      "bytes": 287590,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/b-v5-native-peer2.v5scale.json",
+      "sha256": "10456296b19090b684215b542031a9dcff35a385ef2f29353014f2c7ace0fb42",
+      "bytes": 63691,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/conftest.py",
+      "sha256": "51a56e72baecc8be50bdc33d90144508eda4d65b12ad9b1b4fdbcd99c5888f5d",
+      "bytes": 1826,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/independent-controls.original.json",
+      "sha256": "1b1fc47403a88c9ddff826a0a3ab1d8097d8771ff24ae420d91ba8b330bd5324",
+      "bytes": 199120,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/independent-inputs.original.json",
+      "sha256": "a1e3bac719cd189197856e0d01b1d99719955283e12fbd0404b20d91c8c08177",
+      "bytes": 4738,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/independent-original.log",
+      "sha256": "2184f389e08ccd782670ec30243aef11426cca1242953407676a4b7faab4a075",
+      "bytes": 2295,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/original/app/adapters/extraction.py",
+      "sha256": "27eef6814ce08ddf170220f739ffdd24de4f68e6a10403e908f3723ee0fd5fdf",
+      "bytes": 55162,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/original/app/adapters/page_classifier.py",
+      "sha256": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+      "bytes": 43654,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/original/app/adapters/requirements/section_scope.py",
+      "sha256": "8b2c8da32b7595f95aab817d97b90f7900aca93bab21060499a39ecfc83a2f79",
+      "bytes": 4882,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/original/app/adapters/requirements/web_requirements.py",
+      "sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+      "bytes": 43883,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/original/app/adapters/scope_reader.py",
+      "sha256": "169136aadc489f886f362a4bd703b4968933939257af1dd2e7867a26c2ff0304",
+      "bytes": 16246,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/original/app/adapters/structured_extraction.py",
+      "sha256": "d8a85ae1c2307c428d8e9220fb56d0ab9d69adfdf84a38e56958b30f6b862f47",
+      "bytes": 6760,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/proposed/app/adapters/extraction.py",
+      "sha256": "5f9cc4e514eb631cb54db2834c5583caade40a085f391fd0bcbcd0ff524a2672",
+      "bytes": 55407,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/proposed/app/adapters/requirements/ielts_sections.py",
+      "sha256": "4c4ed4cecf8615e2e191566e6d89821f8a21e0269684deb39768b81eaef637b6",
+      "bytes": 27096,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/proposed/app/adapters/requirements/web_requirements.py",
+      "sha256": "9745d74c436d5b7fda31a89081cc0dd709dafed5e38eade3e2c5e8018c7f69f4",
+      "bytes": 45001,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/pytest-native-peer.imports.json",
+      "sha256": "43a6b50cbf047ff9058fd992bdab5ea273996e700f7c5d2e88e2a7179215354f",
+      "bytes": 1974,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/pytest-native-peer.log",
+      "sha256": "15121b5580049d344e2b04664d6a05f5209dd0d67f2f9984846d28ba6f1e09a4",
+      "bytes": 1370,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/pytest-native-peer.xml",
+      "sha256": "0c4ce21cf036f9336dd1381b7f99a88ac6c1b10d69e23ba5a0c4ed1b595b5c61",
+      "bytes": 1360,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/pytest-native-peer2.imports.json",
+      "sha256": "43a6b50cbf047ff9058fd992bdab5ea273996e700f7c5d2e88e2a7179215354f",
+      "bytes": 1974,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/pytest-native-peer2.log",
+      "sha256": "dba55404466e70432e42c91a35fc88f6c2a207b3dc722f3062f5f89378d746df",
+      "bytes": 1223,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/pytest-native-peer2.xml",
+      "sha256": "a3f53845ab8e746fbd3eac6ccc4ad2e4b22a3dad81d8726afa85f0c63ab7be0d",
+      "bytes": 22800,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/qualification.original.json",
+      "sha256": "31e8c7a4b11e645b5d79ec4a5c4237058a68b9deae539bd42203cda9f46a01f0",
+      "bytes": 14777,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/receipt.original.json",
+      "sha256": "7eef5226691c5cd49fa891d1ebbbcb115b14ea8474901f80bd14fe91c44379ab",
+      "bytes": 935,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/replay_independent.py",
+      "sha256": "6f79c0b314efa82363fa6059d6b79c123571b9b94c32bbaac7c2102ada4797e3",
+      "bytes": 3364,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/replay_proposal.py",
+      "sha256": "e7245b1852fad91b687fe4c93d28e78a9d7d0645cade590024b4cc1657347cd5",
+      "bytes": 4535,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/review.original.ru.md",
+      "sha256": "a4b6e445359eea593d9c13766a506de01f92fbf32fb721de9e9928ca780b45f0",
+      "bytes": 3501,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/root-controls.original.json",
+      "sha256": "2344f4892431ae927b26f7b464da2197aeb1a7517fa19b15a0e61b239cdeb17b",
+      "bytes": 18870,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/source-manifest.original.json",
+      "sha256": "1de653d920992de184329744dc3493dd662332a9cf72d3fbc47bbbae4761c83f",
+      "bytes": 11021,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/tests/test_a_independent.py",
+      "sha256": "2396048d532ba148ea1fd6883cfc7545255eb405362383add71ab4de6ca417f9",
+      "bytes": 1462,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/tests/test_b17.py",
+      "sha256": "16eff2b9f1d88f23e56a15156ae88436d06f689b73c6afc86cb314f445061b6a",
+      "bytes": 1869,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/tests/test_owned_ielts.py",
+      "sha256": "b12fedcba2075b4234f14c8595f30cad7d7c79f97f9e0219f7568f94fdec4363",
+      "bytes": 16579,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/tests/test_parent15.py",
+      "sha256": "ca96ef3b6f6e581fc92c3826e2e319e5eb70b6abab7d1db1eccb54b8cfd2ca59",
+      "bytes": 938,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/tests/test_v3_boundaries.py",
+      "sha256": "b14ff91dbc33e7cb59664f95ec377ad011944d3f36b8e2a5ffa1d05821c68311",
+      "bytes": 1357,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/tests/test_v4_additional.py",
+      "sha256": "3e521a7244d31f49ff27716c56b6a4993d0d667b34a04de608e5fd15279e2bae",
+      "bytes": 1702,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/tests/test_v4_grammar.py",
+      "sha256": "e420a809e55de5622d5dcfc6b0b2ca560ab03b730fbb478bb403d4cf3fe86912",
+      "bytes": 1685,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/tests/test_v4_modal_require.py",
+      "sha256": "e41c4eb5ec649934a94a54fe62a21873072a752a42790eb54535e622b90ea535",
+      "bytes": 1699,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/tests/test_v5_adverb.py",
+      "sha256": "f016e272ff8e537c494a62a3cdd93410dad84629bbc6cecb5807f3f3a2209489",
+      "bytes": 1894,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/tests/test_v5_grammar.py",
+      "sha256": "928f5cdb1a7d812637034f2744d67f2a9957091ed6573578677410a2ebf8f0fe",
+      "bytes": 1891,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/tests/test_v5_scale.py",
+      "sha256": "8638cfce45043c09304e19f5174089a283aa4f5dcfb3bf2ad9ba6ab1ca3a5168",
+      "bytes": 1873,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/tests/test_variant_decline.py",
+      "sha256": "98b16b410dcd90bbda1863eb9b18e85ec81004aeb235eb42658c01c9a511ebd6",
+      "bytes": 1002,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/v4-additional.original-input.json",
+      "sha256": "40c70974fd097a5121b677225c2f6c084902990b401ef9f7933ad27872d64f08",
+      "bytes": 2984,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/v4-controls.original-input.json",
+      "sha256": "d527b8eafc23164afd8f2f192f835dc692c7dd35a30acd5256dbdc2d9072251f",
+      "bytes": 6531,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/v4-modal-require.original-input.json",
+      "sha256": "aad5e068ecf39a58b93a98ec5ee28984cd205d8bf2083e3cb4a2d8aba8149b5b",
+      "bytes": 741,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/v5-adverb.original-input.json",
+      "sha256": "8725905e87844946ab1f62289971517be494a3918d03e1944fcd6e215b75a9d4",
+      "bytes": 3813,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/v5-controls.original-input.json",
+      "sha256": "445de39daa4795e3cc0dbd2ed863144f25c4caba716e0ce40b379fc3566248ea",
+      "bytes": 7990,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "ielts-v5-rejection/v5-scale.original-input.json",
+      "sha256": "acb51f607f6c76734387a2c1c268ea4caeabb1af5ba64aad73994b8875ec0968",
+      "bytes": 1001,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/ready-manifest.json",
+      "sha256": "7b3d8b96705ec1495411152ac468ccc8f32fbd9c2cd7d145854b53a6b26defd1",
+      "bytes": 3615,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/CONTRACT.md",
+      "sha256": "542facb6fca9f23d3149f85f69cfc1fd28b93f96090af5133f85ad7a039a2a66",
+      "bytes": 13505,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/PLAN.json",
+      "sha256": "1768f033e6484f630ff149c91d44d76505e0ff4c8031abc988d461519c2e915c",
+      "bytes": 2193,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/inputs/B-confirmed-coverage/CS-year-contexts.offline.json",
+      "sha256": "475c3d829ade0e3a00994488eeaf970cfe270f0680d74543b51157d47a6458fe",
+      "bytes": 5679,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/inputs/B-confirmed-coverage/MANIFEST.json",
+      "sha256": "bcc0ef08a774dd636b1e52b7d71ea2205acc51ef23ef4fd5a5dfe0ab82c14a43",
+      "bytes": 8582,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/inputs/B-confirmed-coverage/diagnosis.offline.json",
+      "sha256": "f9cfe11dc953e54ebaaa70d483bb6c0149ad78da5d5fabefdec59a47f4771bf7",
+      "bytes": 172138,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/inputs/B-confirmed-coverage/finding.ru.md",
+      "sha256": "819a08bf4bf1bd9791a2eea3332806511a65c701f315995ac8138c99bfcfb5a7",
+      "bytes": 7522,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/inputs/B-confirmed-coverage/historical/AUT-original-counterexample.json",
+      "sha256": "f5011c8f67f832dde820138828118247a4977c09dd41f15fa4a385cc4f62ce95",
+      "bytes": 25601,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/inputs/B-confirmed-coverage/receipt.json",
+      "sha256": "312b676be5f1bd26f3882b28d11c2c3d7261b6a872b5a72db71cffa862354bf0",
+      "bytes": 1906,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/inputs/B-confirmed-coverage/retained/aut/computer-science.body",
+      "sha256": "1340f8a4853246291e727bfaa433ca0ba9ec31ca0fb79cb8f4b16914ffe88f0c",
+      "bytes": 71651,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/inputs/B-confirmed-coverage/retained/aut/computer-science.meta.json",
+      "sha256": "3dff64d5d03a766c27f6c33b91790ecbae91e02dfe61c76ce6a09cfc559d9c4d",
+      "bytes": 734,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/inputs/B-confirmed-coverage/retained/aut/data-science.body",
+      "sha256": "76efe3c790ce9aa3253487b3807afa994918022bfff4c2c0b2b4972e45264312",
+      "bytes": 79486,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/inputs/B-confirmed-coverage/retained/aut/data-science.meta.json",
+      "sha256": "16d03a9771712a612fa61b231df3dbc6b948fa68b00ca9a30e0135598953e192",
+      "bytes": 726,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/inputs/B-confirmed-coverage/retained/groningen/76bb9de33b9a2ae5369072e314127aa4.body",
+      "sha256": "2bc209cbac4ca032889101e05854fd85f579cb924a4969ff2fd4bce11e8ee08d",
+      "bytes": 104481,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/inputs/B-confirmed-coverage/retained/groningen/76bb9de33b9a2ae5369072e314127aa4.meta.json",
+      "sha256": "de5d89c864fe6298977e5cae8e632223cd957f2679a893217a9531f6d203ecd1",
+      "bytes": 536,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/minimal-controls.json",
+      "sha256": "88ab1d4a5c311ccb738d8cf6a58b0b46457a578adb2fae9de2902ec733090f5a",
+      "bytes": 3270,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/receipt.json",
+      "sha256": "45675d6e009d0f1e37fad12c3b272b3c90c426b8908d34eb0a90d1b17ed75617",
+      "bytes": 1226,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/review.ru.md",
+      "sha256": "34556d25c17cb84e304a661e6221625facfe99fc5bca56d2d4d865e8e33a79d5",
+      "bytes": 5074,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/source-anchors.json",
+      "sha256": "ab4f05cd9888c8cfadb99a0781c0498c7e0a38f41d0022a40bcf08b649f8dd6e",
+      "bytes": 3630,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/sources/app/adapters/discovery/catalog_walker.py",
+      "sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+      "bytes": 32381,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/sources/app/adapters/discovery/live_discovery.py",
+      "sha256": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+      "bytes": 96403,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/sources/app/catalogue/discovery.py",
+      "sha256": "650ecf1750afe7072cdb8fe71de5fa1c4d238c0666c4776fa0227a986436319c",
+      "bytes": 12449,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/sources/app/db.py",
+      "sha256": "e3fcdebae0e284e9a2ac7e1ef539c58054d4f12210d9683511b99dcb826bc319",
+      "bytes": 5783,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/sources/app/jobs/store.py",
+      "sha256": "fbf69acb386db032beb64bb9a59af9ee43f75730d0037124959714faec1264cc",
+      "bytes": 18143,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/sources/app/jobs/worker.py",
+      "sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+      "bytes": 21474,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/sources/app/models/research.py",
+      "sha256": "03bc5f07438456d08e412ac2c0ed615464253a1a1bb9ecf3e548ff72d7aeef12",
+      "bytes": 11415,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/sources/app/models/source_page.py",
+      "sha256": "82c165045449cd8f4283800aca20b3c3fa5d9d7b3a252e26509dc549038b82de",
+      "bytes": 12089,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/sources/app/pipeline/control.py",
+      "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd",
+      "bytes": 520,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/sources/app/pipeline/read_budget.py",
+      "sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf",
+      "bytes": 4349,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "durable-partial-contract/sources/app/pipeline/runner.py",
+      "sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "bytes": 97639,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/MANIFEST.json",
+      "sha256": "90a27182835b19be19e8b0523c93d8a258f697446b845ec2995f6a543522554f",
+      "bytes": 24891,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/PLAN.json",
+      "sha256": "1af23f2240455bb6aa6e9f95ccc2bfd3404b4c820efe78ddccbb4ab82ac797c1",
+      "bytes": 1941,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/cache-copy.receipt.json",
+      "sha256": "39fced65e56046a46fc13889052ad8a4e1459f8fd960c5c27286e59f461bf578",
+      "bytes": 41619,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/frozen-source/backend/app/adapters/base.py",
+      "sha256": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46",
+      "bytes": 4121,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/frozen-source/backend/app/adapters/cost/web_costs.py",
+      "sha256": "e624ae4afdbe4500c793bc6f463fe8f5ed82c68be298f72ddf86ec9cef8230ed",
+      "bytes": 8986,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/frozen-source/backend/app/adapters/discovery/catalog_walker.py",
+      "sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+      "bytes": 32381,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/frozen-source/backend/app/adapters/discovery/live_discovery.py",
+      "sha256": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+      "bytes": 96403,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/frozen-source/backend/app/adapters/document_ir.py",
+      "sha256": "c8c3f15da74f8f891f4f79fd8bfd52e937b57898edfdc3ac1a59e7d44bce9f0f",
+      "bytes": 10960,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/frozen-source/backend/app/adapters/extraction.py",
+      "sha256": "27eef6814ce08ddf170220f739ffdd24de4f68e6a10403e908f3723ee0fd5fdf",
+      "bytes": 55162,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/frozen-source/backend/app/adapters/fetching.py",
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "bytes": 47727,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/frozen-source/backend/app/adapters/html_parse.py",
+      "sha256": "62f9c0c30c4b88ad1b7d23907f9019204e424891d361608d92aaac9551ac5d81",
+      "bytes": 916,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/frozen-source/backend/app/adapters/page_classifier.py",
+      "sha256": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+      "bytes": 43654,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/frozen-source/backend/app/adapters/requirements/web_requirements.py",
+      "sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+      "bytes": 43883,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/frozen-source/backend/app/adapters/scholarship/web_scholarships.py",
+      "sha256": "7dec462ebad77859d7c6a50840924253fc1092734af0bebd98bfa07f3d6677a5",
+      "bytes": 61886,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/frozen-source/backend/app/adapters/structured_costs.py",
+      "sha256": "149f716bcf015066b41f9edf6d8678f670e2352962561b69068013f2640a0f53",
+      "bytes": 9125,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/frozen-source/backend/app/pipeline/runner.py",
+      "sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "bytes": 97639,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/frozen-source/backend/evaluation/research/live.py",
+      "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+      "bytes": 69319,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/funnel-counters-and-controls.json",
+      "sha256": "4cbb73500425b7edd9f2fb6e262f052fa341b377b4e1be6c4620a8cb7655416e",
+      "bytes": 21971,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/native-saved-bytes.offline.json",
+      "sha256": "24cf45c60dca0f086d49fb4232dd92e33f94145e4071f8e6ac9d2e2170366d78",
+      "bytes": 95027,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/page-purpose.offline.json",
+      "sha256": "9282c1f4afa28742aa00efe5ae0582e4a53bfc80ef25c7ba611724dfffa96926",
+      "bytes": 69108,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/04585434252a3d26742c77ab0d8a557b.body",
+      "sha256": "4b248ef69ef6e64751ccd2dad6399f92295f36ded8e28a9a6bf5a6e2b8b51b29",
+      "bytes": 2319497,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/04585434252a3d26742c77ab0d8a557b.meta.json",
+      "sha256": "3d45dad4c63fe8b726a08cd7d4b109322af82e83b9ddcd459ef2512820f80e56",
+      "bytes": 442,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/0d4e6576fe939cf20b204461db70fd22.body",
+      "sha256": "34999a78512216e6005cc7b7b9fe8727273a0a0d14d1f39156a87e576e5b32f4",
+      "bytes": 151379,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/0d4e6576fe939cf20b204461db70fd22.meta.json",
+      "sha256": "30321b498a2bb03e5c9ca72d0d066e3e497aa5513a4d2be16f3a4d5f0b679482",
+      "bytes": 603,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/0e7a83bfc97d524dc1e31693e7c4f066.body",
+      "sha256": "9317a3fdd5014de360f71c0d1642b1556edd9a7f59e96effbec49bdb61602351",
+      "bytes": 109267,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/0e7a83bfc97d524dc1e31693e7c4f066.meta.json",
+      "sha256": "f66ad62ec42698c76f35c3cdf4610bebc193e88cf69a1cfa5a90301723c84f6c",
+      "bytes": 479,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/13b094f6306f16f6a14233e7a68c23a1.body",
+      "sha256": "7ecc5f1f54df058d2486167674fe2d73416230050fc802e3a69bbd21af2ee699",
+      "bytes": 149420,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/13b094f6306f16f6a14233e7a68c23a1.meta.json",
+      "sha256": "53ba44ccb7b418d164a3db00dd0b67570a3812d0c14346b22410c3f3cc11a167",
+      "bytes": 524,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/20618175ab48af81865676d3ed7b2700.body",
+      "sha256": "915442c663a3c4ad7831276155bb9f20537fc1cc8a1c7e16eb7a36a739900185",
+      "bytes": 2268026,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/20618175ab48af81865676d3ed7b2700.meta.json",
+      "sha256": "e3bf48eb9c41983a81a80c33b6c28e7854b6ca3b606963a2974983fd463c5b00",
+      "bytes": 444,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/25acaa64c29845bcb52e6af89ceb4b49.body",
+      "sha256": "83d2a35869b15cefdc688a4f7449065e86980fe4edd371cccbdf4959856c4c65",
+      "bytes": 88037,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/25acaa64c29845bcb52e6af89ceb4b49.meta.json",
+      "sha256": "2b58dc6640d93a5bca5cfb2b5f2849e4f19f1175e51e83ea3d4c9c074623d6da",
+      "bytes": 564,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/278e3a20c4382d2a54289c82d8599f11.body",
+      "sha256": "01e7b0cac21e2ecf2ec6bb36de7db80f08cca0dec775c85a9f42a6205e4d3fa6",
+      "bytes": 2272292,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/278e3a20c4382d2a54289c82d8599f11.meta.json",
+      "sha256": "359a6beb052545e7eb6d46fec84261a47267792ae5720c5ad961499e7fd6bfc7",
+      "bytes": 443,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/2adcfbebfe80122f06ab0726c36b89ce.body",
+      "sha256": "36f03acce77161cc4c1f9ecc8f6d2397791bbf00bf1a1ae679ec813d2edcc67d",
+      "bytes": 158307,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/2adcfbebfe80122f06ab0726c36b89ce.meta.json",
+      "sha256": "924fc260c8db049365fc7614d1fe3f83aec115f9834c55567f3814232bb6a655",
+      "bytes": 401,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/2d50b9e7e9156d183ab60fb7d065bed6.body",
+      "sha256": "2eec5c8f7bde7bb8f2b7033b7d1c6f1f2e7e2f9b3f7638c6de5a929767867025",
+      "bytes": 2258766,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/2d50b9e7e9156d183ab60fb7d065bed6.meta.json",
+      "sha256": "b9d6fa40a21485073e883c170b30d00a963846fcddf8a73cd8dd97437c3293f0",
+      "bytes": 440,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/309ce5e9e112d681bbe7bac9e28c8585.body",
+      "sha256": "4278809688191f345dbf861001a59a128224580d370f19286ebde97fb0200011",
+      "bytes": 2579823,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/309ce5e9e112d681bbe7bac9e28c8585.meta.json",
+      "sha256": "26314ef9e784b1786dec19c554db3874a40adb112200299f3688d15fae6ed084",
+      "bytes": 441,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/34e95a86547b207ccffbaefc384804a7.body",
+      "sha256": "ef3408484de3963633f8fa10c8b83905994d60195365d26210603fc2a5fb394b",
+      "bytes": 201265,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/34e95a86547b207ccffbaefc384804a7.meta.json",
+      "sha256": "ea5f2b601971472fccd0cb8d27e6cee0f191942b6129a19c71db9dd9d3fd4ad5",
+      "bytes": 571,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/409dfc224629c367a8a376a802ff77e8.body",
+      "sha256": "f210e13b363e91ee21864c48a937d756c849718fa4d44296f95ed6ceb2f5ee71",
+      "bytes": 92629,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/409dfc224629c367a8a376a802ff77e8.meta.json",
+      "sha256": "b57a099cd03e97658a91609804702818de5efc205ab577af94d50267c48f4fb4",
+      "bytes": 440,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/56f5a36d23b96514e9a426e89a9f03d2.body",
+      "sha256": "d2474577bb49e26af9df2bbc3c0d280829b3c45f734c67fde78808f30fd19c83",
+      "bytes": 2143,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/56f5a36d23b96514e9a426e89a9f03d2.meta.json",
+      "sha256": "e5871188861d22bedd32815613f353df852349d17a582ea775144390cd17d7d9",
+      "bytes": 407,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/5dfb5a7fd44e9c9aaaecc0d3662fffeb.body",
+      "sha256": "f0b53a041432b776d90d9f4c8eaf617bdcd3d35827ab65955175c59fa0d83f66",
+      "bytes": 196537,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/5dfb5a7fd44e9c9aaaecc0d3662fffeb.meta.json",
+      "sha256": "6871be5f0c3e71614aac565a83443ffe4037fbf4b65a7dc6a3ff5c70d30d7b47",
+      "bytes": 571,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/5e5da9bcfc4153ae867e829c3f649d84.body",
+      "sha256": "07e4005f581de5b0bdc0bac400a4987fbf2375f27ebe9c71dc908df6a2218490",
+      "bytes": 122658,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/5e5da9bcfc4153ae867e829c3f649d84.meta.json",
+      "sha256": "89074098d9f5f90cebbcb6217c78a97c3f9fb7781eff37e55ab6a72e8fe10255",
+      "bytes": 417,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/6bc389841de656902df82c57d37052bc.body",
+      "sha256": "11ebc91970ef179b6d3ba46d93236b4fb001541dcfb7f5c97c6e912dca61f3ae",
+      "bytes": 124508,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/6bc389841de656902df82c57d37052bc.meta.json",
+      "sha256": "3dd877915ffb097b340eb2c9e111313b7aa5cbb1873d71c06fd46388169d23c9",
+      "bytes": 434,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/71ee5c148b65086f709df5c5a1a6e14d.body",
+      "sha256": "01216d5693945efb869e4d60ec27dcc01d7eeb31cee7650e0e78535dcf3ae62d",
+      "bytes": 80913,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/71ee5c148b65086f709df5c5a1a6e14d.meta.json",
+      "sha256": "532a29be1f4eeef867db1cc306440c922dd388929c6be70053595d414b2a8071",
+      "bytes": 432,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/725de25ee7fa06ccd086b77d7bb5c00f.body",
+      "sha256": "0eb7da7d5a934c10422ebc338c82792506b48ffb0fc9f83e1d301a9953d41696",
+      "bytes": 121497,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/725de25ee7fa06ccd086b77d7bb5c00f.meta.json",
+      "sha256": "f0175085a1aabd55c0c3732744cb36bdba06fffcbbdb160e0f6659adbd3d2e1e",
+      "bytes": 446,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/84bf351c986c5a35db324731498cd569.body",
+      "sha256": "41cd4c0273ab93e76d6c7e2deccaf8c1704a3cd993e60717da4a0f68a36847c4",
+      "bytes": 176371,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/84bf351c986c5a35db324731498cd569.meta.json",
+      "sha256": "901c5e08aeefaeaa943b197d114420eb4efd451220a6384164308716456ebfcb",
+      "bytes": 512,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/850ceba3abde1d17d6af75eb0231817e.body",
+      "sha256": "038de8a0eff897c20bc5af0056d8d06d1c50b36eab937c0b72bae28e1f3251c2",
+      "bytes": 107051,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/850ceba3abde1d17d6af75eb0231817e.meta.json",
+      "sha256": "482c245c0a4fa13683834cce51b4e713779b2f110da4782d2202bad72455e633",
+      "bytes": 510,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/94f4e9f4fca2062e2453c1b791426ef2.body",
+      "sha256": "665df00ac16d080e543e2df0831d457dd458f7382100180032c32695c7fdd850",
+      "bytes": 172757,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/94f4e9f4fca2062e2453c1b791426ef2.meta.json",
+      "sha256": "4e616ba6d4a3e1d8a90a04b5ed67723db5cf80c9579bb4eeaf31c2a9fb5deda3",
+      "bytes": 496,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/9900913e52a1efec39c0ee40e23b503a.body",
+      "sha256": "7aa107f850dac3c885daa2a26f9351b102b9f1fe06cc0cf6ca6f5c2da8e59da0",
+      "bytes": 2599182,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/9900913e52a1efec39c0ee40e23b503a.meta.json",
+      "sha256": "781332fce4aa28223c8930d3d61c5218981535ddecc73eb631fc1ec820e90168",
+      "bytes": 442,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/a22ffc0dcb44cff9fb81c4f22faba86b.body",
+      "sha256": "1224f295205f6b2f4107ff0a705fce4a0f37b4679e181342c3de7d6b1420bffa",
+      "bytes": 2354756,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/a22ffc0dcb44cff9fb81c4f22faba86b.meta.json",
+      "sha256": "763a51fe9271d3a26a9fdd472400cddb21baee3e6d2ed1da89f7f932e6ffdec8",
+      "bytes": 441,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/ab56febebb4d3efadeef85d2ff411b32.body",
+      "sha256": "d3cdd0bb03d8b66dc457058592eae41cbb3283df0591ec60abecd19b1e647356",
+      "bytes": 146060,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/ab56febebb4d3efadeef85d2ff411b32.meta.json",
+      "sha256": "5a4b08acb9e1e0fbc87a59700eda31a0fc82719c5049c90c4138abfce558b8dc",
+      "bytes": 439,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/ad0c947903b2323471c118a7a899a5d1.body",
+      "sha256": "b92edfa2bd5ee0509edb33f2ce9db4d94105f77be856f42762d167ed0cfa1529",
+      "bytes": 2284878,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/ad0c947903b2323471c118a7a899a5d1.meta.json",
+      "sha256": "6ebf1ab1204cb942da9c67a313732d8e9618386fc390c5cbff331ff0eb77ce23",
+      "bytes": 441,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/bd798759d393ac4855341533abbe36ae.body",
+      "sha256": "2e88eba8d84f283f78d67e2ffff39881740096de3a90a72f6baab2685697cbb0",
+      "bytes": 148799,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/bd798759d393ac4855341533abbe36ae.meta.json",
+      "sha256": "e029bf800d64f35dd0ed3134f79842e5c20f7cee45ae851ee4d015912f97324d",
+      "bytes": 567,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/bebf43d56e3b363476eed0f7cddede69.body",
+      "sha256": "803e15a08ada381f88ee3e933f89bef63594e39d1192f65a8b10367e5af5dcfc",
+      "bytes": 147437,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/bebf43d56e3b363476eed0f7cddede69.meta.json",
+      "sha256": "946e2772e6ee749d82ef196d6539be1f093511f16716d07caaf199cc3a1d56d2",
+      "bytes": 501,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/c0b50a53d1de1b4a77470bb1776eb94d.body",
+      "sha256": "2811b0d74c183dd196f9fd508dce65a19644ff2486aecbc9b3cf182eb7a7495e",
+      "bytes": 93625,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/c0b50a53d1de1b4a77470bb1776eb94d.meta.json",
+      "sha256": "ee891e5ce70383d3aa4d2bf09bb21ee778e5b89c087ea73cf85efdba54cb36ec",
+      "bytes": 595,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/c6b1a6fca5db936887a691bbe477eec7.body",
+      "sha256": "dd20ad0866abed47a3d6fce93a3ec0e3f21127a1eced41aaa7bd82c1aeee27c6",
+      "bytes": 2321700,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/c6b1a6fca5db936887a691bbe477eec7.meta.json",
+      "sha256": "7d748514bdf39305ce8caa0e1ec9df7fad5328cdb2af7d97cbed68d06677cea5",
+      "bytes": 441,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/c85e9f9eed9f8b6d49bae22c9c54ba0e.body",
+      "sha256": "d8641dea9d364d60fe2b42d1ea6e71bde66316d7f775dea2fde18d4ef6d91762",
+      "bytes": 107364,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/c85e9f9eed9f8b6d49bae22c9c54ba0e.meta.json",
+      "sha256": "7ffa9da89ad6af8edc8fc9533888683676042c733aa1a5a7ac75972091cba5e4",
+      "bytes": 480,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/c9929ac7926474308337df32ee81b311.body",
+      "sha256": "c6440c47e02baf39d17803df8c8063c36bfbf9bae1566adc93780509db797c71",
+      "bytes": 125004,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/c9929ac7926474308337df32ee81b311.meta.json",
+      "sha256": "ba1751460805d584d4f0c589383fc498145f591f1c4ec94209731b8cb2fc8d9c",
+      "bytes": 481,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/d1747d66adb2b44142e39ec233595a40.body",
+      "sha256": "bac213e89feb14555cc0959fa72383b30e5a73ed8e8c4a2faa2f6b4fda017653",
+      "bytes": 98563,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/d1747d66adb2b44142e39ec233595a40.meta.json",
+      "sha256": "dad6a00a6f6de4d7f38cc72a5521ac94870eece0e04a1710eef2f66381b1ec5f",
+      "bytes": 467,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/d4ab01cc2de6faeb9185a5d3a3e024bc.body",
+      "sha256": "c67040e43a5ac5ab44c5b8608e3df66e2fa6465a166c752b6db2df968e4d53f6",
+      "bytes": 58565,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/d4ab01cc2de6faeb9185a5d3a3e024bc.meta.json",
+      "sha256": "ee3f5421435b610be03a3db730b2c4b0d15fa0559427c2e697af3dc744b6a6b7",
+      "bytes": 555,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/db9e321b8c5cb0aecd50877726c3ccf8.body",
+      "sha256": "95e7b877ac4b3a8dcd52401a21fbbe1c9c8d7f4897621d56bc45fe517250af6c",
+      "bytes": 1783,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/db9e321b8c5cb0aecd50877726c3ccf8.meta.json",
+      "sha256": "ef5e3b237d50d143704dd907f394e0d57ba40e1b3dd47cf36fa54635dd575e81",
+      "bytes": 427,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/dc42e073a76eed4c5f7dc3cfd3f32a41.body",
+      "sha256": "37d9f2169a8c4e2055995f2059f20bbc0258bf9fc30826a70fdabb3ec9c61fc9",
+      "bytes": 121458,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/dc42e073a76eed4c5f7dc3cfd3f32a41.meta.json",
+      "sha256": "57b896829236b50ef34c8c6926d1f08f8fadc0f1e3b4395f50f5b2c44a85b405",
+      "bytes": 483,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/e01544b6d8ac7bbea533fea08396a75a.body",
+      "sha256": "b2926f242b8596f5ae28f782a518953276b511349c7977f2de87f479a3f87c66",
+      "bytes": 93290,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/e01544b6d8ac7bbea533fea08396a75a.meta.json",
+      "sha256": "88a51b67652ed84d765b179de6de4b90cdcabc4c1894c924e6a86e76a8986ded",
+      "bytes": 449,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/e7f4f4bda411242aaadf18b60dcd4a2f.body",
+      "sha256": "aa65968e0f5966c4a3c9dbd24afe91e81ac0dcf4f56539b702bdf67d0118893b",
+      "bytes": 105578,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/e7f4f4bda411242aaadf18b60dcd4a2f.meta.json",
+      "sha256": "acaef873df0eee0d77f62ef05617fec81c46dba835260d532b40c5e21a2d7be1",
+      "bytes": 449,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/ee47c29a1f56bc9a2f5448aa20440c43.body",
+      "sha256": "9b5fb30c83a246bbfbccc2a29db0725d633868eda7e9dd6549410b49b2722fd7",
+      "bytes": 283290,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/ee47c29a1f56bc9a2f5448aa20440c43.meta.json",
+      "sha256": "1d94c5558ede369b2e52f57a3f30eb177c91d886e4ea9d684d4cfa6a11400ef0",
+      "bytes": 474,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/eece3f5ed117b13d57a9367da2d035ee.body",
+      "sha256": "eb6074fc0741bf1939448c6b6c11296c99b7eddcc3408bc906ab22776ca2cdf1",
+      "bytes": 140794,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/eece3f5ed117b13d57a9367da2d035ee.meta.json",
+      "sha256": "90cceb4c8317ed58a262b3aafb7698d6f2f4e8d04f7b102659878b4f3ab7e1e3",
+      "bytes": 465,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/ef488d9f2accd0544c273b4530a0bcf5.body",
+      "sha256": "a9d30ad74ddda2add05cb7463056b691b7ddaaaa96a778fe6d6978b99f7f87a6",
+      "bytes": 129996,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/ef488d9f2accd0544c273b4530a0bcf5.meta.json",
+      "sha256": "7a30a019f5eeedc1e4586385e4525361739feff3a8102f16bd8786a50f4a1c51",
+      "bytes": 481,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/f2e1147edd164fb79aef0249f9792f40.body",
+      "sha256": "8e0b2e347fd05b26afcc0036afae471aaaa08880701dba65772c79b2f8c5b774",
+      "bytes": 103994,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/f2e1147edd164fb79aef0249f9792f40.meta.json",
+      "sha256": "c851d16d9d25830a6c5396e446fc02c20b8b934f9476d622e8810f40a6286c9c",
+      "bytes": 547,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/f33bd661caa79b40c1ee8b6408dc6a88.body",
+      "sha256": "966356285144941edccad3bc025eece6983f8675c2150a50aec94a1967a42f2f",
+      "bytes": 2650431,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/f33bd661caa79b40c1ee8b6408dc6a88.meta.json",
+      "sha256": "9889edee17e099fa1f6291e6dbdef24a57c7f94ec0eab1a03c47c94b2a421d97",
+      "bytes": 442,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/faf5e1c7dc12c5d2aa6f1322770b63ac.body",
+      "sha256": "160986028ca076519f79c0d374445d735e5975583ea9bd8ca2cedde3b24c99af",
+      "bytes": 2338786,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/public-cache/faf5e1c7dc12c5d2aa6f1322770b63ac.meta.json",
+      "sha256": "8360afb8c60c6d9c2e1dba60118eb899de9c37e3a475096f310eecf48d507ef1",
+      "bytes": 442,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/0d4e6576fe939cf20b204461db70fd22.txt",
+      "sha256": "fea95418a8db202d79bc8040863b847bb496a5a78fcb05c8afb85538ca136b2c",
+      "bytes": 52821,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/0e7a83bfc97d524dc1e31693e7c4f066.txt",
+      "sha256": "d6cef73fdbd525f42c14490d2547cdf1b88aba70e113509942ea9cd4b02a783f",
+      "bytes": 5339,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/13b094f6306f16f6a14233e7a68c23a1.txt",
+      "sha256": "b827ef68ebc10c8a1ac061acd3be82bc525f22cedaad48f67f2aca74a6a099d0",
+      "bytes": 18067,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/25acaa64c29845bcb52e6af89ceb4b49.txt",
+      "sha256": "f86451668e898cbbdfc7e6738e6939a37a27c3c83e474f6a7a20ba1fe808ab7e",
+      "bytes": 3351,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/2adcfbebfe80122f06ab0726c36b89ce.txt",
+      "sha256": "45312b78c1e0be9083381320e3a334b2a553264537740664eaa5d4434cc1eb0e",
+      "bytes": 6242,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/34e95a86547b207ccffbaefc384804a7.txt",
+      "sha256": "7a038212b74145ce3d078b6e958a939624ae1f9ecb59549b85f97119f4770e2a",
+      "bytes": 59029,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/409dfc224629c367a8a376a802ff77e8.txt",
+      "sha256": "acc05707a6ac81edd91fae0ba78e92dee39e5d8e5b592b77de480cfd8213b87f",
+      "bytes": 1278,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/5dfb5a7fd44e9c9aaaecc0d3662fffeb.txt",
+      "sha256": "c00de1ce50652c396f9047269a8f5a7dd87a4881bb3eca0dc8dcd14415de7c84",
+      "bytes": 55231,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/5e5da9bcfc4153ae867e829c3f649d84.txt",
+      "sha256": "d32506ab82afd91fc32ae6282134154e192d8a63d5f1ebd3c412626706c5b135",
+      "bytes": 4219,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/6bc389841de656902df82c57d37052bc.txt",
+      "sha256": "e4406d5d1ab0c4bef347263045ccc2a5d0e92560c10d059ddfc5fb106bea1f8b",
+      "bytes": 3286,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/71ee5c148b65086f709df5c5a1a6e14d.txt",
+      "sha256": "e74b19f626f3945f92efad75191c72cdbbea9151b7a377967548d1c72b53cc6a",
+      "bytes": 1007,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/725de25ee7fa06ccd086b77d7bb5c00f.txt",
+      "sha256": "46c12f8dc3f6180d34582fc093cd87a6009a66f59a40a94237e45267c63cf5ef",
+      "bytes": 2545,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/84bf351c986c5a35db324731498cd569.txt",
+      "sha256": "f273b1d19de726f540c54f9843378abc280892aec0c25a900282feb20de73657",
+      "bytes": 7373,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/850ceba3abde1d17d6af75eb0231817e.txt",
+      "sha256": "c375eee804b22b63770e12a6cb419f907721df73e53890dc9455cb425c3cfb0f",
+      "bytes": 4735,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/94f4e9f4fca2062e2453c1b791426ef2.txt",
+      "sha256": "495660425c6762b56fcf0c7e2aa46bb0f43fe63fe3a72cca2eacfd2ffc1b8938",
+      "bytes": 5297,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/ab56febebb4d3efadeef85d2ff411b32.txt",
+      "sha256": "d5fbf19d1e515494da14cc203698d42b67ae0ce4a6753638b06126113d63ad35",
+      "bytes": 5767,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/bd798759d393ac4855341533abbe36ae.txt",
+      "sha256": "b7a5aa8dbad6ced0f1e01b5609a2605112aba078b044ee724f7c03eb38486469",
+      "bytes": 31954,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/bebf43d56e3b363476eed0f7cddede69.txt",
+      "sha256": "98f6270d70ae432ef614046a0d51d45d1c2e107187949837ba240077e7e75804",
+      "bytes": 29644,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/c0b50a53d1de1b4a77470bb1776eb94d.txt",
+      "sha256": "2c8c7d03a5d3e92db40c30161a13cb9f57d64953f11f1ae3c0c1a46d7c55aa43",
+      "bytes": 2999,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/c85e9f9eed9f8b6d49bae22c9c54ba0e.txt",
+      "sha256": "6a63aa8c3fda7b2b533ac0dce92f4b52fa9e6bf0464b14bbb26f085079ba4a4b",
+      "bytes": 2714,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/c9929ac7926474308337df32ee81b311.txt",
+      "sha256": "7df32d919039fc9abb295181318b929cf73f97a76ab27b96e896cd725f668ad2",
+      "bytes": 2568,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/d1747d66adb2b44142e39ec233595a40.txt",
+      "sha256": "2116745a71fe27d62eecddc0848049f24832d922be2c0d261e8b20255eadb2db",
+      "bytes": 4922,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/d4ab01cc2de6faeb9185a5d3a3e024bc.txt",
+      "sha256": "480aa71e88e2047eb3396cb3c7abc690fde04d0046f06c932c9c5e39264eda42",
+      "bytes": 13722,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/dc42e073a76eed4c5f7dc3cfd3f32a41.txt",
+      "sha256": "6421eb801a5c9fef4b72a789924aa77dc6e6c29607fa3c26cd2ea2f345a1706a",
+      "bytes": 4431,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/e01544b6d8ac7bbea533fea08396a75a.txt",
+      "sha256": "02d5876c0ea5573c47501c32e3006101c64154f3f013f98ff92b31c666075194",
+      "bytes": 910,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/e7f4f4bda411242aaadf18b60dcd4a2f.txt",
+      "sha256": "d6ca8e91aba71858d914efc9a9ccf62ba764bbbfabea7f81d8e7d0d83eda22e9",
+      "bytes": 2096,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/ee47c29a1f56bc9a2f5448aa20440c43.txt",
+      "sha256": "9484637509f363a58d60668cdafda881ec27b6997e2bc7a5e7f4365bcfef5d3a",
+      "bytes": 121910,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/eece3f5ed117b13d57a9367da2d035ee.txt",
+      "sha256": "01713f2f531e5fefc6081a6e3f8f646b4f25fd7ff4af7ea06ec83222c919db56",
+      "bytes": 4120,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/ef488d9f2accd0544c273b4530a0bcf5.txt",
+      "sha256": "170958e2141d61e905209efadce620bbca2bc199e20f7ff46bfa77471993e03c",
+      "bytes": 25435,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/readable/f2e1147edd164fb79aef0249f9792f40.txt",
+      "sha256": "35c697a4a6ebe979b62d6b1604e02c03bbe912b5fff464c4d33b6bdbac6df706",
+      "bytes": 1885,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/receipt.json",
+      "sha256": "ff8c79f73773c30252fb7b04458b0c2cd150936851a183e37f4e0ff62608b5a9",
+      "bytes": 1902,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/replay_native_saved_bytes.py",
+      "sha256": "77b1fa571f11a2fa5c05e80f5314dc6533854f4c792d9926528d42f13ec1da0e",
+      "bytes": 5567,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/replay_page_purpose.py",
+      "sha256": "91bc7419908917b4fc26c432777abb7af1235ae9bdf595e7271ecaf23e08243b",
+      "bytes": 1579,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/review.ru.md",
+      "sha256": "76fccf17934ddac67181a5b4a43ad4b903173d18c403546d1036b335d862a323",
+      "bytes": 12327,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/source-pins.checked.json",
+      "sha256": "608103f904dfd82a455121a049e11b2f7a68acadaeba70c1c6daa28a30961243",
+      "bytes": 4945,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/terminal/aalto.budget.json",
+      "sha256": "2b6e29bdab1f364d04413255e39ab8749177367f9588600f1bfff347de7ee309",
+      "bytes": 611,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/terminal/aalto.json",
+      "sha256": "0896f8078d7ed33806aeb5694338de4f04bedb9886c8479d7286b797299a3e78",
+      "bytes": 6163,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/terminal/aalto.log",
+      "sha256": "af72aded7435f197e23553c6604f483d04dc2130a0a63188b8a214deb4c6e188",
+      "bytes": 6508,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/terminal/aalto.raw.json",
+      "sha256": "e11e4afe6dbfddb2b87feb9ec7b6e161c573b45aaad712fc629145a138f257e2",
+      "bytes": 62458,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/terminal/capture.json",
+      "sha256": "8a3f859f90bf2f0fa7057b98155c251bfca5ae59d9178365613501be97e08c3b",
+      "bytes": 9731,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/terminal-receipt.snapshot.json",
+      "sha256": "43efd27050421ffbd249a71a6a717f277c1fccb4537878206655fb740e180874",
+      "bytes": 316,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "aalto-saved-source-funnel/verify_funnel_counters.py",
+      "sha256": "7bcaf1a1436e022036bd4b70602864d17b96a018f91b798aab55fd3b4d7f9098",
+      "bytes": 4405,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "parent/archive-original.py",
+      "sha256": "836d2deb80249c9dd10f926479512eadbc1b93bda967233bf36bd47e204f01e4",
+      "bytes": 7544,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "parent/archive-first-failure.json",
+      "sha256": "713550651862cc1a946507469cb501c4c7ba5b860c9d11456eea3d11ba753813",
+      "bytes": 302,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "parent/archive-second-original.py",
+      "sha256": "67e7b2143bc6a42dd0c0cc31566b00f9c632e1c7bffe414bda9073982f864a52",
+      "bytes": 7806,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "parent/archive-second-failure.json",
+      "sha256": "72a6c6c31c96495b1d2450fdf0b7d8743e8e391415d7037708d162197d29137d",
+      "bytes": 310,
+      "archive_matches": true,
+      "original_matches": true
+    },
+    {
+      "file": "parent/archive-closure.py",
+      "sha256": "440812a247c9ace604b115cf7709c2f8da4765453651913ad0b793461ab5e9e8",
+      "bytes": 8086,
+      "archive_matches": true,
+      "original_matches": true
+    }
+  ]
+}

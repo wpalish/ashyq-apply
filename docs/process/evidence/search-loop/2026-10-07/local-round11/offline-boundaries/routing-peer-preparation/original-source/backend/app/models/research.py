@@ -1,0 +1,229 @@
+"""Research runs, results, claims, conflicts and the audit log."""
+
+from __future__ import annotations
+
+from datetime import datetime
+from typing import TYPE_CHECKING
+
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    DateTime,
+    Float,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+)
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from app.models.base import TimestampedBase, utcnow
+
+if TYPE_CHECKING:
+    from app.models.applicant import ApplicantProfileRow
+
+
+class ResearchRun(TimestampedBase):
+    """One execution of the pipeline, resumable stage by stage."""
+
+    __tablename__ = "research_runs"
+    __table_args__ = (
+        # A replayed click must find its run, and two clicks with the same key
+        # must never become two runs - the uniqueness is what makes the lookup
+        # in start_run a guarantee rather than a best effort.
+        Index("uq_runs_client_request_key", "profile_id", "client_request_key", unique=True),
+    )
+
+    profile_id: Mapped[str] = mapped_column(
+        String(32), ForeignKey("applicant_profiles.id", ondelete="CASCADE"), index=True
+    )
+    stage: Mapped[str] = mapped_column(String(40), default="queued", index=True)
+    #: The client's `Idempotency-Key` for the request that created this run.
+    #: Replaying that request returns this run instead of starting a second
+    #: one. Scoped per profile, so two applicants may reuse the same key.
+    client_request_key: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    demo_mode: Mapped[bool] = mapped_column(Boolean, default=True)
+    #: Per-run research scope. Persisted so a retry or a restart uses the scope
+    #: the user asked for, not whatever the server default happens to be.
+    candidate_limit: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    verify_limit: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    university_ids: Mapped[list | None] = mapped_column(JSON, nullable=True)
+    cancelled: Mapped[bool] = mapped_column(Boolean, default=False)
+    #: Which tier this run was allowed to spend at. A free run really did fetch
+    #: less, so paying afterwards cannot retroactively widen it — it queues a
+    #: new one. Recorded here so the run carries the truth about its own scope.
+    access_tier: Mapped[str] = mapped_column(String(10), default="full", index=True)
+
+    candidates_found: Mapped[int] = mapped_column(Integer, default=0)
+    programs_verified: Mapped[int] = mapped_column(Integer, default=0)
+    pages_checked: Mapped[int] = mapped_column(Integer, default=0)
+    pages_failed: Mapped[int] = mapped_column(Integer, default=0)
+    claims_recorded: Mapped[int] = mapped_column(Integer, default=0)
+
+    #: Per-stage {status, started_at, finished_at, error} so a failed stage can
+    #: be retried without redoing the whole run.
+    stage_state: Mapped[dict] = mapped_column(JSON, default=dict)
+    #: How many pages each fetch tier produced. Proves the browser tier is
+    #: actually doing work rather than merely being constructed.
+    fetch_tiers: Mapped[dict] = mapped_column(JSON, default=dict)
+    #: Diagnostics that mean "a page could not be read".
+    errors: Mapped[list] = mapped_column(JSON, default=list)
+    #: Diagnostics that mean "the page was read and does not say". Kept apart
+    #: because a clean run produces dozens of these and none of them is a
+    #: problem; mixing them into `errors` taught the applicant to distrust a
+    #: correct result.
+    unknowns: Mapped[list] = mapped_column(JSON, default=list)
+    retry_urls: Mapped[list] = mapped_column(JSON, default=list)
+    settings_snapshot: Mapped[dict] = mapped_column(JSON, default=dict)
+
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    # --- lease, so a dead worker cannot leave a run "running" forever -----
+    #: Which worker holds this run. Cleared when the run reaches a terminal state.
+    worker_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    #: Refreshed as the run makes progress. A lease that stops being refreshed
+    #: is how a crashed worker becomes visible.
+    heartbeat_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    #: When the oldest claim in this run ages out. A queued `recheck` job waits
+    #: until then; before this existed, POSSIBLY_STALE claims stayed stale for
+    #: ever and next_recheck_at was computed only in tests.
+    next_recheck_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    #: How many times this run has been recovered after a worker died.
+    recovery_count: Mapped[int] = mapped_column(Integer, default=0)
+    #: Bumped every time the run's evidence is re-armed for a recheck, in the
+    #: same transaction as the new ``next_recheck_at``. The recheck job's
+    #: idempotency key carries it, so a completed recheck key can never be
+    #: reused — the previous date-granular key let a no-op recheck recompute
+    #: the key of a job that had already finished, and the chain died there.
+    recheck_generation: Mapped[int] = mapped_column(
+        Integer, nullable=False, server_default="0", default=0
+    )
+
+    profile: Mapped[ApplicantProfileRow] = relationship(back_populates="runs")
+    results: Mapped[list[ProgramResultRow]] = relationship(
+        back_populates="run", cascade="all, delete-orphan", passive_deletes=False
+    )
+    claims: Mapped[list[ClaimRow]] = relationship(
+        cascade="all, delete-orphan", passive_deletes=False
+    )
+    conflicts: Mapped[list[ConflictRow]] = relationship(
+        cascade="all, delete-orphan", passive_deletes=False
+    )
+
+
+class ProgramResultRow(TimestampedBase):
+    __tablename__ = "program_results"
+    __table_args__ = (
+        Index("ix_results_run_decision", "run_id", "user_decision"),
+        Index("ix_results_dedupe", "run_id", "dedupe_key", unique=True),
+    )
+
+    run_id: Mapped[str] = mapped_column(
+        String(32), ForeignKey("research_runs.id", ondelete="CASCADE"), index=True
+    )
+    dedupe_key: Mapped[str] = mapped_column(String(400), index=True)
+    university: Mapped[str] = mapped_column(String(200))
+    university_key: Mapped[str] = mapped_column(String(300), index=True)
+    country: Mapped[str] = mapped_column(String(100), index=True)
+    program: Mapped[str] = mapped_column(String(300))
+
+    eligibility: Mapped[str] = mapped_column(String(40), index=True)
+    admissions_fit: Mapped[str] = mapped_column(String(40), index=True)
+    funding_fit: Mapped[str] = mapped_column(String(40), index=True)
+    funding_classification: Mapped[str] = mapped_column(String(40), index=True)
+    score_total: Mapped[float] = mapped_column(Float, default=0.0, index=True)
+    #: Ranking v2 portfolio bucket. Indexed because the shortlist screen asks
+    #: for one bucket at a time; empty on rows assessed under v1.
+    bucket: Mapped[str] = mapped_column(String(40), default="", index=True)
+
+    user_decision: Mapped[str] = mapped_column(String(20), default="undecided", index=True)
+    user_decision_reason: Mapped[str] = mapped_column(Text, default="")
+    user_notes: Mapped[str] = mapped_column(Text, default="")
+    decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    #: The full ProgramResult document. Kept whole so the exact shape shown to
+    #: the user is what gets exported, with no re-derivation drift.
+    payload: Mapped[dict] = mapped_column(JSON, nullable=False)
+    checklist: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+
+    run: Mapped[ResearchRun] = relationship(back_populates="results")
+
+
+class ClaimRow(TimestampedBase):
+    """Persisted evidence. Never deleted while its run exists."""
+
+    __tablename__ = "claims"
+    __table_args__ = (Index("ix_claims_run_type", "run_id", "claim_type"),)
+
+    run_id: Mapped[str] = mapped_column(
+        String(32), ForeignKey("research_runs.id", ondelete="CASCADE"), index=True
+    )
+    result_id: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
+    #: The source_pages row this evidence was read from, when the page is
+    #: tracked. Nullable, and ON DELETE SET NULL: the retention purge may
+    #: delete a page whose only referencers are SUPERSEDED, and the history
+    #: rows must survive it (payload.source_url keeps the provenance).
+    source_page_id: Mapped[str | None] = mapped_column(
+        String(32),
+        ForeignKey("source_pages.id", ondelete="SET NULL", name="fk_claims_source_page"),
+        nullable=True,
+        index=True,
+    )
+    claim_type: Mapped[str] = mapped_column(String(60), index=True)
+    status: Mapped[str] = mapped_column(String(40), index=True)
+    #: When this row stopped being live evidence. Written in the same
+    #: transaction that flips the status to SUPERSEDED, never inferred later
+    #: from ``updated_at`` — that column moves for reasons that have nothing
+    #: to do with a claim ceasing to be true.
+    superseded_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    #: The claim that took over, when one did. ``None`` on a superseded row is
+    #: not a gap to be filled in: it means the page no longer states this at
+    #: all, which is precisely the case the re-extract path exists to record.
+    #: ON DELETE SET NULL, like ``source_page_id`` and for the same reason —
+    #: a purge must never take a history row with it.
+    superseded_by_id: Mapped[str | None] = mapped_column(
+        String(32),
+        ForeignKey("claims.id", ondelete="SET NULL", name="fk_claims_superseded_by"),
+        nullable=True,
+    )
+    source_url: Mapped[str] = mapped_column(Text)
+    source_specificity: Mapped[str] = mapped_column(String(40))
+    accessed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    payload: Mapped[dict] = mapped_column(JSON, nullable=False)
+
+
+class ConflictRow(TimestampedBase):
+    __tablename__ = "conflicts"
+
+    run_id: Mapped[str] = mapped_column(
+        String(32), ForeignKey("research_runs.id", ondelete="CASCADE"), index=True
+    )
+    result_id: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
+    claim_type: Mapped[str] = mapped_column(String(60))
+    unresolved: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
+    payload: Mapped[dict] = mapped_column(JSON, nullable=False)
+
+
+class AuditEvent(TimestampedBase):
+    """Append-only trail of what the system and the user did.
+
+    Deliberately holds no applicant data: entity ids and action names only, so
+    the log can be shipped or shared without a privacy review.
+    """
+
+    __tablename__ = "audit_events"
+    __table_args__ = (
+        Index("ix_audit_entity", "entity_type", "entity_id"),
+        Index("ix_audit_organization_created", "organization_id", "created_at"),
+    )
+
+    organization_id: Mapped[str] = mapped_column(
+        String(32), ForeignKey("organizations.id", ondelete="CASCADE"), index=True
+    )
+    actor: Mapped[str] = mapped_column(String(20), default="system")
+    action: Mapped[str] = mapped_column(String(60), index=True)
+    entity_type: Mapped[str] = mapped_column(String(40))
+    entity_id: Mapped[str] = mapped_column(String(32))
+    detail: Mapped[dict] = mapped_column(JSON, default=dict)

@@ -1,0 +1,85 @@
+proposed/app/adapters/discovery/confirmed_routing.py:2:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Strict in-memory routing proof; never Claim/applicant/intake coverage."""
+ 2 | / from __future__ import annotations
+ 3 | | import re, unicodedata
+ 4 | | from urllib.parse import urlparse
+ 5 | | from bs4 import Tag
+ 6 | | from app.adapters import page_classifier as _route_pc
+ 7 | | from app.adapters.page_classifier import PageClassification,PageType
+ 8 | | from app.adapters.fetching import FetchResult
+ 9 | | from app.adapters.html_parse import parse_html
+10 | | from app.adapters.search.ontology import canonical_field
+   | |________________________________________________________^ I001
+11 |
+12 |   def _route_normalize(label: str) -> str:
+   |
+   = help: Organize imports
+
+proposed/app/adapters/discovery/confirmed_routing.py:3:1: E401 [*] Multiple imports on one line
+  |
+1 | """Strict in-memory routing proof; never Claim/applicant/intake coverage."""
+2 | from __future__ import annotations
+3 | import re, unicodedata
+  | ^^^^^^^^^^^^^^^^^^^^^^ E401
+4 | from urllib.parse import urlparse
+5 | from bs4 import Tag
+  |
+  = help: Split imports
+
+proposed/app/adapters/discovery/live_discovery.py:1168:83: B023 Function definition does not bind loop variable `publication`
+     |
+1166 |                     if RETAIN_CONFIRMED_DISCOVERY_PARTIAL:
+1167 |                         candidate, trace = await self._discover_one(
+1168 |                             entry, profile, confirmation_publisher=lambda *value: publication.append(value)
+     |                                                                                   ^^^^^^^^^^^ B023
+1169 |                         )
+1170 |                     else:
+     |
+
+proposed/app/catalogue/discovery.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Bounded live enrichment of local identities through the existing discovery adapter."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | import asyncio
+ 6 | | import hashlib
+ 7 | | import re
+ 8 | | from contextlib import nullcontext
+ 9 | | from urllib.parse import urlsplit
+10 | |
+11 | | from bs4 import BeautifulSoup
+12 | | from sqlalchemy.orm import Session
+13 | |
+14 | | from app.adapters.base import Candidate
+15 | | from app.adapters.discovery import live_discovery as live_module
+16 | | from app.adapters.discovery.live_discovery import DiscoveryTrace, LiveDiscoveryAdapter, retained_partial
+17 | | from app.adapters.fetching import same_source_site
+18 | | from app.adapters.search import SearchError, get_search_provider
+19 | | from app.adapters.search.base import search_failure_diagnostic
+20 | | from app.catalogue.importer import canonical_name, public_domain, stable_id
+21 | | from app.catalogue.retrieval import retrieve
+22 | | from app.domain.dedupe import normalize
+23 | | from app.domain.site_identity import registrable_domain
+24 | | from app.models import University, UniversityObservation
+25 | | from app.pipeline.control import UniversityReadStopped
+26 | | from app.schemas.profile import ApplicantProfileIn
+   | |__________________________________________________^ I001
+27 |
+28 |   # SI-1: additional first-party homepage branding. Off until measured and approved.
+   |
+   = help: Organize imports
+
+proposed/app/catalogue/discovery.py:117:84: B023 Function definition does not bind loop variable `publication`
+    |
+115 |                             candidate, trace = await asyncio.wait_for(
+116 |                                 self._enrich(uni, profile, candidate, trace,
+117 |                                              confirmation_publisher=lambda *value: publication.append(value)), timeout=300
+    |                                                                                    ^^^^^^^^^^^ B023
+118 |                             )
+119 |                         else:
+    |
+
+Found 5 errors.
+[*] 3 fixable with the `--fix` option.

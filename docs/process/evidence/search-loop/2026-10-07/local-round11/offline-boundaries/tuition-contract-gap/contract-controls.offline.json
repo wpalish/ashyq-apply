@@ -1,0 +1,276 @@
+{
+  "status": "CONTRACT_GAP_NO_RULE_PATCH",
+  "proposed_feature_default": false,
+  "feature_implemented": false,
+  "OFF_contract": "Unchanged native WebCostAdapter called twice, exact whole-result value equality; no patched-module OFF claim",
+  "normal_app_imports": true,
+  "network_provider_model_calls": 0,
+  "semantic_labels_or_scoring": 0,
+  "checks": {
+    "OFF_native_full_output_repeat_equality": true,
+    "OFF_original_no_claim_or_arithmetic_item": true,
+    "original_degree_tables_Bachelor3_Master4_source_rows_only": true,
+    "original_table_quotes_whole_contiguous_under600": true,
+    "scope_from_mapping_drops_source_owned_cohort_field_period": true,
+    "native_typed_models_reject_unknown_cohort_dimensions": true,
+    "ClaimBuilder_unknown_year_allowed_without_requested2027": true,
+    "extra_normalized_value_not_typed_scope": true,
+    "unknown_year_scope_covers_requested2027_isUNKNOWN": true,
+    "no_scope_fields_for_effective_cohort_period_studyfield": true
+  },
+  "OFF_native_outputs": [
+    {
+      "breakdown": {
+        "items": {},
+        "total": null,
+        "academic_year": "2025/26",
+        "source_urls": [
+          "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees"
+        ],
+        "is_range": false
+      },
+      "adapter": {
+        "claims": [],
+        "errors": [
+          "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees: page was read but no cost figures could be extracted."
+        ],
+        "pages_checked": 1,
+        "pages_failed": 0,
+        "retry_urls": [],
+        "page_types": [
+          [
+            "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+            "costs"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+            "category": "no-pattern-match",
+            "page_type": "costs",
+            "detail": "page was read but no cost figures could be extracted",
+            "readable_chars": 29568
+          }
+        ]
+      },
+      "calls": [
+        "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees"
+      ]
+    },
+    {
+      "breakdown": {
+        "items": {},
+        "total": null,
+        "academic_year": "2025/26",
+        "source_urls": [
+          "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees"
+        ],
+        "is_range": false
+      },
+      "adapter": {
+        "claims": [],
+        "errors": [
+          "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees: page was read but no cost figures could be extracted."
+        ],
+        "pages_checked": 1,
+        "pages_failed": 0,
+        "retry_urls": [],
+        "page_types": [
+          [
+            "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+            "costs"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+            "category": "no-pattern-match",
+            "page_type": "costs",
+            "detail": "page was read but no cost figures could be extracted",
+            "readable_chars": 29568
+          }
+        ]
+      },
+      "calls": [
+        "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees"
+      ]
+    }
+  ],
+  "original_table_observations_not_claims": [
+    {
+      "table_id": 0,
+      "degree_header_original": "Bachelor's programmes",
+      "cohort_header_original": "Tuition fees for rights to study beginning on or after 1 August 2025",
+      "entire_table_contiguous_original_quote": "Bachelor's programmes\n\nTuition fees for rights to study beginning on or after 1 August 2025\n\nField of Business\n\n\u20ac12 000 per academic year\n\nFields of Art and Architecture\n\n\u20ac15 000 per academic year\n\nField of Technology\n\n\u20ac12 000 per academic year",
+      "quote_chars": 244,
+      "quote_contiguous": true,
+      "source_rows_diagnostic_only": [
+        {
+          "field_header_original": "Field of Business",
+          "money_original": "\u20ac12 000 per academic year",
+          "parsed_money_atom": [
+            12000.0,
+            "EUR"
+          ],
+          "annual_period_original": "per academic year"
+        },
+        {
+          "field_header_original": "Fields of Art and Architecture",
+          "money_original": "\u20ac15 000 per academic year",
+          "parsed_money_atom": [
+            15000.0,
+            "EUR"
+          ],
+          "annual_period_original": "per academic year"
+        },
+        {
+          "field_header_original": "Field of Technology",
+          "money_original": "\u20ac12 000 per academic year",
+          "parsed_money_atom": [
+            12000.0,
+            "EUR"
+          ],
+          "annual_period_original": "per academic year"
+        }
+      ],
+      "population": null,
+      "population_unknown_reason": "not stated inside either own complete table quote; global fee population/exemption prose is not silently transferred",
+      "academic_year": null,
+      "programme": null,
+      "intake": null,
+      "claims_emitted": 0
+    },
+    {
+      "table_id": 1,
+      "degree_header_original": "Master's programmes",
+      "cohort_header_original": "Tuition fees for rights to study beginning on or after 1 August 2025",
+      "entire_table_contiguous_original_quote": "Master's programmes\n\nTuition fees for rights to study beginning on or after 1 August 2025\n\nField of Business\n\n\u20ac15 000 per academic year\n\nFields of Art and Architecture\n\n\u20ac20 000 per academic year\n\nField of Technology\n\n\u20ac17 000 per academic year\n\nMultidisciplinary programmes*\n\n\u20ac17 000 per academic year",
+      "quote_chars": 300,
+      "quote_contiguous": true,
+      "source_rows_diagnostic_only": [
+        {
+          "field_header_original": "Field of Business",
+          "money_original": "\u20ac15 000 per academic year",
+          "parsed_money_atom": [
+            15000.0,
+            "EUR"
+          ],
+          "annual_period_original": "per academic year"
+        },
+        {
+          "field_header_original": "Fields of Art and Architecture",
+          "money_original": "\u20ac20 000 per academic year",
+          "parsed_money_atom": [
+            20000.0,
+            "EUR"
+          ],
+          "annual_period_original": "per academic year"
+        },
+        {
+          "field_header_original": "Field of Technology",
+          "money_original": "\u20ac17 000 per academic year",
+          "parsed_money_atom": [
+            17000.0,
+            "EUR"
+          ],
+          "annual_period_original": "per academic year"
+        },
+        {
+          "field_header_original": "Multidisciplinary programmes*",
+          "money_original": "\u20ac17 000 per academic year",
+          "parsed_money_atom": [
+            17000.0,
+            "EUR"
+          ],
+          "annual_period_original": "per academic year"
+        }
+      ],
+      "population": null,
+      "population_unknown_reason": "not stated inside either own complete table quote; global fee population/exemption prose is not silently transferred",
+      "academic_year": null,
+      "programme": null,
+      "intake": null,
+      "claims_emitted": 0
+    }
+  ],
+  "contract_gap": {
+    "source_owned_dimensions_unrepresentable": [
+      "effective start-of-study cohort",
+      "study field distinct from faculty or programme",
+      "annual tariff period distinct from academic year"
+    ],
+    "free_text_or_arbitrary_dict_not_typed_scope": true,
+    "missing_schema_dimensions_do_not_authorize_mapping_to_academic_year": "1 August2025 onward is an open cohort boundary, not2025/26 or2027/28",
+    "current_native_builder_control_payload": {
+      "claim_type": "tuition",
+      "normalized_value": {
+        "amount": 12000,
+        "currency": "EUR",
+        "effective_cohort": "rights to study beginning on or after 1 August 2025",
+        "study_field": "Field of Technology",
+        "period": "per academic year"
+      },
+      "original_text_excerpt": "Bachelor's programmes\n\nTuition fees for rights to study beginning on or after 1 August 2025\n\nField of Business\n\n\u20ac12 000 per academic year\n\nFields of Art and Architecture\n\n\u20ac15 000 per academic year\n\nField of Technology\n\n\u20ac12 000 per academic year",
+      "source_url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+      "page_title": "Scholarships and Tuition Fees | Aalto University",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": null,
+      "subject_key": "Field of Technology",
+      "intake": null,
+      "academic_year": null,
+      "accessed_at": "2026-10-08T01:22:06.103172Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "university_admissions",
+      "confidence": 0.8,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": "DIAGNOSTIC CONTRACT CONTROL ONLY; not proposal output"
+    },
+    "scope_constructor_model_errors": {
+      "ClaimScope": {
+        "type": "TypeError",
+        "message": "ClaimScope.__init__() got an unexpected keyword argument 'effective_cohort'"
+      },
+      "RequestedScope": {
+        "type": "TypeError",
+        "message": "RequestedScope.__init__() got an unexpected keyword argument 'effective_cohort'"
+      },
+      "Money": {
+        "type": "ValidationError",
+        "message": "2 validation errors for Money\neffective_cohort\n  Extra inputs are not permitted [type=extra_forbidden, input_value='rights to study beginnin... or after 1 August 2025', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/extra_forbidden\nperiod\n  Extra inputs are not permitted [type=extra_forbidden, input_value='per academic year', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/extra_forbidden"
+      }
+    },
+    "scope_mapping_drops": [
+      "effective_cohort",
+      "period",
+      "study_field"
+    ],
+    "scope_mapping_retained": {
+      "university": "Aalto University",
+      "faculty": null,
+      "programme": null,
+      "degree": "bachelor",
+      "intake": null,
+      "academic_year": null,
+      "population": null,
+      "nationality": null,
+      "residency": null,
+      "qualification": null
+    }
+  },
+  "controls_not_executed_due_gap": [
+    "persemester/month/oneoff/waiver/exemption/year/field/header/currency/quote negatives for a future ON rule; no ON algorithm exists"
+  ]
+}

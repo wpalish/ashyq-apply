@@ -1,0 +1,161 @@
+{
+  "source": "Normal unchanged native imports; no search/discover/Fetcher implementation replaced",
+  "results": [
+    {
+      "case": "native_entrypoint_UniversityReadStopped_read_cap",
+      "status": "RED",
+      "qualification": "Inherited native retrieval boundary; NOT newly introduced proposal failure",
+      "expected": "Original control exception propagates from entry-point fetch",
+      "escaped": null,
+      "report_returned": true,
+      "fake_search_calls": 1,
+      "entry_fetch_calls": [
+        "https://example.edu/"
+      ],
+      "entry_points_unreachable": null
+    },
+    {
+      "case": "native_entrypoint_UniversityReadStopped_checkpoint_busy",
+      "status": "RED",
+      "qualification": "Inherited native retrieval boundary; NOT newly introduced proposal failure",
+      "expected": "Original control exception propagates from entry-point fetch",
+      "escaped": null,
+      "report_returned": true,
+      "fake_search_calls": 1,
+      "entry_fetch_calls": [
+        "https://example.edu/"
+      ],
+      "entry_points_unreachable": null
+    },
+    {
+      "case": "native_entrypoint_RunCancelled_",
+      "status": "RED",
+      "qualification": "Inherited native retrieval boundary; NOT newly introduced proposal failure",
+      "expected": "Original control exception propagates from entry-point fetch",
+      "escaped": null,
+      "report_returned": true,
+      "fake_search_calls": 1,
+      "entry_fetch_calls": [
+        "https://example.edu/"
+      ],
+      "entry_points_unreachable": null
+    },
+    {
+      "case": "native_entrypoint_LeaseLost_",
+      "status": "RED",
+      "qualification": "Inherited native retrieval boundary; NOT newly introduced proposal failure",
+      "expected": "Original control exception propagates from entry-point fetch",
+      "escaped": null,
+      "report_returned": true,
+      "fake_search_calls": 1,
+      "entry_fetch_calls": [
+        "https://example.edu/"
+      ],
+      "entry_points_unreachable": null
+    },
+    {
+      "case": "native_entrypoint_CancelledError_",
+      "status": "PASS",
+      "qualification": "Inherited native retrieval boundary; NOT newly introduced proposal failure",
+      "expected": "Original control exception propagates from entry-point fetch",
+      "escaped": "CancelledError",
+      "report_returned": false,
+      "fake_search_calls": 1,
+      "entry_fetch_calls": [
+        "https://example.edu/"
+      ],
+      "entry_points_unreachable": null
+    },
+    {
+      "case": "native_unwrapped_rate_limit",
+      "status": "PASS",
+      "expected": "Observe native diagnostic degradation separately from strict sticky first refusal; mock dispatch never vendor HTTP",
+      "mock_provider_dispatches": 6,
+      "search_seam_attempts": 6,
+      "failed_queries": 6,
+      "report_throttled": false,
+      "failure_diagnostics": [
+        "Search service unavailable (exa_mcp; rate limited)."
+      ],
+      "budget_snapshot": null,
+      "STOP_file_written": false
+    },
+    {
+      "case": "strict_inmemory_rate_limit",
+      "status": "PASS",
+      "expected": "Observe native diagnostic degradation separately from strict sticky first refusal; mock dispatch never vendor HTTP",
+      "mock_provider_dispatches": 1,
+      "search_seam_attempts": 6,
+      "failed_queries": 6,
+      "report_throttled": false,
+      "failure_diagnostics": [
+        "Search service unavailable (exa_mcp; rate limited).",
+        "Search service unavailable (exa_mcp)."
+      ],
+      "budget_snapshot": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 0,
+        "source_work_deadline_ms": 120000,
+        "fetcher_calls": 0,
+        "search_queries": 1,
+        "blocked_search_queries": 6,
+        "network_http_requests": 0,
+        "elapsed_ms": 0,
+        "stop_reason": "provider_failure",
+        "provider_failure": {
+          "http_status": null,
+          "reason": "rate limited",
+          "error": "Search service unavailable (exa_mcp; rate limited)."
+        },
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages"
+      },
+      "STOP_file_written": false
+    },
+    {
+      "case": "strict_inmemory_http429",
+      "status": "PASS",
+      "expected": "Observe native diagnostic degradation separately from strict sticky first refusal; mock dispatch never vendor HTTP",
+      "mock_provider_dispatches": 1,
+      "search_seam_attempts": 1,
+      "failed_queries": 1,
+      "report_throttled": true,
+      "failure_diagnostics": [
+        "Search service unavailable (exa_mcp; HTTP 429)."
+      ],
+      "budget_snapshot": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 0,
+        "source_work_deadline_ms": 120000,
+        "fetcher_calls": 0,
+        "search_queries": 1,
+        "blocked_search_queries": 1,
+        "network_http_requests": 0,
+        "elapsed_ms": 0,
+        "stop_reason": "http_429",
+        "provider_failure": {
+          "http_status": 429,
+          "reason": null,
+          "error": "Search service unavailable (exa_mcp; HTTP 429)."
+        },
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages"
+      },
+      "STOP_file_written": false
+    }
+  ],
+  "counts": {
+    "PASS": 4,
+    "RED": 4,
+    "total": 8
+  },
+  "denied_transport_attempts": [],
+  "real_network_provider_model_calls": 0,
+  "STOP_file_written": false
+}

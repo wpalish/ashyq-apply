@@ -1,0 +1,26 @@
+# External preparation: strict own-field route stop (default False)
+
+This is a route experiment, not completed intake/applicant coverage. It changes no classifier, reader, ontology, Claim, scoring, budgets or durable PARTIAL storage. The real current catalogue loop fetches all budgeted leads even after get28 accepts Computing Science. The outer `walk()` already breaks on any legacy-confirmed page; this proposal does not pretend to fix that inherited multi-catalogue gap.
+
+The smallest testable seam is the inner `walk_catalog` loop. A local set tracks strict bindings returned by the already-successful `_read_lead`; the ordinary legacy predicate and outcome/recording run first. Enable `WALKER_STOP_AFTER_OWN_FIELD_ROUTES=False` only explicitly. OFF must preserve every current call, output and outcome. No new `CatalogWalk` dataclass field changes its OFF `asdict` shape.
+
+A strict binding must pass ALL of these conditions:
+
+1. Every nonblank privacy-approved requested field resolves to the EXISTING ontology strong/localized alias index. Unknown, malformed or empty requests disable stopping. Canonical aliases collapse duplicate routes (Computing Science/Computer Science), rather than counting the same source twice.
+2. Fetch success, same-site redirect check, native programme classification and native applicant predicate have already passed. Those are necessary, never sufficient.
+3. Exactly one non-chrome main H1/ARIA level-one identity exists. The whole normalized programme portion identifies one ontology concept; it is not a substring assembled across words, another field, joint/related field, secondary section or site title. Normalize NFKC/case/whitespace/punctuation, preserving word order and conjunctions. Limited degree and `major`/honours wrappers may be removed; unsupported titles abstain.
+4. The page title's first own portion agrees with that canonical concept. A generic `Bachelor programmes` title, unrelated primary title or a later site-suffix Computer Science string does not give permission.
+5. The requested degree is stated in that H1 or in a short immediate same-parent degree-only metadata sibling. A Bachelor URL, generic title and body eligibility mention alone cannot bind the level. Any contradictory local degree stops proof.
+6. Reuse the existing scoped `_programme_content_identity` academic-purpose proof unchanged. No new Year-tab/whole-body fallback is introduced to obtain AUT gain. Funding/news/certificate/department-only identities cannot get permission through the legacy predicate alone; explicit unsupported purpose/identity wording conservatively abstains.
+
+Only when the UNION of actual strict single-programme bindings covers ALL requested known routes may the inner loop return before its next read. The returned `confirmed` order can put strict proof URLs before earlier ambiguous legacy confirmations, preserving each partition's order; this must be reported as a separate enabled behavior and cannot manufacture/relabel a confirmation. If coverage remains incomplete, keep legacy full loop and confirmation order. Preserve typed read/cancel/lease/busy propagation and renderer behavior; no swallowed exceptions or synthetic success.
+
+Important limitations before source acceptance:
+
+- Own field + degree + academic purpose is NOT proof of requested 2027/intake/campus/international population. An earlier own-CS 2026/domestic page can hide a later stronger applicable route even when every field is covered. The current walker lacks requested scope context. This is an unresolved early-stop acceptance boundary, not permission to assert scope or automatically ship.
+- Groningen's actual H1 has a sibling `Bachelor` label and the unchanged purpose helper returns True. Its first classified year is 2026/27 tuition while later page sections mention 2027; neither value authorizes year coverage. AUT CS is a real own CS H1/degree page but unchanged purpose helper returns False because it uses Year tabs. This candidate MUST retain/read it yet gives no AUT stop/reorder gain. That conservative missed gain must remain visible.
+- A known broad legacy confirmation (AUT Data Science) stays in the legacy output unless an existing reader rejects it. New stopping permission does not repair the general subject matcher. No blanket programme acceptance/filtering is added.
+- Reordering unvisited link labels is not proof and is outside this smallest seam. Stable strict-first confirmed ordering is allowed only after all requested routes actually passed the same-page binding proof.
+- Cutting reads inside the walker does not bypass optional `_add_search_results` after it. Direct mock walker savings are not end-to-end deadline/recall gain. Full source integration, explicit CLI/provenance, paired measurement and default decision remain parent-owned after frozen baseline diagnosis.
+
+Prototype status: external preparation only. Test exact OFF, actual Groningen 5-to-1 detail reads, actual AUT Data Science then CS retention/no false binding, synthetic all-fields late route, aliases, unknown/empty fields, mixed/joint labels, generic title, remote degree, chrome, funding purpose, strict-first output, original typed stops and a explicit-scope-loss negative. Every false-scope-loss red must be retained; it blocks calling this a universally safe coverage stop.

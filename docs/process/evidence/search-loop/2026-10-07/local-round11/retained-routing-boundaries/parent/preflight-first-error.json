@@ -1,0 +1,10 @@
+{
+  "recorded_utc": "2026-10-08T02:35:13.848180+00:00",
+  "step": "Parent selected packet manifest preflight",
+  "exit_code": 1,
+  "original_error": "Traceback (most recent call last):\n  File \"<stdin>\", line 9, in <module>\nKeyError: 'files'",
+  "cause": "A ready manifest uses selected_files_sha256; root initially assumed files key",
+  "repository_evidence_writes_before_failure": 0,
+  "application_mutations": 0,
+  "repair": "Recognise explicit files or selected_files_sha256 schema; reverify all exact pins before archive"
+}

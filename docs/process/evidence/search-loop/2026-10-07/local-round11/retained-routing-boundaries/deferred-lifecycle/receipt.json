@@ -1,0 +1,157 @@
+{
+  "sealed_utc": "2026-10-08T02:32:51.848224+00:00",
+  "status": "DEFERRED_NOT_SOURCE_READY",
+  "source_applied": false,
+  "rule_default": false,
+  "source_manifest_sha256": "325c1c88d06b8074492d5546b18d6c549a0f54618ff3045ba91f881723bac5bb",
+  "proposal_sha256": {
+    "app/adapters/discovery/catalog_walker.py": "c5c351411bdfc2f487b6992e0db17917b7cd607dcc9555c563d0a3f4141a46ef",
+    "app/adapters/discovery/confirmed_routing.py": "72b36d00c44e2fe947bf5b85045c868300802c9a7f7f20e961033a458b475f72",
+    "app/adapters/discovery/live_discovery.py": "06f0e3da4aea93d9d0f9af51d40b5260e6cf5a7cffa97de06d27b234e639fbda",
+    "app/catalogue/discovery.py": "3541ea2640649d9d28ab35e427c8bded738f4756efd0eeac7c598b93bf1a03ae"
+  },
+  "patch_sha256": "0508787dffa73ce48c7b15c04819d4731eaeb0cd59ac2809861027d8a0b86a67",
+  "executed_exact_final_bytes": true,
+  "execution_record_sha256": "cdb00ed62894f4ef799dfcf442aeefb775e48c431c878b5d0a5a61b9d1902ff1",
+  "final_counts": {
+    "original_controls": {
+      "total": 75,
+      "PASS": 72,
+      "RED": 3
+    },
+    "native_boundaries": {
+      "total": 14,
+      "PASS": 10,
+      "RED": 4
+    },
+    "scope_ownership": {
+      "total": 2,
+      "PASS": 2,
+      "RED": 0
+    },
+    "genuine_sqlite_worker": {
+      "total": 16,
+      "PASS": 16,
+      "RED": 0
+    },
+    "aggregate": {
+      "total": 107,
+      "PASS": 100,
+      "RED": 7
+    }
+  },
+  "qualified_reds": {
+    "fixture_expected_order_errors": 2,
+    "original_provider_exception_not_preserved_native": 1,
+    "inherited_native_entrypoint_typed_control_swallow": 4
+  },
+  "initial_rejected_packet_manifest_sha256": "c3db062cd74f148c94a70113f2fe78385263295bf1a2600bdda0a69f03835554",
+  "normal_complete_equality_assertions_qualified": 38,
+  "missing_body_groningen_mock_equality_claim_excluded": 4,
+  "genuine_worker_proof": {
+    "enqueue_claim_execute_dispatch_runner_native_budget_sql": true,
+    "native_fresh_charge_visible_before_each_original_io": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60
+    ],
+    "scope_key": "catalogue:u-one",
+    "attempt_token": 1,
+    "prior_source_cs_get": 60,
+    "next_tail_original_IO": false,
+    "ClaimRow": 0,
+    "actualJob_status_both": "succeeded",
+    "verified_programme_success_claim": false,
+    "heartbeat_cleaned": true,
+    "PG_proof": false
+  },
+  "scope_exclusions": [
+    "current nativeFalse Toronto outer RuntimeError page-cap",
+    "current nativeFalse Groningen CancelledError119020ms",
+    "typed deadline absent in production",
+    "original provider exception/global first refusal",
+    "crash-durable confirmation snapshot",
+    "PostgreSQL contention",
+    "scored/current baseline gain"
+  ],
+  "static": {
+    "Ruff_final": "PASS4files",
+    "format_final": "PASS4files",
+    "mypy_final": "PASS4files explicit-package-bases external/native dependency roots follow-imports=silent",
+    "full_repo_gates_run": false,
+    "initial_diagnostics_preserved": true
+  },
+  "forbidden_actions": {
+    "repo_app_Git_STOP_gold_labels_scoring": 0,
+    "network_provider_model_real_calls": 0,
+    "production_remote_db_or_package_install": 0
+  },
+  "cleanup": {
+    "own_tool_sessions_completed": true,
+    "own_PG_or_server_created": false,
+    "own_SQLite_connection_scopes_closed_disposed": true
+  },
+  "archive_exclusions": [
+    "state.db and SQLite sidecars",
+    "__pycache__",
+    "tool-cache",
+    "env/secrets"
+  ]
+}

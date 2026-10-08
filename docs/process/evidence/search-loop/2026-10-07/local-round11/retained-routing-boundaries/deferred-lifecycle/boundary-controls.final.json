@@ -1,0 +1,1666 @@
+{
+  "counts": {
+    "PASS": 10,
+    "RED": 4,
+    "total": 14
+  },
+  "checks": [
+    {
+      "case": "multifield_native_order.live",
+      "expected": "Retained strict subset follows actual native confirmed prefix, both requested fields, no extra reads",
+      "status": "PASS",
+      "result": {
+        "candidates": [
+          {
+            "name": "Example University",
+            "country": "Netherlands",
+            "city": "City",
+            "domain": "example.edu",
+            "programs": [
+              {
+                "name": "BSc Mathematics",
+                "field": "mathematics",
+                "degree": "bachelor",
+                "url": "https://example.edu/bachelors/math"
+              },
+              {
+                "name": "BSc Computer Science",
+                "field": "computer science",
+                "degree": "bachelor",
+                "url": "https://example.edu/bachelors/a"
+              }
+            ],
+            "rankings": [],
+            "admissions_url": null,
+            "costs_url": null,
+            "scholarships_url": null,
+            "attributes": {},
+            "discovery_source": "live-sitemap-discovery -> https://example.edu/",
+            "notes": "Partial discovery (read_cap); retained routing is not verified programme facts. Remaining research and applicability unknown.",
+            "search_queries_used": 0,
+            "catalogue_id": null
+          }
+        ],
+        "traces": [
+          {
+            "institution": "Example University",
+            "domain": "example.edu",
+            "sitemaps_declared": [],
+            "sitemaps_read": [],
+            "sitemap_urls_seen": 0,
+            "sitemap_urls_kept": 0,
+            "manual_seeds": {
+              "program_catalog": "https://example.edu/bachelors/catalog"
+            },
+            "selected": {
+              "program_catalog": [
+                "https://example.edu/bachelors/catalog"
+              ],
+              "program_page": [
+                "https://example.edu/bachelors/math",
+                "https://example.edu/bachelors/a"
+              ]
+            },
+            "rejected": [],
+            "errors": [],
+            "search_failures": [],
+            "search_limitations": [
+              "Partial discovery: previously read strict programme routing retained; remaining research unknown (read_cap). Applicant/intake/campus/population applicability remains unknown.",
+              "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+            ],
+            "field_sources": {
+              "https://example.edu/bachelors/math": {
+                "field": "mathematics",
+                "source_url": "https://example.edu/bachelors/math",
+                "subject": "BSc Mathematics",
+                "basis": "classified_programme_page"
+              },
+              "https://example.edu/bachelors/a": {
+                "field": "computer science",
+                "source_url": "https://example.edu/bachelors/a",
+                "subject": "BSc Computer Science",
+                "basis": "classified_programme_page"
+              }
+            },
+            "field_hints": {},
+            "public_fields": [
+              "computer science",
+              "mathematics"
+            ],
+            "queried_fields": [],
+            "search_queries_sent": 0,
+            "search_coverage": {},
+            "used_navigation_fallback": true,
+            "kept_by_link_text": [],
+            "walker": {
+              "catalogs_walked": 0,
+              "candidates": [],
+              "programs_confirmed": 0,
+              "outcomes": []
+            }
+          }
+        ],
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/math",
+          "https://example.edu/bachelors/a",
+          "https://example.edu/bachelors/z"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/math"
+            ]
+          },
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/math",
+              "https://example.edu/bachelors/a"
+            ]
+          }
+        ],
+        "error": null
+      }
+    },
+    {
+      "case": "multifield_native_order.catalogue",
+      "expected": "Retained strict subset follows actual native confirmed prefix, both requested fields, no extra reads",
+      "status": "PASS",
+      "result": {
+        "candidates": [
+          {
+            "name": "Example University",
+            "country": "Netherlands",
+            "city": "City",
+            "domain": "example.edu",
+            "programs": [
+              {
+                "name": "BSc Mathematics",
+                "field": "mathematics",
+                "degree": "bachelor",
+                "url": "https://example.edu/bachelors/math"
+              },
+              {
+                "name": "BSc Computer Science",
+                "field": "computer science",
+                "degree": "bachelor",
+                "url": "https://example.edu/bachelors/a"
+              }
+            ],
+            "rankings": [],
+            "admissions_url": null,
+            "costs_url": null,
+            "scholarships_url": null,
+            "attributes": {},
+            "discovery_source": "local-catalogue:u-one; local-catalogue-with-live-enrichment -> https://example.edu/",
+            "notes": "Partial discovery (read_cap); retained routing is not verified programme facts. Remaining research and applicability unknown.",
+            "search_queries_used": 0,
+            "catalogue_id": "u-one"
+          }
+        ],
+        "traces": [
+          {
+            "institution": "Example University",
+            "domain": "example.edu",
+            "sitemaps_declared": [],
+            "sitemaps_read": [],
+            "sitemap_urls_seen": 0,
+            "sitemap_urls_kept": 0,
+            "manual_seeds": {
+              "program_catalog": "https://example.edu/bachelors/catalog"
+            },
+            "selected": {
+              "program_catalog": [
+                "https://example.edu/bachelors/catalog"
+              ],
+              "program_page": [
+                "https://example.edu/bachelors/math",
+                "https://example.edu/bachelors/a"
+              ]
+            },
+            "rejected": [],
+            "errors": [],
+            "search_failures": [],
+            "search_limitations": [
+              "Partial discovery: previously read strict programme routing retained; remaining research unknown (read_cap). Applicant/intake/campus/population applicability remains unknown.",
+              "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+            ],
+            "field_sources": {
+              "https://example.edu/bachelors/math": {
+                "field": "mathematics",
+                "source_url": "https://example.edu/bachelors/math",
+                "subject": "BSc Mathematics",
+                "basis": "classified_programme_page"
+              },
+              "https://example.edu/bachelors/a": {
+                "field": "computer science",
+                "source_url": "https://example.edu/bachelors/a",
+                "subject": "BSc Computer Science",
+                "basis": "classified_programme_page"
+              }
+            },
+            "field_hints": {},
+            "public_fields": [
+              "computer science",
+              "mathematics"
+            ],
+            "queried_fields": [],
+            "search_queries_sent": 0,
+            "search_coverage": {},
+            "used_navigation_fallback": true,
+            "kept_by_link_text": [],
+            "walker": {
+              "catalogs_walked": 0,
+              "candidates": [],
+              "programs_confirmed": 0,
+              "outcomes": []
+            }
+          }
+        ],
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/math",
+          "https://example.edu/bachelors/a",
+          "https://example.edu/bachelors/z"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/math"
+            ]
+          },
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/math",
+              "https://example.edu/bachelors/a"
+            ]
+          }
+        ],
+        "error": null
+      }
+    },
+    {
+      "case": "failure_declines_retention.None.rate limited.live",
+      "expected": "Any structural search_failures entry conservatively rejects retention: ORIGINAL later read_cap rethrows; original provider error already lost natively",
+      "status": "PASS",
+      "result": {
+        "candidates": [],
+        "traces": [],
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/a"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          }
+        ],
+        "error": {
+          "type": "UniversityReadStopped",
+          "reason": "read_cap",
+          "message": "University read allowance refused: read_cap"
+        }
+      },
+      "original_provider_exception_recovered": false
+    },
+    {
+      "case": "failure_declines_retention.None.rate limited.catalogue",
+      "expected": "Any structural search_failures entry conservatively rejects retention: ORIGINAL later read_cap rethrows; original provider error already lost natively",
+      "status": "PASS",
+      "result": {
+        "candidates": [],
+        "traces": [],
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/a"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          }
+        ],
+        "error": {
+          "type": "UniversityReadStopped",
+          "reason": "read_cap",
+          "message": "University read allowance refused: read_cap"
+        }
+      },
+      "original_provider_exception_recovered": false
+    },
+    {
+      "case": "failure_declines_retention.429.None.live",
+      "expected": "Any structural search_failures entry conservatively rejects retention: ORIGINAL later read_cap rethrows; original provider error already lost natively",
+      "status": "PASS",
+      "result": {
+        "candidates": [],
+        "traces": [],
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/a"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          }
+        ],
+        "error": {
+          "type": "UniversityReadStopped",
+          "reason": "read_cap",
+          "message": "University read allowance refused: read_cap"
+        }
+      },
+      "original_provider_exception_recovered": false
+    },
+    {
+      "case": "failure_declines_retention.429.None.catalogue",
+      "expected": "Any structural search_failures entry conservatively rejects retention: ORIGINAL later read_cap rethrows; original provider error already lost natively",
+      "status": "PASS",
+      "result": {
+        "candidates": [],
+        "traces": [],
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/a"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          }
+        ],
+        "error": {
+          "type": "UniversityReadStopped",
+          "reason": "read_cap",
+          "message": "University read allowance refused: read_cap"
+        }
+      },
+      "original_provider_exception_recovered": false
+    },
+    {
+      "case": "failure_declines_retention.None.timeout.live",
+      "expected": "Any structural search_failures entry conservatively rejects retention: ORIGINAL later read_cap rethrows; original provider error already lost natively",
+      "status": "PASS",
+      "result": {
+        "candidates": [],
+        "traces": [],
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/a"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          }
+        ],
+        "error": {
+          "type": "UniversityReadStopped",
+          "reason": "read_cap",
+          "message": "University read allowance refused: read_cap"
+        }
+      },
+      "original_provider_exception_recovered": false
+    },
+    {
+      "case": "failure_declines_retention.None.timeout.catalogue",
+      "expected": "Any structural search_failures entry conservatively rejects retention: ORIGINAL later read_cap rethrows; original provider error already lost natively",
+      "status": "PASS",
+      "result": {
+        "candidates": [],
+        "traces": [],
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/a"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          }
+        ],
+        "error": {
+          "type": "UniversityReadStopped",
+          "reason": "read_cap",
+          "message": "University read allowance refused: read_cap"
+        }
+      },
+      "original_provider_exception_recovered": false
+    },
+    {
+      "case": "native_entry_point_exception_0",
+      "expected": "Full original typed control should propagate through the actual provider entry-point reader; inherited native broad catch currently violates it",
+      "status": "RED",
+      "native": {
+        "candidates": [
+          {
+            "name": "Example University",
+            "country": "Netherlands",
+            "city": "City",
+            "domain": "example.edu",
+            "programs": [
+              {
+                "name": "A",
+                "field": "computer science",
+                "degree": "bachelor",
+                "url": "https://example.edu/bachelors/a"
+              }
+            ],
+            "rankings": [],
+            "admissions_url": null,
+            "costs_url": null,
+            "scholarships_url": null,
+            "attributes": {},
+            "discovery_source": "live-sitemap-discovery -> https://example.edu/",
+            "notes": "Sitemap-first discovery found: program_catalog, program_page. Not found: admissions, costs, scholarships, documents.",
+            "search_queries_used": 6,
+            "catalogue_id": null
+          }
+        ],
+        "traces": [
+          {
+            "institution": "Example University",
+            "domain": "example.edu",
+            "sitemaps_declared": [],
+            "sitemaps_read": [],
+            "sitemap_urls_seen": 0,
+            "sitemap_urls_kept": 0,
+            "manual_seeds": {
+              "program_catalog": "https://example.edu/bachelors/catalog"
+            },
+            "selected": {
+              "program_catalog": [
+                "https://example.edu/bachelors/catalog"
+              ],
+              "program_page": [
+                "https://example.edu/bachelors/a"
+              ]
+            },
+            "rejected": [],
+            "errors": [
+              "search identity recovery: checked 0, confirmed 0",
+              "search identity recovery via fake; queries 6, failed 0, rejected {'duplicate': 5}"
+            ],
+            "search_failures": [],
+            "search_limitations": [],
+            "field_sources": {},
+            "field_hints": {},
+            "public_fields": [
+              "computer science"
+            ],
+            "queried_fields": [],
+            "search_queries_sent": 6,
+            "search_coverage": {},
+            "used_navigation_fallback": true,
+            "kept_by_link_text": [],
+            "walker": {
+              "catalogs_walked": 1,
+              "candidates": [
+                {
+                  "url": "https://example.edu/bachelors/a",
+                  "label": "BSc Computer Science",
+                  "score": 21,
+                  "source": "html"
+                }
+              ],
+              "programs_confirmed": 1,
+              "outcomes": [
+                {
+                  "url": "https://example.edu/bachelors/a",
+                  "outcome": "program_detail"
+                }
+              ]
+            }
+          }
+        ],
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/a"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          }
+        ],
+        "error": null
+      },
+      "on": {
+        "candidates": [
+          {
+            "name": "Example University",
+            "country": "Netherlands",
+            "city": "City",
+            "domain": "example.edu",
+            "programs": [
+              {
+                "name": "A",
+                "field": "computer science",
+                "degree": "bachelor",
+                "url": "https://example.edu/bachelors/a"
+              }
+            ],
+            "rankings": [],
+            "admissions_url": null,
+            "costs_url": null,
+            "scholarships_url": null,
+            "attributes": {},
+            "discovery_source": "live-sitemap-discovery -> https://example.edu/",
+            "notes": "Sitemap-first discovery found: program_catalog, program_page. Not found: admissions, costs, scholarships, documents.",
+            "search_queries_used": 6,
+            "catalogue_id": null
+          }
+        ],
+        "traces": [
+          {
+            "institution": "Example University",
+            "domain": "example.edu",
+            "sitemaps_declared": [],
+            "sitemaps_read": [],
+            "sitemap_urls_seen": 0,
+            "sitemap_urls_kept": 0,
+            "manual_seeds": {
+              "program_catalog": "https://example.edu/bachelors/catalog"
+            },
+            "selected": {
+              "program_catalog": [
+                "https://example.edu/bachelors/catalog"
+              ],
+              "program_page": [
+                "https://example.edu/bachelors/a"
+              ]
+            },
+            "rejected": [],
+            "errors": [
+              "search identity recovery: checked 0, confirmed 0",
+              "search identity recovery via fake; queries 6, failed 0, rejected {'duplicate': 5}"
+            ],
+            "search_failures": [],
+            "search_limitations": [],
+            "field_sources": {},
+            "field_hints": {},
+            "public_fields": [
+              "computer science"
+            ],
+            "queried_fields": [],
+            "search_queries_sent": 6,
+            "search_coverage": {},
+            "used_navigation_fallback": true,
+            "kept_by_link_text": [],
+            "walker": {
+              "catalogs_walked": 1,
+              "candidates": [
+                {
+                  "url": "https://example.edu/bachelors/a",
+                  "label": "BSc Computer Science",
+                  "score": 21,
+                  "source": "html"
+                }
+              ],
+              "programs_confirmed": 1,
+              "outcomes": [
+                {
+                  "url": "https://example.edu/bachelors/a",
+                  "outcome": "program_detail"
+                }
+              ]
+            }
+          }
+        ],
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/a"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          },
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          }
+        ],
+        "error": null
+      },
+      "inner_fetch_calls": [
+        "https://example.edu/"
+      ],
+      "introduced_by_retention": false,
+      "complete_output_equality": true
+    },
+    {
+      "case": "native_entry_point_exception_1",
+      "expected": "Full original typed control should propagate through the actual provider entry-point reader; inherited native broad catch currently violates it",
+      "status": "RED",
+      "native": {
+        "candidates": [
+          {
+            "name": "Example University",
+            "country": "Netherlands",
+            "city": "City",
+            "domain": "example.edu",
+            "programs": [
+              {
+                "name": "A",
+                "field": "computer science",
+                "degree": "bachelor",
+                "url": "https://example.edu/bachelors/a"
+              }
+            ],
+            "rankings": [],
+            "admissions_url": null,
+            "costs_url": null,
+            "scholarships_url": null,
+            "attributes": {},
+            "discovery_source": "live-sitemap-discovery -> https://example.edu/",
+            "notes": "Sitemap-first discovery found: program_catalog, program_page. Not found: admissions, costs, scholarships, documents.",
+            "search_queries_used": 6,
+            "catalogue_id": null
+          }
+        ],
+        "traces": [
+          {
+            "institution": "Example University",
+            "domain": "example.edu",
+            "sitemaps_declared": [],
+            "sitemaps_read": [],
+            "sitemap_urls_seen": 0,
+            "sitemap_urls_kept": 0,
+            "manual_seeds": {
+              "program_catalog": "https://example.edu/bachelors/catalog"
+            },
+            "selected": {
+              "program_catalog": [
+                "https://example.edu/bachelors/catalog"
+              ],
+              "program_page": [
+                "https://example.edu/bachelors/a"
+              ]
+            },
+            "rejected": [],
+            "errors": [
+              "search identity recovery: checked 0, confirmed 0",
+              "search identity recovery via fake; queries 6, failed 0, rejected {'duplicate': 5}"
+            ],
+            "search_failures": [],
+            "search_limitations": [],
+            "field_sources": {},
+            "field_hints": {},
+            "public_fields": [
+              "computer science"
+            ],
+            "queried_fields": [],
+            "search_queries_sent": 6,
+            "search_coverage": {},
+            "used_navigation_fallback": true,
+            "kept_by_link_text": [],
+            "walker": {
+              "catalogs_walked": 1,
+              "candidates": [
+                {
+                  "url": "https://example.edu/bachelors/a",
+                  "label": "BSc Computer Science",
+                  "score": 21,
+                  "source": "html"
+                }
+              ],
+              "programs_confirmed": 1,
+              "outcomes": [
+                {
+                  "url": "https://example.edu/bachelors/a",
+                  "outcome": "program_detail"
+                }
+              ]
+            }
+          }
+        ],
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/a"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          }
+        ],
+        "error": null
+      },
+      "on": {
+        "candidates": [
+          {
+            "name": "Example University",
+            "country": "Netherlands",
+            "city": "City",
+            "domain": "example.edu",
+            "programs": [
+              {
+                "name": "A",
+                "field": "computer science",
+                "degree": "bachelor",
+                "url": "https://example.edu/bachelors/a"
+              }
+            ],
+            "rankings": [],
+            "admissions_url": null,
+            "costs_url": null,
+            "scholarships_url": null,
+            "attributes": {},
+            "discovery_source": "live-sitemap-discovery -> https://example.edu/",
+            "notes": "Sitemap-first discovery found: program_catalog, program_page. Not found: admissions, costs, scholarships, documents.",
+            "search_queries_used": 6,
+            "catalogue_id": null
+          }
+        ],
+        "traces": [
+          {
+            "institution": "Example University",
+            "domain": "example.edu",
+            "sitemaps_declared": [],
+            "sitemaps_read": [],
+            "sitemap_urls_seen": 0,
+            "sitemap_urls_kept": 0,
+            "manual_seeds": {
+              "program_catalog": "https://example.edu/bachelors/catalog"
+            },
+            "selected": {
+              "program_catalog": [
+                "https://example.edu/bachelors/catalog"
+              ],
+              "program_page": [
+                "https://example.edu/bachelors/a"
+              ]
+            },
+            "rejected": [],
+            "errors": [
+              "search identity recovery: checked 0, confirmed 0",
+              "search identity recovery via fake; queries 6, failed 0, rejected {'duplicate': 5}"
+            ],
+            "search_failures": [],
+            "search_limitations": [],
+            "field_sources": {},
+            "field_hints": {},
+            "public_fields": [
+              "computer science"
+            ],
+            "queried_fields": [],
+            "search_queries_sent": 6,
+            "search_coverage": {},
+            "used_navigation_fallback": true,
+            "kept_by_link_text": [],
+            "walker": {
+              "catalogs_walked": 1,
+              "candidates": [
+                {
+                  "url": "https://example.edu/bachelors/a",
+                  "label": "BSc Computer Science",
+                  "score": 21,
+                  "source": "html"
+                }
+              ],
+              "programs_confirmed": 1,
+              "outcomes": [
+                {
+                  "url": "https://example.edu/bachelors/a",
+                  "outcome": "program_detail"
+                }
+              ]
+            }
+          }
+        ],
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/a"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          },
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          }
+        ],
+        "error": null
+      },
+      "inner_fetch_calls": [
+        "https://example.edu/"
+      ],
+      "introduced_by_retention": false,
+      "complete_output_equality": true
+    },
+    {
+      "case": "native_entry_point_exception_2",
+      "expected": "Full original typed control should propagate through the actual provider entry-point reader; inherited native broad catch currently violates it",
+      "status": "RED",
+      "native": {
+        "candidates": [
+          {
+            "name": "Example University",
+            "country": "Netherlands",
+            "city": "City",
+            "domain": "example.edu",
+            "programs": [
+              {
+                "name": "A",
+                "field": "computer science",
+                "degree": "bachelor",
+                "url": "https://example.edu/bachelors/a"
+              }
+            ],
+            "rankings": [],
+            "admissions_url": null,
+            "costs_url": null,
+            "scholarships_url": null,
+            "attributes": {},
+            "discovery_source": "live-sitemap-discovery -> https://example.edu/",
+            "notes": "Sitemap-first discovery found: program_catalog, program_page. Not found: admissions, costs, scholarships, documents.",
+            "search_queries_used": 6,
+            "catalogue_id": null
+          }
+        ],
+        "traces": [
+          {
+            "institution": "Example University",
+            "domain": "example.edu",
+            "sitemaps_declared": [],
+            "sitemaps_read": [],
+            "sitemap_urls_seen": 0,
+            "sitemap_urls_kept": 0,
+            "manual_seeds": {
+              "program_catalog": "https://example.edu/bachelors/catalog"
+            },
+            "selected": {
+              "program_catalog": [
+                "https://example.edu/bachelors/catalog"
+              ],
+              "program_page": [
+                "https://example.edu/bachelors/a"
+              ]
+            },
+            "rejected": [],
+            "errors": [
+              "search identity recovery: checked 0, confirmed 0",
+              "search identity recovery via fake; queries 6, failed 0, rejected {'duplicate': 5}"
+            ],
+            "search_failures": [],
+            "search_limitations": [],
+            "field_sources": {},
+            "field_hints": {},
+            "public_fields": [
+              "computer science"
+            ],
+            "queried_fields": [],
+            "search_queries_sent": 6,
+            "search_coverage": {},
+            "used_navigation_fallback": true,
+            "kept_by_link_text": [],
+            "walker": {
+              "catalogs_walked": 1,
+              "candidates": [
+                {
+                  "url": "https://example.edu/bachelors/a",
+                  "label": "BSc Computer Science",
+                  "score": 21,
+                  "source": "html"
+                }
+              ],
+              "programs_confirmed": 1,
+              "outcomes": [
+                {
+                  "url": "https://example.edu/bachelors/a",
+                  "outcome": "program_detail"
+                }
+              ]
+            }
+          }
+        ],
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/a"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          }
+        ],
+        "error": null
+      },
+      "on": {
+        "candidates": [
+          {
+            "name": "Example University",
+            "country": "Netherlands",
+            "city": "City",
+            "domain": "example.edu",
+            "programs": [
+              {
+                "name": "A",
+                "field": "computer science",
+                "degree": "bachelor",
+                "url": "https://example.edu/bachelors/a"
+              }
+            ],
+            "rankings": [],
+            "admissions_url": null,
+            "costs_url": null,
+            "scholarships_url": null,
+            "attributes": {},
+            "discovery_source": "live-sitemap-discovery -> https://example.edu/",
+            "notes": "Sitemap-first discovery found: program_catalog, program_page. Not found: admissions, costs, scholarships, documents.",
+            "search_queries_used": 6,
+            "catalogue_id": null
+          }
+        ],
+        "traces": [
+          {
+            "institution": "Example University",
+            "domain": "example.edu",
+            "sitemaps_declared": [],
+            "sitemaps_read": [],
+            "sitemap_urls_seen": 0,
+            "sitemap_urls_kept": 0,
+            "manual_seeds": {
+              "program_catalog": "https://example.edu/bachelors/catalog"
+            },
+            "selected": {
+              "program_catalog": [
+                "https://example.edu/bachelors/catalog"
+              ],
+              "program_page": [
+                "https://example.edu/bachelors/a"
+              ]
+            },
+            "rejected": [],
+            "errors": [
+              "search identity recovery: checked 0, confirmed 0",
+              "search identity recovery via fake; queries 6, failed 0, rejected {'duplicate': 5}"
+            ],
+            "search_failures": [],
+            "search_limitations": [],
+            "field_sources": {},
+            "field_hints": {},
+            "public_fields": [
+              "computer science"
+            ],
+            "queried_fields": [],
+            "search_queries_sent": 6,
+            "search_coverage": {},
+            "used_navigation_fallback": true,
+            "kept_by_link_text": [],
+            "walker": {
+              "catalogs_walked": 1,
+              "candidates": [
+                {
+                  "url": "https://example.edu/bachelors/a",
+                  "label": "BSc Computer Science",
+                  "score": 21,
+                  "source": "html"
+                }
+              ],
+              "programs_confirmed": 1,
+              "outcomes": [
+                {
+                  "url": "https://example.edu/bachelors/a",
+                  "outcome": "program_detail"
+                }
+              ]
+            }
+          }
+        ],
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/a"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          },
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          }
+        ],
+        "error": null
+      },
+      "inner_fetch_calls": [
+        "https://example.edu/"
+      ],
+      "introduced_by_retention": false,
+      "complete_output_equality": true
+    },
+    {
+      "case": "native_entry_point_exception_3",
+      "expected": "Full original typed control should propagate through the actual provider entry-point reader; inherited native broad catch currently violates it",
+      "status": "RED",
+      "native": {
+        "candidates": [
+          {
+            "name": "Example University",
+            "country": "Netherlands",
+            "city": "City",
+            "domain": "example.edu",
+            "programs": [
+              {
+                "name": "A",
+                "field": "computer science",
+                "degree": "bachelor",
+                "url": "https://example.edu/bachelors/a"
+              }
+            ],
+            "rankings": [],
+            "admissions_url": null,
+            "costs_url": null,
+            "scholarships_url": null,
+            "attributes": {},
+            "discovery_source": "live-sitemap-discovery -> https://example.edu/",
+            "notes": "Sitemap-first discovery found: program_catalog, program_page. Not found: admissions, costs, scholarships, documents.",
+            "search_queries_used": 6,
+            "catalogue_id": null
+          }
+        ],
+        "traces": [
+          {
+            "institution": "Example University",
+            "domain": "example.edu",
+            "sitemaps_declared": [],
+            "sitemaps_read": [],
+            "sitemap_urls_seen": 0,
+            "sitemap_urls_kept": 0,
+            "manual_seeds": {
+              "program_catalog": "https://example.edu/bachelors/catalog"
+            },
+            "selected": {
+              "program_catalog": [
+                "https://example.edu/bachelors/catalog"
+              ],
+              "program_page": [
+                "https://example.edu/bachelors/a"
+              ]
+            },
+            "rejected": [],
+            "errors": [
+              "search identity recovery: checked 0, confirmed 0",
+              "search identity recovery via fake; queries 6, failed 0, rejected {'duplicate': 5}"
+            ],
+            "search_failures": [],
+            "search_limitations": [],
+            "field_sources": {},
+            "field_hints": {},
+            "public_fields": [
+              "computer science"
+            ],
+            "queried_fields": [],
+            "search_queries_sent": 6,
+            "search_coverage": {},
+            "used_navigation_fallback": true,
+            "kept_by_link_text": [],
+            "walker": {
+              "catalogs_walked": 1,
+              "candidates": [
+                {
+                  "url": "https://example.edu/bachelors/a",
+                  "label": "BSc Computer Science",
+                  "score": 21,
+                  "source": "html"
+                }
+              ],
+              "programs_confirmed": 1,
+              "outcomes": [
+                {
+                  "url": "https://example.edu/bachelors/a",
+                  "outcome": "program_detail"
+                }
+              ]
+            }
+          }
+        ],
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/a"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          }
+        ],
+        "error": null
+      },
+      "on": {
+        "candidates": [
+          {
+            "name": "Example University",
+            "country": "Netherlands",
+            "city": "City",
+            "domain": "example.edu",
+            "programs": [
+              {
+                "name": "A",
+                "field": "computer science",
+                "degree": "bachelor",
+                "url": "https://example.edu/bachelors/a"
+              }
+            ],
+            "rankings": [],
+            "admissions_url": null,
+            "costs_url": null,
+            "scholarships_url": null,
+            "attributes": {},
+            "discovery_source": "live-sitemap-discovery -> https://example.edu/",
+            "notes": "Sitemap-first discovery found: program_catalog, program_page. Not found: admissions, costs, scholarships, documents.",
+            "search_queries_used": 6,
+            "catalogue_id": null
+          }
+        ],
+        "traces": [
+          {
+            "institution": "Example University",
+            "domain": "example.edu",
+            "sitemaps_declared": [],
+            "sitemaps_read": [],
+            "sitemap_urls_seen": 0,
+            "sitemap_urls_kept": 0,
+            "manual_seeds": {
+              "program_catalog": "https://example.edu/bachelors/catalog"
+            },
+            "selected": {
+              "program_catalog": [
+                "https://example.edu/bachelors/catalog"
+              ],
+              "program_page": [
+                "https://example.edu/bachelors/a"
+              ]
+            },
+            "rejected": [],
+            "errors": [
+              "search identity recovery: checked 0, confirmed 0",
+              "search identity recovery via fake; queries 6, failed 0, rejected {'duplicate': 5}"
+            ],
+            "search_failures": [],
+            "search_limitations": [],
+            "field_sources": {},
+            "field_hints": {},
+            "public_fields": [
+              "computer science"
+            ],
+            "queried_fields": [],
+            "search_queries_sent": 6,
+            "search_coverage": {},
+            "used_navigation_fallback": true,
+            "kept_by_link_text": [],
+            "walker": {
+              "catalogs_walked": 1,
+              "candidates": [
+                {
+                  "url": "https://example.edu/bachelors/a",
+                  "label": "BSc Computer Science",
+                  "score": 21,
+                  "source": "html"
+                }
+              ],
+              "programs_confirmed": 1,
+              "outcomes": [
+                {
+                  "url": "https://example.edu/bachelors/a",
+                  "outcome": "program_detail"
+                }
+              ]
+            }
+          }
+        ],
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/a"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          },
+          {
+            "exception_active": false,
+            "gets": [
+              "https://example.edu/bachelors/catalog",
+              "https://example.edu/bachelors/a"
+            ]
+          }
+        ],
+        "error": null
+      },
+      "inner_fetch_calls": [
+        "https://example.edu/"
+      ],
+      "introduced_by_retention": false,
+      "complete_output_equality": true
+    },
+    {
+      "case": "saved_groningen_exact_body_complete.live",
+      "expected": "Native complete accepted saved URL remains whole-output equal ON and no hidden missing-body failure",
+      "status": "PASS",
+      "native": {
+        "candidates": [
+          {
+            "name": "Example University",
+            "country": "Netherlands",
+            "city": "City",
+            "domain": "www.rug.nl",
+            "programs": [
+              {
+                "name": "Computing Science",
+                "field": "computer science",
+                "degree": "bachelor",
+                "url": "https://www.rug.nl/bachelors/computing-science"
+              }
+            ],
+            "rankings": [],
+            "admissions_url": null,
+            "costs_url": null,
+            "scholarships_url": null,
+            "attributes": {},
+            "discovery_source": "live-sitemap-discovery -> https://www.rug.nl/",
+            "notes": "Sitemap-first discovery found: program_catalog, program_page. Not found: admissions, costs, scholarships, documents.",
+            "search_queries_used": 0,
+            "catalogue_id": null
+          }
+        ],
+        "traces": [
+          {
+            "institution": "Example University",
+            "domain": "www.rug.nl",
+            "sitemaps_declared": [],
+            "sitemaps_read": [],
+            "sitemap_urls_seen": 0,
+            "sitemap_urls_kept": 0,
+            "manual_seeds": {
+              "program_catalog": "https://www.rug.nl/bachelors/alphabet"
+            },
+            "selected": {
+              "program_catalog": [
+                "https://www.rug.nl/bachelors/alphabet"
+              ],
+              "program_page": [
+                "https://www.rug.nl/bachelors/computing-science"
+              ]
+            },
+            "rejected": [],
+            "errors": [],
+            "search_failures": [],
+            "search_limitations": [],
+            "field_sources": {},
+            "field_hints": {},
+            "public_fields": [
+              "computer science"
+            ],
+            "queried_fields": [],
+            "search_queries_sent": 0,
+            "search_coverage": {},
+            "used_navigation_fallback": true,
+            "kept_by_link_text": [],
+            "walker": {
+              "catalogs_walked": 1,
+              "candidates": [
+                {
+                  "url": "https://www.rug.nl/bachelors/computing-science",
+                  "label": "BSc Computer Science",
+                  "score": 37,
+                  "source": "html"
+                }
+              ],
+              "programs_confirmed": 1,
+              "outcomes": [
+                {
+                  "url": "https://www.rug.nl/bachelors/computing-science",
+                  "outcome": "intake_specific_program"
+                }
+              ]
+            }
+          }
+        ],
+        "gets": [
+          "https://www.rug.nl/bachelors/alphabet",
+          "https://www.rug.nl/bachelors/computing-science"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://www.rug.nl/bachelors/alphabet",
+              "https://www.rug.nl/bachelors/computing-science"
+            ]
+          }
+        ],
+        "error": null
+      },
+      "on": {
+        "candidates": [
+          {
+            "name": "Example University",
+            "country": "Netherlands",
+            "city": "City",
+            "domain": "www.rug.nl",
+            "programs": [
+              {
+                "name": "Computing Science",
+                "field": "computer science",
+                "degree": "bachelor",
+                "url": "https://www.rug.nl/bachelors/computing-science"
+              }
+            ],
+            "rankings": [],
+            "admissions_url": null,
+            "costs_url": null,
+            "scholarships_url": null,
+            "attributes": {},
+            "discovery_source": "live-sitemap-discovery -> https://www.rug.nl/",
+            "notes": "Sitemap-first discovery found: program_catalog, program_page. Not found: admissions, costs, scholarships, documents.",
+            "search_queries_used": 0,
+            "catalogue_id": null
+          }
+        ],
+        "traces": [
+          {
+            "institution": "Example University",
+            "domain": "www.rug.nl",
+            "sitemaps_declared": [],
+            "sitemaps_read": [],
+            "sitemap_urls_seen": 0,
+            "sitemap_urls_kept": 0,
+            "manual_seeds": {
+              "program_catalog": "https://www.rug.nl/bachelors/alphabet"
+            },
+            "selected": {
+              "program_catalog": [
+                "https://www.rug.nl/bachelors/alphabet"
+              ],
+              "program_page": [
+                "https://www.rug.nl/bachelors/computing-science"
+              ]
+            },
+            "rejected": [],
+            "errors": [],
+            "search_failures": [],
+            "search_limitations": [],
+            "field_sources": {},
+            "field_hints": {},
+            "public_fields": [
+              "computer science"
+            ],
+            "queried_fields": [],
+            "search_queries_sent": 0,
+            "search_coverage": {},
+            "used_navigation_fallback": true,
+            "kept_by_link_text": [],
+            "walker": {
+              "catalogs_walked": 1,
+              "candidates": [
+                {
+                  "url": "https://www.rug.nl/bachelors/computing-science",
+                  "label": "BSc Computer Science",
+                  "score": 37,
+                  "source": "html"
+                }
+              ],
+              "programs_confirmed": 1,
+              "outcomes": [
+                {
+                  "url": "https://www.rug.nl/bachelors/computing-science",
+                  "outcome": "intake_specific_program"
+                }
+              ]
+            }
+          }
+        ],
+        "gets": [
+          "https://www.rug.nl/bachelors/alphabet",
+          "https://www.rug.nl/bachelors/computing-science"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://www.rug.nl/bachelors/alphabet",
+              "https://www.rug.nl/bachelors/computing-science"
+            ]
+          },
+          {
+            "exception_active": false,
+            "gets": [
+              "https://www.rug.nl/bachelors/alphabet",
+              "https://www.rug.nl/bachelors/computing-science"
+            ]
+          }
+        ],
+        "error": null
+      }
+    },
+    {
+      "case": "saved_groningen_exact_body_complete.catalogue",
+      "expected": "Native complete accepted saved URL remains whole-output equal ON and no hidden missing-body failure",
+      "status": "PASS",
+      "native": {
+        "candidates": [
+          {
+            "name": "Example University",
+            "country": "Netherlands",
+            "city": "City",
+            "domain": "www.rug.nl",
+            "programs": [
+              {
+                "name": "Computing Science",
+                "field": "computer science",
+                "degree": "bachelor",
+                "url": "https://www.rug.nl/bachelors/computing-science"
+              }
+            ],
+            "rankings": [],
+            "admissions_url": null,
+            "costs_url": null,
+            "scholarships_url": null,
+            "attributes": {},
+            "discovery_source": "local-catalogue:u-one; local-catalogue-with-live-enrichment -> https://www.rug.nl/",
+            "notes": "Sitemap-first discovery found: program_catalog, program_page. Not found: admissions, costs, scholarships, documents.",
+            "search_queries_used": 0,
+            "catalogue_id": "u-one"
+          }
+        ],
+        "traces": [
+          {
+            "institution": "Example University",
+            "domain": "www.rug.nl",
+            "sitemaps_declared": [],
+            "sitemaps_read": [],
+            "sitemap_urls_seen": 0,
+            "sitemap_urls_kept": 0,
+            "manual_seeds": {
+              "program_catalog": "https://www.rug.nl/bachelors/alphabet"
+            },
+            "selected": {
+              "program_catalog": [
+                "https://www.rug.nl/bachelors/alphabet"
+              ],
+              "program_page": [
+                "https://www.rug.nl/bachelors/computing-science"
+              ]
+            },
+            "rejected": [],
+            "errors": [],
+            "search_failures": [],
+            "search_limitations": [],
+            "field_sources": {},
+            "field_hints": {},
+            "public_fields": [
+              "computer science"
+            ],
+            "queried_fields": [],
+            "search_queries_sent": 0,
+            "search_coverage": {},
+            "used_navigation_fallback": true,
+            "kept_by_link_text": [],
+            "walker": {
+              "catalogs_walked": 1,
+              "candidates": [
+                {
+                  "url": "https://www.rug.nl/bachelors/computing-science",
+                  "label": "BSc Computer Science",
+                  "score": 37,
+                  "source": "html"
+                }
+              ],
+              "programs_confirmed": 1,
+              "outcomes": [
+                {
+                  "url": "https://www.rug.nl/bachelors/computing-science",
+                  "outcome": "intake_specific_program"
+                }
+              ]
+            }
+          }
+        ],
+        "gets": [
+          "https://www.rug.nl/bachelors/alphabet",
+          "https://www.rug.nl/bachelors/computing-science"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://www.rug.nl/bachelors/alphabet",
+              "https://www.rug.nl/bachelors/computing-science"
+            ]
+          }
+        ],
+        "error": null
+      },
+      "on": {
+        "candidates": [
+          {
+            "name": "Example University",
+            "country": "Netherlands",
+            "city": "City",
+            "domain": "www.rug.nl",
+            "programs": [
+              {
+                "name": "Computing Science",
+                "field": "computer science",
+                "degree": "bachelor",
+                "url": "https://www.rug.nl/bachelors/computing-science"
+              }
+            ],
+            "rankings": [],
+            "admissions_url": null,
+            "costs_url": null,
+            "scholarships_url": null,
+            "attributes": {},
+            "discovery_source": "local-catalogue:u-one; local-catalogue-with-live-enrichment -> https://www.rug.nl/",
+            "notes": "Sitemap-first discovery found: program_catalog, program_page. Not found: admissions, costs, scholarships, documents.",
+            "search_queries_used": 0,
+            "catalogue_id": "u-one"
+          }
+        ],
+        "traces": [
+          {
+            "institution": "Example University",
+            "domain": "www.rug.nl",
+            "sitemaps_declared": [],
+            "sitemaps_read": [],
+            "sitemap_urls_seen": 0,
+            "sitemap_urls_kept": 0,
+            "manual_seeds": {
+              "program_catalog": "https://www.rug.nl/bachelors/alphabet"
+            },
+            "selected": {
+              "program_catalog": [
+                "https://www.rug.nl/bachelors/alphabet"
+              ],
+              "program_page": [
+                "https://www.rug.nl/bachelors/computing-science"
+              ]
+            },
+            "rejected": [],
+            "errors": [],
+            "search_failures": [],
+            "search_limitations": [],
+            "field_sources": {},
+            "field_hints": {},
+            "public_fields": [
+              "computer science"
+            ],
+            "queried_fields": [],
+            "search_queries_sent": 0,
+            "search_coverage": {},
+            "used_navigation_fallback": true,
+            "kept_by_link_text": [],
+            "walker": {
+              "catalogs_walked": 1,
+              "candidates": [
+                {
+                  "url": "https://www.rug.nl/bachelors/computing-science",
+                  "label": "BSc Computer Science",
+                  "score": 37,
+                  "source": "html"
+                }
+              ],
+              "programs_confirmed": 1,
+              "outcomes": [
+                {
+                  "url": "https://www.rug.nl/bachelors/computing-science",
+                  "outcome": "intake_specific_program"
+                }
+              ]
+            }
+          }
+        ],
+        "gets": [
+          "https://www.rug.nl/bachelors/alphabet",
+          "https://www.rug.nl/bachelors/computing-science"
+        ],
+        "applies": [
+          {
+            "exception_active": false,
+            "gets": [
+              "https://www.rug.nl/bachelors/alphabet",
+              "https://www.rug.nl/bachelors/computing-science"
+            ]
+          },
+          {
+            "exception_active": false,
+            "gets": [
+              "https://www.rug.nl/bachelors/alphabet",
+              "https://www.rug.nl/bachelors/computing-science"
+            ]
+          }
+        ],
+        "error": null
+      }
+    }
+  ],
+  "global_provider_stop_proof": false,
+  "real_provider_calls": 0,
+  "native_refusal_boundary": "Original provider exceptions are lost; conservative any-failure refusal is not original-provider propagation."
+}

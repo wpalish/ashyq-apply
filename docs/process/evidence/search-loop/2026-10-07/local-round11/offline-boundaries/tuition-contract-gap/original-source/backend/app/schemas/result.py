@@ -1,0 +1,408 @@
+"""The result row and everything hanging off it."""
+
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Any, Literal
+
+from pydantic import BaseModel, ConfigDict, Field, model_serializer
+
+from app.domain.claim_scope import ClaimScope
+from app.domain.enums import (
+    AdmissionsFit,
+    ApplicationMode,
+    Bucket,
+    CostCategory,
+    DegreeLevel,
+    DocumentOwner,
+    DocumentPurpose,
+    EligibilityStatus,
+    FundingClassification,
+    FundingFit,
+    ScholarshipType,
+    UserDecision,
+)
+from app.schemas.claim import ClaimOut, Conflict, UnresolvedQuestion
+from app.schemas.money import Money
+
+
+class Base(BaseModel):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
+
+#: Whether an award covers a cost category. "unknown" is a first-class answer.
+Coverage = Literal["yes", "no", "partial", "unknown"]
+
+#: A three-valued answer. There is no default to "yes" anywhere in this product.
+Tristate = Literal["yes", "no", "unknown"]
+
+
+class RankingEntry(Base):
+    source: str
+    year: int
+    position: str = Field(description="Kept as published: '=71' and '301-350' are real values")
+    url: str | None = None
+
+
+class RequirementCheck(Base):
+    """One published requirement compared against one applicant value."""
+
+    requirement: str
+    published_value: Any = None
+    applicant_value: Any = None
+    status: EligibilityStatus
+    is_hard_filter: bool = False
+    explanation: str = ""
+    claim_ids: list[str] = Field(default_factory=list)
+    #: Who the page publishing this requirement said it is for, in its own
+    #: terms ("published for international applicants, Fall 2027"). Empty when
+    #: the page said nothing and when no scope was read at all — those are
+    #: different facts, and the difference belongs in the evidence, not here:
+    #: this line exists so an applicant can see *whether* a rule is about them
+    #: without opening the source.
+    published_scope: str = ""
+
+
+class CoverageBreakdown(Base):
+    """Per-cost-category truth table behind the funding classification."""
+
+    category: CostCategory
+    covered: Coverage
+    amount: Money | None = None
+    claim_ids: list[str] = Field(default_factory=list)
+
+
+class Scholarship(Base):
+    id: str
+    name: str
+    scholarship_type: ScholarshipType = ScholarshipType.UNKNOWN
+    classification: FundingClassification = FundingClassification.UNKNOWN
+    classification_reason: str = ""
+    amount: Money | None = None
+    amount_is_percentage_of_tuition: float | None = None
+    coverage: list[CoverageBreakdown] = Field(default_factory=list)
+    # --- eligibility, one question per field --------------------------
+    # These were previously collapsed, which let "an award exists" stand in for
+    # "this applicant can apply for it in this cycle". Each is now answered
+    # from its own evidence and defaults to unknown.
+    #: False when the applicant told us this shape of help does not work for
+    #: them - a tuition-only award to someone who cannot go without a full
+    #: ride. The award stays visible with its reason; it simply stops counting
+    #: as this programme's funding.
+    meets_applicant_shape: bool = True
+    shape_mismatch_reason: str = ""
+    international_eligible: Tristate = "unknown"
+    citizenship_restrictions: list[str] = Field(default_factory=list)
+    residency_restrictions: list[str] = Field(default_factory=list)
+    program_restrictions: list[str] = Field(default_factory=list)
+    #: Faculties or schools the page limits the award to, in the page's own
+    #: words. Separate from ``program_restrictions`` because §6 decomposes
+    #: them separately: "the Faculty of Engineering" and "the BSc Data
+    #: Science programme" exclude different people.
+    faculty_restrictions: list[str] = Field(default_factory=list)
+    degree_applicability: Tristate = Field(
+        default="unknown",
+        description="Whether the award applies to the applicant's degree level",
+    )
+    degree_applicability_reason: str = ""
+    applies_to_degrees: list[str] = Field(default_factory=list)
+    application_mode: ApplicationMode = ApplicationMode.UNKNOWN
+    requires_extra_essays: bool | None = None
+    deadline: date | None = None
+    deadline_timezone: str | None = None
+    deadline_raw: str | None = None
+    renewable: bool | None = None
+    duration_years: float | None = None
+    renewal_requirements: list[str] = Field(default_factory=list)
+    min_test_scores: dict[str, float] = Field(default_factory=dict)
+    stackable: Tristate = "unknown"
+    #: Whether an admission offer must be held first. "unknown" is the honest
+    #: default: most award pages never say, and assuming either answer sends
+    #: an applicant to the wrong queue at the wrong time.
+    offer_required: Tristate = "unknown"
+    #: Whether the award is decided on demonstrated financial need.
+    financial_need_required: Tristate = "unknown"
+    published_count: int | None = Field(
+        default=None, description="Only set when officially published"
+    )
+
+    # --- availability, decomposed -------------------------------------
+    #: An award page exists and names this award.
+    opportunity_exists: bool = False
+    #: The award is currently offered (not withdrawn or discontinued).
+    currently_available: Tristate = "unknown"
+    #: This applicant meets every published restriction that could be checked.
+    applicant_eligible: Tristate = "unknown"
+    #: Applications are open right now.
+    application_window_open: Tristate = "unknown"
+    #: A deadline was found at all.
+    deadline_known: bool = False
+    #: A known deadline that is in the past.
+    deadline_passed: bool = False
+    #: The award is published for the intake being researched.
+    award_current_for_intake: Tristate = "unknown"
+    #: Roll-up, derived from the fields above. Never set directly.
+    available_this_intake: Tristate = "unknown"
+    eligibility_checks: list[RequirementCheck] = Field(default_factory=list)
+    source_urls: list[str] = Field(default_factory=list)
+    claim_ids: list[str] = Field(default_factory=list)
+    last_verified: datetime | None = None
+
+
+class CostBreakdown(Base):
+    items: dict[CostCategory, Money] = Field(default_factory=dict)
+    total: Money | None = None
+    academic_year: str | None = None
+    source_urls: list[str] = Field(default_factory=list)
+    is_range: bool = False
+
+
+#: What the cost figure rests on: the university's own published total, an
+#: itemisation that names every core category, or a partial itemisation where
+#: some core categories are simply absent. ``None`` means no cost basis was
+#: established at all (legacy rows, or no cost data either way).
+CostBasis = Literal["published_total", "itemised_complete", "itemised_partial"]
+
+
+class FundingGap(Base):
+    """Result of the cost-minus-aid arithmetic, including refusals to compute."""
+
+    computable: bool
+    gap: Money | None = None
+    gap_low: float | None = None
+    gap_high: float | None = None
+    total_cost: Money | None = None
+    confirmed_aid: Money | None = None
+    stackable_aid: Money | None = None
+    reason: str = ""
+    year_mismatch: bool = False
+    currency_mismatch: bool = False
+    category_mismatch: bool = False
+    cost_basis: CostBasis | None = None
+    #: Core categories the cost table does not mention. Non-empty only for
+    #: ``itemised_partial``: a line priced at zero is a known cost, not a
+    #: missing one.
+    missing_categories: list[CostCategory] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
+
+
+class ScoreComponent(Base):
+    name: str
+    raw: float = Field(ge=0.0, le=1.0)
+    weight: float
+    weighted: float
+    explanation: str
+    data_present: bool = True
+
+
+class ExplainableScore(Base):
+    """A weighted sum that is explicitly *not* a probability.
+
+    ``disclaimer`` travels with the number everywhere it is rendered.
+    """
+
+    total: float
+    max_possible: float
+    components: list[ScoreComponent]
+    missing_data_penalty: float = 0.0
+    missing_fields: list[str] = Field(default_factory=list)
+    disclaimer: str = (
+        "A preference-match score, not a probability of admission or of receiving funding."
+    )
+
+
+class AxisScore(Base):
+    """One dimension of the v2 ranking, with its own verdict and its reason.
+
+    ``state`` separates the two ways a dimension can have no value. An axis the
+    applicant said nothing about ("any climate") is *not_applicable* and is
+    ignored; an axis we could not verify is *unknown* and lowers coverage
+    without ever lowering fit — a badly parsed website must not read as a
+    worse university (AI_TASK_BRIEF P6, invariants I4 and I5).
+    """
+
+    axis: str
+    value: float | None = Field(default=None, ge=0.0, le=1.0)
+    state: Literal["known", "unknown", "not_applicable"]
+    weight: float = Field(ge=0.0)
+    reason: str
+    evidence_claim_ids: list[str] = Field(default_factory=list)
+
+
+class RankingV2(Base):
+    """The non-compensatory ranking: a fit, how much of it was verified, and why.
+
+    ``fit`` is a weighted *geometric* mean, so a near-zero axis cannot be
+    bought back by strong ones — which is how a place with a 21,471 USD annual
+    shortfall reached the top of the v1 list (AI_TASK_BRIEF P1).
+    """
+
+    fit: float | None = Field(default=None, ge=0.0, le=1.0)
+    coverage: float = Field(ge=0.0, le=1.0)
+    sort_key: float = Field(ge=0.0)
+    gamma: float
+    axes: list[AxisScore] = Field(default_factory=list)
+    unknown_axes: list[str] = Field(default_factory=list)
+    not_applicable_axes: list[str] = Field(default_factory=list)
+    #: Non-empty means the row is listed with its reason and never ranked.
+    knocked_out_by: list[str] = Field(default_factory=list)
+    bucket: Bucket
+    bucket_reason: str = ""
+    weights_source: Literal["priorities_roc", "weights_override"] = "priorities_roc"
+    version: Literal["2"] = "2"
+    disclaimer: str = (
+        "How well this matches your stated priorities, on confirmed data. "
+        "Not a probability of admission."
+    )
+
+
+class DocumentItem(Base):
+    name: str
+    purpose: DocumentPurpose
+    owner: DocumentOwner
+    required: bool = True
+    format_notes: str = ""
+    max_pages: int | None = None
+    max_file_size_mb: float | None = None
+    naming_convention: str | None = None
+    needs_translation: bool = False
+    needs_notarization: bool = False
+    needs_apostille: bool = False
+    needs_credential_evaluation: bool = False
+    word_limit: int | None = None
+    character_limit: int | None = None
+    prompt_text: str | None = None
+    deadline: date | None = None
+    deadline_timezone: str | None = None
+    depends_on: list[str] = Field(default_factory=list)
+    lead_time_days: int | None = None
+    source_url: str | None = None
+    claim_ids: list[str] = Field(default_factory=list)
+    #: What the page this document was read from said it covered. ``None``
+    #: means nobody recorded a scope — not that the document is universal.
+    #: Phase 3 §9: "store source and scope for each required document".
+    scope: ClaimScope | None = None
+
+    @model_serializer(mode="wrap")
+    def _omit_unrecorded_scope(self, handler):
+        """Leave ``scope`` out when nobody recorded one, as ``Claim`` does.
+
+        A key whose value is "we never looked" invites a reader to treat the
+        absence as a finding, and a checklist stored before this field existed
+        keeps its payload byte-identical.
+        """
+        data = handler(self)
+        if isinstance(data, dict) and data.get("scope") is None:
+            data.pop("scope", None)
+        return data
+
+
+class DocumentChecklist(Base):
+    result_id: str
+    university: str
+    program: str
+    admission_documents: list[DocumentItem] = Field(default_factory=list)
+    scholarship_documents: list[DocumentItem] = Field(default_factory=list)
+    applicant_actions: list[DocumentItem] = Field(default_factory=list)
+    school_actions: list[DocumentItem] = Field(default_factory=list)
+    recommender_actions: list[DocumentItem] = Field(default_factory=list)
+    certification_actions: list[DocumentItem] = Field(default_factory=list)
+    ordered_steps: list[str] = Field(default_factory=list)
+    unresolved: list[UnresolvedQuestion] = Field(default_factory=list)
+    generated_at: datetime | None = None
+    completeness: Literal["official", "partial", "unavailable"] = "partial"
+
+
+class ProgramResult(Base):
+    """One row of the shortlist table."""
+
+    id: str
+    run_id: str
+
+    university: str
+    university_id: str
+    country: str
+    city: str
+    program: str
+    program_url: str | None = None
+    degree: DegreeLevel
+    intake: str
+    rankings: list[RankingEntry] = Field(default_factory=list)
+
+    # Three independent axes — never collapsed into one verdict.
+    eligibility: EligibilityStatus = EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION
+    admissions_fit: AdmissionsFit = AdmissionsFit.INSUFFICIENT_DATA
+    funding_fit: FundingFit = FundingFit.UNKNOWN
+    best_funding_classification: FundingClassification = FundingClassification.UNKNOWN
+
+    requirement_checks: list[RequirementCheck] = Field(default_factory=list)
+    missing_prerequisites: list[str] = Field(default_factory=list)
+    hard_filter_failures: list[str] = Field(default_factory=list)
+
+    scholarships: list[Scholarship] = Field(default_factory=list)
+    costs: CostBreakdown = Field(default_factory=CostBreakdown)
+    funding_gap: FundingGap | None = None
+
+    #: v1. Kept through the transition so a stored run still renders.
+    preference_score: ExplainableScore | None = None
+    ranking: RankingV2 | None = None
+
+    #: What the university *is* — climate, city size, size, campus, workload —
+    #: rather than how well it fit. Labels were frozen at verify time, so a
+    #: changed preference meant crawling everything again (AI_TASK_BRIEF P4);
+    #: the raw attributes let the ranking be recomputed from stored data.
+    catalog_attributes: dict[str, str] = Field(default_factory=dict)
+    #: "registry", "fixture-catalog", "agent:<model>" — an attribute is only as
+    #: trustworthy as where it came from, so it says.
+    catalog_attributes_source: str = ""
+
+    admission_deadline: date | None = None
+    admission_deadline_timezone: str | None = None
+    admission_deadline_raw: str | None = None
+    deadline_passed: bool = False
+    #: A deadline the page states that is too early to belong to the intake
+    #: applied for: a previous cycle's date. The deadline for this intake is
+    #: then unknown, and this date is shown as "previous cycle" rather than as
+    #: a closed window (owner decision 2026-09-28, Vienna's 4 May 2026 for a
+    #: fall-2027 applicant).
+    previous_cycle_deadline: date | None = None
+
+    climate_fit: str = "unknown"
+    city_fit: str = "unknown"
+    workload_fit: str = "unknown"
+    #: The same mechanism, for two preferences the form collected and nothing
+    #: read. "unknown" when the registry says nothing about this university,
+    #: which scores as missing data rather than as a mismatch.
+    size_fit: str = "unknown"
+    campus_fit: str = "unknown"
+    career_notes: str = ""
+    post_study_work: str = ""
+    work_during_study: str = ""
+
+    conflicts: list[Conflict] = Field(default_factory=list)
+    unresolved: list[UnresolvedQuestion] = Field(default_factory=list)
+    claims: list[ClaimOut] = Field(default_factory=list)
+    source_urls: list[str] = Field(default_factory=list)
+    last_verified: datetime | None = None
+    verification_completeness: float = Field(
+        default=0.0,
+        ge=0.0,
+        le=1.0,
+        description="Share of decision-grade fields backed by an official claim",
+    )
+
+    user_decision: UserDecision = UserDecision.UNDECIDED
+    user_decision_reason: str = ""
+    user_notes: str = ""
+    decided_at: datetime | None = None
+
+    checklist: DocumentChecklist | None = None
+
+
+class DecisionIn(Base):
+    decision: UserDecision
+    # Bounded, because these are the two free-text fields the API accepts and
+    # an unbounded string is a row the database will take and a screen will
+    # not render.
+    reason: str = Field(default="", max_length=2000)
+    notes: str = Field(default="", max_length=20_000)

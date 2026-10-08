@@ -1,0 +1,516 @@
+"""Verifying one extracted claim against the page it claims to come from.
+
+Extraction is pattern-matching and will always be able to be talked into a
+false positive; this module is the seam where a candidate claim is checked
+against the evidence it arrived with before it is allowed to exist:
+
+* the excerpt must actually appear in the page text (``EXCERPT_NOT_VERBATIM``);
+* the value must fall inside the published range for its claim type
+  (``VALUE_OUT_OF_RANGE``) — an IELTS band of 9.5 does not exist;
+* an official-domain source must actually be served from an allowed domain
+  (``DOMAIN_NOT_OFFICIAL``) — ``narxoz.kz`` inside a query parameter is not
+  the page's host;
+* the page class must be one that can answer the claim's question at all
+  (``PAGE_TYPE_REJECTED``).
+
+Every check whose context is absent is NOT evaluated: a claim verified
+without page text, without a source URL, without allowed domains or without
+a page type is never rejected for the missing context. Unknown stays
+unknown; the verifier only rejects on positive contradiction.
+
+Pure domain logic: no I/O, no network, and no imports from
+``app.adapters.*`` (that direction is forbidden). The page type is therefore
+matched by its string value — ``PageType`` members are ``StrEnum`` and
+compare (and hash) equal to their values, so plain strings interop in both
+directions.
+
+Two deliberate verdicts worth spelling out:
+
+* ``verify_claim`` forgives letter case at the excerpt step (excerpts and
+  page text travel through different extraction paths; only content
+  contradictions reject there), while ``is_verbatim_excerpt`` itself is the
+  strict, case-sensitive predicate for callers that need exact quoting.
+* The value table below is deliberately narrower than every number a page
+  could publish. It rejects *impossible* values; plausibility tuning (such
+  as the tuition floor) lives with the extractor that owns that window.
+"""
+
+from __future__ import annotations
+
+import re
+import unicodedata
+from collections.abc import Callable, Iterable, Mapping, Sequence
+from dataclasses import dataclass
+from datetime import date
+from enum import StrEnum
+from types import MappingProxyType
+from typing import Final, cast
+from urllib.parse import urlparse
+
+from app.domain.enums import ClaimType
+from app.domain.site_identity import hosts_share_site
+from app.domain.site_identity import registrable_domain as site_domain
+
+__all__ = [
+    "CLAIM_TYPE_PAGE_TYPES",
+    "OFFICIAL_PUBLIC_TLDS",
+    "VALUE_RANGE_RULES",
+    "RejectReason",
+    "Verdict",
+    "VerificationInput",
+    "is_verbatim_excerpt",
+    "normalize_text",
+    "page_type_admits",
+    "registrable_domain",
+    "url_matches_domains",
+    "value_in_range",
+    "verify_claim",
+]
+
+
+class RejectReason(StrEnum):
+    """Why a claim was not allowed to exist."""
+
+    EXCERPT_NOT_VERBATIM = "excerpt_not_verbatim"
+    VALUE_OUT_OF_RANGE = "value_out_of_range"
+    DOMAIN_NOT_OFFICIAL = "domain_not_official"
+    PAGE_TYPE_REJECTED = "page_type_rejected"
+
+
+@dataclass(frozen=True)
+class VerificationInput:
+    """A candidate claim plus every piece of context a check might need.
+
+    Absent context is ``None``/empty, and a check whose context is absent is
+    skipped — it never rejects.
+    """
+
+    claim_type: ClaimType
+    value: object
+    excerpt: str | None = None
+    page_text: str | None = None
+    source_url: str | None = None
+    page_type: str | None = None
+    official_domain: bool = False
+    allowed_domains: Sequence[str] = ()
+    today: date | None = None
+
+
+@dataclass(frozen=True)
+class Verdict:
+    """The outcome of one verification: accept, or one specific reason."""
+
+    accepted: bool
+    reason: RejectReason | None = None
+
+
+# --- text normalisation -----------------------------------------------------
+
+
+_WHITESPACE_RUN: Final[re.Pattern[str]] = re.compile(r"\s+")
+
+
+def normalize_text(text: str) -> str:
+    """NFKC, then collapse every Unicode whitespace run to one space, then strip."""
+    return _WHITESPACE_RUN.sub(" ", unicodedata.normalize("NFKC", text)).strip()
+
+
+def is_verbatim_excerpt(excerpt: str, page_text: str) -> bool:
+    """True when the excerpt appears in the page: case-sensitive substring
+    after normalising BOTH sides (NFKC, whitespace runs collapsed)."""
+    return (
+        bool(excerpt) and bool(page_text) and normalize_text(excerpt) in normalize_text(page_text)
+    )
+
+
+# --- the value range table --------------------------------------------------
+#
+# One rule per claim type, keyed by the claim types the extractors actually
+# produce. A claim type without a rule here is never out of range: the
+# verifier rejects impossible values, it does not second-guess plausible
+# ones. Bands the extractors already narrow (IELTS 4.0-9.0 and friends) are
+# recorded at their physical limits; the step is part of the IELTS rule
+# because score scales publish half bands only.
+
+_STEP_TOLERANCE: Final = 1e-9
+
+#: Money claims carry {"amount": ..., "currency": ...} from parse_money.
+_ISO_DATE: Final[re.Pattern[str]] = re.compile(r"\d{4}-\d{2}-\d{2}")
+_BARE_YEAR: Final[re.Pattern[str]] = re.compile(r"\d{4}")
+
+
+def _band_check(low: float, high: float, step: float | None) -> Callable[[object, date], bool]:
+    def one(number: float) -> bool:
+        if not low <= number <= high:
+            return False
+        return step is None or abs(number / step - round(number / step)) <= _STEP_TOLERANCE
+
+    def check(value: object, today: date) -> bool:
+        # A per-section minimum arrives as a map — "Writing 6, Speaking 6" is
+        # not the same statement as one floor — and every band in it has to
+        # pass the same range and step check a single value would.
+        if isinstance(value, dict):
+            if not value:
+                return False
+            try:
+                return all(one(float(band)) for band in value.values())
+            except (TypeError, ValueError):
+                return False
+        return one(cast("float", value))
+
+    return check
+
+
+def _money_check(value: object, today: date) -> bool:
+    """Any real fee or cost is above zero; zero is a misread, not a price."""
+    return cast("dict[str, float]", value)["amount"] > 0
+
+
+def _deadline_check(value: object, today: date) -> bool:
+    """ISO date format only, or a bare year that is not already past."""
+    text = cast("str", value)
+    if _ISO_DATE.fullmatch(text):
+        return True
+    if _BARE_YEAR.fullmatch(text):
+        return int(text) >= today.year
+    return False
+
+
+VALUE_RANGE_RULES: Final[Mapping[ClaimType, Callable[[object, date], bool]]] = MappingProxyType(
+    {
+        ClaimType.IELTS_MIN_OVERALL: _band_check(0.0, 9.0, 0.5),
+        ClaimType.IELTS_MIN_SUBSCORE: _band_check(0.0, 9.0, 0.5),
+        ClaimType.TOEFL_MIN_TOTAL: _band_check(0, 120, None),
+        ClaimType.DUOLINGO_MIN: _band_check(0, 160, None),
+        ClaimType.SAT_MIN_TOTAL: _band_check(0, 1600, None),
+        ClaimType.APPLICATION_FEE: _money_check,
+        ClaimType.TUITION: _money_check,
+        ClaimType.MANDATORY_FEES: _money_check,
+        ClaimType.HOUSING_COST: _money_check,
+        ClaimType.MEALS_COST: _money_check,
+        ClaimType.HEALTH_INSURANCE_COST: _money_check,
+        ClaimType.BOOKS_COST: _money_check,
+        ClaimType.TOTAL_COST_OF_ATTENDANCE: _money_check,
+        ClaimType.ADMISSION_DEADLINE: _deadline_check,
+    }
+)
+
+
+def value_in_range(claim_type: ClaimType, value: object, *, today: date) -> bool:
+    """True unless the value contradicts its claim type's published range."""
+    rule = VALUE_RANGE_RULES.get(claim_type)
+    if rule is None:
+        return True
+    return rule(value, today)
+
+
+# --- domain matching --------------------------------------------------------
+#
+# The actual registrable-domain comparison uses the shared bundled PSL in
+# app.domain.site_identity, including private hosting suffixes. It performs
+# no network update or user-cache write.
+
+# This historical suffix coverage table remains for the regression tests and
+# earlier audit record. It no longer makes host identity decisions.
+_MULTIPART_PUBLIC_SUFFIXES: Final[frozenset[str]] = frozenset(
+    {
+        "ac.at",
+        "ac.be",
+        "ac.cy",
+        "ac.id",
+        "ac.il",
+        "ac.in",
+        "ac.ir",
+        "ac.jp",
+        "ac.kr",
+        "ac.ma",
+        "ac.nz",
+        "ac.rs",
+        "ac.th",
+        "ac.uk",
+        "ac.za",
+        "co.jp",
+        "co.nz",
+        "co.uk",
+        "co.za",
+        "com.au",
+        "com.br",
+        "com.hk",
+        "com.mx",
+        "com.sg",
+        "com.tr",
+        "edu.ar",
+        "edu.au",
+        "edu.br",
+        "edu.cn",
+        "edu.co",
+        "edu.eg",
+        "edu.hk",
+        "edu.jo",
+        "edu.kw",
+        "edu.kz",
+        "edu.lb",
+        "edu.mx",
+        "edu.my",
+        "edu.pe",
+        "edu.ph",
+        "edu.pk",
+        "edu.pl",
+        "edu.sa",
+        "edu.sg",
+        "edu.tr",
+        "edu.tw",
+        "edu.vn",
+        "go.jp",
+        "go.kr",
+        "gov.au",
+        "gov.uk",
+        "govt.nz",
+        "ne.jp",
+        "net.au",
+        "or.jp",
+        "or.kr",
+        "org.au",
+        "org.uk",
+        "re.kr",
+    }
+)
+
+#: Public suffixes that on their own mark an official academic or government
+#: source. Matching is done on the HOST's registrable domain — a ".edu"
+#: anywhere else in the URL string (path, query) proves nothing.
+OFFICIAL_PUBLIC_TLDS: Final[tuple[str, ...]] = (
+    "edu",
+    "ac.uk",
+    "edu.au",
+    "gov",
+    "gov.uk",
+    "ac.nz",
+    "edu.sg",
+)
+
+
+#: Wording that states a requirement without settling it. Phase 3 §10 lists
+#: "wording is conditional" as grounds for escalation, and nothing checked it:
+#: a page saying applicants are *typically* expected to have IELTS 6.5 produced
+#: a VERIFIED_CURRENT claim that could eliminate the university outright.
+#:
+#: Deliberately tight. "May" alone is excluded — "applications close 15 May
+#: 2027" is a date, not a hedge — and only the phrase "may be" counts.
+HEDGED_WORDING = re.compile(
+    r"\b(typically|usually|normally|generally|in most cases|as a (?:general )?rule"
+    r"|may be|might be|could be|is expected to|are expected to|at the discretion"
+    r"|case[-\s]by[-\s]case|on a case basis|subject to change|where applicable"
+    r"|in principle|approximately|around|about)\b",
+    re.IGNORECASE,
+)
+
+
+def _value_forms(value: object) -> list[str]:
+    """The ways a claim's value could be written in the page's own words."""
+    if isinstance(value, bool) or value is None:
+        return []
+    if isinstance(value, float):
+        forms = [f"{value:g}"]
+        if value.is_integer():
+            forms.append(str(int(value)))
+        return forms
+    if isinstance(value, int):
+        return [str(value), f"{value:,}"]
+    text = str(value).strip()
+    return [text] if text else []
+
+
+def states_a_requirement_without_settling_it(excerpt: str, value: object = None) -> str:
+    """The hedging phrase in the claim's **own sentence**, or an empty string.
+
+    Returns the phrase rather than a boolean so a claim can say *which* word
+    unsettled it: "typically" and "at the discretion of the faculty" send an
+    applicant to different questions.
+
+    The sentence matters, and finding that out cost a false positive. An
+    excerpt is a window of a page, not a sentence, and the first version read
+    the whole window: a deadline claim came back "conditional" because
+    "applicants ... may be asked to provide a credential evaluation" happened
+    to sit beside it on the same page.
+
+    So the hedge counts only in the sentence that also states the value. When
+    the value cannot be located in the excerpt — a date written in words, a
+    parsed structure — this returns nothing and the claim keeps today's
+    status. Missing a hedge leaves the product where it already is; inventing
+    one downgrades a requirement that was never in doubt.
+    """
+    text = (excerpt or "").strip()
+    sentences = [s for s in re.split(r"(?<=[.!?])\s+", text) if s.strip()]
+    forms = _value_forms(value)
+    if not forms:
+        # A boolean or a parsed structure cannot be found in the page's words.
+        # One case is still unambiguous: an excerpt that *is* a single
+        # sentence has only one sentence to be about. "An interview may be
+        # required" is exactly that shape, and it is the shape where hedging
+        # matters most.
+        if len(sentences) == 1:
+            match = HEDGED_WORDING.search(sentences[0])
+            return match.group(0) if match else ""
+        return ""
+    for sentence in sentences:
+        if any(form in sentence for form in forms):
+            match = HEDGED_WORDING.search(sentence)
+            if match:
+                return match.group(0)
+    return ""
+
+
+def registrable_domain(host: str) -> str:
+    """The host reduced to its registrable domain (``www.narxoz.kz`` ->
+    ``narxoz.kz``; ``narxoz.kz.attacker.example`` -> ``attacker.example``)."""
+    return site_domain(host)
+
+
+def url_matches_domains(url: str, allowed_domains: Iterable[str]) -> bool:
+    """True when the URL's HOST belongs to one of the allowed domains.
+
+    Only the host decides: the university's name inside a query parameter or
+    a path segment is a spoof, not a source.
+    """
+    try:
+        if urlparse(url).scheme not in ("http", "https", "fixture"):
+            return False
+    except ValueError:
+        return False
+    return any(hosts_share_site(url, d) for d in allowed_domains if d)
+
+
+# --- the page-type table ----------------------------------------------------
+#
+# domain/ cannot import the classifier, so the table is keyed by page-type
+# string values; PageType members interop with these directly. The families
+# mirror page_classifier.ACCEPTS, and a consistency test in the QA suite
+# imports both sides and guards the mirror page by page.
+
+_PROGRAM_PAGES: Final[frozenset[str]] = frozenset({"program_detail", "intake_specific_program"})
+_REQUIREMENTS_PAGES: Final[frozenset[str]] = frozenset(
+    {
+        "program_detail",
+        "intake_specific_program",
+        "general_admissions",
+        "country_credential_requirements",
+    }
+)
+_COSTS_PAGES: Final[frozenset[str]] = frozenset(
+    {"costs", "program_detail", "intake_specific_program"}
+)
+_DOCUMENTS_PAGES: Final[frozenset[str]] = frozenset(
+    {
+        "documents",
+        "program_detail",
+        "intake_specific_program",
+        "general_admissions",
+        "scholarship_award",
+    }
+)
+_SCHOLARSHIP_AWARD_PAGES: Final[frozenset[str]] = frozenset({"scholarship_award"})
+
+CLAIM_TYPE_PAGE_TYPES: Final[Mapping[ClaimType, frozenset[str]]] = MappingProxyType(
+    {
+        # program_exists family
+        ClaimType.PROGRAM_EXISTS: _PROGRAM_PAGES,
+        # requirements family
+        ClaimType.IELTS_MIN_OVERALL: _REQUIREMENTS_PAGES,
+        ClaimType.IELTS_MIN_SUBSCORE: _REQUIREMENTS_PAGES,
+        ClaimType.IELTS_ACCEPTED_TYPES: _REQUIREMENTS_PAGES,
+        ClaimType.TOEFL_MIN_TOTAL: _REQUIREMENTS_PAGES,
+        ClaimType.DUOLINGO_MIN: _REQUIREMENTS_PAGES,
+        ClaimType.MIN_GPA: _REQUIREMENTS_PAGES,
+        ClaimType.GPA_SCALE: _REQUIREMENTS_PAGES,
+        ClaimType.SAT_POLICY: _REQUIREMENTS_PAGES,
+        ClaimType.SAT_MIN_TOTAL: _REQUIREMENTS_PAGES,
+        ClaimType.SUPERSCORE_POLICY: _REQUIREMENTS_PAGES,
+        ClaimType.ADMISSION_DEADLINE: _REQUIREMENTS_PAGES,
+        ClaimType.PORTFOLIO_REQUIRED: _REQUIREMENTS_PAGES,
+        ClaimType.INTERVIEW_REQUIRED: _REQUIREMENTS_PAGES,
+        ClaimType.ENTRANCE_EXAM_REQUIRED: _REQUIREMENTS_PAGES,
+        ClaimType.CREDENTIAL_EVALUATION_REQUIRED: _REQUIREMENTS_PAGES,
+        ClaimType.APPLICATION_FEE: _REQUIREMENTS_PAGES,
+        ClaimType.FEE_WAIVER_AVAILABLE: _REQUIREMENTS_PAGES,
+        ClaimType.ADMISSION_ROUTE: _REQUIREMENTS_PAGES,
+        ClaimType.CREDENTIAL_REQUIREMENT: _REQUIREMENTS_PAGES,
+        ClaimType.SUBJECT_REQUIREMENT: _REQUIREMENTS_PAGES,
+        ClaimType.OTHER_LANGUAGE_MINIMUM: _REQUIREMENTS_PAGES,
+        ClaimType.ENGLISH_EVIDENCE_MINIMUM: _REQUIREMENTS_PAGES,
+        # intake family
+        ClaimType.INTAKE_OPEN: _PROGRAM_PAGES,
+        ClaimType.INTAKE_TERM: _PROGRAM_PAGES,
+        ClaimType.PROGRAM_FACULTY: _PROGRAM_PAGES,
+        # costs family
+        ClaimType.TUITION: _COSTS_PAGES,
+        ClaimType.MANDATORY_FEES: _COSTS_PAGES,
+        ClaimType.HOUSING_COST: _COSTS_PAGES,
+        ClaimType.MEALS_COST: _COSTS_PAGES,
+        ClaimType.HEALTH_INSURANCE_COST: _COSTS_PAGES,
+        ClaimType.BOOKS_COST: _COSTS_PAGES,
+        ClaimType.TOTAL_COST_OF_ATTENDANCE: _COSTS_PAGES,
+        # documents family
+        ClaimType.REQUIRED_DOCUMENT: _DOCUMENTS_PAGES,
+        ClaimType.ESSAY_PROMPT: _DOCUMENTS_PAGES,
+        ClaimType.RECOMMENDATION_REQUIREMENT: _DOCUMENTS_PAGES,
+        ClaimType.DOCUMENT_BY_COMPLETION: _DOCUMENTS_PAGES,
+        # scholarship_award family
+        ClaimType.SCHOLARSHIP_EXISTS: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_AMOUNT: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_COVERAGE: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_INTERNATIONAL_ELIGIBLE: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_CITIZENSHIP_RESTRICTION: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_PROGRAM_RESTRICTION: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_APPLICATION_MODE: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_DEADLINE: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_RENEWABLE: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_RENEWAL_REQUIREMENT: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_MIN_TEST_SCORE: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_STACKABLE: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_COUNT: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_DURATION_YEARS: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_LIVING_ALLOWANCE: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_DURATION: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_BOND: _SCHOLARSHIP_AWARD_PAGES,
+        ClaimType.SCHOLARSHIP_OFFER_REQUIRED: _SCHOLARSHIP_AWARD_PAGES,
+    }
+)
+
+
+def page_type_admits(claim_type: ClaimType, page_type: str) -> bool:
+    """True when this class of page can answer this claim type's question.
+
+    Claim types outside the table (no extractor family produces them from a
+    classified page) admit nothing.
+    """
+    return page_type in CLAIM_TYPE_PAGE_TYPES.get(claim_type, frozenset())
+
+
+# --- the seam ---------------------------------------------------------------
+
+
+def verify_claim(claim: VerificationInput) -> Verdict:
+    """Check one candidate claim: excerpt -> value -> domain -> page_type.
+
+    First failure wins; a fully supported claim is accepted with no reason.
+    """
+    today = claim.today or date.today()
+    if (
+        claim.page_text is not None
+        and claim.excerpt
+        and not is_verbatim_excerpt(claim.excerpt.casefold(), claim.page_text.casefold())
+    ):
+        return Verdict(False, RejectReason.EXCERPT_NOT_VERBATIM)
+    if not value_in_range(claim.claim_type, claim.value, today=today):
+        return Verdict(False, RejectReason.VALUE_OUT_OF_RANGE)
+    if (
+        claim.official_domain
+        and claim.allowed_domains
+        and claim.source_url
+        and not url_matches_domains(claim.source_url, claim.allowed_domains)
+    ):
+        return Verdict(False, RejectReason.DOMAIN_NOT_OFFICIAL)
+    if claim.page_type is not None and not page_type_admits(claim.claim_type, claim.page_type):
+        return Verdict(False, RejectReason.PAGE_TYPE_REJECTED)
+    return Verdict(True, None)
