@@ -1,0 +1,24 @@
+{
+  "events": [
+    {
+      "type": "missing_cwd",
+      "process_started": false,
+      "writes": false
+    },
+    {
+      "type": "wrong_relative_rg_path",
+      "source_mutation": false
+    },
+    {
+      "type": "unresolved_test_name",
+      "preserved": "test-index-preliminary.json"
+    },
+    {
+      "type": "StopIteration",
+      "seam": "indented test function not found by startswith",
+      "before_final_files": true,
+      "app_executed": false
+    }
+  ],
+  "qualification": "Preparation errors only; no product test results."
+}

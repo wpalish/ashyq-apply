@@ -1,0 +1,31 @@
+{
+  "status": "ORIGINAL_TESTS_READONLY_REVIEWED_AWAIT_SEALED_DELTA",
+  "originals": [
+    {
+      "path": "tests/test_exa_mcp.py",
+      "sha256": "8e2b0f6dd0e7c1fbb00ab39cfb653b9cfc6bf6cdf31eddd113b0a2c0f1e0b2db",
+      "native_test_functions": 33
+    },
+    {
+      "path": "tests/test_search_layer_budget_fixes.py",
+      "sha256": "45ee64c0e93538e5c13d61be654ab0480d4a441a3ba98e00003d9a93a9b4fcde",
+      "native_test_functions": 9
+    },
+    {
+      "path": "tests/test_search_throttle_latch.py",
+      "sha256": "b599450b25c28fab0c2dcc6b9d2891f4e59845e6de3ccc02b628c0eb0eb6ad96",
+      "native_test_functions": 4
+    }
+  ],
+  "minimum_review_contract": [
+    "Keep all original parser/retry/guard/slot/budget tests; no broad skips or disabled cap flags",
+    "Real factory Exa MockTransport exercise, inner methods not stubbed",
+    "Typed None/enum replay and ordinary error/raw reason negative",
+    "Real retrieval +on_query_attempt stops unattempted families",
+    "Both Live caller paths preserve known429 in search_failures and generic incomplete limitations",
+    "State expiry/provider isolation/reset both maps only in isolated tests",
+    "Inherited no_dns fixture patches check_url for MockTransport only; no product guard or broader exception rule changes"
+  ],
+  "tests_run": 0,
+  "mutable_proposal_imports": 0
+}

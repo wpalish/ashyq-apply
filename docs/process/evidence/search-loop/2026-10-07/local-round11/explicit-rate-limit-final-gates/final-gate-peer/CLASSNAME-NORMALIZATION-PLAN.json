@@ -1,0 +1,13 @@
+{
+  "status": "WRITEAHEAD_JUNIT_CLASSNAME_NORMALIZATION_ONLY",
+  "original_RED_result_sha256": "679b24862a30a107a42eff6195c6a5d6547b75bac9c6a22527921c53c36ba276",
+  "original_verifier_sha256": "add76533b0329e819eca2f3df57f590fc7c073b010d149ec2b0428aecdd32556",
+  "original_expected90_sha256": "03aded4e3283b779339ad69788abbc6e12d762163ede13800799f0a0913251bd",
+  "finding": "External acceptedA90JUnit explicitly has classname empty and no file attr; originalBcomparison assumed modulebasename present. Full90 names/params match exactly. No functionalRED.",
+  "allowed": "Map each unchanged complete accepted parameterized name to unique test function owner in exact accepted three test ASTs; no name/param expectation mutation. Preserve original2RED and verifier.",
+  "source_pins": {
+    "test_search_throttle_latch.py": "93c18b13acd64df5fb77e0fba0052e01a06ce1c1174ce7cbcc3de5a9ca2a5dd0",
+    "test_search_layer_budget_fixes.py": "6a26fe2bf1728e3c3defb0be46a29056bb8274c2c6bd5ef12fa2c4bdcd2ff386",
+    "test_exa_mcp.py": "f0368bd1d02e4ff99120f3ab8e23cf85fcc23e39d9f72c6504de8ebd55abf596"
+  }
+}

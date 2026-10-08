@@ -1,0 +1,508 @@
+{
+  "scenario": "retrieval-meta-no-retry",
+  "counts": {
+    "PASS": 3,
+    "RED": 2,
+    "total": 5
+  },
+  "checks": [
+    {
+      "case": "retrieval_stops_after_first_refused_family",
+      "expected": "Only first refused query family is charged/sent; remaining original families are not attempted",
+      "status": "RED"
+    },
+    {
+      "case": "retrieval_dispatch_bound_after_original_refusal",
+      "expected": "No further tool dispatches after the first native search call raises refusal (existing inner retry multiplicity recorded separately)",
+      "status": "RED"
+    },
+    {
+      "case": "failure_metadata_not_status_fabrication",
+      "expected": "Diagnostic carries original refusal category: meta rate limited has no fabricated HTTP429, explicit HTTP429 remainsHTTP429",
+      "status": "PASS"
+    },
+    {
+      "case": "original_native_methods_unchanged",
+      "expected": "Actual ExaMcp search/_search_once/_post/_initialize functions never substituted",
+      "status": "PASS"
+    },
+    {
+      "case": "real_network_denied",
+      "expected": "All owned clients use MockTransport and are closed; all source resolution is synthetic",
+      "status": "PASS"
+    }
+  ],
+  "current_source_flags": {
+    "RATE_LIMIT_RETRY": true,
+    "RETRY_429_ONCE": false,
+    "MIN_QUERY_INTERVAL_SECONDS": 0.0
+  },
+  "effective_isolated_child_retry": false,
+  "source_sha256_before": {
+    "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f",
+    "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "tests/test_exa_mcp.py": "8e2b0f6dd0e7c1fbb00ab39cfb653b9cfc6bf6cdf31eddd113b0a2c0f1e0b2db",
+    "tests/test_search_throttle_latch.py": "b599450b25c28fab0c2dcc6b9d2891f4e59845e6de3ccc02b628c0eb0eb6ad96"
+  },
+  "source_sha256_after": {
+    "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f",
+    "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "tests/test_exa_mcp.py": "8e2b0f6dd0e7c1fbb00ab39cfb653b9cfc6bf6cdf31eddd113b0a2c0f1e0b2db",
+    "tests/test_search_throttle_latch.py": "b599450b25c28fab0c2dcc6b9d2891f4e59845e6de3ccc02b628c0eb0eb6ad96"
+  },
+  "native_methods": {
+    "search": {
+      "qualname": "ExaMcpSearchProvider.search",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/exa_mcp.py"
+    },
+    "_search_once": {
+      "qualname": "ExaMcpSearchProvider._search_once",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/exa_mcp.py"
+    },
+    "_post": {
+      "qualname": "ExaMcpSearchProvider._post",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/exa_mcp.py"
+    },
+    "_initialize": {
+      "qualname": "ExaMcpSearchProvider._initialize",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/exa_mcp.py"
+    }
+  },
+  "query_seam_attempts": [
+    {
+      "family_attempt": 1,
+      "HTTP_count_before": 0
+    },
+    {
+      "family_attempt": 2,
+      "HTTP_count_before": 3
+    },
+    {
+      "family_attempt": 3,
+      "HTTP_count_before": 4
+    },
+    {
+      "family_attempt": 4,
+      "HTTP_count_before": 5
+    },
+    {
+      "family_attempt": 5,
+      "HTTP_count_before": 6
+    },
+    {
+      "family_attempt": 6,
+      "HTTP_count_before": 7
+    }
+  ],
+  "mock_HTTP_counts": {
+    "initialize": 1,
+    "notifications/initialized": 1,
+    "tools/call": 6
+  },
+  "mock_HTTP_original_events": [
+    {
+      "method": "initialize",
+      "request_id": 1,
+      "payload": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "initialize",
+        "params": {
+          "protocolVersion": "2025-03-26",
+          "capabilities": {},
+          "clientInfo": {
+            "name": "ashyq-apply",
+            "version": "1"
+          }
+        }
+      },
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa",
+      "session_header": null,
+      "status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": {
+          "protocolVersion": "2025-03-26",
+          "capabilities": {},
+          "serverInfo": {
+            "name": "offline-synthetic-mcp",
+            "version": "1"
+          }
+        }
+      }
+    },
+    {
+      "method": "notifications/initialized",
+      "request_id": null,
+      "payload": {
+        "jsonrpc": "2.0",
+        "method": "notifications/initialized"
+      },
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa",
+      "session_header": "synthetic-session",
+      "status": 202,
+      "response": null
+    },
+    {
+      "method": "tools/call",
+      "request_id": 2,
+      "payload": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "tools/call",
+        "params": {
+          "name": "web_search_advanced_exa",
+          "arguments": {
+            "query": "site:example.edu \"computer science\" \"bachelor\"",
+            "numResults": 10,
+            "type": "auto",
+            "enableHighlights": true,
+            "highlightsMaxCharacters": 1000,
+            "textMaxCharacters": 1,
+            "includeDomains": [
+              "example.edu"
+            ]
+          }
+        }
+      },
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa",
+      "session_header": "synthetic-session",
+      "status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "structuredContent": {
+            "results": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "title": "BSc Computer Science",
+                "highlights": [
+                  "Public discovery hint only"
+                ]
+              }
+            ]
+          },
+          "_meta": {
+            "ai.exa/rateLimited": true
+          }
+        }
+      }
+    },
+    {
+      "method": "tools/call",
+      "request_id": 3,
+      "payload": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "method": "tools/call",
+        "params": {
+          "name": "web_search_advanced_exa",
+          "arguments": {
+            "query": "Synthetic University bachelor undergraduate first cycle computer science programme",
+            "numResults": 10,
+            "type": "auto",
+            "enableHighlights": true,
+            "highlightsMaxCharacters": 1000,
+            "textMaxCharacters": 1,
+            "includeDomains": [
+              "example.edu"
+            ]
+          }
+        }
+      },
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa",
+      "session_header": "synthetic-session",
+      "status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "result": {
+          "structuredContent": {
+            "results": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "title": "BSc Computer Science",
+                "highlights": [
+                  "Public discovery hint only"
+                ]
+              }
+            ]
+          },
+          "_meta": {
+            "ai.exa/rateLimited": true
+          }
+        }
+      }
+    },
+    {
+      "method": "tools/call",
+      "request_id": 4,
+      "payload": {
+        "jsonrpc": "2.0",
+        "id": 4,
+        "method": "tools/call",
+        "params": {
+          "name": "web_search_advanced_exa",
+          "arguments": {
+            "query": "site:example.edu programmes \"computer science\"",
+            "numResults": 10,
+            "type": "auto",
+            "enableHighlights": true,
+            "highlightsMaxCharacters": 1000,
+            "textMaxCharacters": 1,
+            "includeDomains": [
+              "example.edu"
+            ]
+          }
+        }
+      },
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa",
+      "session_header": "synthetic-session",
+      "status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 4,
+        "result": {
+          "structuredContent": {
+            "results": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "title": "BSc Computer Science",
+                "highlights": [
+                  "Public discovery hint only"
+                ]
+              }
+            ]
+          },
+          "_meta": {
+            "ai.exa/rateLimited": true
+          }
+        }
+      }
+    },
+    {
+      "method": "tools/call",
+      "request_id": 5,
+      "payload": {
+        "jsonrpc": "2.0",
+        "id": 5,
+        "method": "tools/call",
+        "params": {
+          "name": "web_search_advanced_exa",
+          "arguments": {
+            "query": "site:example.edu courses \"computer science\"",
+            "numResults": 10,
+            "type": "auto",
+            "enableHighlights": true,
+            "highlightsMaxCharacters": 1000,
+            "textMaxCharacters": 1,
+            "includeDomains": [
+              "example.edu"
+            ]
+          }
+        }
+      },
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa",
+      "session_header": "synthetic-session",
+      "status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 5,
+        "result": {
+          "structuredContent": {
+            "results": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "title": "BSc Computer Science",
+                "highlights": [
+                  "Public discovery hint only"
+                ]
+              }
+            ]
+          },
+          "_meta": {
+            "ai.exa/rateLimited": true
+          }
+        }
+      }
+    },
+    {
+      "method": "tools/call",
+      "request_id": 6,
+      "payload": {
+        "jsonrpc": "2.0",
+        "id": 6,
+        "method": "tools/call",
+        "params": {
+          "name": "web_search_advanced_exa",
+          "arguments": {
+            "query": "site:example.edu undergraduate \"computer science\"",
+            "numResults": 10,
+            "type": "auto",
+            "enableHighlights": true,
+            "highlightsMaxCharacters": 1000,
+            "textMaxCharacters": 1,
+            "includeDomains": [
+              "example.edu"
+            ]
+          }
+        }
+      },
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa",
+      "session_header": "synthetic-session",
+      "status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 6,
+        "result": {
+          "structuredContent": {
+            "results": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "title": "BSc Computer Science",
+                "highlights": [
+                  "Public discovery hint only"
+                ]
+              }
+            ]
+          },
+          "_meta": {
+            "ai.exa/rateLimited": true
+          }
+        }
+      }
+    },
+    {
+      "method": "tools/call",
+      "request_id": 7,
+      "payload": {
+        "jsonrpc": "2.0",
+        "id": 7,
+        "method": "tools/call",
+        "params": {
+          "name": "web_search_advanced_exa",
+          "arguments": {
+            "query": "site:example.edu admissions bachelor",
+            "numResults": 10,
+            "type": "auto",
+            "enableHighlights": true,
+            "highlightsMaxCharacters": 1000,
+            "textMaxCharacters": 1,
+            "includeDomains": [
+              "example.edu"
+            ]
+          }
+        }
+      },
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa",
+      "session_header": "synthetic-session",
+      "status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 7,
+        "result": {
+          "structuredContent": {
+            "results": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "title": "BSc Computer Science",
+                "highlights": [
+                  "Public discovery hint only"
+                ]
+              }
+            ]
+          },
+          "_meta": {
+            "ai.exa/rateLimited": true
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "retrieval": {
+      "candidates": [],
+      "queries_run": [
+        "field_and_degree",
+        "natural_language",
+        "programmes",
+        "courses",
+        "undergraduate",
+        "admissions"
+      ],
+      "provider": "exa_mcp",
+      "ontology_version": "2026-09-30.1",
+      "rejection_counts": {},
+      "failed_queries": [
+        "field_and_degree",
+        "natural_language",
+        "programmes",
+        "courses",
+        "undergraduate",
+        "admissions"
+      ],
+      "hop_entry_points": [],
+      "hop_candidates": 0,
+      "hop_entry_points_unreachable": 0,
+      "throttled": false,
+      "failure_diagnostics": [
+        "Search service unavailable (exa_mcp; rate limited)."
+      ]
+    }
+  },
+  "owned_process_latch_after": {},
+  "fake_clock_sleeps": [],
+  "synthetic_resolutions": [
+    {
+      "host": "mcp.exa.ai",
+      "port": 443,
+      "kind": "synthetic resolver, zero real DNS"
+    },
+    {
+      "host": "mcp.exa.ai",
+      "port": 443,
+      "kind": "synthetic resolver, zero real DNS"
+    },
+    {
+      "host": "mcp.exa.ai",
+      "port": 443,
+      "kind": "synthetic resolver, zero real DNS"
+    },
+    {
+      "host": "mcp.exa.ai",
+      "port": 443,
+      "kind": "synthetic resolver, zero real DNS"
+    },
+    {
+      "host": "mcp.exa.ai",
+      "port": 443,
+      "kind": "synthetic resolver, zero real DNS"
+    },
+    {
+      "host": "mcp.exa.ai",
+      "port": 443,
+      "kind": "synthetic resolver, zero real DNS"
+    }
+  ],
+  "primary_throttle_or_STOP_reset": false,
+  "network_real_DNS_provider_model_Git_app_changes": 0,
+  "client_closed": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "qualification": "Source-default metadata retryTrue can call native _search_once twice inside each search. This existing retry rule is recorded separately, not silently disabled in native scenarios. No source rule proposed."
+}

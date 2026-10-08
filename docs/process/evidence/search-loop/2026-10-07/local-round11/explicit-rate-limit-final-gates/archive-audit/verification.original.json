@@ -1,0 +1,118 @@
+{
+  "verified_utc": "2026-10-08T03:34:06.344978+00:00",
+  "status": "PASS",
+  "archive_receipt_sha256": "ae1b1868286570a76f2e6426dc307fc963d29ecb5b576dcd0501447e2b5a3dbd",
+  "file_checks": {
+    "PASS": 931,
+    "RED": 0,
+    "physical": 931,
+    "bytes": 16787404,
+    "unique_content_hashes": 511,
+    "qualification": "Physical copiedfiles and distinctcontenthashes are notuniqueexperiments/calls."
+  },
+  "origins": [
+    {
+      "origin": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal",
+      "archive_prefix": "source-author",
+      "manifest_sha256": "133b86aae460d6f475f482809419a56733330adf74bb08a90d489e61ca1be9ae",
+      "selected_entries": 583,
+      "physical_including_manifest": 584,
+      "status": "PASS"
+    },
+    {
+      "origin": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-proposal-review",
+      "archive_prefix": "source-peer",
+      "manifest_sha256": "3df6d9a003dfc3c1a36cfef29958c254c6b90f5db714646e8c77727db2218c08",
+      "selected_entries": 102,
+      "physical_including_manifest": 103,
+      "status": "PASS"
+    },
+    {
+      "origin": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-keyless-rate-latch-review",
+      "archive_prefix": "off-peer",
+      "manifest_sha256": "bd0f4467c64a8f3189e7e29ec3890e84e4e09ec103ec503eeeddd46886bc9e7a",
+      "selected_entries": 68,
+      "physical_including_manifest": 69,
+      "status": "PASS"
+    },
+    {
+      "origin": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-coverage-plan",
+      "archive_prefix": "coverage-plan",
+      "manifest_sha256": "2ad90a60f4acca1cd85179690ef4fed7209399521464e86a0100046414d1bfcd",
+      "selected_entries": 22,
+      "physical_including_manifest": 23,
+      "status": "PASS"
+    },
+    {
+      "origin": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-native-tests",
+      "archive_prefix": "native-author",
+      "manifest_sha256": "a1bb4ea0e3cc80f9429f08db59b14953e6b58252858b416dc2c02709bec5b8e5",
+      "selected_entries": 31,
+      "physical_including_manifest": 32,
+      "status": "PASS"
+    },
+    {
+      "origin": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-native-test-review",
+      "archive_prefix": "native-peer",
+      "manifest_sha256": "5f7ae7fe72ad262cb305c402d6af8794d0a53045611ad1e3589b571c0f24a54d",
+      "selected_entries": 34,
+      "physical_including_manifest": 35,
+      "status": "PASS"
+    },
+    {
+      "origin": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-integration-review",
+      "archive_prefix": "first-integration-peer",
+      "manifest_sha256": "612a905cfb3c551001df63bed38feb662e202822f1d450ff2aa0a061b677affc",
+      "selected_entries": 19,
+      "physical_including_manifest": 20,
+      "status": "PASS"
+    },
+    {
+      "origin": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-import-repair-review",
+      "archive_prefix": "import-repair-peer",
+      "manifest_sha256": "0047680141dcc068fa85c7a7925c181767c552bf19ea26d9783d333e19c8c282",
+      "selected_entries": 15,
+      "physical_including_manifest": 16,
+      "status": "PASS"
+    },
+    {
+      "origin": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-seed-verification",
+      "archive_prefix": "synthetic-seed",
+      "manifest_sha256": "7bda26f69100354abcfd55ae96ecd371a35482577ccbd002208b897b11d58c69",
+      "selected_entries": 28,
+      "physical_including_manifest": 29,
+      "status": "PASS"
+    }
+  ],
+  "source_prefix999": {
+    "PASS": 999,
+    "RED": 0,
+    "map_sha256": "1c55186a6626b9f393601439c44b8e1e8e3f12f8fb9d498e0fb40613faa803d7"
+  },
+  "STOP_before": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-STOP.json": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad"
+  },
+  "STOP_after": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-STOP.json": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad"
+  },
+  "STOP_reference_is_hash_not_embedded_copy": true,
+  "first_full": {
+    "status": "interrupted",
+    "ruff_exit": 1,
+    "ruff_errors": 3,
+    "format_exit": 0,
+    "mypy_exit": 0,
+    "sqlite_exit": 130
+  },
+  "qualification": "Archive records operational safetyrepair/noqualityscore and finalfullpending atcheckpoint. No finalfullPASS provedhere; no originalsemanticcontrols rerun.",
+  "metadata_only_parsed": [
+    "archive receipts/ready-manifests",
+    "sourceprefix map",
+    "interruptedfullstatus/rufflog"
+  ],
+  "opaque_original_bytes_only": true,
+  "app_import_test_network_Git_source_default_STOP_gold_scoring_changes": 0,
+  "issues": []
+}

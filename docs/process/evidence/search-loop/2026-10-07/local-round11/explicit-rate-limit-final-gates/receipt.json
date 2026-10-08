@@ -1,0 +1,318 @@
+{
+  "time": "2026-10-08T03:51:44.680749+00:00",
+  "status": "ACCEPT_FRESH_FULL_13_OF_13_PASS_TECHNICAL_REPAIR_ONLY_UNSCORED_LIVE_STOP",
+  "origins": [
+    {
+      "folder": "local-round11/a-explicit-rate-limit-archive-verification",
+      "manifest_sha256": "ae5df1f4ed5ef5c5ca4e7f53f70c1d6627a573dd44fbc1a7684f4d74de20894a",
+      "physical_selected_files": 10
+    },
+    {
+      "folder": "local-round11/b-explicit-rate-limit-final-gate-review",
+      "manifest_sha256": "276fc82eb62fff06478e0b39f452594ccb3ad008e2953a8ebefe50dbe20c3fa7",
+      "physical_selected_files": 26
+    }
+  ],
+  "selected_files": 59,
+  "selected_bytes": 13338464,
+  "file_sha256": {
+    "archive-audit/PLAN.json": {
+      "sha256": "79e921df091925caf40708312c9eeb1fa31db09294f7bd0ccc321c04eb5ad132",
+      "bytes": 1526,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-archive-verification/PLAN.json"
+    },
+    "archive-audit/REPORT.ru.md": {
+      "sha256": "c28507927bf611566b33e4c0876e6c5557487397af606dc41a34d1d0634af40c",
+      "bytes": 2068,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-archive-verification/REPORT.ru.md"
+    },
+    "archive-audit/entries.original.json": {
+      "sha256": "0ceeb47adbc40885ecf11687a405994ad562cd4c28100c12b617ed6d30f70859",
+      "bytes": 477512,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-archive-verification/entries.original.json"
+    },
+    "archive-audit/prefix999.original.json": {
+      "sha256": "76b45014e2fe88bde7b5d30da0bc32c2c2ec1316ae3e0227f9207fdc842027c0",
+      "bytes": 265944,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-archive-verification/prefix999.original.json"
+    },
+    "archive-audit/receipt.json": {
+      "sha256": "e45bdc03c6a0d393450277ace770923adc3e280b650b584cc792f3028e5bd6b1",
+      "bytes": 1859,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-archive-verification/receipt.json"
+    },
+    "archive-audit/seal.py": {
+      "sha256": "ca0c35724320fd1cd5a395aafcad6b4c2d43f24944233092ae28605fdf9db6f1",
+      "bytes": 2003,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-archive-verification/seal.py"
+    },
+    "archive-audit/verification.original.json": {
+      "sha256": "182b84e0cb19688ba1be51aa5b2fb23c7552751942d08f448d3f1385d76fcd53",
+      "bytes": 5149,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-archive-verification/verification.original.json"
+    },
+    "archive-audit/verification.raw.log": {
+      "sha256": "091c5bceca748720b22f7814bc8e7c04e40e68bf30f593fb5523cd7f679d45e6",
+      "bytes": 614,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-archive-verification/verification.raw.log"
+    },
+    "archive-audit/verify.py": {
+      "sha256": "97e322f43f9fbc1113004c5f71ad01f337bdd5515660ad4b740ec2bcfcf7e84f",
+      "bytes": 6712,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-archive-verification/verify.py"
+    },
+    "archive-audit/ready-manifest.json": {
+      "sha256": "ae5df1f4ed5ef5c5ca4e7f53f70c1d6627a573dd44fbc1a7684f4d74de20894a",
+      "bytes": 1359,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-archive-verification/ready-manifest.json"
+    },
+    "final-gate-peer/CLASSNAME-NORMALIZATION-PLAN.json": {
+      "sha256": "34f0c13cc2b71408e926f1d19dcc916c1e7496a891b7bce6a0071ccb150501d7",
+      "bytes": 1095,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/CLASSNAME-NORMALIZATION-PLAN.json"
+    },
+    "final-gate-peer/PLAN.json": {
+      "sha256": "b30cd4fa53ceba3d05c39ce00af95ce56d9fa9101b13721f1ef66e3cfa01cb64",
+      "bytes": 1855,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/PLAN.json"
+    },
+    "final-gate-peer/REPORT.ru.md": {
+      "sha256": "e17c33be7e2161cddf4381b5ee192ae596d131317ab823a1a073ba5a4e638695",
+      "bytes": 4195,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/REPORT.ru.md"
+    },
+    "final-gate-peer/expected-native90-canonical-identities.json": {
+      "sha256": "36ba695f548dd5a1ff3a4c46aa36501596d2e1cbae9b756afc463d4e91f32467",
+      "bytes": 15455,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/expected-native90-canonical-identities.json"
+    },
+    "final-gate-peer/initial-alignment.json": {
+      "sha256": "8f46ba7ee825c08b48c4920c661880ce6b4265436515905a340570ea30089f54",
+      "bytes": 585,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/initial-alignment.json"
+    },
+    "final-gate-peer/packet/backend-postgresql.xml": {
+      "sha256": "24ec8ca3b19911b4fb3776ffc1c1c22e6acdfafc8623e636a5461cdcfa29700e",
+      "bytes": 646540,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/packet/backend-postgresql.xml"
+    },
+    "final-gate-peer/packet/backend-sqlite.xml": {
+      "sha256": "093504056f5543bbfe5a6f627562adf9c3cb0a5278444aa5b6e6f35f4cb981e3",
+      "bytes": 646541,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/packet/backend-sqlite.xml"
+    },
+    "final-gate-peer/packet/expected-native90-identities.json": {
+      "sha256": "03aded4e3283b779339ad69788abbc6e12d762163ede13800799f0a0913251bd",
+      "bytes": 8708,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/packet/expected-native90-identities.json"
+    },
+    "final-gate-peer/packet/source-after-isort-999.json": {
+      "sha256": "1c55186a6626b9f393601439c44b8e1e8e3f12f8fb9d498e0fb40613faa803d7",
+      "bytes": 130843,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/packet/source-after-isort-999.json"
+    },
+    "final-gate-peer/packet/source-manifest.json": {
+      "sha256": "ec39dc311865d2cbfbff5f55c1ae85838a71bd24c6db482df268e6a282d6e8f8",
+      "bytes": 1611469,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/packet/source-manifest.json"
+    },
+    "final-gate-peer/packet/terminal-summary.json": {
+      "sha256": "b6161a546ed6211151e438f70fbbca6813db091f7273f8fdd682c39f8ec78c41",
+      "bytes": 1635120,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/packet/terminal-summary.json"
+    },
+    "final-gate-peer/preparation-errors.json": {
+      "sha256": "2e173ad9c52d0034ebd1e2caf71a0c21871e1cce54ec3a7f78187df34b3b81e3",
+      "bytes": 672,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/preparation-errors.json"
+    },
+    "final-gate-peer/receipt.json": {
+      "sha256": "3761243bb157fd4e25dfeb22f6a82bc88aa2a1a03fd51ccd8f951f69126a9359",
+      "bytes": 4214,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/receipt.json"
+    },
+    "final-gate-peer/terminal-postflight.json": {
+      "sha256": "7015da6c3b36c6966ac1e7d35e3644109d0338bd5d3f7301ce49023c936bd78d",
+      "bytes": 2191,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/terminal-postflight.json"
+    },
+    "final-gate-peer/terminal-preflight.json": {
+      "sha256": "a4840cd94798e4ea6f6dcae8d7cfdc87237b94879a326ab26ba1da1d80c6dd22",
+      "bytes": 2041,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/terminal-preflight.json"
+    },
+    "final-gate-peer/terminal-validation-v2.json": {
+      "sha256": "8da734e42e1c8d5647755da227cd660e8acd2d2cd2b49ba48de2efab9d655c1d",
+      "bytes": 1341785,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/terminal-validation-v2.json"
+    },
+    "final-gate-peer/terminal-validation.json": {
+      "sha256": "679b24862a30a107a42eff6195c6a5d6547b75bac9c6a22527921c53c36ba276",
+      "bytes": 1383884,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/terminal-validation.json"
+    },
+    "final-gate-peer/verified-six/backend/app/adapters/discovery/live_discovery.py": {
+      "sha256": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004",
+      "bytes": 96441,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/verified-six/backend/app/adapters/discovery/live_discovery.py"
+    },
+    "final-gate-peer/verified-six/backend/app/adapters/search/__init__.py": {
+      "sha256": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+      "bytes": 6341,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/verified-six/backend/app/adapters/search/__init__.py"
+    },
+    "final-gate-peer/verified-six/backend/app/adapters/search/retrieval.py": {
+      "sha256": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+      "bytes": 21805,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/verified-six/backend/app/adapters/search/retrieval.py"
+    },
+    "final-gate-peer/verified-six/backend/tests/test_exa_mcp.py": {
+      "sha256": "b0e53700afc97c458508d45e5404566bd730af0de1a4a355210c5d1f5b85fd6a",
+      "bytes": 32702,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/verified-six/backend/tests/test_exa_mcp.py"
+    },
+    "final-gate-peer/verified-six/backend/tests/test_search_layer_budget_fixes.py": {
+      "sha256": "a037d3f48bff9da00879f289379e87938b1db58e903a373ec863f73a78ccf321",
+      "bytes": 12981,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/verified-six/backend/tests/test_search_layer_budget_fixes.py"
+    },
+    "final-gate-peer/verified-six/backend/tests/test_search_throttle_latch.py": {
+      "sha256": "e8ff78ba31ab5d0e037343153b8ae09b43d3fb583bd8abb1ff64ef815bebf101",
+      "bytes": 7953,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/verified-six/backend/tests/test_search_throttle_latch.py"
+    },
+    "final-gate-peer/verify_terminal.py": {
+      "sha256": "add76533b0329e819eca2f3df57f590fc7c073b010d149ec2b0428aecdd32556",
+      "bytes": 5195,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/verify_terminal.py"
+    },
+    "final-gate-peer/verify_terminal_v2.py": {
+      "sha256": "ab074098e35448154bc1dffd1d87134c5e0c5d726626912240cc26cbde0de5de",
+      "bytes": 5201,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/verify_terminal_v2.py"
+    },
+    "final-gate-peer/ready-manifest.json": {
+      "sha256": "276fc82eb62fff06478e0b39f452594ccb3ad008e2953a8ebefe50dbe20c3fa7",
+      "bytes": 4099,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/b-explicit-rate-limit-final-gate-review/ready-manifest.json"
+    },
+    "parent/fresh-full/summary.json": {
+      "sha256": "b6161a546ed6211151e438f70fbbca6813db091f7273f8fdd682c39f8ec78c41",
+      "bytes": 1635120,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/summary.json"
+    },
+    "parent/fresh-full/source-manifest.json": {
+      "sha256": "ec39dc311865d2cbfbff5f55c1ae85838a71bd24c6db482df268e6a282d6e8f8",
+      "bytes": 1611469,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/source-manifest.json"
+    },
+    "parent/fresh-full/backend-sqlite.xml": {
+      "sha256": "093504056f5543bbfe5a6f627562adf9c3cb0a5278444aa5b6e6f35f4cb981e3",
+      "bytes": 646541,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/backend-sqlite.xml"
+    },
+    "parent/fresh-full/backend-postgresql.xml": {
+      "sha256": "24ec8ca3b19911b4fb3776ffc1c1c22e6acdfafc8623e636a5461cdcfa29700e",
+      "bytes": 646540,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/backend-postgresql.xml"
+    },
+    "parent/fresh-full/ruff.log": {
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/ruff.log"
+    },
+    "parent/fresh-full/ruff-format.log": {
+      "sha256": "c08cb44deef3bd5e6aceb013d76f19020ed4f70d4eea0e35334c33d2a0dc94ff",
+      "bytes": 28,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/ruff-format.log"
+    },
+    "parent/fresh-full/mypy.log": {
+      "sha256": "874c02a239cb4a1a869edb412ef78e3c9330fbd6220e0dc83dd1474651872581",
+      "bytes": 10327,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/mypy.log"
+    },
+    "parent/fresh-full/backend-sqlite.log": {
+      "sha256": "7d468423c655a96163660350d35b081f3cecf6971b62f0e3ba626a4c4ec3b75e",
+      "bytes": 17137,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/backend-sqlite.log"
+    },
+    "parent/fresh-full/frontend-typecheck.log": {
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02",
+      "bytes": 53,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/frontend-typecheck.log"
+    },
+    "parent/fresh-full/frontend-lint.log": {
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a",
+      "bytes": 65,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/frontend-lint.log"
+    },
+    "parent/fresh-full/frontend-tests.log": {
+      "sha256": "1f74abb583e74b0b180ee3156734620223a53a45b41a8eb6bef23ac702954760",
+      "bytes": 20135,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/frontend-tests.log"
+    },
+    "parent/fresh-full/frontend-build.log": {
+      "sha256": "f25ab914205c548872dfba180db0b30b0a14ad91fb3f1a1d15792cd5541c6961",
+      "bytes": 7315,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/frontend-build.log"
+    },
+    "parent/fresh-full/backend-postgresql.log": {
+      "sha256": "b91c55381ea206f66acc9a8a3dad1b8c7a73d74930cde92010ff8d8cff47e639",
+      "bytes": 5926,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/backend-postgresql.log"
+    },
+    "parent/fresh-full/e2e.log": {
+      "sha256": "8a6311b0f961158543ca35db3e74a33eeb79542007586dcb4bdb1ba3ebb951d7",
+      "bytes": 172068,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/e2e.log"
+    },
+    "parent/fresh-full/e2e-auth.log": {
+      "sha256": "b0994ab212871f9bbd299c84d51b85efbb971a4956dedd1e40953aebf73defd3",
+      "bytes": 16684,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/e2e-auth.log"
+    },
+    "parent/fresh-full/pip-audit.log": {
+      "sha256": "15950a68a7ed99c59779717acefdceb3f69cfd31bde67d2c954f2a3cea4d7955",
+      "bytes": 31,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/pip-audit.log"
+    },
+    "parent/fresh-full/npm-audit.log": {
+      "sha256": "6d8c5c8f3d7684adb070417bd608d01ae90aa3dc26a65af03ffda4955f38d9a3",
+      "bytes": 24,
+      "original": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b/npm-audit.log"
+    },
+    "parent/full-raw-manifest.json": {
+      "sha256": "3ced3c63fc7fbcc6e9c1ad41008585295039b5c02a67fa763e174bd9e4727ec8",
+      "bytes": 3051,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/full-raw-manifest.json"
+    },
+    "parent/final-full-verification.json": {
+      "sha256": "c2c510edfb45ef5a71bd90f8b4e70ba7a69709f9a7215db7f75ac98421217482",
+      "bytes": 8833,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/final-full-verification.json"
+    },
+    "parent/source-after-isort-999.json": {
+      "sha256": "1c55186a6626b9f393601439c44b8e1e8e3f12f8fb9d498e0fb40613faa803d7",
+      "bytes": 130843,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/source-after-isort-999.json"
+    },
+    "parent/provider-STOP.json": {
+      "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+      "bytes": 142,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json"
+    },
+    "parent/archive_packets.py": {
+      "sha256": "9edbd229b7b10f36a7fc03e3e5e1293a5251f1d688524dac7c703c3f9518c5d2",
+      "bytes": 4283,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/archive_packets.py"
+    },
+    "parent/archive-config.json": {
+      "sha256": "c783fe917d3b415fc1e8aed3f60ea43ebaff9644dc7d1a42e1d762240f9544ec",
+      "bytes": 7173,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/final-archive-config.json"
+    }
+  },
+  "source_prefix_selected_paths_matched": 999,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "qualification": "Physical originals include copied peer evidence; file counts are not unique experiments. No live calls or quality scoring."
+}

@@ -1,0 +1,39 @@
+{
+  "verdict": "ACCEPT_EXACT_FINITE_NATIVE_TEST_DELTA_STATIC_PEER",
+  "A_manifest_sha256": "a1bb4ea0e3cc80f9429f08db59b14953e6b58252858b416dc2c02709bec5b8e5",
+  "A_receipt_sha256": "6063a0bd06e1085a2e4b95547325f761119ae145545e3657640b796b96f5c09e",
+  "tests_only_patch_sha256": "dd857c88ac45f41ee24c78ed2384882839659f6d3cf6d9abfbf13eb2c2c8c197",
+  "proposed_tests_sha256": {
+    "tests/test_search_throttle_latch.py": "93c18b13acd64df5fb77e0fba0052e01a06ce1c1174ce7cbcc3de5a9ca2a5dd0",
+    "tests/test_search_layer_budget_fixes.py": "6a26fe2bf1728e3c3defb0be46a29056bb8274c2c6bd5ef12fa2c4bdcd2ff386",
+    "tests/test_exa_mcp.py": "f0368bd1d02e4ff99120f3ab8e23cf85fcc23e39d9f72c6504de8ebd55abf596"
+  },
+  "source_peer_manifest": "3df6d9a003dfc3c1a36cfef29958c254c6b90f5db714646e8c77727db2218c08",
+  "A_verified_files": 31,
+  "A_verified_bytes": 362512,
+  "own_this_packet_tests_run": 0,
+  "own_this_packet_app_imports": 0,
+  "A_native_focused_inspected_not_rerun": {
+    "ON": {
+      "passed": 90,
+      "failed": 0,
+      "skip": 0
+    },
+    "OFF": {
+      "passed": 78,
+      "failed": 12,
+      "skip": 0
+    },
+    "existing_expanded": 70,
+    "new_parameterized": 20
+  },
+  "known429_metadata_preserved": true,
+  "no_budget_guard_default_weakening": true,
+  "material_findings": [],
+  "original_app_test_before_after_equal": true,
+  "STOP_before_after_equal": true,
+  "report_sha256": "1383ae97386a332064a0ead938db44460fc3345c6cbe39eb2b0e76e5f1c27a11",
+  "post_verification_sha256": "fd9a3f6d37efa6a091adbdd5dc74e26e505a1d67a1c6a861cabf6d3ea8a3e555",
+  "test_delta_inventory_sha256": "16c355d1ba44a8ecd88869fefcfa308864d601ff70261e42db657d8a0b471fe6",
+  "scope": "Static delta review only; root will execute native90 and required exactsource gates. No new full replay required."
+}

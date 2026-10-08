@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="90" time="0.297" timestamp="2026-10-08T08:11:49.059280+05:00" hostname="iMac-Aliser.local"><testcase classname="" name="test_a_429_is_shared_by_a_second_adapter_instance" time="0.001" /><testcase classname="" name="test_other_failures_do_not_latch" time="0.001" /><testcase classname="" name="test_the_latch_is_per_provider_and_expires" time="0.000" /><testcase classname="" name="test_reset_forgets_the_refusal" time="0.000" /><testcase classname="" name="test_typed_status_none_is_shared_without_status_or_message_invention" time="0.001"><failure message="Failed: DID NOT RAISE SearchUnavailable">async def test_typed_status_none_is_shared_without_status_or_message_invention():
+        first, second = Refusing(None, SearchFailureReason.RATE_LIMITED), Answering()
+        with pytest.raises(SearchUnavailable) as initial:
+            await _ThrottleLatch(first).search(query="first")
+        assert initial.value is first.error
+&gt;       with pytest.raises(SearchUnavailable) as local:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE SearchUnavailable
+
+work/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_search_throttle_latch.py:99: Failed</failure></testcase><testcase classname="" name="test_vendor_text_and_untyped_reason_do_not_latch[None]" time="0.000" /><testcase classname="" name="test_vendor_text_and_untyped_reason_do_not_latch[rate limited]" time="0.000" /><testcase classname="" name="test_typed_origin_uses_one_deadline_with_a_ticking_clock" time="0.000"><failure message="KeyError: 'exa_mcp'">monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x108519670&gt;
+
+    async def test_typed_origin_uses_one_deadline_with_a_ticking_clock(monkeypatch):
+        import app.adapters.search as search
+    
+        ticks = iter((100.0, 101.0, 102.0))
+        monkeypatch.setattr(search, "time", SimpleNamespace(monotonic=lambda: next(ticks)))
+        with pytest.raises(SearchUnavailable):
+            await _ThrottleLatch(Refusing(None, SearchFailureReason.RATE_LIMITED)).search(query="first")
+&gt;       assert search._THROTTLED_UNTIL["exa_mcp"] == 101.0 + THROTTLE_COOLDOWN_SECONDS
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'exa_mcp'
+
+work/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_search_throttle_latch.py:134: KeyError</failure></testcase><testcase classname="" name="test_exact_typed_cooldown_expiry_and_provider_isolation" time="0.000"><failure message="KeyError: 'exa_mcp'">monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x108518d40&gt;
+
+    async def test_exact_typed_cooldown_expiry_and_provider_isolation(monkeypatch):
+        import app.adapters.search as search
+    
+        clock = SimpleNamespace(now=100.0)
+        monkeypatch.setattr(search, "time", SimpleNamespace(monotonic=lambda: clock.now))
+        with pytest.raises(SearchUnavailable):
+            await _ThrottleLatch(Refusing(None, SearchFailureReason.RATE_LIMITED)).search(query="first")
+        other = Answering()
+        other.name = "tavily"
+        await _ThrottleLatch(other).search(query="different provider")
+        assert other.calls == 1
+&gt;       deadline = search._THROTTLED_UNTIL["exa_mcp"]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'exa_mcp'
+
+work/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_search_throttle_latch.py:160: KeyError</failure></testcase><testcase classname="" name="test_stale_origin_does_not_relabel_a_deliberately_injected_legacy_float" time="0.000"><failure message="KeyError: 'exa_mcp'">monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10851a7b0&gt;
+
+    async def test_stale_origin_does_not_relabel_a_deliberately_injected_legacy_float(monkeypatch):
+        import app.adapters.search as search
+    
+        monkeypatch.setattr(search, "time", SimpleNamespace(monotonic=lambda: 100.0))
+        with pytest.raises(SearchUnavailable):
+            await _ThrottleLatch(Refusing(None, SearchFailureReason.RATE_LIMITED)).search(query="first")
+        origin = getattr(search, "_THROTTLED_ORIGIN", {})
+&gt;       assert origin["exa_mcp"] == (400.0, None, SearchFailureReason.RATE_LIMITED)
+               ^^^^^^^^^^^^^^^^^
+E       KeyError: 'exa_mcp'
+
+work/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_search_throttle_latch.py:179: KeyError</failure></testcase><testcase classname="" name="test_reset_clears_actual_typed_origin_before_a_new_query" time="0.000"><failure message="AssertionError: assert {}&#10; +  where {} = &lt;module 'app.adapters.search' from '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/__init__.py'&gt;._THROTTLED_UNTIL">async def test_reset_clears_actual_typed_origin_before_a_new_query():
+        import app.adapters.search as search
+    
+        with pytest.raises(SearchUnavailable):
+            await _ThrottleLatch(Refusing(None, SearchFailureReason.RATE_LIMITED)).search(query="first")
+&gt;       assert search._THROTTLED_UNTIL
+E       AssertionError: assert {}
+E        +  where {} = &lt;module 'app.adapters.search' from '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/__init__.py'&gt;._THROTTLED_UNTIL
+
+work/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_search_throttle_latch.py:196: AssertionError</failure></testcase><testcase classname="" name="test_search_is_not_run_when_every_programme_slot_is_full" time="0.000" /><testcase classname="" name="test_search_still_runs_while_a_slot_is_free" time="0.042" /><testcase classname="" name="test_the_provider_is_resolved_once_per_run_not_once_per_institution" time="0.000" /><testcase classname="" name="test_a_deployment_without_a_provider_is_not_re_probed" time="0.000" /><testcase classname="" name="test_a_rate_limit_stops_the_remaining_query_families" time="0.000" /><testcase classname="" name="test_other_failures_do_not_stop_the_remaining_families" time="0.000" /><testcase classname="" name="test_a_throttled_run_records_status_and_incomplete_rate_limit_stop" time="0.000"><failure message="assert False&#10; +  where False = any(&lt;generator object test_a_throttled_run_records_status_and_incomplete_rate_limit_stop.&lt;locals&gt;.&lt;genexpr&gt; at 0x108c72a80&gt;)">async def test_a_throttled_run_records_status_and_incomplete_rate_limit_stop():
+        provider = CountingProvider(fail_with=429)
+        fetcher = RecordingFetcher()
+        trace = DiscoveryTrace(institution=NAME, domain=DOMAIN)
+    
+        selected = selected_with([])
+        await adapter(provider, fetcher)._add_search_results(
+            {"name": NAME}, DOMAIN, selected, trace, profile()
+        )
+    
+        assert any("HTTP 429" in line for line in trace.search_failures)
+&gt;       assert any(
+            "rate-limit stop" in line and "incomplete" in line for line in trace.search_limitations
+        )
+E       assert False
+E        +  where False = any(&lt;generator object test_a_throttled_run_records_status_and_incomplete_rate_limit_stop.&lt;locals&gt;.&lt;genexpr&gt; at 0x108c72a80&gt;)
+
+work/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_search_layer_budget_fixes.py:257: AssertionError</failure></testcase><testcase classname="" name="test_a_throttle_ends_a_multi_subject_run" time="0.001"><failure message="assert False&#10; +  where False = any(&lt;generator object test_a_throttle_ends_a_multi_subject_run.&lt;locals&gt;.&lt;genexpr&gt; at 0x108c736b0&gt;)">async def test_a_throttle_ends_a_multi_subject_run():
+        """One 429 must not be re-sent once per remaining subject."""
+        provider = CountingProvider(fail_with=429)
+        fetcher = RecordingFetcher()
+        trace = DiscoveryTrace(institution=NAME, domain=DOMAIN)
+    
+        selected = selected_with([])
+        await adapter(provider, fetcher)._add_search_results(
+            {"name": NAME},
+            DOMAIN,
+            selected,
+            trace,
+            profile(("Computer Science", "Mathematics", "Physics")),
+        )
+    
+        assert provider.queries, "the first subject is still asked once"
+        assert len(provider.queries) == 1, (
+            "three subjects must not cost three separate probes of a refused "
+            f"quota (sent {len(provider.queries)})"
+        )
+        assert any("HTTP 429" in line for line in trace.search_failures)
+&gt;       assert any(
+            "rate-limit stop" in line and "incomplete" in line for line in trace.search_limitations
+        )
+E       assert False
+E        +  where False = any(&lt;generator object test_a_throttle_ends_a_multi_subject_run.&lt;locals&gt;.&lt;genexpr&gt; at 0x108c736b0&gt;)
+
+work/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_search_layer_budget_fixes.py:287: AssertionError</failure></testcase><testcase classname="" name="test_the_provider_seam_is_still_the_only_way_in" time="0.000" /><testcase classname="" name="test_explicit_rate_limit_charges_only_the_attempted_family[429-None]" time="0.000" /><testcase classname="" name="test_explicit_rate_limit_charges_only_the_attempted_family[None-rate limited]" time="0.001"><failure message="AssertionError: assert False is True&#10; +  where False = RetrievalReport(candidates=(), queries_run=('field_and_degree', 'natural_language', 'programmes', 'courses', 'undergra...entry_points_unreachable=0, throttled=False, failure_diagnostics=('Search service unavailable (fake; rate limited).',)).throttled">status = None, reason = &lt;SearchFailureReason.RATE_LIMITED: 'rate limited'&gt;
+
+    @pytest.mark.parametrize("status,reason", [(429, None), (None, SearchFailureReason.RATE_LIMITED)])
+    async def test_explicit_rate_limit_charges_only_the_attempted_family(status, reason):
+        provider = CountingProvider(fail_with=status, fail_reason=reason)
+        charges: list[int] = []
+        report = await discover_candidates(
+            provider, intent(), query_budget=6, on_query_attempt=lambda: charges.append(1)
+        )
+&gt;       assert report.throttled is True
+E       AssertionError: assert False is True
+E        +  where False = RetrievalReport(candidates=(), queries_run=('field_and_degree', 'natural_language', 'programmes', 'courses', 'undergra...entry_points_unreachable=0, throttled=False, failure_diagnostics=('Search service unavailable (fake; rate limited).',)).throttled
+
+work/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_search_layer_budget_fixes.py:308: AssertionError</failure></testcase><testcase classname="" name="test_untyped_vendor_refusal_does_not_cut_query_families[None]" time="0.000" /><testcase classname="" name="test_untyped_vendor_refusal_does_not_cut_query_families[rate limited]" time="0.001" /><testcase classname="" name="test_typed_status_none_caller_retains_safe_diagnostic_and_exact_query_charge[fields0]" time="0.001"><failure message="assert 5 == 1&#10; +  where 5 = len(['site:rug.nl &quot;Computer Science&quot; &quot;bachelor&quot;', 'University of Groningen bachelor undergraduate first cycle Computer Sci...ogrammes &quot;Computer Science&quot;', 'site:rug.nl courses &quot;Computer Science&quot;', 'site:rug.nl undergraduate &quot;Computer Science&quot;'])&#10; +    where ['site:rug.nl &quot;Computer Science&quot; &quot;bachelor&quot;', 'University of Groningen bachelor undergraduate first cycle Computer Sci...ogrammes &quot;Computer Science&quot;', 'site:rug.nl courses &quot;Computer Science&quot;', 'site:rug.nl undergraduate &quot;Computer Science&quot;'] = &lt;test_search_layer_budget_fixes.CountingProvider object at 0x108cf44d0&gt;.queries">fields = ('Computer Science',)
+
+    @pytest.mark.parametrize(
+        "fields", [("Computer Science",), ("Computer Science", "Mathematics", "Physics")]
+    )
+    async def test_typed_status_none_caller_retains_safe_diagnostic_and_exact_query_charge(fields):
+        provider = CountingProvider(fail_reason=SearchFailureReason.RATE_LIMITED)
+        fetcher = RecordingFetcher()
+        trace = DiscoveryTrace(institution=NAME, domain=DOMAIN)
+        trace.search_queries_sent = 1  # A prior identity query is not refunded.
+        selected = selected_with([])
+        await adapter(provider, fetcher)._add_search_results(
+            {"name": NAME}, DOMAIN, selected, trace, profile(fields)
+        )
+&gt;       assert len(provider.queries) == 1
+E       assert 5 == 1
+E        +  where 5 = len(['site:rug.nl "Computer Science" "bachelor"', 'University of Groningen bachelor undergraduate first cycle Computer Sci...ogrammes "Computer Science"', 'site:rug.nl courses "Computer Science"', 'site:rug.nl undergraduate "Computer Science"'])
+E        +    where ['site:rug.nl "Computer Science" "bachelor"', 'University of Groningen bachelor undergraduate first cycle Computer Sci...ogrammes "Computer Science"', 'site:rug.nl courses "Computer Science"', 'site:rug.nl undergraduate "Computer Science"'] = &lt;test_search_layer_budget_fixes.CountingProvider object at 0x108cf44d0&gt;.queries
+
+work/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_search_layer_budget_fixes.py:349: AssertionError</failure></testcase><testcase classname="" name="test_typed_status_none_caller_retains_safe_diagnostic_and_exact_query_charge[fields1]" time="0.001"><failure message="assert 5 == 1&#10; +  where 5 = len(['site:rug.nl &quot;Computer Science&quot; &quot;bachelor&quot;', 'University of Groningen bachelor undergraduate first cycle Computer Sci...'University of Groningen bachelor undergraduate first cycle Mathematics programme', 'site:rug.nl &quot;Physics&quot; &quot;bachelor&quot;'])&#10; +    where ['site:rug.nl &quot;Computer Science&quot; &quot;bachelor&quot;', 'University of Groningen bachelor undergraduate first cycle Computer Sci...'University of Groningen bachelor undergraduate first cycle Mathematics programme', 'site:rug.nl &quot;Physics&quot; &quot;bachelor&quot;'] = &lt;test_search_layer_budget_fixes.CountingProvider object at 0x108cdb980&gt;.queries">fields = ('Computer Science', 'Mathematics', 'Physics')
+
+    @pytest.mark.parametrize(
+        "fields", [("Computer Science",), ("Computer Science", "Mathematics", "Physics")]
+    )
+    async def test_typed_status_none_caller_retains_safe_diagnostic_and_exact_query_charge(fields):
+        provider = CountingProvider(fail_reason=SearchFailureReason.RATE_LIMITED)
+        fetcher = RecordingFetcher()
+        trace = DiscoveryTrace(institution=NAME, domain=DOMAIN)
+        trace.search_queries_sent = 1  # A prior identity query is not refunded.
+        selected = selected_with([])
+        await adapter(provider, fetcher)._add_search_results(
+            {"name": NAME}, DOMAIN, selected, trace, profile(fields)
+        )
+&gt;       assert len(provider.queries) == 1
+E       assert 5 == 1
+E        +  where 5 = len(['site:rug.nl "Computer Science" "bachelor"', 'University of Groningen bachelor undergraduate first cycle Computer Sci...'University of Groningen bachelor undergraduate first cycle Mathematics programme', 'site:rug.nl "Physics" "bachelor"'])
+E        +    where ['site:rug.nl "Computer Science" "bachelor"', 'University of Groningen bachelor undergraduate first cycle Computer Sci...'University of Groningen bachelor undergraduate first cycle Mathematics programme', 'site:rug.nl "Physics" "bachelor"'] = &lt;test_search_layer_budget_fixes.CountingProvider object at 0x108cdb980&gt;.queries
+
+work/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_search_layer_budget_fixes.py:349: AssertionError</failure></testcase><testcase classname="" name="test_official_single_text_empty_marker_is_legitimate_empty" time="0.001" /><testcase classname="" name="test_error_flag_keeps_empty_marker_unavailable" time="0.001" /><testcase classname="" name="test_empty_marker_does_not_hide_unknown_mixed_content" time="0.001" /><testcase classname="" name="test_json_and_sse_become_ranked_hints_with_shared_timestamp[False-False]" time="0.001" /><testcase classname="" name="test_json_and_sse_become_ranked_hints_with_shared_timestamp[True-True]" time="0.001" /><testcase classname="" name="test_protocol_session_and_query_use_only_the_fixed_keyless_endpoint" time="0.001" /><testcase classname="" name="test_second_search_reuses_session_with_unique_increasing_request_ids" time="0.001" /><testcase classname="" name="test_explicit_new_search_after_failure_never_reuses_request_ids[initialize]" time="0.001" /><testcase classname="" name="test_explicit_new_search_after_failure_never_reuses_request_ids[tools/call]" time="0.001" /><testcase classname="" name="test_unsupported_protocol_stops_before_notification_or_query" time="0.001" /><testcase classname="" name="test_http_failure_is_safe_and_never_retried_or_redirected[302]" time="0.001" /><testcase classname="" name="test_http_failure_is_safe_and_never_retried_or_redirected[400]" time="0.001" /><testcase classname="" name="test_http_failure_is_safe_and_never_retried_or_redirected[401]" time="0.001" /><testcase classname="" name="test_http_failure_is_safe_and_never_retried_or_redirected[402]" time="0.001" /><testcase classname="" name="test_http_failure_is_safe_and_never_retried_or_redirected[429]" time="0.001" /><testcase classname="" name="test_http_failure_is_safe_and_never_retried_or_redirected[500]" time="0.001" /><testcase classname="" name="test_http_failure_is_safe_and_never_retried_or_redirected[503]" time="0.001" /><testcase classname="" name="test_initialization_http_failure_never_sends_search" time="0.001" /><testcase classname="" name="test_initialized_notification_requires_accepted_status" time="0.001" /><testcase classname="" name="test_transport_failure_has_no_vendor_text_or_retry[initialize]" time="0.001" /><testcase classname="" name="test_transport_failure_has_no_vendor_text_or_retry[tools/call]" time="0.001" /><testcase classname="" name="test_malformed_or_rpc_failure_is_unavailable_not_empty[\xff]" time="0.001" /><testcase classname="" name="test_malformed_or_rpc_failure_is_unavailable_not_empty[not JSON or SSE]" time="0.001" /><testcase classname="" name="test_malformed_or_rpc_failure_is_unavailable_not_empty[data: {broken}\n\n]" time="0.001" /><testcase classname="" name="test_malformed_or_rpc_failure_is_unavailable_not_empty[[]]" time="0.001" /><testcase classname="" name="test_malformed_or_rpc_failure_is_unavailable_not_empty[{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:999,&quot;result&quot;:{}}]" time="0.001" /><testcase classname="" name="test_malformed_or_rpc_failure_is_unavailable_not_empty[{&quot;jsonrpc&quot;:&quot;1.0&quot;,&quot;id&quot;:2,&quot;result&quot;:{}}]" time="0.001" /><testcase classname="" name="test_malformed_or_rpc_failure_is_unavailable_not_empty[{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:2,&quot;result&quot;:[]}]" time="0.001" /><testcase classname="" name="test_malformed_or_rpc_failure_is_unavailable_not_empty[{&quot;jsonrpc&quot;: &quot;2.0&quot;, &quot;id&quot;: 2, &quot;error&quot;: {&quot;message&quot;: &quot;private-query-and-provider-secret&quot;}}]" time="0.001" /><testcase classname="" name="test_tool_errors_or_unreadable_results_are_not_legitimate_empty[result0]" time="0.001" /><testcase classname="" name="test_tool_errors_or_unreadable_results_are_not_legitimate_empty[result1]" time="0.001" /><testcase classname="" name="test_tool_errors_or_unreadable_results_are_not_legitimate_empty[result2]" time="0.001" /><testcase classname="" name="test_tool_errors_or_unreadable_results_are_not_legitimate_empty[result3]" time="0.001" /><testcase classname="" name="test_tool_errors_or_unreadable_results_are_not_legitimate_empty[result4]" time="0.001" /><testcase classname="" name="test_tool_error_text_cannot_invent_http_status_or_reveal_private_content" time="0.001" /><testcase classname="" name="test_explicit_empty_result_is_a_success[False]" time="0.001" /><testcase classname="" name="test_explicit_empty_result_is_a_success[True]" time="0.001" /><testcase classname="" name="test_domain_filter_rejects_lookalikes_and_bad_rows_without_losing_valid_rows" time="0.001" /><testcase classname="" name="test_valid_result_count_title_and_highlights_are_bounded" time="0.001" /><testcase classname="" name="test_caller_limit_applies_after_invalid_rows_are_filtered" time="0.001" /><testcase classname="" name="test_blocked_endpoint_never_reaches_transport" time="0.000" /><testcase classname="" name="test_timeout_bounds_the_entire_handshake_not_each_post" time="0.053" /><testcase classname="" name="test_http_client_timeout_remains_distinct_from_transport_failure" time="0.001" /><testcase classname="" name="test_streamed_byte_limit_stops_reading_and_closes_response[initialize]" time="0.001" /><testcase classname="" name="test_streamed_byte_limit_stops_reading_and_closes_response[tools/call]" time="0.001" /><testcase classname="" name="test_invalid_arguments_fail_before_egress[  -10]" time="0.001" /><testcase classname="" name="test_invalid_arguments_fail_before_egress[q-0]" time="0.001" /><testcase classname="" name="test_invalid_arguments_fail_before_egress[q--1]" time="0.001" /><testcase classname="" name="test_configuration_and_factory_allow_keyless_mcp_in_production" time="0.002" /><testcase classname="" name="test_the_rate_limit_is_named_not_malformed" time="0.001" /><testcase classname="" name="test_rate_limit_retry_can_be_switched_off" time="0.001" /><testcase classname="" name="test_rate_limit_retry_answers_on_the_second_try" time="0.001" /><testcase classname="" name="test_rate_limit_retry_happens_once_only" time="0.001" /><testcase classname="" name="test_429_retry_is_off_by_default" time="0.001" /><testcase classname="" name="test_429_retried_once_after_a_pause" time="0.001" /><testcase classname="" name="test_a_second_429_is_final" time="0.001" /><testcase classname="" name="test_queries_are_paced" time="0.001" /><testcase classname="" name="test_factory_suppresses_only_post_escape_explicit_refusal[True-True-2]" time="0.001"><failure message="AssertionError: assert 'request was not sent' in 'Exa MCP rate limit reached'&#10; +  where 'Exa MCP rate limit reached' = str(SearchUnavailable('Exa MCP rate limit reached'))&#10; +    where SearchUnavailable('Exa MCP rate limit reached') = &lt;ExceptionInfo SearchUnavailable('Exa MCP rate limit reached') tblen=5&gt;.value">make_factory_provider = &lt;function make_factory_provider.&lt;locals&gt;.make at 0x108d2b7e0&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x108d79e20&gt;
+metadata = True, retry = True, tools = 2
+
+    @pytest.mark.parametrize(
+        "metadata,retry,tools", [(True, True, 2), (True, False, 1), (False, True, 1)]
+    )
+    async def test_factory_suppresses_only_post_escape_explicit_refusal(
+        make_factory_provider, monkeypatch, metadata, retry, tools
+    ):
+        import app.adapters.search as search
+    
+        assert module.RATE_LIMIT_RETRY is True
+        assert module.RETRY_429_ONCE is False
+        slept: list[float] = []
+    
+        async def sleep(seconds: float) -&gt; None:
+            slept.append(seconds)
+    
+        monkeypatch.setattr(
+            module, "asyncio", SimpleNamespace(sleep=sleep, Lock=asyncio.Lock, timeout=asyncio.timeout)
+        )
+        monkeypatch.setattr(module, "RATE_LIMIT_RETRY", retry)
+        server = (
+            McpServer(result=RATE_LIMITED)
+            if metadata
+            else McpServer(overrides={"tools/call": lambda request: httpx.Response(429)})
+        )
+        first = make_factory_provider(server)
+        with pytest.raises(SearchUnavailable) as original:
+            await first.search(query="first public programme query")
+        assert original.value.http_status == (None if metadata else 429)
+        assert original.value.reason is (SearchFailureReason.RATE_LIMITED if metadata else None)
+        assert server.methods == ["initialize", "notifications/initialized"] + ["tools/call"] * tools
+        before = list(server.methods)
+        # The second factory instance is constructed after the original error escaped.
+        second = make_factory_provider(server)
+        for provider in (first, second):
+            with pytest.raises(SearchUnavailable) as local:
+                await provider.search(query="later public query")
+            assert local.value.http_status == original.value.http_status
+            assert local.value.reason is original.value.reason
+&gt;           assert "request was not sent" in str(local.value)
+E           AssertionError: assert 'request was not sent' in 'Exa MCP rate limit reached'
+E            +  where 'Exa MCP rate limit reached' = str(SearchUnavailable('Exa MCP rate limit reached'))
+E            +    where SearchUnavailable('Exa MCP rate limit reached') = &lt;ExceptionInfo SearchUnavailable('Exa MCP rate limit reached') tblen=5&gt;.value
+
+work/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_exa_mcp.py:766: AssertionError</failure></testcase><testcase classname="" name="test_factory_suppresses_only_post_escape_explicit_refusal[True-False-1]" time="0.001"><failure message="AssertionError: assert 'request was not sent' in 'Exa MCP rate limit reached'&#10; +  where 'Exa MCP rate limit reached' = str(SearchUnavailable('Exa MCP rate limit reached'))&#10; +    where SearchUnavailable('Exa MCP rate limit reached') = &lt;ExceptionInfo SearchUnavailable('Exa MCP rate limit reached') tblen=5&gt;.value">make_factory_provider = &lt;function make_factory_provider.&lt;locals&gt;.make at 0x10926c180&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x108d42ab0&gt;
+metadata = True, retry = False, tools = 1
+
+    @pytest.mark.parametrize(
+        "metadata,retry,tools", [(True, True, 2), (True, False, 1), (False, True, 1)]
+    )
+    async def test_factory_suppresses_only_post_escape_explicit_refusal(
+        make_factory_provider, monkeypatch, metadata, retry, tools
+    ):
+        import app.adapters.search as search
+    
+        assert module.RATE_LIMIT_RETRY is True
+        assert module.RETRY_429_ONCE is False
+        slept: list[float] = []
+    
+        async def sleep(seconds: float) -&gt; None:
+            slept.append(seconds)
+    
+        monkeypatch.setattr(
+            module, "asyncio", SimpleNamespace(sleep=sleep, Lock=asyncio.Lock, timeout=asyncio.timeout)
+        )
+        monkeypatch.setattr(module, "RATE_LIMIT_RETRY", retry)
+        server = (
+            McpServer(result=RATE_LIMITED)
+            if metadata
+            else McpServer(overrides={"tools/call": lambda request: httpx.Response(429)})
+        )
+        first = make_factory_provider(server)
+        with pytest.raises(SearchUnavailable) as original:
+            await first.search(query="first public programme query")
+        assert original.value.http_status == (None if metadata else 429)
+        assert original.value.reason is (SearchFailureReason.RATE_LIMITED if metadata else None)
+        assert server.methods == ["initialize", "notifications/initialized"] + ["tools/call"] * tools
+        before = list(server.methods)
+        # The second factory instance is constructed after the original error escaped.
+        second = make_factory_provider(server)
+        for provider in (first, second):
+            with pytest.raises(SearchUnavailable) as local:
+                await provider.search(query="later public query")
+            assert local.value.http_status == original.value.http_status
+            assert local.value.reason is original.value.reason
+&gt;           assert "request was not sent" in str(local.value)
+E           AssertionError: assert 'request was not sent' in 'Exa MCP rate limit reached'
+E            +  where 'Exa MCP rate limit reached' = str(SearchUnavailable('Exa MCP rate limit reached'))
+E            +    where SearchUnavailable('Exa MCP rate limit reached') = &lt;ExceptionInfo SearchUnavailable('Exa MCP rate limit reached') tblen=5&gt;.value
+
+work/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_exa_mcp.py:766: AssertionError</failure></testcase><testcase classname="" name="test_factory_suppresses_only_post_escape_explicit_refusal[False-True-1]" time="0.001" /><testcase classname="" name="test_factory_does_not_latch_when_the_approved_native_retry_recovers" time="0.001" /><testcase classname="" name="test_factory_metadata_requires_boolean_true[False]" time="0.001" /><testcase classname="" name="test_factory_metadata_requires_boolean_true[1]" time="0.001" /><testcase classname="" name="test_factory_metadata_requires_boolean_true[true]" time="0.001" /></testsuite></testsuites>

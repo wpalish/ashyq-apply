@@ -1,0 +1,4 @@
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/__init__.py:46:_THROTTLED_UNTIL: dict[str, float] = {}
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/__init__.py:51:    _THROTTLED_UNTIL.clear()
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/__init__.py:78:        if time.monotonic() < _THROTTLED_UNTIL.get(self.name, 0.0):
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/__init__.py:87:                _THROTTLED_UNTIL[self.name] = time.monotonic() + THROTTLE_COOLDOWN_SECONDS

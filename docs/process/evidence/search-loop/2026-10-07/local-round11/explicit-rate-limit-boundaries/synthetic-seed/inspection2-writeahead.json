@@ -1,0 +1,6 @@
+{
+  "original_inspection_red_preserved": "asserted UBC OUT_OF_BUDGET in funding_classification; actual field is portfolio bucket. Source result expectation not changed.",
+  "next": "Fresh read-only inspect2 on same ownSQLite, same frozen source and source pins; verify UBC bucket OUT_OF_BUDGET, preserve FULL_TUITION funding_classification separately.",
+  "no_repeat": ["heads", "migrate", "seed"],
+  "no_app_repo_data_source_or_STOP_changes": true
+}

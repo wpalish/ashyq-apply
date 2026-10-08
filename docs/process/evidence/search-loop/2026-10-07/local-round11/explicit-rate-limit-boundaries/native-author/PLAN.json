@@ -1,0 +1,44 @@
+{
+  "created_utc": "2026-10-08T03:07:01.177334+00:00",
+  "status": "WRITEAHEAD_BEFORE_TEST_EDITS",
+  "ownership": [
+    "tests/test_search_throttle_latch.py",
+    "tests/test_search_layer_budget_fixes.py",
+    "tests/test_exa_mcp.py"
+  ],
+  "source_proposal_ready_sha256": "133b86aae460d6f475f482809419a56733330adf74bb08a90d489e61ca1be9ae",
+  "source_proposal_sha256": {
+    "app/adapters/search/__init__.py": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+    "app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+    "app/adapters/discovery/live_discovery.py": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004"
+  },
+  "app_original_sha256": {
+    "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/discovery/live_discovery.py": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f"
+  },
+  "tests_original_sha256": {
+    "tests/test_search_throttle_latch.py": "b599450b25c28fab0c2dcc6b9d2891f4e59845e6de3ccc02b628c0eb0eb6ad96",
+    "tests/test_search_layer_budget_fixes.py": "45ee64c0e93538e5c13d61be654ab0480d4a441a3ba98e00003d9a93a9b4fcde",
+    "tests/test_exa_mcp.py": "8e2b0f6dd0e7c1fbb00ab39cfb653b9cfc6bf6cdf31eddd113b0a2c0f1e0b2db"
+  },
+  "scope": [
+    "finite native regression additions only3proposedtestcopies",
+    "normal actualbase/exa/searchmethods unchanged; exactsealed3external targets only",
+    "shared typed metadataNone factory/retrieval, rawstring nonenum, stampeddeadline/expiry/stale/reset",
+    "known429 failures retainstatusdiagnostic andgenericincompletecallertext; None/Rate path",
+    "actualnativeMCPfactory MockTransport default2tool retry thenzeroHTTP postescape; recoveredretry notlatch",
+    "externalisolatedpytestreplay children; primarythrottle/STOP untouched, no wholefullsuite"
+  ],
+  "forbidden": [
+    "app/repo/Git/HANDOFF/sealedpacket edits",
+    "provider/model/network/DNS/remoteDB/install/gold/scorer/primarySTOPreset"
+  ],
+  "expected_source_lane": "OFForiginal vsONsealed proposal, expectation unchanged; oldassertions preserved except precise known429 caller diagnostic location/text updates",
+  "test_qualification": "syntheticlowlevelproviders are notnativeExa proof; nativefactoryintegration separateactual methods +MockTransport",
+  "protocol": "PLANbeforeedits; preserveoriginalfailures/logs; seal exactpins/results/patch, Bpeer next"
+}

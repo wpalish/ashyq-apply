@@ -1,0 +1,196 @@
+{
+  "sealed_utc": "2026-10-08T03:03:58.128471+00:00",
+  "status": "EXTERNAL_PROPOSAL_READY_FOR_INDEPENDENT_PEER_NOT_APPLIED",
+  "plan_sha256": "5171a6c1f139d06737cbb77cc3ff380cc5e45fe5e9c1999f539c9313954b2e91",
+  "addendum_sha256": "db9ae7e02ba73c02e27181a9fc3ceec9aceb41cc4b119e4e606a609722cd488c",
+  "source_manifest_sha256": "eff1c21b6be4d3fae47e95609ebcb92e2b0852dfed027e37a995c731b763d191",
+  "patch_sha256": "44d2c1f737ef4849a2cc469246133b9963684d97c4eb516e92b654946fdb5fa0",
+  "proposed_source_sha256": {
+    "app/adapters/search/__init__.py": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+    "app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+    "app/adapters/discovery/live_discovery.py": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004"
+  },
+  "test_sha256": "afaafd05ff580ba6480ac446e99dfe28db2c0bb8626085d02cbde4614dca6140",
+  "child_sha256": "ccd328cfe93319411e1e29bf5b036a585066453527ab38dd04bc98e51299f200",
+  "executor_sha256": "5171653aec99ee7af386e9ff18658941f15ba81b7f249255b1b62990e91e8c67",
+  "final_source_replay": {
+    "off": {
+      "PASS": 147,
+      "RED": 24,
+      "exceptions": 0,
+      "total": 171
+    },
+    "on": {
+      "PASS": 171,
+      "RED": 0,
+      "exceptions": 0,
+      "total": 171
+    }
+  },
+  "normal_full_output_dispatch_equality": {
+    "PASS": 15,
+    "RED": 0
+  },
+  "pytest": {
+    "passed": 52,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0,
+    "node_distribution": {
+      "enabled": 37,
+      "whole_normal_equality": 15
+    },
+    "log_sha256": "4cf2124032e464147e816ec20702b3b32e3647b01af12dd56f695de26cf6f779",
+    "qualification": "52 completed dots and exit0; 37 fresh ONchildren plus15fresh OFF/ON comparisons. This repeats the same bounded scenario matrix, not52 independent new defects."
+  },
+  "static": {
+    "Ruff": "All checks passed!",
+    "mypy": "Success: no issues found in 3 source files",
+    "format": "3 files left unchanged"
+  },
+  "historical": {
+    "attempt1": {
+      "on": {
+        "PASS": 125,
+        "RED": 0,
+        "fixture_exceptions": 6
+      },
+      "off": {
+        "PASS": 114,
+        "RED": 11,
+        "fixture_exceptions": 6
+      },
+      "qualification": "PageCategory is a namespace, notEnum; same6caller fixtures failbeforetargetseam inbothmodes. Original source/tests/logs preserved."
+    },
+    "attempt2": {
+      "on": {
+        "PASS": 156,
+        "RED": 0,
+        "exceptions": 0
+      },
+      "off": {
+        "PASS": 138,
+        "RED": 18,
+        "exceptions": 0
+      },
+      "qualification": "Before finalgrammar/comment fix and3additionalnative controls; sourcepins saved separately, never relabeled exactfinalproof."
+    }
+  },
+  "native_HTTP_examples": {
+    "factory-meta": {
+      "HTTP": {
+        "initialize": 1,
+        "notifications/initialized": 1,
+        "tools/call": 2
+      },
+      "query_seams": 3,
+      "sleep": [
+        2.0
+      ]
+    },
+    "factory-no-retry": {
+      "HTTP": {
+        "initialize": 1,
+        "notifications/initialized": 1,
+        "tools/call": 1
+      },
+      "query_seams": 3,
+      "sleep": []
+    },
+    "factory-http429": {
+      "HTTP": {
+        "initialize": 1,
+        "notifications/initialized": 1,
+        "tools/call": 1
+      },
+      "query_seams": 3,
+      "sleep": []
+    },
+    "retrieval-meta": {
+      "HTTP": {
+        "initialize": 1,
+        "notifications/initialized": 1,
+        "tools/call": 2
+      },
+      "query_seams": 1,
+      "sleep": [
+        2.0
+      ]
+    },
+    "retrieval-meta-unwrapped": {
+      "HTTP": {
+        "initialize": 1,
+        "notifications/initialized": 1,
+        "tools/call": 2
+      },
+      "query_seams": 1,
+      "sleep": [
+        2.0
+      ]
+    },
+    "retrieval-http429": {
+      "HTTP": {
+        "initialize": 1,
+        "notifications/initialized": 1,
+        "tools/call": 1
+      },
+      "query_seams": 1,
+      "sleep": []
+    },
+    "native-expiry": {
+      "HTTP": {
+        "initialize": 2,
+        "notifications/initialized": 2,
+        "tools/call": 3
+      },
+      "query_seams": 3,
+      "sleep": [
+        2.0
+      ]
+    },
+    "native-recovery-meta": {
+      "HTTP": {
+        "initialize": 2,
+        "notifications/initialized": 2,
+        "tools/call": 4
+      },
+      "query_seams": 3,
+      "sleep": [
+        2.0
+      ]
+    },
+    "caller-single-meta": {
+      "HTTP": {
+        "initialize": 1,
+        "notifications/initialized": 1,
+        "tools/call": 2
+      },
+      "query_seams": 0,
+      "sleep": [
+        2.0
+      ]
+    },
+    "caller-multi-meta": {
+      "HTTP": {
+        "initialize": 1,
+        "notifications/initialized": 1,
+        "tools/call": 2
+      },
+      "query_seams": 0,
+      "sleep": [
+        2.0
+      ]
+    }
+  },
+  "zero_actual_network_provider_model_Git_app_STOP_mutations": true,
+  "limits": [
+    "Process-local sequential latch, not cross-process or retroactive suppression of already-started concurrent requests.",
+    "Native approved RATE_LIMIT_RETRYTrue still2tools insidefirstfailed metadata search; isolatedFalse control1tool explicitlyrecorded.",
+    "Float-only fallback is knownoldHTTP429 teststate. Currentmetadata stampedNone never becomes429.",
+    "Native private origin stores only deadline/status/fixedenum, notvendor text. Rawstringreason andvendor-onlytext never triggernewpredicate.",
+    "No API/schema/budget/timeout/retryflag/retention/scopehelper/outerSTOP change; no quality gain or launch acceptance claimed.",
+    "Existing broad retrieval hop catches and coverage/query-field planned semantics are unchanged; trace.search_queries_sent proveschargedseams, notvendor dispatch.",
+    "Actual provider protocol/token/account/quota access nottested; officialpagefacts none.",
+    "Peer review and parentintegration are still required; OFFproof original4da30620 untouched."
+  ]
+}

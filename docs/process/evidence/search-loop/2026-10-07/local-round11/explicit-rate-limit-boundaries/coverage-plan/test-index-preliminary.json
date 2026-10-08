@@ -1,0 +1,119 @@
+[
+  {
+    "path": "tests/test_search_throttle_latch.py",
+    "test": "test_a_429_is_shared_by_a_second_adapter_instance",
+    "line": 45
+  },
+  {
+    "path": "tests/test_search_throttle_latch.py",
+    "test": "test_other_failures_do_not_latch",
+    "line": 56
+  },
+  {
+    "path": "tests/test_search_throttle_latch.py",
+    "test": "test_the_latch_is_per_provider_and_expires",
+    "line": 65
+  },
+  {
+    "path": "tests/test_search_throttle_latch.py",
+    "test": "test_reset_forgets_the_refusal",
+    "line": 82
+  },
+  {
+    "path": "tests/test_exa_mcp.py",
+    "test": "test_the_rate_limit_is_named_not_malformed",
+    "line": 599
+  },
+  {
+    "path": "tests/test_exa_mcp.py",
+    "test": "test_rate_limit_retry_can_be_switched_off",
+    "line": 609
+  },
+  {
+    "path": "tests/test_exa_mcp.py",
+    "test": "test_rate_limit_retry_answers_on_the_second_try",
+    "line": 618
+  },
+  {
+    "path": "tests/test_exa_mcp.py",
+    "test": "test_rate_limit_retry_happens_once_only",
+    "line": 627
+  },
+  {
+    "path": "tests/test_exa_mcp.py",
+    "test": "test_429_retry_is_off_by_default",
+    "line": 654
+  },
+  {
+    "path": "tests/test_exa_mcp.py",
+    "test": "test_429_retried_once_after_a_pause",
+    "line": 663
+  },
+  {
+    "path": "tests/test_exa_mcp.py",
+    "test": "test_a_second_429_is_final",
+    "line": 672
+  },
+  {
+    "path": "tests/test_search_layer_budget_fixes.py",
+    "test": "test_a_rate_limit_stops_the_remaining_query_families",
+    "line": 205
+  },
+  {
+    "path": "tests/test_search_layer_budget_fixes.py",
+    "test": "test_other_failures_do_not_stop_the_remaining_families",
+    "line": 221
+  },
+  {
+    "path": "tests/test_search_layer_budget_fixes.py",
+    "test": "test_a_throttled_run_records_a_quota_stop_not_a_miss",
+    "line": 230
+  },
+  {
+    "path": "tests/test_search_layer_budget_fixes.py",
+    "test": "test_a_throttle_ends_a_multi_subject_run",
+    "line": 244
+  },
+  {
+    "path": "tests/test_identity_query_ledger.py",
+    "test": "test_real_429_latch_blocks_second_vendor_dispatch_and_counts_only_attempts",
+    "line": 307
+  },
+  {
+    "path": "tests/test_identity_query_ledger.py",
+    "test": "test_local_identity_rejection_is_attempt_telemetry_not_http_dispatch",
+    "line": 293
+  },
+  {
+    "path": "tests/test_identity_query_ledger.py",
+    "test": "test_escaping_search_error_after_dispatch_keeps_every_attempt",
+    "line": 336
+  },
+  {
+    "path": "tests/test_identity_query_ledger.py",
+    "test": "test_cancellation_records_in_memory_attempt_without_durability_claim",
+    "line": 358
+  },
+  {
+    "path": "tests/test_hybrid_retrieval.py",
+    "test": "test_it_finds_the_programme_page_and_says_how",
+    "line": 220
+  },
+  {
+    "path": "tests/test_hybrid_retrieval.py",
+    "test": "test_a_failing_query_is_reported_not_folded_into_a_smaller_result",
+    "line": 246
+  },
+  {
+    "path": "tests/test_hybrid_retrieval.py",
+    "requested_name": "test_it_respects_the_query_budget",
+    "exact_name_unresolved": true,
+    "candidate_names": [
+      "test_it_finds_the_programme_page_and_says_how",
+      "test_a_failing_query_is_reported_not_folded_into_a_smaller_result",
+      "test_the_query_budget_is_respected",
+      "test_coverage_is_additive_rather_than_competing_for_the_budget",
+      "test_a_programme_page_is_never_dropped_by_this"
+    ]
+  }
+]

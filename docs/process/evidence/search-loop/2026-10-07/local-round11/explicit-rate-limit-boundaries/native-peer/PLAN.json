@@ -1,0 +1,29 @@
+{
+  "status": "WRITEAHEAD_ORIGINAL_TEST_INSPECTION_AWAIT_EXACT_SEAL",
+  "source_peer_manifest": "3df6d9a003dfc3c1a36cfef29958c254c6b90f5db714646e8c77727db2218c08",
+  "original_test_pins": {
+    "tests/test_search_throttle_latch.py": "b599450b25c28fab0c2dcc6b9d2891f4e59845e6de3ccc02b628c0eb0eb6ad96",
+    "tests/test_search_layer_budget_fixes.py": "45ee64c0e93538e5c13d61be654ab0480d4a441a3ba98e00003d9a93a9b4fcde",
+    "tests/test_exa_mcp.py": "8e2b0f6dd0e7c1fbb00ab39cfb653b9cfc6bf6cdf31eddd113b0a2c0f1e0b2db"
+  },
+  "source_pins_before": {
+    "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/discovery/live_discovery.py": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51"
+  },
+  "A_native_proposal_manifest": null,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "allowed": [
+    "Read current original tests and own copies",
+    "Exact final sealed delta review",
+    "Finite genuine native regressions only after seal; no whole suite"
+  ],
+  "forbidden": [
+    "Mutable proposal import/approval",
+    "App/source/Git/STOP/primaryreset/live/network/provider/model/labels/scoring mutations",
+    "Deleting known429 metadata or weakening guards/budgets"
+  ]
+}
