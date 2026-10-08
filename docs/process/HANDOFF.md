@@ -6,6 +6,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[search-control-propagation] Holder: nobody; ready-for-review (Draft PR #72), 2026-10-08 04:57UTC.** https://github.com/wpalish/ashyq-apply/pull/72; OPEN/Draft/base task/search-explicit-rate-limit/head task/search-control-propagation@4d14e26c60a6cdc459a381865b4f0b2cf718048c verified, attached. Cloud rollup[] means no hosted checks, not PASS. Source d076/fullsnapshotd648/13of13/4330sameeachDB/95.26 immutable; all999 selected paths unchanged after metadata/evidence commits. Final88originals3320f41e/proposal1262e8f/seed26a015 allrootverified; independent B33/33 full5873,Aintegratione03e/archives8a8b. Current task technical repair complete; globalgoalACTIVE/liveSTOP65b5/round10UNSCORED/no qualitygain or launch claim. Next task/search-stopped-trace-accounting under explicit §5 predecessor exception after release push: preserve B8e4a/Aca33 OFF proof first, audit private caller signatures/identitydiagnostic merge, conservative trace/accounting-only external proposal then independent review/writeahead/nativefull. No live reset/default/retention/Claim/SQL shortcut.
+
+
 **[search-control-propagation] final GREEN evidence closure 2026-10-08 04:55UTC.** B5873428d independent33/33 saved checks ACCEPT; source999/3applied/242seed/exactfull d076/d648,4330sameeachDB/95.26% all bind. Final archive receipt3320f41e556f96d07c4b8bd731e95c15667bd9d40b4be94119dafa7e5b3eb880:88physical originals/14,111,321bytes including17full raw, A integratione03e/archive8a8b/Bfinal5873; every archivedSHA/size/exactoriginal rootverified. Earlier proposal126receipt2e8f andseed26a015 plusOFF56/33 preserved. Physicalcopycounts include peerduplicate originals, not experiments. Normalgreencommit/push and Draft successor71 next, then release; no extra full because selectedsource unchanged. GoalACTIVE/liveSTOP65b5/round10UNSCORED.
 
 
@@ -107,6 +110,9 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[search-control-propagation] Holder: nobody; ready-for-review (Draft PR #72), 2026-10-08 04:57UTC.** https://github.com/wpalish/ashyq-apply/pull/72; OPEN/Draft/base task/search-explicit-rate-limit/head task/search-control-propagation@4d14e26c60a6cdc459a381865b4f0b2cf718048c verified, attached. Cloud rollup[] means no hosted checks, not PASS. Source d076/fullsnapshotd648/13of13/4330sameeachDB/95.26 immutable; all999 selected paths unchanged after metadata/evidence commits. Final88originals3320f41e/proposal1262e8f/seed26a015 allrootverified; independent B33/33 full5873,Aintegratione03e/archives8a8b. Current task technical repair complete; globalgoalACTIVE/liveSTOP65b5/round10UNSCORED/no qualitygain or launch claim. Next task/search-stopped-trace-accounting under explicit §5 predecessor exception after release push: preserve B8e4a/Aca33 OFF proof first, audit private caller signatures/identitydiagnostic merge, conservative trace/accounting-only external proposal then independent review/writeahead/nativefull. No live reset/default/retention/Claim/SQL shortcut.
+
 
 **[search-control-propagation] technical acceptance GREEN; Draft creation/closed evidence pending.** One exact import+bare native-control rethrow;18meaningful native regressions on actual retrieval/single/multi callers. No public contract/default/migration change. Full13/13d076/d648, root proof final-full-verification.json; independent integratione03e/archives8a8b/proposal2b84 accepted. Native source exceptions preserve identity; ordinary outputs unaffected. Global goal stillACTIVE, no live restart.
 
@@ -1955,6 +1961,9 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[search-control-propagation] Holder: nobody; ready-for-review (Draft PR #72), 2026-10-08 04:57UTC.** https://github.com/wpalish/ashyq-apply/pull/72; OPEN/Draft/base task/search-explicit-rate-limit/head task/search-control-propagation@4d14e26c60a6cdc459a381865b4f0b2cf718048c verified, attached. Cloud rollup[] means no hosted checks, not PASS. Source d076/fullsnapshotd648/13of13/4330sameeachDB/95.26 immutable; all999 selected paths unchanged after metadata/evidence commits. Final88originals3320f41e/proposal1262e8f/seed26a015 allrootverified; independent B33/33 full5873,Aintegratione03e/archives8a8b. Current task technical repair complete; globalgoalACTIVE/liveSTOP65b5/round10UNSCORED/no qualitygain or launch claim. Next task/search-stopped-trace-accounting under explicit §5 predecessor exception after release push: preserve B8e4a/Aca33 OFF proof first, audit private caller signatures/identitydiagnostic merge, conservative trace/accounting-only external proposal then independent review/writeahead/nativefull. No live reset/default/retention/Claim/SQL shortcut.
+
 
 **[search-control-propagation] FINAL CLOSURE write-ahead 2026-10-08 04:51 UTC.** After independent final rawfull seal, archive17 immutable full originals plus root verifier/integration/A audits/B final review into new control-propagation-final-gates using source-after999, verify hashes and STOP; append exactreceipt to relay/ledger/currenthandoff, normalgreencommit Agent:gpt-6-astra/[skipci], push, Draft headcurrentbranch/base task/search-explicit-rate-limit (#71), attach and verify, then release nobody/ready-for-review. Explicit predecessor exception: after clean pushed release, next separate task/search-stopped-trace-accounting may branch from THIS predecessor before owner merge. Take baton before source changes; first preserve/review B8e4a OFF24/Aca33peer9 and native2route22 observations on frozen source. Preserve seed/unknown/cancel/checkpoint contracts; source-only signature/identity-prefix audit before any caller-owned trace proposal, exact external native negatives and independent review then new writeahead/newfull. No _apply on unwind, source/Claim semantic retention, SQL/Worker durability or >6 conclusion from currentOFF. No live/provider/model/gold/scorer/reset/purchase/merge/deploy.
 
@@ -5299,6 +5308,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+- 2026-10-08T04:57:45.662890+00:00: gpt-6-astra [search-control-propagation] releases baton; dec1ae0d → source d076/green4d14e26c/Draft72; source unchanged at release. Next: separate stopped-trace accounting; goalACTIVE/liveSTOP.
 
 | 2026-10-08 02:45 UTC | gpt-6-astra | 62069fb4/Draft70 → task/search-explicit-rate-limit | Fresh offline operational task; typed refusal proof/peer before narrow source proposal; no live restart. |
 
